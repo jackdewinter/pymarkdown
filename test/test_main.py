@@ -214,6 +214,33 @@ def test_markdown_with_dash_l_on_md_directory():
     )
 
 
+def test_markdown_with_dash_l_on_mixed_directories():
+    """
+    Test to make sure we get help if '-l' is supplied with a path containing the md directory and the non-md directory.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = ["-l", "only-text", "simple"]
+
+    expected_return_code = 0
+    expected_output = """simple/simple.md
+""".replace(
+        "/", os.path.sep
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=suppplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
 def test_markdown_with_dash_l_on_non_md_file():
     """
     Test to make sure we get help if '-l' is supplied with a file path that isn't a md file.
@@ -253,6 +280,32 @@ def test_markdown_with_dash_l_on_md_file():
     expected_output = """simple/simple.md
 """
     expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=suppplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_mixed_files():
+    """
+    Test to make sure we get help if '-l' is supplied with a file path that is a simple md file and one that isn't.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = ["-l", "only-text/simple_text_file.txt", "simple/simple.md"]
+
+    expected_return_code = 0
+    expected_output = """simple/simple.md
+"""
+    expected_error = """Provided file path 'only-text/simple_text_file.txt' is not a valid markdown file. Skipping.
+"""
 
     # Act
     execute_results = scanner.invoke_main(
