@@ -50,8 +50,13 @@ class PyMarkdownLint:
 
         files_to_parse = set()
         for next_path in eligible_paths:
+
             if not os.path.exists(next_path):
-                print("Provided path '" + next_path + "' does not exist. Skipping.")
+                print(
+                    "Provided path '" + next_path + "' does not exist. Skipping.",
+                    file=sys.stderr,
+                )
+                continue
             if os.path.isdir(next_path):
                 for root, _, files in os.walk(next_path):
                     for file in files:
@@ -65,7 +70,8 @@ class PyMarkdownLint:
                     print(
                         "Provided file path '"
                         + next_path
-                        + "' is not a valid markdown file. Skipping."
+                        + "' is not a valid markdown file. Skipping.",
+                        file=sys.stderr,
                     )
         files_to_parse = list(files_to_parse)
         files_to_parse.sort()
@@ -77,7 +83,7 @@ class PyMarkdownLint:
         if files_to_scan:
             print("\n".join(files_to_scan))
             return 0
-        print("No Markdown files found.")
+        print("No Markdown files found.", file=sys.stderr)
         return 1
 
     def main(self):

@@ -18,6 +18,13 @@ class MarkdownScanner(InProcessExecution):
     Local instance.
     """
 
+    def __init__(self):
+        super().__init__()
+        resource_directory = os.path.join(os.getcwd(), "test", "resources")
+        assert os.path.exists(resource_directory)
+        assert os.path.isdir(resource_directory)
+        self.resource_directory = resource_directory
+
     def execute_main(self):
         PyMarkdownLint().main()
 
@@ -122,6 +129,135 @@ main.py: error: the following arguments are required: path
 
     # Act
     execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_bad_path():
+    """
+    Test to make sure we get help if '-l' is supplied with a bad path.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = ["-l", "my-bad-path"]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """Provided path 'my-bad-path' does not exist. Skipping.
+No Markdown files found.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=suppplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_non_md_directory():
+    """
+    Test to make sure we get help if '-l' is supplied with a path containing no md files.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = ["-l", "only-text"]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """No Markdown files found.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=suppplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_md_directory():
+    """
+    Test to make sure we get help if '-l' is supplied with a path containing a simple md file.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = ["-l", "simple"]
+
+    expected_return_code = 0
+    expected_output = """simple/simple.md
+""".replace(
+        "/", os.path.sep
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=suppplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_non_md_file():
+    """
+    Test to make sure we get help if '-l' is supplied with a file path that isn't a md file.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = ["-l", "only-text/simple_text_file.txt"]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """Provided file path 'only-text/simple_text_file.txt' is not a valid markdown file. Skipping.
+No Markdown files found.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=suppplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_md_file():
+    """
+    Test to make sure we get help if '-l' is supplied with a file path that is a simple md file.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = ["-l", "simple/simple.md"]
+
+    expected_return_code = 0
+    expected_output = """simple/simple.md
+"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=suppplied_arguments, cwd=scanner.resource_directory
+    )
 
     # Assert
     execute_results.assert_results(

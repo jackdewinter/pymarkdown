@@ -35,7 +35,7 @@ class InProcessResult:
                     diff_values = "\n".join(list(diff))
                     assert False, "Stdout not as expected:\n" + diff_values
             else:
-                assert not self.std_out.getvalue()
+                assert not self.std_out.getvalue(), "Expected stdout to be empty."
 
             if stderr:
                 if self.std_err.getvalue() != stderr:
@@ -45,7 +45,7 @@ class InProcessResult:
                     diff_values = "\n".join(list(diff))
                     assert False, "Stderr not as expected:\n" + diff_values
             else:
-                assert not self.std_err.getvalue()
+                assert not self.std_err.getvalue(), "Expected stderr to be empty."
 
             assert self.return_code == error_code, (
                 "Actual error code ("
@@ -137,7 +137,7 @@ class InProcessExecution(ABC):
         return 1
 
     # pylint: disable=broad-except
-    def invoke_main(self, arguments=None):
+    def invoke_main(self, arguments=None, cwd=None):
         """
         Invoke the mainline so that we can capture results.
         """
@@ -154,6 +154,9 @@ class InProcessExecution(ABC):
         else:
             sys.argv = []
         sys.argv.insert(0, self.get_main_name())
+
+        if cwd:
+            os.chdir(cwd)
 
         try:
             returncode = 0
