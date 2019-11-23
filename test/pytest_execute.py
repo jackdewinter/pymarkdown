@@ -1,11 +1,20 @@
+"""
+Module to provide functionality to test scripts from within pytest.
+"""
+import difflib
+import io
 import os
 import sys
 import traceback
-import io
-import difflib
+from abc import ABC, abstractmethod
 
 
+# pylint: disable=too-few-public-methods
 class InProcessResult:
+    """
+    Class to provide for an encapsulation of the results of an execution.
+    """
+
     def __init__(self, return_code, std_out, std_err):
         self.return_code = return_code
         self.std_out = std_out
@@ -50,56 +59,110 @@ class InProcessResult:
             self.std_out.close()
             self.std_err.close()
 
-class InProcessExecution:
 
-    def efg(self):
-        pass
+# pylint: disable=too-few-public-methods
+class SystemState:
+    """
+    Class to provide an encapsulation of the system state so that we can restore
+    it later.
+    """
 
-    def ghi(self):
-        return "bob"
+    def __init__(self):
+        """
+        Initializes a new instance of the SystemState class.
+        """
 
-    def abc(self, arguments = []):
+        self.saved_stdout = sys.stdout
+        self.saved_stderr = sys.stderr
+        self.saved_cwd = os.getcwd()
+        self.saved_env = os.environ
+        self.saved_argv = sys.argv
 
-        saved_stdout = sys.stdout
-        saved_stderr = sys.stderr
-        saved_cwd = os.getcwd()
-        saved_env = os.environ
-        saved_argv = sys.argv
+    def restore(self):
+        """
+        Restore the system state variables to what they were before.
+        """
+
+        os.chdir(self.saved_cwd)
+        os.environ = self.saved_env
+        sys.argv = self.saved_argv
+        sys.stdout = self.saved_stdout
+        sys.stderr = self.saved_stderr
+
+
+class InProcessExecution(ABC):
+    """
+    Handle the in-process execution of the script's mainline.
+    """
+
+    @abstractmethod
+    def execute_main(self):
+        """
+        Provides the code to execute the mainline.  Should be simple like:
+        MyObjectClass().main()
+        """
+
+    @abstractmethod
+    def get_main_name(self):
+        """
+        Provides the main name to associate with the mainline.  Gets set as
+        the first argument to the program.
+        """
+
+    @classmethod
+    def handle_system_exit(cls, exit_exception, std_error):
+        """
+        Handle the processing of an "early" exit as a result of our execution.
+        """
+        returncode = exit_exception.code
+        if isinstance(returncode, str):
+            std_error.write("{}\n".format(exit_exception))
+            returncode = 1
+        elif returncode is None:
+            returncode = 0
+        return returncode
+
+    @classmethod
+    def handle_normal_exception(cls):
+        """
+        Handle the processing of a normal exception as a result of our execution.
+        """
+        try:
+            exception_type, exception_value, trace_back = sys.exc_info()
+            traceback.print_exception(
+                exception_type, exception_value, trace_back.tb_next
+            )
+        finally:
+            del trace_back
+        return 1
+
+    # pylint: disable=broad-except
+    def invoke_main(self, arguments=None):
+        """
+        Invoke the mainline so that we can capture results.
+        """
+
+        saved_state = SystemState()
 
         std_output = io.StringIO()
-        sys.stdout = std_output
-
         std_error = io.StringIO()
+        sys.stdout = std_output
         sys.stderr = std_error
 
-        sys.argv = []
-        sys.argv.append(self.ghi())
-        for i in arguments:
-            sys.argv.append(i)
-        
+        if arguments:
+            sys.argv = arguments.copy()
+        else:
+            sys.argv = []
+        sys.argv.insert(0, self.get_main_name())
 
         try:
             returncode = 0
-            self.efg()
-        except SystemExit as exc:
-            returncode = exc.code
-            if isinstance(returncode, str):
-                std_error.write('{}\n'.format(exc))
-                returncode = 1
-            elif returncode is None:
-                returncode = 0
-        except Exception as exc:
-            returncode = 1
-            try:
-                et, ev, tb = sys.exc_info()
-                traceback.print_exception(et, ev, tb.tb_next)
-            finally:
-                del tb
+            self.execute_main()
+        except SystemExit as this_exception:
+            returncode = self.handle_system_exit(this_exception, std_error)
+        except Exception:
+            returncode = self.handle_normal_exception()
         finally:
-            os.chdir(saved_cwd)
-            os.environ = saved_env
-            sys.argv = saved_argv
-            sys.stdout = saved_stdout
-            sys.stderr = saved_stderr
+            saved_state.restore()
 
         return InProcessResult(returncode, std_output, std_error)

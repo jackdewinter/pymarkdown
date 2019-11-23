@@ -1,9 +1,9 @@
 """
 Module to provide for a simple implementation of a title case algorithm.
 """
-import sys
 import argparse
 import os
+import sys
 
 
 class PyMarkdownLint:
@@ -12,12 +12,14 @@ class PyMarkdownLint:
     """
 
     def __init__(self):
-        self.VERSION_NUMBER = "0.1.0"
+        self.version_number = "0.1.0"
 
     def __parse_arguments(self):
         parser = argparse.ArgumentParser(description="Lint any found Markdown files.")
 
-        parser.add_argument('--version', action='version', version='%(prog)s ' + self.VERSION_NUMBER)
+        parser.add_argument(
+            "--version", action="version", version="%(prog)s " + self.version_number
+        )
 
         parser.add_argument(
             "-l",
@@ -38,6 +40,9 @@ class PyMarkdownLint:
 
     @classmethod
     def is_file_eligible_to_scan(cls, path_to_test):
+        """
+        Determine if the presented path is one that we want to scan.
+        """
         return path_to_test.endswith(".md")
 
     @classmethod
@@ -50,9 +55,9 @@ class PyMarkdownLint:
             if os.path.isdir(next_path):
                 for root, _, files in os.walk(next_path):
                     for file in files:
-                        x = os.path.join(root, file)
-                        if cls.is_file_eligible_to_scan(x):
-                            files_to_parse.add(x)
+                        rooted_file_path = os.path.join(root, file)
+                        if cls.is_file_eligible_to_scan(rooted_file_path):
+                            files_to_parse.add(rooted_file_path)
             else:
                 if cls.is_file_eligible_to_scan(next_path):
                     files_to_parse.add(next_path)
@@ -66,14 +71,14 @@ class PyMarkdownLint:
         files_to_parse.sort()
         return files_to_parse
 
-    def __handle_list_files(self, files_to_scan):
+    @classmethod
+    def __handle_list_files(cls, files_to_scan):
 
         if files_to_scan:
             print("\n".join(files_to_scan))
             return 0
-        else:
-            print("No Markdown files found.")
-            return 1
+        print("No Markdown files found.")
+        return 1
 
     def main(self):
         """
@@ -85,6 +90,7 @@ class PyMarkdownLint:
         if args.list_files:
             return_code = self.__handle_list_files(files_to_scan)
             sys.exit(return_code)
+
 
 if __name__ == "__main__":
     PyMarkdownLint().main()
