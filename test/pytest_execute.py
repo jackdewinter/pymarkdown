@@ -20,30 +20,63 @@ class InProcessResult:
         self.std_out = std_out
         self.std_err = std_err
 
-    def assert_results(self, stdout=None, stderr=None, error_code=0):
+    @classmethod
+    def compare_versus_expected(
+        cls, stream_name, actual_stream, expected_text, additional_text=None
+    ):
+        """
+        Do a thorough comparison of the actual stream against the expected text.
+        """
+
+        if additional_text:
+            assert actual_stream.getvalue().startswith(expected_text), (
+                "Block\n---\n"
+                + expected_text
+                + "\n---\nwas not found at the start of\n---\n"
+                + actual_stream.getvalue()
+            )
+
+            for next_text_block in additional_text:
+                was_found = next_text_block in actual_stream.getvalue()
+                diff = difflib.ndiff(
+                    next_text_block.splitlines(), actual_stream.getvalue().splitlines()
+                )
+
+                diff_values = "\n".join(list(diff))
+                print(diff_values, file=sys.stderr)
+                if not was_found:
+                    assert False, (
+                        "Block\n---\n"
+                        + next_text_block
+                        + "\n---\nwas not found in\n---\n"
+                        + actual_stream.getvalue()
+                    )
+        else:
+            if actual_stream.getvalue() != expected_text:
+                diff = difflib.ndiff(
+                    expected_text.splitlines(), actual_stream.getvalue().splitlines()
+                )
+
+                diff_values = "\n".join(list(diff))
+                assert False, stream_name + " not as expected:\n" + diff_values
+
+    def assert_results(
+        self, stdout=None, stderr=None, error_code=0, additional_error=None
+    ):
         """
         Assert the results are as expected in the "assert" phase.
         """
 
         try:
             if stdout:
-                if self.std_out.getvalue() != stdout:
-                    diff = difflib.ndiff(
-                        stdout.splitlines(), self.std_out.getvalue().splitlines()
-                    )
-
-                    diff_values = "\n".join(list(diff))
-                    assert False, "Stdout not as expected:\n" + diff_values
+                self.compare_versus_expected("Stdout", self.std_out, stdout)
             else:
                 assert not self.std_out.getvalue(), "Expected stdout to be empty."
 
             if stderr:
-                if self.std_err.getvalue() != stderr:
-                    diff = difflib.ndiff(
-                        stderr.splitlines(), self.std_err.getvalue().splitlines()
-                    )
-                    diff_values = "\n".join(list(diff))
-                    assert False, "Stderr not as expected:\n" + diff_values
+                self.compare_versus_expected(
+                    "Stderr", self.std_err, stderr, additional_error
+                )
             else:
                 assert not self.std_err.getvalue(), "Expected stderr to be empty."
 
