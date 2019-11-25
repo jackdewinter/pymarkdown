@@ -87,7 +87,7 @@ class PyMarkdownLint:
         characters at the very end of the file.
         """
 
-        with open(next_file, "r") as file_to_parse:
+        with open(next_file, "r", encoding="utf-8") as file_to_parse:
             file_as_buffer = file_to_parse.read()
 
         read_lines = []
