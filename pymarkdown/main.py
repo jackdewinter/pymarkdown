@@ -81,7 +81,7 @@ class PyMarkdownLint:
         return path_to_test.endswith(".md")
 
     @classmethod
-    def read_all_lines_from_file(cls, next_file):
+    def __read_all_lines_from_file(cls, next_file):
         """
         Read all of the line from the specified file, making sure to get any
         characters at the very end of the file.
@@ -112,14 +112,14 @@ class PyMarkdownLint:
 
         return read_lines
 
-    def scan_file(self, next_file):
+    def __scan_file(self, next_file):
         """
         Scan a given file and call the plugin manager for any significant events.
         """
 
         line_number = 1
         context = self.plugins.starting_new_file(next_file)
-        for line in self.read_all_lines_from_file(next_file):
+        for line in self.__read_all_lines_from_file(next_file):
             self.plugins.next_line(context, line_number, line)
             line_number = line_number + 1
         self.plugins.completed_file(context, line_number)
@@ -165,19 +165,10 @@ class PyMarkdownLint:
         print("No Markdown files found.", file=sys.stderr)
         return 1
 
-    def main(self):
+    def __initialize_plugins(self, args, plugin_dir):
         """
-        Main entrance point.
+        Make sure all plugins are ready before being initialized.
         """
-        args = self.__parse_arguments()
-
-        files_to_scan = self.__determine_files_to_scan(args.paths)
-        if args.list_files:
-            return_code = self.__handle_list_files(files_to_scan)
-            sys.exit(return_code)
-
-        plugin_dir = os.path.dirname(os.path.realpath(__file__))
-        plugin_dir = os.path.join(plugin_dir, "plugins")
 
         try:
             self.plugins.initialize(
@@ -193,9 +184,24 @@ class PyMarkdownLint:
                 traceback.print_exc(file=sys.stderr)
             sys.exit(1)
 
+    def main(self):
+        """
+        Main entrance point.
+        """
+        args = self.__parse_arguments()
+
+        files_to_scan = self.__determine_files_to_scan(args.paths)
+        if args.list_files:
+            return_code = self.__handle_list_files(files_to_scan)
+            sys.exit(return_code)
+
+        plugin_dir = os.path.dirname(os.path.realpath(__file__))
+        plugin_dir = os.path.join(plugin_dir, "plugins")
+        self.__initialize_plugins(args, plugin_dir)
+
         for next_file in files_to_scan:
             try:
-                self.scan_file(next_file)
+                self.__scan_file(next_file)
             except BadPluginError as this_exception:
                 print(
                     "BadPluginError encountered while scanning '"

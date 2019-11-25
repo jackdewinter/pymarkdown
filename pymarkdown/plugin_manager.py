@@ -101,7 +101,7 @@ class Plugin(ABC):
     """
 
     def __init__(self):
-        self.scan_context = None
+        self.__scan_context = None
 
     @abstractmethod
     def get_details(self):
@@ -113,15 +113,15 @@ class Plugin(ABC):
         """
         Set the context to use for any error reporting.
         """
-        self.scan_context = context
+        self.__scan_context = context
 
     def report_error(self, column_number, line_number_delta=0):
         """
         Fix this up.
         """
-        self.scan_context.owning_manager.log_scan_failure(
-            self.scan_context.scan_file,
-            self.scan_context.line_number + line_number_delta,
+        self.__scan_context.owning_manager.log_scan_failure(
+            self.__scan_context.scan_file,
+            self.__scan_context.line_number + line_number_delta,
             column_number,
             self.get_details().plugin_id,
             self.get_details().plugin_name,
@@ -183,9 +183,9 @@ class PluginManager:
     """
 
     def __init__(self):
-        self.registered = None
-        self.enabled = None
-        self.loaded_classes = None
+        self.__registered_plugins = None
+        self.__enabled_plugins = None
+        self.__loaded_classes = None
         self.number_of_scan_failures = None
 
     def initialize(
@@ -196,7 +196,7 @@ class PluginManager:
         """
         self.number_of_scan_failures = 0
 
-        self.loaded_classes = []
+        self.__loaded_classes = []
 
         plugin_files = self.__find_eligible_plugins_in_directory(directory_to_search)
         self.__load_plugins(directory_to_search, plugin_files)
@@ -291,7 +291,7 @@ class PluginManager:
                     class_name=plugin_class_name,
                     is_constructor=True,
                 )
-            self.loaded_classes.append(plugin_class_instance)
+            self.__loaded_classes.append(plugin_class_instance)
         except BadPluginError as this_exception:
             print("BadPluginError: " + str(this_exception), file=sys.stderr)
             sys.exit(1)
@@ -405,14 +405,14 @@ class PluginManager:
         plugin_object, plugin_enabled_by_default = self.__get_plugin_details(
             plugin_instance
         )
-        self.registered.append(plugin_object)
+        self.__registered_plugins.append(plugin_object)
         if self.__determine_if_plugin_enabled(
             plugin_enabled_by_default,
             plugin_object,
             command_line_enabled_rules,
             command_line_disabled_rules,
         ):
-            self.enabled.append(plugin_object)
+            self.__enabled_plugins.append(plugin_object)
             plugin_instance.initialize_from_config()
 
     def __register_plugins(self, enable_rules, disable_rules):
@@ -430,9 +430,9 @@ class PluginManager:
             for i in disable_rules.split(","):
                 command_line_disabled_rules.add(i)
 
-        self.registered = []
-        self.enabled = []
-        for plugin_instance in self.loaded_classes:
+        self.__registered_plugins = []
+        self.__enabled_plugins = []
+        for plugin_instance in self.__loaded_classes:
             self.__register_individual_plugin(
                 plugin_instance, command_line_enabled_rules, command_line_disabled_rules
             )
@@ -441,7 +441,7 @@ class PluginManager:
         """
         Inform any listeners that a new current file has been started.
         """
-        for next_plugin in self.enabled:
+        for next_plugin in self.__enabled_plugins:
             try:
                 next_plugin.plugin_instance.starting_new_file()
             except Exception:
@@ -454,7 +454,7 @@ class PluginManager:
         Inform any listeners that the current file has been completed.
         """
         context.line_number = line_number
-        for next_plugin in self.enabled:
+        for next_plugin in self.__enabled_plugins:
             try:
                 next_plugin.plugin_instance.set_context(context)
                 next_plugin.plugin_instance.completed_file()
@@ -466,7 +466,7 @@ class PluginManager:
         Inform any listeners that a new line has been loaded.
         """
         context.line_number = line_number
-        for next_plugin in self.enabled:
+        for next_plugin in self.__enabled_plugins:
             try:
                 next_plugin.plugin_instance.set_context(context)
                 next_plugin.plugin_instance.next_line(line)
