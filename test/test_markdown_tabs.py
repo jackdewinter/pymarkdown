@@ -6,7 +6,7 @@ from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from .utils import assert_if_lists_different
 
 
-def test_block_inline_precedence_001():
+def test_tabs_001():
     """
     Test case 001:  (part a) a tab can be used instead of four spaces in an indented code block.
     """
@@ -24,7 +24,7 @@ def test_block_inline_precedence_001():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_block_inline_precedence_002():
+def test_tabs_002():
     """
     Test case 002:  (part b) a tab can be used instead of four spaces in an indented code block.
     """
@@ -42,7 +42,7 @@ def test_block_inline_precedence_002():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_block_inline_precedence_003():
+def test_tabs_003():
     """
     Test case 003:  (part c) a tab can be used instead of four spaces in an indented code block.
     """
@@ -61,7 +61,7 @@ def test_block_inline_precedence_003():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_block_inline_precedence_004():
+def test_tabs_004():
     """
     Test case 004:  (part a) a continuation paragraph of a list item is indented with a tab; this has exactly the same effect as indentation with four spaces would
     """
@@ -90,7 +90,7 @@ def test_block_inline_precedence_004():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_block_inline_precedence_005():
+def test_tabs_005():
     """
     Test case 005:  (part b) a continuation paragraph of a list item is indented with a tab; this has exactly the same effect as indentation with four spaces would
     """
@@ -119,7 +119,7 @@ def test_block_inline_precedence_005():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_block_inline_precedence_006():
+def test_tabs_006():
     """
     Test case 006:  case > is followed by a tab, which is treated as if it were expanded into three spaces.
     """
@@ -137,7 +137,7 @@ def test_block_inline_precedence_006():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_block_inline_precedence_007():
+def test_tabs_007():
     """
     Test case 007:  none
     """
@@ -155,7 +155,7 @@ def test_block_inline_precedence_007():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_block_inline_precedence_008():
+def test_tabs_008():
     """
     Test case 008:  none
     """
@@ -175,7 +175,7 @@ def test_block_inline_precedence_008():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_block_inline_precedence_009():
+def test_tabs_009():
     """
     Test case 009:  none
     """
@@ -202,7 +202,7 @@ def test_block_inline_precedence_009():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_block_inline_precedence_010():
+def test_tabs_010():
     """
     Test case 010:  none
     """
@@ -210,17 +210,16 @@ def test_block_inline_precedence_010():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """#	Foo"""
-    expected_tokens = ["[para:]", "[text:#\tFoo:]", "[end-para]"]
+    expected_tokens = ["[atx:1:Foo::\t::]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when atx implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_block_inline_precedence_011():
+def test_tabs_011():
     """
     Test case 011:  none
     """

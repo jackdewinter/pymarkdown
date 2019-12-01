@@ -342,10 +342,9 @@ def test_thematic_breaks_029():
 ---
 bar"""
     expected_tokens = [
-        "[para:]",
+        "[setext:-:]",
         "[text:Foo:]",
-        "[end-para]",
-        "[tbreak:-::---]",
+        "[end-setext::]",
         "[para:]",
         "[text:bar:]",
         "[end-para]",
