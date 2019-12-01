@@ -1,17 +1,16 @@
 """
-Module to implement a plugin to ensure all files end with a blank line.
+Module to implement a plugin that looks for hard tabs in the files.
 """
 from plugin_manager import Plugin, PluginDetails
 
 
-class RuleMd047(Plugin):
+class RuleMd010(Plugin):
     """
-    Class to implement a plugin to ensure all files end with a blank line.
+    Class to implement a plugin that looks for hard tabs in the files.
     """
 
-    def __init__(self):
-        super().__init__()
-        self.last_line = None
+    # def __init__(self):
+    #    super().__init__()
 
     def get_details(self):
         """
@@ -19,7 +18,7 @@ class RuleMd047(Plugin):
         """
         return PluginDetails(
             plugin_name="single-trailing-newline",
-            plugin_id="MD047",
+            plugin_id="MD010",
             plugin_enabled_by_default=True,
             plugin_description="Files should end with a single newline character",
         )
@@ -28,18 +27,13 @@ class RuleMd047(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.last_line = None
 
     def next_line(self, line):
         """
         Event that a new line is being processed.
         """
-        self.last_line = line
 
     def completed_file(self):
         """
         Event that the file being currently scanned is now completed.
         """
-        if self.last_line:
-            # pylint: disable=too-many-function-args
-            self.report_error(len(self.last_line), -1)
