@@ -14,13 +14,16 @@ def test_tabs_001():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """	foo	baz		bim"""
-    expected_tokens = ["[para:\t]", "[text:foo\tbaz\t\tbim:]", "[end-para]"]
+    expected_tokens = [
+        "[icode-block:\t]",
+        "[text:foo\tbaz\t\tbim:]",
+        "[end-icode-block]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when inline code blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -32,13 +35,16 @@ def test_tabs_002():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """  	foo	baz		bim"""
-    expected_tokens = ["[para:  \t]", "[text:foo\tbaz\t\tbim:]", "[end-para]"]
+    expected_tokens = [
+        "[icode-block:  \t]",
+        "[text:foo\tbaz\t\tbim:]",
+        "[end-icode-block]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when inline code blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -51,13 +57,17 @@ def test_tabs_003():
     tokenizer = TokenizedMarkdown()
     source_markdown = """    a	a
     ὐ	a"""
-    expected_tokens = ["[para:    ]", "[text:a\ta:]", "[text:ὐ\ta:    ]", "[end-para]"]
+    expected_tokens = [
+        "[icode-block:    ]",
+        "[text:a\ta:]",
+        "[text:ὐ\ta:    ]",
+        "[end-icode-block]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when inline code blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -77,16 +87,15 @@ def test_tabs_004():
         "[text:- foo:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:\t]",
+        "[icode-block:\t]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-icode-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when list blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -106,9 +115,9 @@ def test_tabs_005():
         "[text:- foo:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:\t\t]",
+        "[icode-block:\t\t]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-icode-block]",
     ]
 
     # Act
@@ -165,13 +174,17 @@ def test_tabs_008():
     source_markdown = """    foo
 	bar"""  # noqa: E101,W191
     # noqa: E101
-    expected_tokens = ["[para:    ]", "[text:foo:]", "[text:bar:\t]", "[end-para]"]
+    expected_tokens = [
+        "[icode-block:    ]",
+        "[text:foo:]",
+        "[text:bar:\t]",
+        "[end-icode-block]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when block quotes implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

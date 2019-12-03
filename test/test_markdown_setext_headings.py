@@ -163,21 +163,19 @@ def test_setext_headings_055():
     Foo
 ---"""
     expected_tokens = [
-        "[para:    ]",
+        "[icode-block:    ]",
         "[text:Foo:]",
         "[text:---:    ]",
-        "[end-para]",
         "[BLANK:]",
-        "[setext:-:    ]",
-        "[text:Foo:]",
-        "[end-setext::]",
+        "[text:Foo:    ]",
+        "[end-icode-block]",
+        "[tbreak:-::---]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when code blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -498,13 +496,17 @@ def test_setext_headings_070():
     tokenizer = TokenizedMarkdown()
     source_markdown = """    foo
 ---"""
-    expected_tokens = ["[setext:-:    ]", "[text:foo:]", "[end-setext::]"]
+    expected_tokens = [
+        "[icode-block:    ]",
+        "[text:foo:]",
+        "[end-icode-block]",
+        "[tbreak:-::---]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when code blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

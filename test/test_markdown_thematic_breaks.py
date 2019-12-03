@@ -111,13 +111,12 @@ def test_thematic_breaks_018():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """    ***"""
-    expected_tokens = ["[para:    ]", "[text:***:]", "[end-para]"]
+    expected_tokens = ["[icode-block:    ]", "[text:***:]", "[end-icode-block]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when code blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -136,7 +135,6 @@ def test_thematic_breaks_019():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when code blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

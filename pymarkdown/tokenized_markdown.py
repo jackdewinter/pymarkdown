@@ -13,7 +13,7 @@ class TokenizedMarkdown:
         Initializes a new instance of the TokenizedMarkdown class.
         """
         self.ws_char = " \t"
-
+        self.tokenized_document = None
         self.stack = ["document"]
 
     def transform(self, your_text_string):
@@ -21,7 +21,7 @@ class TokenizedMarkdown:
         Transform a markdown-encoded string into an array of tokens.
         """
 
-        tokenized_document = []
+        self.tokenized_document = []
         next_token = your_text_string.split("\n", 1)
         while next_token:
             print("\nnext-line>>" + str(next_token))
@@ -33,19 +33,18 @@ class TokenizedMarkdown:
             if not next_line or not next_line.strip():
                 new_tokens = self.handle_blank_line(next_line)
             else:
-                new_tokens = self.parse_line(next_line, tokenized_document)
+                new_tokens = self.parse_line(next_line)
 
-            for token_to_copy in new_tokens:
-                tokenized_document.append(token_to_copy)
+            self.tokenized_document.extend(new_tokens)
             if len(next_token) == 2:
                 next_token = next_token[1].split("\n", 1)
             elif len(next_token) == 1:
                 break
 
         print("cleanup")
-        return self.close_open_blocks(tokenized_document)
+        return self.close_open_blocks(self.tokenized_document)
 
-    def close_open_blocks(self, destination_array=None):
+    def close_open_blocks(self, destination_array=None, only_these_blocks=None):
         """
         Close any open blocks that are currently on the stack.
         """
@@ -55,7 +54,22 @@ class TokenizedMarkdown:
             new_tokens = destination_array
 
         while self.stack[-1] != "document":
-            new_tokens.append("[end-" + self.stack[-1] + "]")
+            print("close_open_blocks>>>>>>>>" + self.stack[-1])
+            if only_these_blocks and self.stack[-1] not in only_these_blocks:
+                break
+
+            top_element = self.stack[-1]
+            print("cob>>>" + str(self.tokenized_document))
+
+            extra_elements = []
+            if top_element == "icode-block":
+                while self.tokenized_document[-1].startswith("[BLANK"):
+                    last_element = self.tokenized_document[-1]
+                    extra_elements.append(last_element)
+                    del self.tokenized_document[-1]
+
+            new_tokens.append("[end-" + top_element + "]")
+            new_tokens.extend(extra_elements)
             del self.stack[-1]
         return new_tokens
 
@@ -64,13 +78,39 @@ class TokenizedMarkdown:
         Handle the processing of a blank line.
         """
 
-        new_tokens = self.close_open_blocks()
+        new_tokens = self.close_open_blocks(only_these_blocks=["para"])
 
         non_whitespace_index, extracted_whitespace = self.extract_whitespace(
             input_line, 0
         )
         assert non_whitespace_index == len(input_line)
         new_tokens.append("[BLANK:" + extracted_whitespace + "]")
+        return new_tokens
+
+    def parse_indented_code_block(
+        self, line_to_parse, start_index, extracted_whitespace
+    ):
+        """
+        Handle the parsing of an indented code block
+        """
+
+        new_tokens = []
+
+        if (
+            self.determine_whitespace_length(extracted_whitespace) >= 4
+            and self.stack[-1] != "para"
+        ):
+            if self.stack[-1] != "icode-block":
+                self.stack.append("icode-block")
+                new_tokens.append("[icode-block:" + extracted_whitespace + "]")
+                extracted_whitespace = ""
+            new_tokens.append(
+                "[text:"
+                + line_to_parse[start_index:]
+                + ":"
+                + extracted_whitespace
+                + "]"
+            )
         return new_tokens
 
     def parse_thematic_break(self, line_to_parse, start_index, extracted_whitespace):
@@ -174,9 +214,7 @@ class TokenizedMarkdown:
                 )
         return new_tokens
 
-    def parse_setext_headings(
-        self, line_to_parse, start_index, extracted_whitespace, tokenized_document
-    ):
+    def parse_setext_headings(self, line_to_parse, start_index, extracted_whitespace):
         """
         Handle the parsing of an setext heading.
         """
@@ -203,21 +241,21 @@ class TokenizedMarkdown:
                     + extra_whitespace_after_setext
                     + "]"
                 )
-                for token_index in range(len(tokenized_document) - 1, -1, -1):
-                    if tokenized_document[token_index].startswith("[para:"):
+                for token_index in range(len(self.tokenized_document) - 1, -1, -1):
+                    if self.tokenized_document[token_index].startswith("[para:"):
                         print("boing")
                         replacement_token = (
                             "[setext:"
                             + line_to_parse[start_index]
                             + ":"
-                            + tokenized_document[token_index][len("[para:") :]
+                            + self.tokenized_document[token_index][len("[para:") :]
                         )
-                        tokenized_document[token_index] = replacement_token
+                        self.tokenized_document[token_index] = replacement_token
                         break
                 del self.stack[-1]
         return new_tokens
 
-    def handle_paragraph(self, line_to_parse, start_index, extracted_whitespace):
+    def parse_paragraph(self, line_to_parse, start_index, extracted_whitespace):
         """
         Handle the parsing of a paragraph.
         """
@@ -233,36 +271,50 @@ class TokenizedMarkdown:
         )
         return new_tokens
 
-    def parse_line(self, line_to_parse, tokenized_document):
+    def parse_line(self, line_to_parse):
         """
         Parse the contents of a line.
         """
 
         print("Line:" + line_to_parse + ":")
         new_tokens = []
+        pre_tokens = []
         start_index, extracted_whitespace = self.extract_whitespace(line_to_parse, 0)
+
+        if (
+            self.stack[-1] == "icode-block"
+            and self.determine_whitespace_length(extracted_whitespace) <= 3
+        ):
+            pre_tokens.append("[end-" + self.stack[-1] + "]")
+            del self.stack[-1]
+            print("icode>>" + self.tokenized_document[-1])
+            while self.tokenized_document[-1].startswith("[BLANK"):
+                last_element = self.tokenized_document[-1]
+                pre_tokens.append(last_element)
+                del self.tokenized_document[-1]
 
         new_tokens = self.parse_atx_headings(
             line_to_parse, start_index, extracted_whitespace
         )
-
+        if not new_tokens:
+            new_tokens = self.parse_indented_code_block(
+                line_to_parse, start_index, extracted_whitespace
+            )
         if not new_tokens:
             new_tokens = self.parse_setext_headings(
-                line_to_parse, start_index, extracted_whitespace, tokenized_document
+                line_to_parse, start_index, extracted_whitespace
             )
-
         if not new_tokens:
             new_tokens = self.parse_thematic_break(
                 line_to_parse, start_index, extracted_whitespace
             )
-
-        # para
         if not new_tokens:
-            new_tokens = self.handle_paragraph(
+            new_tokens = self.parse_paragraph(
                 line_to_parse, start_index, extracted_whitespace
             )
 
-        return new_tokens
+        pre_tokens.extend(new_tokens)
+        return pre_tokens
 
     @classmethod
     def collect_while_character(cls, line_to_parse, start_index, match_character):

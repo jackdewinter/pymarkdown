@@ -158,13 +158,12 @@ def test_atx_headings_039():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """    # foo"""
-    expected_tokens = ["[para:    ]", "[text:# foo:]", "[end-para]"]
+    expected_tokens = ["[icode-block:    ]", "[text:# foo:]", "[end-icode-block]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when code blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

@@ -163,13 +163,19 @@ def test_paragraph_blocks_195():
     tokenizer = TokenizedMarkdown()
     source_markdown = """    aaa
 bbb"""
-    expected_tokens = ["[para:    ]", "[text:aaa:]", "[text:bbb:]", "[end-para]"]
+    expected_tokens = [
+        "[icode-block:    ]",
+        "[text:aaa:]",
+        "[end-icode-block]",
+        "[para:]",
+        "[text:bbb:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when code blocks from spaces is implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
