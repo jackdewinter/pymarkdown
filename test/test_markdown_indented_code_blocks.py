@@ -297,6 +297,27 @@ def test_indented_code_blocks_087():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
+def test_indented_code_blocks_087a():
+    """
+    ADDED:
+    Test case 087a:  Copied from 84 with extra lines inserted to verify trailing blanks are not part of section.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """    foo
+
+
+bar"""
+    expected_tokens = ['[icode-block:    ]', '[text:foo:]', '[end-icode-block]', '[BLANK:]', '[BLANK:]', '[para:]', '[text:bar:]', '[end-para]']
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
 def test_indented_code_blocks_088():
     """
     Test case 088:  Trailing spaces are included in the code block’s content:

@@ -38,8 +38,8 @@ class TokenizedMarkdown:
             self.tokenized_document.extend(new_tokens)
             if len(next_token) == 2:
                 next_token = next_token[1].split("\n", 1)
-            elif len(next_token) == 1:
-                break
+            else:
+                next_token = None
 
         print("cleanup")
         return self.close_open_blocks(self.tokenized_document)
@@ -54,13 +54,10 @@ class TokenizedMarkdown:
             new_tokens = destination_array
 
         while self.stack[-1] != "document":
-            print("close_open_blocks>>>>>>>>" + self.stack[-1])
             if only_these_blocks and self.stack[-1] not in only_these_blocks:
                 break
 
             top_element = self.stack[-1]
-            print("cob>>>" + str(self.tokenized_document))
-
             extra_elements = []
             if top_element == "icode-block":
                 while self.tokenized_document[-1].startswith("[BLANK"):
@@ -241,17 +238,16 @@ class TokenizedMarkdown:
                     + extra_whitespace_after_setext
                     + "]"
                 )
-                for token_index in range(len(self.tokenized_document) - 1, -1, -1):
-                    if self.tokenized_document[token_index].startswith("[para:"):
-                        print("boing")
-                        replacement_token = (
-                            "[setext:"
-                            + line_to_parse[start_index]
-                            + ":"
-                            + self.tokenized_document[token_index][len("[para:") :]
-                        )
-                        self.tokenized_document[token_index] = replacement_token
-                        break
+                token_index = len(self.tokenized_document) - 1
+                while not self.tokenized_document[token_index].startswith("[para:"):
+                    token_index = token_index - 1
+                replacement_token = (
+                    "[setext:"
+                    + line_to_parse[start_index]
+                    + ":"
+                    + self.tokenized_document[token_index][len("[para:") :]
+                )
+                self.tokenized_document[token_index] = replacement_token
                 del self.stack[-1]
         return new_tokens
 
@@ -287,7 +283,6 @@ class TokenizedMarkdown:
         ):
             pre_tokens.append("[end-" + self.stack[-1] + "]")
             del self.stack[-1]
-            print("icode>>" + self.tokenized_document[-1])
             while self.tokenized_document[-1].startswith("[BLANK"):
                 last_element = self.tokenized_document[-1]
                 pre_tokens.append(last_element)
@@ -361,8 +356,6 @@ class TokenizedMarkdown:
         for next_character in extracted_whitespace:
             if next_character == " ":
                 whitespace_length = whitespace_length + 1
-            elif next_character == "\t":
-                whitespace_length = whitespace_length + 4
             else:
-                raise ValueError()
+                whitespace_length = whitespace_length + 4
         return whitespace_length
