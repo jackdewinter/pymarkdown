@@ -66,7 +66,7 @@ class TokenizedMarkdown:
                     del self.tokenized_document[-1]
 
             if top_element.startswith("fcode-block"):
-                new_tokens.append("[end-fcode-block]")
+                new_tokens.append("[end-fcode-block:]")
             else:
                 new_tokens.append("[end-" + top_element + "]")
             new_tokens.extend(extra_elements)
@@ -144,7 +144,7 @@ class TokenizedMarkdown:
                         and collected_count >= int(self.stack[-1][len(preface) + 2 :])
                         and non_whitespace_index >= len(line_to_parse)
                     ):
-                        new_tokens.append("[end-fcode-block]")
+                        new_tokens.append("[end-fcode-block:" + extracted_whitespace + "]")
                         del self.stack[-1]
                 else:
 

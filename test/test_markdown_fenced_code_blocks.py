@@ -6,7 +6,7 @@ from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from .utils import assert_if_lists_different
 
 
-def test_indented_code_blocks_089():
+def test_fenced_code_blocks_089():
     """
     Test case 089:  Simple example with backticks
     """
@@ -21,7 +21,7 @@ def test_indented_code_blocks_089():
         "[fcode-block:`:3::::]",
         "[text:<:]",
         "[text:>: ]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -31,7 +31,7 @@ def test_indented_code_blocks_089():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_090():
+def test_fenced_code_blocks_090():
     """
     Test case 090:  Simple example with tildes
     """
@@ -46,7 +46,7 @@ def test_indented_code_blocks_090():
         "[fcode-block:~:3::::]",
         "[text:<:]",
         "[text:>: ]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -56,7 +56,7 @@ def test_indented_code_blocks_090():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_091():
+def test_fenced_code_blocks_091():
     """
     Test case 091:  Fewer than three backticks is not enough:
     """
@@ -81,7 +81,7 @@ foo
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_092():
+def test_fenced_code_blocks_092():
     """
     Test case 092:  (part a) The closing code fence must use the same character as the opening fence:
     """
@@ -96,7 +96,7 @@ aaa
         "[fcode-block:`:3::::]",
         "[text:aaa:]",
         "[text:~~~:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -106,7 +106,7 @@ aaa
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_093():
+def test_fenced_code_blocks_093():
     """
     Test case 093:  (part b) The closing code fence must use the same character as the opening fence:
     """
@@ -121,7 +121,7 @@ aaa
         "[fcode-block:~:3::::]",
         "[text:aaa:]",
         "[text:```:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -131,7 +131,7 @@ aaa
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_094():
+def test_fenced_code_blocks_094():
     """
     Test case 094:  (part a) The closing code fence must be at least as long as the opening fence:
     """
@@ -146,7 +146,7 @@ aaa
         "[fcode-block:`:4::::]",
         "[text:aaa:]",
         "[text:```:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -156,7 +156,7 @@ aaa
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_095():
+def test_fenced_code_blocks_095():
     """
     Test case 095:  (part b) The closing code fence must be at least as long as the opening fence:
     """
@@ -171,7 +171,7 @@ aaa
         "[fcode-block:~:4::::]",
         "[text:aaa:]",
         "[text:~~~:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -181,7 +181,7 @@ aaa
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_096():
+def test_fenced_code_blocks_096():
     """
     Test case 096:  (part a) Unclosed code blocks are closed by the end of the document (or the enclosing block quote or list item):
     """
@@ -189,7 +189,7 @@ def test_indented_code_blocks_096():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """```"""
-    expected_tokens = ["[fcode-block:`:3::::]", "[end-fcode-block]"]
+    expected_tokens = ["[fcode-block:`:3::::]", "[end-fcode-block:]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -198,7 +198,7 @@ def test_indented_code_blocks_096():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_097():
+def test_fenced_code_blocks_097():
     """
     Test case 097:  (part b) Unclosed code blocks are closed by the end of the document (or the enclosing block quote or list item):
     """
@@ -214,7 +214,7 @@ aaa"""
         "[BLANK:]",
         "[text:```:]",
         "[text:aaa:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -224,7 +224,7 @@ aaa"""
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_098():
+def test_fenced_code_blocks_098():
     """
     Test case 098:  (part c) Unclosed code blocks are closed by the end of the document (or the enclosing block quote or list item):
     """
@@ -254,7 +254,7 @@ bbb"""
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_099():
+def test_fenced_code_blocks_099():
     """
     Test case 099:  A code block can have all empty lines as its content:
     """
@@ -269,7 +269,7 @@ def test_indented_code_blocks_099():
         "[fcode-block:`:3::::]",
         "[BLANK:]",
         "[BLANK:  ]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -279,7 +279,7 @@ def test_indented_code_blocks_099():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_100():
+def test_fenced_code_blocks_100():
     """
     Test case 100:  A code block can be empty:
     """
@@ -288,7 +288,7 @@ def test_indented_code_blocks_100():
     tokenizer = TokenizedMarkdown()
     source_markdown = """```
 ```"""
-    expected_tokens = ["[fcode-block:`:3::::]", "[end-fcode-block]"]
+    expected_tokens = ["[fcode-block:`:3::::]", "[end-fcode-block:]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -297,7 +297,7 @@ def test_indented_code_blocks_100():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_101():
+def test_fenced_code_blocks_101():
     """
     Test case 101:  (part a)  Fences can be indented. If the opening fence is indented, content lines will have equivalent opening indentation removed, if present:
     """
@@ -312,7 +312,7 @@ aaa
         "[fcode-block:`:3::: :]",
         "[text:aaa: ]",
         "[text:aaa:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -322,7 +322,7 @@ aaa
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_102():
+def test_fenced_code_blocks_102():
     """
     Test case 102:  (part b)  Fences can be indented. If the opening fence is indented, content lines will have equivalent opening indentation removed, if present:
     """
@@ -339,7 +339,7 @@ aaa
         "[text:aaa:]",
         "[text:aaa:  ]",
         "[text:aaa:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:  ]",
     ]
 
     # Act
@@ -349,7 +349,7 @@ aaa
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_103():
+def test_fenced_code_blocks_103():
     """
     Test case 103:  (part c)  Fences can be indented. If the opening fence is indented, content lines will have equivalent opening indentation removed, if present:
     """
@@ -366,7 +366,7 @@ def test_indented_code_blocks_103():
         "[text:aaa:   ]",
         "[text:aaa:    ]",
         "[text:aaa:  ]",
-        "[end-fcode-block]",
+        "[end-fcode-block:   ]",
     ]
 
     # Act
@@ -376,7 +376,7 @@ def test_indented_code_blocks_103():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_104():
+def test_fenced_code_blocks_104():
     """
     Test case 104:  Four spaces indentation produces an indented code block:
     """
@@ -401,7 +401,7 @@ def test_indented_code_blocks_104():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_105():
+def test_fenced_code_blocks_105():
     """
     Test case 105:  (part a) Closing fences may be indented by 0-3 spaces, and their indentation need not match that of the opening fence:
     """
@@ -411,7 +411,7 @@ def test_indented_code_blocks_105():
     source_markdown = """```
 aaa
   ```"""
-    expected_tokens = ["[fcode-block:`:3::::]", "[text:aaa:]", "[end-fcode-block]"]
+    expected_tokens = ["[fcode-block:`:3::::]", "[text:aaa:]", "[end-fcode-block:  ]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -420,7 +420,7 @@ aaa
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_106():
+def test_fenced_code_blocks_106():
     """
     Test case 106:  (part b) Closing fences may be indented by 0-3 spaces, and their indentation need not match that of the opening fence:
     """
@@ -430,7 +430,7 @@ def test_indented_code_blocks_106():
     source_markdown = """   ```
 aaa
   ```"""
-    expected_tokens = ["[fcode-block:`:3:::   :]", "[text:aaa:]", "[end-fcode-block]"]
+    expected_tokens = ["[fcode-block:`:3:::   :]", "[text:aaa:]", "[end-fcode-block:  ]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -439,7 +439,7 @@ aaa
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_107():
+def test_fenced_code_blocks_107():
     """
     Test case 107:  This is not a closing fence, because it is indented 4 spaces:
     """
@@ -453,7 +453,7 @@ aaa
         "[fcode-block:`:3::::]",
         "[text:aaa:]",
         "[text:```:    ]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -463,7 +463,7 @@ aaa
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_108():
+def test_fenced_code_blocks_108():
     """
     Test case 108:  (part a) Code fences (opening and closing) cannot contain internal spaces:
     """
@@ -481,7 +481,7 @@ aaa"""
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_109():
+def test_fenced_code_blocks_109():
     """
     Test case 109:  (part b) Code fences (opening and closing) cannot contain internal spaces:
     """
@@ -495,7 +495,7 @@ aaa
         "[fcode-block:~:6::::]",
         "[text:aaa:]",
         "[text:~~~ ~~:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -505,7 +505,7 @@ aaa
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_110():
+def test_fenced_code_blocks_110():
     """
     Test case 110:  Fenced code blocks can interrupt paragraphs, and can be followed directly by paragraphs, without a blank line between:
     """
@@ -523,7 +523,7 @@ baz"""
         "[end-para]",
         "[fcode-block:`:3::::]",
         "[text:bar:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
         "[para:]",
         "[text:baz:]",
         "[end-para]",
@@ -536,7 +536,7 @@ baz"""
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_111():
+def test_fenced_code_blocks_111():
     """
     Test case 111:  Other blocks can also occur before and after fenced code blocks without an intervening blank line:
     """
@@ -555,7 +555,7 @@ bar
         "[end-setext::]",
         "[fcode-block:~:3::::]",
         "[text:bar:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
         "[atx:1:baz:: ::]",
     ]
 
@@ -566,7 +566,7 @@ bar
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_112():
+def test_fenced_code_blocks_112():
     """
     Test case 112:  (part a) An info string can be provided after the opening code fence.
     """
@@ -583,7 +583,7 @@ end
         "[text:def foo(x):]",
         "[text:return 3:  ]",
         "[text:end:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -593,7 +593,7 @@ end
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_113():
+def test_fenced_code_blocks_113():
     """
     Test case 113:  (part b) An info string can be provided after the opening code fence.
     """
@@ -610,7 +610,7 @@ end
         "[text:def foo(x):]",
         "[text:return 3:  ]",
         "[text:end:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -620,7 +620,7 @@ end
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_114():
+def test_fenced_code_blocks_114():
     """
     Test case 114:  (part c) An info string can be provided after the opening code fence.
     """
@@ -629,7 +629,7 @@ def test_indented_code_blocks_114():
     tokenizer = TokenizedMarkdown()
     source_markdown = """````;
 ````"""
-    expected_tokens = ["[fcode-block:`:4:;:::]", "[end-fcode-block]"]
+    expected_tokens = ["[fcode-block:`:4:;:::]", "[end-fcode-block:]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -638,7 +638,7 @@ def test_indented_code_blocks_114():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_115():
+def test_fenced_code_blocks_115():
     """
     Test case 115:  Info strings for backtick code blocks cannot contain backticks:
     """
@@ -656,7 +656,7 @@ foo"""
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_116():
+def test_fenced_code_blocks_116():
     """
     Test case 116:  Info strings for tilde code blocks can contain backticks and tildes:
     """
@@ -669,7 +669,7 @@ foo
     expected_tokens = [
         "[fcode-block:~:3:aa: ``` ~~~:: ]",
         "[text:foo:]",
-        "[end-fcode-block]",
+        "[end-fcode-block:]",
     ]
 
     # Act
@@ -679,7 +679,7 @@ foo
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_indented_code_blocks_117():
+def test_fenced_code_blocks_117():
     """
     Test case 117:  Closing code fences cannot have info strings:
     """
@@ -689,7 +689,7 @@ def test_indented_code_blocks_117():
     source_markdown = """```
 ``` aaa
 ```"""
-    expected_tokens = ["[fcode-block:`:3::::]", "[text:``` aaa:]", "[end-fcode-block]"]
+    expected_tokens = ["[fcode-block:`:3::::]", "[text:``` aaa:]", "[end-fcode-block:]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
