@@ -309,7 +309,16 @@ def test_indented_code_blocks_087a():
 
 
 bar"""
-    expected_tokens = ['[icode-block:    ]', '[text:foo:]', '[end-icode-block]', '[BLANK:]', '[BLANK:]', '[para:]', '[text:bar:]', '[end-para]']
+    expected_tokens = [
+        "[icode-block:    ]",
+        "[text:foo:]",
+        "[end-icode-block]",
+        "[BLANK:]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

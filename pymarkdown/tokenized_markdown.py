@@ -65,7 +65,10 @@ class TokenizedMarkdown:
                     extra_elements.append(last_element)
                     del self.tokenized_document[-1]
 
-            new_tokens.append("[end-" + top_element + "]")
+            if top_element.startswith("fcode-block"):
+                new_tokens.append("[end-fcode-block]")
+            else:
+                new_tokens.append("[end-" + top_element + "]")
             new_tokens.extend(extra_elements)
             del self.stack[-1]
         return new_tokens
@@ -108,6 +111,80 @@ class TokenizedMarkdown:
                 + extracted_whitespace
                 + "]"
             )
+        return new_tokens
+
+    def parse_fenced_code_block(self, line_to_parse, start_index, extracted_whitespace):
+        """
+        Handle the parsing of a fenced code block
+        """
+
+        new_tokens = []
+
+        if self.determine_whitespace_length(extracted_whitespace) <= 3 and (
+            line_to_parse[start_index] == "~" or line_to_parse[start_index] == "`"
+        ):
+            collected_count, new_index = self.collect_while_character(
+                line_to_parse, start_index, line_to_parse[start_index]
+            )
+            (
+                non_whitespace_index,
+                extracted_whitespace_before_info_string,
+            ) = self.extract_whitespace(line_to_parse, new_index)
+
+            non_whitespace_index_character = None
+            if non_whitespace_index < len(line_to_parse):
+                non_whitespace_index_character = line_to_parse[non_whitespace_index]
+
+            if collected_count >= 3 and non_whitespace_index_character != "`":
+
+                preface = "fcode-block:"
+                if self.stack[-1].startswith(preface):
+                    if (
+                        self.stack[-1][len(preface)] == line_to_parse[start_index]
+                        and collected_count >= int(self.stack[-1][len(preface) + 2 :])
+                        and non_whitespace_index >= len(line_to_parse)
+                    ):
+                        new_tokens.append("[end-fcode-block]")
+                        del self.stack[-1]
+                else:
+
+                    if (
+                        line_to_parse[start_index] == "~"
+                        or "`" not in line_to_parse[non_whitespace_index:]
+                    ):
+                        (
+                            after_extracted_text_index,
+                            extracted_text,
+                        ) = self.extract_until_whitespace(
+                            line_to_parse, non_whitespace_index
+                        )
+                        text_after_extracted_text = line_to_parse[
+                            after_extracted_text_index:
+                        ]
+
+                        new_tokens = self.close_open_blocks(only_these_blocks=["para"])
+
+                        self.stack.append(
+                            "fcode-block:"
+                            + line_to_parse[start_index]
+                            + ":"
+                            + str(collected_count)
+                        )
+                        new_tokens.append(
+                            "[fcode-block:"
+                            + line_to_parse[start_index]
+                            + ":"
+                            + str(collected_count)
+                            + ":"
+                            + extracted_text
+                            + ":"
+                            + text_after_extracted_text
+                            + ":"
+                            + extracted_whitespace
+                            + ":"
+                            + extracted_whitespace_before_info_string
+                            + "]"
+                        )
         return new_tokens
 
     def parse_thematic_break(self, line_to_parse, start_index, extracted_whitespace):
@@ -288,25 +365,39 @@ class TokenizedMarkdown:
                 pre_tokens.append(last_element)
                 del self.tokenized_document[-1]
 
-        new_tokens = self.parse_atx_headings(
+        new_tokens = self.parse_fenced_code_block(
             line_to_parse, start_index, extracted_whitespace
         )
-        if not new_tokens:
-            new_tokens = self.parse_indented_code_block(
-                line_to_parse, start_index, extracted_whitespace
-            )
-        if not new_tokens:
-            new_tokens = self.parse_setext_headings(
-                line_to_parse, start_index, extracted_whitespace
-            )
-        if not new_tokens:
-            new_tokens = self.parse_thematic_break(
-                line_to_parse, start_index, extracted_whitespace
-            )
-        if not new_tokens:
-            new_tokens = self.parse_paragraph(
-                line_to_parse, start_index, extracted_whitespace
-            )
+        if self.stack[-1].startswith("fcode-block:"):
+            if not new_tokens:
+                new_tokens.append(
+                    "[text:"
+                    + line_to_parse[start_index:]
+                    + ":"
+                    + extracted_whitespace
+                    + "]"
+                )
+        else:
+            if not new_tokens:
+                new_tokens = self.parse_atx_headings(
+                    line_to_parse, start_index, extracted_whitespace
+                )
+            if not new_tokens:
+                new_tokens = self.parse_indented_code_block(
+                    line_to_parse, start_index, extracted_whitespace
+                )
+            if not new_tokens:
+                new_tokens = self.parse_setext_headings(
+                    line_to_parse, start_index, extracted_whitespace
+                )
+            if not new_tokens:
+                new_tokens = self.parse_thematic_break(
+                    line_to_parse, start_index, extracted_whitespace
+                )
+            if not new_tokens:
+                new_tokens = self.parse_paragraph(
+                    line_to_parse, start_index, extracted_whitespace
+                )
 
         pre_tokens.extend(new_tokens)
         return pre_tokens
@@ -329,6 +420,17 @@ class TokenizedMarkdown:
 
         index = start_index
         while index < len(source_string) and source_string[index] in self.ws_char:
+            index = index + 1
+
+        return index, source_string[start_index:index]
+
+    def extract_until_whitespace(self, source_string, start_index):
+        """
+        From the start_index, continue extracting until we hit whitespace.
+        """
+
+        index = start_index
+        while index < len(source_string) and source_string[index] not in self.ws_char:
             index = index + 1
 
         return index, source_string[start_index:index]
