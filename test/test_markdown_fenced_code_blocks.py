@@ -430,7 +430,11 @@ def test_fenced_code_blocks_106():
     source_markdown = """   ```
 aaa
   ```"""
-    expected_tokens = ["[fcode-block:`:3:::   :]", "[text:aaa:]", "[end-fcode-block:  ]"]
+    expected_tokens = [
+        "[fcode-block:`:3:::   :]",
+        "[text:aaa:]",
+        "[end-fcode-block:  ]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

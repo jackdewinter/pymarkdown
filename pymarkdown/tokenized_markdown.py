@@ -144,7 +144,9 @@ class TokenizedMarkdown:
                         and collected_count >= int(self.stack[-1][len(preface) + 2 :])
                         and non_whitespace_index >= len(line_to_parse)
                     ):
-                        new_tokens.append("[end-fcode-block:" + extracted_whitespace + "]")
+                        new_tokens.append(
+                            "[end-fcode-block:" + extracted_whitespace + "]"
+                        )
                         del self.stack[-1]
                 else:
 
