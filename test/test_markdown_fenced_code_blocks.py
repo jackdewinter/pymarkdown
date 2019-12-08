@@ -236,10 +236,11 @@ def test_fenced_code_blocks_098():
 
 bbb"""
     expected_tokens = [
-        "[para:]",
-        "[text:> ```:]",
+        "[block-quote:]",
+        "[fcode-block:`:3::::]",
         "[text:> aaa:]",
-        "[end-para]",
+        "[end-fcode-block:]",
+        "[end-block-quote]",
         "[BLANK:]",
         "[para:]",
         "[text:bbb:]",
@@ -250,7 +251,6 @@ bbb"""
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when blah blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

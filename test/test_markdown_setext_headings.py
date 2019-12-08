@@ -317,7 +317,6 @@ of dashes"/>"""
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when inline code blocks implemented
     # TODO Expect this to fail when inline html implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
@@ -331,13 +330,19 @@ def test_setext_headings_062():
     tokenizer = TokenizedMarkdown()
     source_markdown = """> Foo
 ---"""
-    expected_tokens = ["[setext:-:]", "[text:> Foo:]", "[end-setext::]"]
+    expected_tokens = [
+        "[block-quote:]",
+        "[para:]",
+        "[text:Foo:]",
+        "[end-para]",
+        "[end-block-quote]",
+        "[tbreak:-::---]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when block quotes implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -351,13 +356,22 @@ def test_setext_headings_063():
     source_markdown = """> foo
 bar
 ==="""
-    expected_tokens = ["[setext:=:]", "[text:> foo:]", "[text:bar:]", "[end-setext::]"]
+    expected_tokens = [
+        "[block-quote:]",
+        "[para:]",
+        "[text:foo:]",
+        "[text:bar:]",
+        "[end-para]",
+        "[end-block-quote]",
+        "[para:]",
+        "[text:===:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when block quotes implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -376,7 +390,7 @@ def test_setext_headings_064():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when block quotes implemented
+    # TODO Expect this to fail when list blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -519,13 +533,19 @@ def test_setext_headings_071():
     tokenizer = TokenizedMarkdown()
     source_markdown = """> foo
 -----"""
-    expected_tokens = ["[setext:-:]", "[text:> foo:]", "[end-setext::]"]
+    expected_tokens = [
+        "[block-quote:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[end-block-quote]",
+        "[tbreak:-::-----]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when block quotes implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -544,7 +564,7 @@ def test_setext_headings_072():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when block quotes implemented
+    # TODO Expect this to fail when inline implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

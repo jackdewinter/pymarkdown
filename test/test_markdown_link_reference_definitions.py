@@ -640,8 +640,12 @@ def test_link_reference_definitions_183():
         "[atx:1:[Foo]:: ::]",
         "[para:]",
         "[text:[foo]: /url:]",
-        "[text:> bar:]",
         "[end-para]",
+        "[block-quote:]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+        "[end-block-quote]",
     ]
 
     # Act
@@ -761,9 +765,11 @@ def test_link_reference_definitions_187():
         "[text:[foo]:]",
         "[end-para]",
         "[BLANK:]",
+        "[block-quote:]",
         "[para:]",
-        "[text:> [foo]: /url:]",
+        "[text:[foo]: /url:]",
         "[end-para]",
+        "[end-block-quote]",
     ]
 
     # Act

@@ -706,10 +706,12 @@ def test_html_blocks_143():
 
 bar"""
     expected_tokens = [
+        "[block-quote:]",
         "[para:]",
-        "[text:> <div>:]",
-        "[text:> foo:]",
+        "[text:<div>:]",
+        "[text:foo:]",
         "[end-para]",
+        "[end-block-quote]",
         "[BLANK:]",
         "[para:]",
         "[text:bar:]",

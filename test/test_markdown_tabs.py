@@ -136,13 +136,18 @@ def test_tabs_006():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """>		foo"""
-    expected_tokens = ["[para:]", "[text:>\t\tfoo:]", "[end-para]"]
+    expected_tokens = [
+        "[block-quote:]",
+        "[icode-block:\t\t]",
+        "[text:foo:]",
+        "[end-icode-block]",
+        "[end-block-quote]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when block quotes implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

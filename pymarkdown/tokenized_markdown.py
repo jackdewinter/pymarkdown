@@ -23,28 +23,41 @@ class TokenizedMarkdown:
 
         self.tokenized_document = []
         next_token = your_text_string.split("\n", 1)
+        print("---")
         while next_token:
-            print("\nnext-line>>" + str(next_token))
+            print("next-line>>" + str(next_token))
             print("stack>>" + str(self.stack))
             print("current_block>>" + self.stack[-1])
+            print("---")
 
             next_line = next_token[0]
             new_tokens = []
             if not next_line or not next_line.strip():
-                new_tokens = self.handle_blank_line(next_line)
+                new_tokens = self.handle_blank_line(next_line, from_main_transform=True)
             else:
-                new_tokens = self.parse_line(next_line)
+                new_tokens = self.parse_line_for_container_blocks(next_line)
 
+            print("---")
+            print("before>>" + str(self.tokenized_document))
             self.tokenized_document.extend(new_tokens)
+            print("after>>" + str(self.tokenized_document))
+            print("---")
             if len(next_token) == 2:
                 next_token = next_token[1].split("\n", 1)
             else:
                 next_token = None
 
         print("cleanup")
-        return self.close_open_blocks(self.tokenized_document)
+        return self.close_open_blocks(
+            self.tokenized_document, include_container_blocks=True
+        )
 
-    def close_open_blocks(self, destination_array=None, only_these_blocks=None):
+    def close_open_blocks(
+        self,
+        destination_array=None,
+        only_these_blocks=None,
+        include_container_blocks=False,
+    ):
         """
         Close any open blocks that are currently on the stack.
         """
@@ -54,7 +67,12 @@ class TokenizedMarkdown:
             new_tokens = destination_array
 
         while self.stack[-1] != "document":
+            print("cob>>" + str(self.stack))
             if only_these_blocks and self.stack[-1] not in only_these_blocks:
+                print("cob>>not in only")
+                break
+            if not include_container_blocks and self.stack[-1] == "block-quote":
+                print("cob>>not block quotes")
                 break
 
             top_element = self.stack[-1]
@@ -73,16 +91,49 @@ class TokenizedMarkdown:
             del self.stack[-1]
         return new_tokens
 
-    def handle_blank_line(self, input_line):
+    def handle_blank_line(self, input_line, from_main_transform):
         """
         Handle the processing of a blank line.
         """
 
-        new_tokens = self.close_open_blocks(only_these_blocks=["para"])
+        if from_main_transform:
+            close_only_these_blocks = None
+            do_include_container_blocks = True
+        else:
+            close_only_these_blocks = ["para"]
+            do_include_container_blocks = False
+        print("from_main_transform>>" + str(from_main_transform))
+        print("close_only_these_blocks>>" + str(close_only_these_blocks))
+        print("do_include_container_blocks>>" + str(do_include_container_blocks))
 
         non_whitespace_index, extracted_whitespace = self.extract_whitespace(
             input_line, 0
         )
+
+        new_tokens = None
+        if self.stack[-1] == "icode-block":
+            stack_bq_count = self.count_of_block_quotes_on_stack()
+            if stack_bq_count:
+                print("hbl>>indented code block within block quote")
+            else:
+                print("hbl>>indented code block")
+                new_tokens = []
+        elif self.stack[-1].startswith("fcode-block:"):
+            stack_bq_count = self.count_of_block_quotes_on_stack()
+
+            if stack_bq_count:
+                print("hbl>>fenced code block within block quote")
+            else:
+                print("hbl>>fenced code block")
+                new_tokens = []
+
+        if new_tokens is None:
+            new_tokens = self.close_open_blocks(
+                only_these_blocks=close_only_these_blocks,
+                include_container_blocks=do_include_container_blocks,
+            )
+
+        print("new_tokens>>" + str(new_tokens))
         assert non_whitespace_index == len(input_line)
         new_tokens.append("[BLANK:" + extracted_whitespace + "]")
         return new_tokens
@@ -120,8 +171,10 @@ class TokenizedMarkdown:
 
         new_tokens = []
 
-        if self.determine_whitespace_length(extracted_whitespace) <= 3 and (
-            line_to_parse[start_index] == "~" or line_to_parse[start_index] == "`"
+        if (
+            self.determine_whitespace_length(extracted_whitespace) <= 3
+            and start_index < len(line_to_parse)
+            and (line_to_parse[start_index] == "~" or line_to_parse[start_index] == "`")
         ):
             collected_count, new_index = self.collect_while_character(
                 line_to_parse, start_index, line_to_parse[start_index]
@@ -189,17 +242,24 @@ class TokenizedMarkdown:
                         )
         return new_tokens
 
-    def parse_thematic_break(self, line_to_parse, start_index, extracted_whitespace):
+    def parse_thematic_break(
+        self, line_to_parse, start_index, extracted_whitespace, this_bq_count,
+    ):
         """
         Handle the parsing of a thematic break.
         """
 
         new_tokens = []
+        stack_bq_count = self.count_of_block_quotes_on_stack()
 
-        if self.determine_whitespace_length(extracted_whitespace) <= 3 and (
-            line_to_parse[start_index] == "*"
-            or line_to_parse[start_index] == "-"
-            or line_to_parse[start_index] == "_"
+        if (
+            self.determine_whitespace_length(extracted_whitespace) <= 3
+            and start_index < len(line_to_parse)
+            and (
+                line_to_parse[start_index] == "*"
+                or line_to_parse[start_index] == "-"
+                or line_to_parse[start_index] == "_"
+            )
         ):
             start_char = line_to_parse[start_index]
             index = start_index
@@ -215,9 +275,16 @@ class TokenizedMarkdown:
                     break
 
             if char_count >= 3 and index == len(line_to_parse):
+
                 if self.stack[-1] == "para":
                     new_tokens.append("[end-" + self.stack[-1] + "]")
                     del self.stack[-1]
+                if this_bq_count == 0 and stack_bq_count > 0:
+                    new_tokens = self.close_open_blocks(
+                        destination_array=new_tokens,
+                        only_these_blocks="block-quote",
+                        include_container_blocks=True,
+                    )
                 new_tokens.append(
                     "[tbreak:"
                     + start_char
@@ -235,8 +302,10 @@ class TokenizedMarkdown:
         """
 
         new_tokens = []
-        if self.determine_whitespace_length(extracted_whitespace) <= 3 and (
-            line_to_parse[start_index] == "#"
+        if (
+            self.determine_whitespace_length(extracted_whitespace) <= 3
+            and start_index < len(line_to_parse)
+            and (line_to_parse[start_index] == "#")
         ):
             hash_count, new_index = self.collect_while_character(
                 line_to_parse, start_index, "#"
@@ -298,6 +367,7 @@ class TokenizedMarkdown:
         new_tokens = []
         if (
             self.determine_whitespace_length(extracted_whitespace) <= 3
+            and start_index < len(line_to_parse)
             and (line_to_parse[start_index] == "=" or line_to_parse[start_index] == "-")
             and self.stack[-1] == "para"
         ):
@@ -330,12 +400,27 @@ class TokenizedMarkdown:
                 del self.stack[-1]
         return new_tokens
 
-    def parse_paragraph(self, line_to_parse, start_index, extracted_whitespace):
+    def parse_paragraph(
+        self, line_to_parse, start_index, extracted_whitespace, this_bq_count,
+    ):
         """
         Handle the parsing of a paragraph.
         """
 
         new_tokens = []
+
+        stack_bq_count = self.count_of_block_quotes_on_stack()
+        print(
+            "parse_paragraph>stack_bq_count>"
+            + str(stack_bq_count)
+            + ">this_bq_count>"
+            + str(this_bq_count)
+            + "<"
+        )
+        if stack_bq_count != 0 and this_bq_count == 0:
+            new_tokens = self.close_open_blocks(
+                only_these_blocks="block-quote", include_container_blocks=True
+            )
 
         if self.stack[-1] != "para":
             self.stack.append("para")
@@ -346,15 +431,167 @@ class TokenizedMarkdown:
         )
         return new_tokens
 
-    def parse_line(self, line_to_parse):
+    def count_of_block_quotes_on_stack(self):
         """
-        Parse the contents of a line.
+        Helper method to count the number of block quotes currently on the stack.
+        """
+
+        stack_bq_count = 0
+        for next_item_on_stack in self.stack:
+            if next_item_on_stack == "block-quote":
+                stack_bq_count = stack_bq_count + 1
+
+        return stack_bq_count
+
+    @classmethod
+    def count_block_quote_starts(cls, line_to_parse, start_index):
+        """
+        Having detected a block quote character (">") on a line, continue to consume
+        and count while the block quote pattern is there.
+        """
+
+        this_bq_count = 1
+        start_index = start_index + 1
+
+        while True:
+            if start_index < len(line_to_parse) and line_to_parse[start_index] == " ":
+                start_index = start_index + 1
+            if start_index == len(line_to_parse) or line_to_parse[start_index] != ">":
+                break
+            this_bq_count = this_bq_count + 1
+            start_index = start_index + 1
+        return this_bq_count, start_index
+
+    def check_for_lazy_handling(self, this_bq_count, stack_bq_count, line_to_parse, start_index, extracted_whitespace):
+        """
+        Check if there is any processing to be handled during the handling of
+        lazy continuation lines in block quotes.
+        """
+
+        container_level_tokens = []
+        if this_bq_count == 0 and stack_bq_count > 0:
+            print("haven't processed")
+            print(
+                "this_bq_count>"
+                + str(this_bq_count)
+                + ">>stack_bq_count>>"
+                + str(stack_bq_count)
+                + "<<"
+            )
+            if (
+                self.stack[-1].startswith("fcode-block:")
+                or self.stack[-1] == "icode-block"
+            ):
+                assert not container_level_tokens
+                container_level_tokens = self.close_open_blocks(
+                    only_these_blocks=["block-quote", self.stack[-1]],
+                    include_container_blocks=True,
+                )
+
+        if stack_bq_count > 0:
+            if (
+                self.determine_whitespace_length(extracted_whitespace) <= 3
+                and start_index < len(line_to_parse)
+                and (
+                    line_to_parse[start_index] == "="
+                    or line_to_parse[start_index] == "-"
+                )
+                and self.stack[-1] == "para"
+            ):
+                print("set_atx")
+                assert not container_level_tokens
+                container_level_tokens = self.close_open_blocks(
+                    only_these_blocks=["para", "block-quote"],
+                    include_container_blocks=True,
+                )
+            else:
+                print("no set atx!!!!!!!!!!!!")
+
+        return container_level_tokens
+
+    def ensure_stack_at_level(self, this_bq_count, stack_bq_count, extracted_whitespace):
+
+        container_level_tokens = []
+        if this_bq_count > stack_bq_count:
+            container_level_tokens = self.close_open_blocks(
+                only_these_blocks=["para"]
+            )
+            while this_bq_count > stack_bq_count:
+                self.stack.append("block-quote")
+                stack_bq_count = stack_bq_count + 1
+                container_level_tokens.append(
+                    "[block-quote:" + extracted_whitespace + "]"
+                )
+        return container_level_tokens, stack_bq_count
+
+    def handle_block_quote_section(self, line_to_parse, start_index, this_bq_count, stack_bq_count, extracted_whitespace):
+        leaf_tokens = []
+        container_level_tokens = []
+
+        this_bq_count, start_index = self.count_block_quote_starts(
+            line_to_parse, start_index
+        )
+
+        if not self.stack[-1].startswith("fcode-block:"):
+            container_level_tokens, stack_bq_count = self.ensure_stack_at_level(this_bq_count, stack_bq_count, extracted_whitespace)
+
+            line_to_parse = line_to_parse[start_index:]
+
+            if not line_to_parse.strip():
+                leaf_tokens = self.handle_blank_line(
+                    line_to_parse, from_main_transform=False
+                )
+        return line_to_parse, start_index, leaf_tokens, container_level_tokens, stack_bq_count, this_bq_count
+
+    def parse_line_for_container_blocks(self, line_to_parse):
+        """
+        Parse the line, taking care to handle any container blocks before deciding
+        whether or not to pass the (remaining parts of the) line to the leaf block
+        processor.
         """
 
         print("Line:" + line_to_parse + ":")
+        container_level_tokens = []
+        leaf_tokens = []
+        start_index, extracted_whitespace = self.extract_whitespace(line_to_parse, 0)
+
+        stack_bq_count = self.count_of_block_quotes_on_stack()
+
+        this_bq_count = 0
+        if self.determine_whitespace_length(extracted_whitespace) <= 3 \
+            and line_to_parse[start_index] == ">":
+
+            assert not container_level_tokens
+            assert not leaf_tokens
+            line_to_parse, start_index, leaf_tokens, container_level_tokens, stack_bq_count, this_bq_count = self.handle_block_quote_section(line_to_parse, start_index, this_bq_count, stack_bq_count, extracted_whitespace)
+
+        if not leaf_tokens:
+            lazy_tokens = self.check_for_lazy_handling(this_bq_count, stack_bq_count, line_to_parse, start_index, extracted_whitespace)
+            container_level_tokens.extend(lazy_tokens)
+
+        if leaf_tokens:
+            print("adding tokesn>>" + str(leaf_tokens))
+        else:
+            print("parsing leaf>>")
+            leaf_tokens = self.parse_line_for_leaf_blocks(
+                line_to_parse, 0, this_bq_count
+            )
+            print("parsed leaf>>" + str(leaf_tokens))
+
+        container_level_tokens.extend(leaf_tokens)
+        return container_level_tokens
+
+    def parse_line_for_leaf_blocks(self, line_to_parse, start_index, this_bq_count):
+        """
+        Parse the contents of a line for a leaf block.
+        """
+
+        print("Leaf Line:" + line_to_parse + ":")
         new_tokens = []
         pre_tokens = []
-        start_index, extracted_whitespace = self.extract_whitespace(line_to_parse, 0)
+        start_index, extracted_whitespace = self.extract_whitespace(
+            line_to_parse, start_index
+        )
 
         if (
             self.stack[-1] == "icode-block"
@@ -394,11 +631,11 @@ class TokenizedMarkdown:
                 )
             if not new_tokens:
                 new_tokens = self.parse_thematic_break(
-                    line_to_parse, start_index, extracted_whitespace
+                    line_to_parse, start_index, extracted_whitespace, this_bq_count,
                 )
             if not new_tokens:
                 new_tokens = self.parse_paragraph(
-                    line_to_parse, start_index, extracted_whitespace
+                    line_to_parse, start_index, extracted_whitespace, this_bq_count,
                 )
 
         pre_tokens.extend(new_tokens)

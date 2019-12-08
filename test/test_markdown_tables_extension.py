@@ -102,8 +102,12 @@ def test_tables_extension_201():
         "[text:| abc | def |:]",
         "[text:| --- | --- |:]",
         "[text:| bar | baz |:]",
-        "[text:> bar:]",
         "[end-para]",
+        "[block-quote:]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+        "[end-block-quote]",
     ]
 
     # Act
