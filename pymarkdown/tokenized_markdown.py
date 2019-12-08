@@ -112,14 +112,14 @@ class TokenizedMarkdown:
 
         new_tokens = None
         if self.stack[-1] == "icode-block":
-            stack_bq_count = self.count_of_block_quotes_on_stack()
+            stack_bq_count = self.__count_of_block_quotes_on_stack()
             if stack_bq_count:
                 print("hbl>>indented code block within block quote")
             else:
                 print("hbl>>indented code block")
                 new_tokens = []
         elif self.stack[-1].startswith("fcode-block:"):
-            stack_bq_count = self.count_of_block_quotes_on_stack()
+            stack_bq_count = self.__count_of_block_quotes_on_stack()
 
             if stack_bq_count:
                 print("hbl>>fenced code block within block quote")
@@ -250,7 +250,7 @@ class TokenizedMarkdown:
         """
 
         new_tokens = []
-        stack_bq_count = self.count_of_block_quotes_on_stack()
+        stack_bq_count = self.__count_of_block_quotes_on_stack()
 
         if (
             self.determine_whitespace_length(extracted_whitespace) <= 3
@@ -409,7 +409,7 @@ class TokenizedMarkdown:
 
         new_tokens = []
 
-        stack_bq_count = self.count_of_block_quotes_on_stack()
+        stack_bq_count = self.__count_of_block_quotes_on_stack()
         print(
             "parse_paragraph>stack_bq_count>"
             + str(stack_bq_count)
@@ -431,7 +431,7 @@ class TokenizedMarkdown:
         )
         return new_tokens
 
-    def count_of_block_quotes_on_stack(self):
+    def __count_of_block_quotes_on_stack(self):
         """
         Helper method to count the number of block quotes currently on the stack.
         """
@@ -444,7 +444,7 @@ class TokenizedMarkdown:
         return stack_bq_count
 
     @classmethod
-    def count_block_quote_starts(cls, line_to_parse, start_index):
+    def __count_block_quote_starts(cls, line_to_parse, start_index):
         """
         Having detected a block quote character (">") on a line, continue to consume
         and count while the block quote pattern is there.
@@ -462,7 +462,15 @@ class TokenizedMarkdown:
             start_index = start_index + 1
         return this_bq_count, start_index
 
-    def check_for_lazy_handling(self, this_bq_count, stack_bq_count, line_to_parse, start_index, extracted_whitespace):
+    # pylint: disable=too-many-arguments
+    def __check_for_lazy_handling(
+        self,
+        this_bq_count,
+        stack_bq_count,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+    ):
         """
         Check if there is any processing to be handled during the handling of
         lazy continuation lines in block quotes.
@@ -509,13 +517,16 @@ class TokenizedMarkdown:
 
         return container_level_tokens
 
-    def ensure_stack_at_level(self, this_bq_count, stack_bq_count, extracted_whitespace):
+    def __ensure_stack_at_level(
+        self, this_bq_count, stack_bq_count, extracted_whitespace
+    ):
+        """
+        Ensure that the block quote stack is at the proper level on the stack.
+        """
 
         container_level_tokens = []
         if this_bq_count > stack_bq_count:
-            container_level_tokens = self.close_open_blocks(
-                only_these_blocks=["para"]
-            )
+            container_level_tokens = self.close_open_blocks(only_these_blocks=["para"])
             while this_bq_count > stack_bq_count:
                 self.stack.append("block-quote")
                 stack_bq_count = stack_bq_count + 1
@@ -524,16 +535,30 @@ class TokenizedMarkdown:
                 )
         return container_level_tokens, stack_bq_count
 
-    def handle_block_quote_section(self, line_to_parse, start_index, this_bq_count, stack_bq_count, extracted_whitespace):
+    # pylint: disable=too-many-arguments
+    def handle_block_quote_section(
+        self,
+        line_to_parse,
+        start_index,
+        this_bq_count,
+        stack_bq_count,
+        extracted_whitespace,
+    ):
+        """
+        Handle the processing of a section clearly identified as having block quotes.
+        """
+
         leaf_tokens = []
         container_level_tokens = []
 
-        this_bq_count, start_index = self.count_block_quote_starts(
+        this_bq_count, start_index = self.__count_block_quote_starts(
             line_to_parse, start_index
         )
 
         if not self.stack[-1].startswith("fcode-block:"):
-            container_level_tokens, stack_bq_count = self.ensure_stack_at_level(this_bq_count, stack_bq_count, extracted_whitespace)
+            container_level_tokens, stack_bq_count = self.__ensure_stack_at_level(
+                this_bq_count, stack_bq_count, extracted_whitespace
+            )
 
             line_to_parse = line_to_parse[start_index:]
 
@@ -541,7 +566,14 @@ class TokenizedMarkdown:
                 leaf_tokens = self.handle_blank_line(
                     line_to_parse, from_main_transform=False
                 )
-        return line_to_parse, start_index, leaf_tokens, container_level_tokens, stack_bq_count, this_bq_count
+        return (
+            line_to_parse,
+            start_index,
+            leaf_tokens,
+            container_level_tokens,
+            stack_bq_count,
+            this_bq_count,
+        )
 
     def parse_line_for_container_blocks(self, line_to_parse):
         """
@@ -555,18 +587,39 @@ class TokenizedMarkdown:
         leaf_tokens = []
         start_index, extracted_whitespace = self.extract_whitespace(line_to_parse, 0)
 
-        stack_bq_count = self.count_of_block_quotes_on_stack()
+        stack_bq_count = self.__count_of_block_quotes_on_stack()
 
         this_bq_count = 0
-        if self.determine_whitespace_length(extracted_whitespace) <= 3 \
-            and line_to_parse[start_index] == ">":
+        if (
+            self.determine_whitespace_length(extracted_whitespace) <= 3
+            and line_to_parse[start_index] == ">"
+        ):
 
             assert not container_level_tokens
             assert not leaf_tokens
-            line_to_parse, start_index, leaf_tokens, container_level_tokens, stack_bq_count, this_bq_count = self.handle_block_quote_section(line_to_parse, start_index, this_bq_count, stack_bq_count, extracted_whitespace)
+            (
+                line_to_parse,
+                start_index,
+                leaf_tokens,
+                container_level_tokens,
+                stack_bq_count,
+                this_bq_count,
+            ) = self.handle_block_quote_section(
+                line_to_parse,
+                start_index,
+                this_bq_count,
+                stack_bq_count,
+                extracted_whitespace,
+            )
 
         if not leaf_tokens:
-            lazy_tokens = self.check_for_lazy_handling(this_bq_count, stack_bq_count, line_to_parse, start_index, extracted_whitespace)
+            lazy_tokens = self.__check_for_lazy_handling(
+                this_bq_count,
+                stack_bq_count,
+                line_to_parse,
+                start_index,
+                extracted_whitespace,
+            )
             container_level_tokens.extend(lazy_tokens)
 
         if leaf_tokens:
