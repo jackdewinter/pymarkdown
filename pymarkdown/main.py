@@ -9,6 +9,8 @@ import traceback
 from plugin_manager import BadPluginError, PluginManager
 
 
+# https://github.com/hiddenillusion/example-code/commit/3e2daada652fe9b487574c784e0924bd5fcfe667
+# TODO check
 class PyMarkdownLint:
     """
     Class to provide for a simple implementation of a title case algorithm.

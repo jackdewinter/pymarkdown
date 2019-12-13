@@ -15,7 +15,7 @@ def test_tabs_001():
     tokenizer = TokenizedMarkdown()
     source_markdown = """	foo	baz		bim"""
     expected_tokens = [
-        "[icode-block:\t]",
+        "[icode-block:    ]",
         "[text:foo\tbaz\t\tbim:]",
         "[end-icode-block]",
     ]
@@ -36,8 +36,8 @@ def test_tabs_002():
     tokenizer = TokenizedMarkdown()
     source_markdown = """  	foo	baz		bim"""
     expected_tokens = [
-        "[icode-block:  \t]",
-        "[text:foo\tbaz\t\tbim:]",
+        "[icode-block:    ]",
+        "[text:foo\tbaz\t\tbim:  ]",
         "[end-icode-block]",
     ]
 
@@ -83,13 +83,15 @@ def test_tabs_004():
 	bar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[para:  ]",
-        "[text:- foo:]",
+        "[ulist:-:4:  ]",
+        "[para:]",
+        "[text:foo:]",
         "[end-para]",
         "[BLANK:]",
-        "[icode-block:\t]",
+        "[para:]",
         "[text:bar:]",
-        "[end-icode-block]",
+        "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -111,13 +113,15 @@ def test_tabs_005():
 		bar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
+        "[ulist:-:2:]",
         "[para:]",
-        "[text:- foo:]",
+        "[text:foo:]",
         "[end-para]",
         "[BLANK:]",
-        "[icode-block:\t\t]",
-        "[text:bar:]",
+        "[icode-block:    ]",
+        "[text:bar:  ]",
         "[end-icode-block]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -138,8 +142,8 @@ def test_tabs_006():
     source_markdown = """>		foo"""
     expected_tokens = [
         "[block-quote:]",
-        "[icode-block:\t\t]",
-        "[text:foo:]",
+        "[icode-block:    ]",
+        "[text:foo:    ]",
         "[end-icode-block]",
         "[end-block-quote]",
     ]
@@ -159,13 +163,18 @@ def test_tabs_007():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """-		foo"""
-    expected_tokens = ["[para:]", "[text:-\t\tfoo:]", "[end-para]"]
+    expected_tokens = [
+        "[ulist:-:2:]",
+        "[icode-block:    ]",
+        "[text:foo:   ]",
+        "[end-icode-block]",
+        "[end-ulist]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when list blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

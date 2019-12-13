@@ -285,20 +285,23 @@ def test_thematic_breaks_027():
 ***
 - bar"""
     expected_tokens = [
+        "[ulist:-:2:]",
         "[para:]",
-        "[text:- foo:]",
+        "[text:foo:]",
         "[end-para]",
+        "[end-ulist]",
         "[tbreak:*::***]",
+        "[ulist:-:2:]",
         "[para:]",
-        "[text:- bar:]",
+        "[text:bar:]",
         "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when lists are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -366,20 +369,23 @@ def test_thematic_breaks_030():
 * * *
 * Bar"""
     expected_tokens = [
+        "[ulist:*:2:]",
         "[para:]",
-        "[text:* Foo:]",
+        "[text:Foo:]",
         "[end-para]",
+        "[end-ulist]",
         "[tbreak:*::* * *]",
+        "[ulist:*:2:]",
         "[para:]",
-        "[text:* Bar:]",
+        "[text:Bar:]",
         "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when lists are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -392,11 +398,18 @@ def test_thematic_breaks_031():
     tokenizer = TokenizedMarkdown()
     source_markdown = """- Foo
 - * * *"""
-    expected_tokens = ["[para:]", "[text:- Foo:]", "[text:- * * *:]", "[end-para]"]
+    expected_tokens = [
+        "[ulist:-:2:]",
+        "[para:]",
+        "[text:Foo:]",
+        "[end-para]",
+        "[li]",
+        "[tbreak:*::* * *]",
+        "[end-ulist]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when lists are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)

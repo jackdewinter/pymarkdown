@@ -1,3 +1,4 @@
+# pylint: disable=too-many-lines
 """
 https://github.github.com/gfm/#lists
 """
@@ -20,13 +21,20 @@ with two lines.
 
 > A block quote."""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:A paragraph:]",
+        "[text:with two lines.:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:indented code:]",
+        "[BLANK:]",
+        "[block-quote:]",
+        "[para:]",
+        "[text:A block quote.:]",
         "[end-para]",
         "[end-block-quote]",
+        "[end-icode-block]",
     ]
 
     # Act
@@ -34,6 +42,7 @@ with two lines.
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_232():
     """
@@ -64,6 +73,7 @@ def test_list_blocks_232():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_233():
     """
     Test case 233:  (part 1) Here are some examples showing how far content must be indented to be put under the list item:
@@ -75,13 +85,15 @@ def test_list_blocks_233():
 
  two"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:one:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[end-ulist]",
+        "[para: ]",
+        "[text:two:]",
+        "[end-para]",
     ]
 
     # Act
@@ -89,6 +101,7 @@ def test_list_blocks_233():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_234():
     """
@@ -101,13 +114,15 @@ def test_list_blocks_234():
 
   two"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:one:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:two:]",
+        "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -115,6 +130,7 @@ def test_list_blocks_234():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_235():
     """
@@ -127,13 +143,15 @@ def test_list_blocks_235():
 
      two"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:6: ]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:one:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[end-ulist]",
+        "[icode-block:    ]",
+        "[text:two: ]",
+        "[end-icode-block]",
     ]
 
     # Act
@@ -141,6 +159,7 @@ def test_list_blocks_235():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_236():
     """
@@ -153,13 +172,15 @@ def test_list_blocks_236():
 
       two"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:6: ]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:one:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:two:]",
+        "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -168,9 +189,10 @@ def test_list_blocks_236():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_237():
     """
-    Test case 237:  he spaces after the list marker determine how much relative indentation is needed. Which column this indentation reaches will depend on how the list item is embedded in other constructions, as shown by this example:
+    Test case 237:  The spaces after the list marker determine how much relative indentation is needed. Which column this indentation reaches will depend on how the list item is embedded in other constructions, as shown by this example:
     """
 
     # Arrange
@@ -193,6 +215,7 @@ def test_list_blocks_237():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_238():
     """
@@ -220,6 +243,7 @@ def test_list_blocks_238():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_239():
     """
     Test case 239:  Note that at least one space is needed between the list marker and any following content, so these are not list items:
@@ -231,13 +255,13 @@ def test_list_blocks_239():
 
 2.two"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:-one:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:2.two:]",
+        "[end-para]",
     ]
 
     # Act
@@ -245,6 +269,7 @@ def test_list_blocks_239():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_240():
     """
@@ -258,13 +283,16 @@ def test_list_blocks_240():
 
   bar"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
         "[para:]",
         "[text:bar:]",
-        "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -272,6 +300,7 @@ def test_list_blocks_240():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_241():
     """
@@ -305,6 +334,7 @@ def test_list_blocks_241():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_242():
     """
     Test case 242:  A list item that contains an indented code block will preserve empty lines within the code block verbatim.
@@ -319,13 +349,18 @@ def test_list_blocks_242():
 
       baz"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:Foo:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:bar:]",
+        "[BLANK:]",
+        "[BLANK:]",
+        "[text:baz:    ]",
+        "[end-icode-block]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -333,6 +368,7 @@ def test_list_blocks_242():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_243():
     """
@@ -343,13 +379,11 @@ def test_list_blocks_243():
     tokenizer = TokenizedMarkdown()
     source_markdown = """123456789. ok"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:123456789:11:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:ok:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-olist]",
     ]
 
     # Act
@@ -357,6 +391,7 @@ def test_list_blocks_243():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_244():
     """
@@ -366,21 +401,14 @@ def test_list_blocks_244():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """1234567890. not ok"""
-    expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
-        "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
-        "[end-para]",
-        "[end-block-quote]",
-    ]
+    expected_tokens = ["[para:]", "[text:1234567890. not ok:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_245():
     """
@@ -391,13 +419,11 @@ def test_list_blocks_245():
     tokenizer = TokenizedMarkdown()
     source_markdown = """0. ok"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:0:3:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:ok:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-olist]",
     ]
 
     # Act
@@ -405,6 +431,7 @@ def test_list_blocks_245():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_246():
     """
@@ -415,13 +442,11 @@ def test_list_blocks_246():
     tokenizer = TokenizedMarkdown()
     source_markdown = """003. ok"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:003:5:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:ok:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-olist]",
     ]
 
     # Act
@@ -429,6 +454,7 @@ def test_list_blocks_246():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_247():
     """
@@ -438,21 +464,14 @@ def test_list_blocks_247():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """-1. not ok"""
-    expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
-        "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
-        "[end-para]",
-        "[end-block-quote]",
-    ]
+    expected_tokens = ["[para:]", "[text:-1. not ok:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_248():
     """
@@ -465,13 +484,15 @@ def test_list_blocks_248():
 
       bar"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:foo:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:bar:]",
+        "[end-icode-block]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -479,6 +500,7 @@ def test_list_blocks_248():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_249():
     """
@@ -491,13 +513,15 @@ def test_list_blocks_249():
 
            bar"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:10:7:  ]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:foo:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:bar:]",
+        "[end-icode-block]",
+        "[end-olist]",
     ]
 
     # Act
@@ -505,6 +529,7 @@ def test_list_blocks_249():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_250():
     """
@@ -519,13 +544,17 @@ paragraph
 
     more code"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[icode-block:    ]",
+        "[text:indented code:]",
+        "[end-icode-block]",
+        "[BLANK:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:paragraph:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:more code:]",
+        "[end-icode-block]",
     ]
 
     # Act
@@ -533,6 +562,7 @@ paragraph
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_251():
     """
@@ -547,13 +577,19 @@ def test_list_blocks_251():
 
        more code"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:1:3:]",
+        "[icode-block:    ]",
+        "[text:indented code:]",
+        "[end-icode-block]",
+        "[BLANK:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:paragraph:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:more code:]",
+        "[end-icode-block]",
+        "[end-olist]",
     ]
 
     # Act
@@ -561,6 +597,7 @@ def test_list_blocks_251():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_252():
     """
@@ -575,13 +612,19 @@ def test_list_blocks_252():
 
        more code"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:1:3:]",
+        "[icode-block:    ]",
+        "[text:indented code: ]",
+        "[end-icode-block]",
+        "[BLANK:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:paragraph:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:more code:]",
+        "[end-icode-block]",
+        "[end-olist]",
     ]
 
     # Act
@@ -589,6 +632,7 @@ def test_list_blocks_252():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_253():
     """
@@ -601,13 +645,13 @@ def test_list_blocks_253():
 
 bar"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[para:   ]",
+        "[text:foo:]",
+        "[end-para]",
+        "[BLANK:]",
         "[para:]",
         "[text:bar:]",
-        "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
     ]
 
     # Act
@@ -615,6 +659,7 @@ bar"""
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_254():
     """
@@ -627,13 +672,15 @@ def test_list_blocks_254():
 
   bar"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:5:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:foo:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[end-ulist]",
+        "[para:  ]",
+        "[text:bar:]",
+        "[end-para]",
     ]
 
     # Act
@@ -641,6 +688,7 @@ def test_list_blocks_254():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_255():
     """
@@ -653,13 +701,15 @@ def test_list_blocks_255():
 
    bar"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:3:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[BLANK:]",
         "[para:]",
         "[text:bar:]",
-        "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -667,6 +717,7 @@ def test_list_blocks_255():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_256():
     """
@@ -684,13 +735,19 @@ def test_list_blocks_256():
 -
       baz"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:foo:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[li]",
+        "[fcode-block:`:3::::]",
+        "[text:bar:]",
+        "[end-fcode-block:]",
+        "[li]",
+        "[icode-block:    ]",
+        "[text:baz:]",
+        "[end-icode-block]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -698,6 +755,7 @@ def test_list_blocks_256():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_257():
     """
@@ -706,16 +764,15 @@ def test_list_blocks_257():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    # pylint: disable=trailing-whitespace
     source_markdown = """-   
   foo"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:foo:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -723,6 +780,7 @@ def test_list_blocks_257():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_258():
     """
@@ -735,13 +793,12 @@ def test_list_blocks_258():
 
   foo"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:2:]",
+        "[BLANK:]",
+        "[end-ulist]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:foo:]",
         "[end-para]",
-        "[end-block-quote]",
     ]
 
     # Act
@@ -749,6 +806,7 @@ def test_list_blocks_258():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_259():
     """
@@ -761,13 +819,16 @@ def test_list_blocks_259():
 -
 - bar"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[li]",
+        "[li]",
         "[para:]",
         "[text:bar:]",
-        "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -775,6 +836,7 @@ def test_list_blocks_259():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_260():
     """
@@ -787,13 +849,16 @@ def test_list_blocks_260():
 -   
 - bar"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-:2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[li]",
+        "[li]",
         "[para:]",
         "[text:bar:]",
-        "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -801,6 +866,7 @@ def test_list_blocks_260():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_261():
     """
@@ -828,6 +894,7 @@ def test_list_blocks_261():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_262():
     """
     Test case 262:  A list may start or end with an empty list item:
@@ -836,21 +903,14 @@ def test_list_blocks_262():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """*"""
-    expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
-        "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
-        "[end-para]",
-        "[end-block-quote]",
-    ]
+    expected_tokens = ["[ulist:*:2:]", "[end-ulist]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_263():
     """
@@ -865,13 +925,15 @@ def test_list_blocks_263():
 foo
 1."""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:foo:]",
+        "[text:*:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:foo:]",
+        "[text:1.:]",
+        "[end-para]",
     ]
 
     # Act
@@ -879,6 +941,7 @@ foo
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_264():
     """
@@ -909,6 +972,7 @@ def test_list_blocks_264():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_265():
     """
     Test case 265:  Indented two spaces:
@@ -937,6 +1001,7 @@ def test_list_blocks_265():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_266():
     """
@@ -967,6 +1032,7 @@ def test_list_blocks_266():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_267():
     """
     Test case 267:  Four spaces indent gives a code block
@@ -995,6 +1061,7 @@ def test_list_blocks_267():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_268():
     """
@@ -1025,6 +1092,7 @@ with two lines.
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_269():
     """
     Test case 269:  Indentation can be partially deleted:
@@ -1049,6 +1117,7 @@ def test_list_blocks_269():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_270():
     """
@@ -1075,6 +1144,7 @@ continued here."""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_271():
     """
     Test case 271:  (part 2) These examples show how laziness can work in nested structures:
@@ -1099,6 +1169,7 @@ def test_list_blocks_271():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_272():
     """
@@ -1127,6 +1198,7 @@ def test_list_blocks_272():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_273():
     """
     Test case 273:  One is not enough:
@@ -1154,6 +1226,7 @@ def test_list_blocks_273():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_274():
     """
     Test case 274:  Here we need four, because the list marker is wider:
@@ -1178,6 +1251,7 @@ def test_list_blocks_274():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_275():
     """
@@ -1204,6 +1278,7 @@ def test_list_blocks_275():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_276():
     """
     Test case 276:  (part 1) A list may be the first block in a list item:
@@ -1228,6 +1303,7 @@ def test_list_blocks_276():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_blocks_277():
     """
     Test case 277:  (part 2) A list may be the first block in a list item:
@@ -1251,6 +1327,7 @@ def test_list_blocks_277():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_blocks_278():
     """

@@ -32,6 +32,7 @@ def test_list_items_281():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_282():
     """
     Test case 282:  (part 2) Changing the bullet or ordered list delimiter starts a new list:
@@ -57,6 +58,7 @@ def test_list_items_282():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_items_283():
     """
@@ -84,6 +86,7 @@ def test_list_items_283():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_284():
     """
     Test case 284:  In order to solve of unwanted lists in paragraphs with hard-wrapped numerals, we allow only lists starting with 1 to interrupt paragraphs. Thus,
@@ -109,6 +112,7 @@ def test_list_items_284():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_285():
     """
     Test case 285:  We may still get an unintended result in cases like
@@ -133,6 +137,7 @@ def test_list_items_285():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_items_286():
     """
@@ -163,6 +168,7 @@ def test_list_items_286():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_287():
     """
     Test case 287:  (part 2) There can be any number of blank lines between items:
@@ -191,6 +197,7 @@ def test_list_items_287():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_items_288():
     """
@@ -221,6 +228,7 @@ def test_list_items_288():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_items_289():
     """
@@ -254,6 +262,7 @@ def test_list_items_289():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_290():
     """
     Test case 290:  (part 1) List items need not be indented to the same level. The following list items will be treated as items at the same list level, since none is indented enough to belong to the previous list item:
@@ -284,6 +293,7 @@ def test_list_items_290():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_291():
     """
     Test case 291:  (part 2) List items need not be indented to the same level. The following list items will be treated as items at the same list level, since none is indented enough to belong to the previous list item:
@@ -311,6 +321,7 @@ def test_list_items_291():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_items_292():
     """
@@ -340,6 +351,7 @@ def test_list_items_292():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_293():
     """
     Test case 293:  And here, 3. c is treated as in indented code block, because it is indented four spaces and preceded by a blank line.
@@ -368,6 +380,7 @@ def test_list_items_293():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_294():
     """
     Test case 294:  This is a loose list, because there is a blank line between two of the list items:
@@ -395,6 +408,7 @@ def test_list_items_294():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_295():
     """
     Test case 295:  So is this, with a empty second item:
@@ -421,6 +435,7 @@ def test_list_items_295():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_items_296():
     """
@@ -450,6 +465,7 @@ def test_list_items_296():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_297():
     """
     Test case 297:  (part 2) These are loose lists, even though there is no space between the items, because one of the items directly contains two block-level elements with a blank line between them:
@@ -477,6 +493,7 @@ def test_list_items_297():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_items_298():
     """
@@ -508,6 +525,7 @@ def test_list_items_298():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_299():
     """
     Test case 299:  This is a tight list, because the blank line is between two paragraphs of a sublist. So the sublist is loose while the outer list is tight:
@@ -536,6 +554,7 @@ def test_list_items_299():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_300():
     """
     Test case 300:  This is a tight list, because the blank line is inside the block quote:
@@ -562,6 +581,7 @@ def test_list_items_300():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_items_301():
     """
@@ -592,6 +612,7 @@ def test_list_items_301():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_302():
     """
     Test case 302:  (part 1) A single-paragraph list is tight:
@@ -615,6 +636,7 @@ def test_list_items_302():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_items_303():
     """
@@ -640,6 +662,7 @@ def test_list_items_303():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_items_304():
     """
@@ -669,6 +692,7 @@ def test_list_items_304():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_list_items_305():
     """
     Test case 305:  (part 1) Here the outer list is loose, the inner list tight:
@@ -695,6 +719,7 @@ def test_list_items_305():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_list_items_306():
     """

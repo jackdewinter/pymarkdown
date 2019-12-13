@@ -736,7 +736,17 @@ def test_html_blocks_144():
     tokenizer = TokenizedMarkdown()
     source_markdown = """- <div>
 - foo"""
-    expected_tokens = ["[para:]", "[text:- <div>:]", "[text:- foo:]", "[end-para]"]
+    expected_tokens = [
+        "[ulist:-:2:]",
+        "[para:]",
+        "[text:<div>:]",
+        "[end-para]",
+        "[li]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

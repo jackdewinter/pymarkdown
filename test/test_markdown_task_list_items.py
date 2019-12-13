@@ -31,6 +31,7 @@ def test_task_list_items_279():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
 
+
 def test_task_list_items_280():
     """
     Test case 280:  Task lists can be arbitrarily nested:

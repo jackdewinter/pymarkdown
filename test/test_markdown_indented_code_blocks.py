@@ -40,20 +40,21 @@ def test_indented_code_blocks_078():
 
     bar"""
     expected_tokens = [
-        "[para:  ]",
-        "[text:- foo:]",
+        "[ulist:-:4:  ]",
+        "[para:]",
+        "[text:foo:]",
         "[end-para]",
         "[BLANK:]",
-        "[icode-block:    ]",
+        "[para:]",
         "[text:bar:]",
-        "[end-icode-block]",
+        "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when list blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -257,8 +258,8 @@ def test_indented_code_blocks_086():
     source_markdown = """        foo
     bar"""
     expected_tokens = [
-        "[icode-block:        ]",
-        "[text:foo:]",
+        "[icode-block:    ]",
+        "[text:foo:    ]",
         "[text:bar:    ]",
         "[end-icode-block]",
     ]

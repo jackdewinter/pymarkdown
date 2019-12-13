@@ -15,12 +15,20 @@ def test_block_inline_precedence_012():
     tokenizer = TokenizedMarkdown()
     source_markdown = """- `one
 - two`"""
-    expected_tokens = ["[para:]", "[text:- `one:]", "[text:- two`:]", "[end-para]"]
+    expected_tokens = [
+        "[ulist:-:2:]",
+        "[para:]",
+        "[text:`one:]",
+        "[end-para]",
+        "[li]",
+        "[para:]",
+        "[text:two`:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when lists are implemented
-    # TODO Expect this to fail when inline code blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
