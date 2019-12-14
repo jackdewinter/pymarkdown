@@ -83,7 +83,7 @@ def test_tabs_004():
 	bar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist:-:4:  ]",
+        "[ulist:-::4:  ]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
@@ -113,7 +113,7 @@ def test_tabs_005():
 		bar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
@@ -164,7 +164,7 @@ def test_tabs_007():
     tokenizer = TokenizedMarkdown()
     source_markdown = """-		foo"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[icode-block:    ]",
         "[text:foo:   ]",
         "[end-icode-block]",

@@ -40,7 +40,7 @@ def test_indented_code_blocks_078():
 
     bar"""
     expected_tokens = [
-        "[ulist:-:4:  ]",
+        "[ulist:-::4:  ]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",

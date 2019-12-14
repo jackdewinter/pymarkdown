@@ -207,10 +207,12 @@ def test_block_quotes_213():
         "[para:]",
         "[text:- foo:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[ulist:-::2:]",
         "[para:]",
-        "[text:- bar:]",
+        "[text:bar:]",
         "[end-para]",
+        "[end-ulist]",
+        "[end-block-quote]",
     ]
 
     # Act

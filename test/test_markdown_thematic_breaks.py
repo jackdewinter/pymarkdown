@@ -285,13 +285,13 @@ def test_thematic_breaks_027():
 ***
 - bar"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
         "[end-ulist]",
         "[tbreak:*::***]",
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:bar:]",
         "[end-para]",
@@ -369,13 +369,13 @@ def test_thematic_breaks_030():
 * * *
 * Bar"""
     expected_tokens = [
-        "[ulist:*:2:]",
+        "[ulist:*::2:]",
         "[para:]",
         "[text:Foo:]",
         "[end-para]",
         "[end-ulist]",
         "[tbreak:*::* * *]",
-        "[ulist:*:2:]",
+        "[ulist:*::2:]",
         "[para:]",
         "[text:Bar:]",
         "[end-para]",
@@ -399,11 +399,11 @@ def test_thematic_breaks_031():
     source_markdown = """- Foo
 - * * *"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:Foo:]",
         "[end-para]",
-        "[li]",
+        "[li:2]",
         "[tbreak:*::* * *]",
         "[end-ulist]",
     ]

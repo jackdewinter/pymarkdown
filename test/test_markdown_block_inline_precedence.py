@@ -16,11 +16,11 @@ def test_block_inline_precedence_012():
     source_markdown = """- `one
 - two`"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:`one:]",
         "[end-para]",
-        "[li]",
+        "[li:2]",
         "[para:]",
         "[text:two`:]",
         "[end-para]",

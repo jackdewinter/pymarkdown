@@ -385,7 +385,7 @@ def test_setext_headings_064():
     source_markdown = """- Foo
 ---"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:Foo:]",
         "[end-para]",
@@ -498,7 +498,7 @@ def test_setext_headings_069():
     source_markdown = """- foo
 -----"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",

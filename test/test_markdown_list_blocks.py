@@ -85,7 +85,7 @@ def test_list_blocks_233():
 
  two"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:one:]",
         "[end-para]",
@@ -114,7 +114,7 @@ def test_list_blocks_234():
 
   two"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:one:]",
         "[end-para]",
@@ -143,7 +143,7 @@ def test_list_blocks_235():
 
      two"""
     expected_tokens = [
-        "[ulist:-:6: ]",
+        "[ulist:-::6: ]",
         "[para:]",
         "[text:one:]",
         "[end-para]",
@@ -172,7 +172,7 @@ def test_list_blocks_236():
 
       two"""
     expected_tokens = [
-        "[ulist:-:6: ]",
+        "[ulist:-::6: ]",
         "[para:]",
         "[text:one:]",
         "[end-para]",
@@ -283,7 +283,7 @@ def test_list_blocks_240():
 
   bar"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
@@ -349,7 +349,7 @@ def test_list_blocks_242():
 
       baz"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:Foo:]",
         "[end-para]",
@@ -484,7 +484,7 @@ def test_list_blocks_248():
 
       bar"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
@@ -672,7 +672,7 @@ def test_list_blocks_254():
 
   bar"""
     expected_tokens = [
-        "[ulist:-:5:]",
+        "[ulist:-::5:]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
@@ -701,7 +701,7 @@ def test_list_blocks_255():
 
    bar"""
     expected_tokens = [
-        "[ulist:-:3:]",
+        "[ulist:-::3:]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
@@ -735,15 +735,18 @@ def test_list_blocks_256():
 -
       baz"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
+        "[BLANK:]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
-        "[li]",
+        "[li:2]",
+        "[BLANK:]",
         "[fcode-block:`:3::::]",
         "[text:bar:]",
         "[end-fcode-block:]",
-        "[li]",
+        "[li:2]",
+        "[BLANK:]",
         "[icode-block:    ]",
         "[text:baz:]",
         "[end-icode-block]",
@@ -768,7 +771,8 @@ def test_list_blocks_257():
     source_markdown = """-   
   foo"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
+        "[BLANK:]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
@@ -793,10 +797,11 @@ def test_list_blocks_258():
 
   foo"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[BLANK:]",
         "[end-ulist]",
-        "[para:]",
+        "[BLANK:]",
+        "[para:  ]",
         "[text:foo:]",
         "[end-para]",
     ]
@@ -819,12 +824,13 @@ def test_list_blocks_259():
 -
 - bar"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
-        "[li]",
-        "[li]",
+        "[li:2]",
+        "[BLANK:]",
+        "[li:2]",
         "[para:]",
         "[text:bar:]",
         "[end-para]",
@@ -849,12 +855,13 @@ def test_list_blocks_260():
 -   
 - bar"""
     expected_tokens = [
-        "[ulist:-:2:]",
+        "[ulist:-::2:]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
-        "[li]",
-        "[li]",
+        "[li:2]",
+        "[BLANK:]",
+        "[li:2]",
         "[para:]",
         "[text:bar:]",
         "[end-para]",
@@ -879,13 +886,17 @@ def test_list_blocks_261():
 2.
 3. bar"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:1:3:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[li:3]",
+        "[BLANK:]",
+        "[li:3]",
         "[para:]",
         "[text:bar:]",
-        "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-olist]",
     ]
 
     # Act
@@ -903,7 +914,7 @@ def test_list_blocks_262():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """*"""
-    expected_tokens = ["[ulist:*:2:]", "[end-ulist]"]
+    expected_tokens = ["[ulist:*::2:]", "[BLANK:]", "[end-ulist]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -1103,13 +1114,12 @@ def test_list_blocks_269():
     source_markdown = """  1.  A paragraph
     with two lines."""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:1:6:  ]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:A paragraph:]",
+        "[text:with two lines.:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-olist]",
     ]
 
     # Act
@@ -1211,13 +1221,23 @@ def test_list_blocks_273():
   - baz
    - boo"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-::2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[li:3]",
         "[para:]",
         "[text:bar:]",
+        "[end-para]",
+        "[li:4]",
+        "[para:]",
         "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[li:5]",
+        "[para:]",
+        "[text:boo:]",
+        "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -1341,13 +1361,16 @@ def test_list_blocks_278():
   ---
   baz"""
     expected_tokens = [
-        "[block-quote:]",
+        "[ulist:-::2:]",
         "[atx:1:Foo:: ::]",
+        "[li:2]",
+        "[setext:-:]",
+        "[text:Bar:]",
+        "[end-setext::]",
         "[para:]",
-        "[text:bar:]",
         "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-ulist]",
     ]
 
     # Act
