@@ -209,13 +209,26 @@ def test_list_items_287():
 
       bim"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-::2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[ulist:-::4:  ]",
         "[para:]",
         "[text:bar:]",
+        "[end-para]",
+        "[ulist:-::6:    ]",
+        "[para:]",
         "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:bim:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[end-ulist]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -653,13 +666,24 @@ def test_list_items_299():
     c
 - d"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-::2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:a:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[ulist:-::4:  ]",
+        "[para:]",
+        "[text:b:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:c:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[li:2]",
+        "[para:]",
+        "[text:d:]",
+        "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -760,13 +784,16 @@ def test_list_items_303():
     source_markdown = """- a
   - b"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-::2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:a:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[ulist:-::4:  ]",
+        "[para:]",
+        "[text:b:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -819,13 +846,20 @@ def test_list_items_305():
 
   baz"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:*::2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[ulist:*::4:  ]",
         "[para:]",
         "[text:bar:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[end-ulist]",
+        "[para:  ]",
         "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -850,13 +884,34 @@ def test_list_items_306():
   - e
   - f"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-::2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:a:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[ulist:-::4:  ]",
+        "[para:]",
+        "[text:b:]",
+        "[end-para]",
+        "[li:4]",
+        "[para:]",
+        "[text:c:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[end-ulist]",
+        "[li:2]",
+        "[para:]",
+        "[text:d:]",
+        "[end-para]",
+        "[ulist:-::4:  ]",
+        "[para:]",
+        "[text:e:]",
+        "[end-para]",
+        "[li:4]",
+        "[para:]",
+        "[text:f:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -864,3 +919,7 @@ def test_list_items_306():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+# TODO '* foo\n  * bar\n+ baz'
+# TODO '- a\n - b\n  - c\n- d'

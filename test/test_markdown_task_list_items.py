@@ -16,19 +16,22 @@ def test_task_list_items_279():
     source_markdown = """- [ ] foo
 - [x] bar"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-::2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:[ ] foo:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[li:2]",
+        "[para:]",
+        "[text:[x] bar:]",
+        "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO revisit at end, not in back CommonMark spec
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -44,17 +47,29 @@ def test_task_list_items_280():
   - [x] baz
 - [ ] bim"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-::2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:[x] foo:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[ulist:-::4:  ]",
+        "[para:]",
+        "[text:[ ] bar:]",
+        "[end-para]",
+        "[li:4]",
+        "[para:]",
+        "[text:[x] baz:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[li:2]",
+        "[para:]",
+        "[text:[ ] bim:]",
+        "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO revisit at end, not in back CommonMark spec
     assert_if_lists_different(expected_tokens, actual_tokens)

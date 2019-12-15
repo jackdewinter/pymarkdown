@@ -1193,13 +1193,26 @@ def test_list_blocks_272():
     - baz
       - boo"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-::2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[ulist:-::4:  ]",
         "[para:]",
         "[text:bar:]",
+        "[end-para]",
+        "[ulist:-::6:    ]",
+        "[para:]",
         "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[ulist:-::8:      ]",
+        "[para:]",
+        "[text:boo:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[end-ulist]",
+        "[end-ulist]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -1257,13 +1270,16 @@ def test_list_blocks_274():
     source_markdown = """10) foo
     - bar"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:):10:4:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[ulist:-::6:    ]",
         "[para:]",
         "[text:bar:]",
-        "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-ulist]",
+        "[end-olist]",
     ]
 
     # Act
@@ -1283,13 +1299,16 @@ def test_list_blocks_275():
     source_markdown = """10) foo
    - bar"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:):10:4:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[end-olist]",
+        "[ulist:-::5:   ]",
         "[para:]",
         "[text:bar:]",
-        "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-ulist]",
     ]
 
     # Act

@@ -14,7 +14,7 @@ class TokenizedMarkdown:
         """
         Initializes a new instance of the TokenizedMarkdown class.
         """
-        self.ws_char = " \t"
+        self.ws_char = " "
         self.tokenized_document = None
         self.stack = ["document"]
 
@@ -32,7 +32,7 @@ class TokenizedMarkdown:
             print("current_block>>" + self.stack[-1])
             print("---")
 
-            next_line = next_token[0]
+            next_line = next_token[0].replace("\t", "    ")
             new_tokens = []
             if not next_line or not next_line.strip():
                 new_tokens = self.handle_blank_line(next_line, from_main_transform=True)
@@ -194,16 +194,11 @@ class TokenizedMarkdown:
 
         new_tokens = []
 
-        if (
-            self.determine_whitespace_length(extracted_whitespace) >= 4
-            and self.stack[-1] != "para"
-        ):
+        if len(extracted_whitespace) >= 4 and self.stack[-1] != "para":
             if self.stack[-1] != "icode-block":
                 self.stack.append("icode-block")
                 new_tokens.append("[icode-block:    ]")
-                extracted_whitespace = "".rjust(
-                    self.determine_whitespace_length(extracted_whitespace) - 4
-                )
+                extracted_whitespace = "".rjust(len(extracted_whitespace) - 4)
             new_tokens.append(
                 "[text:"
                 + line_to_parse[start_index:]
@@ -221,7 +216,7 @@ class TokenizedMarkdown:
         new_tokens = []
 
         if (
-            self.determine_whitespace_length(extracted_whitespace) <= 3
+            len(extracted_whitespace) <= 3
             and start_index < len(line_to_parse)
             and (line_to_parse[start_index] == "~" or line_to_parse[start_index] == "`")
         ):
@@ -299,7 +294,7 @@ class TokenizedMarkdown:
         thematic_break_character = None
         end_of_break_index = None
         if (
-            self.determine_whitespace_length(extracted_whitespace) <= 3
+            len(extracted_whitespace) <= 3
             and start_index < len(line_to_parse)
             and (
                 line_to_parse[start_index] == "*"
@@ -367,7 +362,7 @@ class TokenizedMarkdown:
 
         new_tokens = []
         if (
-            self.determine_whitespace_length(extracted_whitespace) <= 3
+            len(extracted_whitespace) <= 3
             and start_index < len(line_to_parse)
             and (line_to_parse[start_index] == "#")
         ):
@@ -430,7 +425,7 @@ class TokenizedMarkdown:
 
         new_tokens = []
         if (
-            self.determine_whitespace_length(extracted_whitespace) <= 3
+            len(extracted_whitespace) <= 3
             and start_index < len(line_to_parse)
             and (line_to_parse[start_index] == "=" or line_to_parse[start_index] == "-")
             and self.stack[-1] == "para"
@@ -586,7 +581,7 @@ class TokenizedMarkdown:
 
         if stack_bq_count > 0:
             if (
-                self.determine_whitespace_length(extracted_whitespace) <= 3
+                len(extracted_whitespace) <= 3
                 and start_index < len(line_to_parse)
                 and (
                     line_to_parse[start_index] == "="
@@ -664,7 +659,7 @@ class TokenizedMarkdown:
         )
 
     def is_ulist_start(
-        self, line_to_parse, start_index, extracted_whitespace, skip=False
+        self, line_to_parse, start_index, extracted_whitespace, skip=False, adj_ws=None
     ):
         """
         Determine if we have the start of an un-numbered list.
@@ -672,9 +667,12 @@ class TokenizedMarkdown:
 
         print("is_ulist_start>>pre>>")
         is_start = False
+        if adj_ws is None:
+            adj_ws = extracted_whitespace
+
         # pylint: disable=too-many-boolean-expressions
         if (
-            (self.determine_whitespace_length(extracted_whitespace) <= 3 or skip)
+            (len(adj_ws) <= 3 or skip)
             and start_index < len(line_to_parse)
             and (
                 line_to_parse[start_index] == "-"
@@ -718,7 +716,7 @@ class TokenizedMarkdown:
         return is_start
 
     def is_olist_start(
-        self, line_to_parse, start_index, extracted_whitespace, skip=False
+        self, line_to_parse, start_index, extracted_whitespace, skip=False, adj_ws=None
     ):
         """
         Determine if we have the start of an numbered or ordered list.
@@ -727,8 +725,10 @@ class TokenizedMarkdown:
         is_start = False
         index = None
         my_count = None
+        if adj_ws is None:
+            adj_ws = extracted_whitespace
         if (
-            (self.determine_whitespace_length(extracted_whitespace) <= 3 or skip)
+            (len(adj_ws) <= 3 or skip)
             and start_index < len(line_to_parse)
             and (
                 line_to_parse[start_index] >= "0" and line_to_parse[start_index] <= "9"
@@ -785,11 +785,17 @@ class TokenizedMarkdown:
         print("is_olist_start>>result>>" + str(is_start))
         return is_start, index, my_count
 
-    def are_list_starts_equal(self, last_list_index, new_stack):
+    # pylint: disable=too-many-statements
+    # pylint: disable=too-many-locals
+    def are_list_starts_equal(
+        self, last_list_index, new_stack, current_container_blocks
+    ):
         """
         Check to see if the list starts are equal, and hence a continuation of
         the current list.
         """
+
+        balancing_tokens = []
 
         print(
             "ARE-EQUAL>>stack>>"
@@ -798,7 +804,7 @@ class TokenizedMarkdown:
             + new_stack
         )
         if self.stack[last_list_index] == new_stack:
-            return True
+            return True, True, balancing_tokens
 
         document_token_index = len(self.tokenized_document) - 1
         last_list_token = ""
@@ -847,16 +853,59 @@ class TokenizedMarkdown:
         )
         print("last>>" + str(split_list_start) + ">>" + str(old_start_index))
         print(
-            "previous start>>"
-            + str(old_start_index)
-            + ">>current start>>"
-            + str(current_start_index)
+            "are_list_starts_equal>>stack>>"
+            + split_list_start_from_stack[0]
+            + ">>new>>"
+            + split_list_start_from_new_stack[0]
         )
-        return (
+        print(
+            "are_list_starts_equal>>old_last_marker_character>>"
+            + old_last_marker_character
+            + ">>new_last_marker_character>>"
+            + new_last_marker_character
+        )
+        if (
             split_list_start_from_stack[0] == split_list_start_from_new_stack[0]
-            and current_start_index < old_start_index
             and old_last_marker_character == new_last_marker_character
+        ):
+            print("are_list_starts_equal>>ELIGIBLE!!!")
+            print(
+                "are_list_starts_equal>>current_start_index>>"
+                + str(current_start_index)
+                + ">>old_start_index>>"
+                + str(old_start_index)
+            )
+            if current_start_index < old_start_index:
+
+                print("current_container_blocks>>" + str(current_container_blocks))
+                if len(current_container_blocks) > 1:
+                    print("current_container_blocks-->" + str(self.stack))
+                    split_last_stack = self.stack[-1].split(":")
+                    last_stack_depth = int(split_last_stack[3])
+                    while current_start_index < last_stack_depth:
+                        last_stack_index = self.stack.index(self.stack[-1])
+                        close_tokens = self.close_open_blocks(
+                            until_me=last_stack_index, include_lists=True
+                        )
+                        if close_tokens:
+                            balancing_tokens.extend(close_tokens)
+                        print("close_tokens>>" + str(close_tokens))
+                        split_last_stack = self.stack[-1].split(":")
+                        last_stack_depth = int(split_last_stack[3])
+
+                return True, True, balancing_tokens
+            return True, False, balancing_tokens
+        print("SUBLIST WITH DIFFERENT")
+        print("are_list_starts_equal>>ELIGIBLE!!!")
+        print(
+            "are_list_starts_equal>>current_start_index>>"
+            + str(current_start_index)
+            + ">>old_start_index>>"
+            + str(old_start_index)
         )
+        if current_start_index >= old_start_index:
+            return True, False, balancing_tokens
+        return False, False, balancing_tokens
 
     def pre_list(self, line_to_parse, start_index, extracted_whitespace, marker_width):
         """
@@ -866,8 +915,8 @@ class TokenizedMarkdown:
         after_marker_ws_index, after_marker_whitespace = self.extract_whitespace(
             line_to_parse, start_index + 1
         )
-        ws_after_marker = self.determine_whitespace_length(after_marker_whitespace)
-        ws_before_marker = self.determine_whitespace_length(extracted_whitespace)
+        ws_after_marker = len(after_marker_whitespace)
+        ws_before_marker = len(extracted_whitespace)
 
         print(
             ">>>>>XX>>"
@@ -916,6 +965,7 @@ class TokenizedMarkdown:
             ws_before_marker,
         )
 
+    # pylint: disable=too-many-locals
     def post_list(
         self,
         new_stack,
@@ -924,6 +974,7 @@ class TokenizedMarkdown:
         remaining_whitespace,
         after_marker_ws_index,
         indent_level,
+        current_container_blocks,
     ):
         """
         Handle the processing of the last part of the list.
@@ -934,6 +985,7 @@ class TokenizedMarkdown:
         container_level_tokens = []
 
         emit_item = True
+        emit_li = True
         did_find, last_list_index = self.check_for_list_in_process()
         if did_find:
             print("list-in-process>>" + self.stack[last_list_index])
@@ -942,9 +994,16 @@ class TokenizedMarkdown:
             )
             print("old-stack>>" + str(container_level_tokens) + "<<")
 
-            if self.are_list_starts_equal(last_list_index, new_stack):
+            do_not_emit, emit_li, extra_tokens = self.are_list_starts_equal(
+                last_list_index, new_stack, current_container_blocks
+            )
+            if extra_tokens:
+                container_level_tokens.extend(extra_tokens)
+            if do_not_emit:
                 emit_item = False
+                print("post_list>>don't emit")
             else:
+                print("post_list>>close open blocks and emit")
                 close_tokens = self.close_open_blocks(
                     until_me=last_list_index, include_lists=True
                 )
@@ -955,10 +1014,10 @@ class TokenizedMarkdown:
             container_level_tokens = self.close_open_blocks()
         print("container_level_tokens>>" + str(container_level_tokens))
 
-        if emit_item:
+        if emit_item or not emit_li:
             self.stack.append(new_stack)
             container_level_tokens.append(new_token)
-        else:
+        elif emit_li:
             container_level_tokens.append("[li:" + str(indent_level) + "]")
         ### ONLY OUTPUT IF DIFFERENT THAN PRIOR, CLOSING OLD IF SO
         stri = ""
@@ -1006,7 +1065,7 @@ class TokenizedMarkdown:
             + str(after_ws_length)
         )
 
-        leading_space_length = self.determine_whitespace_length(extracted_whitespace)
+        leading_space_length = len(extracted_whitespace)
         is_in_paragraph = self.stack[-1] == "para"
 
         started_ulist = self.is_ulist_start(
@@ -1064,6 +1123,60 @@ class TokenizedMarkdown:
 
         return container_level_tokens, line_to_parse
 
+    def calculate_adjusted_whitespace(
+        self, current_container_blocks, line_to_parse, extracted_whitespace
+    ):
+        """
+        Based on the last container on the stack, determine what the adjusted whitespace is.
+        """
+
+        adj_ws = extracted_whitespace
+        stack_index = len(self.stack) - 1
+        while stack_index >= 0 and not (
+            self.stack[stack_index].startswith("ulist:")
+            or self.stack[stack_index].startswith("olist:")
+        ):
+            stack_index = stack_index - 1
+        if stack_index < 0:
+            print("PLFCB>>No Started lists")
+            assert len(current_container_blocks) == 0
+        else:
+            assert len(current_container_blocks) >= 1
+            print("PLFCB>>Started list-last stack>>" + str(self.stack[stack_index]))
+            token_index = len(self.tokenized_document) - 1
+            while token_index >= 0 and not (
+                self.tokenized_document[token_index].startswith("[ulist:")
+                or self.tokenized_document[token_index].startswith("[olist:")
+                or self.tokenized_document[token_index].startswith("[li:")
+            ):
+                token_index = token_index - 1
+            print(
+                "PLFCB>>Started list-last token>>"
+                + str(self.tokenized_document[token_index])
+            )
+            last_list_token = self.tokenized_document[token_index]
+            if last_list_token.startswith("[li:"):
+                split_list_start = last_list_token[0:-1].split(":")
+                assert len(split_list_start) == 2
+                old_start_index = int(split_list_start[1])
+            else:
+                split_list_start = last_list_token.split(":")
+                assert len(split_list_start) == 5
+                old_start_index = int(split_list_start[3])
+
+            ws_len = len(extracted_whitespace)
+            print(
+                "old_start_index>>" + str(old_start_index) + ">>ws_len>>" + str(ws_len)
+            )
+            if ws_len >= old_start_index:
+                # line_to_parse = line_to_parse[old_start_index:]
+                # start_index, extracted_whitespace = self.extract_whitespace(line_to_parse, xxxxx)
+                print("RELINE:" + line_to_parse + ":")
+                adj_ws = extracted_whitespace[old_start_index:]
+            elif ws_len < old_start_index:
+                print("DOWNGRADE")
+        return adj_ws
+
     # pylint: disable=too-many-statements
     # pylint: disable=too-many-branches
     # pylint: disable=too-many-locals
@@ -1085,10 +1198,16 @@ class TokenizedMarkdown:
         start_index, extracted_whitespace = self.extract_whitespace(line_to_parse, 0)
         stack_bq_count = self.__count_of_block_quotes_on_stack()
 
-        if (
-            self.determine_whitespace_length(extracted_whitespace) <= 3
-            and line_to_parse[start_index] == ">"
-        ):
+        current_container_blocks = []
+        for ind in self.stack:
+            if ind.startswith("olist:") or ind.startswith("ulist:"):
+                current_container_blocks.append(ind)
+
+        adj_ws = self.calculate_adjusted_whitespace(
+            current_container_blocks, line_to_parse, extracted_whitespace
+        )
+
+        if len(extracted_whitespace) <= 3 and line_to_parse[start_index] == ">":
             assert not container_level_tokens
             assert not leaf_tokens
             print("clt>>block-start")
@@ -1109,7 +1228,7 @@ class TokenizedMarkdown:
             did_process = True
 
         started_ulist = not did_process and self.is_ulist_start(
-            line_to_parse, start_index, extracted_whitespace
+            line_to_parse, start_index, extracted_whitespace, adj_ws=adj_ws
         )
         if started_ulist:
             assert not container_level_tokens
@@ -1162,13 +1281,14 @@ class TokenizedMarkdown:
                 remaining_whitespace,
                 after_marker_ws_index,
                 indent_level,
+                current_container_blocks,
             )
             did_process = True
 
         print("LINE>" + line_to_parse)
         if not did_process:
             started_olist, index, my_count = self.is_olist_start(
-                line_to_parse, start_index, extracted_whitespace
+                line_to_parse, start_index, extracted_whitespace, adj_ws=adj_ws
             )
             if started_olist:
                 assert not container_level_tokens
@@ -1224,6 +1344,7 @@ class TokenizedMarkdown:
                     remaining_whitespace,
                     after_marker_ws_index,
                     indent_level,
+                    current_container_blocks,
                 )
                 did_process = True
 
@@ -1305,10 +1426,7 @@ class TokenizedMarkdown:
             line_to_parse, start_index
         )
 
-        if (
-            self.stack[-1] == "icode-block"
-            and self.determine_whitespace_length(extracted_whitespace) <= 3
-        ):
+        if self.stack[-1] == "icode-block" and len(extracted_whitespace) <= 3:
             pre_tokens.append("[end-" + self.stack[-1] + "]")
             del self.stack[-1]
             while self.tokenized_document[-1].startswith("[BLANK"):
@@ -1403,17 +1521,3 @@ class TokenizedMarkdown:
             index = index - 1
 
         return index + 1, source_string[index + 1 :]
-
-    @classmethod
-    def determine_whitespace_length(cls, extracted_whitespace):
-        """
-        Given a string of whitespace characters, determine the length.
-        """
-
-        whitespace_length = 0
-        for next_character in extracted_whitespace:
-            if next_character == " ":
-                whitespace_length = whitespace_length + 1
-            else:
-                whitespace_length = whitespace_length + 4
-        return whitespace_length

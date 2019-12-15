@@ -16,7 +16,7 @@ def test_tabs_001():
     source_markdown = """	foo	baz		bim"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:foo\tbaz\t\tbim:]",
+        "[text:foo    baz        bim:]",
         "[end-icode-block]",
     ]
 
@@ -37,7 +37,7 @@ def test_tabs_002():
     source_markdown = """  	foo	baz		bim"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:foo\tbaz\t\tbim:  ]",
+        "[text:foo    baz        bim:  ]",
         "[end-icode-block]",
     ]
 
@@ -59,8 +59,8 @@ def test_tabs_003():
     ὐ	a"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:a\ta:]",
-        "[text:ὐ\ta:    ]",
+        "[text:a    a:]",
+        "[text:ὐ    a:    ]",
         "[end-icode-block]",
     ]
 
@@ -143,7 +143,7 @@ def test_tabs_006():
     expected_tokens = [
         "[block-quote:]",
         "[icode-block:    ]",
-        "[text:foo:    ]",
+        "[text:foo:   ]",
         "[end-icode-block]",
         "[end-block-quote]",
     ]
@@ -191,7 +191,7 @@ def test_tabs_008():
     expected_tokens = [
         "[icode-block:    ]",
         "[text:foo:]",
-        "[text:bar:\t]",
+        "[text:bar:    ]",
         "[end-icode-block]",
     ]
 
@@ -211,14 +211,24 @@ def test_tabs_009():
     tokenizer = TokenizedMarkdown()
     source_markdown = """ - foo
    - bar
-	- baz"""  # noqa: E101,W191
+	 - baz"""  # noqa: E101,W191
     # noqa: E101
     expected_tokens = [
-        "[para: ]",
-        "[text:- foo:]",
-        "[text:- bar:   ]",
-        "[text:- baz:\t]",
+        "[ulist:-::3: ]",
+        "[para:]",
+        "[text:foo:]",
         "[end-para]",
+        "[ulist:-::5:   ]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+        "[ulist:-::7:     ]",
+        "[para:]",
+        "[text:baz:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[end-ulist]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -237,7 +247,7 @@ def test_tabs_010():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """#	Foo"""
-    expected_tokens = ["[atx:1:Foo::\t::]"]
+    expected_tokens = ["[atx:1:Foo::    ::]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -254,7 +264,7 @@ def test_tabs_011():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """*	*	*	"""
-    expected_tokens = ["[tbreak:*::*\t*\t*\t]"]
+    expected_tokens = ["[tbreak:*::*    *    *    ]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
