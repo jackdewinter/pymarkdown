@@ -705,13 +705,21 @@ def test_list_items_300():
   >
 * c"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:*::2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:a:]",
         "[end-para]",
+        "[block-quote:  ]",
+        "[para:]",
+        "[text:b:]",
+        "[end-para]",
+        "[BLANK:]",
         "[end-block-quote]",
+        "[li:2]",
+        "[para:]",
+        "[text:c:]",
+        "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -735,13 +743,23 @@ def test_list_items_301():
   ```
 - d"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-::2:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:a:]",
+        "[end-para]",
+        "[block-quote:  ]",
+        "[para:]",
+        "[text:b:]",
         "[end-para]",
         "[end-block-quote]",
+        "[fcode-block:`:3::::]",
+        "[text:c:]",
+        "[end-fcode-block:]",
+        "[li:2]",
+        "[para:]",
+        "[text:d:]",
+        "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -923,3 +941,9 @@ def test_list_items_306():
 
 # TODO '* foo\n  * bar\n+ baz'
 # TODO '- a\n - b\n  - c\n- d'
+# TODO block quotes that start and stop i.e. > then >> then > then >>>, etc
+# TODO 300 with different list following
+# TODO 300 with extra indent on following item
+# TODO 301, but with extra levels of block quotes
+# TODO 301, with indented code blocks
+# TODO 270 and check for indent levels after

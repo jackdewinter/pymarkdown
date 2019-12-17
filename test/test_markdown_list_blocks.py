@@ -2,6 +2,8 @@
 """
 https://github.github.com/gfm/#lists
 """
+import pytest
+
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
 from .utils import assert_if_lists_different
@@ -28,13 +30,13 @@ with two lines.
         "[BLANK:]",
         "[icode-block:    ]",
         "[text:indented code:]",
+        "[end-icode-block]",
         "[BLANK:]",
         "[block-quote:]",
         "[para:]",
         "[text:A block quote.:]",
         "[end-para]",
         "[end-block-quote]",
-        "[end-icode-block]",
     ]
 
     # Act
@@ -58,13 +60,22 @@ def test_list_blocks_232():
 
     > A block quote."""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:1:4:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:A paragraph:]",
+        "[text:with two lines.:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:indented code:]",
+        "[end-icode-block]",
+        "[BLANK:]",
+        "[block-quote:    ]",
+        "[para:]",
+        "[text:A block quote.:]",
         "[end-para]",
         "[end-block-quote]",
+        "[end-olist]",
     ]
 
     # Act
@@ -190,6 +201,7 @@ def test_list_blocks_236():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
+@pytest.mark.skip
 def test_list_blocks_237():
     """
     Test case 237:  The spaces after the list marker determine how much relative indentation is needed. Which column this indentation reaches will depend on how the list item is embedded in other constructions, as shown by this example:
@@ -217,6 +229,7 @@ def test_list_blocks_237():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
+@pytest.mark.skip
 def test_list_blocks_238():
     """
     Test case 238:  The converse is also possible. In the following example, the word two occurs far to the right of the initial text of the list item, one, but it is not considered part of the list item, because it is not indented far enough past the blockquote marker:
@@ -319,13 +332,25 @@ def test_list_blocks_241():
 
     > bam"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:1:4:]",
         "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[fcode-block:`:3::::]",
         "[text:bar:]",
+        "[end-fcode-block:]",
+        "[BLANK:]",
+        "[para:]",
         "[text:baz:]",
         "[end-para]",
+        "[BLANK:]",
+        "[block-quote:    ]",
+        "[para:]",
+        "[text:bam:]",
+        "[end-para]",
         "[end-block-quote]",
+        "[end-olist]",
     ]
 
     # Act
@@ -968,13 +993,22 @@ def test_list_blocks_264():
 
      > A block quote."""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:1:5: ]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:A paragraph:]",
+        "[text:with two lines.:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:indented code:]",
+        "[end-icode-block]",
+        "[BLANK:]",
+        "[block-quote:     ]",
+        "[para:]",
+        "[text:A block quote.:]",
         "[end-para]",
         "[end-block-quote]",
+        "[end-olist]",
     ]
 
     # Act
@@ -998,13 +1032,22 @@ def test_list_blocks_265():
 
       > A block quote."""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:1:6:  ]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:A paragraph:]",
+        "[text:with two lines.:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:indented code:]",
+        "[end-icode-block]",
+        "[BLANK:]",
+        "[block-quote:      ]",
+        "[para:]",
+        "[text:A block quote.:]",
         "[end-para]",
         "[end-block-quote]",
+        "[end-olist]",
     ]
 
     # Act
@@ -1028,13 +1071,22 @@ def test_list_blocks_266():
 
        > A block quote."""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:1:7:   ]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:A paragraph:]",
+        "[text:with two lines.:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:indented code:]",
+        "[end-icode-block]",
+        "[BLANK:]",
+        "[block-quote:       ]",
+        "[para:]",
+        "[text:A block quote.:]",
         "[end-para]",
         "[end-block-quote]",
+        "[end-olist]",
     ]
 
     # Act
@@ -1058,13 +1110,14 @@ def test_list_blocks_267():
 
         > A block quote."""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
-        "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[icode-block:    ]",
+        "[text:1.  A paragraph:]",
+        "[text:with two lines.:        ]",
+        "[BLANK:]",
+        "[text:indented code:            ]",
+        "[BLANK:]",
+        "[text:> A block quote.:        ]",
+        "[end-icode-block]",
     ]
 
     # Act
@@ -1088,13 +1141,22 @@ with two lines.
 
       > A block quote."""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:1:6:  ]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:A paragraph:]",
+        "[text:with two lines.:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:indented code:]",
+        "[end-icode-block]",
+        "[BLANK:]",
+        "[block-quote:      ]",
+        "[para:]",
+        "[text:A block quote.:]",
         "[end-para]",
         "[end-block-quote]",
+        "[end-olist]",
     ]
 
     # Act
@@ -1129,6 +1191,7 @@ def test_list_blocks_269():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
+@pytest.mark.skip
 def test_list_blocks_270():
     """
     Test case 270:  (part 1) These examples show how laziness can work in nested structures:
@@ -1155,6 +1218,7 @@ continued here."""
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
+@pytest.mark.skip
 def test_list_blocks_271():
     """
     Test case 271:  (part 2) These examples show how laziness can work in nested structures:
@@ -1327,13 +1391,13 @@ def test_list_blocks_276():
     tokenizer = TokenizedMarkdown()
     source_markdown = """- - foo"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-::2:]",
+        "[ulist:-::4:  ]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:foo:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-ulist]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -1352,13 +1416,15 @@ def test_list_blocks_277():
     tokenizer = TokenizedMarkdown()
     source_markdown = """1. - 2. foo"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[olist:.:1:3:]",
+        "[ulist:-::5:   ]",
+        "[olist:.:2:8:     ]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:foo:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[end-olist]",
+        "[end-ulist]",
+        "[end-olist]",
     ]
 
     # Act

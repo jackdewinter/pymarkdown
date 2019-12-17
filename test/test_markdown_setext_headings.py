@@ -400,6 +400,31 @@ def test_setext_headings_064():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
+def test_setext_headings_064a():
+    """
+    Test case 064a:  064 with with other underline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """- Foo
+---"""
+    expected_tokens = [
+        "[ulist:-::2:]",
+        "[para:]",
+        "[text:Foo:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[tbreak:-::---]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
 def test_setext_headings_065():
     """
     Test case 065:  A blank line is needed between a paragraph and a following setext heading, since otherwise the paragraph becomes part of the heading’s content:
@@ -491,6 +516,31 @@ def test_setext_headings_068():
 def test_setext_headings_069():
     """
     Test case 069:  (part b) Setext heading text lines must not be interpretable as block constructs other than paragraphs. So, the line of dashes in these examples gets interpreted as a thematic break:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """- foo
+-----"""
+    expected_tokens = [
+        "[ulist:-::2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[tbreak:-::-----]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_setext_headings_069a():
+    """
+    Test case 069a:  069 with other underline
     """
 
     # Arrange

@@ -238,7 +238,7 @@ bbb"""
     expected_tokens = [
         "[block-quote:]",
         "[fcode-block:`:3::::]",
-        "[text:> aaa:]",
+        "[text:aaa:  ]",
         "[end-fcode-block:]",
         "[end-block-quote]",
         "[BLANK:]",

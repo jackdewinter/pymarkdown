@@ -204,22 +204,23 @@ def test_block_quotes_213():
 - bar"""
     expected_tokens = [
         "[block-quote:]",
+        "[ulist:-::4:  ]",
         "[para:]",
-        "[text:- foo:]",
+        "[text:foo:]",
         "[end-para]",
+        "[end-ulist]",
+        "[end-block-quote]",
         "[ulist:-::2:]",
         "[para:]",
         "[text:bar:]",
         "[end-para]",
         "[end-ulist]",
-        "[end-block-quote]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when list blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -339,6 +340,7 @@ def test_block_quotes_218():
         "[BLANK:]",
         "[BLANK: ]",
         "[BLANK:]",
+        "[BLANK:]",
         "[end-block-quote]",
     ]
 
@@ -366,6 +368,7 @@ def test_block_quotes_219():
         "[text:foo:]",
         "[end-para]",
         "[BLANK: ]",
+        "[BLANK:]",
         "[end-block-quote]",
     ]
 
