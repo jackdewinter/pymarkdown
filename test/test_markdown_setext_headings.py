@@ -317,7 +317,6 @@ of dashes"/>"""
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when inline html implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

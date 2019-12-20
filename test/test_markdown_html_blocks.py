@@ -23,24 +23,26 @@ _world_.
 </pre>
 </td></tr></table>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<table><tr><td>:]",
         "[text:<pre>:]",
         "[text:**Hello**,:]",
-        "[end-para]",
+        "[end-html-block]",
         "[BLANK:]",
         "[para:]",
         "[text:_world_.:]",
         "[text:</pre>:]",
-        "[text:</td></tr></table>:]",
         "[end-para]",
+        "[html-block]",
+        "[text:</td></tr></table>:]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
+    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -61,7 +63,7 @@ def test_html_blocks_119():
 
 okay."""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<table>:]",
         "[text:<tr>:  ]",
         "[text:<td>:    ]",
@@ -69,7 +71,7 @@ okay."""
         "[text:</td>:    ]",
         "[text:</tr>:  ]",
         "[text:</table>:]",
-        "[end-para]",
+        "[end-html-block]",
         "[BLANK:]",
         "[para:]",
         "[text:okay.:]",
@@ -80,7 +82,6 @@ okay."""
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -95,18 +96,17 @@ def test_html_blocks_120():
   *hello*
          <foo><a>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<div>:]",
         "[text:*hello*:  ]",
         "[text:<foo><a>:         ]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -119,13 +119,17 @@ def test_html_blocks_121():
     tokenizer = TokenizedMarkdown()
     source_markdown = """</div>
 *foo*"""
-    expected_tokens = ["[para:]", "[text:</div>:]", "[text:*foo*:]", "[end-para]"]
+    expected_tokens = [
+        "[html-block]",
+        "[text:</div>:]",
+        "[text:*foo*:]",
+        "[end-html-block]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -142,24 +146,24 @@ def test_html_blocks_122():
 
 </DIV>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         '[text:<DIV CLASS="foo">:]',
-        "[end-para]",
+        "[end-html-block]",
         "[BLANK:]",
         "[para:]",
         "[text:*Markdown*:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[html-block]",
         "[text:</DIV>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
+    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -174,18 +178,17 @@ def test_html_blocks_123():
   class="bar">
 </div>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         '[text:<div id="foo":]',
         '[text:class="bar">:  ]',
         "[text:</div>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -200,18 +203,17 @@ def test_html_blocks_124():
   baz">
 </div>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         '[text:<div id="foo" class="bar:]',
         '[text:baz">:  ]',
         "[text:</div>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -227,10 +229,10 @@ def test_html_blocks_125():
 
 *bar*"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<div>:]",
         "[text:*foo*:]",
-        "[end-para]",
+        "[end-html-block]",
         "[BLANK:]",
         "[para:]",
         "[text:*bar*:]",
@@ -241,7 +243,7 @@ def test_html_blocks_125():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
+    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -254,13 +256,17 @@ def test_html_blocks_126():
     tokenizer = TokenizedMarkdown()
     source_markdown = """<div id="foo"
 *hi*"""
-    expected_tokens = ["[para:]", '[text:<div id="foo":]', "[text:*hi*:]", "[end-para]"]
+    expected_tokens = [
+        "[html-block]",
+        '[text:<div id="foo":]',
+        "[text:*hi*:]",
+        "[end-html-block]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -273,13 +279,17 @@ def test_html_blocks_127():
     tokenizer = TokenizedMarkdown()
     source_markdown = """<div class
 foo"""
-    expected_tokens = ["[para:]", "[text:<div class:]", "[text:foo:]", "[end-para]"]
+    expected_tokens = [
+        "[html-block]",
+        "[text:<div class:]",
+        "[text:foo:]",
+        "[end-html-block]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -293,17 +303,16 @@ def test_html_blocks_128():
     source_markdown = """<div *???-&&&-<---
 *foo*"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<div *???-&&&-<---:]",
         "[text:*foo*:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -316,16 +325,15 @@ def test_html_blocks_129():
     tokenizer = TokenizedMarkdown()
     source_markdown = """<div><a href="bar">*foo*</a></div>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         '[text:<div><a href="bar">*foo*</a></div>:]',
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -340,18 +348,17 @@ def test_html_blocks_130():
 foo
 </td></tr></table>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<table><tr><td>:]",
         "[text:foo:]",
         "[text:</td></tr></table>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -367,19 +374,18 @@ def test_html_blocks_131():
 int x = 33;
 ```"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<div></div>:]",
-        "[end-para]",
-        "[fcode-block:`:3:c::: ]",
+        "[text:``` c:]",
         "[text:int x = 33;:]",
-        "[end-fcode-block:]",
+        "[text:```:]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -394,18 +400,17 @@ def test_html_blocks_132():
 *bar*
 </a>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         '[text:<a href="foo">:]',
         "[text:*bar*:]",
         "[text:</a>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -420,18 +425,17 @@ def test_html_blocks_133():
 *bar*
 </Warning>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<Warning>:]",
         "[text:*bar*:]",
         "[text:</Warning>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -446,18 +450,17 @@ def test_html_blocks_134():
 *bar*
 </i>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         '[text:<i class="foo">:]',
         "[text:*bar*:]",
         "[text:</i>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -470,13 +473,17 @@ def test_html_blocks_135():
     tokenizer = TokenizedMarkdown()
     source_markdown = """</ins>
 *bar*"""
-    expected_tokens = ["[para:]", "[text:</ins>:]", "[text:*bar*:]", "[end-para]"]
+    expected_tokens = [
+        "[html-block]",
+        "[text:</ins>:]",
+        "[text:*bar*:]",
+        "[end-html-block]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -491,18 +498,17 @@ def test_html_blocks_136():
 *foo*
 </del>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<del>:]",
         "[text:*foo*:]",
         "[text:</del>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -519,24 +525,23 @@ def test_html_blocks_137():
 
 </del>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<del>:]",
-        "[end-para]",
+        "[end-html-block]",
         "[BLANK:]",
         "[para:]",
         "[text:*foo*:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[html-block]",
         "[text:</del>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -554,7 +559,7 @@ def test_html_blocks_138():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
+    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -573,24 +578,22 @@ main = print $ parseTags tags
 </code></pre>
 okay"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         '[text:<pre language="haskell"><code>:]',
         "[text:import Text.HTML.TagSoup:]",
-        "[end-para]",
         "[BLANK:]",
-        "[para:]",
         "[text:main :: IO ():]",
         "[text:main = print $ parseTags tags:]",
         "[text:</code></pre>:]",
+        "[end-html-block]",
+        "[para:]",
         "[text:okay:]",
         "[end-para]",
     ]
-
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -608,14 +611,14 @@ document.getElementById("demo").innerHTML = "Hello JavaScript!";
 </script>
 okay"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         '[text:<script type="text/javascript">:]',
         "[text:// JavaScript example:]",
-        "[end-para]",
         "[BLANK:]",
-        "[para:]",
         '[text:document.getElementById("demo").innerHTML = "Hello JavaScript!";:]',
         "[text:</script>:]",
+        "[end-html-block]",
+        "[para:]",
         "[text:okay:]",
         "[end-para]",
     ]
@@ -624,7 +627,6 @@ okay"""
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -643,15 +645,15 @@ p {color:blue;}
 </style>
 okay"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<style:]",
         '[text:type="text/css">:  ]',
         "[text:h1 {color:red;}:]",
-        "[end-para]",
         "[BLANK:]",
-        "[para:]",
         "[text:p {color:blue;}:]",
         "[text:</style>:]",
+        "[end-html-block]",
+        "[para:]",
         "[text:okay:]",
         "[end-para]",
     ]
@@ -660,7 +662,6 @@ okay"""
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -676,21 +677,18 @@ def test_html_blocks_142():
 
 foo"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<style:]",
         '[text:type="text/css">:  ]',
-        "[end-para]",
         "[BLANK:]",
-        "[para:]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -707,12 +705,12 @@ def test_html_blocks_143():
 bar"""
     expected_tokens = [
         "[block-quote:]",
-        "[para:]",
+        "[html-block]",
         "[text:<div>:]",
         "[text:foo:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-html-block]",
         "[BLANK:]",
+        "[end-block-quote]",
         "[para:]",
         "[text:bar:]",
         "[end-para]",
@@ -722,8 +720,6 @@ bar"""
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when block quotes are implemented
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -738,9 +734,9 @@ def test_html_blocks_144():
 - foo"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[para:]",
+        "[html-block]",
         "[text:<div>:]",
-        "[end-para]",
+        "[end-html-block]",
         "[li:2]",
         "[para:]",
         "[text:foo:]",
@@ -752,8 +748,6 @@ def test_html_blocks_144():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when list blocks are implemented
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -767,8 +761,10 @@ def test_html_blocks_145():
     source_markdown = """<style>p{color:red;}</style>
 *foo*"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<style>p{color:red;}</style>:]",
+        "[end-html-block]",
+        "[para:]",
         "[text:*foo*:]",
         "[end-para]",
     ]
@@ -777,7 +773,7 @@ def test_html_blocks_145():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
+    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -791,8 +787,10 @@ def test_html_blocks_146():
     source_markdown = """<!-- foo -->*bar*
 *baz*"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<!-- foo -->*bar*:]",
+        "[end-html-block]",
+        "[para:]",
         "[text:*baz*:]",
         "[end-para]",
     ]
@@ -801,7 +799,7 @@ def test_html_blocks_146():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
+    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -816,18 +814,17 @@ def test_html_blocks_147():
 foo
 </script>1. *bar*"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<script>:]",
         "[text:foo:]",
         "[text:</script>1. *bar*:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -844,13 +841,13 @@ bar
    baz -->
 okay"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<!-- Foo:]",
-        "[end-para]",
         "[BLANK:]",
-        "[para:]",
         "[text:bar:]",
         "[text:baz -->:   ]",
+        "[end-html-block]",
+        "[para:]",
         "[text:okay:]",
         "[end-para]",
     ]
@@ -859,7 +856,6 @@ okay"""
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -877,16 +873,14 @@ def test_html_blocks_149():
 ?>
 okay"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<?php:]",
-        "[end-para]",
         "[BLANK:]",
-        "[para:  ]",
-        "[text:echo '>';:]",
-        "[end-para]",
+        "[text:echo '>';:  ]",
         "[BLANK:]",
-        "[para:]",
         "[text:?>:]",
+        "[end-html-block]",
+        "[para:]",
         "[text:okay:]",
         "[end-para]",
     ]
@@ -895,7 +889,6 @@ okay"""
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -907,13 +900,12 @@ def test_html_blocks_150():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<!DOCTYPE html>"""
-    expected_tokens = ["[para:]", "[text:<!DOCTYPE html>:]", "[end-para]"]
+    expected_tokens = ["[html-block]", "[text:<!DOCTYPE html>:]", "[end-html-block]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -938,25 +930,21 @@ function matchwo(a,b)
 ]]>
 okay"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<![CDATA[:]",
         "[text:function matchwo(a,b):]",
         "[text:{:]",
         "[text:if (a < b && a < 0) then {:  ]",
         "[text:return 1;:    ]",
-        "[end-para]",
         "[BLANK:]",
-        "[para:  ]",
-        "[text:} else {:]",
-        "[end-para]",
+        "[text:} else {:  ]",
         "[BLANK:]",
-        "[icode-block:    ]",
-        "[text:return 0;:]",
-        "[end-icode-block]",
-        "[para:  ]",
-        "[text:}:]",
+        "[text:return 0;:    ]",
+        "[text:}:  ]",
         "[text:}:]",
         "[text:]]>:]",
+        "[end-html-block]",
+        "[para:]",
         "[text:okay:]",
         "[end-para]",
     ]
@@ -965,7 +953,6 @@ okay"""
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -980,9 +967,9 @@ def test_html_blocks_152():
 
     <!-- foo -->"""
     expected_tokens = [
-        "[para:  ]",
-        "[text:<!-- foo -->:]",
-        "[end-para]",
+        "[html-block]",
+        "[text:<!-- foo -->:  ]",
+        "[end-html-block]",
         "[BLANK:]",
         "[icode-block:    ]",
         "[text:<!-- foo -->:]",
@@ -993,7 +980,6 @@ def test_html_blocks_152():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -1008,9 +994,9 @@ def test_html_blocks_153():
 
     <div>"""
     expected_tokens = [
-        "[para:  ]",
-        "[text:<div>:]",
-        "[end-para]",
+        "[html-block]",
+        "[text:<div>:  ]",
+        "[end-html-block]",
         "[BLANK:]",
         "[icode-block:    ]",
         "[text:<div>:]",
@@ -1021,7 +1007,6 @@ def test_html_blocks_153():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -1039,17 +1024,18 @@ bar
     expected_tokens = [
         "[para:]",
         "[text:Foo:]",
+        "[end-para]",
+        "[html-block]",
         "[text:<div>:]",
         "[text:bar:]",
         "[text:</div>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -1065,19 +1051,18 @@ bar
 </div>
 *foo*"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<div>:]",
         "[text:bar:]",
         "[text:</div>:]",
         "[text:*foo*:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -1103,7 +1088,6 @@ baz"""
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -1120,24 +1104,24 @@ def test_html_blocks_157():
 
 </div>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<div>:]",
-        "[end-para]",
+        "[end-html-block]",
         "[BLANK:]",
         "[para:]",
         "[text:*Emphasized* text.:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[html-block]",
         "[text:</div>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
+    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -1152,18 +1136,17 @@ def test_html_blocks_158():
 *Emphasized* text.
 </div>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<div>:]",
         "[text:*Emphasized* text.:]",
         "[text:</div>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -1186,34 +1169,33 @@ Hi
 
 </table>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<table>:]",
-        "[end-para]",
+        "[end-html-block]",
         "[BLANK:]",
-        "[para:]",
+        "[html-block]",
         "[text:<tr>:]",
-        "[end-para]",
+        "[end-html-block]",
         "[BLANK:]",
-        "[para:]",
+        "[html-block]",
         "[text:<td>:]",
         "[text:Hi:]",
         "[text:</td>:]",
-        "[end-para]",
+        "[end-html-block]",
         "[BLANK:]",
-        "[para:]",
+        "[html-block]",
         "[text:</tr>:]",
-        "[end-para]",
+        "[end-html-block]",
         "[BLANK:]",
-        "[para:]",
+        "[html-block]",
         "[text:</table>:]",
-        "[end-para]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -1234,16 +1216,15 @@ def test_html_blocks_160():
 
   </tr>
 
-</table>
-"""
+</table>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<table>:]",
-        "[end-para]",
+        "[end-html-block]",
         "[BLANK:]",
-        "[para:  ]",
-        "[text:<tr>:]",
-        "[end-para]",
+        "[html-block]",
+        "[text:<tr>:  ]",
+        "[end-html-block]",
         "[BLANK:]",
         "[icode-block:    ]",
         "[text:<td>:]",
@@ -1251,14 +1232,13 @@ def test_html_blocks_160():
         "[text:</td>:    ]",
         "[end-icode-block]",
         "[BLANK:]",
-        "[para:  ]",
-        "[text:</tr>:]",
-        "[end-para]",
+        "[html-block]",
+        "[text:</tr>:  ]",
+        "[end-html-block]",
         "[BLANK:]",
-        "[para:]",
+        "[html-block]",
         "[text:</table>:]",
-        "[end-para]",
-        "[BLANK:]",
+        "[end-html-block]",
     ]
 
     # Act
@@ -1282,10 +1262,9 @@ def test_html_blocks_160a():
       Hi
     </td>
   </tr>
-</table>
-"""
+</table>"""
     expected_tokens = [
-        "[para:]",
+        "[html-block]",
         "[text:<table>:]",
         "[text:<tr>:  ]",
         "[text:<td>:    ]",
@@ -1293,13 +1272,11 @@ def test_html_blocks_160a():
         "[text:</td>:    ]",
         "[text:</tr>:  ]",
         "[text:</table>:]",
-        "[end-para]",
-        "[BLANK:]",
+        "[end-html-block]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)

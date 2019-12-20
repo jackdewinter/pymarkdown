@@ -253,13 +253,29 @@ def test_list_items_288():
 - baz
 - bim"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-::2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[li:2]",
         "[para:]",
         "[text:bar:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[end-ulist]",
+        "[html-block]",
+        "[text:<!-- -->:]",
+        "[end-html-block]",
+        "[BLANK:]",
+        "[ulist:-::2:]",
+        "[para:]",
         "[text:baz:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[li:2]",
+        "[para:]",
+        "[text:bim:]",
+        "[end-para]",
+        "[end-ulist]",
     ]
 
     # Act
@@ -286,13 +302,28 @@ def test_list_items_289():
 
     code"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
+        "[ulist:-::4:]",
         "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[text:foo:]",
         "[end-para]",
-        "[end-block-quote]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:notcode:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[li:4]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[end-ulist]",
+        "[html-block]",
+        "[text:<!-- -->:]",
+        "[end-html-block]",
+        "[BLANK:]",
+        "[icode-block:    ]",
+        "[text:code:]",
+        "[end-icode-block]",
     ]
 
     # Act
