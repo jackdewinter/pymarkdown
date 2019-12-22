@@ -20,6 +20,18 @@ class ParserHelper:
         )
 
     @staticmethod
+    def is_character_at_index_one_of(source_string, index_in_string, valid_characters):
+        """
+        Determine if the specified character is at a valid location and is one
+        of the specified valid characters.
+        """
+
+        return (
+            0 <= index_in_string < len(source_string)
+            and source_string[index_in_string] in valid_characters
+        )
+
+    @staticmethod
     def is_character_at_index_not_whitespace(source_string, index_in_string):
         """
         Determine if the specified character is valid and not a whitespace character.
@@ -39,7 +51,7 @@ class ParserHelper:
         whitespace in a tuple.
         """
 
-        if start_index < 0 or start_index > len(source_string):
+        if not 0 <= start_index <= len(source_string):
             return None, None
 
         index = start_index
@@ -74,7 +86,7 @@ class ParserHelper:
         in a tuple.
         """
 
-        if start_index < 0 or start_index > len(source_string):
+        if not 0 <= start_index <= len(source_string):
             return None, None
 
         index = start_index
@@ -92,7 +104,7 @@ class ParserHelper:
         character and any extracted text in a tuple.
         """
 
-        if start_index < 0 or start_index > len(source_string):
+        if not 0 <= start_index <= len(source_string):
             return None, None
 
         index = start_index
@@ -109,7 +121,7 @@ class ParserHelper:
         in a tuple.
         """
 
-        if start_index < 0 or start_index > len(source_string):
+        if not 0 <= start_index <= len(source_string):
             return None, None
 
         index = start_index
@@ -127,7 +139,7 @@ class ParserHelper:
         in a tuple.
         """
 
-        if start_index < 0 or start_index > len(source_string):
+        if not 0 <= start_index <= len(source_string):
             return None, None
 
         index = start_index
