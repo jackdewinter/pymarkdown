@@ -2,6 +2,8 @@
 """
 Module to provide a tokenization of a markdown-encoded string.
 """
+from pymarkdown.html_helper import HtmlHelper
+from pymarkdown.parser_helper import ParserHelper
 
 
 # pylint: disable=too-many-public-methods
@@ -17,7 +19,6 @@ class TokenizedMarkdown:
         self.ws_char = " "
         self.tokenized_document = None
         self.stack = ["document"]
-        self.html_block_1_start_tag_prefix = ["script", "pre", "style"]
         self.html_block_1_end_tags = ["</script>", "</pre>", "</style>"]
         self.html_block_6_start = [
             "address",
@@ -83,7 +84,6 @@ class TokenizedMarkdown:
             "track",
             "ul",
         ]
-        self.html_tag_attribute_value_terminators = " \"'=<>`"
 
     def transform(self, your_text_string):
         """
@@ -222,7 +222,7 @@ class TokenizedMarkdown:
         print("close_only_these_blocks>>" + str(close_only_these_blocks))
         print("do_include_block_quotes>>" + str(do_include_block_quotes))
 
-        non_whitespace_index, extracted_whitespace = self.extract_whitespace(
+        non_whitespace_index, extracted_whitespace = ParserHelper.extract_whitespace(
             input_line, 0
         )
 
@@ -298,8 +298,9 @@ class TokenizedMarkdown:
             )
         return new_tokens
 
+    @classmethod
     def is_fenced_code_block(
-        self,
+        cls,
         line_to_parse,
         start_index,
         extracted_whitespace,
@@ -321,14 +322,14 @@ class TokenizedMarkdown:
                 + str(start_index)
                 + "<<"
             )
-            collected_count, new_index = self.collect_while_character(
+            collected_count, new_index = ParserHelper.collect_while_character(
                 line_to_parse, start_index, line_to_parse[start_index]
             )
             print("ifcb:collected_count:" + str(collected_count))
             (
                 non_whitespace_index,
                 extracted_whitespace_before_info_string,
-            ) = self.extract_whitespace(line_to_parse, new_index)
+            ) = ParserHelper.extract_whitespace(line_to_parse, new_index)
 
             non_whitespace_index_character = None
             if non_whitespace_index < len(line_to_parse):
@@ -377,7 +378,7 @@ class TokenizedMarkdown:
                     (
                         after_extracted_text_index,
                         extracted_text,
-                    ) = self.extract_until_whitespace(
+                    ) = ParserHelper.extract_until_whitespace(
                         line_to_parse, non_whitespace_index
                     )
                     text_after_extracted_text = line_to_parse[
@@ -409,8 +410,9 @@ class TokenizedMarkdown:
                     )
         return new_tokens
 
+    @classmethod
     def is_thematic_break(
-        self,
+        cls,
         line_to_parse,
         start_index,
         extracted_whitespace,
@@ -437,7 +439,7 @@ class TokenizedMarkdown:
 
             char_count = 0
             while index < len(line_to_parse):
-                if line_to_parse[index] in self.ws_char:
+                if ParserHelper.is_character_at_index_whitespace(line_to_parse, index):
                     index = index + 1
                 elif line_to_parse[index] == start_char:
                     index = index + 1
@@ -496,13 +498,13 @@ class TokenizedMarkdown:
             and start_index < len(line_to_parse)
             and (line_to_parse[start_index] == "#")
         ):
-            hash_count, new_index = self.collect_while_character(
+            hash_count, new_index = ParserHelper.collect_while_character(
                 line_to_parse, start_index, "#"
             )
             (
                 non_whitespace_index,
                 extracted_whitespace_at_start,
-            ) = self.extract_whitespace(line_to_parse, new_index)
+            ) = ParserHelper.extract_whitespace(line_to_parse, new_index)
 
             if hash_count <= 6 and (
                 extracted_whitespace_at_start
@@ -514,17 +516,19 @@ class TokenizedMarkdown:
                 (
                     end_index,
                     extracted_whitespace_at_end,
-                ) = self.extract_whitespace_from_end(remaining_line)
+                ) = ParserHelper.extract_whitespace_from_end(remaining_line)
                 while end_index > 0 and remaining_line[end_index - 1] == "#":
                     end_index = end_index - 1
                 extracted_whitespace_before_end = ""
                 if end_index > 0:
-                    if remaining_line[end_index - 1] in self.ws_char:
+                    if ParserHelper.is_character_at_index_whitespace(
+                        remaining_line, end_index - 1
+                    ):
                         remaining_line = remaining_line[:end_index]
                         (
                             end_index,
                             extracted_whitespace_before_end,
-                        ) = self.extract_whitespace_from_end(remaining_line)
+                        ) = ParserHelper.extract_whitespace_from_end(remaining_line)
                         remaining_line = remaining_line[:end_index]
                     else:
                         extracted_whitespace_at_end = ""
@@ -560,13 +564,13 @@ class TokenizedMarkdown:
             and (line_to_parse[start_index] == "=" or line_to_parse[start_index] == "-")
             and (self.stack[-1] == "para")
         ):
-            _, collected_to_index = self.collect_while_character(
+            _, collected_to_index = ParserHelper.collect_while_character(
                 line_to_parse, start_index, line_to_parse[start_index]
             )
             (
                 after_whitespace_index,
                 extra_whitespace_after_setext,
-            ) = self.extract_whitespace(line_to_parse, collected_to_index)
+            ) = ParserHelper.extract_whitespace(line_to_parse, collected_to_index)
             if after_whitespace_index == len(line_to_parse):
                 new_tokens.append(
                     "[end-setext:"
@@ -836,16 +840,15 @@ class TokenizedMarkdown:
                 or line_to_parse[start_index] == "*"
             )
             and (
-                (
-                    (start_index + 1) < len(line_to_parse)
-                    and line_to_parse[start_index + 1] in self.ws_char
+                ParserHelper.is_character_at_index_whitespace(
+                    line_to_parse, start_index + 1
                 )
                 or ((start_index + 1) == len(line_to_parse))
             )
         ):
 
             print("is_ulist_start>>mid>>")
-            after_all_whitespace_index, _ = self.extract_whitespace(
+            after_all_whitespace_index, _ = ParserHelper.extract_whitespace(
                 line_to_parse, start_index + 1
             )
             print(
@@ -909,7 +912,9 @@ class TokenizedMarkdown:
             print("olist>>" + str(line_to_parse[index]))
             print("index+1>>" + str(index + 1) + ">>len>>" + str(len(line_to_parse)))
 
-            end_whitespace_index, _ = self.extract_whitespace(line_to_parse, index + 1)
+            end_whitespace_index, _ = ParserHelper.extract_whitespace(
+                line_to_parse, index + 1
+            )
             print(
                 "end_whitespace_index>>"
                 + str(end_whitespace_index)
@@ -935,9 +940,8 @@ class TokenizedMarkdown:
                     )
                 )
                 and (
-                    (
-                        (index + 1) < len(line_to_parse)
-                        and (line_to_parse[index + 1] in self.ws_char)
+                    ParserHelper.is_character_at_index_whitespace(
+                        line_to_parse, index + 1
                     )
                     or ((index + 1) == len(line_to_parse))
                 )
@@ -1099,9 +1103,10 @@ class TokenizedMarkdown:
 
         container_level_tokens = []
 
-        after_marker_ws_index, after_marker_whitespace = self.extract_whitespace(
-            line_to_parse, start_index + 1
-        )
+        (
+            after_marker_ws_index,
+            after_marker_whitespace,
+        ) = ParserHelper.extract_whitespace(line_to_parse, start_index + 1)
         ws_after_marker = len(after_marker_whitespace)
         ws_before_marker = len(extracted_whitespace)
 
@@ -1572,7 +1577,9 @@ class TokenizedMarkdown:
         container_level_tokens = []
         leaf_tokens = []
 
-        start_index, extracted_whitespace = self.extract_whitespace(line_to_parse, 0)
+        start_index, extracted_whitespace = ParserHelper.extract_whitespace(
+            line_to_parse, 0
+        )
         stack_bq_count = self.__count_of_block_quotes_on_stack()
 
         current_container_blocks = []
@@ -1911,7 +1918,7 @@ class TokenizedMarkdown:
                 start_index + 1 : parse_character_index
             ].lower()
             print("remaining_html_tag>>" + remaining_html_tag)
-            if remaining_html_tag in self.html_block_1_start_tag_prefix:
+            if HtmlHelper.is_valid_block_1_tag_name(remaining_html_tag):
                 html_block_type = "1"
             else:
                 adjusted_remaining_html_tag = remaining_html_tag
@@ -1936,7 +1943,7 @@ class TokenizedMarkdown:
                     html_block_type = "6"
                 elif is_end_tag:
                     print("end?")
-                    if self.is_complete_html_end_tag(
+                    if HtmlHelper.is_complete_html_end_tag(
                         adjusted_remaining_html_tag,
                         line_to_parse,
                         parse_character_index,
@@ -1944,7 +1951,7 @@ class TokenizedMarkdown:
                         html_block_type = "7"
                         print("7-end")
                 else:
-                    if self.is_complete_html_start_tag(
+                    if HtmlHelper.is_complete_html_start_tag(
                         adjusted_remaining_html_tag,
                         line_to_parse,
                         parse_character_index,
@@ -2058,7 +2065,7 @@ class TokenizedMarkdown:
         print("Leaf Line:" + line_to_parse + ":")
         new_tokens = []
         pre_tokens = []
-        start_index, extracted_whitespace = self.extract_whitespace(
+        start_index, extracted_whitespace = ParserHelper.extract_whitespace(
             line_to_parse, start_index
         )
 
@@ -2131,314 +2138,3 @@ class TokenizedMarkdown:
         assert new_tokens
         pre_tokens.extend(new_tokens)
         return pre_tokens
-
-    @classmethod
-    def collect_while_character(cls, source_string, start_index, match_character):
-        """
-        Collect a sequence of the same character from a given starting point in a string.
-
-        Returns the number of characters collected and the index of the first non-matching
-        character and any extracted text in a tuple.
-        """
-
-        if start_index < 0 or start_index > len(source_string):
-            return None, None
-
-        index = start_index
-        while index < len(source_string) and source_string[index] == match_character:
-            index = index + 1
-        return index - start_index, index
-
-    @classmethod
-    def collect_until_character(cls, source_string, start_index, match_character):
-        """
-        Collect a sequence of characters from a given starting point in a string until we hit a given character.
-
-        Returns the index of the first non-matching character and any extracted text
-        in a tuple.
-        """
-
-        if start_index < 0 or start_index > len(source_string):
-            return None, None
-
-        index = start_index
-        while index < len(source_string) and source_string[index] != match_character:
-            index = index + 1
-
-        return index, source_string[start_index:index]
-
-    @classmethod
-    def collect_until_one_of_characters(
-        cls, source_string, start_index, match_characters
-    ):
-        """
-        Collect a sequence of characters from a given starting point in a string until we hit one of a given set of characters.
-
-        Returns the index of the first non-matching character and any extracted text
-        in a tuple.
-        """
-
-        if start_index < 0 or start_index > len(source_string):
-            return None, None
-
-        index = start_index
-        while (
-            index < len(source_string) and source_string[index] not in match_characters
-        ):
-            index = index + 1
-
-        return index, source_string[start_index:index]
-
-    def extract_whitespace(self, source_string, start_index):
-        """
-        From the start_index, continue extracting whitespace while we have it.
-
-        Returns the index of the first non-whitespace character and any extracted
-        whitespace in a tuple.
-        """
-
-        if start_index < 0 or start_index > len(source_string):
-            return None, None
-
-        index = start_index
-        while index < len(source_string) and source_string[index] == self.ws_char:
-            index = index + 1
-
-        return index, source_string[start_index:index]
-
-    def extract_until_whitespace(self, source_string, start_index):
-        """
-        From the start_index, continue extracting until we hit whitespace.
-
-        Returns the index of the first whitespace character and any extracted text
-        in a tuple.
-        """
-
-        if start_index < 0 or start_index > len(source_string):
-            return None, None
-
-        index = start_index
-        while index < len(source_string) and source_string[index] not in self.ws_char:
-            index = index + 1
-
-        return index, source_string[start_index:index]
-
-    def extract_whitespace_from_end(self, source_string):
-        """
-        From the end of the string, continue extracting whitespace while we have it.
-
-        Returns the index of the last non-whitespace character and any extracted whitespace
-        in a tuple.
-        """
-        if not source_string:
-            return 0, ""
-
-        index = len(source_string) - 1
-        while index >= 0 and source_string[index] in self.ws_char:
-            index = index - 1
-
-        return index + 1, source_string[index + 1 :]
-
-    @classmethod
-    # pylint: disable=chained-comparison
-    def is_valid_tag_name(cls, tag_name):
-        """
-        Determine if the html tag name is valid according to the html rules.
-        """
-
-        is_valid = bool(tag_name)
-        for next_character in tag_name.lower():
-            if not (
-                (next_character >= "a" and next_character <= "z")
-                or (next_character >= "0" and next_character <= "9")
-                or next_character == "-"
-            ):
-                is_valid = False
-        return is_valid
-
-    @classmethod
-    def extract_html_attribute_name(cls, string_to_parse, string_index):
-        """
-        Attempt to extract the attribute name from the provided string.
-        """
-
-        if not (
-            string_index < len(string_to_parse)
-            and (
-                (
-                    string_to_parse[string_index] >= "a"
-                    and string_to_parse[string_index] <= "z"
-                )
-                or (
-                    string_to_parse[string_index] >= "A"
-                    and string_to_parse[string_index] <= "Z"
-                )
-                or (
-                    string_to_parse[string_index] >= "0"
-                    and string_to_parse[string_index] <= "9"
-                )
-                or string_to_parse[string_index] == ":"
-                or string_to_parse[string_index] == "_"
-            )
-        ):
-            return -1
-        string_index = string_index + 1
-        while string_index < len(string_to_parse):
-            if not (
-                (
-                    string_to_parse[string_index] >= "a"
-                    and string_to_parse[string_index] <= "z"
-                )
-                or (
-                    string_to_parse[string_index] >= "A"
-                    and string_to_parse[string_index] <= "Z"
-                )
-                or (
-                    string_to_parse[string_index] >= "0"
-                    and string_to_parse[string_index] <= "9"
-                )
-                or string_to_parse[string_index] == ":"
-                or string_to_parse[string_index] == "."
-                or string_to_parse[string_index] == "-"
-                or string_to_parse[string_index] == "_"
-            ):
-                break
-            string_index = string_index + 1
-
-        if string_index < len(string_to_parse) and (
-            string_to_parse[string_index] == "="
-            or string_to_parse[string_index] == " "
-            or string_to_parse[string_index] == "/"
-            or string_to_parse[string_index] == ">"
-        ):
-            return string_index
-        return -1
-
-    def extract_optional_attribute_value(self, line_to_parse, value_index):
-        """
-        Determine and extract an optional attribute value.
-        """
-
-        non_whitespace_index, _ = self.extract_whitespace(line_to_parse, value_index)
-        if (
-            non_whitespace_index < len(line_to_parse)
-            and line_to_parse[non_whitespace_index] != "="
-        ) or non_whitespace_index >= len(line_to_parse):
-            return non_whitespace_index
-
-        non_whitespace_index = non_whitespace_index + 1
-        non_whitespace_index, _ = self.extract_whitespace(
-            line_to_parse, non_whitespace_index
-        )
-        if non_whitespace_index < len(line_to_parse):
-            first_character_of_value = line_to_parse[non_whitespace_index]
-            if first_character_of_value == '"':
-                non_whitespace_index, extracted_text = self.collect_until_character(
-                    line_to_parse, non_whitespace_index + 1, '"'
-                )
-                if non_whitespace_index == len(line_to_parse):
-                    return -1
-                non_whitespace_index = non_whitespace_index + 1
-            elif first_character_of_value == "'":
-                non_whitespace_index, extracted_text = self.collect_until_character(
-                    line_to_parse, non_whitespace_index + 1, "'"
-                )
-                if non_whitespace_index == len(line_to_parse):
-                    return -1
-                non_whitespace_index = non_whitespace_index + 1
-            else:
-                (
-                    non_whitespace_index,
-                    extracted_text,
-                ) = self.collect_until_one_of_characters(
-                    line_to_parse,
-                    non_whitespace_index,
-                    self.html_tag_attribute_value_terminators,
-                )
-
-                if not extracted_text:
-                    non_whitespace_index = -1
-        else:
-            non_whitespace_index = -1
-        return non_whitespace_index
-
-    def is_complete_html_end_tag(self, tag_name, line_to_parse, next_char_index):
-        """
-        Determine if the supplied information is a completed end of tag specification.
-        """
-
-        is_valid = self.is_valid_tag_name(tag_name)
-        non_whitespace_index, _ = self.extract_whitespace(
-            line_to_parse, next_char_index
-        )
-        have_end_of_tag = (
-            non_whitespace_index < len(line_to_parse)
-            and line_to_parse[non_whitespace_index] == ">"
-        )
-        return have_end_of_tag and is_valid
-
-    def is_complete_html_start_tag(self, tag_name, line_to_parse, next_char_index):
-        """
-        Determine if the supplied information is a completed start of tag specification.
-        """
-
-        is_tag_valid = (
-            self.is_valid_tag_name(tag_name)
-            and tag_name not in self.html_block_1_start_tag_prefix
-        )
-
-        non_whitespace_index, _ = self.extract_whitespace(
-            line_to_parse, next_char_index
-        )
-
-        are_attributes_valid = True
-        while (
-            is_tag_valid
-            and are_attributes_valid
-            and (
-                # pylint: disable=chained-comparison
-                non_whitespace_index >= 0
-                and non_whitespace_index < len(line_to_parse)
-            )
-            and not (
-                line_to_parse[non_whitespace_index] == ">"
-                or line_to_parse[non_whitespace_index] == "/"
-            )
-        ):
-
-            non_whitespace_index = self.extract_html_attribute_name(
-                line_to_parse, non_whitespace_index
-            )
-            if non_whitespace_index == -1:
-                are_attributes_valid = False
-                break
-            non_whitespace_index = self.extract_optional_attribute_value(
-                line_to_parse, non_whitespace_index
-            )
-            if non_whitespace_index == -1:
-                are_attributes_valid = False
-                break
-            non_whitespace_index, _ = self.extract_whitespace(
-                line_to_parse, non_whitespace_index
-            )
-
-        is_end_of_tag_present = False
-        if (
-            non_whitespace_index < len(line_to_parse)
-            and line_to_parse[non_whitespace_index] == "/"
-        ):
-            non_whitespace_index = non_whitespace_index + 1
-        if (
-            non_whitespace_index < len(line_to_parse)
-            and line_to_parse[non_whitespace_index] == ">"
-        ):
-            non_whitespace_index = non_whitespace_index + 1
-            is_end_of_tag_present = True
-
-        non_whitespace_index, _ = self.extract_whitespace(
-            line_to_parse, non_whitespace_index
-        )
-        at_eol = non_whitespace_index == len(line_to_parse)
-        return (
-            is_tag_valid and is_end_of_tag_present and at_eol and are_attributes_valid
-        )

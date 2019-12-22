@@ -1,7 +1,7 @@
 """
 Tests for the functions that deal with parsing of complete html tags.
 """
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
+from pymarkdown.html_helper import HtmlHelper
 
 
 def test_simple_complete_html_end_tag():
@@ -10,14 +10,13 @@ def test_simple_complete_html_end_tag():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = ">"
     parse_index = 0
     expected_is_valid = True
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_end_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_end_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -31,14 +30,13 @@ def test_simple_complete_html_end_tag_with_invalid_tag_name():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a*b"
     string_to_parse = ">"
     parse_index = 0
     expected_is_valid = False
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_end_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_end_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -52,14 +50,13 @@ def test_simple_complete_html_end_tag_with_whitespace():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = " >"
     parse_index = 0
     expected_is_valid = True
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_end_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_end_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -73,14 +70,13 @@ def test_complete_html_end_tag_with_bad_attribute():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = " foo>"
     parse_index = 0
     expected_is_valid = False
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_end_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_end_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -94,14 +90,13 @@ def test_complete_html_end_tag_with_no_more_string():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = ""
     parse_index = 0
     expected_is_valid = False
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_end_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_end_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -115,14 +110,13 @@ def test_simple_complete_html_start_tag_with_no_attributes():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = ">"
     parse_index = 0
     expected_is_valid = True
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_start_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -136,14 +130,13 @@ def test_simple_complete_html_start_tag_with_bad_tag_name():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a*b"
     string_to_parse = ">"
     parse_index = 0
     expected_is_valid = False
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_start_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -157,14 +150,13 @@ def test_simple_complete_html_start_tag_with_no_attributes_and_whitespace():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = " >"
     parse_index = 0
     expected_is_valid = True
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_start_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -178,14 +170,13 @@ def test_complete_html_start_tag_with_single_no_value_attributes():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = " show>"
     parse_index = 0
     expected_is_valid = True
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_start_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -199,14 +190,13 @@ def test_complete_html_start_tag_with_invalidly_named_no_value_attributes():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = " sh*ow>"
     parse_index = 0
     expected_is_valid = False
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_start_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -220,14 +210,13 @@ def test_complete_html_start_tag_with_single_no_value_attributes_and_whitespace(
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = " show >"
     parse_index = 0
     expected_is_valid = True
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_start_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -241,14 +230,13 @@ def test_complete_html_start_tag_with_single_attribute():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = " show=1>"
     parse_index = 0
     expected_is_valid = True
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_start_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -262,14 +250,13 @@ def test_complete_html_start_tag_with_single_attribute_with_bad_value():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = " show=>"
     parse_index = 0
     expected_is_valid = False
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_start_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -283,14 +270,13 @@ def test_complete_html_start_tag_with_single_attribute_with_whitespace():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = " show = '1' >"
     parse_index = 0
     expected_is_valid = True
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_start_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -304,14 +290,13 @@ def test_complete_html_start_tag_with_multiple_attributes():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = " show=1 maximize=1 opacity='70'>"
     parse_index = 0
     expected_is_valid = True
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_start_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -325,14 +310,13 @@ def test_complete_html_start_tag_with_self_closing_tag():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = " show/>"
     parse_index = 0
     expected_is_valid = True
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_start_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
@@ -346,14 +330,13 @@ def test_complete_html_start_tag_with_normal_opening_tag():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     input_tag_name = "a"
     string_to_parse = " show>"
     parse_index = 0
     expected_is_valid = True
 
     # Act
-    actual_is_valid = tokenizer.is_complete_html_start_tag(
+    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 

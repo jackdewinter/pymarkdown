@@ -1245,7 +1245,6 @@ def test_html_blocks_160():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when html blocks are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
