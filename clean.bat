@@ -60,6 +60,7 @@ if ERRORLEVEL 1 (
 	echo Executing unit tests on Python code failed.
 	goto error_end
 )
+pipenv run python ..\pyscan\pyscan\main.py --junit report\tests.xml
 
 echo.
 set PC_EXIT_CODE=0
@@ -75,3 +76,11 @@ erase /f /q %CLEAN_TEMPFILE%
 set CLEAN_TEMPFILE=
 popd
 exit /B %PC_EXIT_CODE%
+
+rem this file, setup.cfg, pytest_execute.py?
+rem pipenv install black==19.10b0 pytest-console-scripts==0.2.0 pytest-timeout==1.3.3 pytest-cov==2.8.1 pylint==2.4.4 flake8==3.7.9 --pre
+rem git init --bare .git
+rem git config --unset core.bare
+rem mkdir pyscan; mkdir test
+rem copy ..\pymarkdown\test\__init__.py test
+rem at top of set PYTHON_MODULE_NAME=pyscan, and adjust scan for source code to this name

@@ -13,6 +13,8 @@ pylint = "*"
 pytest-cov = "*"
 pytest-console-scripts = "*"
 stringio = "*"
+pytest-timeout = "*"
+tabulate = "*"
 
 [requires]
 python_version = "3.7"

@@ -2,6 +2,8 @@
 """
 Module to provide a tokenization of a markdown-encoded string.
 """
+import string
+
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.parser_helper import ParserHelper
 
@@ -19,8 +21,13 @@ class TokenizedMarkdown:
         """
         self.tokenized_document = None
         self.stack = ["document"]
+
         self.ulist_start_characters = "-+*"
         self.olist_start_characters = ".)"
+        self.block_quote_character = ">"
+
+        self.atx_character = "#"
+        self.html_block_start_character = "<"
         self.fenced_code_block_start_characters = "~`"
         self.thematic_break_characters = "*_-"
         self.setext_characters = "-="
@@ -491,13 +498,11 @@ class TokenizedMarkdown:
         """
 
         new_tokens = []
-        if (
-            len(extracted_whitespace) <= 3
-            and start_index < len(line_to_parse)
-            and (line_to_parse[start_index] == "#")
+        if len(extracted_whitespace) <= 3 and ParserHelper.is_character_at_index(
+            line_to_parse, start_index, self.atx_character
         ):
             hash_count, new_index = ParserHelper.collect_while_character(
-                line_to_parse, start_index, "#"
+                line_to_parse, start_index, self.atx_character
             )
             (
                 non_whitespace_index,
@@ -662,8 +667,7 @@ class TokenizedMarkdown:
 
         return stack_bq_count
 
-    @classmethod
-    def __count_block_quote_starts(cls, line_to_parse, start_index):
+    def __count_block_quote_starts(self, line_to_parse, start_index):
         """
         Having detected a block quote character (">") on a line, continue to consume
         and count while the block quote pattern is there.
@@ -673,9 +677,15 @@ class TokenizedMarkdown:
         start_index = start_index + 1
 
         while True:
-            if start_index < len(line_to_parse) and line_to_parse[start_index] == " ":
+            if ParserHelper.is_character_at_index_whitespace(
+                line_to_parse, start_index
+            ):
                 start_index = start_index + 1
-            if start_index == len(line_to_parse) or line_to_parse[start_index] != ">":
+            if start_index == len(
+                line_to_parse
+            ) or ParserHelper.is_character_at_index_not(
+                line_to_parse, start_index, self.block_quote_character
+            ):
                 break
             this_bq_count = this_bq_count + 1
             start_index = start_index + 1
@@ -732,10 +742,8 @@ class TokenizedMarkdown:
             # TODO replace?
             if (
                 len(extracted_whitespace) <= 3
-                and start_index < len(line_to_parse)
-                and (
-                    line_to_parse[start_index] == "="
-                    or line_to_parse[start_index] == "-"
+                and ParserHelper.is_character_at_index_one_of(
+                    line_to_parse, start_index, self.setext_characters
                 )
                 and self.stack[-1] == "para"
             ):
@@ -895,17 +903,13 @@ class TokenizedMarkdown:
         if adj_ws is None:
             adj_ws = extracted_whitespace
         if (
-            (len(adj_ws) <= 3 or skip_whitespace_check)
-            and start_index < len(line_to_parse)
-            and (
-                line_to_parse[start_index] >= "0" and line_to_parse[start_index] <= "9"
-            )
+            len(adj_ws) <= 3 or skip_whitespace_check
+        ) and ParserHelper.is_character_at_index_one_of(
+            line_to_parse, start_index, string.digits
         ):
             index = start_index
-            while (
-                index < len(line_to_parse)
-                and line_to_parse[index] >= "0"
-                and line_to_parse[index] <= "9"
+            while ParserHelper.is_character_at_index_one_of(
+                line_to_parse, index, string.digits
             ):
                 index = index + 1
             my_count = index - start_index
@@ -1405,9 +1409,8 @@ class TokenizedMarkdown:
                 print("DOWNGRADE")
         return adj_ws
 
-    @classmethod
     def is_block_quote_start(
-        cls, line_to_parse, start_index, extracted_whitespace, adj_ws=None
+        self, line_to_parse, start_index, extracted_whitespace, adj_ws=None
     ):
         """
         Determine if we have the start of a block quote section.
@@ -1416,10 +1419,8 @@ class TokenizedMarkdown:
         if adj_ws is None:
             adj_ws = extracted_whitespace
 
-        if (
-            len(adj_ws) <= 3
-            and start_index < len(line_to_parse)
-            and line_to_parse[start_index] == ">"
+        if len(adj_ws) <= 3 and ParserHelper.is_character_at_index(
+            line_to_parse, start_index, self.block_quote_character
         ):
             return True
         return False
@@ -2041,22 +2042,22 @@ class TokenizedMarkdown:
 
         html_block_type = None
         if character_index < len(line_to_parse):
-            if line_to_parse[character_index] == "!":
-                if (character_index + 2) < len(line_to_parse) and line_to_parse[
-                    character_index + 1 : character_index + 3
-                ] == "--":
+            if ParserHelper.is_character_at_index(line_to_parse, character_index, "!"):
+                if ParserHelper.are_characters_at_index(
+                    line_to_parse, character_index + 1, "--"
+                ):
                     html_block_type = "2"
-                elif (
-                    (character_index + 1) < len(line_to_parse)
-                    and line_to_parse[character_index + 1] >= "A"
-                    and line_to_parse[character_index + 1] <= "Z"
+                elif ParserHelper.is_character_at_index_one_of(
+                    line_to_parse, character_index + 1, string.ascii_uppercase
                 ):
                     html_block_type = "4"
-                elif (character_index + 7) < len(line_to_parse) and line_to_parse[
-                    character_index + 1 : character_index + 1 + 7
-                ] >= "[CDATA[":
+                elif ParserHelper.are_characters_at_index(
+                    line_to_parse, character_index + 1, "[CDATA["
+                ):
                     html_block_type = "5"
-            elif line_to_parse[character_index] == "?":
+            elif ParserHelper.is_character_at_index(
+                line_to_parse, character_index, "?"
+            ):
                 html_block_type = "3"
 
         return html_block_type
@@ -2119,16 +2120,13 @@ class TokenizedMarkdown:
             line_to_parse, character_index
         )
         if not html_block_type:
-            while (
-                character_index < len(line_to_parse)
-                and line_to_parse[character_index] != " "
-                and line_to_parse[character_index] != ">"
-            ):
-                character_index = character_index + 1
-
-            remaining_html_tag = line_to_parse[
-                start_index + 1 : character_index
-            ].lower()
+            (
+                character_index,
+                remaining_html_tag,
+            ) = ParserHelper.collect_until_one_of_characters(
+                line_to_parse, character_index, " >"
+            )
+            remaining_html_tag = remaining_html_tag.lower()
 
             print("remaining_html_tag>>" + remaining_html_tag)
             html_block_type = self.check_for_normal_html_blocks(
@@ -2149,10 +2147,8 @@ class TokenizedMarkdown:
         """
 
         new_tokens = []
-        if (
-            (len(extracted_whitespace) <= 3)
-            and start_index < len(line_to_parse)
-            and (line_to_parse[start_index] == "<")
+        if (len(extracted_whitespace) <= 3) and ParserHelper.is_character_at_index(
+            line_to_parse, start_index, self.html_block_start_character
         ):
             print("HTML-START?")
             block_start_info = self.determine_html_block_type(

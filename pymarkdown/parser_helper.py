@@ -9,6 +9,44 @@ class ParserHelper:
     """
 
     @staticmethod
+    def is_character_at_index(source_string, index_in_string, valid_character):
+        """
+        Determine if the specified character is at a valid location and is the
+        specified valid character.
+        """
+
+        return (
+            0 <= index_in_string < len(source_string)
+            and source_string[index_in_string] == valid_character
+        )
+
+    @staticmethod
+    def are_characters_at_index(source_string, index_in_string, string_to_match):
+        """
+        Determine if the specified character is at a valid location and is the
+        specified valid character.
+        """
+
+        return (
+            index_in_string >= 0
+            and index_in_string + len(string_to_match) <= len(source_string)
+            and source_string[index_in_string : index_in_string + len(string_to_match)]
+            == string_to_match
+        )
+
+    @staticmethod
+    def is_character_at_index_not(source_string, index_in_string, valid_character):
+        """
+        Determine if the specified character is at a valid location and is
+        not the specified valid character.
+        """
+
+        return (
+            0 <= index_in_string < len(source_string)
+            and source_string[index_in_string] != valid_character
+        )
+
+    @staticmethod
     def is_character_at_index_whitespace(source_string, index_in_string):
         """
         Determine if the specified character is valid and a whitespace character.
@@ -29,6 +67,20 @@ class ParserHelper:
         return (
             0 <= index_in_string < len(source_string)
             and source_string[index_in_string] in valid_characters
+        )
+
+    @staticmethod
+    def is_character_at_index_not_one_of(
+        source_string, index_in_string, valid_characters
+    ):
+        """
+        Determine if the specified character is at a valid location and is not one
+        of the specified valid characters.
+        """
+
+        return (
+            0 <= index_in_string < len(source_string)
+            and source_string[index_in_string] not in valid_characters
         )
 
     @staticmethod

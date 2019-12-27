@@ -57,7 +57,7 @@ class InProcessResult:
                     expected_text.splitlines(), actual_stream.getvalue().splitlines()
                 )
 
-                diff_values = "\n".join(list(diff))
+                diff_values = "\n".join(list(diff)) + "\n---\n"
                 assert False, stream_name + " not as expected:\n" + diff_values
 
     def assert_results(
