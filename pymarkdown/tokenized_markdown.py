@@ -2081,9 +2081,12 @@ class TokenizedMarkdown:
                 adjusted_remaining_html_tag = adjusted_remaining_html_tag[1:]
                 is_end_tag = True
                 print("end")
-            if line_to_parse[
-                character_index
-            ] == ">" and adjusted_remaining_html_tag.endswith("/"):
+            print(">>" + str(character_index) + ">>" + str(len(line_to_parse)))
+            if (
+                character_index < len(line_to_parse)
+                and line_to_parse[character_index] == ">"
+                and adjusted_remaining_html_tag.endswith("/")
+            ):
                 adjusted_remaining_html_tag = adjusted_remaining_html_tag[0:-1]
                 print("-otherend")
             print(

@@ -1279,3 +1279,104 @@ def test_html_blocks_160a():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_html_blocks_cov1():
+    """
+    Test case cov1:  Based on coverage analysis.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """<hr/>
+</x-table>
+
+</x-table>"""
+    expected_tokens = [
+        "[html-block]",
+        "[text:<hr/>:]",
+        "[text:</x-table>:]",
+        "[end-html-block]",
+        "[BLANK:]",
+        "[html-block]",
+        "[text:</x-table>:]",
+        "[end-html-block]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_html_blocks_cov2():
+    """
+    Test case cov2:  Based on coverage analysis.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """</hrx
+>
+</x-table>"""
+    expected_tokens = [
+        "[para:]",
+        "[text:</hrx:]",
+        "[end-para]",
+        "[block-quote:]",
+        "[BLANK:]",
+        "[html-block]",
+        "[text:</x-table>:]",
+        "[end-html-block]",
+        "[end-block-quote]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_html_blocks_cov3():
+    """
+    Test case cov3:  Based on coverage analysis.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """<!bad>
+</x-table>"""
+    expected_tokens = ["[para:]", "[text:<!bad>:]", "[text:</x-table>:]", "[end-para]"]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_html_blocks_cov4():
+    """
+    Test case cov4:  Based on coverage analysis.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """<
+bad>
+</x-table>"""
+    expected_tokens = [
+        "[para:]",
+        "[text:<:]",
+        "[text:bad>:]",
+        "[text:</x-table>:]",
+        "[end-para]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
