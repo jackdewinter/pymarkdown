@@ -12,9 +12,9 @@ flake8 = "*"
 pylint = "*"
 pytest-cov = "*"
 pytest-console-scripts = "*"
-stringio = "*"
 pytest-timeout = "*"
 tabulate = "*"
+pytest-html = "*"
 
 [requires]
 python_version = "3.7"
