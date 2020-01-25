@@ -6,6 +6,16 @@ import string
 
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.stack_token import (
+    BlockQuoteStackToken,
+    DocumentStackToken,
+    FencedCodeBlockStackToken,
+    HtmlBlockStackToken,
+    IndentedCodeBlockStackToken,
+    OrderedListStackToken,
+    ParagraphStackToken,
+    UnorderedListStackToken,
+)
 
 
 # pylint: disable=too-many-public-methods
@@ -19,18 +29,8 @@ class TokenizedMarkdown:
         """
         Initializes a new instance of the TokenizedMarkdown class.
         """
-        self.__stack_base_document = "document"
-        self.__stack_indented_code = "icode-block"
-        self.__stack_paragraph = "para"
-
-        self.__stack_fenced_code_prefix = "fcode-block:"
-        self.__stack_block_quote_prefix = "block-quote:"
-        self.__stack_unordered_list_prefix = "ulist"
-        self.__stack_ordered_list_prefix = "olist"
-        self.__stack_html_block_prefix = "html-block:"
-
         self.tokenized_document = None
-        self.stack = [self.__stack_base_document]
+        self.stack = [DocumentStackToken()]
 
         self.ulist_start_characters = "-+*"
         self.olist_start_characters = ".)"
@@ -118,7 +118,7 @@ class TokenizedMarkdown:
         while next_token:
             print("next-line>>" + str(next_token))
             print("stack>>" + str(self.stack))
-            print("current_block>>" + self.stack[-1])
+            print("current_block>>" + str(self.stack[-1]))
             print("---")
 
             next_line = next_token[0].replace("\t", "    ")
@@ -165,28 +165,15 @@ class TokenizedMarkdown:
         if destination_array:
             new_tokens = destination_array
 
-        while self.stack[-1] != self.__stack_base_document:
+        while not self.stack[-1].is_document:
             print("cob>>" + str(self.stack))
-            if only_these_blocks and self.stack[-1] not in only_these_blocks:
-                do_break = True
+            if only_these_blocks and self.stack[-1].type_name not in only_these_blocks:
                 print("cob>>not in only")
-                if self.stack[-1].startswith(self.__stack_block_quote_prefix):
-                    print("cob>>not in only - checking presence of BQ")
-                    do_break = False
-                    for next_block in only_these_blocks:
-                        if next_block == self.__stack_block_quote_prefix:
-                            do_break = True
-                if do_break:
-                    break
-            if not include_block_quotes and (
-                self.stack[-1].startswith(self.__stack_block_quote_prefix)
-            ):
+                break
+            if not include_block_quotes and (self.stack[-1].is_block_quote):
                 print("cob>>not block quotes")
                 break
-            if not include_lists and (
-                self.stack[-1].startswith(self.__stack_unordered_list_prefix)
-                or self.stack[-1].startswith(self.__stack_ordered_list_prefix)
-            ):
+            if not include_lists and (self.stack[-1].is_list):
                 print("cob>>not lists")
                 break
             if until_me != -1:
@@ -208,24 +195,13 @@ class TokenizedMarkdown:
         new_tokens = []
         print("cob->te->" + str(self.stack[-1]))
         extra_elements = []
-        if self.stack[-1] == self.__stack_indented_code:
+        if self.stack[-1].is_indented_code_block:
             while self.tokenized_document[-1].startswith("[BLANK"):
                 last_element = self.tokenized_document[-1]
                 extra_elements.append(last_element)
                 del self.tokenized_document[-1]
 
-        if self.stack[-1].startswith(self.__stack_fenced_code_prefix):
-            new_tokens.append("[end-fcode-block:]")
-        elif self.stack[-1].startswith(self.__stack_html_block_prefix):
-            new_tokens.append("[end-html-block]")
-        elif self.stack[-1].startswith(self.__stack_unordered_list_prefix):
-            new_tokens.append("[end-ulist]")
-        elif self.stack[-1].startswith(self.__stack_ordered_list_prefix):
-            new_tokens.append("[end-olist]")
-        elif self.stack[-1].startswith(self.__stack_block_quote_prefix):
-            new_tokens.append("[end-block-quote]")
-        else:
-            new_tokens.append("[end-" + self.stack[-1] + "]")
+        new_tokens.append(self.stack[-1].generate_close_token())
         new_tokens.extend(extra_elements)
         del self.stack[-1]
         return new_tokens
@@ -236,23 +212,18 @@ class TokenizedMarkdown:
         """
 
         if (
-            self.stack[-1] == self.__stack_paragraph
+            self.stack[-1].is_paragraph
             and len(self.stack) >= 2
-            and (
-                self.stack[-2].startswith(self.__stack_unordered_list_prefix)
-                or self.stack[-2].startswith(self.__stack_ordered_list_prefix)
-            )
+            and (self.stack[-2].is_list)
         ):
             from_main_transform = False
-        elif self.stack[-1].startswith(
-            self.__stack_unordered_list_prefix
-        ) or self.stack[-1].startswith(self.__stack_ordered_list_prefix):
+        elif self.stack[-1].is_list:
             from_main_transform = False
 
         close_only_these_blocks = None
         do_include_block_quotes = True
         if not from_main_transform:
-            close_only_these_blocks = [self.__stack_paragraph]
+            close_only_these_blocks = [ParagraphStackToken().type_name]
             do_include_block_quotes = False
         print("from_main_transform>>" + str(from_main_transform))
         print("close_only_these_blocks>>" + str(close_only_these_blocks))
@@ -268,19 +239,19 @@ class TokenizedMarkdown:
             + str(is_processing_list)
             + ">>in_index>>"
             + str(in_index)
+            + ">>last_stack>>"
+            + str(self.stack[-1])
         )
 
         new_tokens = None
-        if self.stack[-1] == self.__stack_indented_code or self.stack[-1].startswith(
-            self.__stack_fenced_code_prefix
-        ):
+        if self.stack[-1].is_indented_code_block or self.stack[-1].is_fenced_code_block:
             stack_bq_count = self.__count_of_block_quotes_on_stack()
             if stack_bq_count:
                 print("hbl>>code block within block quote")
             else:
                 print("hbl>>code block")
                 new_tokens = []
-        elif self.stack[-1].startswith(self.__stack_html_block_prefix):
+        elif self.stack[-1].is_html_block:
             new_tokens = self.check_blank_html_block_end()
         elif is_processing_list:
             print("tokenized_document-1>>" + self.tokenized_document[-1])
@@ -314,9 +285,9 @@ class TokenizedMarkdown:
 
         new_tokens = []
 
-        if len(extracted_whitespace) >= 4 and self.stack[-1] != self.__stack_paragraph:
-            if self.stack[-1] != self.__stack_indented_code:
-                self.stack.append(self.__stack_indented_code)
+        if len(extracted_whitespace) >= 4 and not self.stack[-1].is_paragraph:
+            if not self.stack[-1].is_indented_code_block:
+                self.stack.append(IndentedCodeBlockStackToken())
                 new_tokens.append("[icode-block:    ]")
                 extracted_whitespace = "".rjust(len(extracted_whitespace) - 4)
             new_tokens.append(
@@ -386,18 +357,18 @@ class TokenizedMarkdown:
             extracted_whitespace_before_info_string,
             collected_count,
         ) = self.is_fenced_code_block(line_to_parse, start_index, extracted_whitespace)
-        if is_fence_start and not self.stack[-1].startswith(
-            self.__stack_html_block_prefix
-        ):
-            preface = self.__stack_fenced_code_prefix
-            if self.stack[-1].startswith(preface):
+        if is_fence_start and not self.stack[-1].is_html_block:
+            if self.stack[-1].is_fenced_code_block:
                 print("pfcb->end")
+
                 if (
-                    self.stack[-1][len(preface)] == line_to_parse[start_index]
-                    and collected_count >= int(self.stack[-1][len(preface) + 2 :])
+                    self.stack[-1].extra_data[0] == line_to_parse[start_index]
+                    and collected_count >= int(self.stack[-1].extra_data[2:])
                     and non_whitespace_index >= len(line_to_parse)
                 ):
-                    new_tokens.append("[end-fcode-block:" + extracted_whitespace + "]")
+                    new_tokens.append(
+                        self.stack[-1].generate_close_token(extracted_whitespace)
+                    )
                     del self.stack[-1]
             else:
                 print("pfcb->check")
@@ -417,14 +388,13 @@ class TokenizedMarkdown:
                     ]
 
                     new_tokens = self.close_open_blocks(
-                        only_these_blocks=[self.__stack_paragraph]
+                        only_these_blocks=[ParagraphStackToken().type_name]
                     )
 
                     self.stack.append(
-                        self.__stack_fenced_code_prefix
-                        + line_to_parse[start_index]
-                        + ":"
-                        + str(collected_count)
+                        FencedCodeBlockStackToken(
+                            line_to_parse[start_index] + ":" + str(collected_count)
+                        )
                     )
                     new_tokens.append(
                         "[fcode-block:"
@@ -494,13 +464,13 @@ class TokenizedMarkdown:
             line_to_parse, start_index, extracted_whitespace
         )
         if start_char:
-            if self.stack[-1] == self.__stack_paragraph:
-                new_tokens.append("[end-" + self.stack[-1] + "]")
+            if self.stack[-1].is_paragraph:
+                new_tokens.append(self.stack[-1].generate_close_token())
                 del self.stack[-1]
             if this_bq_count == 0 and stack_bq_count > 0:
                 new_tokens = self.close_open_blocks(
                     destination_array=new_tokens,
-                    only_these_blocks=self.__stack_block_quote_prefix,
+                    only_these_blocks=BlockQuoteStackToken().type_name,
                     include_block_quotes=True,
                 )
             new_tokens.append(
@@ -588,7 +558,7 @@ class TokenizedMarkdown:
             and ParserHelper.is_character_at_index_one_of(
                 line_to_parse, start_index, self.setext_characters
             )
-            and (self.stack[-1] == self.__stack_paragraph)
+            and (self.stack[-1].is_paragraph)
         ):
             _, collected_to_index = ParserHelper.collect_while_character(
                 line_to_parse, start_index, line_to_parse[start_index]
@@ -664,12 +634,12 @@ class TokenizedMarkdown:
             new_tokens = self.close_open_blocks(until_me=last_list_index)
         if stack_bq_count != 0 and this_bq_count == 0:
             new_tokens = self.close_open_blocks(
-                only_these_blocks=self.__stack_block_quote_prefix,
+                only_these_blocks=BlockQuoteStackToken().type_name,
                 include_block_quotes=True,
             )
 
-        if self.stack[-1] != self.__stack_paragraph:
-            self.stack.append(self.__stack_paragraph)
+        if not self.stack[-1].is_paragraph:
+            self.stack.append(ParagraphStackToken())
             new_tokens.append("[para:" + extracted_whitespace + "]")
             extracted_whitespace = ""
         new_tokens.append(
@@ -685,7 +655,7 @@ class TokenizedMarkdown:
 
         stack_bq_count = 0
         for next_item_on_stack in self.stack:
-            if next_item_on_stack.startswith(self.__stack_block_quote_prefix):
+            if next_item_on_stack.is_block_quote:
                 stack_bq_count = stack_bq_count + 1
 
         return stack_bq_count
@@ -746,14 +716,17 @@ class TokenizedMarkdown:
             print("fenced_start?" + str(is_fenced_start))
 
             if (
-                self.stack[-1].startswith(self.__stack_fenced_code_prefix)
-                or self.stack[-1] == self.__stack_indented_code
+                self.stack[-1].is_fenced_code_block
+                or self.stack[-1].is_indented_code_block
                 or is_fenced_start
             ):
                 print("__check_for_lazy_handling>>code block")
                 assert not container_level_tokens
                 container_level_tokens = self.close_open_blocks(
-                    only_these_blocks=[self.__stack_block_quote_prefix, self.stack[-1]],
+                    only_these_blocks=[
+                        BlockQuoteStackToken().type_name,
+                        self.stack[-1].type_name,
+                    ],
                     include_block_quotes=True,
                 )
             else:
@@ -768,14 +741,14 @@ class TokenizedMarkdown:
                 and ParserHelper.is_character_at_index_one_of(
                     line_to_parse, start_index, self.setext_characters
                 )
-                and self.stack[-1] == self.__stack_paragraph
+                and self.stack[-1].is_paragraph
             ):
                 print("set_atx")
                 assert not container_level_tokens
                 container_level_tokens = self.close_open_blocks(
                     only_these_blocks=[
-                        self.__stack_paragraph,
-                        self.__stack_block_quote_prefix,
+                        ParagraphStackToken().type_name,
+                        BlockQuoteStackToken().type_name,
                     ],
                     include_block_quotes=True,
                 )
@@ -795,10 +768,13 @@ class TokenizedMarkdown:
         container_level_tokens = []
         if this_bq_count > stack_bq_count:
             container_level_tokens = self.close_open_blocks(
-                only_these_blocks=[self.__stack_paragraph, self.__stack_indented_code]
+                only_these_blocks=[
+                    ParagraphStackToken().type_name,
+                    IndentedCodeBlockStackToken().type_name,
+                ]
             )
             while this_bq_count > stack_bq_count:
-                self.stack.append(self.__stack_block_quote_prefix)
+                self.stack.append(BlockQuoteStackToken())
                 stack_bq_count = stack_bq_count + 1
                 container_level_tokens.append(
                     "[block-quote:" + extracted_whitespace + "]"
@@ -825,7 +801,7 @@ class TokenizedMarkdown:
             line_to_parse, start_index
         )
 
-        if not self.stack[-1].startswith(self.__stack_fenced_code_prefix):
+        if not self.stack[-1].is_fenced_code_block:
             print("handle_block_quote_section>>not fenced")
             container_level_tokens, stack_bq_count = self.__ensure_stack_at_level(
                 this_bq_count, stack_bq_count, extracted_whitespace
@@ -896,11 +872,8 @@ class TokenizedMarkdown:
                 line_to_parse, start_index, extracted_whitespace
             )
             if not is_break and not (
-                self.stack[-1] == self.__stack_paragraph
-                and not (
-                    self.stack[-2].startswith(self.__stack_unordered_list_prefix)
-                    or self.stack[-2].startswith(self.__stack_ordered_list_prefix)
-                )
+                self.stack[-1].is_paragraph
+                and not (self.stack[-2].is_list)
                 and (after_all_whitespace_index == len(line_to_parse))
             ):
                 is_start = True
@@ -962,11 +935,8 @@ class TokenizedMarkdown:
                     line_to_parse, index, self.olist_start_characters
                 )
                 and not (
-                    self.stack[-1] == self.__stack_paragraph
-                    and not (
-                        self.stack[-2].startswith(self.__stack_unordered_list_prefix)
-                        or self.stack[-2].startswith(self.__stack_ordered_list_prefix)
-                    )
+                    self.stack[-1].is_paragraph
+                    and not (self.stack[-2].is_list)
                     and (
                         (end_whitespace_index == len(line_to_parse))
                         or olist_index_number != "1"
@@ -1000,9 +970,12 @@ class TokenizedMarkdown:
             "ARE-EQUAL>>stack>>"
             + str(self.stack[last_list_index])
             + ">>new>>"
-            + new_stack
+            + str(new_stack)
         )
-        if self.stack[last_list_index] == new_stack:
+        if (
+            self.stack[last_list_index].type_name == new_stack.type_name
+            and self.stack[last_list_index].extra_data == new_stack.extra_data
+        ):
             balancing_tokens = self.close_open_blocks(
                 until_me=last_list_index, include_block_quotes=True
             )
@@ -1023,10 +996,10 @@ class TokenizedMarkdown:
         )
         last_list_token = self.tokenized_document[document_token_index]
 
-        split_list_start_from_stack = self.stack[last_list_index].split(":")
-        assert len(split_list_start_from_stack) == 5
-        split_list_start_from_new_stack = new_stack.split(":")
-        assert len(split_list_start_from_new_stack) == 5
+        split_list_start_from_stack = self.stack[last_list_index].extra_data.split(":")
+        assert len(split_list_start_from_stack) == 4
+        split_list_start_from_new_stack = new_stack.extra_data.split(":")
+        assert len(split_list_start_from_new_stack) == 4
         if last_list_token.startswith("[li:"):
             split_list_start = last_list_token[0:-1].split(":")
             print(
@@ -1050,9 +1023,9 @@ class TokenizedMarkdown:
             assert len(split_list_start) == 5
             old_start_index = int(split_list_start[3])
 
-        old_last_marker_character = split_list_start_from_stack[2][-1]
-        new_last_marker_character = split_list_start_from_new_stack[2][-1]
-        current_start_index = int(split_list_start_from_new_stack[3])
+        old_last_marker_character = split_list_start_from_stack[1][-1]
+        new_last_marker_character = split_list_start_from_new_stack[1][-1]
+        current_start_index = int(split_list_start_from_new_stack[2])
         print(
             "old>>"
             + str(split_list_start_from_stack)
@@ -1066,7 +1039,7 @@ class TokenizedMarkdown:
             + new_last_marker_character
         )
         if (
-            split_list_start_from_stack[0] == split_list_start_from_new_stack[0]
+            self.stack[last_list_index].type_name == new_stack.type_name
             and old_last_marker_character == new_last_marker_character
         ):
             print("are_list_starts_equal>>ELIGIBLE!!!")
@@ -1081,8 +1054,8 @@ class TokenizedMarkdown:
                 print("current_container_blocks>>" + str(current_container_blocks))
                 if len(current_container_blocks) > 1:
                     print("current_container_blocks-->" + str(self.stack))
-                    split_last_stack = self.stack[-1].split(":")
-                    last_stack_depth = int(split_last_stack[3])
+                    split_last_stack = self.stack[-1].extra_data.split(":")
+                    last_stack_depth = int(split_last_stack[2])
                     while current_start_index < last_stack_depth:
                         last_stack_index = self.stack.index(self.stack[-1])
                         close_tokens = self.close_open_blocks(
@@ -1091,8 +1064,8 @@ class TokenizedMarkdown:
                         assert close_tokens
                         balancing_tokens.extend(close_tokens)
                         print("close_tokens>>" + str(close_tokens))
-                        split_last_stack = self.stack[-1].split(":")
-                        last_stack_depth = int(split_last_stack[3])
+                        split_last_stack = self.stack[-1].extra_data.split(":")
+                        last_stack_depth = int(split_last_stack[2])
 
                 return True, True, balancing_tokens
             return True, False, balancing_tokens
@@ -1141,7 +1114,7 @@ class TokenizedMarkdown:
         while this_bq_count < stack_bq_count:
 
             inf = len(self.stack) - 1
-            while not self.stack[inf].startswith(self.__stack_block_quote_prefix):
+            while not self.stack[inf].is_block_quote:
                 inf = inf - 1
 
             container_level_tokens = self.close_open_blocks(
@@ -1215,7 +1188,7 @@ class TokenizedMarkdown:
         Handle the processing of the last part of the list.
         """
 
-        print("new_stack>>" + new_stack)
+        print("new_stack>>" + str(new_stack))
         no_para_start_if_empty = True
         container_level_tokens = []
 
@@ -1223,7 +1196,7 @@ class TokenizedMarkdown:
         emit_li = True
         did_find, last_list_index = self.check_for_list_in_process()
         if did_find:
-            print("list-in-process>>" + self.stack[last_list_index])
+            print("list-in-process>>" + str(self.stack[last_list_index]))
             container_level_tokens = self.close_open_blocks(
                 until_me=last_list_index + 1
             )
@@ -1245,7 +1218,7 @@ class TokenizedMarkdown:
                 assert close_tokens
                 container_level_tokens.extend(close_tokens)
         else:
-            print("NOT list-in-process>>" + self.stack[last_list_index])
+            print("NOT list-in-process>>" + str(self.stack[last_list_index]))
             container_level_tokens = self.close_open_blocks()
         print("container_level_tokens>>" + str(container_level_tokens))
 
@@ -1270,10 +1243,7 @@ class TokenizedMarkdown:
         """
 
         stack_index = len(self.stack) - 1
-        while stack_index >= 0 and not (
-            self.stack[stack_index].startswith(self.__stack_unordered_list_prefix)
-            or self.stack[stack_index].startswith(self.__stack_ordered_list_prefix)
-        ):
+        while stack_index >= 0 and not self.stack[stack_index].is_list:
             stack_index = stack_index - 1
         return stack_index >= 0, stack_index
 
@@ -1285,10 +1255,8 @@ class TokenizedMarkdown:
 
         container_level_tokens = []
 
-        print("!!!!!FOUND>>" + self.stack[ind])
-        split_list_info = self.stack[ind][
-            len(self.__stack_unordered_list_prefix) + 1 :
-        ].split(":")
+        print("!!!!!FOUND>>" + str(self.stack[ind]))
+        split_list_info = self.stack[ind].extra_data.split(":")
         print("!!!!!FOUND>>" + str(split_list_info))
         assert len(split_list_info) == 4
         requested_list_indent = int(split_list_info[0])
@@ -1304,7 +1272,7 @@ class TokenizedMarkdown:
         )
 
         leading_space_length = len(extracted_whitespace)
-        is_in_paragraph = self.stack[-1] == self.__stack_paragraph
+        is_in_paragraph = self.stack[-1].is_paragraph
 
         started_ulist, _ = self.is_ulist_start(
             line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=True
@@ -1333,7 +1301,7 @@ class TokenizedMarkdown:
             )
         else:
             requested_list_indent = requested_list_indent - before_ws_length
-            is_in_paragraph = self.stack[-1] == self.__stack_paragraph
+            is_in_paragraph = self.stack[-1].is_paragraph
             print(
                 "leading_space_length>>"
                 + str(leading_space_length)
@@ -1387,10 +1355,7 @@ class TokenizedMarkdown:
 
         adj_ws = extracted_whitespace
         stack_index = len(self.stack) - 1
-        while stack_index >= 0 and not (
-            self.stack[stack_index].startswith(self.__stack_unordered_list_prefix)
-            or self.stack[stack_index].startswith(self.__stack_ordered_list_prefix)
-        ):
+        while stack_index >= 0 and not self.stack[stack_index].is_list:
             stack_index = stack_index - 1
         if stack_index < 0:
             print("PLFCB>>No Started lists")
@@ -1629,16 +1594,14 @@ class TokenizedMarkdown:
                     + ";ws_after="
                     + str(ws_after_marker)
                 )
-                new_stack = (
-                    self.__stack_unordered_list_prefix
-                    + ":"
-                    + str(indent_level)
+                new_stack = UnorderedListStackToken(
+                    str(indent_level)
                     + ":"
                     + line_to_parse[start_index]
                     + ":"
                     + str(ws_before_marker)
                     + ":"
-                    + str(ws_after_marker)
+                    + str(ws_after_marker),
                 )
                 new_token = (
                     "[ulist:"
@@ -1737,16 +1700,14 @@ class TokenizedMarkdown:
                     + str(ws_after_marker)
                 )
 
-                new_stack = (
-                    self.__stack_ordered_list_prefix
-                    + ":"
-                    + str(indent_level)
+                new_stack = OrderedListStackToken(
+                    str(indent_level)
                     + ":"
                     + line_to_parse[start_index : index + 1]
                     + ":"
                     + str(ws_before_marker)
                     + ":"
-                    + str(ws_after_marker)
+                    + str(ws_after_marker),
                 )
                 new_token = (
                     "[olist:"
@@ -1868,9 +1829,7 @@ class TokenizedMarkdown:
 
         current_container_blocks = []
         for ind in self.stack:
-            if ind.startswith(self.__stack_ordered_list_prefix) or ind.startswith(
-                self.__stack_unordered_list_prefix
-            ):
+            if ind.is_list:
                 current_container_blocks.append(ind)
 
         adj_ws = self.calculate_adjusted_whitespace(
@@ -2172,7 +2131,7 @@ class TokenizedMarkdown:
         if html_block_type == "7":
             print("7>>>" + str(self.stack))
             print("7>>>" + str(self.tokenized_document))
-            if self.stack[-1] == self.__stack_paragraph:
+            if self.stack[-1].is_paragraph:
                 return None
         return html_block_type + ":" + remaining_html_tag
 
@@ -2192,9 +2151,9 @@ class TokenizedMarkdown:
             if block_start_info:
                 print("HTML-STARTED::" + block_start_info)
                 new_tokens = self.close_open_blocks(
-                    only_these_blocks=[self.__stack_paragraph]
+                    only_these_blocks=[ParagraphStackToken().type_name]
                 )
-                self.stack.append(self.__stack_html_block_prefix + block_start_info)
+                self.stack.append(HtmlBlockStackToken(block_start_info))
                 new_tokens.append("[html-block]")
             else:
                 print("HTML-NOT-STARTED")
@@ -2208,38 +2167,34 @@ class TokenizedMarkdown:
         via text on a normal line.
         """
 
-        # xx = self.parse_setext_headings(line_to_parse, start_index, extracted_whitespace)
-        # if xx:
-        #    print("HTML-LINE:" + str(xx))
-        #    return xx
         print("HTML-LINE")
         new_tokens = []
         new_tokens.append(
             "[text:" + line_to_parse[start_index:] + ":" + extracted_whitespace + "]"
         )
 
-        split_stack_value = self.stack[-1].split(":")
+        split_stack_value = self.stack[-1].extra_data.split(":")
         print(">>" + str(split_stack_value) + "<<")
-        assert len(split_stack_value) >= 3
+        assert len(split_stack_value) >= 2
 
         is_block_terminated = False
         adj_line = line_to_parse[start_index:]
-        if split_stack_value[1] == "1":
+        if split_stack_value[0] == "1":
             for next_end_tag in self.html_block_1_end_tags:
                 if next_end_tag in adj_line:
                     is_block_terminated = True
-        elif split_stack_value[1] == "2":
+        elif split_stack_value[0] == "2":
             is_block_terminated = "-->" in adj_line
-        elif split_stack_value[1] == "3":
+        elif split_stack_value[0] == "3":
             is_block_terminated = "?>" in adj_line
-        elif split_stack_value[1] == "4":
+        elif split_stack_value[0] == "4":
             is_block_terminated = ">" in adj_line
-        elif split_stack_value[1] == "5":
+        elif split_stack_value[0] == "5":
             is_block_terminated = "]]>" in adj_line
 
         if is_block_terminated:
             terminated_block_tokens = self.close_open_blocks(
-                only_these_blocks=self.stack[-1]
+                only_these_blocks=self.stack[-1].type_name
             )
             assert terminated_block_tokens
             new_tokens.extend(terminated_block_tokens)
@@ -2253,13 +2208,15 @@ class TokenizedMarkdown:
 
         print("HTML-BLANK")
 
-        split_stack_value = self.stack[-1].split(":")
+        split_stack_value = self.stack[-1].extra_data.split(":")
         print(">>" + str(split_stack_value) + "<<")
-        assert len(split_stack_value) >= 3
+        assert len(split_stack_value) >= 2
 
         new_tokens = []
-        if split_stack_value[1] == "6" or split_stack_value[1] == "7":
-            new_tokens = self.close_open_blocks(only_these_blocks=self.stack[-1])
+        if split_stack_value[0] == "6" or split_stack_value[0] == "7":
+            new_tokens = self.close_open_blocks(
+                only_these_blocks=self.stack[-1].type_name
+            )
 
         return new_tokens
 
@@ -2277,11 +2234,8 @@ class TokenizedMarkdown:
             line_to_parse, start_index
         )
 
-        if (
-            self.stack[-1] == self.__stack_indented_code
-            and len(extracted_whitespace) <= 3
-        ):
-            pre_tokens.append("[end-" + self.stack[-1] + "]")
+        if self.stack[-1].is_indented_code_block and len(extracted_whitespace) <= 3:
+            pre_tokens.append(self.stack[-1].generate_close_token())
             del self.stack[-1]
             while self.tokenized_document[-1].startswith("[BLANK"):
                 last_element = self.tokenized_document[-1]
@@ -2296,7 +2250,7 @@ class TokenizedMarkdown:
         if fenced_tokens:
             new_tokens.extend(fenced_tokens)
             outer_processed = True
-        elif self.stack[-1].startswith(self.__stack_fenced_code_prefix):
+        elif self.stack[-1].is_fenced_code_block:
             new_tokens.append(
                 "[text:"
                 + line_to_parse[start_index:]
@@ -2306,14 +2260,12 @@ class TokenizedMarkdown:
             )
             outer_processed = True
 
-        if not outer_processed and not self.stack[-1].startswith(
-            self.__stack_html_block_prefix
-        ):
+        if not outer_processed and not self.stack[-1].is_html_block:
             html_tokens = self.parse_html_block(
                 line_to_parse, start_index, extracted_whitespace
             )
             new_tokens.extend(html_tokens)
-        if self.stack[-1].startswith(self.__stack_html_block_prefix):
+        if self.stack[-1].is_html_block:
             html_tokens = self.check_normal_html_block_end(
                 line_to_parse, start_index, extracted_whitespace
             )

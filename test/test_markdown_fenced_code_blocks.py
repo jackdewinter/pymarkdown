@@ -21,7 +21,7 @@ def test_fenced_code_blocks_089():
         "[fcode-block:`:3::::]",
         "[text:<:]",
         "[text:>: ]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -46,7 +46,7 @@ def test_fenced_code_blocks_090():
         "[fcode-block:~:3::::]",
         "[text:<:]",
         "[text:>: ]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -96,7 +96,7 @@ aaa
         "[fcode-block:`:3::::]",
         "[text:aaa:]",
         "[text:~~~:]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -121,7 +121,7 @@ aaa
         "[fcode-block:~:3::::]",
         "[text:aaa:]",
         "[text:```:]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -146,7 +146,7 @@ aaa
         "[fcode-block:`:4::::]",
         "[text:aaa:]",
         "[text:```:]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -171,7 +171,7 @@ aaa
         "[fcode-block:~:4::::]",
         "[text:aaa:]",
         "[text:~~~:]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -189,7 +189,7 @@ def test_fenced_code_blocks_096():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """```"""
-    expected_tokens = ["[fcode-block:`:3::::]", "[end-fcode-block:]"]
+    expected_tokens = ["[fcode-block:`:3::::]", "[end-fcode-block]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -214,7 +214,7 @@ aaa"""
         "[BLANK:]",
         "[text:```:]",
         "[text:aaa:]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -239,7 +239,7 @@ bbb"""
         "[block-quote:]",
         "[fcode-block:`:3::::]",
         "[text:aaa:  ]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
         "[end-block-quote]",
         "[BLANK:]",
         "[para:]",
@@ -269,7 +269,7 @@ def test_fenced_code_blocks_099():
         "[fcode-block:`:3::::]",
         "[BLANK:]",
         "[BLANK:  ]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -288,7 +288,7 @@ def test_fenced_code_blocks_100():
     tokenizer = TokenizedMarkdown()
     source_markdown = """```
 ```"""
-    expected_tokens = ["[fcode-block:`:3::::]", "[end-fcode-block:]"]
+    expected_tokens = ["[fcode-block:`:3::::]", "[end-fcode-block]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -312,7 +312,7 @@ aaa
         "[fcode-block:`:3::: :]",
         "[text:aaa: ]",
         "[text:aaa:]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -457,7 +457,7 @@ aaa
         "[fcode-block:`:3::::]",
         "[text:aaa:]",
         "[text:```:    ]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -499,7 +499,7 @@ aaa
         "[fcode-block:~:6::::]",
         "[text:aaa:]",
         "[text:~~~ ~~:]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -527,7 +527,7 @@ baz"""
         "[end-para]",
         "[fcode-block:`:3::::]",
         "[text:bar:]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
         "[para:]",
         "[text:baz:]",
         "[end-para]",
@@ -559,7 +559,7 @@ bar
         "[end-setext::]",
         "[fcode-block:~:3::::]",
         "[text:bar:]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
         "[atx:1:baz:: ::]",
     ]
 
@@ -587,7 +587,7 @@ end
         "[text:def foo(x):]",
         "[text:return 3:  ]",
         "[text:end:]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -614,7 +614,7 @@ end
         "[text:def foo(x):]",
         "[text:return 3:  ]",
         "[text:end:]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -633,7 +633,7 @@ def test_fenced_code_blocks_114():
     tokenizer = TokenizedMarkdown()
     source_markdown = """````;
 ````"""
-    expected_tokens = ["[fcode-block:`:4:;:::]", "[end-fcode-block:]"]
+    expected_tokens = ["[fcode-block:`:4:;:::]", "[end-fcode-block]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -673,7 +673,7 @@ foo
     expected_tokens = [
         "[fcode-block:~:3:aa: ``` ~~~:: ]",
         "[text:foo:]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
@@ -693,7 +693,7 @@ def test_fenced_code_blocks_117():
     source_markdown = """```
 ``` aaa
 ```"""
-    expected_tokens = ["[fcode-block:`:3::::]", "[text:``` aaa:]", "[end-fcode-block:]"]
+    expected_tokens = ["[fcode-block:`:3::::]", "[text:``` aaa:]", "[end-fcode-block]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

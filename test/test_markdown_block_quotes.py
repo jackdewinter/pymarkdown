@@ -266,13 +266,13 @@ foo
     expected_tokens = [
         "[block-quote:]",
         "[fcode-block:`:3::::]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
         "[end-block-quote]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
         "[fcode-block:`:3::::]",
-        "[end-fcode-block:]",
+        "[end-fcode-block]",
     ]
 
     # Act
