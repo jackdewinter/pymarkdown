@@ -105,6 +105,9 @@ class DocumentStackToken(StackToken):
         StackToken.__init__(self, StackToken.stack_base_document)
 
 
+# pylint: enable=too-few-public-methods
+
+
 class ParagraphStackToken(StackToken):
     """
     Class to provide for a stack token for a paragraph.
@@ -112,33 +115,6 @@ class ParagraphStackToken(StackToken):
 
     def __init__(self):
         StackToken.__init__(self, StackToken.stack_paragraph)
-
-
-class OrderedListStackToken(StackToken):
-    """
-    Class to provide for a stack token for an ordered list.
-    """
-
-    def __init__(self, extra_data):
-        StackToken.__init__(self, StackToken.stack_ordered_list, extra_data)
-
-
-class UnorderedListStackToken(StackToken):
-    """
-    Class to provide for a stack token for an unordered list.
-    """
-
-    def __init__(self, extra_data):
-        StackToken.__init__(self, StackToken.stack_unordered_list, extra_data)
-
-
-class HtmlBlockStackToken(StackToken):
-    """
-    Class to provide for a stack token for a html block.
-    """
-
-    def __init__(self, extra_data):
-        StackToken.__init__(self, StackToken.stack_html_block, extra_data)
 
 
 class BlockQuoteStackToken(StackToken):
@@ -150,15 +126,6 @@ class BlockQuoteStackToken(StackToken):
         StackToken.__init__(self, StackToken.stack_block_quote)
 
 
-class FencedCodeBlockStackToken(StackToken):
-    """
-    Class to provide for a stack token for a fenced code block.
-    """
-
-    def __init__(self, extra_data):
-        StackToken.__init__(self, StackToken.stack_fenced_code, extra_data)
-
-
 class IndentedCodeBlockStackToken(StackToken):
     """
     Class to provide for a stack token for an indented code block.
@@ -166,3 +133,86 @@ class IndentedCodeBlockStackToken(StackToken):
 
     def __init__(self):
         StackToken.__init__(self, StackToken.stack_indented_code)
+
+
+class FencedCodeBlockStackToken(StackToken):
+    """
+    Class to provide for a stack token for a fenced code block.
+    """
+
+    def __init__(self, code_fence_character, fence_character_count):
+        self.code_fence_character = code_fence_character
+        self.fence_character_count = fence_character_count
+        extra_data = code_fence_character + ":" + str(fence_character_count)
+        StackToken.__init__(self, StackToken.stack_fenced_code, extra_data)
+
+
+class ListStackToken(StackToken):
+    """
+    Class to provide for a stack token for a list.
+    """
+
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self, type_name, indent_level, list_character, ws_before_marker, ws_after_marker
+    ):
+        self.indent_level = indent_level
+        self.list_character = list_character
+        self.ws_before_marker = ws_before_marker
+        self.ws_after_marker = ws_after_marker
+        extra_data = (
+            str(indent_level)
+            + ":"
+            + list_character
+            + ":"
+            + str(ws_before_marker)
+            + ":"
+            + str(ws_after_marker)
+        )
+        StackToken.__init__(self, type_name, extra_data)
+
+    # pylint: enable=too-many-arguments
+
+
+class OrderedListStackToken(ListStackToken):
+    """
+    Class to provide for a stack token for an ordered list.
+    """
+
+    def __init__(self, indent_level, list_character, ws_before_marker, ws_after_marker):
+        ListStackToken.__init__(
+            self,
+            StackToken.stack_ordered_list,
+            indent_level,
+            list_character,
+            ws_before_marker,
+            ws_after_marker,
+        )
+
+
+class UnorderedListStackToken(ListStackToken):
+    """
+    Class to provide for a stack token for an unordered list.
+    """
+
+    def __init__(self, indent_level, list_character, ws_before_marker, ws_after_marker):
+        ListStackToken.__init__(
+            self,
+            StackToken.stack_unordered_list,
+            indent_level,
+            list_character,
+            ws_before_marker,
+            ws_after_marker,
+        )
+
+
+class HtmlBlockStackToken(StackToken):
+    """
+    Class to provide for a stack token for a html block.
+    """
+
+    def __init__(self, html_block_type, remaining_html_tag):
+        self.html_block_type = html_block_type
+        self.remaining_html_tag = remaining_html_tag
+        extra_data = str(html_block_type) + ":" + str(remaining_html_tag)
+        StackToken.__init__(self, StackToken.stack_html_block, extra_data)

@@ -30,7 +30,8 @@ class TokenizedMarkdown:
         Initializes a new instance of the TokenizedMarkdown class.
         """
         self.tokenized_document = None
-        self.stack = [DocumentStackToken()]
+        self.stack = []
+        self.stack.append(DocumentStackToken())
 
         self.ulist_start_characters = "-+*"
         self.olist_start_characters = ".)"
@@ -170,10 +171,10 @@ class TokenizedMarkdown:
             if only_these_blocks and self.stack[-1].type_name not in only_these_blocks:
                 print("cob>>not in only")
                 break
-            if not include_block_quotes and (self.stack[-1].is_block_quote):
+            if not include_block_quotes and self.stack[-1].is_block_quote:
                 print("cob>>not block quotes")
                 break
-            if not include_lists and (self.stack[-1].is_list):
+            if not include_lists and self.stack[-1].is_list:
                 print("cob>>not lists")
                 break
             if until_me != -1:
@@ -214,7 +215,7 @@ class TokenizedMarkdown:
         if (
             self.stack[-1].is_paragraph
             and len(self.stack) >= 2
-            and (self.stack[-2].is_list)
+            and self.stack[-2].is_list
         ):
             from_main_transform = False
         elif self.stack[-1].is_list:
@@ -362,8 +363,8 @@ class TokenizedMarkdown:
                 print("pfcb->end")
 
                 if (
-                    self.stack[-1].extra_data[0] == line_to_parse[start_index]
-                    and collected_count >= int(self.stack[-1].extra_data[2:])
+                    self.stack[-1].code_fence_character == line_to_parse[start_index]
+                    and collected_count >= self.stack[-1].fence_character_count
                     and non_whitespace_index >= len(line_to_parse)
                 ):
                     new_tokens.append(
@@ -393,7 +394,8 @@ class TokenizedMarkdown:
 
                     self.stack.append(
                         FencedCodeBlockStackToken(
-                            line_to_parse[start_index] + ":" + str(collected_count)
+                            code_fence_character=line_to_parse[start_index],
+                            fence_character_count=collected_count,
                         )
                     )
                     new_tokens.append(
@@ -972,6 +974,7 @@ class TokenizedMarkdown:
             + ">>new>>"
             + str(new_stack)
         )
+        # TODO __eq__?
         if (
             self.stack[last_list_index].type_name == new_stack.type_name
             and self.stack[last_list_index].extra_data == new_stack.extra_data
@@ -996,10 +999,6 @@ class TokenizedMarkdown:
         )
         last_list_token = self.tokenized_document[document_token_index]
 
-        split_list_start_from_stack = self.stack[last_list_index].extra_data.split(":")
-        assert len(split_list_start_from_stack) == 4
-        split_list_start_from_new_stack = new_stack.extra_data.split(":")
-        assert len(split_list_start_from_new_stack) == 4
         if last_list_token.startswith("[li:"):
             split_list_start = last_list_token[0:-1].split(":")
             print(
@@ -1023,21 +1022,16 @@ class TokenizedMarkdown:
             assert len(split_list_start) == 5
             old_start_index = int(split_list_start[3])
 
-        old_last_marker_character = split_list_start_from_stack[1][-1]
-        new_last_marker_character = split_list_start_from_new_stack[1][-1]
-        current_start_index = int(split_list_start_from_new_stack[2])
+        old_last_marker_character = self.stack[last_list_index].list_character[-1]
+        new_last_marker_character = new_stack.list_character[-1]
+        current_start_index = new_stack.ws_before_marker
         print(
             "old>>"
-            + str(split_list_start_from_stack)
+            + str(self.stack[last_list_index].extra_data)
             + ">>"
             + old_last_marker_character
         )
-        print(
-            "new>>"
-            + str(split_list_start_from_new_stack)
-            + ">>"
-            + new_last_marker_character
-        )
+        print("new>>" + str(new_stack.extra_data) + ">>" + new_last_marker_character)
         if (
             self.stack[last_list_index].type_name == new_stack.type_name
             and old_last_marker_character == new_last_marker_character
@@ -1054,8 +1048,7 @@ class TokenizedMarkdown:
                 print("current_container_blocks>>" + str(current_container_blocks))
                 if len(current_container_blocks) > 1:
                     print("current_container_blocks-->" + str(self.stack))
-                    split_last_stack = self.stack[-1].extra_data.split(":")
-                    last_stack_depth = int(split_last_stack[2])
+                    last_stack_depth = self.stack[-1].ws_before_marker
                     while current_start_index < last_stack_depth:
                         last_stack_index = self.stack.index(self.stack[-1])
                         close_tokens = self.close_open_blocks(
@@ -1064,8 +1057,7 @@ class TokenizedMarkdown:
                         assert close_tokens
                         balancing_tokens.extend(close_tokens)
                         print("close_tokens>>" + str(close_tokens))
-                        split_last_stack = self.stack[-1].extra_data.split(":")
-                        last_stack_depth = int(split_last_stack[2])
+                        last_stack_depth = self.stack[-1].ws_before_marker
 
                 return True, True, balancing_tokens
             return True, False, balancing_tokens
@@ -1256,12 +1248,10 @@ class TokenizedMarkdown:
         container_level_tokens = []
 
         print("!!!!!FOUND>>" + str(self.stack[ind]))
-        split_list_info = self.stack[ind].extra_data.split(":")
-        print("!!!!!FOUND>>" + str(split_list_info))
-        assert len(split_list_info) == 4
-        requested_list_indent = int(split_list_info[0])
-        before_ws_length = int(split_list_info[2])
-        after_ws_length = int(split_list_info[3])
+        print("!!!!!FOUND>>" + str(self.stack[ind].extra_data))
+        requested_list_indent = self.stack[ind].indent_level
+        before_ws_length = self.stack[ind].ws_before_marker
+        after_ws_length = self.stack[ind].ws_after_marker
         print(
             "!!!!!requested_list_indent>>"
             + str(requested_list_indent)
@@ -1595,13 +1585,10 @@ class TokenizedMarkdown:
                     + str(ws_after_marker)
                 )
                 new_stack = UnorderedListStackToken(
-                    str(indent_level)
-                    + ":"
-                    + line_to_parse[start_index]
-                    + ":"
-                    + str(ws_before_marker)
-                    + ":"
-                    + str(ws_after_marker),
+                    indent_level,
+                    line_to_parse[start_index],
+                    ws_before_marker,
+                    ws_after_marker,
                 )
                 new_token = (
                     "[ulist:"
@@ -1701,13 +1688,10 @@ class TokenizedMarkdown:
                 )
 
                 new_stack = OrderedListStackToken(
-                    str(indent_level)
-                    + ":"
-                    + line_to_parse[start_index : index + 1]
-                    + ":"
-                    + str(ws_before_marker)
-                    + ":"
-                    + str(ws_after_marker),
+                    indent_level,
+                    line_to_parse[start_index : index + 1],
+                    ws_before_marker,
+                    ws_after_marker,
                 )
                 new_token = (
                     "[olist:"
@@ -2127,13 +2111,13 @@ class TokenizedMarkdown:
                 remaining_html_tag, line_to_parse, character_index
             )
         if not html_block_type:
-            return None
+            return None, None
         if html_block_type == "7":
             print("7>>>" + str(self.stack))
             print("7>>>" + str(self.tokenized_document))
             if self.stack[-1].is_paragraph:
-                return None
-        return html_block_type + ":" + remaining_html_tag
+                return None, None
+        return html_block_type, remaining_html_tag
 
     def parse_html_block(self, line_to_parse, start_index, extracted_whitespace):
         """
@@ -2145,15 +2129,17 @@ class TokenizedMarkdown:
             line_to_parse, start_index, self.html_block_start_character
         ):
             print("HTML-START?")
-            block_start_info = self.determine_html_block_type(
+            html_block_type, remaining_html_tag = self.determine_html_block_type(
                 line_to_parse, start_index
             )
-            if block_start_info:
-                print("HTML-STARTED::" + block_start_info)
+            if html_block_type:
+                print("HTML-STARTED::" + html_block_type + ":" + remaining_html_tag)
                 new_tokens = self.close_open_blocks(
                     only_these_blocks=[ParagraphStackToken().type_name]
                 )
-                self.stack.append(HtmlBlockStackToken(block_start_info))
+                self.stack.append(
+                    HtmlBlockStackToken(html_block_type, remaining_html_tag)
+                )
                 new_tokens.append("[html-block]")
             else:
                 print("HTML-NOT-STARTED")
@@ -2173,23 +2159,19 @@ class TokenizedMarkdown:
             "[text:" + line_to_parse[start_index:] + ":" + extracted_whitespace + "]"
         )
 
-        split_stack_value = self.stack[-1].extra_data.split(":")
-        print(">>" + str(split_stack_value) + "<<")
-        assert len(split_stack_value) >= 2
-
         is_block_terminated = False
         adj_line = line_to_parse[start_index:]
-        if split_stack_value[0] == "1":
+        if self.stack[-1].html_block_type == "1":
             for next_end_tag in self.html_block_1_end_tags:
                 if next_end_tag in adj_line:
                     is_block_terminated = True
-        elif split_stack_value[0] == "2":
+        elif self.stack[-1].html_block_type == "2":
             is_block_terminated = "-->" in adj_line
-        elif split_stack_value[0] == "3":
+        elif self.stack[-1].html_block_type == "3":
             is_block_terminated = "?>" in adj_line
-        elif split_stack_value[0] == "4":
+        elif self.stack[-1].html_block_type == "4":
             is_block_terminated = ">" in adj_line
-        elif split_stack_value[0] == "5":
+        elif self.stack[-1].html_block_type == "5":
             is_block_terminated = "]]>" in adj_line
 
         if is_block_terminated:
@@ -2208,12 +2190,11 @@ class TokenizedMarkdown:
 
         print("HTML-BLANK")
 
-        split_stack_value = self.stack[-1].extra_data.split(":")
-        print(">>" + str(split_stack_value) + "<<")
-        assert len(split_stack_value) >= 2
-
         new_tokens = []
-        if split_stack_value[0] == "6" or split_stack_value[0] == "7":
+        if (
+            self.stack[-1].html_block_type == "6"
+            or self.stack[-1].html_block_type == "7"
+        ):
             new_tokens = self.close_open_blocks(
                 only_these_blocks=self.stack[-1].type_name
             )
