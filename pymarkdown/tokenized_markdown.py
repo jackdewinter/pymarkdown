@@ -156,7 +156,7 @@ class TokenizedMarkdown:
         only_these_blocks=None,
         include_block_quotes=False,
         include_lists=False,
-        until_me=-1,
+        until_this_index=-1,
     ):
         """
         Close any open blocks that are currently on the stack.
@@ -168,18 +168,29 @@ class TokenizedMarkdown:
 
         while not self.stack[-1].is_document:
             print("cob>>" + str(self.stack))
-            if only_these_blocks and self.stack[-1].type_name not in only_these_blocks:
-                print("cob>>not in only")
-                break
+            if only_these_blocks:
+                print("cob-only-type>>" + str(only_these_blocks))
+                print("cob-only-type>>" + str(type(self.stack[-1])))
+                # pylint: disable=unidiomatic-typecheck
+                if type(self.stack[-1]) not in only_these_blocks:
+                    print("cob>>not in only")
+                    break
+                # pylint: enable=unidiomatic-typecheck
             if not include_block_quotes and self.stack[-1].is_block_quote:
                 print("cob>>not block quotes")
                 break
             if not include_lists and self.stack[-1].is_list:
                 print("cob>>not lists")
                 break
-            if until_me != -1:
-                print("NOT ME!!!!" + str(until_me) + "<<" + str(len(self.stack)) + "<<")
-                if until_me >= len(self.stack):
+            if until_this_index != -1:
+                print(
+                    "NOT ME!!!!"
+                    + str(until_this_index)
+                    + "<<"
+                    + str(len(self.stack))
+                    + "<<"
+                )
+                if until_this_index >= len(self.stack):
                     break
 
             adjusted_tokens = self.remove_top_element_from_stack()
@@ -224,7 +235,7 @@ class TokenizedMarkdown:
         close_only_these_blocks = None
         do_include_block_quotes = True
         if not from_main_transform:
-            close_only_these_blocks = [ParagraphStackToken().type_name]
+            close_only_these_blocks = [ParagraphStackToken]
             do_include_block_quotes = False
         print("from_main_transform>>" + str(from_main_transform))
         print("close_only_these_blocks>>" + str(close_only_these_blocks))
@@ -263,7 +274,7 @@ class TokenizedMarkdown:
             ):
                 print("double blank in list")
                 new_tokens = self.close_open_blocks(
-                    until_me=in_index, include_lists=True
+                    until_this_index=in_index, include_lists=True
                 )
 
         if new_tokens is None:
@@ -389,7 +400,7 @@ class TokenizedMarkdown:
                     ]
 
                     new_tokens = self.close_open_blocks(
-                        only_these_blocks=[ParagraphStackToken().type_name]
+                        only_these_blocks=[ParagraphStackToken],
                     )
 
                     self.stack.append(
@@ -472,7 +483,7 @@ class TokenizedMarkdown:
             if this_bq_count == 0 and stack_bq_count > 0:
                 new_tokens = self.close_open_blocks(
                     destination_array=new_tokens,
-                    only_these_blocks=BlockQuoteStackToken().type_name,
+                    only_these_blocks=[BlockQuoteStackToken],
                     include_block_quotes=True,
                 )
             new_tokens.append(
@@ -633,11 +644,10 @@ class TokenizedMarkdown:
 
             did_find, last_list_index = self.check_for_list_in_process()
             assert did_find
-            new_tokens = self.close_open_blocks(until_me=last_list_index)
+            new_tokens = self.close_open_blocks(until_this_index=last_list_index)
         if stack_bq_count != 0 and this_bq_count == 0:
             new_tokens = self.close_open_blocks(
-                only_these_blocks=BlockQuoteStackToken().type_name,
-                include_block_quotes=True,
+                only_these_blocks=[BlockQuoteStackToken], include_block_quotes=True,
             )
 
         if not self.stack[-1].is_paragraph:
@@ -725,10 +735,7 @@ class TokenizedMarkdown:
                 print("__check_for_lazy_handling>>code block")
                 assert not container_level_tokens
                 container_level_tokens = self.close_open_blocks(
-                    only_these_blocks=[
-                        BlockQuoteStackToken().type_name,
-                        self.stack[-1].type_name,
-                    ],
+                    only_these_blocks=[BlockQuoteStackToken, type(self.stack[-1])],
                     include_block_quotes=True,
                 )
             else:
@@ -748,10 +755,7 @@ class TokenizedMarkdown:
                 print("set_atx")
                 assert not container_level_tokens
                 container_level_tokens = self.close_open_blocks(
-                    only_these_blocks=[
-                        ParagraphStackToken().type_name,
-                        BlockQuoteStackToken().type_name,
-                    ],
+                    only_these_blocks=[ParagraphStackToken, BlockQuoteStackToken],
                     include_block_quotes=True,
                 )
             else:
@@ -770,10 +774,7 @@ class TokenizedMarkdown:
         container_level_tokens = []
         if this_bq_count > stack_bq_count:
             container_level_tokens = self.close_open_blocks(
-                only_these_blocks=[
-                    ParagraphStackToken().type_name,
-                    IndentedCodeBlockStackToken().type_name,
-                ]
+                only_these_blocks=[ParagraphStackToken, IndentedCodeBlockStackToken],
             )
             while this_bq_count > stack_bq_count:
                 self.stack.append(BlockQuoteStackToken())
@@ -980,7 +981,7 @@ class TokenizedMarkdown:
             and self.stack[last_list_index].extra_data == new_stack.extra_data
         ):
             balancing_tokens = self.close_open_blocks(
-                until_me=last_list_index, include_block_quotes=True
+                until_this_index=last_list_index, include_block_quotes=True
             )
             return True, True, balancing_tokens
 
@@ -1052,7 +1053,7 @@ class TokenizedMarkdown:
                     while current_start_index < last_stack_depth:
                         last_stack_index = self.stack.index(self.stack[-1])
                         close_tokens = self.close_open_blocks(
-                            until_me=last_stack_index, include_lists=True
+                            until_this_index=last_stack_index, include_lists=True
                         )
                         assert close_tokens
                         balancing_tokens.extend(close_tokens)
@@ -1110,7 +1111,7 @@ class TokenizedMarkdown:
                 inf = inf - 1
 
             container_level_tokens = self.close_open_blocks(
-                until_me=inf, include_block_quotes=True, include_lists=True
+                until_this_index=inf, include_block_quotes=True, include_lists=True
             )
             print("container_level_tokens>>" + str(container_level_tokens))
             stack_bq_count = stack_bq_count - 1
@@ -1190,7 +1191,7 @@ class TokenizedMarkdown:
         if did_find:
             print("list-in-process>>" + str(self.stack[last_list_index]))
             container_level_tokens = self.close_open_blocks(
-                until_me=last_list_index + 1
+                until_this_index=last_list_index + 1
             )
             print("old-stack>>" + str(container_level_tokens) + "<<")
 
@@ -1205,7 +1206,7 @@ class TokenizedMarkdown:
             else:
                 print("post_list>>close open blocks and emit")
                 close_tokens = self.close_open_blocks(
-                    until_me=last_list_index, include_lists=True
+                    until_this_index=last_list_index, include_lists=True
                 )
                 assert close_tokens
                 container_level_tokens.extend(close_tokens)
@@ -1328,7 +1329,7 @@ class TokenizedMarkdown:
                     print("ws (normal and adjusted) not enough to continue")
 
                     container_level_tokens = self.close_open_blocks(
-                        until_me=ind, include_lists=True
+                        until_this_index=ind, include_lists=True
                     )
                 else:
                     print("ws (normal and adjusted) continue")
@@ -2135,7 +2136,7 @@ class TokenizedMarkdown:
             if html_block_type:
                 print("HTML-STARTED::" + html_block_type + ":" + remaining_html_tag)
                 new_tokens = self.close_open_blocks(
-                    only_these_blocks=[ParagraphStackToken().type_name]
+                    only_these_blocks=[ParagraphStackToken],
                 )
                 self.stack.append(
                     HtmlBlockStackToken(html_block_type, remaining_html_tag)
@@ -2176,7 +2177,7 @@ class TokenizedMarkdown:
 
         if is_block_terminated:
             terminated_block_tokens = self.close_open_blocks(
-                only_these_blocks=self.stack[-1].type_name
+                only_these_blocks=[type(self.stack[-1])],
             )
             assert terminated_block_tokens
             new_tokens.extend(terminated_block_tokens)
@@ -2196,7 +2197,7 @@ class TokenizedMarkdown:
             or self.stack[-1].html_block_type == "7"
         ):
             new_tokens = self.close_open_blocks(
-                only_these_blocks=self.stack[-1].type_name
+                only_these_blocks=[type(self.stack[-1])],
             )
 
         return new_tokens
