@@ -47,6 +47,41 @@ class MarkdownToken:
         """
         return self.token_name == MarkdownToken.token_blank_line
 
+    @property
+    def is_list_start(self):
+        """
+        Returns whether or not the current token is a list element.
+        """
+        return self.token_name == MarkdownToken.token_unordered_list_start or \
+            self.token_name == MarkdownToken.token_ordered_list_start
+
+    @property
+    def is_new_list_item(self):
+        """
+        Returns whether or not the current token is a list item element.
+        """
+        return self.token_name == MarkdownToken.token_new_list_item
+
+    @property
+    def is_any_list_token(self):
+        """
+        Returns whether or not the current token is a list item element or a list element.
+        """
+        return self.is_new_list_item or self.is_list_start
+
+    @property
+    def is_paragraph(self):
+        """
+        Returns whether or not the current token is a paragraph element.
+        """
+        return self.token_name == MarkdownToken.token_paragraph
+
+    @property
+    def is_html_block(self):
+        """
+        Returns whether or not the current token is a html block element.
+        """
+        return self.token_name == MarkdownToken.token_html_block
 
 # pylint: disable=too-few-public-methods
 class BlankLineMarkdownToken(MarkdownToken):
@@ -220,6 +255,7 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, list_start_sequence, indent_level, extracted_whitespace):
+        self.indent_level = indent_level
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_unordered_list_start,
@@ -239,6 +275,7 @@ class OrderedListStartMarkdownToken(MarkdownToken):
         indent_level,
         extracted_whitespace,
     ):
+        self.indent_level = indent_level
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_ordered_list_start,
@@ -258,6 +295,7 @@ class NewListItemMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, indent_level):
+        self.indent_level = indent_level
         MarkdownToken.__init__(
             self, MarkdownToken.token_new_list_item, str(indent_level)
         )

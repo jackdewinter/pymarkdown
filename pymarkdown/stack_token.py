@@ -74,6 +74,13 @@ class StackToken:
         return self.type_name == self.stack_html_block
 
     @property
+    def is_code_block(self):
+        """
+        Is this stack token a fenced code block or indented code block token?
+        """
+        return self.is_fenced_code_block or self.is_indented_code_block
+
+    @property
     def is_fenced_code_block(self):
         """
         Is this stack token a fenced code block token?
