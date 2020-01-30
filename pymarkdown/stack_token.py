@@ -1,6 +1,7 @@
 """
 Module to provide for an element that can be added to the stack.
 """
+from pymarkdown.markdown_token import EndMarkdownToken
 
 
 class StackToken:
@@ -30,17 +31,23 @@ class StackToken:
     def __repr__(self):
         return self.__str__()
 
+    def __eq__(self, other):
+        """
+        Overrides the default implementation
+        """
+        if isinstance(other, StackToken):
+            return (
+                self.type_name == other.type_name
+                and self.extra_data == other.extra_data
+            )
+        return NotImplemented
+
     def generate_close_token(self, extracted_whitespace=None):
         """
         Generate the token emitted to close off the current stack token
         """
 
-        close_token = "[end-" + self.type_name
-        if extracted_whitespace:
-            if not close_token.endswith(":"):
-                close_token = close_token + ":"
-            close_token = close_token + extracted_whitespace
-        return close_token + "]"
+        return EndMarkdownToken(self.type_name, extracted_whitespace, None)
 
     @property
     def is_document(self):
