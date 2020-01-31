@@ -297,9 +297,11 @@ class TokenizedMarkdown:
                 new_tokens = []
         elif self.stack[-1].is_html_block:
             new_tokens = self.check_blank_html_block_end()
-        elif is_processing_list and \
-            self.tokenized_document[-1].is_blank_line and \
-            self.tokenized_document[-2].is_list_start:
+        elif (
+            is_processing_list
+            and self.tokenized_document[-1].is_blank_line
+            and self.tokenized_document[-2].is_list_start
+        ):
             print("double blank in list")
             new_tokens = self.close_open_blocks(
                 until_this_index=in_index, include_lists=True
@@ -536,7 +538,10 @@ class TokenizedMarkdown:
                     end_index,
                     extracted_whitespace_at_end,
                 ) = ParserHelper.extract_whitespace_from_end(remaining_line)
-                while end_index > 0 and remaining_line[end_index - 1] == self.atx_character:
+                while (
+                    end_index > 0
+                    and remaining_line[end_index - 1] == self.atx_character
+                ):
                     end_index = end_index - 1
                 extracted_whitespace_before_end = ""
                 if end_index > 0:
@@ -590,7 +595,7 @@ class TokenizedMarkdown:
 
                 # This is unusual.  Normally, close_open_blocks is used to close off
                 # blocks based on the stack token.  However, since the setext takes
-                # the last paragraph or HTML (see case 61) of text and translates it
+                # the last paragraph of text (see case 61) and translates it
                 # into a header, this has to be done separately, as there is no
                 # stack token to close.
                 new_tokens.append(
@@ -599,17 +604,12 @@ class TokenizedMarkdown:
                     )
                 )
                 token_index = len(self.tokenized_document) - 1
-                while not (
-                    self.tokenized_document[token_index].is_paragraph
-                    or self.tokenized_document[token_index].is_html_block
-                ):
+                while not self.tokenized_document[token_index].is_paragraph:
                     token_index = token_index - 1
 
-                # TODO is this set up properly for [html-block] i.e. len(para) below?
-                # see case 61
                 replacement_token = SetextHeaderMarkdownToken(
                     line_to_parse[start_index],
-                    str(self.tokenized_document[token_index])[len("[para:") : -1],
+                    self.tokenized_document[token_index].extra_data,
                 )
                 self.tokenized_document[token_index] = replacement_token
                 del self.stack[-1]
@@ -734,10 +734,7 @@ class TokenizedMarkdown:
             )
             print("fenced_start?" + str(is_fenced_start))
 
-            if (
-                self.stack[-1].is_code_block
-                or is_fenced_start
-            ):
+            if self.stack[-1].is_code_block or is_fenced_start:
                 print("__check_for_lazy_handling>>code block")
                 assert not container_level_tokens
                 container_level_tokens = self.close_open_blocks(
@@ -1975,17 +1972,25 @@ class TokenizedMarkdown:
 
         html_block_type = None
         if character_index < len(line_to_parse):
-            if ParserHelper.is_character_at_index(line_to_parse, character_index, self.html_block_2_to_5_start):
+            if ParserHelper.is_character_at_index(
+                line_to_parse, character_index, self.html_block_2_to_5_start
+            ):
                 if ParserHelper.are_characters_at_index(
-                    line_to_parse, character_index + 1, self.html_block_2_continued_start
+                    line_to_parse,
+                    character_index + 1,
+                    self.html_block_2_continued_start,
                 ):
                     html_block_type = self.html_block_2
                 elif ParserHelper.is_character_at_index_one_of(
-                    line_to_parse, character_index + 1, self.html_block_4_continued_start
+                    line_to_parse,
+                    character_index + 1,
+                    self.html_block_4_continued_start,
                 ):
                     html_block_type = self.html_block_4
                 elif ParserHelper.are_characters_at_index(
-                    line_to_parse, character_index + 1, self.html_block_5_continued_start
+                    line_to_parse,
+                    character_index + 1,
+                    self.html_block_5_continued_start,
                 ):
                     html_block_type = self.html_block_5
             elif ParserHelper.is_character_at_index(

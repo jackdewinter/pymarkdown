@@ -52,8 +52,10 @@ class MarkdownToken:
         """
         Returns whether or not the current token is a list element.
         """
-        return self.token_name == MarkdownToken.token_unordered_list_start or \
-            self.token_name == MarkdownToken.token_ordered_list_start
+        return (
+            self.token_name == MarkdownToken.token_unordered_list_start
+            or self.token_name == MarkdownToken.token_ordered_list_start
+        )
 
     @property
     def is_new_list_item(self):
@@ -82,6 +84,7 @@ class MarkdownToken:
         Returns whether or not the current token is a html block element.
         """
         return self.token_name == MarkdownToken.token_html_block
+
 
 # pylint: disable=too-few-public-methods
 class BlankLineMarkdownToken(MarkdownToken):
