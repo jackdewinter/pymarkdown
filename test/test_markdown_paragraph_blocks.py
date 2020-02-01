@@ -47,13 +47,11 @@ ccc
 ddd"""
     expected_tokens = [
         "[para:]",
-        "[text:aaa:]",
-        "[text:bbb:]",
+        "[text:aaa\nbbb:]",
         "[end-para]",
         "[BLANK:]",
         "[para:]",
-        "[text:ccc:]",
-        "[text:ddd:]",
+        "[text:ccc\nddd:]",
         "[end-para]",
     ]
 
@@ -102,7 +100,7 @@ def test_paragraph_blocks_192():
     tokenizer = TokenizedMarkdown()
     source_markdown = """  aaa
  bbb"""
-    expected_tokens = ["[para:  ]", "[text:aaa:]", "[text:bbb: ]", "[end-para]"]
+    expected_tokens = ["[para:  ]", "[text:aaa\n bbb:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -123,9 +121,7 @@ def test_paragraph_blocks_193():
                                        ccc"""
     expected_tokens = [
         "[para:]",
-        "[text:aaa:]",
-        "[text:bbb:             ]",
-        "[text:ccc:                                       ]",
+        "[text:aaa\n             bbb\n                                       ccc:]",
         "[end-para]",
     ]
 
@@ -145,7 +141,7 @@ def test_paragraph_blocks_194():
     tokenizer = TokenizedMarkdown()
     source_markdown = """   aaa
 bbb"""
-    expected_tokens = ["[para:   ]", "[text:aaa:]", "[text:bbb:]", "[end-para]"]
+    expected_tokens = ["[para:   ]", "[text:aaa\nbbb:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -189,7 +185,7 @@ def test_paragraph_blocks_196():
     tokenizer = TokenizedMarkdown()
     source_markdown = """aaa     
 bbb     """
-    expected_tokens = ["[para:]", "[text:aaa     :]", "[text:bbb     :]", "[end-para]"]
+    expected_tokens = ["[para:]", "[text:aaa     \nbbb     :]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

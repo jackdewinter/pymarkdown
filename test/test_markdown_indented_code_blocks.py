@@ -17,8 +17,7 @@ def test_indented_code_blocks_077():
       indented code block"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:a simple:]",
-        "[text:indented code block:      ]",
+        "[text:a simple\n      indented code block:]",
         "[end-icode-block]",
     ]
 
@@ -102,8 +101,7 @@ def test_indented_code_blocks_080():
     - one"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:<a/>:]",
-        "[text:*hi*:    ]",
+        "[text:<a/>\n    *hi*:]",
         "[BLANK:]",
         "[text:- one:    ]",
         "[end-icode-block]",
@@ -183,7 +181,7 @@ def test_indented_code_blocks_083():
     tokenizer = TokenizedMarkdown()
     source_markdown = """Foo
     bar"""
-    expected_tokens = ["[para:]", "[text:Foo:]", "[text:bar:    ]", "[end-para]"]
+    expected_tokens = ["[para:]", "[text:Foo\n    bar:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -262,8 +260,7 @@ def test_indented_code_blocks_086():
     bar"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:foo:    ]",
-        "[text:bar:    ]",
+        "[text:foo\n    bar:    ]",
         "[end-icode-block]",
     ]
 

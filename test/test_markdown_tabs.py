@@ -59,8 +59,7 @@ def test_tabs_003():
     ὐ	a"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:a    a:]",
-        "[text:ὐ    a:    ]",
+        "[text:a    a\n    ὐ    a:]",
         "[end-icode-block]",
     ]
 
@@ -190,8 +189,7 @@ def test_tabs_008():
     # noqa: E101
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:foo:]",
-        "[text:bar:    ]",
+        "[text:foo\n    bar:]",
         "[end-icode-block]",
     ]
 

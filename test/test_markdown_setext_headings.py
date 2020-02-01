@@ -48,8 +48,7 @@ baz*
 ===="""
     expected_tokens = [
         "[setext:=:]",
-        "[text:Foo *bar:]",
-        "[text:baz*:]",
+        "[text:Foo *bar\nbaz*:]",
         "[end-setext::]",
     ]
 
@@ -72,8 +71,7 @@ baz*→
 ===="""
     expected_tokens = [
         "[setext:=:  ]",
-        "[text:Foo *bar:]",
-        "[text:baz*→:]",
+        "[text:Foo *bar\nbaz*→:]",
         "[end-setext::]",
     ]
 
@@ -164,8 +162,7 @@ def test_setext_headings_055():
 ---"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:Foo:]",
-        "[text:---:    ]",
+        "[text:Foo\n    ---:]",
         "[BLANK:]",
         "[text:Foo:    ]",
         "[end-icode-block]",
@@ -206,7 +203,7 @@ def test_setext_headings_057():
     tokenizer = TokenizedMarkdown()
     source_markdown = """Foo
     ---"""
-    expected_tokens = ["[para:]", "[text:Foo:]", "[text:---:    ]", "[end-para]"]
+    expected_tokens = ["[para:]", "[text:Foo\n    ---:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -229,8 +226,7 @@ Foo
 --- -"""
     expected_tokens = [
         "[para:]",
-        "[text:Foo:]",
-        "[text:= =:]",
+        "[text:Foo\n= =:]",
         "[end-para]",
         "[BLANK:]",
         "[para:]",
@@ -358,8 +354,7 @@ bar
     expected_tokens = [
         "[block-quote:]",
         "[para:]",
-        "[text:foo:]",
-        "[text:bar:]",
+        "[text:foo\nbar:]",
         "[end-para]",
         "[end-block-quote]",
         "[para:]",
@@ -434,7 +429,7 @@ def test_setext_headings_065():
     source_markdown = """Foo
 Bar
 ---"""
-    expected_tokens = ["[setext:-:]", "[text:Foo:]", "[text:Bar:]", "[end-setext::]"]
+    expected_tokens = ["[setext:-:]", "[text:Foo\nBar:]", "[end-setext::]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -678,8 +673,7 @@ bar
 baz"""
     expected_tokens = [
         "[para:]",
-        "[text:Foo:]",
-        "[text:bar:]",
+        "[text:Foo\nbar:]",
         "[end-para]",
         "[BLANK:]",
         "[tbreak:-::---]",
@@ -710,8 +704,7 @@ bar
 baz"""
     expected_tokens = [
         "[para:]",
-        "[text:Foo:]",
-        "[text:bar:]",
+        "[text:Foo\nbar:]",
         "[end-para]",
         "[tbreak:*::* * *]",
         "[para:]",
@@ -740,10 +733,7 @@ bar
 baz"""
     expected_tokens = [
         "[para:]",
-        "[text:Foo:]",
-        "[text:bar:]",
-        "[text:\\---:]",
-        "[text:baz:]",
+        "[text:Foo\nbar\n\\---\nbaz:]",
         "[end-para]",
     ]
 

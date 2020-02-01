@@ -24,8 +24,7 @@ with two lines.
 > A block quote."""
     expected_tokens = [
         "[para:]",
-        "[text:A paragraph:]",
-        "[text:with two lines.:]",
+        "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[BLANK:]",
         "[icode-block:    ]",
@@ -62,8 +61,7 @@ def test_list_blocks_232():
     expected_tokens = [
         "[olist:.:1:4:]",
         "[para:]",
-        "[text:A paragraph:]",
-        "[text:with two lines.:]",
+        "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[BLANK:]",
         "[icode-block:    ]",
@@ -962,13 +960,11 @@ foo
 1."""
     expected_tokens = [
         "[para:]",
-        "[text:foo:]",
-        "[text:*:]",
+        "[text:foo\n*:]",
         "[end-para]",
         "[BLANK:]",
         "[para:]",
-        "[text:foo:]",
-        "[text:1.:]",
+        "[text:foo\n1.:]",
         "[end-para]",
     ]
 
@@ -995,8 +991,7 @@ def test_list_blocks_264():
     expected_tokens = [
         "[olist:.:1:5: ]",
         "[para:]",
-        "[text:A paragraph:]",
-        "[text:with two lines.:]",
+        "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[BLANK:]",
         "[icode-block:    ]",
@@ -1034,8 +1029,7 @@ def test_list_blocks_265():
     expected_tokens = [
         "[olist:.:1:6:  ]",
         "[para:]",
-        "[text:A paragraph:]",
-        "[text:with two lines.:]",
+        "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[BLANK:]",
         "[icode-block:    ]",
@@ -1073,8 +1067,7 @@ def test_list_blocks_266():
     expected_tokens = [
         "[olist:.:1:7:   ]",
         "[para:]",
-        "[text:A paragraph:]",
-        "[text:with two lines.:]",
+        "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[BLANK:]",
         "[icode-block:    ]",
@@ -1111,8 +1104,7 @@ def test_list_blocks_267():
         > A block quote."""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:1.  A paragraph:]",
-        "[text:with two lines.:        ]",
+        "[text:1.  A paragraph\n        with two lines.:]",
         "[BLANK:]",
         "[text:indented code:            ]",
         "[BLANK:]",
@@ -1143,8 +1135,7 @@ with two lines.
     expected_tokens = [
         "[olist:.:1:6:  ]",
         "[para:]",
-        "[text:A paragraph:]",
-        "[text:with two lines.:]",
+        "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[BLANK:]",
         "[icode-block:    ]",
@@ -1178,8 +1169,7 @@ def test_list_blocks_269():
     expected_tokens = [
         "[olist:.:1:6:  ]",
         "[para:]",
-        "[text:A paragraph:]",
-        "[text:with two lines.:]",
+        "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[end-olist]",
     ]

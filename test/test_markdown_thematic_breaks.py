@@ -71,9 +71,7 @@ def test_thematic_breaks_016():
 __"""
     expected_tokens = [
         "[para:]",
-        "[text:--:]",
-        "[text:**:]",
-        "[text:__:]",
+        "[text:--\n**\n__:]",
         "[end-para]",
     ]
 
@@ -129,7 +127,7 @@ def test_thematic_breaks_019():
     tokenizer = TokenizedMarkdown()
     source_markdown = """Foo
     ***"""
-    expected_tokens = ["[para:]", "[text:Foo:]", "[text:***:    ]", "[end-para]"]
+    expected_tokens = ["[para:]", "[text:Foo\n    ***:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

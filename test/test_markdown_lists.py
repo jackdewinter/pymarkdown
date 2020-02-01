@@ -117,8 +117,7 @@ def test_list_items_284():
 14.  The number of doors is 6."""
     expected_tokens = [
         "[para:]",
-        "[text:The number of windows in my house is:]",
-        "[text:14.  The number of doors is 6.:]",
+        "[text:The number of windows in my house is\n14.  The number of doors is 6.:]",
         "[end-para]",
     ]
 
@@ -450,8 +449,7 @@ def test_list_items_292():
         "[end-para]",
         "[li:5]",
         "[para:]",
-        "[text:d:]",
-        "[text:- e:  ]",
+        "[text:d\n  - e:]",
         "[end-para]",
         "[end-ulist]",
     ]

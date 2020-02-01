@@ -147,6 +147,16 @@ class TokenizedMarkdown:
         """
         Transform a markdown-encoded string into an array of tokens.
         """
+        first_pass_results = self.parse_blocks_pass(your_text_string)
+
+        coalesced_results = self.coalesce_text_blocks(first_pass_results)
+
+        return coalesced_results
+
+    def parse_blocks_pass(self, your_text_string):
+        """
+        The first pass at the tokens is to deal with blocks.
+        """
 
         self.tokenized_document = []
         next_token = your_text_string.split("\n", 1)
@@ -183,6 +193,26 @@ class TokenizedMarkdown:
         return self.close_open_blocks(
             self.tokenized_document, include_block_quotes=True, include_lists=True
         )
+
+    @classmethod
+    def coalesce_text_blocks(cls, first_pass_results):
+        """
+        Take a pass and combine any two adjacent text blocks into one.
+        """
+
+        print(">>" + str(first_pass_results))
+        coalesced_list = []
+        coalesced_list.extend(first_pass_results[0:1])
+        print(">>" + str(coalesced_list))
+        for coalesce_index in range(1, len(first_pass_results)):
+            if (
+                first_pass_results[coalesce_index].is_text
+                and coalesced_list[-1].is_text
+            ):
+                coalesced_list[-1].combine(first_pass_results[coalesce_index])
+            else:
+                coalesced_list.append(first_pass_results[coalesce_index])
+        return coalesced_list
 
     # pylint: disable=too-many-arguments
     def close_open_blocks(
@@ -661,6 +691,7 @@ class TokenizedMarkdown:
             self.stack.append(ParagraphStackToken())
             new_tokens.append(ParagraphMarkdownToken(extracted_whitespace))
             extracted_whitespace = ""
+
         new_tokens.append(
             TextMarkdownToken(line_to_parse[start_index:], extracted_whitespace)
         )

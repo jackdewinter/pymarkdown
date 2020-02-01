@@ -24,14 +24,11 @@ _world_.
 </td></tr></table>"""
     expected_tokens = [
         "[html-block]",
-        "[text:<table><tr><td>:]",
-        "[text:<pre>:]",
-        "[text:**Hello**,:]",
+        "[text:<table><tr><td>\n<pre>\n**Hello**,:]",
         "[end-html-block]",
         "[BLANK:]",
         "[para:]",
-        "[text:_world_.:]",
-        "[text:</pre>:]",
+        "[text:_world_.\n</pre>:]",
         "[end-para]",
         "[html-block]",
         "[text:</td></tr></table>:]",
@@ -64,13 +61,7 @@ def test_html_blocks_119():
 okay."""
     expected_tokens = [
         "[html-block]",
-        "[text:<table>:]",
-        "[text:<tr>:  ]",
-        "[text:<td>:    ]",
-        "[text:hi:           ]",
-        "[text:</td>:    ]",
-        "[text:</tr>:  ]",
-        "[text:</table>:]",
+        "[text:<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>:]",
         "[end-html-block]",
         "[BLANK:]",
         "[para:]",
@@ -97,9 +88,7 @@ def test_html_blocks_120():
          <foo><a>"""
     expected_tokens = [
         "[html-block]",
-        "[text:<div>:]",
-        "[text:*hello*:  ]",
-        "[text:<foo><a>:         ]",
+        "[text:<div>\n  *hello*\n         <foo><a>:]",
         "[end-html-block]",
     ]
 
@@ -121,8 +110,7 @@ def test_html_blocks_121():
 *foo*"""
     expected_tokens = [
         "[html-block]",
-        "[text:</div>:]",
-        "[text:*foo*:]",
+        "[text:</div>\n*foo*:]",
         "[end-html-block]",
     ]
 
@@ -179,9 +167,7 @@ def test_html_blocks_123():
 </div>"""
     expected_tokens = [
         "[html-block]",
-        '[text:<div id="foo":]',
-        '[text:class="bar">:  ]',
-        "[text:</div>:]",
+        '[text:<div id="foo"\n  class="bar">\n</div>:]',
         "[end-html-block]",
     ]
 
@@ -204,9 +190,7 @@ def test_html_blocks_124():
 </div>"""
     expected_tokens = [
         "[html-block]",
-        '[text:<div id="foo" class="bar:]',
-        '[text:baz">:  ]',
-        "[text:</div>:]",
+        '[text:<div id="foo" class="bar\n  baz">\n</div>:]',
         "[end-html-block]",
     ]
 
@@ -230,8 +214,7 @@ def test_html_blocks_125():
 *bar*"""
     expected_tokens = [
         "[html-block]",
-        "[text:<div>:]",
-        "[text:*foo*:]",
+        "[text:<div>\n*foo*:]",
         "[end-html-block]",
         "[BLANK:]",
         "[para:]",
@@ -258,8 +241,7 @@ def test_html_blocks_126():
 *hi*"""
     expected_tokens = [
         "[html-block]",
-        '[text:<div id="foo":]',
-        "[text:*hi*:]",
+        '[text:<div id="foo"\n*hi*:]',
         "[end-html-block]",
     ]
 
@@ -281,8 +263,7 @@ def test_html_blocks_127():
 foo"""
     expected_tokens = [
         "[html-block]",
-        "[text:<div class:]",
-        "[text:foo:]",
+        "[text:<div class\nfoo:]",
         "[end-html-block]",
     ]
 
@@ -304,8 +285,7 @@ def test_html_blocks_128():
 *foo*"""
     expected_tokens = [
         "[html-block]",
-        "[text:<div *???-&&&-<---:]",
-        "[text:*foo*:]",
+        "[text:<div *???-&&&-<---\n*foo*:]",
         "[end-html-block]",
     ]
 
@@ -349,9 +329,7 @@ foo
 </td></tr></table>"""
     expected_tokens = [
         "[html-block]",
-        "[text:<table><tr><td>:]",
-        "[text:foo:]",
-        "[text:</td></tr></table>:]",
+        "[text:<table><tr><td>\nfoo\n</td></tr></table>:]",
         "[end-html-block]",
     ]
 
@@ -375,10 +353,7 @@ int x = 33;
 ```"""
     expected_tokens = [
         "[html-block]",
-        "[text:<div></div>:]",
-        "[text:``` c:]",
-        "[text:int x = 33;:]",
-        "[text:```:]",
+        "[text:<div></div>\n``` c\nint x = 33;\n```:]",
         "[end-html-block]",
     ]
 
@@ -401,9 +376,7 @@ def test_html_blocks_132():
 </a>"""
     expected_tokens = [
         "[html-block]",
-        '[text:<a href="foo">:]',
-        "[text:*bar*:]",
-        "[text:</a>:]",
+        '[text:<a href="foo">\n*bar*\n</a>:]',
         "[end-html-block]",
     ]
 
@@ -426,9 +399,7 @@ def test_html_blocks_133():
 </Warning>"""
     expected_tokens = [
         "[html-block]",
-        "[text:<Warning>:]",
-        "[text:*bar*:]",
-        "[text:</Warning>:]",
+        "[text:<Warning>\n*bar*\n</Warning>:]",
         "[end-html-block]",
     ]
 
@@ -451,9 +422,7 @@ def test_html_blocks_134():
 </i>"""
     expected_tokens = [
         "[html-block]",
-        '[text:<i class="foo">:]',
-        "[text:*bar*:]",
-        "[text:</i>:]",
+        '[text:<i class="foo">\n*bar*\n</i>:]',
         "[end-html-block]",
     ]
 
@@ -475,8 +444,7 @@ def test_html_blocks_135():
 *bar*"""
     expected_tokens = [
         "[html-block]",
-        "[text:</ins>:]",
-        "[text:*bar*:]",
+        "[text:</ins>\n*bar*:]",
         "[end-html-block]",
     ]
 
@@ -499,9 +467,7 @@ def test_html_blocks_136():
 </del>"""
     expected_tokens = [
         "[html-block]",
-        "[text:<del>:]",
-        "[text:*foo*:]",
-        "[text:</del>:]",
+        "[text:<del>\n*foo*\n</del>:]",
         "[end-html-block]",
     ]
 
@@ -579,12 +545,9 @@ main = print $ parseTags tags
 okay"""
     expected_tokens = [
         "[html-block]",
-        '[text:<pre language="haskell"><code>:]',
-        "[text:import Text.HTML.TagSoup:]",
+        '[text:<pre language="haskell"><code>\nimport Text.HTML.TagSoup:]',
         "[BLANK:]",
-        "[text:main :: IO ():]",
-        "[text:main = print $ parseTags tags:]",
-        "[text:</code></pre>:]",
+        "[text:main :: IO ()\nmain = print $ parseTags tags\n</code></pre>:]",
         "[end-html-block]",
         "[para:]",
         "[text:okay:]",
@@ -612,11 +575,9 @@ document.getElementById("demo").innerHTML = "Hello JavaScript!";
 okay"""
     expected_tokens = [
         "[html-block]",
-        '[text:<script type="text/javascript">:]',
-        "[text:// JavaScript example:]",
+        '[text:<script type="text/javascript">\n// JavaScript example:]',
         "[BLANK:]",
-        '[text:document.getElementById("demo").innerHTML = "Hello JavaScript!";:]',
-        "[text:</script>:]",
+        '[text:document.getElementById("demo").innerHTML = "Hello JavaScript!";\n</script>:]',
         "[end-html-block]",
         "[para:]",
         "[text:okay:]",
@@ -646,12 +607,9 @@ p {color:blue;}
 okay"""
     expected_tokens = [
         "[html-block]",
-        "[text:<style:]",
-        '[text:type="text/css">:  ]',
-        "[text:h1 {color:red;}:]",
+        '[text:<style\n  type="text/css">\nh1 {color:red;}:]',
         "[BLANK:]",
-        "[text:p {color:blue;}:]",
-        "[text:</style>:]",
+        "[text:p {color:blue;}\n</style>:]",
         "[end-html-block]",
         "[para:]",
         "[text:okay:]",
@@ -678,8 +636,7 @@ def test_html_blocks_142():
 foo"""
     expected_tokens = [
         "[html-block]",
-        "[text:<style:]",
-        '[text:type="text/css">:  ]',
+        '[text:<style\n  type="text/css">:]',
         "[BLANK:]",
         "[text:foo:]",
         "[end-html-block]",
@@ -706,8 +663,7 @@ bar"""
     expected_tokens = [
         "[block-quote:]",
         "[html-block]",
-        "[text:<div>:]",
-        "[text:foo:]",
+        "[text:<div>\nfoo:]",
         "[end-html-block]",
         "[BLANK:]",
         "[end-block-quote]",
@@ -815,9 +771,7 @@ foo
 </script>1. *bar*"""
     expected_tokens = [
         "[html-block]",
-        "[text:<script>:]",
-        "[text:foo:]",
-        "[text:</script>1. *bar*:]",
+        "[text:<script>\nfoo\n</script>1. *bar*:]",
         "[end-html-block]",
     ]
 
@@ -844,8 +798,7 @@ okay"""
         "[html-block]",
         "[text:<!-- Foo:]",
         "[BLANK:]",
-        "[text:bar:]",
-        "[text:baz -->:   ]",
+        "[text:bar\n   baz -->:]",
         "[end-html-block]",
         "[para:]",
         "[text:okay:]",
@@ -931,18 +884,11 @@ function matchwo(a,b)
 okay"""
     expected_tokens = [
         "[html-block]",
-        "[text:<![CDATA[:]",
-        "[text:function matchwo(a,b):]",
-        "[text:{:]",
-        "[text:if (a < b && a < 0) then {:  ]",
-        "[text:return 1;:    ]",
+        "[text:<![CDATA[\nfunction matchwo(a,b)\n{\n  if (a < b && a < 0) then {\n    return 1;:]",
         "[BLANK:]",
         "[text:} else {:  ]",
         "[BLANK:]",
-        "[text:return 0;:    ]",
-        "[text:}:  ]",
-        "[text:}:]",
-        "[text:]]>:]",
+        "[text:return 0;\n  }\n}\n]]>:    ]",
         "[end-html-block]",
         "[para:]",
         "[text:okay:]",
@@ -1026,9 +972,7 @@ bar
         "[text:Foo:]",
         "[end-para]",
         "[html-block]",
-        "[text:<div>:]",
-        "[text:bar:]",
-        "[text:</div>:]",
+        "[text:<div>\nbar\n</div>:]",
         "[end-html-block]",
     ]
 
@@ -1052,10 +996,7 @@ bar
 *foo*"""
     expected_tokens = [
         "[html-block]",
-        "[text:<div>:]",
-        "[text:bar:]",
-        "[text:</div>:]",
-        "[text:*foo*:]",
+        "[text:<div>\nbar\n</div>\n*foo*:]",
         "[end-html-block]",
     ]
 
@@ -1078,9 +1019,7 @@ def test_html_blocks_156():
 baz"""
     expected_tokens = [
         "[para:]",
-        "[text:Foo:]",
-        '[text:<a href="bar">:]',
-        "[text:baz:]",
+        '[text:Foo\n<a href="bar">\nbaz:]',
         "[end-para]",
     ]
 
@@ -1137,9 +1076,7 @@ def test_html_blocks_158():
 </div>"""
     expected_tokens = [
         "[html-block]",
-        "[text:<div>:]",
-        "[text:*Emphasized* text.:]",
-        "[text:</div>:]",
+        "[text:<div>\n*Emphasized* text.\n</div>:]",
         "[end-html-block]",
     ]
 
@@ -1178,9 +1115,7 @@ Hi
         "[end-html-block]",
         "[BLANK:]",
         "[html-block]",
-        "[text:<td>:]",
-        "[text:Hi:]",
-        "[text:</td>:]",
+        "[text:<td>\nHi\n</td>:]",
         "[end-html-block]",
         "[BLANK:]",
         "[html-block]",
@@ -1227,9 +1162,7 @@ def test_html_blocks_160():
         "[end-html-block]",
         "[BLANK:]",
         "[icode-block:    ]",
-        "[text:<td>:]",
-        "[text:Hi:      ]",
-        "[text:</td>:    ]",
+        "[text:<td>\n      Hi\n    </td>:]",
         "[end-icode-block]",
         "[BLANK:]",
         "[html-block]",
@@ -1264,13 +1197,7 @@ def test_html_blocks_160a():
 </table>"""
     expected_tokens = [
         "[html-block]",
-        "[text:<table>:]",
-        "[text:<tr>:  ]",
-        "[text:<td>:    ]",
-        "[text:Hi:      ]",
-        "[text:</td>:    ]",
-        "[text:</tr>:  ]",
-        "[text:</table>:]",
+        "[text:<table>\n  <tr>\n    <td>\n      Hi\n    </td>\n  </tr>\n</table>:]",
         "[end-html-block]",
     ]
 
@@ -1294,8 +1221,7 @@ def test_html_blocks_cov1():
 </x-table>"""
     expected_tokens = [
         "[html-block]",
-        "[text:<hr/>:]",
-        "[text:</x-table>:]",
+        "[text:<hr/>\n</x-table>:]",
         "[end-html-block]",
         "[BLANK:]",
         "[html-block]",
@@ -1348,7 +1274,7 @@ def test_html_blocks_cov3():
     tokenizer = TokenizedMarkdown()
     source_markdown = """<!bad>
 </x-table>"""
-    expected_tokens = ["[para:]", "[text:<!bad>:]", "[text:</x-table>:]", "[end-para]"]
+    expected_tokens = ["[para:]", "[text:<!bad>\n</x-table>:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -1369,9 +1295,7 @@ bad>
 </x-table>"""
     expected_tokens = [
         "[para:]",
-        "[text:<:]",
-        "[text:bad>:]",
-        "[text:</x-table>:]",
+        "[text:<\nbad>\n</x-table>:]",
         "[end-para]",
     ]
 

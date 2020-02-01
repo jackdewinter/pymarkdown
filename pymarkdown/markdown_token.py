@@ -79,6 +79,13 @@ class MarkdownToken:
         return self.token_name == MarkdownToken.token_paragraph
 
     @property
+    def is_text(self):
+        """
+        Returns whether or not the current token is a paragraph element.
+        """
+        return self.token_name == MarkdownToken.token_text
+
+    @property
     def is_html_block(self):
         """
         Returns whether or not the current token is a html block element.
@@ -236,9 +243,24 @@ class TextMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, token_text, extracted_whitespace):
+        self.token_text = token_text
+        self.extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self, MarkdownToken.token_text, token_text + ":" + extracted_whitespace
         )
+
+    def combine(self, other_text_token):
+        """
+        Combine the two text tokens together with a line feed between.
+        """
+
+        self.token_text = (
+            self.token_text
+            + "\n"
+            + other_text_token.extracted_whitespace
+            + other_text_token.token_text
+        )
+        self.extra_data = self.token_text + ":" + self.extracted_whitespace
 
 
 class BlockQuoteMarkdownToken(MarkdownToken):
