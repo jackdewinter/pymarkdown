@@ -2,7 +2,10 @@
 """
 Module to provide a tokenization of a markdown-encoded string.
 """
+import json
+import os
 import string
+import sys
 
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.markdown_token import (
@@ -142,6 +145,63 @@ class TokenizedMarkdown:
             "track",
             "ul",
         ]
+        self.backslash_punctuation = "!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~\\"
+        self.entity_map = self.load_entity_map()
+
+    @classmethod
+    def load_entity_map(cls):
+        """
+        Load the entity map, refreshed from https://html.spec.whatwg.org/entities.json
+        into a dict that was can use.
+        """
+
+        master_entities_file = (
+            "C:\\old\\enlistments\\pymarkdown\\pymarkdown\\entities.json"
+        )
+        try:
+            with open(os.path.abspath(master_entities_file), "r") as infile:
+                results_dictionary = json.load(infile)
+        except json.decoder.JSONDecodeError as ex:
+            print(
+                "Named character entity map file '"
+                + master_entities_file
+                + "' is not a valid JSON file ("
+                + str(ex)
+                + ")."
+            )
+            sys.exit(1)
+        except IOError as ex:
+            print(
+                "Named character entity map file '"
+                + master_entities_file
+                + "' was not loaded ("
+                + str(ex)
+                + ")."
+            )
+            sys.exit(1)
+
+        approved_entity_map = {}
+        for next_name in results_dictionary:
+
+            # Downloaded file is for HTML5, which includes some names that do
+            # not end with ";".  These are excluded.
+            if not next_name.endswith(";"):
+                continue
+
+            char_entity = results_dictionary[next_name]
+            entity_characters = char_entity["characters"]
+            entity_codepoints = char_entity["codepoints"]
+
+            # The only entities we should encounter either have a length of 1 or 2
+            if len(entity_characters) == 1:
+                assert len(entity_codepoints) == 1
+                assert ord(entity_characters[0]) == entity_codepoints[0]
+            else:
+                assert len(entity_codepoints) == 2
+                assert ord(entity_characters[0]) == entity_codepoints[0]
+                assert ord(entity_characters[1]) == entity_codepoints[1]
+            approved_entity_map[next_name] = entity_characters
+        return approved_entity_map
 
     def transform(self, your_text_string):
         """
@@ -151,7 +211,9 @@ class TokenizedMarkdown:
 
         coalesced_results = self.coalesce_text_blocks(first_pass_results)
 
-        return coalesced_results
+        final_pass_results = self.parse_inline(coalesced_results)
+
+        return final_pass_results
 
     def parse_blocks_pass(self, your_text_string):
         """
@@ -200,10 +262,8 @@ class TokenizedMarkdown:
         Take a pass and combine any two adjacent text blocks into one.
         """
 
-        print(">>" + str(first_pass_results))
         coalesced_list = []
         coalesced_list.extend(first_pass_results[0:1])
-        print(">>" + str(coalesced_list))
         for coalesce_index in range(1, len(first_pass_results)):
             if (
                 first_pass_results[coalesce_index].is_text
@@ -213,6 +273,258 @@ class TokenizedMarkdown:
             else:
                 coalesced_list.append(first_pass_results[coalesce_index])
         return coalesced_list
+
+    def parse_inline(self, coalesced_results):
+        """
+        Parse and resolve any inline elements.
+        """
+
+        coalesced_list = []
+        coalesced_list.extend(coalesced_results[0:1])
+        for coalesce_index in range(1, len(coalesced_results)):
+            if (
+                coalesced_results[coalesce_index].is_text
+                and coalesced_list[-1].is_paragraph
+            ):
+                # TODO SETEXT as well
+                processed_tokens = self.process_inline_text_block(
+                    coalesced_results[coalesce_index].extracted_whitespace
+                    + coalesced_results[coalesce_index].token_text
+                )
+                coalesced_list.extend(processed_tokens)
+            else:
+                coalesced_list.append(coalesced_results[coalesce_index])
+        return coalesced_list
+
+    @classmethod
+    def index_any_of(cls, source_text, find_any, start_index=0):
+        """
+        Determine if any of the specified characters are in the source string.
+        """
+
+        while start_index < len(source_text):
+            if source_text[start_index] in find_any:
+                return start_index
+            start_index = start_index + 1
+        return -1
+
+    def handle_backslashes(self, source_text):
+        """
+        Handle the processing of backslashes for anything other than the text
+        blocks, which have additional needs for parsing.
+        """
+
+        valid_sequence_starts = "\\&"
+        start_index = 0
+        current_string = ""
+        next_index = self.index_any_of(source_text, valid_sequence_starts, start_index)
+        while next_index != -1:
+            current_string = current_string + source_text[start_index:next_index]
+            current_char = source_text[next_index]
+            if current_char == "\\":
+                new_string, new_index = self.handle_inline_backslash(
+                    source_text, next_index
+                )
+            else:  # if source_text[next_index] == "&":
+                new_string, new_index = self.handle_character_reference(
+                    source_text, next_index
+                )
+            current_string = current_string + new_string
+            start_index = new_index
+            next_index = self.index_any_of(
+                source_text, valid_sequence_starts, start_index
+            )
+
+        if start_index < len(source_text):
+            current_string = current_string + source_text[start_index:]
+        return current_string
+
+    @classmethod
+    def append_text(cls, string_to_append_to, text_to_append):
+        """
+        Append the text to the given string, doing any needed encoding as we go.
+        """
+
+        escape_map = {"<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;"}
+        start_index = 0
+        next_index = cls.index_any_of(text_to_append, escape_map.keys(), start_index)
+        while next_index != -1:
+            string_to_append_to = (
+                string_to_append_to
+                + text_to_append[start_index:next_index]
+                + escape_map[text_to_append[next_index]]
+            )
+
+            start_index = next_index + 1
+            next_index = cls.index_any_of(
+                text_to_append, escape_map.keys(), start_index
+            )
+
+        if start_index < len(text_to_append):
+            string_to_append_to = string_to_append_to + text_to_append[start_index:]
+
+        return string_to_append_to
+
+    def process_inline_text_block(self, source_text):
+        """
+        Process a text block for any inline items.
+        """
+
+        print("process_inline_text_block<<" + str(source_text) + ">>")
+        inline_blocks = []
+        start_index = 0
+        current_string = ""
+        valid_sequence_starts = "\\&"
+
+        next_index = self.index_any_of(source_text, valid_sequence_starts, start_index)
+        print("next_index>>" + str(next_index))
+        while next_index != -1:
+            current_string = self.append_text(
+                current_string, source_text[start_index:next_index]
+            )
+
+            if source_text[next_index] == "\\":
+                new_string, new_index = self.handle_inline_backslash(
+                    source_text, next_index
+                )
+            else:  # if source_text[next_index] == "&":
+                new_string, new_index = self.handle_character_reference(
+                    source_text, next_index
+                )
+
+            print(
+                "\nreplace>"
+                + current_string
+                + "<"
+                + new_string
+                + "<"
+                + str(new_index)
+                + "<"
+            )
+            current_string = self.append_text(current_string, new_string)
+            start_index = new_index
+            print("start_index>" + str(start_index) + "<")
+            print("\nreplace-after>" + current_string + "<")
+
+            next_index = self.index_any_of(
+                source_text, valid_sequence_starts, start_index
+            )
+            print("next_index2>>" + str(next_index))
+
+        if start_index < len(source_text):
+            current_string = self.append_text(current_string, source_text[start_index:])
+
+        print("xx-end>" + current_string + "<")
+        # if current_string:
+        inline_blocks.append(TextMarkdownToken(current_string, ""))
+        print(">>" + str(inline_blocks) + "<<")
+        return inline_blocks
+
+    def handle_inline_backslash(self, source_text, next_index):
+        """
+        Handle the inline case of having a backslash.
+        """
+
+        new_index = next_index + 1
+        new_string = ""
+        if new_index >= len(source_text):
+            new_string = "\\"
+        else:
+            if source_text[new_index] in self.backslash_punctuation:
+                new_string = source_text[new_index]
+            else:
+                new_string = "\\" + source_text[new_index]
+            new_index = new_index + 1
+        return new_string, new_index
+
+    @classmethod
+    def handle_numeric_character_reference(cls, source_text, new_index):
+        """
+        Handle a character reference that is numeric in nature.
+        """
+
+        new_index = new_index + 1
+        translated_reference = -1
+        if new_index < len(source_text) and (
+            source_text[new_index] == "x" or source_text[new_index] == "X"
+        ):
+            hex_char = source_text[new_index]
+            new_index = new_index + 1
+            end_index, collected_string = ParserHelper.collect_while_one_of_characters(
+                source_text, new_index, string.hexdigits
+            )
+            print(
+                "&#x>>a>>"
+                + str(end_index)
+                + ">>b>>"
+                + str(collected_string)
+                + ">>"
+                + str(len(source_text))
+            )
+            delta = end_index - new_index
+            print("delta>>" + str(delta) + ">>")
+            if 1 <= delta <= 6:
+                translated_reference = int(collected_string, 16)
+            new_string = "&#" + hex_char + collected_string
+            new_index = end_index
+        else:
+            end_index, collected_string = ParserHelper.collect_while_one_of_characters(
+                source_text, new_index, string.digits
+            )
+            print(
+                "&#>>a>>"
+                + str(end_index)
+                + ">>b>>"
+                + str(collected_string)
+                + ">>"
+                + str(len(source_text))
+            )
+            delta = end_index - new_index
+            print("delta>>" + str(delta) + ">>")
+            if 1 <= delta <= 7:
+                translated_reference = int(collected_string)
+            new_string = "&#" + collected_string
+            new_index = end_index
+
+        if (
+            translated_reference >= 0
+            and new_index < len(source_text)
+            and source_text[new_index] == ";"
+        ):
+            new_index = new_index + 1
+            if translated_reference == 0:
+                new_string = "\ufffd"
+            else:
+                new_string = chr(translated_reference)
+        return new_string, new_index
+
+    def handle_character_reference(self, source_text, next_index):
+        """
+        Handle a generic character reference.
+        """
+
+        new_index = next_index + 1
+        new_string = ""
+        if new_index < len(source_text) and source_text[new_index] == "#":
+            new_string, new_index = self.handle_numeric_character_reference(
+                source_text, new_index
+            )
+        else:
+            end_index, collected_string = ParserHelper.collect_while_one_of_characters(
+                source_text, new_index, string.ascii_letters + string.digits
+            )
+            if collected_string:
+                collected_string = "&" + collected_string
+                if end_index < len(source_text) and source_text[end_index] == ";":
+                    end_index = end_index + 1
+                    collected_string = collected_string + ";"
+                    if collected_string in self.entity_map:
+                        collected_string = self.entity_map[collected_string]
+                new_string = collected_string
+                new_index = end_index
+            else:
+                new_string = "&"
+        return new_string, new_index
 
     # pylint: disable=too-many-arguments
     def close_open_blocks(
@@ -460,6 +772,10 @@ class TokenizedMarkdown:
                             code_fence_character=line_to_parse[start_index],
                             fence_character_count=collected_count,
                         )
+                    )
+                    extracted_text = self.handle_backslashes(extracted_text)
+                    text_after_extracted_text = self.handle_backslashes(
+                        text_after_extracted_text
                     )
                     new_tokens.append(
                         FencedCodeBlockMarkdownToken(

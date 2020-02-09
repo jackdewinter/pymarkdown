@@ -305,7 +305,7 @@ of dashes"/>"""
         '[text:<a title="a lot:]',
         "[end-setext::]",
         "[para:]",
-        '[text:of dashes"/>:]',
+        "[text:of dashes&quot;/&gt;:]",
         "[end-para]",
     ]
 
@@ -733,7 +733,7 @@ bar
 baz"""
     expected_tokens = [
         "[para:]",
-        "[text:Foo\nbar\n\\---\nbaz:]",
+        "[text:Foo\nbar\n---\nbaz:]",
         "[end-para]",
     ]
 

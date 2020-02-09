@@ -85,13 +85,6 @@ class MarkdownToken:
         """
         return self.token_name == MarkdownToken.token_text
 
-    @property
-    def is_html_block(self):
-        """
-        Returns whether or not the current token is a html block element.
-        """
-        return self.token_name == MarkdownToken.token_html_block
-
 
 # pylint: disable=too-few-public-methods
 class BlankLineMarkdownToken(MarkdownToken):

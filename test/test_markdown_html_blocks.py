@@ -1248,7 +1248,7 @@ def test_html_blocks_cov2():
 </x-table>"""
     expected_tokens = [
         "[para:]",
-        "[text:</hrx:]",
+        "[text:&lt;/hrx:]",
         "[end-para]",
         "[block-quote:]",
         "[BLANK:]",
@@ -1274,7 +1274,11 @@ def test_html_blocks_cov3():
     tokenizer = TokenizedMarkdown()
     source_markdown = """<!bad>
 </x-table>"""
-    expected_tokens = ["[para:]", "[text:<!bad>\n</x-table>:]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:&lt;!bad&gt;\n&lt;/x-table&gt;:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -1295,7 +1299,7 @@ bad>
 </x-table>"""
     expected_tokens = [
         "[para:]",
-        "[text:<\nbad>\n</x-table>:]",
+        "[text:&lt;\nbad&gt;\n&lt;/x-table&gt;:]",
         "[end-para]",
     ]
 

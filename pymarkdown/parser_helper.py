@@ -183,6 +183,24 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
+    def collect_while_one_of_characters(source_string, start_index, match_characters):
+        """
+        Collect a sequence of characters from a given starting point in a string as long as the character is one of the match characters.
+
+        Returns the index of the first non-matching character and any extracted text
+        in a tuple.
+        """
+
+        if not 0 <= start_index <= len(source_string):
+            return None, None
+
+        index = start_index
+        while index < len(source_string) and source_string[index] in match_characters:
+            index = index + 1
+
+        return index, source_string[start_index:index]
+
+    @staticmethod
     def collect_until_one_of_characters(source_string, start_index, match_characters):
         """
         Collect a sequence of characters from a given starting point in a string until we hit one of a given set of characters.

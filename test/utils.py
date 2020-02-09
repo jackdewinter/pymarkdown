@@ -1,6 +1,7 @@
 """
 Module to provide helper methods for tests.
 """
+import difflib
 
 
 def assert_if_lists_different(expected_tokens, actual_tokens):
@@ -14,7 +15,18 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
 
     # pylint: disable=consider-using-enumerate
     for element_index in range(0, len(expected_tokens)):
-        assert str(expected_tokens[element_index]) == str(
-            actual_tokens[element_index]
-        ), ("List items " + str(element_index) + " are not equal.")
+
+        expected_str = str(expected_tokens[element_index])
+        actual_str = str(actual_tokens[element_index])
+
+        print("expected_tokens(" + str(len(expected_str)) + ")>>" + expected_str + "<<")
+        print("actual_tokens  (" + str(len(actual_str)) + ")>>" + actual_str + "<<")
+
+        diff = difflib.ndiff(expected_str, actual_str)
+
+        diff_values = "\n".join(list(diff)) + "\n---\n"
+
+        assert expected_str == str(actual_tokens[element_index]), (
+            "List items " + str(element_index) + " are not equal." + diff_values
+        )
     # pylint: enable=consider-using-enumerate
