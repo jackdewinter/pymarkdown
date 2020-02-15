@@ -110,7 +110,7 @@ def test_atx_headings_036():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when inline code blocks implemented
+    # TODO Expect this to fail when inline emphasis implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

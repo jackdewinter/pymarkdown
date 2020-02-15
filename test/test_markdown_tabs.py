@@ -13,7 +13,7 @@ def test_tabs_001():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """	foo	baz		bim"""
+    source_markdown = """\tfoo\tbaz\t\tbim"""
     expected_tokens = [
         "[icode-block:    ]",
         "[text:foo    baz        bim:]",
@@ -34,7 +34,7 @@ def test_tabs_002():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """  	foo	baz		bim"""
+    source_markdown = """  \tfoo\tbaz\t\tbim"""
     expected_tokens = [
         "[icode-block:    ]",
         "[text:foo    baz        bim:  ]",
@@ -55,8 +55,8 @@ def test_tabs_003():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """    a	a
-    ὐ	a"""
+    source_markdown = """    a\ta
+    ὐ\ta"""
     expected_tokens = [
         "[icode-block:    ]",
         "[text:a    a\n    ὐ    a:]",
@@ -79,7 +79,7 @@ def test_tabs_004():
     tokenizer = TokenizedMarkdown()
     source_markdown = """  - foo
 
-	bar"""  # noqa: E101,W191
+\tbar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
         "[ulist:-::4:  ]",
@@ -109,7 +109,7 @@ def test_tabs_005():
     tokenizer = TokenizedMarkdown()
     source_markdown = """- foo
 
-		bar"""  # noqa: E101,W191
+\t\tbar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
         "[ulist:-::2:]",
@@ -127,7 +127,6 @@ def test_tabs_005():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when list blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -138,7 +137,7 @@ def test_tabs_006():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """>		foo"""
+    source_markdown = """>\t\tfoo"""
     expected_tokens = [
         "[block-quote:]",
         "[icode-block:    ]",
@@ -161,7 +160,7 @@ def test_tabs_007():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """-		foo"""
+    source_markdown = """-\t\tfoo"""
     expected_tokens = [
         "[ulist:-::2:]",
         "[icode-block:    ]",
@@ -185,7 +184,7 @@ def test_tabs_008():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """    foo
-	bar"""  # noqa: E101,W191
+\tbar"""  # noqa: E101,W191
     # noqa: E101
     expected_tokens = [
         "[icode-block:    ]",
@@ -209,7 +208,7 @@ def test_tabs_009():
     tokenizer = TokenizedMarkdown()
     source_markdown = """ - foo
    - bar
-	 - baz"""  # noqa: E101,W191
+\t - baz"""  # noqa: E101,W191
     # noqa: E101
     expected_tokens = [
         "[ulist:-::3: ]",
@@ -233,7 +232,6 @@ def test_tabs_009():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when list blocks implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -244,7 +242,7 @@ def test_tabs_010():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """#	Foo"""
+    source_markdown = """#\tFoo"""
     expected_tokens = ["[atx:1:Foo::    ::]"]
 
     # Act
@@ -261,7 +259,7 @@ def test_tabs_011():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """*	*	*	"""
+    source_markdown = """*\t*\t*\t"""
     expected_tokens = ["[tbreak:*::*    *    *    ]"]
 
     # Act

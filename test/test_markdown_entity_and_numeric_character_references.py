@@ -1,7 +1,9 @@
 """
 https://github.github.com/gfm/#entity-and-numeric-character-references
 """
-import pytest
+import io
+import os
+import sys
 
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
@@ -97,6 +99,27 @@ def test_character_references_324():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
+def test_character_references_324a():
+    """
+    Test case 324a:  Extension of 324
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """&"""
+    expected_tokens = [
+        "[para:]",
+        "[text:&amp;:]",
+        "[end-para]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
 def test_character_references_325():
     """
     Test case 325:  Although HTML5 does accept some entity references without a trailing semicolon (such as &copy), these are not recognized here, because it makes the grammar too ambiguous:
@@ -160,7 +183,6 @@ def test_character_references_327():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-@pytest.mark.skip
 def test_character_references_328():
     """
     Test case 328:  (part 2) Entity and numeric character references are recognized in any context besides code spans or code blocks, including URLs, link titles, and fenced code block info strings:
@@ -171,7 +193,7 @@ def test_character_references_328():
     source_markdown = '[foo](/f&ouml;&ouml; "f&ouml;&ouml;")'
     expected_tokens = [
         "[para:]",
-        '[text:<a href="/f%C3%B6%C3%B6" title="föö">foo</a>:]',
+        "[text:[foo](/föö &quot;föö&quot;):]",
         "[end-para]",
     ]
 
@@ -179,10 +201,10 @@ def test_character_references_328():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO will break with link definitions
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-@pytest.mark.skip
 def test_character_references_329():
     """
     Test case 329:  (part 3) Entity and numeric character references are recognized in any context besides code spans or code blocks, including URLs, link titles, and fenced code block info strings:
@@ -195,7 +217,11 @@ def test_character_references_329():
 [foo]: /f&ouml;&ouml; "f&ouml;&ouml;"""
     expected_tokens = [
         "[para:]",
-        '[text:<a href="/f%C3%B6%C3%B6" title="föö">foo</a>:]',
+        "[text:[foo]:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:[foo]: /föö &quot;föö:]",
         "[end-para]",
     ]
 
@@ -203,6 +229,7 @@ def test_character_references_329():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO will break with link definitions
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -231,7 +258,6 @@ foo
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-@pytest.mark.skip
 def test_character_references_331():
     """
     Test case 331:  (part 1) Entity and numeric character references are treated as literal text in code spans and code blocks:
@@ -242,7 +268,7 @@ def test_character_references_331():
     source_markdown = """`f&ouml;&ouml;`"""
     expected_tokens = [
         "[para:]",
-        "[text:<code>f&amp;ouml;&amp;ouml;</code>:]",
+        "[icode-span:f&amp;ouml;&amp;ouml;]",
         "[end-para]",
     ]
 
@@ -263,7 +289,7 @@ def test_character_references_332():
     source_markdown = """    f&ouml;f&ouml;"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:f&ouml;f&ouml;:]",
+        "[text:f&amp;ouml;f&amp;ouml;:]",
         "[end-icode-block]",
     ]
 
@@ -293,6 +319,7 @@ def test_character_references_333():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO emphasis
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -386,6 +413,58 @@ def test_character_references_337():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_missing_entities_json_file():
+    """
+    Test the entities.json not being present in the specified directory.
+    """
+
+    tokenizer = TokenizedMarkdown()
+    tokenizer.resource_path = "resourcesx"
+    std_output = io.StringIO()
+    try:
+        old_out = sys.stdout
+        sys.stdout = std_output
+
+        tokenizer.transform("")
+        assert False, "Should have exited prior to this."
+    except SystemExit as this_exception:
+        assert this_exception.code == 1
+    finally:
+        sys.stdout = old_out
+
+    assert std_output.getvalue().startswith(
+        "Named character entity map file 'resourcesx\\entities.json' was not loaded ([Errno 2] No such file or directory: '"
+    )
+
+
+def test_bad_entities_json_file():
+    """
+    Test the entities.json not being a valid json file in the specified directory.
+    """
+
+    tokenizer = TokenizedMarkdown()
+    tokenizer.resource_path = os.path.join(os.path.split(__file__)[0], "resources")
+    entities_json_file = os.path.join(tokenizer.resource_path, "entities.json")
+    std_output = io.StringIO()
+    try:
+        old_out = sys.stdout
+        sys.stdout = std_output
+
+        tokenizer.transform("")
+        assert False, "Should have exited prior to this."
+    except SystemExit as this_exception:
+        assert this_exception.code == 1
+    finally:
+        sys.stdout = old_out
+
+    assert (
+        std_output.getvalue()
+        == "Named character entity map file '"
+        + entities_json_file
+        + "' is not a valid JSON file (Expecting value: line 1 column 1 (char 0)).\n"
+    )
 
 
 # TODO

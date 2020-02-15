@@ -67,11 +67,11 @@ def test_setext_headings_052():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """  Foo *bar
-baz*→
+baz*\t
 ===="""
     expected_tokens = [
         "[setext:=:  ]",
-        "[text:Foo *bar\nbaz*→:]",
+        "[text:Foo *bar\nbaz*    :]",
         "[end-setext::]",
     ]
 
@@ -302,7 +302,7 @@ of dashes"/>"""
         "[end-para]",
         "[BLANK:]",
         "[setext:-:]",
-        '[text:<a title="a lot:]',
+        '[text:&lt;a title=&quot;a lot:]',
         "[end-setext::]",
         "[para:]",
         "[text:of dashes&quot;/&gt;:]",
@@ -614,13 +614,12 @@ def test_setext_headings_072():
     tokenizer = TokenizedMarkdown()
     source_markdown = """\\> foo
 ------"""
-    expected_tokens = ["[setext:-:]", "[text:\\> foo:]", "[end-setext::]"]
+    expected_tokens = ["[setext:-:]", "[text:&gt; foo:]", "[end-setext::]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when inline implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

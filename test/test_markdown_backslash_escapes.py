@@ -1,7 +1,6 @@
 """
 https://github.github.com/gfm/#backslash-escapes
 """
-import pytest
 
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
@@ -84,6 +83,7 @@ def test_backslash_escapes_310():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO in flux with inlines
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -106,10 +106,10 @@ def test_backslash_escapes_311():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO will fail when emphasis added
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-@pytest.mark.skip
 def test_backslash_escapes_312():
     """
     Test case 312:  A backslash at the end of the line is a hard line break:
@@ -121,7 +121,8 @@ def test_backslash_escapes_312():
 bar"""
     expected_tokens = [
         "[para:]",
-        """[text:*emphasize*:]""",
+        """[text:foo\\
+bar:]""",
         "[end-para]",
     ]
 
@@ -129,10 +130,10 @@ bar"""
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO will fail when hard line break added
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-@pytest.mark.skip
 def test_backslash_escapes_313():
     """
     Test case 313:  (part 1) Backslash escapes do not work in code blocks, code spans, autolinks, or raw HTML:
@@ -143,7 +144,7 @@ def test_backslash_escapes_313():
     source_markdown = """`` \\[\\` ``"""
     expected_tokens = [
         "[para:]",
-        """[text:*emphasize*:]""",
+        "[icode-span:\\[\\`]",
         "[end-para]",
     ]
 
@@ -194,7 +195,6 @@ def test_backslash_escapes_315():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-@pytest.mark.skip
 def test_backslash_escapes_316():
     """
     Test case 316:  (part 4) Backslash escapes do not work in code blocks, code spans, autolinks, or raw HTML:
@@ -205,7 +205,7 @@ def test_backslash_escapes_316():
     source_markdown = """<http://example.com?find=\\*>"""
     expected_tokens = [
         "[para:]",
-        """[text:*emphasize*:]""",
+        "[text:&lt;http://example.com?find=*&gt;:]",
         "[end-para]",
     ]
 
@@ -213,10 +213,10 @@ def test_backslash_escapes_316():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO will fail when autolinks break added
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-@pytest.mark.skip
 def test_backslash_escapes_317():
     """
     Test case 317:  (part 5) Backslash escapes do not work in code blocks, code spans, autolinks, or raw HTML:
@@ -226,9 +226,9 @@ def test_backslash_escapes_317():
     tokenizer = TokenizedMarkdown()
     source_markdown = """<a href="/bar\\/)">"""
     expected_tokens = [
-        "[para:]",
-        """[text:*emphasize*:]""",
-        "[end-para]",
+        "[html-block]",
+        '[text:<a href="/bar\\/)">:]',
+        "[end-html-block]",
     ]
 
     # Act
@@ -238,7 +238,6 @@ def test_backslash_escapes_317():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-@pytest.mark.skip
 def test_backslash_escapes_318():
     """
     Test case 318:  (part 1) But they work in all other contexts, including URLs and link titles, link references, and info strings in fenced code blocks:
@@ -249,7 +248,7 @@ def test_backslash_escapes_318():
     source_markdown = """[foo](/bar\\* "ti\\*tle")"""
     expected_tokens = [
         "[para:]",
-        """[text:*emphasize*:]""",
+        "[text:[foo](/bar* &quot;ti*tle&quot;):]",
         "[end-para]",
     ]
 
@@ -257,10 +256,10 @@ def test_backslash_escapes_318():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO will fail when link definitions added
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-@pytest.mark.skip
 def test_backslash_escapes_319():
     """
     Test case 319:  (part 2) But they work in all other contexts, including URLs and link titles, link references, and info strings in fenced code blocks:
@@ -274,14 +273,20 @@ def test_backslash_escapes_319():
 """
     expected_tokens = [
         "[para:]",
-        """[text:*emphasize*:]""",
+        "[text:[foo]:]",
         "[end-para]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:[foo]: /bar* &quot;ti*tle&quot;:]",
+        "[end-para]",
+        "[BLANK:]",
     ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO will fail when link definitions added
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

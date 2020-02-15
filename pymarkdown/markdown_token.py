@@ -21,6 +21,7 @@ class MarkdownToken:
     token_ordered_list_start = "olist"
     token_new_list_item = "li"
     token_html_block = "html-block"
+    token_inline_code_span = "icode-span"
 
     def __init__(self, token_name, extra_data=None):
         self.token_name = token_name
@@ -85,6 +86,19 @@ class MarkdownToken:
         """
         return self.token_name == MarkdownToken.token_text
 
+    @property
+    def is_setext(self):
+        """
+        Returns whether or not the current token is a setext element.
+        """
+        return self.token_name == MarkdownToken.token_setext_header
+
+    @property
+    def is_code_block(self):
+        """
+        Returns whether or not the current token is a fenced code block element.
+        """
+        return self.token_name == MarkdownToken.token_fenced_code_block or self.token_name == MarkdownToken.token_indented_code_block
 
 # pylint: disable=too-few-public-methods
 class BlankLineMarkdownToken(MarkdownToken):
@@ -339,6 +353,15 @@ class ThematicBreakMarkdownToken(MarkdownToken):
             MarkdownToken.token_thematic_break,
             start_character + ":" + extracted_whitespace + ":" + rest_of_line,
         )
+
+
+class InlineCodeSpanMarkdownToken(MarkdownToken):
+    """
+    Class to provide for an encapsulation of the inline code span element.
+    """
+
+    def __init__(self, span_text):
+        MarkdownToken.__init__(self, MarkdownToken.token_inline_code_span, span_text)
 
 
 # pylint: enable=too-few-public-methods

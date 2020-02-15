@@ -96,7 +96,7 @@ def test_block_quotes_209():
     > baz"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:> # Foo\n    > bar\n    > baz:]",
+        "[text:&gt; # Foo\n    &gt; bar\n    &gt; baz:]",
         "[end-icode-block]",
     ]
 

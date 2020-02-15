@@ -28,7 +28,8 @@ _world_.
         "[end-html-block]",
         "[BLANK:]",
         "[para:]",
-        "[text:_world_.\n</pre>:]",
+        """[text:_world_.
+&lt;/pre&gt;:]""",
         "[end-para]",
         "[html-block]",
         "[text:</td></tr></table>:]",
@@ -83,12 +84,12 @@ def test_html_blocks_120():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """<div>
+    source_markdown = """ <div>
   *hello*
          <foo><a>"""
     expected_tokens = [
         "[html-block]",
-        "[text:<div>\n  *hello*\n         <foo><a>:]",
+        "[text:<div>\n  *hello*\n         <foo><a>: ]",
         "[end-html-block]",
     ]
 
@@ -508,6 +509,7 @@ def test_html_blocks_137():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -519,12 +521,13 @@ def test_html_blocks_138():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<del>*foo*</del>"""
-    expected_tokens = ["[para:]", "[text:<del>*foo*</del>:]", "[end-para]"]
+    expected_tokens = ["[para:]", "[text:&lt;del&gt;*foo*&lt;/del&gt;:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO Expect this to fail when raw HTML are implemented
     # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
@@ -918,7 +921,7 @@ def test_html_blocks_152():
         "[end-html-block]",
         "[BLANK:]",
         "[icode-block:    ]",
-        "[text:<!-- foo -->:]",
+        "[text:&lt;!-- foo --&gt;:]",
         "[end-icode-block]",
     ]
 
@@ -945,7 +948,7 @@ def test_html_blocks_153():
         "[end-html-block]",
         "[BLANK:]",
         "[icode-block:    ]",
-        "[text:<div>:]",
+        "[text:&lt;div&gt;:]",
         "[end-icode-block]",
     ]
 
@@ -1019,7 +1022,9 @@ def test_html_blocks_156():
 baz"""
     expected_tokens = [
         "[para:]",
-        '[text:Foo\n<a href="bar">\nbaz:]',
+        """[text:Foo
+&lt;a href=&quot;bar&quot;&gt;
+baz:]""",
         "[end-para]",
     ]
 
@@ -1162,7 +1167,7 @@ def test_html_blocks_160():
         "[end-html-block]",
         "[BLANK:]",
         "[icode-block:    ]",
-        "[text:<td>\n      Hi\n    </td>:]",
+        "[text:&lt;td&gt;\n      Hi\n    &lt;/td&gt;:]",
         "[end-icode-block]",
         "[BLANK:]",
         "[html-block]",

@@ -15,6 +15,7 @@ from pymarkdown.markdown_token import (
     FencedCodeBlockMarkdownToken,
     HtmlBlockMarkdownToken,
     IndentedCodeBlockMarkdownToken,
+    InlineCodeSpanMarkdownToken,
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
     ParagraphMarkdownToken,
@@ -146,18 +147,16 @@ class TokenizedMarkdown:
             "ul",
         ]
         self.backslash_punctuation = "!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~\\"
-        self.entity_map = self.load_entity_map()
+        self.resource_path = os.path.join(os.path.split(__file__)[0], "resources")
+        self.entity_map = None
 
-    @classmethod
-    def load_entity_map(cls):
+    def load_entity_map(self):
         """
         Load the entity map, refreshed from https://html.spec.whatwg.org/entities.json
         into a dict that was can use.
         """
 
-        master_entities_file = (
-            "C:\\old\\enlistments\\pymarkdown\\pymarkdown\\entities.json"
-        )
+        master_entities_file = os.path.join(self.resource_path, "entities.json")
         try:
             with open(os.path.abspath(master_entities_file), "r") as infile:
                 results_dictionary = json.load(infile)
@@ -207,6 +206,8 @@ class TokenizedMarkdown:
         """
         Transform a markdown-encoded string into an array of tokens.
         """
+        self.entity_map = self.load_entity_map()
+
         first_pass_results = self.parse_blocks_pass(your_text_string)
 
         coalesced_results = self.coalesce_text_blocks(first_pass_results)
@@ -284,13 +285,16 @@ class TokenizedMarkdown:
         for coalesce_index in range(1, len(coalesced_results)):
             if (
                 coalesced_results[coalesce_index].is_text
-                and coalesced_list[-1].is_paragraph
+                and (coalesced_list[-1].is_paragraph or coalesced_list[-1].is_setext or coalesced_list[-1].is_code_block )
             ):
-                # TODO SETEXT as well
-                processed_tokens = self.process_inline_text_block(
-                    coalesced_results[coalesce_index].extracted_whitespace
-                    + coalesced_results[coalesce_index].token_text
-                )
+                if coalesced_list[-1].is_code_block:
+                    encoded_text = self.append_text("", coalesced_results[coalesce_index].token_text)
+                    processed_tokens = [TextMarkdownToken(encoded_text, coalesced_results[coalesce_index].extracted_whitespace)]
+                else:
+                    processed_tokens = self.process_inline_text_block(
+                        coalesced_results[coalesce_index].extracted_whitespace
+                        + coalesced_results[coalesce_index].token_text
+                    )
                 coalesced_list.extend(processed_tokens)
             else:
                 coalesced_list.append(coalesced_results[coalesce_index])
@@ -374,16 +378,25 @@ class TokenizedMarkdown:
         inline_blocks = []
         start_index = 0
         current_string = ""
-        valid_sequence_starts = "\\&"
-
+        valid_sequence_starts = "`\\&"
+            
         next_index = self.index_any_of(source_text, valid_sequence_starts, start_index)
         print("next_index>>" + str(next_index))
         while next_index != -1:
+
+            new_tokens = None
+            new_string = None
+            new_index = None
+
             current_string = self.append_text(
                 current_string, source_text[start_index:next_index]
             )
 
-            if source_text[next_index] == "\\":
+            if source_text[next_index] == "`":
+                new_string, new_index, new_tokens = self.handle_inline_backtick(
+                    source_text, next_index
+                )
+            elif source_text[next_index] == "\\":
                 new_string, new_index = self.handle_inline_backslash(
                     source_text, next_index
                 )
@@ -401,6 +414,12 @@ class TokenizedMarkdown:
                 + str(new_index)
                 + "<"
             )
+            if new_tokens:
+                if current_string:
+                    inline_blocks.append(TextMarkdownToken(current_string, ""))
+                    current_string = ""
+
+                inline_blocks.extend(new_tokens)
             current_string = self.append_text(current_string, new_string)
             start_index = new_index
             print("start_index>" + str(start_index) + "<")
@@ -415,8 +434,8 @@ class TokenizedMarkdown:
             current_string = self.append_text(current_string, source_text[start_index:])
 
         print("xx-end>" + current_string + "<")
-        # if current_string:
-        inline_blocks.append(TextMarkdownToken(current_string, ""))
+        if current_string:
+            inline_blocks.append(TextMarkdownToken(current_string, ""))
         print(">>" + str(inline_blocks) + "<<")
         return inline_blocks
 
@@ -436,6 +455,62 @@ class TokenizedMarkdown:
                 new_string = "\\" + source_text[new_index]
             new_index = new_index + 1
         return new_string, new_index
+
+    def handle_inline_backtick(self, source_text, next_index):
+        """
+        Handle the inline case of backticks for code spans.
+        """
+
+        print("before_collect>" + str(next_index))
+        (
+            new_index,
+            extracted_start_backticks,
+        ) = ParserHelper.collect_while_one_of_characters(source_text, next_index, "`")
+        print("after_collect>" + str(new_index) + ">" + extracted_start_backticks)
+
+        end_backtick_start_index = source_text.find(
+            extracted_start_backticks, new_index
+        )
+        while end_backtick_start_index != -1:
+            (
+                end_backticks_index,
+                end_backticks_attempt,
+            ) = ParserHelper.collect_while_one_of_characters(
+                source_text, end_backtick_start_index, "`"
+            )
+            if len(end_backticks_attempt) == len(extracted_start_backticks):
+                break
+            end_backtick_start_index = source_text.find(
+                extracted_start_backticks, end_backticks_index
+            )
+        if end_backtick_start_index == -1:
+            return extracted_start_backticks, new_index, None
+
+        between_text = source_text[new_index:end_backtick_start_index]
+        between_text = (
+            between_text.replace("\r\n", " ").replace("\r", " ").replace("\n", " ")
+        )
+
+        print(
+            "after_collect>"
+            + between_text
+            + ">>"
+            + str(end_backtick_start_index)
+            + ">>"
+            + source_text[end_backtick_start_index:]
+            + "<<"
+        )
+        if len(between_text) > 2 and between_text[0] == " " and between_text[-1] == " ":
+            stripped_between_attempt = between_text[1:-1]
+            if len(stripped_between_attempt.strip()) != 0:
+                between_text = stripped_between_attempt
+
+        between_text = self.append_text("", between_text)
+        print("between_text>>" + between_text + "<<")
+        end_backtick_start_index = end_backtick_start_index + len(
+            extracted_start_backticks
+        )
+        return "", end_backtick_start_index, [InlineCodeSpanMarkdownToken(between_text)]
 
     @classmethod
     def handle_numeric_character_reference(cls, source_text, new_index):

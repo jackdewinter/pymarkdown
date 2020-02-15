@@ -101,7 +101,7 @@ def test_indented_code_blocks_080():
     - one"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:<a/>\n    *hi*:]",
+        "[text:&lt;a/&gt;\n    *hi*:]",
         "[BLANK:]",
         "[text:- one:    ]",
         "[end-icode-block]",

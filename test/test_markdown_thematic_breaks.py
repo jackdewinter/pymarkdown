@@ -268,7 +268,7 @@ def test_thematic_breaks_026():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when inlining-emphasis are implemented
+    # TODO Expect this to fail when inline-emphasis are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
