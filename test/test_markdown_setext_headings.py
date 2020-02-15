@@ -302,7 +302,7 @@ of dashes"/>"""
         "[end-para]",
         "[BLANK:]",
         "[setext:-:]",
-        '[text:&lt;a title=&quot;a lot:]',
+        "[text:&lt;a title=&quot;a lot:]",
         "[end-setext::]",
         "[para:]",
         "[text:of dashes&quot;/&gt;:]",

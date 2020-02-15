@@ -98,7 +98,11 @@ class MarkdownToken:
         """
         Returns whether or not the current token is a fenced code block element.
         """
-        return self.token_name == MarkdownToken.token_fenced_code_block or self.token_name == MarkdownToken.token_indented_code_block
+        return (
+            self.token_name == MarkdownToken.token_fenced_code_block
+            or self.token_name == MarkdownToken.token_indented_code_block
+        )
+
 
 # pylint: disable=too-few-public-methods
 class BlankLineMarkdownToken(MarkdownToken):

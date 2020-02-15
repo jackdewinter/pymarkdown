@@ -283,13 +283,21 @@ class TokenizedMarkdown:
         coalesced_list = []
         coalesced_list.extend(coalesced_results[0:1])
         for coalesce_index in range(1, len(coalesced_results)):
-            if (
-                coalesced_results[coalesce_index].is_text
-                and (coalesced_list[-1].is_paragraph or coalesced_list[-1].is_setext or coalesced_list[-1].is_code_block )
+            if coalesced_results[coalesce_index].is_text and (
+                coalesced_list[-1].is_paragraph
+                or coalesced_list[-1].is_setext
+                or coalesced_list[-1].is_code_block
             ):
                 if coalesced_list[-1].is_code_block:
-                    encoded_text = self.append_text("", coalesced_results[coalesce_index].token_text)
-                    processed_tokens = [TextMarkdownToken(encoded_text, coalesced_results[coalesce_index].extracted_whitespace)]
+                    encoded_text = self.append_text(
+                        "", coalesced_results[coalesce_index].token_text
+                    )
+                    processed_tokens = [
+                        TextMarkdownToken(
+                            encoded_text,
+                            coalesced_results[coalesce_index].extracted_whitespace,
+                        )
+                    ]
                 else:
                     processed_tokens = self.process_inline_text_block(
                         coalesced_results[coalesce_index].extracted_whitespace
@@ -379,7 +387,7 @@ class TokenizedMarkdown:
         start_index = 0
         current_string = ""
         valid_sequence_starts = "`\\&"
-            
+
         next_index = self.index_any_of(source_text, valid_sequence_starts, start_index)
         print("next_index>>" + str(next_index))
         while next_index != -1:
