@@ -354,12 +354,9 @@ bar
     expected_tokens = [
         "[block-quote:]",
         "[para:]",
-        "[text:foo\nbar:]",
+        "[text:foo\nbar\n===:]",
         "[end-para]",
         "[end-block-quote]",
-        "[para:]",
-        "[text:===:]",
-        "[end-para]",
     ]
 
     # Act

@@ -1000,7 +1000,9 @@ class TokenizedMarkdown:
                 )
         return new_tokens
 
-    def parse_setext_headings(self, line_to_parse, start_index, extracted_whitespace):
+    def parse_setext_headings(
+        self, line_to_parse, start_index, extracted_whitespace, this_bq_count
+    ):
         """
         Handle the parsing of an setext heading.
         """
@@ -1012,6 +1014,7 @@ class TokenizedMarkdown:
                 line_to_parse, start_index, self.setext_characters
             )
             and (self.stack[-1].is_paragraph)
+            and (this_bq_count == self.__count_of_block_quotes_on_stack())
         ):
             _, collected_to_index = ParserHelper.collect_while_character(
                 line_to_parse, start_index, line_to_parse[start_index]
@@ -1135,12 +1138,7 @@ class TokenizedMarkdown:
 
     # pylint: disable=too-many-arguments
     def __check_for_lazy_handling(
-        self,
-        this_bq_count,
-        stack_bq_count,
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
+        self, this_bq_count, stack_bq_count, line_to_parse, extracted_whitespace,
     ):
         """
         Check if there is any processing to be handled during the handling of
@@ -1174,24 +1172,6 @@ class TokenizedMarkdown:
             else:
                 print("__check_for_lazy_handling>>not code block")
                 print("__check_for_lazy_handling>>" + str(self.stack))
-
-        if stack_bq_count > 0:
-            print("is_set_atx???")
-            if (
-                len(extracted_whitespace) <= 3
-                and ParserHelper.is_character_at_index_one_of(
-                    line_to_parse, start_index, self.setext_characters
-                )
-                and self.stack[-1].is_paragraph
-            ):
-                print("set_atx")
-                assert not container_level_tokens
-                container_level_tokens = self.close_open_blocks(
-                    only_these_blocks=[ParagraphStackToken, BlockQuoteStackToken],
-                    include_block_quotes=True,
-                )
-            else:
-                print("no set atx!!!!!!!!!!!!")
 
         return container_level_tokens
         # pylint: enable=too-many-arguments
@@ -2356,11 +2336,7 @@ class TokenizedMarkdown:
         if not leaf_tokens:
             print("clt>>lazy-check")
             lazy_tokens = self.__check_for_lazy_handling(
-                this_bq_count,
-                stack_bq_count,
-                line_to_parse,
-                start_index,
-                extracted_whitespace,
+                this_bq_count, stack_bq_count, line_to_parse, extracted_whitespace,
             )
             if lazy_tokens:
                 print("clt>>lazy-found")
@@ -2662,7 +2638,7 @@ class TokenizedMarkdown:
                 )
             if not new_tokens:
                 new_tokens = self.parse_setext_headings(
-                    line_to_parse, start_index, extracted_whitespace
+                    line_to_parse, start_index, extracted_whitespace, this_bq_count,
                 )
             if not new_tokens:
                 new_tokens = self.parse_thematic_break(

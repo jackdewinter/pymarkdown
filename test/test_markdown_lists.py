@@ -980,6 +980,7 @@ def test_list_items_306():
 # TODO 301, with indented code blocks
 # TODO 270 and check for indent levels after
 
+# TODO go through any case that uses lazy and do un-lazy example
 # TODO - trailing-whitespace removal in favor of more visible method
 # TODO - linking text blocks properly if not in paragraph block
 # TODO - [BLANK] and folding lines
@@ -1013,8 +1014,6 @@ def test_list_items_306():
 # TODO - setext does not process line break after backslash or line break
 #       - 059 (setext)
 #       - 060 (setext)
-# TODO - === should be inside of paragraph
-#       - 063 (setext)
 # TODO atx backslashes not processed inside of atx
 #       - 036 (atx)
 #       - 046 (atx)
