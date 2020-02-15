@@ -1011,9 +1011,6 @@ def test_list_items_306():
 #       - 193 (para)
 #       - 196 (para)
 #       - 216 (block quote)
-# TODO - setext does not process line break after backslash or line break
-#       - 059 (setext)
-#       - 060 (setext)
 # TODO atx backslashes not processed inside of atx
 #       - 036 (atx)
 #       - 046 (atx)

@@ -258,6 +258,7 @@ def test_setext_headings_059():
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
+    # TODO Expect this to fail when proper paragraph handling with breaks and trimming
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -268,9 +269,9 @@ def test_setext_headings_060():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """Foo\
+    source_markdown = """Foo\\
 ----"""
-    expected_tokens = ["[para:]", "[text:Foo----:]", "[end-para]"]
+    expected_tokens = ["[setext:-:]", "[text:Foo\\:]", "[end-setext::]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
