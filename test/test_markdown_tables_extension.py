@@ -17,7 +17,7 @@ def test_tables_extension_198():
 | --- | --- |
 | baz | bim |"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n]",
         "[text:| foo | bar |\n| --- | --- |\n| baz | bim |:]",
         "[end-para]",
     ]
@@ -41,7 +41,7 @@ def test_tables_extension_199():
 :-: | -----------:
 bar | baz"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n]",
         "[text:| abc | defghi |\n:-: | -----------:\nbar | baz:]",
         "[end-para]",
     ]
@@ -66,7 +66,7 @@ def test_tables_extension_200():
 | b `\\|` az |
 | b **\\|** im |"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n\n]",
         """[text:| f|oo  |
 | ------ |
 | b :]""",
@@ -96,7 +96,7 @@ def test_tables_extension_201():
 | bar | baz |
 > bar"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n]",
         "[text:| abc | def |\n| --- | --- |\n| bar | baz |:]",
         "[end-para]",
         "[block-quote:]",
@@ -128,7 +128,7 @@ bar
 
 bar"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n\n]",
         "[text:| abc | def |\n| --- | --- |\n| bar | baz |\nbar:]",
         "[end-para]",
         "[BLANK:]",
@@ -156,7 +156,7 @@ def test_tables_extension_203():
 | --- |
 | bar |"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n]",
         "[text:| abc | def |\n| --- |\n| bar |:]",
         "[end-para]",
     ]
@@ -181,7 +181,7 @@ def test_tables_extension_204():
 | bar |
 | bar | baz | boo |"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n\n]",
         "[text:| abc | def |\n| --- | --- |\n| bar |\n| bar | baz | boo |:]",
         "[end-para]",
     ]
@@ -204,7 +204,7 @@ def test_tables_extension_205():
     source_markdown = """| abc | def |
 | --- | --- |"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[text:| abc | def |\n| --- | --- |:]",
         "[end-para]",
     ]

@@ -27,7 +27,7 @@ _world_.
         "[text:<table><tr><td>\n<pre>\n**Hello**,:]",
         "[end-html-block]",
         "[BLANK:]",
-        "[para:]",
+        "[para:\n]",
         """[text:_world_.
 &lt;/pre&gt;:]""",
         "[end-para]",
@@ -1021,7 +1021,7 @@ def test_html_blocks_156():
 <a href="bar">
 baz"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n]",
         """[text:Foo
 &lt;a href=&quot;bar&quot;&gt;
 baz:]""",
@@ -1280,7 +1280,7 @@ def test_html_blocks_cov3():
     source_markdown = """<!bad>
 </x-table>"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[text:&lt;!bad&gt;\n&lt;/x-table&gt;:]",
         "[end-para]",
     ]
@@ -1303,7 +1303,7 @@ def test_html_blocks_cov4():
 bad>
 </x-table>"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n]",
         "[text:&lt;\nbad&gt;\n&lt;/x-table&gt;:]",
         "[end-para]",
     ]

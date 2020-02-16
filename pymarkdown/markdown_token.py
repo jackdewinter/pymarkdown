@@ -1,6 +1,7 @@
 """
 Module to provide for an element that can be added to markdown parsing stream.
 """
+from pymarkdown.parser_helper import ParserHelper
 
 
 class MarkdownToken:
@@ -108,18 +109,15 @@ class MarkdownToken:
         """
         Returns whether or not the current token is an indented code block element.
         """
-        return (
-            self.token_name == MarkdownToken.token_indented_code_block
-        )
+        return self.token_name == MarkdownToken.token_indented_code_block
 
     @property
     def is_fenced_code_block(self):
         """
         Returns whether or not the current token is a fenced code block element.
         """
-        return (
-            self.token_name == MarkdownToken.token_fenced_code_block
-        )
+        return self.token_name == MarkdownToken.token_fenced_code_block
+
 
 # pylint: disable=too-few-public-methods
 class BlankLineMarkdownToken(MarkdownToken):
@@ -139,10 +137,39 @@ class ParagraphMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, extracted_whitespace):
+        self.extracted_whitespace = extracted_whitespace
+        self.final_whitespace = ""
         MarkdownToken.__init__(
-            self, MarkdownToken.token_paragraph, extracted_whitespace
+            self, MarkdownToken.token_paragraph, ""
         )
+        self.compose_extra_data_field()
 
+    def compose_extra_data_field(self):
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+
+        self.extra_data = self.extracted_whitespace
+        if self.final_whitespace:
+            self.extra_data = self.extra_data + ":" + self.final_whitespace
+
+    def add_whitespace(self, whitespace_to_add):
+        """
+        Add extra whitespace to the end of the current paragraph.  Should only be
+        used when combining text blocks in a paragraph.
+        """
+
+        self.extracted_whitespace = self.extracted_whitespace + whitespace_to_add
+        self.compose_extra_data_field()
+
+    def set_final_whitespace(self, whitespace_to_set):
+        """
+        Set the final whitespace for the paragraph. That is any whitespace at the very
+        end of the paragraph, removed to prevent hard lines at the end.
+        """
+
+        self.final_whitespace = whitespace_to_set
+        self.compose_extra_data_field()
 
 class IndentedCodeBlockMarkdownToken(MarkdownToken):
     """
@@ -278,6 +305,19 @@ class TextMarkdownToken(MarkdownToken):
             self, MarkdownToken.token_text, token_text + ":" + extracted_whitespace
         )
 
+    def remove_final_whitespace(self):
+        """
+        Remove any final whitespace.  Used by paragraph blocks so that they do not
+        end with a hard break.
+        """
+
+        removed_whitespace = ""
+        collected_whitespace_length, first_non_whitespace_index = ParserHelper.collect_backwards_while_character(self.token_text, -1, " ")
+        if collected_whitespace_length:
+            removed_whitespace = self.token_text[first_non_whitespace_index:first_non_whitespace_index+collected_whitespace_length]
+            self.token_text = self.token_text[0:first_non_whitespace_index]
+        return removed_whitespace
+
     def combine(self, other_text_token, remove_leading_spaces):
         """
         Combine the two text tokens together with a line feed between.
@@ -291,20 +331,23 @@ class TextMarkdownToken(MarkdownToken):
             text_to_combine = other_text_token.token_text
             whitespace_present = other_text_token.extracted_whitespace
 
+        whitespace_to_append = None
         if not remove_leading_spaces:
             prefix_whitespace = whitespace_present
+        elif remove_leading_spaces == -1:
+            whitespace_to_append = whitespace_present
+            prefix_whitespace = ""
         else:
             if len(whitespace_present) < remove_leading_spaces:
                 prefix_whitespace = ""
             else:
                 prefix_whitespace = whitespace_present[remove_leading_spaces:]
 
-        self.token_text = (
-            self.token_text
-            + "\n"
-            + prefix_whitespace
-            + text_to_combine
-        )
+        if whitespace_to_append is not None:
+            self.extracted_whitespace = (
+                self.extracted_whitespace + "\n" + whitespace_to_append
+            )
+        self.token_text = self.token_text + "\n" + prefix_whitespace + text_to_combine
         self.extra_data = self.token_text + ":" + self.extracted_whitespace
 
 

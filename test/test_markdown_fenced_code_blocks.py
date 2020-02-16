@@ -64,7 +64,7 @@ def test_fenced_code_blocks_091():
     source_markdown = """``
 foo
 ``"""
-    expected_tokens = ["[para:]", "[icode-span:foo]", "[end-para]"]
+    expected_tokens = ["[para:\n\n]", "[icode-span:foo]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -456,7 +456,7 @@ def test_fenced_code_blocks_108():
     source_markdown = """``` ```
 aaa"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[icode-span: ]",
         """[text:
 aaa:]""",
@@ -632,7 +632,7 @@ def test_fenced_code_blocks_115():
     source_markdown = """``` aa ```
 foo"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[icode-span:aa]",
         """[text:
 foo:]""",

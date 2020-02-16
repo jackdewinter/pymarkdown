@@ -21,7 +21,7 @@ def test_character_references_321():
 &frac34; &HilbertSpace; &DifferentialD;
 &ClockwiseContourIntegral; &ngE;"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n]",
         "[text:\u00A0 &amp; © Æ Ď\n¾ ℋ ⅆ\n∲ ≧̸:]",
         "[end-para]",
     ]
@@ -87,7 +87,7 @@ def test_character_references_324():
 &#abcdef0;
 &ThisIsNotDefined; &hi?;"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n\n]",
         "[text:&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#87654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;:]",
         "[end-para]",
     ]
@@ -310,7 +310,7 @@ def test_character_references_333():
     source_markdown = """&#42;foo&#42;
 *foo*"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[text:*foo*\n*foo*:]",
         "[end-para]",
     ]

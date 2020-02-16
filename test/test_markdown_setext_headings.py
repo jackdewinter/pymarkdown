@@ -201,7 +201,7 @@ def test_setext_headings_057():
     tokenizer = TokenizedMarkdown()
     source_markdown = """Foo
     ---"""
-    expected_tokens = ["[para:]", "[text:Foo\n    ---:]", "[end-para]"]
+    expected_tokens = ["[para:\n    ]", "[text:Foo\n---:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -223,7 +223,7 @@ def test_setext_headings_058():
 Foo
 --- -"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[text:Foo\n= =:]",
         "[end-para]",
         "[BLANK:]",
@@ -352,7 +352,7 @@ bar
 ==="""
     expected_tokens = [
         "[block-quote:]",
-        "[para:]",
+        "[para:\n\n]",
         "[text:foo\nbar\n===:]",
         "[end-para]",
         "[end-block-quote]",
@@ -667,7 +667,7 @@ bar
 
 baz"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[text:Foo\nbar:]",
         "[end-para]",
         "[BLANK:]",
@@ -698,7 +698,7 @@ bar
 * * *
 baz"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[text:Foo\nbar:]",
         "[end-para]",
         "[tbreak:*::* * *]",
@@ -727,7 +727,7 @@ bar
 \\---
 baz"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n\n]",
         "[text:Foo\nbar\n---\nbaz:]",
         "[end-para]",
     ]

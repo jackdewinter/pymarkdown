@@ -66,7 +66,7 @@ def test_backslash_escapes_310():
 \\[foo]: /url "not a reference"
 \\&ouml; not a character entity"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n\n\n\n\n\n\n]",
         """[text:*not emphasized*
 &lt;br/&gt; not a tag
 [not a link](/foo)
@@ -120,7 +120,7 @@ def test_backslash_escapes_312():
     source_markdown = """foo\\
 bar"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         """[text:foo\\
 bar:]""",
         "[end-para]",

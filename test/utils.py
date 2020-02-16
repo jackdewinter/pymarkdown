@@ -9,8 +9,8 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
     Compart two lists and make sure they are equal, asserting if not.
     """
 
-    print("expected_tokens:" + str(expected_tokens))
-    print("actual_html:" + str(actual_tokens))
+    print("expected_tokens: " + str(expected_tokens))
+    print("parsed_tokens  : " + str(actual_tokens).replace("\n", "\\n"))
     assert len(expected_tokens) == len(actual_tokens), "List lengths are not the same."
 
     # pylint: disable=consider-using-enumerate

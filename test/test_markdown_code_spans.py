@@ -143,7 +143,7 @@ def test_code_spans_344():
     source_markdown = """` `
 `  `"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[icode-span: ]",
         """[text:
 :]""",
@@ -192,7 +192,7 @@ bar
 baz
 ``"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n\n\n]",
         "[icode-span:foo bar   baz]",
         "[end-para]",
     ]
@@ -215,7 +215,7 @@ def test_code_spans_346():
 foo 
 ``"""
     expected_tokens = [
-        "[para:]",
+        "[para:\n\n]",
         "[icode-span:foo ]",
         "[end-para]",
     ]
@@ -239,7 +239,7 @@ def test_code_spans_347():
 baz`"""
     # pylint: enable=trailing-whitespace
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[icode-span:foo   bar  baz]",
         "[end-para]",
     ]

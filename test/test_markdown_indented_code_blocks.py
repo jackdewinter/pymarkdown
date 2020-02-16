@@ -171,7 +171,7 @@ def test_indented_code_blocks_083():
     tokenizer = TokenizedMarkdown()
     source_markdown = """Foo
     bar"""
-    expected_tokens = ["[para:]", "[text:Foo\n    bar:]", "[end-para]"]
+    expected_tokens = ["[para:\n    ]", "[text:Foo\nbar:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

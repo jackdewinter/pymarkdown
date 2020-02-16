@@ -165,6 +165,25 @@ class ParserHelper:
         return index - start_index, index
 
     @staticmethod
+    def collect_backwards_while_character(source_string, end_index, match_character):
+        """
+        Collect a sequence of the same character from a given starting point in a string going backwards towards the start of the string.
+
+        Returns the number of characters collected and the index of the first non-matching
+        character and any extracted text in a tuple.
+        """
+
+        if not -1 <= end_index <= len(source_string):
+            return None, None
+        if end_index == -1:
+            end_index = len(source_string)
+
+        index = end_index
+        while index >= 1 and source_string[index-1] == match_character:
+            index = index - 1
+        return end_index - index, index
+
+    @staticmethod
     def collect_until_character(source_string, start_index, match_character):
         """
         Collect a sequence of characters from a given starting point in a string until we hit a given character.

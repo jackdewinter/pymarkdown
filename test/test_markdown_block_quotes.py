@@ -19,7 +19,7 @@ def test_block_quotes_206():
     expected_tokens = [
         "[block-quote:]",
         "[atx:1:Foo:: ::]",
-        "[para:]",
+        "[para:\n]",
         "[text:bar\nbaz:]",
         "[end-para]",
         "[end-block-quote]",
@@ -45,7 +45,7 @@ def test_block_quotes_207():
     expected_tokens = [
         "[block-quote:]",
         "[atx:1:Foo:: ::]",
-        "[para:]",
+        "[para:\n]",
         "[text:bar\nbaz:]",
         "[end-para]",
         "[end-block-quote]",
@@ -71,7 +71,7 @@ def test_block_quotes_208():
     expected_tokens = [
         "[block-quote:   ]",
         "[atx:1:Foo:: ::]",
-        "[para:]",
+        "[para:\n]",
         "[text:bar\nbaz:]",
         "[end-para]",
         "[end-block-quote]",
@@ -120,7 +120,7 @@ baz"""
     expected_tokens = [
         "[block-quote:]",
         "[atx:1:Foo:: ::]",
-        "[para:]",
+        "[para:\n]",
         "[text:bar\nbaz:]",
         "[end-para]",
         "[end-block-quote]",
@@ -145,7 +145,7 @@ baz
 > foo"""
     expected_tokens = [
         "[block-quote:]",
-        "[para:]",
+        "[para:\n\n]",
         "[text:bar\nbaz\nfoo:]",
         "[end-para]",
         "[end-block-quote]",
@@ -286,8 +286,8 @@ def test_block_quotes_216():
     - bar"""
     expected_tokens = [
         "[block-quote:]",
-        "[para:]",
-        "[text:foo\n    - bar:]",
+        "[para:\n    ]",
+        "[text:foo\n- bar:]",
         "[end-para]",
         "[end-block-quote]",
     ]
@@ -412,7 +412,7 @@ def test_block_quotes_221():
 > bar"""
     expected_tokens = [
         "[block-quote:]",
-        "[para:]",
+        "[para:\n]",
         "[text:foo\nbar:]",
         "[end-para]",
         "[end-block-quote]",
@@ -523,7 +523,7 @@ def test_block_quotes_225():
 baz"""
     expected_tokens = [
         "[block-quote:]",
-        "[para:]",
+        "[para:\n]",
         "[text:bar\nbaz:]",
         "[end-para]",
         "[end-block-quote]",
@@ -607,7 +607,7 @@ bar"""
         "[block-quote:]",
         "[block-quote:]",
         "[block-quote:]",
-        "[para:]",
+        "[para:\n]",
         "[text:foo\nbar:]",
         "[end-para]",
         "[end-block-quote]",
@@ -636,7 +636,7 @@ def test_block_quotes_229():
         "[block-quote:]",
         "[block-quote:]",
         "[block-quote:]",
-        "[para:]",
+        "[para:\n\n]",
         "[text:foo\nbar\nbaz:]",
         "[end-para]",
         "[end-block-quote]",

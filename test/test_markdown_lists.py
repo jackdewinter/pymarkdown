@@ -118,7 +118,7 @@ def test_list_items_284():
     source_markdown = """The number of windows in my house is
 14.  The number of doors is 6."""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[text:The number of windows in my house is\n14.  The number of doors is 6.:]",
         "[end-para]",
     ]
@@ -450,8 +450,8 @@ def test_list_items_292():
         "[text:c:]",
         "[end-para]",
         "[li:5]",
-        "[para:]",
-        "[text:d\n  - e:]",
+        "[para:\n  ]",
+        "[text:d\n- e:]",
         "[end-para]",
         "[end-ulist]",
     ]
@@ -983,17 +983,6 @@ def test_list_items_306():
 # TODO - linking text blocks properly if not in paragraph block
 # TODO - [BLANK] and folding lines
 # TODO reverse global replacement of tabs with 4 spaces, inline shouldn't
-# TODO second+ line of paragraph removed leading spaces
-#      "The paragraph’s raw content is formed by concatenating the lines and removing initial and final whitespace."
-#       - 019 (thematic)
-#       - 040 (atx)
-#       - 057 (setext)
-#       - 083 (icb)
-#       - 086 (icb)
-#       - 192 (para)
-#       - 193 (para)
-#       - 196 (para)
-#       - 216 (block quote)
 # TODO atx backslashes not processed inside of atx
 #       - 036 (atx)
 #       - 046 (atx)

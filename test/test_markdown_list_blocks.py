@@ -23,7 +23,7 @@ with two lines.
 
 > A block quote."""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[BLANK:]",
@@ -60,7 +60,7 @@ def test_list_blocks_232():
     > A block quote."""
     expected_tokens = [
         "[olist:.:1:4:]",
-        "[para:]",
+        "[para:\n]",
         "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[BLANK:]",
@@ -956,11 +956,11 @@ def test_list_blocks_263():
 foo
 1."""
     expected_tokens = [
-        "[para:]",
+        "[para:\n]",
         "[text:foo\n*:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para:\n]",
         "[text:foo\n1.:]",
         "[end-para]",
     ]
@@ -987,7 +987,7 @@ def test_list_blocks_264():
      > A block quote."""
     expected_tokens = [
         "[olist:.:1:5: ]",
-        "[para:]",
+        "[para:\n]",
         "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[BLANK:]",
@@ -1025,7 +1025,7 @@ def test_list_blocks_265():
       > A block quote."""
     expected_tokens = [
         "[olist:.:1:6:  ]",
-        "[para:]",
+        "[para:\n]",
         "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[BLANK:]",
@@ -1063,7 +1063,7 @@ def test_list_blocks_266():
        > A block quote."""
     expected_tokens = [
         "[olist:.:1:7:   ]",
-        "[para:]",
+        "[para:\n]",
         "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[BLANK:]",
@@ -1127,7 +1127,7 @@ with two lines.
       > A block quote."""
     expected_tokens = [
         "[olist:.:1:6:  ]",
-        "[para:]",
+        "[para:\n]",
         "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[BLANK:]",
@@ -1161,7 +1161,7 @@ def test_list_blocks_269():
     with two lines."""
     expected_tokens = [
         "[olist:.:1:6:  ]",
-        "[para:]",
+        "[para:\n]",
         "[text:A paragraph\nwith two lines.:]",
         "[end-para]",
         "[end-olist]",
