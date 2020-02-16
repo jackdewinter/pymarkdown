@@ -175,7 +175,6 @@ bbb"""
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-# pylint: disable=trailing-whitespace
 def test_paragraph_blocks_196():
     """
     Test case 196:  (part b) However, the first line may be indented at most three spaces, or an indented code block will be triggered:
@@ -183,8 +182,10 @@ def test_paragraph_blocks_196():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """aaa     
-bbb     """
+    source_markdown = """aaa\a\a\a\a\a
+bbb     """.replace(
+        "\a", " "
+    )
     expected_tokens = ["[para:\n:     ]", "[text:aaa     \nbbb:]", "[end-para]"]
 
     # Act

@@ -6,7 +6,6 @@ from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from .utils import assert_if_lists_different
 
 
-# pylint: disable=trailing-whitespace
 def test_blank_lines_197():
     """
     Test case 197:  Blank lines at the beginning and end of the document are also ignored.
@@ -14,14 +13,16 @@ def test_blank_lines_197():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """  
+    source_markdown = """\a\a
 
 aaa
-  
+\a\a
 
 # aaa
 
-  """
+  """.replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[BLANK:  ]",
         "[BLANK:]",

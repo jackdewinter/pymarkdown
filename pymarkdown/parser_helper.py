@@ -179,7 +179,7 @@ class ParserHelper:
             end_index = len(source_string)
 
         index = end_index
-        while index >= 1 and source_string[index-1] == match_character:
+        while index >= 1 and source_string[index - 1] == match_character:
             index = index - 1
         return end_index - index, index
 

@@ -234,10 +234,10 @@ def test_code_spans_347():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    # pylint: disable=trailing-whitespace
-    source_markdown = """`foo   bar 
-baz`"""
-    # pylint: enable=trailing-whitespace
+    source_markdown = """`foo   bar\a
+baz`""".replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[para:\n]",
         "[icode-span:foo   bar  baz]",

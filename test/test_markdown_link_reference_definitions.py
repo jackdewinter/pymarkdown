@@ -45,12 +45,13 @@ def test_link_reference_definitions_162():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    # pylint: disable=trailing-whitespace
-    source_markdown = """   [foo]: 
-      /url  
-           'the title'  
+    source_markdown = """   [foo]:\a
+      /url\a\a
+           'the title'\a\a
 
-[foo]"""
+[foo]""".replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[para:   ]",
         "[text:[foo]: :]",

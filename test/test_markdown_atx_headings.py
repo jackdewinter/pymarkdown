@@ -341,7 +341,6 @@ Bar foo"""
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-# pylint: disable=trailing-whitespace
 def test_atx_headings_049():
     """
     Test case 049:  ATX headings can be empty:
@@ -349,9 +348,11 @@ def test_atx_headings_049():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """## 
+    source_markdown = """##\a
 #
-### ###"""
+### ###""".replace(
+        "\a", " "
+    )
     expected_tokens = ["[atx:2::: ::]", "[atx:1:::::]", "[atx:3::: ::]"]
 
     # Act

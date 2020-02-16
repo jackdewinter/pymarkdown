@@ -163,7 +163,8 @@ def test_simple_case_from_end_with_whitespace():
     # Assert
     assert expected_output == actual_output
 
-def test_simple_case_from_end_with_EOL_index():
+
+def test_simple_case_from_end_with_eol_index():
     """
     Make sure that we test a simple extraction from the end of the string with whitespace
     """
@@ -181,6 +182,7 @@ def test_simple_case_from_end_with_EOL_index():
 
     # Assert
     assert expected_output == actual_output
+
 
 def test_simple_case_from_end_without_whitespace():
     """

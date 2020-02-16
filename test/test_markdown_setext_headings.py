@@ -240,7 +240,6 @@ Foo
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-# pylint: disable=trailing-whitespace
 def test_setext_headings_059():
     """
     Test case 059:  Trailing spaces in the content line do not cause a line break:
@@ -248,8 +247,10 @@ def test_setext_headings_059():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """Foo  
------"""
+    source_markdown = """Foo\a\a
+-----""".replace(
+        "\a", " "
+    )
     expected_tokens = ["[setext:-:]", "[text:Foo  :]", "[end-setext::]"]
 
     # Act

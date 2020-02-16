@@ -979,7 +979,6 @@ def test_list_items_306():
 # TODO 270 and check for indent levels after
 
 # TODO go through any case that uses lazy and do un-lazy example
-# TODO - trailing-whitespace removal in favor of more visible method
 # TODO - linking text blocks properly if not in paragraph block
 # TODO - [BLANK] and folding lines
 # TODO reverse global replacement of tabs with 4 spaces, inline shouldn't

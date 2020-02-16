@@ -787,9 +787,10 @@ def test_list_blocks_257():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    # pylint: disable=trailing-whitespace
-    source_markdown = """-   
-  foo"""
+    source_markdown = """-\a\a\a
+  foo""".replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[ulist:-::2:]",
         "[BLANK:]",

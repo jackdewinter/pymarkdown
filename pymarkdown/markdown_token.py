@@ -139,9 +139,7 @@ class ParagraphMarkdownToken(MarkdownToken):
     def __init__(self, extracted_whitespace):
         self.extracted_whitespace = extracted_whitespace
         self.final_whitespace = ""
-        MarkdownToken.__init__(
-            self, MarkdownToken.token_paragraph, ""
-        )
+        MarkdownToken.__init__(self, MarkdownToken.token_paragraph, "")
         self.compose_extra_data_field()
 
     def compose_extra_data_field(self):
@@ -170,6 +168,7 @@ class ParagraphMarkdownToken(MarkdownToken):
 
         self.final_whitespace = whitespace_to_set
         self.compose_extra_data_field()
+
 
 class IndentedCodeBlockMarkdownToken(MarkdownToken):
     """
@@ -312,9 +311,15 @@ class TextMarkdownToken(MarkdownToken):
         """
 
         removed_whitespace = ""
-        collected_whitespace_length, first_non_whitespace_index = ParserHelper.collect_backwards_while_character(self.token_text, -1, " ")
+        (
+            collected_whitespace_length,
+            first_non_whitespace_index,
+        ) = ParserHelper.collect_backwards_while_character(self.token_text, -1, " ")
         if collected_whitespace_length:
-            removed_whitespace = self.token_text[first_non_whitespace_index:first_non_whitespace_index+collected_whitespace_length]
+            removed_whitespace = self.token_text[
+                first_non_whitespace_index : first_non_whitespace_index
+                + collected_whitespace_length
+            ]
             self.token_text = self.token_text[0:first_non_whitespace_index]
         return removed_whitespace
 

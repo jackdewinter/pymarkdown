@@ -304,14 +304,39 @@ class TokenizedMarkdown:
                 coalesced_list.append(first_pass_results[coalesce_index])
 
         for coalesce_index in range(1, len(coalesced_list)):
-            if coalesced_list[coalesce_index].is_text and coalesced_list[coalesce_index-1].is_paragraph:
-                print("full_paragraph_text>" + str(coalesced_list[coalesce_index]) + "<")
-                print("full_paragraph_text>" + str(len(coalesced_list[coalesce_index].token_text)) + ">" + coalesced_list[coalesce_index].token_text + "<")
+            if (
+                coalesced_list[coalesce_index].is_text
+                and coalesced_list[coalesce_index - 1].is_paragraph
+            ):
+                print(
+                    "full_paragraph_text>" + str(coalesced_list[coalesce_index]) + "<"
+                )
+                print(
+                    "full_paragraph_text>"
+                    + str(len(coalesced_list[coalesce_index].token_text))
+                    + ">"
+                    + coalesced_list[coalesce_index].token_text
+                    + "<"
+                )
                 removed_ws = coalesced_list[coalesce_index].remove_final_whitespace()
-                print("full_paragraph_text>" + str(len(coalesced_list[coalesce_index].token_text)) + ">" + coalesced_list[coalesce_index].token_text + "<")
-                print("full_paragraph_text>" + str(coalesced_list[coalesce_index-1]) + ">")
-                coalesced_list[coalesce_index-1].set_final_whitespace(removed_ws)
-                print("full_paragraph_text>" + str(coalesced_list[coalesce_index-1]) + ">")
+                print(
+                    "full_paragraph_text>"
+                    + str(len(coalesced_list[coalesce_index].token_text))
+                    + ">"
+                    + coalesced_list[coalesce_index].token_text
+                    + "<"
+                )
+                print(
+                    "full_paragraph_text>"
+                    + str(coalesced_list[coalesce_index - 1])
+                    + ">"
+                )
+                coalesced_list[coalesce_index - 1].set_final_whitespace(removed_ws)
+                print(
+                    "full_paragraph_text>"
+                    + str(coalesced_list[coalesce_index - 1])
+                    + ">"
+                )
 
         return coalesced_list
 
