@@ -322,7 +322,7 @@ aaa
   ```"""
     expected_tokens = [
         "[fcode-block:`:3:::  :]",
-        "[text:aaa\n  aaa\naaa:]",
+        "[text:aaa\naaa\naaa:]",
         "[end-fcode-block:  ]",
     ]
 
@@ -347,7 +347,7 @@ def test_fenced_code_blocks_103():
    ```"""
     expected_tokens = [
         "[fcode-block:`:3:::   :]",
-        "[text:aaa\n    aaa\n  aaa:   ]",
+        "[text:aaa\n aaa\naaa:   ]",
         "[end-fcode-block:   ]",
     ]
 
@@ -370,7 +370,7 @@ def test_fenced_code_blocks_104():
     ```"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:```\n    aaa\n    ```:]",
+        "[text:```\naaa\n```:]",
         "[end-icode-block]",
     ]
 

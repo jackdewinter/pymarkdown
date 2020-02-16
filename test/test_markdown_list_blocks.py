@@ -158,7 +158,7 @@ def test_list_blocks_235():
         "[end-para]",
         "[BLANK:]",
         "[end-ulist]",
-        "[icode-block:    ]",
+        "[icode-block:     ]",
         "[text:two: ]",
         "[end-icode-block]",
     ]
@@ -378,10 +378,7 @@ def test_list_blocks_242():
         "[end-para]",
         "[BLANK:]",
         "[icode-block:    ]",
-        "[text:bar:]",
-        "[BLANK:]",
-        "[BLANK:]",
-        "[text:baz:    ]",
+        "[text:bar\n\n\nbaz:]",
         "[end-icode-block]",
         "[end-ulist]",
     ]
@@ -636,7 +633,7 @@ def test_list_blocks_252():
        more code"""
     expected_tokens = [
         "[olist:.:1:3:]",
-        "[icode-block:    ]",
+        "[icode-block:     ]",
         "[text:indented code: ]",
         "[end-icode-block]",
         "[BLANK:]",
@@ -1104,11 +1101,7 @@ def test_list_blocks_267():
         > A block quote."""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:1.  A paragraph\n        with two lines.:]",
-        "[BLANK:]",
-        "[text:indented code:            ]",
-        "[BLANK:]",
-        "[text:> A block quote.:        ]",
+        "[text:1.  A paragraph\n    with two lines.\n\n        indented code\n\n    &gt; A block quote.:]",
         "[end-icode-block]",
     ]
 

@@ -96,13 +96,30 @@ class MarkdownToken:
     @property
     def is_code_block(self):
         """
-        Returns whether or not the current token is a fenced code block element.
+        Returns whether or not the current token is a code block element.
         """
         return (
             self.token_name == MarkdownToken.token_fenced_code_block
             or self.token_name == MarkdownToken.token_indented_code_block
         )
 
+    @property
+    def is_indented_code_block(self):
+        """
+        Returns whether or not the current token is an indented code block element.
+        """
+        return (
+            self.token_name == MarkdownToken.token_indented_code_block
+        )
+
+    @property
+    def is_fenced_code_block(self):
+        """
+        Returns whether or not the current token is a fenced code block element.
+        """
+        return (
+            self.token_name == MarkdownToken.token_fenced_code_block
+        )
 
 # pylint: disable=too-few-public-methods
 class BlankLineMarkdownToken(MarkdownToken):
@@ -153,6 +170,7 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
         extracted_whitespace,
         extracted_whitespace_before_info_string,
     ):
+        self.extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_fenced_code_block,
@@ -260,16 +278,32 @@ class TextMarkdownToken(MarkdownToken):
             self, MarkdownToken.token_text, token_text + ":" + extracted_whitespace
         )
 
-    def combine(self, other_text_token):
+    def combine(self, other_text_token, remove_leading_spaces):
         """
         Combine the two text tokens together with a line feed between.
         """
 
+        if other_text_token.is_blank_line:
+            text_to_combine = ""
+            whitespace_present = other_text_token.extra_data
+        else:
+            assert other_text_token.is_text
+            text_to_combine = other_text_token.token_text
+            whitespace_present = other_text_token.extracted_whitespace
+
+        if not remove_leading_spaces:
+            prefix_whitespace = whitespace_present
+        else:
+            if len(whitespace_present) < remove_leading_spaces:
+                prefix_whitespace = ""
+            else:
+                prefix_whitespace = whitespace_present[remove_leading_spaces:]
+
         self.token_text = (
             self.token_text
             + "\n"
-            + other_text_token.extracted_whitespace
-            + other_text_token.token_text
+            + prefix_whitespace
+            + text_to_combine
         )
         self.extra_data = self.token_text + ":" + self.extracted_whitespace
 

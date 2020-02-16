@@ -17,7 +17,7 @@ def test_indented_code_blocks_077():
       indented code block"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:a simple\n      indented code block:]",
+        "[text:a simple\n  indented code block:]",
         "[end-icode-block]",
     ]
 
@@ -101,9 +101,7 @@ def test_indented_code_blocks_080():
     - one"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:&lt;a/&gt;\n    *hi*:]",
-        "[BLANK:]",
-        "[text:- one:    ]",
+        "[text:&lt;a/&gt;\n*hi*\n\n- one:]",
         "[end-icode-block]",
     ]
 
@@ -130,13 +128,7 @@ def test_indented_code_blocks_081():
     chunk3"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:chunk1:]",
-        "[BLANK:]",
-        "[text:chunk2:    ]",
-        "[BLANK:  ]",
-        "[BLANK: ]",
-        "[BLANK: ]",
-        "[text:chunk3:    ]",
+        "[text:chunk1\n\nchunk2\n\n\n\nchunk3:]",
         "[end-icode-block]",
     ]
 
@@ -159,9 +151,7 @@ def test_indented_code_blocks_082():
       chunk2"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:chunk1:]",
-        "[BLANK:      ]",
-        "[text:chunk2:      ]",
+        "[text:chunk1\n  \n  chunk2:]",
         "[end-icode-block]",
     ]
 
@@ -259,8 +249,8 @@ def test_indented_code_blocks_086():
     source_markdown = """        foo
     bar"""
     expected_tokens = [
-        "[icode-block:    ]",
-        "[text:foo\n    bar:    ]",
+        "[icode-block:        ]",
+        "[text:foo\nbar:    ]",
         "[end-icode-block]",
     ]
 

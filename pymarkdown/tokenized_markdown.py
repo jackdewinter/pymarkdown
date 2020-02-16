@@ -266,12 +266,23 @@ class TokenizedMarkdown:
         coalesced_list = []
         coalesced_list.extend(first_pass_results[0:1])
         for coalesce_index in range(1, len(first_pass_results)):
-            if (
-                first_pass_results[coalesce_index].is_text
-                and coalesced_list[-1].is_text
-            ):
-                coalesced_list[-1].combine(first_pass_results[coalesce_index])
-            else:
+            did_process = False
+            print("coalesce_text_blocks>>>>" + str(first_pass_results[coalesce_index]) + "<<")
+            if coalesced_list[-1].is_text:
+                print(">>coalesce_text_blocks>>>>" + str(coalesced_list[-1]) + "<<")
+                if first_pass_results[coalesce_index].is_text or (first_pass_results[coalesce_index].is_blank_line and coalesced_list[-2].is_code_block):
+                    print("text-text>>" + str(coalesced_list[-2]) + "<<")
+                    remove_leading_spaces = 0
+                    if coalesced_list[-2].is_indented_code_block:
+                        remove_leading_spaces = len(coalesced_list[-2].extra_data)
+                        if remove_leading_spaces > 4:
+                            remove_leading_spaces = 4
+                    elif coalesced_list[-2].is_fenced_code_block:
+                        remove_leading_spaces = len(coalesced_list[-2].extracted_whitespace)
+                    print("remove_leading_spaces>>" +str(remove_leading_spaces))
+                    coalesced_list[-1].combine(first_pass_results[coalesce_index], remove_leading_spaces)
+                    did_process = True
+            if not did_process:
                 coalesced_list.append(first_pass_results[coalesce_index])
         return coalesced_list
 
@@ -755,7 +766,7 @@ class TokenizedMarkdown:
         if len(extracted_whitespace) >= 4 and not self.stack[-1].is_paragraph:
             if not self.stack[-1].is_indented_code_block:
                 self.stack.append(IndentedCodeBlockStackToken())
-                new_tokens.append(IndentedCodeBlockMarkdownToken("    "))
+                new_tokens.append(IndentedCodeBlockMarkdownToken(extracted_whitespace))
                 extracted_whitespace = "".rjust(len(extracted_whitespace) - 4)
             new_tokens.append(
                 TextMarkdownToken(line_to_parse[start_index:], extracted_whitespace)

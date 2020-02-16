@@ -1167,7 +1167,7 @@ def test_html_blocks_160():
         "[end-html-block]",
         "[BLANK:]",
         "[icode-block:    ]",
-        "[text:&lt;td&gt;\n      Hi\n    &lt;/td&gt;:]",
+        "[text:&lt;td&gt;\n  Hi\n&lt;/td&gt;:]",
         "[end-icode-block]",
         "[BLANK:]",
         "[html-block]",

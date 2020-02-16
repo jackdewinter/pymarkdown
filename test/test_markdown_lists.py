@@ -667,9 +667,7 @@ def test_list_items_298():
         "[end-para]",
         "[li:2]",
         "[fcode-block:`:3::::]",
-        "[text:b:]",
-        "[BLANK:]",
-        "[BLANK:]",
+        "[text:b\n\n:]",
         "[end-fcode-block]",
         "[li:2]",
         "[para:]",
@@ -985,27 +983,12 @@ def test_list_items_306():
 # TODO - linking text blocks properly if not in paragraph block
 # TODO - [BLANK] and folding lines
 # TODO reverse global replacement of tabs with 4 spaces, inline shouldn't
-# TODO 4.4  "indented code block...minus four spaces of indentation"
-#       - 003 (tabs)
-#       - 008 (tabs)
-#       - 055 (setext)
-#       - 080 (icb)
-#       - 081 (icb)
-#       - 082 (icb)
-#       - 083 (icb)
-#       - 104 (fcb)
-#       - 160 (html)
-#       - 209 (block quote)
-#       - 267 (list blocks)
-# TODO indented code block should have 2 spaces, not 3
-#       - 006 (tabs)
-#       - 007 (tabs)
 # TODO second+ line of paragraph removed leading spaces
 #      "The paragraph’s raw content is formed by concatenating the lines and removing initial and final whitespace."
 #       - 019 (thematic)
 #       - 040 (atx)
 #       - 057 (setext)
-#       - 077 (icb)
+#       - 083 (icb)
 #       - 086 (icb)
 #       - 192 (para)
 #       - 193 (para)
@@ -1016,8 +999,5 @@ def test_list_items_306():
 #       - 046 (atx)
 # TODO atx "Leading and trailing whitespace is ignored in parsing inline content:"
 #       - 037 (atx)
-# TODO "Fences can be indented. If the opening fence is indented, content lines will have equivalent opening indentation removed, if present:"
-#       - 102 (fcb)
-#       - 103 (fcb)
 # TODO Verify correct parsing
 #       - 118 (html)
