@@ -12,6 +12,7 @@ from pymarkdown.markdown_token import (
     AtxHeaderMarkdownToken,
     BlankLineMarkdownToken,
     BlockQuoteMarkdownToken,
+    EndMarkdownToken,
     FencedCodeBlockMarkdownToken,
     HtmlBlockMarkdownToken,
     IndentedCodeBlockMarkdownToken,
@@ -351,6 +352,7 @@ class TokenizedMarkdown:
             if coalesced_results[coalesce_index].is_text and (
                 coalesced_list[-1].is_paragraph
                 or coalesced_list[-1].is_setext
+                or coalesced_list[-1].is_atx_header
                 or coalesced_list[-1].is_code_block
             ):
                 if coalesced_list[-1].is_code_block:
@@ -367,6 +369,11 @@ class TokenizedMarkdown:
                     processed_tokens = self.process_inline_text_block(
                         coalesced_results[coalesce_index].extracted_whitespace
                         + coalesced_results[coalesce_index].token_text
+                    )
+                elif coalesced_list[-1].is_atx_header:
+                    processed_tokens = self.process_inline_text_block(
+                        coalesced_results[coalesce_index].token_text,
+                        coalesced_results[coalesce_index].extracted_whitespace,
                     )
                 else:
                     print(
@@ -457,7 +464,7 @@ class TokenizedMarkdown:
 
         return string_to_append_to
 
-    def process_inline_text_block(self, source_text):
+    def process_inline_text_block(self, source_text, starting_whitespace=""):
         """
         Process a text block for any inline items.
         """
@@ -470,11 +477,13 @@ class TokenizedMarkdown:
 
         next_index = self.index_any_of(source_text, valid_sequence_starts, start_index)
         print("next_index>>" + str(next_index))
+        have_processed_once = False
         while next_index != -1:
 
             new_tokens = None
             new_string = None
             new_index = None
+            have_processed_once = True
 
             current_string = self.append_text(
                 current_string, source_text[start_index:next_index]
@@ -504,8 +513,11 @@ class TokenizedMarkdown:
             )
             if new_tokens:
                 if current_string:
-                    inline_blocks.append(TextMarkdownToken(current_string, ""))
+                    inline_blocks.append(
+                        TextMarkdownToken(current_string, starting_whitespace)
+                    )
                     current_string = ""
+                    starting_whitespace = ""
 
                 inline_blocks.extend(new_tokens)
             current_string = self.append_text(current_string, new_string)
@@ -522,8 +534,8 @@ class TokenizedMarkdown:
             current_string = self.append_text(current_string, source_text[start_index:])
 
         print("xx-end>" + current_string + "<")
-        if current_string:
-            inline_blocks.append(TextMarkdownToken(current_string, ""))
+        if current_string or not have_processed_once:
+            inline_blocks.append(TextMarkdownToken(current_string, starting_whitespace))
         print(">>" + str(inline_blocks) + "<<")
         return inline_blocks
 
@@ -1047,33 +1059,44 @@ class TokenizedMarkdown:
                     end_index,
                     extracted_whitespace_at_end,
                 ) = ParserHelper.extract_whitespace_from_end(remaining_line)
+                remove_trailing_count = 0
                 while (
                     end_index > 0
                     and remaining_line[end_index - 1] == self.atx_character
                 ):
                     end_index = end_index - 1
+                    remove_trailing_count = remove_trailing_count + 1
                 extracted_whitespace_before_end = ""
-                if end_index > 0:
-                    if ParserHelper.is_character_at_index_whitespace(
-                        remaining_line, end_index - 1
-                    ):
-                        remaining_line = remaining_line[:end_index]
-                        (
-                            end_index,
-                            extracted_whitespace_before_end,
-                        ) = ParserHelper.extract_whitespace_from_end(remaining_line)
-                        remaining_line = remaining_line[:end_index]
+                if remove_trailing_count:
+                    if end_index > 0:
+                        if ParserHelper.is_character_at_index_whitespace(
+                            remaining_line, end_index - 1
+                        ):
+                            remaining_line = remaining_line[:end_index]
+                            (
+                                end_index,
+                                extracted_whitespace_before_end,
+                            ) = ParserHelper.extract_whitespace_from_end(remaining_line)
+                            remaining_line = remaining_line[:end_index]
+                        else:
+                            extracted_whitespace_at_end = ""
+                            remove_trailing_count = 0
                     else:
-                        extracted_whitespace_at_end = ""
+                        remaining_line = ""
                 else:
-                    remaining_line = ""
-
+                    extracted_whitespace_at_end = remaining_line[end_index:]
+                    remaining_line = remaining_line[0:end_index]
                 new_tokens.append(
                     AtxHeaderMarkdownToken(
-                        hash_count,
-                        remaining_line,
-                        extracted_whitespace,
-                        extracted_whitespace_at_start,
+                        hash_count, remove_trailing_count, extracted_whitespace,
+                    )
+                )
+                new_tokens.append(
+                    TextMarkdownToken(remaining_line, extracted_whitespace_at_start)
+                )
+                new_tokens.append(
+                    EndMarkdownToken(
+                        "atx",
                         extracted_whitespace_at_end,
                         extracted_whitespace_before_end,
                     )

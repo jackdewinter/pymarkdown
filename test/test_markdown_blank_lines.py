@@ -31,7 +31,9 @@ aaa
         "[end-para]",
         "[BLANK:  ]",
         "[BLANK:]",
-        "[atx:1:aaa:: ::]",
+        "[atx:1:0:]",
+        "[text:aaa: ]",
+        "[end-atx::]",
         "[BLANK:]",
         "[BLANK:  ]",
     ]

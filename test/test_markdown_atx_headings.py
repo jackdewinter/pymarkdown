@@ -20,12 +20,24 @@ def test_atx_headings_032():
 ##### foo
 ###### foo"""
     expected_tokens = [
-        "[atx:1:foo:: ::]",
-        "[atx:2:foo:: ::]",
-        "[atx:3:foo:: ::]",
-        "[atx:4:foo:: ::]",
-        "[atx:5:foo:: ::]",
-        "[atx:6:foo:: ::]",
+        "[atx:1:0:]",
+        "[text:foo: ]",
+        "[end-atx::]",
+        "[atx:2:0:]",
+        "[text:foo: ]",
+        "[end-atx::]",
+        "[atx:3:0:]",
+        "[text:foo: ]",
+        "[end-atx::]",
+        "[atx:4:0:]",
+        "[text:foo: ]",
+        "[end-atx::]",
+        "[atx:5:0:]",
+        "[text:foo: ]",
+        "[end-atx::]",
+        "[atx:6:0:]",
+        "[text:foo: ]",
+        "[end-atx::]",
     ]
 
     # Act
@@ -104,7 +116,7 @@ def test_atx_headings_036():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """# foo *bar* \\*baz\\*"""
-    expected_tokens = ["[atx:1:foo *bar* \\*baz\\*:: ::]"]
+    expected_tokens = ["[atx:1:0:]", "[text:foo *bar* *baz*: ]", "[end-atx::]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -122,7 +134,11 @@ def test_atx_headings_037():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """#                  foo                     """
-    expected_tokens = ["[atx:1:foo                     ::                  ::]"]
+    expected_tokens = [
+        "[atx:1:0:]",
+        "[text:foo:                  ]",
+        "[end-atx:                     :]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -141,7 +157,17 @@ def test_atx_headings_038():
     source_markdown = """ ### foo
   ## foo
    # foo"""
-    expected_tokens = ["[atx:3:foo: : ::]", "[atx:2:foo:  : ::]", "[atx:1:foo:   : ::]"]
+    expected_tokens = [
+        "[atx:3:0: ]",
+        "[text:foo: ]",
+        "[end-atx::]",
+        "[atx:2:0:  ]",
+        "[text:foo: ]",
+        "[end-atx::]",
+        "[atx:1:0:   ]",
+        "[text:foo: ]",
+        "[end-atx::]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -194,7 +220,14 @@ def test_atx_headings_041():
     tokenizer = TokenizedMarkdown()
     source_markdown = """## foo ##
   ###   bar    ###"""
-    expected_tokens = ["[atx:2:foo:: :: ]", "[atx:3:bar:  :   ::    ]"]
+    expected_tokens = [
+        "[atx:2:2:]",
+        "[text:foo: ]",
+        "[end-atx:: ]",
+        "[atx:3:3:  ]",
+        "[text:bar:   ]",
+        "[end-atx::    ]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -212,7 +245,14 @@ def test_atx_headings_042():
     tokenizer = TokenizedMarkdown()
     source_markdown = """# foo ##################################
 ##### foo ##"""
-    expected_tokens = ["[atx:1:foo:: :: ]", "[atx:5:foo:: :: ]"]
+    expected_tokens = [
+        "[atx:1:34:]",
+        "[text:foo: ]",
+        "[end-atx:: ]",
+        "[atx:5:2:]",
+        "[text:foo: ]",
+        "[end-atx:: ]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -229,7 +269,7 @@ def test_atx_headings_043():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """### foo ###     """
-    expected_tokens = ["[atx:3:foo:: :     : ]"]
+    expected_tokens = ["[atx:3:3:]", "[text:foo: ]", "[end-atx:     : ]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -246,7 +286,7 @@ def test_atx_headings_044():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """### foo ### b"""
-    expected_tokens = ["[atx:3:foo ### b:: ::]"]
+    expected_tokens = ["[atx:3:0:]", "[text:foo ### b: ]", "[end-atx::]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -263,7 +303,7 @@ def test_atx_headings_045():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """# foo#"""
-    expected_tokens = ["[atx:1:foo#:: ::]"]
+    expected_tokens = ["[atx:1:0:]", "[text:foo#: ]", "[end-atx::]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -283,9 +323,15 @@ def test_atx_headings_046():
 ## foo #\\##
 # foo \\#"""
     expected_tokens = [
-        "[atx:3:foo \\###:: ::]",
-        "[atx:2:foo #\\##:: ::]",
-        "[atx:1:foo \\#:: ::]",
+        "[atx:3:0:]",
+        "[text:foo ###: ]",
+        "[end-atx::]",
+        "[atx:2:0:]",
+        "[text:foo ###: ]",
+        "[end-atx::]",
+        "[atx:1:0:]",
+        "[text:foo #: ]",
+        "[end-atx::]",
     ]
 
     # Act
@@ -305,7 +351,13 @@ def test_atx_headings_047():
     source_markdown = """****
 ## foo
 ****"""
-    expected_tokens = ["[tbreak:*::****]", "[atx:2:foo:: ::]", "[tbreak:*::****]"]
+    expected_tokens = [
+        "[tbreak:*::****]",
+        "[atx:2:0:]",
+        "[text:foo: ]",
+        "[end-atx::]",
+        "[tbreak:*::****]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -328,7 +380,9 @@ Bar foo"""
         "[para:]",
         "[text:Foo bar:]",
         "[end-para]",
-        "[atx:1:baz:: ::]",
+        "[atx:1:0:]",
+        "[text:baz: ]",
+        "[end-atx::]",
         "[para:]",
         "[text:Bar foo:]",
         "[end-para]",
@@ -353,7 +407,17 @@ def test_atx_headings_049():
 ### ###""".replace(
         "\a", " "
     )
-    expected_tokens = ["[atx:2::: ::]", "[atx:1:::::]", "[atx:3::: ::]"]
+    expected_tokens = [
+        "[atx:2:0:]",
+        "[text:: ]",
+        "[end-atx::]",
+        "[atx:1:0:]",
+        "[text::]",
+        "[end-atx::]",
+        "[atx:3:3:]",
+        "[text:: ]",
+        "[end-atx::]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

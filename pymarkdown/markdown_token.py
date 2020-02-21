@@ -95,6 +95,13 @@ class MarkdownToken:
         return self.token_name == MarkdownToken.token_setext_header
 
     @property
+    def is_atx_header(self):
+        """
+        Returns whether or not the current token is an atx element.
+        """
+        return self.token_name == MarkdownToken.token_atx_header
+
+    @property
     def is_code_block(self):
         """
         Returns whether or not the current token is a code block element.
@@ -223,28 +230,16 @@ class AtxHeaderMarkdownToken(MarkdownToken):
 
     # pylint: disable=too-many-arguments
     def __init__(
-        self,
-        hash_count,
-        remaining_line,
-        extracted_whitespace,
-        extracted_whitespace_at_start,
-        extracted_whitespace_at_end,
-        extracted_whitespace_before_end,
+        self, hash_count, remove_trailing_count, extracted_whitespace,
     ):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_atx_header,
             str(hash_count)
             + ":"
-            + remaining_line
+            + str(remove_trailing_count)
             + ":"
-            + extracted_whitespace
-            + ":"
-            + extracted_whitespace_at_start
-            + ":"
-            + extracted_whitespace_at_end
-            + ":"
-            + extracted_whitespace_before_end,
+            + extracted_whitespace,
         )
 
     # pylint: enable=too-many-arguments

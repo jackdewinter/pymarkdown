@@ -978,14 +978,12 @@ def test_list_items_306():
 # TODO 301, with indented code blocks
 # TODO 270 and check for indent levels after
 
-# TODO go through any case that uses lazy and do un-lazy example
-# TODO - linking text blocks properly if not in paragraph block
-# TODO - [BLANK] and folding lines
 # TODO reverse global replacement of tabs with 4 spaces, inline shouldn't
-# TODO atx backslashes not processed inside of atx
-#       - 036 (atx)
-#       - 046 (atx)
-# TODO atx "Leading and trailing whitespace is ignored in parsing inline content:"
-#       - 037 (atx)
+
+# TODO go through any case that uses lazy and do un-lazy example
 # TODO Verify correct parsing
 #       - 118 (html)
+
+# DONE?
+# TODO - linking text blocks properly if not in paragraph block. DONE?
+# TODO - [BLANK] and folding lines. DONE?

@@ -1431,7 +1431,9 @@ def test_list_blocks_278():
   baz"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[atx:1:Foo:: ::]",
+        "[atx:1:0:]",
+        "[text:Foo: ]",
+        "[end-atx::]",
         "[li:2]",
         "[setext:-:]",
         "[text:Bar:]",

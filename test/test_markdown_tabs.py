@@ -243,7 +243,7 @@ def test_tabs_010():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """#\tFoo"""
-    expected_tokens = ["[atx:1:Foo::    ::]"]
+    expected_tokens = ["[atx:1:0:]", "[text:Foo:    ]", "[end-atx::]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

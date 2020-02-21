@@ -544,7 +544,9 @@ bar
         "[fcode-block:~:3::::]",
         "[text:bar:]",
         "[end-fcode-block]",
-        "[atx:1:baz:: ::]",
+        "[atx:1:0:]",
+        "[text:baz: ]",
+        "[end-atx::]",
     ]
 
     # Act
