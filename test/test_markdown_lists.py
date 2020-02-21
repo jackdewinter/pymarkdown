@@ -978,11 +978,10 @@ def test_list_items_306():
 # TODO 301, with indented code blocks
 # TODO 270 and check for indent levels after
 
-# TODO reverse global replacement of tabs with 4 spaces, inline shouldn't
-
 # TODO go through any case that uses lazy and do un-lazy example
 # TODO Verify correct parsing
 #       - 118 (html)
+# TODO - verify 002, 006, 007
 
 # DONE?
 # TODO - linking text blocks properly if not in paragraph block. DONE?

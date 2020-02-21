@@ -231,7 +231,7 @@ class TokenizedMarkdown:
             print("current_block>>" + str(self.stack[-1]))
             print("---")
 
-            next_line = next_token[0].replace("\t", "    ")
+            next_line = next_token[0]
             tokens_from_line = []
             if not next_line or not next_line.strip():
                 tokens_from_line = self.handle_blank_line(
@@ -366,14 +366,21 @@ class TokenizedMarkdown:
                         )
                     ]
                 elif coalesced_list[-1].is_setext:
-                    processed_tokens = self.process_inline_text_block(
+                    combined_test = (
                         coalesced_results[coalesce_index].extracted_whitespace
                         + coalesced_results[coalesce_index].token_text
                     )
+                    processed_tokens = self.process_inline_text_block(
+                        combined_test.replace("\t", "    ")
+                    )
                 elif coalesced_list[-1].is_atx_header:
                     processed_tokens = self.process_inline_text_block(
-                        coalesced_results[coalesce_index].token_text,
-                        coalesced_results[coalesce_index].extracted_whitespace,
+                        coalesced_results[coalesce_index].token_text.replace(
+                            "\t", "    "
+                        ),
+                        coalesced_results[coalesce_index].extracted_whitespace.replace(
+                            "\t", "    "
+                        ),
                     )
                 else:
                     print(
@@ -384,11 +391,15 @@ class TokenizedMarkdown:
                         + ">>"
                     )
                     coalesced_list[-1].add_whitespace(
-                        coalesced_results[coalesce_index].extracted_whitespace
+                        coalesced_results[coalesce_index].extracted_whitespace.replace(
+                            "\t", "    "
+                        )
                     )
                     print(">>after_add_ws>>" + str(coalesced_list[-1]))
                     processed_tokens = self.process_inline_text_block(
-                        coalesced_results[coalesce_index].token_text
+                        coalesced_results[coalesce_index].token_text.replace(
+                            "\t", "    "
+                        )
                     )
                 coalesced_list.extend(processed_tokens)
             else:
@@ -844,11 +855,16 @@ class TokenizedMarkdown:
 
         new_tokens = []
 
-        if len(extracted_whitespace) >= 4 and not self.stack[-1].is_paragraph:
+        if (
+            ParserHelper.is_length_greater_than_or_equal_to(extracted_whitespace, 4)
+            and not self.stack[-1].is_paragraph
+        ):
             if not self.stack[-1].is_indented_code_block:
                 self.stack.append(IndentedCodeBlockStackToken())
                 new_tokens.append(IndentedCodeBlockMarkdownToken(extracted_whitespace))
-                extracted_whitespace = "".rjust(len(extracted_whitespace) - 4)
+                extracted_whitespace = "".rjust(
+                    ParserHelper.calculate_length(extracted_whitespace) - 4
+                )
             new_tokens.append(
                 TextMarkdownToken(line_to_parse[start_index:], extracted_whitespace)
             )
@@ -866,7 +882,8 @@ class TokenizedMarkdown:
         """
 
         if (
-            len(extracted_whitespace) <= 3 or skip_whitespace_check
+            ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
+            or skip_whitespace_check
         ) and ParserHelper.is_character_at_index_one_of(
             line_to_parse, start_index, self.fenced_code_block_start_characters
         ):
@@ -978,7 +995,8 @@ class TokenizedMarkdown:
         thematic_break_character = None
         end_of_break_index = None
         if (
-            len(extracted_whitespace) <= 3 or skip_whitespace_check
+            ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
+            or skip_whitespace_check
         ) and ParserHelper.is_character_at_index_one_of(
             line_to_parse, start_index, self.thematic_break_characters
         ):
@@ -1026,7 +1044,9 @@ class TokenizedMarkdown:
                 )
             new_tokens.append(
                 ThematicBreakMarkdownToken(
-                    start_char, extracted_whitespace, line_to_parse[start_index:index]
+                    start_char,
+                    extracted_whitespace.replace("\t", "    "),
+                    line_to_parse[start_index:index].replace("\t", "    "),
                 )
             )
         return new_tokens
@@ -1037,7 +1057,9 @@ class TokenizedMarkdown:
         """
 
         new_tokens = []
-        if len(extracted_whitespace) <= 3 and ParserHelper.is_character_at_index(
+        if ParserHelper.is_length_less_than_or_equal_to(
+            extracted_whitespace, 3
+        ) and ParserHelper.is_character_at_index(
             line_to_parse, start_index, self.atx_character
         ):
             hash_count, new_index = ParserHelper.collect_while_character(
@@ -1112,7 +1134,7 @@ class TokenizedMarkdown:
 
         new_tokens = []
         if (
-            len(extracted_whitespace) <= 3
+            ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
             and ParserHelper.is_character_at_index_one_of(
                 line_to_parse, start_index, self.setext_characters
             )
@@ -1363,7 +1385,10 @@ class TokenizedMarkdown:
             adj_ws = extracted_whitespace
 
         if (
-            (len(adj_ws) <= 3 or skip_whitespace_check)
+            (
+                ParserHelper.is_length_less_than_or_equal_to(adj_ws, 3)
+                or skip_whitespace_check
+            )
             and ParserHelper.is_character_at_index_one_of(
                 line_to_parse, start_index, self.ulist_start_characters
             )
@@ -1420,7 +1445,8 @@ class TokenizedMarkdown:
         if adj_ws is None:
             adj_ws = extracted_whitespace
         if (
-            len(adj_ws) <= 3 or skip_whitespace_check
+            ParserHelper.is_length_less_than_or_equal_to(adj_ws, 3)
+            or skip_whitespace_check
         ) and ParserHelper.is_character_at_index_one_of(
             line_to_parse, start_index, string.digits
         ):
@@ -1581,8 +1607,8 @@ class TokenizedMarkdown:
             after_marker_ws_index,
             after_marker_whitespace,
         ) = ParserHelper.extract_whitespace(line_to_parse, start_index + 1)
-        ws_after_marker = len(after_marker_whitespace)
-        ws_before_marker = len(extracted_whitespace)
+        ws_after_marker = ParserHelper.calculate_length(after_marker_whitespace)
+        ws_before_marker = ParserHelper.calculate_length(extracted_whitespace)
 
         print(
             ">>stack_bq_count>>"
@@ -1748,7 +1774,7 @@ class TokenizedMarkdown:
             + str(after_ws_length)
         )
 
-        leading_space_length = len(extracted_whitespace)
+        leading_space_length = ParserHelper.calculate_length(extracted_whitespace)
         is_in_paragraph = self.stack[-1].is_paragraph
 
         started_ulist, _ = self.is_ulist_start(
@@ -1859,7 +1885,7 @@ class TokenizedMarkdown:
 
             old_start_index = self.tokenized_document[token_index].indent_level
 
-            ws_len = len(extracted_whitespace)
+            ws_len = ParserHelper.calculate_length(extracted_whitespace)
             print(
                 "old_start_index>>" + str(old_start_index) + ">>ws_len>>" + str(ws_len)
             )
@@ -1882,7 +1908,9 @@ class TokenizedMarkdown:
         if adj_ws is None:
             adj_ws = extracted_whitespace
 
-        if len(adj_ws) <= 3 and ParserHelper.is_character_at_index(
+        if ParserHelper.is_length_less_than_or_equal_to(
+            adj_ws, 3
+        ) and ParserHelper.is_character_at_index(
             line_to_parse, start_index, self.block_quote_character
         ):
             return True
@@ -2596,7 +2624,9 @@ class TokenizedMarkdown:
         """
 
         new_tokens = []
-        if (len(extracted_whitespace) <= 3) and ParserHelper.is_character_at_index(
+        if (
+            ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
+        ) and ParserHelper.is_character_at_index(
             line_to_parse, start_index, self.html_block_start_character
         ):
             print("HTML-START?")
@@ -2698,7 +2728,11 @@ class TokenizedMarkdown:
             line_to_parse, start_index
         )
 
-        if self.stack[-1].is_indented_code_block and len(extracted_whitespace) <= 3:
+        if self.stack[
+            -1
+        ].is_indented_code_block and ParserHelper.is_length_less_than_or_equal_to(
+            extracted_whitespace, 3
+        ):
             pre_tokens.append(self.stack[-1].generate_close_token())
             del self.stack[-1]
             pre_tokens.extend(self.extract_markdown_tokens_back_to_blank_line())

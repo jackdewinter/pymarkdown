@@ -52,9 +52,9 @@ class ParserHelper:
         Determine if the specified character is valid and a whitespace character.
         """
 
-        return (
-            0 <= index_in_string < len(source_string)
-            and source_string[index_in_string] == " "
+        return 0 <= index_in_string < len(source_string) and (
+            source_string[index_in_string] == " "
+            or source_string[index_in_string] == "\t"
         )
 
     @staticmethod
@@ -238,3 +238,33 @@ class ParserHelper:
             index = index + 1
 
         return index, source_string[start_index:index]
+
+    @staticmethod
+    def calculate_length(source_string):
+        """
+        Calculate an adjusted length for the string.
+        """
+
+        string_length = 0
+        for source_character in source_string:
+            if source_character == "\t":
+                string_length = string_length + 4
+            else:
+                string_length = string_length + 1
+        return string_length
+
+    @staticmethod
+    def is_length_less_than_or_equal_to(source_string, length_limit):
+        """
+        Determine if the adjusted length of the string is less than or equal to the
+        specified limit.
+        """
+        return ParserHelper.calculate_length(source_string) <= length_limit
+
+    @staticmethod
+    def is_length_greater_than_or_equal_to(source_string, length_limit):
+        """
+        Determine if the adjusted length of the string is greater than or equal to the
+        specified limit.
+        """
+        return ParserHelper.calculate_length(source_string) >= length_limit

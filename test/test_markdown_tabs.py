@@ -15,8 +15,8 @@ def test_tabs_001():
     tokenizer = TokenizedMarkdown()
     source_markdown = """\tfoo\tbaz\t\tbim"""
     expected_tokens = [
-        "[icode-block:    ]",
-        "[text:foo    baz        bim:]",
+        "[icode-block:\t]",
+        "[text:foo\tbaz\t\tbim:]",
         "[end-icode-block]",
     ]
 
@@ -36,8 +36,8 @@ def test_tabs_002():
     tokenizer = TokenizedMarkdown()
     source_markdown = """  \tfoo\tbaz\t\tbim"""
     expected_tokens = [
-        "[icode-block:      ]",
-        "[text:foo    baz        bim:  ]",
+        "[icode-block:  \t]",
+        "[text:foo\tbaz\t\tbim:  ]",
         "[end-icode-block]",
     ]
 
@@ -59,7 +59,7 @@ def test_tabs_003():
     ὐ\ta"""
     expected_tokens = [
         "[icode-block:    ]",
-        "[text:a    a\nὐ    a:]",
+        "[text:a\ta\nὐ\ta:]",
         "[end-icode-block]",
     ]
 
@@ -140,8 +140,8 @@ def test_tabs_006():
     source_markdown = """>\t\tfoo"""
     expected_tokens = [
         "[block-quote:]",
-        "[icode-block:       ]",
-        "[text:foo:   ]",
+        "[icode-block:\t]",
+        "[text:foo:]",
         "[end-icode-block]",
         "[end-block-quote]",
     ]
@@ -219,7 +219,7 @@ def test_tabs_009():
         "[para:]",
         "[text:bar:]",
         "[end-para]",
-        "[ulist:-::7:     ]",
+        "[ulist:-::7:\t ]",
         "[para:]",
         "[text:baz:]",
         "[end-para]",
