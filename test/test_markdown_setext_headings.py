@@ -48,7 +48,7 @@ baz*
 ===="""
     expected_tokens = [
         "[setext:=:]",
-        "[text:Foo *bar\nbaz*:]",
+        "[text:Foo *bar\nbaz*::\n]",
         "[end-setext::]",
     ]
 
@@ -71,7 +71,7 @@ baz*\t
 ===="""
     expected_tokens = [
         "[setext:=:  ]",
-        "[text:Foo *bar\nbaz*    :]",
+        "[text:Foo *bar\nbaz*    ::\n]",
         "[end-setext::]",
     ]
 
@@ -201,7 +201,7 @@ def test_setext_headings_057():
     tokenizer = TokenizedMarkdown()
     source_markdown = """Foo
     ---"""
-    expected_tokens = ["[para:\n    ]", "[text:Foo\n---:]", "[end-para]"]
+    expected_tokens = ["[para:\n    ]", "[text:Foo\n---::\n]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -224,7 +224,7 @@ Foo
 --- -"""
     expected_tokens = [
         "[para:\n]",
-        "[text:Foo\n= =:]",
+        "[text:Foo\n= =::\n]",
         "[end-para]",
         "[BLANK:]",
         "[para:]",
@@ -354,7 +354,7 @@ bar
     expected_tokens = [
         "[block-quote:]",
         "[para:\n\n]",
-        "[text:foo\nbar\n===:]",
+        "[text:foo\nbar\n===::\n\n]",
         "[end-para]",
         "[end-block-quote]",
     ]
@@ -426,7 +426,7 @@ def test_setext_headings_065():
     source_markdown = """Foo
 Bar
 ---"""
-    expected_tokens = ["[setext:-:]", "[text:Foo\nBar:]", "[end-setext::]"]
+    expected_tokens = ["[setext:-:]", "[text:Foo\nBar::\n]", "[end-setext::]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -669,7 +669,7 @@ bar
 baz"""
     expected_tokens = [
         "[para:\n]",
-        "[text:Foo\nbar:]",
+        "[text:Foo\nbar::\n]",
         "[end-para]",
         "[BLANK:]",
         "[tbreak:-::---]",
@@ -700,7 +700,7 @@ bar
 baz"""
     expected_tokens = [
         "[para:\n]",
-        "[text:Foo\nbar:]",
+        "[text:Foo\nbar::\n]",
         "[end-para]",
         "[tbreak:*::* * *]",
         "[para:]",
@@ -729,7 +729,7 @@ bar
 baz"""
     expected_tokens = [
         "[para:\n\n\n]",
-        "[text:Foo\nbar\n---\nbaz:]",
+        "[text:Foo\nbar\n---\nbaz::\n\n\n]",
         "[end-para]",
     ]
 

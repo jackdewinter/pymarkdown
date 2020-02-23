@@ -25,6 +25,7 @@ from pymarkdown.markdown_token import (
     TextMarkdownToken,
     ThematicBreakMarkdownToken,
     UnorderedListStartMarkdownToken,
+    HardBreakMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.stack_token import (
@@ -484,7 +485,8 @@ class TokenizedMarkdown:
         inline_blocks = []
         start_index = 0
         current_string = ""
-        valid_sequence_starts = "`\\&"
+        end_string = None
+        valid_sequence_starts = "`\\&\n"
 
         next_index = self.index_any_of(source_text, valid_sequence_starts, start_index)
         print("next_index>>" + str(next_index))
@@ -495,10 +497,9 @@ class TokenizedMarkdown:
             new_string = None
             new_index = None
             have_processed_once = True
+            whitespace_to_add = None
 
-            current_string = self.append_text(
-                current_string, source_text[start_index:next_index]
-            )
+            remaining_line = source_text[start_index:next_index]
 
             if source_text[next_index] == "`":
                 new_string, new_index, new_tokens = self.handle_inline_backtick(
@@ -508,10 +509,16 @@ class TokenizedMarkdown:
                 new_string, new_index = self.handle_inline_backslash(
                     source_text, next_index
                 )
-            else:  # if source_text[next_index] == "&":
+            elif source_text[next_index] == "&":
                 new_string, new_index = self.handle_character_reference(
                     source_text, next_index
                 )
+            else:  # if source_text[next_index] == "\n":
+                new_string, whitespace_to_add, new_index, new_tokens, remaining_line, end_string, current_string = self.handle_line_end(
+                    source_text, next_index, remaining_line, end_string, current_string
+                )
+
+            current_string = self.append_text(current_string, remaining_line)
 
             print(
                 "\nreplace>"
@@ -524,13 +531,19 @@ class TokenizedMarkdown:
             )
             if new_tokens:
                 if current_string:
+                    #assert end_string is None
                     inline_blocks.append(
-                        TextMarkdownToken(current_string, starting_whitespace)
+                        TextMarkdownToken(current_string, starting_whitespace, end_whitespace=end_string)
                     )
                     current_string = ""
                     starting_whitespace = ""
+                    end_string = None
 
                 inline_blocks.extend(new_tokens)
+
+            if whitespace_to_add:
+                end_string = self.modify_end_string(end_string, whitespace_to_add)
+
             current_string = self.append_text(current_string, new_string)
             start_index = new_index
             print("start_index>" + str(start_index) + "<")
@@ -545,10 +558,53 @@ class TokenizedMarkdown:
             current_string = self.append_text(current_string, source_text[start_index:])
 
         print("xx-end>" + current_string + "<")
+        if end_string is not None:
+            print("xx-end-lf>" + end_string.replace("\n", "\\n") + "<")
         if current_string or not have_processed_once:
-            inline_blocks.append(TextMarkdownToken(current_string, starting_whitespace))
+            inline_blocks.append(TextMarkdownToken(current_string, starting_whitespace, end_whitespace=end_string))
         print(">>" + str(inline_blocks) + "<<")
         return inline_blocks
+
+
+    def modify_end_string(self, end_string, removed_end_whitespace):
+        print(">>removed_end_whitespace>>" + str(type(removed_end_whitespace)) + ">>" + removed_end_whitespace + ">>")
+        print(">>>>>>>>>>>>>>>>>>>>>>>>>>>NewLine")
+        if end_string:
+            print(">>end_string>>" + end_string.replace("\n", "\\n")+ ">>")
+        print(">>removed_end_whitespace>>" + removed_end_whitespace.replace("\n", "\\n")+ ">>")
+        if end_string is None:
+            end_string = removed_end_whitespace + "\n"
+        else:
+            end_string = end_string + removed_end_whitespace + "\n"
+        print(">>end_string>>" + end_string.replace("\n", "\\n")+ ">>")
+        return end_string
+
+    def handle_line_end(self, source_text, next_index, remaining_line, end_string, current_string):
+        """
+        Handle the inline case of having the end of line character encountered.
+        """
+
+        new_tokens = []
+
+        _, last_non_whitespace_index = ParserHelper.collect_backwards_while_character(remaining_line, -1, " ")
+        print(">>y>>" + str(last_non_whitespace_index))
+        print(">>current_string>>" + current_string + ">>")
+        removed_end_whitespace = remaining_line[last_non_whitespace_index:]
+        remaining_line = remaining_line[0:last_non_whitespace_index]
+
+        append_to_current_string = "\n"
+        whitespace_to_add = None
+        print(">>len(r_e_w)>>" + str(len(removed_end_whitespace)) + ">>rem>>" + remaining_line + ">>")
+        if len(removed_end_whitespace) == 0 and len(current_string) >= 1 and current_string[len(current_string)-1] == "\\":
+            new_tokens.append(HardBreakMarkdownToken())
+            current_string = current_string[0:-1]
+        elif len(removed_end_whitespace) >= 2:
+            new_tokens.append(HardBreakMarkdownToken())
+            whitespace_to_add = removed_end_whitespace
+        else:
+            end_string = self.modify_end_string(end_string, removed_end_whitespace)
+
+        return append_to_current_string, whitespace_to_add, next_index + 1, new_tokens, remaining_line, end_string, current_string
 
     def handle_inline_backslash(self, source_text, next_index):
         """
@@ -557,7 +613,8 @@ class TokenizedMarkdown:
 
         new_index = next_index + 1
         new_string = ""
-        if new_index >= len(source_text):
+        if new_index >= len(source_text) or \
+            (new_index < len(source_text) and source_text[new_index] == "\n"):
             new_string = "\\"
         else:
             if source_text[new_index] in self.backslash_punctuation:

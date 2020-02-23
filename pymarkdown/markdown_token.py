@@ -23,6 +23,7 @@ class MarkdownToken:
     token_new_list_item = "li"
     token_html_block = "html-block"
     token_inline_code_span = "icode-span"
+    token_inline_hard_break = "hard-break"
 
     def __init__(self, token_name, extra_data=None):
         self.token_name = token_name
@@ -292,12 +293,21 @@ class TextMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the text element.
     """
 
-    def __init__(self, token_text, extracted_whitespace):
+    def __init__(self, token_text, extracted_whitespace, end_whitespace=None):
         self.token_text = token_text
         self.extracted_whitespace = extracted_whitespace
-        MarkdownToken.__init__(
-            self, MarkdownToken.token_text, token_text + ":" + extracted_whitespace
-        )
+        self.end_whitespace = end_whitespace
+        MarkdownToken.__init__(self, MarkdownToken.token_text, "")
+        self.compose_extra_data_field()
+
+    def compose_extra_data_field(self):
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+
+        self.extra_data = self.token_text + ":" + self.extracted_whitespace
+        if self.end_whitespace:
+            self.extra_data = self.extra_data + ":" + self.end_whitespace
 
     def remove_final_whitespace(self):
         """
@@ -344,11 +354,14 @@ class TextMarkdownToken(MarkdownToken):
                 prefix_whitespace = whitespace_present[remove_leading_spaces:]
 
         if whitespace_to_append is not None:
+            print(">>whitespace_to_append>>" + whitespace_to_append + ">>")
+            print(">>self.extracted_whitespace>>" + self.extracted_whitespace + ">>")
             self.extracted_whitespace = (
                 self.extracted_whitespace + "\n" + whitespace_to_append
             )
+            print(">>self.extracted_whitespace>>" + self.extracted_whitespace + ">>")
         self.token_text = self.token_text + "\n" + prefix_whitespace + text_to_combine
-        self.extra_data = self.token_text + ":" + self.extracted_whitespace
+        self.compose_extra_data_field()
 
 
 class BlockQuoteMarkdownToken(MarkdownToken):
@@ -444,5 +457,12 @@ class InlineCodeSpanMarkdownToken(MarkdownToken):
     def __init__(self, span_text):
         MarkdownToken.__init__(self, MarkdownToken.token_inline_code_span, span_text)
 
+class HardBreakMarkdownToken(MarkdownToken):
+    """
+    Class to provide for an encapsulation of the inline hard line break element.
+    """
+
+    def __init__(self):
+        MarkdownToken.__init__(self, MarkdownToken.token_inline_hard_break)
 
 # pylint: enable=too-few-public-methods

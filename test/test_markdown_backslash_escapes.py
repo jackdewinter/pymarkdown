@@ -75,7 +75,7 @@ def test_backslash_escapes_310():
 * not a list
 # not a heading
 [foo]: /url &quot;not a reference&quot;
-&amp;ouml; not a character entity:]""",
+&amp;ouml; not a character entity::\n\n\n\n\n\n\n\n]""",
         "[end-para]",
     ]
 
@@ -119,18 +119,12 @@ def test_backslash_escapes_312():
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo\\
 bar"""
-    expected_tokens = [
-        "[para:\n]",
-        """[text:foo\\
-bar:]""",
-        "[end-para]",
-    ]
+    expected_tokens =  ['[para:\n]', '[text:foo:]', '[hard-break]', '[text:\nbar:]', '[end-para]']
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO will fail when hard line break added
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 

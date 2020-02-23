@@ -47,11 +47,11 @@ ccc
 ddd"""
     expected_tokens = [
         "[para:\n]",
-        "[text:aaa\nbbb:]",
+        "[text:aaa\nbbb::\n]",
         "[end-para]",
         "[BLANK:]",
         "[para:\n]",
-        "[text:ccc\nddd:]",
+        "[text:ccc\nddd::\n]",
         "[end-para]",
     ]
 
@@ -100,7 +100,7 @@ def test_paragraph_blocks_192():
     tokenizer = TokenizedMarkdown()
     source_markdown = """  aaa
  bbb"""
-    expected_tokens = ["[para:  \n ]", "[text:aaa\nbbb:]", "[end-para]"]
+    expected_tokens = ["[para:  \n ]", "[text:aaa\nbbb::\n]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -121,7 +121,7 @@ def test_paragraph_blocks_193():
                                        ccc"""
     expected_tokens = [
         "[para:\n             \n                                       ]",
-        "[text:aaa\nbbb\nccc:]",
+        "[text:aaa\nbbb\nccc::\n\n]",
         "[end-para]",
     ]
 
@@ -141,7 +141,7 @@ def test_paragraph_blocks_194():
     tokenizer = TokenizedMarkdown()
     source_markdown = """   aaa
 bbb"""
-    expected_tokens = ["[para:   \n]", "[text:aaa\nbbb:]", "[end-para]"]
+    expected_tokens = ["[para:   \n]", "[text:aaa\nbbb::\n]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -186,11 +186,10 @@ def test_paragraph_blocks_196():
 bbb     """.replace(
         "\a", " "
     )
-    expected_tokens = ["[para:\n:     ]", "[text:aaa     \nbbb:]", "[end-para]"]
+    expected_tokens = ['[para:\n:     ]', '[text:aaa:]', '[hard-break]', '[text:\nbbb::     \n]', '[end-para]']
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when hard line breaks is implemented
     assert_if_lists_different(expected_tokens, actual_tokens)

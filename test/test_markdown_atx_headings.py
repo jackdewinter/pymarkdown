@@ -202,7 +202,7 @@ def test_atx_headings_040():
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo
     # bar"""
-    expected_tokens = ["[para:\n    ]", "[text:foo\n# bar:]", "[end-para]"]
+    expected_tokens = ["[para:\n    ]", "[text:foo\n# bar::\n]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

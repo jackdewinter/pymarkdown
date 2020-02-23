@@ -119,7 +119,7 @@ def test_list_items_284():
 14.  The number of doors is 6."""
     expected_tokens = [
         "[para:\n]",
-        "[text:The number of windows in my house is\n14.  The number of doors is 6.:]",
+        "[text:The number of windows in my house is\n14.  The number of doors is 6.::\n]",
         "[end-para]",
     ]
 
@@ -451,7 +451,7 @@ def test_list_items_292():
         "[end-para]",
         "[li:5]",
         "[para:\n  ]",
-        "[text:d\n- e:]",
+        "[text:d\n- e::\n]",
         "[end-para]",
         "[end-ulist]",
     ]
@@ -977,12 +977,13 @@ def test_list_items_306():
 # TODO 301, but with extra levels of block quotes
 # TODO 301, with indented code blocks
 # TODO 270 and check for indent levels after
+# TODO 670 - hard/soft line break with code span
 
 # TODO go through any case that uses lazy and do un-lazy example
 # TODO Verify correct parsing
 #       - 118 (html)
 # TODO - verify 002, 006, 007
-
+# TODO - foo \, what happens
 # DONE?
 # TODO - linking text blocks properly if not in paragraph block. DONE?
 # TODO - [BLANK] and folding lines. DONE?

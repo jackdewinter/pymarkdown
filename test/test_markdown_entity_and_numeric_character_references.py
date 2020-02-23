@@ -22,7 +22,7 @@ def test_character_references_321():
 &ClockwiseContourIntegral; &ngE;"""
     expected_tokens = [
         "[para:\n\n]",
-        "[text:\u00A0 &amp; © Æ Ď\n¾ ℋ ⅆ\n∲ ≧̸:]",
+        "[text:\u00A0 &amp; © Æ Ď\n¾ ℋ ⅆ\n∲ ≧̸::\n\n]",
         "[end-para]",
     ]
 
@@ -88,7 +88,7 @@ def test_character_references_324():
 &ThisIsNotDefined; &hi?;"""
     expected_tokens = [
         "[para:\n\n\n]",
-        "[text:&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#87654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;:]",
+        "[text:&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#87654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;::\n\n\n]",
         "[end-para]",
     ]
 
@@ -311,7 +311,7 @@ def test_character_references_333():
 *foo*"""
     expected_tokens = [
         "[para:\n]",
-        "[text:*foo*\n*foo*:]",
+        "[text:*foo*\n*foo*::\n]",
         "[end-para]",
     ]
 

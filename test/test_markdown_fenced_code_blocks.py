@@ -459,7 +459,7 @@ aaa"""
         "[para:\n]",
         "[icode-span: ]",
         """[text:
-aaa:]""",
+aaa::\n]""",
         "[end-para]",
     ]
 
@@ -637,7 +637,7 @@ foo"""
         "[para:\n]",
         "[icode-span:aa]",
         """[text:
-foo:]""",
+foo::\n]""",
         "[end-para]",
     ]
 

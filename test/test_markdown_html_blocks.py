@@ -29,7 +29,7 @@ _world_.
         "[BLANK:]",
         "[para:\n]",
         """[text:_world_.
-&lt;/pre&gt;:]""",
+&lt;/pre&gt;::\n]""",
         "[end-para]",
         "[html-block]",
         "[text:</td></tr></table>:]",
@@ -1024,7 +1024,7 @@ baz"""
         "[para:\n\n]",
         """[text:Foo
 &lt;a href=&quot;bar&quot;&gt;
-baz:]""",
+baz::\n\n]""",
         "[end-para]",
     ]
 
@@ -1281,7 +1281,7 @@ def test_html_blocks_cov3():
 </x-table>"""
     expected_tokens = [
         "[para:\n]",
-        "[text:&lt;!bad&gt;\n&lt;/x-table&gt;:]",
+        "[text:&lt;!bad&gt;\n&lt;/x-table&gt;::\n]",
         "[end-para]",
     ]
 
@@ -1304,7 +1304,7 @@ bad>
 </x-table>"""
     expected_tokens = [
         "[para:\n\n]",
-        "[text:&lt;\nbad&gt;\n&lt;/x-table&gt;:]",
+        "[text:&lt;\nbad&gt;\n&lt;/x-table&gt;::\n\n]",
         "[end-para]",
     ]
 

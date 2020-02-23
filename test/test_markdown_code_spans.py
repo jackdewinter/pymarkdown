@@ -145,8 +145,7 @@ def test_code_spans_344():
     expected_tokens = [
         "[para:\n]",
         "[icode-span: ]",
-        """[text:
-:]""",
+        "[text:\n::\n]",
         "[icode-span:  ]",
         "[end-para]",
     ]
