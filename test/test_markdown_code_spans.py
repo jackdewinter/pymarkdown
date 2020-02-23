@@ -434,12 +434,7 @@ def test_code_spans_356():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<http://foo.bar.`baz>`"""
-    expected_tokens = [
-        "[para:]",
-        "[text:&lt;http://foo.bar.:]",
-        "[icode-span:baz&gt;]",
-        "[end-para]",
-    ]
+    expected_tokens = ['[para:]', '[uri-autolink:http://foo.bar.`baz]', '[text:`:]', '[end-para]']
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

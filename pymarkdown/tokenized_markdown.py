@@ -6,6 +6,7 @@ import json
 import os
 import string
 import sys
+import re
 
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.markdown_token import (
@@ -26,6 +27,8 @@ from pymarkdown.markdown_token import (
     ThematicBreakMarkdownToken,
     UnorderedListStartMarkdownToken,
     HardBreakMarkdownToken,
+    UriAutolinkMarkdownToken,
+    EmailAutolinkMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.stack_token import (
@@ -151,6 +154,9 @@ class TokenizedMarkdown:
         self.backslash_punctuation = "!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~\\"
         self.resource_path = os.path.join(os.path.split(__file__)[0], "resources")
         self.entity_map = None
+        self.valid_scheme_characters = string.ascii_letters + string.digits + ".-+"
+        self.valid_email_regex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+        self.html_character_escape_map = {"<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;"}
 
     def load_entity_map(self):
         """
@@ -450,25 +456,23 @@ class TokenizedMarkdown:
             current_string = current_string + source_text[start_index:]
         return current_string
 
-    @classmethod
-    def append_text(cls, string_to_append_to, text_to_append):
+    def append_text(self, string_to_append_to, text_to_append):
         """
         Append the text to the given string, doing any needed encoding as we go.
         """
 
-        escape_map = {"<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;"}
         start_index = 0
-        next_index = cls.index_any_of(text_to_append, escape_map.keys(), start_index)
+        next_index = self.index_any_of(text_to_append, self.html_character_escape_map.keys(), start_index)
         while next_index != -1:
             string_to_append_to = (
                 string_to_append_to
                 + text_to_append[start_index:next_index]
-                + escape_map[text_to_append[next_index]]
+                + self.html_character_escape_map[text_to_append[next_index]]
             )
 
             start_index = next_index + 1
-            next_index = cls.index_any_of(
-                text_to_append, escape_map.keys(), start_index
+            next_index = self.index_any_of(
+                text_to_append, self.html_character_escape_map.keys(), start_index
             )
 
         if start_index < len(text_to_append):
@@ -486,7 +490,7 @@ class TokenizedMarkdown:
         start_index = 0
         current_string = ""
         end_string = None
-        valid_sequence_starts = "`\\&\n"
+        valid_sequence_starts = "`\\&\n<"
 
         next_index = self.index_any_of(source_text, valid_sequence_starts, start_index)
         print("next_index>>" + str(next_index))
@@ -511,6 +515,10 @@ class TokenizedMarkdown:
                 )
             elif source_text[next_index] == "&":
                 new_string, new_index = self.handle_character_reference(
+                    source_text, next_index
+                )
+            elif source_text[next_index] == "<":
+                new_string, new_index, new_tokens = self.handle_angle_brackets(
                     source_text, next_index
                 )
             else:  # if source_text[next_index] == "\n":
@@ -768,6 +776,42 @@ class TokenizedMarkdown:
             else:
                 new_string = "&"
         return new_string, new_index
+
+    def parse_valid_uri_autolink(self, text_to_parse):
+        uri_scheme = ""
+        if "<" not in text_to_parse and text_to_parse[0] in string.ascii_letters:
+            path_index, uri_scheme = ParserHelper.collect_while_one_of_characters(text_to_parse, 1, self.valid_scheme_characters)
+            uri_scheme = text_to_parse[0] + uri_scheme
+        if len(uri_scheme) >= 2 and len(uri_scheme) <= 32 and path_index < len(text_to_parse) and text_to_parse[path_index] == ":":
+            path_index = path_index + 1
+            while path_index < len(text_to_parse):
+                if ord(text_to_parse[path_index]) <= 32:
+                    break
+                path_index = path_index + 1
+            if path_index == len(text_to_parse):
+                return UriAutolinkMarkdownToken(text_to_parse)
+        return None
+
+    def parse_valid_email_autolink(self, text_to_parse):
+        if re.match(self.valid_email_regex, text_to_parse):
+            return EmailAutolinkMarkdownToken(text_to_parse)
+        else:
+            return None
+
+    def handle_angle_brackets(self, source_text, next_index):
+        closing_index = source_text.find(">", next_index)
+        new_token = None
+        if closing_index != -1 and closing_index != (next_index + 1):
+            between_brackets = source_text[next_index + 1:closing_index]
+            print(">>between_brackets>>" + between_brackets + ">>")
+            new_token = self.parse_valid_uri_autolink(between_brackets)
+            if not new_token:
+                new_token = self.parse_valid_email_autolink(between_brackets)
+
+        if new_token:
+            return "", closing_index + 1, [new_token]
+        else:
+            return "<", next_index + 1, None
 
     # pylint: disable=too-many-arguments
     def close_open_blocks(

@@ -197,17 +197,12 @@ def test_backslash_escapes_316():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<http://example.com?find=\\*>"""
-    expected_tokens = [
-        "[para:]",
-        "[text:&lt;http://example.com?find=*&gt;:]",
-        "[end-para]",
-    ]
+    expected_tokens = ['[para:]', '[uri-autolink:http://example.com?find=\\*]', '[end-para]']
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO will fail when autolinks break added
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
