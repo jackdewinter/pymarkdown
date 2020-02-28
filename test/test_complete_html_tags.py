@@ -16,12 +16,13 @@ def test_simple_complete_html_end_tag():
     expected_is_valid = True
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_end_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_end_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 1
 
 
 def test_simple_complete_html_end_tag_with_invalid_tag_name():
@@ -36,12 +37,13 @@ def test_simple_complete_html_end_tag_with_invalid_tag_name():
     expected_is_valid = False
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_end_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_end_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 1
 
 
 def test_simple_complete_html_end_tag_with_whitespace():
@@ -56,12 +58,13 @@ def test_simple_complete_html_end_tag_with_whitespace():
     expected_is_valid = True
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_end_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_end_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 2
 
 
 def test_complete_html_end_tag_with_bad_attribute():
@@ -76,12 +79,13 @@ def test_complete_html_end_tag_with_bad_attribute():
     expected_is_valid = False
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_end_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_end_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 2
 
 
 def test_complete_html_end_tag_with_no_more_string():
@@ -96,12 +100,13 @@ def test_complete_html_end_tag_with_no_more_string():
     expected_is_valid = False
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_end_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_end_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 1
 
 
 def test_simple_complete_html_start_tag_with_no_attributes():
@@ -116,12 +121,13 @@ def test_simple_complete_html_start_tag_with_no_attributes():
     expected_is_valid = True
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 1
 
 
 def test_simple_complete_html_start_tag_with_bad_tag_name():
@@ -136,12 +142,13 @@ def test_simple_complete_html_start_tag_with_bad_tag_name():
     expected_is_valid = False
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 1
 
 
 def test_simple_complete_html_start_tag_with_no_attributes_and_whitespace():
@@ -156,12 +163,13 @@ def test_simple_complete_html_start_tag_with_no_attributes_and_whitespace():
     expected_is_valid = True
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 2
 
 
 def test_complete_html_start_tag_with_single_no_value_attributes():
@@ -176,12 +184,13 @@ def test_complete_html_start_tag_with_single_no_value_attributes():
     expected_is_valid = True
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 6
 
 
 def test_complete_html_start_tag_with_invalidly_named_no_value_attributes():
@@ -196,12 +205,13 @@ def test_complete_html_start_tag_with_invalidly_named_no_value_attributes():
     expected_is_valid = False
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 1
 
 
 def test_complete_html_start_tag_with_single_no_value_attributes_and_whitespace():
@@ -216,12 +226,13 @@ def test_complete_html_start_tag_with_single_no_value_attributes_and_whitespace(
     expected_is_valid = True
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 7
 
 
 def test_complete_html_start_tag_with_single_attribute():
@@ -236,12 +247,13 @@ def test_complete_html_start_tag_with_single_attribute():
     expected_is_valid = True
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 8
 
 
 def test_complete_html_start_tag_with_single_attribute_with_bad_value():
@@ -256,12 +268,13 @@ def test_complete_html_start_tag_with_single_attribute_with_bad_value():
     expected_is_valid = False
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 1
 
 
 def test_complete_html_start_tag_with_single_attribute_with_whitespace():
@@ -276,12 +289,13 @@ def test_complete_html_start_tag_with_single_attribute_with_whitespace():
     expected_is_valid = True
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 13
 
 
 def test_complete_html_start_tag_with_multiple_attributes():
@@ -296,12 +310,13 @@ def test_complete_html_start_tag_with_multiple_attributes():
     expected_is_valid = True
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 32
 
 
 def test_complete_html_start_tag_with_self_closing_tag():
@@ -316,12 +331,13 @@ def test_complete_html_start_tag_with_self_closing_tag():
     expected_is_valid = True
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 7
 
 
 def test_complete_html_start_tag_with_normal_opening_tag():
@@ -336,9 +352,10 @@ def test_complete_html_start_tag_with_normal_opening_tag():
     expected_is_valid = True
 
     # Act
-    actual_is_valid = HtmlHelper.is_complete_html_start_tag(
+    actual_is_valid, parse_index = HtmlHelper.is_complete_html_start_tag(
         input_tag_name, string_to_parse, parse_index
     )
 
     # Assert
     assert expected_is_valid == actual_is_valid
+    assert parse_index == 6

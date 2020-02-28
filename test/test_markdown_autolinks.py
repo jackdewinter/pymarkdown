@@ -15,13 +15,14 @@ def test_autolinks_602():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<http://foo.bar.baz>"""
-    expected_tokens = ['[para:]', '[uri-autolink:http://foo.bar.baz]', '[end-para]']
+    expected_tokens = ["[para:]", "[uri-autolink:http://foo.bar.baz]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_603():
     """
@@ -31,13 +32,18 @@ def test_autolinks_603():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<http://foo.bar.baz/test?q=hello&id=22&boolean>"""
-    expected_tokens = ['[para:]', '[uri-autolink:http://foo.bar.baz/test?q=hello&id=22&boolean]', '[end-para]']
+    expected_tokens = [
+        "[para:]",
+        "[uri-autolink:http://foo.bar.baz/test?q=hello&id=22&boolean]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_604():
     """
@@ -47,13 +53,14 @@ def test_autolinks_604():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<irc://foo.bar:2233/baz>"""
-    expected_tokens = ['[para:]', '[uri-autolink:irc://foo.bar:2233/baz]', '[end-para]']
+    expected_tokens = ["[para:]", "[uri-autolink:irc://foo.bar:2233/baz]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_605():
     """
@@ -63,7 +70,7 @@ def test_autolinks_605():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<MAILTO:FOO@BAR.BAZ>"""
-    expected_tokens = ['[para:]', '[uri-autolink:MAILTO:FOO@BAR.BAZ]', '[end-para]']
+    expected_tokens = ["[para:]", "[uri-autolink:MAILTO:FOO@BAR.BAZ]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -80,13 +87,14 @@ def test_autolinks_606():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<a+b+c:d>"""
-    expected_tokens = ['[para:]', '[uri-autolink:a+b+c:d]', '[end-para]']
+    expected_tokens = ["[para:]", "[uri-autolink:a+b+c:d]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_607():
     """
@@ -96,13 +104,18 @@ def test_autolinks_607():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<made-up-scheme://foo,bar>"""
-    expected_tokens = ['[para:]', '[uri-autolink:made-up-scheme://foo,bar]', '[end-para]']
+    expected_tokens = [
+        "[para:]",
+        "[uri-autolink:made-up-scheme://foo,bar]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_608():
     """
@@ -112,13 +125,14 @@ def test_autolinks_608():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<http://../>"""
-    expected_tokens = ['[para:]', '[uri-autolink:http://../]', '[end-para]']
+    expected_tokens = ["[para:]", "[uri-autolink:http://../]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_609():
     """
@@ -128,13 +142,14 @@ def test_autolinks_609():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<localhost:5001/foo>"""
-    expected_tokens = ['[para:]', '[uri-autolink:localhost:5001/foo]', '[end-para]']
+    expected_tokens = ["[para:]", "[uri-autolink:localhost:5001/foo]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_610():
     """
@@ -144,13 +159,18 @@ def test_autolinks_610():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<http://foo.bar/baz bim>"""
-    expected_tokens = ['[para:]', '[text:&lt;http://foo.bar/baz bim&gt;:]', '[end-para]']
+    expected_tokens = [
+        "[para:]",
+        "[text:&lt;http://foo.bar/baz bim&gt;:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_611():
     """
@@ -160,13 +180,18 @@ def test_autolinks_611():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<http://example.com/\\[\\>"""
-    expected_tokens = ['[para:]', '[uri-autolink:http://example.com/\\[\\]', '[end-para]']
+    expected_tokens = [
+        "[para:]",
+        "[uri-autolink:http://example.com/\\[\\]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_612():
     """
@@ -176,13 +201,14 @@ def test_autolinks_612():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<foo@bar.example.com>"""
-    expected_tokens = ['[para:]', '[email-autolink:foo@bar.example.com]', '[end-para]']
+    expected_tokens = ["[para:]", "[email-autolink:foo@bar.example.com]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_613():
     """
@@ -192,13 +218,18 @@ def test_autolinks_613():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<foo+special@Bar.baz-bar0.com>"""
-    expected_tokens = ['[para:]', '[email-autolink:foo+special@Bar.baz-bar0.com]', '[end-para]']
+    expected_tokens = [
+        "[para:]",
+        "[email-autolink:foo+special@Bar.baz-bar0.com]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_614():
     """
@@ -208,13 +239,14 @@ def test_autolinks_614():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<foo\\+@bar.example.com>"""
-    expected_tokens = ['[para:]', '[text:&lt;foo+@bar.example.com&gt;:]', '[end-para]']
+    expected_tokens = ["[para:]", "[text:&lt;foo+@bar.example.com&gt;:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_615():
     """
@@ -224,13 +256,14 @@ def test_autolinks_615():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<>"""
-    expected_tokens = ['[para:]', '[text:&lt;&gt;:]', '[end-para]']
+    expected_tokens = ["[para:]", "[text:&lt;&gt;:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_616():
     """
@@ -240,13 +273,14 @@ def test_autolinks_616():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """< http://foo.bar >"""
-    expected_tokens = ['[para:]', '[text:&lt; http://foo.bar &gt;:]', '[end-para]']
+    expected_tokens = ["[para:]", "[text:&lt; http://foo.bar &gt;:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_617():
     """
@@ -256,13 +290,14 @@ def test_autolinks_617():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<m:abc>"""
-    expected_tokens = ['[para:]', '[text:&lt;m:abc&gt;:]', '[end-para]']
+    expected_tokens = ["[para:]", "[text:&lt;m:abc&gt;:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_618():
     """
@@ -272,13 +307,14 @@ def test_autolinks_618():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<foo.bar.baz>"""
-    expected_tokens = ['[para:]', '[text:&lt;foo.bar.baz&gt;:]', '[end-para]']
+    expected_tokens = ["[para:]", "[text:&lt;foo.bar.baz&gt;:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_619():
     """
@@ -288,13 +324,14 @@ def test_autolinks_619():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """http://example.com"""
-    expected_tokens = ['[para:]', '[text:http://example.com:]', '[end-para]']
+    expected_tokens = ["[para:]", "[text:http://example.com:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_autolinks_620():
     """
@@ -304,7 +341,7 @@ def test_autolinks_620():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo@bar.example.com"""
-    expected_tokens = ['[para:]', '[text:foo@bar.example.com:]', '[end-para]']
+    expected_tokens = ["[para:]", "[text:foo@bar.example.com:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

@@ -113,6 +113,26 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
+    def extract_any_whitespace(source_string, start_index):
+        """
+        From the start_index, continue extracting whitespace while we have it.
+
+        Returns the index of the first non-whitespace character and any extracted
+        whitespace in a tuple.
+        """
+
+        if not 0 <= start_index <= len(source_string):
+            return None, None
+
+        index = start_index
+        while ParserHelper.is_character_at_index_one_of(
+            source_string, index, " \x09\x0a\x0b\x0c\x0d"
+        ):
+            index = index + 1
+
+        return index, source_string[start_index:index]
+
+    @staticmethod
     def extract_whitespace_from_end(source_string):
         """
         From the end of the string, continue extracting whitespace while we have it.

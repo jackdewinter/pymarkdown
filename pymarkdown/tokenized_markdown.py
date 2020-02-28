@@ -4,31 +4,32 @@ Module to provide a tokenization of a markdown-encoded string.
 """
 import json
 import os
+import re
 import string
 import sys
-import re
 
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.markdown_token import (
     AtxHeaderMarkdownToken,
     BlankLineMarkdownToken,
     BlockQuoteMarkdownToken,
+    EmailAutolinkMarkdownToken,
     EndMarkdownToken,
     FencedCodeBlockMarkdownToken,
+    HardBreakMarkdownToken,
     HtmlBlockMarkdownToken,
     IndentedCodeBlockMarkdownToken,
     InlineCodeSpanMarkdownToken,
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
     ParagraphMarkdownToken,
+    RawHtmlMarkdownToken,
     SetextHeaderEndMarkdownToken,
     SetextHeaderMarkdownToken,
     TextMarkdownToken,
     ThematicBreakMarkdownToken,
     UnorderedListStartMarkdownToken,
-    HardBreakMarkdownToken,
     UriAutolinkMarkdownToken,
-    EmailAutolinkMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.stack_token import (
@@ -151,12 +152,25 @@ class TokenizedMarkdown:
             "track",
             "ul",
         ]
+        self.valid_tag_name_start = string.ascii_letters
+        self.valid_tag_name_characters = string.ascii_letters + string.digits + "-"
+        self.tag_attribute_name_start = string.ascii_letters + "_:"
+        self.tag_attribute_name_characters = (
+            string.ascii_letters + string.digits + "_.:-"
+        )
+        self.unquoted_attribute_value_stop = "\"'=<>`" + " \x09\x0a\x0b\x0c\x0d"
+
         self.backslash_punctuation = "!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~\\"
         self.resource_path = os.path.join(os.path.split(__file__)[0], "resources")
         self.entity_map = None
         self.valid_scheme_characters = string.ascii_letters + string.digits + ".-+"
         self.valid_email_regex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
-        self.html_character_escape_map = {"<": "&lt;", ">": "&gt;", "&": "&amp;", '"': "&quot;"}
+        self.html_character_escape_map = {
+            "<": "&lt;",
+            ">": "&gt;",
+            "&": "&amp;",
+            '"': "&quot;",
+        }
 
     def load_entity_map(self):
         """
@@ -462,7 +476,9 @@ class TokenizedMarkdown:
         """
 
         start_index = 0
-        next_index = self.index_any_of(text_to_append, self.html_character_escape_map.keys(), start_index)
+        next_index = self.index_any_of(
+            text_to_append, self.html_character_escape_map.keys(), start_index
+        )
         while next_index != -1:
             string_to_append_to = (
                 string_to_append_to
@@ -522,8 +538,16 @@ class TokenizedMarkdown:
                     source_text, next_index
                 )
             else:  # if source_text[next_index] == "\n":
-                new_string, whitespace_to_add, new_index, new_tokens, remaining_line, end_string, current_string = self.handle_line_end(
-                    source_text, next_index, remaining_line, end_string, current_string
+                (
+                    new_string,
+                    whitespace_to_add,
+                    new_index,
+                    new_tokens,
+                    remaining_line,
+                    end_string,
+                    current_string,
+                ) = self.handle_line_end(
+                    next_index, remaining_line, end_string, current_string
                 )
 
             current_string = self.append_text(current_string, remaining_line)
@@ -539,9 +563,13 @@ class TokenizedMarkdown:
             )
             if new_tokens:
                 if current_string:
-                    #assert end_string is None
+                    # assert end_string is None
                     inline_blocks.append(
-                        TextMarkdownToken(current_string, starting_whitespace, end_whitespace=end_string)
+                        TextMarkdownToken(
+                            current_string,
+                            starting_whitespace,
+                            end_whitespace=end_string,
+                        )
                     )
                     current_string = ""
                     starting_whitespace = ""
@@ -554,47 +582,61 @@ class TokenizedMarkdown:
 
             current_string = self.append_text(current_string, new_string)
             start_index = new_index
-            print("start_index>" + str(start_index) + "<")
-            print("\nreplace-after>" + current_string + "<")
-
             next_index = self.index_any_of(
                 source_text, valid_sequence_starts, start_index
             )
-            print("next_index2>>" + str(next_index))
 
         if start_index < len(source_text):
             current_string = self.append_text(current_string, source_text[start_index:])
 
-        print("xx-end>" + current_string + "<")
         if end_string is not None:
             print("xx-end-lf>" + end_string.replace("\n", "\\n") + "<")
         if current_string or not have_processed_once:
-            inline_blocks.append(TextMarkdownToken(current_string, starting_whitespace, end_whitespace=end_string))
+            inline_blocks.append(
+                TextMarkdownToken(
+                    current_string, starting_whitespace, end_whitespace=end_string
+                )
+            )
         print(">>" + str(inline_blocks) + "<<")
         return inline_blocks
 
-
-    def modify_end_string(self, end_string, removed_end_whitespace):
-        print(">>removed_end_whitespace>>" + str(type(removed_end_whitespace)) + ">>" + removed_end_whitespace + ">>")
+    @classmethod
+    def modify_end_string(cls, end_string, removed_end_whitespace):
+        """
+        Modify the string at the end of the paragraph.
+        """
+        print(
+            ">>removed_end_whitespace>>"
+            + str(type(removed_end_whitespace))
+            + ">>"
+            + removed_end_whitespace
+            + ">>"
+        )
         print(">>>>>>>>>>>>>>>>>>>>>>>>>>>NewLine")
         if end_string:
-            print(">>end_string>>" + end_string.replace("\n", "\\n")+ ">>")
-        print(">>removed_end_whitespace>>" + removed_end_whitespace.replace("\n", "\\n")+ ">>")
+            print(">>end_string>>" + end_string.replace("\n", "\\n") + ">>")
+        print(
+            ">>removed_end_whitespace>>"
+            + removed_end_whitespace.replace("\n", "\\n")
+            + ">>"
+        )
         if end_string is None:
             end_string = removed_end_whitespace + "\n"
         else:
             end_string = end_string + removed_end_whitespace + "\n"
-        print(">>end_string>>" + end_string.replace("\n", "\\n")+ ">>")
+        print(">>end_string>>" + end_string.replace("\n", "\\n") + ">>")
         return end_string
 
-    def handle_line_end(self, source_text, next_index, remaining_line, end_string, current_string):
+    def handle_line_end(self, next_index, remaining_line, end_string, current_string):
         """
         Handle the inline case of having the end of line character encountered.
         """
 
         new_tokens = []
 
-        _, last_non_whitespace_index = ParserHelper.collect_backwards_while_character(remaining_line, -1, " ")
+        _, last_non_whitespace_index = ParserHelper.collect_backwards_while_character(
+            remaining_line, -1, " "
+        )
         print(">>y>>" + str(last_non_whitespace_index))
         print(">>current_string>>" + current_string + ">>")
         removed_end_whitespace = remaining_line[last_non_whitespace_index:]
@@ -602,8 +644,18 @@ class TokenizedMarkdown:
 
         append_to_current_string = "\n"
         whitespace_to_add = None
-        print(">>len(r_e_w)>>" + str(len(removed_end_whitespace)) + ">>rem>>" + remaining_line + ">>")
-        if len(removed_end_whitespace) == 0 and len(current_string) >= 1 and current_string[len(current_string)-1] == "\\":
+        print(
+            ">>len(r_e_w)>>"
+            + str(len(removed_end_whitespace))
+            + ">>rem>>"
+            + remaining_line
+            + ">>"
+        )
+        if (
+            len(removed_end_whitespace) == 0
+            and len(current_string) >= 1
+            and current_string[len(current_string) - 1] == "\\"
+        ):
             new_tokens.append(HardBreakMarkdownToken())
             current_string = current_string[0:-1]
         elif len(removed_end_whitespace) >= 2:
@@ -612,7 +664,15 @@ class TokenizedMarkdown:
         else:
             end_string = self.modify_end_string(end_string, removed_end_whitespace)
 
-        return append_to_current_string, whitespace_to_add, next_index + 1, new_tokens, remaining_line, end_string, current_string
+        return (
+            append_to_current_string,
+            whitespace_to_add,
+            next_index + 1,
+            new_tokens,
+            remaining_line,
+            end_string,
+            current_string,
+        )
 
     def handle_inline_backslash(self, source_text, next_index):
         """
@@ -621,8 +681,9 @@ class TokenizedMarkdown:
 
         new_index = next_index + 1
         new_string = ""
-        if new_index >= len(source_text) or \
-            (new_index < len(source_text) and source_text[new_index] == "\n"):
+        if new_index >= len(source_text) or (
+            new_index < len(source_text) and source_text[new_index] == "\n"
+        ):
             new_string = "\\"
         else:
             if source_text[new_index] in self.backslash_punctuation:
@@ -778,11 +839,22 @@ class TokenizedMarkdown:
         return new_string, new_index
 
     def parse_valid_uri_autolink(self, text_to_parse):
+        """
+        Parse a possible uri autolink and determine if it is valid.
+        """
+
         uri_scheme = ""
         if "<" not in text_to_parse and text_to_parse[0] in string.ascii_letters:
-            path_index, uri_scheme = ParserHelper.collect_while_one_of_characters(text_to_parse, 1, self.valid_scheme_characters)
+            path_index, uri_scheme = ParserHelper.collect_while_one_of_characters(
+                text_to_parse, 1, self.valid_scheme_characters
+            )
             uri_scheme = text_to_parse[0] + uri_scheme
-        if len(uri_scheme) >= 2 and len(uri_scheme) <= 32 and path_index < len(text_to_parse) and text_to_parse[path_index] == ":":
+        if (
+            len(uri_scheme) >= 2
+            and len(uri_scheme) <= 32
+            and path_index < len(text_to_parse)
+            and text_to_parse[path_index] == ":"
+        ):
             path_index = path_index + 1
             while path_index < len(text_to_parse):
                 if ord(text_to_parse[path_index]) <= 32:
@@ -793,25 +865,239 @@ class TokenizedMarkdown:
         return None
 
     def parse_valid_email_autolink(self, text_to_parse):
+        """
+        Parse a possible email autolink and determine if it is valid.
+        """
         if re.match(self.valid_email_regex, text_to_parse):
             return EmailAutolinkMarkdownToken(text_to_parse)
-        else:
-            return None
+        return None
+
+    @classmethod
+    def process_raw_special(
+        cls, remaining_line, special_start, special_end, do_extra_check=False,
+    ):
+        """
+        Parse a possible raw html special sequence, and return if it is valid.
+        """
+        valid_raw_html = None
+        parse_index = -1
+
+        if remaining_line.startswith(special_start):
+            remaining_line = remaining_line[len(special_start) :]
+            parse_index = remaining_line.find(special_end)
+        if parse_index != -1:
+            remaining_line = remaining_line[0:parse_index]
+            parse_index = parse_index + len(special_start) + len(special_end)
+            if (not do_extra_check) or (
+                not (
+                    remaining_line.startswith(">")
+                    or remaining_line.startswith("->")
+                    or remaining_line.endswith("-")
+                    or "--" in remaining_line
+                )
+            ):
+                valid_raw_html = special_start + remaining_line + special_end[0:-1]
+        return valid_raw_html, parse_index
+
+    def parse_raw_declaration(self, text_to_parse):
+        """
+        Parse a possible raw html declaration sequence, and return if it is valid.
+        """
+
+        valid_raw_html = None
+        if ParserHelper.is_character_at_index_one_of(text_to_parse, 0, "!"):
+            (
+                parse_index,
+                declaration_name,
+            ) = ParserHelper.collect_while_one_of_characters(
+                text_to_parse, 1, self.html_block_4_continued_start
+            )
+            if declaration_name:
+                whitespace_count, _ = ParserHelper.collect_while_character(
+                    text_to_parse, parse_index, " "
+                )
+                if whitespace_count:
+                    valid_raw_html = text_to_parse
+        return valid_raw_html
+
+    def parse_raw_tag_name(self, text_to_parse, start_index):
+        """
+        Parse a HTML tag name from the string.
+        """
+        tag_name = ""
+        if ParserHelper.is_character_at_index_one_of(
+            text_to_parse, start_index, self.valid_tag_name_start
+        ):
+            index = start_index + 1
+            while ParserHelper.is_character_at_index_one_of(
+                text_to_parse, index, self.valid_tag_name_characters
+            ):
+                index = index + 1
+            tag_name = text_to_parse[0:index]
+        return tag_name
+
+    def parse_tag_attributes(self, text_to_parse, start_index):
+        """
+        Handle the parsing of the attributes for an open tag.
+        """
+        parse_index, _ = ParserHelper.collect_while_one_of_characters(
+            text_to_parse, start_index, self.tag_attribute_name_characters
+        )
+        end_name_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
+            text_to_parse, parse_index
+        )
+        if ParserHelper.is_character_at_index(text_to_parse, end_name_index, "="):
+            (
+                value_start_index,
+                extracted_whitespace,
+            ) = ParserHelper.extract_any_whitespace(text_to_parse, end_name_index + 1)
+            if ParserHelper.is_character_at_index_one_of(
+                text_to_parse, value_start_index, "'"
+            ):
+                value_end_index, _ = ParserHelper.collect_until_character(
+                    text_to_parse, value_start_index + 1, "'"
+                )
+                if not ParserHelper.is_character_at_index(
+                    text_to_parse, value_end_index, "'"
+                ):
+                    return None, -1
+                value_end_index = value_end_index + 1
+            elif ParserHelper.is_character_at_index_one_of(
+                text_to_parse, value_start_index, '"'
+            ):
+                value_end_index, _ = ParserHelper.collect_until_character(
+                    text_to_parse, value_start_index + 1, '"'
+                )
+                if not ParserHelper.is_character_at_index(
+                    text_to_parse, value_end_index, '"'
+                ):
+                    return None, -1
+                value_end_index = value_end_index + 1
+            else:
+                value_end_index, _ = ParserHelper.collect_until_one_of_characters(
+                    text_to_parse, value_start_index, self.unquoted_attribute_value_stop
+                )
+            end_name_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
+                text_to_parse, value_end_index
+            )
+
+        return end_name_index, extracted_whitespace
+
+    def parse_raw_open_tag(self, text_to_parse):
+        """
+        Parse the current line as if it is an open tag, and determine if it is valid.
+        """
+
+        end_parse_index = -1
+        valid_raw_html = None
+        tag_name = self.parse_raw_tag_name(text_to_parse, 0)
+        if tag_name:
+            parse_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
+                text_to_parse, len(tag_name)
+            )
+            if extracted_whitespace:
+                while (
+                    extracted_whitespace
+                    and ParserHelper.is_character_at_index_one_of(
+                        text_to_parse, parse_index, self.tag_attribute_name_start
+                    )
+                ):
+                    parse_index, extracted_whitespace = self.parse_tag_attributes(
+                        text_to_parse, parse_index
+                    )
+                    if parse_index is None:
+                        return parse_index, extracted_whitespace
+
+            if ParserHelper.is_character_at_index(text_to_parse, parse_index, "/"):
+                parse_index = parse_index + 1
+
+            if ParserHelper.is_character_at_index(text_to_parse, parse_index, ">"):
+                valid_raw_html = text_to_parse[0:parse_index]
+                end_parse_index = parse_index + 1
+
+        return valid_raw_html, end_parse_index
+
+    def parse_raw_close_tag(self, text_to_parse):
+        """
+        Parse the current line as if it is a close tag, and determine if it is valid.
+        """
+        valid_raw_html = None
+        if ParserHelper.is_character_at_index(text_to_parse, 0, "/"):
+            tag_name = self.parse_raw_tag_name(text_to_parse, 1)
+            if tag_name:
+                parse_index = len(tag_name)
+                if parse_index != len(text_to_parse):
+                    parse_index, _ = ParserHelper.extract_whitespace(
+                        text_to_parse, parse_index
+                    )
+                if parse_index == len(text_to_parse):
+                    valid_raw_html = text_to_parse
+        return valid_raw_html
+
+    def parse_raw_html(self, only_between_angles, remaining_line):
+        """
+        Given an open HTML tag character (<), try the various possibilities for
+        types of tag, and determine if any of them parse validly.
+        """
+
+        valid_raw_html = None
+        remaining_line_parse_index = -1
+
+        valid_raw_html, remaining_line_parse_index = self.parse_raw_open_tag(
+            remaining_line
+        )
+        if not valid_raw_html:
+            valid_raw_html = self.parse_raw_close_tag(only_between_angles)
+        if not valid_raw_html:
+            valid_raw_html, remaining_line_parse_index = self.process_raw_special(
+                remaining_line,
+                self.html_block_2_to_5_start + self.html_block_2_continued_start,
+                self.html_block_2_end,
+                True,
+            )
+        if not valid_raw_html:
+            valid_raw_html, remaining_line_parse_index = self.process_raw_special(
+                remaining_line,
+                self.html_block_3_continued_start,
+                self.html_block_3_end,
+            )
+        if not valid_raw_html:
+            valid_raw_html, remaining_line_parse_index = self.process_raw_special(
+                remaining_line,
+                self.html_block_2_to_5_start + self.html_block_5_continued_start,
+                self.html_block_5_end,
+            )
+        if not valid_raw_html:
+            valid_raw_html = self.parse_raw_declaration(only_between_angles)
+
+        if valid_raw_html:
+            return RawHtmlMarkdownToken(valid_raw_html), remaining_line_parse_index
+        return None, -1
 
     def handle_angle_brackets(self, source_text, next_index):
-        closing_index = source_text.find(">", next_index)
+        """
+        Given an open angle bracket, determine which of the three possibilities it is.
+        """
+        closing_angle_index = source_text.find(">", next_index)
         new_token = None
-        if closing_index != -1 and closing_index != (next_index + 1):
-            between_brackets = source_text[next_index + 1:closing_index]
-            print(">>between_brackets>>" + between_brackets + ">>")
+        if closing_angle_index not in (-1, next_index + 1):
+
+            between_brackets = source_text[next_index + 1 : closing_angle_index]
+            remaining_line = source_text[next_index + 1 :]
+            closing_angle_index = closing_angle_index + 1
             new_token = self.parse_valid_uri_autolink(between_brackets)
             if not new_token:
                 new_token = self.parse_valid_email_autolink(between_brackets)
+            if not new_token:
+                new_token, after_index = self.parse_raw_html(
+                    between_brackets, remaining_line
+                )
+                if after_index != -1:
+                    closing_angle_index = after_index + next_index + 1
 
         if new_token:
-            return "", closing_index + 1, [new_token]
-        else:
-            return "<", next_index + 1, None
+            return "", closing_angle_index, [new_token]
+        return "<", next_index + 1, None
 
     # pylint: disable=too-many-arguments
     def close_open_blocks(
@@ -2658,6 +2944,7 @@ class TokenizedMarkdown:
                 is_end_tag = True
                 print("end")
             print(">>" + str(character_index) + ">>" + str(len(line_to_parse)))
+            print(">>" + line_to_parse[character_index:] + "<<")
             if (
                 character_index < len(line_to_parse)
                 and line_to_parse[character_index] == self.html_tag_end
@@ -2672,17 +2959,36 @@ class TokenizedMarkdown:
                 html_block_type = self.html_block_6
             elif is_end_tag:
                 print("end?")
-                if HtmlHelper.is_complete_html_end_tag(
-                    adjusted_remaining_html_tag, line_to_parse, character_index,
-                ):
+                is_complete, complete_parse_index = HtmlHelper.is_complete_html_end_tag(
+                    adjusted_remaining_html_tag, line_to_parse, character_index
+                )
+                if is_complete:
                     html_block_type = self.html_block_7
+                    character_index = complete_parse_index
                     print("7-end")
             else:
-                if HtmlHelper.is_complete_html_start_tag(
-                    adjusted_remaining_html_tag, line_to_parse, character_index,
-                ):
+                print("7-start?")
+                (
+                    is_complete,
+                    complete_parse_index,
+                ) = HtmlHelper.is_complete_html_start_tag(
+                    adjusted_remaining_html_tag, line_to_parse, character_index
+                )
+                if is_complete:
                     html_block_type = self.html_block_7
+                    character_index = complete_parse_index
                     print("7-start")
+            if html_block_type == self.html_block_7:
+                print("7>>EOL check")
+                new_index, _ = ParserHelper.extract_whitespace(
+                    line_to_parse, character_index
+                )
+                print(">>" + line_to_parse[character_index:] + "<<")
+                if new_index != len(line_to_parse):
+                    html_block_type = None
+                    print("7>>not EOL, reset")
+                else:
+                    print("7>>EOL-->" + html_block_type)
         return html_block_type
 
     def determine_html_block_type(self, line_to_parse, start_index):
@@ -2710,6 +3016,7 @@ class TokenizedMarkdown:
             html_block_type = self.check_for_normal_html_blocks(
                 remaining_html_tag, line_to_parse, character_index
             )
+            print("html_block_type>>" + str(html_block_type))
         if not html_block_type:
             return None, None
         if html_block_type == self.html_block_7:

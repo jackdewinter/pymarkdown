@@ -1,23 +1,26 @@
 """
-https://github.github.com/gfm/#code-spans
+https://github.github.com/gfm/#raw-html
 """
+
 
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
 from .utils import assert_if_lists_different
 
 
-def test_code_spans_338():
+def test_raw_html_632():
     """
-    Test case 338:  This is a simple code span:
+    Test case 632:  Here are some simple open tags:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """`foo`"""
+    source_markdown = """<a><bab><c2c>"""
     expected_tokens = [
         "[para:]",
-        "[icode-span:foo]",
+        "[raw-html:a]",
+        "[raw-html:bab]",
+        "[raw-html:c2c]",
         "[end-para]",
     ]
 
@@ -28,19 +31,15 @@ def test_code_spans_338():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_339():
+def test_raw_html_633():
     """
-    Test case 339:  Here two backticks are used, because the code contains a backtick. This example also illustrates stripping of a single leading and trailing space:
+    Test case 633:  Empty elements:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """`` foo ` bar ``"""
-    expected_tokens = [
-        "[para:]",
-        "[icode-span:foo ` bar]",
-        "[end-para]",
-    ]
+    source_markdown = """<a/><b2/>"""
+    expected_tokens = ["[para:]", "[raw-html:a/]", "[raw-html:b2/]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -49,104 +48,19 @@ def test_code_spans_339():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_340():
+def test_raw_html_634():
     """
-    Test case 340:  This example shows the motivation for stripping leading and trailing spaces:
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    source_markdown = """`  ``  `"""
-    expected_tokens = [
-        "[para:]",
-        "[icode-span: `` ]",
-        "[end-para]",
-    ]
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-
-
-def test_code_spans_341():
-    """
-    Test case 341:  Note that only one space is stripped:
+    Test case 634:  Whitespace is allowed:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """`  ``  `"""
-    expected_tokens = [
-        "[para:]",
-        "[icode-span: `` ]",
-        "[end-para]",
-    ]
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-
-
-def test_code_spans_342():
-    """
-    Test case 342:  The stripping only happens if the space is on both sides of the string:
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    source_markdown = """` a`"""
-    expected_tokens = [
-        "[para:]",
-        "[icode-span: a]",
-        "[end-para]",
-    ]
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-
-
-def test_code_spans_343():
-    """
-    Test case 343:  Only spaces, and not unicode whitespace in general, are stripped in this way:
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    source_markdown = """`\u00A0b\u00A0`"""
-    expected_tokens = [
-        "[para:]",
-        "[icode-span:\u00A0b\u00A0]",
-        "[end-para]",
-    ]
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-
-
-def test_code_spans_344():
-    """
-    Test case 344:  No stripping occurs if the code span contains only spaces:
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    source_markdown = """` `
-`  `"""
+    source_markdown = """<a  /><b2
+data="foo" >"""
     expected_tokens = [
         "[para:\n]",
-        "[icode-span: ]",
-        "[text:\n::\n]",
-        "[icode-span:  ]",
+        "[raw-html:a  /]",
+        '[raw-html:b2\ndata="foo" ]',
         "[end-para]",
     ]
 
@@ -157,89 +71,19 @@ def test_code_spans_344():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_344a():
+def test_raw_html_635():
     """
-    Test case 344a:  Extension of 344 with a whitespace string that is longer than 2.
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    source_markdown = """`   `"""
-    expected_tokens = [
-        "[para:]",
-        "[icode-span:   ]",
-        "[end-para]",
-    ]
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-
-
-def test_code_spans_345():
-    """
-    Test case 345:  (part 1) Line endings are treated like spaces:
+    Test case 635:  With attributes:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """``
-foo
-bar  
-baz
-``"""
-    expected_tokens = [
-        "[para:\n\n\n\n]",
-        "[icode-span:foo bar   baz]",
-        "[end-para]",
-    ]
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-
-
-def test_code_spans_346():
-    """
-    Test case 346:  (part 2) Line endings are treated like spaces:
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    source_markdown = """``
-foo 
-``"""
-    expected_tokens = [
-        "[para:\n\n]",
-        "[icode-span:foo ]",
-        "[end-para]",
-    ]
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-
-
-def test_code_spans_347():
-    """
-    Test case 347:  Interior spaces are not collapsed:
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    source_markdown = """`foo   bar\a
-baz`""".replace(
-        "\a", " "
-    )
+    source_markdown = """<a foo="bar" bam = 'baz <em>"</em>'
+_boolean zoop:33=zoop:33 />"""
     expected_tokens = [
         "[para:\n]",
-        "[icode-span:foo   bar  baz]",
+        """[raw-html:a foo="bar" bam = 'baz <em>"</em>'
+_boolean zoop:33=zoop:33 /]""",
         "[end-para]",
     ]
 
@@ -250,18 +94,18 @@ baz`""".replace(
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_348():
+def test_raw_html_636():
     """
-    Test case 348:  Note that backslash escapes do not work in code spans. All backslashes are treated literally:
+    Test case 636:  Custom tag names can be used:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """`foo\\`bar`"""
+    source_markdown = """Foo <responsive-image src="foo.jpg" />"""
     expected_tokens = [
         "[para:]",
-        "[icode-span:foo\\]",
-        "[text:bar`:]",
+        "[text:Foo :]",
+        '[raw-html:responsive-image src="foo.jpg" /]',
         "[end-para]",
     ]
 
@@ -272,17 +116,34 @@ def test_code_spans_348():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_349():
+def test_raw_html_637():
     """
-    Test case 349:  (part 1) Backslash escapes are never needed, because one can always choose a string of n backtick characters as delimiters, where the code does not contain any strings of exactly n backtick characters.
+    Test case 637:  Illegal tag names, not parsed as HTML:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """``foo`bar``"""
+    source_markdown = """<33> <__>"""
+    expected_tokens = ["[para:]", "[text:&lt;33&gt; &lt;__&gt;:]", "[end-para]"]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_raw_html_638():
+    """
+    Test case 638:  Illegal attribute names:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """<a h*#ref="hi">"""
     expected_tokens = [
         "[para:]",
-        "[icode-span:foo`bar]",
+        "[text:&lt;a h*#ref=&quot;hi&quot;&gt;:]",
         "[end-para]",
     ]
 
@@ -293,17 +154,17 @@ def test_code_spans_349():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_350():
+def test_raw_html_639():
     """
-    Test case 350:  (part 2) Backslash escapes are never needed, because one can always choose a string of n backtick characters as delimiters, where the code does not contain any strings of exactly n backtick characters.
+    Test case 639:  Illegal attribute values:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """` foo `` bar `"""
+    source_markdown = """<a href="hi'> <a href=hi'>"""
     expected_tokens = [
         "[para:]",
-        "[icode-span:foo `` bar]",
+        "[text:&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;:]",
         "[end-para]",
     ]
 
@@ -314,18 +175,17 @@ def test_code_spans_350():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_351():
+def test_raw_html_639a():
     """
-    Test case 351:  Code span backticks have higher precedence than any other inline constructs except HTML tags and autolinks.
+    Test case 639a:  Illegal attribute values:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """*foo`*`"""
+    source_markdown = """<a href='hi"> <a href=hi">"""
     expected_tokens = [
         "[para:]",
-        "[text:*foo:]",
-        "[icode-span:*]",
+        "[text:&lt;a href='hi&quot;&gt; &lt;a href=hi&quot;&gt;:]",
         "[end-para]",
     ]
 
@@ -336,19 +196,20 @@ def test_code_spans_351():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_352():
+def test_raw_html_640():
     """
-    Test case 352:  And this is not parsed as a link:
+    Test case 640:  Illegal whitespace:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """[not a `link](/foo`)"""
+    source_markdown = """< a><
+foo><bar/ >
+<foo bar=baz
+bim!bop />"""
     expected_tokens = [
-        "[para:]",
-        "[text:[not a :]",
-        "[icode-span:link](/foo]",
-        "[text:):]",
+        "[para:\n\n\n]",
+        "[text:&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;\n&lt;foo bar=baz\nbim!bop /&gt;::\n\n\n]",
         "[end-para]",
     ]
 
@@ -359,18 +220,72 @@ def test_code_spans_352():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_353():
+def test_raw_html_641():
     """
-    Test case 353:  Code spans, HTML tags, and autolinks have the same precedence. Thus, this is code:
+    Test case 641:  Missing whitespace:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """`<a href="`">`"""
+    source_markdown = """<a href='bar'title=title>"""
+    expected_tokens = [
+        "[html-block]",
+        "[text:<a href='bar'title=title>:]",
+        "[end-html-block]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_raw_html_642():
+    """
+    Test case 642:  Closing tags:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """</a></foo >"""
+    expected_tokens = ["[para:]", "[raw-html:/a]", "[raw-html:/foo ]", "[end-para]"]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_raw_html_642a():
+    """
+    Test case 642a:  closing tag character without a valid closing tag name
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """</>"""
+    expected_tokens = ["[para:]", "[text:&lt;/&gt;:]", "[end-para]"]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_raw_html_643():
+    """
+    Test case 643:  Illegal attributes in closing tag:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """</a href="foo">"""
     expected_tokens = [
         "[para:]",
-        "[icode-span:&lt;a href=&quot;]",
-        "[text:&quot;&gt;`:]",
+        "[text:&lt;/a href=&quot;foo&quot;&gt;:]",
         "[end-para]",
     ]
 
@@ -381,35 +296,19 @@ def test_code_spans_353():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_354():
+def test_raw_html_644():
     """
-    Test case 354:  But this is an HTML tag:
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    source_markdown = """<a href="`">`"""
-    expected_tokens = ["[para:]", '[raw-html:a href="`"]', "[text:`:]", "[end-para]"]
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-
-
-def test_code_spans_355():
-    """
-    Test case 355:  And this is code:
+    Test case 644:  (part 1) Comments:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """`<http://foo.bar.`baz>`"""
+    source_markdown = """foo <!-- this is a
+comment - with hyphen -->"""
     expected_tokens = [
-        "[para:]",
-        "[icode-span:&lt;http://foo.bar.]",
-        "[text:baz&gt;`:]",
+        "[para:\n]",
+        "[text:foo :]",
+        "[raw-html:!-- this is a\ncomment - with hyphen --]",
         "[end-para]",
     ]
 
@@ -420,40 +319,17 @@ def test_code_spans_355():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_356():
+def test_raw_html_645():
     """
-    Test case 356:  But this is an autolink:
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    source_markdown = """<http://foo.bar.`baz>`"""
-    expected_tokens = [
-        "[para:]",
-        "[uri-autolink:http://foo.bar.`baz]",
-        "[text:`:]",
-        "[end-para]",
-    ]
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    # TODO will fail when autolinks
-    assert_if_lists_different(expected_tokens, actual_tokens)
-
-
-def test_code_spans_357():
-    """
-    Test case 357:  (part 1) When a backtick string is not closed by a matching backtick string, we just have literal backticks:
+    Test case 645:  (part 2) Comments:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """```foo``"""
+    source_markdown = """foo <!-- not a comment -- two hyphens -->"""
     expected_tokens = [
         "[para:]",
-        "[text:```foo``:]",
+        "[text:foo &lt;!-- not a comment -- two hyphens --&gt;:]",
         "[end-para]",
     ]
 
@@ -464,17 +340,23 @@ def test_code_spans_357():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_358():
+def test_raw_html_646():
     """
-    Test case 358:  (part 2) When a backtick string is not closed by a matching backtick string, we just have literal backticks:
+    Test case 646:  Not comments:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """`foo"""
+    source_markdown = """foo <!--> foo -->
+
+foo <!-- foo--->"""
     expected_tokens = [
         "[para:]",
-        "[text:`foo:]",
+        "[text:foo &lt;!--&gt; foo --&gt;:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:foo &lt;!-- foo---&gt;:]",
         "[end-para]",
     ]
 
@@ -485,18 +367,144 @@ def test_code_spans_358():
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
-def test_code_spans_359():
+def test_raw_html_647():
     """
-    Test case 359:  The following case also illustrates the need for opening and closing backtick strings to be equal in length:
+    Test case 647:  Processing instructions:
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """`foo``bar``"""
+    source_markdown = """foo <?php echo $a; ?>"""
     expected_tokens = [
         "[para:]",
-        "[text:`foo:]",
-        "[icode-span:bar]",
+        "[text:foo :]",
+        "[raw-html:?php echo $a; ?]",
+        "[end-para]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_raw_html_648():
+    """
+    Test case 648:  Declarations:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """foo <!ELEMENT br EMPTY>"""
+    expected_tokens = [
+        "[para:]",
+        "[text:foo :]",
+        "[raw-html:!ELEMENT br EMPTY]",
+        "[end-para]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_raw_html_648a():
+    """
+    Test case 648:  Declarations:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """foo <!ELEMENT>"""
+    expected_tokens = ["[para:]", "[text:foo &lt;!ELEMENT&gt;:]", "[end-para]"]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_raw_html_649():
+    """
+    Test case 649:  CDATA sections:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """foo <![CDATA[>&<]]>"""
+    expected_tokens = [
+        "[para:]",
+        "[text:foo :]",
+        "[raw-html:![CDATA[>&<]]]",
+        "[end-para]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_raw_html_650():
+    """
+    Test case 650:  Entity and numeric character references are preserved in HTML attributes:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """foo <a href="&ouml;">"""
+    expected_tokens = [
+        "[para:]",
+        "[text:foo :]",
+        '[raw-html:a href="&ouml;"]',
+        "[end-para]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_raw_html_651():
+    """
+    Test case 651:  (part 1) Backslash escapes do not work in HTML attributes:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """foo <a href="\\*">"""
+    expected_tokens = [
+        "[para:]",
+        "[text:foo :]",
+        '[raw-html:a href="\\*"]',
+        "[end-para]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_raw_html_652():
+    """
+    Test case 652:  (part 2) Backslash escapes do not work in HTML attributes:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """<a href="\\"">"""
+    expected_tokens = [
+        "[para:]",
+        "[text:&lt;a href=&quot;&quot;&quot;&gt;:]",
         "[end-para]",
     ]
 

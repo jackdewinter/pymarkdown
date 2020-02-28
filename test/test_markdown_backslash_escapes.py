@@ -119,7 +119,13 @@ def test_backslash_escapes_312():
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo\\
 bar"""
-    expected_tokens =  ['[para:\n]', '[text:foo:]', '[hard-break]', '[text:\nbar:]', '[end-para]']
+    expected_tokens = [
+        "[para:\n]",
+        "[text:foo:]",
+        "[hard-break]",
+        "[text:\nbar:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -197,7 +203,11 @@ def test_backslash_escapes_316():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<http://example.com?find=\\*>"""
-    expected_tokens = ['[para:]', '[uri-autolink:http://example.com?find=\\*]', '[end-para]']
+    expected_tokens = [
+        "[para:]",
+        "[uri-autolink:http://example.com?find=\\*]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

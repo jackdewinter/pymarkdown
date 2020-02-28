@@ -186,7 +186,13 @@ def test_paragraph_blocks_196():
 bbb     """.replace(
         "\a", " "
     )
-    expected_tokens = ['[para:\n:     ]', '[text:aaa:]', '[hard-break]', '[text:\nbbb::     \n]', '[end-para]']
+    expected_tokens = [
+        "[para:\n:     ]",
+        "[text:aaa:]",
+        "[hard-break]",
+        "[text:\nbbb::     \n]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

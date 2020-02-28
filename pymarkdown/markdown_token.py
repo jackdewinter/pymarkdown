@@ -26,6 +26,7 @@ class MarkdownToken:
     token_inline_hard_break = "hard-break"
     token_inline_uri_autolink = "uri-autolink"
     token_inline_email_autolink = "email-autolink"
+    token_inline_raw_html = "raw-html"
 
     def __init__(self, token_name, extra_data=None):
         self.token_name = token_name
@@ -459,6 +460,7 @@ class InlineCodeSpanMarkdownToken(MarkdownToken):
     def __init__(self, span_text):
         MarkdownToken.__init__(self, MarkdownToken.token_inline_code_span, span_text)
 
+
 class HardBreakMarkdownToken(MarkdownToken):
     """
     Class to provide for an encapsulation of the inline hard line break element.
@@ -467,13 +469,17 @@ class HardBreakMarkdownToken(MarkdownToken):
     def __init__(self):
         MarkdownToken.__init__(self, MarkdownToken.token_inline_hard_break)
 
+
 class UriAutolinkMarkdownToken(MarkdownToken):
     """
     Class to provide for an encapsulation of the inline uri autolink element.
     """
 
     def __init__(self, autolink_text):
-        MarkdownToken.__init__(self, MarkdownToken.token_inline_uri_autolink, autolink_text)
+        MarkdownToken.__init__(
+            self, MarkdownToken.token_inline_uri_autolink, autolink_text
+        )
+
 
 class EmailAutolinkMarkdownToken(MarkdownToken):
     """
@@ -481,6 +487,18 @@ class EmailAutolinkMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, autolink_text):
-        MarkdownToken.__init__(self, MarkdownToken.token_inline_email_autolink, autolink_text)
+        MarkdownToken.__init__(
+            self, MarkdownToken.token_inline_email_autolink, autolink_text
+        )
+
+
+class RawHtmlMarkdownToken(MarkdownToken):
+    """
+    Class to provide for an encapsulation of the inline raw html element.
+    """
+
+    def __init__(self, raw_tag):
+        MarkdownToken.__init__(self, MarkdownToken.token_inline_raw_html, raw_tag)
+
 
 # pylint: enable=too-few-public-methods

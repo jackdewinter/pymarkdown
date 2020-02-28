@@ -15,13 +15,14 @@ def test_textual_content_671():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """hello $.;'there"""
-    expected_tokens = ['[para:]', "[text:hello $.;'there:]", '[end-para]']
+    expected_tokens = ["[para:]", "[text:hello $.;'there:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_textual_content_672():
     """
@@ -31,13 +32,14 @@ def test_textual_content_672():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """Foo χρῆν"""
-    expected_tokens = ['[para:]', '[text:Foo χρῆν:]', '[end-para]']
+    expected_tokens = ["[para:]", "[text:Foo χρῆν:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_textual_content_673():
     """
@@ -47,7 +49,7 @@ def test_textual_content_673():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """Multiple     spaces"""
-    expected_tokens = ['[para:]', '[text:Multiple     spaces:]', '[end-para]']
+    expected_tokens = ["[para:]", "[text:Multiple     spaces:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

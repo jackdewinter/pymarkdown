@@ -16,13 +16,14 @@ def test_soft_line_breaks_669():
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo
 baz"""
-    expected_tokens = ['[para:\n]', "[text:foo\nbaz::\n]", '[end-para]']
+    expected_tokens = ["[para:\n]", "[text:foo\nbaz::\n]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_soft_line_breaks_670():
     """
@@ -32,8 +33,10 @@ def test_soft_line_breaks_670():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo\a
- baz""".replace("\a", " ")
-    expected_tokens = ['[para:\n ]', "[text:foo\nbaz:: \n]", '[end-para]']
+ baz""".replace(
+        "\a", " "
+    )
+    expected_tokens = ["[para:\n ]", "[text:foo\nbaz:: \n]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

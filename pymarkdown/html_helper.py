@@ -159,7 +159,7 @@ class HtmlHelper:
             non_whitespace_index < len(line_to_parse)
             and line_to_parse[non_whitespace_index] == ">"
         )
-        return have_end_of_tag and is_valid
+        return have_end_of_tag and is_valid, non_whitespace_index + 1
 
     @staticmethod
     def is_valid_block_1_tag_name(tag_name):
@@ -233,5 +233,11 @@ class HtmlHelper:
         )
         at_eol = non_whitespace_index == len(line_to_parse)
         return (
-            is_tag_valid and is_end_of_tag_present and at_eol and are_attributes_valid
+            (
+                is_tag_valid
+                and is_end_of_tag_present
+                and at_eol
+                and are_attributes_valid
+            ),
+            non_whitespace_index,
         )

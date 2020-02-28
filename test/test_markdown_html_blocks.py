@@ -28,8 +28,8 @@ _world_.
         "[end-html-block]",
         "[BLANK:]",
         "[para:\n]",
-        """[text:_world_.
-&lt;/pre&gt;::\n]""",
+        "[text:_world_.\n::\n]",
+        "[raw-html:/pre]",
         "[end-para]",
         "[html-block]",
         "[text:</td></tr></table>:]",
@@ -521,13 +521,18 @@ def test_html_blocks_138():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """<del>*foo*</del>"""
-    expected_tokens = ["[para:]", "[text:&lt;del&gt;*foo*&lt;/del&gt;:]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[raw-html:del]",
+        "[text:*foo*:]",
+        "[raw-html:/del]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO Expect this to fail when raw HTML are implemented
     # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
@@ -1022,9 +1027,9 @@ def test_html_blocks_156():
 baz"""
     expected_tokens = [
         "[para:\n\n]",
-        """[text:Foo
-&lt;a href=&quot;bar&quot;&gt;
-baz::\n\n]""",
+        "[text:Foo\n::\n]",
+        '[raw-html:a href="bar"]',
+        "[text:\nbaz::\n]",
         "[end-para]",
     ]
 
@@ -1281,7 +1286,8 @@ def test_html_blocks_cov3():
 </x-table>"""
     expected_tokens = [
         "[para:\n]",
-        "[text:&lt;!bad&gt;\n&lt;/x-table&gt;::\n]",
+        "[text:&lt;!bad&gt;\n::\n]",
+        "[raw-html:/x-table]",
         "[end-para]",
     ]
 
@@ -1304,7 +1310,8 @@ bad>
 </x-table>"""
     expected_tokens = [
         "[para:\n\n]",
-        "[text:&lt;\nbad&gt;\n&lt;/x-table&gt;::\n\n]",
+        "[text:&lt;\nbad&gt;\n::\n\n]",
+        "[raw-html:/x-table]",
         "[end-para]",
     ]
 

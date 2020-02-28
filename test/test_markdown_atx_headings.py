@@ -424,3 +424,26 @@ def test_atx_headings_049():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
+
+def test_atx_headings_extra_1():
+    """
+    Test case extra 1:  ATX headings with a code span.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    source_markdown = """## this is a ``fun`` day"""
+    expected_tokens = [
+        "[atx:2:0:]",
+        "[text:this is a : ]",
+        "[icode-span:fun]",
+        "[text: day:]",
+        "[end-atx::]",
+    ]
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)

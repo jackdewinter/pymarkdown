@@ -15,14 +15,23 @@ def test_hard_line_breaks_654():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo\a\a
-baz""".replace("\a", " ")
-    expected_tokens = ['[para:\n]', '[text:foo:]', '[hard-break]', '[text:\nbaz::  \n]', '[end-para]']
+baz""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para:\n]",
+        "[text:foo:]",
+        "[hard-break]",
+        "[text:\nbaz::  \n]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_hard_line_breaks_655():
     """
@@ -33,13 +42,20 @@ def test_hard_line_breaks_655():
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo\\
 baz"""
-    expected_tokens = ['[para:\n]', '[text:foo:]', '[hard-break]', '[text:\nbaz:]', '[end-para]']
+    expected_tokens = [
+        "[para:\n]",
+        "[text:foo:]",
+        "[hard-break]",
+        "[text:\nbaz:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_hard_line_breaks_656():
     """
@@ -49,14 +65,23 @@ def test_hard_line_breaks_656():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo\a\a\a\a\a\a\a
-baz""".replace("\a", " ")
-    expected_tokens = ['[para:\n]', '[text:foo:]', '[hard-break]', '[text:\nbaz::       \n]', '[end-para]']
+baz""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para:\n]",
+        "[text:foo:]",
+        "[hard-break]",
+        "[text:\nbaz::       \n]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_hard_line_breaks_657():
     """
@@ -66,14 +91,23 @@ def test_hard_line_breaks_657():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo\a\a
-     bar""".replace("\a", " ")
-    expected_tokens = ['[para:\n     ]', '[text:foo:]', '[hard-break]', '[text:\nbar::  \n]', '[end-para]']
+     bar""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para:\n     ]",
+        "[text:foo:]",
+        "[hard-break]",
+        "[text:\nbar::  \n]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_hard_line_breaks_658():
     """
@@ -84,13 +118,20 @@ def test_hard_line_breaks_658():
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo\\
      bar"""
-    expected_tokens = ['[para:\n     ]', '[text:foo:]', '[hard-break]', '[text:\nbar:]', '[end-para]']
+    expected_tokens = [
+        "[para:\n     ]",
+        "[text:foo:]",
+        "[hard-break]",
+        "[text:\nbar:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_hard_line_breaks_659():
     """
@@ -100,14 +141,23 @@ def test_hard_line_breaks_659():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """*foo\a\a
-bar*""".replace("\a", " ")
-    expected_tokens = ['[para:\n]', '[text:*foo:]', '[hard-break]', '[text:\nbar*::  \n]', '[end-para]']
+bar*""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para:\n]",
+        "[text:*foo:]",
+        "[hard-break]",
+        "[text:\nbar*::  \n]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_hard_line_breaks_660():
     """
@@ -117,14 +167,23 @@ def test_hard_line_breaks_660():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """*foo\\
-bar*""".replace("\a", " ")
-    expected_tokens = ['[para:\n]', '[text:*foo:]', '[hard-break]', '[text:\nbar*:]', '[end-para]']
+bar*""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para:\n]",
+        "[text:*foo:]",
+        "[hard-break]",
+        "[text:\nbar*:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_hard_line_breaks_661():
     """
@@ -134,14 +193,17 @@ def test_hard_line_breaks_661():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """`code\a\a
-span`""".replace("\a", " ")
-    expected_tokens = ['[para:\n]', '[icode-span:code   span]', '[end-para]']
+span`""".replace(
+        "\a", " "
+    )
+    expected_tokens = ["[para:\n]", "[icode-span:code   span]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_hard_line_breaks_662():
     """
@@ -152,13 +214,14 @@ def test_hard_line_breaks_662():
     tokenizer = TokenizedMarkdown()
     source_markdown = """`code\\
 span`"""
-    expected_tokens = ['[para:\n]', '[icode-span:code\\ span]', '[end-para]']
+    expected_tokens = ["[para:\n]", "[icode-span:code\\ span]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_hard_line_breaks_663():
     """
@@ -167,15 +230,16 @@ def test_hard_line_breaks_663():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """<a href="foo  
-bar">""".replace("\a", " ")
-    expected_tokens = ['[para:\n]', '[text:&lt;a href=&quot;foo:]', '[hard-break]', '[text:\nbar&quot;&gt;::  \n]', '[end-para]']
+    source_markdown = """<a href="foo\a\a
+bar">""".replace(
+        "\a", " "
+    )
+    expected_tokens = ["[para:\n]", '[raw-html:a href="foo  \nbar"]', "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO will change when raw html implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -188,13 +252,12 @@ def test_hard_line_breaks_664():
     tokenizer = TokenizedMarkdown()
     source_markdown = """<a href="foo\\
 bar">"""
-    expected_tokens = ['[para:\n]', '[text:&lt;a href=&quot;foo:]', '[hard-break]', '[text:\nbar&quot;&gt;:]', '[end-para]']
+    expected_tokens = ["[para:\n]", '[raw-html:a href="foo\\\nbar"]', "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
-    # TODO will change when raw html implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
 
 
@@ -206,13 +269,14 @@ def test_hard_line_breaks_665():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo\\"""
-    expected_tokens = ['[para:]', '[text:foo\\:]', '[end-para]']
+    expected_tokens = ["[para:]", "[text:foo\\:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_hard_line_breaks_666():
     """
@@ -222,13 +286,14 @@ def test_hard_line_breaks_666():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo  """
-    expected_tokens =  ['[para::  ]', '[text:foo:]', '[end-para]']
+    expected_tokens = ["[para::  ]", "[text:foo:]", "[end-para]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_hard_line_breaks_667():
     """
@@ -238,13 +303,14 @@ def test_hard_line_breaks_667():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """### foo\\"""
-    expected_tokens = ['[atx:3:0:]', '[text:foo\\: ]', '[end-atx::]']
+    expected_tokens = ["[atx:3:0:]", "[text:foo\\: ]", "[end-atx::]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+
 
 def test_hard_line_breaks_668():
     """
@@ -254,11 +320,10 @@ def test_hard_line_breaks_668():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """### foo  """
-    expected_tokens = ['[atx:3:0:]', '[text:foo: ]', '[end-atx:  :]']
+    expected_tokens = ["[atx:3:0:]", "[text:foo: ]", "[end-atx:  :]"]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
-
