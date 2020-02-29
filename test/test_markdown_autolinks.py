@@ -1,7 +1,6 @@
 """
 https://github.github.com/gfm/#autolinks
 """
-
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
 from .utils import assert_if_lists_different
