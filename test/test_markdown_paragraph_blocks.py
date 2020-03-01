@@ -1,11 +1,15 @@
 """
 https://github.github.com/gfm/#paragraphs
 """
+import pytest
+
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
+from pymarkdown.transform_to_gfm import TransformToGfm
 
-from .utils import assert_if_lists_different
+from .utils import assert_if_lists_different, assert_if_strings_different
 
 
+@pytest.mark.gfm
 def test_paragraph_blocks_189():
     """
     Test case 189:  simple case of paragraphs
@@ -13,6 +17,7 @@ def test_paragraph_blocks_189():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """aaa
 
 bbb"""
@@ -25,14 +30,19 @@ bbb"""
         "[text:bbb:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>aaa</p>
+<p>bbb</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_paragraph_blocks_190():
     """
     Test case 189:  Paragraphs can contain multiple lines, but no blank lines:
@@ -40,6 +50,7 @@ def test_paragraph_blocks_190():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """aaa
 bbb
 
@@ -54,14 +65,21 @@ ddd"""
         "[text:ccc\nddd::\n]",
         "[end-para]",
     ]
+    expected_gfm = """<p>aaa
+bbb</p>
+<p>ccc
+ddd</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_paragraph_blocks_191():
     """
     Test case 191:  Multiple blank lines between paragraph have no effect:
@@ -69,6 +87,7 @@ def test_paragraph_blocks_191():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """aaa
 
 
@@ -83,14 +102,19 @@ bbb"""
         "[text:bbb:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>aaa</p>
+<p>bbb</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_paragraph_blocks_192():
     """
     Test case 192:  Leading spaces are skipped:
@@ -98,17 +122,23 @@ def test_paragraph_blocks_192():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """  aaa
  bbb"""
     expected_tokens = ["[para:  \n ]", "[text:aaa\nbbb::\n]", "[end-para]"]
+    expected_gfm = """<p>aaa
+bbb</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_paragraph_blocks_193():
     """
     Test case 193:  Lines after the first may be indented any amount, since indented code blocks cannot interrupt paragraphs.
@@ -116,6 +146,7 @@ def test_paragraph_blocks_193():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """aaa
              bbb
                                        ccc"""
@@ -124,14 +155,20 @@ def test_paragraph_blocks_193():
         "[text:aaa\nbbb\nccc::\n\n]",
         "[end-para]",
     ]
+    expected_gfm = """<p>aaa
+bbb
+ccc</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_paragraph_blocks_194():
     """
     Test case 194: (part a) However, the first line may be indented at most three spaces, or an indented code block will be triggered:
@@ -139,17 +176,23 @@ def test_paragraph_blocks_194():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """   aaa
 bbb"""
     expected_tokens = ["[para:   \n]", "[text:aaa\nbbb::\n]", "[end-para]"]
+    expected_gfm = """<p>aaa
+bbb</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_paragraph_blocks_195():
     """
     Test case 195:  (part b) However, the first line may be indented at most three spaces, or an indented code block will be triggered:
@@ -157,6 +200,7 @@ def test_paragraph_blocks_195():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """    aaa
 bbb"""
     expected_tokens = [
@@ -167,14 +211,20 @@ bbb"""
         "[text:bbb:]",
         "[end-para]",
     ]
+    expected_gfm = """<pre><code>aaa
+</code></pre>
+<p>bbb</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_paragraph_blocks_196():
     """
     Test case 196:  (part b) However, the first line may be indented at most three spaces, or an indented code block will be triggered:
@@ -182,6 +232,7 @@ def test_paragraph_blocks_196():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """aaa\a\a\a\a\a
 bbb     """.replace(
         "\a", " "
@@ -193,9 +244,13 @@ bbb     """.replace(
         "[text:\nbbb::     \n]",
         "[end-para]",
     ]
+    expected_gfm = """<p>aaa<br />
+bbb</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)

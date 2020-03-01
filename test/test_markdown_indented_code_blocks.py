@@ -1,11 +1,15 @@
 """
 https://github.github.com/gfm/#indented-code-blocks
 """
+import pytest
+
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
+from pymarkdown.transform_to_gfm import TransformToGfm
 
-from .utils import assert_if_lists_different
+from .utils import assert_if_lists_different, assert_if_strings_different
 
 
+@pytest.mark.gfm
 def test_indented_code_blocks_077():
     """
     Test case 077:  Simple examples:
@@ -13,6 +17,7 @@ def test_indented_code_blocks_077():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """    a simple
       indented code block"""
     expected_tokens = [
@@ -20,14 +25,20 @@ def test_indented_code_blocks_077():
         "[text:a simple\n  indented code block:]",
         "[end-icode-block]",
     ]
+    expected_gfm = """<pre><code>a simple
+  indented code block
+</code></pre>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_indented_code_blocks_078():
     """
     Test case 078:  (part a) If there is any ambiguity between an interpretation of indentation as a code block and as indicating that material belongs to a list item, the list item interpretation takes precedence:
@@ -35,6 +46,7 @@ def test_indented_code_blocks_078():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """  - foo
 
     bar"""
@@ -49,14 +61,23 @@ def test_indented_code_blocks_078():
         "[end-para]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>
+<p>foo</p>
+<p>bar</p>
+</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_indented_code_blocks_079():
     """
     Test case 079:  (part b) If there is any ambiguity between an interpretation of indentation as a code block and as indicating that material belongs to a list item, the list item interpretation takes precedence:
@@ -64,6 +85,7 @@ def test_indented_code_blocks_079():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """1.  foo
 
     - bar"""
@@ -80,14 +102,25 @@ def test_indented_code_blocks_079():
         "[end-ulist]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol>
+<li>
+<p>foo</p>
+<ul>
+<li>bar</li>
+</ul>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_indented_code_blocks_080():
     """
     Test case 080:  The contents of a code block are literal text, and do not get parsed as Markdown:
@@ -95,6 +128,7 @@ def test_indented_code_blocks_080():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """    <a/>
     *hi*
 
@@ -104,14 +138,22 @@ def test_indented_code_blocks_080():
         "[text:&lt;a/&gt;\n*hi*\n\n- one:]",
         "[end-icode-block]",
     ]
+    expected_gfm = """<pre><code>&lt;a/&gt;
+*hi*
+
+- one
+</code></pre>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_indented_code_blocks_081():
     """
     Test case 081:  Here we have three chunks separated by blank lines:
@@ -119,6 +161,7 @@ def test_indented_code_blocks_081():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """    chunk1
 
     chunk2
@@ -131,14 +174,25 @@ def test_indented_code_blocks_081():
         "[text:chunk1\n\nchunk2\n\n\n\nchunk3:]",
         "[end-icode-block]",
     ]
+    expected_gfm = """<pre><code>chunk1
+
+chunk2
+
+
+
+chunk3
+</code></pre>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_indented_code_blocks_082():
     """
     Test case 082:  Any initial spaces beyond four will be included in the content, even in interior blank lines:
@@ -146,6 +200,7 @@ def test_indented_code_blocks_082():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """    chunk1
       
       chunk2"""
@@ -154,14 +209,21 @@ def test_indented_code_blocks_082():
         "[text:chunk1\n  \n  chunk2:]",
         "[end-icode-block]",
     ]
+    expected_gfm = """<pre><code>chunk1
+  
+  chunk2
+</code></pre>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_indented_code_blocks_083():
     """
     Test case 083:  An indented code block cannot interrupt a paragraph. (This allows hanging indents and the like.)
@@ -169,17 +231,23 @@ def test_indented_code_blocks_083():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo
     bar"""
     expected_tokens = ["[para:\n    ]", "[text:Foo\nbar::\n]", "[end-para]"]
+    expected_gfm = """<p>Foo
+bar</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_indented_code_blocks_084():
     """
     Test case 084:  However, any non-blank line with fewer than four leading spaces ends the code block immediately. So a paragraph may occur immediately after indented code:
@@ -187,6 +255,7 @@ def test_indented_code_blocks_084():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """    foo
 bar"""
     expected_tokens = [
@@ -197,14 +266,57 @@ bar"""
         "[text:bar:]",
         "[end-para]",
     ]
+    expected_gfm = """<pre><code>foo
+</code></pre>
+<p>bar</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
+def test_indented_code_blocks_084a():
+    """
+    ADDED:
+    Test case 084a:  Copied from 84 with extra lines inserted to verify trailing blanks are not part of section.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """    foo
+
+
+bar"""
+    expected_tokens = [
+        "[icode-block:    ]",
+        "[text:foo:]",
+        "[end-icode-block]",
+        "[BLANK:]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+    ]
+    expected_gfm = """<pre><code>foo
+</code></pre>
+<p>bar</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
 def test_indented_code_blocks_085():
     """
     Test case 085:  And indented code can occur immediately before and after other kinds of blocks:
@@ -212,6 +324,7 @@ def test_indented_code_blocks_085():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """# Heading
     foo
 Heading
@@ -233,14 +346,24 @@ Heading
         "[end-icode-block]",
         "[tbreak:-::----]",
     ]
+    expected_gfm = """<h1>Heading</h1>
+<pre><code>foo
+</code></pre>
+<h2>Heading</h2>
+<pre><code>foo
+</code></pre>
+<hr />"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_indented_code_blocks_086():
     """
     Test case 086:  The first line can be indented more than four spaces:
@@ -248,6 +371,7 @@ def test_indented_code_blocks_086():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """        foo
     bar"""
     expected_tokens = [
@@ -255,14 +379,20 @@ def test_indented_code_blocks_086():
         "[text:foo\nbar:    ]",
         "[end-icode-block]",
     ]
+    expected_gfm = """<pre><code>    foo
+bar
+</code></pre>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_indented_code_blocks_087():
     """
     Test case 087:  Blank lines preceding or following an indented code block are not included in it:
@@ -270,6 +400,7 @@ def test_indented_code_blocks_087():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """
     
     foo
@@ -282,44 +413,19 @@ def test_indented_code_blocks_087():
         "[end-icode-block]",
         "[BLANK:    ]",
     ]
+    expected_gfm = """<pre><code>foo
+</code></pre>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-def test_indented_code_blocks_087a():
-    """
-    ADDED:
-    Test case 087a:  Copied from 84 with extra lines inserted to verify trailing blanks are not part of section.
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    source_markdown = """    foo
-
-
-bar"""
-    expected_tokens = [
-        "[icode-block:    ]",
-        "[text:foo:]",
-        "[end-icode-block]",
-        "[BLANK:]",
-        "[BLANK:]",
-        "[para:]",
-        "[text:bar:]",
-        "[end-para]",
-    ]
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-
-
+@pytest.mark.gfm
 def test_indented_code_blocks_088():
     """
     Test case 088:  Trailing spaces are included in the code block’s content:
@@ -327,11 +433,18 @@ def test_indented_code_blocks_088():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """    foo  """
     expected_tokens = ["[icode-block:    ]", "[text:foo  :]", "[end-icode-block]"]
+    expected_gfm = """<pre><code>foo\a\a
+</code></pre>""".replace(
+        "\a", " "
+    )
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)

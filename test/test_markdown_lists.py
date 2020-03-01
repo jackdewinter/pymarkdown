@@ -984,8 +984,23 @@ def test_list_items_306():
 # TODO go through any case that uses lazy and do un-lazy example
 # TODO Verify correct parsing
 #       - 118 (html)
-# TODO - verify 002, 006, 007
 # TODO - foo \, what happens
+
 # DONE?
 # TODO - linking text blocks properly if not in paragraph block. DONE?
 # TODO - [BLANK] and folding lines. DONE?
+
+# TODO Expect this to fail when proper paragraph handling with breaks and trimming
+# - 052
+# - 059
+# TODO "aaa" should not have 2 spaces in front of it
+# - 098
+# TODO removed spaces inconsistent
+# - 101
+# - 103
+# TODO 144 as two separate and make sure still works
+# TODO recheck after resetting tabs back
+# - 006
+# - 007
+# TODO Is the example for this wrong?
+# - 002

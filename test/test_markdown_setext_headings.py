@@ -1,11 +1,15 @@
 """
 https://github.github.com/gfm/#setext-headings
 """
+import pytest
+
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
+from pymarkdown.transform_to_gfm import TransformToGfm
 
-from .utils import assert_if_lists_different
+from .utils import assert_if_lists_different, assert_if_strings_different
 
 
+@pytest.mark.gfm
 def test_setext_headings_050():
     """
     Test case 050:  Simple examples:
@@ -13,6 +17,7 @@ def test_setext_headings_050():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo *bar*
 =========
 
@@ -27,15 +32,20 @@ Foo *bar*
         "[text:Foo *bar*:]",
         "[end-setext::]",
     ]
+    expected_gfm = """<h1>Foo *bar*</h1>
+<h2>Foo *bar*</h2>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     # TODO Expect this to fail when inline emphasis implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_051():
     """
     Test case 051:  The content of the header may span more than one line:
@@ -43,6 +53,7 @@ def test_setext_headings_051():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo *bar
 baz*
 ===="""
@@ -51,14 +62,20 @@ baz*
         "[text:Foo *bar\nbaz*::\n]",
         "[end-setext::]",
     ]
+    expected_gfm = """<h1>Foo *bar
+baz*</h1>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
+    # TODO Expect this to fail when inline emphasis implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_052():
     """
     Test case 052:  The heading’s raw content is formed by concatenating the lines and removing initial and final whitespace.
@@ -66,6 +83,7 @@ def test_setext_headings_052():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """  Foo *bar
 baz*\t
 ===="""
@@ -74,15 +92,21 @@ baz*\t
         "[text:Foo *bar\nbaz*    ::\n]",
         "[end-setext::]",
     ]
+    expected_gfm = """<h1>Foo *bar
+baz*    </h1>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
+    # TODO Expect this to fail when proper paragraph handling with breaks and trimming
     # TODO Expect this to fail when inline emphasis implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_053():
     """
     Test case 053:  The underlining can be any length:
@@ -90,6 +114,7 @@ def test_setext_headings_053():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo
 -------------------------
 
@@ -104,14 +129,19 @@ Foo
         "[text:Foo:]",
         "[end-setext::]",
     ]
+    expected_gfm = """<h2>Foo</h2>
+<h1>Foo</h1>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_054():
     """
     Test case 054:  The heading content can be indented up to three spaces, and need not line up with the underlining:
@@ -119,6 +149,7 @@ def test_setext_headings_054():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """   Foo
 ---
 
@@ -140,14 +171,20 @@ def test_setext_headings_054():
         "[text:Foo:]",
         "[end-setext:  :]",
     ]
+    expected_gfm = """<h2>Foo</h2>
+<h2>Foo</h2>
+<h1>Foo</h1>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_055():
     """
     Test case 055:  Four spaces indent is too much:
@@ -155,6 +192,7 @@ def test_setext_headings_055():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """    Foo
     ---
 
@@ -166,14 +204,23 @@ def test_setext_headings_055():
         "[end-icode-block]",
         "[tbreak:-::---]",
     ]
+    expected_gfm = """<pre><code>Foo
+---
+
+Foo
+</code></pre>
+<hr />"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_056():
     """
     Test case 056:  The setext heading underline can be indented up to three spaces, and may have trailing spaces:
@@ -181,17 +228,22 @@ def test_setext_headings_056():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo
    ----      """
     expected_tokens = ["[setext:-:]", "[text:Foo:]", "[end-setext:   :      ]"]
+    expected_gfm = """<h2>Foo</h2>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_057():
     """
     Test case 057:  Four spaces is too much:
@@ -199,17 +251,23 @@ def test_setext_headings_057():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo
     ---"""
     expected_tokens = ["[para:\n    ]", "[text:Foo\n---::\n]", "[end-para]"]
+    expected_gfm = """<p>Foo
+---</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_058():
     """
     Test case 058:  The setext heading underline cannot contain internal spaces:
@@ -217,6 +275,7 @@ def test_setext_headings_058():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo
 = =
 
@@ -232,14 +291,21 @@ Foo
         "[end-para]",
         "[tbreak:-::--- -]",
     ]
+    expected_gfm = """<p>Foo
+= =</p>
+<p>Foo</p>
+<hr />"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_059():
     """
     Test case 059:  Trailing spaces in the content line do not cause a line break:
@@ -247,20 +313,25 @@ def test_setext_headings_059():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo\a\a
 -----""".replace(
         "\a", " "
     )
     expected_tokens = ["[setext:-:]", "[text:Foo  :]", "[end-setext::]"]
+    expected_gfm = """<h2>Foo  </h2>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     # TODO Expect this to fail when proper paragraph handling with breaks and trimming
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_060():
     """
     Test case 060:  Nor does a backslash at the end:
@@ -268,17 +339,22 @@ def test_setext_headings_060():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo\\
 ----"""
     expected_tokens = ["[setext:-:]", "[text:Foo\\:]", "[end-setext::]"]
+    expected_gfm = """<h2>Foo\\</h2>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_061():
     """
     Test case 061:  Since indicators of block structure take precedence over indicators of inline structure, the following are setext headings:
@@ -286,6 +362,7 @@ def test_setext_headings_061():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """`Foo
 ----
 `
@@ -308,14 +385,21 @@ of dashes"/>"""
         "[text:of dashes&quot;/&gt;:]",
         "[end-para]",
     ]
+    expected_gfm = """<h2>`Foo</h2>
+<p>`</p>
+<h2>&lt;a title=&quot;a lot</h2>
+<p>of dashes&quot;/&gt;</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_062():
     """
     Test case 062:  (part a) The setext heading underline cannot be a lazy continuation line in a list item or block quote:
@@ -323,6 +407,7 @@ def test_setext_headings_062():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """> Foo
 ---"""
     expected_tokens = [
@@ -333,14 +418,21 @@ def test_setext_headings_062():
         "[end-block-quote]",
         "[tbreak:-::---]",
     ]
+    expected_gfm = """<blockquote>
+<p>Foo</p>
+</blockquote>
+<hr />"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_063():
     """
     Test case 063:  (part b) The setext heading underline cannot be a lazy continuation line in a list item or block quote:
@@ -348,6 +440,7 @@ def test_setext_headings_063():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """> foo
 bar
 ==="""
@@ -358,14 +451,22 @@ bar
         "[end-para]",
         "[end-block-quote]",
     ]
+    expected_gfm = """<blockquote>
+<p>foo
+bar
+===</p>
+</blockquote>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_064():
     """
     Test case 064:  (part c) The setext heading underline cannot be a lazy continuation line in a list item or block quote:
@@ -373,6 +474,7 @@ def test_setext_headings_064():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- Foo
 ---"""
     expected_tokens = [
@@ -383,14 +485,21 @@ def test_setext_headings_064():
         "[end-ulist]",
         "[tbreak:-::---]",
     ]
+    expected_gfm = """<ul>
+<li>Foo</li>
+</ul>
+<hr />"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_064a():
     """
     Test case 064a:  064 with with other underline
@@ -398,6 +507,7 @@ def test_setext_headings_064a():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- Foo
 ---"""
     expected_tokens = [
@@ -408,14 +518,21 @@ def test_setext_headings_064a():
         "[end-ulist]",
         "[tbreak:-::---]",
     ]
+    expected_gfm = """<ul>
+<li>Foo</li>
+</ul>
+<hr />"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_065():
     """
     Test case 065:  A blank line is needed between a paragraph and a following setext heading, since otherwise the paragraph becomes part of the heading’s content:
@@ -423,18 +540,24 @@ def test_setext_headings_065():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo
 Bar
 ---"""
     expected_tokens = ["[setext:-:]", "[text:Foo\nBar::\n]", "[end-setext::]"]
+    expected_gfm = """<h2>Foo
+Bar</h2>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_066():
     """
     Test case 066:  A blank line is needed between a paragraph and a following setext heading, since otherwise the paragraph becomes part of the heading’s content:
@@ -442,6 +565,7 @@ def test_setext_headings_066():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """---
 Foo
 ---
@@ -460,14 +584,21 @@ Baz"""
         "[text:Baz:]",
         "[end-para]",
     ]
+    expected_gfm = """<hr />
+<h2>Foo</h2>
+<h2>Bar</h2>
+<p>Baz</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_067():
     """
     Test case 067:  Setext headings cannot be empty:
@@ -475,17 +606,22 @@ def test_setext_headings_067():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """
 ===="""
     expected_tokens = ["[BLANK:]", "[para:]", "[text:====:]", "[end-para]"]
+    expected_gfm = """<p>====</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_068():
     """
     Test case 068:  (part a) Setext heading text lines must not be interpretable as block constructs other than paragraphs. So, the line of dashes in these examples gets interpreted as a thematic break:
@@ -493,17 +629,23 @@ def test_setext_headings_068():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """---
 ---"""
     expected_tokens = ["[tbreak:-::---]", "[tbreak:-::---]"]
+    expected_gfm = """<hr />
+<hr />"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_069():
     """
     Test case 069:  (part b) Setext heading text lines must not be interpretable as block constructs other than paragraphs. So, the line of dashes in these examples gets interpreted as a thematic break:
@@ -511,6 +653,7 @@ def test_setext_headings_069():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- foo
 -----"""
     expected_tokens = [
@@ -521,14 +664,21 @@ def test_setext_headings_069():
         "[end-ulist]",
         "[tbreak:-::-----]",
     ]
+    expected_gfm = """<ul>
+<li>foo</li>
+</ul>
+<hr />"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_069a():
     """
     Test case 069a:  069 with other underline
@@ -536,6 +686,7 @@ def test_setext_headings_069a():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- foo
 -----"""
     expected_tokens = [
@@ -546,14 +697,21 @@ def test_setext_headings_069a():
         "[end-ulist]",
         "[tbreak:-::-----]",
     ]
+    expected_gfm = """<ul>
+<li>foo</li>
+</ul>
+<hr />"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_070():
     """
     Test case 070:  (part c) Setext heading text lines must not be interpretable as block constructs other than paragraphs. So, the line of dashes in these examples gets interpreted as a thematic break:
@@ -561,6 +719,7 @@ def test_setext_headings_070():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """    foo
 ---"""
     expected_tokens = [
@@ -569,14 +728,20 @@ def test_setext_headings_070():
         "[end-icode-block]",
         "[tbreak:-::---]",
     ]
+    expected_gfm = """<pre><code>foo
+</code></pre>
+<hr />"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_071():
     """
     Test case 071:  (part d) Setext heading text lines must not be interpretable as block constructs other than paragraphs. So, the line of dashes in these examples gets interpreted as a thematic break:
@@ -584,6 +749,7 @@ def test_setext_headings_071():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """> foo
 -----"""
     expected_tokens = [
@@ -594,14 +760,21 @@ def test_setext_headings_071():
         "[end-block-quote]",
         "[tbreak:-::-----]",
     ]
+    expected_gfm = """<blockquote>
+<p>foo</p>
+</blockquote>
+<hr />"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_072():
     """
     Test case 072:  If you want a heading with > foo as its literal text, you can use backslash escapes:
@@ -609,17 +782,22 @@ def test_setext_headings_072():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """\\> foo
 ------"""
     expected_tokens = ["[setext:-:]", "[text:&gt; foo:]", "[end-setext::]"]
+    expected_gfm = """<h2>&gt; foo</h2>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_073():
     """
     Test case 073:  Authors who want interpretation 1 can put a blank line after the first paragraph:
@@ -628,6 +806,7 @@ def test_setext_headings_073():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo
 
 bar
@@ -645,14 +824,20 @@ baz"""
         "[text:baz:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>Foo</p>
+<h2>bar</h2>
+<p>baz</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_074():
     """
     Test case 074:  Authors who want interpretation 2 can put blank lines around the thematic break,
@@ -661,6 +846,7 @@ def test_setext_headings_074():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo
 bar
 
@@ -678,14 +864,21 @@ baz"""
         "[text:baz:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>Foo
+bar</p>
+<hr />
+<p>baz</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_075():
     """
     Test case 075:  or use a thematic break that cannot count as a setext heading underline, such as
@@ -694,6 +887,7 @@ def test_setext_headings_075():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo
 bar
 * * *
@@ -707,14 +901,21 @@ baz"""
         "[text:baz:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>Foo
+bar</p>
+<hr />
+<p>baz</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_setext_headings_076():
     """
     Test case 076:  Authors who want interpretation 3 can use backslash escapes:
@@ -723,6 +924,7 @@ def test_setext_headings_076():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """Foo
 bar
 \\---
@@ -732,9 +934,15 @@ baz"""
         "[text:Foo\nbar\n---\nbaz::\n\n\n]",
         "[end-para]",
     ]
+    expected_gfm = """<p>Foo
+bar
+---
+baz</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)

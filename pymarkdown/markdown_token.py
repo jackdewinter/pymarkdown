@@ -137,6 +137,7 @@ class BlankLineMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, extracted_whitespace):
+        self.extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self, MarkdownToken.token_blank_line, extracted_whitespace
         )
@@ -208,6 +209,7 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
         extracted_whitespace_before_info_string,
     ):
         self.extracted_whitespace = extracted_whitespace
+        self.extracted_text = extracted_text
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_fenced_code_block,
@@ -236,6 +238,7 @@ class AtxHeaderMarkdownToken(MarkdownToken):
     def __init__(
         self, hash_count, remove_trailing_count, extracted_whitespace,
     ):
+        self.hash_count = hash_count
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_atx_header,
@@ -255,6 +258,7 @@ class SetextHeaderMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, header_character, remaining_line):
+        self.header_character = header_character
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_setext_header,
@@ -269,6 +273,7 @@ class EndMarkdownToken(MarkdownToken):
 
     def __init__(self, type_name, extracted_whitespace, extra_data):
 
+        self.type_name = type_name
         display_data = extracted_whitespace
         if extra_data is not None:
             display_data = display_data + ":" + extra_data
@@ -458,6 +463,7 @@ class InlineCodeSpanMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, span_text):
+        self.span_text = span_text
         MarkdownToken.__init__(self, MarkdownToken.token_inline_code_span, span_text)
 
 
@@ -498,6 +504,7 @@ class RawHtmlMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, raw_tag):
+        self.raw_tag = raw_tag
         MarkdownToken.__init__(self, MarkdownToken.token_inline_raw_html, raw_tag)
 
 
