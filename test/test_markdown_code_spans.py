@@ -2,11 +2,15 @@
 https://github.github.com/gfm/#code-spans
 """
 
+import pytest
+
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
+from pymarkdown.transform_to_gfm import TransformToGfm
 
-from .utils import assert_if_lists_different
+from .utils import assert_if_lists_different, assert_if_strings_different
 
 
+@pytest.mark.gfm
 def test_code_spans_338():
     """
     Test case 338:  This is a simple code span:
@@ -14,20 +18,25 @@ def test_code_spans_338():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """`foo`"""
     expected_tokens = [
         "[para:]",
         "[icode-span:foo]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>foo</code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_339():
     """
     Test case 339:  Here two backticks are used, because the code contains a backtick. This example also illustrates stripping of a single leading and trailing space:
@@ -35,20 +44,25 @@ def test_code_spans_339():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """`` foo ` bar ``"""
     expected_tokens = [
         "[para:]",
         "[icode-span:foo ` bar]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>foo ` bar</code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_340():
     """
     Test case 340:  This example shows the motivation for stripping leading and trailing spaces:
@@ -56,20 +70,25 @@ def test_code_spans_340():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """`  ``  `"""
+    transformer = TransformToGfm()
+    source_markdown = """` `` `"""
     expected_tokens = [
         "[para:]",
-        "[icode-span: `` ]",
+        "[icode-span:``]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>``</code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_341():
     """
     Test case 341:  Note that only one space is stripped:
@@ -77,20 +96,25 @@ def test_code_spans_341():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """`  ``  `"""
     expected_tokens = [
         "[para:]",
         "[icode-span: `` ]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code> `` </code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_342():
     """
     Test case 342:  The stripping only happens if the space is on both sides of the string:
@@ -98,20 +122,25 @@ def test_code_spans_342():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """` a`"""
     expected_tokens = [
         "[para:]",
         "[icode-span: a]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code> a</code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_343():
     """
     Test case 343:  Only spaces, and not unicode whitespace in general, are stripped in this way:
@@ -119,20 +148,25 @@ def test_code_spans_343():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """`\u00A0b\u00A0`"""
     expected_tokens = [
         "[para:]",
         "[icode-span:\u00A0b\u00A0]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>\u00A0b\u00A0</code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_344():
     """
     Test case 344:  No stripping occurs if the code span contains only spaces:
@@ -140,6 +174,7 @@ def test_code_spans_344():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """` `
 `  `"""
     expected_tokens = [
@@ -149,14 +184,19 @@ def test_code_spans_344():
         "[icode-span:  ]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code> </code>
+<code>  </code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_344a():
     """
     Test case 344a:  Extension of 344 with a whitespace string that is longer than 2.
@@ -164,20 +204,25 @@ def test_code_spans_344a():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """`   `"""
     expected_tokens = [
         "[para:]",
         "[icode-span:   ]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>   </code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_345():
     """
     Test case 345:  (part 1) Line endings are treated like spaces:
@@ -185,6 +230,7 @@ def test_code_spans_345():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """``
 foo
 bar  
@@ -195,14 +241,18 @@ baz
         "[icode-span:foo bar   baz]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>foo bar   baz</code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_346():
     """
     Test case 346:  (part 2) Line endings are treated like spaces:
@@ -210,6 +260,7 @@ def test_code_spans_346():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """``
 foo 
 ``"""
@@ -218,14 +269,18 @@ foo
         "[icode-span:foo ]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>foo </code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_347():
     """
     Test case 347:  Interior spaces are not collapsed:
@@ -233,6 +288,7 @@ def test_code_spans_347():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """`foo   bar\a
 baz`""".replace(
         "\a", " "
@@ -242,14 +298,18 @@ baz`""".replace(
         "[icode-span:foo   bar  baz]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>foo   bar  baz</code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_348():
     """
     Test case 348:  Note that backslash escapes do not work in code spans. All backslashes are treated literally:
@@ -257,6 +317,7 @@ def test_code_spans_348():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """`foo\\`bar`"""
     expected_tokens = [
         "[para:]",
@@ -264,14 +325,18 @@ def test_code_spans_348():
         "[text:bar`:]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>foo\\</code>bar`</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_349():
     """
     Test case 349:  (part 1) Backslash escapes are never needed, because one can always choose a string of n backtick characters as delimiters, where the code does not contain any strings of exactly n backtick characters.
@@ -279,20 +344,25 @@ def test_code_spans_349():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """``foo`bar``"""
     expected_tokens = [
         "[para:]",
         "[icode-span:foo`bar]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>foo`bar</code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_350():
     """
     Test case 350:  (part 2) Backslash escapes are never needed, because one can always choose a string of n backtick characters as delimiters, where the code does not contain any strings of exactly n backtick characters.
@@ -300,20 +370,25 @@ def test_code_spans_350():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """` foo `` bar `"""
     expected_tokens = [
         "[para:]",
         "[icode-span:foo `` bar]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>foo `` bar</code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_351():
     """
     Test case 351:  Code span backticks have higher precedence than any other inline constructs except HTML tags and autolinks.
@@ -321,6 +396,7 @@ def test_code_spans_351():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """*foo`*`"""
     expected_tokens = [
         "[para:]",
@@ -328,14 +404,18 @@ def test_code_spans_351():
         "[icode-span:*]",
         "[end-para]",
     ]
+    expected_gfm = """<p>*foo<code>*</code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_352():
     """
     Test case 352:  And this is not parsed as a link:
@@ -343,6 +423,7 @@ def test_code_spans_352():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[not a `link](/foo`)"""
     expected_tokens = [
         "[para:]",
@@ -351,14 +432,18 @@ def test_code_spans_352():
         "[text:):]",
         "[end-para]",
     ]
+    expected_gfm = """<p>[not a <code>link](/foo</code>)</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_353():
     """
     Test case 353:  Code spans, HTML tags, and autolinks have the same precedence. Thus, this is code:
@@ -366,6 +451,7 @@ def test_code_spans_353():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """`<a href="`">`"""
     expected_tokens = [
         "[para:]",
@@ -373,14 +459,18 @@ def test_code_spans_353():
         "[text:&quot;&gt;`:]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_354():
     """
     Test case 354:  But this is an HTML tag:
@@ -388,16 +478,21 @@ def test_code_spans_354():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """<a href="`">`"""
     expected_tokens = ["[para:]", '[raw-html:a href="`"]', "[text:`:]", "[end-para]"]
+    expected_gfm = """<p><a href="`">`</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_355():
     """
     Test case 355:  And this is code:
@@ -405,6 +500,7 @@ def test_code_spans_355():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """`<http://foo.bar.`baz>`"""
     expected_tokens = [
         "[para:]",
@@ -412,14 +508,19 @@ def test_code_spans_355():
         "[text:baz&gt;`:]",
         "[end-para]",
     ]
+    expected_gfm = """<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.skip
+@pytest.mark.gfm
 def test_code_spans_356():
     """
     Test case 356:  But this is an autolink:
@@ -427,6 +528,7 @@ def test_code_spans_356():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """<http://foo.bar.`baz>`"""
     expected_tokens = [
         "[para:]",
@@ -434,15 +536,19 @@ def test_code_spans_356():
         "[text:`:]",
         "[end-para]",
     ]
+    expected_gfm = """<p><a href="http://foo.bar.%60baz">http://foo.bar.`baz</a>`</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     # TODO will fail when autolinks
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_357():
     """
     Test case 357:  (part 1) When a backtick string is not closed by a matching backtick string, we just have literal backticks:
@@ -450,20 +556,25 @@ def test_code_spans_357():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """```foo``"""
     expected_tokens = [
         "[para:]",
         "[text:```foo``:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>```foo``</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_358():
     """
     Test case 358:  (part 2) When a backtick string is not closed by a matching backtick string, we just have literal backticks:
@@ -471,20 +582,25 @@ def test_code_spans_358():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """`foo"""
     expected_tokens = [
         "[para:]",
         "[text:`foo:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>`foo</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_code_spans_359():
     """
     Test case 359:  The following case also illustrates the need for opening and closing backtick strings to be equal in length:
@@ -492,6 +608,7 @@ def test_code_spans_359():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """`foo``bar``"""
     expected_tokens = [
         "[para:]",
@@ -499,9 +616,12 @@ def test_code_spans_359():
         "[icode-span:bar]",
         "[end-para]",
     ]
+    expected_gfm = """<p>`foo<code>bar</code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
