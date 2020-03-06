@@ -47,6 +47,24 @@ class MarkdownToken:
         return "'" + self.__str__() + "'"
 
     @property
+    def is_block(self):
+        """
+        Returns whether or not the current token is one of the block tokens.
+        """
+        # block quotes?
+        return (
+            self.is_list_start
+            or self.token_name == MarkdownToken.token_thematic_break
+            or self.is_atx_header
+            or self.is_setext
+            or self.is_code_block
+            or self.token_name == MarkdownToken.token_html_block
+            or self.is_paragraph
+        )
+        # lrd or \
+        # or tables
+
+    @property
     def is_blank_line(self):
         """
         Returns whether or not the current token is the blank line element.
@@ -390,6 +408,7 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
 
     def __init__(self, list_start_sequence, indent_level, extracted_whitespace):
         self.indent_level = indent_level
+        self.is_loose = True
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_unordered_list_start,
@@ -409,7 +428,9 @@ class OrderedListStartMarkdownToken(MarkdownToken):
         indent_level,
         extracted_whitespace,
     ):
+        self.list_start_content = list_start_content
         self.indent_level = indent_level
+        self.is_loose = True
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_ordered_list_start,

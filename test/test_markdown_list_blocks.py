@@ -5,10 +5,12 @@ https://github.github.com/gfm/#lists
 import pytest
 
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
+from pymarkdown.transform_to_gfm import TransformToGfm
 
-from .utils import assert_if_lists_different
+from .utils import assert_if_lists_different, assert_if_strings_different
 
 
+@pytest.mark.gfm
 def test_list_blocks_231():
     """
     Test case 231:  If the list item is ordered, then it is also assigned a start number, based on the ordered list marker.
@@ -16,6 +18,7 @@ def test_list_blocks_231():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """A paragraph
 with two lines.
 
@@ -37,14 +40,24 @@ with two lines.
         "[end-para]",
         "[end-block-quote]",
     ]
+    expected_gfm = """<p>A paragraph
+with two lines.</p>
+<pre><code>indented code
+</code></pre>
+<blockquote>
+<p>A block quote.</p>
+</blockquote>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_232():
     """
     Test case 232:  And let M be the marker 1., and N = 2. Then rule #1 says that the following is an ordered list item with start number 1, and the same contents as Ls:
@@ -52,6 +65,7 @@ def test_list_blocks_232():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """1.  A paragraph
     with two lines.
 
@@ -75,14 +89,28 @@ def test_list_blocks_232():
         "[end-block-quote]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol>
+<li>
+<p>A paragraph
+with two lines.</p>
+<pre><code>indented code
+</code></pre>
+<blockquote>
+<p>A block quote.</p>
+</blockquote>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_233():
     """
     Test case 233:  (part 1) Here are some examples showing how far content must be indented to be put under the list item:
@@ -90,6 +118,7 @@ def test_list_blocks_233():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- one
 
  two"""
@@ -104,14 +133,21 @@ def test_list_blocks_233():
         "[text:two:]",
         "[end-para]",
     ]
+    expected_gfm = """<ul>
+<li>one</li>
+</ul>
+<p>two</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_234():
     """
     Test case 234:  (part 2) Here are some examples showing how far content must be indented to be put under the list item:
@@ -119,6 +155,7 @@ def test_list_blocks_234():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- one
 
   two"""
@@ -133,14 +170,23 @@ def test_list_blocks_234():
         "[end-para]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>
+<p>one</p>
+<p>two</p>
+</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_235():
     """
     Test case 235:  (part 3) Here are some examples showing how far content must be indented to be put under the list item:
@@ -148,6 +194,7 @@ def test_list_blocks_235():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """ -    one
 
      two"""
@@ -162,14 +209,22 @@ def test_list_blocks_235():
         "[text:two: ]",
         "[end-icode-block]",
     ]
+    expected_gfm = """<ul>
+<li>one</li>
+</ul>
+<pre><code> two
+</code></pre>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_236():
     """
     Test case 236:  (part 4) Here are some examples showing how far content must be indented to be put under the list item:
@@ -177,6 +232,7 @@ def test_list_blocks_236():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """ -    one
 
       two"""
@@ -191,15 +247,24 @@ def test_list_blocks_236():
         "[end-para]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>
+<p>one</p>
+<p>two</p>
+</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
 @pytest.mark.skip
+@pytest.mark.gfm
 def test_list_blocks_237():
     """
     Test case 237:  The spaces after the list marker determine how much relative indentation is needed. Which column this indentation reaches will depend on how the list item is embedded in other constructions, as shown by this example:
@@ -207,6 +272,7 @@ def test_list_blocks_237():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """   > > 1.  one
 >>
 >>     two"""
@@ -219,15 +285,28 @@ def test_list_blocks_237():
         "[end-para]",
         "[end-block-quote]",
     ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<ol>
+<li>
+<p>one</p>
+<p>two</p>
+</li>
+</ol>
+</blockquote>
+</blockquote>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
 @pytest.mark.skip
+@pytest.mark.gfm
 def test_list_blocks_238():
     """
     Test case 238:  The converse is also possible. In the following example, the word two occurs far to the right of the initial text of the list item, one, but it is not considered part of the list item, because it is not indented far enough past the blockquote marker:
@@ -235,6 +314,7 @@ def test_list_blocks_238():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """>>- one
 >>
   >  > two"""
@@ -247,14 +327,25 @@ def test_list_blocks_238():
         "[end-para]",
         "[end-block-quote]",
     ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<ul>
+<li>one</li>
+</ul>
+<p>two</p>
+</blockquote>
+</blockquote>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_239():
     """
     Test case 239:  Note that at least one space is needed between the list marker and any following content, so these are not list items:
@@ -262,6 +353,7 @@ def test_list_blocks_239():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """-one
 
 2.two"""
@@ -274,14 +366,19 @@ def test_list_blocks_239():
         "[text:2.two:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>-one</p>
+<p>2.two</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_240():
     """
     Test case 240:  A list item may contain blocks that are separated by more than one blank line.
@@ -289,6 +386,7 @@ def test_list_blocks_240():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- foo
 
 
@@ -305,14 +403,23 @@ def test_list_blocks_240():
         "[end-para]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>
+<p>foo</p>
+<p>bar</p>
+</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_241():
     """
     Test case 241:  A list item may contain any kind of block:
@@ -320,6 +427,7 @@ def test_list_blocks_241():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """1.  foo
 
     ```
@@ -350,14 +458,28 @@ def test_list_blocks_241():
         "[end-block-quote]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol>
+<li>
+<p>foo</p>
+<pre><code>bar
+</code></pre>
+<p>baz</p>
+<blockquote>
+<p>bam</p>
+</blockquote>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_242():
     """
     Test case 242:  A list item that contains an indented code block will preserve empty lines within the code block verbatim.
@@ -365,6 +487,7 @@ def test_list_blocks_242():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- Foo
 
       bar
@@ -382,14 +505,27 @@ def test_list_blocks_242():
         "[end-icode-block]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>
+<p>Foo</p>
+<pre><code>bar
+
+
+baz
+</code></pre>
+</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_243():
     """
     Test case 243:  (part 1) Note that ordered list start numbers must be nine digits or less:
@@ -397,6 +533,7 @@ def test_list_blocks_243():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """123456789. ok"""
     expected_tokens = [
         "[olist:.:123456789:11:]",
@@ -405,14 +542,20 @@ def test_list_blocks_243():
         "[end-para]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol start="123456789">
+<li>ok</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_244():
     """
     Test case 244:  (part 2) Note that ordered list start numbers must be nine digits or less:
@@ -420,16 +563,21 @@ def test_list_blocks_244():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """1234567890. not ok"""
     expected_tokens = ["[para:]", "[text:1234567890. not ok:]", "[end-para]"]
+    expected_gfm = """<p>1234567890. not ok</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_245():
     """
     Test case 245:  (part 1) A start number may begin with 0s:
@@ -437,6 +585,7 @@ def test_list_blocks_245():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """0. ok"""
     expected_tokens = [
         "[olist:.:0:3:]",
@@ -445,14 +594,20 @@ def test_list_blocks_245():
         "[end-para]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol start="0">
+<li>ok</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_246():
     """
     Test case 246:  (part 2) A start number may begin with 0s:
@@ -460,6 +615,7 @@ def test_list_blocks_246():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """003. ok"""
     expected_tokens = [
         "[olist:.:003:5:]",
@@ -468,14 +624,20 @@ def test_list_blocks_246():
         "[end-para]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol start="3">
+<li>ok</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_247():
     """
     Test case 247:  A start number may not be negative:
@@ -483,16 +645,21 @@ def test_list_blocks_247():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """-1. not ok"""
     expected_tokens = ["[para:]", "[text:-1. not ok:]", "[end-para]"]
+    expected_gfm = """<p>-1. not ok</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_248():
     """
     Test case 248:  An indented code block will have to be indented four spaces beyond the edge of the region where text will be included in the list item. In the following case that is 6 spaces:
@@ -500,6 +667,7 @@ def test_list_blocks_248():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- foo
 
       bar"""
@@ -514,14 +682,24 @@ def test_list_blocks_248():
         "[end-icode-block]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>
+<p>foo</p>
+<pre><code>bar
+</code></pre>
+</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_249():
     """
     Test case 249:  And in this case it is 11 spaces:
@@ -529,6 +707,7 @@ def test_list_blocks_249():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """  10.  foo
 
            bar"""
@@ -543,14 +722,24 @@ def test_list_blocks_249():
         "[end-icode-block]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol start="10">
+<li>
+<p>foo</p>
+<pre><code>bar
+</code></pre>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_250():
     """
     Test case 250:  (part 1) If the first block in the list item is an indented code block, then by rule #2, the contents must be indented one space after the list marker:
@@ -558,6 +747,7 @@ def test_list_blocks_250():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """    indented code
 
 paragraph
@@ -576,14 +766,22 @@ paragraph
         "[text:more code:]",
         "[end-icode-block]",
     ]
+    expected_gfm = """<pre><code>indented code
+</code></pre>
+<p>paragraph</p>
+<pre><code>more code
+</code></pre>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_251():
     """
     Test case 251:  (part 2) If the first block in the list item is an indented code block, then by rule #2, the contents must be indented one space after the list marker:
@@ -591,6 +789,7 @@ def test_list_blocks_251():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """1.     indented code
 
    paragraph
@@ -611,14 +810,26 @@ def test_list_blocks_251():
         "[end-icode-block]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol>
+<li>
+<pre><code>indented code
+</code></pre>
+<p>paragraph</p>
+<pre><code>more code
+</code></pre>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_252():
     """
     Test case 252:  (part 2) If the first block in the list item is an indented code block, then by rule #2, the contents must be indented one space after the list marker:
@@ -626,6 +837,7 @@ def test_list_blocks_252():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """1.      indented code
 
    paragraph
@@ -646,14 +858,26 @@ def test_list_blocks_252():
         "[end-icode-block]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol>
+<li>
+<pre><code> indented code
+</code></pre>
+<p>paragraph</p>
+<pre><code>more code
+</code></pre>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_253():
     """
     Test case 253:  (part 1) Note that rules #1 and #2 only apply to two cases: (a) cases in which the lines to be included in a list item begin with a non-whitespace character, and (b) cases in which they begin with an indented code block. In a case like the following, where the first block begins with a three-space indent, the rules do not allow us to form a list item by indenting the whole thing and prepending a list marker:
@@ -661,6 +885,7 @@ def test_list_blocks_253():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """   foo
 
 bar"""
@@ -673,14 +898,19 @@ bar"""
         "[text:bar:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>foo</p>
+<p>bar</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_254():
     """
     Test case 254:  (part 2) Note that rules #1 and #2 only apply to two cases: (a) cases in which the lines to be included in a list item begin with a non-whitespace character, and (b) cases in which they begin with an indented code block. In a case like the following, where the first block begins with a three-space indent, the rules do not allow us to form a list item by indenting the whole thing and prepending a list marker:
@@ -688,6 +918,7 @@ def test_list_blocks_254():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """-    foo
 
   bar"""
@@ -702,14 +933,21 @@ def test_list_blocks_254():
         "[text:bar:]",
         "[end-para]",
     ]
+    expected_gfm = """<ul>
+<li>foo</li>
+</ul>
+<p>bar</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_255():
     """
     Test case 255:  This is not a significant restriction, because when a block begins with 1-3 spaces indent, the indentation can always be removed without a change in interpretation, allowing rule #1 to be applied. So, in the above case:
@@ -717,6 +955,7 @@ def test_list_blocks_255():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """-  foo
 
    bar"""
@@ -731,14 +970,23 @@ def test_list_blocks_255():
         "[end-para]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>
+<p>foo</p>
+<p>bar</p>
+</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_256():
     """
     Test case 256:  Here are some list items that start with a blank line but are not empty:
@@ -746,6 +994,7 @@ def test_list_blocks_256():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """-
   foo
 -
@@ -772,14 +1021,28 @@ def test_list_blocks_256():
         "[end-icode-block]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>foo</li>
+<li>
+<pre><code>bar
+</code></pre>
+</li>
+<li>
+<pre><code>baz
+</code></pre>
+</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_257():
     """
     Test case 257:  When the list item starts with a blank line, the number of spaces following the list marker doesn’t change the required indentation:
@@ -787,6 +1050,7 @@ def test_list_blocks_257():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """-\a\a\a
   foo""".replace(
         "\a", " "
@@ -799,14 +1063,20 @@ def test_list_blocks_257():
         "[end-para]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>foo</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_258():
     """
     Test case 258:  A list item can begin with at most one blank line. In the following example, foo is not part of the list item:
@@ -814,6 +1084,7 @@ def test_list_blocks_258():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """-
 
   foo"""
@@ -826,14 +1097,21 @@ def test_list_blocks_258():
         "[text:foo:]",
         "[end-para]",
     ]
+    expected_gfm = """<ul>
+<li></li>
+</ul>
+<p>foo</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_259():
     """
     Test case 259:  Here is an empty bullet list item:
@@ -841,6 +1119,7 @@ def test_list_blocks_259():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- foo
 -
 - bar"""
@@ -857,14 +1136,22 @@ def test_list_blocks_259():
         "[end-para]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>foo</li>
+<li></li>
+<li>bar</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_260():
     """
     Test case 260:  It does not matter whether there are spaces following the list marker:
@@ -872,6 +1159,7 @@ def test_list_blocks_260():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- foo
 -   
 - bar"""
@@ -888,14 +1176,22 @@ def test_list_blocks_260():
         "[end-para]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>foo</li>
+<li></li>
+<li>bar</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_261():
     """
     Test case 261:  Here is an empty ordered list item:
@@ -903,6 +1199,7 @@ def test_list_blocks_261():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """1. foo
 2.
 3. bar"""
@@ -919,14 +1216,22 @@ def test_list_blocks_261():
         "[end-para]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol>
+<li>foo</li>
+<li></li>
+<li>bar</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_262():
     """
     Test case 262:  A list may start or end with an empty list item:
@@ -934,16 +1239,23 @@ def test_list_blocks_262():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """*"""
     expected_tokens = ["[ulist:*::2:]", "[BLANK:]", "[end-ulist]"]
+    expected_gfm = """<ul>
+<li></li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_263():
     """
     Test case 263:  However, an empty list item cannot interrupt a paragraph:
@@ -951,6 +1263,7 @@ def test_list_blocks_263():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """foo
 *
 
@@ -965,14 +1278,21 @@ foo
         "[text:foo\n1.::\n]",
         "[end-para]",
     ]
+    expected_gfm = """<p>foo
+*</p>
+<p>foo
+1.</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_264():
     """
     Test case 264:  Indented one space:
@@ -980,6 +1300,7 @@ def test_list_blocks_264():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """ 1.  A paragraph
      with two lines.
 
@@ -1003,14 +1324,28 @@ def test_list_blocks_264():
         "[end-block-quote]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol>
+<li>
+<p>A paragraph
+with two lines.</p>
+<pre><code>indented code
+</code></pre>
+<blockquote>
+<p>A block quote.</p>
+</blockquote>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_265():
     """
     Test case 265:  Indented two spaces:
@@ -1018,6 +1353,7 @@ def test_list_blocks_265():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """  1.  A paragraph
       with two lines.
 
@@ -1041,14 +1377,28 @@ def test_list_blocks_265():
         "[end-block-quote]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol>
+<li>
+<p>A paragraph
+with two lines.</p>
+<pre><code>indented code
+</code></pre>
+<blockquote>
+<p>A block quote.</p>
+</blockquote>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_266():
     """
     Test case 266:  Indented three spaces:
@@ -1056,6 +1406,7 @@ def test_list_blocks_266():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """   1.  A paragraph
        with two lines.
 
@@ -1079,14 +1430,28 @@ def test_list_blocks_266():
         "[end-block-quote]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol>
+<li>
+<p>A paragraph
+with two lines.</p>
+<pre><code>indented code
+</code></pre>
+<blockquote>
+<p>A block quote.</p>
+</blockquote>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_267():
     """
     Test case 267:  Four spaces indent gives a code block
@@ -1094,6 +1459,7 @@ def test_list_blocks_267():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """    1.  A paragraph
         with two lines.
 
@@ -1105,14 +1471,24 @@ def test_list_blocks_267():
         "[text:1.  A paragraph\n    with two lines.\n\n        indented code\n\n    &gt; A block quote.:]",
         "[end-icode-block]",
     ]
+    expected_gfm = """<pre><code>1.  A paragraph
+    with two lines.
+
+        indented code
+
+    &gt; A block quote.
+</code></pre>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_268():
     """
     Test case 268:  Here is an example with lazy continuation lines:
@@ -1120,6 +1496,7 @@ def test_list_blocks_268():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """  1.  A paragraph
 with two lines.
 
@@ -1143,14 +1520,28 @@ with two lines.
         "[end-block-quote]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol>
+<li>
+<p>A paragraph
+with two lines.</p>
+<pre><code>indented code
+</code></pre>
+<blockquote>
+<p>A block quote.</p>
+</blockquote>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_269():
     """
     Test case 269:  Indentation can be partially deleted:
@@ -1158,6 +1549,7 @@ def test_list_blocks_269():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """  1.  A paragraph
     with two lines."""
     expected_tokens = [
@@ -1167,15 +1559,22 @@ def test_list_blocks_269():
         "[end-para]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol>
+<li>A paragraph
+with two lines.</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
 @pytest.mark.skip
+@pytest.mark.gfm
 def test_list_blocks_270():
     """
     Test case 270:  (part 1) These examples show how laziness can work in nested structures:
@@ -1183,6 +1582,7 @@ def test_list_blocks_270():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """> 1. > Blockquote
 continued here."""
     expected_tokens = [
@@ -1194,15 +1594,28 @@ continued here."""
         "[end-para]",
         "[end-block-quote]",
     ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<blockquote>
+<p>Blockquote
+continued here.</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
 @pytest.mark.skip
+@pytest.mark.gfm
 def test_list_blocks_271():
     """
     Test case 271:  (part 2) These examples show how laziness can work in nested structures:
@@ -1210,6 +1623,7 @@ def test_list_blocks_271():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """> 1. > Blockquote
 > continued here."""
     expected_tokens = [
@@ -1221,14 +1635,27 @@ def test_list_blocks_271():
         "[end-para]",
         "[end-block-quote]",
     ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<blockquote>
+<p>Blockquote
+continued here.</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_272():
     """
     Test case 272:  So, in this case we need two spaces indent:
@@ -1236,6 +1663,7 @@ def test_list_blocks_272():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- foo
   - bar
     - baz
@@ -1262,14 +1690,32 @@ def test_list_blocks_272():
         "[end-ulist]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>foo
+<ul>
+<li>bar
+<ul>
+<li>baz
+<ul>
+<li>boo</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_273():
     """
     Test case 273:  One is not enough:
@@ -1277,6 +1723,7 @@ def test_list_blocks_273():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- foo
  - bar
   - baz
@@ -1300,14 +1747,23 @@ def test_list_blocks_273():
         "[end-para]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>foo</li>
+<li>bar</li>
+<li>baz</li>
+<li>boo</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_274():
     """
     Test case 274:  Here we need four, because the list marker is wider:
@@ -1315,6 +1771,7 @@ def test_list_blocks_274():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """10) foo
     - bar"""
     expected_tokens = [
@@ -1329,14 +1786,24 @@ def test_list_blocks_274():
         "[end-ulist]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol start="10">
+<li>foo
+<ul>
+<li>bar</li>
+</ul>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_275():
     """
     Test case 275:  Three is not enough:
@@ -1344,6 +1811,7 @@ def test_list_blocks_275():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """10) foo
    - bar"""
     expected_tokens = [
@@ -1358,14 +1826,23 @@ def test_list_blocks_275():
         "[end-para]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ol start="10">
+<li>foo</li>
+</ol>
+<ul>
+<li>bar</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_276():
     """
     Test case 276:  (part 1) A list may be the first block in a list item:
@@ -1373,6 +1850,7 @@ def test_list_blocks_276():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- - foo"""
     expected_tokens = [
         "[ulist:-::2:]",
@@ -1383,14 +1861,24 @@ def test_list_blocks_276():
         "[end-ulist]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>
+<ul>
+<li>foo</li>
+</ul>
+</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_277():
     """
     Test case 277:  (part 2) A list may be the first block in a list item:
@@ -1398,6 +1886,7 @@ def test_list_blocks_277():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """1. - 2. foo"""
     expected_tokens = [
         "[olist:.:1:3:]",
@@ -1410,14 +1899,28 @@ def test_list_blocks_277():
         "[end-ulist]",
         "[end-olist]",
     ]
+    expected_gfm = """<ol>
+<li>
+<ul>
+<li>
+<ol start="2">
+<li>foo</li>
+</ol>
+</li>
+</ul>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_list_blocks_278():
     """
     Test case 278:  A list item can contain a heading:
@@ -1425,6 +1928,7 @@ def test_list_blocks_278():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """- # Foo
 - Bar
   ---
@@ -1443,9 +1947,19 @@ def test_list_blocks_278():
         "[end-para]",
         "[end-ulist]",
     ]
+    expected_gfm = """<ul>
+<li>
+<h1>Foo</h1>
+</li>
+<li>
+<h2>Bar</h2>
+baz</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
