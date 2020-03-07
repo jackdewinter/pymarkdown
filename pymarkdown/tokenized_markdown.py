@@ -470,25 +470,30 @@ class TokenizedMarkdown:
             current_string = current_string + source_text[start_index:]
         return current_string
 
-    def append_text(self, string_to_append_to, text_to_append):
+    def append_text(
+        self, string_to_append_to, text_to_append, alternate_escape_map=None
+    ):
         """
         Append the text to the given string, doing any needed encoding as we go.
         """
 
+        if not alternate_escape_map:
+            alternate_escape_map = self.html_character_escape_map
+
         start_index = 0
         next_index = self.index_any_of(
-            text_to_append, self.html_character_escape_map.keys(), start_index
+            text_to_append, alternate_escape_map.keys(), start_index
         )
         while next_index != -1:
             string_to_append_to = (
                 string_to_append_to
                 + text_to_append[start_index:next_index]
-                + self.html_character_escape_map[text_to_append[next_index]]
+                + alternate_escape_map[text_to_append[next_index]]
             )
 
             start_index = next_index + 1
             next_index = self.index_any_of(
-                text_to_append, self.html_character_escape_map.keys(), start_index
+                text_to_append, alternate_escape_map.keys(), start_index
             )
 
         if start_index < len(text_to_append):

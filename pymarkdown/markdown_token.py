@@ -503,6 +503,7 @@ class UriAutolinkMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, autolink_text):
+        self.autolink_text = autolink_text
         MarkdownToken.__init__(
             self, MarkdownToken.token_inline_uri_autolink, autolink_text
         )
@@ -514,6 +515,7 @@ class EmailAutolinkMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, autolink_text):
+        self.autolink_text = autolink_text
         MarkdownToken.__init__(
             self, MarkdownToken.token_inline_email_autolink, autolink_text
         )

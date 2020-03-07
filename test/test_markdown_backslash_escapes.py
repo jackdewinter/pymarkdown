@@ -247,7 +247,6 @@ def test_backslash_escapes_315():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_backslash_escapes_316():
     """

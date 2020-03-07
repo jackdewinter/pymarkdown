@@ -519,7 +519,6 @@ def test_code_spans_355():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_code_spans_356():
     """

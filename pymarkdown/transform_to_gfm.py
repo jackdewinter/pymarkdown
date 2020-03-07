@@ -1,6 +1,8 @@
 """
 Module to provide for a transformation from markdown tokens to html for GFM.
 """
+from pymarkdown.tokenized_markdown import TokenizedMarkdown
+
 from pymarkdown.markdown_token import (  # EmailAutolinkMarkdownToken,; SetextHeaderEndMarkdownToken,; UriAutolinkMarkdownToken,
     AtxHeaderMarkdownToken,
     BlankLineMarkdownToken,
@@ -20,6 +22,8 @@ from pymarkdown.markdown_token import (  # EmailAutolinkMarkdownToken,; SetextHe
     TextMarkdownToken,
     ThematicBreakMarkdownToken,
     UnorderedListStartMarkdownToken,
+    UriAutolinkMarkdownToken,
+    EmailAutolinkMarkdownToken,
 )
 
 
@@ -43,6 +47,12 @@ class TransformToGfm:
         "<ol>",
         '<ol start="',
     ]
+    uri_autolink_html_character_escape_map = {
+        "<": "&lt;",
+        ">": "&gt;",
+        "&": "&amp;",
+    }
+    raw_html_percent_escape_ascii_chars = '"%[\\]^`{}|'
 
     @classmethod
     def calculate_list_looseness(cls, actual_tokens, actual_token_index, next_token):
@@ -337,6 +347,52 @@ class TransformToGfm:
                 output_html = output_html + "<code>" + next_token.span_text + "</code>"
             elif isinstance(next_token, RawHtmlMarkdownToken):
                 output_html = output_html + "<" + next_token.raw_tag + ">"
+            elif isinstance(next_token, EmailAutolinkMarkdownToken):
+                output_html = (
+                    output_html
+                    + '<a href="mailto:'
+                    + next_token.autolink_text
+                    + '">'
+                    + next_token.autolink_text
+                    + "</a>"
+                )
+            elif isinstance(next_token, UriAutolinkMarkdownToken):
+
+                in_tag_pretext = TokenizedMarkdown().append_text(
+                    "",
+                    next_token.autolink_text,
+                    alternate_escape_map=TransformToGfm.uri_autolink_html_character_escape_map,
+                )
+                in_tag_text = ""
+                for next_character in in_tag_pretext:
+                    if (
+                        next_character
+                        in TransformToGfm.raw_html_percent_escape_ascii_chars
+                    ):
+                        in_tag_text = (
+                            in_tag_text + "%" + (hex(ord(next_character))[2:]).upper()
+                        )
+                    elif ord(next_character) >= 128:
+                        encoded_data = next_character.encode("utf8")
+                        for encoded_byte in encoded_data:
+                            in_tag_text = (
+                                in_tag_text + "%" + (hex(encoded_byte)[2:]).upper()
+                            )
+                    else:
+                        in_tag_text = in_tag_text + next_character
+
+                in_anchor_text = TokenizedMarkdown().append_text(
+                    "", next_token.autolink_text
+                )
+
+                output_html = (
+                    output_html
+                    + '<a href="'
+                    + in_tag_text
+                    + '">'
+                    + in_anchor_text
+                    + "</a>"
+                )
             elif isinstance(next_token, HtmlBlockMarkdownToken):
                 is_in_html_block = True
                 if (
@@ -454,21 +510,7 @@ class TransformToGfm:
             if add_trailing_text:
                 stack_text = transform_stack.pop()
 
-                add_trailing_text_tokens = [
-                    "<hr />",
-                    "<p>",
-                    "<h1>",
-                    "<h2>",
-                    "<h3>",
-                    "<h4>",
-                    "<h5>",
-                    "<h6>",
-                    "<pre>",
-                    "<ul>",
-                    "<ol>",
-                    '<ol start="',
-                ]
-                for next_token_to_test in add_trailing_text_tokens:
+                for next_token_to_test in TransformToGfm.add_trailing_text_tokens:
                     if output_html.startswith(next_token_to_test):
                         output_html = "\n" + output_html
                         break

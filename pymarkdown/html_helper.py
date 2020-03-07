@@ -180,13 +180,14 @@ class HtmlHelper:
             tag_name
         ) and not HtmlHelper.is_valid_block_1_tag_name(tag_name)
 
-        non_whitespace_index, _ = ParserHelper.extract_whitespace(
+        non_whitespace_index, extracted_whitespace = ParserHelper.extract_whitespace(
             line_to_parse, next_char_index
         )
 
         are_attributes_valid = True
         while (
             is_tag_valid
+            and extracted_whitespace
             and are_attributes_valid
             and (
                 # pylint: disable=chained-comparison
@@ -211,9 +212,10 @@ class HtmlHelper:
             if non_whitespace_index == -1:
                 are_attributes_valid = False
                 break
-            non_whitespace_index, _ = ParserHelper.extract_whitespace(
-                line_to_parse, non_whitespace_index
-            )
+            (
+                non_whitespace_index,
+                extracted_whitespace,
+            ) = ParserHelper.extract_whitespace(line_to_parse, non_whitespace_index)
 
         is_end_of_tag_present = False
         if (
