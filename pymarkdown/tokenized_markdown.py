@@ -14,18 +14,21 @@ from pymarkdown.markdown_token import (
     BlankLineMarkdownToken,
     BlockQuoteMarkdownToken,
     EmailAutolinkMarkdownToken,
+    EmphasisMarkdownToken,
     EndMarkdownToken,
     FencedCodeBlockMarkdownToken,
     HardBreakMarkdownToken,
     HtmlBlockMarkdownToken,
     IndentedCodeBlockMarkdownToken,
     InlineCodeSpanMarkdownToken,
+    MarkdownToken,
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
     ParagraphMarkdownToken,
     RawHtmlMarkdownToken,
     SetextHeaderEndMarkdownToken,
     SetextHeaderMarkdownToken,
+    SpecialTextMarkdownToken,
     TextMarkdownToken,
     ThematicBreakMarkdownToken,
     UnorderedListStartMarkdownToken,
@@ -159,6 +162,14 @@ class TokenizedMarkdown:
             string.ascii_letters + string.digits + "_.:-"
         )
         self.unquoted_attribute_value_stop = "\"'=<>`" + " \x09\x0a\x0b\x0c\x0d"
+
+        self.unicode_whitespace = "\x20\x09\x0a\x0c\x0d\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000"
+        self.punctuation_characters = (
+            "\u0020\u0021\u0022\u0023\u0024\u0025\u0026\u0027\u0028\u0029\u002a\u002b\u002c\u002d\u002e\u002f"
+            + "\u003a\u003b\u003c\u003d\u003e\u003f\u0040"
+            + "\u005b\u005c\u005d\u005e\u005f\u0060"
+            + "\u007b\u007c\u007d\u007e"
+        )
 
         self.backslash_punctuation = "!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~\\"
         self.resource_path = os.path.join(os.path.split(__file__)[0], "resources")
@@ -501,6 +512,8 @@ class TokenizedMarkdown:
 
         return string_to_append_to
 
+    # pylint: disable=too-many-branches
+    # pylint: disable=too-many-statements
     def process_inline_text_block(self, source_text, starting_whitespace=""):
         """
         Process a text block for any inline items.
@@ -511,7 +524,7 @@ class TokenizedMarkdown:
         start_index = 0
         current_string = ""
         end_string = None
-        valid_sequence_starts = "`\\&\n<"
+        valid_sequence_starts = "`\\&\n<*_[!]"
 
         next_index = self.index_any_of(source_text, valid_sequence_starts, start_index)
         print("next_index>>" + str(next_index))
@@ -542,6 +555,18 @@ class TokenizedMarkdown:
                 new_string, new_index, new_tokens = self.handle_angle_brackets(
                     source_text, next_index
                 )
+            elif source_text[next_index] in "*_[]":
+                new_string, new_index, new_tokens = self.handle_inline_special(
+                    source_text, next_index, 1
+                )
+            elif source_text[next_index] == "!":
+                if ParserHelper.are_characters_at_index(source_text, next_index, "!["):
+                    new_string, new_index, new_tokens = self.handle_inline_special(
+                        source_text, next_index, 2
+                    )
+                else:
+                    new_string = "!"
+                    new_index = next_index + 1
             else:  # if source_text[next_index] == "\n":
                 (
                     new_string,
@@ -603,7 +628,178 @@ class TokenizedMarkdown:
                 )
             )
         print(">>" + str(inline_blocks) + "<<")
+
+        return self.resolve_inline_emphasis(inline_blocks)
+
+    # pylint: enable=too-many-branches
+    # pylint: enable=too-many-statements
+
+    # pylint: disable=too-many-branches
+    def resolve_inline_emphasis(self, inline_blocks):
+        """
+        Resolve the inline emphasis by interpreting the special text tokens.
+        """
+
+        delimiter_stack = []
+        for i in inline_blocks:
+            if not isinstance(i, SpecialTextMarkdownToken):
+                continue
+            delimiter_stack.append(i)
+
+        stack_bottom = -1
+        current_position = stack_bottom + 1
+        openers_bottom = stack_bottom
+        if current_position < len(delimiter_stack):
+            print(
+                "BLOCK("
+                + str(current_position)
+                + ") of ("
+                + str(len(delimiter_stack))
+                + ")"
+            )
+            print(
+                "BLOCK("
+                + str(current_position)
+                + ")-->"
+                + delimiter_stack[current_position].show_process_emphasis()
+            )
+
+            while current_position < (len(delimiter_stack) - 1):
+                current_position = current_position + 1
+                print(
+                    "Block("
+                    + str(current_position)
+                    + ")-->"
+                    + delimiter_stack[current_position].show_process_emphasis()
+                )
+                if delimiter_stack[current_position].token_text[0] not in "*_":
+                    print("not emphasis")
+                    continue
+                if not self.is_potential_closer(delimiter_stack[current_position]):
+                    print("not closer")
+                    continue
+
+                matching_delimiter = delimiter_stack[current_position].token_text[0]
+                print("potential closer")
+                scan_index = current_position - 1
+                found_one = False
+                while (
+                    scan_index >= 0
+                    and scan_index > stack_bottom
+                    and scan_index > openers_bottom
+                    and delimiter_stack[scan_index].token_text[0] == matching_delimiter
+                ):
+                    print("potential opener:" + str(scan_index))
+                    if delimiter_stack[scan_index].active and self.is_potential_opener(
+                        delimiter_stack[scan_index]
+                    ):
+                        found_one = True
+                        break
+                    scan_index = scan_index - 1
+
+                if found_one:
+                    print("FOUND OPEN")
+                    # Figure out whether we have emphasis or strong emphasis
+                    emph_length = 1
+                    if (
+                        delimiter_stack[current_position].repeat_count >= 2
+                        and delimiter_stack[scan_index].repeat_count >= 2
+                    ):
+                        emph_length = 2
+
+                    # add emph node in main stream
+                    inf_start = inline_blocks.index(delimiter_stack[scan_index])
+                    inline_blocks.insert(
+                        inf_start + 1, EmphasisMarkdownToken(emph_length)
+                    )
+                    inf_end = inline_blocks.index(delimiter_stack[current_position])
+                    inline_blocks.insert(
+                        inf_end,
+                        EndMarkdownToken(
+                            MarkdownToken.token_inline_emphasis, "", str(emph_length)
+                        ),
+                    )
+
+                    # "remove" between start and end from delimiter_stack
+                    # remove emph_length from open and close nodes
+                    delimiter_stack[current_position].repeat_count = (
+                        delimiter_stack[current_position].repeat_count - emph_length
+                    )
+                    if not delimiter_stack[current_position].repeat_count:
+                        inline_blocks.remove(delimiter_stack[current_position])
+                    delimiter_stack[current_position].active = False
+
+                    delimiter_stack[scan_index].repeat_count = (
+                        delimiter_stack[scan_index].repeat_count - emph_length
+                    )
+                    if not delimiter_stack[scan_index].repeat_count:
+                        inline_blocks.remove(delimiter_stack[scan_index])
+                    delimiter_stack[scan_index].active = False
+                else:
+                    print("NOT FOUND OPEN")
+                    openers_bottom = current_position - 1
+
+                # current_position = current_position + 1
+                print("next->" + str(current_position))
         return inline_blocks
+
+    # pylint: enable=too-many-branches
+
+    def is_right_flanking_delimiter_run(self, current_token):
+        """
+        Is the current token a right flanking delimiter run?
+        """
+
+        preceding_two = current_token.preceding_two.rjust(2, " ")
+        following_two = current_token.following_two.ljust(2, " ")
+
+        return preceding_two[-1] not in self.unicode_whitespace and (
+            not preceding_two[-1] in self.punctuation_characters
+            or (
+                preceding_two[-1] in self.punctuation_characters
+                and (
+                    following_two[0] in self.unicode_whitespace
+                    or following_two[0] in self.punctuation_characters
+                )
+            )
+        )
+
+    def is_left_flanking_delimiter_run(self, current_token):
+        """
+        Is the current token a left flanking delimiter run?
+        """
+
+        preceding_two = current_token.preceding_two.rjust(2, " ")
+        following_two = current_token.following_two.ljust(2, " ")
+
+        return following_two[0] not in self.unicode_whitespace and (
+            not following_two[0] in self.punctuation_characters
+            or (
+                following_two[0] in self.punctuation_characters
+                and (
+                    preceding_two[-1] in self.unicode_whitespace
+                    or preceding_two[-1] in self.punctuation_characters
+                )
+            )
+        )
+
+    def is_potential_closer(self, current_token):
+        """
+        Determine if the current token is a potential closer.
+        """
+
+        # Rule 3
+        is_closer = self.is_right_flanking_delimiter_run(current_token)
+        return is_closer
+
+    def is_potential_opener(self, current_token):
+        """
+        Determine if the current token is a potential opener.
+        """
+
+        # Rule 1
+        is_opener = self.is_left_flanking_delimiter_run(current_token)
+        return is_opener
 
     @classmethod
     def modify_end_string(cls, end_string, removed_end_whitespace):
@@ -1103,6 +1299,35 @@ class TokenizedMarkdown:
         if new_token:
             return "", closing_angle_index, [new_token]
         return "<", next_index + 1, None
+
+    @classmethod
+    def handle_inline_special(cls, source_text, next_index, special_length):
+        """
+        Handle the collection of special inline characters for later processing.
+        """
+
+        inline_emphasis = ["*", "_"]
+        preceeding_two = None
+        following_two = None
+        repeat_count = 1
+        special_sequence = source_text[next_index : next_index + special_length]
+        if special_length == 1 and special_sequence in inline_emphasis:
+            repeat_count, new_index = ParserHelper.collect_while_character(
+                source_text, next_index, special_sequence
+            )
+            special_sequence = source_text[next_index:new_index]
+
+            preceeding_two = source_text[max(0, next_index - 2) : next_index]
+            following_two = source_text[
+                new_index : min(len(source_text), new_index + 2)
+            ]
+        else:
+            repeat_count = special_length
+            new_index = next_index + special_length
+        new_token = SpecialTextMarkdownToken(
+            special_sequence, repeat_count, preceeding_two, following_two
+        )
+        return "", new_index, [new_token]
 
     # pylint: disable=too-many-arguments
     def close_open_blocks(

@@ -155,7 +155,13 @@ def test_raw_html_637():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """<33> <__>"""
-    expected_tokens = ["[para:]", "[text:&lt;33&gt; &lt;__&gt;:]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:&lt;33&gt; &lt;:]",
+        "[text:__:]",
+        "[text:&gt;:]",
+        "[end-para]",
+    ]
     expected_gfm = """<p>&lt;33&gt; &lt;__&gt;</p>"""
 
     # Act
@@ -179,7 +185,9 @@ def test_raw_html_638():
     source_markdown = """<a h*#ref="hi">"""
     expected_tokens = [
         "[para:]",
-        "[text:&lt;a h*#ref=&quot;hi&quot;&gt;:]",
+        "[text:&lt;a h:]",
+        "[text:*:]",
+        "[text:#ref=&quot;hi&quot;&gt;:]",
         "[end-para]",
     ]
     expected_gfm = """<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>"""

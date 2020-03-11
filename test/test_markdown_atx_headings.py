@@ -147,15 +147,22 @@ def test_atx_headings_036():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """# foo *bar* \\*baz\\*"""
-    expected_tokens = ["[atx:1:0:]", "[text:foo *bar* *baz*: ]", "[end-atx::]"]
-    expected_gfm = """<h1>foo *bar* *baz*</h1>"""
+    expected_tokens = [
+        "[atx:1:0:]",
+        "[text:foo : ]",
+        "[emphasis:1]",
+        "[text:bar:]",
+        "[end-emphasis::1]",
+        "[text: *baz*:]",
+        "[end-atx::]",
+    ]
+    expected_gfm = """<h1>foo <em>bar</em> *baz*</h1>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO Expect this to fail when inline emphasis implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 

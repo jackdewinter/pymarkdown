@@ -25,22 +25,27 @@ Foo *bar*
 ---------"""
     expected_tokens = [
         "[setext:=:]",
-        "[text:Foo *bar*:]",
+        "[text:Foo :]",
+        "[emphasis:1]",
+        "[text:bar:]",
+        "[end-emphasis::1]",
         "[end-setext::]",
         "[BLANK:]",
         "[setext:-:]",
-        "[text:Foo *bar*:]",
+        "[text:Foo :]",
+        "[emphasis:1]",
+        "[text:bar:]",
+        "[end-emphasis::1]",
         "[end-setext::]",
     ]
-    expected_gfm = """<h1>Foo *bar*</h1>
-<h2>Foo *bar*</h2>"""
+    expected_gfm = """<h1>Foo <em>bar</em></h1>
+<h2>Foo <em>bar</em></h2>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO Expect this to fail when inline emphasis implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -59,18 +64,20 @@ baz*
 ===="""
     expected_tokens = [
         "[setext:=:]",
-        "[text:Foo *bar\nbaz*::\n]",
+        "[text:Foo :]",
+        "[emphasis:1]",
+        "[text:bar\nbaz::\n]",
+        "[end-emphasis::1]",
         "[end-setext::]",
     ]
-    expected_gfm = """<h1>Foo *bar
-baz*</h1>"""
+    expected_gfm = """<h1>Foo <em>bar
+baz</em></h1>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO Expect this to fail when inline emphasis implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -89,11 +96,15 @@ baz*\t
 ===="""
     expected_tokens = [
         "[setext:=:  ]",
-        "[text:Foo *bar\nbaz*    ::\n]",
+        "[text:Foo :]",
+        "[emphasis:1]",
+        "[text:bar\nbaz::\n]",
+        "[end-emphasis::1]",
+        "[text:    :]",
         "[end-setext::]",
     ]
-    expected_gfm = """<h1>Foo *bar
-baz*    </h1>"""
+    expected_gfm = """<h1>Foo <em>bar
+baz</em>    </h1>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -101,7 +112,6 @@ baz*    </h1>"""
 
     # Assert
     # TODO Expect this to fail when proper paragraph handling with breaks and trimming
-    # TODO Expect this to fail when inline emphasis implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 

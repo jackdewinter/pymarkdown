@@ -181,20 +181,21 @@ bar*""".replace(
     )
     expected_tokens = [
         "[para:\n]",
-        "[text:*foo:]",
+        "[emphasis:1]",
+        "[text:foo:]",
         "[hard-break]",
-        "[text:\nbar*::  \n]",
+        "[text:\nbar::  \n]",
+        "[end-emphasis::1]",
         "[end-para]",
     ]
-    expected_gfm = """<p>*foo<br />
-bar*</p>"""
+    expected_gfm = """<p><em>foo<br />
+bar</em></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO will fail when emphasis added
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -214,16 +215,17 @@ bar*""".replace(
     )
     expected_tokens = [
         "[para:\n]",
-        "[text:*foo:]",
+        "[emphasis:1]",
+        "[text:foo:]",
         "[hard-break]",
-        "[text:\nbar*:]",
+        "[text:\nbar:]",
+        "[end-emphasis::1]",
         "[end-para]",
     ]
-    expected_gfm = """<p>*foo<br />
-bar*</p>"""
+    expected_gfm = """<p><em>foo<br />
+bar</em></p>"""
 
     # Act
-    # TODO will fail when emphasis added
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 

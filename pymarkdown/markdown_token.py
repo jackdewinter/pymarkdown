@@ -27,6 +27,7 @@ class MarkdownToken:
     token_inline_uri_autolink = "uri-autolink"
     token_inline_email_autolink = "email-autolink"
     token_inline_raw_html = "raw-html"
+    token_inline_emphasis = "emphasis"
 
     def __init__(self, token_name, extra_data=None):
         self.token_name = token_name
@@ -390,6 +391,36 @@ class TextMarkdownToken(MarkdownToken):
         self.compose_extra_data_field()
 
 
+class SpecialTextMarkdownToken(TextMarkdownToken):
+    """
+    Class to provide for special tokens that represent exceptional inline elements.
+    """
+
+    def __init__(self, token_text, repeat_count, preceding_two, following_two):
+        self.repeat_count = repeat_count
+        self.active = True
+        self.preceding_two = preceding_two
+        self.following_two = following_two
+        TextMarkdownToken.__init__(self, token_text, "", "")
+
+    def show_process_emphasis(self):
+        """
+        Independent of the __str__ function, provide extra information.
+        """
+        return (
+            ">>active="
+            + str(self.active)
+            + ",repeat="
+            + str(self.repeat_count)
+            + ",preceeding='"
+            + str(self.preceding_two)
+            + "',following='"
+            + str(self.following_two)
+            + "':"
+            + str(self)
+        )
+
+
 class BlockQuoteMarkdownToken(MarkdownToken):
     """
     Class to provide for an encapsulation of the block quote element.
@@ -529,6 +560,17 @@ class RawHtmlMarkdownToken(MarkdownToken):
     def __init__(self, raw_tag):
         self.raw_tag = raw_tag
         MarkdownToken.__init__(self, MarkdownToken.token_inline_raw_html, raw_tag)
+
+
+class EmphasisMarkdownToken(MarkdownToken):
+    """
+    Class to provide for an encapsulation of the inline emphasis element.
+    """
+
+    def __init__(self, is_strong):
+        MarkdownToken.__init__(
+            self, MarkdownToken.token_inline_emphasis, str(is_strong)
+        )
 
 
 # pylint: enable=too-few-public-methods

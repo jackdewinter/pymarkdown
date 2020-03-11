@@ -36,7 +36,13 @@ def test_emphasis_367():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """_ foo bar_"""
-    expected_tokens = ["[para:]", "[text:_ foo bar_:]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:_:]",
+        "[text: foo bar:]",
+        "[text:_:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -53,7 +59,14 @@ def test_emphasis_368():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """a_"foo"_"""
-    expected_tokens = ["[para:]", "[text:a_&quot;foo&quot;_:]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:a:]",
+        "[text:_:]",
+        "[text:&quot;foo&quot;:]",
+        "[text:_:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -70,7 +83,14 @@ def test_emphasis_369():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """foo_bar_"""
-    expected_tokens = ["[para:]", "[text:foo_bar_:]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:foo:]",
+        "[emphasis:1]",
+        "[text:bar:]",
+        "[end-emphasis::1]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -87,7 +107,15 @@ def test_emphasis_370():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """5_6_78"""
-    expected_tokens = ["[para:]", "[text:5_6_78:]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:5:]",
+        "[emphasis:1]",
+        "[text:6:]",
+        "[end-emphasis::1]",
+        "[text:78:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -104,7 +132,14 @@ def test_emphasis_371():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """пристаням_стремятся_"""
-    expected_tokens = ["[para:]", "[text:пристаням_стремятся_:]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:пристаням:]",
+        "[emphasis:1]",
+        "[text:стремятся:]",
+        "[end-emphasis::1]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -121,7 +156,15 @@ def test_emphasis_372():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """aa_"bb"_cc"""
-    expected_tokens = ["[para:]", "[text:aa_&quot;bb&quot;_cc:]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:aa:]",
+        "[text:_:]",
+        "[text:&quot;bb&quot;:]",
+        "[text:_:]",
+        "[text:cc:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

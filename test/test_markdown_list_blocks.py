@@ -1271,7 +1271,8 @@ foo
 1."""
     expected_tokens = [
         "[para:\n]",
-        "[text:foo\n*::\n]",
+        "[text:foo\n::\n]",
+        "[text:*:]",
         "[end-para]",
         "[BLANK:]",
         "[para:\n]",

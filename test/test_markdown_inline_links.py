@@ -96,7 +96,14 @@ def test_inline_links_497():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """[link](/my uri)"""
-    expected_tokens = ["[para:]", "[text:[link](/my uri):]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:link:]",
+        "[text:]:]",
+        "[text:(/my uri):]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -134,7 +141,14 @@ def test_inline_links_499():
     tokenizer = TokenizedMarkdown()
     source_markdown = """[link](foo
 bar)"""
-    expected_tokens = ["[para:\n]", "[text:[link](foo\nbar)::\n]", "[end-para]"]
+    expected_tokens = [
+        "[para:\n]",
+        "[text:[:]",
+        "[text:link:]",
+        "[text:]:]",
+        "[text:(foo\nbar)::\n]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -154,7 +168,10 @@ def test_inline_links_500():
 bar>)"""
     expected_tokens = [
         "[para:\n]",
-        "[text:[link](:]",
+        "[text:[:]",
+        "[text:link:]",
+        "[text:]:]",
+        "[text:(:]",
         "[raw-html:foo\nbar]",
         "[text:):]",
         "[end-para]",
@@ -195,7 +212,14 @@ def test_inline_links_502():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """[link](<foo\\>)"""
-    expected_tokens = ["[para:]", "[text:[link](&lt;foo&gt;):]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:link:]",
+        "[text:]:]",
+        "[text:(&lt;foo&gt;):]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -482,7 +506,10 @@ def test_inline_links_516():
     source_markdown = """[link](/url "title "and" title")"""
     expected_tokens = [
         "[para:]",
-        "[text:[link](/url &quot;title &quot;and&quot; title&quot;):]",
+        "[text:[:]",
+        "[text:link:]",
+        "[text:]:]",
+        "[text:(/url &quot;title &quot;and&quot; title&quot;):]",
         "[end-para]",
     ]
 
@@ -542,7 +569,14 @@ def test_inline_links_519():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """[link] (/uri)"""
-    expected_tokens = ["[para:]", "[text:[link] (/uri):]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:link:]",
+        "[text:]:]",
+        "[text: (/uri):]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -579,7 +613,16 @@ def test_inline_links_521():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """[link] bar](/uri)"""
-    expected_tokens = ["[para:]", "[text:[link] bar](/uri):]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:link:]",
+        "[text:]:]",
+        "[text: bar:]",
+        "[text:]:]",
+        "[text:(/uri):]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -798,7 +841,8 @@ def test_inline_links_532():
     source_markdown = """[foo <bar attr="](baz)">"""
     expected_tokens = [
         "[para:]",
-        "[text:[foo :]",
+        "[text:[:]",
+        "[text:foo :]",
         '[raw-html:bar attr="](baz)"]',
         "[end-para]",
     ]
@@ -818,7 +862,13 @@ def test_inline_links_533():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """[foo`](/uri)`"""
-    expected_tokens = ["[para:]", "[text:[foo:]", "[icode-span:](/uri)]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[icode-span:](/uri)]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -837,7 +887,8 @@ def test_inline_links_534():
     source_markdown = """[foo<http://example.com/?search=](uri)>"""
     expected_tokens = [
         "[para:]",
-        "[text:[foo:]",
+        "[text:[:]",
+        "[text:foo:]",
         "[uri-autolink:http://example.com/?search=](uri)]",
         "[end-para]",
     ]

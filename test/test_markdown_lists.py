@@ -813,7 +813,6 @@ def test_list_items_296():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_list_items_297():
     """
     Test case 297:  (part 2) These are loose lists, even though there is no space between the items, because one of the items directly contains two block-level elements with a blank line between them:
@@ -838,7 +837,10 @@ def test_list_items_297():
         "[end-para]",
         "[BLANK:]",
         "[para:]",
-        "[text:[ref]: /url:]",
+        "[text:[:]",
+        "[text:ref:]",
+        "[text:]:]",
+        "[text:: /url:]",
         "[end-para]",
         "[li:2]",
         "[para:]",
@@ -852,6 +854,7 @@ def test_list_items_297():
 </li>
 <li>
 <p>b</p>
+<p>[ref]: /url</p>
 </li>
 <li>
 <p>d</p>
@@ -1347,3 +1350,4 @@ def test_list_items_306():
 # >>stack_count>>1>>#8:[BLANK:]
 # >>stack_count>>0>>#9:[end-ulist]
 # - should be end and then blank, as the blank is outside of the list
+# TODO scan GFM and ensure Unicode whitespace uses actual unicode whitespace, not just whitespace

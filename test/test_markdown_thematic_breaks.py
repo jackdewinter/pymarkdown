@@ -93,7 +93,10 @@ def test_thematic_breaks_016():
 __"""
     expected_tokens = [
         "[para:\n\n]",
-        "[text:--\n**\n__::\n\n]",
+        "[text:--\n::\n]",
+        "[text:**:]",
+        "[text:\n::\n]",
+        "[text:__:]",
         "[end-para]",
     ]
     expected_gfm = """<p>--
@@ -169,7 +172,7 @@ def test_thematic_breaks_019():
     transformer = TransformToGfm()
     source_markdown = """Foo
     ***"""
-    expected_tokens = ["[para:\n    ]", "[text:Foo\n***::\n]", "[end-para]"]
+    expected_tokens = ["[para:\n    ]", "[text:Foo\n::\n]", "[text:***:]", "[end-para]"]
     expected_gfm = """<p>Foo
 ***</p>"""
 
@@ -308,7 +311,14 @@ a------
 ---a---"""
     expected_tokens = [
         "[para:]",
-        "[text:_ _ _ _ a:]",
+        "[text:_:]",
+        "[text: :]",
+        "[text:_:]",
+        "[text: :]",
+        "[text:_:]",
+        "[text: :]",
+        "[text:_:]",
+        "[text: a:]",
         "[end-para]",
         "[BLANK:]",
         "[para:]",
@@ -342,15 +352,20 @@ def test_thematic_breaks_026():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """ *-*"""
-    expected_tokens = ["[para: ]", "[text:*-*:]", "[end-para]"]
-    expected_gfm = """<p>*-*</p>"""
+    expected_tokens = [
+        "[para: ]",
+        "[emphasis:1]",
+        "[text:-:]",
+        "[end-emphasis::1]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p><em>-</em></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO Expect this to fail when inline-emphasis are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 

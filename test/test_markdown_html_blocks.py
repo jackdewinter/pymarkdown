@@ -33,7 +33,10 @@ _world_.
         "[end-html-block]",
         "[BLANK:]",
         "[para:\n]",
-        "[text:_world_.\n::\n]",
+        "[emphasis:1]",
+        "[text:world:]",
+        "[end-emphasis::1]",
+        "[text:.\n::\n]",
         "[raw-html:/pre]",
         "[end-para]",
         "[html-block]",
@@ -43,7 +46,7 @@ _world_.
     expected_gfm = """<table><tr><td>
 <pre>
 **Hello**,
-<p>_world_.
+<p><em>world</em>.
 </pre></p>
 </td></tr></table>"""
 
@@ -52,7 +55,7 @@ _world_.
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO Expect this to fail when em are implemented
+    # TODO Expect this to fail when strong em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -180,7 +183,9 @@ def test_html_blocks_122():
         "[end-html-block]",
         "[BLANK:]",
         "[para:]",
-        "[text:*Markdown*:]",
+        "[emphasis:1]",
+        "[text:Markdown:]",
+        "[end-emphasis::1]",
         "[end-para]",
         "[BLANK:]",
         "[html-block]",
@@ -188,7 +193,7 @@ def test_html_blocks_122():
         "[end-html-block]",
     ]
     expected_gfm = """<DIV CLASS="foo">
-<p>*Markdown*</p>
+<p><em>Markdown</em></p>
 </DIV>"""
 
     # Act
@@ -196,7 +201,6 @@ def test_html_blocks_122():
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -280,12 +284,14 @@ def test_html_blocks_125():
         "[end-html-block]",
         "[BLANK:]",
         "[para:]",
-        "[text:*bar*:]",
+        "[emphasis:1]",
+        "[text:bar:]",
+        "[end-emphasis::1]",
         "[end-para]",
     ]
     expected_gfm = """<div>
 *foo*
-<p>*bar*</p>"""
+<p><em>bar</em></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -637,7 +643,9 @@ def test_html_blocks_137():
         "[end-html-block]",
         "[BLANK:]",
         "[para:]",
-        "[text:*foo*:]",
+        "[emphasis:1]",
+        "[text:foo:]",
+        "[end-emphasis::1]",
         "[end-para]",
         "[BLANK:]",
         "[html-block]",
@@ -645,7 +653,7 @@ def test_html_blocks_137():
         "[end-html-block]",
     ]
     expected_gfm = """<del>
-<p>*foo*</p>
+<p><em>foo</em></p>
 </del>"""
 
     # Act
@@ -653,7 +661,6 @@ def test_html_blocks_137():
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -671,18 +678,19 @@ def test_html_blocks_138():
     expected_tokens = [
         "[para:]",
         "[raw-html:del]",
-        "[text:*foo*:]",
+        "[emphasis:1]",
+        "[text:foo:]",
+        "[end-emphasis::1]",
         "[raw-html:/del]",
         "[end-para]",
     ]
-    expected_gfm = """<p><del>*foo*</del></p>"""
+    expected_gfm = """<p><del><em>foo</em></del></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -941,18 +949,19 @@ def test_html_blocks_145():
         "[text:<style>p{color:red;}</style>:]",
         "[end-html-block]",
         "[para:]",
-        "[text:*foo*:]",
+        "[emphasis:1]",
+        "[text:foo:]",
+        "[end-emphasis::1]",
         "[end-para]",
     ]
     expected_gfm = """<style>p{color:red;}</style>
-<p>*foo*</p>"""
+<p><em>foo</em></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -973,18 +982,19 @@ def test_html_blocks_146():
         "[text:<!-- foo -->*bar*:]",
         "[end-html-block]",
         "[para:]",
-        "[text:*baz*:]",
+        "[emphasis:1]",
+        "[text:baz:]",
+        "[end-emphasis::1]",
         "[end-para]",
     ]
     expected_gfm = """<!-- foo -->*bar*
-<p>*baz*</p>"""
+<p><em>baz</em></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -1367,7 +1377,10 @@ def test_html_blocks_157():
         "[end-html-block]",
         "[BLANK:]",
         "[para:]",
-        "[text:*Emphasized* text.:]",
+        "[emphasis:1]",
+        "[text:Emphasized:]",
+        "[end-emphasis::1]",
+        "[text: text.:]",
         "[end-para]",
         "[BLANK:]",
         "[html-block]",
@@ -1375,7 +1388,7 @@ def test_html_blocks_157():
         "[end-html-block]",
     ]
     expected_gfm = """<div>
-<p>*Emphasized* text.</p>
+<p><em>Emphasized</em> text.</p>
 </div>"""
 
     # Act
@@ -1383,7 +1396,6 @@ def test_html_blocks_157():
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO Expect this to fail when em are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 

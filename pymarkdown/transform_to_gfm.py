@@ -24,6 +24,7 @@ from pymarkdown.markdown_token import (  # EmailAutolinkMarkdownToken,; SetextHe
     UnorderedListStartMarkdownToken,
     UriAutolinkMarkdownToken,
     EmailAutolinkMarkdownToken,
+    EmphasisMarkdownToken,
 )
 
 
@@ -410,6 +411,8 @@ class TransformToGfm:
                         == MarkdownToken.token_ordered_list_start
                     ):
                         output_html = output_html + "\n"
+            elif isinstance(next_token, EmphasisMarkdownToken):
+                output_html = output_html + "<em>"
             elif isinstance(next_token, EndMarkdownToken):
                 if next_token.type_name == MarkdownToken.token_paragraph:
                     if is_in_loose_list:
@@ -484,6 +487,8 @@ class TransformToGfm:
                     )
                 elif next_token.type_name == MarkdownToken.token_html_block:
                     is_in_html_block = False
+                elif next_token.type_name == MarkdownToken.token_inline_emphasis:
+                    output_html = output_html + "</em>"
                 else:
                     assert False, (
                         "Markdown token end type "

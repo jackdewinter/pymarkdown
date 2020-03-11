@@ -243,7 +243,10 @@ def test_character_references_328():
     source_markdown = '[foo](/f&ouml;&ouml; "f&ouml;&ouml;")'
     expected_tokens = [
         "[para:]",
-        "[text:[foo](/föö &quot;föö&quot;):]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[text:(/föö &quot;föö&quot;):]",
         "[end-para]",
     ]
     expected_gfm = """<p>[foo](/föö &quot;föö&quot;)</p>"""
@@ -272,11 +275,16 @@ def test_character_references_329():
 [foo]: /f&ouml;&ouml; "f&ouml;&ouml;"""
     expected_tokens = [
         "[para:]",
-        "[text:[foo]:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
         "[end-para]",
         "[BLANK:]",
         "[para:]",
-        "[text:[foo]: /föö &quot;föö:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[text:: /föö &quot;föö:]",
         "[end-para]",
     ]
     expected_gfm = """<p>[foo]</p>
@@ -389,18 +397,20 @@ def test_character_references_333():
 *foo*"""
     expected_tokens = [
         "[para:\n]",
-        "[text:*foo*\n*foo*::\n]",
+        "[text:*foo*\n::\n]",
+        "[emphasis:1]",
+        "[text:foo:]",
+        "[end-emphasis::1]",
         "[end-para]",
     ]
     expected_gfm = """<p>*foo*
-*foo*</p>"""
+<em>foo</em></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO emphasis
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -508,7 +518,10 @@ def test_character_references_337():
     source_markdown = """[a](url &quot;tit&quot;)"""
     expected_tokens = [
         "[para:]",
-        "[text:[a](url &quot;tit&quot;):]",
+        "[text:[:]",
+        "[text:a:]",
+        "[text:]:]",
+        "[text:(url &quot;tit&quot;):]",
         "[end-para]",
     ]
     expected_gfm = """<p>[a](url &quot;tit&quot;)</p>"""

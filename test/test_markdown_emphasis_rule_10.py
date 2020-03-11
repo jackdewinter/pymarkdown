@@ -258,7 +258,12 @@ def test_emphasis_443():
     # Arrange
     tokenizer = TokenizedMarkdown()
     source_markdown = """__ is not an empty emphasis"""
-    expected_tokens = ["[para:]", "[text:__ is not an empty emphasis:]", "[end-para]"]
+    expected_tokens = [
+        "[para:]",
+        "[text:__:]",
+        "[text: is not an empty emphasis:]",
+        "[end-para]",
+    ]
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -277,7 +282,8 @@ def test_emphasis_444():
     source_markdown = """____ is not an empty strong emphasis"""
     expected_tokens = [
         "[para:]",
-        "[text:____ is not an empty strong emphasis:]",
+        "[text:____:]",
+        "[text: is not an empty strong emphasis:]",
         "[end-para]",
     ]
 

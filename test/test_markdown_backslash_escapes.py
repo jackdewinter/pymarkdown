@@ -81,15 +81,19 @@ def test_backslash_escapes_310():
 \\&ouml; not a character entity"""
     expected_tokens = [
         "[para:\n\n\n\n\n\n\n\n]",
-        """[text:*not emphasized*
-&lt;br/&gt; not a tag
-[not a link](/foo)
+        "[text:*not emphasized:]",
+        "[text:*:]",
+        "[text:\n&lt;br/&gt; not a tag\n[not a link::\n\n]",
+        "[text:]:]",
+        """[text:(/foo)
 `not code`
 1. not a list
 * not a list
 # not a heading
-[foo]: /url &quot;not a reference&quot;
-&amp;ouml; not a character entity::\n\n\n\n\n\n\n\n]""",
+[foo::\n\n\n\n\n]""",
+        "[text:]:]",
+        """[text:: /url &quot;not a reference&quot;
+&amp;ouml; not a character entity::\n]""",
         "[end-para]",
     ]
     expected_gfm = """<p>*not emphasized*
@@ -124,17 +128,19 @@ def test_backslash_escapes_311():
     source_markdown = """\\\\*emphasis*"""
     expected_tokens = [
         "[para:]",
-        "[text:\\*emphasis*:]",
+        "[text:\\:]",
+        "[emphasis:1]",
+        "[text:emphasis:]",
+        "[end-emphasis::1]",
         "[end-para]",
     ]
-    expected_gfm = """<p>\\*emphasis*</p>"""
+    expected_gfm = """<p>\\<em>emphasis</em></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO will fail when emphasis added
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -311,7 +317,10 @@ def test_backslash_escapes_318():
     source_markdown = """[foo](/bar\\* "ti\\*tle")"""
     expected_tokens = [
         "[para:]",
-        "[text:[foo](/bar* &quot;ti*tle&quot;):]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[text:(/bar* &quot;ti*tle&quot;):]",
         "[end-para]",
     ]
     expected_gfm = """<p>[foo](/bar* &quot;ti*tle&quot;)</p>"""
@@ -341,11 +350,16 @@ def test_backslash_escapes_319():
 """
     expected_tokens = [
         "[para:]",
-        "[text:[foo]:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
         "[end-para]",
         "[BLANK:]",
         "[para:]",
-        "[text:[foo]: /bar* &quot;ti*tle&quot;:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[text:: /bar* &quot;ti*tle&quot;:]",
         "[end-para]",
         "[BLANK:]",
     ]
