@@ -4,11 +4,12 @@ https://github.github.com/gfm/#emphasis-and-strong-emphasis
 import pytest
 
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
+from pymarkdown.transform_to_gfm import TransformToGfm
 
-from .utils import assert_if_lists_different
+from .utils import assert_if_lists_different, assert_if_strings_different
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_emphasis_391():
     """
     Test case 391:  Rule 6:
@@ -16,18 +17,27 @@ def test_emphasis_391():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """__foo bar__"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[emphasis:2]",
+        "[text:foo bar:]",
+        "[end-emphasis::2]",
+        "[end-para]",
     ]
+    expected_gfm = """<p><strong>foo bar</strong></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_emphasis_392():
     """
     Test case 392:  This is not strong emphasis, because the opening delimiter is followed by whitespace:
@@ -35,6 +45,7 @@ def test_emphasis_392():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """__ foo bar__"""
     expected_tokens = [
         "[para:]",
@@ -43,14 +54,18 @@ def test_emphasis_392():
         "[text:__:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>__ foo bar__</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_emphasis_393():
     """
     Test case 393:  A newline counts as whitespace:
@@ -58,6 +73,7 @@ def test_emphasis_393():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """__
 foo bar__"""
     expected_tokens = [
@@ -67,14 +83,19 @@ foo bar__"""
         "[text:__:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>__
+foo bar__</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_emphasis_394():
     """
     Test case 394:  This is not strong emphasis, because the opening __ is preceded by an alphanumeric and followed by punctuation:
@@ -82,6 +103,7 @@ def test_emphasis_394():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """a__"foo"__"""
     expected_tokens = [
         "[para:]",
@@ -91,14 +113,18 @@ def test_emphasis_394():
         "[text:__:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>a__&quot;foo&quot;__</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_emphasis_395():
     """
     Test case 395:  (part 1) Intraword strong emphasis is forbidden with __:
@@ -106,23 +132,28 @@ def test_emphasis_395():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """foo__bar__"""
     expected_tokens = [
         "[para:]",
         "[text:foo:]",
-        "[emphasis:2]",
+        "[text:__:]",
         "[text:bar:]",
-        "[end-emphasis::2]",
+        "[text:__:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>foo__bar__</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_emphasis_396():
     """
     Test case 396:  (part 2) Intraword strong emphasis is forbidden with __:
@@ -130,24 +161,29 @@ def test_emphasis_396():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """5__6__78"""
     expected_tokens = [
         "[para:]",
         "[text:5:]",
-        "[emphasis:2]",
+        "[text:__:]",
         "[text:6:]",
-        "[end-emphasis::2]",
+        "[text:__:]",
         "[text:78:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>5__6__78</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
 def test_emphasis_397():
     """
     Test case 397:  (part 3) Intraword strong emphasis is forbidden with __:
@@ -155,24 +191,28 @@ def test_emphasis_397():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """пристаням__стремятся__"""
     expected_tokens = [
         "[para:]",
         "[text:пристаням:]",
-        "[emphasis:2]",
+        "[text:__:]",
         "[text:стремятся:]",
-        "[end-emphasis::2]",
+        "[text:__:]",
         "[end-para]",
     ]
+    expected_gfm = """<p>пристаням__стремятся__</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_emphasis_398():
     """
     Test case 398:  (part 4) Intraword strong emphasis is forbidden with __:
@@ -180,19 +220,31 @@ def test_emphasis_398():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """__foo, __bar__, baz__"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[emphasis:2]",
+        "[text:foo, :]",
+        "[emphasis:2]",
+        "[text:bar:]",
+        "[end-emphasis::2]",
+        "[text:, baz:]",
+        "[end-emphasis::2]",
+        "[end-para]",
     ]
+    expected_gfm = """<p><strong>foo, <strong>bar</strong>, baz</strong></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_emphasis_399():
     """
     Test case 399:  This is strong emphasis, even though the opening delimiter is both left- and right-flanking, because it is preceded by punctuation:
@@ -200,13 +252,22 @@ def test_emphasis_399():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """foo-__(bar)__"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:foo-:]",
+        "[emphasis:2]",
+        "[text:(bar):]",
+        "[end-emphasis::2]",
+        "[end-para]",
     ]
+    expected_gfm = """<p>foo-<strong>(bar)</strong></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)

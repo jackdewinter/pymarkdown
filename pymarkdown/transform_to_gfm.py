@@ -412,7 +412,10 @@ class TransformToGfm:
                     ):
                         output_html = output_html + "\n"
             elif isinstance(next_token, EmphasisMarkdownToken):
-                output_html = output_html + "<em>"
+                if next_token.emphasis_length == 1:
+                    output_html = output_html + "<em>"
+                else:
+                    output_html = output_html + "<strong>"
             elif isinstance(next_token, EndMarkdownToken):
                 if next_token.type_name == MarkdownToken.token_paragraph:
                     if is_in_loose_list:
@@ -488,7 +491,10 @@ class TransformToGfm:
                 elif next_token.type_name == MarkdownToken.token_html_block:
                     is_in_html_block = False
                 elif next_token.type_name == MarkdownToken.token_inline_emphasis:
-                    output_html = output_html + "</em>"
+                    if next_token.extra_end_data == "1":
+                        output_html = output_html + "</em>"
+                    else:
+                        output_html = output_html + "</strong>"
                 else:
                     assert False, (
                         "Markdown token end type "

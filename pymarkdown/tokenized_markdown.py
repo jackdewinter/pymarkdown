@@ -634,7 +634,85 @@ class TokenizedMarkdown:
     # pylint: enable=too-many-branches
     # pylint: enable=too-many-statements
 
-    # pylint: disable=too-many-branches
+    def is_open_close_emphasis_valid(self, open_token, close_token):
+        """
+        Determine if these two tokens together make a valid open/close emphasis pair.
+        """
+
+        is_valid_opener = False
+        if not open_token.active:
+            print("  not active")
+        elif open_token.active and self.is_potential_opener(open_token):
+            is_valid_opener = True
+            is_closer_both = self.is_potential_closer(
+                close_token
+            ) and self.is_potential_opener(close_token)
+            print("is_closer_both>>" + str(is_closer_both))
+            is_opener_both = self.is_potential_closer(
+                open_token
+            ) and self.is_potential_opener(open_token)
+            print("is_opener_both>>" + str(is_opener_both))
+            if is_closer_both or is_opener_both:
+                sum_repeat_count = close_token.repeat_count + open_token.repeat_count
+                print("sum_delims>>" + str(sum_repeat_count))
+                print("closer_delims>>" + str(close_token.repeat_count))
+                print("opener_delims>>" + str(open_token.repeat_count))
+
+                if sum_repeat_count % 3 == 0:
+                    is_valid_opener = (
+                        close_token.repeat_count % 3 == 0
+                        and open_token.repeat_count % 3 == 0
+                    )
+
+        return is_valid_opener
+
+    @classmethod
+    def process_emphasis_pair(
+        cls, inline_blocks, open_token, close_token, current_position
+    ):
+        """
+        Given that we have found a valid open and close block, process them.
+        """
+
+        # Figure out whether we have emphasis or strong emphasis
+        emphasis_length = 1
+        if close_token.repeat_count >= 2 and open_token.repeat_count >= 2:
+            emphasis_length = 2
+
+        # add emph node in main stream
+        start_index_in_blocks = inline_blocks.index(open_token)
+        inline_blocks.insert(
+            start_index_in_blocks + 1, EmphasisMarkdownToken(emphasis_length),
+        )
+        end_index_in_blocks = inline_blocks.index(close_token)
+        inline_blocks.insert(
+            end_index_in_blocks,
+            EndMarkdownToken(
+                MarkdownToken.token_inline_emphasis, "", str(emphasis_length),
+            ),
+        )
+
+        # "remove" between start and end from delimiter_stack
+
+        # remove emphasis_length from open and close nodes
+        print("close_token>>" + close_token.show_process_emphasis() + "<<")
+        close_token.reduce_repeat_count(emphasis_length)
+        if not close_token.repeat_count:
+            inline_blocks.remove(close_token)
+            close_token.active = False
+        else:
+            current_position = current_position - 1
+        print("close_token>>" + close_token.show_process_emphasis() + "<<")
+
+        print("open_token>>" + open_token.show_process_emphasis() + "<<")
+        open_token.reduce_repeat_count(emphasis_length)
+        if not open_token.repeat_count:
+            inline_blocks.remove(open_token)
+            open_token.active = False
+        print("open_token>>" + open_token.show_process_emphasis() + "<<")
+
+        return current_position
+
     def resolve_inline_emphasis(self, inline_blocks):
         """
         Resolve the inline emphasis by interpreting the special text tokens.
@@ -679,71 +757,54 @@ class TokenizedMarkdown:
                     print("not closer")
                     continue
 
-                matching_delimiter = delimiter_stack[current_position].token_text[0]
+                close_token = delimiter_stack[current_position]
+                matching_delimiter = close_token.token_text[0]
                 print("potential closer")
                 scan_index = current_position - 1
-                found_one = False
+                is_valid_opener = False
                 while (
                     scan_index >= 0
                     and scan_index > stack_bottom
                     and scan_index > openers_bottom
+                    and delimiter_stack[scan_index].token_text
                     and delimiter_stack[scan_index].token_text[0] == matching_delimiter
                 ):
                     print("potential opener:" + str(scan_index))
-                    if delimiter_stack[scan_index].active and self.is_potential_opener(
-                        delimiter_stack[scan_index]
-                    ):
-                        found_one = True
+                    open_token = delimiter_stack[scan_index]
+                    is_valid_opener = self.is_open_close_emphasis_valid(
+                        open_token, close_token
+                    )
+                    if is_valid_opener:
                         break
                     scan_index = scan_index - 1
+                    print(
+                        "scan_index-->"
+                        + str(scan_index)
+                        + ">stack_bottom>"
+                        + str(stack_bottom)
+                        + ">openers_bottom>"
+                        + str(openers_bottom)
+                        + ">"
+                    )
 
-                if found_one:
+                if is_valid_opener:
                     print("FOUND OPEN")
-                    # Figure out whether we have emphasis or strong emphasis
-                    emph_length = 1
-                    if (
-                        delimiter_stack[current_position].repeat_count >= 2
-                        and delimiter_stack[scan_index].repeat_count >= 2
-                    ):
-                        emph_length = 2
-
-                    # add emph node in main stream
-                    inf_start = inline_blocks.index(delimiter_stack[scan_index])
-                    inline_blocks.insert(
-                        inf_start + 1, EmphasisMarkdownToken(emph_length)
+                    current_position = self.process_emphasis_pair(
+                        inline_blocks, open_token, close_token, current_position
                     )
-                    inf_end = inline_blocks.index(delimiter_stack[current_position])
-                    inline_blocks.insert(
-                        inf_end,
-                        EndMarkdownToken(
-                            MarkdownToken.token_inline_emphasis, "", str(emph_length)
-                        ),
-                    )
-
-                    # "remove" between start and end from delimiter_stack
-                    # remove emph_length from open and close nodes
-                    delimiter_stack[current_position].repeat_count = (
-                        delimiter_stack[current_position].repeat_count - emph_length
-                    )
-                    if not delimiter_stack[current_position].repeat_count:
-                        inline_blocks.remove(delimiter_stack[current_position])
-                    delimiter_stack[current_position].active = False
-
-                    delimiter_stack[scan_index].repeat_count = (
-                        delimiter_stack[scan_index].repeat_count - emph_length
-                    )
-                    if not delimiter_stack[scan_index].repeat_count:
-                        inline_blocks.remove(delimiter_stack[scan_index])
-                    delimiter_stack[scan_index].active = False
                 else:
-                    print("NOT FOUND OPEN")
-                    openers_bottom = current_position - 1
+                    # openers_bottom = current_position - 1
+                    print("NOT FOUND OPEN, openers_bottom=" + str(openers_bottom))
 
-                # current_position = current_position + 1
                 print("next->" + str(current_position))
-        return inline_blocks
 
-    # pylint: enable=too-many-branches
+        # TODO roll this in to reduce_repeat_count
+        for next_block in inline_blocks:
+            if isinstance(next_block, SpecialTextMarkdownToken):
+                next_block.token_text = next_block.token_text[
+                    0 : next_block.repeat_count
+                ]
+        return inline_blocks
 
     def is_right_flanking_delimiter_run(self, current_token):
         """
@@ -788,8 +849,20 @@ class TokenizedMarkdown:
         Determine if the current token is a potential closer.
         """
 
-        # Rule 3
-        is_closer = self.is_right_flanking_delimiter_run(current_token)
+        # Rule 3 and 7
+        is_closer = False
+        if current_token.token_text[0] == "*":
+            is_closer = self.is_right_flanking_delimiter_run(current_token)
+        # Rule 4 and 8
+        elif current_token.token_text[0] == "_":
+            is_closer = self.is_right_flanking_delimiter_run(current_token)
+            if is_closer:
+                is_left_flanking = self.is_left_flanking_delimiter_run(current_token)
+
+                following_two = current_token.following_two.ljust(2, " ")
+                is_closer = not is_left_flanking or (
+                    is_left_flanking and following_two[0] in self.punctuation_characters
+                )
         return is_closer
 
     def is_potential_opener(self, current_token):
@@ -798,7 +871,18 @@ class TokenizedMarkdown:
         """
 
         # Rule 1
-        is_opener = self.is_left_flanking_delimiter_run(current_token)
+        is_opener = False
+        if current_token.token_text[0] == "*":
+            is_opener = self.is_left_flanking_delimiter_run(current_token)
+        elif current_token.token_text[0] == "_":
+            is_opener = self.is_left_flanking_delimiter_run(current_token)
+            if is_opener:
+                is_right_flanking = self.is_right_flanking_delimiter_run(current_token)
+                preceding_two = current_token.preceding_two.ljust(2, " ")
+                is_opener = not is_right_flanking or (
+                    is_right_flanking
+                    and preceding_two[-1] in self.punctuation_characters
+                )
         return is_opener
 
     @classmethod

@@ -290,12 +290,13 @@ class EndMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the end element to a matching start.
     """
 
-    def __init__(self, type_name, extracted_whitespace, extra_data):
+    def __init__(self, type_name, extracted_whitespace, extra_end_data):
 
         self.type_name = type_name
+        self.extra_end_data = extra_end_data
         display_data = extracted_whitespace
-        if extra_data is not None:
-            display_data = display_data + ":" + extra_data
+        if extra_end_data is not None:
+            display_data = display_data + ":" + extra_end_data
 
         MarkdownToken.__init__(
             self, "end-" + type_name, display_data,
@@ -402,6 +403,12 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         self.preceding_two = preceding_two
         self.following_two = following_two
         TextMarkdownToken.__init__(self, token_text, "", "")
+
+    def reduce_repeat_count(self, emphasis_length):
+        """
+        Reduce the repeat count by the specified amount.
+        """
+        self.repeat_count = self.repeat_count - emphasis_length
 
     def show_process_emphasis(self):
         """
@@ -567,9 +574,10 @@ class EmphasisMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the inline emphasis element.
     """
 
-    def __init__(self, is_strong):
+    def __init__(self, emphasis_length):
+        self.emphasis_length = emphasis_length
         MarkdownToken.__init__(
-            self, MarkdownToken.token_inline_emphasis, str(is_strong)
+            self, MarkdownToken.token_inline_emphasis, str(emphasis_length)
         )
 
 
