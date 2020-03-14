@@ -9,7 +9,6 @@ from pymarkdown.transform_to_gfm import TransformToGfm
 from .utils import assert_if_lists_different, assert_if_strings_different
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_emphasis_476():
     """
@@ -22,9 +21,11 @@ def test_emphasis_476():
     source_markdown = """***foo***"""
     expected_tokens = [
         "[para:]",
-        "[text:***:]",
+        "[emphasis:1]",
+        "[emphasis:2]",
         "[text:foo:]",
-        "[text:***:]",
+        "[end-emphasis::2]",
+        "[end-emphasis::1]",
         "[end-para]",
     ]
     expected_gfm = """<p><em><strong>foo</strong></em></p>"""
@@ -38,7 +39,6 @@ def test_emphasis_476():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_emphasis_477():
     """
@@ -51,9 +51,13 @@ def test_emphasis_477():
     source_markdown = """_____foo_____"""
     expected_tokens = [
         "[para:]",
-        "[text:_____:]",
+        "[emphasis:1]",
+        "[emphasis:2]",
+        "[emphasis:2]",
         "[text:foo:]",
-        "[text:_____:]",
+        "[end-emphasis::2]",
+        "[end-emphasis::2]",
+        "[end-emphasis::1]",
         "[end-para]",
     ]
     expected_gfm = """<p><em><strong><strong>foo</strong></strong></em></p>"""
@@ -67,7 +71,6 @@ def test_emphasis_477():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_emphasis_478():
     """
@@ -80,11 +83,11 @@ def test_emphasis_478():
     source_markdown = """*foo _bar* baz_"""
     expected_tokens = [
         "[para:]",
-        "[text:*:]",
+        "[emphasis:1]",
         "[text:foo :]",
         "[text:_:]",
         "[text:bar:]",
-        "[text:*:]",
+        "[end-emphasis::1]",
         "[text: baz:]",
         "[text:_:]",
         "[end-para]",
@@ -100,7 +103,6 @@ def test_emphasis_478():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_emphasis_479():
     """
@@ -113,15 +115,15 @@ def test_emphasis_479():
     source_markdown = """*foo __bar *baz bim__ bam*"""
     expected_tokens = [
         "[para:]",
-        "[text:*:]",
+        "[emphasis:1]",
         "[text:foo :]",
-        "[text:__:]",
+        "[emphasis:2]",
         "[text:bar :]",
         "[text:*:]",
         "[text:baz bim:]",
-        "[text:__:]",
+        "[end-emphasis::2]",
         "[text: bam:]",
-        "[text:*:]",
+        "[end-emphasis::1]",
         "[end-para]",
     ]
     expected_gfm = """<p><em>foo <strong>bar *baz bim</strong> bam</em></p>"""
@@ -135,7 +137,6 @@ def test_emphasis_479():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_emphasis_480():
     """
@@ -150,9 +151,9 @@ def test_emphasis_480():
         "[para:]",
         "[text:**:]",
         "[text:foo :]",
-        "[text:**:]",
+        "[emphasis:2]",
         "[text:bar baz:]",
-        "[text:**:]",
+        "[end-emphasis::2]",
         "[end-para]",
     ]
     expected_gfm = """<p>**foo <strong>bar baz</strong></p>"""
@@ -166,7 +167,6 @@ def test_emphasis_480():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_emphasis_481():
     """
@@ -181,9 +181,9 @@ def test_emphasis_481():
         "[para:]",
         "[text:*:]",
         "[text:foo :]",
-        "[text:*:]",
+        "[emphasis:1]",
         "[text:bar baz:]",
-        "[text:*:]",
+        "[end-emphasis::1]",
         "[end-para]",
     ]
     expected_gfm = """<p>*foo <em>bar baz</em></p>"""

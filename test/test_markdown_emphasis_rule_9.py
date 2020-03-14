@@ -429,7 +429,7 @@ def test_emphasis_426():
         "[end-emphasis::2]",
         "[end-emphasis::2]",
         "[end-emphasis::2]",
-        "[text:*********:]",
+        "[text:***:]",
         "[text:baz:]",
         "[end-para]",
     ]

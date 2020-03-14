@@ -639,8 +639,14 @@ class TokenizedMarkdown:
         Determine if these two tokens together make a valid open/close emphasis pair.
         """
 
+        matching_delimiter = close_token.token_text[0]
         is_valid_opener = False
-        if not open_token.active:
+
+        if not (
+            open_token.token_text and open_token.token_text[0] == matching_delimiter
+        ):
+            print("  delimiter mismatch")
+        elif not open_token.active:
             print("  not active")
         elif open_token.active and self.is_potential_opener(open_token):
             is_valid_opener = True
@@ -691,25 +697,53 @@ class TokenizedMarkdown:
                 MarkdownToken.token_inline_emphasis, "", str(emphasis_length),
             ),
         )
-
-        # "remove" between start and end from delimiter_stack
+        end_index_in_blocks = end_index_in_blocks + 1
 
         # remove emphasis_length from open and close nodes
-        print("close_token>>" + close_token.show_process_emphasis() + "<<")
+        print(
+            str(end_index_in_blocks)
+            + ">>close_token>>"
+            + close_token.show_process_emphasis()
+            + "<<"
+        )
         close_token.reduce_repeat_count(emphasis_length)
         if not close_token.repeat_count:
             inline_blocks.remove(close_token)
+            print("close_token>>removed")
+            end_index_in_blocks = end_index_in_blocks - 1
             close_token.active = False
         else:
             current_position = current_position - 1
         print("close_token>>" + close_token.show_process_emphasis() + "<<")
 
-        print("open_token>>" + open_token.show_process_emphasis() + "<<")
+        print(
+            str(start_index_in_blocks)
+            + ">>open_token>>"
+            + open_token.show_process_emphasis()
+            + "<<"
+        )
         open_token.reduce_repeat_count(emphasis_length)
         if not open_token.repeat_count:
             inline_blocks.remove(open_token)
+            print("open_token>>removed")
+            end_index_in_blocks = end_index_in_blocks - 1
             open_token.active = False
         print("open_token>>" + open_token.show_process_emphasis() + "<<")
+
+        # "remove" between start and end from delimiter_stack
+        inline_index = start_index_in_blocks + 1
+        while inline_index < end_index_in_blocks:
+            print(
+                "inline_index>>"
+                + str(inline_index)
+                + ">>end>>"
+                + str(end_index_in_blocks)
+                + ">>"
+                + str(len(inline_blocks))
+            )
+            if isinstance(inline_blocks[inline_index], SpecialTextMarkdownToken):
+                inline_blocks[inline_index].active = False
+            inline_index = inline_index + 1
 
         return current_position
 
@@ -758,7 +792,6 @@ class TokenizedMarkdown:
                     continue
 
                 close_token = delimiter_stack[current_position]
-                matching_delimiter = close_token.token_text[0]
                 print("potential closer")
                 scan_index = current_position - 1
                 is_valid_opener = False
@@ -766,8 +799,6 @@ class TokenizedMarkdown:
                     scan_index >= 0
                     and scan_index > stack_bottom
                     and scan_index > openers_bottom
-                    and delimiter_stack[scan_index].token_text
-                    and delimiter_stack[scan_index].token_text[0] == matching_delimiter
                 ):
                     print("potential opener:" + str(scan_index))
                     open_token = delimiter_stack[scan_index]
@@ -804,6 +835,7 @@ class TokenizedMarkdown:
                 next_block.token_text = next_block.token_text[
                     0 : next_block.repeat_count
                 ]
+                next_block.compose_extra_data_field()
         return inline_blocks
 
     def is_right_flanking_delimiter_run(self, current_token):
