@@ -1311,6 +1311,8 @@ def test_list_items_306():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+# TODO go through each use of extract_whitespace and validate whether it should
+#    be e_space or e_whitespace
 # TODO '* foo\n  * bar\n+ baz'
 # TODO '- a\n - b\n  - c\n- d'
 # TODO block quotes that start and stop i.e. > then >> then > then >>>, etc
@@ -1351,3 +1353,4 @@ def test_list_items_306():
 # >>stack_count>>0>>#9:[end-ulist]
 # - should be end and then blank, as the blank is outside of the list
 # TODO scan GFM and ensure Unicode whitespace uses actual unicode whitespace, not just whitespace
+# TODO inline link ( without any extra info

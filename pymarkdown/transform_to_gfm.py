@@ -1,18 +1,20 @@
 """
 Module to provide for a transformation from markdown tokens to html for GFM.
 """
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
-
-from pymarkdown.markdown_token import (  # EmailAutolinkMarkdownToken,; SetextHeaderEndMarkdownToken,; UriAutolinkMarkdownToken,
+from pymarkdown.markdown_token import (
     AtxHeaderMarkdownToken,
     BlankLineMarkdownToken,
     BlockQuoteMarkdownToken,
+    EmailAutolinkMarkdownToken,
+    EmphasisMarkdownToken,
     EndMarkdownToken,
     FencedCodeBlockMarkdownToken,
     HardBreakMarkdownToken,
     HtmlBlockMarkdownToken,
+    ImageStartMarkdownToken,
     IndentedCodeBlockMarkdownToken,
     InlineCodeSpanMarkdownToken,
+    LinkStartMarkdownToken,
     MarkdownToken,
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
@@ -23,9 +25,8 @@ from pymarkdown.markdown_token import (  # EmailAutolinkMarkdownToken,; SetextHe
     ThematicBreakMarkdownToken,
     UnorderedListStartMarkdownToken,
     UriAutolinkMarkdownToken,
-    EmailAutolinkMarkdownToken,
-    EmphasisMarkdownToken,
 )
+from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
 
 # pylint: disable=too-few-public-methods
@@ -416,6 +417,15 @@ class TransformToGfm:
                     output_html = output_html + "<em>"
                 else:
                     output_html = output_html + "<strong>"
+            elif isinstance(next_token, LinkStartMarkdownToken):
+
+                anchor_tag = '<a href="' + next_token.link_uri
+                if next_token.link_title:
+                    anchor_tag = anchor_tag + '" title="' + next_token.link_title
+                anchor_tag = anchor_tag + '">'
+                output_html = output_html + anchor_tag
+            elif isinstance(next_token, ImageStartMarkdownToken):
+                output_html = output_html + "<image />"
             elif isinstance(next_token, EndMarkdownToken):
                 if next_token.type_name == MarkdownToken.token_paragraph:
                     if is_in_loose_list:
@@ -490,6 +500,8 @@ class TransformToGfm:
                     )
                 elif next_token.type_name == MarkdownToken.token_html_block:
                     is_in_html_block = False
+                elif next_token.type_name == MarkdownToken.token_inline_link:
+                    output_html = output_html + "</a>"
                 elif next_token.type_name == MarkdownToken.token_inline_emphasis:
                     if next_token.extra_end_data == "1":
                         output_html = output_html + "</em>"

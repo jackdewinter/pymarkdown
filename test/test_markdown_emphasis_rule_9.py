@@ -10,7 +10,6 @@ from .utils import assert_if_lists_different, assert_if_strings_different
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_emphasis_413():
     """
     Test case 413:  (part 1) Any nonempty sequence of inline elements can be the contents of an emphasized span.
@@ -21,7 +20,14 @@ def test_emphasis_413():
     transformer = TransformToGfm()
     source_markdown = """*foo [bar](/url)*"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[emphasis:1]",
+        "[text:foo :]",
+        "[link:/url:]",
+        "[text:bar:]",
+        "[end-link::]",
+        "[end-emphasis::1]",
+        "[end-para]",
     ]
     expected_gfm = """<p><em>foo <a href="/url">bar</a></em></p>"""
 
@@ -483,7 +489,6 @@ def test_emphasis_427():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_emphasis_428():
     """
     Test case 428:  (part 2) When the lengths of the interior closing and opening delimiter runs are both multiples of 3, though, they can match to create emphasis:
@@ -495,15 +500,14 @@ def test_emphasis_428():
     source_markdown = """*foo [*bar*](/url)*"""
     expected_tokens = [
         "[para:]",
-        "[text:*:]",
+        "[emphasis:1]",
         "[text:foo :]",
-        "[text:[:]",
+        "[link:/url:]",
         "[emphasis:1]",
         "[text:bar:]",
         "[end-emphasis::1]",
-        "[text:]:]",
-        "[text:(/url):]",
-        "[text:*:]",
+        "[end-link::]",
+        "[end-emphasis::1]",
         "[end-para]",
     ]
     expected_gfm = """<p><em>foo <a href="/url"><em>bar</em></a></em></p>"""

@@ -28,6 +28,8 @@ class MarkdownToken:
     token_inline_email_autolink = "email-autolink"
     token_inline_raw_html = "raw-html"
     token_inline_emphasis = "emphasis"
+    token_inline_link = "link"
+    token_inline_image = "image"
 
     def __init__(self, token_name, extra_data=None):
         self.token_name = token_name
@@ -397,12 +399,17 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
     Class to provide for special tokens that represent exceptional inline elements.
     """
 
-    def __init__(self, token_text, repeat_count, preceding_two, following_two):
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self, token_text, repeat_count, preceding_two, following_two, is_active=True
+    ):
         self.repeat_count = repeat_count
-        self.active = True
+        self.active = is_active
         self.preceding_two = preceding_two
         self.following_two = following_two
         TextMarkdownToken.__init__(self, token_text, "", "")
+
+    # pylint: enable=too-many-arguments
 
     def reduce_repeat_count(self, emphasis_length):
         """
@@ -544,6 +551,32 @@ class UriAutolinkMarkdownToken(MarkdownToken):
         self.autolink_text = autolink_text
         MarkdownToken.__init__(
             self, MarkdownToken.token_inline_uri_autolink, autolink_text
+        )
+
+
+class LinkStartMarkdownToken(MarkdownToken):
+    """
+    Class to provide for an encapsulation of the link element.
+    """
+
+    def __init__(self, link_uri, link_title):
+        self.link_uri = link_uri
+        self.link_title = link_title
+        MarkdownToken.__init__(
+            self, MarkdownToken.token_inline_link, link_uri + ":" + link_title
+        )
+
+
+class ImageStartMarkdownToken(MarkdownToken):
+    """
+    Class to provide for an encapsulation of the image element.
+    """
+
+    def __init__(self, link_uri, link_title):
+        self.link_uri = link_uri
+        self.link_title = link_title
+        MarkdownToken.__init__(
+            self, MarkdownToken.token_inline_image, link_uri + ":" + link_title
         )
 
 

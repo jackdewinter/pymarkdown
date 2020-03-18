@@ -197,7 +197,6 @@ def test_emphasis_481():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_emphasis_482():
     """
@@ -211,11 +210,10 @@ def test_emphasis_482():
     expected_tokens = [
         "[para:]",
         "[text:*:]",
-        "[text:[:]",
+        "[link:/url:]",
         "[text:bar:]",
         "[text:*:]",
-        "[text:]:]",
-        "[text:(/url):]",
+        "[end-link::]",
         "[end-para]",
     ]
     expected_gfm = """<p>*<a href="/url">bar*</a></p>"""
@@ -229,7 +227,6 @@ def test_emphasis_482():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_emphasis_483():
     """
@@ -244,11 +241,10 @@ def test_emphasis_483():
         "[para:]",
         "[text:_:]",
         "[text:foo :]",
-        "[text:[:]",
+        "[link:/url:]",
         "[text:bar:]",
         "[text:_:]",
-        "[text:]:]",
-        "[text:(/url):]",
+        "[end-link::]",
         "[end-para]",
     ]
     expected_gfm = """<p>_foo <a href="/url">bar_</a></p>"""

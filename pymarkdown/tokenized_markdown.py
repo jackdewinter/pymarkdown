@@ -7,6 +7,7 @@ import os
 import re
 import string
 import sys
+import urllib
 
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.markdown_token import (
@@ -19,8 +20,10 @@ from pymarkdown.markdown_token import (
     FencedCodeBlockMarkdownToken,
     HardBreakMarkdownToken,
     HtmlBlockMarkdownToken,
+    ImageStartMarkdownToken,
     IndentedCodeBlockMarkdownToken,
     InlineCodeSpanMarkdownToken,
+    LinkStartMarkdownToken,
     MarkdownToken,
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
@@ -169,6 +172,11 @@ class TokenizedMarkdown:
             + "\u003a\u003b\u003c\u003d\u003e\u003f\u0040"
             + "\u005b\u005c\u005d\u005e\u005f\u0060"
             + "\u007b\u007c\u007d\u007e"
+        )
+        self.ascii_control_characters = (
+            "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f"
+            + "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f"
+            + "\x20\x7f"
         )
 
         self.backslash_punctuation = "!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~\\"
@@ -557,12 +565,12 @@ class TokenizedMarkdown:
                 )
             elif source_text[next_index] in "*_[]":
                 new_string, new_index, new_tokens = self.handle_inline_special(
-                    source_text, next_index, 1
+                    inline_blocks, source_text, next_index, 1
                 )
             elif source_text[next_index] == "!":
                 if ParserHelper.are_characters_at_index(source_text, next_index, "!["):
                     new_string, new_index, new_tokens = self.handle_inline_special(
-                        source_text, next_index, 2
+                        inline_blocks, source_text, next_index, 2
                     )
                 else:
                     new_string = "!"
@@ -629,7 +637,7 @@ class TokenizedMarkdown:
             )
         print(">>" + str(inline_blocks) + "<<")
 
-        return self.resolve_inline_emphasis(inline_blocks)
+        return self.resolve_inline_emphasis(inline_blocks, None)
 
     # pylint: enable=too-many-branches
     # pylint: enable=too-many-statements
@@ -747,18 +755,54 @@ class TokenizedMarkdown:
 
         return current_position
 
-    def resolve_inline_emphasis(self, inline_blocks):
+    @classmethod
+    def find_token_in_delimiter_stack(cls, inline_blocks, delimiter_stack, wall_token):
+        """
+        Find the specified token in the delimiter stack, based solely on
+        position in the inline_blocks.
+        """
+
+        if wall_token:
+            wall_index_in_inlines = inline_blocks.index(wall_token)
+            print(">>wall_index_in_inlines>>" + str(wall_index_in_inlines))
+            while wall_index_in_inlines >= 0:
+                if isinstance(
+                    inline_blocks[wall_index_in_inlines], SpecialTextMarkdownToken
+                ):
+                    wall_index_in_inlines = delimiter_stack.index(
+                        inline_blocks[wall_index_in_inlines]
+                    )
+                    break
+                wall_index_in_inlines = wall_index_in_inlines - 1
+            print(">>wall_index_in_inlines(mod)>>" + str(wall_index_in_inlines))
+            stack_bottom = wall_index_in_inlines
+        else:
+            stack_bottom = -1
+        return stack_bottom
+
+    def resolve_inline_emphasis(self, inline_blocks, wall_token):
         """
         Resolve the inline emphasis by interpreting the special text tokens.
         """
 
         delimiter_stack = []
-        for i in inline_blocks:
-            if not isinstance(i, SpecialTextMarkdownToken):
+        special_count = 0
+        for next_block in inline_blocks:
+            print("special_count>>" + str(special_count) + ">>" + str(next_block))
+            special_count = special_count + 1
+            if not isinstance(next_block, SpecialTextMarkdownToken):
                 continue
-            delimiter_stack.append(i)
+            print(
+                "i>>"
+                + str(len(delimiter_stack))
+                + ">>"
+                + next_block.show_process_emphasis()
+            )
+            delimiter_stack.append(next_block)
 
-        stack_bottom = -1
+        stack_bottom = self.find_token_in_delimiter_stack(
+            inline_blocks, delimiter_stack, wall_token
+        )
         current_position = stack_bottom + 1
         openers_bottom = stack_bottom
         if current_position < len(delimiter_stack):
@@ -784,6 +828,9 @@ class TokenizedMarkdown:
                     + ")-->"
                     + delimiter_stack[current_position].show_process_emphasis()
                 )
+                if not delimiter_stack[current_position].active:
+                    print("not active")
+                    continue
                 if delimiter_stack[current_position].token_text[0] not in "*_":
                     print("not emphasis")
                     continue
@@ -792,7 +839,7 @@ class TokenizedMarkdown:
                     continue
 
                 close_token = delimiter_stack[current_position]
-                print("potential closer")
+                print("potential closer-->" + str(current_position))
                 scan_index = current_position - 1
                 is_valid_opener = False
                 while (
@@ -829,6 +876,17 @@ class TokenizedMarkdown:
 
                 print("next->" + str(current_position))
 
+        self.reset_token_text(inline_blocks)
+        self.clear_remaining_emphasis(delimiter_stack, stack_bottom)
+        return inline_blocks
+
+    @classmethod
+    def reset_token_text(cls, inline_blocks):
+        """
+        Once we are completed with any emphasis processing, ensure that any
+        special emphasis tokens are limited to the specified lengths.
+        """
+
         # TODO roll this in to reduce_repeat_count
         for next_block in inline_blocks:
             if isinstance(next_block, SpecialTextMarkdownToken):
@@ -836,7 +894,18 @@ class TokenizedMarkdown:
                     0 : next_block.repeat_count
                 ]
                 next_block.compose_extra_data_field()
-        return inline_blocks
+
+    @classmethod
+    def clear_remaining_emphasis(cls, delimiter_stack, stack_bottom):
+        """
+        After processing is finished, clear any active states to ensure we don't
+        process them in the future.
+        """
+
+        clear_index = stack_bottom + 1
+        while clear_index < len(delimiter_stack):
+            delimiter_stack[clear_index].active = False
+            clear_index = clear_index + 1
 
     def is_right_flanking_delimiter_run(self, current_token):
         """
@@ -1416,8 +1485,9 @@ class TokenizedMarkdown:
             return "", closing_angle_index, [new_token]
         return "<", next_index + 1, None
 
-    @classmethod
-    def handle_inline_special(cls, source_text, next_index, special_length):
+    def handle_inline_special(
+        self, inline_blocks, source_text, next_index, special_length
+    ):
         """
         Handle the collection of special inline characters for later processing.
         """
@@ -1425,7 +1495,9 @@ class TokenizedMarkdown:
         inline_emphasis = ["*", "_"]
         preceeding_two = None
         following_two = None
+        new_token = None
         repeat_count = 1
+        is_active = True
         special_sequence = source_text[next_index : next_index + special_length]
         if special_length == 1 and special_sequence in inline_emphasis:
             repeat_count, new_index = ParserHelper.collect_while_character(
@@ -1438,12 +1510,414 @@ class TokenizedMarkdown:
                 new_index : min(len(source_text), new_index + 2)
             ]
         else:
-            repeat_count = special_length
-            new_index = next_index + special_length
-        new_token = SpecialTextMarkdownToken(
-            special_sequence, repeat_count, preceeding_two, following_two
-        )
+            if special_length == 1 and special_sequence[0] == "]":
+                print(
+                    "\nPOSSIBLE LINK CLOSE_FOUND>>"
+                    + str(special_length)
+                    + ">>"
+                    + special_sequence
+                    + ">>"
+                )
+                new_index, is_active, new_token = self.look_for_link_or_image(
+                    inline_blocks, source_text, next_index
+                )
+            else:
+                repeat_count = special_length
+                new_index = next_index + special_length
+
+        if not new_token:
+            new_token = SpecialTextMarkdownToken(
+                special_sequence, repeat_count, preceeding_two, following_two, is_active
+            )
         return "", new_index, [new_token]
+
+    def look_for_link_or_image(self, inline_blocks, source_text, next_index):
+        """
+        Given that a link close character has been found, process it to see if
+        there is actually enough other text to properly construct the link.
+        """
+
+        print(">>look_for_link_or_image>>" + str(inline_blocks) + "<<")
+        is_valid = False
+        new_index = next_index + 1
+        updated_index = -1
+        token_to_append = None
+
+        valid_special_start_text = None
+        search_index = len(inline_blocks) - 1
+        while search_index >= 0:
+            if isinstance(inline_blocks[search_index], SpecialTextMarkdownToken):
+                print(
+                    "search_index>>"
+                    + str(search_index)
+                    + ">>"
+                    + inline_blocks[search_index].show_process_emphasis()
+                )
+                if inline_blocks[search_index].token_text in ["[", "!["]:
+                    valid_special_start_text = inline_blocks[search_index].token_text
+                    if inline_blocks[search_index].active:
+                        updated_index, token_to_append = self.handle_link_types(
+                            inline_blocks,
+                            search_index,
+                            source_text,
+                            new_index,
+                            valid_special_start_text,
+                        )
+                        if updated_index != -1:
+                            is_valid = True
+                        else:
+                            inline_blocks[search_index].active = False
+                        break
+                    print("  not active")
+                else:
+                    print("  not link")
+            search_index = search_index - 1
+
+        print(
+            ">>look_for_link_or_image>>"
+            + str(inline_blocks)
+            + "<<is_valid<<"
+            + str(is_valid)
+            + "<<"
+        )
+        if is_valid:
+            # if link set all [ before to inactive
+            print("")
+            print("SET TO INACTIVE-->" + str(valid_special_start_text))
+            print("ind-->" + str(search_index))
+
+            foobar = inline_blocks[search_index]
+            assert isinstance(foobar, (LinkStartMarkdownToken, ImageStartMarkdownToken))
+
+            print("\bresolve_inline_emphasis>>" + str(inline_blocks))
+            self.resolve_inline_emphasis(inline_blocks, foobar)
+
+            if valid_special_start_text == "[":
+                for deactivate_token in inline_blocks:
+                    if isinstance(deactivate_token, SpecialTextMarkdownToken):
+                        print("inline_blocks>>>>>>>>>>>>>>>>>>" + str(deactivate_token))
+                        if deactivate_token.token_text == "[":
+                            deactivate_token.active = False
+            return updated_index, True, token_to_append
+        is_active = False
+        return new_index, is_active, token_to_append
+
+    # pylint: disable=too-many-arguments
+    def handle_link_types(self, inline_blocks, ind, source_text, new_index, start_text):
+        """
+        After finding a link specifier, figure out what type of link it is.
+        """
+
+        print(
+            "handle_link_types>>"
+            + str(inline_blocks)
+            + "<<"
+            + str(ind)
+            + "<<"
+            + str(len(inline_blocks))
+        )
+        print("handle_link_types>>" + source_text[new_index:] + "<<")
+        update_index = -1
+        inline_link = None
+        inline_title = None
+        if ParserHelper.is_character_at_index(source_text, new_index, "("):
+            inline_link, inline_title, update_index = self.process_inline_link_body(
+                source_text, new_index + 1
+            )
+
+        token_to_append = None
+        if update_index != -1:
+            if start_text == "[":
+                inline_blocks[ind] = LinkStartMarkdownToken(
+                    link_uri=inline_link, link_title=inline_title
+                )
+                token_to_append = EndMarkdownToken(
+                    MarkdownToken.token_inline_link, "", ""
+                )
+            else:
+                inline_blocks[ind] = ImageStartMarkdownToken(
+                    link_uri=inline_link, link_title=inline_title
+                )
+                token_to_append = EndMarkdownToken(
+                    MarkdownToken.token_inline_image, "", ""
+                )
+
+        print(
+            "handle_link_types<update_index<"
+            + str(update_index)
+            + "<<"
+            + str(token_to_append)
+            + "<<"
+        )
+        return update_index, token_to_append
+
+    # pylint: enable=too-many-arguments
+
+    def process_inline_link_body(self, source_text, new_index):
+        """
+        Given that an inline link has been identified, process it's body.
+        """
+
+        print("process_inline_link_body>>" + source_text[new_index:] + "<<")
+        inline_link = ""
+        inline_title = ""
+        new_index, _ = ParserHelper.extract_any_whitespace(source_text, new_index)
+        print(
+            "new_index>>"
+            + str(new_index)
+            + ">>source_text[]>>"
+            + source_text[new_index:]
+            + ">"
+        )
+        if not ParserHelper.is_character_at_index(source_text, new_index, ")"):
+            inline_link, new_index = self.parse_link_destination(source_text, new_index)
+            if new_index != -1:
+                print("before ws>>" + source_text[new_index:] + ">")
+                new_index, _ = ParserHelper.extract_any_whitespace(
+                    source_text, new_index
+                )
+                print("after ws>>" + source_text[new_index:] + ">")
+                if ParserHelper.is_character_at_index_not(source_text, new_index, ")"):
+                    inline_title, new_index = self.parse_link_title(
+                        source_text, new_index
+                    )
+                if new_index != -1:
+                    new_index, _ = ParserHelper.extract_any_whitespace(
+                        source_text, new_index
+                    )
+        print(
+            "inline_link>>"
+            + str(inline_link)
+            + ">>inline_title>>"
+            + str(inline_title)
+            + ">new_index>"
+            + str(new_index)
+            + ">"
+        )
+        if new_index != -1:
+            if ParserHelper.is_character_at_index(source_text, new_index, ")"):
+                new_index = new_index + 1
+            else:
+                new_index = -1
+        print(
+            "process_inline_link_body>>inline_link>>"
+            + str(inline_link)
+            + ">>inline_title>>"
+            + str(inline_title)
+            + ">new_index>"
+            + str(new_index)
+            + ">"
+        )
+        return inline_link, inline_title, new_index
+
+    def parse_angle_link_destination(self, source_text, new_index):
+        """
+        Parse a link destination that is included in angle brackets.
+        """
+
+        collected_destination = ""
+        new_index = new_index + 1
+        angle_link_breaks = ">\\"
+        keep_collecting = True
+        while keep_collecting:
+            keep_collecting = False
+            new_index, ert_new = ParserHelper.collect_until_one_of_characters(
+                source_text, new_index, angle_link_breaks
+            )
+            collected_destination = collected_destination + ert_new
+            if ParserHelper.is_character_at_index(source_text, new_index, "\\"):
+                old_new_index = new_index
+                _, new_index = self.handle_inline_backslash(source_text, new_index)
+                collected_destination = (
+                    collected_destination + source_text[old_new_index:new_index]
+                )
+                keep_collecting = True
+
+        if ParserHelper.is_character_at_index(source_text, new_index, ">"):
+            new_index = new_index + 1
+        else:
+            new_index = -1
+            collected_destination = ""
+        return new_index, collected_destination
+
+    def parse_non_angle_link_destination(self, source_text, new_index):
+        """
+        Parse a link destination that is not included in angle brackets.
+        """
+
+        link_breaks = self.ascii_control_characters + "()\\"
+        collected_destination = ""
+        nesting_level = 0
+        keep_collecting = True
+        while keep_collecting:
+            print(
+                "collected_destination>>"
+                + str(collected_destination)
+                + "<<"
+                + source_text[new_index:]
+                + ">>nesting_level>>"
+                + str(nesting_level)
+                + ">>"
+            )
+            keep_collecting = False
+            new_index, before_part = ParserHelper.collect_until_one_of_characters(
+                source_text, new_index, link_breaks
+            )
+            collected_destination = collected_destination + before_part
+            print(">>>>>>" + source_text[new_index:] + "<<<<<")
+            if ParserHelper.is_character_at_index(source_text, new_index, "\\"):
+                old_new_index = new_index
+                _, new_index = self.handle_inline_backslash(source_text, new_index)
+                collected_destination = (
+                    collected_destination + source_text[old_new_index:new_index]
+                )
+                keep_collecting = True
+            elif ParserHelper.is_character_at_index(source_text, new_index, "("):
+                nesting_level = nesting_level + 1
+                collected_destination = collected_destination + "("
+                new_index = new_index + 1
+                keep_collecting = True
+            elif ParserHelper.is_character_at_index(source_text, new_index, ")"):
+                if nesting_level != 0:
+                    collected_destination = collected_destination + ")"
+                    new_index = new_index + 1
+                    nesting_level = nesting_level - 1
+                    keep_collecting = True
+        ex_link = collected_destination
+        print("collected_destination>>" + str(collected_destination))
+        if nesting_level != 0:
+            return None, -1
+        return new_index, ex_link
+
+    def parse_link_destination(self, source_text, new_index):
+        """
+        Parse an inline link's link destination.
+        """
+
+        print("parse_link_destination>>new_index>>" + source_text[new_index:] + ">>")
+        ex_link = ""
+        if ParserHelper.is_character_at_index(source_text, new_index, "<"):
+            new_index, ex_link = self.parse_angle_link_destination(
+                source_text, new_index
+            )
+        else:
+            new_index, ex_link = self.parse_non_angle_link_destination(
+                source_text, new_index
+            )
+
+        if new_index != -1 and "\n" in ex_link:
+            return None, -1
+        print(
+            "handle_backslashes>>new_index>>"
+            + str(new_index)
+            + ">>ex_link>>"
+            + str(ex_link)
+            + ">>"
+        )
+        if new_index != -1 and ex_link:
+            ex_link = self.handle_backslashes(ex_link)
+        print("urllib.parse.quote>>ex_link>>" + str(ex_link) + ">>")
+
+        # TODO Check with checkmark.js as to how they encode and emulate instead of using python library
+        ex_link = urllib.parse.quote(ex_link, safe="/#:?=()%*")
+        print(
+            "handle_backslashes>>new_index>>"
+            + str(new_index)
+            + ">>ex_link>>"
+            + str(ex_link)
+            + ">>"
+        )
+        return ex_link, new_index
+
+    def parse_link_title(self, source_text, new_index):
+        """
+        Parse an inline link's link title.
+        """
+
+        print("parse_link_title>>new_index>>" + source_text[new_index:] + ">>")
+        ex_title = ""
+        if ParserHelper.is_character_at_index(source_text, new_index, "'"):
+            new_index, ex_title = self.extract_bounded_string(
+                source_text, new_index + 1, "'", None
+            )
+        elif ParserHelper.is_character_at_index(source_text, new_index, '"'):
+            new_index, ex_title = self.extract_bounded_string(
+                source_text, new_index + 1, '"', None
+            )
+        elif ParserHelper.is_character_at_index(source_text, new_index, "("):
+            new_index, ex_title = self.extract_bounded_string(
+                source_text, new_index + 1, ")", "("
+            )
+        else:
+            new_index = -1
+        print(
+            "parse_link_title>>new_index>>"
+            + str(new_index)
+            + ">>ex_link>>"
+            + str(ex_title)
+            + ">>"
+        )
+
+        ex_title = self.append_text("", self.handle_backslashes(ex_title))
+        print("parse_link_title>>after>>" + ex_title + ">>")
+
+        return ex_title, new_index
+
+    def extract_bounded_string(
+        self, source_text, new_index, close_character, start_character
+    ):
+        """
+        Extract a string that is bounded by some manner of characters.
+        """
+
+        break_characters = "\\" + close_character
+        if start_character:
+            break_characters = break_characters + start_character
+        nesting_level = 0
+        print(
+            ">>new_index>>"
+            + str(new_index)
+            + ">>data>>"
+            + source_text[new_index:]
+            + ">>"
+        )
+        next_index, data = ParserHelper.collect_until_one_of_characters(
+            source_text, new_index, break_characters
+        )
+        print(">>next_index1>>" + str(next_index) + ">>data>>" + data + ">>")
+        while (
+            next_index < len(source_text)
+            and source_text[next_index] != close_character
+            and nesting_level == 0
+        ):
+            if ParserHelper.is_character_at_index(source_text, next_index, "\\"):
+                print("pre-back>>next_index>>" + str(next_index) + ">>")
+                old_index = next_index
+                _, next_index = self.handle_inline_backslash(source_text, next_index)
+                data = data + source_text[old_index:next_index]
+            elif start_character is not None and ParserHelper.is_character_at_index(
+                source_text, next_index, start_character
+            ):
+                print("pre-start>>next_index>>" + str(next_index) + ">>")
+                data = data + start_character
+                nesting_level = nesting_level + 1
+            elif ParserHelper.is_character_at_index(
+                source_text, next_index, close_character
+            ):
+                print("pre-close>>next_index>>" + str(next_index) + ">>")
+                data = data + close_character
+                nesting_level = nesting_level - 1
+            else:
+                assert False
+            next_index, new_data = ParserHelper.collect_until_one_of_characters(
+                source_text, next_index, break_characters
+            )
+            print("back>>next_index>>" + str(next_index) + ">>data>>" + data + ">>")
+            data = data + new_data
+        print(">>next_index2>>" + str(next_index) + ">>data>>" + data + ">>")
+        if ParserHelper.is_character_at_index(source_text, next_index, close_character):
+            return next_index + 1, data
+        assert False
 
     # pylint: disable=too-many-arguments
     def close_open_blocks(

@@ -10,7 +10,6 @@ from .utils import assert_if_lists_different, assert_if_strings_different
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_emphasis_431():
     """
     Test case 431:  (part 1) Any nonempty sequence of inline elements can be the contents of an strongly emphasized span.
@@ -21,7 +20,14 @@ def test_emphasis_431():
     transformer = TransformToGfm()
     source_markdown = """**foo [bar](/url)**"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[emphasis:2]",
+        "[text:foo :]",
+        "[link:/url:]",
+        "[text:bar:]",
+        "[end-link::]",
+        "[end-emphasis::2]",
+        "[end-para]",
     ]
     expected_gfm = """<p><strong>foo <a href="/url">bar</a></strong></p>"""
 
@@ -355,7 +361,6 @@ bim</em> bop</strong></p>"""
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_emphasis_442():
     """
     Test case 442:  (part 2) Indefinite levels of nesting are possible:
@@ -366,7 +371,16 @@ def test_emphasis_442():
     transformer = TransformToGfm()
     source_markdown = """**foo [*bar*](/url)**"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[emphasis:2]",
+        "[text:foo :]",
+        "[link:/url:]",
+        "[emphasis:1]",
+        "[text:bar:]",
+        "[end-emphasis::1]",
+        "[end-link::]",
+        "[end-emphasis::2]",
+        "[end-para]",
     ]
     expected_gfm = """<p><strong>foo <a href="/url"><em>bar</em></a></strong></p>"""
 

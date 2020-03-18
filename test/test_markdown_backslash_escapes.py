@@ -317,13 +317,12 @@ def test_backslash_escapes_318():
     source_markdown = """[foo](/bar\\* "ti\\*tle")"""
     expected_tokens = [
         "[para:]",
-        "[text:[:]",
+        "[link:/bar*:ti*tle]",
         "[text:foo:]",
-        "[text:]:]",
-        "[text:(/bar* &quot;ti*tle&quot;):]",
+        "[end-link::]",
         "[end-para]",
     ]
-    expected_gfm = """<p>[foo](/bar* &quot;ti*tle&quot;)</p>"""
+    expected_gfm = """<p><a href="/bar*" title="ti*tle">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

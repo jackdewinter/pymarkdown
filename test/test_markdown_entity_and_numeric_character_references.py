@@ -243,13 +243,12 @@ def test_character_references_328():
     source_markdown = '[foo](/f&ouml;&ouml; "f&ouml;&ouml;")'
     expected_tokens = [
         "[para:]",
-        "[text:[:]",
+        "[link:/f%C3%B6%C3%B6:föö]",
         "[text:foo:]",
-        "[text:]:]",
-        "[text:(/föö &quot;föö&quot;):]",
+        "[end-link::]",
         "[end-para]",
     ]
-    expected_gfm = """<p>[foo](/föö &quot;föö&quot;)</p>"""
+    expected_gfm = """<p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
