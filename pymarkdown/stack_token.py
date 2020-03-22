@@ -17,6 +17,7 @@ class StackToken:
     stack_fenced_code = "fcode-block"
     stack_indented_code = "icode-block"
     stack_paragraph = "para"
+    stack_link_definition = "linkdef"
 
     def __init__(self, type_name, extra_data=None):
         self.type_name = type_name
@@ -46,6 +47,8 @@ class StackToken:
         """
         Generate the token emitted to close off the current stack token
         """
+
+        assert self.stack_link_definition != self.type_name
 
         return EndMarkdownToken(self.type_name, extracted_whitespace, None)
 
@@ -107,6 +110,13 @@ class StackToken:
         Is this stack token a paragraph token?
         """
         return self.type_name == self.stack_paragraph
+
+    @property
+    def was_link_definition_started(self):
+        """
+        Is this stack token a link definition started token?
+        """
+        return self.type_name == self.stack_link_definition
 
 
 # pylint: disable=too-few-public-methods
@@ -230,3 +240,29 @@ class HtmlBlockStackToken(StackToken):
         self.remaining_html_tag = remaining_html_tag
         extra_data = str(html_block_type) + ":" + str(remaining_html_tag)
         StackToken.__init__(self, StackToken.stack_html_block, extra_data)
+
+
+class LinkDefinitionStackToken(StackToken):
+    """
+    Class to provide for a stack token for a possible link definition.
+    """
+
+    def __init__(self):
+        self.continuation_lines = []
+        StackToken.__init__(self, StackToken.stack_link_definition)
+
+    def add_continuation_line(self, new_line):
+        """
+        Add the line to the collection of lines to keep as "continuations".
+        """
+        self.continuation_lines.append(new_line)
+
+    def get_joined_lines(self, join_suffix):
+        """
+        Grab the continuation lines as a single line.
+        """
+
+        joined_lines = ""
+        for next_line in self.continuation_lines:
+            joined_lines = joined_lines + next_line + "\n"
+        return joined_lines + join_suffix

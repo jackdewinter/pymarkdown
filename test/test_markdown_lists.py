@@ -836,12 +836,6 @@ def test_list_items_297():
         "[text:b:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
-        "[text:[:]",
-        "[text:ref:]",
-        "[text:]:]",
-        "[text:: /url:]",
-        "[end-para]",
         "[li:2]",
         "[para:]",
         "[text:d:]",
@@ -854,7 +848,6 @@ def test_list_items_297():
 </li>
 <li>
 <p>b</p>
-<p>[ref]: /url</p>
 </li>
 <li>
 <p>d</p>
@@ -866,7 +859,6 @@ def test_list_items_297():
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO will fail when link defs added
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -1354,3 +1346,9 @@ def test_list_items_306():
 # - should be end and then blank, as the blank is outside of the list
 # TODO scan GFM and ensure Unicode whitespace uses actual unicode whitespace, not just whitespace
 # TODO inline link ( without any extra info
+# TODO why does GFM not specify that between [ and ] for a lrd, no blanks are allowed?
+# -- maybe expound on 166 a bit?
+# TODO what if bad link followed by good link?
+# TODO collect_until_one_of_characters with backslashes?
+# TODO what if bad link definition discovered multiple lines down, how to back track?
+# TODO split up link definition within a block quote or list?

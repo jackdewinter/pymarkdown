@@ -544,7 +544,6 @@ def test_code_spans_356():
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO will fail when autolinks
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 

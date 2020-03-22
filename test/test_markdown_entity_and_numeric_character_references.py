@@ -255,7 +255,6 @@ def test_character_references_328():
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO will break with link definitions
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -271,30 +270,22 @@ def test_character_references_329():
     transformer = TransformToGfm()
     source_markdown = """[foo]
 
-[foo]: /f&ouml;&ouml; "f&ouml;&ouml;"""
+[foo]: /f&ouml;&ouml; "f&ouml;&ouml;\""""
     expected_tokens = [
         "[para:]",
-        "[text:[:]",
+        "[link:/f%C3%B6%C3%B6:föö]",
         "[text:foo:]",
-        "[text:]:]",
+        "[end-link::]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
-        "[text:[:]",
-        "[text:foo:]",
-        "[text:]:]",
-        "[text:: /föö &quot;föö:]",
-        "[end-para]",
     ]
-    expected_gfm = """<p>[foo]</p>
-<p>[foo]: /föö &quot;föö</p>"""
+    expected_gfm = """<p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO will break with link definitions
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 

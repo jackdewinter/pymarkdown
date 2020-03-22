@@ -329,7 +329,6 @@ def test_backslash_escapes_318():
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO will fail when link definitions added
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -349,28 +348,20 @@ def test_backslash_escapes_319():
 """
     expected_tokens = [
         "[para:]",
-        "[text:[:]",
+        "[link:/bar*:ti*tle]",
         "[text:foo:]",
-        "[text:]:]",
+        "[end-link::]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
-        "[text:[:]",
-        "[text:foo:]",
-        "[text:]:]",
-        "[text:: /bar* &quot;ti*tle&quot;:]",
-        "[end-para]",
         "[BLANK:]",
     ]
-    expected_gfm = """<p>[foo]</p>
-<p>[foo]: /bar* &quot;ti*tle&quot;</p>"""
+    expected_gfm = """<p><a href="/bar*" title="ti*tle">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO will fail when link definitions added
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
