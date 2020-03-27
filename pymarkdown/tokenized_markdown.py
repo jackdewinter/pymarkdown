@@ -58,6 +58,7 @@ class TokenizedMarkdown:
     Class to provide a tokenization of a markdown-encoded string.
     """
 
+    # pylint: disable=too-many-statements
     def __init__(self):
         """
         Initializes a new instance of the TokenizedMarkdown class.
@@ -160,6 +161,7 @@ class TokenizedMarkdown:
             "track",
             "ul",
         ]
+        self.valid_inline_text_block_sequence_starts = "`\\&\n<*_[!]"
         self.valid_tag_name_start = string.ascii_letters
         self.valid_tag_name_characters = string.ascii_letters + string.digits + "-"
         self.tag_attribute_name_start = string.ascii_letters + "_:"
@@ -169,6 +171,7 @@ class TokenizedMarkdown:
         self.unquoted_attribute_value_stop = "\"'=<>`" + " \x09\x0a\x0b\x0c\x0d"
 
         self.whitespace = "\x20\x09\x0a\x0b\x0c\x0d"
+        self.non_space_whitespace = self.whitespace[1:]
         self.unicode_whitespace = "\x20\x09\x0a\x0c\x0d\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000"
         self.punctuation_characters = (
             "\u0020\u0021\u0022\u0023\u0024\u0025\u0026\u0027\u0028\u0029\u002a\u002b\u002c\u002d\u002e\u002f"
@@ -182,6 +185,9 @@ class TokenizedMarkdown:
             + "\x20\x7f"
         )
 
+        self.inline_emphasis = "*_"
+        self.inline_processing_needed = self.inline_emphasis + "[]"
+
         self.backslash_punctuation = "!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~\\"
         self.resource_path = os.path.join(os.path.split(__file__)[0], "resources")
         self.entity_map = None
@@ -193,6 +199,8 @@ class TokenizedMarkdown:
             "&": "&amp;",
             '"': "&quot;",
         }
+
+    # pylint: enable=too-many-statements
 
     def load_entity_map(self):
         """
@@ -252,12 +260,16 @@ class TokenizedMarkdown:
         """
         self.entity_map = self.load_entity_map()
 
+        print("\n\n>>>>>>>parse_blocks_pass>>>>>>")
         first_pass_results = self.parse_blocks_pass(your_text_string)
 
+        print("\n\n>>>>>>>coalesce_text_blocks>>>>>>")
         coalesced_results = self.coalesce_text_blocks(first_pass_results)
 
+        print("\n\n>>>>>>>parse_inline>>>>>>")
         final_pass_results = self.parse_inline(coalesced_results)
 
+        print("\n\n>>>>>>>final_pass_results>>>>>>")
         return final_pass_results
 
     def parse_blocks_pass(self, your_text_string):
@@ -268,32 +280,57 @@ class TokenizedMarkdown:
         self.tokenized_document = []
         next_token = your_text_string.split("\n", 1)
         token_to_use = next_token
+        did_start_close = False
+        did_started_close = False
         requeue = []
         ignore_link_definition_start = False
         print("---")
-        while token_to_use:
+        print("---" + str(token_to_use) + "---")
+        print("---")
+        while True:
             print("next-line>>" + str(token_to_use))
             print("stack>>" + str(self.stack))
             print("current_block>>" + str(self.stack[-1]))
             print("---")
 
-            next_line = token_to_use[0]
-            tokens_from_line = []
-            if not next_line or not next_line.strip():
-                (
-                    tokens_from_line,
-                    lines_to_requeue,
-                    force_ignore_first_as_lrd,
-                ) = self.handle_blank_line(next_line, from_main_transform=True)
-            else:
-                (
-                    tokens_from_line,
-                    _,
-                    lines_to_requeue,
-                    force_ignore_first_as_lrd,
-                ) = self.parse_line_for_container_blocks(
-                    next_line, ignore_link_definition_start
+            lines_to_requeue = []
+            if did_start_close:
+                print("\n\ncleanup")
+                did_started_close = True
+                _, lines_to_requeue, force_ignore_first_as_lrd = self.close_open_blocks(
+                    self.tokenized_document,
+                    include_block_quotes=True,
+                    include_lists=True,
+                    caller_can_handle_requeue=True,
                 )
+                if not lines_to_requeue:
+                    break
+
+                did_start_close = False
+                token_to_use = None
+                print(
+                    "\n\n\n\n\n\n\n\n\n\n>>lines_to_requeue>>" + str(lines_to_requeue)
+                )
+            else:
+                next_line = token_to_use[0]
+                tokens_from_line = []
+                if not next_line or not next_line.strip():
+                    print("\n\nblank line")
+                    (
+                        tokens_from_line,
+                        lines_to_requeue,
+                        force_ignore_first_as_lrd,
+                    ) = self.handle_blank_line(next_line, from_main_transform=True)
+                else:
+                    print("\n\nnormal lines")
+                    (
+                        tokens_from_line,
+                        _,
+                        lines_to_requeue,
+                        force_ignore_first_as_lrd,
+                    ) = self.parse_line_for_container_blocks(
+                        next_line, ignore_link_definition_start
+                    )
 
             if lines_to_requeue:
                 print("requeuing lines: " + str(lines_to_requeue))
@@ -305,25 +342,52 @@ class TokenizedMarkdown:
 
             print("---")
             print("before>>" + str(self.tokenized_document))
+            print("before>>" + str(tokens_from_line))
             self.tokenized_document.extend(tokens_from_line)
             print("after>>" + str(self.tokenized_document))
+            if requeue:
+                print("requeue>>" + str(requeue))
             print("---")
 
-            if requeue:
-                token_to_use = requeue[0]
-                del requeue[0]
-                token_to_use = (token_to_use, None)
-            elif len(next_token) == 2:
+            (
+                token_to_use,
+                next_token,
+                did_start_close,
+                did_started_close,
+            ) = self.determine_next_token_process(
+                requeue, next_token, did_start_close, did_started_close
+            )
+
+        return self.tokenized_document
+
+    @classmethod
+    def determine_next_token_process(
+        cls, requeue, next_token, did_start_close, did_started_close
+    ):
+        """
+        For the parse_blocks_pass function, determine the next token to parse.
+        """
+
+        token_to_use = None
+        if requeue:
+            print(">>Requeues present")
+            token_to_use = requeue[0]
+            del requeue[0]
+            token_to_use = (token_to_use, None)
+            print(">>Requeue>>" + str(token_to_use))
+            print(">>Requeues left>>" + str(requeue))
+        elif did_started_close:
+            did_start_close = True
+        else:
+            if len(next_token) == 2:
                 next_token = next_token[1].split("\n", 1)
                 token_to_use = next_token
             else:
                 next_token = None
-                token_to_use = next_token
+                token_to_use = None
+                did_start_close = True
 
-        print("cleanup")
-        return self.close_open_blocks(
-            self.tokenized_document, include_block_quotes=True, include_lists=True
-        )
+        return token_to_use, next_token, did_start_close, did_started_close
 
     @classmethod
     def coalesce_text_blocks(cls, first_pass_results):
@@ -413,6 +477,10 @@ class TokenizedMarkdown:
         Parse and resolve any inline elements.
         """
 
+        for next_token in coalesced_results:
+            print(">>" + str(next_token) + "<<")
+        print("")
+
         coalesced_list = []
         coalesced_list.extend(coalesced_results[0:1])
         for coalesce_index in range(1, len(coalesced_results)):
@@ -499,7 +567,7 @@ class TokenizedMarkdown:
             current_string = current_string + source_text[start_index:next_index]
             current_char = source_text[next_index]
             if current_char == "\\":
-                new_string, new_index = self.handle_inline_backslash(
+                new_string, new_index, _ = self.handle_inline_backslash(
                     source_text, next_index
                 )
             else:  # if source_text[next_index] == "&":
@@ -549,6 +617,7 @@ class TokenizedMarkdown:
 
     # pylint: disable=too-many-branches
     # pylint: disable=too-many-statements
+    # pylint: disable=too-many-locals
     def process_inline_text_block(self, source_text, starting_whitespace=""):
         """
         Process a text block for any inline items.
@@ -558,16 +627,19 @@ class TokenizedMarkdown:
         inline_blocks = []
         start_index = 0
         current_string = ""
+        current_string_unresolved = ""
         end_string = None
-        valid_sequence_starts = "`\\&\n<*_[!]"
 
-        next_index = self.index_any_of(source_text, valid_sequence_starts, start_index)
+        next_index = self.index_any_of(
+            source_text, self.valid_inline_text_block_sequence_starts, start_index
+        )
         print("next_index>>" + str(next_index))
         have_processed_once = False
         while next_index != -1:
 
             new_tokens = None
             new_string = None
+            new_string_unresolved = None
             new_index = None
             have_processed_once = True
             whitespace_to_add = None
@@ -579,9 +651,11 @@ class TokenizedMarkdown:
                     source_text, next_index
                 )
             elif source_text[next_index] == "\\":
-                new_string, new_index = self.handle_inline_backslash(
-                    source_text, next_index
-                )
+                (
+                    new_string,
+                    new_index,
+                    new_string_unresolved,
+                ) = self.handle_inline_backslash(source_text, next_index)
             elif source_text[next_index] == "&":
                 new_string, new_index = self.handle_character_reference(
                     source_text, next_index
@@ -590,7 +664,7 @@ class TokenizedMarkdown:
                 new_string, new_index, new_tokens = self.handle_angle_brackets(
                     source_text, next_index
                 )
-            elif source_text[next_index] in "*_[]":
+            elif source_text[next_index] in self.inline_processing_needed:
                 print(
                     "\nBEFORE:handle_inline_special>"
                     + str(current_string)
@@ -604,12 +678,12 @@ class TokenizedMarkdown:
                     next_index,
                     1,
                     remaining_line,
-                    current_string,
+                    current_string_unresolved,
                 )
             elif source_text[next_index] == "!":
                 if ParserHelper.are_characters_at_index(source_text, next_index, "!["):
                     new_string, new_index, new_tokens = self.handle_inline_special(
-                        inline_blocks, source_text, next_index, 2, remaining_line, ""
+                        inline_blocks, source_text, next_index, 2, remaining_line, "",
                     )
                 else:
                     new_string = "!"
@@ -628,6 +702,9 @@ class TokenizedMarkdown:
                 )
 
             current_string = self.append_text(current_string, remaining_line)
+            current_string_unresolved = self.append_text(
+                current_string_unresolved, remaining_line
+            )
 
             print(
                 "\nreplace>"
@@ -649,6 +726,7 @@ class TokenizedMarkdown:
                         )
                     )
                     current_string = ""
+                    current_string_unresolved = ""
                     starting_whitespace = ""
                     end_string = None
 
@@ -658,13 +736,26 @@ class TokenizedMarkdown:
                 end_string = self.modify_end_string(end_string, whitespace_to_add)
 
             current_string = self.append_text(current_string, new_string)
+
+            if new_string_unresolved:
+                current_string_unresolved = self.append_text(
+                    current_string_unresolved, new_string_unresolved
+                )
+            else:
+                current_string_unresolved = self.append_text(
+                    current_string_unresolved, new_string
+                )
+
             start_index = new_index
             next_index = self.index_any_of(
-                source_text, valid_sequence_starts, start_index
+                source_text, self.valid_inline_text_block_sequence_starts, start_index
             )
 
         if start_index < len(source_text):
             current_string = self.append_text(current_string, source_text[start_index:])
+            current_string_unresolved = self.append_text(
+                current_string_unresolved, source_text[start_index:]
+            )
 
         if end_string is not None:
             print("xx-end-lf>" + end_string.replace("\n", "\\n") + "<")
@@ -680,6 +771,7 @@ class TokenizedMarkdown:
 
     # pylint: enable=too-many-branches
     # pylint: enable=too-many-statements
+    # pylint: enable=too-many-locals
 
     def is_open_close_emphasis_valid(self, open_token, close_token):
         """
@@ -870,7 +962,10 @@ class TokenizedMarkdown:
                 if not delimiter_stack[current_position].active:
                     print("not active")
                     continue
-                if delimiter_stack[current_position].token_text[0] not in "*_":
+                if (
+                    delimiter_stack[current_position].token_text[0]
+                    not in self.inline_emphasis
+                ):
                     print("not emphasis")
                     continue
                 if not self.is_potential_closer(delimiter_stack[current_position]):
@@ -989,12 +1084,14 @@ class TokenizedMarkdown:
         Determine if the current token is a potential closer.
         """
 
+        assert current_token.token_text[0] in self.inline_emphasis
+
         # Rule 3 and 7
         is_closer = False
         if current_token.token_text[0] == "*":
             is_closer = self.is_right_flanking_delimiter_run(current_token)
         # Rule 4 and 8
-        elif current_token.token_text[0] == "_":
+        else:  # elif current_token.token_text[0] == "_":
             is_closer = self.is_right_flanking_delimiter_run(current_token)
             if is_closer:
                 is_left_flanking = self.is_left_flanking_delimiter_run(current_token)
@@ -1010,11 +1107,13 @@ class TokenizedMarkdown:
         Determine if the current token is a potential opener.
         """
 
+        assert current_token.token_text[0] in self.inline_emphasis
+
         # Rule 1
         is_opener = False
         if current_token.token_text[0] == "*":
             is_opener = self.is_left_flanking_delimiter_run(current_token)
-        elif current_token.token_text[0] == "_":
+        else:  # elif current_token.token_text[0] == "_":
             is_opener = self.is_left_flanking_delimiter_run(current_token)
             if is_opener:
                 is_right_flanking = self.is_right_flanking_delimiter_run(current_token)
@@ -1106,17 +1205,21 @@ class TokenizedMarkdown:
 
         new_index = next_index + 1
         new_string = ""
+        new_string_unresolved = ""
         if new_index >= len(source_text) or (
             new_index < len(source_text) and source_text[new_index] == "\n"
         ):
             new_string = "\\"
+            new_string_unresolved = new_string
         else:
             if source_text[new_index] in self.backslash_punctuation:
                 new_string = source_text[new_index]
+                new_string_unresolved = "\\" + new_string
             else:
                 new_string = "\\" + source_text[new_index]
+                new_string_unresolved = new_string
             new_index = new_index + 1
-        return new_string, new_index
+        return new_string, new_index, new_string_unresolved
 
     def handle_inline_backtick(self, source_text, next_index):
         """
@@ -1532,7 +1635,7 @@ class TokenizedMarkdown:
         next_index,
         special_length,
         remaining_line,
-        current_string,
+        current_string_unresolved,
     ):
         """
         Handle the collection of special inline characters for later processing.
@@ -1564,16 +1667,25 @@ class TokenizedMarkdown:
                     + special_sequence
                     + ">>"
                 )
-                print(">>" + str(inline_blocks) + "<<")
-                print(">>" + str(remaining_line) + "<<")
+                print(">>inline_blocks>>" + str(inline_blocks) + "<<")
+                print(">>remaining_line>>" + str(remaining_line) + "<<")
+                print(
+                    ">>current_string_unresolved>>"
+                    + str(current_string_unresolved)
+                    + "<<"
+                )
+                print(">>source_text>>" + source_text[next_index:] + "<<")
                 print("")
                 new_index, is_active, new_token = self.look_for_link_or_image(
                     inline_blocks,
                     source_text,
                     next_index,
                     remaining_line,
-                    current_string,
+                    current_string_unresolved,
                 )
+                print(">>inline_blocks>>" + str(inline_blocks) + "<<")
+                print(">>new_token>>" + str(new_token) + "<<")
+                print(">>source_text>>" + source_text[new_index:] + "<<")
             else:
                 repeat_count = special_length
                 new_index = next_index + special_length
@@ -1588,7 +1700,12 @@ class TokenizedMarkdown:
 
     # pylint: disable=too-many-arguments
     def look_for_link_or_image(
-        self, inline_blocks, source_text, next_index, remaining_line, current_string
+        self,
+        inline_blocks,
+        source_text,
+        next_index,
+        remaining_line,
+        current_string_unresolved,
     ):
         """
         Given that a link close character has been found, process it to see if
@@ -1622,7 +1739,7 @@ class TokenizedMarkdown:
                             new_index,
                             valid_special_start_text,
                             remaining_line,
-                            current_string,
+                            current_string_unresolved,
                         )
                         if updated_index != -1:
                             is_valid = True
@@ -1672,14 +1789,18 @@ class TokenizedMarkdown:
         Aggregate the text component of text blocks.
         """
 
+        print(">>collect_text_from_blocks>>" + str(inline_blocks))
+        print(">>collect_text_from_blocks>>suffix_text>>" + str(suffix_text))
         collected_text = ""
         collect_index = ind + 1
         while collect_index < len(inline_blocks):
             collected_text = collected_text + inline_blocks[collect_index].token_text
             collect_index = collect_index + 1
         collected_text = collected_text + suffix_text
+        print(">>collect_text_from_blocks>>" + str(collected_text) + "<<")
         return collected_text
 
+    # pylint: disable=too-many-locals
     # pylint: disable=too-many-arguments
     def handle_link_types(
         self,
@@ -1689,7 +1810,7 @@ class TokenizedMarkdown:
         new_index,
         start_text,
         remaining_line,
-        current_string,
+        current_string_unresolved,
     ):
         """
         After finding a link specifier, figure out what type of link it is.
@@ -1704,33 +1825,66 @@ class TokenizedMarkdown:
             + str(len(inline_blocks))
         )
         print("handle_link_types>>" + source_text[new_index:] + "<<")
+        print(
+            "handle_link_types>>current_string_unresolved>>"
+            + str(current_string_unresolved)
+            + "<<remaining_line<<"
+            + str(remaining_line)
+            + ">>"
+        )
         text_from_blocks = self.collect_text_from_blocks(
-            inline_blocks, ind, current_string + remaining_line
+            inline_blocks, ind, current_string_unresolved + remaining_line
         )
         print("handle_link_types>>text_from_blocks>>" + text_from_blocks + "<<")
 
         update_index = -1
         inline_link = None
         inline_title = None
+        tried_full_reference_form = False
         if ParserHelper.is_character_at_index(source_text, new_index, "("):
+            print("inline reference?")
             inline_link, inline_title, update_index = self.process_inline_link_body(
                 source_text, new_index + 1
             )
         elif ParserHelper.is_character_at_index(source_text, new_index, "["):
-            assert False
-        else:
+            print("collapsed reference?")
+            after_open_index = new_index + 1
+            if ParserHelper.is_character_at_index(source_text, after_open_index, "]"):
+                print("collapsed reference")
+                print(">>" + text_from_blocks + ">>")
+                update_index, inline_link, inline_title = self.look_up_link(
+                    text_from_blocks, after_open_index + 1, "collapsed reference"
+                )
+                tried_full_reference_form = True
+            else:
+                print("full reference?")
+                print(">>did_extract>>" + source_text[after_open_index:] + ">")
+                did_extract, after_label_index, ex_label = self.extract_link_label(
+                    source_text, after_open_index, include_reference_colon=False
+                )
+                print(
+                    ">>did_extract>>"
+                    + str(did_extract)
+                    + ">after_label_index>"
+                    + str(after_label_index)
+                    + ">ex_label>"
+                    + str(ex_label)
+                    + ">"
+                )
+                if did_extract:
+                    tried_full_reference_form = True
+                    update_index, inline_link, inline_title = self.look_up_link(
+                        ex_label, after_label_index, "full reference"
+                    )
+
+        if update_index == -1 and not tried_full_reference_form:
+            print("shortcut?")
             print("link_definitions>>" + str(self.link_definitions) + "<<")
             print(">>" + str(inline_blocks) + "<<")
             print(">>" + str(text_from_blocks) + "<<")
-
-            link_label = self.normalize_link_label(text_from_blocks)
-
-            if link_label not in self.link_definitions:
-                update_index = -1
-            else:
-                update_index = new_index
-                inline_link = self.link_definitions[link_label][0]
-                inline_title = self.link_definitions[link_label][1]
+            update_index, inline_link, inline_title = self.look_up_link(
+                text_from_blocks, new_index, "shortcut"
+            )
 
         token_to_append = None
         if update_index != -1:
@@ -1758,7 +1912,25 @@ class TokenizedMarkdown:
         )
         return update_index, token_to_append
 
+    # pylint: enable=too-many-locals
     # pylint: enable=too-many-arguments
+
+    def look_up_link(self, link_to_lookup, new_index, link_type):
+        """
+        Look up a link to see if it is present.
+        """
+
+        inline_link = ""
+        inline_title = ""
+        link_label = self.normalize_link_label(link_to_lookup)
+        if not link_label or link_label not in self.link_definitions:
+            update_index = -1
+        else:
+            print(link_type)
+            update_index = new_index
+            inline_link = self.link_definitions[link_label][0]
+            inline_title = self.link_definitions[link_label][1]
+        return update_index, inline_link, inline_title
 
     def process_inline_link_body(self, source_text, new_index):
         """
@@ -1788,7 +1960,6 @@ class TokenizedMarkdown:
                     inline_title, new_index = self.parse_link_title(
                         source_text, new_index
                     )
-                    assert inline_title is not None
                 if new_index != -1:
                     new_index, _ = ParserHelper.extract_any_whitespace(
                         source_text, new_index
@@ -1835,7 +2006,7 @@ class TokenizedMarkdown:
             collected_destination = collected_destination + ert_new
             if ParserHelper.is_character_at_index(source_text, new_index, "\\"):
                 old_new_index = new_index
-                _, new_index = self.handle_inline_backslash(source_text, new_index)
+                _, new_index, _ = self.handle_inline_backslash(source_text, new_index)
                 collected_destination = (
                     collected_destination + source_text[old_new_index:new_index]
                 )
@@ -1874,18 +2045,21 @@ class TokenizedMarkdown:
             collected_destination = collected_destination + before_part
             print(">>>>>>" + source_text[new_index:] + "<<<<<")
             if ParserHelper.is_character_at_index(source_text, new_index, "\\"):
+                print("backslash")
                 old_new_index = new_index
-                _, new_index = self.handle_inline_backslash(source_text, new_index)
+                _, new_index, _ = self.handle_inline_backslash(source_text, new_index)
                 collected_destination = (
                     collected_destination + source_text[old_new_index:new_index]
                 )
                 keep_collecting = True
             elif ParserHelper.is_character_at_index(source_text, new_index, "("):
+                print("+1")
                 nesting_level = nesting_level + 1
                 collected_destination = collected_destination + "("
                 new_index = new_index + 1
                 keep_collecting = True
             elif ParserHelper.is_character_at_index(source_text, new_index, ")"):
+                print("-1")
                 if nesting_level != 0:
                     collected_destination = collected_destination + ")"
                     new_index = new_index + 1
@@ -1894,7 +2068,7 @@ class TokenizedMarkdown:
         ex_link = collected_destination
         print("collected_destination>>" + str(collected_destination))
         if nesting_level != 0:
-            return None, -1
+            return -1, None
         return new_index, ex_link
 
     def parse_link_destination(self, source_text, new_index):
@@ -1935,7 +2109,7 @@ class TokenizedMarkdown:
                 ">parse_non_angle_link_destination>new_index>"
                 + str(new_index)
                 + ">ex_link>"
-                + ex_link
+                + str(ex_link)
                 + ">"
             )
             if not ex_link:
@@ -2011,7 +2185,7 @@ class TokenizedMarkdown:
             break_characters = break_characters + start_character
         nesting_level = 0
         print(
-            ">>new_index>>"
+            "extract_bounded_string>>new_index>>"
             + str(new_index)
             + ">>data>>"
             + source_text[new_index:]
@@ -2021,41 +2195,45 @@ class TokenizedMarkdown:
             source_text, new_index, break_characters
         )
         print(">>next_index1>>" + str(next_index) + ">>data>>" + data + ">>")
-        while (
-            next_index < len(source_text)
-            and source_text[next_index] != close_character
-            and nesting_level == 0
+        while next_index < len(source_text) and not (
+            source_text[next_index] == close_character and nesting_level == 0
         ):
             if ParserHelper.is_character_at_index(source_text, next_index, "\\"):
                 print("pre-back>>next_index>>" + str(next_index) + ">>")
                 old_index = next_index
-                _, next_index = self.handle_inline_backslash(source_text, next_index)
+                _, next_index, _ = self.handle_inline_backslash(source_text, next_index)
                 data = data + source_text[old_index:next_index]
             elif start_character is not None and ParserHelper.is_character_at_index(
                 source_text, next_index, start_character
             ):
                 print("pre-start>>next_index>>" + str(next_index) + ">>")
                 data = data + start_character
+                next_index = next_index + 1
                 nesting_level = nesting_level + 1
-            elif ParserHelper.is_character_at_index(
-                source_text, next_index, close_character
-            ):
+            else:  # elif ParserHelper.is_character_at_index(
+                # source_text, next_index, close_character
+                # ):
                 print("pre-close>>next_index>>" + str(next_index) + ">>")
                 data = data + close_character
+                next_index = next_index + 1
                 nesting_level = nesting_level - 1
-            else:
-                assert False
             next_index, new_data = ParserHelper.collect_until_one_of_characters(
                 source_text, next_index, break_characters
             )
             print("back>>next_index>>" + str(next_index) + ">>data>>" + data + ">>")
             data = data + new_data
         print(">>next_index2>>" + str(next_index) + ">>data>>" + data + ">>")
-        if ParserHelper.is_character_at_index(source_text, next_index, close_character):
+        if (
+            ParserHelper.is_character_at_index(source_text, next_index, close_character)
+            and nesting_level == 0
+        ):
+            print("extract_bounded_string>>found-close")
             return next_index + 1, data
-        if next_index == len(source_text):
-            return next_index, None
-        return -1, None
+        # if next_index == len(source_text):
+        print(
+            "extract_bounded_string>>ran out of string>>next_index>>" + str(next_index)
+        )
+        return next_index, None
 
     # pylint: disable=too-many-arguments
     def close_open_blocks(
@@ -2065,12 +2243,15 @@ class TokenizedMarkdown:
         include_block_quotes=False,
         include_lists=False,
         until_this_index=-1,
+        caller_can_handle_requeue=False,
     ):
         """
         Close any open blocks that are currently on the stack.
         """
 
         new_tokens = []
+        lines_to_requeue = []
+        force_ignore_first_as_lrd = False
         if destination_array:
             new_tokens = destination_array
 
@@ -2110,9 +2291,10 @@ class TokenizedMarkdown:
                     did_complete_lrd,
                     did_pause_lrd,
                     lines_to_requeue,
-                    _,
+                    force_ignore_first_as_lrd,
                 ) = self.process_link_reference_definition("", 0, "", "")
-                # will also need to handle last return of above function
+                if caller_can_handle_requeue and lines_to_requeue:
+                    break
                 assert not lines_to_requeue
                 print(
                     "cob->process_link_reference_definition>>outer_processed>>"
@@ -2125,7 +2307,7 @@ class TokenizedMarkdown:
             else:
                 adjusted_tokens = self.remove_top_element_from_stack()
                 new_tokens.extend(adjusted_tokens)
-        return new_tokens
+        return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
         # pylint: enable=too-many-arguments
 
     def remove_top_element_from_stack(self):
@@ -2210,12 +2392,12 @@ class TokenizedMarkdown:
             and self.tokenized_document[-2].is_list_start
         ):
             print("double blank in list")
-            new_tokens = self.close_open_blocks(
+            new_tokens, _, _ = self.close_open_blocks(
                 until_this_index=in_index, include_lists=True
             )
 
         if new_tokens is None:
-            new_tokens = self.close_open_blocks(
+            new_tokens, _, _ = self.close_open_blocks(
                 only_these_blocks=close_only_these_blocks,
                 include_block_quotes=do_include_block_quotes,
             )
@@ -2334,7 +2516,7 @@ class TokenizedMarkdown:
                         after_extracted_text_index:
                     ]
 
-                    new_tokens = self.close_open_blocks(
+                    new_tokens, _, _ = self.close_open_blocks(
                         only_these_blocks=[ParagraphStackToken],
                     )
 
@@ -2378,12 +2560,14 @@ class TokenizedMarkdown:
             return True
         return False
 
-    def extract_link_label(self, line_to_parse, new_index):
+    def extract_link_label(
+        self, line_to_parse, new_index, include_reference_colon=True
+    ):
         """
         Extract the link reference definition's link label.
         """
 
-        angle_link_breaks = "]\\"
+        angle_link_breaks = "[]]\\"
 
         collected_destination = ""
         keep_collecting = True
@@ -2395,23 +2579,27 @@ class TokenizedMarkdown:
             collected_destination = collected_destination + ert_new
             if ParserHelper.is_character_at_index(line_to_parse, new_index, "\\"):
                 old_new_index = new_index
-                _, new_index = self.handle_inline_backslash(line_to_parse, new_index)
+                _, new_index, _ = self.handle_inline_backslash(line_to_parse, new_index)
                 collected_destination = (
                     collected_destination + line_to_parse[old_new_index:new_index]
                 )
                 keep_collecting = True
+            elif ParserHelper.is_character_at_index(line_to_parse, new_index, "["):
+                print(">> unescaped [, bailing")
+                return False, -1, None
 
         print("look for ]>>" + line_to_parse[new_index:] + "<<")
         if not ParserHelper.is_character_at_index(line_to_parse, new_index, "]"):
             print(">> no end ], bailing")
             return False, new_index, None
+        new_index = new_index + 1
 
-        new_index = new_index + 1
-        print("look for :>>" + line_to_parse[new_index:] + "<<")
-        if not ParserHelper.is_character_at_index(line_to_parse, new_index, ":"):
-            print(">> no :, bailing")
-            return False, -1, None
-        new_index = new_index + 1
+        if include_reference_colon:
+            print("look for :>>" + line_to_parse[new_index:] + "<<")
+            if not ParserHelper.is_character_at_index(line_to_parse, new_index, ":"):
+                print(">> no :, bailing")
+                return False, -1, None
+            new_index = new_index + 1
 
         return True, new_index, collected_destination
 
@@ -2461,14 +2649,12 @@ class TokenizedMarkdown:
         Verify that the link reference definition's ends properly.
         """
 
-        if new_index != -1:
-            print("look for EOL-ws>>" + line_to_parse[new_index:] + "<<")
-            new_index, _ = ParserHelper.extract_any_whitespace(line_to_parse, new_index)
-        if new_index != -1:
-            print("look for EOL>>" + line_to_parse[new_index:] + "<<")
-            if new_index < len(line_to_parse):
-                print(">> characters left at EOL, bailing")
-                return False, -1
+        print("look for EOL-ws>>" + line_to_parse[new_index:] + "<<")
+        new_index, _ = ParserHelper.extract_any_whitespace(line_to_parse, new_index)
+        print("look for EOL>>" + line_to_parse[new_index:] + "<<")
+        if new_index < len(line_to_parse):
+            print(">> characters left at EOL, bailing")
+            return False, -1
         return True, new_index
 
     def parse_link_reference_definition(
@@ -2500,13 +2686,16 @@ class TokenizedMarkdown:
             keep_going, new_index = self.verify_link_definition_end(
                 line_to_parse, new_index
             )
+        if keep_going:
+            collected_destination = self.normalize_link_label(collected_destination)
+            if not collected_destination:
+                new_index = -1
+                keep_going = False
         if not keep_going:
             return False, new_index, None
 
         assert new_index != -1
 
-        collected_destination = self.handle_backslashes(collected_destination)
-        collected_destination = self.normalize_link_label(collected_destination)
         print(">>collected_destination(norml)>>" + str(collected_destination))
         print(">>inline_link>>" + str(inline_link) + "<<")
         print(">>inline_title>>" + str(inline_title) + "<<")
@@ -2514,16 +2703,40 @@ class TokenizedMarkdown:
         return True, new_index, parsed_lrd_tuple
 
     @classmethod
-    def normalize_link_label(cls, link_label):
+    def replace_any_of(
+        cls, string_to_search_in, characters_to_search_for, replace_with
+    ):
+        """
+        Replace any of a given set of characters with a given sequence.
+        """
+
+        rebuilt_string = ""
+        start_index = 0
+        index, ex_str = ParserHelper.collect_until_one_of_characters(
+            string_to_search_in, start_index, characters_to_search_for
+        )
+        while index < len(string_to_search_in):
+            rebuilt_string = rebuilt_string + ex_str + replace_with
+            start_index = index + 1
+            index, ex_str = ParserHelper.collect_until_one_of_characters(
+                string_to_search_in, start_index, characters_to_search_for
+            )
+        rebuilt_string = rebuilt_string + ex_str
+        return rebuilt_string
+
+    def normalize_link_label(self, link_label):
         """
         Translate a link label into a normalized form to use for comparisons.
         """
 
-        # TODO need to fold multiple spaces into one
-        # TODO need to fold whitespaces into space
-        print(">>normalize_link_label>>in>>" + link_label + "<<")
+        # Fold all whitespace characters (except for space) into a space character
+        link_label = self.replace_any_of(link_label, self.non_space_whitespace, " ")
+
+        # Fold multiple spaces into a single space character.
+        link_label = " ".join(link_label.split())
+
+        # Fold the case of any characters to their lower equivalent.
         link_label = link_label.casefold().strip()
-        print(">>normalize_link_label>>out>>" + link_label + "<<")
         return link_label
 
     def is_thematic_break(
@@ -2582,7 +2795,7 @@ class TokenizedMarkdown:
                 new_tokens.append(self.stack[-1].generate_close_token())
                 del self.stack[-1]
             if this_bq_count == 0 and stack_bq_count > 0:
-                new_tokens = self.close_open_blocks(
+                new_tokens, _, _ = self.close_open_blocks(
                     destination_array=new_tokens,
                     only_these_blocks=[BlockQuoteStackToken],
                     include_block_quotes=True,
@@ -2620,7 +2833,7 @@ class TokenizedMarkdown:
                 or non_whitespace_index == len(line_to_parse)
             ):
 
-                new_tokens = self.close_open_blocks(new_tokens)
+                new_tokens, _, _ = self.close_open_blocks(new_tokens)
                 remaining_line = line_to_parse[non_whitespace_index:]
                 (
                     end_index,
@@ -2753,9 +2966,9 @@ class TokenizedMarkdown:
 
             did_find, last_list_index = self.check_for_list_in_process()
             assert did_find
-            new_tokens = self.close_open_blocks(until_this_index=last_list_index)
+            new_tokens, _, _ = self.close_open_blocks(until_this_index=last_list_index)
         if stack_bq_count != 0 and this_bq_count == 0:
-            new_tokens = self.close_open_blocks(
+            new_tokens, _, _ = self.close_open_blocks(
                 only_these_blocks=[BlockQuoteStackToken], include_block_quotes=True,
             )
 
@@ -2835,7 +3048,7 @@ class TokenizedMarkdown:
             if self.stack[-1].is_code_block or is_fenced_start:
                 print("__check_for_lazy_handling>>code block")
                 assert not container_level_tokens
-                container_level_tokens = self.close_open_blocks(
+                container_level_tokens, _, _ = self.close_open_blocks(
                     only_these_blocks=[BlockQuoteStackToken, type(self.stack[-1])],
                     include_block_quotes=True,
                 )
@@ -2855,7 +3068,7 @@ class TokenizedMarkdown:
 
         container_level_tokens = []
         if this_bq_count > stack_bq_count:
-            container_level_tokens = self.close_open_blocks(
+            container_level_tokens, _, _ = self.close_open_blocks(
                 only_these_blocks=[ParagraphStackToken, IndentedCodeBlockStackToken],
             )
             while this_bq_count > stack_bq_count:
@@ -3064,7 +3277,7 @@ class TokenizedMarkdown:
             + str(new_stack)
         )
         if self.stack[last_list_index] == new_stack:
-            balancing_tokens = self.close_open_blocks(
+            balancing_tokens, _, _ = self.close_open_blocks(
                 until_this_index=last_list_index, include_block_quotes=True
             )
             return True, True, balancing_tokens
@@ -3111,7 +3324,7 @@ class TokenizedMarkdown:
                     last_stack_depth = self.stack[-1].ws_before_marker
                     while current_start_index < last_stack_depth:
                         last_stack_index = self.stack.index(self.stack[-1])
-                        close_tokens = self.close_open_blocks(
+                        close_tokens, _, _ = self.close_open_blocks(
                             until_this_index=last_stack_index, include_lists=True
                         )
                         assert close_tokens
@@ -3135,6 +3348,7 @@ class TokenizedMarkdown:
         # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-locals
     def pre_list(
         self,
         line_to_parse,
@@ -3169,7 +3383,7 @@ class TokenizedMarkdown:
             while not self.stack[inf].is_block_quote:
                 inf = inf - 1
 
-            container_level_tokens = self.close_open_blocks(
+            container_level_tokens, _, _ = self.close_open_blocks(
                 until_this_index=inf, include_block_quotes=True, include_lists=True
             )
             print("container_level_tokens>>" + str(container_level_tokens))
@@ -3224,6 +3438,7 @@ class TokenizedMarkdown:
             stack_bq_count,
         )
         # pylint: enable=too-many-arguments
+        # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-locals, too-many-arguments
     def post_list(
@@ -3249,7 +3464,7 @@ class TokenizedMarkdown:
         did_find, last_list_index = self.check_for_list_in_process()
         if did_find:
             print("list-in-process>>" + str(self.stack[last_list_index]))
-            container_level_tokens = self.close_open_blocks(
+            container_level_tokens, _, _ = self.close_open_blocks(
                 until_this_index=last_list_index + 1
             )
             print("old-stack>>" + str(container_level_tokens) + "<<")
@@ -3264,14 +3479,14 @@ class TokenizedMarkdown:
                 print("post_list>>don't emit")
             else:
                 print("post_list>>close open blocks and emit")
-                close_tokens = self.close_open_blocks(
+                close_tokens, _, _ = self.close_open_blocks(
                     until_this_index=last_list_index, include_lists=True
                 )
                 assert close_tokens
                 container_level_tokens.extend(close_tokens)
         else:
             print("NOT list-in-process>>" + str(self.stack[last_list_index]))
-            container_level_tokens = self.close_open_blocks()
+            container_level_tokens, _, _ = self.close_open_blocks()
         print("container_level_tokens>>" + str(container_level_tokens))
 
         if emit_item or not emit_li:
@@ -3387,7 +3602,7 @@ class TokenizedMarkdown:
                 if not is_in_paragraph or is_theme_break:
                     print("ws (normal and adjusted) not enough to continue")
 
-                    container_level_tokens = self.close_open_blocks(
+                    container_level_tokens, _, _ = self.close_open_blocks(
                         until_this_index=ind, include_lists=True
                     )
                 else:
@@ -3437,8 +3652,6 @@ class TokenizedMarkdown:
                 "old_start_index>>" + str(old_start_index) + ">>ws_len>>" + str(ws_len)
             )
             if ws_len >= old_start_index:
-                # line_to_parse = line_to_parse[old_start_index:]
-                # start_index, extracted_whitespace = self.extract_whitespace(line_to_parse, xxxxx)
                 print("RELINE:" + line_to_parse + ":")
                 adj_ws = extracted_whitespace[old_start_index:]
             else:
@@ -4074,7 +4287,6 @@ class TokenizedMarkdown:
                 + ">"
             )
 
-        # assert leaf_tokens
         container_level_tokens.extend(leaf_tokens)
         print(
             "clt-end>>"
@@ -4247,7 +4459,7 @@ class TokenizedMarkdown:
             )
             if html_block_type:
                 print("HTML-STARTED::" + html_block_type + ":" + remaining_html_tag)
-                new_tokens = self.close_open_blocks(
+                new_tokens, _, _ = self.close_open_blocks(
                     only_these_blocks=[ParagraphStackToken],
                 )
                 self.stack.append(
@@ -4288,7 +4500,7 @@ class TokenizedMarkdown:
             is_block_terminated = self.html_block_5_end in adj_line
 
         if is_block_terminated:
-            terminated_block_tokens = self.close_open_blocks(
+            terminated_block_tokens, _, _ = self.close_open_blocks(
                 only_these_blocks=[type(self.stack[-1])],
             )
             assert terminated_block_tokens
@@ -4308,7 +4520,7 @@ class TokenizedMarkdown:
             self.stack[-1].html_block_type == self.html_block_6
             or self.stack[-1].html_block_type == self.html_block_7
         ):
-            new_tokens = self.close_open_blocks(
+            new_tokens, _, _ = self.close_open_blocks(
                 only_these_blocks=[type(self.stack[-1])],
             )
 
@@ -4518,6 +4730,7 @@ class TokenizedMarkdown:
         del self.stack[-1]
         if did_complete_lrd:
             assert parsed_lrd_tuple
+            print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + str(self.link_definitions))
             print(">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>" + str(parsed_lrd_tuple))
             if parsed_lrd_tuple[0] in self.link_definitions:
                 # TODO warning?
@@ -4531,7 +4744,7 @@ class TokenizedMarkdown:
                     + str(parsed_lrd_tuple[1])
                 )
 
-            assert not(end_lrd_index < -1 and original_line_to_parse)
+            assert not (end_lrd_index < -1 and original_line_to_parse)
         else:
             assert is_blank_line
             force_ignore_first_as_lrd = True
@@ -4541,6 +4754,8 @@ class TokenizedMarkdown:
 
     # pylint: disable=too-many-arguments
     # pylint: disable=too-many-locals
+    # pylint: disable=too-many-branches
+    # pylint: disable=too-many-statements
     def parse_line_for_leaf_blocks(
         self,
         line_to_parse,
@@ -4604,6 +4819,8 @@ class TokenizedMarkdown:
             ) = self.process_link_reference_definition(
                 line_to_parse, start_index, original_line_to_parse, extracted_whitespace
             )
+            if lines_to_requeue:
+                outer_processed = True
             print(
                 "plflb-process_link_reference_definition>>outer_processed>>"
                 + str(outer_processed)
@@ -4656,9 +4873,12 @@ class TokenizedMarkdown:
                     no_para_start_if_empty,
                 )
 
-        assert new_tokens or did_complete_lrd or did_pause_lrd
+        assert new_tokens or did_complete_lrd or did_pause_lrd or lines_to_requeue
+        print(">>leaf--adding>>" + str(new_tokens))
         pre_tokens.extend(new_tokens)
         return pre_tokens, lines_to_requeue, force_ignore_first_as_lrd
 
     # pylint: enable=too-many-locals
     # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-branches
+    # pylint: enable=too-many-statements

@@ -430,7 +430,7 @@ def test_inline_links_506():
 @pytest.mark.gfm
 def test_inline_links_507():
     """
-    Test case 506:  (part 2) However, if you have unbalanced parentheses, you need to escape or use the <...> form:
+    Test case 507:  (part 2) However, if you have unbalanced parentheses, you need to escape or use the <...> form:
     """
 
     # Arrange
@@ -445,6 +445,64 @@ def test_inline_links_507():
         "[end-para]",
     ]
     expected_gfm = """<p><a href="foo(and(bar)">link</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_inline_links_507b():
+    """
+    Test case 507b:  Modification of 507 without the angle brackets.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[link](foo(and(bar))"""
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:link:]",
+        "[text:]:]",
+        "[text:(foo(and(bar)):]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p>[link](foo(and(bar))</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_inline_links_507c():
+    """
+    Test case 507c:  Modification of 507 without the angle brackets, and more open
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[link](foo(and(b(ar))"""
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:link:]",
+        "[text:]:]",
+        "[text:(foo(and(b(ar)):]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p>[link](foo(and(b(ar))</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -699,6 +757,178 @@ def test_inline_links_515():
         "[end-para]",
     ]
     expected_gfm = """<p><a href="/url%C2%A0%22title%22">link</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_inline_links_515b():
+    """
+    Test case 515b:  Modification of 515 to use normal space and remove closing quotes.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[link](/url "title)"""
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:link:]",
+        "[text:]:]",
+        "[text:(/url &quot;title):]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p>[link](/url &quot;title)</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_inline_links_515c():
+    """
+    Test case 515c:  Modification of 515 to use normal space and remove closing quotes.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[link](/url (title))"""
+    expected_tokens = [
+        "[para:]",
+        "[link:/url:title]",
+        "[text:link:]",
+        "[end-link::]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p><a href="/url" title="title">link</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_inline_links_515d():
+    """
+    Test case 515d:  Modification of 515 to use normal space and remove closing quotes.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[link](/url (title)"""
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:link:]",
+        "[text:]:]",
+        "[text:(/url (title):]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p>[link](/url (title)</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_inline_links_515e():
+    """
+    Test case 515e:  Modification of 515 to use normal space and remove closing quotes.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[link](/url (title(other)line))"""
+    expected_tokens = [
+        "[para:]",
+        "[link:/url:title(other)line]",
+        "[text:link:]",
+        "[end-link::]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p><a href="/url" title="title(other)line">link</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_inline_links_515f():
+    """
+    Test case 515e:  Modification of 515 to use normal space and remove closing quotes.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[link](/url (title(other)line)) abc"""
+    expected_tokens = [
+        "[para:]",
+        "[link:/url:title(other)line]",
+        "[text:link:]",
+        "[end-link::]",
+        "[text: abc:]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p><a href="/url" title="title(other)line">link</a> abc</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_inline_links_515g():
+    """
+    Test case 515e:  Modification of 515 to use normal space and remove closing quotes.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[link](/url (title(otherline) abc"""
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:link:]",
+        "[text:]:]",
+        "[text:(/url (title(otherline) abc:]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p>[link](/url (title(otherline) abc</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

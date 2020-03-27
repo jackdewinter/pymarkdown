@@ -1352,3 +1352,7 @@ def test_list_items_306():
 # TODO collect_until_one_of_characters with backslashes?
 # TODO what if bad link definition discovered multiple lines down, how to back track?
 # TODO split up link definition within a block quote or list?
+# TODO link ref def with empty link label, like 560?
+# TODO full reference link with empty link label, like 560?
+# TODO samples that end without a blank line, and add a blank line?
+# TODO 553 with other inlines?

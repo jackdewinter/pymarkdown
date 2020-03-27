@@ -4,12 +4,13 @@ https://github.github.com/gfm/#links
 import pytest
 
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
+from pymarkdown.transform_to_gfm import TransformToGfm
 
-from .utils import assert_if_lists_different
+from .utils import assert_if_lists_different, assert_if_strings_different
 
 
 # pylint: disable=too-many-lines
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_535():
     """
     Test case 535:  Here is a simple example:
@@ -17,22 +18,32 @@ def test_reference_links_535():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo][bar]
 
 [bar]: /url "title"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url:title]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_536():
     """
     Test case 536:  (part 1) The link text may contain balanced brackets, but not unbalanced ones, unless they are escaped:
@@ -40,21 +51,36 @@ def test_reference_links_536():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[link [foo [bar]]][ref]
 
 [ref]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/uri:]",
+        "[text:link :]",
+        "[text:[:]",
+        "[text:foo :]",
+        "[text:[:]",
+        "[text:bar:]",
+        "[text:]:]",
+        "[text:]:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/uri">link [foo [bar]]</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_537():
     """
     Test case 537:  (part 2) The link text may contain balanced brackets, but not unbalanced ones, unless they are escaped:
@@ -62,21 +88,30 @@ def test_reference_links_537():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[link \\[bar][ref]
 
 [ref]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/uri:]",
+        "[text:link [bar:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/uri">link [bar</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_538():
     """
     Test case 538:  (part 1) The link text may contain inline content:
@@ -84,21 +119,39 @@ def test_reference_links_538():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[link *foo **bar** `#`*][ref]
 
 [ref]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/uri:]",
+        "[text:link :]",
+        "[emphasis:1]",
+        "[text:foo :]",
+        "[emphasis:2]",
+        "[text:bar:]",
+        "[end-emphasis::2]",
+        "[text: :]",
+        "[icode-span:#]",
+        "[end-emphasis::1]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
 @pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_539():
     """
     Test case 539:  (part 2) The link text may contain inline content:
@@ -106,21 +159,25 @@ def test_reference_links_539():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[![moon](moon.jpg)][ref]
 
 [ref]: /uri"""
     expected_tokens = [
         "[ulist:-::2:]",
     ]
+    expected_gfm = """<p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_540():
     """
     Test case 540:  (part 1) However, links may not contain other links, at any level of nesting.
@@ -128,21 +185,36 @@ def test_reference_links_540():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo [bar](/uri)][ref]
 
 [ref]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:foo :]",
+        "[link:/uri:]",
+        "[text:bar:]",
+        "[end-link::]",
+        "[text:]:]",
+        "[link:/uri:]",
+        "[text:ref:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[foo <a href="/uri">bar</a>]<a href="/uri">ref</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_541():
     """
     Test case 541:  (part 2) However, links may not contain other links, at any level of nesting.
@@ -150,21 +222,41 @@ def test_reference_links_541():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo *bar [baz][ref]*][ref]
 
 [ref]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:foo :]",
+        "[emphasis:1]",
+        "[text:bar :]",
+        "[link:/uri:]",
+        "[text:baz:]",
+        "[end-link::]",
+        "[end-emphasis::1]",
+        "[text:]:]",
+        "[link:/uri:]",
+        "[text:ref:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = (
+        """<p>[foo <em>bar <a href="/uri">baz</a></em>]<a href="/uri">ref</a></p>"""
+    )
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_542():
     """
     Test case 542:  (part 1) The following cases illustrate the precedence of link text grouping over emphasis grouping:
@@ -172,21 +264,32 @@ def test_reference_links_542():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """*[foo*][ref]
 
 [ref]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:*:]",
+        "[link:/uri:]",
+        "[text:foo:]",
+        "[text:*:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>*<a href="/uri">foo*</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_543():
     """
     Test case 543:  (part 2) The following cases illustrate the precedence of link text grouping over emphasis grouping:
@@ -194,21 +297,33 @@ def test_reference_links_543():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo *bar][ref]*
 
 [ref]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/uri:]",
+        "[text:foo :]",
+        "[text:*:]",
+        "[text:bar:]",
+        "[end-link::]",
+        "[text:*:]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/uri">foo *bar</a>*</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_544():
     """
     Test case 544:  (part 1) The following cases illustrate the precedence of link text grouping over emphasis grouping:
@@ -216,21 +331,30 @@ def test_reference_links_544():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo <bar attr="][ref]">
 
 [ref]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:foo :]",
+        '[raw-html:bar attr="][ref]"]',
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[foo <bar attr="][ref]"></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_545():
     """
     Test case 545:  (part 2) The following cases illustrate the precedence of link text grouping over emphasis grouping:
@@ -238,21 +362,30 @@ def test_reference_links_545():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo`][ref]`
 
 [ref]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[icode-span:][ref]]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[foo<code>][ref]</code></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_546():
     """
     Test case 546:  (part 3) The following cases illustrate the precedence of link text grouping over emphasis grouping:
@@ -260,21 +393,30 @@ def test_reference_links_546():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo<http://example.com/?search=][ref]>
 
 [ref]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[uri-autolink:http://example.com/?search=][ref]]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[foo<a href="http://example.com/?search=%5D%5Bref%5D">http://example.com/?search=][ref]</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_547():
     """
     Test case 547:  Matching is case-insensitive:
@@ -282,22 +424,32 @@ def test_reference_links_547():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo][BaR]
 
 [bar]: /url "title"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url:title]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_548():
     """
     Test case 548:  Unicode case fold is used:
@@ -305,21 +457,30 @@ def test_reference_links_548():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[ẞ]
 
 [SS]: /url"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url:]",
+        "[text:ẞ:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url">ẞ</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_549():
     """
     Test case 549:  Consecutive internal whitespace is treated as one space for purposes of determining matching:
@@ -327,22 +488,31 @@ def test_reference_links_549():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[Foo
   bar]: /url
 
 [Baz][Foo bar]"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[BLANK:]",
+        "[para:]",
+        "[link:/url:]",
+        "[text:Baz:]",
+        "[end-link::]",
+        "[end-para]",
     ]
+    expected_gfm = """<p><a href="/url">Baz</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_550():
     """
     Test case 550:  (part 1) No whitespace is allowed between the link text and the link label:
@@ -350,22 +520,36 @@ def test_reference_links_550():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo] [bar]
 
 [bar]: /url "title"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[text: :]",
+        "[link:/url:title]",
+        "[text:bar:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[foo] <a href="/url" title="title">bar</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_551():
     """
     Test case 551:  (part 2) No whitespace is allowed between the link text and the link label:
@@ -373,23 +557,38 @@ def test_reference_links_551():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo]
 [bar]
 
 [bar]: /url "title"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:\n]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[text:\n::\n]",
+        "[link:/url:title]",
+        "[text:bar:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[foo]
+<a href="/url" title="title">bar</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_552():
     """
     Test case 552:  When there are multiple matching link reference definitions, the first is used:
@@ -397,23 +596,33 @@ def test_reference_links_552():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo]: /url1
 
 [foo]: /url2
 
 [bar][foo]"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[BLANK:]",
+        "[BLANK:]",
+        "[para:]",
+        "[link:/url1:]",
+        "[text:bar:]",
+        "[end-link::]",
+        "[end-para]",
     ]
+    expected_gfm = """<p><a href="/url1">bar</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_553():
     """
     Test case 553:  Note that matching is performed on normalized strings, not parsed inline content. So the following does not match, even though the labels define equivalent inline content:
@@ -421,21 +630,33 @@ def test_reference_links_553():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[bar][foo\\!]
 
 [foo!]: /url"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:bar:]",
+        "[text:]:]",
+        "[text:[:]",
+        "[text:foo!:]",
+        "[text:]:]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[bar][foo!]</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_554():
     """
     Test case 554:  (part 1) Link labels cannot contain brackets, unless they are backslash-escaped:
@@ -443,21 +664,42 @@ def test_reference_links_554():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo][ref[]
 
 [ref[]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[text:[:]",
+        "[text:ref:]",
+        "[text:[:]",
+        "[text:]:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:ref:]",
+        "[text:[:]",
+        "[text:]:]",
+        "[text:: /uri:]",
+        "[end-para]",
     ]
+    expected_gfm = """<p>[foo][ref[]</p>
+<p>[ref[]: /uri</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_555():
     """
     Test case 555:  (part 2) Link labels cannot contain brackets, unless they are backslash-escaped:
@@ -465,21 +707,46 @@ def test_reference_links_555():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo][ref[bar]]
 
 [ref[bar]]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[text:[:]",
+        "[text:ref:]",
+        "[text:[:]",
+        "[text:bar:]",
+        "[text:]:]",
+        "[text:]:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:ref:]",
+        "[text:[:]",
+        "[text:bar:]",
+        "[text:]:]",
+        "[text:]:]",
+        "[text:: /uri:]",
+        "[end-para]",
     ]
+    expected_gfm = """<p>[foo][ref[bar]]</p>
+<p>[ref[bar]]: /uri</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_556():
     """
     Test case 556:  (part 3) Link labels cannot contain brackets, unless they are backslash-escaped:
@@ -487,21 +754,45 @@ def test_reference_links_556():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[[[foo]]]
 
 [[[foo]]]: /url"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:[:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[text:]:]",
+        "[text:]:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:[:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[text:]:]",
+        "[text:]:]",
+        "[text:: /url:]",
+        "[end-para]",
     ]
+    expected_gfm = """<p>[[[foo]]]</p>
+<p>[[[foo]]]: /url</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_557():
     """
     Test case 557:  (part 4) Link labels cannot contain brackets, unless they are backslash-escaped:
@@ -509,21 +800,30 @@ def test_reference_links_557():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo][ref\\[]
 
 [ref\\[]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/uri:]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/uri">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_558():
     """
     Test case 558:  Note that in this example ] is not backslash-escaped:
@@ -531,21 +831,30 @@ def test_reference_links_558():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """[bar\\]: /uri
+    transformer = TransformToGfm()
+    source_markdown = """[bar\\\\]: /uri
 
-[bar\\]"""
+[bar\\\\]"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[BLANK:]",
+        "[para:]",
+        "[link:/uri:]",
+        "[text:bar\\:]",
+        "[end-link::]",
+        "[end-para]",
     ]
+    expected_gfm = """<p><a href="/uri">bar\\</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_559():
     """
     Test case 559:  (part 1) A link label must contain at least one non-whitespace character:
@@ -553,21 +862,36 @@ def test_reference_links_559():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[]
 
 []: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:]:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:]:]",
+        "[text:: /uri:]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[]</p>
+<p>[]: /uri</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_560():
     """
     Test case 560:  (part 2) A link label must contain at least one non-whitespace character:
@@ -575,23 +899,42 @@ def test_reference_links_560():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[
  ]
 
 [
  ]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:\n ]",
+        "[text:[:]",
+        "[text:\n::\n]",
+        "[text:]:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[para:\n ]",
+        "[text:[:]",
+        "[text:\n::\n]",
+        "[text:]:]",
+        "[text:: /uri:]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[
+]</p>
+<p>[
+]: /uri</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_561():
     """
     Test case 561:  (part 1) Thus, [foo][] is equivalent to [foo][foo].
@@ -599,22 +942,32 @@ def test_reference_links_561():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo][]
 
 [foo]: /url "title"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url:title]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_562():
     """
     Test case 562:  (part 2) Thus, [foo][] is equivalent to [foo][foo].
@@ -622,22 +975,35 @@ def test_reference_links_562():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[*foo* bar][]
 
 [*foo* bar]: /url "title"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url:title]",
+        "[emphasis:1]",
+        "[text:foo:]",
+        "[end-emphasis::1]",
+        "[text: bar:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url" title="title"><em>foo</em> bar</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_563():
     """
     Test case 563:  The link labels are case-insensitive:
@@ -645,22 +1011,32 @@ def test_reference_links_563():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[Foo][]
 
 [foo]: /url "title"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url:title]",
+        "[text:Foo:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url" title="title">Foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_564():
     """
     Test case 564:  As with full reference links, whitespace is not allowed between the two sets of brackets:
@@ -668,6 +1044,7 @@ def test_reference_links_564():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo]\a
 []
 
@@ -676,17 +1053,30 @@ def test_reference_links_564():
         "\a", " "
     )
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:\n]",
+        "[link:/url:title]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[text:\n:: \n]",
+        "[text:[:]",
+        "[text:]:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url" title="title">foo</a>
+[]</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_565():
     """
     Test case 565:  (part 1) A shortcut reference link consists of a link label that matches a link reference definition elsewhere in the document and is not followed by [] or a link label.
@@ -694,22 +1084,32 @@ def test_reference_links_565():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo]
 
 [foo]: /url "title"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url:title]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_566():
     """
     Test case 566:  (part 2) A shortcut reference link consists of a link label that matches a link reference definition elsewhere in the document and is not followed by [] or a link label.
@@ -717,22 +1117,35 @@ def test_reference_links_566():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[*foo* bar]
 
 [*foo* bar]: /url "title"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url:title]",
+        "[emphasis:1]",
+        "[text:foo:]",
+        "[end-emphasis::1]",
+        "[text: bar:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url" title="title"><em>foo</em> bar</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_567():
     """
     Test case 567:  (part 3) A shortcut reference link consists of a link label that matches a link reference definition elsewhere in the document and is not followed by [] or a link label.
@@ -740,22 +1153,37 @@ def test_reference_links_567():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[[*foo* bar]]
 
 [*foo* bar]: /url "title"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[link:/url:title]",
+        "[emphasis:1]",
+        "[text:foo:]",
+        "[end-emphasis::1]",
+        "[text: bar:]",
+        "[end-link::]",
+        "[text:]:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[<a href="/url" title="title"><em>foo</em> bar</a>]</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_568():
     """
     Test case 568:  (part 4) A shortcut reference link consists of a link label that matches a link reference definition elsewhere in the document and is not followed by [] or a link label.
@@ -763,21 +1191,33 @@ def test_reference_links_568():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[[bar [foo]
 
 [foo]: /url"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:[:]",
+        "[text:bar :]",
+        "[link:/url:]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[[bar <a href="/url">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_569():
     """
     Test case 569:  The link labels are case-insensitive:
@@ -785,22 +1225,32 @@ def test_reference_links_569():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[Foo]
 
 [foo]: /url "title"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url:title]",
+        "[text:Foo:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url" title="title">Foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_570():
     """
     Test case 570:  A space after the link text should be preserved:
@@ -808,21 +1258,31 @@ def test_reference_links_570():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo] bar
 
 [foo]: /url"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url:]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[text: bar:]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url">foo</a> bar</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_571():
     """
     Test case 571:  If you just want bracketed text, you can backslash-escape the opening bracket to avoid links
@@ -830,22 +1290,31 @@ def test_reference_links_571():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """\\[foo]
 
 [foo]: /url "title"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[foo:]",
+        "[text:]:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[foo]</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_572():
     """
     Test case 572:  Note that this is a link, because a link label ends with the first following closing bracket:
@@ -853,21 +1322,32 @@ def test_reference_links_572():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo*]: /url
 
 *[foo*]"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:*:]",
+        "[link:/url:]",
+        "[text:foo:]",
+        "[text:*:]",
+        "[end-link::]",
+        "[end-para]",
     ]
+    expected_gfm = """<p>*<a href="/url">foo*</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_573():
     """
     Test case 573:  (part 1) Full and compact references take precedence over shortcut references:
@@ -875,22 +1355,31 @@ def test_reference_links_573():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo][bar]
 
 [foo]: /url1
 [bar]: /url2"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url2:]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url2">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_574():
     """
     Test case 574:  (part 2) Full and compact references take precedence over shortcut references:
@@ -898,21 +1387,30 @@ def test_reference_links_574():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo][]
 
 [foo]: /url1"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url1:]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url1">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_575():
     """
     Test case 575:  (part 1) Inline links also take precedence:
@@ -920,21 +1418,30 @@ def test_reference_links_575():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo]()
 
 [foo]: /url1"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link::]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="">foo</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_576():
     """
     Test case 576:  (part 2) Inline links also take precedence:
@@ -942,22 +1449,31 @@ def test_reference_links_576():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
-    source_markdown = """[foo]()
-[foo](not a link)
+    transformer = TransformToGfm()
+    source_markdown = """[foo](not a link)
 
 [foo]: /url1"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url1:]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[text:(not a link):]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url1">foo</a>(not a link)</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_577():
     """
     Test case 577:  In the following case [bar][baz] is parsed as a reference, [foo] as normal text:
@@ -965,21 +1481,33 @@ def test_reference_links_577():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo][bar][baz]
 
 [baz]: /url"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[link:/url:]",
+        "[text:bar:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[foo]<a href="/url">bar</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_578():
     """
     Test case 578:  Here, though, [foo][bar] is parsed as a reference, since [bar] is defined:
@@ -987,22 +1515,34 @@ def test_reference_links_578():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo][bar][baz]
 
 [baz]: /url1
 [bar]: /url2"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/url2:]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[link:/url1:]",
+        "[text:baz:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p><a href="/url2">foo</a><a href="/url1">baz</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_reference_links_579():
     """
     Test case 579:  Here [foo] is not parsed as a shortcut reference, because it is followed by a link label (even though [bar] is not defined):
@@ -1010,16 +1550,28 @@ def test_reference_links_579():
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
     source_markdown = """[foo][bar][baz]
 
 [baz]: /url1
 [foo]: /url2"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[link:/url1:]",
+        "[text:bar:]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
+    expected_gfm = """<p>[foo]<a href="/url1">bar</a></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
