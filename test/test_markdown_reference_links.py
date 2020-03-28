@@ -150,7 +150,6 @@ def test_reference_links_538():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_reference_links_539():
     """
@@ -164,7 +163,12 @@ def test_reference_links_539():
 
 [ref]: /uri"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/uri:]",
+        "[image:moon.jpg::moon]",
+        "[end-link::]",
+        "[end-para]",
+        "[BLANK:]",
     ]
     expected_gfm = """<p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>"""
 

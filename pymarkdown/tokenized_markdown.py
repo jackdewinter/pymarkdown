@@ -179,6 +179,9 @@ class TokenizedMarkdown:
             + "\u005b\u005c\u005d\u005e\u005f\u0060"
             + "\u007b\u007c\u007d\u007e"
         )
+        # http://www.fileformat.info/info/unicode/category/index.htm
+        # http://www.fileformat.info/info/unicode/category/P*/list.htm
+
         self.ascii_control_characters = (
             "\x00\x01\x02\x03\x04\x05\x06\x07\x08\x09\x0a\x0b\x0c\x0d\x0e\x0f"
             + "\x10\x11\x12\x13\x14\x15\x16\x17\x18\x19\x1a\x1b\x1c\x1d\x1e\x1f"
@@ -672,7 +675,12 @@ class TokenizedMarkdown:
                     + str(remaining_line)
                     + "<"
                 )
-                new_string, new_index, new_tokens = self.handle_inline_special(
+                (
+                    new_string,
+                    new_index,
+                    new_tokens,
+                    consume_rest_of_line,
+                ) = self.handle_inline_special(
                     inline_blocks,
                     source_text,
                     next_index,
@@ -680,9 +688,38 @@ class TokenizedMarkdown:
                     remaining_line,
                     current_string_unresolved,
                 )
+                print("<<<<<<<<<<<<<consume_rest_of_line<<" + str(consume_rest_of_line))
+                print("<<<<<<<<<<<<<new_string<<" + str(new_string))
+                print("<<<<<<<<<<<<<new_tokens<<" + str(new_tokens))
+                print("<<<<<<<<<<<<<current_string<<" + str(current_string))
+                print(
+                    "<<<<<<<<<<<<<current_string_unresolved<<"
+                    + str(current_string_unresolved)
+                )
+                print("<<<<<<<<<<<<<remaining_line<<" + str(remaining_line))
+                if consume_rest_of_line:
+                    new_string = ""
+                    current_string = ""
+                    current_string_unresolved = ""
+                    remaining_line = ""
+                    new_tokens = None
             elif source_text[next_index] == "!":
+                print(
+                    "\nBEFORE:PICTURE:handle_inline_special>"
+                    + str(current_string)
+                    + "<"
+                    + str(remaining_line)
+                    + "<"
+                    + source_text[next_index:]
+                    + "<<"
+                )
                 if ParserHelper.are_characters_at_index(source_text, next_index, "!["):
-                    new_string, new_index, new_tokens = self.handle_inline_special(
+                    (
+                        new_string,
+                        new_index,
+                        new_tokens,
+                        consume_rest_of_line,
+                    ) = self.handle_inline_special(
                         inline_blocks, source_text, next_index, 2, remaining_line, "",
                     )
                 else:
@@ -1641,14 +1678,14 @@ class TokenizedMarkdown:
         Handle the collection of special inline characters for later processing.
         """
 
-        inline_emphasis = ["*", "_"]
         preceeding_two = None
         following_two = None
         new_token = None
         repeat_count = 1
         is_active = True
+        consume_rest_of_line = False
         special_sequence = source_text[next_index : next_index + special_length]
-        if special_length == 1 and special_sequence in inline_emphasis:
+        if special_length == 1 and special_sequence in self.inline_emphasis:
             repeat_count, new_index = ParserHelper.collect_while_character(
                 source_text, next_index, special_sequence
             )
@@ -1659,7 +1696,7 @@ class TokenizedMarkdown:
                 new_index : min(len(source_text), new_index + 2)
             ]
         else:
-            if special_length == 1 and special_sequence[0] == "]":
+            if special_sequence[0] == "]":
                 print(
                     "\nPOSSIBLE LINK CLOSE_FOUND>>"
                     + str(special_length)
@@ -1676,7 +1713,12 @@ class TokenizedMarkdown:
                 )
                 print(">>source_text>>" + source_text[next_index:] + "<<")
                 print("")
-                new_index, is_active, new_token = self.look_for_link_or_image(
+                (
+                    new_index,
+                    is_active,
+                    new_token,
+                    consume_rest_of_line,
+                ) = self.look_for_link_or_image(
                     inline_blocks,
                     source_text,
                     next_index,
@@ -1686,6 +1728,7 @@ class TokenizedMarkdown:
                 print(">>inline_blocks>>" + str(inline_blocks) + "<<")
                 print(">>new_token>>" + str(new_token) + "<<")
                 print(">>source_text>>" + source_text[new_index:] + "<<")
+                print(">>consume_rest_of_line>>" + str(consume_rest_of_line) + "<<")
             else:
                 repeat_count = special_length
                 new_index = next_index + special_length
@@ -1694,7 +1737,7 @@ class TokenizedMarkdown:
             new_token = SpecialTextMarkdownToken(
                 special_sequence, repeat_count, preceeding_two, following_two, is_active
             )
-        return "", new_index, [new_token]
+        return "", new_index, [new_token], consume_rest_of_line
 
     # pylint: enable=too-many-arguments
 
@@ -1714,6 +1757,7 @@ class TokenizedMarkdown:
 
         print(">>look_for_link_or_image>>" + str(inline_blocks) + "<<")
         is_valid = False
+        consume_rest_of_line = False
         new_index = next_index + 1
         updated_index = -1
         token_to_append = None
@@ -1732,7 +1776,11 @@ class TokenizedMarkdown:
                     valid_special_start_text = inline_blocks[search_index].token_text
                     if inline_blocks[search_index].active:
                         print(">>>>>>" + str(inline_blocks))
-                        updated_index, token_to_append = self.handle_link_types(
+                        (
+                            updated_index,
+                            token_to_append,
+                            consume_rest_of_line,
+                        ) = self.handle_link_types(
                             inline_blocks,
                             search_index,
                             source_text,
@@ -1757,6 +1805,8 @@ class TokenizedMarkdown:
             + "<<is_valid<<"
             + str(is_valid)
             + "<<"
+            + str(consume_rest_of_line)
+            + "<<"
         )
         if is_valid:
             # if link set all [ before to inactive
@@ -1769,8 +1819,9 @@ class TokenizedMarkdown:
                 (LinkStartMarkdownToken, ImageStartMarkdownToken),
             )
 
-            print("\bresolve_inline_emphasis>>" + str(inline_blocks))
+            print("\nresolve_inline_emphasis>>" + str(inline_blocks))
             self.resolve_inline_emphasis(inline_blocks, inline_blocks[search_index])
+            print("resolve_inline_emphasis>>" + str(inline_blocks) + "\n")
 
             if valid_special_start_text == "[":
                 for deactivate_token in inline_blocks:
@@ -1778,9 +1829,9 @@ class TokenizedMarkdown:
                         print("inline_blocks>>>>>>>>>>>>>>>>>>" + str(deactivate_token))
                         if deactivate_token.token_text == "[":
                             deactivate_token.active = False
-            return updated_index, True, token_to_append
+            return updated_index, True, token_to_append, consume_rest_of_line
         is_active = False
-        return new_index, is_active, token_to_append
+        return new_index, is_active, token_to_append, consume_rest_of_line
 
     # pylint: enable=too-many-arguments
     @classmethod
@@ -1837,6 +1888,7 @@ class TokenizedMarkdown:
         )
         print("handle_link_types>>text_from_blocks>>" + text_from_blocks + "<<")
 
+        consume_rest_of_line = False
         update_index = -1
         inline_link = None
         inline_title = None
@@ -1879,7 +1931,6 @@ class TokenizedMarkdown:
 
         if update_index == -1 and not tried_full_reference_form:
             print("shortcut?")
-            print("link_definitions>>" + str(self.link_definitions) + "<<")
             print(">>" + str(inline_blocks) + "<<")
             print(">>" + str(text_from_blocks) + "<<")
             update_index, inline_link, inline_title = self.look_up_link(
@@ -1888,6 +1939,7 @@ class TokenizedMarkdown:
 
         token_to_append = None
         if update_index != -1:
+            print("<<<<<<<start_text<<<<<<<" + str(start_text) + "<<")
             if start_text == "[":
                 inline_blocks[ind] = LinkStartMarkdownToken(
                     link_uri=inline_link, link_title=inline_title
@@ -1896,12 +1948,26 @@ class TokenizedMarkdown:
                     MarkdownToken.token_inline_link, "", ""
                 )
             else:
+
+                consume_rest_of_line = True
+                image_alt_text = self.consume_text_for_image_alt_text(
+                    inline_blocks, ind, remaining_line
+                )
+
                 inline_blocks[ind] = ImageStartMarkdownToken(
-                    link_uri=inline_link, link_title=inline_title
+                    image_uri=inline_link,
+                    image_title=inline_title,
+                    image_alt_text=image_alt_text,
                 )
-                token_to_append = EndMarkdownToken(
-                    MarkdownToken.token_inline_image, "", ""
+                print("\n>>Image>>" + str(inline_blocks))
+                print(">>start_text>>" + str(start_text) + "<<")
+                print(">>remaining_line>>" + str(remaining_line) + "<<")
+                print(
+                    ">>current_string_unresolved>>"
+                    + str(current_string_unresolved)
+                    + "<<"
                 )
+                # assert False
 
         print(
             "handle_link_types<update_index<"
@@ -1910,10 +1976,29 @@ class TokenizedMarkdown:
             + str(token_to_append)
             + "<<"
         )
-        return update_index, token_to_append
+        return update_index, token_to_append, consume_rest_of_line
 
     # pylint: enable=too-many-locals
     # pylint: enable=too-many-arguments
+
+    @classmethod
+    def consume_text_for_image_alt_text(cls, inline_blocks, ind, remaining_line):
+        """
+        Consume text from the inline blocks to use as part of the image's alt text.
+        """
+
+        image_alt_text = ""
+        print(">>" + str(inline_blocks[ind + 1 :]) + "<<")
+        while len(inline_blocks) > (ind + 1):
+            if isinstance(inline_blocks[ind + 1], SpecialTextMarkdownToken):
+                pass
+            elif isinstance(inline_blocks[ind + 1], TextMarkdownToken):
+                image_alt_text = image_alt_text + inline_blocks[ind + 1].token_text
+            elif isinstance(inline_blocks[ind + 1], ImageStartMarkdownToken):
+                image_alt_text = image_alt_text + inline_blocks[ind + 1].image_alt_text
+            del inline_blocks[ind + 1]
+        image_alt_text = image_alt_text + remaining_line
+        return image_alt_text
 
     def look_up_link(self, link_to_lookup, new_index, link_type):
         """
@@ -2032,7 +2117,7 @@ class TokenizedMarkdown:
             print(
                 "collected_destination>>"
                 + str(collected_destination)
-                + "<<"
+                + "<<source_text<<"
                 + source_text[new_index:]
                 + ">>nesting_level>>"
                 + str(nesting_level)

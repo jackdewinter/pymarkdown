@@ -1356,3 +1356,8 @@ def test_list_items_306():
 # TODO full reference link with empty link label, like 560?
 # TODO samples that end without a blank line, and add a blank line?
 # TODO 553 with other inlines?
+
+# TODO can we generate Markdown from tokens? do we have enough info?
+# TODO token for LRDs, even though consumed?
+# TODO specific types of links for the 3 types?
+# TODO more testing to determine what inlines are stripped within image links i.e. code spans?

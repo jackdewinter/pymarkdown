@@ -1215,7 +1215,6 @@ def test_inline_links_524():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_inline_links_525():
     """
@@ -1227,7 +1226,11 @@ def test_inline_links_525():
     transformer = TransformToGfm()
     source_markdown = """[![moon](moon.jpg)](/uri)"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[link:/uri:]",
+        "[image:moon.jpg::moon]",
+        "[end-link::]",
+        "[end-para]",
     ]
     expected_gfm = """<p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>"""
 
@@ -1262,6 +1265,38 @@ def test_inline_links_526():
         "[end-para]",
     ]
     expected_gfm = """<p>[foo <a href="/uri">bar</a>](/uri)</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_inline_links_526a():
+    """
+    Test case 526a:  (part 1) However, links may not contain other links, at any level of nesting.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo [bar](/uri1)](/uri2)"""
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:foo :]",
+        "[link:/uri1:]",
+        "[text:bar:]",
+        "[end-link::]",
+        "[text:]:]",
+        "[text:(/uri2):]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p>[foo <a href="/uri1">bar</a>](/uri2)</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -1310,6 +1345,46 @@ def test_inline_links_527():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+@pytest.mark.gfm
+def test_inline_links_527a():
+    """
+    Test case 527a:  (part 2) However, links may not contain other links, at any level of nesting.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo *[bar [baz](/uri1)](/uri2)*](/uri3)"""
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:foo :]",
+        "[emphasis:1]",
+        "[text:[:]",
+        "[text:bar :]",
+        "[link:/uri1:]",
+        "[text:baz:]",
+        "[end-link::]",
+        "[text:]:]",
+        "[text:(/uri2):]",
+        "[end-emphasis::1]",
+        "[text:]:]",
+        "[text:(/uri3):]",
+        "[end-para]",
+    ]
+    expected_gfm = (
+        """<p>[foo <em>[bar <a href="/uri1">baz</a>](/uri2)</em>](/uri3)</p>"""
+    )
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
 @pytest.mark.skip
 @pytest.mark.gfm
 def test_inline_links_528():
@@ -1322,9 +1397,61 @@ def test_inline_links_528():
     transformer = TransformToGfm()
     source_markdown = """![[[foo](uri1)](uri2)](uri3)"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[image:uri2::]",
+        "[text:[:]",
+        "[link:uri1:]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[text:]:]",
+        "[text:(uri3):]",
+        "[end-para]",
     ]
     expected_gfm = """<p><img src="uri3" alt="[foo](uri2)" /></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_inline_links_528a():
+    """
+    Test case 528a:  (part 3) However, links may not contain other links, at any level of nesting.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """![[foo](uri2)](uri3)"""
+    expected_tokens = ["[para:]", "[image:uri3::foo]", "[end-para]"]
+    expected_gfm = """<p><img src="uri3" alt="foo" /></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_inline_links_528b():
+    """
+    Test case 528b:  (part 3) However, links may not contain other links, at any level of nesting.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """![[foo](uri2 "bar")](uri3)"""
+    expected_tokens = ["[para:]", "[image:uri3::foo]", "[end-para]"]
+    expected_gfm = """<p><img src="uri3" alt="foo" /></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

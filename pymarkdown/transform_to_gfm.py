@@ -425,7 +425,14 @@ class TransformToGfm:
                 anchor_tag = anchor_tag + '">'
                 output_html = output_html + anchor_tag
             elif isinstance(next_token, ImageStartMarkdownToken):
-                output_html = output_html + "<image />"
+                output_html = output_html + "<img "
+                output_html = output_html + 'src="' + next_token.image_uri + '" '
+                output_html = output_html + 'alt="' + next_token.image_alt_text + '" '
+                if next_token.image_title:
+                    output_html = (
+                        output_html + 'title="' + next_token.image_title + '" '
+                    )
+                output_html = output_html + "/>"
             elif isinstance(next_token, EndMarkdownToken):
                 if next_token.type_name == MarkdownToken.token_paragraph:
                     if is_in_loose_list:
@@ -502,6 +509,8 @@ class TransformToGfm:
                     is_in_html_block = False
                 elif next_token.type_name == MarkdownToken.token_inline_link:
                     output_html = output_html + "</a>"
+                elif next_token.type_name == MarkdownToken.token_inline_image:
+                    assert False
                 elif next_token.type_name == MarkdownToken.token_inline_emphasis:
                     if next_token.extra_end_data == "1":
                         output_html = output_html + "</em>"

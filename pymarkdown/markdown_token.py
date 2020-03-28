@@ -572,11 +572,14 @@ class ImageStartMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the image element.
     """
 
-    def __init__(self, link_uri, link_title):
-        self.link_uri = link_uri
-        self.link_title = link_title
+    def __init__(self, image_uri, image_title, image_alt_text):
+        self.image_uri = image_uri
+        self.image_title = image_title
+        self.image_alt_text = image_alt_text
         MarkdownToken.__init__(
-            self, MarkdownToken.token_inline_image, link_uri + ":" + link_title
+            self,
+            MarkdownToken.token_inline_image,
+            image_uri + ":" + image_title + ":" + image_alt_text,
         )
 
 
