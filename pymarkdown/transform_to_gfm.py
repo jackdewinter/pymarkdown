@@ -1,6 +1,7 @@
 """
 Module to provide for a transformation from markdown tokens to html for GFM.
 """
+from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.markdown_token import (
     AtxHeaderMarkdownToken,
     BlankLineMarkdownToken,
@@ -26,7 +27,6 @@ from pymarkdown.markdown_token import (
     UnorderedListStartMarkdownToken,
     UriAutolinkMarkdownToken,
 )
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
 
 # pylint: disable=too-few-public-methods
@@ -360,7 +360,7 @@ class TransformToGfm:
                 )
             elif isinstance(next_token, UriAutolinkMarkdownToken):
 
-                in_tag_pretext = TokenizedMarkdown().append_text(
+                in_tag_pretext = InlineHelper.append_text(
                     "",
                     next_token.autolink_text,
                     alternate_escape_map=TransformToGfm.uri_autolink_html_character_escape_map,
@@ -383,9 +383,7 @@ class TransformToGfm:
                     else:
                         in_tag_text = in_tag_text + next_character
 
-                in_anchor_text = TokenizedMarkdown().append_text(
-                    "", next_token.autolink_text
-                )
+                in_anchor_text = InlineHelper.append_text("", next_token.autolink_text)
 
                 output_html = (
                     output_html

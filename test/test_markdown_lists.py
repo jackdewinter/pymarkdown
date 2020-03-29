@@ -1361,3 +1361,7 @@ def test_list_items_306():
 # TODO token for LRDs, even though consumed?
 # TODO specific types of links for the 3 types?
 # TODO more testing to determine what inlines are stripped within image links i.e. code spans?
+# TODO Check with checkmark.js as to how they encode and emulate instead of using python library
+#      per urllib.parse.quote
+# TODO complete list of unicode punctuation characters
+# TODO reduce html_helper functions?

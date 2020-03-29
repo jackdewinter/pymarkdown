@@ -3,6 +3,7 @@ Module to provide helper functions for parsing.
 """
 
 
+# pylint: disable=too-many-public-methods
 class ParserHelper:
     """
     Class to provide helper functions for parsing.
@@ -288,3 +289,38 @@ class ParserHelper:
         specified limit.
         """
         return ParserHelper.calculate_length(source_string) >= length_limit
+
+    @staticmethod
+    def index_any_of(source_text, find_any, start_index=0):
+        """
+        Determine if any of the specified characters are in the source string.
+        """
+
+        while start_index < len(source_text):
+            if source_text[start_index] in find_any:
+                return start_index
+            start_index = start_index + 1
+        return -1
+
+    @staticmethod
+    def replace_any_of(string_to_search_in, characters_to_search_for, replace_with):
+        """
+        Replace any of a given set of characters with a given sequence.
+        """
+
+        rebuilt_string = ""
+        start_index = 0
+        index, ex_str = ParserHelper.collect_until_one_of_characters(
+            string_to_search_in, start_index, characters_to_search_for
+        )
+        while index < len(string_to_search_in):
+            rebuilt_string = rebuilt_string + ex_str + replace_with
+            start_index = index + 1
+            index, ex_str = ParserHelper.collect_until_one_of_characters(
+                string_to_search_in, start_index, characters_to_search_for
+            )
+        rebuilt_string = rebuilt_string + ex_str
+        return rebuilt_string
+
+
+# pylint: enable=too-many-public-methods

@@ -31,7 +31,7 @@ def test_image_link_580():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+@pytest.mark.gfm
 def test_image_link_581():
     """
     Test case 581:  (part 2) Syntax for images is like the syntax for links, with one difference
@@ -45,7 +45,11 @@ def test_image_link_581():
 [foo *bar*]: train.jpg "train & tracks"
 """
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para:]",
+        "[image:train.jpg:train &amp; tracks:foo bar]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
     ]
     expected_gfm = (
         """<p><img src="train.jpg" alt="foo bar" title="train &amp; tracks" /></p>"""
