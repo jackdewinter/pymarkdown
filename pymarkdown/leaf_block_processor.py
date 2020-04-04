@@ -403,7 +403,6 @@ class LeafBlockProcessor:
         """
         Handle the parsing of a paragraph.
         """
-
         new_tokens = []
 
         if no_para_start_if_empty and start_index >= len(line_to_parse):

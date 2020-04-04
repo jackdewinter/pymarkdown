@@ -11,13 +11,12 @@ from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.inline_processor import InlineProcessor
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.link_helper import LinkHelper
+from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.markdown_token import BlankLineMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.stack_token import DocumentStackToken, ParagraphStackToken
 
 
-# pylint: disable=too-many-public-methods
-# pylint: disable=too-many-instance-attributes
 class TokenizedMarkdown:
     """
     Class to provide a tokenization of a markdown-encoded string.
@@ -36,6 +35,7 @@ class TokenizedMarkdown:
         Transform a markdown-encoded string into an array of tokens.
         """
         InlineHelper.initialize(self.resource_path)
+        InlineProcessor.initialize()
         LinkHelper.initialize()
 
         print("\n\n>>>>>>>parse_blocks_pass>>>>>>")
@@ -50,7 +50,6 @@ class TokenizedMarkdown:
         print("\n\n>>>>>>>final_pass_results>>>>>>")
         return final_pass_results
 
-    # pylint: disable=too-many-statements
     def parse_blocks_pass(self, your_text_string):
         """
         The first pass at the tokens is to deal with blocks.
@@ -66,7 +65,6 @@ class TokenizedMarkdown:
         did_started_close = False
         requeue = []
         ignore_link_definition_start = False
-        print("---")
         print("---" + str(token_to_use) + "---")
         print("---")
         while True:
@@ -112,8 +110,7 @@ class TokenizedMarkdown:
                     (
                         tokens_from_line,
                         _,
-                        lines_to_requeue,
-                        force_ignore_first_as_lrd,
+                        requeue_line_info,
                     ) = ContainerBlockProcessor.parse_line_for_container_blocks(
                         self.stack,
                         self.tokenized_document,
@@ -122,17 +119,19 @@ class TokenizedMarkdown:
                         next_line,
                         ignore_link_definition_start,
                     )
+                    lines_to_requeue = requeue_line_info.lines_to_requeue
+                    force_ignore_first_as_lrd = (
+                        requeue_line_info.force_ignore_first_as_lrd
+                    )
 
             if lines_to_requeue:
-                print("requeuing lines: " + str(lines_to_requeue))
                 for i in lines_to_requeue:
                     requeue.insert(0, i)
                 ignore_link_definition_start = force_ignore_first_as_lrd
             else:
                 ignore_link_definition_start = False
 
-            print("---")
-            print("before>>" + str(self.tokenized_document))
+            print("---\nbefore>>" + str(self.tokenized_document))
             print("before>>" + str(tokens_from_line))
             self.tokenized_document.extend(tokens_from_line)
             print("after>>" + str(self.tokenized_document))
@@ -150,8 +149,6 @@ class TokenizedMarkdown:
             )
 
         return self.tokenized_document
-
-    # pylint: enable=too-many-statements
 
     @classmethod
     def __determine_next_token_process(
@@ -239,7 +236,7 @@ class TokenizedMarkdown:
                     did_pause_lrd,
                     lines_to_requeue,
                     force_ignore_first_as_lrd,
-                ) = LinkHelper.process_link_reference_definition(
+                ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
                     self.stack, "", 0, "", ""
                 )
                 if caller_can_handle_requeue and lines_to_requeue:
@@ -330,7 +327,9 @@ class TokenizedMarkdown:
                 did_pause_lrd,
                 lines_to_requeue,
                 force_ignore_first_as_lrd,
-            ) = LinkHelper.process_link_reference_definition(self.stack, "", 0, "", "")
+            ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
+                self.stack, "", 0, "", ""
+            )
             assert not did_pause_lrd
         elif self.stack[-1].is_code_block:
             stack_bq_count = BlockQuoteProcessor.count_of_block_quotes_on_stack(

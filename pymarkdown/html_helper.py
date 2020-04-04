@@ -129,6 +129,8 @@ class HtmlHelper:
                 is_valid = False
         return is_valid
 
+    # pylint: enable=chained-comparison
+
     @staticmethod
     def extract_html_attribute_name(string_to_parse, string_index):
         """

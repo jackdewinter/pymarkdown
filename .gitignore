@@ -5,3 +5,4 @@ coverage.xml
 report/
 .vscode/
 build/
+.idea/

@@ -4,10 +4,39 @@ Module to provide processing for the container blocks.
 from pymarkdown.block_quote_processor import BlockQuoteProcessor
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
-from pymarkdown.link_helper import LinkHelper
+from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.list_block_processor import ListBlockProcessor
 from pymarkdown.markdown_token import TextMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
+
+
+# pylint: disable=too-few-public-methods
+class ContainerIndices:
+    """
+    Class to provide for encapsulation on a group of container indices.
+    """
+
+    def __init__(self, ulist_index, olist_index, block_index):
+        self.ulist_index = ulist_index
+        self.olist_index = olist_index
+        self.block_index = block_index
+
+
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
+class RequeueLineInfo:
+    """
+    Class to provide an container for lines that need to be requeued.
+    """
+
+    def __init__(self):
+        self.lines_to_requeue = []
+        self.force_ignore_first_as_lrd = None
+
+
+# pylint: enable=too-few-public-methods
 
 
 class ContainerBlockProcessor:
@@ -114,12 +143,12 @@ class ContainerBlockProcessor:
         container_depth,
         this_bq_count,
         stack_bq_count,
+        no_para_start_if_empty,
         line_to_parse,
-        end_of_ulist_start_index,
-        end_of_olist_start_index,
-        end_of_bquote_start_index,
+        end_container_indices,
         leaf_tokens,
         container_level_tokens,
+        was_container_start,
         close_open_blocks_fn,
         handle_blank_line_fn,
     ):
@@ -128,7 +157,100 @@ class ContainerBlockProcessor:
         themselves and get somewhat messy.
         """
 
-        assert container_depth < 10
+        if was_container_start and line_to_parse:
+            assert container_depth < 10
+            nested_container_starts = ContainerBlockProcessor.__get_nested_container_starts(
+                token_stack, line_to_parse, end_container_indices,
+            )
+
+            print("check next container_start>stack>>" + str(token_stack))
+            print("check next container_start>leaf_tokens>>" + str(leaf_tokens))
+            print(
+                "check next container_start>container_level_tokens>>"
+                + str(container_level_tokens)
+            )
+
+            adj_line_to_parse = line_to_parse
+
+            print("check next container_start>pre>>" + str(adj_line_to_parse) + "<<")
+            active_container_index = max(
+                end_container_indices.ulist_index,
+                end_container_indices.olist_index,
+                end_container_indices.block_index,
+            )
+            print(
+                "check next container_start>max>>"
+                + str(active_container_index)
+                + ">>bq>>"
+                + str(end_container_indices.block_index)
+            )
+            print(
+                "^^"
+                + adj_line_to_parse[0 : end_container_indices.block_index]
+                + "^^"
+                + adj_line_to_parse[end_container_indices.block_index :]
+                + "^^"
+            )
+            if (
+                end_container_indices.block_index != -1
+                and not nested_container_starts.ulist_index
+                and not nested_container_starts.olist_index
+            ):  # and active_container_index == end_container_indices.block_index:
+                adj_line_to_parse = adj_line_to_parse[
+                    end_container_indices.block_index :
+                ]
+
+            print(
+                "check next container_start>mid>>stack_bq_count>>"
+                + str(stack_bq_count)
+                + "<<this_bq_count<<"
+                + str(this_bq_count)
+            )
+            adj_line_to_parse = "".rjust(active_container_index) + adj_line_to_parse
+            print("check next container_start>post<<" + str(adj_line_to_parse) + "<<")
+
+            print("leaf_tokens>>" + str(leaf_tokens))
+            if leaf_tokens:
+                token_document.extend(leaf_tokens)
+                leaf_tokens = []
+            if container_level_tokens:
+                token_document.extend(container_level_tokens)
+                container_level_tokens = []
+
+            print("check next container_start>stack>>" + str(token_stack))
+            print(
+                "check next container_start>tokenized_document>>" + str(token_document)
+            )
+
+            if (
+                nested_container_starts.ulist_index
+                or nested_container_starts.olist_index
+                or nested_container_starts.block_index
+            ):
+                line_to_parse = ContainerBlockProcessor.__look_for_container_blocks(
+                    adj_line_to_parse,
+                    end_container_indices.block_index,
+                    token_stack,
+                    token_document,
+                    container_depth,
+                    this_bq_count,
+                    close_open_blocks_fn,
+                    handle_blank_line_fn,
+                )
+            no_para_start_if_empty = True
+        return (
+            line_to_parse,
+            leaf_tokens,
+            container_level_tokens,
+            no_para_start_if_empty,
+        )
+        # pylint: enable=too-many-locals, too-many-arguments
+
+    @staticmethod
+    def __get_nested_container_starts(
+        token_stack, line_to_parse, end_container_indices,
+    ):
+
         print("check next container_start>")
         nested_ulist_start, _ = ListBlockProcessor.is_ulist_start(
             token_stack, line_to_parse, 0, ""
@@ -143,115 +265,75 @@ class ContainerBlockProcessor:
             "check next container_start>ulist>"
             + str(nested_ulist_start)
             + ">index>"
-            + str(end_of_ulist_start_index)
+            + str(end_container_indices.ulist_index)
         )
         print(
             "check next container_start>olist>"
             + str(nested_olist_start)
             + ">index>"
-            + str(end_of_olist_start_index)
+            + str(end_container_indices.olist_index)
         )
         print(
             "check next container_start>bquote>"
             + str(nested_block_start)
             + ">index>"
-            + str(end_of_bquote_start_index)
+            + str(end_container_indices.block_index)
         )
-        print("check next container_start>stack>>" + str(token_stack))
-        print("check next container_start>leaf_tokens>>" + str(leaf_tokens))
-        print(
-            "check next container_start>container_level_tokens>>"
-            + str(container_level_tokens)
+        return ContainerIndices(
+            nested_ulist_start, nested_olist_start, nested_block_start
         )
 
-        adj_line_to_parse = line_to_parse
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __look_for_container_blocks(
+        adj_line_to_parse,
+        end_of_bquote_start_index,
+        token_stack,
+        token_document,
+        container_depth,
+        this_bq_count,
+        close_open_blocks_fn,
+        handle_blank_line_fn,
+    ):
+        """
+        Look for container blocks that we can use.
+        """
+        print("check next container_start>recursing")
+        print("check next container_start>>" + adj_line_to_parse + "\n")
 
-        print("check next container_start>pre>>" + str(adj_line_to_parse) + "<<")
-        active_container_index = max(
-            end_of_ulist_start_index,
-            end_of_olist_start_index,
-            end_of_bquote_start_index,
-        )
-        print(
-            "check next container_start>max>>"
-            + str(active_container_index)
-            + ">>bq>>"
-            + str(end_of_bquote_start_index)
-        )
-        print(
-            "^^"
-            + adj_line_to_parse[0:end_of_bquote_start_index]
-            + "^^"
-            + adj_line_to_parse[end_of_bquote_start_index:]
-            + "^^"
-        )
-        if (
-            end_of_bquote_start_index != -1
-            and not nested_ulist_start
-            and not nested_olist_start
-        ):  # and active_container_index == end_of_bquote_start_index:
-            adj_line_to_parse = adj_line_to_parse[end_of_bquote_start_index:]
+        adj_block = None
+        if end_of_bquote_start_index != -1:
+            adj_block = end_of_bquote_start_index
 
-        print(
-            "check next container_start>mid>>stack_bq_count>>"
-            + str(stack_bq_count)
-            + "<<this_bq_count<<"
-            + str(this_bq_count)
+        print("adj_line_to_parse>>>" + str(adj_line_to_parse) + "<<<")
+        (
+            _,
+            line_to_parse,
+            requeue_line_info,
+        ) = ContainerBlockProcessor.parse_line_for_container_blocks(
+            token_stack,
+            token_document,
+            close_open_blocks_fn,
+            handle_blank_line_fn,
+            adj_line_to_parse,
+            False,
+            container_depth=container_depth + 1,
+            foobar=adj_block,
+            init_bq=this_bq_count,
         )
-        adj_line_to_parse = "".rjust(active_container_index) + adj_line_to_parse
-        print("check next container_start>post<<" + str(adj_line_to_parse) + "<<")
+        assert not requeue_line_info or not requeue_line_info.lines_to_requeue
+        # TODO will need to deal with force_ignore_first_as_lrd
 
-        print("leaf_tokens>>" + str(leaf_tokens))
-        if leaf_tokens:
-            token_document.extend(leaf_tokens)
-            leaf_tokens = []
-        if container_level_tokens:
-            token_document.extend(container_level_tokens)
-            container_level_tokens = []
-
+        print("\ncheck next container_start>recursed")
         print("check next container_start>stack>>" + str(token_stack))
         print("check next container_start>tokenized_document>>" + str(token_document))
+        print("check next container_start>line_parse>>" + str(line_to_parse))
+        return line_to_parse
 
-        if nested_ulist_start or nested_olist_start or nested_block_start:
-            print("check next container_start>recursing")
-            print("check next container_start>>" + adj_line_to_parse + "\n")
-
-            adj_block = None
-            if end_of_bquote_start_index != -1:
-                adj_block = end_of_bquote_start_index
-
-            print("adj_line_to_parse>>>" + str(adj_line_to_parse) + "<<<")
-            (
-                _,
-                line_to_parse,
-                lines_to_requeue,
-                _,
-            ) = ContainerBlockProcessor.parse_line_for_container_blocks(
-                token_stack,
-                token_document,
-                close_open_blocks_fn,
-                handle_blank_line_fn,
-                adj_line_to_parse,
-                False,
-                container_depth=container_depth + 1,
-                foobar=adj_block,
-                init_bq=this_bq_count,
-            )
-            assert not lines_to_requeue
-            # TODO will need to deal with force_ignore_first_as_lrd
-
-            print("\ncheck next container_start>recursed")
-            print("check next container_start>stack>>" + str(token_stack))
-            print(
-                "check next container_start>tokenized_document>>" + str(token_document)
-            )
-            print("check next container_start>line_parse>>" + str(line_to_parse))
-        return line_to_parse, leaf_tokens, container_level_tokens
-        # pylint: enable=too-many-locals, too-many-arguments
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-arguments
-    # pylint: disable=too-many-statements
     @staticmethod
     def parse_line_for_container_blocks(
         token_stack,
@@ -291,14 +373,11 @@ class ContainerBlockProcessor:
             init_bq,
         )
 
-        end_of_olist_start_index = -1
-        end_of_ulist_start_index = -1
-
-        print("LINE-pre-block-start>" + line_to_parse)
+        end_container_indices = ContainerIndices(-1, -1, -1)
         (
             did_process,
             was_container_start,
-            end_of_bquote_start_index,
+            end_container_indices.block_index,
             this_bq_count,
             stack_bq_count,
             line_to_parse,
@@ -317,11 +396,10 @@ class ContainerBlockProcessor:
             handle_blank_line_fn,
         )
 
-        print("LINE-pre-ulist>" + line_to_parse)
         (
             did_process,
             was_container_start,
-            end_of_ulist_start_index,
+            end_container_indices.ulist_index,
             no_para_start_if_empty,
             line_to_parse,
             resultant_tokens,
@@ -342,11 +420,10 @@ class ContainerBlockProcessor:
         )
         container_level_tokens.extend(resultant_tokens)
 
-        print("LINE-pre-olist>" + line_to_parse)
         (
             did_process,
             was_container_start,
-            end_of_olist_start_index,
+            end_container_indices.olist_index,
             no_para_start_if_empty,
             line_to_parse,
             resultant_tokens,
@@ -367,41 +444,92 @@ class ContainerBlockProcessor:
         )
         container_level_tokens.extend(resultant_tokens)
 
-        print(
-            "LINE-another_container_start>did_start>>"
-            + str(was_container_start)
-            + ">>"
-            + line_to_parse
+        (
+            line_to_parse,
+            leaf_tokens,
+            container_level_tokens,
+            no_para_start_if_empty,
+        ) = ContainerBlockProcessor.__handle_nested_container_blocks(
+            token_stack,
+            token_document,
+            container_depth,
+            this_bq_count,
+            stack_bq_count,
+            no_para_start_if_empty,
+            line_to_parse,
+            end_container_indices,
+            leaf_tokens,
+            container_level_tokens,
+            was_container_start,
+            close_open_blocks_fn,
+            handle_blank_line_fn,
         )
-        if was_container_start and line_to_parse:
-            (
-                line_to_parse,
-                leaf_tokens,
-                container_level_tokens,
-            ) = ContainerBlockProcessor.__handle_nested_container_blocks(
-                token_stack,
-                token_document,
-                container_depth,
-                this_bq_count,
-                stack_bq_count,
-                line_to_parse,
-                end_of_ulist_start_index,
-                end_of_olist_start_index,
-                end_of_bquote_start_index,
-                leaf_tokens,
-                container_level_tokens,
-                close_open_blocks_fn,
-                handle_blank_line_fn,
-            )
-            no_para_start_if_empty = True
 
         if container_depth:
             assert not leaf_tokens
             print(">>>>>>>>" + line_to_parse + "<<<<<<<<<<")
-            return container_level_tokens, line_to_parse, None, None
+            return container_level_tokens, line_to_parse, None
 
-        print("LINE-list-in-progress>" + line_to_parse)
+        (
+            did_process,
+            line_to_parse,
+            container_level_tokens,
+        ) = ContainerBlockProcessor.__process_list_in_progress(
+            did_process,
+            token_stack,
+            token_document,
+            line_to_parse,
+            start_index,
+            container_level_tokens,
+            extracted_whitespace,
+            close_open_blocks_fn,
+        )
+        did_process = ContainerBlockProcessor.__process_lazy_lines(
+            leaf_tokens,
+            token_stack,
+            this_bq_count,
+            stack_bq_count,
+            line_to_parse,
+            extracted_whitespace,
+            did_process,
+            container_level_tokens,
+            close_open_blocks_fn,
+        )
+        leaf_tokens, requeue_line_info = ContainerBlockProcessor.__process_leaf_tokens(
+            token_stack,
+            leaf_tokens,
+            token_document,
+            line_to_parse,
+            this_bq_count,
+            no_para_start_if_empty,
+            ignore_link_definition_start,
+            close_open_blocks_fn,
+        )
 
+        container_level_tokens.extend(leaf_tokens)
+        print(
+            "clt-end>>"
+            + str(len(container_level_tokens))
+            + ">>"
+            + str(container_level_tokens)
+            + "<<"
+        )
+        return container_level_tokens, line_to_parse, requeue_line_info
+        # pylint: enable=too-many-locals
+        # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __process_list_in_progress(
+        did_process,
+        token_stack,
+        token_document,
+        line_to_parse,
+        start_index,
+        container_level_tokens,
+        extracted_whitespace,
+        close_open_blocks_fn,
+    ):
         if not did_process:
             is_list_in_process, ind = LeafBlockProcessor.check_for_list_in_process(
                 token_stack
@@ -430,6 +558,23 @@ class ContainerBlockProcessor:
                 + ">>"
                 + str(container_level_tokens)
             )
+        return did_process, line_to_parse, container_level_tokens
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __process_lazy_lines(
+        leaf_tokens,
+        token_stack,
+        this_bq_count,
+        stack_bq_count,
+        line_to_parse,
+        extracted_whitespace,
+        did_process,
+        container_level_tokens,
+        close_open_blocks_fn,
+    ):
 
         print("LINE-lazy>" + line_to_parse)
         if not leaf_tokens:
@@ -454,15 +599,28 @@ class ContainerBlockProcessor:
                 + ">>"
                 + str(container_level_tokens)
             )
+        return did_process
 
-        lines_to_requeue = []
-        force_ignore_first_as_lrd = None
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __process_leaf_tokens(
+        token_stack,
+        leaf_tokens,
+        token_document,
+        line_to_parse,
+        this_bq_count,
+        no_para_start_if_empty,
+        ignore_link_definition_start,
+        close_open_blocks_fn,
+    ):
+        requeue_line_info = RequeueLineInfo()
         if not leaf_tokens:
             print("parsing leaf>>")
             (
                 leaf_tokens,
-                lines_to_requeue,
-                force_ignore_first_as_lrd,
+                requeue_line_info,
             ) = ContainerBlockProcessor.__parse_line_for_leaf_blocks(
                 token_stack,
                 token_document,
@@ -477,63 +635,24 @@ class ContainerBlockProcessor:
             print("parsed leaf>>" + str(len(leaf_tokens)))
             print(
                 "parsed leaf>>lines_to_requeue>>"
-                + str(lines_to_requeue)
+                + str(requeue_line_info.lines_to_requeue)
                 + ">"
-                + str(len(lines_to_requeue))
+                + str(len(requeue_line_info.lines_to_requeue))
             )
             print(
-                "parsed leaf>>force_ignore_first_as_lrd>>"
-                + str(force_ignore_first_as_lrd)
+                "parsed leaf>>requeue_line_info.force_ignore_first_as_lrd>>"
+                + str(requeue_line_info.force_ignore_first_as_lrd)
                 + ">"
             )
-
-        container_level_tokens.extend(leaf_tokens)
-        print(
-            "clt-end>>"
-            + str(len(container_level_tokens))
-            + ">>"
-            + str(container_level_tokens)
-            + "<<"
-        )
-        return (
-            container_level_tokens,
-            line_to_parse,
-            lines_to_requeue,
-            force_ignore_first_as_lrd,
-        )
-        # pylint: enable=too-many-locals
+        return leaf_tokens, requeue_line_info
         # pylint: enable=too-many-arguments
-        # pylint: enable=too-many-statements
 
-    # pylint: disable=too-many-arguments
-    # pylint: disable=too-many-locals
-    # pylint: disable=too-many-branches
-    # pylint: disable=too-many-statements
     @staticmethod
-    def __parse_line_for_leaf_blocks(
-        token_stack,
-        token_document,
-        line_to_parse,
-        start_index,
-        this_bq_count,
-        no_para_start_if_empty,
-        ignore_link_definition_start,
-        close_open_blocks_fn,
+    def __close_indented_block_if_indent_not_there(
+        token_stack, extracted_whitespace, token_document
     ):
-        """
-        Parse the contents of a line for a leaf block.
-        """
 
-        print("Leaf Line:" + line_to_parse + ":")
-        new_tokens = []
         pre_tokens = []
-        lines_to_requeue = []
-        force_ignore_first_as_lrd = None
-        original_line_to_parse = line_to_parse[start_index:]
-        start_index, extracted_whitespace = ParserHelper.extract_whitespace(
-            line_to_parse, start_index
-        )
-
         if token_stack[
             -1
         ].is_indented_code_block and ParserHelper.is_length_less_than_or_equal_to(
@@ -546,10 +665,22 @@ class ContainerBlockProcessor:
                     token_document
                 )
             )
+        return pre_tokens
 
-        outer_processed = False
-        fenced_tokens = None
-
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def handle_fenced_code_block(
+        outer_processed,
+        token_stack,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+        new_tokens,
+        close_open_blocks_fn,
+    ):
+        """
+        Take care of the processing for fenced code blocks.
+        """
         if not token_stack[-1].was_link_definition_started:
             fenced_tokens = LeafBlockProcessor.parse_fenced_code_block(
                 token_stack,
@@ -558,6 +689,7 @@ class ContainerBlockProcessor:
                 extracted_whitespace,
                 close_open_blocks_fn,
             )
+            outer_processed = False
             if fenced_tokens:
                 new_tokens.extend(fenced_tokens)
                 outer_processed = True
@@ -566,42 +698,24 @@ class ContainerBlockProcessor:
                     TextMarkdownToken(line_to_parse[start_index:], extracted_whitespace)
                 )
                 outer_processed = True
+        return outer_processed
 
-        did_complete_lrd = False
-        did_pause_lrd = False
-        if not outer_processed and not ignore_link_definition_start:
-            print(
-                "plflb-process_link_reference_definition>>outer_processed>>"
-                + line_to_parse[start_index:]
-            )
-            (
-                outer_processed,
-                did_complete_lrd,
-                did_pause_lrd,
-                lines_to_requeue,
-                force_ignore_first_as_lrd,
-            ) = LinkHelper.process_link_reference_definition(
-                token_stack,
-                line_to_parse,
-                start_index,
-                original_line_to_parse,
-                extracted_whitespace,
-            )
-            if lines_to_requeue:
-                outer_processed = True
-            print(
-                "plflb-process_link_reference_definition>>outer_processed>>"
-                + str(outer_processed)
-                + ">did_complete_lrd>"
-                + str(did_complete_lrd)
-                + "<did_pause_lrd<"
-                + str(did_pause_lrd)
-                + "<lines_to_requeue<"
-                + str(lines_to_requeue)
-                + "<"
-                + str(len(lines_to_requeue))
-            )
+    # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def handle_html_block(
+        outer_processed,
+        token_stack,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+        new_tokens,
+        close_open_blocks_fn,
+    ):
+        """
+        Take care of the processing for html blocks.
+        """
         if not outer_processed and not token_stack[-1].is_html_block:
             html_tokens = HtmlHelper.parse_html_block(
                 token_stack,
@@ -622,6 +736,133 @@ class ContainerBlockProcessor:
             assert html_tokens
             new_tokens.extend(html_tokens)
             outer_processed = True
+        return outer_processed
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments, unused-argument
+    @staticmethod
+    def handle_link_reference_definition(
+        outer_processed,
+        token_stack,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+        new_tokens,
+        close_open_blocks_fn,
+        original_line_to_parse,
+        ignore_link_definition_start,
+    ):
+        """
+        Take care of the processing for link reference definitions.
+        """
+        # did_complete_lrd = False
+        # did_pause_lrd = False
+
+        lines_to_requeue = []
+        force_ignore_first_as_lrd = None
+
+        if not outer_processed and not ignore_link_definition_start:
+            print(
+                "plflb-process_link_reference_definition>>outer_processed>>"
+                + line_to_parse[start_index:]
+            )
+            (
+                outer_processed,
+                _,  # did_complete_lrd,
+                _,  # did_pause_lrd,
+                lines_to_requeue,
+                force_ignore_first_as_lrd,
+            ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
+                token_stack,
+                line_to_parse,
+                start_index,
+                original_line_to_parse,
+                extracted_whitespace,
+            )
+            if lines_to_requeue:
+                outer_processed = True
+            print(
+                "plflb-process_link_reference_definition>>outer_processed>>"
+                + str(outer_processed)
+                # + ">did_complete_lrd>"
+                # + str(did_complete_lrd)
+                # + "<did_pause_lrd<"
+                # + str(did_pause_lrd)
+                + "<lines_to_requeue<"
+                + str(lines_to_requeue)
+                + "<"
+                + str(len(lines_to_requeue))
+            )
+        return outer_processed, lines_to_requeue, force_ignore_first_as_lrd
+
+    # pylint: enable=too-many-arguments, unused-argument
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __parse_line_for_leaf_blocks(
+        token_stack,
+        token_document,
+        line_to_parse,
+        start_index,
+        this_bq_count,
+        no_para_start_if_empty,
+        ignore_link_definition_start,
+        close_open_blocks_fn,
+    ):
+        """
+        Parse the contents of a line for a leaf block.
+        """
+
+        print("Leaf Line:" + line_to_parse + ":")
+        new_tokens = []
+
+        requeue_line_info = RequeueLineInfo()
+        original_line_to_parse = line_to_parse[start_index:]
+        start_index, extracted_whitespace = ParserHelper.extract_whitespace(
+            line_to_parse, start_index
+        )
+
+        pre_tokens = ContainerBlockProcessor.__close_indented_block_if_indent_not_there(
+            token_stack, extracted_whitespace, token_document
+        )
+
+        outer_processed = False
+        outer_processed = ContainerBlockProcessor.handle_fenced_code_block(
+            outer_processed,
+            token_stack,
+            line_to_parse,
+            start_index,
+            extracted_whitespace,
+            new_tokens,
+            close_open_blocks_fn,
+        )
+
+        (
+            outer_processed,
+            requeue_line_info.lines_to_requeue,
+            requeue_line_info.force_ignore_first_as_lrd,
+        ) = ContainerBlockProcessor.handle_link_reference_definition(
+            outer_processed,
+            token_stack,
+            line_to_parse,
+            start_index,
+            extracted_whitespace,
+            new_tokens,
+            close_open_blocks_fn,
+            original_line_to_parse,
+            ignore_link_definition_start,
+        )
+
+        outer_processed = ContainerBlockProcessor.handle_html_block(
+            outer_processed,
+            token_stack,
+            line_to_parse,
+            start_index,
+            extracted_whitespace,
+            new_tokens,
+            close_open_blocks_fn,
+        )
 
         if not outer_processed:
             assert not new_tokens
@@ -674,15 +915,12 @@ class ContainerBlockProcessor:
                     close_open_blocks_fn,
                 )
 
-        assert new_tokens or did_complete_lrd or did_pause_lrd or lines_to_requeue
+        # assert new_tokens or did_complete_lrd or did_pause_lrd or lines_to_requeue
         print(">>leaf--adding>>" + str(new_tokens))
         pre_tokens.extend(new_tokens)
-        return pre_tokens, lines_to_requeue, force_ignore_first_as_lrd
+        return pre_tokens, requeue_line_info
 
-    # pylint: enable=too-many-locals
     # pylint: enable=too-many-arguments
-    # pylint: enable=too-many-branches
-    # pylint: enable=too-many-statements
 
     @staticmethod
     def extract_markdown_tokens_back_to_blank_line(token_document):

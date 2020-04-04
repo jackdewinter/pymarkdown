@@ -17,6 +17,48 @@ from pymarkdown.markdown_token import (
 from pymarkdown.parser_helper import ParserHelper
 
 
+# pylint: disable=too-few-public-methods
+class InlineRequest:
+    """
+    Class to hold the request information to pass on to the handle_* functions.
+    """
+
+    def __init__(self, source_text, next_index):
+        self.source_text = source_text
+        self.next_index = next_index
+
+
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
+class InlineResponse:
+    """
+    Class to hold the response from the inline handle_* functions.
+    """
+
+    def __init__(self):
+        self.new_string = None
+        self.new_index = None
+        self.new_tokens = None
+        self.new_string_unresolved = None
+        self.consume_rest_of_line = False
+        self.clear_fields()
+
+    def clear_fields(self):
+        """
+        Clear any of the fields that start with new_*.
+        """
+        self.new_string = None
+        self.new_index = None
+        self.new_tokens = None
+        self.new_string_unresolved = None
+        self.consume_rest_of_line = False
+
+
+# pylint: enable=too-few-public-methods
+
+
 class InlineHelper:
     """
     Class to helper with the parsing of inline elements.
@@ -42,28 +84,40 @@ class InlineHelper:
         InlineHelper.__entity_map = InlineHelper.__load_entity_map(resource_path)
 
     @staticmethod
-    def handle_inline_backslash(source_text, next_index):
+    def handle_inline_backslash(inline_request):
         """
         Handle the inline case of having a backslash.
         """
 
-        new_index = next_index + 1
-        new_string = ""
-        new_string_unresolved = ""
-        if new_index >= len(source_text) or (
-            new_index < len(source_text) and source_text[new_index] == "\n"
+        inline_response = InlineResponse()
+        inline_response.new_index = inline_request.next_index + 1
+        inline_response.new_string = ""
+        inline_response.new_string_unresolved = ""
+        if inline_response.new_index >= len(inline_request.source_text) or (
+            inline_response.new_index < len(inline_request.source_text)
+            and inline_request.source_text[inline_response.new_index] == "\n"
         ):
-            new_string = "\\"
-            new_string_unresolved = new_string
+            inline_response.new_string = "\\"
+            inline_response.new_string_unresolved = inline_response.new_string
         else:
-            if source_text[new_index] in InlineHelper.__backslash_punctuation:
-                new_string = source_text[new_index]
-                new_string_unresolved = "\\" + new_string
+            if (
+                inline_request.source_text[inline_response.new_index]
+                in InlineHelper.__backslash_punctuation
+            ):
+                inline_response.new_string = inline_request.source_text[
+                    inline_response.new_index
+                ]
+                inline_response.new_string_unresolved = (
+                    "\\" + inline_response.new_string
+                )
             else:
-                new_string = "\\" + source_text[new_index]
-                new_string_unresolved = new_string
-            new_index = new_index + 1
-        return new_string, new_index, new_string_unresolved
+                inline_response.new_string = (
+                    "\\" + inline_request.source_text[inline_response.new_index]
+                )
+                inline_response.new_string_unresolved = inline_response.new_string
+            inline_response.new_index = inline_response.new_index + 1
+
+        return inline_response
 
     @staticmethod
     def __handle_numeric_character_reference(source_text, new_index):
@@ -127,33 +181,44 @@ class InlineHelper:
         return new_string, new_index
 
     @staticmethod
-    def handle_character_reference(source_text, next_index):
+    def handle_character_reference(inline_request):
         """
         Handle a generic character reference.
         """
-
-        new_index = next_index + 1
-        new_string = ""
-        if new_index < len(source_text) and source_text[new_index] == "#":
-            new_string, new_index = InlineHelper.__handle_numeric_character_reference(
-                source_text, new_index
+        inline_response = InlineResponse()
+        inline_response.new_index = inline_request.next_index + 1
+        inline_response.new_string = ""
+        if (
+            inline_response.new_index < len(inline_request.source_text)
+            and inline_request.source_text[inline_response.new_index] == "#"
+        ):
+            (
+                inline_response.new_string,
+                inline_response.new_index,
+            ) = InlineHelper.__handle_numeric_character_reference(
+                inline_request.source_text, inline_response.new_index
             )
         else:
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
-                source_text, new_index, string.ascii_letters + string.digits
+                inline_request.source_text,
+                inline_response.new_index,
+                string.ascii_letters + string.digits,
             )
             if collected_string:
                 collected_string = "&" + collected_string
-                if end_index < len(source_text) and source_text[end_index] == ";":
+                if (
+                    end_index < len(inline_request.source_text)
+                    and inline_request.source_text[end_index] == ";"
+                ):
                     end_index = end_index + 1
                     collected_string = collected_string + ";"
                     if collected_string in InlineHelper.__entity_map:
                         collected_string = InlineHelper.__entity_map[collected_string]
-                new_string = collected_string
-                new_index = end_index
+                inline_response.new_string = collected_string
+                inline_response.new_index = end_index
             else:
-                new_string = "&"
-        return new_string, new_index
+                inline_response.new_string = "&"
+        return inline_response
 
     @staticmethod
     def __load_entity_map(resource_path):
@@ -237,9 +302,10 @@ class InlineHelper:
             if ParserHelper.is_character_at_index(source_text, next_index, "\\"):
                 print("pre-back>>next_index>>" + str(next_index) + ">>")
                 old_index = next_index
-                _, next_index, _ = InlineHelper.handle_inline_backslash(
-                    source_text, next_index
-                )
+
+                inline_request = InlineRequest(source_text, next_index)
+                inline_response = InlineHelper.handle_inline_backslash(inline_request)
+                next_index = inline_response.new_index
                 data = data + source_text[old_index:next_index]
             elif start_character is not None and ParserHelper.is_character_at_index(
                 source_text, next_index, start_character
@@ -289,14 +355,18 @@ class InlineHelper:
         while next_index != -1:
             current_string = current_string + source_text[start_index:next_index]
             current_char = source_text[next_index]
+
+            inline_request = InlineRequest(source_text, next_index)
             if current_char == "\\":
-                new_string, new_index, _ = InlineHelper.handle_inline_backslash(
-                    source_text, next_index
-                )
+                inline_response = InlineHelper.handle_inline_backslash(inline_request)
+                new_string = inline_response.new_string
+                new_index = inline_response.new_index
             else:  # if source_text[next_index] == "&":
-                new_string, new_index = InlineHelper.handle_character_reference(
-                    source_text, next_index
+                inline_response = InlineHelper.handle_character_reference(
+                    inline_request
                 )
+                new_string = inline_response.new_string
+                new_index = inline_response.new_index
             current_string = current_string + new_string
             start_index = new_index
             next_index = ParserHelper.index_any_of(
@@ -338,19 +408,20 @@ class InlineHelper:
         return string_to_append_to
 
     @staticmethod
-    def handle_inline_backtick(source_text, next_index):
+    def handle_inline_backtick(inline_request):
         """
         Handle the inline case of backticks for code spans.
         """
-
-        print("before_collect>" + str(next_index))
+        print("before_collect>" + str(inline_request.next_index))
         (
             new_index,
             extracted_start_backticks,
-        ) = ParserHelper.collect_while_one_of_characters(source_text, next_index, "`")
+        ) = ParserHelper.collect_while_one_of_characters(
+            inline_request.source_text, inline_request.next_index, "`"
+        )
         print("after_collect>" + str(new_index) + ">" + extracted_start_backticks)
 
-        end_backtick_start_index = source_text.find(
+        end_backtick_start_index = inline_request.source_text.find(
             extracted_start_backticks, new_index
         )
         while end_backtick_start_index != -1:
@@ -358,41 +429,53 @@ class InlineHelper:
                 end_backticks_index,
                 end_backticks_attempt,
             ) = ParserHelper.collect_while_one_of_characters(
-                source_text, end_backtick_start_index, "`"
+                inline_request.source_text, end_backtick_start_index, "`"
             )
             if len(end_backticks_attempt) == len(extracted_start_backticks):
                 break
-            end_backtick_start_index = source_text.find(
+            end_backtick_start_index = inline_request.source_text.find(
                 extracted_start_backticks, end_backticks_index
             )
+
+        inline_response = InlineResponse()
         if end_backtick_start_index == -1:
-            return extracted_start_backticks, new_index, None
+            inline_response.new_string = extracted_start_backticks
+            inline_response.new_index = new_index
+        else:
+            between_text = inline_request.source_text[
+                new_index:end_backtick_start_index
+            ]
+            between_text = (
+                between_text.replace("\r\n", " ").replace("\r", " ").replace("\n", " ")
+            )
 
-        between_text = source_text[new_index:end_backtick_start_index]
-        between_text = (
-            between_text.replace("\r\n", " ").replace("\r", " ").replace("\n", " ")
-        )
+            print(
+                "after_collect>"
+                + between_text
+                + ">>"
+                + str(end_backtick_start_index)
+                + ">>"
+                + inline_request.source_text[end_backtick_start_index:]
+                + "<<"
+            )
+            if (
+                len(between_text) > 2
+                and between_text[0] == " "
+                and between_text[-1] == " "
+            ):
+                stripped_between_attempt = between_text[1:-1]
+                if len(stripped_between_attempt.strip()) != 0:
+                    between_text = stripped_between_attempt
 
-        print(
-            "after_collect>"
-            + between_text
-            + ">>"
-            + str(end_backtick_start_index)
-            + ">>"
-            + source_text[end_backtick_start_index:]
-            + "<<"
-        )
-        if len(between_text) > 2 and between_text[0] == " " and between_text[-1] == " ":
-            stripped_between_attempt = between_text[1:-1]
-            if len(stripped_between_attempt.strip()) != 0:
-                between_text = stripped_between_attempt
-
-        between_text = InlineHelper.append_text("", between_text)
-        print("between_text>>" + between_text + "<<")
-        end_backtick_start_index = end_backtick_start_index + len(
-            extracted_start_backticks
-        )
-        return "", end_backtick_start_index, [InlineCodeSpanMarkdownToken(between_text)]
+            between_text = InlineHelper.append_text("", between_text)
+            print("between_text>>" + between_text + "<<")
+            end_backtick_start_index = end_backtick_start_index + len(
+                extracted_start_backticks
+            )
+            inline_response.new_string = ""
+            inline_response.new_index = end_backtick_start_index
+            inline_response.new_tokens = [InlineCodeSpanMarkdownToken(between_text)]
+        return inline_response
 
     @staticmethod
     def modify_end_string(end_string, removed_end_whitespace):
@@ -508,16 +591,20 @@ class InlineHelper:
         return None
 
     @staticmethod
-    def handle_angle_brackets(source_text, next_index):
+    def handle_angle_brackets(inline_request):
         """
         Given an open angle bracket, determine which of the three possibilities it is.
         """
-        closing_angle_index = source_text.find(">", next_index)
+        closing_angle_index = inline_request.source_text.find(
+            ">", inline_request.next_index
+        )
         new_token = None
-        if closing_angle_index not in (-1, next_index + 1):
+        if closing_angle_index not in (-1, inline_request.next_index + 1):
 
-            between_brackets = source_text[next_index + 1 : closing_angle_index]
-            remaining_line = source_text[next_index + 1 :]
+            between_brackets = inline_request.source_text[
+                inline_request.next_index + 1 : closing_angle_index
+            ]
+            remaining_line = inline_request.source_text[inline_request.next_index + 1 :]
             closing_angle_index = closing_angle_index + 1
             new_token = InlineHelper.__parse_valid_uri_autolink(between_brackets)
             if not new_token:
@@ -527,8 +614,14 @@ class InlineHelper:
                     between_brackets, remaining_line
                 )
                 if after_index != -1:
-                    closing_angle_index = after_index + next_index + 1
+                    closing_angle_index = after_index + inline_request.next_index + 1
 
+        inline_response = InlineResponse()
         if new_token:
-            return "", closing_angle_index, [new_token]
-        return "<", next_index + 1, None
+            inline_response.new_string = ""
+            inline_response.new_index = closing_angle_index
+            inline_response.new_tokens = [new_token]
+        else:
+            inline_response.new_string = "<"
+            inline_response.new_index = inline_request.next_index + 1
+        return inline_response

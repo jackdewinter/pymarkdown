@@ -159,7 +159,6 @@ class ListBlockProcessor:
         # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
-    # pylint: disable=too-many-locals
     @staticmethod
     def __pre_list(
         token_stack,
@@ -184,24 +183,9 @@ class ListBlockProcessor:
         ws_after_marker = ParserHelper.calculate_length(after_marker_whitespace)
         ws_before_marker = ParserHelper.calculate_length(extracted_whitespace)
 
-        print(
-            ">>stack_bq_count>>"
-            + str(stack_bq_count)
-            + ">>this_bq_count>>"
-            + str(this_bq_count)
+        container_level_tokens, stack_bq_count = ListBlockProcessor.handle_list_nesting(
+            token_stack, stack_bq_count, this_bq_count, close_open_blocks_fn
         )
-        while this_bq_count < stack_bq_count:
-
-            inf = len(token_stack) - 1
-            while not token_stack[inf].is_block_quote:
-                inf = inf - 1
-
-            container_level_tokens, _, _ = close_open_blocks_fn(
-                until_this_index=inf, include_block_quotes=True, include_lists=True
-            )
-            print("container_level_tokens>>" + str(container_level_tokens))
-            stack_bq_count = stack_bq_count - 1
-
         print(
             ">>>>>XX>>"
             + str(after_marker_ws_index)
@@ -251,7 +235,34 @@ class ListBlockProcessor:
             stack_bq_count,
         )
         # pylint: enable=too-many-arguments
-        # pylint: enable=too-many-locals
+
+    @staticmethod
+    def handle_list_nesting(
+        token_stack, stack_bq_count, this_bq_count, close_open_blocks_fn
+    ):
+        """
+        Resolve any nesting issues with block quotes.
+        """
+        print(
+            ">>stack_bq_count>>"
+            + str(stack_bq_count)
+            + ">>this_bq_count>>"
+            + str(this_bq_count)
+        )
+        container_level_tokens = []
+        while this_bq_count < stack_bq_count:
+
+            assert not container_level_tokens
+            inf = len(token_stack) - 1
+            while not token_stack[inf].is_block_quote:
+                inf = inf - 1
+
+            container_level_tokens, _, _ = close_open_blocks_fn(
+                until_this_index=inf, include_block_quotes=True, include_lists=True
+            )
+            print("container_level_tokens>>" + str(container_level_tokens))
+            stack_bq_count = stack_bq_count - 1
+        return container_level_tokens, stack_bq_count
 
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
@@ -272,7 +283,6 @@ class ListBlockProcessor:
         """
 
         print("new_stack>>" + str(new_stack))
-        no_para_start_if_empty = True
         container_level_tokens = []
 
         emit_item = True
@@ -281,36 +291,18 @@ class ListBlockProcessor:
             token_stack
         )
         if did_find:
-            print("list-in-process>>" + str(token_stack[last_list_index]))
-            container_level_tokens, _, _ = close_open_blocks_fn(
-                until_this_index=last_list_index + 1
-            )
-            print("old-stack>>" + str(container_level_tokens) + "<<")
-
             (
-                do_not_emit,
+                container_level_tokens,
                 emit_li,
-                extra_tokens,
-            ) = ListBlockProcessor.__are_list_starts_equal(
+                emit_item,
+            ) = ListBlockProcessor.close_required_lists_after_start(
                 token_stack,
                 token_document,
                 last_list_index,
+                close_open_blocks_fn,
                 new_stack,
                 current_container_blocks,
-                close_open_blocks_fn,
             )
-            print("extra_tokens>>" + str(extra_tokens))
-            container_level_tokens.extend(extra_tokens)
-            if do_not_emit:
-                emit_item = False
-                print("post_list>>don't emit")
-            else:
-                print("post_list>>close open blocks and emit")
-                close_tokens, _, _ = close_open_blocks_fn(
-                    until_this_index=last_list_index, include_lists=True
-                )
-                assert close_tokens
-                container_level_tokens.extend(close_tokens)
         else:
             print("NOT list-in-process>>" + str(token_stack[last_list_index]))
             container_level_tokens, _, _ = close_open_blocks_fn()
@@ -322,16 +314,61 @@ class ListBlockProcessor:
         else:
             assert emit_li
             container_level_tokens.append(NewListItemMarkdownToken(indent_level))
-        stri = ""
         line_to_parse = (
-            stri.rjust(remaining_whitespace, " ")
-            + line_to_parse[after_marker_ws_index:]
+            "".rjust(remaining_whitespace, " ") + line_to_parse[after_marker_ws_index:]
         )
 
-        return no_para_start_if_empty, container_level_tokens, line_to_parse
+        return True, container_level_tokens, line_to_parse
         # pylint: enable=too-many-locals, too-many-arguments
 
-    # pylint: disable=too-many-locals
+    @staticmethod
+    # pylint: disable=too-many-arguments
+    def close_required_lists_after_start(
+        token_stack,
+        token_document,
+        last_list_index,
+        close_open_blocks_fn,
+        new_stack,
+        current_container_blocks,
+    ):
+        """
+        After a list start, check to see if any others need closing.
+        """
+        print("list-in-process>>" + str(token_stack[last_list_index]))
+        container_level_tokens, _, _ = close_open_blocks_fn(
+            until_this_index=last_list_index + 1
+        )
+        print("old-stack>>" + str(container_level_tokens) + "<<")
+
+        (
+            do_not_emit,
+            emit_li,
+            extra_tokens,
+        ) = ListBlockProcessor.__are_list_starts_equal(
+            token_stack,
+            token_document,
+            last_list_index,
+            new_stack,
+            current_container_blocks,
+            close_open_blocks_fn,
+        )
+        print("extra_tokens>>" + str(extra_tokens))
+        container_level_tokens.extend(extra_tokens)
+        emit_item = None
+        if do_not_emit:
+            emit_item = False
+            print("post_list>>don't emit")
+        else:
+            print("post_list>>close open blocks and emit")
+            close_tokens, _, _ = close_open_blocks_fn(
+                until_this_index=last_list_index, include_lists=True
+            )
+            assert close_tokens
+            container_level_tokens.extend(close_tokens)
+        return container_level_tokens, emit_li, emit_item
+
+    # pylint: enable=too-many-arguments
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def __are_list_starts_equal(
@@ -372,7 +409,6 @@ class ListBlockProcessor:
         old_start_index = token_document[document_token_index].indent_level
 
         old_last_marker_character = token_stack[last_list_index].list_character[-1]
-        new_last_marker_character = new_stack.list_character[-1]
         current_start_index = new_stack.ws_before_marker
         print(
             "old>>"
@@ -380,10 +416,10 @@ class ListBlockProcessor:
             + ">>"
             + old_last_marker_character
         )
-        print("new>>" + str(new_stack.extra_data) + ">>" + new_last_marker_character)
+        print("new>>" + str(new_stack.extra_data) + ">>" + new_stack.list_character[-1])
         if (
             token_stack[last_list_index].type_name == new_stack.type_name
-            and old_last_marker_character == new_last_marker_character
+            and old_last_marker_character == new_stack.list_character[-1]
         ):
             print("are_list_starts_equal>>ELIGIBLE!!!")
             print(
@@ -421,7 +457,6 @@ class ListBlockProcessor:
         if current_start_index >= old_start_index:
             return True, False, balancing_tokens
         return False, False, balancing_tokens
-        # pylint: enable=too-many-locals
         # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-locals, too-many-arguments
@@ -635,9 +670,8 @@ class ListBlockProcessor:
             line_to_parse,
             container_level_tokens,
         )
-        # pylint: enable=too-many-locals, too-many-arguments
+        # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-locals
     # pylint: disable=too-many-arguments
     @staticmethod
     def list_in_process(
@@ -659,18 +693,14 @@ class ListBlockProcessor:
         print("!!!!!FOUND>>" + str(token_stack[ind].extra_data))
         requested_list_indent = token_stack[ind].indent_level
         before_ws_length = token_stack[ind].ws_before_marker
-        after_ws_length = token_stack[ind].ws_after_marker
         print(
             "!!!!!requested_list_indent>>"
             + str(requested_list_indent)
             + ",before_ws="
             + str(before_ws_length)
-            + ",after_ws="
-            + str(after_ws_length)
         )
 
         leading_space_length = ParserHelper.calculate_length(extracted_whitespace)
-        is_in_paragraph = token_stack[-1].is_paragraph
 
         started_ulist, _ = ListBlockProcessor.is_ulist_start(
             token_stack,
@@ -697,58 +727,96 @@ class ListBlockProcessor:
             + ">>requested_list_indent>>"
             + str(requested_list_indent)
             + ">>is_in_paragraph>>"
-            + str(is_in_paragraph)
+            + str(token_stack[-1].is_paragraph)
         )
         if leading_space_length >= requested_list_indent and allow_list_continue:
-            print("enough ws to continue")
-            remaining_indent = leading_space_length - requested_list_indent
-            line_to_parse = (
-                "".rjust(remaining_indent, " ") + line_to_parse[start_index:]
+            line_to_parse = ListBlockProcessor.adjust_line_for_list_in_process(
+                line_to_parse, start_index, leading_space_length, requested_list_indent
             )
         else:
             requested_list_indent = requested_list_indent - before_ws_length
-            is_in_paragraph = token_stack[-1].is_paragraph
             print(
                 "leading_space_length>>"
                 + str(leading_space_length)
                 + ">>adj requested_list_indent>>"
                 + str(requested_list_indent)
                 + ">>"
-                + str(is_in_paragraph)
+                + str(token_stack[-1].is_paragraph)
                 + "<<"
             )
             if (
-                is_in_paragraph
+                token_stack[-1].is_paragraph
                 and leading_space_length >= requested_list_indent
                 and allow_list_continue
             ):
-                print("adjusted enough ws to continue")
-                remaining_indent = requested_list_indent - requested_list_indent
-                line_to_parse = (
-                    "".rjust(remaining_indent, " ") + line_to_parse[start_index:]
-                )
-            else:
-                print("ws(naa)>>line_to_parse>>" + line_to_parse + "<<")
-                print("ws(naa)>>stack>>" + str(token_stack))
-                print("ws(naa)>>tokens>>" + str(token_document))
-
-                is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
+                line_to_parse = ListBlockProcessor.adjust_line_for_list_in_process(
                     line_to_parse,
                     start_index,
-                    extracted_whitespace,
-                    skip_whitespace_check=True,
+                    requested_list_indent,
+                    requested_list_indent,
                 )
-                print("ws(naa)>>is_theme_break>>" + str(is_theme_break))
-
-                if not is_in_paragraph or is_theme_break:
-                    print("ws (normal and adjusted) not enough to continue")
-
-                    container_level_tokens, _, _ = close_open_blocks_fn(
-                        until_this_index=ind, include_lists=True
-                    )
-                else:
-                    print("ws (normal and adjusted) continue")
+            else:
+                container_level_tokens = ListBlockProcessor.check_for_list_closures(
+                    line_to_parse,
+                    token_stack,
+                    token_document,
+                    start_index,
+                    extracted_whitespace,
+                    close_open_blocks_fn,
+                    ind,
+                )
 
         return container_level_tokens, line_to_parse
-        # pylint: enable=too-many-locals
         # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def adjust_line_for_list_in_process(
+        line_to_parse, start_index, leading_space_length, requested_list_indent
+    ):
+        """
+        Alter the current line to better represent the current level of lists.
+        """
+        print("enough ws to continue")
+        remaining_indent = leading_space_length - requested_list_indent
+        line_to_parse = "".rjust(remaining_indent, " ") + line_to_parse[start_index:]
+        return line_to_parse
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def check_for_list_closures(
+        line_to_parse,
+        token_stack,
+        token_document,
+        start_index,
+        extracted_whitespace,
+        close_open_blocks_fn,
+        ind,
+    ):
+        """
+        Check to see if the list in progress and the level of lists shown require
+        the closing of some of the sublists.
+        """
+        container_level_tokens = []
+        print("ws(naa)>>line_to_parse>>" + line_to_parse + "<<")
+        print("ws(naa)>>stack>>" + str(token_stack))
+        print("ws(naa)>>tokens>>" + str(token_document))
+
+        is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
+            line_to_parse,
+            start_index,
+            extracted_whitespace,
+            skip_whitespace_check=True,
+        )
+        print("ws(naa)>>is_theme_break>>" + str(is_theme_break))
+
+        if not token_stack[-1].is_paragraph or is_theme_break:
+            print("ws (normal and adjusted) not enough to continue")
+
+            container_level_tokens, _, _ = close_open_blocks_fn(
+                until_this_index=ind, include_lists=True
+            )
+        else:
+            print("ws (normal and adjusted) continue")
+        return container_level_tokens
+
+    # pylint: enable=too-many-arguments
