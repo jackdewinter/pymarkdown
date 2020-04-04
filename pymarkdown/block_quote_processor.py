@@ -45,21 +45,21 @@ class BlockQuoteProcessor:
         """
 
         this_bq_count = 1
-        start_index = start_index + 1
+        start_index += 1
 
         while True:
             if ParserHelper.is_character_at_index_whitespace(
                 line_to_parse, start_index
             ):
-                start_index = start_index + 1
+                start_index += 1
             if start_index == len(
                 line_to_parse
             ) or ParserHelper.is_character_at_index_not(
                 line_to_parse, start_index, BlockQuoteProcessor.__block_quote_character
             ):
                 break
-            this_bq_count = this_bq_count + 1
-            start_index = start_index + 1
+            this_bq_count += 1
+            start_index += 1
         return this_bq_count, start_index
 
     @staticmethod
@@ -71,7 +71,7 @@ class BlockQuoteProcessor:
         stack_bq_count = 0
         for next_item_on_stack in token_stack:
             if next_item_on_stack.is_block_quote:
-                stack_bq_count = stack_bq_count + 1
+                stack_bq_count += 1
 
         return stack_bq_count
 
@@ -94,7 +94,7 @@ class BlockQuoteProcessor:
             )
             while this_bq_count > stack_bq_count:
                 token_stack.append(BlockQuoteStackToken())
-                stack_bq_count = stack_bq_count + 1
+                stack_bq_count += 1
                 container_level_tokens.append(
                     BlockQuoteMarkdownToken(extracted_whitespace)
                 )
@@ -106,7 +106,6 @@ class BlockQuoteProcessor:
         token_stack,
         line_to_parse,
         start_index,
-        this_bq_count,
         stack_bq_count,
         extracted_whitespace,
         close_open_blocks_fn,
@@ -240,7 +239,6 @@ class BlockQuoteProcessor:
                 token_stack,
                 line_to_parse,
                 start_index,
-                this_bq_count,
                 stack_bq_count,
                 extracted_whitespace,
                 close_open_blocks_fn,

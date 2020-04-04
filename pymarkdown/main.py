@@ -89,7 +89,7 @@ class PyMarkdownLint:
         characters at the very end of the file.
         """
 
-        with open(next_file, "r", encoding="utf-8") as file_to_parse:
+        with open(next_file, encoding="utf-8") as file_to_parse:
             file_as_buffer = file_to_parse.read()
 
         read_lines = []
@@ -123,7 +123,7 @@ class PyMarkdownLint:
         context = self.plugins.starting_new_file(next_file)
         for line in self.__read_all_lines_from_file(next_file):
             self.plugins.next_line(context, line_number, line)
-            line_number = line_number + 1
+            line_number += 1
         self.plugins.completed_file(context, line_number)
 
     @classmethod

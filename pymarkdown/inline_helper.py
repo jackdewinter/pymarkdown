@@ -23,9 +23,22 @@ class InlineRequest:
     Class to hold the request information to pass on to the handle_* functions.
     """
 
-    def __init__(self, source_text, next_index):
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        source_text,
+        next_index,
+        inline_blocks=None,
+        remaining_line=None,
+        current_string_unresolved=None,
+    ):
         self.source_text = source_text
         self.next_index = next_index
+        self.inline_blocks = inline_blocks
+        self.remaining_line = remaining_line
+        self.current_string_unresolved = current_string_unresolved
+
+    # pylint: enable=too-many-arguments
 
 
 # pylint: enable=too-few-public-methods
@@ -115,7 +128,7 @@ class InlineHelper:
                     "\\" + inline_request.source_text[inline_response.new_index]
                 )
                 inline_response.new_string_unresolved = inline_response.new_string
-            inline_response.new_index = inline_response.new_index + 1
+            inline_response.new_index += 1
 
         return inline_response
 
@@ -125,13 +138,13 @@ class InlineHelper:
         Handle a character reference that is numeric in nature.
         """
 
-        new_index = new_index + 1
+        new_index += 1
         translated_reference = -1
         if new_index < len(source_text) and (
             source_text[new_index] == "x" or source_text[new_index] == "X"
         ):
             hex_char = source_text[new_index]
-            new_index = new_index + 1
+            new_index += 1
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
                 source_text, new_index, string.hexdigits
             )
@@ -173,7 +186,7 @@ class InlineHelper:
             and new_index < len(source_text)
             and source_text[new_index] == ";"
         ):
-            new_index = new_index + 1
+            new_index += 1
             if translated_reference == 0:
                 new_string = "\ufffd"
             else:
@@ -210,8 +223,8 @@ class InlineHelper:
                     end_index < len(inline_request.source_text)
                     and inline_request.source_text[end_index] == ";"
                 ):
-                    end_index = end_index + 1
-                    collected_string = collected_string + ";"
+                    end_index += 1
+                    collected_string += ";"
                     if collected_string in InlineHelper.__entity_map:
                         collected_string = InlineHelper.__entity_map[collected_string]
                 inline_response.new_string = collected_string
@@ -229,7 +242,7 @@ class InlineHelper:
 
         master_entities_file = os.path.join(resource_path, "entities.json")
         try:
-            with open(os.path.abspath(master_entities_file), "r") as infile:
+            with open(os.path.abspath(master_entities_file)) as infile:
                 results_dictionary = json.load(infile)
         except json.decoder.JSONDecodeError as ex:
             print(
@@ -312,15 +325,15 @@ class InlineHelper:
             ):
                 print("pre-start>>next_index>>" + str(next_index) + ">>")
                 data = data + start_character
-                next_index = next_index + 1
-                nesting_level = nesting_level + 1
+                next_index += 1
+                nesting_level += 1
             else:  # elif ParserHelper.is_character_at_index(
                 # source_text, next_index, close_character
                 # ):
                 print("pre-close>>next_index>>" + str(next_index) + ">>")
                 data = data + close_character
-                next_index = next_index + 1
-                nesting_level = nesting_level - 1
+                next_index += 1
+                nesting_level -= 1
             next_index, new_data = ParserHelper.collect_until_one_of_characters(
                 source_text, next_index, break_characters
             )
@@ -469,9 +482,7 @@ class InlineHelper:
 
             between_text = InlineHelper.append_text("", between_text)
             print("between_text>>" + between_text + "<<")
-            end_backtick_start_index = end_backtick_start_index + len(
-                extracted_start_backticks
-            )
+            end_backtick_start_index += len(extracted_start_backticks)
             inline_response.new_string = ""
             inline_response.new_index = end_backtick_start_index
             inline_response.new_tokens = [InlineCodeSpanMarkdownToken(between_text)]
@@ -570,22 +581,22 @@ class InlineHelper:
         """
 
         uri_scheme = ""
+        path_index = -1
         if "<" not in text_to_parse and text_to_parse[0] in string.ascii_letters:
             path_index, uri_scheme = ParserHelper.collect_while_one_of_characters(
                 text_to_parse, 1, InlineHelper.__valid_scheme_characters
             )
             uri_scheme = text_to_parse[0] + uri_scheme
         if (
-            len(uri_scheme) >= 2
-            and len(uri_scheme) <= 32
+            2 <= len(uri_scheme) <= 32
             and path_index < len(text_to_parse)
             and text_to_parse[path_index] == ":"
         ):
-            path_index = path_index + 1
+            path_index += 1
             while path_index < len(text_to_parse):
                 if ord(text_to_parse[path_index]) <= 32:
                     break
-                path_index = path_index + 1
+                path_index += 1
             if path_index == len(text_to_parse):
                 return UriAutolinkMarkdownToken(text_to_parse)
         return None
@@ -605,7 +616,7 @@ class InlineHelper:
                 inline_request.next_index + 1 : closing_angle_index
             ]
             remaining_line = inline_request.source_text[inline_request.next_index + 1 :]
-            closing_angle_index = closing_angle_index + 1
+            closing_angle_index += 1
             new_token = InlineHelper.__parse_valid_uri_autolink(between_brackets)
             if not new_token:
                 new_token = InlineHelper.__parse_valid_email_autolink(between_brackets)

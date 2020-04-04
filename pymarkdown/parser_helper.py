@@ -109,7 +109,7 @@ class ParserHelper:
 
         index = start_index
         while ParserHelper.is_character_at_index_whitespace(source_string, index):
-            index = index + 1
+            index += 1
 
         return index, source_string[start_index:index]
 
@@ -129,7 +129,7 @@ class ParserHelper:
         while ParserHelper.is_character_at_index_one_of(
             source_string, index, " \x09\x0a\x0b\x0c\x0d"
         ):
-            index = index + 1
+            index += 1
 
         return index, source_string[start_index:index]
 
@@ -146,7 +146,7 @@ class ParserHelper:
 
         index = len(source_string) - 1
         while ParserHelper.is_character_at_index_whitespace(source_string, index):
-            index = index - 1
+            index -= 1
 
         return index + 1, source_string[index + 1 :]
 
@@ -164,7 +164,7 @@ class ParserHelper:
 
         index = start_index
         while ParserHelper.is_character_at_index_not_whitespace(source_string, index):
-            index = index + 1
+            index += 1
 
         return index, source_string[start_index:index]
 
@@ -182,7 +182,7 @@ class ParserHelper:
 
         index = start_index
         while index < len(source_string) and source_string[index] == match_character:
-            index = index + 1
+            index += 1
         return index - start_index, index
 
     @staticmethod
@@ -201,7 +201,7 @@ class ParserHelper:
 
         index = end_index
         while index >= 1 and source_string[index - 1] == match_character:
-            index = index - 1
+            index -= 1
         return end_index - index, index
 
     @staticmethod
@@ -218,7 +218,7 @@ class ParserHelper:
 
         index = start_index
         while index < len(source_string) and source_string[index] != match_character:
-            index = index + 1
+            index += 1
 
         return index, source_string[start_index:index]
 
@@ -236,7 +236,7 @@ class ParserHelper:
 
         index = start_index
         while index < len(source_string) and source_string[index] in match_characters:
-            index = index + 1
+            index += 1
 
         return index, source_string[start_index:index]
 
@@ -256,7 +256,7 @@ class ParserHelper:
         while (
             index < len(source_string) and source_string[index] not in match_characters
         ):
-            index = index + 1
+            index += 1
 
         return index, source_string[start_index:index]
 
@@ -269,9 +269,9 @@ class ParserHelper:
         string_length = 0
         for source_character in source_string:
             if source_character == "\t":
-                string_length = string_length + 4
+                string_length += 4
             else:
-                string_length = string_length + 1
+                string_length += 1
         return string_length
 
     @staticmethod
@@ -299,7 +299,7 @@ class ParserHelper:
         while start_index < len(source_text):
             if source_text[start_index] in find_any:
                 return start_index
-            start_index = start_index + 1
+            start_index += 1
         return -1
 
     @staticmethod

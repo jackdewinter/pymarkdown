@@ -64,7 +64,7 @@ class LinkHelper:
         collect_index = ind + 1
         while collect_index < len(inline_blocks):
             collected_text = collected_text + inline_blocks[collect_index].token_text
-            collect_index = collect_index + 1
+            collect_index += 1
         collected_text = collected_text + suffix_text
         print(">>collect_text_from_blocks>>" + str(collected_text) + "<<")
         return collected_text
@@ -102,14 +102,14 @@ class LinkHelper:
         if not ParserHelper.is_character_at_index(line_to_parse, new_index, "]"):
             print(">> no end ], bailing")
             return False, new_index, None
-        new_index = new_index + 1
+        new_index += 1
 
         if include_reference_colon:
             print("look for :>>" + line_to_parse[new_index:] + "<<")
             if not ParserHelper.is_character_at_index(line_to_parse, new_index, ":"):
                 print(">> no :, bailing")
                 return False, -1, None
-            new_index = new_index + 1
+            new_index += 1
 
         return True, new_index, collected_destination
 
@@ -120,7 +120,7 @@ class LinkHelper:
         """
 
         collected_destination = ""
-        new_index = new_index + 1
+        new_index += 1
         angle_link_breaks = ">\\"
         keep_collecting = True
         while keep_collecting:
@@ -140,7 +140,7 @@ class LinkHelper:
                 keep_collecting = True
 
         if ParserHelper.is_character_at_index(source_text, new_index, ">"):
-            new_index = new_index + 1
+            new_index += 1
         else:
             new_index = -1
             collected_destination = ""
@@ -183,16 +183,16 @@ class LinkHelper:
                 keep_collecting = True
             elif ParserHelper.is_character_at_index(source_text, new_index, "("):
                 print("+1")
-                nesting_level = nesting_level + 1
-                collected_destination = collected_destination + "("
-                new_index = new_index + 1
+                nesting_level += 1
+                collected_destination += "("
+                new_index += 1
                 keep_collecting = True
             elif ParserHelper.is_character_at_index(source_text, new_index, ")"):
                 print("-1")
                 if nesting_level != 0:
-                    collected_destination = collected_destination + ")"
-                    new_index = new_index + 1
-                    nesting_level = nesting_level - 1
+                    collected_destination += ")"
+                    new_index += 1
+                    nesting_level -= 1
                     keep_collecting = True
         ex_link = collected_destination
         print("collected_destination>>" + str(collected_destination))
@@ -207,7 +207,6 @@ class LinkHelper:
         """
 
         print("parse_link_destination>>new_index>>" + source_text[new_index:] + ">>")
-        ex_link = ""
         if ParserHelper.is_character_at_index(source_text, new_index, "<"):
             print(
                 ">parse_angle_link_destination>new_index>"
@@ -378,7 +377,7 @@ class LinkHelper:
         )
         if new_index != -1:
             if ParserHelper.is_character_at_index(source_text, new_index, ")"):
-                new_index = new_index + 1
+                new_index += 1
             else:
                 new_index = -1
         print(
@@ -484,10 +483,6 @@ class LinkHelper:
         print("handle_link_types>>text_from_blocks>>" + text_from_blocks + "<<")
 
         consume_rest_of_line = False
-        update_index = -1
-        inline_link = ""
-        inline_title = ""
-        tried_full_reference_form = False
 
         (
             inline_link,
@@ -654,7 +649,7 @@ class LinkHelper:
                     print("  not active")
                 else:
                     print("  not link")
-            search_index = search_index - 1
+            search_index -= 1
 
         print(
             ">>look_for_link_or_image>>"

@@ -1,6 +1,8 @@
 """
 Module to provide for a transformation from markdown tokens to html for GFM.
 """
+import inspect
+
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.markdown_token import (
     AtxHeaderMarkdownToken,
@@ -100,7 +102,7 @@ class TransformToGfm:
                 (UnorderedListStartMarkdownToken, OrderedListStartMarkdownToken),
             ):
                 check_me = stack_count == 0
-                stack_count = stack_count + 1
+                stack_count += 1
             elif (
                 isinstance(current_token, NewListItemMarkdownToken)
                 or current_token.is_block
@@ -113,7 +115,7 @@ class TransformToGfm:
                 if stack_count == 0:
                     stop_me = True
                 else:
-                    stack_count = stack_count - 1
+                    stack_count -= 1
 
             print(
                 ">>stack_count>>"
@@ -131,7 +133,7 @@ class TransformToGfm:
                     print("!!!LOOSE!!!")
             if stop_me:
                 break
-            current_token_index = current_token_index + 1
+            current_token_index += 1
 
         assert current_token_index != len(actual_tokens)
         next_token.is_loose = is_loose
@@ -180,7 +182,7 @@ class TransformToGfm:
             actual_tokens[current_index], OrderedListStartMarkdownToken
         )
 
-        current_index = current_index - 1
+        current_index -= 1
         keep_going = True
         stack_count = 0
         while keep_going and current_index >= 0:
@@ -191,16 +193,16 @@ class TransformToGfm:
                 if stack_count == 0:
                     keep_going = False
                 else:
-                    stack_count = stack_count - 1
+                    stack_count -= 1
             elif isinstance(actual_tokens[current_index], EndMarkdownToken) and (
                 actual_tokens[current_index].type_name
                 == MarkdownToken.token_unordered_list_start
                 or actual_tokens[current_index].type_name
                 == MarkdownToken.token_ordered_list_start
             ):
-                stack_count = stack_count + 1
+                stack_count += 1
             if keep_going:
-                current_index = current_index - 1
+                current_index -= 1
         return current_index
 
     @classmethod
@@ -221,7 +223,7 @@ class TransformToGfm:
                 == MarkdownToken.token_ordered_list_start
             ):
                 break
-            search_index = search_index + 1
+            search_index += 1
         print("!!!!!!!!!!!!!!!" + str(search_index) + "-of-" + str(len(actual_tokens)))
         # check to see where we are, then grab the matching start to find
         # the loose
@@ -239,126 +241,100 @@ class TransformToGfm:
         self.start_token_handlers = {}
         self.end_token_handlers = {}
 
-        sample_token = ThematicBreakMarkdownToken("", "", "")
         self.register_handlers(
-            sample_token.token_name, self.handle_thematic_break_token
+            ThematicBreakMarkdownToken, self.handle_thematic_break_token
         )
-        sample_token = HardBreakMarkdownToken()
-        self.register_handlers(sample_token.token_name, self.handle_hard_break_token)
-
-        sample_token = AtxHeaderMarkdownToken("", "", "")
+        self.register_handlers(HardBreakMarkdownToken, self.handle_hard_break_token)
         self.register_handlers(
-            sample_token.token_name,
+            AtxHeaderMarkdownToken,
             self.handle_start_atx_header_token,
             self.handle_end_atx_header_token,
         )
-
-        sample_token = LinkStartMarkdownToken("", "")
         self.register_handlers(
-            sample_token.token_name,
+            LinkStartMarkdownToken,
             self.handle_start_link_token,
             self.handle_end_link_token,
         )
-
-        sample_token = ImageStartMarkdownToken("", "", "")
-        self.register_handlers(sample_token.token_name, self.handle_image_token)
-
-        sample_token = InlineCodeSpanMarkdownToken("")
+        self.register_handlers(ImageStartMarkdownToken, self.handle_image_token)
         self.register_handlers(
-            sample_token.token_name, self.handle_inline_code_span_token
+            InlineCodeSpanMarkdownToken, self.handle_inline_code_span_token
         )
-
-        sample_token = RawHtmlMarkdownToken("")
-        self.register_handlers(sample_token.token_name, self.handle_raw_html_token)
-
-        sample_token = EmailAutolinkMarkdownToken("")
+        self.register_handlers(RawHtmlMarkdownToken, self.handle_raw_html_token)
         self.register_handlers(
-            sample_token.token_name, self.handle_email_autolink_token
+            EmailAutolinkMarkdownToken, self.handle_email_autolink_token
         )
-
-        sample_token = UriAutolinkMarkdownToken("")
-        self.register_handlers(sample_token.token_name, self.handle_uri_autolink)
-
-        sample_token = SetextHeaderMarkdownToken("", "")
+        self.register_handlers(UriAutolinkMarkdownToken, self.handle_uri_autolink)
         self.register_handlers(
-            sample_token.token_name,
+            SetextHeaderMarkdownToken,
             self.handle_start_setext_header_token,
             self.handle_end_setext_header_token,
         )
-
-        sample_token = EmphasisMarkdownToken("")
         self.register_handlers(
-            sample_token.token_name,
+            EmphasisMarkdownToken,
             self.handle_start_emphasis_token,
             self.handle_end_emphasis_token,
         )
-
-        sample_token = TextMarkdownToken("", "")
-        self.register_handlers(sample_token.token_name, self.handle_text_token)
-
-        sample_token = ParagraphMarkdownToken("")
+        self.register_handlers(TextMarkdownToken, self.handle_text_token)
         self.register_handlers(
-            sample_token.token_name,
+            ParagraphMarkdownToken,
             self.handle_start_paragraph_token,
             self.handle_end_paragraph_token,
         )
-
-        sample_token = BlankLineMarkdownToken("")
-        self.register_handlers(sample_token.token_name, self.handle_blank_line_token)
-
-        sample_token = BlockQuoteMarkdownToken("")
+        self.register_handlers(BlankLineMarkdownToken, self.handle_blank_line_token)
         self.register_handlers(
-            sample_token.token_name,
+            BlockQuoteMarkdownToken,
             self.handle_start_block_quote_token,
             self.handle_end_block_quote_token,
         )
-
-        sample_token = IndentedCodeBlockMarkdownToken("")
         self.register_handlers(
-            sample_token.token_name,
+            IndentedCodeBlockMarkdownToken,
             self.handle_start_indented_code_block_token,
             self.handle_end_indented_code_block_token,
         )
-
-        sample_token = FencedCodeBlockMarkdownToken("", "", "", "", "", "")
         self.register_handlers(
-            sample_token.token_name,
+            FencedCodeBlockMarkdownToken,
             self.handle_start_fenced_code_block_token,
             self.handle_end_fenced_code_block_token,
         )
-
-        sample_token = NewListItemMarkdownToken("")
-        self.register_handlers(sample_token.token_name, self.handle_new_list_item_token)
-
-        sample_token = OrderedListStartMarkdownToken("", "", "", "")
         self.register_handlers(
-            sample_token.token_name,
+            NewListItemMarkdownToken, self.handle_new_list_item_token
+        )
+        self.register_handlers(
+            OrderedListStartMarkdownToken,
             self.handle_start_ordered_list_token,
             self.handle_end_list_token,
         )
-
-        sample_token = UnorderedListStartMarkdownToken("", "", "")
         self.register_handlers(
-            sample_token.token_name,
+            UnorderedListStartMarkdownToken,
             self.handle_start_unordered_list_token,
             self.handle_end_list_token,
         )
-        sample_token = HtmlBlockMarkdownToken()
         self.register_handlers(
-            sample_token.token_name,
+            HtmlBlockMarkdownToken,
             self.handle_start_html_block_token,
             self.handle_end_html_block_token,
         )
 
-    def register_handlers(
-        self, token_name, start_token_handler, end_token_handler=None
-    ):
+    def register_handlers(self, type_name, start_token_handler, end_token_handler=None):
         """
         Register the handlers necessary to deal with token's start and end.
         """
-        self.start_token_handlers[token_name] = start_token_handler
+        assert issubclass(type_name, MarkdownToken), (
+            "Token class '"
+            + str(type_name)
+            + "' must be descended from the 'MarkdownToken' class."
+        )
+        token_init_fn = type_name.__dict__["__init__"]
+        init_parameters = {}
+        for i in inspect.getfullargspec(token_init_fn)[0]:
+            if i == "self":
+                continue
+            init_parameters[i] = ""
+        handler_instance = type_name(**init_parameters)
+
+        self.start_token_handlers[handler_instance.token_name] = start_token_handler
         if end_token_handler:
-            self.end_token_handlers[token_name] = end_token_handler
+            self.end_token_handlers[handler_instance.token_name] = end_token_handler
 
     def transform(self, actual_tokens):
         """
@@ -418,7 +394,7 @@ class TransformToGfm:
                 + "<--"
             )
 
-            transform_state.actual_token_index = transform_state.actual_token_index + 1
+            transform_state.actual_token_index += 1
         if output_html.endswith("\n"):
             output_html = output_html[:-1]
         return output_html
@@ -436,7 +412,7 @@ class TransformToGfm:
                 break
 
         if output_html.endswith("</ul>") or output_html.endswith("</ol>"):
-            output_html = output_html + "\n"
+            output_html += "\n"
         output_html = stack_text + output_html + transform_state.add_trailing_text
         return output_html
 
@@ -446,7 +422,7 @@ class TransformToGfm:
         Apply any leading text to the output.
         """
         if output_html and output_html[-1] != "\n":
-            output_html = output_html + "\n"
+            output_html += "\n"
         output_html = output_html + transform_state.add_leading_text
         transform_state.transform_stack.append(output_html)
         output_html = ""
@@ -481,8 +457,8 @@ class TransformToGfm:
         assert next_token
         if transform_state.is_in_loose_list:
             if output_html and output_html[-1] != "\n":
-                output_html = output_html + "\n"
-            output_html = output_html + "<p>"
+                output_html += "\n"
+            output_html += "<p>"
         return output_html
 
     @classmethod
@@ -492,7 +468,7 @@ class TransformToGfm:
         """
         assert next_token
         if transform_state.is_in_loose_list:
-            output_html = output_html + "</p>\n"
+            output_html += "</p>\n"
         return output_html
 
     @classmethod
@@ -503,7 +479,7 @@ class TransformToGfm:
         if transform_state.is_in_fenced_code_block:
             output_html = output_html + next_token.extracted_whitespace + "\n"
         elif transform_state.is_in_html_block:
-            output_html = output_html + "\n"
+            output_html += "\n"
         return output_html
 
     @classmethod
@@ -513,8 +489,8 @@ class TransformToGfm:
         """
         assert next_token
         if output_html and not output_html.endswith("\n"):
-            output_html = output_html + "\n"
-        output_html = output_html + "<blockquote>\n"
+            output_html += "\n"
+        output_html += "<blockquote>\n"
         transform_state.is_in_loose_list = True
         return output_html
 
@@ -524,8 +500,8 @@ class TransformToGfm:
         """
         assert next_token
         if output_html[-1] != "\n":
-            output_html = output_html + "\n"
-        output_html = output_html + "</blockquote>\n"
+            output_html += "\n"
+        output_html += "</blockquote>\n"
         transform_state.is_in_loose_list = self.reset_list_looseness(
             transform_state.actual_tokens, transform_state.actual_token_index,
         )
@@ -546,8 +522,8 @@ class TransformToGfm:
         ):
             output_html = "\n"
         elif output_html and output_html[-1] != "\n":
-            output_html = output_html + "\n"
-        output_html = output_html + "<pre><code>"
+            output_html += "\n"
+        output_html += "<pre><code>"
         transform_state.is_in_code_block = True
         transform_state.is_in_fenced_code_block = False
         return output_html
@@ -561,7 +537,7 @@ class TransformToGfm:
         """
         assert next_token
         transform_state.is_in_code_block = False
-        output_html = output_html + "\n</code></pre>\n"
+        output_html += "\n</code></pre>\n"
         return output_html
 
     @classmethod
@@ -589,7 +565,7 @@ class TransformToGfm:
         assert next_token
         fenced_token = transform_state.actual_token_index - 1
         while not transform_state.actual_tokens[fenced_token].is_fenced_code_block:
-            fenced_token = fenced_token - 1
+            fenced_token -= 1
 
         inner_tag = ""
         if transform_state.actual_tokens[fenced_token].extracted_text:
@@ -601,15 +577,15 @@ class TransformToGfm:
         inner_tag = "<code" + inner_tag + ">"
 
         if not output_html.endswith(inner_tag) and output_html[-1] != "\n":
-            output_html = output_html + "\n"
+            output_html += "\n"
         elif (
             output_html[-1] == "\n"
             and transform_state.actual_tokens[
                 transform_state.actual_token_index - 1
             ].is_text
         ):
-            output_html = output_html + "\n"
-        output_html = output_html + "</code></pre>\n"
+            output_html += "\n"
+        output_html += "</code></pre>\n"
         transform_state.is_in_code_block = False
         transform_state.is_in_fenced_code_block = False
         return output_html
@@ -623,8 +599,8 @@ class TransformToGfm:
         assert transform_state
 
         if output_html and output_html[-1] != "\n":
-            output_html = output_html + "\n"
-        output_html = output_html + "<hr />\n"
+            output_html += "\n"
+        output_html += "<hr />\n"
         return output_html
 
     @classmethod
@@ -634,7 +610,7 @@ class TransformToGfm:
         """
         assert next_token.token_name == MarkdownToken.token_inline_hard_break
         assert transform_state
-        output_html = output_html + "<br />"
+        output_html += "<br />"
         return output_html
 
     @classmethod
@@ -654,7 +630,7 @@ class TransformToGfm:
         assert next_token
         fenced_token = transform_state.actual_token_index - 1
         while not transform_state.actual_tokens[fenced_token].is_atx_header:
-            fenced_token = fenced_token - 1
+            fenced_token -= 1
 
         output_html = (
             output_html
@@ -685,7 +661,7 @@ class TransformToGfm:
         assert next_token
         fenced_token = transform_state.actual_token_index - 1
         while not transform_state.actual_tokens[fenced_token].is_setext:
-            fenced_token = fenced_token - 1
+            fenced_token -= 1
         if transform_state.actual_tokens[fenced_token].header_character == "=":
             inner_tag = "1"
         else:
@@ -701,7 +677,7 @@ class TransformToGfm:
         """
         assert next_token
         if output_html.endswith(">"):
-            output_html = output_html + "\n"
+            output_html += "\n"
         transform_state.add_trailing_text = "</li>"
         transform_state.add_leading_text = "<li>"
         return output_html
@@ -837,7 +813,7 @@ class TransformToGfm:
                 previous_token.type_name == MarkdownToken.token_unordered_list_start
                 or previous_token.type_name == MarkdownToken.token_ordered_list_start
             ):
-                output_html = output_html + "\n"
+                output_html += "\n"
         return output_html
 
     @classmethod
@@ -856,9 +832,9 @@ class TransformToGfm:
         """
         assert transform_state
         if next_token.emphasis_length == 1:
-            output_html = output_html + "<em>"
+            output_html += "<em>"
         else:
-            output_html = output_html + "<strong>"
+            output_html += "<strong>"
         return output_html
 
     @classmethod
@@ -868,9 +844,9 @@ class TransformToGfm:
         """
         assert transform_state
         if next_token.extra_end_data == "1":
-            output_html = output_html + "</em>"
+            output_html += "</em>"
         else:
-            output_html = output_html + "</strong>"
+            output_html += "</strong>"
         return output_html
 
     @classmethod
@@ -882,7 +858,7 @@ class TransformToGfm:
         anchor_tag = '<a href="' + next_token.link_uri
         if next_token.link_title:
             anchor_tag = anchor_tag + '" title="' + next_token.link_title
-        anchor_tag = anchor_tag + '">'
+        anchor_tag += '">'
         output_html = output_html + anchor_tag
         return output_html
 
@@ -893,7 +869,7 @@ class TransformToGfm:
         """
         assert next_token
         assert transform_state
-        output_html = output_html + "</a>"
+        output_html += "</a>"
         return output_html
 
     @classmethod
@@ -902,12 +878,12 @@ class TransformToGfm:
         Handle the image token.
         """
         assert transform_state
-        output_html = output_html + "<img "
+        output_html += "<img "
         output_html = output_html + 'src="' + next_token.image_uri + '" '
         output_html = output_html + 'alt="' + next_token.image_alt_text + '" '
         if next_token.image_title:
             output_html = output_html + 'title="' + next_token.image_title + '" '
-        output_html = output_html + "/>"
+        output_html += "/>"
         return output_html
 
 

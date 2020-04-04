@@ -41,7 +41,7 @@ class EmphasisHelper:
                 MarkdownToken.token_inline_emphasis, "", str(emphasis_length),
             ),
         )
-        end_index_in_blocks = end_index_in_blocks + 1
+        end_index_in_blocks += 1
 
         # remove emphasis_length from open and close nodes
         print(
@@ -54,10 +54,10 @@ class EmphasisHelper:
         if not close_token.repeat_count:
             inline_blocks.remove(close_token)
             print("close_token>>removed")
-            end_index_in_blocks = end_index_in_blocks - 1
+            end_index_in_blocks -= 1
             close_token.active = False
         else:
-            current_position = current_position - 1
+            current_position -= 1
         print("close_token>>" + close_token.show_process_emphasis() + "<<")
 
         print(
@@ -70,7 +70,7 @@ class EmphasisHelper:
         if not open_token.repeat_count:
             inline_blocks.remove(open_token)
             print("open_token>>removed")
-            end_index_in_blocks = end_index_in_blocks - 1
+            end_index_in_blocks -= 1
             open_token.active = False
         print("open_token>>" + open_token.show_process_emphasis() + "<<")
 
@@ -87,7 +87,7 @@ class EmphasisHelper:
             )
             if isinstance(inline_blocks[inline_index], SpecialTextMarkdownToken):
                 inline_blocks[inline_index].active = False
-            inline_index = inline_index + 1
+            inline_index += 1
 
         return current_position
 
@@ -109,7 +109,7 @@ class EmphasisHelper:
                         inline_blocks[wall_index_in_inlines]
                     )
                     break
-                wall_index_in_inlines = wall_index_in_inlines - 1
+                wall_index_in_inlines -= 1
             print(">>wall_index_in_inlines(mod)>>" + str(wall_index_in_inlines))
             stack_bottom = wall_index_in_inlines
         else:
@@ -140,7 +140,7 @@ class EmphasisHelper:
         clear_index = stack_bottom + 1
         while clear_index < len(delimiter_stack):
             delimiter_stack[clear_index].active = False
-            clear_index = clear_index + 1
+            clear_index += 1
 
     @staticmethod
     def __is_right_flanking_delimiter_run(current_token):
@@ -191,7 +191,6 @@ class EmphasisHelper:
         assert current_token.token_text[0] in Constants.inline_emphasis
 
         # Rule 3 and 7
-        is_closer = False
         if current_token.token_text[0] == "*":
             is_closer = EmphasisHelper.__is_right_flanking_delimiter_run(current_token)
         # Rule 4 and 8
@@ -218,7 +217,6 @@ class EmphasisHelper:
         assert current_token.token_text[0] in Constants.inline_emphasis
 
         # Rule 1
-        is_opener = False
         if current_token.token_text[0] == "*":
             is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(current_token)
         else:  # elif current_token.token_text[0] == "_":
@@ -283,7 +281,7 @@ class EmphasisHelper:
         special_count = 0
         for next_block in inline_blocks:
             print("special_count>>" + str(special_count) + ">>" + str(next_block))
-            special_count = special_count + 1
+            special_count += 1
             if not isinstance(next_block, SpecialTextMarkdownToken):
                 continue
             print(
@@ -315,7 +313,7 @@ class EmphasisHelper:
             )
 
             while current_position < (len(delimiter_stack) - 1):
-                current_position = current_position + 1
+                current_position += 1
                 print(
                     "Block("
                     + str(current_position)
@@ -340,7 +338,7 @@ class EmphasisHelper:
                 close_token = delimiter_stack[current_position]
                 print("potential closer-->" + str(current_position))
                 scan_index = current_position - 1
-                is_valid_opener = False
+                found_opener = None
                 while (
                     scan_index >= 0
                     and scan_index > stack_bottom
@@ -352,8 +350,9 @@ class EmphasisHelper:
                         open_token, close_token
                     )
                     if is_valid_opener:
+                        found_opener = open_token
                         break
-                    scan_index = scan_index - 1
+                    scan_index -= 1
                     print(
                         "scan_index-->"
                         + str(scan_index)
@@ -364,10 +363,10 @@ class EmphasisHelper:
                         + ">"
                     )
 
-                if is_valid_opener:
+                if found_opener:
                     print("FOUND OPEN")
                     current_position = EmphasisHelper.__process_emphasis_pair(
-                        inline_blocks, open_token, close_token, current_position
+                        inline_blocks, found_opener, close_token, current_position
                     )
                 else:
                     # openers_bottom = current_position - 1

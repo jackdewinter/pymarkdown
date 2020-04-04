@@ -73,7 +73,6 @@ class TokenizedMarkdown:
             print("current_block>>" + str(self.stack[-1]))
             print("---")
 
-            lines_to_requeue = []
             if did_start_close:
                 print("\n\ncleanup")
                 did_started_close = True
@@ -91,13 +90,12 @@ class TokenizedMarkdown:
                     break
 
                 did_start_close = False
-                token_to_use = None
+                tokens_from_line = None
                 print(
                     "\n\n\n\n\n\n\n\n\n\n>>lines_to_requeue>>" + str(lines_to_requeue)
                 )
             else:
                 next_line = token_to_use[0]
-                tokens_from_line = []
                 if not next_line or not next_line.strip():
                     print("\n\nblank line")
                     (
@@ -133,7 +131,8 @@ class TokenizedMarkdown:
 
             print("---\nbefore>>" + str(self.tokenized_document))
             print("before>>" + str(tokens_from_line))
-            self.tokenized_document.extend(tokens_from_line)
+            if tokens_from_line:
+                self.tokenized_document.extend(tokens_from_line)
             print("after>>" + str(self.tokenized_document))
             if requeue:
                 print("requeue>>" + str(requeue))

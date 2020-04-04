@@ -74,7 +74,7 @@ class ListBlockProcessor:
             )
             if not is_break and not (
                 token_stack[-1].is_paragraph
-                and not (token_stack[-2].is_list)
+                and not token_stack[-2].is_list
                 and (after_all_whitespace_index == len(line_to_parse))
             ):
                 is_start = True
@@ -113,7 +113,7 @@ class ListBlockProcessor:
             while ParserHelper.is_character_at_index_one_of(
                 line_to_parse, index, string.digits
             ):
-                index = index + 1
+                index += 1
             my_count = index - start_index
             olist_index_number = line_to_parse[start_index:index]
             print("olist?" + olist_index_number + "<<count>>" + str(my_count) + "<<")
@@ -139,7 +139,7 @@ class ListBlockProcessor:
                 )
                 and not (
                     token_stack[-1].is_paragraph
-                    and not (token_stack[-2].is_list)
+                    and not token_stack[-2].is_list
                     and (
                         (end_whitespace_index == len(line_to_parse))
                         or olist_index_number != "1"
@@ -173,8 +173,6 @@ class ListBlockProcessor:
         """
         Handle the processing of the first part of the list.
         """
-
-        container_level_tokens = []
 
         (
             after_marker_ws_index,
@@ -255,13 +253,13 @@ class ListBlockProcessor:
             assert not container_level_tokens
             inf = len(token_stack) - 1
             while not token_stack[inf].is_block_quote:
-                inf = inf - 1
+                inf -= 1
 
             container_level_tokens, _, _ = close_open_blocks_fn(
                 until_this_index=inf, include_block_quotes=True, include_lists=True
             )
             print("container_level_tokens>>" + str(container_level_tokens))
-            stack_bq_count = stack_bq_count - 1
+            stack_bq_count -= 1
         return container_level_tokens, stack_bq_count
 
     # pylint: disable=too-many-locals, too-many-arguments
@@ -283,7 +281,6 @@ class ListBlockProcessor:
         """
 
         print("new_stack>>" + str(new_stack))
-        container_level_tokens = []
 
         emit_item = True
         emit_li = True
@@ -402,7 +399,7 @@ class ListBlockProcessor:
         while document_token_index >= 0 and not (
             token_document[document_token_index].is_any_list_token
         ):
-            document_token_index = document_token_index - 1
+            document_token_index -= 1
         assert document_token_index >= 0
 
         print("ARE-EQUAL>>Last_List_token=" + str(token_document[document_token_index]))

@@ -24,7 +24,6 @@ class LinkReferenceDefinitionHelper:
         Process a link deference definition.  Note, this requires a lot of work to
         handle properly because of partial definitions across lines.
         """
-        did_complete_lrd = False
         did_pause_lrd = False
         lines_to_requeue = []
         force_ignore_first_as_lrd = False
@@ -183,6 +182,7 @@ class LinkReferenceDefinitionHelper:
 
         print("\nparse_link_reference_definition")
         inline_title = ""
+        inline_link = None
         keep_going, new_index, collected_destination = LinkHelper.extract_link_label(
             line_to_parse, start_index + 1
         )
@@ -271,6 +271,11 @@ class LinkReferenceDefinitionHelper:
         that make it a bit more difficult to figure out if we have an actual good
         LRD in the mix somehow.  So take lines off the end while we have lines.
         """
+        is_blank_line = None
+        line_to_parse = None
+        did_complete_lrd = None
+        end_lrd_index = None
+        parsed_lrd_tuple = None
 
         do_again = True
         token_stack[-1].add_continuation_line(original_line_to_parse)

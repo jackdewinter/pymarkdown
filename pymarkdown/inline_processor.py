@@ -15,9 +15,10 @@ class InlineProcessor:
     Handle the inline processing of the token stream.
     """
 
-    __valid_inline_text_block_sequence_starts = "`\\&\n<*_[!]"
+    __valid_inline_text_block_sequence_starts = ""
+    __old_valid_inline_text_block_sequence_starts = "`\\&\n<*_[!]"
     __inline_processing_needed = Constants.inline_emphasis + "[]"
-    inline_character_handlers = {}
+    __inline_character_handlers = {}
 
     """
     Class to provide helper functions for parsing html.
@@ -28,20 +29,31 @@ class InlineProcessor:
         """
         Initialize the inline processor subsystem.
         """
-        InlineProcessor.inline_character_handlers = {}
+        InlineProcessor.__inline_character_handlers = {}
+        InlineProcessor.__valid_inline_text_block_sequence_starts = "\n"
         InlineProcessor.register_handlers("`", InlineHelper.handle_inline_backtick)
         InlineProcessor.register_handlers("\\", InlineHelper.handle_inline_backslash)
         InlineProcessor.register_handlers("&", InlineHelper.handle_character_reference)
         InlineProcessor.register_handlers("<", InlineHelper.handle_angle_brackets)
+        for i in InlineProcessor.__inline_processing_needed:
+            InlineProcessor.register_handlers(
+                i, InlineProcessor.__handle_inline_special_single_character
+            )
+        InlineProcessor.register_handlers(
+            "!", InlineProcessor.__handle_inline_image_link_start_character
+        )
 
     @staticmethod
     def register_handlers(inline_character, start_token_handler):
         """
         Register the handlers necessary to deal with token's start and end.
         """
-        InlineProcessor.inline_character_handlers[
+        InlineProcessor.__inline_character_handlers[
             inline_character
         ] = start_token_handler
+        InlineProcessor.__valid_inline_text_block_sequence_starts = (
+            InlineProcessor.__valid_inline_text_block_sequence_starts + inline_character
+        )
 
     @staticmethod
     def parse_inline(coalesced_results):
@@ -112,6 +124,37 @@ class InlineProcessor:
             else:
                 coalesced_list.append(coalesced_results[coalesce_index])
         return coalesced_list
+
+    @staticmethod
+    def __handle_inline_special_single_character(inline_request,):
+        return InlineProcessor.__handle_inline_special(
+            inline_request.source_text,
+            inline_request.next_index,
+            inline_request.inline_blocks,
+            1,
+            inline_request.remaining_line,
+            inline_request.current_string_unresolved,
+        )
+
+    @staticmethod
+    def __handle_inline_image_link_start_character(inline_request):
+        if ParserHelper.are_characters_at_index(
+            inline_request.source_text, inline_request.next_index, "!["
+        ):
+            inline_response = InlineProcessor.__handle_inline_special(
+                inline_request.source_text,
+                inline_request.next_index,
+                inline_request.inline_blocks,
+                2,
+                inline_request.remaining_line,
+                inline_request.current_string_unresolved,
+            )
+            assert not inline_response.consume_rest_of_line
+        else:
+            inline_response = InlineResponse()
+            inline_response.new_string = "!"
+            inline_response.new_index = inline_request.next_index + 1
+        return inline_response
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -224,30 +267,18 @@ class InlineProcessor:
 
             remaining_line = source_text[start_index:next_index]
 
-            if source_text[next_index] in InlineProcessor.inline_character_handlers:
-                proc_fn = InlineProcessor.inline_character_handlers[
+            inline_request = InlineRequest(
+                source_text,
+                next_index,
+                inline_blocks,
+                remaining_line,
+                current_string_unresolved,
+            )
+            if source_text[next_index] in InlineProcessor.__inline_character_handlers:
+                proc_fn = InlineProcessor.__inline_character_handlers[
                     source_text[next_index]
                 ]
-                inline_request = InlineRequest(source_text, next_index)
                 inline_response = proc_fn(inline_request)
-            elif source_text[next_index] in InlineProcessor.__inline_processing_needed:
-                inline_response = InlineProcessor.__handle_inline_special(
-                    source_text,
-                    next_index,
-                    inline_blocks,
-                    1,
-                    remaining_line,
-                    current_string_unresolved,
-                )
-            elif source_text[next_index] == "!":
-                if ParserHelper.are_characters_at_index(source_text, next_index, "!["):
-                    inline_response = InlineProcessor.__handle_inline_special(
-                        source_text, next_index, inline_blocks, 2, remaining_line, "",
-                    )
-                    assert not inline_response.consume_rest_of_line
-                else:
-                    inline_response.new_string = "!"
-                    inline_response.new_index = next_index + 1
             else:  # if source_text[next_index] == "\n":
                 (
                     inline_response.new_string,
@@ -264,7 +295,6 @@ class InlineProcessor:
             if inline_response.consume_rest_of_line:
                 inline_response.new_string = ""
                 reset_current_string = True
-                remaining_line = ""
                 inline_response.new_tokens = None
             else:
                 current_string = InlineHelper.append_text(

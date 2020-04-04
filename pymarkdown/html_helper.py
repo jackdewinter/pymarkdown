@@ -122,8 +122,8 @@ class HtmlHelper:
         is_valid = bool(tag_name)
         for next_character in tag_name.lower():
             if not (
-                (next_character >= "a" and next_character <= "z")
-                or (next_character >= "0" and next_character <= "9")
+                ("a" <= next_character <= "z")
+                or ("0" <= next_character <= "9")
                 or next_character == "-"
             ):
                 is_valid = False
@@ -142,44 +142,30 @@ class HtmlHelper:
             and (
                 (
                     # TODO https://stackoverflow.com/questions/16060899/alphabet-range-in-python
-                    string_to_parse[string_index] >= "a"
-                    and string_to_parse[string_index] <= "z"
+                    "a"
+                    <= string_to_parse[string_index]
+                    <= "z"
                 )
-                or (
-                    string_to_parse[string_index] >= "A"
-                    and string_to_parse[string_index] <= "Z"
-                )
-                or (
-                    string_to_parse[string_index] >= "0"
-                    and string_to_parse[string_index] <= "9"
-                )
+                or ("A" <= string_to_parse[string_index] <= "Z")
+                or ("0" <= string_to_parse[string_index] <= "9")
                 or string_to_parse[string_index] == ":"
                 or string_to_parse[string_index] == "_"
             )
         ):
             return -1
-        string_index = string_index + 1
+        string_index += 1
         while string_index < len(string_to_parse):
             if not (
-                (
-                    string_to_parse[string_index] >= "a"
-                    and string_to_parse[string_index] <= "z"
-                )
-                or (
-                    string_to_parse[string_index] >= "A"
-                    and string_to_parse[string_index] <= "Z"
-                )
-                or (
-                    string_to_parse[string_index] >= "0"
-                    and string_to_parse[string_index] <= "9"
-                )
+                ("a" <= string_to_parse[string_index] <= "z")
+                or ("A" <= string_to_parse[string_index] <= "Z")
+                or ("0" <= string_to_parse[string_index] <= "9")
                 or string_to_parse[string_index] == ":"
                 or string_to_parse[string_index] == "."
                 or string_to_parse[string_index] == "-"
                 or string_to_parse[string_index] == "_"
             ):
                 break
-            string_index = string_index + 1
+            string_index += 1
 
         if string_index < len(string_to_parse) and (
             string_to_parse[string_index] == "="
@@ -205,7 +191,7 @@ class HtmlHelper:
         ) or non_whitespace_index >= len(line_to_parse):
             return non_whitespace_index
 
-        non_whitespace_index = non_whitespace_index + 1
+        non_whitespace_index += 1
         non_whitespace_index, _ = ParserHelper.extract_whitespace(
             line_to_parse, non_whitespace_index
         )
@@ -220,7 +206,7 @@ class HtmlHelper:
                 )
                 if non_whitespace_index == len(line_to_parse):
                     return -1
-                non_whitespace_index = non_whitespace_index + 1
+                non_whitespace_index += 1
             elif first_character_of_value == "'":
                 (
                     non_whitespace_index,
@@ -230,7 +216,7 @@ class HtmlHelper:
                 )
                 if non_whitespace_index == len(line_to_parse):
                     return -1
-                non_whitespace_index = non_whitespace_index + 1
+                non_whitespace_index += 1
             else:
                 (
                     non_whitespace_index,
@@ -293,8 +279,9 @@ class HtmlHelper:
             and are_attributes_valid
             and (
                 # pylint: disable=chained-comparison
-                non_whitespace_index >= 0
-                and non_whitespace_index < len(line_to_parse)
+                0
+                <= non_whitespace_index
+                < len(line_to_parse)
             )
             and not (
                 line_to_parse[non_whitespace_index] == ">"
@@ -324,12 +311,12 @@ class HtmlHelper:
             non_whitespace_index < len(line_to_parse)
             and line_to_parse[non_whitespace_index] == "/"
         ):
-            non_whitespace_index = non_whitespace_index + 1
+            non_whitespace_index += 1
         if (
             non_whitespace_index < len(line_to_parse)
             and line_to_parse[non_whitespace_index] == ">"
         ):
-            non_whitespace_index = non_whitespace_index + 1
+            non_whitespace_index += 1
             is_end_of_tag_present = True
 
         non_whitespace_index, _ = ParserHelper.extract_whitespace(
@@ -359,7 +346,7 @@ class HtmlHelper:
             while ParserHelper.is_character_at_index_one_of(
                 text_to_parse, index, HtmlHelper.__valid_tag_name_characters
             ):
-                index = index + 1
+                index += 1
             tag_name = text_to_parse[0:index]
         return tag_name
 
@@ -389,7 +376,7 @@ class HtmlHelper:
                     text_to_parse, value_end_index, "'"
                 ):
                     return None, -1
-                value_end_index = value_end_index + 1
+                value_end_index += 1
             elif ParserHelper.is_character_at_index_one_of(
                 text_to_parse, value_start_index, '"'
             ):
@@ -400,7 +387,7 @@ class HtmlHelper:
                     text_to_parse, value_end_index, '"'
                 ):
                     return None, -1
-                value_end_index = value_end_index + 1
+                value_end_index += 1
             else:
                 value_end_index, _ = ParserHelper.collect_until_one_of_characters(
                     text_to_parse,
@@ -443,7 +430,7 @@ class HtmlHelper:
                         return parse_index, extracted_whitespace
 
             if ParserHelper.is_character_at_index(text_to_parse, parse_index, "/"):
-                parse_index = parse_index + 1
+                parse_index += 1
 
             if ParserHelper.is_character_at_index(text_to_parse, parse_index, ">"):
                 valid_raw_html = text_to_parse[0:parse_index]
@@ -524,9 +511,6 @@ class HtmlHelper:
         Given an open HTML tag character (<), try the various possibilities for
         types of tag, and determine if any of them parse validly.
         """
-
-        valid_raw_html = None
-        remaining_line_parse_index = -1
 
         valid_raw_html, remaining_line_parse_index = HtmlHelper.__parse_raw_open_tag(
             remaining_line
@@ -783,10 +767,9 @@ class HtmlHelper:
         """
 
         print("HTML-LINE")
-        new_tokens = []
-        new_tokens.append(
+        new_tokens = [
             TextMarkdownToken(line_to_parse[start_index:], extracted_whitespace)
-        )
+        ]
 
         is_block_terminated = False
         adj_line = line_to_parse[start_index:]

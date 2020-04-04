@@ -199,10 +199,10 @@ class LeafBlockProcessor:
             char_count = 0
             while index < len(line_to_parse):
                 if ParserHelper.is_character_at_index_whitespace(line_to_parse, index):
-                    index = index + 1
+                    index += 1
                 elif line_to_parse[index] == start_char:
-                    index = index + 1
-                    char_count = char_count + 1
+                    index += 1
+                    char_count += 1
                 else:
                     break
 
@@ -292,8 +292,8 @@ class LeafBlockProcessor:
                     and remaining_line[end_index - 1]
                     == LeafBlockProcessor.__atx_character
                 ):
-                    end_index = end_index - 1
-                    remove_trailing_count = remove_trailing_count + 1
+                    end_index -= 1
+                    remove_trailing_count += 1
                 extracted_whitespace_before_end = ""
                 if remove_trailing_count:
                     if end_index > 0:
@@ -352,7 +352,7 @@ class LeafBlockProcessor:
             and ParserHelper.is_character_at_index_one_of(
                 line_to_parse, start_index, LeafBlockProcessor.__setext_characters
             )
-            and (token_stack[-1].is_paragraph)
+            and token_stack[-1].is_paragraph
             and (this_bq_count == stack_bq_count)
         ):
             _, collected_to_index = ParserHelper.collect_while_character(
@@ -376,7 +376,7 @@ class LeafBlockProcessor:
                 )
                 token_index = len(token_document) - 1
                 while not token_document[token_index].is_paragraph:
-                    token_index = token_index - 1
+                    token_index -= 1
 
                 replacement_token = SetextHeaderMarkdownToken(
                     line_to_parse[start_index], token_document[token_index].extra_data,
@@ -452,5 +452,5 @@ class LeafBlockProcessor:
 
         stack_index = len(token_stack) - 1
         while stack_index >= 0 and not token_stack[stack_index].is_list:
-            stack_index = stack_index - 1
+            stack_index -= 1
         return stack_index >= 0, stack_index

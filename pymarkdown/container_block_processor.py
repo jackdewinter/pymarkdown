@@ -99,7 +99,7 @@ class ContainerBlockProcessor:
         adj_ws = extracted_whitespace
         stack_index = len(token_stack) - 1
         while stack_index >= 0 and not token_stack[stack_index].is_list:
-            stack_index = stack_index - 1
+            stack_index -= 1
         if stack_index < 0:
             print("PLFCB>>No Started lists")
             assert len(current_container_blocks) == 0
@@ -116,7 +116,7 @@ class ContainerBlockProcessor:
             while token_index >= 0 and not (
                 token_document[token_index].is_any_list_token
             ):
-                token_index = token_index - 1
+                token_index -= 1
             print("PLFCB>>Started list-last token>>" + str(token_document[token_index]))
             assert token_index >= 0
 
@@ -484,7 +484,7 @@ class ContainerBlockProcessor:
             extracted_whitespace,
             close_open_blocks_fn,
         )
-        did_process = ContainerBlockProcessor.__process_lazy_lines(
+        ContainerBlockProcessor.__process_lazy_lines(
             leaf_tokens,
             token_stack,
             this_bq_count,
@@ -599,7 +599,6 @@ class ContainerBlockProcessor:
                 + ">>"
                 + str(container_level_tokens)
             )
-        return did_process
 
     # pylint: enable=too-many-arguments
 
@@ -748,8 +747,6 @@ class ContainerBlockProcessor:
         line_to_parse,
         start_index,
         extracted_whitespace,
-        new_tokens,
-        close_open_blocks_fn,
         original_line_to_parse,
         ignore_link_definition_start,
     ):
@@ -848,8 +845,6 @@ class ContainerBlockProcessor:
             line_to_parse,
             start_index,
             extracted_whitespace,
-            new_tokens,
-            close_open_blocks_fn,
             original_line_to_parse,
             ignore_link_definition_start,
         )

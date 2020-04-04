@@ -245,7 +245,7 @@ class PluginManager:
                 rule_name,
             )
         )
-        self.number_of_scan_failures = self.number_of_scan_failures + 1
+        self.number_of_scan_failures += 1
 
     @classmethod
     def __find_eligible_plugins_in_directory(cls, directory_to_search):
