@@ -533,8 +533,8 @@ def test_missing_entities_json_file():
     tokenizer = TokenizedMarkdown()
     tokenizer.resource_path = "resourcesx"
     std_output = io.StringIO()
+    old_out = sys.stdout
     try:
-        old_out = sys.stdout
         sys.stdout = std_output
 
         tokenizer.transform("")
@@ -558,8 +558,8 @@ def test_bad_entities_json_file():
     tokenizer.resource_path = os.path.join(os.path.split(__file__)[0], "resources")
     entities_json_file = os.path.join(tokenizer.resource_path, "entities.json")
     std_output = io.StringIO()
+    old_out = sys.stdout
     try:
-        old_out = sys.stdout
         sys.stdout = std_output
 
         tokenizer.transform("")

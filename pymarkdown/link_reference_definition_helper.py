@@ -12,6 +12,8 @@ class LinkReferenceDefinitionHelper:
     Class to helper with the parsing of link reference definitions.
     """
 
+    __lrd_start_character = "["
+
     @staticmethod
     def process_link_reference_definition(
         token_stack,
@@ -148,7 +150,9 @@ class LinkReferenceDefinitionHelper:
         if (
             ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
         ) and ParserHelper.is_character_at_index_one_of(
-            line_to_parse, start_index, "["
+            line_to_parse,
+            start_index,
+            LinkReferenceDefinitionHelper.__lrd_start_character,
         ):
             return True
         return False

@@ -78,7 +78,10 @@ class InlineHelper:
     """
 
     __valid_email_regex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+
+    __scheme_end_character = ":"
     __valid_scheme_characters = string.ascii_letters + string.digits + ".-+"
+
     __backslash_punctuation = "!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~\\"
     __html_character_escape_map = {
         "<": "&lt;",
@@ -87,7 +90,24 @@ class InlineHelper:
         '"': "&quot;",
     }
 
+    angle_bracket_start = "<"
+    __angle_bracket_end = ">"
+    code_span_bounds = "`"
+    backslash_character = "\\"
     __entity_map = {}
+    character_reference_start_character = "&"
+    __numeric_character_reference_start_character = "#"
+    __hex_character_reference_start_character = "xX"
+    __character_reference_end_character = ";"
+    __invalid_reference_character_substitute = "\ufffd"
+    __line_end_whitespace = " "
+    __valid_backslash_sequence_starts = (
+        backslash_character + character_reference_start_character
+    )
+
+    __skip_html5_entities_ending_with = ";"
+
+    __entities_file_name = "entities.json"
 
     @staticmethod
     def initialize(resource_path):
@@ -110,7 +130,7 @@ class InlineHelper:
             inline_response.new_index < len(inline_request.source_text)
             and inline_request.source_text[inline_response.new_index] == "\n"
         ):
-            inline_response.new_string = "\\"
+            inline_response.new_string = InlineHelper.backslash_character
             inline_response.new_string_unresolved = inline_response.new_string
         else:
             if (
@@ -121,11 +141,12 @@ class InlineHelper:
                     inline_response.new_index
                 ]
                 inline_response.new_string_unresolved = (
-                    "\\" + inline_response.new_string
+                    InlineHelper.backslash_character + inline_response.new_string
                 )
             else:
                 inline_response.new_string = (
-                    "\\" + inline_request.source_text[inline_response.new_index]
+                    InlineHelper.backslash_character
+                    + inline_request.source_text[inline_response.new_index]
                 )
                 inline_response.new_string_unresolved = inline_response.new_string
             inline_response.new_index += 1
@@ -141,7 +162,8 @@ class InlineHelper:
         new_index += 1
         translated_reference = -1
         if new_index < len(source_text) and (
-            source_text[new_index] == "x" or source_text[new_index] == "X"
+            source_text[new_index]
+            in InlineHelper.__hex_character_reference_start_character
         ):
             hex_char = source_text[new_index]
             new_index += 1
@@ -160,7 +182,12 @@ class InlineHelper:
             print("delta>>" + str(delta) + ">>")
             if 1 <= delta <= 6:
                 translated_reference = int(collected_string, 16)
-            new_string = "&#" + hex_char + collected_string
+            new_string = (
+                InlineHelper.character_reference_start_character
+                + InlineHelper.__numeric_character_reference_start_character
+                + hex_char
+                + collected_string
+            )
             new_index = end_index
         else:
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
@@ -178,17 +205,22 @@ class InlineHelper:
             print("delta>>" + str(delta) + ">>")
             if 1 <= delta <= 7:
                 translated_reference = int(collected_string)
-            new_string = "&#" + collected_string
+            new_string = (
+                InlineHelper.character_reference_start_character
+                + InlineHelper.__numeric_character_reference_start_character
+                + collected_string
+            )
             new_index = end_index
 
         if (
             translated_reference >= 0
             and new_index < len(source_text)
-            and source_text[new_index] == ";"
+            and source_text[new_index]
+            == InlineHelper.__character_reference_end_character
         ):
             new_index += 1
             if translated_reference == 0:
-                new_string = "\ufffd"
+                new_string = InlineHelper.__invalid_reference_character_substitute
             else:
                 new_string = chr(translated_reference)
         return new_string, new_index
@@ -203,7 +235,8 @@ class InlineHelper:
         inline_response.new_string = ""
         if (
             inline_response.new_index < len(inline_request.source_text)
-            and inline_request.source_text[inline_response.new_index] == "#"
+            and inline_request.source_text[inline_response.new_index]
+            == InlineHelper.__numeric_character_reference_start_character
         ):
             (
                 inline_response.new_string,
@@ -218,19 +251,24 @@ class InlineHelper:
                 string.ascii_letters + string.digits,
             )
             if collected_string:
-                collected_string = "&" + collected_string
+                collected_string = (
+                    InlineHelper.character_reference_start_character + collected_string
+                )
                 if (
                     end_index < len(inline_request.source_text)
-                    and inline_request.source_text[end_index] == ";"
+                    and inline_request.source_text[end_index]
+                    == InlineHelper.__character_reference_end_character
                 ):
                     end_index += 1
-                    collected_string += ";"
+                    collected_string += InlineHelper.__character_reference_end_character
                     if collected_string in InlineHelper.__entity_map:
                         collected_string = InlineHelper.__entity_map[collected_string]
                 inline_response.new_string = collected_string
                 inline_response.new_index = end_index
             else:
-                inline_response.new_string = "&"
+                inline_response.new_string = (
+                    InlineHelper.character_reference_start_character
+                )
         return inline_response
 
     @staticmethod
@@ -240,7 +278,9 @@ class InlineHelper:
         into a dict that was can use.
         """
 
-        master_entities_file = os.path.join(resource_path, "entities.json")
+        master_entities_file = os.path.join(
+            resource_path, InlineHelper.__entities_file_name
+        )
         try:
             with open(os.path.abspath(master_entities_file)) as infile:
                 results_dictionary = json.load(infile)
@@ -268,7 +308,7 @@ class InlineHelper:
 
             # Downloaded file is for HTML5, which includes some names that do
             # not end with ";".  These are excluded.
-            if not next_name.endswith(";"):
+            if not next_name.endswith(InlineHelper.__skip_html5_entities_ending_with):
                 continue
 
             char_entity = results_dictionary[next_name]
@@ -294,7 +334,7 @@ class InlineHelper:
         Extract a string that is bounded by some manner of characters.
         """
 
-        break_characters = "\\" + close_character
+        break_characters = InlineHelper.backslash_character + close_character
         if start_character:
             break_characters = break_characters + start_character
         nesting_level = 0
@@ -312,7 +352,9 @@ class InlineHelper:
         while next_index < len(source_text) and not (
             source_text[next_index] == close_character and nesting_level == 0
         ):
-            if ParserHelper.is_character_at_index(source_text, next_index, "\\"):
+            if ParserHelper.is_character_at_index(
+                source_text, next_index, InlineHelper.backslash_character
+            ):
                 print("pre-back>>next_index>>" + str(next_index) + ">>")
                 old_index = next_index
 
@@ -327,9 +369,10 @@ class InlineHelper:
                 data = data + start_character
                 next_index += 1
                 nesting_level += 1
-            else:  # elif ParserHelper.is_character_at_index(
-                # source_text, next_index, close_character
-                # ):
+            else:
+                assert ParserHelper.is_character_at_index(
+                    source_text, next_index, close_character
+                )
                 print("pre-close>>next_index>>" + str(next_index) + ">>")
                 data = data + close_character
                 next_index += 1
@@ -346,7 +389,6 @@ class InlineHelper:
         ):
             print("extract_bounded_string>>found-close")
             return next_index + 1, data
-        # if next_index == len(source_text):
         print(
             "extract_bounded_string>>ran out of string>>next_index>>" + str(next_index)
         )
@@ -359,22 +401,25 @@ class InlineHelper:
         blocks, which have additional needs for parsing.
         """
 
-        valid_sequence_starts = "\\&"
         start_index = 0
         current_string = ""
         next_index = ParserHelper.index_any_of(
-            source_text, valid_sequence_starts, start_index
+            source_text, InlineHelper.__valid_backslash_sequence_starts, start_index
         )
         while next_index != -1:
             current_string = current_string + source_text[start_index:next_index]
             current_char = source_text[next_index]
 
             inline_request = InlineRequest(source_text, next_index)
-            if current_char == "\\":
+            if current_char == InlineHelper.backslash_character:
                 inline_response = InlineHelper.handle_inline_backslash(inline_request)
                 new_string = inline_response.new_string
                 new_index = inline_response.new_index
-            else:  # if source_text[next_index] == "&":
+            else:
+                assert (
+                    source_text[next_index]
+                    == InlineHelper.character_reference_start_character
+                )
                 inline_response = InlineHelper.handle_character_reference(
                     inline_request
                 )
@@ -383,7 +428,7 @@ class InlineHelper:
             current_string = current_string + new_string
             start_index = new_index
             next_index = ParserHelper.index_any_of(
-                source_text, valid_sequence_starts, start_index
+                source_text, InlineHelper.__valid_backslash_sequence_starts, start_index
             )
 
         if start_index < len(source_text):
@@ -430,7 +475,9 @@ class InlineHelper:
             new_index,
             extracted_start_backticks,
         ) = ParserHelper.collect_while_one_of_characters(
-            inline_request.source_text, inline_request.next_index, "`"
+            inline_request.source_text,
+            inline_request.next_index,
+            InlineHelper.code_span_bounds,
         )
         print("after_collect>" + str(new_index) + ">" + extracted_start_backticks)
 
@@ -442,7 +489,9 @@ class InlineHelper:
                 end_backticks_index,
                 end_backticks_attempt,
             ) = ParserHelper.collect_while_one_of_characters(
-                inline_request.source_text, end_backtick_start_index, "`"
+                inline_request.source_text,
+                end_backtick_start_index,
+                InlineHelper.code_span_bounds,
             )
             if len(end_backticks_attempt) == len(extracted_start_backticks):
                 break
@@ -524,7 +573,7 @@ class InlineHelper:
         new_tokens = []
 
         _, last_non_whitespace_index = ParserHelper.collect_backwards_while_character(
-            remaining_line, -1, " "
+            remaining_line, -1, InlineHelper.__line_end_whitespace
         )
         print(">>last_non_whitespace_index>>" + str(last_non_whitespace_index))
         print(">>current_string>>" + current_string + ">>")
@@ -543,7 +592,8 @@ class InlineHelper:
         if (
             len(removed_end_whitespace) == 0
             and len(current_string) >= 1
-            and current_string[len(current_string) - 1] == "\\"
+            and current_string[len(current_string) - 1]
+            == InlineHelper.backslash_character
         ):
             new_tokens.append(HardBreakMarkdownToken())
             current_string = current_string[0:-1]
@@ -582,7 +632,10 @@ class InlineHelper:
 
         uri_scheme = ""
         path_index = -1
-        if "<" not in text_to_parse and text_to_parse[0] in string.ascii_letters:
+        if (
+            InlineHelper.angle_bracket_start not in text_to_parse
+            and text_to_parse[0] in string.ascii_letters
+        ):
             path_index, uri_scheme = ParserHelper.collect_while_one_of_characters(
                 text_to_parse, 1, InlineHelper.__valid_scheme_characters
             )
@@ -590,7 +643,7 @@ class InlineHelper:
         if (
             2 <= len(uri_scheme) <= 32
             and path_index < len(text_to_parse)
-            and text_to_parse[path_index] == ":"
+            and text_to_parse[path_index] == InlineHelper.__scheme_end_character
         ):
             path_index += 1
             while path_index < len(text_to_parse):
@@ -607,7 +660,7 @@ class InlineHelper:
         Given an open angle bracket, determine which of the three possibilities it is.
         """
         closing_angle_index = inline_request.source_text.find(
-            ">", inline_request.next_index
+            InlineHelper.__angle_bracket_end, inline_request.next_index
         )
         new_token = None
         if closing_angle_index not in (-1, inline_request.next_index + 1):
@@ -633,6 +686,6 @@ class InlineHelper:
             inline_response.new_index = closing_angle_index
             inline_response.new_tokens = [new_token]
         else:
-            inline_response.new_string = "<"
+            inline_response.new_string = InlineHelper.angle_bracket_start
             inline_response.new_index = inline_request.next_index + 1
         return inline_response

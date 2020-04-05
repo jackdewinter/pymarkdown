@@ -28,7 +28,12 @@ class HtmlHelper:
 
     __html_block_start_character = "<"
     __html_tag_start = "/"
+    __html_tag_name_end = " >"
     __html_tag_end = ">"
+    __html_attribute_value_single = "'"
+    __html_attribute_value_double = '"'
+    __html_attribute_name_value_separator = "="
+    __html_attribute_separator = " "
     __valid_tag_name_start = string.ascii_letters
     __valid_tag_name_characters = string.ascii_letters + string.digits + "-"
     __tag_attribute_name_characters = string.ascii_letters + string.digits + "_.:-"
@@ -46,6 +51,13 @@ class HtmlHelper:
     __html_block_3_end = "?>"
     __html_block_4_end = __html_tag_end
     __html_block_5_end = "]]>"
+
+    __raw_declaration_start_character = "!"
+    __raw_declaration_whitespace = " "
+    __raw_html_exclusion_1 = ">"
+    __raw_html_exclusion_2 = "->"
+    __raw_html_exclusion_3 = "-"
+    __raw_html_exclusion_4 = "--"
 
     __html_block_6_start = [
         "address",
@@ -113,7 +125,6 @@ class HtmlHelper:
     ]
 
     @staticmethod
-    # pylint: disable=chained-comparison
     def is_valid_tag_name(tag_name):
         """
         Determine if the html tag name is valid according to the html rules.
@@ -128,8 +139,6 @@ class HtmlHelper:
             ):
                 is_valid = False
         return is_valid
-
-    # pylint: enable=chained-comparison
 
     @staticmethod
     def extract_html_attribute_name(string_to_parse, string_index):
@@ -168,10 +177,11 @@ class HtmlHelper:
             string_index += 1
 
         if string_index < len(string_to_parse) and (
-            string_to_parse[string_index] == "="
-            or string_to_parse[string_index] == " "
-            or string_to_parse[string_index] == "/"
-            or string_to_parse[string_index] == ">"
+            string_to_parse[string_index]
+            == HtmlHelper.__html_attribute_name_value_separator
+            or string_to_parse[string_index] == HtmlHelper.__html_attribute_separator
+            or string_to_parse[string_index] == HtmlHelper.__html_tag_start
+            or string_to_parse[string_index] == HtmlHelper.__html_tag_end
         ):
             return string_index
         return -1
@@ -187,7 +197,8 @@ class HtmlHelper:
         )
         if (
             non_whitespace_index < len(line_to_parse)
-            and line_to_parse[non_whitespace_index] != "="
+            and line_to_parse[non_whitespace_index]
+            != HtmlHelper.__html_attribute_name_value_separator
         ) or non_whitespace_index >= len(line_to_parse):
             return non_whitespace_index
 
@@ -197,22 +208,26 @@ class HtmlHelper:
         )
         if non_whitespace_index < len(line_to_parse):
             first_character_of_value = line_to_parse[non_whitespace_index]
-            if first_character_of_value == '"':
+            if first_character_of_value == HtmlHelper.__html_attribute_value_double:
                 (
                     non_whitespace_index,
                     extracted_text,
                 ) = ParserHelper.collect_until_character(
-                    line_to_parse, non_whitespace_index + 1, '"'
+                    line_to_parse,
+                    non_whitespace_index + 1,
+                    HtmlHelper.__html_attribute_value_double,
                 )
                 if non_whitespace_index == len(line_to_parse):
                     return -1
                 non_whitespace_index += 1
-            elif first_character_of_value == "'":
+            elif first_character_of_value == HtmlHelper.__html_attribute_value_single:
                 (
                     non_whitespace_index,
                     extracted_text,
                 ) = ParserHelper.collect_until_character(
-                    line_to_parse, non_whitespace_index + 1, "'"
+                    line_to_parse,
+                    non_whitespace_index + 1,
+                    HtmlHelper.__html_attribute_value_single,
                 )
                 if non_whitespace_index == len(line_to_parse):
                     return -1
@@ -245,7 +260,7 @@ class HtmlHelper:
         )
         have_end_of_tag = (
             non_whitespace_index < len(line_to_parse)
-            and line_to_parse[non_whitespace_index] == ">"
+            and line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_end
         )
         return have_end_of_tag and is_valid, non_whitespace_index + 1
 
@@ -277,15 +292,10 @@ class HtmlHelper:
             is_tag_valid
             and extracted_whitespace
             and are_attributes_valid
-            and (
-                # pylint: disable=chained-comparison
-                0
-                <= non_whitespace_index
-                < len(line_to_parse)
-            )
+            and (0 <= non_whitespace_index < len(line_to_parse))
             and not (
-                line_to_parse[non_whitespace_index] == ">"
-                or line_to_parse[non_whitespace_index] == "/"
+                line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_end
+                or line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_start
             )
         ):
 
@@ -309,12 +319,12 @@ class HtmlHelper:
         is_end_of_tag_present = False
         if (
             non_whitespace_index < len(line_to_parse)
-            and line_to_parse[non_whitespace_index] == "/"
+            and line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_start
         ):
             non_whitespace_index += 1
         if (
             non_whitespace_index < len(line_to_parse)
-            and line_to_parse[non_whitespace_index] == ">"
+            and line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_end
         ):
             non_whitespace_index += 1
             is_end_of_tag_present = True
@@ -361,30 +371,46 @@ class HtmlHelper:
         end_name_index, extracted_whitespace = ParserHelper.extract_any_whitespace(
             text_to_parse, parse_index
         )
-        if ParserHelper.is_character_at_index(text_to_parse, end_name_index, "="):
+        if ParserHelper.is_character_at_index(
+            text_to_parse,
+            end_name_index,
+            HtmlHelper.__html_attribute_name_value_separator,
+        ):
             (
                 value_start_index,
                 extracted_whitespace,
             ) = ParserHelper.extract_any_whitespace(text_to_parse, end_name_index + 1)
             if ParserHelper.is_character_at_index_one_of(
-                text_to_parse, value_start_index, "'"
+                text_to_parse,
+                value_start_index,
+                HtmlHelper.__html_attribute_value_single,
             ):
                 value_end_index, _ = ParserHelper.collect_until_character(
-                    text_to_parse, value_start_index + 1, "'"
+                    text_to_parse,
+                    value_start_index + 1,
+                    HtmlHelper.__html_attribute_value_single,
                 )
                 if not ParserHelper.is_character_at_index(
-                    text_to_parse, value_end_index, "'"
+                    text_to_parse,
+                    value_end_index,
+                    HtmlHelper.__html_attribute_value_single,
                 ):
                     return None, -1
                 value_end_index += 1
             elif ParserHelper.is_character_at_index_one_of(
-                text_to_parse, value_start_index, '"'
+                text_to_parse,
+                value_start_index,
+                HtmlHelper.__html_attribute_value_double,
             ):
                 value_end_index, _ = ParserHelper.collect_until_character(
-                    text_to_parse, value_start_index + 1, '"'
+                    text_to_parse,
+                    value_start_index + 1,
+                    HtmlHelper.__html_attribute_value_double,
                 )
                 if not ParserHelper.is_character_at_index(
-                    text_to_parse, value_end_index, '"'
+                    text_to_parse,
+                    value_end_index,
+                    HtmlHelper.__html_attribute_value_double,
                 ):
                     return None, -1
                 value_end_index += 1
@@ -429,10 +455,14 @@ class HtmlHelper:
                     if parse_index is None:
                         return parse_index, extracted_whitespace
 
-            if ParserHelper.is_character_at_index(text_to_parse, parse_index, "/"):
+            if ParserHelper.is_character_at_index(
+                text_to_parse, parse_index, HtmlHelper.__html_tag_start
+            ):
                 parse_index += 1
 
-            if ParserHelper.is_character_at_index(text_to_parse, parse_index, ">"):
+            if ParserHelper.is_character_at_index(
+                text_to_parse, parse_index, HtmlHelper.__html_tag_end
+            ):
                 valid_raw_html = text_to_parse[0:parse_index]
                 end_parse_index = parse_index + 1
 
@@ -444,7 +474,9 @@ class HtmlHelper:
         Parse the current line as if it is a close tag, and determine if it is valid.
         """
         valid_raw_html = None
-        if ParserHelper.is_character_at_index(text_to_parse, 0, "/"):
+        if ParserHelper.is_character_at_index(
+            text_to_parse, 0, HtmlHelper.__html_tag_start
+        ):
             tag_name = HtmlHelper.__parse_raw_tag_name(text_to_parse, 1)
             if tag_name:
                 parse_index = len(tag_name)
@@ -463,7 +495,9 @@ class HtmlHelper:
         """
 
         valid_raw_html = None
-        if ParserHelper.is_character_at_index_one_of(text_to_parse, 0, "!"):
+        if ParserHelper.is_character_at_index_one_of(
+            text_to_parse, 0, HtmlHelper.__raw_declaration_start_character
+        ):
             (
                 parse_index,
                 declaration_name,
@@ -472,7 +506,7 @@ class HtmlHelper:
             )
             if declaration_name:
                 whitespace_count, _ = ParserHelper.collect_while_character(
-                    text_to_parse, parse_index, " "
+                    text_to_parse, parse_index, HtmlHelper.__raw_declaration_whitespace
                 )
                 if whitespace_count:
                     valid_raw_html = text_to_parse
@@ -496,10 +530,10 @@ class HtmlHelper:
             parse_index = parse_index + len(special_start) + len(special_end)
             if (not do_extra_check) or (
                 not (
-                    remaining_line.startswith(">")
-                    or remaining_line.startswith("->")
-                    or remaining_line.endswith("-")
-                    or "--" in remaining_line
+                    remaining_line.startswith(HtmlHelper.__raw_html_exclusion_1)
+                    or remaining_line.startswith(HtmlHelper.__raw_html_exclusion_2)
+                    or remaining_line.endswith(HtmlHelper.__raw_html_exclusion_3)
+                    or HtmlHelper.__raw_html_exclusion_4 in remaining_line
                 )
             ):
                 valid_raw_html = special_start + remaining_line + special_end[0:-1]
@@ -678,7 +712,7 @@ class HtmlHelper:
                 character_index,
                 remaining_html_tag,
             ) = ParserHelper.collect_until_one_of_characters(
-                line_to_parse, character_index, " >"
+                line_to_parse, character_index, HtmlHelper.__html_tag_name_end
             )
             remaining_html_tag = remaining_html_tag.lower()
 

@@ -28,7 +28,11 @@ class LeafBlockProcessor:
     Class to provide processing for the leaf blocks.
     """
 
-    __fenced_code_block_start_characters = "~`"
+    __fenced_start_tilde = "~"
+    __fenced_start_backtick = "`"
+    __fenced_code_block_start_characters = (
+        __fenced_start_tilde + __fenced_start_backtick
+    )
     __thematic_break_characters = "*_-"
     __atx_character = "#"
     __setext_characters = "-="
@@ -112,8 +116,10 @@ class LeafBlockProcessor:
             else:
                 print("pfcb->check")
                 if (
-                    line_to_parse[start_index] == "~"
-                    or "`" not in line_to_parse[non_whitespace_index:]
+                    line_to_parse[start_index]
+                    == LeafBlockProcessor.__fenced_start_tilde
+                    or LeafBlockProcessor.__fenced_start_backtick
+                    not in line_to_parse[non_whitespace_index:]
                 ):
                     print("pfcb->start")
                     (

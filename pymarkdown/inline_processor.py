@@ -1,7 +1,6 @@
 """
 Inline processing
 """
-from pymarkdown.constants import Constants
 from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline_helper import InlineHelper, InlineRequest, InlineResponse
 from pymarkdown.link_helper import LinkHelper
@@ -16,8 +15,11 @@ class InlineProcessor:
     """
 
     __valid_inline_text_block_sequence_starts = ""
-    __old_valid_inline_text_block_sequence_starts = "`\\&\n<*_[!]"
-    __inline_processing_needed = Constants.inline_emphasis + "[]"
+    __inline_processing_needed = (
+        EmphasisHelper.inline_emphasis
+        + LinkHelper.link_label_start
+        + LinkHelper.link_label_end
+    )
     __inline_character_handlers = {}
 
     """
@@ -31,16 +33,26 @@ class InlineProcessor:
         """
         InlineProcessor.__inline_character_handlers = {}
         InlineProcessor.__valid_inline_text_block_sequence_starts = "\n"
-        InlineProcessor.register_handlers("`", InlineHelper.handle_inline_backtick)
-        InlineProcessor.register_handlers("\\", InlineHelper.handle_inline_backslash)
-        InlineProcessor.register_handlers("&", InlineHelper.handle_character_reference)
-        InlineProcessor.register_handlers("<", InlineHelper.handle_angle_brackets)
+        InlineProcessor.register_handlers(
+            InlineHelper.code_span_bounds, InlineHelper.handle_inline_backtick
+        )
+        InlineProcessor.register_handlers(
+            InlineHelper.backslash_character, InlineHelper.handle_inline_backslash
+        )
+        InlineProcessor.register_handlers(
+            InlineHelper.character_reference_start_character,
+            InlineHelper.handle_character_reference,
+        )
+        InlineProcessor.register_handlers(
+            InlineHelper.angle_bracket_start, InlineHelper.handle_angle_brackets
+        )
         for i in InlineProcessor.__inline_processing_needed:
             InlineProcessor.register_handlers(
                 i, InlineProcessor.__handle_inline_special_single_character
             )
         InlineProcessor.register_handlers(
-            "!", InlineProcessor.__handle_inline_image_link_start_character
+            LinkHelper.image_start_sequence[0],
+            InlineProcessor.__handle_inline_image_link_start_character,
         )
 
     @staticmethod
@@ -139,7 +151,9 @@ class InlineProcessor:
     @staticmethod
     def __handle_inline_image_link_start_character(inline_request):
         if ParserHelper.are_characters_at_index(
-            inline_request.source_text, inline_request.next_index, "!["
+            inline_request.source_text,
+            inline_request.next_index,
+            LinkHelper.image_start_sequence,
         ):
             inline_response = InlineProcessor.__handle_inline_special(
                 inline_request.source_text,
@@ -152,7 +166,7 @@ class InlineProcessor:
             assert not inline_response.consume_rest_of_line
         else:
             inline_response = InlineResponse()
-            inline_response.new_string = "!"
+            inline_response.new_string = LinkHelper.image_start_sequence[0]
             inline_response.new_index = inline_request.next_index + 1
         return inline_response
 
@@ -177,7 +191,7 @@ class InlineProcessor:
         is_active = True
         consume_rest_of_line = False
         special_sequence = source_text[next_index : next_index + special_length]
-        if special_length == 1 and special_sequence in Constants.inline_emphasis:
+        if special_length == 1 and special_sequence in EmphasisHelper.inline_emphasis:
             repeat_count, new_index = ParserHelper.collect_while_character(
                 source_text, next_index, special_sequence
             )
@@ -188,7 +202,7 @@ class InlineProcessor:
                 new_index : min(len(source_text), new_index + 2)
             ]
         else:
-            if special_sequence[0] == "]":
+            if special_sequence[0] == LinkHelper.link_label_end:
                 print(
                     "\nPOSSIBLE LINK CLOSE_FOUND>>"
                     + str(special_length)

@@ -16,6 +16,10 @@ class EmphasisHelper:
     Class to helper with the parsing of emphasis for inline elements.
     """
 
+    __simple_emphasis = "*"
+    __complex_emphasis = "_"
+    inline_emphasis = __simple_emphasis + __complex_emphasis
+
     @staticmethod
     def __process_emphasis_pair(
         inline_blocks, open_token, close_token, current_position
@@ -188,13 +192,14 @@ class EmphasisHelper:
         Determine if the current token is a potential closer.
         """
 
-        assert current_token.token_text[0] in Constants.inline_emphasis
+        assert current_token.token_text[0] in EmphasisHelper.inline_emphasis
 
         # Rule 3 and 7
-        if current_token.token_text[0] == "*":
+        if current_token.token_text[0] == EmphasisHelper.__simple_emphasis:
             is_closer = EmphasisHelper.__is_right_flanking_delimiter_run(current_token)
         # Rule 4 and 8
-        else:  # elif current_token.token_text[0] == "_":
+        else:
+            assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
             is_closer = EmphasisHelper.__is_right_flanking_delimiter_run(current_token)
             if is_closer:
                 is_left_flanking = EmphasisHelper.__is_left_flanking_delimiter_run(
@@ -214,12 +219,13 @@ class EmphasisHelper:
         Determine if the current token is a potential opener.
         """
 
-        assert current_token.token_text[0] in Constants.inline_emphasis
+        assert current_token.token_text[0] in EmphasisHelper.inline_emphasis
 
         # Rule 1
-        if current_token.token_text[0] == "*":
+        if current_token.token_text[0] == EmphasisHelper.__simple_emphasis:
             is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(current_token)
-        else:  # elif current_token.token_text[0] == "_":
+        else:
+            assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
             is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(current_token)
             if is_opener:
                 is_right_flanking = EmphasisHelper.__is_right_flanking_delimiter_run(
@@ -325,7 +331,7 @@ class EmphasisHelper:
                     continue
                 if (
                     delimiter_stack[current_position].token_text[0]
-                    not in Constants.inline_emphasis
+                    not in EmphasisHelper.inline_emphasis
                 ):
                     print("not emphasis")
                     continue

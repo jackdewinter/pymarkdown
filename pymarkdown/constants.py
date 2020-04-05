@@ -32,7 +32,5 @@ class Constants:
     # http://www.fileformat.info/info/unicode/category/index.htm
     # http://www.fileformat.info/info/unicode/category/P*/list.htm
 
-    inline_emphasis = "*_"
-
 
 # pylint: enable=too-few-public-methods

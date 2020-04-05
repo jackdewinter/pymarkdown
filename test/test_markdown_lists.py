@@ -1365,3 +1365,5 @@ def test_list_items_306():
 #      per urllib.parse.quote
 # TODO complete list of unicode punctuation characters
 # TODO reduce html_helper functions?
+# TODO modify parse_blocks_pass to consume lines as it goes, instead of requiring entire string in memory
+# TODO rewrite transform to allow it to comsume as it goes

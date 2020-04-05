@@ -23,8 +23,38 @@ class LinkHelper:
     """
 
     __link_definitions = {}
+    __link_safe_characters = "/#:?=()%*"
 
+    __non_angle_link_nest = "("
+    __non_angle_link_unnest = ")"
     __non_angle_link_breaks = Constants.ascii_control_characters + "()\\"
+
+    link_label_start = "["
+    link_label_end = "]"
+    __link_label_is_definition_character = ":"
+    __link_label_breaks = (
+        link_label_start + link_label_end + InlineHelper.backslash_character
+    )
+
+    __angle_link_start = "<"
+    __angle_link_end = ">"
+    __angle_link_destination_breaks = (
+        __angle_link_end + InlineHelper.backslash_character
+    )
+
+    __link_title_single = "'"
+    __link_title_double = '"'
+    __link_title_parenthesis_open = "("
+    __link_title_parenthesis_close = ")"
+
+    __link_format_inline_start = "("
+    __link_format_inline_end = ")"
+    __link_format_reference_start = "["
+    __link_format_reference_end = "]"
+
+    __link_start_sequence = "["
+    image_start_sequence = "!["
+    __valid_link_starts = [__link_start_sequence, image_start_sequence]
 
     @staticmethod
     def initialize():
@@ -75,17 +105,17 @@ class LinkHelper:
         Extract the link reference definition's link label.
         """
 
-        angle_link_breaks = "[]]\\"
-
         collected_destination = ""
         keep_collecting = True
         while keep_collecting:
             keep_collecting = False
             new_index, ert_new = ParserHelper.collect_until_one_of_characters(
-                line_to_parse, new_index, angle_link_breaks
+                line_to_parse, new_index, LinkHelper.__link_label_breaks
             )
             collected_destination = collected_destination + ert_new
-            if ParserHelper.is_character_at_index(line_to_parse, new_index, "\\"):
+            if ParserHelper.is_character_at_index(
+                line_to_parse, new_index, InlineHelper.backslash_character
+            ):
                 old_new_index = new_index
                 inline_request = InlineRequest(line_to_parse, new_index)
                 inline_response = InlineHelper.handle_inline_backslash(inline_request)
@@ -94,19 +124,27 @@ class LinkHelper:
                     collected_destination + line_to_parse[old_new_index:new_index]
                 )
                 keep_collecting = True
-            elif ParserHelper.is_character_at_index(line_to_parse, new_index, "["):
+            elif ParserHelper.is_character_at_index(
+                line_to_parse, new_index, LinkHelper.link_label_start
+            ):
                 print(">> unescaped [, bailing")
                 return False, -1, None
 
         print("look for ]>>" + line_to_parse[new_index:] + "<<")
-        if not ParserHelper.is_character_at_index(line_to_parse, new_index, "]"):
+        if not ParserHelper.is_character_at_index(
+            line_to_parse, new_index, LinkHelper.link_label_end
+        ):
             print(">> no end ], bailing")
             return False, new_index, None
         new_index += 1
 
         if include_reference_colon:
             print("look for :>>" + line_to_parse[new_index:] + "<<")
-            if not ParserHelper.is_character_at_index(line_to_parse, new_index, ":"):
+            if not ParserHelper.is_character_at_index(
+                line_to_parse,
+                new_index,
+                LinkHelper.__link_label_is_definition_character,
+            ):
                 print(">> no :, bailing")
                 return False, -1, None
             new_index += 1
@@ -121,15 +159,16 @@ class LinkHelper:
 
         collected_destination = ""
         new_index += 1
-        angle_link_breaks = ">\\"
         keep_collecting = True
         while keep_collecting:
             keep_collecting = False
             new_index, ert_new = ParserHelper.collect_until_one_of_characters(
-                source_text, new_index, angle_link_breaks
+                source_text, new_index, LinkHelper.__angle_link_destination_breaks
             )
             collected_destination = collected_destination + ert_new
-            if ParserHelper.is_character_at_index(source_text, new_index, "\\"):
+            if ParserHelper.is_character_at_index(
+                source_text, new_index, InlineHelper.backslash_character
+            ):
                 old_new_index = new_index
                 inline_request = InlineRequest(source_text, new_index)
                 inline_response = InlineHelper.handle_inline_backslash(inline_request)
@@ -139,7 +178,9 @@ class LinkHelper:
                 )
                 keep_collecting = True
 
-        if ParserHelper.is_character_at_index(source_text, new_index, ">"):
+        if ParserHelper.is_character_at_index(
+            source_text, new_index, LinkHelper.__angle_link_end
+        ):
             new_index += 1
         else:
             new_index = -1
@@ -171,7 +212,9 @@ class LinkHelper:
             )
             collected_destination = collected_destination + before_part
             print(">>>>>>" + source_text[new_index:] + "<<<<<")
-            if ParserHelper.is_character_at_index(source_text, new_index, "\\"):
+            if ParserHelper.is_character_at_index(
+                source_text, new_index, InlineHelper.backslash_character
+            ):
                 print("backslash")
                 old_new_index = new_index
                 inline_request = InlineRequest(source_text, new_index)
@@ -181,16 +224,20 @@ class LinkHelper:
                     collected_destination + source_text[old_new_index:new_index]
                 )
                 keep_collecting = True
-            elif ParserHelper.is_character_at_index(source_text, new_index, "("):
+            elif ParserHelper.is_character_at_index(
+                source_text, new_index, LinkHelper.__non_angle_link_nest
+            ):
                 print("+1")
                 nesting_level += 1
-                collected_destination += "("
+                collected_destination += LinkHelper.__non_angle_link_nest
                 new_index += 1
                 keep_collecting = True
-            elif ParserHelper.is_character_at_index(source_text, new_index, ")"):
+            elif ParserHelper.is_character_at_index(
+                source_text, new_index, LinkHelper.__non_angle_link_unnest
+            ):
                 print("-1")
                 if nesting_level != 0:
-                    collected_destination += ")"
+                    collected_destination += LinkHelper.__non_angle_link_unnest
                     new_index += 1
                     nesting_level -= 1
                     keep_collecting = True
@@ -207,7 +254,9 @@ class LinkHelper:
         """
 
         print("parse_link_destination>>new_index>>" + source_text[new_index:] + ">>")
-        if ParserHelper.is_character_at_index(source_text, new_index, "<"):
+        if ParserHelper.is_character_at_index(
+            source_text, new_index, LinkHelper.__angle_link_start
+        ):
             print(
                 ">parse_angle_link_destination>new_index>"
                 + str(new_index)
@@ -257,7 +306,7 @@ class LinkHelper:
             ex_link = InlineHelper.handle_backslashes(ex_link)
         print("urllib.parse.quote>>ex_link>>" + str(ex_link) + ">>")
 
-        ex_link = urllib.parse.quote(ex_link, safe="/#:?=()%*")
+        ex_link = urllib.parse.quote(ex_link, safe=LinkHelper.__link_safe_characters)
         print(
             "parse_link_destination>>new_index>>"
             + str(new_index)
@@ -275,17 +324,26 @@ class LinkHelper:
 
         print("parse_link_title>>new_index>>" + source_text[new_index:] + ">>")
         ex_title = ""
-        if ParserHelper.is_character_at_index(source_text, new_index, "'"):
+        if ParserHelper.is_character_at_index(
+            source_text, new_index, LinkHelper.__link_title_single
+        ):
             new_index, ex_title = InlineHelper.extract_bounded_string(
-                source_text, new_index + 1, "'", None
+                source_text, new_index + 1, LinkHelper.__link_title_single, None
             )
-        elif ParserHelper.is_character_at_index(source_text, new_index, '"'):
+        elif ParserHelper.is_character_at_index(
+            source_text, new_index, LinkHelper.__link_title_double
+        ):
             new_index, ex_title = InlineHelper.extract_bounded_string(
-                source_text, new_index + 1, '"', None
+                source_text, new_index + 1, LinkHelper.__link_title_double, None
             )
-        elif ParserHelper.is_character_at_index(source_text, new_index, "("):
+        elif ParserHelper.is_character_at_index(
+            source_text, new_index, LinkHelper.__link_title_parenthesis_open
+        ):
             new_index, ex_title = InlineHelper.extract_bounded_string(
-                source_text, new_index + 1, ")", "("
+                source_text,
+                new_index + 1,
+                LinkHelper.__link_title_parenthesis_close,
+                LinkHelper.__link_title_parenthesis_open,
             )
         else:
             new_index = -1
@@ -348,7 +406,9 @@ class LinkHelper:
             + source_text[new_index:]
             + ">"
         )
-        if not ParserHelper.is_character_at_index(source_text, new_index, ")"):
+        if not ParserHelper.is_character_at_index(
+            source_text, new_index, LinkHelper.__link_format_inline_end
+        ):
             inline_link, new_index = LinkHelper.__parse_link_destination(
                 source_text, new_index
             )
@@ -358,7 +418,9 @@ class LinkHelper:
                     source_text, new_index
                 )
                 print("after ws>>" + source_text[new_index:] + ">")
-                if ParserHelper.is_character_at_index_not(source_text, new_index, ")"):
+                if ParserHelper.is_character_at_index_not(
+                    source_text, new_index, LinkHelper.__link_format_inline_end
+                ):
                     inline_title, new_index = LinkHelper.__parse_link_title(
                         source_text, new_index
                     )
@@ -376,7 +438,9 @@ class LinkHelper:
             + ">"
         )
         if new_index != -1:
-            if ParserHelper.is_character_at_index(source_text, new_index, ")"):
+            if ParserHelper.is_character_at_index(
+                source_text, new_index, LinkHelper.__link_format_inline_end
+            ):
                 new_index += 1
             else:
                 new_index = -1
@@ -502,7 +566,7 @@ class LinkHelper:
         token_to_append = None
         if update_index != -1:
             print("<<<<<<<start_text<<<<<<<" + str(start_text) + "<<")
-            if start_text == "[":
+            if start_text == LinkHelper.__link_start_sequence:
                 inline_blocks[ind] = LinkStartMarkdownToken(
                     link_uri=inline_link, link_title=inline_title
                 )
@@ -510,7 +574,7 @@ class LinkHelper:
                     MarkdownToken.token_inline_link, "", ""
                 )
             else:
-
+                assert start_text == LinkHelper.image_start_sequence
                 consume_rest_of_line = True
                 image_alt_text = LinkHelper.__consume_text_for_image_alt_text(
                     inline_blocks, ind, remaining_line
@@ -551,17 +615,23 @@ class LinkHelper:
         inline_title = ""
         update_index = -1
         tried_full_reference_form = False
-        if ParserHelper.is_character_at_index(source_text, new_index, "("):
+        if ParserHelper.is_character_at_index(
+            source_text, new_index, LinkHelper.__link_format_inline_start
+        ):
             print("inline reference?")
             (
                 inline_link,
                 inline_title,
                 update_index,
             ) = LinkHelper.__process_inline_link_body(source_text, new_index + 1)
-        elif ParserHelper.is_character_at_index(source_text, new_index, "["):
+        elif ParserHelper.is_character_at_index(
+            source_text, new_index, LinkHelper.__link_format_reference_start
+        ):
             print("collapsed reference?")
             after_open_index = new_index + 1
-            if ParserHelper.is_character_at_index(source_text, after_open_index, "]"):
+            if ParserHelper.is_character_at_index(
+                source_text, after_open_index, LinkHelper.__link_format_reference_end
+            ):
                 print("collapsed reference")
                 print(">>" + text_from_blocks + ">>")
                 update_index, inline_link, inline_title = LinkHelper.__look_up_link(
@@ -624,7 +694,10 @@ class LinkHelper:
                     + ">>"
                     + inline_blocks[search_index].show_process_emphasis()
                 )
-                if inline_blocks[search_index].token_text in ["[", "!["]:
+                if (
+                    inline_blocks[search_index].token_text
+                    in LinkHelper.__valid_link_starts
+                ):
                     valid_special_start_text = inline_blocks[search_index].token_text
                     if inline_blocks[search_index].active:
                         print(">>>>>>" + str(inline_blocks))
@@ -677,11 +750,14 @@ class LinkHelper:
             )
             print("resolve_inline_emphasis>>" + str(inline_blocks) + "\n")
 
-            if valid_special_start_text == "[":
+            if valid_special_start_text == LinkHelper.__link_start_sequence:
                 for deactivate_token in inline_blocks:
                     if isinstance(deactivate_token, SpecialTextMarkdownToken):
                         print("inline_blocks>>>>>>>>>>>>>>>>>>" + str(deactivate_token))
-                        if deactivate_token.token_text == "[":
+                        if (
+                            deactivate_token.token_text
+                            == LinkHelper.__link_start_sequence
+                        ):
                             deactivate_token.active = False
             return updated_index, True, token_to_append, consume_rest_of_line
         is_active = False
