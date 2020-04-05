@@ -1302,9 +1302,11 @@ def test_list_items_306():
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
-
 # TODO go through each use of extract_whitespace and validate whether it should
 #    be e_space or e_whitespace
+# TODO scan GFM and ensure Unicode whitespace uses actual unicode whitespace, not just whitespace
+# TODO look for cases where " " is used, and convert to whitespace helper
+
 # TODO '* foo\n  * bar\n+ baz'
 # TODO '- a\n - b\n  - c\n- d'
 # TODO block quotes that start and stop i.e. > then >> then > then >>>, etc
@@ -1344,7 +1346,7 @@ def test_list_items_306():
 # >>stack_count>>1>>#8:[BLANK:]
 # >>stack_count>>0>>#9:[end-ulist]
 # - should be end and then blank, as the blank is outside of the list
-# TODO scan GFM and ensure Unicode whitespace uses actual unicode whitespace, not just whitespace
+
 # TODO inline link ( without any extra info
 # TODO why does GFM not specify that between [ and ] for a lrd, no blanks are allowed?
 # -- maybe expound on 166 a bit?
@@ -1361,8 +1363,6 @@ def test_list_items_306():
 # TODO token for LRDs, even though consumed?
 # TODO specific types of links for the 3 types?
 # TODO more testing to determine what inlines are stripped within image links i.e. code spans?
-# TODO Check with checkmark.js as to how they encode and emulate instead of using python library
-#      per urllib.parse.quote
 # TODO complete list of unicode punctuation characters
 # TODO reduce html_helper functions?
 # TODO modify parse_blocks_pass to consume lines as it goes, instead of requiring entire string in memory

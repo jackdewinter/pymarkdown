@@ -23,7 +23,9 @@ class LinkHelper:
     """
 
     __link_definitions = {}
-    __link_safe_characters = "/#:?=()%*"
+    __link_safe_characters = "/#:?=()*!$'+,;@"
+
+    __special_link_destination_characters = "%&"
 
     __non_angle_link_nest = "("
     __non_angle_link_unnest = ")"
@@ -306,7 +308,7 @@ class LinkHelper:
             ex_link = InlineHelper.handle_backslashes(ex_link)
         print("urllib.parse.quote>>ex_link>>" + str(ex_link) + ">>")
 
-        ex_link = urllib.parse.quote(ex_link, safe=LinkHelper.__link_safe_characters)
+        ex_link = LinkHelper.__encode_link_destination(ex_link)
         print(
             "parse_link_destination>>new_index>>"
             + str(new_index)
@@ -784,3 +786,31 @@ class LinkHelper:
         else:
             LinkHelper.__link_definitions[link_name] = link_value
             print(">>added def>>" + str(link_name) + "-->" + str(link_value))
+
+    @staticmethod
+    def __encode_link_destination(link_to_encode):
+
+        encoded_link = ""
+        percent_index, before_data = ParserHelper.collect_until_one_of_characters(link_to_encode, 0, LinkHelper.__special_link_destination_characters)
+        encoded_link += urllib.parse.quote(before_data, safe=LinkHelper.__link_safe_characters)
+        while percent_index < len(link_to_encode):
+            special_character = link_to_encode[percent_index]
+            percent_index += 1
+            if special_character == "%":
+                hex_guess_characters = link_to_encode[percent_index:percent_index+2]
+                if len(hex_guess_characters) == 2:
+                    try:
+                        int(hex_guess_characters, 16)
+                        encoded_link += "%" + hex_guess_characters
+                        percent_index += 2
+                    except ValueError:
+                        encoded_link += "%25"
+                else:
+                    encoded_link += "%25"
+            else:
+                assert special_character == "&"
+                encoded_link += "&amp;"
+
+            percent_index, before_data = ParserHelper.collect_until_one_of_characters(link_to_encode, percent_index, LinkHelper.__special_link_destination_characters)
+            encoded_link += urllib.parse.quote(before_data, safe=LinkHelper.__link_safe_characters)
+        return encoded_link
