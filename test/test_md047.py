@@ -2,8 +2,10 @@
 Module to provide tests related to the MD047 rule.
 """
 from test.markdown_scanner import MarkdownScanner
+import pytest
 
 
+@pytest.mark.rules
 def test_md0047_all_samples():
     """
     Test to make sure we get the expect behavior after scanning the files in the
@@ -31,6 +33,7 @@ def test_md0047_all_samples():
     )
 
 
+@pytest.mark.rules
 def test_md0047_good_sample():
     """
     Test to make sure we get the expect behavior after scanning a good file from the
