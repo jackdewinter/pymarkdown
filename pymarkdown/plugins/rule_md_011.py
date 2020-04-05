@@ -4,7 +4,7 @@ Module to implement a plugin that looks for hard tabs in the files.
 from plugin_manager import Plugin, PluginDetails
 
 
-class RuleMd010(Plugin):
+class RuleMd011(Plugin):
     """
     Class to implement a plugin that looks for hard tabs in the files.
     """
@@ -14,13 +14,12 @@ class RuleMd010(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # whitespace, hard_tab
-            plugin_name="no-hard-tabs",
-            plugin_id="MD010",
+            # links
+            plugin_name="no-reversed-links",
+            plugin_id="MD011",
             plugin_enabled_by_default=True,
-            plugin_description="Hard tabs",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md010---hard-tabs
-        # Parameters: code_blocks (boolean; default true)
+            plugin_description="Reversed link syntax",
+        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md011---reversed-link-syntax
 
     def starting_new_file(self):
         """

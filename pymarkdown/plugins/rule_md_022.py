@@ -4,7 +4,7 @@ Module to implement a plugin that looks for hard tabs in the files.
 from plugin_manager import Plugin, PluginDetails
 
 
-class RuleMd010(Plugin):
+class RuleMd022(Plugin):
     """
     Class to implement a plugin that looks for hard tabs in the files.
     """
@@ -14,13 +14,13 @@ class RuleMd010(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # whitespace, hard_tab
-            plugin_name="no-hard-tabs",
-            plugin_id="MD010",
+            # headings, headers, blank_lines
+            plugin_name="blanks-around-headings,blanks-around-headers",
+            plugin_id="MD022",
             plugin_enabled_by_default=True,
-            plugin_description="Hard tabs",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md010---hard-tabs
-        # Parameters: code_blocks (boolean; default true)
+            plugin_description="Headings should be surrounded by blank lines",
+        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md022---headings-should-be-surrounded-by-blank-lines
+        # Parameters: lines_above, lines_below (number; default 1)
 
     def starting_new_file(self):
         """

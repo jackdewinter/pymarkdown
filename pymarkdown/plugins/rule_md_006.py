@@ -4,7 +4,7 @@ Module to implement a plugin that looks for hard tabs in the files.
 from plugin_manager import Plugin, PluginDetails
 
 
-class RuleMd010(Plugin):
+class RuleMd006(Plugin):
     """
     Class to implement a plugin that looks for hard tabs in the files.
     """
@@ -14,13 +14,12 @@ class RuleMd010(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # whitespace, hard_tab
-            plugin_name="no-hard-tabs",
-            plugin_id="MD010",
-            plugin_enabled_by_default=True,
-            plugin_description="Hard tabs",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md010---hard-tabs
-        # Parameters: code_blocks (boolean; default true)
+            # bullet, ul, indentation
+            plugin_name="ul-start-left",
+            plugin_id="MD006",
+            plugin_enabled_by_default=False,
+            plugin_description="Consider starting bulleted lists at the beginning of the line",
+        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md006---consider-starting-bulleted-lists-at-the-beginning-of-the-line
 
     def starting_new_file(self):
         """
