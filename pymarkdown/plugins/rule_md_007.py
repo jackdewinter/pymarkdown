@@ -19,7 +19,7 @@ class RuleMd007(Plugin):
             plugin_id="MD007",
             plugin_enabled_by_default=True,
             plugin_description="Unordered list indentation",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md007---unordered-list-indentation
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md007---unordered-list-indentation
 
     def starting_new_file(self):
         """

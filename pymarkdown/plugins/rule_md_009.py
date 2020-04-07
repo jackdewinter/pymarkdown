@@ -19,7 +19,7 @@ class RuleMd009(Plugin):
             plugin_id="MD009",
             plugin_enabled_by_default=True,
             plugin_description="Trailing spaces",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md007---unordered-list-indentation
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md007---unordered-list-indentation
         # Parameters: br_spaces, list_item_empty_lines, strict (number; default 2, boolean; default false, boolean; default false)
 
     def starting_new_file(self):

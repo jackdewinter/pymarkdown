@@ -19,7 +19,7 @@ class RuleMd019(Plugin):
             plugin_id="MD019",
             plugin_enabled_by_default=True,
             plugin_description="Multiple spaces after hash on atx style heading",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md019---multiple-spaces-after-hash-on-atx-style-heading
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md019---multiple-spaces-after-hash-on-atx-style-heading
 
     def starting_new_file(self):
         """

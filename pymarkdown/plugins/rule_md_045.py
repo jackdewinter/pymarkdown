@@ -19,7 +19,7 @@ class RuleMd045(Plugin):
             plugin_id="MD045",
             plugin_enabled_by_default=True,
             plugin_description="Images should have alternate text (alt text)",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md045---images-should-have-alternate-text-alt-text
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md045---images-should-have-alternate-text-alt-text
 
     def starting_new_file(self):
         """

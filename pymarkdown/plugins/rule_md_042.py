@@ -19,7 +19,7 @@ class RuleMd042(Plugin):
             plugin_id="MD042",
             plugin_enabled_by_default=True,
             plugin_description="No empty links",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md042---no-empty-links
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md042---no-empty-links
 
     def starting_new_file(self):
         """

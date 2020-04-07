@@ -19,7 +19,7 @@ class RuleMd046(Plugin):
             plugin_id="MD046",
             plugin_enabled_by_default=True,
             plugin_description="Code block style",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md045---images-should-have-alternate-text-alt-text
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md045---images-should-have-alternate-text-alt-text
         # Parameters: style ("consistent", "fenced", "indented"; default "consistent")
 
     def starting_new_file(self):

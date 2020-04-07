@@ -19,7 +19,7 @@ class RuleMd029(Plugin):
             plugin_id="MD029",
             plugin_enabled_by_default=True,
             plugin_description="Ordered list item prefix",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md029---ordered-list-item-prefix
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md029---ordered-list-item-prefix
         # Parameters: style ("one", "ordered", "one_or_ordered", "zero"; default "one_or_ordered")
 
     def starting_new_file(self):

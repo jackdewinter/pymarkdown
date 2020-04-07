@@ -19,7 +19,7 @@ class RuleMd002(Plugin):
             plugin_id="MD002",
             plugin_enabled_by_default=False,
             plugin_description="First heading should be a top level heading",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md002---first-heading-should-be-a-top-level-heading
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md002---first-heading-should-be-a-top-level-heading
         # Parameters: level (number; default 1)
 
     def starting_new_file(self):

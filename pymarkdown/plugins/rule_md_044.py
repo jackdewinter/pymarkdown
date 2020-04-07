@@ -19,7 +19,7 @@ class RuleMd044(Plugin):
             plugin_id="MD044",
             plugin_enabled_by_default=True,
             plugin_description="Proper names should have the correct capitalization",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md044---proper-names-should-have-the-correct-capitalization
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md044---proper-names-should-have-the-correct-capitalization
         # Parameters: names, code_blocks (string array; default null, boolean; default true)
 
     def starting_new_file(self):

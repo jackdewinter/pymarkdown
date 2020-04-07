@@ -19,7 +19,7 @@ class RuleMd006(Plugin):
             plugin_id="MD006",
             plugin_enabled_by_default=False,
             plugin_description="Consider starting bulleted lists at the beginning of the line",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md006---consider-starting-bulleted-lists-at-the-beginning-of-the-line
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md006---consider-starting-bulleted-lists-at-the-beginning-of-the-line
 
     def starting_new_file(self):
         """

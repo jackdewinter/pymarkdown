@@ -19,7 +19,7 @@ class RuleMd037(Plugin):
             plugin_id="MD037",
             plugin_enabled_by_default=True,
             plugin_description="Spaces inside emphasis markers",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md037---spaces-inside-emphasis-markers
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md037---spaces-inside-emphasis-markers
 
     def starting_new_file(self):
         """

@@ -19,7 +19,7 @@ class RuleMd010(Plugin):
             plugin_id="MD010",
             plugin_enabled_by_default=True,
             plugin_description="Hard tabs",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md010---hard-tabs
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md010---hard-tabs
         # Parameters: code_blocks (boolean; default true)
 
     def starting_new_file(self):

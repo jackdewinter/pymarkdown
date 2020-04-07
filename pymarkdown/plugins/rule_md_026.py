@@ -19,7 +19,7 @@ class RuleMd026(Plugin):
             plugin_id="MD026",
             plugin_enabled_by_default=True,
             plugin_description="Trailing punctuation in heading",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md026---trailing-punctuation-in-heading
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md026---trailing-punctuation-in-heading
         # Parameters: punctuation (string; default ".,;:!?。，；：！？")
 
     def starting_new_file(self):

@@ -19,7 +19,7 @@ class RuleMd039(Plugin):
             plugin_id="MD039",
             plugin_enabled_by_default=True,
             plugin_description="Spaces inside link text",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md039---spaces-inside-link-text
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md039---spaces-inside-link-text
 
     def starting_new_file(self):
         """

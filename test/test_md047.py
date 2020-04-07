@@ -2,6 +2,7 @@
 Module to provide tests related to the MD047 rule.
 """
 from test.markdown_scanner import MarkdownScanner
+
 import pytest
 
 

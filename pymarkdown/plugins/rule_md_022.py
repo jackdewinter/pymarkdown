@@ -19,7 +19,7 @@ class RuleMd022(Plugin):
             plugin_id="MD022",
             plugin_enabled_by_default=True,
             plugin_description="Headings should be surrounded by blank lines",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md022---headings-should-be-surrounded-by-blank-lines
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md022---headings-should-be-surrounded-by-blank-lines
         # Parameters: lines_above, lines_below (number; default 1)
 
     def starting_new_file(self):

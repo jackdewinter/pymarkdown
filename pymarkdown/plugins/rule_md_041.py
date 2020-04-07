@@ -19,7 +19,7 @@ class RuleMd041(Plugin):
             plugin_id="MD041",
             plugin_enabled_by_default=True,
             plugin_description="First line in file should be a top level heading",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md041---first-line-in-file-should-be-a-top-level-heading
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md041---first-line-in-file-should-be-a-top-level-heading
 
     def starting_new_file(self):
         """

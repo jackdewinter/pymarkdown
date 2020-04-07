@@ -1302,6 +1302,7 @@ def test_list_items_306():
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
+
 # TODO go through each use of extract_whitespace and validate whether it should
 #    be e_space or e_whitespace
 # TODO scan GFM and ensure Unicode whitespace uses actual unicode whitespace, not just whitespace
@@ -1366,4 +1367,10 @@ def test_list_items_306():
 # TODO complete list of unicode punctuation characters
 # TODO reduce html_helper functions?
 # TODO modify parse_blocks_pass to consume lines as it goes, instead of requiring entire string in memory
-# TODO rewrite transform to allow it to comsume as it goes
+# TODO rewrite transform to allow it to consume a Markdown file as it goes
+
+# TODO document current restrictions:
+# - nested block quotes and nested lists are okay, but not together
+# - currently do not pass one test with a link inside of an image link
+# - multi-line link reference definitions within a list of block quote not adequately tested
+# - no install/setup support currently

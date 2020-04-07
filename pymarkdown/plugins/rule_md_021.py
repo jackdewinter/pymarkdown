@@ -19,7 +19,7 @@ class RuleMd021(Plugin):
             plugin_id="MD021",
             plugin_enabled_by_default=True,
             plugin_description="Multiple spaces inside hashes on closed atx style heading",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md021---multiple-spaces-inside-hashes-on-closed-atx-style-heading
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md021---multiple-spaces-inside-hashes-on-closed-atx-style-heading
 
     def starting_new_file(self):
         """

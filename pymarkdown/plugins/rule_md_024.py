@@ -19,7 +19,7 @@ class RuleMd024(Plugin):
             plugin_id="MD024",
             plugin_enabled_by_default=True,
             plugin_description="Multiple headings with the same content",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md024---multiple-headings-with-the-same-content
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md024---multiple-headings-with-the-same-content
         # Parameters: siblings_only, allow_different_nesting (boolean; default false)
 
     def starting_new_file(self):

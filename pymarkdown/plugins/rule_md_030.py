@@ -19,7 +19,7 @@ class RuleMd030(Plugin):
             plugin_id="MD030",
             plugin_enabled_by_default=True,
             plugin_description="Spaces after list markers",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md030---spaces-after-list-markers
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md030---spaces-after-list-markers
         # Parameters: ul_single, ol_single, ul_multi, ol_multi (number; default 1)
 
     def starting_new_file(self):

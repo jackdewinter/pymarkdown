@@ -67,7 +67,7 @@ def test_extra_003():
     source_markdown = "[link](!\"#$%&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~)"
     expected_tokens = [
         "[para:]",
-        "[link:!%22#$%25&amp;\'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~:]",
+        "[link:!%22#$%25&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~:]",
         "[text:link:]",
         "[end-link::]",
         "[end-para]",
@@ -81,6 +81,7 @@ def test_extra_003():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+
 
 @pytest.mark.gfm
 def test_extra_004():
@@ -96,10 +97,12 @@ def test_extra_004():
     # Arrange
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
-    source_markdown = "[link](!\"#$%12&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~)"
+    source_markdown = (
+        "[link](!\"#$%12&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~)"
+    )
     expected_tokens = [
         "[para:]",
-        "[link:!%22#$%12&amp;\'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~:]",
+        "[link:!%22#$%12&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~:]",
         "[text:link:]",
         "[end-link::]",
         "[end-para]",
@@ -113,6 +116,7 @@ def test_extra_004():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+
 
 @pytest.mark.gfm
 def test_extra_005():

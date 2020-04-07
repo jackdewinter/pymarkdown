@@ -19,7 +19,7 @@ class RuleMd012(Plugin):
             plugin_id="MD012",
             plugin_enabled_by_default=True,
             plugin_description="Multiple consecutive blank lines",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md012---multiple-consecutive-blank-lines
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md012---multiple-consecutive-blank-lines
         # Parameters: maximum (number; default 1)
 
     def starting_new_file(self):

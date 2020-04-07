@@ -791,13 +791,17 @@ class LinkHelper:
     def __encode_link_destination(link_to_encode):
 
         encoded_link = ""
-        percent_index, before_data = ParserHelper.collect_until_one_of_characters(link_to_encode, 0, LinkHelper.__special_link_destination_characters)
-        encoded_link += urllib.parse.quote(before_data, safe=LinkHelper.__link_safe_characters)
+        percent_index, before_data = ParserHelper.collect_until_one_of_characters(
+            link_to_encode, 0, LinkHelper.__special_link_destination_characters
+        )
+        encoded_link += urllib.parse.quote(
+            before_data, safe=LinkHelper.__link_safe_characters
+        )
         while percent_index < len(link_to_encode):
             special_character = link_to_encode[percent_index]
             percent_index += 1
             if special_character == "%":
-                hex_guess_characters = link_to_encode[percent_index:percent_index+2]
+                hex_guess_characters = link_to_encode[percent_index : percent_index + 2]
                 if len(hex_guess_characters) == 2:
                     try:
                         int(hex_guess_characters, 16)
@@ -811,6 +815,12 @@ class LinkHelper:
                 assert special_character == "&"
                 encoded_link += "&amp;"
 
-            percent_index, before_data = ParserHelper.collect_until_one_of_characters(link_to_encode, percent_index, LinkHelper.__special_link_destination_characters)
-            encoded_link += urllib.parse.quote(before_data, safe=LinkHelper.__link_safe_characters)
+            percent_index, before_data = ParserHelper.collect_until_one_of_characters(
+                link_to_encode,
+                percent_index,
+                LinkHelper.__special_link_destination_characters,
+            )
+            encoded_link += urllib.parse.quote(
+                before_data, safe=LinkHelper.__link_safe_characters
+            )
         return encoded_link

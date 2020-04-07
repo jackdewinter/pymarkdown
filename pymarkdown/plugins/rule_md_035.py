@@ -19,7 +19,7 @@ class RuleMd035(Plugin):
             plugin_id="MD035",
             plugin_enabled_by_default=True,
             plugin_description="Horizontal rule style",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md035---horizontal-rule-style
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md035---horizontal-rule-style
         # Parameters: style ("consistent", "---", "***", or other string specifying the horizontal rule; default "consistent")
 
     def starting_new_file(self):

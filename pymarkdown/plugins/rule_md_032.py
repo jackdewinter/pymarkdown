@@ -19,7 +19,7 @@ class RuleMd032(Plugin):
             plugin_id="MD032",
             plugin_enabled_by_default=True,
             plugin_description="Lists should be surrounded by blank lines",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md032---lists-should-be-surrounded-by-blank-lines
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md032---lists-should-be-surrounded-by-blank-lines
 
     def starting_new_file(self):
         """

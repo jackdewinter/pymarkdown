@@ -19,7 +19,7 @@ class RuleMd004(Plugin):
             plugin_id="MD004",
             plugin_enabled_by_default=True,
             plugin_description="Unordered list style",
-        ) # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md004---unordered-list-style
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md004---unordered-list-style
         # Parameters: style ("consistent", "asterisk", "plus", "dash", "sublist"; default "consistent")
 
     def starting_new_file(self):
