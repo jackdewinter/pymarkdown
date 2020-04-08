@@ -11,7 +11,10 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
 
     print("\n---")
     print("expected_tokens: " + str(expected_tokens))
-    print("parsed_tokens  : " + str(actual_tokens).replace("\n", "\\n"))
+    print(
+        "parsed_tokens  : "
+        + str(actual_tokens).replace("\n", "\\n").replace("\t", "\\t")
+    )
     assert len(expected_tokens) == len(actual_tokens), "List lengths are not the same."
     print("---")
 

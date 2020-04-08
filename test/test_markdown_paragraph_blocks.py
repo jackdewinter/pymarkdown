@@ -254,3 +254,35 @@ bbb</p>"""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_paragraph_blocks_196a():
+    """
+    Test case 196a:  Modification of 196, but with tabs instead of space.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """aaa\t\t\t\t\t
+bbb\t\t\t\t\t""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para:\n:\t\t\t\t\t]",
+        "[text:aaa:]",
+        "[hard-break]",
+        "[text:\nbbb::                    \n]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p>aaa<br />
+bbb</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)

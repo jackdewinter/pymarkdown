@@ -1,6 +1,7 @@
 """
 Module to provide for an element that can be added to markdown parsing stream.
 """
+from pymarkdown.constants import Constants
 from pymarkdown.parser_helper import ParserHelper
 
 
@@ -203,6 +204,39 @@ class ParagraphMarkdownToken(MarkdownToken):
         self.compose_extra_data_field()
 
 
+class SetextHeaderMarkdownToken(MarkdownToken):
+    """
+    Class to provide for an encapsulation of the setext header element.
+    """
+
+    def __init__(self, header_character, remaining_line):
+        self.header_character = header_character
+        self.remaining_line = remaining_line
+        self.final_whitespace = ""
+        MarkdownToken.__init__(
+            self, MarkdownToken.token_setext_header, "",
+        )
+        self.compose_extra_data_field()
+
+    def set_final_whitespace(self, whitespace_to_set):
+        """
+        Set the final whitespace for the paragraph. That is any whitespace at the very
+        end of the paragraph, removed to prevent hard lines at the end.
+        """
+
+        self.final_whitespace = whitespace_to_set
+        self.compose_extra_data_field()
+
+    def compose_extra_data_field(self):
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+
+        self.extra_data = self.header_character + ":" + self.remaining_line
+        if self.final_whitespace:
+            self.extra_data = self.extra_data + ":" + self.final_whitespace
+
+
 class IndentedCodeBlockMarkdownToken(MarkdownToken):
     """
     Class to provide for an encapsulation of the indented code block element.
@@ -273,20 +307,6 @@ class AtxHeaderMarkdownToken(MarkdownToken):
     # pylint: enable=too-many-arguments
 
 
-class SetextHeaderMarkdownToken(MarkdownToken):
-    """
-    Class to provide for an encapsulation of the setext header element.
-    """
-
-    def __init__(self, header_character, remaining_line):
-        self.header_character = header_character
-        MarkdownToken.__init__(
-            self,
-            MarkdownToken.token_setext_header,
-            header_character + ":" + remaining_line,
-        )
-
-
 class EndMarkdownToken(MarkdownToken):
     """
     Class to provide for an encapsulation of the end element to a matching start.
@@ -349,7 +369,9 @@ class TextMarkdownToken(MarkdownToken):
         (
             collected_whitespace_length,
             first_non_whitespace_index,
-        ) = ParserHelper.collect_backwards_while_character(self.token_text, -1, " ")
+        ) = ParserHelper.collect_backwards_while_one_of_characters(
+            self.token_text, -1, Constants.whitespace
+        )
         if collected_whitespace_length:
             removed_whitespace = self.token_text[
                 first_non_whitespace_index : first_non_whitespace_index

@@ -95,16 +95,15 @@ def test_setext_headings_052():
 baz*\t
 ===="""
     expected_tokens = [
-        "[setext:=:  ]",
+        "[setext:=:  :\t]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar\nbaz::\n]",
         "[end-emphasis::1]",
-        "[text:    :]",
         "[end-setext::]",
     ]
     expected_gfm = """<h1>Foo <em>bar
-baz</em>    </h1>"""
+baz</em></h1>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -327,8 +326,8 @@ def test_setext_headings_059():
 -----""".replace(
         "\a", " "
     )
-    expected_tokens = ["[setext:-:]", "[text:Foo  :]", "[end-setext::]"]
-    expected_gfm = """<h2>Foo  </h2>"""
+    expected_tokens = ["[setext:-::  ]", "[text:Foo:]", "[end-setext::]"]
+    expected_gfm = """<h2>Foo</h2>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

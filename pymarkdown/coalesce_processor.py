@@ -56,9 +56,9 @@ class CoalesceProcessor:
                 coalesced_list.append(first_pass_results[coalesce_index])
 
         for coalesce_index in range(1, len(coalesced_list)):
-            if (
-                coalesced_list[coalesce_index].is_text
-                and coalesced_list[coalesce_index - 1].is_paragraph
+            if coalesced_list[coalesce_index].is_text and (
+                coalesced_list[coalesce_index - 1].is_paragraph
+                or coalesced_list[coalesce_index - 1].is_setext
             ):
                 print(
                     "full_paragraph_text>" + str(coalesced_list[coalesce_index]) + "<"
