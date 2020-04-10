@@ -35,8 +35,6 @@ class CoalesceProcessor:
                     remove_leading_spaces = 0
                     if coalesced_list[-2].is_indented_code_block:
                         remove_leading_spaces = len(coalesced_list[-2].extra_data)
-                        if remove_leading_spaces > 4:
-                            remove_leading_spaces = 4
                     elif coalesced_list[-2].is_fenced_code_block:
                         remove_leading_spaces = len(
                             coalesced_list[-2].extracted_whitespace

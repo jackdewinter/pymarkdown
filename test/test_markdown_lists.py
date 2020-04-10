@@ -1329,8 +1329,6 @@ def test_list_items_306():
 # TODO - linking text blocks properly if not in paragraph block. DONE?
 # TODO - [BLANK] and folding lines. DONE?
 
-# TODO 006
-# - even with tabs replaced with spaces, not transferring properly after block quote
 # TODO "aaa" should not have 2 spaces in front of it
 # - 098
 # TODO removed spaces inconsistent
@@ -1342,6 +1340,8 @@ def test_list_items_306():
 # >>stack_count>>0>>#9:[end-ulist]
 # - should be end and then blank, as the blank is outside of the list
 
+# TODO check is_length_less_than_or_equal_to to see if any issues with tabs, most
+#   likely in conjunction with starting another type of block
 # TODO inline link ( without any extra info
 # TODO why does GFM not specify that between [ and ] for a lrd, no blanks are allowed?
 # -- maybe expound on 166 a bit?

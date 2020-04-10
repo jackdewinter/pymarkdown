@@ -143,6 +143,7 @@ class BlockQuoteProcessor:
 
         leaf_tokens = []
         container_level_tokens = []
+        removed_chars_at_start = 0
 
         print(
             "__handle_block_quote_section---"
@@ -178,6 +179,7 @@ class BlockQuoteProcessor:
             )
 
             line_to_parse = line_to_parse[start_index:]
+            removed_chars_at_start = start_index
 
             if not line_to_parse.strip():
                 (leaf_tokens, lines_to_requeue, _,) = handle_blank_line_fn(
@@ -201,6 +203,7 @@ class BlockQuoteProcessor:
             container_level_tokens,
             stack_bq_count,
             this_bq_count,
+            removed_chars_at_start,
         )
         # pylint: enable=too-many-arguments
 
@@ -251,6 +254,7 @@ class BlockQuoteProcessor:
         # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-locals
     @staticmethod
     def handle_block_quote_block(
         token_stack,
@@ -272,6 +276,7 @@ class BlockQuoteProcessor:
         end_of_bquote_start_index = -1
         leaf_tokens = []
         container_level_tokens = []
+        removed_chars_at_start = 0
 
         if BlockQuoteProcessor.is_block_quote_start(
             line_to_parse, start_index, extracted_whitespace, adj_ws=adj_ws
@@ -284,6 +289,7 @@ class BlockQuoteProcessor:
                 container_level_tokens,
                 stack_bq_count,
                 alt_this_bq_count,
+                removed_chars_at_start,
             ) = BlockQuoteProcessor.__handle_block_quote_section(
                 token_stack,
                 line_to_parse,
@@ -320,5 +326,8 @@ class BlockQuoteProcessor:
             start_index,
             leaf_tokens,
             container_level_tokens,
+            removed_chars_at_start,
         )
-        # pylint: enable=too-many-arguments
+
+    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-locals

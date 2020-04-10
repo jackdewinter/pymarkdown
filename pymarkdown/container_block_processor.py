@@ -384,6 +384,7 @@ class ContainerBlockProcessor:
             start_index,
             leaf_tokens,
             container_level_tokens,
+            removed_chars_at_start,
         ) = BlockQuoteProcessor.handle_block_quote_block(
             token_stack,
             line_to_parse,
@@ -403,6 +404,7 @@ class ContainerBlockProcessor:
             no_para_start_if_empty,
             line_to_parse,
             resultant_tokens,
+            removed_chars_at_start,
         ) = ListBlockProcessor.handle_ulist_block(
             token_stack,
             token_document,
@@ -415,6 +417,7 @@ class ContainerBlockProcessor:
             adj_ws,
             stack_bq_count,
             this_bq_count,
+            removed_chars_at_start,
             current_container_blocks,
             close_open_blocks_fn,
         )
@@ -427,6 +430,7 @@ class ContainerBlockProcessor:
             no_para_start_if_empty,
             line_to_parse,
             resultant_tokens,
+            removed_chars_at_start,
         ) = ListBlockProcessor.handle_olist_block(
             token_stack,
             token_document,
@@ -439,6 +443,7 @@ class ContainerBlockProcessor:
             adj_ws,
             stack_bq_count,
             this_bq_count,
+            removed_chars_at_start,
             current_container_blocks,
             close_open_blocks_fn,
         )
@@ -464,6 +469,8 @@ class ContainerBlockProcessor:
             close_open_blocks_fn,
             handle_blank_line_fn,
         )
+
+        print("removed_chars_at_start>>>" + str(removed_chars_at_start))
 
         if container_depth:
             assert not leaf_tokens
@@ -501,6 +508,7 @@ class ContainerBlockProcessor:
             token_document,
             line_to_parse,
             this_bq_count,
+            removed_chars_at_start,
             no_para_start_if_empty,
             ignore_link_definition_start,
             close_open_blocks_fn,
@@ -610,6 +618,7 @@ class ContainerBlockProcessor:
         token_document,
         line_to_parse,
         this_bq_count,
+        removed_chars_at_start,
         no_para_start_if_empty,
         ignore_link_definition_start,
         close_open_blocks_fn,
@@ -626,6 +635,7 @@ class ContainerBlockProcessor:
                 line_to_parse,
                 0,
                 this_bq_count,
+                removed_chars_at_start,
                 no_para_start_if_empty,
                 ignore_link_definition_start,
                 close_open_blocks_fn,
@@ -796,6 +806,7 @@ class ContainerBlockProcessor:
     # pylint: enable=too-many-arguments, unused-argument
 
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-locals
     @staticmethod
     def __parse_line_for_leaf_blocks(
         token_stack,
@@ -803,6 +814,7 @@ class ContainerBlockProcessor:
         line_to_parse,
         start_index,
         this_bq_count,
+        removed_chars_at_start,
         no_para_start_if_empty,
         ignore_link_definition_start,
         close_open_blocks_fn,
@@ -866,7 +878,11 @@ class ContainerBlockProcessor:
             )
             if not new_tokens:
                 new_tokens = LeafBlockProcessor.parse_indented_code_block(
-                    token_stack, line_to_parse, start_index, extracted_whitespace
+                    token_stack,
+                    line_to_parse,
+                    start_index,
+                    extracted_whitespace,
+                    removed_chars_at_start,
                 )
             if not new_tokens:
                 stack_bq_count = BlockQuoteProcessor.count_of_block_quotes_on_stack(
@@ -916,6 +932,7 @@ class ContainerBlockProcessor:
         return pre_tokens, requeue_line_info
 
     # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def extract_markdown_tokens_back_to_blank_line(token_document):

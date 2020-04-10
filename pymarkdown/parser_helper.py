@@ -304,12 +304,15 @@ class ParserHelper:
         return ParserHelper.calculate_length(source_string) <= length_limit
 
     @staticmethod
-    def is_length_greater_than_or_equal_to(source_string, length_limit):
+    def is_length_greater_than_or_equal_to(source_string, length_limit, start_index=0):
         """
         Determine if the adjusted length of the string is greater than or equal to the
         specified limit.
         """
-        return ParserHelper.calculate_length(source_string) >= length_limit
+        return (
+            ParserHelper.calculate_length(source_string, start_index=start_index)
+            >= length_limit
+        )
 
     @staticmethod
     def index_any_of(source_text, find_any, start_index=0):

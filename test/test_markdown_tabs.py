@@ -240,7 +240,7 @@ def test_tabs_005():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.gfm
 def test_tabs_006():
     """
@@ -254,7 +254,100 @@ def test_tabs_006():
     expected_tokens = [
         "[block-quote:]",
         "[icode-block:    ]",
-        "[text:foo:]",
+        "[text:foo:  ]",
+        "[end-icode-block]",
+        "[end-block-quote]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code>  foo
+</code></pre>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_tabs_006a():
+    """
+    Test case 006a:  modified version of 006 with spaces leading in instead of tab
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """>   \tfoo"""
+    expected_tokens = [
+        "[block-quote:]",
+        "[icode-block:    ]",
+        "[text:foo:  ]",
+        "[end-icode-block]",
+        "[end-block-quote]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code>  foo
+</code></pre>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_tabs_006b():
+    """
+    Test case 006b:  modified version of 006 with spaces leading in instead of tab
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """>\t    foo"""
+    expected_tokens = [
+        "[block-quote:]",
+        "[icode-block:    ]",
+        "[text:foo:  ]",
+        "[end-icode-block]",
+        "[end-block-quote]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code>  foo
+</code></pre>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_tabs_006c():
+    """
+    Test case 006c:  modified version of 006 with spaces leading in instead of tab
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """>       foo"""
+    expected_tokens = [
+        "[block-quote:]",
+        "[icode-block:    ]",
+        "[text:foo:  ]",
         "[end-icode-block]",
         "[end-block-quote]",
     ]

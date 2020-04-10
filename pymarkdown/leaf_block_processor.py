@@ -160,7 +160,11 @@ class LeafBlockProcessor:
 
     @staticmethod
     def parse_indented_code_block(
-        token_stack, line_to_parse, start_index, extracted_whitespace
+        token_stack,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+        removed_chars_at_start,
     ):
         """
         Handle the parsing of an indented code block
@@ -169,15 +173,19 @@ class LeafBlockProcessor:
         new_tokens = []
 
         if (
-            ParserHelper.is_length_greater_than_or_equal_to(extracted_whitespace, 4)
+            ParserHelper.is_length_greater_than_or_equal_to(
+                extracted_whitespace, 4, start_index=removed_chars_at_start
+            )
             and not token_stack[-1].is_paragraph
         ):
+            modified_whitespace_count = ParserHelper.calculate_length(
+                extracted_whitespace, start_index=removed_chars_at_start
+            )
+
             if not token_stack[-1].is_indented_code_block:
                 token_stack.append(IndentedCodeBlockStackToken())
-                new_tokens.append(IndentedCodeBlockMarkdownToken(extracted_whitespace))
-                extracted_whitespace = "".rjust(
-                    ParserHelper.calculate_length(extracted_whitespace) - 4
-                )
+                new_tokens.append(IndentedCodeBlockMarkdownToken("".rjust(4)))
+                extracted_whitespace = "".rjust(modified_whitespace_count - 4)
             new_tokens.append(
                 TextMarkdownToken(line_to_parse[start_index:], extracted_whitespace)
             )

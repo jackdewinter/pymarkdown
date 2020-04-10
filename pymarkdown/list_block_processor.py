@@ -479,6 +479,7 @@ class ListBlockProcessor:
         adj_ws,
         stack_bq_count,
         this_bq_count,
+        removed_chars_at_start,
         current_container_blocks,
         close_open_blocks_fn,
     ):
@@ -498,6 +499,7 @@ class ListBlockProcessor:
             )
             if started_ulist:
                 print("clt>>ulist-start")
+                removed_chars_at_start = 0
 
                 (
                     indent_level,
@@ -564,6 +566,7 @@ class ListBlockProcessor:
             no_para_start_if_empty,
             line_to_parse,
             container_level_tokens,
+            removed_chars_at_start,
         )
         # pylint: enable=too-many-locals, too-many-arguments
 
@@ -581,6 +584,7 @@ class ListBlockProcessor:
         adj_ws,
         stack_bq_count,
         this_bq_count,
+        removed_chars_at_start,
         current_container_blocks,
         close_open_blocks_fn,
     ):
@@ -606,6 +610,7 @@ class ListBlockProcessor:
             if started_olist:
                 assert not container_level_tokens
                 print("clt>>olist-start")
+                removed_chars_at_start = 0
 
                 (
                     indent_level,
@@ -675,6 +680,7 @@ class ListBlockProcessor:
             no_para_start_if_empty,
             line_to_parse,
             container_level_tokens,
+            removed_chars_at_start,
         )
         # pylint: enable=too-many-arguments
 
