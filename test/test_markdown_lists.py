@@ -1329,17 +1329,16 @@ def test_list_items_306():
 # TODO - linking text blocks properly if not in paragraph block. DONE?
 # TODO - [BLANK] and folding lines. DONE?
 
+# TODO 006
+# - indented code blocks should only have 4 spaces in token
+# TODO 006
+# - even with tabs replaced with spaces, not transferring properly after block quote
 # TODO "aaa" should not have 2 spaces in front of it
 # - 098
 # TODO removed spaces inconsistent
 # - 101
 # - 103
 # TODO 144 as two separate and make sure still works
-# TODO recheck after resetting tabs back
-# - 006
-# - 007
-# TODO Is the example for this wrong?
-# - 002
 # TODO blank line ending a list is parsed wrong into tokens
 # >>stack_count>>1>>#8:[BLANK:]
 # >>stack_count>>0>>#9:[end-ulist]

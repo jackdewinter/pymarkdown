@@ -178,8 +178,19 @@ class ListBlockProcessor:
             after_marker_ws_index,
             after_marker_whitespace,
         ) = ParserHelper.extract_whitespace(line_to_parse, start_index + 1)
-        ws_after_marker = ParserHelper.calculate_length(after_marker_whitespace)
+        ws_after_marker = ParserHelper.calculate_length(
+            after_marker_whitespace, start_index=start_index + 1
+        )
         ws_before_marker = ParserHelper.calculate_length(extracted_whitespace)
+
+        print(
+            "--ws_before_marker>>"
+            + str(ws_before_marker)
+            + ">>marker_width>>"
+            + str(marker_width)
+        )
+        print("--" + str(start_index) + "--" + str(start_index + 1))
+        # assert "\t" not in after_marker_whitespace
 
         container_level_tokens, stack_bq_count = ListBlockProcessor.handle_list_nesting(
             token_stack, stack_bq_count, this_bq_count, close_open_blocks_fn
@@ -202,8 +213,6 @@ class ListBlockProcessor:
             print(
                 "ws_after_marker>>"
                 + str(ws_after_marker)
-                + "<<es<<"
-                + str(len(extracted_whitespace))
                 + "<<indent_level<<"
                 + str(indent_level)
                 + "<<rem<<"

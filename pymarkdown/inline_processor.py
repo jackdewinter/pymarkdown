@@ -114,6 +114,7 @@ class InlineProcessor:
                         ),
                     )
                 else:
+                    assert coalesced_list[-1].is_paragraph
                     print(
                         ">>before_add_ws>>"
                         + str(coalesced_list[-1])
@@ -293,7 +294,8 @@ class InlineProcessor:
                     source_text[next_index]
                 ]
                 inline_response = proc_fn(inline_request)
-            else:  # if source_text[next_index] == "\n":
+            else:
+                assert source_text[next_index] == "\n"
                 (
                     inline_response.new_string,
                     whitespace_to_add,

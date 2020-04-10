@@ -24,8 +24,20 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
         expected_str = str(expected_tokens[element_index])
         actual_str = str(actual_tokens[element_index])
 
-        print("expected_tokens(" + str(len(expected_str)) + ")>>" + expected_str + "<<")
-        print("actual_tokens  (" + str(len(actual_str)) + ")>>" + actual_str + "<<")
+        print(
+            "expected_tokens("
+            + str(len(expected_str))
+            + ")>>"
+            + expected_str.replace("\t", "\\t")
+            + "<<"
+        )
+        print(
+            "actual_tokens  ("
+            + str(len(actual_str))
+            + ")>>"
+            + actual_str.replace("\t", "\\t")
+            + "<<"
+        )
 
         diff = difflib.ndiff(expected_str, actual_str)
 

@@ -282,18 +282,18 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
-    def calculate_length(source_string):
+    def calculate_length(source_string, start_index=0):
         """
         Calculate an adjusted length for the string.
         """
 
-        string_length = 0
+        string_length = start_index
         for source_character in source_string:
             if source_character == "\t":
-                string_length += 4
+                string_length = int((string_length + 4) / 4) * 4
             else:
                 string_length += 1
-        return string_length
+        return string_length - start_index
 
     @staticmethod
     def is_length_less_than_or_equal_to(source_string, length_limit):

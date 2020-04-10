@@ -811,7 +811,7 @@ class ContainerBlockProcessor:
         Parse the contents of a line for a leaf block.
         """
 
-        print("Leaf Line:" + line_to_parse + ":")
+        print("Leaf Line:" + line_to_parse.replace("\t", "\\t") + ":")
         new_tokens = []
 
         requeue_line_info = RequeueLineInfo()
