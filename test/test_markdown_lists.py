@@ -1330,8 +1330,6 @@ def test_list_items_306():
 # TODO - [BLANK] and folding lines. DONE?
 
 # TODO 006
-# - indented code blocks should only have 4 spaces in token
-# TODO 006
 # - even with tabs replaced with spaces, not transferring properly after block quote
 # TODO "aaa" should not have 2 spaces in front of it
 # - 098

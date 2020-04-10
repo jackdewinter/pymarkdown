@@ -20,7 +20,7 @@ def test_tabs_001():
     transformer = TransformToGfm()
     source_markdown = """\tfoo\tbaz\t\tbim"""
     expected_tokens = [
-        "[icode-block:\t]",
+        "[icode-block:    ]",
         "[text:foo\tbaz\t\tbim:]",
         "[end-icode-block]",
     ]
@@ -47,7 +47,7 @@ def test_tabs_002():
     transformer = TransformToGfm()
     source_markdown = """  \tfoo\tbaz\t\tbim"""
     expected_tokens = [
-        "[icode-block:  \t]",
+        "[icode-block:    ]",
         "[text:foo\tbaz\t\tbim:]",
         "[end-icode-block]",
     ]
@@ -74,7 +74,7 @@ def test_tabs_002a():
     transformer = TransformToGfm()
     source_markdown = """      foo    baz        bim"""
     expected_tokens = [
-        "[icode-block:      ]",
+        "[icode-block:    ]",
         "[text:foo    baz        bim:  ]",
         "[end-icode-block]",
     ]
@@ -109,7 +109,7 @@ def test_tabs_002b():
         "[text:a simple\n  indented code block:]",
         "[end-icode-block]",
         "[tbreak:-::---]",
-        "[icode-block:      ]",
+        "[icode-block:    ]",
         "[text:a simple\n  indented code block:  ]",
         "[end-icode-block]",
     ]
@@ -218,7 +218,7 @@ def test_tabs_005():
         "[text:foo:]",
         "[end-para]",
         "[BLANK:]",
-        "[icode-block:      ]",
+        "[icode-block:    ]",
         "[text:bar:  ]",
         "[end-icode-block]",
         "[end-ulist]",
@@ -284,7 +284,7 @@ def test_tabs_007():
     source_markdown = """-\t\tfoo"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[icode-block:      ]",
+        "[icode-block:    ]",
         "[text:foo:  ]",
         "[end-icode-block]",
         "[end-ulist]",
@@ -317,7 +317,7 @@ def test_tabs_007a():
     source_markdown = """1)\t\tfoo"""
     expected_tokens = [
         "[olist:):1:3:]",
-        "[icode-block:     ]",
+        "[icode-block:    ]",
         "[text:foo: ]",
         "[end-icode-block]",
         "[end-olist]",
@@ -383,7 +383,7 @@ def test_tabs_007c():
     source_markdown = """001)\t\tfoo"""
     expected_tokens = [
         "[olist:):001:5:]",
-        "[icode-block:       ]",
+        "[icode-block:    ]",
         "[text:foo:   ]",
         "[end-icode-block]",
         "[end-olist]",
