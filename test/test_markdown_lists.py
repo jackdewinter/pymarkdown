@@ -1329,9 +1329,6 @@ def test_list_items_306():
 # TODO - linking text blocks properly if not in paragraph block. DONE?
 # TODO - [BLANK] and folding lines. DONE?
 
-# TODO removed spaces inconsistent
-# - 101
-# - 103
 # TODO 144 as two separate and make sure still works
 # TODO blank line ending a list is parsed wrong into tokens
 # >>stack_count>>1>>#8:[BLANK:]

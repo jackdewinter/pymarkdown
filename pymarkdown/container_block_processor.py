@@ -693,7 +693,10 @@ class ContainerBlockProcessor:
         Take care of the processing for fenced code blocks.
         """
         if not token_stack[-1].was_link_definition_started:
-            fenced_tokens = LeafBlockProcessor.parse_fenced_code_block(
+            (
+                fenced_tokens,
+                extracted_whitespace,
+            ) = LeafBlockProcessor.parse_fenced_code_block(
                 token_stack,
                 line_to_parse,
                 start_index,

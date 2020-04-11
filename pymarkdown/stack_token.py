@@ -164,10 +164,19 @@ class FencedCodeBlockStackToken(StackToken):
     Class to provide for a stack token for a fenced code block.
     """
 
-    def __init__(self, code_fence_character, fence_character_count):
+    def __init__(
+        self, code_fence_character, fence_character_count, whitespace_start_count
+    ):
         self.code_fence_character = code_fence_character
         self.fence_character_count = fence_character_count
-        extra_data = code_fence_character + ":" + str(fence_character_count)
+        self.whitespace_start_count = whitespace_start_count
+        extra_data = (
+            code_fence_character
+            + ":"
+            + str(fence_character_count)
+            + ":"
+            + str(whitespace_start_count)
+        )
         StackToken.__init__(self, StackToken.stack_fenced_code, extra_data)
 
 

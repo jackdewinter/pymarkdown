@@ -79,6 +79,7 @@ class LeafBlockProcessor:
                 )
         return False, None, None, None
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def parse_fenced_code_block(
         token_stack,
@@ -140,6 +141,9 @@ class LeafBlockProcessor:
                         FencedCodeBlockStackToken(
                             code_fence_character=line_to_parse[start_index],
                             fence_character_count=collected_count,
+                            whitespace_start_count=ParserHelper.calculate_length(
+                                extracted_whitespace
+                            ),
                         )
                     )
                     extracted_text = InlineHelper.handle_backslashes(extracted_text)
@@ -156,7 +160,22 @@ class LeafBlockProcessor:
                             extracted_whitespace_before_info_string,
                         )
                     )
-        return new_tokens
+        elif (
+            token_stack[-1].is_fenced_code_block
+            and token_stack[-1].whitespace_start_count
+            and extracted_whitespace
+        ):
+
+            current_whitespace_length = ParserHelper.calculate_length(
+                extracted_whitespace
+            )
+            whitespace_left = max(
+                0, current_whitespace_length - token_stack[-1].whitespace_start_count
+            )
+            extracted_whitespace = "".rjust(whitespace_left, " ")
+        return new_tokens, extracted_whitespace
+
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def parse_indented_code_block(

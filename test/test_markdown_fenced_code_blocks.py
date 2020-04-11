@@ -503,10 +503,10 @@ aaa
 ```"""
     expected_tokens = [
         "[fcode-block:`:3::: :]",
-        "[text:aaa\naaa: ]",
+        "[text:aaa\naaa:]",
         "[end-fcode-block]",
     ]
-    expected_gfm = """<pre><code> aaa
+    expected_gfm = """<pre><code>aaa
 aaa
 </code></pre>"""
 
@@ -515,7 +515,6 @@ aaa
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO removed spaces inconsistent
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
@@ -569,10 +568,10 @@ def test_fenced_code_blocks_103():
    ```"""
     expected_tokens = [
         "[fcode-block:`:3:::   :]",
-        "[text:aaa\n aaa\naaa:   ]",
+        "[text:aaa\n aaa\naaa:]",
         "[end-fcode-block:   ]",
     ]
-    expected_gfm = """<pre><code>   aaa
+    expected_gfm = """<pre><code>aaa
  aaa
 aaa
 </code></pre>"""
@@ -582,7 +581,6 @@ aaa
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO removed spaces inconsistent
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
