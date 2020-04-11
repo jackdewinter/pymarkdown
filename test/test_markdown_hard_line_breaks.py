@@ -355,6 +355,7 @@ def test_hard_line_breaks_665():
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
+
 @pytest.mark.gfm
 def test_hard_line_breaks_665a():
     """
@@ -375,6 +376,7 @@ def test_hard_line_breaks_665a():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+
 
 @pytest.mark.gfm
 def test_hard_line_breaks_666():
