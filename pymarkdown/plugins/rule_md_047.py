@@ -1,7 +1,7 @@
 """
 Module to implement a plugin to ensure all files end with a blank line.
 """
-from plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd047(Plugin):

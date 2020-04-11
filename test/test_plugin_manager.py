@@ -276,8 +276,8 @@ During handling of the above exception, another exception occurred:
 Traceback (most recent call last):
 """,
             """, in next_line
-    raise BadPluginError(next_plugin.plugin_id, inspect.stack()[0][3])
-plugin_manager.BadPluginError: Plugin id 'MDE003' had a critical failure during the 'next_line' action.
+    raise BadPluginError(next_plugin.plugin_id, inspect.stack()[0].function)
+pymarkdown.plugin_manager.BadPluginError: Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 """,
         ],
     )
@@ -378,7 +378,7 @@ During handling of the above exception, another exception occurred:
 Traceback (most recent call last):
 """,
             """    raise BadPluginError(class_name=type(plugin_instance).__name__,)
-plugin_manager.BadPluginError: Plugin class 'BadDetails' had a critical failure loading the plugin details.""",
+pymarkdown.plugin_manager.BadPluginError: Plugin class 'BadDetails' had a critical failure loading the plugin details.""",
         ],
     )
 

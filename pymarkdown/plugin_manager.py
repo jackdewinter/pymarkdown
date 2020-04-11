@@ -89,7 +89,7 @@ class BadPluginError(Exception):
                 "Plugin id '"
                 + plugin_id
                 + "' had a critical failure during the '"
-                + plugin_action
+                + str(plugin_action)
                 + "' action."
             )
         Exception.__init__(self, formatted_message)
@@ -445,7 +445,7 @@ class PluginManager:
             try:
                 next_plugin.plugin_instance.starting_new_file()
             except Exception:
-                raise BadPluginError(next_plugin.plugin_id, inspect.stack()[0][3])
+                raise BadPluginError(next_plugin.plugin_id, inspect.stack()[0].function)
 
         return ScanContext(self, file_being_started)
 
@@ -459,7 +459,7 @@ class PluginManager:
                 next_plugin.plugin_instance.set_context(context)
                 next_plugin.plugin_instance.completed_file()
             except Exception:
-                raise BadPluginError(next_plugin.plugin_id, inspect.stack()[0][3])
+                raise BadPluginError(next_plugin.plugin_id, inspect.stack()[0].function)
 
     def next_line(self, context, line_number, line):
         """
@@ -471,4 +471,4 @@ class PluginManager:
                 next_plugin.plugin_instance.set_context(context)
                 next_plugin.plugin_instance.next_line(line)
             except Exception:
-                raise BadPluginError(next_plugin.plugin_id, inspect.stack()[0][3])
+                raise BadPluginError(next_plugin.plugin_id, inspect.stack()[0].function)

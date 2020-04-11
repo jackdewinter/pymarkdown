@@ -1,7 +1,7 @@
 """
 Module to implement a sample plugin that just reports that it has been called.
 """
-from plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class PluginOne(Plugin):
