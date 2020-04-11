@@ -355,6 +355,26 @@ def test_hard_line_breaks_665():
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
+@pytest.mark.gfm
+def test_hard_line_breaks_665a():
+    """
+    Test case 665a:  variation of 665 with a space before hb character
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """foo \\"""
+    expected_tokens = ["[para:]", "[text:foo \\:]", "[end-para]"]
+    expected_gfm = """<p>foo \\</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
 
 @pytest.mark.gfm
 def test_hard_line_breaks_666():

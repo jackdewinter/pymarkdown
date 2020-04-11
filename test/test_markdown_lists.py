@@ -1323,11 +1323,6 @@ def test_list_items_306():
 # TODO go through any case that uses lazy and do un-lazy example
 # TODO Verify correct parsing
 #       - 118 (html)
-# TODO - foo \, what happens
-
-# DONE?
-# TODO - linking text blocks properly if not in paragraph block. DONE?
-# TODO - [BLANK] and folding lines. DONE?
 
 # TODO 144 as two separate and make sure still works
 # TODO blank line ending a list is parsed wrong into tokens
