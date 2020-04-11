@@ -1320,8 +1320,6 @@ def test_list_items_306():
 # TODO 603 - href? doesn't look right
 
 # TODO go through any case that uses lazy and do un-lazy example
-# TODO Verify correct parsing
-#       - 118 (html)
 
 # TODO 144 as two separate and make sure still works
 # TODO blank line ending a list is parsed wrong into tokens
