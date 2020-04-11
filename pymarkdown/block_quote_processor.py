@@ -38,48 +38,69 @@ class BlockQuoteProcessor:
         return False
 
     @staticmethod
-    def __count_block_quote_starts(line_to_parse, start_index):
+    def __count_block_quote_starts(
+        line_to_parse, start_index, stack_bq_count, is_top_of_stack_fenced_code_block
+    ):
         """
         Having detected a block quote character (">") on a line, continue to consume
         and count while the block quote pattern is there.
         """
 
-        this_bq_count = 1
-        start_index += 1
+        this_bq_count = 0
         adjusted_line = line_to_parse
-
-        while True:
-            if ParserHelper.is_character_at_index_whitespace(
-                adjusted_line, start_index
-            ):
-                if adjusted_line[start_index] == "\t":
-                    adjusted_tab_length = ParserHelper.calculate_length(
-                        "\t", start_index=start_index
-                    )
-                    print("--" + adjusted_line.replace("\t", "\\t") + "--")
-                    adjusted_line = (
-                        adjusted_line[0:start_index]
-                        + "".rjust(adjusted_tab_length)
-                        + adjusted_line[start_index + 1 :]
-                    )
-                    print("--" + adjusted_line.replace("\t", "\\t") + "--")
-                start_index += 1
-            if start_index == len(
-                adjusted_line
-            ) or ParserHelper.is_character_at_index_not(
-                adjusted_line, start_index, BlockQuoteProcessor.__block_quote_character
-            ):
-                break
+        if stack_bq_count == 0 and is_top_of_stack_fenced_code_block:
+            start_index -= 1
+        else:
             this_bq_count += 1
             start_index += 1
 
-        print(
-            "__count_block_quote_starts--"
-            + str(start_index)
-            + "--"
-            + adjusted_line.replace("\t", "\\t")
-            + "--"
-        )
+            print(
+                "stack_bq_count--"
+                + str(stack_bq_count)
+                + "--is_top_of_stack_fenced_code_block--"
+                + str(is_top_of_stack_fenced_code_block)
+            )
+
+            while True:
+                if ParserHelper.is_character_at_index_whitespace(
+                    adjusted_line, start_index
+                ):
+                    if adjusted_line[start_index] == "\t":
+                        adjusted_tab_length = ParserHelper.calculate_length(
+                            "\t", start_index=start_index
+                        )
+                        print("--" + adjusted_line.replace("\t", "\\t") + "--")
+                        adjusted_line = (
+                            adjusted_line[0:start_index]
+                            + "".rjust(adjusted_tab_length)
+                            + adjusted_line[start_index + 1 :]
+                        )
+                        print("--" + adjusted_line.replace("\t", "\\t") + "--")
+                    start_index += 1
+
+                if is_top_of_stack_fenced_code_block and (
+                    this_bq_count >= stack_bq_count
+                ):
+                    break
+
+                if start_index == len(
+                    adjusted_line
+                ) or ParserHelper.is_character_at_index_not(
+                    adjusted_line,
+                    start_index,
+                    BlockQuoteProcessor.__block_quote_character,
+                ):
+                    break
+                this_bq_count += 1
+                start_index += 1
+
+            print(
+                "__count_block_quote_starts--"
+                + str(start_index)
+                + "--"
+                + adjusted_line.replace("\t", "\\t")
+                + "--"
+            )
         return this_bq_count, start_index, adjusted_line
 
     @staticmethod
@@ -140,6 +161,8 @@ class BlockQuoteProcessor:
             + line_to_parse.replace("\t", "\\t")
             + "<<<"
         )
+        print("stack_bq_count--" + str(stack_bq_count))
+        print("token_stack[-1]--" + str(token_stack[-1]))
 
         leaf_tokens = []
         container_level_tokens = []
@@ -156,9 +179,16 @@ class BlockQuoteProcessor:
             this_bq_count,
             start_index,
             line_to_parse,
-        ) = BlockQuoteProcessor.__count_block_quote_starts(line_to_parse, start_index)
+        ) = BlockQuoteProcessor.__count_block_quote_starts(
+            line_to_parse,
+            start_index,
+            stack_bq_count,
+            token_stack[-1].is_fenced_code_block,
+        )
         print(
-            "__handle_block_quote_section---"
+            "__handle_block_quote_section---this_bq_count--"
+            + str(this_bq_count)
+            + "--"
             + str(start_index)
             + "--"
             + line_to_parse.replace("\t", "\\t")
@@ -189,6 +219,7 @@ class BlockQuoteProcessor:
                 assert not lines_to_requeue
         else:
             print("handle_block_quote_section>>fenced")
+            line_to_parse = line_to_parse[start_index:]
 
         print(
             "OUT>__handle_block_quote_section---"

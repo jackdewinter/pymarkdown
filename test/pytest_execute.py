@@ -71,14 +71,18 @@ class InProcessResult:
             if stdout:
                 self.compare_versus_expected("Stdout", self.std_out, stdout)
             else:
-                assert not self.std_out.getvalue(), "Expected stdout to be empty, not: " + self.std_out.getvalue()
+                assert not self.std_out.getvalue(), (
+                    "Expected stdout to be empty, not: " + self.std_out.getvalue()
+                )
 
             if stderr:
                 self.compare_versus_expected(
                     "Stderr", self.std_err, stderr, additional_error
                 )
             else:
-                assert not self.std_err.getvalue(), "Expected stderr to be empty, not: " + self.std_err.getvalue()
+                assert not self.std_err.getvalue(), (
+                    "Expected stderr to be empty, not: " + self.std_err.getvalue()
+                )
 
             assert self.return_code == error_code, (
                 "Actual error code ("

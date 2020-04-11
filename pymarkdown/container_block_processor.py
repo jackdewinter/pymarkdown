@@ -195,7 +195,8 @@ class ContainerBlockProcessor:
                 end_container_indices.block_index != -1
                 and not nested_container_starts.ulist_index
                 and not nested_container_starts.olist_index
-            ):  # and active_container_index == end_container_indices.block_index:
+            ):
+                assert active_container_index == end_container_indices.block_index
                 adj_line_to_parse = adj_line_to_parse[
                     end_container_indices.block_index :
                 ]
@@ -449,26 +450,27 @@ class ContainerBlockProcessor:
         )
         container_level_tokens.extend(resultant_tokens)
 
-        (
-            line_to_parse,
-            leaf_tokens,
-            container_level_tokens,
-            no_para_start_if_empty,
-        ) = ContainerBlockProcessor.__handle_nested_container_blocks(
-            token_stack,
-            token_document,
-            container_depth,
-            this_bq_count,
-            stack_bq_count,
-            no_para_start_if_empty,
-            line_to_parse,
-            end_container_indices,
-            leaf_tokens,
-            container_level_tokens,
-            was_container_start,
-            close_open_blocks_fn,
-            handle_blank_line_fn,
-        )
+        if not token_stack[-1].is_fenced_code_block:
+            (
+                line_to_parse,
+                leaf_tokens,
+                container_level_tokens,
+                no_para_start_if_empty,
+            ) = ContainerBlockProcessor.__handle_nested_container_blocks(
+                token_stack,
+                token_document,
+                container_depth,
+                this_bq_count,
+                stack_bq_count,
+                no_para_start_if_empty,
+                line_to_parse,
+                end_container_indices,
+                leaf_tokens,
+                container_level_tokens,
+                was_container_start,
+                close_open_blocks_fn,
+                handle_blank_line_fn,
+            )
 
         print("removed_chars_at_start>>>" + str(removed_chars_at_start))
 

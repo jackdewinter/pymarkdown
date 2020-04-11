@@ -1329,8 +1329,6 @@ def test_list_items_306():
 # TODO - linking text blocks properly if not in paragraph block. DONE?
 # TODO - [BLANK] and folding lines. DONE?
 
-# TODO "aaa" should not have 2 spaces in front of it
-# - 098
 # TODO removed spaces inconsistent
 # - 101
 # - 103

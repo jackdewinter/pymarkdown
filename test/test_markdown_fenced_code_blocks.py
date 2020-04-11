@@ -9,6 +9,7 @@ from pymarkdown.transform_to_gfm import TransformToGfm
 from .utils import assert_if_lists_different, assert_if_strings_different
 
 
+# pylint: disable=too-many-lines
 @pytest.mark.gfm
 def test_fenced_code_blocks_089():
     """
@@ -290,7 +291,7 @@ bbb"""
     expected_tokens = [
         "[block-quote:]",
         "[fcode-block:`:3::::]",
-        "[text:aaa:  ]",
+        "[text:aaa:]",
         "[end-fcode-block]",
         "[end-block-quote]",
         "[BLANK:]",
@@ -299,7 +300,7 @@ bbb"""
         "[end-para]",
     ]
     expected_gfm = """<blockquote>
-<pre><code>  aaa
+<pre><code>aaa
 </code></pre>
 </blockquote>
 <p>bbb</p>"""
@@ -309,7 +310,125 @@ bbb"""
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO "aaa" should not have 2 spaces in front of it
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_098a():
+    """
+    Test case 098a:  Modified 98 without a space between the block quote indicator and the string.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> ```
+>aaa
+
+bbb"""
+    expected_tokens = [
+        "[block-quote:]",
+        "[fcode-block:`:3::::]",
+        "[text:aaa:]",
+        "[end-fcode-block]",
+        "[end-block-quote]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:bbb:]",
+        "[end-para]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code>aaa
+</code></pre>
+</blockquote>
+<p>bbb</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_098b():
+    """
+    Test case 098b:  Modified 98 with extra ">" before second line.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> ```
+>> aaa
+
+bbb"""
+    expected_tokens = [
+        "[block-quote:]",
+        "[fcode-block:`:3::::]",
+        "[text:&gt; aaa:]",
+        "[end-fcode-block]",
+        "[end-block-quote]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:bbb:]",
+        "[end-para]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code>&gt; aaa
+</code></pre>
+</blockquote>
+<p>bbb</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_098c():
+    """
+    Test case 098c:  Modified 98 with less ">" before second line.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> ```
+aaa
+
+bbb"""
+    expected_tokens = [
+        "[block-quote:]",
+        "[fcode-block:`:3::::]",
+        "[end-fcode-block]",
+        "[end-block-quote]",
+        "[para:]",
+        "[text:aaa:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[para:]",
+        "[text:bbb:]",
+        "[end-para]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code></code></pre>
+</blockquote>
+<p>aaa</p>
+<p>bbb</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 
