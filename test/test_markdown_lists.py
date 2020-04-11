@@ -1316,7 +1316,6 @@ def test_list_items_306():
 # TODO 301, but with extra levels of block quotes
 # TODO 301, with indented code blocks
 # TODO 270 and check for indent levels after
-# TODO 670 - hard/soft line break with code span
 # TODO 620 - more bad cases, like <
 # TODO 603 - href? doesn't look right
 
