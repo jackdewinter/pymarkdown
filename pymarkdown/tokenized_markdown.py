@@ -14,9 +14,11 @@ from pymarkdown.link_helper import LinkHelper
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.markdown_token import BlankLineMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.source_providers import InMemorySourceProvider
 from pymarkdown.stack_token import DocumentStackToken, ParagraphStackToken
 
 
+# pylint: disable=too-few-public-methods
 class TokenizedMarkdown:
     """
     Class to provide a tokenization of a markdown-encoded string.
@@ -29,6 +31,7 @@ class TokenizedMarkdown:
         self.tokenized_document = None
         self.stack = []
         self.resource_path = os.path.join(os.path.split(__file__)[0], "resources")
+        self.source_provider = None
 
     def transform(self, your_text_string):
         """
@@ -37,9 +40,10 @@ class TokenizedMarkdown:
         InlineHelper.initialize(self.resource_path)
         InlineProcessor.initialize()
         LinkHelper.initialize()
+        self.source_provider = InMemorySourceProvider(your_text_string)
 
         print("\n\n>>>>>>>parse_blocks_pass>>>>>>")
-        first_pass_results = self.parse_blocks_pass(your_text_string)
+        first_pass_results = self.__parse_blocks_pass()
 
         print("\n\n>>>>>>>coalesce_text_blocks>>>>>>")
         coalesced_results = CoalesceProcessor.coalesce_text_blocks(first_pass_results)
@@ -50,7 +54,7 @@ class TokenizedMarkdown:
         print("\n\n>>>>>>>final_pass_results>>>>>>")
         return final_pass_results
 
-    def parse_blocks_pass(self, your_text_string):
+    def __parse_blocks_pass(self):
         """
         The first pass at the tokens is to deal with blocks.
         """
@@ -59,8 +63,7 @@ class TokenizedMarkdown:
         self.stack.append(DocumentStackToken())
 
         self.tokenized_document = []
-        next_token = your_text_string.split("\n", 1)
-        token_to_use = next_token
+        token_to_use = self.source_provider.get_next_line()
         did_start_close = False
         did_started_close = False
         requeue = []
@@ -95,14 +98,13 @@ class TokenizedMarkdown:
                     "\n\n\n\n\n\n\n\n\n\n>>lines_to_requeue>>" + str(lines_to_requeue)
                 )
             else:
-                next_line = token_to_use[0]
-                if not next_line or not next_line.strip():
+                if not token_to_use or not token_to_use.strip():
                     print("\n\nblank line")
                     (
                         tokens_from_line,
                         lines_to_requeue,
                         force_ignore_first_as_lrd,
-                    ) = self.__handle_blank_line(next_line, from_main_transform=True)
+                    ) = self.__handle_blank_line(token_to_use, from_main_transform=True)
                 else:
                     print("\n\nnormal lines")
                     (
@@ -114,7 +116,7 @@ class TokenizedMarkdown:
                         self.tokenized_document,
                         self.__close_open_blocks,
                         self.__handle_blank_line,
-                        next_line,
+                        token_to_use,
                         ignore_link_definition_start,
                     )
                     lines_to_requeue = requeue_line_info.lines_to_requeue
@@ -140,18 +142,16 @@ class TokenizedMarkdown:
 
             (
                 token_to_use,
-                next_token,
                 did_start_close,
                 did_started_close,
             ) = self.__determine_next_token_process(
-                requeue, next_token, did_start_close, did_started_close
+                requeue, did_start_close, did_started_close
             )
 
         return self.tokenized_document
 
-    @classmethod
     def __determine_next_token_process(
-        cls, requeue, next_token, did_start_close, did_started_close
+        self, requeue, did_start_close, did_started_close
     ):
         """
         For the parse_blocks_pass function, determine the next token to parse.
@@ -162,21 +162,16 @@ class TokenizedMarkdown:
             print(">>Requeues present")
             token_to_use = requeue[0]
             del requeue[0]
-            token_to_use = (token_to_use, None)
             print(">>Requeue>>" + str(token_to_use))
             print(">>Requeues left>>" + str(requeue))
         elif did_started_close:
             did_start_close = True
         else:
-            if len(next_token) == 2:
-                next_token = next_token[1].split("\n", 1)
-                token_to_use = next_token
-            else:
-                next_token = None
-                token_to_use = None
+            token_to_use = self.source_provider.get_next_line()
+            if token_to_use is None:
                 did_start_close = True
 
-        return token_to_use, next_token, did_start_close, did_started_close
+        return token_to_use, did_start_close, did_started_close
 
     # pylint: disable=too-many-arguments
     def __close_open_blocks(
@@ -363,3 +358,6 @@ class TokenizedMarkdown:
         assert non_whitespace_index == len(input_line)
         new_tokens.append(BlankLineMarkdownToken(extracted_whitespace))
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
+
+
+# pylint: enable=too-few-public-methods

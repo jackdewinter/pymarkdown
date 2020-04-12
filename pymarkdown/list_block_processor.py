@@ -381,13 +381,13 @@ class ListBlockProcessor:
                     + "--last_list_index--"
                     + str(last_list_index)
                 )
-                if did_find:
-                    print(
-                        "ARE-EQUAL>>stack>>"
-                        + str(token_stack[last_list_index])
-                        + ">>new>>"
-                        + str(new_stack)
-                    )
+                assert did_find
+                print(
+                    "ARE-EQUAL>>stack>>"
+                    + str(token_stack[last_list_index])
+                    + ">>new>>"
+                    + str(new_stack)
+                )
                 if (
                     token_stack[last_list_index].type_name == new_stack.type_name
                     or new_stack.start_index > token_stack[last_list_index].start_index
