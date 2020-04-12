@@ -56,6 +56,274 @@ def test_list_items_281():
 
 
 @pytest.mark.gfm
+def test_list_items_281a():
+    """
+    Test case 281a:  variation on 281 with second item indented
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """* foo
+  * bar
+* baz"""
+    expected_tokens = [
+        "[ulist:*::2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[ulist:*::4:  ]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[li:2]",
+        "[para:]",
+        "[text:baz:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
+    expected_gfm = """<ul>
+<li>foo
+<ul>
+<li>bar</li>
+</ul>
+</li>
+<li>baz</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_items_281b():
+    """
+    Test case 281b:  variation on 281 with second item indented and third with different list start
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """* foo
+  * bar
++ baz"""
+    expected_tokens = [
+        "[ulist:*::2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[ulist:*::4:  ]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[end-ulist]",
+        "[ulist:+::2:]",
+        "[para:]",
+        "[text:baz:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
+    expected_gfm = """<ul>
+<li>foo
+<ul>
+<li>bar</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>baz</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_items_281c():
+    """
+    Test case 281c:  variation on 281b with third item indented, and a following list item for the parent
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """* foo
+  * bar
+  + baz
+* boffo"""
+    expected_tokens = [
+        "[ulist:*::2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[ulist:*::4:  ]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[ulist:+::4:  ]",
+        "[para:]",
+        "[text:baz:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[li:2]",
+        "[para:]",
+        "[text:boffo:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
+    expected_gfm = """<ul>
+<li>foo
+<ul>
+<li>bar</li>
+</ul>
+<ul>
+<li>baz</li>
+</ul>
+</li>
+<li>boffo</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_items_281d():
+    """
+    Test case 281d:  variation on 281
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """* foo
+  * bar
+    * boffo
+  + baz"""
+    expected_tokens = [
+        "[ulist:*::2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[ulist:*::4:  ]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+        "[ulist:*::6:    ]",
+        "[para:]",
+        "[text:boffo:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[end-ulist]",
+        "[ulist:+::4:  ]",
+        "[para:]",
+        "[text:baz:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[end-ulist]",
+    ]
+    expected_gfm = """<ul>
+<li>foo
+<ul>
+<li>bar
+<ul>
+<li>boffo</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>baz</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_items_281e():
+    """
+    Test case 281e:  variation on 281
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """* foo
+  * bar
+    * boffo
++ baz"""
+    expected_tokens = [
+        "[ulist:*::2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[ulist:*::4:  ]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+        "[ulist:*::6:    ]",
+        "[para:]",
+        "[text:boffo:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[end-ulist]",
+        "[end-ulist]",
+        "[ulist:+::2:]",
+        "[para:]",
+        "[text:baz:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
+    expected_gfm = """<ul>
+<li>foo
+<ul>
+<li>bar
+<ul>
+<li>boffo</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<ul>
+<li>baz</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
 def test_list_items_282():
     """
     Test case 282:  (part 2) Changing the bullet or ordered list delimiter starts a new list:
@@ -612,6 +880,108 @@ def test_list_items_292():
 
 
 @pytest.mark.gfm
+def test_list_items_292a():
+    """
+    Test case 292a:  Variation on 292
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- a
+ - b
+  - c
+- d"""
+    expected_tokens = [
+        "[ulist:-::2:]",
+        "[para:]",
+        "[text:a:]",
+        "[end-para]",
+        "[li:3]",
+        "[para:]",
+        "[text:b:]",
+        "[end-para]",
+        "[li:4]",
+        "[para:]",
+        "[text:c:]",
+        "[end-para]",
+        "[li:2]",
+        "[para:]",
+        "[text:d:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
+    expected_gfm = """<ul>
+<li>a</li>
+<li>b</li>
+<li>c</li>
+<li>d</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_items_292b():
+    """
+    Test case 292a:  Variation on 292
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- a
+ - b
+  - c
+   - d
+- e"""
+    expected_tokens = [
+        "[ulist:-::2:]",
+        "[para:]",
+        "[text:a:]",
+        "[end-para]",
+        "[li:3]",
+        "[para:]",
+        "[text:b:]",
+        "[end-para]",
+        "[li:4]",
+        "[para:]",
+        "[text:c:]",
+        "[end-para]",
+        "[li:5]",
+        "[para:]",
+        "[text:d:]",
+        "[end-para]",
+        "[li:2]",
+        "[para:]",
+        "[text:e:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
+    expected_gfm = """<ul>
+<li>a</li>
+<li>b</li>
+<li>c</li>
+<li>d</li>
+<li>e</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
 def test_list_items_293():
     """
     Test case 293:  And here, 3. c is treated as in indented code block, because it is indented four spaces and preceded by a blank line.
@@ -651,6 +1021,312 @@ def test_list_items_293():
 </ol>
 <pre><code>3. c
 </code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_items_293a():
+    """
+    Test case 293a:  variation on 293
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. a
+  1. b
+    1. c"""
+    expected_tokens = [
+        "[olist:.:1:3:]",
+        "[para:]",
+        "[text:a:]",
+        "[end-para]",
+        "[li:5]",
+        "[para:\n ]",
+        "[text:b\n1. c::\n]",
+        "[end-para]",
+        "[end-olist]",
+    ]
+    expected_gfm = """<ol>
+<li>a</li>
+<li>b
+1. c</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_items_293b():
+    """
+    Test case 293b:  variation on 293
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. a
+   1. b
+1. c"""
+    expected_tokens = [
+        "[olist:.:1:3:]",
+        "[para:]",
+        "[text:a:]",
+        "[end-para]",
+        "[olist:.:1:6:   ]",
+        "[para:]",
+        "[text:b:]",
+        "[end-para]",
+        "[end-olist]",
+        "[li:3]",
+        "[para:]",
+        "[text:c:]",
+        "[end-para]",
+        "[end-olist]",
+    ]
+    expected_gfm = """<ol>
+<li>a
+<ol>
+<li>b</li>
+</ol>
+</li>
+<li>c</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_items_293c():
+    """
+    Test case 293c:  variation on 293
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. a
+   1. b
+1) c"""
+    expected_tokens = [
+        "[olist:.:1:3:]",
+        "[para:]",
+        "[text:a:]",
+        "[end-para]",
+        "[olist:.:1:6:   ]",
+        "[para:]",
+        "[text:b:]",
+        "[end-para]",
+        "[end-olist]",
+        "[end-olist]",
+        "[olist:):1:3:]",
+        "[para:]",
+        "[text:c:]",
+        "[end-para]",
+        "[end-olist]",
+    ]
+    expected_gfm = """<ol>
+<li>a
+<ol>
+<li>b</li>
+</ol>
+</li>
+</ol>
+<ol>
+<li>c</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_items_293d():
+    """
+    Test case 293d:  variation on 293
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. a
+   1. b
+   1) c
+1. d"""
+    expected_tokens = [
+        "[olist:.:1:3:]",
+        "[para:]",
+        "[text:a:]",
+        "[end-para]",
+        "[olist:.:1:6:   ]",
+        "[para:]",
+        "[text:b:]",
+        "[end-para]",
+        "[end-olist]",
+        "[olist:):1:6:   ]",
+        "[para:]",
+        "[text:c:]",
+        "[end-para]",
+        "[end-olist]",
+        "[li:3]",
+        "[para:]",
+        "[text:d:]",
+        "[end-para]",
+        "[end-olist]",
+    ]
+    expected_gfm = """<ol>
+<li>a
+<ol>
+<li>b</li>
+</ol>
+<ol>
+<li>c</li>
+</ol>
+</li>
+<li>d</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_items_293e():
+    """
+    Test case 293e:  variation on 293
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. a
+   1. b
+      1. c
+   1) d"""
+    expected_tokens = [
+        "[olist:.:1:3:]",
+        "[para:]",
+        "[text:a:]",
+        "[end-para]",
+        "[olist:.:1:6:   ]",
+        "[para:]",
+        "[text:b:]",
+        "[end-para]",
+        "[olist:.:1:9:      ]",
+        "[para:]",
+        "[text:c:]",
+        "[end-para]",
+        "[end-olist]",
+        "[end-olist]",
+        "[olist:):1:6:   ]",
+        "[para:]",
+        "[text:d:]",
+        "[end-para]",
+        "[end-olist]",
+        "[end-olist]",
+    ]
+    expected_gfm = """<ol>
+<li>a
+<ol>
+<li>b
+<ol>
+<li>c</li>
+</ol>
+</li>
+</ol>
+<ol>
+<li>d</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_items_293f():
+    """
+    Test case 293f:  variation on 293
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. a
+   1. b
+      1. c
+1) d"""
+    expected_tokens = [
+        "[olist:.:1:3:]",
+        "[para:]",
+        "[text:a:]",
+        "[end-para]",
+        "[olist:.:1:6:   ]",
+        "[para:]",
+        "[text:b:]",
+        "[end-para]",
+        "[olist:.:1:9:      ]",
+        "[para:]",
+        "[text:c:]",
+        "[end-para]",
+        "[end-olist]",
+        "[end-olist]",
+        "[end-olist]",
+        "[olist:):1:3:]",
+        "[para:]",
+        "[text:d:]",
+        "[end-para]",
+        "[end-olist]",
+    ]
+    expected_gfm = """<ol>
+<li>a
+<ol>
+<li>b
+<ol>
+<li>c</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+<ol>
+<li>d</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -1303,51 +1979,60 @@ def test_list_items_306():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-# TODO go through each use of extract_whitespace and validate whether it should
-#    be e_space or e_whitespace
-# TODO scan GFM and ensure Unicode whitespace uses actual unicode whitespace, not just whitespace
-# TODO look for cases where " " is used, and convert to whitespace helper
+# Future Bugs - Tabs
+# TODO check is_length_less_than_or_equal_to to see if any issues with tabs, most
+#   likely in conjunction with starting another type of block
 
-# TODO '* foo\n  * bar\n+ baz'
-# TODO '- a\n - b\n  - c\n- d'
+# Future Bugs - AutoLinks
+# TODO 620 - more bad cases, like <
+# TODO 603 - href? doesn't look right
+
+# Future Bugs - Links
+# TODO inline link ( without any extra info
+# TODO why does GFM not specify that between [ and ] for a lrd, no blanks are allowed?
+# -- maybe expound on 166 a bit?
+# TODO what if bad link followed by good link?
+# TODO specific types of links for the 3 types?
+# TODO more testing to determine what inlines are stripped within image links i.e. code spans?
+# TODO link ref def with empty link label, like 560?
+# TODO full reference link with empty link label, like 560?
+# TODO 553 with other inlines?
+# TODO what if bad link definition discovered multiple lines down, how to back track?
+# TODO split up link definition within a block quote or list?
+
+# Future Bugs - Block Quote
 # TODO block quotes that start and stop i.e. > then >> then > then >>>, etc
+
+# Future Bugs - List
+# TODO blank line ending a list is parsed wrong into tokens
+# >>stack_count>>0>>#9:[end-ulist]
+# - should be end and then blank, as the blank is outside of the list
+
+# Future Bugs - Block Quote/List Interaction
 # TODO 300 with different list following
 # TODO 300 with extra indent on following item
 # TODO 301, but with extra levels of block quotes
 # TODO 301, with indented code blocks
 # TODO 270 and check for indent levels after
-# TODO 620 - more bad cases, like <
-# TODO 603 - href? doesn't look right
 
-# TODO go through any case that uses lazy and do un-lazy example
-
-# TODO blank line ending a list is parsed wrong into tokens
-# >>stack_count>>1>>#8:[BLANK:]
-# >>stack_count>>0>>#9:[end-ulist]
-# - should be end and then blank, as the blank is outside of the list
-
-# TODO check is_length_less_than_or_equal_to to see if any issues with tabs, most
-#   likely in conjunction with starting another type of block
-# TODO inline link ( without any extra info
-# TODO why does GFM not specify that between [ and ] for a lrd, no blanks are allowed?
-# -- maybe expound on 166 a bit?
-# TODO what if bad link followed by good link?
-# TODO collect_until_one_of_characters with backslashes?
-# TODO what if bad link definition discovered multiple lines down, how to back track?
-# TODO split up link definition within a block quote or list?
-# TODO link ref def with empty link label, like 560?
-# TODO full reference link with empty link label, like 560?
-# TODO samples that end without a blank line, and add a blank line?
-# TODO 553 with other inlines?
-
-# TODO can we generate Markdown from tokens? do we have enough info?
-# TODO token for LRDs, even though consumed?
-# TODO specific types of links for the 3 types?
-# TODO more testing to determine what inlines are stripped within image links i.e. code spans?
+# Future Features - Correctness - Whitespace and Punctuation
+# TODO go through each use of extract_whitespace and validate whether it should
+#    be e_space or e_whitespace
+# TODO scan GFM and ensure Unicode whitespace uses actual unicode whitespace, not just whitespace
+# TODO look for cases where " " is used, and convert to whitespace helper
 # TODO complete list of unicode punctuation characters
+
+# Future Features - Correctness
+# TODO token for LRDs, even though consumed?
+# TODO can we generate Markdown from tokens? do we have enough info?
+# TODO go through any case that uses lazy and do un-lazy example
+# TODO samples that end without a blank line, and add a blank line?
+
+# Future Features - Performance
 # TODO reduce html_helper functions?
-# TODO modify parse_blocks_pass to consume lines as it goes, instead of requiring entire string in memory
+# TODO collect_until_one_of_characters with backslashes?
 # TODO rewrite transform to allow it to consume a Markdown file as it goes
+# TODO modify parse_blocks_pass to consume lines as it goes, instead of requiring entire string in memory
 
 # TODO document current restrictions:
 # - nested block quotes and nested lists are okay, but not together

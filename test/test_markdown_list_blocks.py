@@ -1805,6 +1805,153 @@ def test_list_blocks_274():
 
 
 @pytest.mark.gfm
+def test_list_blocks_274a():
+    """
+    Test case 274a:  modification for 274
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1) foo
+   - bar
+1. baz"""
+    expected_tokens = [
+        "[olist:):1:3:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[ulist:-::5:   ]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[end-olist]",
+        "[olist:.:1:3:]",
+        "[para:]",
+        "[text:baz:]",
+        "[end-para]",
+        "[end-olist]",
+    ]
+    expected_gfm = """<ol>
+<li>foo
+<ul>
+<li>bar</li>
+</ul>
+</li>
+</ol>
+<ol>
+<li>baz</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_blocks_274b():
+    """
+    Test case 274b:  modification for 274
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1) foo
+   - bar
+- baz"""
+    expected_tokens = [
+        "[olist:):1:3:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[ulist:-::5:   ]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+        "[end-ulist]",
+        "[end-olist]",
+        "[ulist:-::2:]",
+        "[para:]",
+        "[text:baz:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
+    expected_gfm = """<ol>
+<li>foo
+<ul>
+<li>bar</li>
+</ul>
+</li>
+</ol>
+<ul>
+<li>baz</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_list_blocks_274c():
+    """
+    Test case 274c:  modification for 274
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- foo
+  1) bar
+1) baz"""
+    expected_tokens = [
+        "[ulist:-::2:]",
+        "[para:]",
+        "[text:foo:]",
+        "[end-para]",
+        "[olist:):1:5:  ]",
+        "[para:]",
+        "[text:bar:]",
+        "[end-para]",
+        "[end-olist]",
+        "[end-ulist]",
+        "[olist:):1:3:]",
+        "[para:]",
+        "[text:baz:]",
+        "[end-para]",
+        "[end-olist]",
+    ]
+    expected_gfm = """<ul>
+<li>foo
+<ol>
+<li>bar</li>
+</ol>
+</li>
+</ul>
+<ol>
+<li>baz</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
 def test_list_blocks_275():
     """
     Test case 275:  Three is not enough:

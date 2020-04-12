@@ -187,12 +187,19 @@ class ListStackToken(StackToken):
 
     # pylint: disable=too-many-arguments
     def __init__(
-        self, type_name, indent_level, list_character, ws_before_marker, ws_after_marker
+        self,
+        type_name,
+        indent_level,
+        list_character,
+        ws_before_marker,
+        ws_after_marker,
+        start_index,
     ):
         self.indent_level = indent_level
         self.list_character = list_character
         self.ws_before_marker = ws_before_marker
         self.ws_after_marker = ws_after_marker
+        self.start_index = start_index
         extra_data = (
             str(indent_level)
             + ":"
@@ -201,6 +208,8 @@ class ListStackToken(StackToken):
             + str(ws_before_marker)
             + ":"
             + str(ws_after_marker)
+            + ":"
+            + str(start_index)
         )
         StackToken.__init__(self, type_name, extra_data)
 
@@ -212,7 +221,15 @@ class OrderedListStackToken(ListStackToken):
     Class to provide for a stack token for an ordered list.
     """
 
-    def __init__(self, indent_level, list_character, ws_before_marker, ws_after_marker):
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        indent_level,
+        list_character,
+        ws_before_marker,
+        ws_after_marker,
+        start_index,
+    ):
         ListStackToken.__init__(
             self,
             StackToken.stack_ordered_list,
@@ -220,7 +237,10 @@ class OrderedListStackToken(ListStackToken):
             list_character,
             ws_before_marker,
             ws_after_marker,
+            start_index,
         )
+
+    # pylint: enable=too-many-arguments
 
 
 class UnorderedListStackToken(ListStackToken):
@@ -228,7 +248,15 @@ class UnorderedListStackToken(ListStackToken):
     Class to provide for a stack token for an unordered list.
     """
 
-    def __init__(self, indent_level, list_character, ws_before_marker, ws_after_marker):
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        indent_level,
+        list_character,
+        ws_before_marker,
+        ws_after_marker,
+        start_index,
+    ):
         ListStackToken.__init__(
             self,
             StackToken.stack_unordered_list,
@@ -236,7 +264,10 @@ class UnorderedListStackToken(ListStackToken):
             list_character,
             ws_before_marker,
             ws_after_marker,
+            start_index,
         )
+
+    # pylint: enable=too-many-arguments
 
 
 class HtmlBlockStackToken(StackToken):

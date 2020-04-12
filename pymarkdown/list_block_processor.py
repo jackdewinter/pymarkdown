@@ -300,8 +300,7 @@ class ListBlockProcessor:
             (
                 container_level_tokens,
                 emit_li,
-                emit_item,
-            ) = ListBlockProcessor.close_required_lists_after_start(
+            ) = ListBlockProcessor.__close_required_lists_after_start(
                 token_stack,
                 token_document,
                 last_list_index,
@@ -309,27 +308,32 @@ class ListBlockProcessor:
                 new_stack,
                 current_container_blocks,
             )
+            emit_item = False
         else:
             print("NOT list-in-process>>" + str(token_stack[last_list_index]))
             container_level_tokens, _, _ = close_open_blocks_fn()
         print("container_level_tokens>>" + str(container_level_tokens))
 
+        print("__post_list>>before>>" + str(container_level_tokens))
         if emit_item or not emit_li:
+            print("__post_list>>adding>>" + str(new_token))
             token_stack.append(new_stack)
             container_level_tokens.append(new_token)
         else:
+            print("__post_list>>new list item>>")
             assert emit_li
             container_level_tokens.append(NewListItemMarkdownToken(indent_level))
         line_to_parse = (
             "".rjust(remaining_whitespace, " ") + line_to_parse[after_marker_ws_index:]
         )
+        print("__post_list>>after>>" + str(container_level_tokens))
 
         return True, container_level_tokens, line_to_parse
         # pylint: enable=too-many-locals, too-many-arguments
 
     @staticmethod
     # pylint: disable=too-many-arguments
-    def close_required_lists_after_start(
+    def __close_required_lists_after_start(
         token_stack,
         token_document,
         last_list_index,
@@ -346,32 +350,82 @@ class ListBlockProcessor:
         )
         print("old-stack>>" + str(container_level_tokens) + "<<")
 
-        (
-            do_not_emit,
-            emit_li,
-            extra_tokens,
-        ) = ListBlockProcessor.__are_list_starts_equal(
-            token_stack,
-            token_document,
-            last_list_index,
-            new_stack,
-            current_container_blocks,
-            close_open_blocks_fn,
-        )
-        print("extra_tokens>>" + str(extra_tokens))
-        container_level_tokens.extend(extra_tokens)
-        emit_item = None
-        if do_not_emit:
-            emit_item = False
-            print("post_list>>don't emit")
-        else:
-            print("post_list>>close open blocks and emit")
-            close_tokens, _, _ = close_open_blocks_fn(
-                until_this_index=last_list_index, include_lists=True
+        repeat_check = True
+        while repeat_check:
+            print("start")
+            repeat_check = False
+            (
+                do_not_emit,
+                emit_li,
+                extra_tokens,
+                last_list_index,
+            ) = ListBlockProcessor.__are_list_starts_equal(
+                token_stack,
+                token_document,
+                last_list_index,
+                new_stack,
+                current_container_blocks,
+                close_open_blocks_fn,
             )
-            assert close_tokens
-            container_level_tokens.extend(close_tokens)
-        return container_level_tokens, emit_li, emit_item
+            print("extra_tokens>>" + str(extra_tokens))
+            container_level_tokens.extend(extra_tokens)
+            if do_not_emit:
+                print("post_list>>don't emit")
+                (
+                    did_find,
+                    last_list_index,
+                ) = LeafBlockProcessor.check_for_list_in_process(token_stack)
+                print(
+                    "did_find>>"
+                    + str(did_find)
+                    + "--last_list_index--"
+                    + str(last_list_index)
+                )
+                if did_find:
+                    print(
+                        "ARE-EQUAL>>stack>>"
+                        + str(token_stack[last_list_index])
+                        + ">>new>>"
+                        + str(new_stack)
+                    )
+                if (
+                    token_stack[last_list_index].type_name == new_stack.type_name
+                    or new_stack.start_index > token_stack[last_list_index].start_index
+                ):
+                    pass
+                else:
+                    repeat_check = True
+            else:
+                print("post_list>>close open blocks and emit")
+                close_tokens, _, _ = close_open_blocks_fn(
+                    until_this_index=last_list_index, include_lists=True
+                )
+                assert close_tokens
+                container_level_tokens.extend(close_tokens)
+
+                (
+                    did_find,
+                    last_list_index,
+                ) = LeafBlockProcessor.check_for_list_in_process(token_stack)
+                print(
+                    "did_find>>"
+                    + str(did_find)
+                    + "--last_list_index--"
+                    + str(last_list_index)
+                )
+                if did_find:
+                    print(
+                        "ARE-EQUAL>>stack>>"
+                        + str(token_stack[last_list_index])
+                        + ">>new>>"
+                        + str(new_stack)
+                    )
+                    if (
+                        new_stack.indent_level
+                        <= token_stack[last_list_index].indent_level
+                    ):
+                        repeat_check = True
+        return container_level_tokens, emit_li
 
     # pylint: enable=too-many-arguments
 
@@ -402,7 +456,7 @@ class ListBlockProcessor:
             balancing_tokens, _, _ = close_open_blocks_fn(
                 until_this_index=last_list_index, include_block_quotes=True
             )
-            return True, True, balancing_tokens
+            return True, True, balancing_tokens, last_list_index
 
         document_token_index = len(token_document) - 1
         while document_token_index >= 0 and not (
@@ -427,31 +481,16 @@ class ListBlockProcessor:
             token_stack[last_list_index].type_name == new_stack.type_name
             and old_last_marker_character == new_stack.list_character[-1]
         ):
-            print("are_list_starts_equal>>ELIGIBLE!!!")
-            print(
-                "are_list_starts_equal>>current_start_index>>"
-                + str(current_start_index)
-                + ">>old_start_index>>"
-                + str(old_start_index)
+            do_not_emit, emit_li = ListBlockProcessor.__process_eligible_list_start(
+                balancing_tokens,
+                current_start_index,
+                old_start_index,
+                current_container_blocks,
+                token_stack,
+                close_open_blocks_fn,
             )
-            if current_start_index < old_start_index:
+            return do_not_emit, emit_li, balancing_tokens, last_list_index
 
-                print("current_container_blocks>>" + str(current_container_blocks))
-                if len(current_container_blocks) > 1:
-                    print("current_container_blocks-->" + str(token_stack))
-                    last_stack_depth = token_stack[-1].ws_before_marker
-                    while current_start_index < last_stack_depth:
-                        last_stack_index = token_stack.index(token_stack[-1])
-                        close_tokens, _, _ = close_open_blocks_fn(
-                            until_this_index=last_stack_index, include_lists=True
-                        )
-                        assert close_tokens
-                        balancing_tokens.extend(close_tokens)
-                        print("close_tokens>>" + str(close_tokens))
-                        last_stack_depth = token_stack[-1].ws_before_marker
-
-                return True, True, balancing_tokens
-            return True, False, balancing_tokens
         print("SUBLIST WITH DIFFERENT")
         print("are_list_starts_equal>>ELIGIBLE!!!")
         print(
@@ -461,9 +500,53 @@ class ListBlockProcessor:
             + str(old_start_index)
         )
         if current_start_index >= old_start_index:
-            return True, False, balancing_tokens
-        return False, False, balancing_tokens
+            print("are_list_starts_equal>>True")
+            return True, False, balancing_tokens, last_list_index
+
+        print("are_list_starts_equal>>False")
+        print(">>" + str(token_stack))
+        return False, False, balancing_tokens, last_list_index
         # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __process_eligible_list_start(
+        balancing_tokens,
+        current_start_index,
+        old_start_index,
+        current_container_blocks,
+        token_stack,
+        close_open_blocks_fn,
+    ):
+        print("are_list_starts_equal>>ELIGIBLE!!!")
+        print(
+            "are_list_starts_equal>>current_start_index>>"
+            + str(current_start_index)
+            + ">>old_start_index>>"
+            + str(old_start_index)
+        )
+        if current_start_index < old_start_index:
+
+            print("current_container_blocks>>" + str(current_container_blocks))
+            if len(current_container_blocks) > 1:
+                print("current_container_blocks-->" + str(token_stack))
+                last_stack_depth = token_stack[-1].ws_before_marker
+                while current_start_index < last_stack_depth:
+                    last_stack_index = token_stack.index(token_stack[-1])
+                    close_tokens, _, _ = close_open_blocks_fn(
+                        until_this_index=last_stack_index, include_lists=True
+                    )
+                    assert close_tokens
+                    balancing_tokens.extend(close_tokens)
+                    print("close_tokens>>" + str(close_tokens))
+                    last_stack_depth = token_stack[-1].ws_before_marker
+
+            return True, True
+
+        print("are_list_starts_equal>>True")
+        return True, False
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
@@ -527,12 +610,15 @@ class ListBlockProcessor:
                     + str(ws_before_marker)
                     + ";ws_after="
                     + str(ws_after_marker)
+                    + ";start_index="
+                    + str(start_index)
                 )
                 new_stack = UnorderedListStackToken(
                     indent_level,
                     line_to_parse[start_index],
                     ws_before_marker,
                     ws_after_marker,
+                    start_index,
                 )
                 new_token = UnorderedListStartMarkdownToken(
                     line_to_parse[start_index], indent_level, extracted_whitespace
@@ -638,6 +724,8 @@ class ListBlockProcessor:
                     + str(ws_before_marker)
                     + ";ws_after="
                     + str(ws_after_marker)
+                    + ";start_index="
+                    + str(start_index)
                 )
 
                 new_stack = OrderedListStackToken(
@@ -645,6 +733,7 @@ class ListBlockProcessor:
                     line_to_parse[start_index : index + 1],
                     ws_before_marker,
                     ws_after_marker,
+                    start_index,
                 )
                 new_token = OrderedListStartMarkdownToken(
                     line_to_parse[index],
