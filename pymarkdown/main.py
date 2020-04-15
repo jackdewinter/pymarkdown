@@ -5,9 +5,11 @@ import argparse
 import os
 import sys
 import traceback
+import logging
 
 from pymarkdown.plugin_manager import BadPluginError, PluginManager
 from pymarkdown.source_providers import FileSourceProvider
+from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
 
 # https://github.com/hiddenillusion/example-code/commit/3e2daada652fe9b487574c784e0924bd5fcfe667
@@ -21,6 +23,7 @@ class PyMarkdownLint:
         self.version_number = "0.1.0"
 
         self.plugins = PluginManager()
+        self.logger = logging.getLogger(__name__)
 
     def __parse_arguments(self):
         parser = argparse.ArgumentParser(description="Lint any found Markdown files.")
@@ -83,53 +86,30 @@ class PyMarkdownLint:
         """
         return path_to_test.endswith(".md")
 
-    @classmethod
-    def __read_all_lines_from_file(cls, next_file):
-        """
-        Read all of the line from the specified file, making sure to get any
-        characters at the very end of the file.
-        """
-
-        with open(next_file, encoding="utf-8") as file_to_parse:
-            file_as_buffer = file_to_parse.read()
-
-        read_lines = []
-        last_found_index = 0
-        try:
-            next_index = file_as_buffer.index("\n", last_found_index)
-        except ValueError:
-            next_index = -1
-
-        while next_index != -1:
-            read_lines.append(file_as_buffer[last_found_index:next_index])
-            last_found_index = next_index + 1
-            try:
-                next_index = file_as_buffer.index("\n", last_found_index)
-            except ValueError:
-                next_index = -1
-
-        if last_found_index < len(file_as_buffer):
-            read_lines.append(file_as_buffer[last_found_index:])
-        elif last_found_index != 0:
-            read_lines.append("")
-
-        return read_lines
-
     def __scan_file(self, next_file):
         """
         Scan a given file and call the plugin manager for any significant events.
         """
 
-        fsp = FileSourceProvider(next_file)
+        source_provider = FileSourceProvider(next_file)
+
         line_number = 1
-        next_line = fsp.get_next_line()
+        next_line = source_provider.get_next_line()
         context = self.plugins.starting_new_file(next_file)
         while not next_line is None:
             self.plugins.next_line(context, line_number, next_line)
-            # call source provider here
             line_number += 1
-            next_line = fsp.get_next_line()
+            next_line = source_provider.get_next_line()
         self.plugins.completed_file(context, line_number)
+
+        tokenizer = TokenizedMarkdown()
+        source_provider = FileSourceProvider(next_file)
+        try:
+            actual_tokens = tokenizer.transform_from_provider(source_provider)
+            self.logger.debug(">>" + str(actual_tokens) + "<<")
+        except Exception:
+            print("Exception encountered parsing document:\n")
+            traceback.print_exc(file=sys.stdout)
 
     @classmethod
     def __determine_files_to_scan(cls, eligible_paths):
@@ -196,6 +176,10 @@ class PyMarkdownLint:
         Main entrance point.
         """
         args = self.__parse_arguments()
+
+        #logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+        logger = logging.getLogger()
+        logger.setLevel(logging.DEBUG)
 
         files_to_scan = self.__determine_files_to_scan(args.paths)
         if args.list_files:

@@ -4,6 +4,7 @@ Inline processing
 from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline_helper import InlineHelper, InlineRequest, InlineResponse
 from pymarkdown.link_helper import LinkHelper
+import logging
 from pymarkdown.markdown_token import SpecialTextMarkdownToken, TextMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 
@@ -72,10 +73,11 @@ class InlineProcessor:
         """
         Parse and resolve any inline elements.
         """
+        logger = logging.getLogger(__name__)
 
         for next_token in coalesced_results:
-            print(">>" + str(next_token) + "<<")
-        print("")
+            logger.debug(">>" + str(next_token) + "<<")
+        logger.debug("")
 
         coalesced_list = []
         coalesced_list.extend(coalesced_results[0:1])
@@ -101,11 +103,11 @@ class InlineProcessor:
                         coalesced_results[coalesce_index].extracted_whitespace
                         + coalesced_results[coalesce_index].token_text
                     )
-                    processed_tokens = InlineProcessor.__process_inline_text_block(
+                    processed_tokens = InlineProcessor.__process_inline_text_block(logger,
                         combined_test.replace("\t", "    ")
                     )
                 elif coalesced_list[-1].is_atx_header:
-                    processed_tokens = InlineProcessor.__process_inline_text_block(
+                    processed_tokens = InlineProcessor.__process_inline_text_block(logger,
                         coalesced_results[coalesce_index].token_text.replace(
                             "\t", "    "
                         ),
@@ -115,7 +117,7 @@ class InlineProcessor:
                     )
                 else:
                     assert coalesced_list[-1].is_paragraph
-                    print(
+                    logger.debug(
                         ">>before_add_ws>>"
                         + str(coalesced_list[-1])
                         + ">>add>>"
@@ -127,8 +129,8 @@ class InlineProcessor:
                             "\t", "    "
                         )
                     )
-                    print(">>after_add_ws>>" + str(coalesced_list[-1]))
-                    processed_tokens = InlineProcessor.__process_inline_text_block(
+                    logger.debug(">>after_add_ws>>" + str(coalesced_list[-1]))
+                    processed_tokens = InlineProcessor.__process_inline_text_block(logger,
                         coalesced_results[coalesce_index].token_text.replace(
                             "\t", "    "
                         )
@@ -139,7 +141,7 @@ class InlineProcessor:
         return coalesced_list
 
     @staticmethod
-    def __handle_inline_special_single_character(inline_request,):
+    def __handle_inline_special_single_character(inline_request):
         return InlineProcessor.__handle_inline_special(
             inline_request.source_text,
             inline_request.next_index,
@@ -184,6 +186,7 @@ class InlineProcessor:
         """
         Handle the collection of special inline characters for later processing.
         """
+        logger = logging.getLogger(__name__)
 
         preceeding_two = None
         following_two = None
@@ -204,38 +207,39 @@ class InlineProcessor:
             ]
         else:
             if special_sequence[0] == LinkHelper.link_label_end:
-                print(
+                logger.debug(
                     "\nPOSSIBLE LINK CLOSE_FOUND>>"
                     + str(special_length)
                     + ">>"
                     + special_sequence
                     + ">>"
                 )
-                print(">>inline_blocks>>" + str(inline_blocks) + "<<")
-                print(">>remaining_line>>" + str(remaining_line) + "<<")
-                print(
+                logger.debug(">>inline_blocks>>" + str(inline_blocks) + "<<")
+                logger.debug(">>remaining_line>>" + str(remaining_line) + "<<")
+                logger.debug(
                     ">>current_string_unresolved>>"
                     + str(current_string_unresolved)
                     + "<<"
                 )
-                print(">>source_text>>" + source_text[next_index:] + "<<")
-                print("")
+                logger.debug(">>source_text>>" + source_text[next_index:] + "<<")
+                logger.debug("")
                 (
                     new_index,
                     is_active,
                     new_token,
                     consume_rest_of_line,
                 ) = LinkHelper.look_for_link_or_image(
+                    logger,
                     inline_blocks,
                     source_text,
                     next_index,
                     remaining_line,
                     current_string_unresolved,
                 )
-                print(">>inline_blocks>>" + str(inline_blocks) + "<<")
-                print(">>new_token>>" + str(new_token) + "<<")
-                print(">>source_text>>" + source_text[new_index:] + "<<")
-                print(">>consume_rest_of_line>>" + str(consume_rest_of_line) + "<<")
+                logger.debug(">>inline_blocks>>" + str(inline_blocks) + "<<")
+                logger.debug(">>new_token>>" + str(new_token) + "<<")
+                logger.debug(">>source_text>>" + source_text[new_index:] + "<<")
+                logger.debug(">>consume_rest_of_line>>" + str(consume_rest_of_line) + "<<")
             else:
                 repeat_count = special_length
                 new_index = next_index + special_length
@@ -255,7 +259,7 @@ class InlineProcessor:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def __process_inline_text_block(source_text, starting_whitespace=""):
+    def __process_inline_text_block(logger, source_text, starting_whitespace=""):
         """
         Process a text block for any inline items.
         """
@@ -358,6 +362,7 @@ class InlineProcessor:
             )
 
         return InlineProcessor.__complete_inline_block_processing(
+            logger,
             inline_blocks,
             source_text,
             start_index,
@@ -411,6 +416,7 @@ class InlineProcessor:
     @staticmethod
     # pylint: disable=too-many-arguments
     def __complete_inline_block_processing(
+        logger,
         inline_blocks,
         source_text,
         start_index,
@@ -426,14 +432,14 @@ class InlineProcessor:
             )
 
         if end_string is not None:
-            print("xx-end-lf>" + end_string.replace("\n", "\\n") + "<")
+            logger.debug("xx-end-lf>" + end_string.replace("\n", "\\n") + "<")
         if current_string or not have_processed_once:
             inline_blocks.append(
                 TextMarkdownToken(
                     current_string, starting_whitespace, end_whitespace=end_string
                 )
             )
-        print(">>" + str(inline_blocks) + "<<")
+        logger.debug(">>" + str(inline_blocks) + "<<")
 
         return EmphasisHelper.resolve_inline_emphasis(inline_blocks, None)
 

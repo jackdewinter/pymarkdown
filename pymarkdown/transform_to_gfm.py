@@ -29,6 +29,7 @@ from pymarkdown.markdown_token import (
     UnorderedListStartMarkdownToken,
     UriAutolinkMarkdownToken,
 )
+import logging
 
 
 # pylint: disable=too-few-public-methods
@@ -83,8 +84,7 @@ class TransformToGfm:
     }
     raw_html_percent_escape_ascii_chars = '"%[\\]^`{}|'
 
-    @classmethod
-    def calculate_list_looseness(cls, actual_tokens, actual_token_index, next_token):
+    def __calculate_list_looseness(self, actual_tokens, actual_token_index, next_token):
         """
         Based on the first token in a list, compute the "looseness" of the list.
         """
@@ -117,7 +117,7 @@ class TransformToGfm:
                 else:
                     stack_count -= 1
 
-            print(
+            self.logger.debug(
                 ">>stack_count>>"
                 + str(stack_count)
                 + ">>#"
@@ -126,11 +126,11 @@ class TransformToGfm:
                 + str(actual_tokens[current_token_index])
             )
             if check_me:
-                print("check")
-                if cls.is_token_loose(actual_tokens, current_token_index):
+                self.logger.debug("check")
+                if self.__is_token_loose(actual_tokens, current_token_index):
                     is_loose = True
                     stop_me = True
-                    print("!!!LOOSE!!!")
+                    self.logger.debug("!!!LOOSE!!!")
             if stop_me:
                 break
             current_token_index += 1
@@ -139,21 +139,20 @@ class TransformToGfm:
         next_token.is_loose = is_loose
         return is_loose
 
-    @classmethod
-    def is_token_loose(cls, actual_tokens, current_token_index):
+    def __is_token_loose(self, actual_tokens, current_token_index):
         """
         Check to see if this token inspires looseness.
         """
 
         token_to_check = actual_tokens[current_token_index - 1]
-        print("token_to_check-->" + str(token_to_check))
+        self.logger.debug("token_to_check-->" + str(token_to_check))
         if isinstance(token_to_check, EndMarkdownToken) and (
             token_to_check.type_name == MarkdownToken.token_unordered_list_start
             or token_to_check.type_name == MarkdownToken.token_ordered_list_start
         ):
             if actual_tokens[current_token_index - 2].is_blank_line:
                 token_to_check = actual_tokens[current_token_index - 2]
-        print("token_to_check-->" + str(token_to_check))
+        self.logger.debug("token_to_check-->" + str(token_to_check))
         if token_to_check.is_blank_line:
             if isinstance(
                 actual_tokens[current_token_index - 2],
@@ -163,14 +162,14 @@ class TransformToGfm:
                     OrderedListStartMarkdownToken,
                 ),
             ):
-                print("!!!Starting Blank!!!")
+                self.logger.debug("!!!Starting Blank!!!")
             else:
-                print("!!!LOOSE!!!")
+                self.logger.debug("!!!LOOSE!!!")
                 return True
         return False
 
     @classmethod
-    def find_owning_list_start(cls, actual_tokens, actual_token_index):
+    def __find_owning_list_start(cls, actual_tokens, actual_token_index):
         """
         Figure out what the list start for the current token is.
         """
@@ -205,17 +204,16 @@ class TransformToGfm:
                 current_index -= 1
         return current_index
 
-    @classmethod
-    def reset_list_looseness(cls, actual_tokens, actual_token_index):
+    def __reset_list_looseness(self, actual_tokens, actual_token_index):
         """
         Based on where we are within the actual tokens being emitted, figure
         out the correct list looseness to use.
         """
 
-        print("!!!!!!!!!!!!!!!" + str(actual_token_index))
+        self.logger.debug("!!!!!!!!!!!!!!!" + str(actual_token_index))
         search_index = actual_token_index + 1
         while search_index < len(actual_tokens):
-            print("!!" + str(search_index) + "::" + str(actual_tokens[search_index]))
+            self.logger.debug("!!" + str(search_index) + "::" + str(actual_tokens[search_index]))
             if isinstance(actual_tokens[search_index], EndMarkdownToken) and (
                 actual_tokens[search_index].type_name
                 == MarkdownToken.token_unordered_list_start
@@ -224,17 +222,17 @@ class TransformToGfm:
             ):
                 break
             search_index += 1
-        print("!!!!!!!!!!!!!!!" + str(search_index) + "-of-" + str(len(actual_tokens)))
+        self.logger.debug("!!!!!!!!!!!!!!!" + str(search_index) + "-of-" + str(len(actual_tokens)))
         # check to see where we are, then grab the matching start to find
         # the loose
         if search_index == len(actual_tokens):
             is_in_loose_list = True
         else:
-            print(">>reset_list_looseness-token_unordered_list_start>>")
-            new_index = cls.find_owning_list_start(actual_tokens, search_index)
-            print(">>reset_list_looseness>>" + str(new_index))
+            self.logger.debug(">>reset_list_looseness-token_unordered_list_start>>")
+            new_index = self.__find_owning_list_start(actual_tokens, search_index)
+            self.logger.debug(">>reset_list_looseness>>" + str(new_index))
             is_in_loose_list = actual_tokens[new_index].is_loose
-        print("           is_in_loose_list=" + str(is_in_loose_list))
+        self.logger.debug("           is_in_loose_list=" + str(is_in_loose_list))
         return is_in_loose_list
 
     def __init__(self):
@@ -340,7 +338,9 @@ class TransformToGfm:
         """
         Transform the tokens into html.
         """
-        print("\n\n---\n")
+        self.logger = logging.getLogger(__name__)
+
+        self.logger.debug("\n\n---\n")
         output_html = ""
         transform_state = TransformState(actual_tokens)
         for next_token in transform_state.actual_tokens:
@@ -367,13 +367,13 @@ class TransformToGfm:
                     "Markdown token type " + str(type(next_token)) + " not supported."
                 )
 
-            print("======")
-            print(
+            self.logger.debug("======")
+            self.logger.debug(
                 "add_trailing_text-->"
                 + str(transform_state.add_trailing_text).replace("\n", "\\n")
                 + "<--"
             )
-            print(
+            self.logger.debug(
                 "add_leading_text -->"
                 + str(transform_state.add_leading_text).replace("\n", "\\n")
                 + "<--"
@@ -385,10 +385,10 @@ class TransformToGfm:
             if transform_state.add_leading_text:
                 output_html = self.apply_leading_text(output_html, transform_state)
 
-            print("------")
-            print("next_token     -->" + str(next_token).replace("\n", "\\n") + "<--")
-            print("output_html    -->" + str(output_html).replace("\n", "\\n") + "<--")
-            print(
+            self.logger.debug("------")
+            self.logger.debug("next_token     -->" + str(next_token).replace("\n", "\\n") + "<--")
+            self.logger.debug("output_html    -->" + str(output_html).replace("\n", "\\n") + "<--")
+            self.logger.debug(
                 "transform_stack-->"
                 + str(transform_state.transform_stack).replace("\n", "\\n")
                 + "<--"
@@ -502,7 +502,7 @@ class TransformToGfm:
         if output_html[-1] != "\n":
             output_html += "\n"
         output_html += "</blockquote>\n"
-        transform_state.is_in_loose_list = self.reset_list_looseness(
+        transform_state.is_in_loose_list = self.__reset_list_looseness(
             transform_state.actual_tokens, transform_state.actual_token_index,
         )
         return output_html
@@ -722,7 +722,7 @@ class TransformToGfm:
         """
         Handle the start ordered list token.
         """
-        transform_state.is_in_loose_list = self.calculate_list_looseness(
+        transform_state.is_in_loose_list = self.__calculate_list_looseness(
             transform_state.actual_tokens,
             transform_state.actual_token_index,
             next_token,
@@ -740,7 +740,7 @@ class TransformToGfm:
         """
         Handle the start unordered list token.
         """
-        transform_state.is_in_loose_list = self.calculate_list_looseness(
+        transform_state.is_in_loose_list = self.__calculate_list_looseness(
             transform_state.actual_tokens,
             transform_state.actual_token_index,
             next_token,
@@ -754,7 +754,7 @@ class TransformToGfm:
         """
         Handle the end list token for either an ordered or unordered list.
         """
-        transform_state.is_in_loose_list = self.reset_list_looseness(
+        transform_state.is_in_loose_list = self.__reset_list_looseness(
             transform_state.actual_tokens, transform_state.actual_token_index,
         )
         if next_token.type_name == MarkdownToken.token_unordered_list_start:

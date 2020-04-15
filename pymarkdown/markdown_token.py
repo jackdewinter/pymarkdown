@@ -406,12 +406,9 @@ class TextMarkdownToken(MarkdownToken):
                 prefix_whitespace = whitespace_present[remove_leading_spaces:]
 
         if whitespace_to_append is not None:
-            print(">>whitespace_to_append>>" + whitespace_to_append + ">>")
-            print(">>self.extracted_whitespace>>" + self.extracted_whitespace + ">>")
             self.extracted_whitespace = (
                 self.extracted_whitespace + "\n" + whitespace_to_append
             )
-            print(">>self.extracted_whitespace>>" + self.extracted_whitespace + ">>")
         self.token_text = self.token_text + "\n" + prefix_whitespace + text_to_combine
         self.compose_extra_data_field()
 

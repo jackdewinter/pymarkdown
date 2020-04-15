@@ -641,36 +641,25 @@ class HtmlHelper:
         else:
             adjusted_remaining_html_tag = remaining_html_tag
             is_end_tag = False
-            print("6/7?")
             if adjusted_remaining_html_tag.startswith(HtmlHelper.__html_tag_start):
                 adjusted_remaining_html_tag = adjusted_remaining_html_tag[1:]
                 is_end_tag = True
-                print("end")
-            print(">>" + str(character_index) + ">>" + str(len(line_to_parse)))
-            print(">>" + line_to_parse[character_index:] + "<<")
             if (
                 character_index < len(line_to_parse)
                 and line_to_parse[character_index] == HtmlHelper.__html_tag_end
                 and adjusted_remaining_html_tag.endswith(HtmlHelper.__html_tag_start)
             ):
                 adjusted_remaining_html_tag = adjusted_remaining_html_tag[0:-1]
-                print("-otherend")
-            print(
-                "adjusted_remaining_html_tag-->" + adjusted_remaining_html_tag + "<--"
-            )
             if adjusted_remaining_html_tag in HtmlHelper.__html_block_6_start:
                 html_block_type = HtmlHelper.html_block_6
             elif is_end_tag:
-                print("end?")
                 is_complete, complete_parse_index = HtmlHelper.is_complete_html_end_tag(
                     adjusted_remaining_html_tag, line_to_parse, character_index
                 )
                 if is_complete:
                     html_block_type = HtmlHelper.html_block_7
                     character_index = complete_parse_index
-                    print("7-end")
             else:
-                print("7-start?")
                 (
                     is_complete,
                     complete_parse_index,
@@ -680,18 +669,12 @@ class HtmlHelper:
                 if is_complete:
                     html_block_type = HtmlHelper.html_block_7
                     character_index = complete_parse_index
-                    print("7-start")
             if html_block_type == HtmlHelper.html_block_7:
-                print("7>>EOL check")
                 new_index, _ = ParserHelper.extract_whitespace(
                     line_to_parse, character_index
                 )
-                print(">>" + line_to_parse[character_index:] + "<<")
                 if new_index != len(line_to_parse):
                     html_block_type = None
-                    print("7>>not EOL, reset")
-                else:
-                    print("7>>EOL-->" + html_block_type)
         return html_block_type
 
     @staticmethod
@@ -700,7 +683,6 @@ class HtmlHelper:
         Determine the type of the html block that we are starting.
         """
 
-        print(">>" + str(start_index) + ">>" + line_to_parse + "<<")
         character_index = start_index + 1
         remaining_html_tag = ""
 
@@ -716,15 +698,12 @@ class HtmlHelper:
             )
             remaining_html_tag = remaining_html_tag.lower()
 
-            print("remaining_html_tag>>" + remaining_html_tag)
             html_block_type = HtmlHelper.__check_for_normal_html_blocks(
                 remaining_html_tag, line_to_parse, character_index
             )
-            print("html_block_type>>" + str(html_block_type))
         if not html_block_type:
             return None, None
         if html_block_type == HtmlHelper.html_block_7:
-            print("7>>>" + str(token_stack))
             if token_stack[-1].is_paragraph:
                 return None, None
         return html_block_type, remaining_html_tag
@@ -747,7 +726,6 @@ class HtmlHelper:
         ) and ParserHelper.is_character_at_index(
             line_to_parse, start_index, HtmlHelper.__html_block_start_character
         ):
-            print("HTML-START?")
             (
                 html_block_type,
                 remaining_html_tag,
@@ -755,7 +733,6 @@ class HtmlHelper:
                 token_stack, line_to_parse, start_index
             )
             if html_block_type:
-                print("HTML-STARTED::" + html_block_type + ":" + remaining_html_tag)
                 new_tokens, _, _ = close_open_blocks_fn(
                     only_these_blocks=[ParagraphStackToken],
                 )
@@ -763,8 +740,6 @@ class HtmlHelper:
                     HtmlBlockStackToken(html_block_type, remaining_html_tag)
                 )
                 new_tokens.append(HtmlBlockMarkdownToken())
-            else:
-                print("HTML-NOT-STARTED")
         return new_tokens
 
     @staticmethod
@@ -773,8 +748,6 @@ class HtmlHelper:
         Check to see if we have encountered the end of the current HTML block
         via an empty line or BLANK.
         """
-
-        print("HTML-BLANK")
 
         new_tokens = []
         if (
