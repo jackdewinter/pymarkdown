@@ -1,8 +1,8 @@
 """
 Module to provide tests for source providers.
 """
-from pymarkdown.source_providers import InMemorySourceProvider
-
+from pymarkdown.source_providers import InMemorySourceProvider, FileSourceProvider
+import os
 
 def __verify_line(expected_line, actual_line):
     if expected_line is None:
@@ -80,3 +80,121 @@ def test_source_provider_in_memory_two_lines():
     __verify_line(expected_first_line, actual_first_line)
     __verify_line(expected_second_line, actual_second_line)
     __verify_line(expected_third_line, actual_third_line)
+
+def test_source_provider_file_empty():
+    """
+    Test the file source provider with an empty file.
+    """
+
+    # Arrange
+    resource_directory = os.path.join(os.getcwd(), "test", "resources")
+    input_file = os.path.join(resource_directory, "empty-file.txt")
+    source_provider = FileSourceProvider(input_file)
+    expected_first_line = ""
+    expected_second_line = None
+
+    # Act
+    actual_first_line = source_provider.get_next_line()
+    actual_second_line = source_provider.get_next_line()
+
+    # Assert
+    __verify_line(expected_first_line, actual_first_line)
+    __verify_line(expected_second_line, actual_second_line)
+
+def test_source_provider_file_single_line():
+    """
+    Test the file source provider with a single line
+    """
+
+    # Arrange
+    resource_directory = os.path.join(os.getcwd(), "test", "resources")
+    input_file = os.path.join(resource_directory, "single-line.txt")
+    source_provider = FileSourceProvider(input_file)
+    expected_first_line = "this is the first line"
+    expected_second_line = None
+
+    # Act
+    actual_first_line = source_provider.get_next_line()
+    actual_second_line = source_provider.get_next_line()
+
+    # Assert
+    __verify_line(expected_first_line, actual_first_line)
+    __verify_line(expected_second_line, actual_second_line)
+
+def test_source_provider_file_two_lines():
+    """
+    Test the file source provider with two lines of input.
+    """
+
+    # Arrange
+    resource_directory = os.path.join(os.getcwd(), "test", "resources")
+    input_file = os.path.join(resource_directory, "double-line.txt")
+    source_provider = FileSourceProvider(input_file)
+    expected_first_line = "this is the first line"
+    expected_second_line = "this is the second line"
+    expected_third_line = None
+
+    # Act
+    actual_first_line = source_provider.get_next_line()
+    actual_second_line = source_provider.get_next_line()
+    actual_third_line = source_provider.get_next_line()
+
+    # Assert
+    __verify_line(expected_first_line, actual_first_line)
+    __verify_line(expected_second_line, actual_second_line)
+    __verify_line(expected_third_line, actual_third_line)
+
+def test_source_provider_file_two_lines_with_blank_between():
+    """
+    Test the file source provider with two lines of input with a blank between them.
+    """
+
+    # Arrange
+    resource_directory = os.path.join(os.getcwd(), "test", "resources")
+    input_file = os.path.join(resource_directory, "double-line-with-blank.txt")
+    source_provider = FileSourceProvider(input_file)
+    expected_first_line = "this is the first line"
+    expected_second_line = ""
+    expected_third_line = "this is the second line"
+    expected_fourth_line = None
+
+    # Act
+    actual_first_line = source_provider.get_next_line()
+    actual_second_line = source_provider.get_next_line()
+    actual_third_line = source_provider.get_next_line()
+    actual_fourth_line = source_provider.get_next_line()
+
+    # Assert
+    __verify_line(expected_first_line, actual_first_line)
+    __verify_line(expected_second_line, actual_second_line)
+    __verify_line(expected_third_line, actual_third_line)
+    __verify_line(expected_fourth_line, actual_fourth_line)
+
+def test_source_provider_file_two_lines_with_blank_between_and_trailing():
+    """
+    Test the file source provider with two lines of input with a blank between them and a trailing line.
+    """
+
+    # Arrange
+    resource_directory = os.path.join(os.getcwd(), "test", "resources")
+    input_file = os.path.join(resource_directory, "double-line-with-blank-and-trailing.txt")
+    source_provider = FileSourceProvider(input_file)
+    expected_first_line = "this is the first line"
+    expected_second_line = ""
+    expected_third_line = "this is the second line"
+    expected_fourth_line = ""
+    expected_fifth_line = None
+
+    # Act
+    actual_first_line = source_provider.get_next_line()
+    actual_second_line = source_provider.get_next_line()
+    actual_third_line = source_provider.get_next_line()
+    actual_fourth_line = source_provider.get_next_line()
+    actual_fifth_line = source_provider.get_next_line()
+
+    # Assert
+    __verify_line(expected_first_line, actual_first_line)
+    __verify_line(expected_second_line, actual_second_line)
+    __verify_line(expected_third_line, actual_third_line)
+    __verify_line(expected_fourth_line, actual_fourth_line)
+    __verify_line(expected_fifth_line, actual_fifth_line)

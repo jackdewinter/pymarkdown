@@ -7,6 +7,7 @@ import sys
 import traceback
 
 from pymarkdown.plugin_manager import BadPluginError, PluginManager
+from pymarkdown.source_providers import FileSourceProvider
 
 
 # https://github.com/hiddenillusion/example-code/commit/3e2daada652fe9b487574c784e0924bd5fcfe667
@@ -119,11 +120,15 @@ class PyMarkdownLint:
         Scan a given file and call the plugin manager for any significant events.
         """
 
+        fsp = FileSourceProvider(next_file)
         line_number = 1
+        next_line = fsp.get_next_line()
         context = self.plugins.starting_new_file(next_file)
-        for line in self.__read_all_lines_from_file(next_file):
-            self.plugins.next_line(context, line_number, line)
+        while not next_line is None:
+            self.plugins.next_line(context, line_number, next_line)
+            # call source provider here
             line_number += 1
+            next_line = fsp.get_next_line()
         self.plugins.completed_file(context, line_number)
 
     @classmethod
