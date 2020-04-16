@@ -1,6 +1,8 @@
 """
 Module to provide processing for the container blocks.
 """
+import logging
+
 from pymarkdown.block_quote_processor import BlockQuoteProcessor
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
@@ -8,7 +10,6 @@ from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionH
 from pymarkdown.list_block_processor import ListBlockProcessor
 from pymarkdown.markdown_token import TextMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
-import logging
 
 
 # pylint: disable=too-few-public-methods
@@ -79,7 +80,7 @@ class ContainerBlockProcessor:
         """
         logger = logging.getLogger(__name__)
 
-        logger.debug("Line:" + line_to_parse + ":")
+        logger.debug("Line:%s:", line_to_parse)
         no_para_start_if_empty = False
 
         start_index, extracted_whitespace = ParserHelper.extract_whitespace(
@@ -200,11 +201,11 @@ class ContainerBlockProcessor:
                 handle_blank_line_fn,
             )
 
-        logger.debug("removed_chars_at_start>>>" + str(removed_chars_at_start))
+        logger.debug("removed_chars_at_start>>>%s", str(removed_chars_at_start))
 
         if container_depth:
             assert not leaf_tokens
-            logger.debug(">>>>>>>>" + line_to_parse + "<<<<<<<<<<")
+            logger.debug(">>>>>>>>%s<<<<<<<<<<", line_to_parse)
             return container_level_tokens, line_to_parse, None
 
         (
@@ -249,11 +250,9 @@ class ContainerBlockProcessor:
 
         container_level_tokens.extend(leaf_tokens)
         logger.debug(
-            "clt-end>>"
-            + str(len(container_level_tokens))
-            + ">>"
-            + str(container_level_tokens)
-            + "<<"
+            "clt-end>>%s>>%s<<",
+            str(len(container_level_tokens)),
+            str(container_level_tokens),
         )
         return container_level_tokens, line_to_parse, requeue_line_info
         # pylint: enable=too-many-locals
@@ -328,14 +327,18 @@ class ContainerBlockProcessor:
                 adj_ws = extracted_whitespace[foobar:]
         else:
             assert len(current_container_blocks) >= 1
-            logger.debug("PLFCB>>Started list-last stack>>" + str(token_stack[stack_index]))
+            logger.debug(
+                "PLFCB>>Started list-last stack>>" + str(token_stack[stack_index])
+            )
             token_index = len(token_document) - 1
 
             while token_index >= 0 and not (
                 token_document[token_index].is_any_list_token
             ):
                 token_index -= 1
-            logger.debug("PLFCB>>Started list-last token>>" + str(token_document[token_index]))
+            logger.debug(
+                "PLFCB>>Started list-last token>>" + str(token_document[token_index])
+            )
             assert token_index >= 0
 
             old_start_index = token_document[token_index].indent_level
@@ -378,8 +381,8 @@ class ContainerBlockProcessor:
 
         if was_container_start and line_to_parse:
             assert container_depth < 10
-            nested_container_starts = ContainerBlockProcessor.__get_nested_container_starts(logger,
-                token_stack, line_to_parse, end_container_indices,
+            nested_container_starts = ContainerBlockProcessor.__get_nested_container_starts(
+                logger, token_stack, line_to_parse, end_container_indices,
             )
 
             logger.debug("check next container_start>stack>>" + str(token_stack))
@@ -391,7 +394,9 @@ class ContainerBlockProcessor:
 
             adj_line_to_parse = line_to_parse
 
-            logger.debug("check next container_start>pre>>" + str(adj_line_to_parse) + "<<")
+            logger.debug(
+                "check next container_start>pre>>" + str(adj_line_to_parse) + "<<"
+            )
             active_container_index = max(
                 end_container_indices.ulist_index,
                 end_container_indices.olist_index,
@@ -427,7 +432,9 @@ class ContainerBlockProcessor:
                 + str(this_bq_count)
             )
             adj_line_to_parse = "".rjust(active_container_index) + adj_line_to_parse
-            logger.debug("check next container_start>post<<" + str(adj_line_to_parse) + "<<")
+            logger.debug(
+                "check next container_start>post<<" + str(adj_line_to_parse) + "<<"
+            )
 
             logger.debug("leaf_tokens>>" + str(leaf_tokens))
             if leaf_tokens:
@@ -469,8 +476,7 @@ class ContainerBlockProcessor:
 
     @staticmethod
     def __get_nested_container_starts(
-        logger,
-        token_stack, line_to_parse, end_container_indices,
+        logger, token_stack, line_to_parse, end_container_indices,
     ):
 
         logger.debug("check next container_start>")
@@ -549,7 +555,9 @@ class ContainerBlockProcessor:
 
         logger.debug("\ncheck next container_start>recursed")
         logger.debug("check next container_start>stack>>" + str(token_stack))
-        logger.debug("check next container_start>tokenized_document>>" + str(token_document))
+        logger.debug(
+            "check next container_start>tokenized_document>>" + str(token_document)
+        )
         logger.debug("check next container_start>line_parse>>" + str(line_to_parse))
         return line_to_parse
 
@@ -972,4 +980,3 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
     # pylint: enable=too-many-locals
-

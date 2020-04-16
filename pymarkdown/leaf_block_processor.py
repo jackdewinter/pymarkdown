@@ -1,6 +1,8 @@
 """
 Module to provide processing for the leaf blocks.
 """
+import logging
+
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.markdown_token import (
     AtxHeaderMarkdownToken,
@@ -21,7 +23,6 @@ from pymarkdown.stack_token import (
     IndentedCodeBlockStackToken,
     ParagraphStackToken,
 )
-import logging
 
 
 class LeafBlockProcessor:
@@ -56,16 +57,12 @@ class LeafBlockProcessor:
             LeafBlockProcessor.__fenced_code_block_start_characters,
         ):
             logger.debug(
-                "ifcb:collected_count>>"
-                + line_to_parse
-                + "<<"
-                + str(start_index)
-                + "<<"
+                "ifcb:collected_count>>%s<<%s<<", line_to_parse, str(start_index)
             )
             collected_count, new_index = ParserHelper.collect_while_character(
                 line_to_parse, start_index, line_to_parse[start_index]
             )
-            logger.debug("ifcb:collected_count:" + str(collected_count))
+            logger.debug("ifcb:collected_count:%s", str(collected_count))
             (
                 non_whitespace_index,
                 extracted_whitespace_before_info_string,
@@ -447,11 +444,9 @@ class LeafBlockProcessor:
             return [BlankLineMarkdownToken("")]
 
         logger.debug(
-            "parse_paragraph>stack_bq_count>"
-            + str(stack_bq_count)
-            + ">this_bq_count>"
-            + str(this_bq_count)
-            + "<"
+            "parse_paragraph>stack_bq_count>%s>this_bq_count>%s<",
+            str(stack_bq_count),
+            str(this_bq_count),
         )
 
         if (

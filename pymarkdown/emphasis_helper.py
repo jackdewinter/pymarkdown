@@ -1,6 +1,8 @@
 """
 Emphasis helper
 """
+import logging
+
 from pymarkdown.constants import Constants
 from pymarkdown.markdown_token import (
     EmphasisMarkdownToken,
@@ -8,7 +10,6 @@ from pymarkdown.markdown_token import (
     MarkdownToken,
     SpecialTextMarkdownToken,
 )
-import logging
 
 
 # pylint: disable=too-few-public-methods
@@ -31,45 +32,38 @@ class EmphasisHelper:
         delimiter_stack = []
         special_count = 0
         for next_block in inline_blocks:
-            logger.debug("special_count>>" + str(special_count) + ">>" + str(next_block))
+            logger.debug("special_count>>%s>>%s", str(special_count), str(next_block))
             special_count += 1
             if not isinstance(next_block, SpecialTextMarkdownToken):
                 continue
             logger.debug(
-                "i>>"
-                + str(len(delimiter_stack))
-                + ">>"
-                + next_block.show_process_emphasis()
+                "i>>%s>>%s",
+                str(len(delimiter_stack)),
+                next_block.show_process_emphasis(),
             )
             delimiter_stack.append(next_block)
 
-        stack_bottom = EmphasisHelper.__find_token_in_delimiter_stack(logger,
-            inline_blocks, delimiter_stack, wall_token
+        stack_bottom = EmphasisHelper.__find_token_in_delimiter_stack(
+            logger, inline_blocks, delimiter_stack, wall_token
         )
         current_position = stack_bottom + 1
         openers_bottom = stack_bottom
         if current_position < len(delimiter_stack):
             logger.debug(
-                "BLOCK("
-                + str(current_position)
-                + ") of ("
-                + str(len(delimiter_stack))
-                + ")"
+                "BLOCK(%s) of (%s)", str(current_position), str(len(delimiter_stack))
             )
             logger.debug(
-                "BLOCK("
-                + str(current_position)
-                + ")-->"
-                + delimiter_stack[current_position].show_process_emphasis()
+                "BLOCK(%s)-->%s",
+                str(current_position),
+                delimiter_stack[current_position].show_process_emphasis(),
             )
 
             while current_position < (len(delimiter_stack) - 1):
                 current_position += 1
                 logger.debug(
-                    "Block("
-                    + str(current_position)
-                    + ")-->"
-                    + delimiter_stack[current_position].show_process_emphasis()
+                    "Block(%s)-->%s",
+                    str(current_position),
+                    delimiter_stack[current_position].show_process_emphasis(),
                 )
                 if not delimiter_stack[current_position].active:
                     logger.debug("not active")
@@ -87,7 +81,7 @@ class EmphasisHelper:
                     continue
 
                 close_token = delimiter_stack[current_position]
-                logger.debug("potential closer-->" + str(current_position))
+                logger.debug("potential closer-->%s", str(current_position))
                 scan_index = current_position - 1
                 found_opener = None
                 while (
@@ -95,44 +89,46 @@ class EmphasisHelper:
                     and scan_index > stack_bottom
                     and scan_index > openers_bottom
                 ):
-                    logger.debug("potential opener:" + str(scan_index))
+                    logger.debug("potential opener:%s", str(scan_index))
                     open_token = delimiter_stack[scan_index]
-                    is_valid_opener = EmphasisHelper.__is_open_close_emphasis_valid(logger,
-                        open_token, close_token
+                    is_valid_opener = EmphasisHelper.__is_open_close_emphasis_valid(
+                        logger, open_token, close_token
                     )
                     if is_valid_opener:
                         found_opener = open_token
                         break
                     scan_index -= 1
                     logger.debug(
-                        "scan_index-->"
-                        + str(scan_index)
-                        + ">stack_bottom>"
-                        + str(stack_bottom)
-                        + ">openers_bottom>"
-                        + str(openers_bottom)
-                        + ">"
+                        "scan_index-->%s>stack_bottom>%s>openers_bottom>%s>",
+                        str(scan_index),
+                        str(stack_bottom),
+                        str(openers_bottom),
                     )
 
                 if found_opener:
                     logger.debug("FOUND OPEN")
-                    current_position = EmphasisHelper.__process_emphasis_pair(logger,
-                        inline_blocks, found_opener, close_token, current_position
+                    current_position = EmphasisHelper.__process_emphasis_pair(
+                        logger,
+                        inline_blocks,
+                        found_opener,
+                        close_token,
+                        current_position,
                     )
                 else:
                     # openers_bottom = current_position - 1
-                    logger.debug("NOT FOUND OPEN, openers_bottom=" + str(openers_bottom))
+                    logger.debug(
+                        "NOT FOUND OPEN, openers_bottom=%s", str(openers_bottom)
+                    )
 
-                logger.debug("next->" + str(current_position))
+                logger.debug("next->%s", str(current_position))
 
         EmphasisHelper.__reset_token_text(inline_blocks)
         EmphasisHelper.__clear_remaining_emphasis(delimiter_stack, stack_bottom)
         return inline_blocks
 
-
     @staticmethod
-    def __process_emphasis_pair(logger,
-        inline_blocks, open_token, close_token, current_position
+    def __process_emphasis_pair(
+        logger, inline_blocks, open_token, close_token, current_position
     ):
         """
         Given that we have found a valid open and close block, process them.
@@ -206,7 +202,9 @@ class EmphasisHelper:
         return current_position
 
     @staticmethod
-    def __find_token_in_delimiter_stack(logger, inline_blocks, delimiter_stack, wall_token):
+    def __find_token_in_delimiter_stack(
+        logger, inline_blocks, delimiter_stack, wall_token
+    ):
         """
         Find the specified token in the delimiter stack, based solely on
         position in the inline_blocks.

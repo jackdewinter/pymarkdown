@@ -2,10 +2,10 @@
 Module to provide for a simple implementation of a title case algorithm.
 """
 import argparse
+import logging
 import os
 import sys
 import traceback
-import logging
 
 from pymarkdown.plugin_manager import BadPluginError, PluginManager
 from pymarkdown.source_providers import FileSourceProvider
@@ -86,6 +86,7 @@ class PyMarkdownLint:
         """
         return path_to_test.endswith(".md")
 
+    # pylint: disable=broad-except
     def __scan_file(self, next_file):
         """
         Scan a given file and call the plugin manager for any significant events.
@@ -96,7 +97,7 @@ class PyMarkdownLint:
         line_number = 1
         next_line = source_provider.get_next_line()
         context = self.plugins.starting_new_file(next_file)
-        while not next_line is None:
+        while next_line is not None:
             self.plugins.next_line(context, line_number, next_line)
             line_number += 1
             next_line = source_provider.get_next_line()
@@ -106,10 +107,12 @@ class PyMarkdownLint:
         source_provider = FileSourceProvider(next_file)
         try:
             actual_tokens = tokenizer.transform_from_provider(source_provider)
-            self.logger.debug(">>" + str(actual_tokens) + "<<")
+            self.logger.debug(">>%s<<", str(actual_tokens))
         except Exception:
             print("Exception encountered parsing document:\n")
             traceback.print_exc(file=sys.stdout)
+
+    # pylint: enable=broad-except
 
     @classmethod
     def __determine_files_to_scan(cls, eligible_paths):
@@ -177,7 +180,7 @@ class PyMarkdownLint:
         """
         args = self.__parse_arguments()
 
-        #logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
+        # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
         logger = logging.getLogger()
         logger.setLevel(logging.DEBUG)
 

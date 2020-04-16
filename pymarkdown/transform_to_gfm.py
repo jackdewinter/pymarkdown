@@ -2,6 +2,7 @@
 Module to provide for a transformation from markdown tokens to html for GFM.
 """
 import inspect
+import logging
 
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.markdown_token import (
@@ -29,7 +30,6 @@ from pymarkdown.markdown_token import (
     UnorderedListStartMarkdownToken,
     UriAutolinkMarkdownToken,
 )
-import logging
 
 
 # pylint: disable=too-few-public-methods
@@ -118,12 +118,10 @@ class TransformToGfm:
                     stack_count -= 1
 
             self.logger.debug(
-                ">>stack_count>>"
-                + str(stack_count)
-                + ">>#"
-                + str(current_token_index)
-                + ":"
-                + str(actual_tokens[current_token_index])
+                ">>stack_count>>%s>>#%s:%s",
+                str(stack_count),
+                str(current_token_index),
+                str(actual_tokens[current_token_index]),
             )
             if check_me:
                 self.logger.debug("check")
@@ -145,14 +143,14 @@ class TransformToGfm:
         """
 
         token_to_check = actual_tokens[current_token_index - 1]
-        self.logger.debug("token_to_check-->" + str(token_to_check))
+        self.logger.debug("token_to_check-->%s", str(token_to_check))
         if isinstance(token_to_check, EndMarkdownToken) and (
             token_to_check.type_name == MarkdownToken.token_unordered_list_start
             or token_to_check.type_name == MarkdownToken.token_ordered_list_start
         ):
             if actual_tokens[current_token_index - 2].is_blank_line:
                 token_to_check = actual_tokens[current_token_index - 2]
-        self.logger.debug("token_to_check-->" + str(token_to_check))
+        self.logger.debug("token_to_check-->%s", str(token_to_check))
         if token_to_check.is_blank_line:
             if isinstance(
                 actual_tokens[current_token_index - 2],
@@ -210,10 +208,12 @@ class TransformToGfm:
         out the correct list looseness to use.
         """
 
-        self.logger.debug("!!!!!!!!!!!!!!!" + str(actual_token_index))
+        self.logger.debug("!!!!!!!!!!!!!!!%s", str(actual_token_index))
         search_index = actual_token_index + 1
         while search_index < len(actual_tokens):
-            self.logger.debug("!!" + str(search_index) + "::" + str(actual_tokens[search_index]))
+            self.logger.debug(
+                "!!%s::%s", str(search_index), str(actual_tokens[search_index])
+            )
             if isinstance(actual_tokens[search_index], EndMarkdownToken) and (
                 actual_tokens[search_index].type_name
                 == MarkdownToken.token_unordered_list_start
@@ -222,7 +222,9 @@ class TransformToGfm:
             ):
                 break
             search_index += 1
-        self.logger.debug("!!!!!!!!!!!!!!!" + str(search_index) + "-of-" + str(len(actual_tokens)))
+        self.logger.debug(
+            "!!!!!!!!!!!!!!!%s-of-%s", str(search_index), str(len(actual_tokens))
+        )
         # check to see where we are, then grab the matching start to find
         # the loose
         if search_index == len(actual_tokens):
@@ -230,14 +232,16 @@ class TransformToGfm:
         else:
             self.logger.debug(">>reset_list_looseness-token_unordered_list_start>>")
             new_index = self.__find_owning_list_start(actual_tokens, search_index)
-            self.logger.debug(">>reset_list_looseness>>" + str(new_index))
+            self.logger.debug(">>reset_list_looseness>>%s", str(new_index))
             is_in_loose_list = actual_tokens[new_index].is_loose
-        self.logger.debug("           is_in_loose_list=" + str(is_in_loose_list))
+        self.logger.debug("           is_in_loose_list=%s", str(is_in_loose_list))
         return is_in_loose_list
 
     def __init__(self):
         self.start_token_handlers = {}
         self.end_token_handlers = {}
+
+        self.logger = logging.getLogger(__name__)
 
         self.register_handlers(
             ThematicBreakMarkdownToken, self.handle_thematic_break_token
@@ -338,8 +342,6 @@ class TransformToGfm:
         """
         Transform the tokens into html.
         """
-        self.logger = logging.getLogger(__name__)
-
         self.logger.debug("\n\n---\n")
         output_html = ""
         transform_state = TransformState(actual_tokens)
@@ -369,14 +371,12 @@ class TransformToGfm:
 
             self.logger.debug("======")
             self.logger.debug(
-                "add_trailing_text-->"
-                + str(transform_state.add_trailing_text).replace("\n", "\\n")
-                + "<--"
+                "add_trailing_text-->%s<--",
+                str(transform_state.add_trailing_text).replace("\n", "\\n"),
             )
             self.logger.debug(
-                "add_leading_text -->"
-                + str(transform_state.add_leading_text).replace("\n", "\\n")
-                + "<--"
+                "add_leading_text -->%s<--",
+                str(transform_state.add_leading_text).replace("\n", "\\n"),
             )
 
             if transform_state.add_trailing_text:
@@ -386,12 +386,15 @@ class TransformToGfm:
                 output_html = self.apply_leading_text(output_html, transform_state)
 
             self.logger.debug("------")
-            self.logger.debug("next_token     -->" + str(next_token).replace("\n", "\\n") + "<--")
-            self.logger.debug("output_html    -->" + str(output_html).replace("\n", "\\n") + "<--")
             self.logger.debug(
-                "transform_stack-->"
-                + str(transform_state.transform_stack).replace("\n", "\\n")
-                + "<--"
+                "next_token     -->%s<--", str(next_token).replace("\n", "\\n")
+            )
+            self.logger.debug(
+                "output_html    -->%s<--", str(output_html).replace("\n", "\\n")
+            )
+            self.logger.debug(
+                "transform_stack-->%s<--",
+                str(transform_state.transform_stack).replace("\n", "\\n"),
             )
 
             transform_state.actual_token_index += 1

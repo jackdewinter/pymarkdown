@@ -3,6 +3,7 @@ Processing to coalesce a text tokens with a list of tokens.
 """
 import logging
 
+
 # pylint: disable=too-few-public-methods
 class CoalesceProcessor:
     """
@@ -21,31 +22,33 @@ class CoalesceProcessor:
         for coalesce_index in range(1, len(first_pass_results)):
             did_process = False
             logger.debug(
-                "coalesce_text_blocks>>>>"
-                + str(first_pass_results[coalesce_index])
-                + "<<"
+                "coalesce_text_blocks>>>>%s<<", str(first_pass_results[coalesce_index])
             )
             if coalesced_list[-1].is_text:
-                logger.debug(">>coalesce_text_blocks>>>>" + str(coalesced_list[-1]) + "<<")
+                logger.debug(">>coalesce_text_blocks>>>>%s<<", str(coalesced_list[-1]))
                 if first_pass_results[coalesce_index].is_text or (
                     first_pass_results[coalesce_index].is_blank_line
                     and coalesced_list[-2].is_code_block
                 ):
 
-                    logger.debug("text-text>>" + str(coalesced_list[-2]) + "<<")
+                    logger.debug("text-text>>%s<<", str(coalesced_list[-2]))
                     remove_leading_spaces = 0
                     if coalesced_list[-2].is_indented_code_block:
                         remove_leading_spaces = len(coalesced_list[-2].extra_data)
                     elif coalesced_list[-2].is_paragraph:
                         remove_leading_spaces = -1
 
-                    logger.debug("remove_leading_spaces>>" + str(remove_leading_spaces))
-                    logger.debug("combine1>>" + str(coalesced_list[-1]))
-                    logger.debug("combine2>>" + str(first_pass_results[coalesce_index]))
+                    logger.debug(
+                        "remove_leading_spaces>>%s", str(remove_leading_spaces)
+                    )
+                    logger.debug("combine1>>%s", str(coalesced_list[-1]))
+                    logger.debug(
+                        "combine2>>%s", str(first_pass_results[coalesce_index])
+                    )
                     coalesced_list[-1].combine(
                         first_pass_results[coalesce_index], remove_leading_spaces
                     )
-                    logger.debug("combined>>" + str(coalesced_list[-1]))
+                    logger.debug("combined>>%s", str(coalesced_list[-1]))
                     did_process = True
             if not did_process:
                 coalesced_list.append(first_pass_results[coalesce_index])
@@ -56,33 +59,25 @@ class CoalesceProcessor:
                 or coalesced_list[coalesce_index - 1].is_setext
             ):
                 logger.debug(
-                    "full_paragraph_text>" + str(coalesced_list[coalesce_index]) + "<"
+                    "full_paragraph_text>%s<", str(coalesced_list[coalesce_index])
                 )
                 logger.debug(
-                    "full_paragraph_text>"
-                    + str(len(coalesced_list[coalesce_index].token_text))
-                    + ">"
-                    + coalesced_list[coalesce_index].token_text
-                    + "<"
+                    "full_paragraph_text>%s>%s<",
+                    str(len(coalesced_list[coalesce_index].token_text)),
+                    coalesced_list[coalesce_index].token_text,
                 )
                 removed_ws = coalesced_list[coalesce_index].remove_final_whitespace()
                 logger.debug(
-                    "full_paragraph_text>"
-                    + str(len(coalesced_list[coalesce_index].token_text))
-                    + ">"
-                    + coalesced_list[coalesce_index].token_text
-                    + "<"
+                    "full_paragraph_text>%s>%s<",
+                    str(len(coalesced_list[coalesce_index].token_text)),
+                    coalesced_list[coalesce_index].token_text,
                 )
                 logger.debug(
-                    "full_paragraph_text>"
-                    + str(coalesced_list[coalesce_index - 1])
-                    + ">"
+                    "full_paragraph_text>%s>", str(coalesced_list[coalesce_index - 1])
                 )
                 coalesced_list[coalesce_index - 1].set_final_whitespace(removed_ws)
                 logger.debug(
-                    "full_paragraph_text>"
-                    + str(coalesced_list[coalesce_index - 1])
-                    + ">"
+                    "full_paragraph_text>%s>", str(coalesced_list[coalesce_index - 1])
                 )
 
         return coalesced_list

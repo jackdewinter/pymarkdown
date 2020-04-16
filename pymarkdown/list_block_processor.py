@@ -2,8 +2,8 @@
 Module to provide processing for the list blocks.
 """
 
-import string
 import logging
+import string
 
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.markdown_token import (
@@ -65,10 +65,9 @@ class ListBlockProcessor:
                 line_to_parse, start_index + 1
             )
             logger.debug(
-                "after_all_whitespace_index>>"
-                + str(after_all_whitespace_index)
-                + ">>len>>"
-                + str(len(line_to_parse))
+                "after_all_whitespace_index>>%s>>len>>%s",
+                str(after_all_whitespace_index),
+                str(len(line_to_parse)),
             )
 
             is_break, _ = LeafBlockProcessor.is_thematic_break(
@@ -81,7 +80,7 @@ class ListBlockProcessor:
             ):
                 is_start = True
 
-        logger.debug("is_ulist_start>>result>>" + str(is_start))
+        logger.debug("is_ulist_start>>result>>%s", str(is_start))
         return is_start, after_all_whitespace_index
         # pylint: enable=too-many-arguments
 
@@ -119,20 +118,20 @@ class ListBlockProcessor:
                 index += 1
             my_count = index - start_index
             olist_index_number = line_to_parse[start_index:index]
-            logger.debug("olist?" + olist_index_number + "<<count>>" + str(my_count) + "<<")
-            logger.debug("olist>>" + str(line_to_parse[index]))
-            logger.debug("index+1>>" + str(index + 1) + ">>len>>" + str(len(line_to_parse)))
+            logger.debug("olist?%s<<count>>%s<<", olist_index_number, str(my_count))
+            logger.debug("olist>>%s", str(line_to_parse[index]))
+            logger.debug(
+                "index+1>>%s>>len>>%s", str(index + 1), str(len(line_to_parse))
+            )
 
             end_whitespace_index, _ = ParserHelper.extract_whitespace(
                 line_to_parse, index + 1
             )
             logger.debug(
-                "end_whitespace_index>>"
-                + str(end_whitespace_index)
-                + ">>len>>"
-                + str(len(line_to_parse))
-                + ">>"
-                + olist_index_number
+                "end_whitespace_index>>%s>>len>>%s>>%s",
+                str(end_whitespace_index),
+                str(len(line_to_parse)),
+                olist_index_number,
             )
 
             if (
@@ -157,7 +156,7 @@ class ListBlockProcessor:
             ):
                 is_start = True
 
-        logger.debug("is_olist_start>>result>>" + str(is_start))
+        logger.debug("is_olist_start>>result>>%s", str(is_start))
         return is_start, index, my_count, end_whitespace_index
         # pylint: enable=too-many-arguments
 
@@ -219,14 +218,11 @@ class ListBlockProcessor:
                 )
 
                 logger.debug(
-                    "total="
-                    + str(indent_level)
-                    + ";ws-before="
-                    + str(ws_before_marker)
-                    + ";ws_after="
-                    + str(ws_after_marker)
-                    + ";start_index="
-                    + str(start_index)
+                    "total=%s;ws-before=%s;ws_after=%s;start_index=%s",
+                    str(indent_level),
+                    str(ws_before_marker),
+                    str(ws_after_marker),
+                    str(start_index),
                 )
                 new_stack = UnorderedListStackToken(
                     indent_level,
@@ -336,14 +332,11 @@ class ListBlockProcessor:
                 )
 
                 logger.debug(
-                    "total="
-                    + str(indent_level)
-                    + ";ws-before="
-                    + str(ws_before_marker)
-                    + ";ws_after="
-                    + str(ws_after_marker)
-                    + ";start_index="
-                    + str(start_index)
+                    "total=%s;ws-before=%s;ws_after=%s;start_index=%s",
+                    str(indent_level),
+                    str(ws_before_marker),
+                    str(ws_after_marker),
+                    str(start_index),
                 )
 
                 new_stack = OrderedListStackToken(
@@ -392,7 +385,6 @@ class ListBlockProcessor:
         )
         # pylint: enable=too-many-arguments
 
-
     # pylint: disable=too-many-arguments
     @staticmethod
     def list_in_process(
@@ -411,15 +403,14 @@ class ListBlockProcessor:
 
         container_level_tokens = []
 
-        logger.debug("!!!!!FOUND>>" + str(token_stack[ind]))
-        logger.debug("!!!!!FOUND>>" + str(token_stack[ind].extra_data))
+        logger.debug("!!!!!FOUND>>%s", str(token_stack[ind]))
+        logger.debug("!!!!!FOUND>>%s", str(token_stack[ind].extra_data))
         requested_list_indent = token_stack[ind].indent_level
         before_ws_length = token_stack[ind].ws_before_marker
         logger.debug(
-            "!!!!!requested_list_indent>>"
-            + str(requested_list_indent)
-            + ",before_ws="
-            + str(before_ws_length)
+            "!!!!!requested_list_indent>>%s,before_ws=%s",
+            str(requested_list_indent),
+            str(before_ws_length),
         )
 
         leading_space_length = ParserHelper.calculate_length(extracted_whitespace)
@@ -444,27 +435,26 @@ class ListBlockProcessor:
             allow_list_continue = not token_document[-1].is_blank_line
 
         logger.debug(
-            "leading_space_length>>"
-            + str(leading_space_length)
-            + ">>requested_list_indent>>"
-            + str(requested_list_indent)
-            + ">>is_in_paragraph>>"
-            + str(token_stack[-1].is_paragraph)
+            "leading_space_length>>%s>>requested_list_indent>>%s>>is_in_paragraph>>%s",
+            str(leading_space_length),
+            str(requested_list_indent),
+            str(token_stack[-1].is_paragraph),
         )
         if leading_space_length >= requested_list_indent and allow_list_continue:
-            line_to_parse = ListBlockProcessor.__adjust_line_for_list_in_process(logger,
-                line_to_parse, start_index, leading_space_length, requested_list_indent
+            line_to_parse = ListBlockProcessor.__adjust_line_for_list_in_process(
+                logger,
+                line_to_parse,
+                start_index,
+                leading_space_length,
+                requested_list_indent,
             )
         else:
             requested_list_indent = requested_list_indent - before_ws_length
             logger.debug(
-                "leading_space_length>>"
-                + str(leading_space_length)
-                + ">>adj requested_list_indent>>"
-                + str(requested_list_indent)
-                + ">>"
-                + str(token_stack[-1].is_paragraph)
-                + "<<"
+                "leading_space_length>>%s>>adj requested_list_indent>>%s>>%s<<",
+                str(leading_space_length),
+                str(requested_list_indent),
+                str(token_stack[-1].is_paragraph),
             )
             if (
                 token_stack[-1].is_paragraph
@@ -492,7 +482,7 @@ class ListBlockProcessor:
 
         return container_level_tokens, line_to_parse
         # pylint: enable=too-many-arguments
-        
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def __pre_list(
@@ -528,9 +518,11 @@ class ListBlockProcessor:
         logger.debug("--" + str(start_index) + "--" + str(start_index + 1))
         # assert "\t" not in after_marker_whitespace
 
-        container_level_tokens, stack_bq_count = ListBlockProcessor.__handle_list_nesting(
-            logger,
-            token_stack, stack_bq_count, this_bq_count, close_open_blocks_fn
+        (
+            container_level_tokens,
+            stack_bq_count,
+        ) = ListBlockProcessor.__handle_list_nesting(
+            logger, token_stack, stack_bq_count, this_bq_count, close_open_blocks_fn
         )
         logger.debug(
             ">>>>>XX>>"
@@ -581,8 +573,8 @@ class ListBlockProcessor:
         # pylint: enable=too-many-arguments
 
     @staticmethod
-    def __handle_list_nesting(logger,
-        token_stack, stack_bq_count, this_bq_count, close_open_blocks_fn
+    def __handle_list_nesting(
+        logger, token_stack, stack_bq_count, this_bq_count, close_open_blocks_fn
     ):
         """
         Resolve any nesting issues with block quotes.
@@ -807,7 +799,9 @@ class ListBlockProcessor:
             document_token_index -= 1
         assert document_token_index >= 0
 
-        logger.debug("ARE-EQUAL>>Last_List_token=" + str(token_document[document_token_index]))
+        logger.debug(
+            "ARE-EQUAL>>Last_List_token=" + str(token_document[document_token_index])
+        )
         old_start_index = token_document[document_token_index].indent_level
 
         old_last_marker_character = token_stack[last_list_index].list_character[-1]
@@ -818,7 +812,9 @@ class ListBlockProcessor:
             + ">>"
             + old_last_marker_character
         )
-        logger.debug("new>>" + str(new_stack.extra_data) + ">>" + new_stack.list_character[-1])
+        logger.debug(
+            "new>>" + str(new_stack.extra_data) + ">>" + new_stack.list_character[-1]
+        )
         if (
             token_stack[last_list_index].type_name == new_stack.type_name
             and old_last_marker_character == new_stack.list_character[-1]
@@ -893,8 +889,8 @@ class ListBlockProcessor:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def __adjust_line_for_list_in_process(logger,
-        line_to_parse, start_index, leading_space_length, requested_list_indent
+    def __adjust_line_for_list_in_process(
+        logger, line_to_parse, start_index, leading_space_length, requested_list_indent
     ):
         """
         Alter the current line to better represent the current level of lists.

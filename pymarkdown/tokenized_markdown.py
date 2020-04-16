@@ -1,9 +1,8 @@
 """
 Module to provide a tokenization of a markdown-encoded string.
 """
-import os
-import sys
 import logging
+import os
 
 from pymarkdown.block_quote_processor import BlockQuoteProcessor
 from pymarkdown.coalesce_processor import CoalesceProcessor
@@ -34,12 +33,19 @@ class TokenizedMarkdown:
         self.stack = []
         self.resource_path = os.path.join(os.path.split(__file__)[0], "resources")
         self.source_provider = None
+        self.logger = logging.getLogger(__name__)
 
     def transform_from_provider(self, source_provider):
+        """
+        Transform the data from the source provider into a Markdown token stream.
+        """
         self.source_provider = source_provider
         return self.__transform()
 
     def transform(self, your_text_string, show_debug=True):
+        """
+        Transform a text string in a Markdown format into a Markdown token stream.
+        """
 
         logger = logging.getLogger()
         if show_debug:
@@ -53,8 +59,6 @@ class TokenizedMarkdown:
         """
         Transform a markdown-encoded string into an array of tokens.
         """
-        self.logger = logging.getLogger(__name__)
-
         InlineHelper.initialize(self.resource_path)
         InlineProcessor.initialize()
         LinkHelper.initialize()
@@ -85,12 +89,12 @@ class TokenizedMarkdown:
         did_started_close = False
         requeue = []
         ignore_link_definition_start = False
-        self.logger.debug("---" + str(token_to_use) + "---")
+        self.logger.debug("---%s---", str(token_to_use))
         self.logger.debug("---")
         while True:
-            self.logger.debug("next-line>>" + str(token_to_use))
-            self.logger.debug("stack>>" + str(self.stack))
-            self.logger.debug("current_block>>" + str(self.stack[-1]))
+            self.logger.debug("next-line>>%s", str(token_to_use))
+            self.logger.debug("stack>>%s", str(self.stack))
+            self.logger.debug("current_block>>%s", str(self.stack[-1]))
             self.logger.debug("---")
 
             if did_start_close:
@@ -112,7 +116,7 @@ class TokenizedMarkdown:
                 did_start_close = False
                 tokens_from_line = None
                 self.logger.debug(
-                    "\n\n\n\n\n\n\n\n\n\n>>lines_to_requeue>>" + str(lines_to_requeue)
+                    "\n\n\n\n\n\n\n\n\n\n>>lines_to_requeue>>%s", str(lines_to_requeue)
                 )
             else:
                 if not token_to_use or not token_to_use.strip():
@@ -148,13 +152,13 @@ class TokenizedMarkdown:
             else:
                 ignore_link_definition_start = False
 
-            self.logger.debug("---\nbefore>>" + str(self.tokenized_document))
-            self.logger.debug("before>>" + str(tokens_from_line))
+            self.logger.debug("---\nbefore>>%s", str(self.tokenized_document))
+            self.logger.debug("before>>%s", str(tokens_from_line))
             if tokens_from_line:
                 self.tokenized_document.extend(tokens_from_line)
-            self.logger.debug("after>>" + str(self.tokenized_document))
+            self.logger.debug("after>>%s", str(self.tokenized_document))
             if requeue:
-                self.logger.debug("requeue>>" + str(requeue))
+                self.logger.debug("requeue>>%s", str(requeue))
             self.logger.debug("---")
 
             (
@@ -179,8 +183,8 @@ class TokenizedMarkdown:
             self.logger.debug(">>Requeues present")
             token_to_use = requeue[0]
             del requeue[0]
-            self.logger.debug(">>Requeue>>" + str(token_to_use))
-            self.logger.debug(">>Requeues left>>" + str(requeue))
+            self.logger.debug(">>Requeue>>%s", str(token_to_use))
+            self.logger.debug(">>Requeues left>>%s", str(requeue))
         elif did_started_close:
             did_start_close = True
         else:
@@ -211,10 +215,10 @@ class TokenizedMarkdown:
             new_tokens = destination_array
 
         while not self.stack[-1].is_document:
-            self.logger.debug("cob>>" + str(self.stack))
+            self.logger.debug("cob>>%s", str(self.stack))
             if only_these_blocks:
-                self.logger.debug("cob-only-type>>" + str(only_these_blocks))
-                self.logger.debug("cob-only-type>>" + str(type(self.stack[-1])))
+                self.logger.debug("cob-only-type>>%s", str(only_these_blocks))
+                self.logger.debug("cob-only-type>>%s", str(type(self.stack[-1])))
                 # pylint: disable=unidiomatic-typecheck
                 if type(self.stack[-1]) not in only_these_blocks:
                     self.logger.debug("cob>>not in only")
@@ -228,11 +232,7 @@ class TokenizedMarkdown:
                 break
             if until_this_index != -1:
                 self.logger.debug(
-                    "NOT ME!!!!"
-                    + str(until_this_index)
-                    + "<<"
-                    + str(len(self.stack))
-                    + "<<"
+                    "NOT ME!!!!%s<<%s<<", str(until_this_index), str(len(self.stack))
                 )
                 if until_this_index >= len(self.stack):
                     break
@@ -254,11 +254,9 @@ class TokenizedMarkdown:
                     break
                 assert not lines_to_requeue
                 self.logger.debug(
-                    "cob->process_link_reference_definition>>outer_processed>>"
-                    + str(outer_processed)
-                    + ">did_complete_lrd>"
-                    + str(did_complete_lrd)
-                    + "<"
+                    "cob->process_link_reference_definition>>outer_processed>>%s>did_complete_lrd>%s<",
+                    str(outer_processed),
+                    str(did_complete_lrd),
                 )
                 assert not did_pause_lrd
             else:
@@ -274,7 +272,7 @@ class TokenizedMarkdown:
         """
 
         new_tokens = []
-        self.logger.debug("cob->te->" + str(self.stack[-1]))
+        self.logger.debug("cob->te->%s", str(self.stack[-1]))
         extra_elements = []
         if self.stack[-1].is_indented_code_block:
             extra_elements.extend(
@@ -307,9 +305,9 @@ class TokenizedMarkdown:
         if not from_main_transform:
             close_only_these_blocks = [ParagraphStackToken]
             do_include_block_quotes = False
-        self.logger.debug("from_main_transform>>" + str(from_main_transform))
-        self.logger.debug("close_only_these_blocks>>" + str(close_only_these_blocks))
-        self.logger.debug("do_include_block_quotes>>" + str(do_include_block_quotes))
+        self.logger.debug("from_main_transform>>%s", str(from_main_transform))
+        self.logger.debug("close_only_these_blocks>>%s", str(close_only_these_blocks))
+        self.logger.debug("do_include_block_quotes>>%s", str(do_include_block_quotes))
 
         non_whitespace_index, extracted_whitespace = ParserHelper.extract_whitespace(
             input_line, 0
@@ -319,19 +317,19 @@ class TokenizedMarkdown:
             self.stack
         )
         self.logger.debug(
-            "is_processing_list>>"
-            + str(is_processing_list)
-            + ">>in_index>>"
-            + str(in_index)
-            + ">>last_stack>>"
-            + str(self.stack[-1])
+            "is_processing_list>>%s>>in_index>>%s>>last_stack>>%s",
+            str(is_processing_list),
+            str(in_index),
+            str(self.stack[-1]),
         )
 
         lines_to_requeue = []
         force_ignore_first_as_lrd = None
         new_tokens = None
         if self.stack[-1].was_link_definition_started:
-            self.logger.debug("process_link_reference_definition>>stopping link definition")
+            self.logger.debug(
+                "process_link_reference_definition>>stopping link definition"
+            )
             (
                 _,
                 _,
@@ -371,7 +369,7 @@ class TokenizedMarkdown:
                 include_block_quotes=do_include_block_quotes,
             )
 
-        self.logger.debug("new_tokens>>" + str(new_tokens))
+        self.logger.debug("new_tokens>>%s", str(new_tokens))
         assert non_whitespace_index == len(input_line)
         new_tokens.append(BlankLineMarkdownToken(extracted_whitespace))
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd

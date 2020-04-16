@@ -1,6 +1,7 @@
 """
 Link helper
 """
+import logging
 import urllib
 
 from pymarkdown.constants import Constants
@@ -15,7 +16,6 @@ from pymarkdown.markdown_token import (
     TextMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
-import logging
 
 
 class LinkHelper:
@@ -74,21 +74,20 @@ class LinkHelper:
         logger = logging.getLogger(__name__)
 
         logger.debug(
-            ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-            + str(LinkHelper.__link_definitions)
+            ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>%s",
+            str(LinkHelper.__link_definitions),
         )
         logger.debug(
-            ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
-            + str(link_name)
-            + ":"
-            + str(link_value)
+            ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>%s:%s",
+            str(link_name),
+            str(link_value),
         )
         if link_name in LinkHelper.__link_definitions:
             # TODO warning?
-            logger.debug(">>def already present>>" + str(link_name))
+            logger.debug(">>def already present>>%s", str(link_name))
         else:
             LinkHelper.__link_definitions[link_name] = link_value
-            logger.debug(">>added def>>" + str(link_name) + "-->" + str(link_value))
+            logger.debug(">>added def>>%s-->%s", str(link_name), str(link_value))
 
     @staticmethod
     def extract_link_label(line_to_parse, new_index, include_reference_colon=True):
@@ -122,7 +121,7 @@ class LinkHelper:
                 logger.debug(">> unescaped [, bailing")
                 return False, -1, None
 
-        logger.debug("look for ]>>" + line_to_parse[new_index:] + "<<")
+        logger.debug("look for ]>>%s<<", line_to_parse[new_index:])
         if not ParserHelper.is_character_at_index(
             line_to_parse, new_index, LinkHelper.link_label_end
         ):
@@ -131,7 +130,7 @@ class LinkHelper:
         new_index += 1
 
         if include_reference_colon:
-            logger.debug("look for :>>" + line_to_parse[new_index:] + "<<")
+            logger.debug("look for :>>%s<<", line_to_parse[new_index:])
             if not ParserHelper.is_character_at_index(
                 line_to_parse,
                 new_index,
@@ -151,26 +150,24 @@ class LinkHelper:
         logger = logging.getLogger(__name__)
 
         inline_title = ""
-        logger.debug("before ws>>" + line_to_parse[new_index:] + ">")
+        logger.debug("before ws>>%s>", line_to_parse[new_index:])
         new_index, ex_ws = ParserHelper.extract_any_whitespace(line_to_parse, new_index)
         logger.debug(
-            "after ws>>"
-            + line_to_parse[new_index:]
-            + ">ex_ws>"
-            + ex_ws.replace("\n", "\\n")
+            "after ws>>%s>ex_ws>%s",
+            line_to_parse[new_index:],
+            ex_ws.replace("\n", "\\n"),
         )
         if new_index == len(line_to_parse) and not is_blank_line:
             return False, new_index, None
         if ex_ws and new_index < len(line_to_parse):
-            inline_title, new_index = LinkHelper.__parse_link_title(logger,
-                line_to_parse, new_index
+            inline_title, new_index = LinkHelper.__parse_link_title(
+                logger, line_to_parse, new_index
             )
             if new_index == -1:
                 return False, -1, None
             if inline_title is None:
                 return False, new_index, None
         return True, new_index, inline_title
-
 
     @staticmethod
     def extract_link_destination(line_to_parse, new_index, is_blank_line):
@@ -185,9 +182,9 @@ class LinkHelper:
         if new_index == len(line_to_parse) and not is_blank_line:
             return False, new_index, None
 
-        logger.debug("LD>>" + line_to_parse[new_index:] + "<<")
-        inline_link, new_index = LinkHelper.__parse_link_destination(logger,
-            line_to_parse, new_index
+        logger.debug("LD>>%s<<", line_to_parse[new_index:])
+        inline_link, new_index = LinkHelper.__parse_link_destination(
+            logger, line_to_parse, new_index
         )
         if new_index == -1:
             return False, -1, None
@@ -211,6 +208,7 @@ class LinkHelper:
         link_label = link_label.casefold().strip()
         return link_label
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def look_for_link_or_image(
         logger,
@@ -253,7 +251,8 @@ class LinkHelper:
                             updated_index,
                             token_to_append,
                             consume_rest_of_line,
-                        ) = LinkHelper.__handle_link_types(logger,
+                        ) = LinkHelper.__handle_link_types(
+                            logger,
                             inline_blocks,
                             search_index,
                             source_text,
@@ -301,7 +300,9 @@ class LinkHelper:
             if valid_special_start_text == LinkHelper.__link_start_sequence:
                 for deactivate_token in inline_blocks:
                     if isinstance(deactivate_token, SpecialTextMarkdownToken):
-                        logger.debug("inline_blocks>>>>>>>>>>>>>>>>>>" + str(deactivate_token))
+                        logger.debug(
+                            "inline_blocks>>>>>>>>>>>>>>>>>>" + str(deactivate_token)
+                        )
                         if (
                             deactivate_token.token_text
                             == LinkHelper.__link_start_sequence
@@ -310,6 +311,8 @@ class LinkHelper:
             return updated_index, True, token_to_append, consume_rest_of_line
         is_active = False
         return new_index, is_active, token_to_append, consume_rest_of_line
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __consume_text_for_image_alt_text(logger, inline_blocks, ind, remaining_line):
@@ -449,7 +452,9 @@ class LinkHelper:
         Parse an inline link's link destination.
         """
 
-        logger.debug("parse_link_destination>>new_index>>" + source_text[new_index:] + ">>")
+        logger.debug(
+            "parse_link_destination>>new_index>>" + source_text[new_index:] + ">>"
+        )
         if ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__angle_link_start
         ):
@@ -476,8 +481,8 @@ class LinkHelper:
                 + ">"
                 + str(source_text[new_index:])
             )
-            new_index, ex_link = LinkHelper.__parse_non_angle_link_destination(logger,
-                source_text, new_index
+            new_index, ex_link = LinkHelper.__parse_non_angle_link_destination(
+                logger, source_text, new_index
             )
             logger.debug(
                 ">parse_non_angle_link_destination>new_index>"
@@ -578,8 +583,8 @@ class LinkHelper:
         if not ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_format_inline_end
         ):
-            inline_link, new_index = LinkHelper.__parse_link_destination(logger,
-                source_text, new_index
+            inline_link, new_index = LinkHelper.__parse_link_destination(
+                logger, source_text, new_index
             )
             if new_index != -1:
                 logger.debug("before ws>>" + source_text[new_index:] + ">")
@@ -590,8 +595,8 @@ class LinkHelper:
                 if ParserHelper.is_character_at_index_not(
                     source_text, new_index, LinkHelper.__link_format_inline_end
                 ):
-                    inline_title, new_index = LinkHelper.__parse_link_title(logger,
-                        source_text, new_index
+                    inline_title, new_index = LinkHelper.__parse_link_title(
+                        logger, source_text, new_index
                     )
                 if new_index != -1:
                     new_index, _ = ParserHelper.extract_any_whitespace(
@@ -643,8 +648,10 @@ class LinkHelper:
         return update_index, inline_link, inline_title
 
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-locals
     @staticmethod
-    def __handle_link_types(logger,
+    def __handle_link_types(
+        logger,
         inline_blocks,
         ind,
         source_text,
@@ -673,8 +680,8 @@ class LinkHelper:
             + str(remaining_line)
             + ">>"
         )
-        text_from_blocks = LinkHelper.__collect_text_from_blocks(logger,
-            inline_blocks, ind, current_string_unresolved + remaining_line
+        text_from_blocks = LinkHelper.__collect_text_from_blocks(
+            logger, inline_blocks, ind, current_string_unresolved + remaining_line
         )
         logger.debug("handle_link_types>>text_from_blocks>>" + text_from_blocks + "<<")
 
@@ -685,14 +692,16 @@ class LinkHelper:
             inline_title,
             update_index,
             tried_full_reference_form,
-        ) = LinkHelper.__look_for_link_formats(logger,source_text, new_index, text_from_blocks)
+        ) = LinkHelper.__look_for_link_formats(
+            logger, source_text, new_index, text_from_blocks
+        )
 
         if update_index == -1 and not tried_full_reference_form:
             logger.debug("shortcut?")
             logger.debug(">>" + str(inline_blocks) + "<<")
             logger.debug(">>" + str(text_from_blocks) + "<<")
-            update_index, inline_link, inline_title = LinkHelper.__look_up_link(logger,
-                text_from_blocks, new_index, "shortcut"
+            update_index, inline_link, inline_title = LinkHelper.__look_up_link(
+                logger, text_from_blocks, new_index, "shortcut"
             )
 
         token_to_append = None
@@ -708,8 +717,8 @@ class LinkHelper:
             else:
                 assert start_text == LinkHelper.image_start_sequence
                 consume_rest_of_line = True
-                image_alt_text = LinkHelper.__consume_text_for_image_alt_text(logger,
-                    inline_blocks, ind, remaining_line
+                image_alt_text = LinkHelper.__consume_text_for_image_alt_text(
+                    logger, inline_blocks, ind, remaining_line
                 )
 
                 inline_blocks[ind] = ImageStartMarkdownToken(
@@ -737,6 +746,7 @@ class LinkHelper:
         return update_index, token_to_append, consume_rest_of_line
 
     # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def __look_for_link_formats(logger, source_text, new_index, text_from_blocks):
@@ -755,7 +765,9 @@ class LinkHelper:
                 inline_link,
                 inline_title,
                 update_index,
-            ) = LinkHelper.__process_inline_link_body(logger,source_text, new_index + 1)
+            ) = LinkHelper.__process_inline_link_body(
+                logger, source_text, new_index + 1
+            )
         elif ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_format_reference_start
         ):
@@ -766,8 +778,11 @@ class LinkHelper:
             ):
                 logger.debug("collapsed reference")
                 logger.debug(">>" + text_from_blocks + ">>")
-                update_index, inline_link, inline_title = LinkHelper.__look_up_link(logger,
-                    text_from_blocks, after_open_index + 1, "collapsed reference"
+                update_index, inline_link, inline_title = LinkHelper.__look_up_link(
+                    logger,
+                    text_from_blocks,
+                    after_open_index + 1,
+                    "collapsed reference",
                 )
                 tried_full_reference_form = True
             else:
@@ -791,8 +806,8 @@ class LinkHelper:
                 )
                 if did_extract:
                     tried_full_reference_form = True
-                    update_index, inline_link, inline_title = LinkHelper.__look_up_link(logger,
-                        ex_label, after_label_index, "full reference"
+                    update_index, inline_link, inline_title = LinkHelper.__look_up_link(
+                        logger, ex_label, after_label_index, "full reference"
                     )
         return inline_link, inline_title, update_index, tried_full_reference_form
 

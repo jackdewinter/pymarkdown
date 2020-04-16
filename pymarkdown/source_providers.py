@@ -31,6 +31,8 @@ class InMemorySourceProvider:
 
 # pylint: enable=too-few-public-methods
 
+
+# pylint: disable=too-few-public-methods
 class FileSourceProvider:
     """
     Class to provide for a source provider that is on media as a file.
@@ -39,7 +41,7 @@ class FileSourceProvider:
     def __init__(self, file_to_open):
         with open(file_to_open, encoding="utf-8") as file_to_parse:
             file_as_lines = file_to_parse.readlines()
-    
+
         self.read_lines = []
         self.read_index = 0
         did_line_end_in_newline = False
@@ -61,3 +63,6 @@ class FileSourceProvider:
             token_to_use = self.read_lines[self.read_index]
             self.read_index += 1
         return token_to_use
+
+
+# pylint: enable=too-few-public-methods

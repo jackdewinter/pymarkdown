@@ -2,6 +2,7 @@
 Inline helper
 """
 import json
+import logging
 import os
 import re
 import string
@@ -15,7 +16,6 @@ from pymarkdown.markdown_token import (
     UriAutolinkMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
-import logging
 
 
 # pylint: disable=too-few-public-methods
@@ -172,8 +172,8 @@ class InlineHelper:
             (
                 inline_response.new_string,
                 inline_response.new_index,
-            ) = InlineHelper.__handle_numeric_character_reference(logger,
-                inline_request.source_text, inline_response.new_index
+            ) = InlineHelper.__handle_numeric_character_reference(
+                logger, inline_request.source_text, inline_response.new_index
             )
         else:
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
@@ -280,7 +280,7 @@ class InlineHelper:
         """
         logger = logging.getLogger(__name__)
 
-        logger.debug("before_collect>" + str(inline_request.next_index))
+        logger.debug("before_collect>%s", str(inline_request.next_index))
         (
             new_index,
             extracted_start_backticks,
@@ -289,7 +289,7 @@ class InlineHelper:
             inline_request.next_index,
             InlineHelper.code_span_bounds,
         )
-        logger.debug("after_collect>" + str(new_index) + ">" + extracted_start_backticks)
+        logger.debug("after_collect>%s>%s", str(new_index), extracted_start_backticks)
 
         end_backtick_start_index = inline_request.source_text.find(
             extracted_start_backticks, new_index
@@ -322,13 +322,10 @@ class InlineHelper:
             )
 
             logger.debug(
-                "after_collect>"
-                + between_text
-                + ">>"
-                + str(end_backtick_start_index)
-                + ">>"
-                + inline_request.source_text[end_backtick_start_index:]
-                + "<<"
+                "after_collect>%s>>%s>>%s<<",
+                between_text,
+                str(end_backtick_start_index),
+                inline_request.source_text[end_backtick_start_index:],
             )
             if (
                 len(between_text) > 2
@@ -340,7 +337,7 @@ class InlineHelper:
                     between_text = stripped_between_attempt
 
             between_text = InlineHelper.append_text("", between_text)
-            logger.debug("between_text>>" + between_text + "<<")
+            logger.debug("between_text>>%s<<", between_text)
             end_backtick_start_index += len(extracted_start_backticks)
             inline_response.new_string = ""
             inline_response.new_index = end_backtick_start_index
@@ -355,25 +352,22 @@ class InlineHelper:
         logger = logging.getLogger(__name__)
 
         logger.debug(
-            ">>removed_end_whitespace>>"
-            + str(type(removed_end_whitespace))
-            + ">>"
-            + removed_end_whitespace
-            + ">>"
+            ">>removed_end_whitespace>>%s>>%s>>",
+            str(type(removed_end_whitespace)),
+            removed_end_whitespace,
         )
         logger.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>NewLine")
         if end_string:
-            logger.debug(">>end_string>>" + end_string.replace("\n", "\\n") + ">>")
+            logger.debug(">>end_string>>%s>>", end_string.replace("\n", "\\n"))
         logger.debug(
-            ">>removed_end_whitespace>>"
-            + removed_end_whitespace.replace("\n", "\\n")
-            + ">>"
+            ">>removed_end_whitespace>>%s>>",
+            removed_end_whitespace.replace("\n", "\\n"),
         )
         if end_string is None:
             end_string = removed_end_whitespace + "\n"
         else:
             end_string = end_string + removed_end_whitespace + "\n"
-        logger.debug(">>end_string>>" + end_string.replace("\n", "\\n") + ">>")
+        logger.debug(">>end_string>>%s>>", end_string.replace("\n", "\\n"))
         return end_string
 
     @staticmethod
@@ -388,19 +382,17 @@ class InlineHelper:
         _, last_non_whitespace_index = ParserHelper.collect_backwards_while_character(
             remaining_line, -1, InlineHelper.__line_end_whitespace
         )
-        logger.debug(">>last_non_whitespace_index>>" + str(last_non_whitespace_index))
-        logger.debug(">>current_string>>" + current_string + ">>")
+        logger.debug(">>last_non_whitespace_index>>%s", str(last_non_whitespace_index))
+        logger.debug(">>current_string>>%s>>", current_string)
         removed_end_whitespace = remaining_line[last_non_whitespace_index:]
         remaining_line = remaining_line[0:last_non_whitespace_index]
 
         append_to_current_string = "\n"
         whitespace_to_add = None
         logger.debug(
-            ">>len(r_e_w)>>"
-            + str(len(removed_end_whitespace))
-            + ">>rem>>"
-            + remaining_line
-            + ">>"
+            ">>len(r_e_w)>>%s>>rem>>%s>>",
+            str(len(removed_end_whitespace)),
+            remaining_line,
         )
         if (
             len(removed_end_whitespace) == 0
@@ -442,23 +434,21 @@ class InlineHelper:
             break_characters = break_characters + start_character
         nesting_level = 0
         logger.debug(
-            "extract_bounded_string>>new_index>>"
-            + str(new_index)
-            + ">>data>>"
-            + source_text[new_index:]
-            + ">>"
+            "extract_bounded_string>>new_index>>%s>>data>>%s>>",
+            str(new_index),
+            source_text[new_index:],
         )
         next_index, data = ParserHelper.collect_until_one_of_characters(
             source_text, new_index, break_characters
         )
-        logger.debug(">>next_index1>>" + str(next_index) + ">>data>>" + data + ">>")
+        logger.debug(">>next_index1>>%s>>data>>%s>>", str(next_index), data)
         while next_index < len(source_text) and not (
             source_text[next_index] == close_character and nesting_level == 0
         ):
             if ParserHelper.is_character_at_index(
                 source_text, next_index, InlineHelper.backslash_character
             ):
-                logger.debug("pre-back>>next_index>>" + str(next_index) + ">>")
+                logger.debug("pre-back>>next_index>>%s>>", str(next_index))
                 old_index = next_index
 
                 inline_request = InlineRequest(source_text, next_index)
@@ -468,7 +458,7 @@ class InlineHelper:
             elif start_character is not None and ParserHelper.is_character_at_index(
                 source_text, next_index, start_character
             ):
-                logger.debug("pre-start>>next_index>>" + str(next_index) + ">>")
+                logger.debug("pre-start>>next_index>>%s>>", str(next_index))
                 data = data + start_character
                 next_index += 1
                 nesting_level += 1
@@ -476,16 +466,16 @@ class InlineHelper:
                 assert ParserHelper.is_character_at_index(
                     source_text, next_index, close_character
                 )
-                logger.debug("pre-close>>next_index>>" + str(next_index) + ">>")
+                logger.debug("pre-close>>next_index>>%s>>", str(next_index))
                 data = data + close_character
                 next_index += 1
                 nesting_level -= 1
             next_index, new_data = ParserHelper.collect_until_one_of_characters(
                 source_text, next_index, break_characters
             )
-            logger.debug("back>>next_index>>" + str(next_index) + ">>data>>" + data + ">>")
+            logger.debug("back>>next_index>>%s>>data>>%s>>", str(next_index), data)
             data = data + new_data
-        logger.debug(">>next_index2>>" + str(next_index) + ">>data>>" + data + ">>")
+        logger.debug(">>next_index2>>%s>>data>>%s>>", str(next_index), data)
         if (
             ParserHelper.is_character_at_index(source_text, next_index, close_character)
             and nesting_level == 0
@@ -493,7 +483,7 @@ class InlineHelper:
             logger.debug("extract_bounded_string>>found-close")
             return next_index + 1, data
         logger.debug(
-            "extract_bounded_string>>ran out of string>>next_index>>" + str(next_index)
+            "extract_bounded_string>>ran out of string>>next_index>>%s", str(next_index)
         )
         return next_index, None
 

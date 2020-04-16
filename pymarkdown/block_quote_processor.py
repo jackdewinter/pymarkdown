@@ -1,6 +1,8 @@
 """
 Module to provide processing for the block quotes.
 """
+import logging
+
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
@@ -9,7 +11,6 @@ from pymarkdown.stack_token import (
     IndentedCodeBlockStackToken,
     ParagraphStackToken,
 )
-import logging
 
 
 class BlockQuoteProcessor:
@@ -72,17 +73,15 @@ class BlockQuoteProcessor:
         if this_bq_count == 0 and stack_bq_count > 0:
             logger.debug("haven't processed")
             logger.debug(
-                "this_bq_count>"
-                + str(this_bq_count)
-                + ">>stack_bq_count>>"
-                + str(stack_bq_count)
-                + "<<"
+                "this_bq_count>%s>>stack_bq_count>>%s<<",
+                str(this_bq_count),
+                str(stack_bq_count),
             )
 
             is_fenced_start, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
                 line_to_parse, 0, extracted_whitespace, skip_whitespace_check=True
             )
-            logger.debug("fenced_start?" + str(is_fenced_start))
+            logger.debug("fenced_start?%s", str(is_fenced_start))
 
             if token_stack[-1].is_code_block or is_fenced_start:
                 logger.debug("__check_for_lazy_handling>>code block")
@@ -93,7 +92,7 @@ class BlockQuoteProcessor:
                 )
             else:
                 logger.debug("__check_for_lazy_handling>>not code block")
-                logger.debug("__check_for_lazy_handling>>" + str(token_stack))
+                logger.debug("__check_for_lazy_handling>>%s", str(token_stack))
 
         return container_level_tokens
         # pylint: enable=too-many-arguments
@@ -152,10 +151,7 @@ class BlockQuoteProcessor:
                 this_bq_count = alt_this_bq_count
             else:
                 logger.debug(
-                    ">>>>>>>>>>>>>>>"
-                    + str(this_bq_count)
-                    + ">>>"
-                    + str(alt_this_bq_count)
+                    ">>>>>>>>>>>>>>>%s>>>%s", str(this_bq_count), str(alt_this_bq_count)
                 )
                 this_bq_count = alt_this_bq_count
 
@@ -182,7 +178,10 @@ class BlockQuoteProcessor:
     @staticmethod
     def __count_block_quote_starts(
         logger,
-        line_to_parse, start_index, stack_bq_count, is_top_of_stack_fenced_code_block
+        line_to_parse,
+        start_index,
+        stack_bq_count,
+        is_top_of_stack_fenced_code_block,
     ):
         """
         Having detected a block quote character (">") on a line, continue to consume
@@ -369,4 +368,3 @@ class BlockQuoteProcessor:
                     BlockQuoteMarkdownToken(extracted_whitespace)
                 )
         return container_level_tokens, stack_bq_count
-
