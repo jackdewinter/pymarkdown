@@ -1979,6 +1979,10 @@ def test_list_items_306():
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
+# Future Bugs - Command Line
+# TODO - determine which errors to print and which to log
+# TODO - add log level + file support
+
 # Future Bugs - Tabs
 # TODO check is_length_less_than_or_equal_to to see if any issues with tabs, most
 #   likely in conjunction with starting another type of block
@@ -2007,6 +2011,7 @@ def test_list_items_306():
 # TODO blank line ending a list is parsed wrong into tokens
 # >>stack_count>>0>>#9:[end-ulist]
 # - should be end and then blank, as the blank is outside of the list
+# TODO commonmark and how handles non-initial cases for list starts
 
 # Future Bugs - Block Quote/List Interaction
 # TODO 300 with different list following

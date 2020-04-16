@@ -111,7 +111,6 @@ def test_backslash_escapes_310():
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
-    # TODO in flux with inlines
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
 

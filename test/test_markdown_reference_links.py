@@ -1287,6 +1287,42 @@ def test_reference_links_570():
 
 
 @pytest.mark.gfm
+def test_reference_links_570a():
+    """
+    Test case 570a:  Variation of 570 to show how link inside of link doesn't work.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo[foo]]
+
+[foo]: /url "title"
+"""
+    expected_tokens = [
+        "[para:]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[link:/url:title]",
+        "[text:foo:]",
+        "[end-link::]",
+        "[text:]:]",
+        "[end-para]",
+        "[BLANK:]",
+        "[BLANK:]",
+    ]
+    expected_gfm = """<p>[foo<a href=\"/url\" title=\"title\">foo</a>]</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
 def test_reference_links_571():
     """
     Test case 571:  If you just want bracketed text, you can backslash-escape the opening bracket to avoid links
