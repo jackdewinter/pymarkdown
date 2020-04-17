@@ -38,6 +38,12 @@ class PluginOne(Plugin):
         """
         print(self.get_details().plugin_id + ">>next_line:" + line)
 
+    def next_token(self, token):
+        """
+        Event that a new token is being processed.
+        """
+        print(self.get_details().plugin_id + ">>token:" + str(token))
+
     def completed_file(self):
         """
         Event that the file being currently scanned is now completed.

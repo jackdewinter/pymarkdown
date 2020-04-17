@@ -12,6 +12,19 @@ from pymarkdown.source_providers import FileSourceProvider
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
 
+class BadParsingError(Exception):
+    """
+    Class to allow for a critical error during the parsing of the Markdown file
+    to be reported.
+    """
+
+    def __init__(self):
+        formatted_message = (
+            "File was not translated from Markdown text to Markdown tokens."
+        )
+        super(BadParsingError, self).__init__(formatted_message)
+
+
 # https://github.com/hiddenillusion/example-code/commit/3e2daada652fe9b487574c784e0924bd5fcfe667
 # TODO check
 class PyMarkdownLint:
@@ -57,6 +70,13 @@ class PyMarkdownLint:
             help="comma separated list of rules to disable",
         )
         parser.add_argument(
+            "-x",
+            dest="something_x",
+            action="store_true",
+            default="",
+            help=argparse.SUPPRESS,
+        )
+        parser.add_argument(
             "--add-plugin",
             dest="add_plugin",
             action="append",
@@ -87,7 +107,7 @@ class PyMarkdownLint:
         return path_to_test.endswith(".md")
 
     # pylint: disable=broad-except
-    def __scan_file(self, next_file):
+    def __scan_file(self, args, next_file):
         """
         Scan a given file and call the plugin manager for any significant events.
         """
@@ -101,16 +121,20 @@ class PyMarkdownLint:
             self.plugins.next_line(context, line_number, next_line)
             line_number += 1
             next_line = source_provider.get_next_line()
-        self.plugins.completed_file(context, line_number)
 
         tokenizer = TokenizedMarkdown()
         source_provider = FileSourceProvider(next_file)
         try:
+            if args.something_x:
+                source_provider = None
             actual_tokens = tokenizer.transform_from_provider(source_provider)
-            self.logger.debug(">>%s<<", str(actual_tokens))
-        except Exception:
-            print("Exception encountered parsing document:\n")
-            traceback.print_exc(file=sys.stdout)
+        except Exception as this_exception:
+            raise BadParsingError() from this_exception
+
+        for next_token in actual_tokens:
+            self.plugins.next_token(context, next_token)
+
+        self.plugins.completed_file(context, line_number)
 
     # pylint: enable=broad-except
 
@@ -174,6 +198,21 @@ class PyMarkdownLint:
                 traceback.print_exc(file=sys.stderr)
             sys.exit(1)
 
+    def __handle_error(self, args, next_file, this_exception):
+
+        formatted_error = (
+            str(type(this_exception).__name__)
+            + " encountered while scanning '"
+            + next_file
+            + "':\n"
+            + str(this_exception)
+        )
+        self.logger.warning(formatted_error, exc_info=True)
+        print(formatted_error, file=sys.stderr)
+        if args.show_stack_trace:
+            traceback.print_exc(file=sys.stderr)
+        sys.exit(1)
+
     def main(self):
         """
         Main entrance point.
@@ -181,8 +220,8 @@ class PyMarkdownLint:
         args = self.__parse_arguments()
 
         # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-        logger = logging.getLogger()
-        logger.setLevel(logging.DEBUG)
+        base_logger = logging.getLogger()
+        base_logger.setLevel(logging.DEBUG)
 
         files_to_scan = self.__determine_files_to_scan(args.paths)
         if args.list_files:
@@ -195,18 +234,11 @@ class PyMarkdownLint:
 
         for next_file in files_to_scan:
             try:
-                self.__scan_file(next_file)
+                self.__scan_file(args, next_file)
             except BadPluginError as this_exception:
-                print(
-                    "BadPluginError encountered while scanning '"
-                    + next_file
-                    + "':\n"
-                    + str(this_exception),
-                    file=sys.stderr,
-                )
-                if args.show_stack_trace:
-                    traceback.print_exc(file=sys.stderr)
-                sys.exit(1)
+                self.__handle_error(args, next_file, this_exception)
+            except BadParsingError as this_exception:
+                self.__handle_error(args, next_file, this_exception)
 
         if self.plugins.number_of_scan_failures:
             sys.exit(1)

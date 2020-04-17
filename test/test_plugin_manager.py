@@ -271,12 +271,12 @@ Traceback (most recent call last):
             """    raise Exception("bad next_line")
 Exception: bad next_line
 
-During handling of the above exception, another exception occurred:
+The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
 """,
             """, in next_line
-    raise BadPluginError(next_plugin.plugin_id, inspect.stack()[0].function)
+    ) from this_exception
 pymarkdown.plugin_manager.BadPluginError: Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 """,
         ],

@@ -118,6 +118,14 @@ MD999>>next_line:# This is a test
 MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
+MD999>>token:[atx:1:0:]
+MD999>>token:[text:This is a test: ]
+MD999>>token:[end-atx::]
+MD999>>token:[BLANK:]
+MD999>>token:[para:]
+MD999>>token:[text:The line after this line should be blank.:]
+MD999>>token:[end-para]
+MD999>>token:[BLANK:]
 MD999>>completed_file
 """
     expected_error = ""
@@ -153,6 +161,14 @@ MD999>>next_line:# This is a test
 MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
+MD999>>token:[atx:1:0:]
+MD999>>token:[text:This is a test: ]
+MD999>>token:[end-atx::]
+MD999>>token:[BLANK:]
+MD999>>token:[para:]
+MD999>>token:[text:The line after this line should be blank.:]
+MD999>>token:[end-para]
+MD999>>token:[BLANK:]
 MD999>>completed_file
 """
     expected_error = ""
@@ -220,3 +236,35 @@ def test_markdown_with_dash_d_single_by_id():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_markdown_with_dash_x():
+    """
+    Test to make sure we get enable a rule if '-d' is supplied and the id of the
+    rule is provided. The test data for MD047 is used as it is a simple file that
+    fails normally, it is used as a comparison.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = [
+        "-x",
+        "test/resources/rules/md047/end_with_no_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """BadParsingError encountered while scanning 'test/resources/rules/md047/end_with_no_blank_line.md':
+File was not translated from Markdown text to Markdown tokens.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+# TODO add Markdown parsing of some binary file to cause the tokenizer to throw an exception?

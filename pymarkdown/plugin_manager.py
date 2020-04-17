@@ -20,6 +20,9 @@ class ScanContext:
         self.line_number = 0
 
 
+# pylint: enable=too-few-public-methods
+
+
 class BadPluginError(Exception):
     """
     Class to allow for a critical error within a plugin to be encapsulated
@@ -92,7 +95,9 @@ class BadPluginError(Exception):
                 + str(plugin_action)
                 + "' action."
             )
-        Exception.__init__(self, formatted_message)
+        super(BadPluginError, self).__init__(formatted_message)
+
+    # pylint: enable=too-many-arguments
 
 
 class Plugin(ABC):
@@ -148,7 +153,13 @@ class Plugin(ABC):
         Event that a new line is being processed.
         """
 
+    def next_token(self, token):
+        """
+        Event that a new token is being processed.
+        """
 
+
+# pylint: disable=too-few-public-methods
 class PluginDetails:
     """
     Class to provide details about a plugin, supplied by the plugin.
@@ -163,6 +174,10 @@ class PluginDetails:
         self.plugin_enabled_by_default = plugin_enabled_by_default
 
 
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
 class FoundPlugin:
     """
     Encapsulation of a plugin that was discovered.  While similar to the PluginDetails
@@ -175,6 +190,9 @@ class FoundPlugin:
         self.plugin_name = plugin_name
         self.plugin_description = plugin_description
         self.plugin_instance = plugin_instance
+
+
+# pylint: enable=too-few-public-methods
 
 
 class PluginManager:
@@ -444,8 +462,10 @@ class PluginManager:
         for next_plugin in self.__enabled_plugins:
             try:
                 next_plugin.plugin_instance.starting_new_file()
-            except Exception:
-                raise BadPluginError(next_plugin.plugin_id, inspect.stack()[0].function)
+            except Exception as this_exception:
+                raise BadPluginError(
+                    next_plugin.plugin_id, inspect.stack()[0].function
+                ) from this_exception
 
         return ScanContext(self, file_being_started)
 
@@ -458,8 +478,10 @@ class PluginManager:
             try:
                 next_plugin.plugin_instance.set_context(context)
                 next_plugin.plugin_instance.completed_file()
-            except Exception:
-                raise BadPluginError(next_plugin.plugin_id, inspect.stack()[0].function)
+            except Exception as this_exception:
+                raise BadPluginError(
+                    next_plugin.plugin_id, inspect.stack()[0].function
+                ) from this_exception
 
     def next_line(self, context, line_number, line):
         """
@@ -470,5 +492,20 @@ class PluginManager:
             try:
                 next_plugin.plugin_instance.set_context(context)
                 next_plugin.plugin_instance.next_line(line)
-            except Exception:
-                raise BadPluginError(next_plugin.plugin_id, inspect.stack()[0].function)
+            except Exception as this_exception:
+                raise BadPluginError(
+                    next_plugin.plugin_id, inspect.stack()[0].function
+                ) from this_exception
+
+    def next_token(self, context, token):
+        """
+        Inform any listeners of a new token that has been processed.
+        """
+        for next_plugin in self.__enabled_plugins:
+            try:
+                next_plugin.plugin_instance.set_context(context)
+                next_plugin.plugin_instance.next_token(token)
+            except Exception as this_exception:
+                raise BadPluginError(
+                    next_plugin.plugin_id, inspect.stack()[0].function
+                ) from this_exception
