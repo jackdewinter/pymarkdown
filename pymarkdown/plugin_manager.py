@@ -120,9 +120,9 @@ class Plugin(ABC):
         """
         self.__scan_context = context
 
-    def report_error(self, column_number, line_number_delta=0):
+    def report_next_line_error(self, column_number, line_number_delta=0):
         """
-        Fix this up.
+        Report an error with the current line being processed.
         """
         self.__scan_context.owning_manager.log_scan_failure(
             self.__scan_context.scan_file,
@@ -131,6 +131,20 @@ class Plugin(ABC):
             self.get_details().plugin_id,
             self.get_details().plugin_name,
             self.get_details().plugin_description,
+        )
+
+    def report_next_token_error(self, token, extra_error_information):
+        """
+        Report an error with the current token being processed.
+        """
+        self.__scan_context.owning_manager.log_scan_failure(
+            self.__scan_context.scan_file,
+            token.line_number,
+            token.column_number,
+            self.get_details().plugin_id,
+            self.get_details().plugin_name,
+            self.get_details().plugin_description,
+            extra_error_information=extra_error_information,
         )
 
     def initialize_from_config(self):
@@ -249,17 +263,24 @@ class PluginManager:
         rule_id,
         rule_name,
         rule_description,
+        extra_error_information=None,
     ):
         """
         Log the scan failure in the appropriate format.
         """
+
+        extra_info = ""
+        if extra_error_information:
+            extra_info = " [" + extra_error_information + "]"
+
         print(
-            "{0}:{1}:{2}: {3}: {4} ({5})".format(
+            "{0}:{1}:{2}: {3}: {4}{5} ({6})".format(
                 scan_file,
                 line_number,
                 column_number,
                 rule_id,
                 rule_description,
+                extra_info,
                 rule_name,
             )
         )

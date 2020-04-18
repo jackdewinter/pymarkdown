@@ -35,6 +35,8 @@ class MarkdownToken:
     def __init__(self, token_name, extra_data=None):
         self.token_name = token_name
         self.extra_data = extra_data
+        self.line_number = 0
+        self.column_number = 0
 
     def __str__(self):
         add_extra = ""

@@ -42,5 +42,4 @@ class RuleMd047(Plugin):
         Event that the file being currently scanned is now completed.
         """
         if self.last_line:
-            # pylint: disable=too-many-function-args
-            self.report_error(len(self.last_line), -1)
+            self.report_next_line_error(len(self.last_line), -1)
