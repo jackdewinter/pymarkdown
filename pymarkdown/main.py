@@ -8,22 +8,10 @@ import os
 import sys
 import traceback
 
+from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.plugin_manager import BadPluginError, PluginManager
 from pymarkdown.source_providers import FileSourceProvider
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
-
-
-class BadParsingError(Exception):
-    """
-    Class to allow for a critical error during the parsing of the Markdown file
-    to be reported.
-    """
-
-    def __init__(self):
-        formatted_message = (
-            "File was not translated from Markdown text to Markdown tokens."
-        )
-        super(BadParsingError, self).__init__(formatted_message)
 
 
 # https://github.com/hiddenillusion/example-code/commit/3e2daada652fe9b487574c784e0924bd5fcfe667
@@ -34,17 +22,18 @@ class PyMarkdownLint:
     """
 
     def __init__(self):
-        self.version_number = "0.1.0"
-        self.show_stack_trace = False
+        self.__version_number = "0.1.0"
+        self.__show_stack_trace = False
 
-        self.plugins = PluginManager()
+        self.__plugins = PluginManager()
+        self.__tokenizer = None
         self.logger = logging.getLogger(__name__)
 
     def __parse_arguments(self):
         parser = argparse.ArgumentParser(description="Lint any found Markdown files.")
 
         parser.add_argument(
-            "--version", action="version", version="%(prog)s " + self.version_number
+            "--version", action="version", version="%(prog)s " + self.__version_number
         )
 
         parser.add_argument(
@@ -72,8 +61,15 @@ class PyMarkdownLint:
             help="comma separated list of rules to disable",
         )
         parser.add_argument(
-            "-x",
-            dest="something_x",
+            "-x-scan",
+            dest="x_test_scan_fault",
+            action="store_true",
+            default="",
+            help=argparse.SUPPRESS,
+        )
+        parser.add_argument(
+            "-x-init",
+            dest="x_test_init_fault",
             action="store_true",
             default="",
             help=argparse.SUPPRESS,
@@ -126,25 +122,21 @@ class PyMarkdownLint:
 
         line_number = 1
         next_line = source_provider.get_next_line()
-        context = self.plugins.starting_new_file(next_file)
+        context = self.__plugins.starting_new_file(next_file)
         while next_line is not None:
-            self.plugins.next_line(context, line_number, next_line)
+            self.__plugins.next_line(context, line_number, next_line)
             line_number += 1
             next_line = source_provider.get_next_line()
 
-        tokenizer = TokenizedMarkdown()
         source_provider = FileSourceProvider(next_file)
-        try:
-            if args.something_x:
-                source_provider = None
-            actual_tokens = tokenizer.transform_from_provider(source_provider)
-        except Exception as this_exception:
-            raise BadParsingError() from this_exception
+        if args.x_test_scan_fault:
+            source_provider = None
+        actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
 
         for next_token in actual_tokens:
-            self.plugins.next_token(context, next_token)
+            self.__plugins.next_token(context, next_token)
 
-        self.plugins.completed_file(context, line_number)
+        self.__plugins.completed_file(context, line_number)
 
     # pylint: enable=broad-except
 
@@ -228,11 +220,27 @@ class PyMarkdownLint:
             )
 
         try:
-            self.plugins.apply_configuration(loaded_configuration_map)
+            self.__plugins.apply_configuration(loaded_configuration_map)
         except BadPluginError as this_exception:
             formatted_error = (
                 str(type(this_exception).__name__)
                 + " encountered while configuring plugins:\n"
+                + str(this_exception)
+            )
+            self.__handle_error(formatted_error)
+
+    def __initialize_parser(self, args):
+
+        resource_path = None
+        if args.x_test_init_fault:
+            resource_path = "fredo"
+
+        try:
+            self.__tokenizer = TokenizedMarkdown(resource_path)
+        except BadTokenizationError as this_exception:
+            formatted_error = (
+                str(type(this_exception).__name__)
+                + " encountered while initializing tokenizer:\n"
                 + str(this_exception)
             )
             self.__handle_error(formatted_error)
@@ -242,25 +250,23 @@ class PyMarkdownLint:
         Make sure all plugins are ready before being initialized.
         """
 
+        self.__plugins = PluginManager()
         try:
-            self.plugins.initialize(
+            self.__plugins.initialize(
                 plugin_dir, args.add_plugin, args.enable_rules, args.disable_rules
             )
         except BadPluginError as this_exception:
-            print(
+            formatted_error = (
                 "BadPluginError encountered while loading plugins:\n"
-                + str(this_exception),
-                file=sys.stderr,
+                + str(this_exception)
             )
-            if self.show_stack_trace:
-                traceback.print_exc(file=sys.stderr)
-            sys.exit(1)
+            self.__handle_error(formatted_error)
 
     def __handle_error(self, formatted_error):
 
         self.logger.warning(formatted_error, exc_info=True)
         print(formatted_error, file=sys.stderr)
-        if self.show_stack_trace:
+        if self.__show_stack_trace:
             traceback.print_exc(file=sys.stderr)
         sys.exit(1)
 
@@ -280,7 +286,7 @@ class PyMarkdownLint:
         Main entrance point.
         """
         args = self.__parse_arguments()
-        self.show_stack_trace = args.show_stack_trace
+        self.__show_stack_trace = args.show_stack_trace
 
         # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
         base_logger = logging.getLogger()
@@ -295,6 +301,8 @@ class PyMarkdownLint:
         plugin_dir = os.path.join(plugin_dir, "plugins")
         self.__initialize_plugins(args, plugin_dir)
 
+        self.__initialize_parser(args)
+
         self.__load_configuration_and_apply_to_plugins(args)
 
         for next_file in files_to_scan:
@@ -302,10 +310,10 @@ class PyMarkdownLint:
                 self.__scan_file(args, next_file)
             except BadPluginError as this_exception:
                 self.__handle_scan_error(next_file, this_exception)
-            except BadParsingError as this_exception:
+            except BadTokenizationError as this_exception:
                 self.__handle_scan_error(next_file, this_exception)
 
-        if self.plugins.number_of_scan_failures:
+        if self.__plugins.number_of_scan_failures:
             sys.exit(1)
 
 

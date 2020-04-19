@@ -6,8 +6,8 @@ import logging
 import os
 import re
 import string
-import sys
 
+from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.markdown_token import (
     EmailAutolinkMarkdownToken,
@@ -572,24 +572,24 @@ class InlineHelper:
         try:
             with open(os.path.abspath(master_entities_file)) as infile:
                 results_dictionary = json.load(infile)
-        except json.decoder.JSONDecodeError as ex:
-            print(
+        except json.decoder.JSONDecodeError as this_exception:
+            error_message = (
                 "Named character entity map file '"
                 + master_entities_file
                 + "' is not a valid JSON file ("
-                + str(ex)
+                + str(this_exception)
                 + ")."
             )
-            sys.exit(1)
-        except IOError as ex:
-            print(
+            raise BadTokenizationError(error_message) from this_exception
+        except IOError as this_exception:
+            error_message = (
                 "Named character entity map file '"
                 + master_entities_file
                 + "' was not loaded ("
-                + str(ex)
+                + str(this_exception)
                 + ")."
             )
-            sys.exit(1)
+            raise BadTokenizationError(error_message) from this_exception
 
         approved_entity_map = {}
         for next_name in results_dictionary:

@@ -19,7 +19,10 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_path():
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = "Plugin path 'MD047' does not exist.\n"
+    expected_error = (
+        "BadPluginError encountered while loading plugins:\n"
+        + "Plugin path 'MD047' does not exist.\n"
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=suppplied_arguments)
@@ -112,8 +115,8 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_plugin_file():
     expected_return_code = 1
     expected_output = ""
     expected_error = (
-        "BadPluginError: Plugin file named 'not-a-python-file.txt' "
-        + "cannot be loaded.\n"
+        "BadPluginError encountered while loading plugins:\n"
+        + "Plugin file named 'not-a-python-file.txt' cannot be loaded.\n"
     )
 
     # Act
@@ -141,8 +144,8 @@ def test_markdown_with_dash_dash_add_plugin_and_missing_class():
     expected_return_code = 1
     expected_output = ""
     expected_error = (
-        "BadPluginError: Plugin file named 'misnamed.py' "
-        + "does not contain a class named 'Misnamed'.\n"
+        "BadPluginError encountered while loading plugins:\n"
+        + "Plugin file named 'misnamed.py' does not contain a class named 'Misnamed'.\n"
     )
 
     # Act
@@ -299,8 +302,8 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_constructor():
     expected_return_code = 1
     expected_output = ""
     expected_error = (
-        "BadPluginError: Plugin file named 'bad_constructor.py' threw an exception "
-        + "in the constructor for the class 'BadConstructor'.\n"
+        "BadPluginError encountered while loading plugins:\n"
+        + "Plugin file named 'bad_constructor.py' threw an exception in the constructor for the class 'BadConstructor'.\n"
     )
 
     # Act

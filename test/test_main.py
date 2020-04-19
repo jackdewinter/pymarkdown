@@ -247,25 +247,60 @@ def test_markdown_with_dash_d_single_by_id():
     )
 
 
-def test_markdown_with_dash_x():
+def test_markdown_with_dash_x_scan():
     """
-    Test to make sure we get enable a rule if '-d' is supplied and the id of the
-    rule is provided. The test data for MD047 is used as it is a simple file that
-    fails normally, it is used as a comparison.
+    Test to make sure we get simulate a test scan exception if the `-x-scan` flag
+    is set.
     """
 
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "-x",
+        "-x-scan",
         "test/resources/rules/md047/end_with_no_blank_line.md",
     ]
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """BadParsingError encountered while scanning 'test/resources/rules/md047/end_with_no_blank_line.md':
+    expected_error = """BadTokenizationError encountered while scanning 'test/resources/rules/md047/end_with_no_blank_line.md':
 File was not translated from Markdown text to Markdown tokens.
 """
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_x_init():
+    """
+    Test to make sure we get simulate a test initialization exception if the
+    `-x-init` flag is set.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = [
+        "-x-init",
+        "test/resources/rules/md047/end_with_no_blank_line.md",
+    ]
+    fake_directory = "fredo"
+    abs_fake_directory = os.path.abspath(fake_directory).replace("\\", "\\\\")
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = (
+        "BadTokenizationError encountered while initializing tokenizer:\n"
+        + "Named character entity map file '"
+        + fake_directory
+        + "\\entities.json' was not loaded "
+        + "([Errno 2] No such file or directory: '"
+        + abs_fake_directory
+        + "\\\\entities.json').\n"
+    )
 
     # Act
     execute_results = scanner.invoke_main(arguments=suppplied_arguments)

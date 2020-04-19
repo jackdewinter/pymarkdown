@@ -1,12 +1,11 @@
 """
 https://github.github.com/gfm/#entity-and-numeric-character-references
 """
-import io
 import os
-import sys
 
 import pytest
 
+from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.transform_to_gfm import TransformToGfm
 
@@ -530,23 +529,18 @@ def test_missing_entities_json_file():
     Test the entities.json not being present in the specified directory.
     """
 
-    tokenizer = TokenizedMarkdown()
-    tokenizer.resource_path = "resourcesx"
-    std_output = io.StringIO()
-    old_out = sys.stdout
+    alternate_resource_path = "bob"
+
     try:
-        sys.stdout = std_output
+        TokenizedMarkdown(resource_path=alternate_resource_path)
 
-        tokenizer.transform("")
         assert False, "Should have exited prior to this."
-    except SystemExit as this_exception:
-        assert this_exception.code == 1
-    finally:
-        sys.stdout = old_out
-
-    assert std_output.getvalue().startswith(
-        "Named character entity map file 'resourcesx\\entities.json' was not loaded ([Errno 2] No such file or directory: '"
-    )
+    except BadTokenizationError as this_exception:
+        assert str(this_exception).startswith(
+            "Named character entity map file '"
+            + alternate_resource_path
+            + "\\entities.json' was not loaded ([Errno 2] No such file or directory: '"
+        )
 
 
 def test_bad_entities_json_file():
@@ -554,27 +548,20 @@ def test_bad_entities_json_file():
     Test the entities.json not being a valid json file in the specified directory.
     """
 
-    tokenizer = TokenizedMarkdown()
-    tokenizer.resource_path = os.path.join(os.path.split(__file__)[0], "resources")
-    entities_json_file = os.path.join(tokenizer.resource_path, "entities.json")
-    std_output = io.StringIO()
-    old_out = sys.stdout
+    alternate_resource_path = os.path.join(os.path.split(__file__)[0], "resources")
+    full_alternate_resource_path = os.path.abspath(alternate_resource_path)
+
     try:
-        sys.stdout = std_output
+        TokenizedMarkdown(resource_path=alternate_resource_path)
 
-        tokenizer.transform("")
         assert False, "Should have exited prior to this."
-    except SystemExit as this_exception:
-        assert this_exception.code == 1
-    finally:
-        sys.stdout = old_out
-
-    assert (
-        std_output.getvalue()
-        == "Named character entity map file '"
-        + entities_json_file
-        + "' is not a valid JSON file (Expecting value: line 1 column 1 (char 0)).\n"
-    )
+    except BadTokenizationError as this_exception:
+        assert (
+            str(this_exception)
+            == "Named character entity map file '"
+            + full_alternate_resource_path
+            + "\\entities.json' is not a valid JSON file (Expecting value: line 1 column 1 (char 0))."
+        )
 
 
 # TODO

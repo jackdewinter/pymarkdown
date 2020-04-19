@@ -39,62 +39,64 @@ class BadPluginError(Exception):
         field_name=None,
         is_constructor=False,
         is_empty=False,
+        formatted_message=None,
     ):
 
-        if file_name:
-            if class_name:
-                if is_constructor:
-                    formatted_message = (
-                        "Plugin file named '"
-                        + file_name
-                        + "' threw an exception in the constructor for the class '"
-                        + class_name
-                        + "'."
-                    )
+        if not formatted_message:
+            if file_name:
+                if class_name:
+                    if is_constructor:
+                        formatted_message = (
+                            "Plugin file named '"
+                            + file_name
+                            + "' threw an exception in the constructor for the class '"
+                            + class_name
+                            + "'."
+                        )
+                    else:
+                        formatted_message = (
+                            "Plugin file named '"
+                            + file_name
+                            + "' does not contain a class named '"
+                            + class_name
+                            + "'."
+                        )
                 else:
                     formatted_message = (
-                        "Plugin file named '"
-                        + file_name
-                        + "' does not contain a class named '"
-                        + class_name
-                        + "'."
+                        "Plugin file named '" + file_name + "' cannot be loaded."
                     )
-            else:
-                formatted_message = (
-                    "Plugin file named '" + file_name + "' cannot be loaded."
-                )
-        elif class_name:
-            if field_name:
-                if is_empty:
+            elif class_name:
+                if field_name:
+                    if is_empty:
+                        formatted_message = (
+                            "Plugin class '"
+                            + class_name
+                            + "' returned an empty value for field name '"
+                            + field_name
+                            + "'."
+                        )
+                    else:
+                        formatted_message = (
+                            "Plugin class '"
+                            + class_name
+                            + "' returned an improperly typed value for field name '"
+                            + field_name
+                            + "'."
+                        )
+                else:
                     formatted_message = (
                         "Plugin class '"
                         + class_name
-                        + "' returned an empty value for field name '"
-                        + field_name
-                        + "'."
-                    )
-                else:
-                    formatted_message = (
-                        "Plugin class '"
-                        + class_name
-                        + "' returned an improperly typed value for field name '"
-                        + field_name
-                        + "'."
+                        + "' had a critical failure loading the plugin details."
                     )
             else:
                 formatted_message = (
-                    "Plugin class '"
-                    + class_name
-                    + "' had a critical failure loading the plugin details."
+                    "Plugin id '"
+                    + plugin_id
+                    + "' had a critical failure during the '"
+                    + str(plugin_action)
+                    + "' action."
                 )
-        else:
-            formatted_message = (
-                "Plugin id '"
-                + plugin_id
-                + "' had a critical failure during the '"
-                + str(plugin_action)
-                + "' action."
-            )
         super(BadPluginError, self).__init__(formatted_message)
 
     # pylint: enable=too-many-arguments
@@ -256,11 +258,10 @@ class PluginManager:
         if additional_paths:
             for next_additional_plugin in additional_paths:
                 if not os.path.exists(next_additional_plugin):
-                    print(
-                        "Plugin path '" + next_additional_plugin + "' does not exist.",
-                        file=sys.stderr,
+                    formatted_message = (
+                        "Plugin path '" + next_additional_plugin + "' does not exist."
                     )
-                    sys.exit(1)
+                    raise BadPluginError(formatted_message=formatted_message)
                 if os.path.isdir(next_additional_plugin):
                     plugin_files = self.__find_eligible_plugins_in_directory(
                         next_additional_plugin
@@ -333,29 +334,25 @@ class PluginManager:
         Attempt to cleanly load the specified plugin.
         """
         try:
-            try:
-                mod = __import__(next_plugin_module)
-            except Exception:
-                raise BadPluginError(file_name=next_plugin_file)
+            mod = __import__(next_plugin_module)
+        except Exception:
+            raise BadPluginError(file_name=next_plugin_file)
 
-            if not hasattr(mod, plugin_class_name):
-                raise BadPluginError(
-                    file_name=next_plugin_file, class_name=plugin_class_name
-                )
-            my_class = getattr(mod, plugin_class_name)
+        if not hasattr(mod, plugin_class_name):
+            raise BadPluginError(
+                file_name=next_plugin_file, class_name=plugin_class_name
+            )
+        my_class = getattr(mod, plugin_class_name)
 
-            try:
-                plugin_class_instance = my_class()
-            except Exception:
-                raise BadPluginError(
-                    file_name=next_plugin_file,
-                    class_name=plugin_class_name,
-                    is_constructor=True,
-                )
-            self.__loaded_classes.append(plugin_class_instance)
-        except BadPluginError as this_exception:
-            print("BadPluginError: " + str(this_exception), file=sys.stderr)
-            sys.exit(1)
+        try:
+            plugin_class_instance = my_class()
+        except Exception:
+            raise BadPluginError(
+                file_name=next_plugin_file,
+                class_name=plugin_class_name,
+                is_constructor=True,
+            )
+        self.__loaded_classes.append(plugin_class_instance)
 
     def __load_plugins(self, directory_to_search, plugin_files):
         """

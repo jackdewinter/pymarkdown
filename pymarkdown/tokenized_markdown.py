@@ -4,6 +4,7 @@ Module to provide a tokenization of a markdown-encoded string.
 import logging
 import os
 
+from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.block_quote_processor import BlockQuoteProcessor
 from pymarkdown.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_block_processor import ContainerBlockProcessor
@@ -25,15 +26,19 @@ class TokenizedMarkdown:
     Class to provide a tokenization of a markdown-encoded string.
     """
 
-    def __init__(self):
+    def __init__(self, resource_path=None):
         """
         Initializes a new instance of the TokenizedMarkdown class.
         """
-        self.tokenized_document = None
-        self.stack = []
-        self.resource_path = os.path.join(os.path.split(__file__)[0], "resources")
-        self.source_provider = None
         self.logger = logging.getLogger(__name__)
+
+        self.tokenized_document = None
+        self.stack = None
+        self.source_provider = None
+
+        if not resource_path:
+            resource_path = os.path.join(os.path.split(__file__)[0], "resources")
+        InlineHelper.initialize(resource_path)
 
     def transform_from_provider(self, source_provider):
         """
@@ -45,13 +50,15 @@ class TokenizedMarkdown:
     def transform(self, your_text_string, show_debug=True):
         """
         Transform a text string in a Markdown format into a Markdown token stream.
+        This function should only be used as a simplified manner of accessing the
+        functionality for the purposes of testing.
         """
 
-        logger = logging.getLogger()
+        root_logger = logging.getLogger()
         if show_debug:
-            logger.setLevel(logging.DEBUG)
+            root_logger.setLevel(logging.DEBUG)
         else:
-            logger.setLevel(logging.WARNING)
+            root_logger.setLevel(logging.WARNING)
         self.source_provider = InMemorySourceProvider(your_text_string)
         return self.__transform()
 
@@ -59,21 +66,28 @@ class TokenizedMarkdown:
         """
         Transform a markdown-encoded string into an array of tokens.
         """
-        InlineHelper.initialize(self.resource_path)
-        InlineProcessor.initialize()
-        LinkHelper.initialize()
+        try:
+            self.tokenized_document = None
+            self.stack = []
 
-        self.logger.debug("\n\n>>>>>>>parse_blocks_pass>>>>>>")
-        first_pass_results = self.__parse_blocks_pass()
+            InlineProcessor.initialize()
+            LinkHelper.initialize()
 
-        self.logger.debug("\n\n>>>>>>>coalesce_text_blocks>>>>>>")
-        coalesced_results = CoalesceProcessor.coalesce_text_blocks(first_pass_results)
+            self.logger.debug("\n\n>>>>>>>parse_blocks_pass>>>>>>")
+            first_pass_results = self.__parse_blocks_pass()
 
-        self.logger.debug("\n\n>>>>>>>parse_inline>>>>>>")
-        final_pass_results = InlineProcessor.parse_inline(coalesced_results)
+            self.logger.debug("\n\n>>>>>>>coalesce_text_blocks>>>>>>")
+            coalesced_results = CoalesceProcessor.coalesce_text_blocks(
+                first_pass_results
+            )
 
-        self.logger.debug("\n\n>>>>>>>final_pass_results>>>>>>")
-        return final_pass_results
+            self.logger.debug("\n\n>>>>>>>parse_inline>>>>>>")
+            final_pass_results = InlineProcessor.parse_inline(coalesced_results)
+
+            self.logger.debug("\n\n>>>>>>>final_pass_results>>>>>>")
+            return final_pass_results
+        except Exception as this_exception:
+            raise BadTokenizationError() from this_exception
 
     def __parse_blocks_pass(self):
         """
