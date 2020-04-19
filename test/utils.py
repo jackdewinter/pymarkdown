@@ -2,6 +2,20 @@
 Module to provide helper methods for tests.
 """
 import difflib
+import json
+import tempfile
+
+
+def write_temporary_configuration(supplied_configuration):
+    """
+    Write the configuration as a temporary file that is kept around.
+    """
+    try:
+        with tempfile.TemporaryFile("wt", delete=False) as outfile:
+            json.dump(supplied_configuration, outfile)
+            return outfile.name
+    except IOError as ex:
+        assert False, "Test configuration file was not written (" + str(ex) + ")."
 
 
 def assert_if_lists_different(expected_tokens, actual_tokens):

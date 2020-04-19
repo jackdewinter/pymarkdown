@@ -107,12 +107,32 @@ class Plugin(ABC):
 
     def __init__(self):
         self.__scan_context = None
+        self.__configuration_map = None
 
     @abstractmethod
     def get_details(self):
         """
         Get the details for the plugin.
         """
+
+    def get_configuration_value(self, value_name, default_value):
+        """
+        From the configuration map, try and grab the specified value from the map.
+        If the value is not present or is not the same type as the default value,
+        the default value will be returned.
+        """
+        configuration_value = default_value
+        if value_name in self.__configuration_map:
+            retrieved_value = self.__configuration_map[value_name]
+            if isinstance(retrieved_value, type(default_value)):
+                configuration_value = retrieved_value
+        return configuration_value
+
+    def set_configuration_map(self, map_to_use):
+        """
+        Set the configuration map with values for the plugin.
+        """
+        self.__configuration_map = map_to_use
 
     def set_context(self, context):
         """
@@ -133,7 +153,7 @@ class Plugin(ABC):
             self.get_details().plugin_description,
         )
 
-    def report_next_token_error(self, token, extra_error_information):
+    def report_next_token_error(self, token, extra_error_information=None):
         """
         Report an error with the current token being processed.
         """
@@ -149,7 +169,7 @@ class Plugin(ABC):
 
     def initialize_from_config(self):
         """
-        Event to allow the plugin to load configuration.
+        Event to allow the plugin to load configuration information.
         """
 
     def starting_new_file(self):
@@ -286,6 +306,8 @@ class PluginManager:
         )
         self.number_of_scan_failures += 1
 
+    # pylint: enable=too-many-arguments
+
     @classmethod
     def __find_eligible_plugins_in_directory(cls, directory_to_search):
         """
@@ -335,7 +357,6 @@ class PluginManager:
             print("BadPluginError: " + str(this_exception), file=sys.stderr)
             sys.exit(1)
 
-    # pylint: disable=broad-except
     def __load_plugins(self, directory_to_search, plugin_files):
         """
         Given an array of discovered modules, load them into the global namespace.
@@ -433,7 +454,6 @@ class PluginManager:
         )
         return plugin_object, plugin_enabled_by_default
 
-    # pylint: disable=broad-except
     def __register_individual_plugin(
         self, plugin_instance, command_line_enabled_rules, command_line_disabled_rules
     ):
@@ -452,7 +472,6 @@ class PluginManager:
             command_line_disabled_rules,
         ):
             self.__enabled_plugins.append(plugin_object)
-            plugin_instance.initialize_from_config()
 
     def __register_plugins(self, enable_rules, disable_rules):
         """
@@ -475,6 +494,32 @@ class PluginManager:
             self.__register_individual_plugin(
                 plugin_instance, command_line_enabled_rules, command_line_disabled_rules
             )
+
+    def apply_configuration(self, configuration_map):
+        """
+        Apply any supplied configuration to each of the enabled plugins.
+        """
+
+        for next_plugin in self.__enabled_plugins:
+            try:
+                valid_key_names = [next_plugin.plugin_id]
+                for next_name in next_plugin.plugin_name.split(","):
+                    valid_key_names.append(next_name.strip())
+
+                plugin_specific_configuration = {}
+                for next_key_name in valid_key_names:
+                    if next_key_name in configuration_map:
+                        plugin_specific_configuration = configuration_map[next_key_name]
+                        break
+
+                next_plugin.plugin_instance.set_configuration_map(
+                    plugin_specific_configuration
+                )
+                next_plugin.plugin_instance.initialize_from_config()
+            except Exception as this_exception:
+                raise BadPluginError(
+                    next_plugin.plugin_id, inspect.stack()[0].function
+                ) from this_exception
 
     def starting_new_file(self, file_being_started):
         """

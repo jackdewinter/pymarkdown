@@ -16,7 +16,8 @@ def test_markdown_with_dash_l_only():
     expected_return_code = 2
     expected_output = ""
     expected_error = """usage: main.py [-h] [--version] [-l] [-e ENABLE_RULES] [-d DISABLE_RULES]
-               [--add-plugin ADD_PLUGIN] [--stack-trace]
+               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
+               [--stack-trace]
                path [path ...]
 main.py: error: the following arguments are required: path
 """

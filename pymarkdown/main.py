@@ -2,6 +2,7 @@
 Module to provide for a simple implementation of a title case algorithm.
 """
 import argparse
+import json
 import logging
 import os
 import sys
@@ -34,6 +35,7 @@ class PyMarkdownLint:
 
     def __init__(self):
         self.version_number = "0.1.0"
+        self.show_stack_trace = False
 
         self.plugins = PluginManager()
         self.logger = logging.getLogger(__name__)
@@ -82,6 +84,14 @@ class PyMarkdownLint:
             action="append",
             default=None,
             help="path to a plugin containing a new rule to apply",
+        )
+        parser.add_argument(
+            "--config",
+            "-c",
+            dest="configuration_file",
+            action="store",
+            default=None,
+            help="path to a configuration file",
         )
         parser.add_argument(
             "--stack-trace",
@@ -179,6 +189,54 @@ class PyMarkdownLint:
         print("No Markdown files found.", file=sys.stderr)
         return 1
 
+    def load_json_configuration(self, configuration_file):
+        """
+        Load the configuration from a json file.
+        """
+
+        configuration_map = {}
+        try:
+            with open(configuration_file) as infile:
+                configuration_map = json.load(infile)
+        except json.decoder.JSONDecodeError as ex:
+            formatted_error = (
+                "Specified configuration file '"
+                + configuration_file
+                + "' is not a valid JSON file ("
+                + str(ex)
+                + ")."
+            )
+            self.__handle_error(formatted_error)
+        except IOError as ex:
+            formatted_error = (
+                "Specified configuration file '"
+                + configuration_file
+                + "' was not loaded ("
+                + str(ex)
+                + ")."
+            )
+            self.__handle_error(formatted_error)
+
+        return configuration_map
+
+    def __load_configuration_and_apply_to_plugins(self, args):
+
+        loaded_configuration_map = {}
+        if args.configuration_file:
+            loaded_configuration_map = self.load_json_configuration(
+                args.configuration_file
+            )
+
+        try:
+            self.plugins.apply_configuration(loaded_configuration_map)
+        except BadPluginError as this_exception:
+            formatted_error = (
+                str(type(this_exception).__name__)
+                + " encountered while configuring plugins:\n"
+                + str(this_exception)
+            )
+            self.__handle_error(formatted_error)
+
     def __initialize_plugins(self, args, plugin_dir):
         """
         Make sure all plugins are ready before being initialized.
@@ -194,11 +252,19 @@ class PyMarkdownLint:
                 + str(this_exception),
                 file=sys.stderr,
             )
-            if args.show_stack_trace:
+            if self.show_stack_trace:
                 traceback.print_exc(file=sys.stderr)
             sys.exit(1)
 
-    def __handle_error(self, args, next_file, this_exception):
+    def __handle_error(self, formatted_error):
+
+        self.logger.warning(formatted_error, exc_info=True)
+        print(formatted_error, file=sys.stderr)
+        if self.show_stack_trace:
+            traceback.print_exc(file=sys.stderr)
+        sys.exit(1)
+
+    def __handle_scan_error(self, next_file, this_exception):
 
         formatted_error = (
             str(type(this_exception).__name__)
@@ -207,17 +273,14 @@ class PyMarkdownLint:
             + "':\n"
             + str(this_exception)
         )
-        self.logger.warning(formatted_error, exc_info=True)
-        print(formatted_error, file=sys.stderr)
-        if args.show_stack_trace:
-            traceback.print_exc(file=sys.stderr)
-        sys.exit(1)
+        self.__handle_error(formatted_error)
 
     def main(self):
         """
         Main entrance point.
         """
         args = self.__parse_arguments()
+        self.show_stack_trace = args.show_stack_trace
 
         # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
         base_logger = logging.getLogger()
@@ -232,13 +295,15 @@ class PyMarkdownLint:
         plugin_dir = os.path.join(plugin_dir, "plugins")
         self.__initialize_plugins(args, plugin_dir)
 
+        self.__load_configuration_and_apply_to_plugins(args)
+
         for next_file in files_to_scan:
             try:
                 self.__scan_file(args, next_file)
             except BadPluginError as this_exception:
-                self.__handle_error(args, next_file, this_exception)
+                self.__handle_scan_error(next_file, this_exception)
             except BadParsingError as this_exception:
-                self.__handle_error(args, next_file, this_exception)
+                self.__handle_scan_error(next_file, this_exception)
 
         if self.plugins.number_of_scan_failures:
             sys.exit(1)

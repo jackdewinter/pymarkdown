@@ -94,7 +94,8 @@ def test_md001_good_setext_sample():
 def test_md001_bad_atx_sample():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md001 directory that...
+    test/resources/rules/md001 directory that has an atx header that is more than a 1
+    step positive jump.
     """
 
     # Arrange
@@ -124,7 +125,9 @@ def test_md001_bad_atx_sample():
 def test_md001_bad_setext_sample():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md001 directory that...
+    test/resources/rules/md001 directory that starts with a level 2 setext header and
+    is then followed by a level 4 atx header (as there is only a level 1 and 2 setext
+    header).
     """
 
     # Arrange

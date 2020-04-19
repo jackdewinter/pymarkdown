@@ -59,8 +59,3 @@ class RuleMd001(Plugin):
                         token, extra_error_information=extra_data
                     )
             self.last_header_count = hash_count
-
-    def completed_file(self):
-        """
-        Event that the file being currently scanned is now completed.
-        """
