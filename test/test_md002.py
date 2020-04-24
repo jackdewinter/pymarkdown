@@ -18,7 +18,13 @@ def test_md002_all_samples():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["-e", "MD002", "test/resources/rules/md002"]
+    suppplied_arguments = [
+        "--disable-rules",
+        "MD003",
+        "-e",
+        "MD002",
+        "test/resources/rules/md002",
+    ]
 
     expected_return_code = 1
     expected_output = (
@@ -261,6 +267,8 @@ def test_md002_bad_setext_sample():
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
+        "--disable-rules",
+        "MD003",
         "-e",
         "MD002",
         "test/resources/rules/md002/improper_setext_header_start.md",
@@ -298,6 +306,8 @@ def test_md002_bad_setext_sample_with_alternate_configuration():
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         suppplied_arguments = [
+            "--disable-rules",
+            "MD003",
             "-e",
             "MD002",
             "-c",

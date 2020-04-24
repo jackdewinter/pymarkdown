@@ -121,6 +121,7 @@ def test_markdown_with_dash_e_single_by_name():
     expected_return_code = 0
     expected_output = """MD999>>init_from_config
 MD999>>test_value>>1
+MD999>>other_test_value>>1
 MD999>>starting_new_file>>
 MD999>>next_line:# This is a test
 MD999>>next_line:
@@ -165,6 +166,7 @@ def test_markdown_with_dash_e_single_by_id():
     expected_return_code = 0
     expected_output = """MD999>>init_from_config
 MD999>>test_value>>1
+MD999>>other_test_value>>1
 MD999>>starting_new_file>>
 MD999>>next_line:# This is a test
 MD999>>next_line:
@@ -334,6 +336,7 @@ def test_markdown_with_dash_e_single_by_id_and_good_config():
         expected_return_code = 0
         expected_output = """MD999>>init_from_config
 MD999>>test_value>>2
+MD999>>other_test_value>>1
 MD999>>starting_new_file>>
 MD999>>next_line:# This is a test
 MD999>>next_line:
@@ -386,6 +389,113 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config():
         expected_return_code = 0
         expected_output = """MD999>>init_from_config
 MD999>>test_value>>1
+MD999>>other_test_value>>1
+MD999>>starting_new_file>>
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
+MD999>>token:[atx:1:0:]
+MD999>>token:[text:This is a test: ]
+MD999>>token:[end-atx::]
+MD999>>token:[BLANK:]
+MD999>>token:[para:]
+MD999>>token:[text:The line after this line should be blank.:]
+MD999>>token:[end-para]
+MD999>>token:[BLANK:]
+MD999>>completed_file
+"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if os.path.exists(configuration_file):
+            os.remove(configuration_file)
+
+
+def test_markdown_with_dash_e_single_by_id_and_good_select_config():
+    """
+    Test to make sure we get enable a rule if '-e' is supplied and the id of the
+    rule is provided. The test data for MD047 is used as it is a simple file that
+    passes normally, it is used as a comparison.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_configuration = {"MD999": {"other_test_value": 2}}
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        suppplied_arguments = [
+            "-e",
+            "MD999",
+            "-c",
+            configuration_file,
+            "test/resources/rules/md047/end_with_blank_line.md",
+        ]
+
+        expected_return_code = 0
+        expected_output = """MD999>>init_from_config
+MD999>>test_value>>1
+MD999>>other_test_value>>2
+MD999>>starting_new_file>>
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
+MD999>>token:[atx:1:0:]
+MD999>>token:[text:This is a test: ]
+MD999>>token:[end-atx::]
+MD999>>token:[BLANK:]
+MD999>>token:[para:]
+MD999>>token:[text:The line after this line should be blank.:]
+MD999>>token:[end-para]
+MD999>>token:[BLANK:]
+MD999>>completed_file
+"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if os.path.exists(configuration_file):
+            os.remove(configuration_file)
+
+
+def test_markdown_with_dash_e_single_by_id_and_bad_select_config():
+    """
+    Test to make sure we get enable a rule if '-e' is supplied and the id of the
+    rule is provided. The test data for MD047 is used as it is a simple file that
+    passes normally, it is used as a comparison.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_configuration = {"MD999": {"other_test_value": 9}}
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        suppplied_arguments = [
+            "-e",
+            "MD999",
+            "-c",
+            configuration_file,
+            "test/resources/rules/md047/end_with_blank_line.md",
+        ]
+
+        expected_return_code = 0
+        expected_output = """MD999>>init_from_config
+MD999>>test_value>>1
+MD999>>other_test_value>>1
 MD999>>starting_new_file>>
 MD999>>next_line:# This is a test
 MD999>>next_line:
@@ -437,6 +547,7 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_config_exception()
         expected_return_code = 1
         expected_output = """MD999>>init_from_config
 MD999>>test_value>>10
+MD999>>other_test_value>>1
 """
         expected_error = """BadPluginError encountered while configuring plugins:
 Plugin id 'MD999' had a critical failure during the 'apply_configuration' action.
@@ -476,6 +587,7 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_next_token_excepti
         expected_return_code = 1
         expected_output = """MD999>>init_from_config
 MD999>>test_value>>20
+MD999>>other_test_value>>1
 MD999>>starting_new_file>>
 MD999>>next_line:# This is a test
 MD999>>next_line:

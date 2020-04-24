@@ -117,7 +117,7 @@ class Plugin(ABC):
         Get the details for the plugin.
         """
 
-    def get_configuration_value(self, value_name, default_value):
+    def get_configuration_value(self, value_name, default_value, valid_values=None):
         """
         From the configuration map, try and grab the specified value from the map.
         If the value is not present or is not the same type as the default value,
@@ -127,7 +127,8 @@ class Plugin(ABC):
         if value_name in self.__configuration_map:
             retrieved_value = self.__configuration_map[value_name]
             if isinstance(retrieved_value, type(default_value)):
-                configuration_value = retrieved_value
+                if valid_values is None or retrieved_value in valid_values:
+                    configuration_value = retrieved_value
         return configuration_value
 
     def set_configuration_map(self, map_to_use):

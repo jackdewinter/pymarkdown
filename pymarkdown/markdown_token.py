@@ -296,6 +296,7 @@ class AtxHeaderMarkdownToken(MarkdownToken):
         self, hash_count, remove_trailing_count, extracted_whitespace,
     ):
         self.hash_count = hash_count
+        self.remove_trailing_count = remove_trailing_count
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_atx_header,

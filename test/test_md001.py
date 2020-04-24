@@ -15,7 +15,7 @@ def test_md001_all_samples():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["test/resources/rules/md001"]
+    suppplied_arguments = ["--disable-rules", "MD003", "test/resources/rules/md001"]
 
     expected_return_code = 1
     expected_output = (
@@ -74,7 +74,9 @@ def test_md001_good_setext_sample():
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md001/proper_setext_header_incrementing.md"
+        "--disable-rules",
+        "MD003",
+        "test/resources/rules/md001/proper_setext_header_incrementing.md",
     ]
 
     expected_return_code = 0
@@ -133,7 +135,9 @@ def test_md001_bad_setext_sample():
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md001/improper_setext_header_incrementing.md"
+        "--disable-rules",
+        "MD003",
+        "test/resources/rules/md001/improper_setext_header_incrementing.md",
     ]
 
     expected_return_code = 1

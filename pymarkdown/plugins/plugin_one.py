@@ -9,9 +9,12 @@ class PluginOne(Plugin):
     Class to implement a sample plugin that just reports that it has been called.
     """
 
+    __valid_values = [0, 1, 2]
+
     def __init__(self):
         super().__init__()
         self.test_value = None
+        self.other_test_value = None
 
     def get_details(self):
         """
@@ -31,6 +34,14 @@ class PluginOne(Plugin):
         print(self.get_details().plugin_id + ">>init_from_config")
         self.test_value = self.get_configuration_value("test_value", default_value=1)
         print(self.get_details().plugin_id + ">>test_value>>" + str(self.test_value))
+        self.other_test_value = self.get_configuration_value(
+            "other_test_value", default_value=1, valid_values=PluginOne.__valid_values
+        )
+        print(
+            self.get_details().plugin_id
+            + ">>other_test_value>>"
+            + str(self.other_test_value)
+        )
         if self.test_value == 10:
             raise Exception("because")
 
