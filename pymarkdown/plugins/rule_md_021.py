@@ -1,6 +1,12 @@
 """
 Module to implement a plugin that looks for hard tabs in the files.
 """
+from pymarkdown.markdown_token import (
+    AtxHeaderMarkdownToken,
+    EndMarkdownToken,
+    MarkdownToken,
+    TextMarkdownToken,
+)
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -8,6 +14,11 @@ class RuleMd021(Plugin):
     """
     Class to implement a plugin that looks for hard tabs in the files.
     """
+
+    def __init__(self):
+        super().__init__()
+        self.in_atx_header = None
+        self.is_left_in_error = None
 
     def get_details(self):
         """
@@ -25,13 +36,22 @@ class RuleMd021(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
+        self.in_atx_header = None
+        self.is_left_in_error = False
 
-    def next_line(self, line):
+    def next_token(self, token):
         """
-        Event that a new line is being processed.
+        Event that a new token is being processed.
         """
-
-    def completed_file(self):
-        """
-        Event that the file being currently scanned is now completed.
-        """
+        if isinstance(token, AtxHeaderMarkdownToken):
+            self.in_atx_header = token.remove_trailing_count
+            self.is_left_in_error = False
+        elif isinstance(token, EndMarkdownToken):
+            if token.type_name == MarkdownToken.token_paragraph:
+                self.in_atx_header = False
+            elif token.type_name == MarkdownToken.token_atx_header:
+                if self.is_left_in_error or len(token.extra_end_data) > 1:
+                    self.report_next_token_error(token)
+        elif isinstance(token, TextMarkdownToken):
+            if self.in_atx_header and len(token.extracted_whitespace) > 1:
+                self.is_left_in_error = True

@@ -63,3 +63,33 @@ def test_md019_multiple_spacing():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+def test_md019_multiple_spacing_with_inline():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md019 directory that has good atx header start spacing
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = [
+        "test/resources/rules/md019/multiple_spacing_with_inline.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md019/multiple_spacing_with_inline.md:0:0: "
+        + "MD019: Multiple spaces after hash on atx style heading (no-multiple-space-atx)\n"
+        "test/resources/rules/md019/multiple_spacing_with_inline.md:0:0: "
+        + "MD019: Multiple spaces after hash on atx style heading (no-multiple-space-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )

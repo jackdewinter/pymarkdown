@@ -42,7 +42,7 @@ class RuleMd019(Plugin):
         Event that a new token is being processed.
         """
         if isinstance(token, AtxHeaderMarkdownToken):
-            self.in_atx_header = True
+            self.in_atx_header = not token.remove_trailing_count
         elif isinstance(token, EndMarkdownToken):
             if token.type_name == MarkdownToken.token_paragraph:
                 self.in_atx_header = False
