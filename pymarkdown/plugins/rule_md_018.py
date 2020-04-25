@@ -57,5 +57,7 @@ class RuleMd018(Plugin):
 
             for split_index, next_text in enumerate(split_text):
                 combined_text = split_whitespace[split_index] + next_text
-                if re.search(r"^\s{0,3}#{1,6}\S", combined_text):
+                if re.search(r"^\s{0,3}#{1,6}\S", combined_text) and not re.search(
+                    r"#\s*$", combined_text
+                ):
                     self.report_next_token_error(token)

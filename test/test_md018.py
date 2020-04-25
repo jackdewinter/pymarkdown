@@ -35,6 +35,37 @@ def test_md018_good_atx_start_spacing():
 
 
 @pytest.mark.rules
+def test_md018_ignore_bad_atx_closed_spacing():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md018 directory that has good atx header start spacing
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = [
+        "test/resources/rules/md018/ignore_bad_atx_closed_spacing.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md018/ignore_bad_atx_closed_spacing.md:0:0: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md018/ignore_bad_atx_closed_spacing.md:0:0: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
 def test_md018_missing_atx_start_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the

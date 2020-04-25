@@ -1,6 +1,15 @@
 """
 Module to implement a plugin that looks for hard tabs in the files.
 """
+import re
+
+from pymarkdown.markdown_token import (
+    AtxHeaderMarkdownToken,
+    EndMarkdownToken,
+    MarkdownToken,
+    ParagraphMarkdownToken,
+    TextMarkdownToken,
+)
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -8,6 +17,12 @@ class RuleMd020(Plugin):
     """
     Class to implement a plugin that looks for hard tabs in the files.
     """
+
+    def __init__(self):
+        super().__init__()
+        self.last_paragraph_token = None
+        self.is_in_normal_atx = None
+        self.last_atx_token = None
 
     def get_details(self):
         """
@@ -25,13 +40,45 @@ class RuleMd020(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
+        self.last_paragraph_token = None
+        self.is_in_normal_atx = False
+        self.last_atx_token = None
 
-    def next_line(self, line):
+    def next_token(self, token):
         """
-        Event that a new line is being processed.
+        Event that a new token is being processed.
         """
+        if (
+            not (
+                isinstance(token, EndMarkdownToken)
+                and token.type_name == MarkdownToken.token_atx_header
+            )
+            and self.is_in_normal_atx
+        ):
+            self.last_atx_token = token
 
-    def completed_file(self):
-        """
-        Event that the file being currently scanned is now completed.
-        """
+        if isinstance(token, ParagraphMarkdownToken):
+            self.last_paragraph_token = token
+        elif isinstance(token, AtxHeaderMarkdownToken):
+            self.is_in_normal_atx = True
+        elif isinstance(token, EndMarkdownToken):
+            if token.type_name == MarkdownToken.token_paragraph:
+                self.last_paragraph_token = None
+            elif token.type_name == MarkdownToken.token_atx_header:
+                if self.is_in_normal_atx and isinstance(
+                    self.last_atx_token, TextMarkdownToken
+                ):
+                    if self.last_atx_token.token_text.endswith("#"):
+                        self.report_next_token_error(token)
+                self.is_in_normal_atx = False
+        elif isinstance(token, TextMarkdownToken) and self.last_paragraph_token:
+            split_whitespace = self.last_paragraph_token.extracted_whitespace.split(
+                "\n"
+            )
+            split_text = token.token_text.split("\n")
+            assert len(split_whitespace) == len(split_text)
+
+            for split_index, next_text in enumerate(split_text):
+                combined_text = split_whitespace[split_index] + next_text
+                if re.search(r"^\s{0,3}#{1,6}.*#+\s*$", combined_text):
+                    self.report_next_token_error(token)
