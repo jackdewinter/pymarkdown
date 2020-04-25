@@ -773,7 +773,6 @@ class HtmlHelper:
         via text on a normal line.
         """
 
-        print("HTML-LINE")
         new_tokens = [
             TextMarkdownToken(line_to_parse[start_index:], extracted_whitespace)
         ]

@@ -1,6 +1,14 @@
 """
 Module to implement a plugin that looks for hard tabs in the files.
 """
+import re
+
+from pymarkdown.markdown_token import (
+    EndMarkdownToken,
+    MarkdownToken,
+    ParagraphMarkdownToken,
+    TextMarkdownToken,
+)
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -8,6 +16,10 @@ class RuleMd018(Plugin):
     """
     Class to implement a plugin that looks for hard tabs in the files.
     """
+
+    def __init__(self):
+        super().__init__()
+        self.last_paragraph_token = None
 
     def get_details(self):
         """
@@ -25,13 +37,25 @@ class RuleMd018(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
+        self.last_paragraph_token = None
 
-    def next_line(self, line):
+    def next_token(self, token):
         """
-        Event that a new line is being processed.
+        Event that a new token is being processed.
         """
+        if isinstance(token, ParagraphMarkdownToken):
+            self.last_paragraph_token = token
+        elif isinstance(token, EndMarkdownToken):
+            if token.type_name == MarkdownToken.token_paragraph:
+                self.last_paragraph_token = None
+        elif isinstance(token, TextMarkdownToken) and self.last_paragraph_token:
+            split_whitespace = self.last_paragraph_token.extracted_whitespace.split(
+                "\n"
+            )
+            split_text = token.token_text.split("\n")
+            assert len(split_whitespace) == len(split_text)
 
-    def completed_file(self):
-        """
-        Event that the file being currently scanned is now completed.
-        """
+            for split_index, next_text in enumerate(split_text):
+                combined_text = split_whitespace[split_index] + next_text
+                if re.search(r"^\s{0,3}#{1,6}\S", combined_text):
+                    self.report_next_token_error(token)
