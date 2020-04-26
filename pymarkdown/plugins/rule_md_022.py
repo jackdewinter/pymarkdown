@@ -12,7 +12,6 @@ from pymarkdown.markdown_token import (
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
-# pylint: disable=too-many-instance-attributes
 class RuleMd022(Plugin):
     """
     Class to implement a plugin that looks for hard tabs in the files.
@@ -21,13 +20,12 @@ class RuleMd022(Plugin):
     def __init__(self):
         super().__init__()
         self.blank_line_count = None
-        self.did_start_match = None
-        self.did_atx = None
-        self.did_setext = None
-        self.did_atx_terminate = None
-        self.did_setext_terminate = None
+        self.did_above_line_count_match = None
+        self.start_header_token = None
+        self.did_header_end = None
         self.lines_above = None
         self.lines_below = None
+        self.start_header_blank_line_count = None
 
     def get_details(self):
         """
@@ -54,11 +52,9 @@ class RuleMd022(Plugin):
         Event that the a new file to be scanned is starting.
         """
         self.blank_line_count = -1
-        self.did_start_match = False
-        self.did_atx = None
-        self.did_setext = None
-        self.did_atx_terminate = False
-        self.did_setext_terminate = False
+        self.did_above_line_count_match = False
+        self.start_header_token = None
+        self.did_header_end = False
 
     def completed_file(self):
         """
@@ -75,18 +71,13 @@ class RuleMd022(Plugin):
         if isinstance(token, BlankLineMarkdownToken):
             if (self.blank_line_count is not None) and self.blank_line_count >= 0:
                 self.blank_line_count += 1
-        if isinstance(token, AtxHeaderMarkdownToken):
-            self.did_start_match = bool(
+        if isinstance(token, (AtxHeaderMarkdownToken, SetextHeaderMarkdownToken)):
+            self.did_above_line_count_match = bool(
                 self.blank_line_count == -1 or self.blank_line_count == self.lines_above
             )
-            self.did_atx = token
-            self.did_atx_terminate = False
-        elif isinstance(token, SetextHeaderMarkdownToken):
-            self.did_start_match = bool(
-                self.blank_line_count == -1 or self.blank_line_count == self.lines_above
-            )
-            self.did_setext = token
-            self.did_setext_terminate = False
+            self.start_header_token = token
+            self.start_header_blank_line_count = self.blank_line_count
+            self.did_header_end = False
         elif isinstance(token, ThematicBreakMarkdownToken):
             self.blank_line_count = 0
         elif isinstance(token, EndMarkdownToken):
@@ -102,10 +93,11 @@ class RuleMd022(Plugin):
                 self.blank_line_count = 0
             else:
                 self.blank_line_count = None
-            if token.type_name == MarkdownToken.token_atx_header:
-                self.did_atx_terminate = True
-            elif token.type_name == MarkdownToken.token_setext_header:
-                self.did_setext_terminate = True
+            if (
+                token.type_name == MarkdownToken.token_atx_header
+                or token.type_name == MarkdownToken.token_setext_header
+            ):
+                self.did_header_end = True
 
     def perform_close_check(self, token):
         """
@@ -115,18 +107,37 @@ class RuleMd022(Plugin):
         """
 
         if (
-            (self.did_atx and self.did_atx_terminate)
-            or (self.did_setext and self.did_setext_terminate)
+            (self.start_header_token and self.did_header_end)
         ) and self.blank_line_count >= 0:
             if not isinstance(token, BlankLineMarkdownToken):
                 did_end_match = bool(self.blank_line_count == self.lines_below)
-                if not did_end_match or not self.did_start_match:
-                    if self.did_atx:
-                        self.report_next_token_error(self.did_atx)
-                    else:
-                        self.report_next_token_error(self.did_setext)
-                self.did_atx = None
-                self.did_setext = None
+                self.report_any_match_failures(did_end_match)
+                self.start_header_token = None
 
+    def report_any_match_failures(self, did_end_match):
+        """
+        Take care of reporting any match failures.
+        """
 
-# pylint: enable=too-many-instance-attributes
+        if not self.did_above_line_count_match:
+            extra_info = (
+                "Expected: "
+                + str(self.lines_above)
+                + "; Actual: "
+                + str(self.start_header_blank_line_count)
+                + "; Above"
+            )
+            self.report_next_token_error(
+                self.start_header_token, extra_error_information=extra_info
+            )
+        if not did_end_match:
+            extra_info = (
+                "Expected: "
+                + str(self.lines_below)
+                + "; Actual: "
+                + str(self.blank_line_count)
+                + "; Below"
+            )
+            self.report_next_token_error(
+                self.start_header_token, extra_error_information=extra_info
+            )
