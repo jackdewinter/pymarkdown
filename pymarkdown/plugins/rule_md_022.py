@@ -70,7 +70,6 @@ class RuleMd022(Plugin):
         """
         Event that a new token is being processed.
         """
-        # print("token>" +str(token) + ">blc>" + str(self.blank_line_count))
         self.perform_close_check(token)
 
         if isinstance(token, BlankLineMarkdownToken):
@@ -80,14 +79,12 @@ class RuleMd022(Plugin):
             self.did_start_match = bool(
                 self.blank_line_count == -1 or self.blank_line_count == self.lines_above
             )
-            # print("self.did_start_match>>" + str(self.did_start_match))
             self.did_atx = token
             self.did_atx_terminate = False
         elif isinstance(token, SetextHeaderMarkdownToken):
             self.did_start_match = bool(
                 self.blank_line_count == -1 or self.blank_line_count == self.lines_above
             )
-            # print("self.did_start_match>>" + str(self.did_start_match))
             self.did_setext = token
             self.did_setext_terminate = False
         elif isinstance(token, ThematicBreakMarkdownToken):
@@ -123,8 +120,6 @@ class RuleMd022(Plugin):
         ) and self.blank_line_count >= 0:
             if not isinstance(token, BlankLineMarkdownToken):
                 did_end_match = bool(self.blank_line_count == self.lines_below)
-                # print("did_end_match>>" + str(did_end_match))
-                # print("did_start_match>>" + str(self.did_start_match))
                 if not did_end_match or not self.did_start_match:
                     if self.did_atx:
                         self.report_next_token_error(self.did_atx)
