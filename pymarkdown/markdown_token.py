@@ -297,6 +297,7 @@ class AtxHeaderMarkdownToken(MarkdownToken):
     ):
         self.hash_count = hash_count
         self.remove_trailing_count = remove_trailing_count
+        self.extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_atx_header,
@@ -318,7 +319,9 @@ class EndMarkdownToken(MarkdownToken):
     def __init__(self, type_name, extracted_whitespace, extra_end_data):
 
         self.type_name = type_name
+        self.extracted_whitespace = extracted_whitespace
         self.extra_end_data = extra_end_data
+
         display_data = extracted_whitespace
         if extra_end_data is not None:
             display_data = display_data + ":" + extra_end_data

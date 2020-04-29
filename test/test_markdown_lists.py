@@ -1983,6 +1983,10 @@ def test_list_items_306():
 # TODO - determine which errors to print and which to log
 # TODO - add log level + file support
 
+# Future Bugs - SetExt
+# TODO - MD023 is parsing the text token for whitespace instead of it being removed
+#    and placed in the ws field, like with other text types
+
 # Future Bugs - Tabs
 # TODO check is_length_less_than_or_equal_to to see if any issues with tabs, most
 #   likely in conjunction with starting another type of block
