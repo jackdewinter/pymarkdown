@@ -84,7 +84,6 @@ def test_md002_good_atx_sample_with_alternate_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    scanner = MarkdownScanner()
     supplied_configuration = {"MD002": {"level": 2}}
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
