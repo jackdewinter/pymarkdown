@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD003 rule.
+Module to provide tests related to the MD026 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
@@ -10,10 +10,11 @@ from .utils import write_temporary_configuration
 
 
 @pytest.mark.rules
-def test_md026_ends_without_punctuation_atx():
+def test_md026_good_ends_without_punctuation_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD026 directory that has atx headings that do not end with
+    punctuation.
     """
 
     # Arrange
@@ -36,10 +37,11 @@ def test_md026_ends_without_punctuation_atx():
 
 
 @pytest.mark.rules
-def test_md026_ends_with_punctuation_atx():
+def test_md026_bad_ends_with_punctuation_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD026 directory that has atx headings that do end with a
+    punctuation character.
     """
 
     # Arrange
@@ -65,10 +67,11 @@ def test_md026_ends_with_punctuation_atx():
 
 
 @pytest.mark.rules
-def test_md026_ends_with_punctuation_then_inline_atx():
+def test_md026_good_ends_with_punctuation_then_inline_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD026 directory that has atx headings that do end with a
+    punctuation character, but after that character have an inline sequence.
     """
 
     # Arrange
@@ -91,10 +94,12 @@ def test_md026_ends_with_punctuation_then_inline_atx():
 
 
 @pytest.mark.rules
-def test_md026_ends_with_punctuation_atx_with_configuration():
+def test_md026_good_ends_with_punctuation_atx_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD026 directory that has atx headings that do end with what
+    would normally be punctuation, but have configuration that changes those characters
+    that are considered punctuation.
     """
 
     # Arrange
@@ -125,10 +130,11 @@ def test_md026_ends_with_punctuation_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md026_ends_without_punctuation_setext():
+def test_md026_good_ends_without_punctuation_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD026 directory that has setext headings that do not end with
+    punctuation.
     """
 
     # Arrange
@@ -151,10 +157,11 @@ def test_md026_ends_without_punctuation_setext():
 
 
 @pytest.mark.rules
-def test_md026_ends_with_punctuation_setext():
+def test_md026_bad_ends_with_punctuation_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD026 directory that has setext headings that do end with a
+    punctuation character.
     """
 
     # Arrange
@@ -180,10 +187,11 @@ def test_md026_ends_with_punctuation_setext():
 
 
 @pytest.mark.rules
-def test_md026_ends_with_punctuation_then_inline_setext():
+def test_md026_good_ends_with_punctuation_then_inline_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD026 directory that has setext headings that do end with a
+    punctuation character, but after that character have an inline sequence.
     """
 
     # Arrange
@@ -206,10 +214,12 @@ def test_md026_ends_with_punctuation_then_inline_setext():
 
 
 @pytest.mark.rules
-def test_md026_ends_with_punctuation_setext_with_configuration():
+def test_md026_good_ends_with_punctuation_setext_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD026 directory that has setext headings that do end with what
+    would normally be punctuation, but have configuration that changes those characters
+    that are considered punctuation.
     """
 
     # Arrange

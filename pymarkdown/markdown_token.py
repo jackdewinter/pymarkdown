@@ -215,6 +215,12 @@ class SetextHeaderMarkdownToken(MarkdownToken):
         self.header_character = header_character
         self.remaining_line = remaining_line
         self.final_whitespace = ""
+        if self.header_character == "=":
+            self.hash_count = 1
+        elif self.header_character == "-":
+            self.hash_count = 2
+        else:
+            self.hash_count = -1
         MarkdownToken.__init__(
             self, MarkdownToken.token_setext_header, "",
         )

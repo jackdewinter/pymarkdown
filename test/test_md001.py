@@ -9,7 +9,7 @@ import pytest
 @pytest.mark.rules
 def test_md001_all_samples():
     """
-    Test to make sure we get the expected behavior after scanning the files in the
+    Test to make sure we get the expected behavior after scanning all the files in the
     test/resources/rules/md001 directory.
     """
 
@@ -38,7 +38,7 @@ def test_md001_all_samples():
 
 
 @pytest.mark.rules
-def test_md001_good_atx_sample():
+def test_md001_good_proper_atx_header_incrementing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md001 directory using atx headers.
@@ -64,7 +64,7 @@ def test_md001_good_atx_sample():
 
 
 @pytest.mark.rules
-def test_md001_good_setext_sample():
+def test_md001_good_proper_setext_header_incrementing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md001 directory starting with a pair of setext headers and finishing
@@ -93,7 +93,7 @@ def test_md001_good_setext_sample():
 
 
 @pytest.mark.rules
-def test_md001_bad_atx_sample():
+def test_md001_bad_improper_atx_header_incrementing():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
     test/resources/rules/md001 directory that has an atx header that is more than a 1
@@ -124,7 +124,7 @@ def test_md001_bad_atx_sample():
 
 
 @pytest.mark.rules
-def test_md001_bad_setext_sample():
+def test_md001_bad_improper_setext_header_incrementing():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
     test/resources/rules/md001 directory that starts with a level 2 setext header and

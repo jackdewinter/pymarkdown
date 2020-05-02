@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD003 rule.
+Module to provide tests related to the MD024 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
@@ -10,10 +10,11 @@ from .utils import write_temporary_configuration
 
 
 @pytest.mark.rules
-def test_md024_different_header_content_atx():
+def test_md024_good_different_header_content_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has atx headings that all have different
+    text in them.
     """
 
     # Arrange
@@ -36,10 +37,11 @@ def test_md024_different_header_content_atx():
 
 
 @pytest.mark.rules
-def test_md024_same_header_content_atx():
+def test_md024_bad_same_header_content_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text in them.
     """
 
     # Arrange
@@ -65,10 +67,11 @@ def test_md024_same_header_content_atx():
 
 
 @pytest.mark.rules
-def test_md024_same_header_in_siblings_atx():
+def test_md024_bad_same_header_in_siblings_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text in siblings.
     """
 
     # Arrange
@@ -96,10 +99,11 @@ def test_md024_same_header_in_siblings_atx():
 
 
 @pytest.mark.rules
-def test_md024_same_header_but_not_in_siblings_atx():
+def test_md024_bad_same_header_but_not_in_siblings_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text but not in siblings.
     """
 
     # Arrange
@@ -125,10 +129,12 @@ def test_md024_same_header_but_not_in_siblings_atx():
 
 
 @pytest.mark.rules
-def test_md024_different_header_content_atx_with_configuration():
+def test_md024_good_different_header_content_atx_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has atx headings that all have different
+    text in them, with configuration allowing for duplicated text except for in
+    sibling headings.
     """
 
     # Arrange
@@ -159,10 +165,12 @@ def test_md024_different_header_content_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_same_header_content_atx_with_configuration():
+def test_md024_good_same_header_content_atx_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text in them, with configuration allowing for duplicated text except for in
+    sibling headings.
     """
 
     # Arrange
@@ -193,10 +201,12 @@ def test_md024_same_header_content_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_same_header_in_siblings_atx_with_configuration():
+def test_md024_bad_same_header_in_siblings_atx_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text in siblings, with configuration allowing for duplicated text except for in
+    sibling headings.
     """
 
     # Arrange
@@ -230,10 +240,12 @@ def test_md024_same_header_in_siblings_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_same_header_but_not_in_siblings_atx_with_configuration():
+def test_md024_good_same_header_but_not_in_siblings_atx_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text but not in siblings, with configuration allowing for duplicated text except for
+    in sibling headings.
     """
 
     # Arrange
@@ -264,10 +276,12 @@ def test_md024_same_header_but_not_in_siblings_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_same_header_but_not_in_siblings_atx_with_alternate_configuration():
+def test_md024_good_same_header_but_not_in_siblings_atx_with_alternate_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text but not in siblings, with the alternate configuration name allowing for
+    duplicated text except for in sibling headings.
     """
 
     # Arrange
@@ -298,7 +312,7 @@ def test_md024_same_header_but_not_in_siblings_atx_with_alternate_configuration(
 
 
 @pytest.mark.rules
-def test_md024_different_inline_header_content_atx():
+def test_md024_good_different_inline_header_content_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md021 directory that has good atx header start spacing
@@ -324,10 +338,11 @@ def test_md024_different_inline_header_content_atx():
 
 
 @pytest.mark.rules
-def test_md024_different_header_content_setext():
+def test_md024_good_different_header_content_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has setext headings that all have different
+    text in them.
     """
 
     # Arrange
@@ -350,10 +365,11 @@ def test_md024_different_header_content_setext():
 
 
 @pytest.mark.rules
-def test_md024_same_header_content_setext():
+def test_md024_bad_same_header_content_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has setext headings that have some duplicated
+    text in them.
     """
 
     # Arrange
@@ -379,10 +395,11 @@ def test_md024_same_header_content_setext():
 
 
 @pytest.mark.rules
-def test_md024_same_header_in_siblings_setext():
+def test_md024_bad_same_header_in_siblings_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has setext headings that have some duplicated
+    text in siblings.
     """
 
     # Arrange
@@ -410,10 +427,11 @@ def test_md024_same_header_in_siblings_setext():
 
 
 @pytest.mark.rules
-def test_md024_same_header_but_not_in_siblings_setext():
+def test_md024_bad_same_header_but_not_in_siblings_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has setext headings that have some duplicated
+    text but not in siblings.
     """
 
     # Arrange
@@ -439,10 +457,12 @@ def test_md024_same_header_but_not_in_siblings_setext():
 
 
 @pytest.mark.rules
-def test_md024_different_header_content_setext_with_configuration():
+def test_md024_good_different_header_content_setext_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has setext headings that all have different
+    text in them, with configuration allowing for duplicated text except for in
+    sibling headings.
     """
 
     # Arrange
@@ -473,10 +493,12 @@ def test_md024_different_header_content_setext_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_same_header_content_setext_with_configuration():
+def test_md024_good_same_header_content_setext_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has setext headings that have some
+    duplicated text in them, with configuration allowing for duplicated text except for
+    in sibling headings.
     """
 
     # Arrange
@@ -507,10 +529,12 @@ def test_md024_same_header_content_setext_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_same_header_in_siblings_setext_with_configuration():
+def test_md024_bad_same_header_in_siblings_setext_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has setext headings that have some duplicated
+    text in siblings, with configuration allowing for duplicated text except for in
+    sibling headings.
     """
 
     # Arrange
@@ -544,10 +568,12 @@ def test_md024_same_header_in_siblings_setext_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_same_header_but_not_in_siblings_setext_with_configuration():
+def test_md024_good_same_header_but_not_in_siblings_setext_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD024 directory that has setext headings that have some duplicated
+    text but not in siblings, with configuration allowing for duplicated text except for
+    in sibling headings.
     """
 
     # Arrange

@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD003 rule.
+Module to provide tests related to the MD036 rule.
 """
 import os
 from test.markdown_scanner import MarkdownScanner
@@ -13,7 +13,7 @@ from .utils import write_temporary_configuration
 def test_md036_proper_headings_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md036 directory that normal atx headers.
     """
 
     # Arrange
@@ -39,7 +39,7 @@ def test_md036_proper_headings_atx():
 def test_md036_proper_headings_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md036 directory that normal setext headers.
     """
 
     # Arrange
@@ -65,7 +65,8 @@ def test_md036_proper_headings_setext():
 def test_md036_proper_emphasis_with_link():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md036 directory that has a single line wrapped in emphasis
+    that contains an inline link.
     """
 
     # Arrange
@@ -91,7 +92,8 @@ def test_md036_proper_emphasis_with_link():
 def test_md036_proper_emphasis_with_text_then_link():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md036 directory that has a single line wrapped in emphasis
+    that contains text and then an inline link.
     """
 
     # Arrange
@@ -117,7 +119,8 @@ def test_md036_proper_emphasis_with_text_then_link():
 def test_md036_proper_emphasis_with_text_then_link_then_text():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md036 directory that has a single line wrapped in emphasis
+    that contains text, an inline link, and then text again.
     """
 
     # Arrange
@@ -143,7 +146,8 @@ def test_md036_proper_emphasis_with_text_then_link_then_text():
 def test_md036_proper_emphasis_with_text_end_emphasis_more_text():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md036 directory that has a single line wrapped with emphasis
+    that contains text, followed by more text.
     """
 
     # Arrange
@@ -169,7 +173,8 @@ def test_md036_proper_emphasis_with_text_end_emphasis_more_text():
 def test_md036_proper_emphasis_within_text():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md036 directory that has a single line with emphasis within
+    the text.
     """
 
     # Arrange
@@ -195,7 +200,8 @@ def test_md036_proper_emphasis_within_text():
 def test_md036_proper_emphasis_within_multiline_text():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md036 directory that has a single line with emphasis wrapped
+    around the multiline text.
     """
 
     # Arrange
@@ -221,7 +227,8 @@ def test_md036_proper_emphasis_within_multiline_text():
 def test_md036_proper_emphasis_ending_with_punctuation():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md036 directory that has a single line with emphasis wrapped
+    around the text, the text ending with punctuation.
     """
 
     # Arrange
@@ -247,7 +254,9 @@ def test_md036_proper_emphasis_ending_with_punctuation():
 def test_md036_proper_emphasis_ending_with_punctuation_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md036 directory that has a single line with emphasis wrapped
+    around the text, the text ending with punctuation, with configuration that makes
+    the punctuation okay.
     """
 
     # Arrange
@@ -287,7 +296,8 @@ def test_md036_proper_emphasis_ending_with_punctuation_with_configuration():
 def test_md036_valid_emphasis_headings():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md036 directory that has a single line with emphasis wrapped
+    around the text, valid golden case for recommending.
     """
 
     # Arrange

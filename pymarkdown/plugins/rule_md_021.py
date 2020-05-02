@@ -1,5 +1,6 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for more than one space between either the
+opening or closing hashes of an atx header.
 """
 from pymarkdown.markdown_token import (
     AtxHeaderMarkdownToken,
@@ -12,13 +13,14 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 class RuleMd021(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for more than one space between either the
+    opening or closing hashes of an atx header.
     """
 
     def __init__(self):
         super().__init__()
-        self.in_atx_header = None
-        self.is_left_in_error = None
+        self.__in_atx_header = None
+        self.__is_left_in_error = None
 
     def get_details(self):
         """
@@ -36,22 +38,22 @@ class RuleMd021(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.in_atx_header = None
-        self.is_left_in_error = False
+        self.__in_atx_header = None
+        self.__is_left_in_error = False
 
     def next_token(self, token):
         """
         Event that a new token is being processed.
         """
         if isinstance(token, AtxHeaderMarkdownToken):
-            self.in_atx_header = token.remove_trailing_count
-            self.is_left_in_error = False
+            self.__in_atx_header = token.remove_trailing_count
+            self.__is_left_in_error = False
         elif isinstance(token, EndMarkdownToken):
             if token.type_name == MarkdownToken.token_paragraph:
-                self.in_atx_header = False
+                self.__in_atx_header = False
             elif token.type_name == MarkdownToken.token_atx_header:
-                if self.is_left_in_error or len(token.extra_end_data) > 1:
+                if self.__is_left_in_error or len(token.extra_end_data) > 1:
                     self.report_next_token_error(token)
         elif isinstance(token, TextMarkdownToken):
-            if self.in_atx_header and len(token.extracted_whitespace) > 1:
-                self.is_left_in_error = True
+            if self.__in_atx_header and len(token.extracted_whitespace) > 1:
+                self.__is_left_in_error = True

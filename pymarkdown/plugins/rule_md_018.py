@@ -1,5 +1,7 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for text in a paragraph where a line starts
+with what could be an atx header, except there is no spaces between the hashes and
+the text of the header.
 """
 import re
 
@@ -14,12 +16,14 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 class RuleMd018(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for text in a paragraph where a line starts
+    with what could be an atx header, except there is no spaces between the hashes and
+    the text of the header.
     """
 
     def __init__(self):
         super().__init__()
-        self.last_paragraph_token = None
+        self.__last_paragraph_token = None
 
     def get_details(self):
         """
@@ -37,19 +41,19 @@ class RuleMd018(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.last_paragraph_token = None
+        self.__last_paragraph_token = None
 
     def next_token(self, token):
         """
         Event that a new token is being processed.
         """
         if isinstance(token, ParagraphMarkdownToken):
-            self.last_paragraph_token = token
+            self.__last_paragraph_token = token
         elif isinstance(token, EndMarkdownToken):
             if token.type_name == MarkdownToken.token_paragraph:
-                self.last_paragraph_token = None
-        elif isinstance(token, TextMarkdownToken) and self.last_paragraph_token:
-            split_whitespace = self.last_paragraph_token.extracted_whitespace.split(
+                self.__last_paragraph_token = None
+        elif isinstance(token, TextMarkdownToken) and self.__last_paragraph_token:
+            split_whitespace = self.__last_paragraph_token.extracted_whitespace.split(
                 "\n"
             )
             split_text = token.token_text.split("\n")

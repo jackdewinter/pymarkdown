@@ -14,7 +14,7 @@ CONSISTENT_ATX_HEADERS_SAMPLE_OUTPUT = ""
 
 
 @pytest.mark.rules
-def test_md003_consistent_atx_headers_sample():
+def test_md003_good_consistent_headers_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only atx headers.
@@ -43,7 +43,7 @@ CONSISTENT_ATX_CLOSED_HEADERS_SAMPLE_OUTPUT = ""
 
 
 @pytest.mark.rules
-def test_md003_consistent_atx_closed_headers_sample():
+def test_md003_good_consistent_headers_atx_closed():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only closed atx headers.
@@ -72,7 +72,7 @@ CONSISTENT_SETEXT_HEADERS_SAMPLE_OUTPUT = ""
 
 
 @pytest.mark.rules
-def test_md003_consistent_setext_headers_sample():
+def test_md003_good_consistent_headers_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers.
@@ -104,7 +104,7 @@ CONSISTENT_SETEXT_WITH_ATX_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_consistent_setext_with_atx_headers_sample():
+def test_md003_bad_consistent_headers_setext_with_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers for the first two
@@ -137,7 +137,7 @@ CONSISTENT_SETEXT_WITH_ATX_CLOSED_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_consistent_setext_with_atx_closed_headers_sample():
+def test_md003_bad_consistent_headers_setext_with_atx_closed():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers for the first two
@@ -197,7 +197,7 @@ ATX_ATX_HEADERS_SAMPLE_OUTPUT = ""
 
 
 @pytest.mark.rules
-def test_md003_atx_atx_headers_sample():
+def test_md003_good_atx_headers_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only atx headers.
@@ -239,7 +239,7 @@ ATX_ATX_CLOSED_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_atx_atx_closed_headers_sample():
+def test_md003_bad_atx_headers_atx_closed():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only closed atx headers.
@@ -281,7 +281,7 @@ ATX_SETEXT_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_atx_setext_headers_sample():
+def test_md003_bad_atx_headers_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers.
@@ -323,7 +323,7 @@ ATX_SETEXT_WITH_ATX_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_atx_setext_with_atx_headers_sample():
+def test_md003_bad_atx_headers_setext_with_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers for the first two
@@ -368,7 +368,7 @@ ATX_SETEXT_WITH_ATX_CLOSED_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_atx_setext_with_atx_closed_headers_sample():
+def test_md003_bad_atx_headers_setext_with_atx_closed():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers for the first two
@@ -447,7 +447,7 @@ ATXCLOSED_ATX_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_atxclosed_atx_headers_sample():
+def test_md003_bad_atxclosed_headers_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only atx headers.
@@ -484,7 +484,7 @@ ATXCLOSED_ATX_CLOSED_HEADERS_SAMPLE_OUTPUT = ""
 
 
 @pytest.mark.rules
-def test_md003_atxclosed_atx_closed_headers_sample():
+def test_md003_good_atxclosed_headers_atx_closed():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only closed atx headers.
@@ -526,7 +526,7 @@ ATXCLOSED_SETEXT_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_atxclosed_setext_headers_sample():
+def test_md003_bad_atxclosed_headers_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers.
@@ -570,7 +570,7 @@ ATXCLOSED_SETEXT_WITH_ATX_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_atxclosed_setext_with_atx_headers_sample():
+def test_md003_bad_atxclosed_headers_setext_with_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers for the first two
@@ -613,7 +613,7 @@ ATXCLOSED_SETEXT_WITH_ATX_CLOSED_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_atxclosed_setext_with_atx_closed_headers_sample():
+def test_md003_bad_atxclosed_headers_setext_with_atx_closed():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers for the first two
@@ -692,7 +692,7 @@ SETEXT_ATX_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_setext_atx_headers_sample():
+def test_md003_bad_setext_headers_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only atx headers.
@@ -734,7 +734,7 @@ SETEXT_ATX_CLOSED_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_setext_atx_closed_headers_sample():
+def test_md003_bad_setext_headers_atx_closed():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only closed atx headers.
@@ -771,7 +771,7 @@ SETEXT_SETEXT_HEADERS_SAMPLE_OUTPUT = ""
 
 
 @pytest.mark.rules
-def test_md003_setext_setext_headers_sample():
+def test_md003_good_setext_headers_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers.
@@ -811,7 +811,7 @@ SETEXT_SETEXT_WITH_ATX_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_setext_setext_with_atx_headers_sample():
+def test_md003_bad_setext_headers_setext_with_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers for the first two
@@ -852,7 +852,7 @@ SETEXT_SETEXT_WITH_ATX_CLOSED_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_setext_setext_with_atx_closed_headers_sample():
+def test_md003_bad_setext_headers_setext_with_atx_closed():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers for the first two
@@ -931,7 +931,7 @@ SETEXT_WITH_ATX_ATX_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_setext_with_atx_atx_headers_sample():
+def test_md003_bad_setext_with_atx_headers_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only atx headers.
@@ -973,7 +973,7 @@ SETEXT_WITH_ATX_ATX_CLOSED_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_setext_with_atx_atx_closed_headers_sample():
+def test_md003_bad_setext_with_atx_headers_atx_closed():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only closed atx headers.
@@ -1010,7 +1010,7 @@ SETEXT_WITH_ATX_SETEXT_HEADERS_SAMPLE_OUTPUT = ""
 
 
 @pytest.mark.rules
-def test_md003_setext_with_atx_setext_headers_sample():
+def test_md003_good_setext_with_atx_headers_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers.
@@ -1047,7 +1047,7 @@ SETEXT_WITH_ATX_SETEXT_WITH_ATX_HEADERS_SAMPLE_OUTPUT = ""
 
 
 @pytest.mark.rules
-def test_md003_setext_with_atx_setext_with_atx_headers_sample():
+def test_md003_good_setext_with_atx_headers_setext_with_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers for the first two
@@ -1088,7 +1088,7 @@ SETEXT_WITH_ATX_SETEXT_WITH_ATX_CLOSED_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_setext_with_atx_setext_with_atx_closed_headers_sample():
+def test_md003_bad_setext_with_atx_headers_setext_with_atx_closed():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers for the first two
@@ -1167,7 +1167,7 @@ SETEXT_WITH_ATX_CLOSED_ATX_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_setext_with_atx_closed_atx_headers_sample():
+def test_md003_bad_setext_with_atx_closed_headers_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only atx headers.
@@ -1209,7 +1209,7 @@ SETEXT_WITH_ATX_CLOSED_ATX_CLOSED_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_setext_with_atx_closed_atx_closed_headers_sample():
+def test_md003_bad_setext_with_atx_closed_headers_atx_closed():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only closed atx headers.
@@ -1246,7 +1246,7 @@ SETEXT_WITH_ATX_CLOSED_SETEXT_HEADERS_SAMPLE_OUTPUT = ""
 
 
 @pytest.mark.rules
-def test_md003_setext_with_atx_closed_setext_headers_sample():
+def test_md003_good_setext_with_atx_closed_headers_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers.
@@ -1286,7 +1286,7 @@ SETEXT_WITH_ATX_CLOSED_SETEXT_WITH_ATX_HEADERS_SAMPLE_OUTPUT = (
 
 
 @pytest.mark.rules
-def test_md003_setext_with_atx_closed_setext_with_atx_headers_sample():
+def test_md003_bad_setext_with_atx_closed_headers_setext_with_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers for the first two
@@ -1324,7 +1324,7 @@ SETEXT_WITH_ATX_CLOSED_SETEXT_WITH_ATX_CLOSED_HEADERS_SAMPLE_OUTPUT = ""
 
 
 @pytest.mark.rules
-def test_md003_setext_with_atx_closed_setext_with_atx_closed_headers_sample():
+def test_md003_good_setext_with_atx_closed_headers_setext_with_atx_closed():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md003 directory that has only setext headers for the first two

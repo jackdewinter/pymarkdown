@@ -1,5 +1,6 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for multiple spaces after the hash
+mark on a atx header.
 """
 from pymarkdown.markdown_token import (
     AtxHeaderMarkdownToken,
@@ -12,12 +13,13 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 class RuleMd019(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for multiple spaces after the hash
+    mark on a atx header.
     """
 
     def __init__(self):
         super().__init__()
-        self.in_atx_header = None
+        self.__in_atx_header = None
 
     def get_details(self):
         """
@@ -35,17 +37,17 @@ class RuleMd019(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.in_atx_header = None
+        self.__in_atx_header = None
 
     def next_token(self, token):
         """
         Event that a new token is being processed.
         """
         if isinstance(token, AtxHeaderMarkdownToken):
-            self.in_atx_header = not token.remove_trailing_count
+            self.__in_atx_header = not token.remove_trailing_count
         elif isinstance(token, EndMarkdownToken):
             if token.type_name == MarkdownToken.token_paragraph:
-                self.in_atx_header = False
+                self.__in_atx_header = False
         elif isinstance(token, TextMarkdownToken):
-            if self.in_atx_header and len(token.extracted_whitespace) > 1:
+            if self.__in_atx_header and len(token.extracted_whitespace) > 1:
                 self.report_next_token_error(token)

@@ -11,7 +11,7 @@ class RuleMd047(Plugin):
 
     def __init__(self):
         super().__init__()
-        self.last_line = None
+        self.__last_line = None
 
     def get_details(self):
         """
@@ -29,17 +29,17 @@ class RuleMd047(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.last_line = None
+        self.__last_line = None
 
     def next_line(self, line):
         """
         Event that a new line is being processed.
         """
-        self.last_line = line
+        self.__last_line = line
 
     def completed_file(self):
         """
         Event that the file being currently scanned is now completed.
         """
-        if self.last_line:
-            self.report_next_line_error(len(self.last_line), -1)
+        if self.__last_line:
+            self.report_next_line_error(len(self.__last_line), -1)

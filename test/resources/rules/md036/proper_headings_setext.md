@@ -1,7 +1,9 @@
-# My document
+My document
+===========
 
 Lorem ipsum dolor sit amet...
 
-## Another section
+Another section
+---------------
 
 Consectetur adipiscing elit, sed do eiusmod.

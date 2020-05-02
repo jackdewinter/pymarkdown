@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD003 rule.
+Module to provide tests related to the MD018 rule.
 """
 from test.markdown_scanner import MarkdownScanner
 
@@ -9,10 +9,11 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md018_good_atx_start_spacing():
+def test_md018_good_good_start_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx header start spacing
+    test/resources/rules/md018 directory that has good atx header start spacing after
+    the first hash.
     """
 
     # Arrange
@@ -35,10 +36,11 @@ def test_md018_good_atx_start_spacing():
 
 
 @pytest.mark.rules
-def test_md018_ignore_bad_atx_closed_spacing():
+def test_md018_bad_ignore_bad_atx_closed_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx header start spacing
+    test/resources/rules/md018 directory that has an atx header with no spaces after
+    initial hash, but ends with a close hash, making it a closed atx.
     """
 
     # Arrange
@@ -66,10 +68,11 @@ def test_md018_ignore_bad_atx_closed_spacing():
 
 
 @pytest.mark.rules
-def test_md018_missing_atx_start_spacing():
+def test_md018_bad_missing_atx_start_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx header start spacing
+    test/resources/rules/md018 directory that has an atx header with no spaces after
+    initial hash.
     """
 
     # Arrange
@@ -95,10 +98,11 @@ def test_md018_missing_atx_start_spacing():
 
 
 @pytest.mark.rules
-def test_md018_with_setext_headers():
+def test_md018_good_with_setext_headers():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx header start spacing
+    test/resources/rules/md018 directory that has a possible atx header except that
+    it is followed by setext headers.
     """
 
     # Arrange
@@ -121,10 +125,11 @@ def test_md018_with_setext_headers():
 
 
 @pytest.mark.rules
-def test_md018_with_code_blocks():
+def test_md018_good_with_code_blocks():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx header start spacing
+    test/resources/rules/md018 directory that has a possible atx header except that
+    it is followed by code blocks.
     """
 
     # Arrange
@@ -147,10 +152,11 @@ def test_md018_with_code_blocks():
 
 
 @pytest.mark.rules
-def test_md018_with_html_blocks():
+def test_md018_good_with_html_blocks():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx header start spacing
+    test/resources/rules/md018 directory that has a possible atx header except that
+    it is followed by html blocks.
     """
 
     # Arrange
@@ -173,10 +179,11 @@ def test_md018_with_html_blocks():
 
 
 @pytest.mark.rules
-def test_md018_multiple_within_paragraph():
+def test_md018_bad_multiple_within_paragraph():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx header start spacing
+    test/resources/rules/md018 directory that has multiple possible atx headers within
+    a single paragraph.
     """
 
     # Arrange
@@ -204,10 +211,11 @@ def test_md018_multiple_within_paragraph():
 
 
 @pytest.mark.rules
-def test_md018_paragraphs_with_starting_whitespace():
+def test_md018_bad_paragraphs_with_starting_whitespace():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx header start spacing
+    test/resources/rules/md018 directory that has multiple possible atx headers each
+    one with starting whitespace that would normally be permitted.
     """
 
     # Arrange
@@ -239,10 +247,12 @@ def test_md018_paragraphs_with_starting_whitespace():
 
 
 @pytest.mark.rules
-def test_md018_single_paragraph_with_starting_whitespace():
+def test_md018_bad_single_paragraph_with_starting_whitespace():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx header start spacing
+    test/resources/rules/md018 directory that has multiple possible atx headers within
+    a single paragraph each one with starting whitespace that would normally be
+    permitted.
     """
 
     # Arrange

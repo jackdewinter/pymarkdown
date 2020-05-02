@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD003 rule.
+Module to provide tests related to the MD021 rule.
 """
 from test.markdown_scanner import MarkdownScanner
 
@@ -9,10 +9,11 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md021_single_spacing():
+def test_md021_good_single_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md021 directory that has single spacing inside the hashes of
+    a closed atx header.
     """
 
     # Arrange
@@ -35,10 +36,11 @@ def test_md021_single_spacing():
 
 
 @pytest.mark.rules
-def test_md021_multiple_spacing_both():
+def test_md021_bad_multiple_spacing_both():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md021 directory that has multiple spacing inside the hashes of
+    a closed atx header on both sides.
     """
 
     # Arrange
@@ -66,10 +68,11 @@ def test_md021_multiple_spacing_both():
 
 
 @pytest.mark.rules
-def test_md021_multiple_spacing_left():
+def test_md021_bad_multiple_spacing_left():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md021 directory that has multiple spacing inside the hashes of
+    a closed atx header on the left.
     """
 
     # Arrange
@@ -97,10 +100,11 @@ def test_md021_multiple_spacing_left():
 
 
 @pytest.mark.rules
-def test_md021_multiple_spacing_right():
+def test_md021_bad_multiple_spacing_right():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md021 directory that has multiple spacing inside the hashes of
+    a closed atx header on the right.
     """
 
     # Arrange
@@ -128,10 +132,11 @@ def test_md021_multiple_spacing_right():
 
 
 @pytest.mark.rules
-def test_md021_multiple_spacing_with_inline():
+def test_md021_good_multiple_spacing_with_inline():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md021 directory that has single spacing inside the hashes of
+    a closed atx header, with inline.
     """
 
     # Arrange

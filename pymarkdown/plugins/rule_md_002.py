@@ -1,5 +1,6 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks to see if the first heading in a file is
+a top level heading.
 """
 from pymarkdown.markdown_token import AtxHeaderMarkdownToken, SetextHeaderMarkdownToken
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -7,13 +8,14 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 class RuleMd002(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks to see if the first heading in a file is
+    a top level heading.
     """
 
     def __init__(self):
         super().__init__()
-        self.start_level = None
-        self.have_seen_first_header = None
+        self.__start_level = None
+        self.__have_seen_first_header = None
 
     def get_details(self):
         """
@@ -32,13 +34,13 @@ class RuleMd002(Plugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.start_level = self.get_configuration_value("level", default_value=1)
+        self.__start_level = self.get_configuration_value("level", default_value=1)
 
     def starting_new_file(self):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.have_seen_first_header = False
+        self.__have_seen_first_header = False
 
     def next_token(self, token):
         """
@@ -48,17 +50,13 @@ class RuleMd002(Plugin):
         if isinstance(token, AtxHeaderMarkdownToken):
             hash_count = token.hash_count
         elif isinstance(token, SetextHeaderMarkdownToken):
-            if token.header_character == "=":
-                hash_count = 1
-            else:
-                assert token.header_character == "-"
-                hash_count = 2
-        if not self.have_seen_first_header and hash_count:
-            self.have_seen_first_header = True
-            if hash_count != self.start_level:
+            hash_count = token.hash_count
+        if not self.__have_seen_first_header and hash_count:
+            self.__have_seen_first_header = True
+            if hash_count != self.__start_level:
                 extra_data = (
                     "Expected: h"
-                    + str(self.start_level)
+                    + str(self.__start_level)
                     + "; Actual: h"
                     + str(hash_count)
                 )

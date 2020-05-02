@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD003 rule.
+Module to provide tests related to the MD019 rule.
 """
 from test.markdown_scanner import MarkdownScanner
 
@@ -9,10 +9,11 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md019_single_spacing():
+def test_md019_good_single_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md019 directory that has good atx header start spacing
+    test/resources/rules/md019 directory that has atx headers with a single space
+    after the initial hash.
     """
 
     # Arrange
@@ -35,10 +36,11 @@ def test_md019_single_spacing():
 
 
 @pytest.mark.rules
-def test_md019_multiple_spacing():
+def test_md019_bad_multiple_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md019 directory that has good atx header start spacing
+    test/resources/rules/md019 directory that has atx headers with multiple spaces
+    after the initial hash.
     """
 
     # Arrange
@@ -65,10 +67,11 @@ def test_md019_multiple_spacing():
     )
 
 
-def test_md019_multiple_spacing_with_inline():
+def test_md019_bad_multiple_spacing_with_inline():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md019 directory that has good atx header start spacing
+    test/resources/rules/md019 directory that has atx headers with a single space
+    after the initial hash, with inline processing in the header for good measure.
     """
 
     # Arrange

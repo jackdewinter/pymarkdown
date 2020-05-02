@@ -35,7 +35,7 @@ def test_md047_all_samples():
 
 
 @pytest.mark.rules
-def test_md047_good_sample():
+def test_md047_good_end_with_blank_line():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md047 directory.
@@ -59,7 +59,7 @@ def test_md047_good_sample():
 
 
 @pytest.mark.rules
-def test_md047_bad_sample():
+def test_md047_bad_end_with_no_blank_line():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
     test/resources/rules/md047 directory which does not end with a blank line.
@@ -70,7 +70,10 @@ def test_md047_bad_sample():
     suppplied_arguments = ["test/resources/rules/md047/end_with_no_blank_line.md"]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md047/end_with_no_blank_line.md:3:41: MD047: Files should end with a single newline character (single-trailing-newline)\n"
+    expected_output = (
+        "test/resources/rules/md047/end_with_no_blank_line.md:3:41: "
+        + "MD047: Files should end with a single newline character (single-trailing-newline)\n"
+    )
     expected_error = ""
 
     # Act

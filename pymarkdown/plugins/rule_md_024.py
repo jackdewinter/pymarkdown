@@ -1,5 +1,6 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for multiple header lines with the same
+content.
 """
 from pymarkdown.markdown_token import (
     AtxHeaderMarkdownToken,
@@ -12,17 +13,18 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 class RuleMd024(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for multiple header lines with the same
+    content.
     """
 
     def __init__(self):
         super().__init__()
-        self.header_text = None
-        self.start_token = None
-        self.hash_count = None
-        self.last_hash_count = None
-        self.siblings_only = None
-        self.header_content_map = None
+        self.__header_text = None
+        self.__start_token = None
+        self.__hash_count = None
+        self.__last_hash_count = None
+        self.__siblings_only = None
+        self.__header_content_map = None
 
     def get_details(self):
         """
@@ -41,7 +43,7 @@ class RuleMd024(Plugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.siblings_only = self.get_configuration_value(
+        self.__siblings_only = self.get_configuration_value(
             "siblings_only", default_value=False
         ) or self.get_configuration_value(
             "allow_different_nesting", default_value=False
@@ -51,14 +53,14 @@ class RuleMd024(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.header_text = None
-        self.start_token = None
-        self.hash_count = None
-        self.last_hash_count = None
-        if self.siblings_only:
-            self.header_content_map = [{}, {}, {}, {}, {}, {}]
+        self.__header_text = None
+        self.__start_token = None
+        self.__hash_count = None
+        self.__last_hash_count = None
+        if self.__siblings_only:
+            self.__header_content_map = [{}, {}, {}, {}, {}, {}]
         else:
-            self.header_content_map = [{}]
+            self.__header_content_map = [{}]
 
     def next_token(self, token):
         """
@@ -75,46 +77,39 @@ class RuleMd024(Plugin):
             ):
                 self.handler_header_end()
 
-        if not skip_this_token and self.header_text is not None:
-            self.header_text += str(token)
+        if not skip_this_token and self.__header_text is not None:
+            self.__header_text += str(token)
 
     def handle_header_start(self, token):
         """
         Process the start header token, atx or setext
         """
 
-        self.header_text = ""
-        self.start_token = token
-        if self.siblings_only:
-            if isinstance(token, AtxHeaderMarkdownToken):
-                self.hash_count = token.hash_count
-            else:
-                if token.header_character == "=":
-                    self.hash_count = 1
-                else:
-                    assert token.header_character == "-"
-                    self.hash_count = 2
+        self.__header_text = ""
+        self.__start_token = token
+        if self.__siblings_only:
+            self.__hash_count = token.hash_count
         else:
-            self.hash_count = 1
+            self.__hash_count = 1
 
     def handler_header_end(self):
         """
         Process the end header token, atx or setext
         """
 
-        if self.last_hash_count:
-            while self.last_hash_count < self.hash_count:
-                self.last_hash_count += 1
-                self.header_content_map[self.last_hash_count - 1] = {}
-            while self.last_hash_count > self.hash_count:
-                self.header_content_map[self.last_hash_count - 1] = {}
-                self.last_hash_count -= 1
+        if self.__last_hash_count:
+            while self.__last_hash_count < self.__hash_count:
+                self.__last_hash_count += 1
+                self.__header_content_map[self.__last_hash_count - 1] = {}
+            while self.__last_hash_count > self.__hash_count:
+                self.__header_content_map[self.__last_hash_count - 1] = {}
+                self.__last_hash_count -= 1
 
-        past_headers_map = self.header_content_map[self.hash_count - 1]
+        past_headers_map = self.__header_content_map[self.__hash_count - 1]
 
-        if self.header_text in past_headers_map:
-            self.report_next_token_error(self.start_token)
+        if self.__header_text in past_headers_map:
+            self.report_next_token_error(self.__start_token)
         else:
-            past_headers_map[self.header_text] = self.header_text
-        self.header_text = None
-        self.last_hash_count = self.hash_count
+            past_headers_map[self.__header_text] = self.__header_text
+        self.__header_text = None
+        self.__last_hash_count = self.__hash_count

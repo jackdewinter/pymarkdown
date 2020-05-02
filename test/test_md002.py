@@ -47,7 +47,7 @@ def test_md002_all_samples():
 
 
 @pytest.mark.rules
-def test_md002_good_atx_sample():
+def test_md002_good_proper_atx_header_start():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md002 directory that starts with a h1 atx header.
@@ -75,7 +75,7 @@ def test_md002_good_atx_sample():
 
 
 @pytest.mark.rules
-def test_md002_good_atx_sample_with_alternate_configuration():
+def test_md002_bad_proper_atx_header_start_with_alternate_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md002 directory that starts with a h1 atx header.  The modified
@@ -116,7 +116,7 @@ def test_md002_good_atx_sample_with_alternate_configuration():
 
 
 @pytest.mark.rules
-def test_md002_good_setext_sample():
+def test_md002_good_proper_setext_header_start():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md002 directory starting with a setext header of ====== to
@@ -145,7 +145,7 @@ def test_md002_good_setext_sample():
 
 
 @pytest.mark.rules
-def test_md002_good_setext_sample_with_alternate_configuration():
+def test_md002_bad_proper_setext_header_start_with_alternate_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md002 directory starting with a setext header of ====== to
@@ -187,7 +187,7 @@ def test_md002_good_setext_sample_with_alternate_configuration():
 
 
 @pytest.mark.rules
-def test_md002_bad_atx_sample():
+def test_md002_bad_improper_atx_header_start():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
     test/resources/rules/md002 directory that starts with a non-h1 header.
@@ -219,7 +219,7 @@ def test_md002_bad_atx_sample():
 
 
 @pytest.mark.rules
-def test_md002_bad_atx_sample_with_alternate_configuration():
+def test_md002_good_improper_atx_header_start_with_alternate_configuration():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
     test/resources/rules/md002 directory that starts with a non-h1 header.  The modified
@@ -256,7 +256,7 @@ def test_md002_bad_atx_sample_with_alternate_configuration():
 
 
 @pytest.mark.rules
-def test_md002_bad_setext_sample():
+def test_md002_bad_improper_setext_header_start():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
     test/resources/rules/md002 directory starting with a setext header of ----- to
@@ -291,7 +291,7 @@ def test_md002_bad_setext_sample():
 
 
 @pytest.mark.rules
-def test_md002_bad_setext_sample_with_alternate_configuration():
+def test_md002_good_improper_setext_header_start_with_alternate_configuration():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
     test/resources/rules/md002 directory starting with a setext header of ----- to

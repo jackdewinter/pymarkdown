@@ -1,5 +1,6 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for heading styles that are inconsistent
+throughout the document.
 """
 from pymarkdown.markdown_token import AtxHeaderMarkdownToken, SetextHeaderMarkdownToken
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -7,7 +8,8 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 class RuleMd003(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for heading styles that are inconsistent
+    throughout the document.
     """
 
     __consistent_style = "consistent"
@@ -29,8 +31,8 @@ class RuleMd003(Plugin):
 
     def __init__(self):
         super().__init__()
-        self.style_type = None
-        self.actual_style_type = None
+        self.__style_type = None
+        self.__actual_style_type = None
 
     def get_details(self):
         """
@@ -49,7 +51,7 @@ class RuleMd003(Plugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.style_type = self.get_configuration_value(
+        self.__style_type = self.get_configuration_value(
             "style",
             default_value=RuleMd003.__consistent_style,
             valid_values=RuleMd003.__valid_styles,
@@ -59,9 +61,9 @@ class RuleMd003(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.actual_style_type = None
-        if self.style_type != RuleMd003.__consistent_style:
-            self.actual_style_type = self.style_type
+        self.__actual_style_type = None
+        if self.__style_type != RuleMd003.__consistent_style:
+            self.__actual_style_type = self.__style_type
 
     def next_token(self, token):
         """
@@ -72,18 +74,18 @@ class RuleMd003(Plugin):
         is_header_bad = False
         if header_style_type:
             expected_style_type = None
-            if not self.actual_style_type:
-                self.actual_style_type = header_style_type
-            elif self.actual_style_type in RuleMd003.__simple_styles:
-                is_header_bad = bool(header_style_type != self.actual_style_type)
-                expected_style_type = self.actual_style_type
+            if not self.__actual_style_type:
+                self.__actual_style_type = header_style_type
+            elif self.__actual_style_type in RuleMd003.__simple_styles:
+                is_header_bad = bool(header_style_type != self.__actual_style_type)
+                expected_style_type = self.__actual_style_type
             else:
 
-                if self.actual_style_type == RuleMd003.__setext_with_atx_style:
+                if self.__actual_style_type == RuleMd003.__setext_with_atx_style:
                     base_atx_style = RuleMd003.__atx_style
                 else:
                     assert (
-                        self.actual_style_type
+                        self.__actual_style_type
                         == RuleMd003.__setext_with_atx_closed_style
                     )
                     base_atx_style = RuleMd003.__atx_closed_style

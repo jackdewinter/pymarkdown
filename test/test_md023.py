@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD003 rule.
+Module to provide tests related to the MD023 rule.
 """
 from test.markdown_scanner import MarkdownScanner
 
@@ -7,10 +7,11 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md023_proper_indent_atx():
+def test_md023_good_proper_indent_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD023 directory that has an atx header that is not indented
+    from the start of the line.
     """
 
     # Arrange
@@ -33,10 +34,11 @@ def test_md023_proper_indent_atx():
 
 
 @pytest.mark.rules
-def test_md023_proper_indent_setext():
+def test_md023_good_proper_indent_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/MD023 directory that has an setext header that is not indented
+    from the start of the line.
     """
 
     # Arrange
@@ -59,10 +61,11 @@ def test_md023_proper_indent_setext():
 
 
 @pytest.mark.rules
-def test_md023_improper_indent_atx():
+def test_md023_bad_improper_indent_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md023 directory that has an atx header that is indented from
+    the start of the line.
     """
 
     # Arrange
@@ -88,10 +91,11 @@ def test_md023_improper_indent_atx():
 
 
 @pytest.mark.rules
-def test_md023_improper_indent_setext():
+def test_md023_bad_improper_indent_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md023 directory that has a setext header that is indented from
+    the start of the line.
     """
 
     # Arrange
