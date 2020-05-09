@@ -12,7 +12,10 @@ def write_temporary_configuration(supplied_configuration):
     """
     try:
         with tempfile.TemporaryFile("wt", delete=False) as outfile:
-            json.dump(supplied_configuration, outfile)
+            if isinstance(supplied_configuration, str):
+                outfile.write(supplied_configuration)
+            else:
+                json.dump(supplied_configuration, outfile)
             return outfile.name
     except IOError as ex:
         assert False, "Test configuration file was not written (" + str(ex) + ")."

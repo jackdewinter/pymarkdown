@@ -14,12 +14,17 @@ from pymarkdown.source_providers import FileSourceProvider
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
 
-# https://github.com/hiddenillusion/example-code/commit/3e2daada652fe9b487574c784e0924bd5fcfe667
-# TODO check
 class PyMarkdownLint:
     """
     Class to provide for a simple implementation of a title case algorithm.
     """
+
+    available_log_maps = {}
+    available_log_maps["CRITICAL"] = logging.CRITICAL
+    available_log_maps["ERROR"] = logging.ERROR
+    available_log_maps["WARNING"] = logging.WARNING
+    available_log_maps["INFO"] = logging.INFO
+    available_log_maps["DEBUG"] = logging.DEBUG
 
     def __init__(self):
         self.__version_number = "0.1.0"
@@ -28,6 +33,16 @@ class PyMarkdownLint:
         self.__plugins = PluginManager()
         self.__tokenizer = None
         self.logger = logging.getLogger(__name__)
+        self.default_log_level = "CRITICAL"
+
+    @staticmethod
+    def log_level_type(argument):
+        """
+        Function to help argparse limit the valid log levels.
+        """
+        if argument in PyMarkdownLint.available_log_maps:
+            return argument
+        raise ValueError("Value '" + argument + "' is not a valid log level.")
 
     def __parse_arguments(self):
         parser = argparse.ArgumentParser(description="Lint any found Markdown files.")
@@ -97,6 +112,21 @@ class PyMarkdownLint:
             help="if an error occurs, print out the stack trace for debug purposes",
         )
         parser.add_argument(
+            "--log-level",
+            dest="log_level",
+            action="store",
+            default=self.default_log_level,
+            help="minimum level for any log messages",
+            type=PyMarkdownLint.log_level_type,
+            choices=list(PyMarkdownLint.available_log_maps.keys()),
+        )
+        parser.add_argument(
+            "--log-file",
+            dest="log_file",
+            action="store",
+            help="destination file for log messages",
+        )
+        parser.add_argument(
             "paths",
             metavar="path",
             type=str,
@@ -140,28 +170,42 @@ class PyMarkdownLint:
 
     # pylint: enable=broad-except
 
-    @classmethod
-    def __determine_files_to_scan(cls, eligible_paths):
+    def __determine_files_to_scan(self, eligible_paths):
 
         files_to_parse = set()
         for next_path in eligible_paths:
 
+            self.logger.info("Determining files to scan for path '%s'.", next_path)
             if not os.path.exists(next_path):
                 print(
                     "Provided path '" + next_path + "' does not exist. Skipping.",
                     file=sys.stderr,
                 )
+                self.logger.debug(
+                    "Provided path '%s' does not exist. Skipping.", next_path
+                )
                 continue
             if os.path.isdir(next_path):
+                self.logger.debug(
+                    "Provided path '%s' is a directory. Walking directory.", next_path
+                )
                 for root, _, files in os.walk(next_path):
                     for file in files:
                         rooted_file_path = root + "/" + file
-                        if cls.is_file_eligible_to_scan(rooted_file_path):
+                        if self.is_file_eligible_to_scan(rooted_file_path):
                             files_to_parse.add(rooted_file_path)
             else:
-                if cls.is_file_eligible_to_scan(next_path):
+                if self.is_file_eligible_to_scan(next_path):
+                    self.logger.debug(
+                        "Provided path '%s' is a valid Markdown file. Adding.",
+                        next_path,
+                    )
                     files_to_parse.add(next_path)
                 else:
+                    self.logger.debug(
+                        "Provided path '%s' is not a valid Markdown file. Skipping.",
+                        next_path,
+                    )
                     print(
                         "Provided file path '"
                         + next_path
@@ -170,6 +214,8 @@ class PyMarkdownLint:
                     )
         files_to_parse = list(files_to_parse)
         files_to_parse.sort()
+
+        self.logger.info("Number of scanned files found: %s", str(len(files_to_parse)))
         return files_to_parse
 
     @classmethod
@@ -288,31 +334,40 @@ class PyMarkdownLint:
         args = self.__parse_arguments()
         self.__show_stack_trace = args.show_stack_trace
 
-        # logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
-        base_logger = logging.getLogger()
-        base_logger.setLevel(logging.DEBUG)
+        new_handler = None
+        try:
+            base_logger = logging.getLogger()
+            if args.log_file:
+                new_handler = logging.FileHandler(args.log_file)
+                new_handler.setLevel(PyMarkdownLint.available_log_maps[args.log_level])
+                base_logger.addHandler(new_handler)
+            else:
+                base_logger.setLevel(PyMarkdownLint.available_log_maps[args.log_level])
 
-        files_to_scan = self.__determine_files_to_scan(args.paths)
-        if args.list_files:
-            return_code = self.__handle_list_files(files_to_scan)
-            sys.exit(return_code)
+            self.logger.info("Determining files to scan.")
+            files_to_scan = self.__determine_files_to_scan(args.paths)
+            if args.list_files:
+                return_code = self.__handle_list_files(files_to_scan)
+                sys.exit(return_code)
 
-        plugin_dir = os.path.dirname(os.path.realpath(__file__))
-        plugin_dir = os.path.join(plugin_dir, "plugins")
-        self.__initialize_plugins(args, plugin_dir)
+            plugin_dir = os.path.dirname(os.path.realpath(__file__))
+            plugin_dir = os.path.join(plugin_dir, "plugins")
+            self.__initialize_plugins(args, plugin_dir)
 
-        self.__initialize_parser(args)
+            self.__initialize_parser(args)
 
-        self.__load_configuration_and_apply_to_plugins(args)
+            self.__load_configuration_and_apply_to_plugins(args)
 
-        for next_file in files_to_scan:
-            try:
-                self.__scan_file(args, next_file)
-            except BadPluginError as this_exception:
-                self.__handle_scan_error(next_file, this_exception)
-            except BadTokenizationError as this_exception:
-                self.__handle_scan_error(next_file, this_exception)
-
+            for next_file in files_to_scan:
+                try:
+                    self.__scan_file(args, next_file)
+                except BadPluginError as this_exception:
+                    self.__handle_scan_error(next_file, this_exception)
+                except BadTokenizationError as this_exception:
+                    self.__handle_scan_error(next_file, this_exception)
+        finally:
+            if new_handler:
+                new_handler.close()
         if self.__plugins.number_of_scan_failures:
             sys.exit(1)
 

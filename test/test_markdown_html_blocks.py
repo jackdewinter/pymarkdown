@@ -977,44 +977,6 @@ foo"""
 
 
 @pytest.mark.gfm
-def test_html_blocks_144b():
-    """
-    Test case 144b:  Modification of 144 to add extra paragraph
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
-    source_markdown = """- <div>
-- foo"""
-    expected_tokens = [
-        "[ulist:-::2:]",
-        "[html-block]",
-        "[text:<div>:]",
-        "[end-html-block]",
-        "[li:2]",
-        "[para:]",
-        "[text:foo:]",
-        "[end-para]",
-        "[end-ulist]",
-    ]
-    expected_gfm = """<ul>
-<li>
-<div>
-</li>
-<li>foo</li>
-</ul>"""
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-
-
-@pytest.mark.gfm
 def test_html_blocks_145():
     """
     Test case 145:  (part 1) The end tag can occur on the same line as the start tag:

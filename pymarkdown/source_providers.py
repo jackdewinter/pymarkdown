@@ -10,8 +10,7 @@ class InMemorySourceProvider:
     """
 
     def __init__(self, source_text):
-        self.source_text = source_text
-        self.next_token = self.source_text.split("\n", 1)
+        self.next_token = source_text.split("\n", 1)
 
     def get_next_line(self):
         """
@@ -44,14 +43,14 @@ class FileSourceProvider:
 
         self.read_lines = []
         self.read_index = 0
-        did_line_end_in_newline = False
+        did_line_end_in_newline = True
         for next_line in file_as_lines:
             did_line_end_in_newline = next_line.endswith("\n")
             if did_line_end_in_newline:
                 next_line = next_line[0:-1]
             self.read_lines.append(next_line)
 
-        if did_line_end_in_newline or not self.read_lines:
+        if did_line_end_in_newline:
             self.read_lines.append("")
 
     def get_next_line(self):

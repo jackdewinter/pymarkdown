@@ -105,6 +105,7 @@ class BadPluginError(Exception):
 class Plugin(ABC):
     """
     Class to provide structure to scan through a file.
+    Based off of concepts from https://github.com/hiddenillusion/example-code/commit/3e2daada652fe9b487574c784e0924bd5fcfe667
     """
 
     def __init__(self):

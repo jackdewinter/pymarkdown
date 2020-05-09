@@ -2,6 +2,7 @@
 Module to provide tests related to the basic parts of the scanner.
 """
 import os
+import tempfile
 from test.markdown_scanner import MarkdownScanner
 
 from .utils import write_temporary_configuration
@@ -21,6 +22,8 @@ def test_markdown_with_no_parameters():
     expected_error = """usage: main.py [-h] [--version] [-l] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--stack-trace]
+               [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
+               [--log-file LOG_FILE]
                path [path ...]
 main.py: error: the following arguments are required: path
 """
@@ -47,6 +50,8 @@ def test_markdown_with_dash_h():
     expected_output = """usage: main.py [-h] [--version] [-l] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--stack-trace]
+               [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
+               [--log-file LOG_FILE]
                path [path ...]
 
 Lint any found Markdown files.
@@ -68,6 +73,9 @@ optional arguments:
                         path to a configuration file
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
+  --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
+                        minimum level for any log messages
+  --log-file LOG_FILE   destination file for log messages
 """
     expected_error = ""
 
@@ -277,6 +285,197 @@ File was not translated from Markdown text to Markdown tokens.
     )
 
 
+def test_markdown_with_dash_dash_log_level_debug(caplog):
+    """
+    Test to make sure we get the right effect if the `--log-level` flag
+    is set for debug.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = [
+        "--log-level",
+        "DEBUG",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = """"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+    # Info messages
+    assert "Number of scanned files found: " in caplog.text
+    assert (
+        "Determining files to scan for path "
+        + "'test/resources/rules/md047/end_with_blank_line.md'."
+        in caplog.text
+    )
+
+    # Debug messages
+    assert (
+        "Provided path 'test/resources/rules/md047/end_with_blank_line.md' "
+        + "is a valid Markdown file. Adding."
+        in caplog.text
+    )
+
+
+def test_markdown_with_dash_dash_log_level_info(caplog):
+    """
+    Test to make sure we get the right effect if the `--log-level` flag
+    is set for info.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = [
+        "--log-level",
+        "INFO",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+    # Info messages
+    assert "Number of scanned files found: " in caplog.text
+    assert (
+        "Determining files to scan for path "
+        + "'test/resources/rules/md047/end_with_blank_line.md'."
+        in caplog.text
+    )
+
+    # Debug messages
+    assert (
+        "Provided path 'test/resources/rules/md047/end_with_blank_line.md' "
+        + "is a valid Markdown file. Adding."
+        not in caplog.text
+    )
+
+
+def test_markdown_with_dash_dash_log_level_invalid(caplog):
+    """
+    Test to make sure we get the right effect if the `--log-level` flag
+    is set for an invalid log level.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    suppplied_arguments = [
+        "--log-level",
+        "invalid",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 2
+    expected_output = ""
+    expected_error = """usage: main.py [-h] [--version] [-l] [-e ENABLE_RULES] [-d DISABLE_RULES]
+               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
+               [--stack-trace]
+               [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
+               [--log-file LOG_FILE]
+               path [path ...]
+main.py: error: argument --log-level: invalid log_level_type value: 'invalid'
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+    # Info messages
+    assert "Number of scanned files found: " not in caplog.text
+    assert (
+        "Determining files to scan for path "
+        + "'test/resources/rules/md047/end_with_blank_line.md'."
+        not in caplog.text
+    )
+
+    # Debug messages
+    assert (
+        "Provided path 'test/resources/rules/md047/end_with_blank_line.md' "
+        + "is a valid Markdown file. Adding."
+        not in caplog.text
+    )
+
+
+def test_markdown_with_dash_dash_log_level_info_with_file():
+    """
+    Test to make sure we get the right effect if the `--log-level` flag
+    is set for info with the results going to a file.
+    """
+
+    # Arrange
+    log_file_name = None
+    try:
+        temp_file = tempfile.NamedTemporaryFile()
+        log_file_name = temp_file.name
+    finally:
+        temp_file.close()
+
+    try:
+        scanner = MarkdownScanner()
+        suppplied_arguments = [
+            "--log-level",
+            "INFO",
+            "--log-file",
+            log_file_name,
+            "test/resources/rules/md047/end_with_blank_line.md",
+        ]
+
+        expected_return_code = 0
+        expected_output = ""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+
+        with open(log_file_name, "r") as file:
+            file_data = file.read().replace("\n", "")
+
+        # Info messages
+        assert "Number of scanned files found: " in file_data
+        assert (
+            "Determining files to scan for path "
+            + "'test/resources/rules/md047/end_with_blank_line.md'."
+            in file_data
+        )
+
+        # Debug messages
+        assert (
+            "Provided path 'test/resources/rules/md047/end_with_blank_line.md' "
+            + "is a valid Markdown file. Adding."
+            not in file_data
+        )
+    finally:
+        if os.path.exists(log_file_name):
+            os.remove(log_file_name)
+
+
 def test_markdown_with_dash_x_init():
     """
     Test to make sure we get simulate a test initialization exception if the
@@ -417,6 +616,79 @@ MD999>>completed_file
     finally:
         if os.path.exists(configuration_file):
             os.remove(configuration_file)
+
+
+def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
+    """
+    Test to make sure we get an error if we provide a configuration file that is
+    not in a json format.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_configuration = "not a json file"
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        suppplied_arguments = [
+            "-e",
+            "MD999",
+            "-c",
+            configuration_file,
+            "test/resources/rules/md047/end_with_blank_line.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = (
+            "Specified configuration file '"
+            + configuration_file
+            + "' is not a valid JSON file (Expecting value: line 1 column 1 (char 0)).\n"
+        )
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if os.path.exists(configuration_file):
+            os.remove(configuration_file)
+
+
+def test_markdown_with_dash_e_single_by_id_and_non_present_config_file():
+    """
+    Test to make sure we get an error if we provide a configuration file that is
+    not in a json format.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    configuration_file = "not-exists"
+    assert not os.path.exists(configuration_file)
+    suppplied_arguments = [
+        "-e",
+        "MD999",
+        "-c",
+        configuration_file,
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = (
+        "Specified configuration file 'not-exists' was not loaded "
+        + "([Errno 2] No such file or directory: 'not-exists').\n"
+    )
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
 
 
 def test_markdown_with_dash_e_single_by_id_and_good_select_config():
