@@ -24,6 +24,8 @@ from pymarkdown.stack_token import (
     ParagraphStackToken,
 )
 
+LOGGER = logging.getLogger(__name__)
+
 
 class LeafBlockProcessor:
     """
@@ -46,7 +48,6 @@ class LeafBlockProcessor:
         """
         Determine if we have the start of a fenced code block.
         """
-        logger = logging.getLogger(__name__)
 
         if (
             ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
@@ -56,20 +57,20 @@ class LeafBlockProcessor:
             start_index,
             LeafBlockProcessor.__fenced_code_block_start_characters,
         ):
-            logger.debug(
+            LOGGER.debug(
                 "ifcb:collected_count>>%s<<%s<<", line_to_parse, str(start_index)
             )
             collected_count, new_index = ParserHelper.collect_while_character(
                 line_to_parse, start_index, line_to_parse[start_index]
             )
-            logger.debug("ifcb:collected_count:%s", str(collected_count))
+            LOGGER.debug("ifcb:collected_count:%s", str(collected_count))
             (
                 non_whitespace_index,
                 extracted_whitespace_before_info_string,
             ) = ParserHelper.extract_whitespace(line_to_parse, new_index)
 
             if collected_count >= 3:
-                logger.debug("ifcb:True")
+                LOGGER.debug("ifcb:True")
                 return (
                     True,
                     non_whitespace_index,
@@ -90,8 +91,6 @@ class LeafBlockProcessor:
         """
         Handle the parsing of a fenced code block
         """
-        logger = logging.getLogger(__name__)
-
         new_tokens = []
         (
             is_fence_start,
@@ -103,7 +102,7 @@ class LeafBlockProcessor:
         )
         if is_fence_start and not token_stack[-1].is_html_block:
             if token_stack[-1].is_fenced_code_block:
-                logger.debug("pfcb->end")
+                LOGGER.debug("pfcb->end")
 
                 if (
                     token_stack[-1].code_fence_character == line_to_parse[start_index]
@@ -115,14 +114,14 @@ class LeafBlockProcessor:
                     )
                     del token_stack[-1]
             else:
-                logger.debug("pfcb->check")
+                LOGGER.debug("pfcb->check")
                 if (
                     line_to_parse[start_index]
                     == LeafBlockProcessor.__fenced_start_tilde
                     or LeafBlockProcessor.__fenced_start_backtick
                     not in line_to_parse[non_whitespace_index:]
                 ):
-                    logger.debug("pfcb->start")
+                    LOGGER.debug("pfcb->start")
                     (
                         after_extracted_text_index,
                         extracted_text,
@@ -436,14 +435,13 @@ class LeafBlockProcessor:
         """
         Handle the parsing of a paragraph.
         """
-        logger = logging.getLogger(__name__)
         new_tokens = []
 
         if no_para_start_if_empty and start_index >= len(line_to_parse):
-            logger.debug("Escaping paragraph due to empty w/ blank")
+            LOGGER.debug("Escaping paragraph due to empty w/ blank")
             return [BlankLineMarkdownToken("")]
 
-        logger.debug(
+        LOGGER.debug(
             "parse_paragraph>stack_bq_count>%s>this_bq_count>%s<",
             str(stack_bq_count),
             str(this_bq_count),

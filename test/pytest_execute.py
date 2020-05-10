@@ -9,6 +9,8 @@ import sys
 import traceback
 from abc import ABC, abstractmethod
 
+LOGGER = logging.getLogger(__name__)
+
 
 # pylint: disable=too-few-public-methods
 class InProcessResult:
@@ -60,11 +62,10 @@ class InProcessResult:
 
                 diff_values = "\n".join(list(diff)) + "\n---\n"
 
-                logger = logging.getLogger(__name__)
-                logger.warning(
+                LOGGER.warning(
                     "actual>>%s", actual_stream.getvalue().replace("\n", "\\n")
                 )
-                logger.warning("expect>>%s", expected_text.replace("\n", "\\n"))
+                LOGGER.warning("expect>>%s", expected_text.replace("\n", "\\n"))
                 assert False, stream_name + " not as expected:\n" + diff_values
 
     def assert_results(

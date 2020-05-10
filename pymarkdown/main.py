@@ -13,6 +13,8 @@ from pymarkdown.plugin_manager import BadPluginError, PluginManager
 from pymarkdown.source_providers import FileSourceProvider
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
+LOGGER = logging.getLogger(__name__)
+
 
 class PyMarkdownLint:
     """
@@ -32,7 +34,6 @@ class PyMarkdownLint:
 
         self.__plugins = PluginManager()
         self.__tokenizer = None
-        self.logger = logging.getLogger(__name__)
         self.default_log_level = "CRITICAL"
 
     @staticmethod
@@ -175,18 +176,16 @@ class PyMarkdownLint:
         files_to_parse = set()
         for next_path in eligible_paths:
 
-            self.logger.info("Determining files to scan for path '%s'.", next_path)
+            LOGGER.info("Determining files to scan for path '%s'.", next_path)
             if not os.path.exists(next_path):
                 print(
                     "Provided path '" + next_path + "' does not exist. Skipping.",
                     file=sys.stderr,
                 )
-                self.logger.debug(
-                    "Provided path '%s' does not exist. Skipping.", next_path
-                )
+                LOGGER.debug("Provided path '%s' does not exist. Skipping.", next_path)
                 continue
             if os.path.isdir(next_path):
-                self.logger.debug(
+                LOGGER.debug(
                     "Provided path '%s' is a directory. Walking directory.", next_path
                 )
                 for root, _, files in os.walk(next_path):
@@ -196,13 +195,13 @@ class PyMarkdownLint:
                             files_to_parse.add(rooted_file_path)
             else:
                 if self.is_file_eligible_to_scan(next_path):
-                    self.logger.debug(
+                    LOGGER.debug(
                         "Provided path '%s' is a valid Markdown file. Adding.",
                         next_path,
                     )
                     files_to_parse.add(next_path)
                 else:
-                    self.logger.debug(
+                    LOGGER.debug(
                         "Provided path '%s' is not a valid Markdown file. Skipping.",
                         next_path,
                     )
@@ -215,7 +214,7 @@ class PyMarkdownLint:
         files_to_parse = list(files_to_parse)
         files_to_parse.sort()
 
-        self.logger.info("Number of scanned files found: %s", str(len(files_to_parse)))
+        LOGGER.info("Number of scanned files found: %s", str(len(files_to_parse)))
         return files_to_parse
 
     @classmethod
@@ -310,7 +309,7 @@ class PyMarkdownLint:
 
     def __handle_error(self, formatted_error):
 
-        self.logger.warning(formatted_error, exc_info=True)
+        LOGGER.warning(formatted_error, exc_info=True)
         print(formatted_error, file=sys.stderr)
         if self.__show_stack_trace:
             traceback.print_exc(file=sys.stderr)
@@ -344,7 +343,7 @@ class PyMarkdownLint:
             else:
                 base_logger.setLevel(PyMarkdownLint.available_log_maps[args.log_level])
 
-            self.logger.info("Determining files to scan.")
+            LOGGER.info("Determining files to scan.")
             files_to_scan = self.__determine_files_to_scan(args.paths)
             if args.list_files:
                 return_code = self.__handle_list_files(files_to_scan)

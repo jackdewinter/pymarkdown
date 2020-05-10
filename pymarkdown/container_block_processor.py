@@ -11,6 +11,8 @@ from pymarkdown.list_block_processor import ListBlockProcessor
 from pymarkdown.markdown_token import TextMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 
+LOGGER = logging.getLogger(__name__)
+
 
 # pylint: disable=too-few-public-methods
 class ContainerIndices:
@@ -78,9 +80,7 @@ class ContainerBlockProcessor:
         whether or not to pass the (remaining parts of the) line to the leaf block
         processor.
         """
-        logger = logging.getLogger(__name__)
-
-        logger.debug("Line:%s:", line_to_parse)
+        LOGGER.debug("Line:%s:", line_to_parse)
         no_para_start_if_empty = False
 
         start_index, extracted_whitespace = ParserHelper.extract_whitespace(
@@ -93,7 +93,6 @@ class ContainerBlockProcessor:
             stack_bq_count,
             this_bq_count,
         ) = ContainerBlockProcessor.__calculate_for_container_blocks(
-            logger,
             token_stack,
             token_document,
             line_to_parse,
@@ -185,7 +184,6 @@ class ContainerBlockProcessor:
                 container_level_tokens,
                 no_para_start_if_empty,
             ) = ContainerBlockProcessor.__handle_nested_container_blocks(
-                logger,
                 token_stack,
                 token_document,
                 container_depth,
@@ -201,11 +199,11 @@ class ContainerBlockProcessor:
                 handle_blank_line_fn,
             )
 
-        logger.debug("removed_chars_at_start>>>%s", str(removed_chars_at_start))
+        LOGGER.debug("removed_chars_at_start>>>%s", str(removed_chars_at_start))
 
         if container_depth:
             assert not leaf_tokens
-            logger.debug(">>>>>>>>%s<<<<<<<<<<", line_to_parse)
+            LOGGER.debug(">>>>>>>>%s<<<<<<<<<<", line_to_parse)
             return container_level_tokens, line_to_parse, None
 
         (
@@ -213,7 +211,6 @@ class ContainerBlockProcessor:
             line_to_parse,
             container_level_tokens,
         ) = ContainerBlockProcessor.__process_list_in_progress(
-            logger,
             did_process,
             token_stack,
             token_document,
@@ -224,7 +221,6 @@ class ContainerBlockProcessor:
             close_open_blocks_fn,
         )
         ContainerBlockProcessor.__process_lazy_lines(
-            logger,
             leaf_tokens,
             token_stack,
             this_bq_count,
@@ -236,7 +232,6 @@ class ContainerBlockProcessor:
             close_open_blocks_fn,
         )
         leaf_tokens, requeue_line_info = ContainerBlockProcessor.__process_leaf_tokens(
-            logger,
             token_stack,
             leaf_tokens,
             token_document,
@@ -249,7 +244,7 @@ class ContainerBlockProcessor:
         )
 
         container_level_tokens.extend(leaf_tokens)
-        logger.debug(
+        LOGGER.debug(
             "clt-end>>%s>>%s<<",
             str(len(container_level_tokens)),
             str(container_level_tokens),
@@ -261,7 +256,6 @@ class ContainerBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __calculate_for_container_blocks(
-        logger,
         token_stack,
         token_document,
         line_to_parse,
@@ -283,7 +277,6 @@ class ContainerBlockProcessor:
                 current_container_blocks.append(ind)
 
         adj_ws = ContainerBlockProcessor.__calculate_adjusted_whitespace(
-            logger,
             token_stack,
             token_document,
             current_container_blocks,
@@ -301,7 +294,6 @@ class ContainerBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __calculate_adjusted_whitespace(
-        logger,
         token_stack,
         token_document,
         current_container_blocks,
@@ -318,17 +310,17 @@ class ContainerBlockProcessor:
         while stack_index >= 0 and not token_stack[stack_index].is_list:
             stack_index -= 1
         if stack_index < 0:
-            logger.debug("PLFCB>>No Started lists")
+            LOGGER.debug("PLFCB>>No Started lists")
             assert len(current_container_blocks) == 0
             if foobar is None:
-                logger.debug("PLFCB>>No Started Block Quote")
+                LOGGER.debug("PLFCB>>No Started Block Quote")
             else:
-                logger.debug("PLFCB>>Started Block Quote")
+                LOGGER.debug("PLFCB>>Started Block Quote")
                 adj_ws = extracted_whitespace[foobar:]
         else:
             assert len(current_container_blocks) >= 1
-            logger.debug(
-                "PLFCB>>Started list-last stack>>" + str(token_stack[stack_index])
+            LOGGER.debug(
+                "PLFCB>>Started list-last stack>>%s", str(token_stack[stack_index])
             )
             token_index = len(token_document) - 1
 
@@ -336,22 +328,22 @@ class ContainerBlockProcessor:
                 token_document[token_index].is_any_list_token
             ):
                 token_index -= 1
-            logger.debug(
-                "PLFCB>>Started list-last token>>" + str(token_document[token_index])
+            LOGGER.debug(
+                "PLFCB>>Started list-last token>>%s", str(token_document[token_index])
             )
             assert token_index >= 0
 
             old_start_index = token_document[token_index].indent_level
 
             ws_len = ParserHelper.calculate_length(extracted_whitespace)
-            logger.debug(
-                "old_start_index>>" + str(old_start_index) + ">>ws_len>>" + str(ws_len)
+            LOGGER.debug(
+                "old_start_index>>%s>>ws_len>>%s", str(old_start_index), str(ws_len)
             )
             if ws_len >= old_start_index:
-                logger.debug("RELINE:" + line_to_parse + ":")
+                LOGGER.debug("RELINE:%s:", line_to_parse)
                 adj_ws = extracted_whitespace[old_start_index:]
             else:
-                logger.debug("DOWNGRADE")
+                LOGGER.debug("DOWNGRADE")
         return adj_ws
 
     # pylint: enable=too-many-arguments
@@ -359,7 +351,6 @@ class ContainerBlockProcessor:
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def __handle_nested_container_blocks(
-        logger,
         token_stack,
         token_document,
         container_depth,
@@ -382,38 +373,33 @@ class ContainerBlockProcessor:
         if was_container_start and line_to_parse:
             assert container_depth < 10
             nested_container_starts = ContainerBlockProcessor.__get_nested_container_starts(
-                logger, token_stack, line_to_parse, end_container_indices,
+                token_stack, line_to_parse, end_container_indices,
             )
 
-            logger.debug("check next container_start>stack>>" + str(token_stack))
-            logger.debug("check next container_start>leaf_tokens>>" + str(leaf_tokens))
-            logger.debug(
-                "check next container_start>container_level_tokens>>"
-                + str(container_level_tokens)
+            LOGGER.debug("check next container_start>stack>>%s", str(token_stack))
+            LOGGER.debug("check next container_start>leaf_tokens>>%s", str(leaf_tokens))
+            LOGGER.debug(
+                "check next container_start>container_level_tokens>>%s",
+                str(container_level_tokens),
             )
 
             adj_line_to_parse = line_to_parse
 
-            logger.debug(
-                "check next container_start>pre>>" + str(adj_line_to_parse) + "<<"
-            )
+            LOGGER.debug("check next container_start>pre>>%s<<", str(adj_line_to_parse))
             active_container_index = max(
                 end_container_indices.ulist_index,
                 end_container_indices.olist_index,
                 end_container_indices.block_index,
             )
-            logger.debug(
-                "check next container_start>max>>"
-                + str(active_container_index)
-                + ">>bq>>"
-                + str(end_container_indices.block_index)
+            LOGGER.debug(
+                "check next container_start>max>>%s>>bq>>%s",
+                str(active_container_index),
+                str(end_container_indices.block_index),
             )
-            logger.debug(
-                "^^"
-                + adj_line_to_parse[0 : end_container_indices.block_index]
-                + "^^"
-                + adj_line_to_parse[end_container_indices.block_index :]
-                + "^^"
+            LOGGER.debug(
+                "^^%s^^%s^^",
+                adj_line_to_parse[0 : end_container_indices.block_index],
+                adj_line_to_parse[end_container_indices.block_index :],
             )
             if (
                 end_container_indices.block_index != -1
@@ -425,18 +411,17 @@ class ContainerBlockProcessor:
                     end_container_indices.block_index :
                 ]
 
-            logger.debug(
-                "check next container_start>mid>>stack_bq_count>>"
-                + str(stack_bq_count)
-                + "<<this_bq_count<<"
-                + str(this_bq_count)
+            LOGGER.debug(
+                "check next container_start>mid>>stack_bq_count>>%s<<this_bq_count<<%s",
+                str(stack_bq_count),
+                str(this_bq_count),
             )
             adj_line_to_parse = "".rjust(active_container_index) + adj_line_to_parse
-            logger.debug(
-                "check next container_start>post<<" + str(adj_line_to_parse) + "<<"
+            LOGGER.debug(
+                "check next container_start>post<<%s<<", str(adj_line_to_parse)
             )
 
-            logger.debug("leaf_tokens>>" + str(leaf_tokens))
+            LOGGER.debug("leaf_tokens>>%s", str(leaf_tokens))
             if leaf_tokens:
                 token_document.extend(leaf_tokens)
                 leaf_tokens = []
@@ -444,9 +429,9 @@ class ContainerBlockProcessor:
                 token_document.extend(container_level_tokens)
                 container_level_tokens = []
 
-            logger.debug("check next container_start>stack>>" + str(token_stack))
-            logger.debug(
-                "check next container_start>tokenized_document>>" + str(token_document)
+            LOGGER.debug("check next container_start>stack>>%s", str(token_stack))
+            LOGGER.debug(
+                "check next container_start>tokenized_document>>%s", str(token_document)
             )
 
             if (
@@ -455,7 +440,6 @@ class ContainerBlockProcessor:
                 or nested_container_starts.block_index
             ):
                 line_to_parse = ContainerBlockProcessor.__look_for_container_blocks(
-                    logger,
                     adj_line_to_parse,
                     end_container_indices.block_index,
                     token_stack,
@@ -476,10 +460,10 @@ class ContainerBlockProcessor:
 
     @staticmethod
     def __get_nested_container_starts(
-        logger, token_stack, line_to_parse, end_container_indices,
+        token_stack, line_to_parse, end_container_indices,
     ):
 
-        logger.debug("check next container_start>")
+        LOGGER.debug("check next container_start>")
         nested_ulist_start, _ = ListBlockProcessor.is_ulist_start(
             token_stack, line_to_parse, 0, ""
         )
@@ -489,23 +473,20 @@ class ContainerBlockProcessor:
         nested_block_start = BlockQuoteProcessor.is_block_quote_start(
             line_to_parse, 0, ""
         )
-        logger.debug(
-            "check next container_start>ulist>"
-            + str(nested_ulist_start)
-            + ">index>"
-            + str(end_container_indices.ulist_index)
+        LOGGER.debug(
+            "check next container_start>ulist>%s>index>%s",
+            str(nested_ulist_start),
+            str(end_container_indices.ulist_index),
         )
-        logger.debug(
-            "check next container_start>olist>"
-            + str(nested_olist_start)
-            + ">index>"
-            + str(end_container_indices.olist_index)
+        LOGGER.debug(
+            "check next container_start>olist>%s>index>%s",
+            str(nested_olist_start),
+            str(end_container_indices.olist_index),
         )
-        logger.debug(
-            "check next container_start>bquote>"
-            + str(nested_block_start)
-            + ">index>"
-            + str(end_container_indices.block_index)
+        LOGGER.debug(
+            "check next container_start>bquote>%s>index>%s",
+            str(nested_block_start),
+            str(end_container_indices.block_index),
         )
         return ContainerIndices(
             nested_ulist_start, nested_olist_start, nested_block_start
@@ -514,7 +495,6 @@ class ContainerBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __look_for_container_blocks(
-        logger,
         adj_line_to_parse,
         end_of_bquote_start_index,
         token_stack,
@@ -527,14 +507,14 @@ class ContainerBlockProcessor:
         """
         Look for container blocks that we can use.
         """
-        logger.debug("check next container_start>recursing")
-        logger.debug("check next container_start>>" + adj_line_to_parse + "\n")
+        LOGGER.debug("check next container_start>recursing")
+        LOGGER.debug("check next container_start>>%s\n", adj_line_to_parse)
 
         adj_block = None
         if end_of_bquote_start_index != -1:
             adj_block = end_of_bquote_start_index
 
-        logger.debug("adj_line_to_parse>>>" + str(adj_line_to_parse) + "<<<")
+        LOGGER.debug("adj_line_to_parse>>>%s<<<", str(adj_line_to_parse))
         (
             _,
             line_to_parse,
@@ -553,12 +533,12 @@ class ContainerBlockProcessor:
         assert not requeue_line_info or not requeue_line_info.lines_to_requeue
         # TODO will need to deal with force_ignore_first_as_lrd
 
-        logger.debug("\ncheck next container_start>recursed")
-        logger.debug("check next container_start>stack>>" + str(token_stack))
-        logger.debug(
-            "check next container_start>tokenized_document>>" + str(token_document)
+        LOGGER.debug("\ncheck next container_start>recursed")
+        LOGGER.debug("check next container_start>stack>>%s", str(token_stack))
+        LOGGER.debug(
+            "check next container_start>tokenized_document>>%s", str(token_document)
         )
-        logger.debug("check next container_start>line_parse>>" + str(line_to_parse))
+        LOGGER.debug("check next container_start>line_parse>>%s", str(line_to_parse))
         return line_to_parse
 
     # pylint: enable=too-many-arguments
@@ -566,7 +546,6 @@ class ContainerBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __process_list_in_progress(
-        logger,
         did_process,
         token_stack,
         token_document,
@@ -582,7 +561,7 @@ class ContainerBlockProcessor:
             )
             if is_list_in_process:
                 assert not container_level_tokens
-                logger.debug("clt>>list-in-progress")
+                LOGGER.debug("clt>>list-in-progress")
                 (
                     container_level_tokens,
                     line_to_parse,
@@ -598,11 +577,10 @@ class ContainerBlockProcessor:
                 did_process = True
 
         if did_process:
-            logger.debug(
-                "clt-before-lead>>"
-                + str(len(container_level_tokens))
-                + ">>"
-                + str(container_level_tokens)
+            LOGGER.debug(
+                "clt-before-lead>>%s>>%s",
+                str(len(container_level_tokens)),
+                str(container_level_tokens),
             )
         return did_process, line_to_parse, container_level_tokens
 
@@ -611,7 +589,6 @@ class ContainerBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __process_lazy_lines(
-        logger,
         leaf_tokens,
         token_stack,
         this_bq_count,
@@ -623,9 +600,9 @@ class ContainerBlockProcessor:
         close_open_blocks_fn,
     ):
 
-        logger.debug("LINE-lazy>" + line_to_parse)
+        LOGGER.debug("LINE-lazy>%s", line_to_parse)
         if not leaf_tokens:
-            logger.debug("clt>>lazy-check")
+            LOGGER.debug("clt>>lazy-check")
             lazy_tokens = BlockQuoteProcessor.check_for_lazy_handling(
                 token_stack,
                 this_bq_count,
@@ -635,16 +612,15 @@ class ContainerBlockProcessor:
                 close_open_blocks_fn,
             )
             if lazy_tokens:
-                logger.debug("clt>>lazy-found")
+                LOGGER.debug("clt>>lazy-found")
                 container_level_tokens.extend(lazy_tokens)
                 did_process = True
 
         if did_process:
-            logger.debug(
-                "clt-after-leaf>>"
-                + str(len(container_level_tokens))
-                + ">>"
-                + str(container_level_tokens)
+            LOGGER.debug(
+                "clt-after-leaf>>%s>>%s",
+                str(len(container_level_tokens)),
+                str(container_level_tokens),
             )
 
     # pylint: enable=too-many-arguments
@@ -652,7 +628,6 @@ class ContainerBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def __process_leaf_tokens(
-        logger,
         token_stack,
         leaf_tokens,
         token_document,
@@ -665,12 +640,11 @@ class ContainerBlockProcessor:
     ):
         requeue_line_info = RequeueLineInfo()
         if not leaf_tokens:
-            logger.debug("parsing leaf>>")
+            LOGGER.debug("parsing leaf>>")
             (
                 leaf_tokens,
                 requeue_line_info,
             ) = ContainerBlockProcessor.__parse_line_for_leaf_blocks(
-                logger,
                 token_stack,
                 token_document,
                 line_to_parse,
@@ -681,18 +655,16 @@ class ContainerBlockProcessor:
                 ignore_link_definition_start,
                 close_open_blocks_fn,
             )
-            logger.debug("parsed leaf>>" + str(leaf_tokens))
-            logger.debug("parsed leaf>>" + str(len(leaf_tokens)))
-            logger.debug(
-                "parsed leaf>>lines_to_requeue>>"
-                + str(requeue_line_info.lines_to_requeue)
-                + ">"
-                + str(len(requeue_line_info.lines_to_requeue))
+            LOGGER.debug("parsed leaf>>%s", str(leaf_tokens))
+            LOGGER.debug("parsed leaf>>%s", str(len(leaf_tokens)))
+            LOGGER.debug(
+                "parsed leaf>>lines_to_requeue>>%s>%s",
+                str(requeue_line_info.lines_to_requeue),
+                str(len(requeue_line_info.lines_to_requeue)),
             )
-            logger.debug(
-                "parsed leaf>>requeue_line_info.force_ignore_first_as_lrd>>"
-                + str(requeue_line_info.force_ignore_first_as_lrd)
-                + ">"
+            LOGGER.debug(
+                "parsed leaf>>requeue_line_info.force_ignore_first_as_lrd>>%s>",
+                str(requeue_line_info.force_ignore_first_as_lrd),
             )
         return leaf_tokens, requeue_line_info
         # pylint: enable=too-many-arguments
@@ -796,7 +768,6 @@ class ContainerBlockProcessor:
     # pylint: disable=too-many-arguments, unused-argument
     @staticmethod
     def __handle_link_reference_definition(
-        logger,
         outer_processed,
         token_stack,
         line_to_parse,
@@ -815,9 +786,9 @@ class ContainerBlockProcessor:
         force_ignore_first_as_lrd = None
 
         if not outer_processed and not ignore_link_definition_start:
-            logger.debug(
-                "plflb-process_link_reference_definition>>outer_processed>>"
-                + line_to_parse[start_index:]
+            LOGGER.debug(
+                "plflb-process_link_reference_definition>>outer_processed>>%s",
+                line_to_parse[start_index:],
             )
             (
                 outer_processed,
@@ -834,17 +805,11 @@ class ContainerBlockProcessor:
             )
             if lines_to_requeue:
                 outer_processed = True
-            logger.debug(
-                "plflb-process_link_reference_definition>>outer_processed>>"
-                + str(outer_processed)
-                # + ">did_complete_lrd>"
-                # + str(did_complete_lrd)
-                # + "<did_pause_lrd<"
-                # + str(did_pause_lrd)
-                + "<lines_to_requeue<"
-                + str(lines_to_requeue)
-                + "<"
-                + str(len(lines_to_requeue))
+            LOGGER.debug(
+                "plflb-process_link_reference_definition>>outer_processed>>%s<lines_to_requeue<%s<%s",
+                str(outer_processed),
+                str(lines_to_requeue),
+                str(len(lines_to_requeue)),
             )
         return outer_processed, lines_to_requeue, force_ignore_first_as_lrd
 
@@ -854,7 +819,6 @@ class ContainerBlockProcessor:
     # pylint: disable=too-many-locals
     @staticmethod
     def __parse_line_for_leaf_blocks(
-        logger,
         token_stack,
         token_document,
         line_to_parse,
@@ -869,7 +833,7 @@ class ContainerBlockProcessor:
         Parse the contents of a line for a leaf block.
         """
 
-        logger.debug("Leaf Line:" + line_to_parse.replace("\t", "\\t") + ":")
+        LOGGER.debug("Leaf Line:%s:", line_to_parse.replace("\t", "\\t"))
         new_tokens = []
 
         requeue_line_info = RequeueLineInfo()
@@ -898,7 +862,6 @@ class ContainerBlockProcessor:
             requeue_line_info.lines_to_requeue,
             requeue_line_info.force_ignore_first_as_lrd,
         ) = ContainerBlockProcessor.__handle_link_reference_definition(
-            logger,
             outer_processed,
             token_stack,
             line_to_parse,
@@ -974,7 +937,7 @@ class ContainerBlockProcessor:
                 )
 
         # assert new_tokens or did_complete_lrd or did_pause_lrd or lines_to_requeue
-        logger.debug(">>leaf--adding>>" + str(new_tokens))
+        LOGGER.debug(">>leaf--adding>>%s", str(new_tokens))
         pre_tokens.extend(new_tokens)
         return pre_tokens, requeue_line_info
 

@@ -1981,8 +1981,6 @@ def test_list_items_306():
 
 # Future Bugs - Command Line
 # TODO - determine which errors to print and which to log
-# TODO - can I get away with one logger instance in static modules, or is my
-#        current approach best?
 
 # Future Bugs - SetExt
 # TODO - MD023 is parsing the text token for whitespace instead of it being removed

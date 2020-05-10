@@ -31,6 +31,8 @@ from pymarkdown.markdown_token import (
     UriAutolinkMarkdownToken,
 )
 
+LOGGER = logging.getLogger(__name__)
+
 
 # pylint: disable=too-few-public-methods
 # pylint: disable=too-many-instance-attributes
@@ -117,18 +119,18 @@ class TransformToGfm:
                 else:
                     stack_count -= 1
 
-            self.logger.debug(
+            LOGGER.debug(
                 ">>stack_count>>%s>>#%s:%s",
                 str(stack_count),
                 str(current_token_index),
                 str(actual_tokens[current_token_index]),
             )
             if check_me:
-                self.logger.debug("check")
+                LOGGER.debug("check")
                 if self.__is_token_loose(actual_tokens, current_token_index):
                     is_loose = True
                     stop_me = True
-                    self.logger.debug("!!!LOOSE!!!")
+                    LOGGER.debug("!!!LOOSE!!!")
             if stop_me:
                 break
             current_token_index += 1
@@ -137,20 +139,21 @@ class TransformToGfm:
         next_token.is_loose = is_loose
         return is_loose
 
-    def __is_token_loose(self, actual_tokens, current_token_index):
+    @classmethod
+    def __is_token_loose(cls, actual_tokens, current_token_index):
         """
         Check to see if this token inspires looseness.
         """
 
         token_to_check = actual_tokens[current_token_index - 1]
-        self.logger.debug("token_to_check-->%s", str(token_to_check))
+        LOGGER.debug("token_to_check-->%s", str(token_to_check))
         if isinstance(token_to_check, EndMarkdownToken) and (
             token_to_check.type_name == MarkdownToken.token_unordered_list_start
             or token_to_check.type_name == MarkdownToken.token_ordered_list_start
         ):
             if actual_tokens[current_token_index - 2].is_blank_line:
                 token_to_check = actual_tokens[current_token_index - 2]
-        self.logger.debug("token_to_check-->%s", str(token_to_check))
+        LOGGER.debug("token_to_check-->%s", str(token_to_check))
         if token_to_check.is_blank_line:
             if isinstance(
                 actual_tokens[current_token_index - 2],
@@ -160,9 +163,9 @@ class TransformToGfm:
                     OrderedListStartMarkdownToken,
                 ),
             ):
-                self.logger.debug("!!!Starting Blank!!!")
+                LOGGER.debug("!!!Starting Blank!!!")
             else:
-                self.logger.debug("!!!LOOSE!!!")
+                LOGGER.debug("!!!LOOSE!!!")
                 return True
         return False
 
@@ -208,10 +211,10 @@ class TransformToGfm:
         out the correct list looseness to use.
         """
 
-        self.logger.debug("!!!!!!!!!!!!!!!%s", str(actual_token_index))
+        LOGGER.debug("!!!!!!!!!!!!!!!%s", str(actual_token_index))
         search_index = actual_token_index + 1
         while search_index < len(actual_tokens):
-            self.logger.debug(
+            LOGGER.debug(
                 "!!%s::%s", str(search_index), str(actual_tokens[search_index])
             )
             if isinstance(actual_tokens[search_index], EndMarkdownToken) and (
@@ -222,7 +225,7 @@ class TransformToGfm:
             ):
                 break
             search_index += 1
-        self.logger.debug(
+        LOGGER.debug(
             "!!!!!!!!!!!!!!!%s-of-%s", str(search_index), str(len(actual_tokens))
         )
         # check to see where we are, then grab the matching start to find
@@ -230,18 +233,16 @@ class TransformToGfm:
         if search_index == len(actual_tokens):
             is_in_loose_list = True
         else:
-            self.logger.debug(">>reset_list_looseness-token_unordered_list_start>>")
+            LOGGER.debug(">>reset_list_looseness-token_unordered_list_start>>")
             new_index = self.__find_owning_list_start(actual_tokens, search_index)
-            self.logger.debug(">>reset_list_looseness>>%s", str(new_index))
+            LOGGER.debug(">>reset_list_looseness>>%s", str(new_index))
             is_in_loose_list = actual_tokens[new_index].is_loose
-        self.logger.debug("           is_in_loose_list=%s", str(is_in_loose_list))
+        LOGGER.debug("           is_in_loose_list=%s", str(is_in_loose_list))
         return is_in_loose_list
 
     def __init__(self):
         self.start_token_handlers = {}
         self.end_token_handlers = {}
-
-        self.logger = logging.getLogger(__name__)
 
         self.register_handlers(
             ThematicBreakMarkdownToken, self.handle_thematic_break_token
@@ -342,7 +343,7 @@ class TransformToGfm:
         """
         Transform the tokens into html.
         """
-        self.logger.debug("\n\n---\n")
+        LOGGER.debug("\n\n---\n")
         output_html = ""
         transform_state = TransformState(actual_tokens)
         for next_token in transform_state.actual_tokens:
@@ -369,12 +370,12 @@ class TransformToGfm:
                     "Markdown token type " + str(type(next_token)) + " not supported."
                 )
 
-            self.logger.debug("======")
-            self.logger.debug(
+            LOGGER.debug("======")
+            LOGGER.debug(
                 "add_trailing_text-->%s<--",
                 str(transform_state.add_trailing_text).replace("\n", "\\n"),
             )
-            self.logger.debug(
+            LOGGER.debug(
                 "add_leading_text -->%s<--",
                 str(transform_state.add_leading_text).replace("\n", "\\n"),
             )
@@ -385,14 +386,14 @@ class TransformToGfm:
             if transform_state.add_leading_text:
                 output_html = self.apply_leading_text(output_html, transform_state)
 
-            self.logger.debug("------")
-            self.logger.debug(
+            LOGGER.debug("------")
+            LOGGER.debug(
                 "next_token     -->%s<--", str(next_token).replace("\n", "\\n")
             )
-            self.logger.debug(
+            LOGGER.debug(
                 "output_html    -->%s<--", str(output_html).replace("\n", "\\n")
             )
-            self.logger.debug(
+            LOGGER.debug(
                 "transform_stack-->%s<--",
                 str(transform_state.transform_stack).replace("\n", "\\n"),
             )
