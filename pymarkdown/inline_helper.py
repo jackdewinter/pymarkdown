@@ -377,7 +377,7 @@ class InlineHelper:
             remaining_line, -1, InlineHelper.__line_end_whitespace
         )
         LOGGER.debug(">>last_non_whitespace_index>>%s", str(last_non_whitespace_index))
-        LOGGER.debug(">>current_string>>%s>>", current_string)
+        LOGGER.debug(">>current_string>>%s>>", current_string.replace("\n", "\\n"))
         removed_end_whitespace = remaining_line[last_non_whitespace_index:]
         remaining_line = remaining_line[0:last_non_whitespace_index]
 

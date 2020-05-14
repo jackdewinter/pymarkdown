@@ -9,6 +9,7 @@ from pymarkdown.transform_to_gfm import TransformToGfm
 from .utils import assert_if_lists_different, assert_if_strings_different
 
 
+# pylint: disable=too-many-lines
 @pytest.mark.gfm
 def test_setext_headings_050():
     """
@@ -107,6 +108,63 @@ baz</em></h1>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.gfm
+def test_setext_headings_052a():
+    """
+    Test case 052a:  Deal with multiple lines that start with whitespace.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """  a
+  b
+  c
+==="""
+    expected_tokens = ["[setext:=:  ]", "[text:a\nb\nc::\n  \n  ]", "[end-setext::]"]
+    expected_gfm = """<h1>a
+b
+c</h1>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_setext_headings_052b():
+    """
+    Test case 052a:  Deal with multiple lines that start with whitespace.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """  a\a\a
+  b\a\a
+  c
+===""".replace(
+        "\a", " "
+    )
+    expected_tokens = ["[setext:=:  ]", "[text:a\nb\nc::\n  \n  ]", "[end-setext::]"]
+    expected_gfm = """<h1>a
+b
+c</h1>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

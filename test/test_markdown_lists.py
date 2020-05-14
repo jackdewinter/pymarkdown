@@ -1983,8 +1983,9 @@ def test_list_items_306():
 # TODO - determine which errors to print and which to log
 
 # Future Bugs - SetExt
-# TODO - MD023 is parsing the text token for whitespace instead of it being removed
-#    and placed in the ws field, like with other text types
+# TODO - change "header" to "heading" to be consistent
+# TODO - 052b - after effects of fixing MD023 + observation
+#      - removed whitespace for hard-break should be with hard-break token
 
 # Future Bugs - Tabs
 # TODO check is_length_less_than_or_equal_to to see if any issues with tabs, most

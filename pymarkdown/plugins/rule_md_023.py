@@ -9,7 +9,6 @@ from pymarkdown.markdown_token import (
     SetextHeaderMarkdownToken,
     TextMarkdownToken,
 )
-from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -55,12 +54,8 @@ class RuleMd023(Plugin):
             self.__any_leading_whitespace_detected = bool(token.remaining_line)
         elif isinstance(token, (TextMarkdownToken)):
             if self.__setext_start_token and not self.__any_leading_whitespace_detected:
-                text_to_process = token.token_text
-                split_lines = text_to_process.split("\n")
-                for next_line in split_lines:
-                    _, ex_ws = ParserHelper.extract_whitespace(next_line, 0)
-                    if ex_ws:
-                        self.__any_leading_whitespace_detected = True
+                if token.end_whitespace and " " in token.end_whitespace:
+                    self.__any_leading_whitespace_detected = True
         elif isinstance(token, EndMarkdownToken):
             if token.type_name in (MarkdownToken.token_setext_header,):
                 if token.extracted_whitespace:

@@ -35,7 +35,9 @@ class CoalesceProcessor:
                     remove_leading_spaces = 0
                     if coalesced_list[-2].is_indented_code_block:
                         remove_leading_spaces = len(coalesced_list[-2].extra_data)
-                    elif coalesced_list[-2].is_paragraph:
+                    elif (
+                        coalesced_list[-2].is_paragraph or coalesced_list[-2].is_setext
+                    ):
                         remove_leading_spaces = -1
 
                     LOGGER.debug(

@@ -76,9 +76,13 @@ class InlineProcessor:
         """
         Parse and resolve any inline elements.
         """
+        LOGGER.info("coalesced_results")
+        LOGGER.info("-----")
         for next_token in coalesced_results:
-            LOGGER.debug(">>%s<<", str(next_token))
-        LOGGER.debug("")
+            LOGGER.info(
+                ">>%s<<", str(next_token).replace("\t", "\\t").replace("\n", "\\n")
+            )
+        LOGGER.info("-----")
 
         coalesced_list = []
         coalesced_list.extend(coalesced_results[0:1])
@@ -100,12 +104,21 @@ class InlineProcessor:
                         )
                     ]
                 elif coalesced_list[-1].is_setext:
-                    combined_test = (
-                        coalesced_results[coalesce_index].extracted_whitespace
-                        + coalesced_results[coalesce_index].token_text
+                    combined_test = coalesced_results[coalesce_index].token_text
+                    LOGGER.warning(
+                        "combined_test>>%s", combined_test.replace("\n", "\\n")
                     )
                     processed_tokens = InlineProcessor.__process_inline_text_block(
-                        combined_test.replace("\t", "    ")
+                        coalesced_results[coalesce_index].token_text.replace(
+                            "\t", "    "
+                        ),
+                        whitespace_to_recombine=coalesced_results[
+                            coalesce_index
+                        ].extracted_whitespace.replace("\t", "    "),
+                    )
+                    LOGGER.warning(
+                        "processed_tokens>>%s",
+                        str(processed_tokens).replace("\n", "\\n"),
                     )
                 elif coalesced_list[-1].is_atx_header:
                     processed_tokens = InlineProcessor.__process_inline_text_block(
@@ -253,13 +266,38 @@ class InlineProcessor:
     # pylint: enable=too-many-locals
 
     @staticmethod
-    def __process_inline_text_block(source_text, starting_whitespace=""):
+    def __recombine_with_whitespace(source_text, whitespace_to_recombine):
+        split_source_text = source_text.split("\n")
+        split_whitespace_to_recombine = whitespace_to_recombine.split("\n")
+        assert len(split_source_text) == len(split_whitespace_to_recombine)
+        recombined_text = None
+        for split_index, next_split_source in enumerate(split_source_text):
+            if recombined_text is None:
+                recombined_text = next_split_source
+            else:
+                recombined_text += (
+                    "\n"
+                    + split_whitespace_to_recombine[split_index]
+                    + next_split_source
+                )
+        return recombined_text
+
+    @staticmethod
+    def __process_inline_text_block(
+        source_text, starting_whitespace="", whitespace_to_recombine=None
+    ):
         """
         Process a text block for any inline items.
         """
 
         inline_blocks = []
         start_index = 0
+        if whitespace_to_recombine and " " in whitespace_to_recombine:
+            source_text = InlineProcessor.__recombine_with_whitespace(
+                source_text, whitespace_to_recombine
+            )
+        else:
+            whitespace_to_recombine = None
 
         current_string = ""
         current_string_unresolved = ""
@@ -294,6 +332,9 @@ class InlineProcessor:
                 inline_response = proc_fn(inline_request)
             else:
                 assert source_text[next_index] == "\n"
+                LOGGER.debug(
+                    "end_string(before)>>%s<<", str(end_string).replace("\n", "\\n")
+                )
                 (
                     inline_response.new_string,
                     whitespace_to_add,
@@ -304,6 +345,19 @@ class InlineProcessor:
                     current_string,
                 ) = InlineHelper.handle_line_end(
                     next_index, remaining_line, end_string, current_string
+                )
+                end_string = InlineProcessor.__add_recombined_whitespace(
+                    bool(whitespace_to_recombine),
+                    source_text,
+                    inline_response,
+                    end_string,
+                )
+                LOGGER.debug(
+                    "handle_line_end>>%s<<",
+                    source_text[inline_response.new_index :].replace("\n", "\\n"),
+                )
+                LOGGER.debug(
+                    "end_string(after)>>%s<<", str(end_string).replace("\n", "\\n")
                 )
 
             if inline_response.consume_rest_of_line:
@@ -363,6 +417,20 @@ class InlineProcessor:
             end_string,
             starting_whitespace,
         )
+
+    @staticmethod
+    def __add_recombined_whitespace(
+        did_recombine, source_text, inline_response, end_string
+    ):
+
+        if did_recombine:
+            new_index, extracted_whitespace = ParserHelper.extract_whitespace(
+                source_text, inline_response.new_index
+            )
+            if extracted_whitespace:
+                inline_response.new_index = new_index
+                end_string += extracted_whitespace
+        return end_string
 
     @staticmethod
     # pylint: disable=too-many-arguments
