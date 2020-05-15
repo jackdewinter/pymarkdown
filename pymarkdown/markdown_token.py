@@ -337,19 +337,6 @@ class EndMarkdownToken(MarkdownToken):
         )
 
 
-class SetextHeadingEndMarkdownToken(EndMarkdownToken):
-    """
-    Class to provide for an encapsulation of the end of a setext heading element.
-    """
-
-    def __init__(self, extracted_whitespace, extra_whitespace_after_setext):
-        super().__init__(
-            MarkdownToken.token_setext_heading,
-            extracted_whitespace,
-            extra_whitespace_after_setext,
-        )
-
-
 class TextMarkdownToken(MarkdownToken):
     """
     Class to provide for an encapsulation of the text element.

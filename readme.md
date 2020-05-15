@@ -10,7 +10,6 @@
 
 ## Bugs - SetExt
 
-- is SetextHeadingEndMarkdownToken needed?
 - MD041 requires metadatqa
 
 ## Bugs - Tabs

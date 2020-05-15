@@ -2,7 +2,10 @@
 Module to implement a plugin that looks for heading that increment more than one
 level at a time (going up).
 """
-from pymarkdown.markdown_token import AtxHeadingMarkdownToken, SetextHeadingMarkdownToken
+from pymarkdown.markdown_token import (
+    AtxHeadingMarkdownToken,
+    SetextHeadingMarkdownToken,
+)
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 

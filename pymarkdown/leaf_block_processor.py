@@ -10,8 +10,8 @@ from pymarkdown.markdown_token import (
     EndMarkdownToken,
     FencedCodeBlockMarkdownToken,
     IndentedCodeBlockMarkdownToken,
+    MarkdownToken,
     ParagraphMarkdownToken,
-    SetextHeadingEndMarkdownToken,
     SetextHeadingMarkdownToken,
     TextMarkdownToken,
     ThematicBreakMarkdownToken,
@@ -402,8 +402,10 @@ class LeafBlockProcessor:
                 # into a heading, this has to be done separately, as there is no
                 # stack token to close.
                 new_tokens.append(
-                    SetextHeadingEndMarkdownToken(
-                        extracted_whitespace, extra_whitespace_after_setext
+                    EndMarkdownToken(
+                        MarkdownToken.token_setext_heading,
+                        extracted_whitespace,
+                        extra_whitespace_after_setext,
                     )
                 )
                 token_index = len(token_document) - 1

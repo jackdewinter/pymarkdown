@@ -645,7 +645,9 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_start_setext_heading_token(cls, output_html, next_token, transform_state):
+    def handle_start_setext_heading_token(
+        cls, output_html, next_token, transform_state
+    ):
         """
         Handle the start setext heading token.
         """
