@@ -394,11 +394,11 @@ class InlineHelper:
             and current_string[len(current_string) - 1]
             == InlineHelper.backslash_character
         ):
-            new_tokens.append(HardBreakMarkdownToken())
+            new_tokens.append(HardBreakMarkdownToken(InlineHelper.backslash_character))
             current_string = current_string[0:-1]
         elif len(removed_end_whitespace) >= 2:
-            new_tokens.append(HardBreakMarkdownToken())
-            whitespace_to_add = removed_end_whitespace
+            new_tokens.append(HardBreakMarkdownToken(removed_end_whitespace))
+            whitespace_to_add = ""
         else:
             end_string = InlineHelper.modify_end_string(
                 end_string, removed_end_whitespace

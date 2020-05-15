@@ -429,7 +429,10 @@ class InlineProcessor:
             )
             if extracted_whitespace:
                 inline_response.new_index = new_index
-                end_string += extracted_whitespace
+                if end_string:
+                    end_string += extracted_whitespace
+                else:
+                    end_string = extracted_whitespace
         return end_string
 
     @staticmethod
@@ -455,7 +458,7 @@ class InlineProcessor:
                 current_string_unresolved, new_string
             )
 
-        if whitespace_to_add:
+        if whitespace_to_add is not None:
             end_string = InlineHelper.modify_end_string(end_string, whitespace_to_add)
 
         start_index = new_index

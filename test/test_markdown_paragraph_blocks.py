@@ -227,7 +227,7 @@ bbb"""
 @pytest.mark.gfm
 def test_paragraph_blocks_196():
     """
-    Test case 196:  (part b) However, the first line may be indented at most three spaces, or an indented code block will be triggered:
+    Test case 196:  Final spaces are stripped before inline parsing, so a paragraph that ends with two or more spaces will not end with a hard line break.
     """
 
     # Arrange
@@ -240,8 +240,8 @@ bbb     """.replace(
     expected_tokens = [
         "[para:\n:     ]",
         "[text:aaa:]",
-        "[hard-break]",
-        "[text:\nbbb::     \n]",
+        "[hard-break:     ]",
+        "[text:\nbbb::\n]",
         "[end-para]",
     ]
     expected_gfm = """<p>aaa<br />
@@ -266,14 +266,12 @@ def test_paragraph_blocks_196a():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """aaa\t\t\t\t\t
-bbb\t\t\t\t\t""".replace(
-        "\a", " "
-    )
+bbb\t\t\t\t\t"""
     expected_tokens = [
         "[para:\n:\t\t\t\t\t]",
         "[text:aaa:]",
-        "[hard-break]",
-        "[text:\nbbb::                    \n]",
+        "[hard-break:                    ]",
+        "[text:\nbbb::\n]",
         "[end-para]",
     ]
     expected_gfm = """<p>aaa<br />

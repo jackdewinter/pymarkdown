@@ -142,7 +142,6 @@ c</h1>"""
     assert_if_strings_different(expected_gfm, actual_gfm)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_setext_headings_052b():
     """
@@ -158,9 +157,17 @@ def test_setext_headings_052b():
 ===""".replace(
         "\a", " "
     )
-    expected_tokens = ["[setext:=:  ]", "[text:a\nb\nc::\n  \n  ]", "[end-setext::]"]
-    expected_gfm = """<h1>a
-b
+    expected_tokens = [
+        "[setext:=:  ]",
+        "[text:a::  ]",
+        "[hard-break:  ]",
+        "[text:\nb::\n  ]",
+        "[hard-break:  ]",
+        "[text:\nc::\n]",
+        "[end-setext::]",
+    ]
+    expected_gfm = """<h1>a<br />
+b<br />
 c</h1>"""
 
     # Act

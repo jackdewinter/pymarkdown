@@ -26,8 +26,8 @@ baz""".replace(
     expected_tokens = [
         "[para:\n]",
         "[text:foo:]",
-        "[hard-break]",
-        "[text:\nbaz::  \n]",
+        "[hard-break:  ]",
+        "[text:\nbaz::\n]",
         "[end-para]",
     ]
     expected_gfm = """<p>foo<br />
@@ -56,7 +56,7 @@ baz"""
     expected_tokens = [
         "[para:\n]",
         "[text:foo:]",
-        "[hard-break]",
+        "[hard-break:\\]",
         "[text:\nbaz:]",
         "[end-para]",
     ]
@@ -88,8 +88,8 @@ baz""".replace(
     expected_tokens = [
         "[para:\n]",
         "[text:foo:]",
-        "[hard-break]",
-        "[text:\nbaz::       \n]",
+        "[hard-break:       ]",
+        "[text:\nbaz::\n]",
         "[end-para]",
     ]
     expected_gfm = """<p>foo<br />
@@ -120,8 +120,8 @@ def test_hard_line_breaks_657():
     expected_tokens = [
         "[para:\n     ]",
         "[text:foo:]",
-        "[hard-break]",
-        "[text:\nbar::  \n]",
+        "[hard-break:  ]",
+        "[text:\nbar::\n]",
         "[end-para]",
     ]
     expected_gfm = """<p>foo<br />
@@ -150,7 +150,7 @@ def test_hard_line_breaks_658():
     expected_tokens = [
         "[para:\n     ]",
         "[text:foo:]",
-        "[hard-break]",
+        "[hard-break:\\]",
         "[text:\nbar:]",
         "[end-para]",
     ]
@@ -183,8 +183,8 @@ bar*""".replace(
         "[para:\n]",
         "[emphasis:1]",
         "[text:foo:]",
-        "[hard-break]",
-        "[text:\nbar::  \n]",
+        "[hard-break:  ]",
+        "[text:\nbar::\n]",
         "[end-emphasis::1]",
         "[end-para]",
     ]
@@ -217,7 +217,7 @@ bar*""".replace(
         "[para:\n]",
         "[emphasis:1]",
         "[text:foo:]",
-        "[hard-break]",
+        "[hard-break:\\]",
         "[text:\nbar:]",
         "[end-emphasis::1]",
         "[end-para]",

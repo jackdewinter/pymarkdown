@@ -7,8 +7,6 @@
 ## Bugs - SetExt
 
 - change "header" to "heading" to be consistent
-- TODO - 052b - after effects of fixing MD023 + observation
-  - removed whitespace for hard-break should be with hard-break token
 
 ## Bugs - Tabs
 

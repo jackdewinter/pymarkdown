@@ -395,6 +395,10 @@ class TextMarkdownToken(MarkdownToken):
     def combine(self, other_text_token, remove_leading_spaces):
         """
         Combine the two text tokens together with a line feed between.
+        If remove_leading_spaces > 0, then that many leading spaces will be
+        removed from each line, if present.
+        If remove_leading_spaces == -1, then.
+        If remove_leading_spaces == 0, then.
         """
 
         if other_text_token.is_blank_line:
@@ -569,8 +573,9 @@ class HardBreakMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the inline hard line break element.
     """
 
-    def __init__(self):
-        MarkdownToken.__init__(self, MarkdownToken.token_inline_hard_break)
+    def __init__(self, line_end):
+        self.line_end = line_end
+        MarkdownToken.__init__(self, MarkdownToken.token_inline_hard_break, line_end)
 
 
 class UriAutolinkMarkdownToken(MarkdownToken):
