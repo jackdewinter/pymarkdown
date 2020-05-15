@@ -6,7 +6,7 @@ import logging
 
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.markdown_token import (
-    AtxHeaderMarkdownToken,
+    AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
     BlockQuoteMarkdownToken,
     EmailAutolinkMarkdownToken,
@@ -24,7 +24,7 @@ from pymarkdown.markdown_token import (
     OrderedListStartMarkdownToken,
     ParagraphMarkdownToken,
     RawHtmlMarkdownToken,
-    SetextHeaderMarkdownToken,
+    SetextHeadingMarkdownToken,
     TextMarkdownToken,
     ThematicBreakMarkdownToken,
     UnorderedListStartMarkdownToken,
@@ -249,9 +249,9 @@ class TransformToGfm:
         )
         self.register_handlers(HardBreakMarkdownToken, self.handle_hard_break_token)
         self.register_handlers(
-            AtxHeaderMarkdownToken,
-            self.handle_start_atx_header_token,
-            self.handle_end_atx_header_token,
+            AtxHeadingMarkdownToken,
+            self.handle_start_atx_heading_token,
+            self.handle_end_atx_heading_token,
         )
         self.register_handlers(
             LinkStartMarkdownToken,
@@ -268,9 +268,9 @@ class TransformToGfm:
         )
         self.register_handlers(UriAutolinkMarkdownToken, self.handle_uri_autolink)
         self.register_handlers(
-            SetextHeaderMarkdownToken,
-            self.handle_start_setext_header_token,
-            self.handle_end_setext_header_token,
+            SetextHeadingMarkdownToken,
+            self.handle_start_setext_heading_token,
+            self.handle_end_setext_heading_token,
         )
         self.register_handlers(
             EmphasisMarkdownToken,
@@ -618,22 +618,22 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_start_atx_header_token(cls, output_html, next_token, transform_state):
+    def handle_start_atx_heading_token(cls, output_html, next_token, transform_state):
         """
-        Handle the start atx header token.
+        Handle the start atx heading token.
         """
         assert transform_state
         output_html = output_html + "<h" + str(next_token.hash_count) + ">"
         return output_html
 
     @classmethod
-    def handle_end_atx_header_token(cls, output_html, next_token, transform_state):
+    def handle_end_atx_heading_token(cls, output_html, next_token, transform_state):
         """
-        Handle the end atx header token.
+        Handle the end atx heading token.
         """
         assert next_token
         fenced_token = transform_state.actual_token_index - 1
-        while not transform_state.actual_tokens[fenced_token].is_atx_header:
+        while not transform_state.actual_tokens[fenced_token].is_atx_heading:
             fenced_token -= 1
 
         output_html = (
@@ -645,12 +645,12 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_start_setext_header_token(cls, output_html, next_token, transform_state):
+    def handle_start_setext_heading_token(cls, output_html, next_token, transform_state):
         """
-        Handle the start setext header token.
+        Handle the start setext heading token.
         """
         assert transform_state
-        if next_token.header_character == "=":
+        if next_token.heading_character == "=":
             inner_tag = "1"
         else:
             inner_tag = "2"
@@ -658,15 +658,15 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_end_setext_header_token(cls, output_html, next_token, transform_state):
+    def handle_end_setext_heading_token(cls, output_html, next_token, transform_state):
         """
-        Handle the end setext header token.
+        Handle the end setext heading token.
         """
         assert next_token
         fenced_token = transform_state.actual_token_index - 1
         while not transform_state.actual_tokens[fenced_token].is_setext:
             fenced_token -= 1
-        if transform_state.actual_tokens[fenced_token].header_character == "=":
+        if transform_state.actual_tokens[fenced_token].heading_character == "=":
             inner_tag = "1"
         else:
             inner_tag = "2"

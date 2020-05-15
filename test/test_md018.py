@@ -12,7 +12,7 @@ import pytest
 def test_md018_good_good_start_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx header start spacing after
+    test/resources/rules/md018 directory that has good atx heading start spacing after
     the first hash.
     """
 
@@ -39,7 +39,7 @@ def test_md018_good_good_start_spacing():
 def test_md018_bad_ignore_bad_atx_closed_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has an atx header with no spaces after
+    test/resources/rules/md018 directory that has an atx heading with no spaces after
     initial hash, but ends with a close hash, making it a closed atx.
     """
 
@@ -71,7 +71,7 @@ def test_md018_bad_ignore_bad_atx_closed_spacing():
 def test_md018_bad_missing_atx_start_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has an atx header with no spaces after
+    test/resources/rules/md018 directory that has an atx heading with no spaces after
     initial hash.
     """
 
@@ -98,17 +98,17 @@ def test_md018_bad_missing_atx_start_spacing():
 
 
 @pytest.mark.rules
-def test_md018_good_with_setext_headers():
+def test_md018_good_with_setext_headings():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has a possible atx header except that
-    it is followed by setext headers.
+    test/resources/rules/md018 directory that has a possible atx heading except that
+    it is followed by setext headings.
     """
 
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md018/with_setext_headers.md",
+        "test/resources/rules/md018/with_setext_headings.md",
     ]
 
     expected_return_code = 0
@@ -128,7 +128,7 @@ def test_md018_good_with_setext_headers():
 def test_md018_good_with_code_blocks():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has a possible atx header except that
+    test/resources/rules/md018 directory that has a possible atx heading except that
     it is followed by code blocks.
     """
 
@@ -155,7 +155,7 @@ def test_md018_good_with_code_blocks():
 def test_md018_good_with_html_blocks():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has a possible atx header except that
+    test/resources/rules/md018 directory that has a possible atx heading except that
     it is followed by html blocks.
     """
 
@@ -182,7 +182,7 @@ def test_md018_good_with_html_blocks():
 def test_md018_bad_multiple_within_paragraph():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headers within
+    test/resources/rules/md018 directory that has multiple possible atx headings within
     a single paragraph.
     """
 
@@ -214,7 +214,7 @@ def test_md018_bad_multiple_within_paragraph():
 def test_md018_bad_paragraphs_with_starting_whitespace():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headers each
+    test/resources/rules/md018 directory that has multiple possible atx headings each
     one with starting whitespace that would normally be permitted.
     """
 
@@ -250,7 +250,7 @@ def test_md018_bad_paragraphs_with_starting_whitespace():
 def test_md018_bad_single_paragraph_with_starting_whitespace():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headers within
+    test/resources/rules/md018 directory that has multiple possible atx headings within
     a single paragraph each one with starting whitespace that would normally be
     permitted.
     """

@@ -4,9 +4,14 @@
 
 - determine which errors to print and which to log
 
+## Bugs - General
+
+- need to add line/column
+
 ## Bugs - SetExt
 
-- change "header" to "heading" to be consistent
+- is SetextHeadingEndMarkdownToken needed?
+- MD041 requires metadatqa
 
 ## Bugs - Tabs
 

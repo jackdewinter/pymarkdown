@@ -90,7 +90,7 @@ class InlineProcessor:
             if coalesced_results[coalesce_index].is_text and (
                 coalesced_list[-1].is_paragraph
                 or coalesced_list[-1].is_setext
-                or coalesced_list[-1].is_atx_header
+                or coalesced_list[-1].is_atx_heading
                 or coalesced_list[-1].is_code_block
             ):
                 if coalesced_list[-1].is_code_block:
@@ -120,7 +120,7 @@ class InlineProcessor:
                         "processed_tokens>>%s",
                         str(processed_tokens).replace("\n", "\\n"),
                     )
-                elif coalesced_list[-1].is_atx_header:
+                elif coalesced_list[-1].is_atx_heading:
                     processed_tokens = InlineProcessor.__process_inline_text_block(
                         coalesced_results[coalesce_index].token_text.replace(
                             "\t", "    "

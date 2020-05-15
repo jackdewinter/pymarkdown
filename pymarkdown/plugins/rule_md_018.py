@@ -1,7 +1,7 @@
 """
 Module to implement a plugin that looks for text in a paragraph where a line starts
-with what could be an atx header, except there is no spaces between the hashes and
-the text of the header.
+with what could be an atx heading, except there is no spaces between the hashes and
+the text of the heading.
 """
 import re
 
@@ -17,8 +17,8 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 class RuleMd018(Plugin):
     """
     Class to implement a plugin that looks for text in a paragraph where a line starts
-    with what could be an atx header, except there is no spaces between the hashes and
-    the text of the header.
+    with what could be an atx heading, except there is no spaces between the hashes and
+    the text of the heading.
     """
 
     def __init__(self):

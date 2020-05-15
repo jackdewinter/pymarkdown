@@ -54,7 +54,7 @@ Foo *bar*
 @pytest.mark.gfm
 def test_setext_headings_051():
     """
-    Test case 051:  The content of the header may span more than one line:
+    Test case 051:  The content of the heading may span more than one line:
     """
 
     # Arrange
@@ -171,7 +171,7 @@ b<br />
 c</h1>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

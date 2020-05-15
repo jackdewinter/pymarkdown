@@ -10,7 +10,7 @@ from .utils import write_temporary_configuration
 
 
 @pytest.mark.rules
-def test_md024_good_different_header_content_atx():
+def test_md024_good_different_heading_content_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has atx headings that all have different
@@ -20,7 +20,7 @@ def test_md024_good_different_header_content_atx():
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md024/different_header_content_atx.md",
+        "test/resources/rules/md024/different_heading_content_atx.md",
     ]
 
     expected_return_code = 0
@@ -37,7 +37,7 @@ def test_md024_good_different_header_content_atx():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_header_content_atx():
+def test_md024_bad_same_heading_content_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has atx headings that have some duplicated
@@ -47,12 +47,12 @@ def test_md024_bad_same_header_content_atx():
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md024/same_header_content_atx.md",
+        "test/resources/rules/md024/same_heading_content_atx.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_header_content_atx.md:0:0: "
+        "test/resources/rules/md024/same_heading_content_atx.md:0:0: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -67,7 +67,7 @@ def test_md024_bad_same_header_content_atx():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_header_in_siblings_atx():
+def test_md024_bad_same_heading_in_siblings_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has atx headings that have some duplicated
@@ -77,14 +77,14 @@ def test_md024_bad_same_header_in_siblings_atx():
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md024/same_header_in_siblings_atx.md",
+        "test/resources/rules/md024/same_heading_in_siblings_atx.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_header_in_siblings_atx.md:0:0: "
+        "test/resources/rules/md024/same_heading_in_siblings_atx.md:0:0: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
-        + "test/resources/rules/md024/same_header_in_siblings_atx.md:0:0: "
+        + "test/resources/rules/md024/same_heading_in_siblings_atx.md:0:0: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -99,7 +99,7 @@ def test_md024_bad_same_header_in_siblings_atx():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_header_but_not_in_siblings_atx():
+def test_md024_bad_same_heading_but_not_in_siblings_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has atx headings that have some duplicated
@@ -109,12 +109,12 @@ def test_md024_bad_same_header_but_not_in_siblings_atx():
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md024/same_header_but_not_in_siblings_atx.md",
+        "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_header_but_not_in_siblings_atx.md:0:0: "
+        "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md:0:0: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -129,7 +129,7 @@ def test_md024_bad_same_header_but_not_in_siblings_atx():
 
 
 @pytest.mark.rules
-def test_md024_good_different_header_content_atx_with_configuration():
+def test_md024_good_different_heading_content_atx_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has atx headings that all have different
@@ -145,7 +145,7 @@ def test_md024_good_different_header_content_atx_with_configuration():
         suppplied_arguments = [
             "-c",
             configuration_file,
-            "test/resources/rules/md024/different_header_content_atx.md",
+            "test/resources/rules/md024/different_heading_content_atx.md",
         ]
 
         expected_return_code = 0
@@ -165,7 +165,7 @@ def test_md024_good_different_header_content_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_good_same_header_content_atx_with_configuration():
+def test_md024_good_same_heading_content_atx_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has atx headings that have some duplicated
@@ -181,7 +181,7 @@ def test_md024_good_same_header_content_atx_with_configuration():
         suppplied_arguments = [
             "-c",
             configuration_file,
-            "test/resources/rules/md024/same_header_content_atx.md",
+            "test/resources/rules/md024/same_heading_content_atx.md",
         ]
 
         expected_return_code = 0
@@ -201,7 +201,7 @@ def test_md024_good_same_header_content_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_header_in_siblings_atx_with_configuration():
+def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has atx headings that have some duplicated
@@ -217,12 +217,12 @@ def test_md024_bad_same_header_in_siblings_atx_with_configuration():
         suppplied_arguments = [
             "-c",
             configuration_file,
-            "test/resources/rules/md024/same_header_in_siblings_atx.md",
+            "test/resources/rules/md024/same_heading_in_siblings_atx.md",
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md024/same_header_in_siblings_atx.md:0:0: "
+            "test/resources/rules/md024/same_heading_in_siblings_atx.md:0:0: "
             + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
         )
         expected_error = ""
@@ -240,7 +240,7 @@ def test_md024_bad_same_header_in_siblings_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_good_same_header_but_not_in_siblings_atx_with_configuration():
+def test_md024_good_same_heading_but_not_in_siblings_atx_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has atx headings that have some duplicated
@@ -256,7 +256,7 @@ def test_md024_good_same_header_but_not_in_siblings_atx_with_configuration():
         suppplied_arguments = [
             "-c",
             configuration_file,
-            "test/resources/rules/md024/same_header_but_not_in_siblings_atx.md",
+            "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md",
         ]
 
         expected_return_code = 0
@@ -276,7 +276,7 @@ def test_md024_good_same_header_but_not_in_siblings_atx_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_good_same_header_but_not_in_siblings_atx_with_alternate_configuration():
+def test_md024_good_same_heading_but_not_in_siblings_atx_with_alternate_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has atx headings that have some duplicated
@@ -292,7 +292,7 @@ def test_md024_good_same_header_but_not_in_siblings_atx_with_alternate_configura
         suppplied_arguments = [
             "-c",
             configuration_file,
-            "test/resources/rules/md024/same_header_but_not_in_siblings_atx.md",
+            "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md",
         ]
 
         expected_return_code = 0
@@ -312,16 +312,16 @@ def test_md024_good_same_header_but_not_in_siblings_atx_with_alternate_configura
 
 
 @pytest.mark.rules
-def test_md024_good_different_inline_header_content_atx():
+def test_md024_good_different_inline_heading_content_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx header start spacing
+    test/resources/rules/md021 directory that has good atx heading start spacing
     """
 
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md024/different_inline_header_content_atx.md",
+        "test/resources/rules/md024/different_inline_heading_content_atx.md",
     ]
 
     expected_return_code = 0
@@ -338,7 +338,7 @@ def test_md024_good_different_inline_header_content_atx():
 
 
 @pytest.mark.rules
-def test_md024_good_different_header_content_setext():
+def test_md024_good_different_heading_content_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has setext headings that all have different
@@ -348,7 +348,7 @@ def test_md024_good_different_header_content_setext():
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md024/different_header_content_setext.md",
+        "test/resources/rules/md024/different_heading_content_setext.md",
     ]
 
     expected_return_code = 0
@@ -365,7 +365,7 @@ def test_md024_good_different_header_content_setext():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_header_content_setext():
+def test_md024_bad_same_heading_content_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has setext headings that have some duplicated
@@ -375,12 +375,12 @@ def test_md024_bad_same_header_content_setext():
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md024/same_header_content_setext.md",
+        "test/resources/rules/md024/same_heading_content_setext.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_header_content_setext.md:0:0: "
+        "test/resources/rules/md024/same_heading_content_setext.md:0:0: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -395,7 +395,7 @@ def test_md024_bad_same_header_content_setext():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_header_in_siblings_setext():
+def test_md024_bad_same_heading_in_siblings_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has setext headings that have some duplicated
@@ -405,14 +405,14 @@ def test_md024_bad_same_header_in_siblings_setext():
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md024/same_header_in_siblings_setext.md",
+        "test/resources/rules/md024/same_heading_in_siblings_setext.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_header_in_siblings_setext.md:0:0: "
+        "test/resources/rules/md024/same_heading_in_siblings_setext.md:0:0: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
-        + "test/resources/rules/md024/same_header_in_siblings_setext.md:0:0: "
+        + "test/resources/rules/md024/same_heading_in_siblings_setext.md:0:0: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -427,7 +427,7 @@ def test_md024_bad_same_header_in_siblings_setext():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_header_but_not_in_siblings_setext():
+def test_md024_bad_same_heading_but_not_in_siblings_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has setext headings that have some duplicated
@@ -437,12 +437,12 @@ def test_md024_bad_same_header_but_not_in_siblings_setext():
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md024/same_header_but_not_in_siblings_setext.md",
+        "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_header_but_not_in_siblings_setext.md:0:0: "
+        "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md:0:0: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -457,7 +457,7 @@ def test_md024_bad_same_header_but_not_in_siblings_setext():
 
 
 @pytest.mark.rules
-def test_md024_good_different_header_content_setext_with_configuration():
+def test_md024_good_different_heading_content_setext_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has setext headings that all have different
@@ -473,7 +473,7 @@ def test_md024_good_different_header_content_setext_with_configuration():
         suppplied_arguments = [
             "-c",
             configuration_file,
-            "test/resources/rules/md024/different_header_content_setext.md",
+            "test/resources/rules/md024/different_heading_content_setext.md",
         ]
 
         expected_return_code = 0
@@ -493,7 +493,7 @@ def test_md024_good_different_header_content_setext_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_good_same_header_content_setext_with_configuration():
+def test_md024_good_same_heading_content_setext_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has setext headings that have some
@@ -509,7 +509,7 @@ def test_md024_good_same_header_content_setext_with_configuration():
         suppplied_arguments = [
             "-c",
             configuration_file,
-            "test/resources/rules/md024/same_header_content_setext.md",
+            "test/resources/rules/md024/same_heading_content_setext.md",
         ]
 
         expected_return_code = 0
@@ -529,7 +529,7 @@ def test_md024_good_same_header_content_setext_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_bad_same_header_in_siblings_setext_with_configuration():
+def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has setext headings that have some duplicated
@@ -545,12 +545,12 @@ def test_md024_bad_same_header_in_siblings_setext_with_configuration():
         suppplied_arguments = [
             "-c",
             configuration_file,
-            "test/resources/rules/md024/same_header_in_siblings_setext.md",
+            "test/resources/rules/md024/same_heading_in_siblings_setext.md",
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md024/same_header_in_siblings_setext.md:0:0: "
+            "test/resources/rules/md024/same_heading_in_siblings_setext.md:0:0: "
             + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
         )
         expected_error = ""
@@ -568,7 +568,7 @@ def test_md024_bad_same_header_in_siblings_setext_with_configuration():
 
 
 @pytest.mark.rules
-def test_md024_good_same_header_but_not_in_siblings_setext_with_configuration():
+def test_md024_good_same_heading_but_not_in_siblings_setext_with_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD024 directory that has setext headings that have some duplicated
@@ -584,7 +584,7 @@ def test_md024_good_same_header_but_not_in_siblings_setext_with_configuration():
         suppplied_arguments = [
             "-c",
             configuration_file,
-            "test/resources/rules/md024/same_header_but_not_in_siblings_setext.md",
+            "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md",
         ]
 
         expected_return_code = 0

@@ -17,8 +17,8 @@ class MarkdownToken:
     token_fenced_code_block = "fcode-block"
     token_thematic_break = "tbreak"
     token_block_quote = "block-quote"
-    token_atx_header = "atx"
-    token_setext_header = "setext"
+    token_atx_heading = "atx"
+    token_setext_heading = "setext"
     token_unordered_list_start = "ulist"
     token_ordered_list_start = "olist"
     token_new_list_item = "li"
@@ -61,7 +61,7 @@ class MarkdownToken:
         return (
             self.is_list_start
             or self.token_name == MarkdownToken.token_thematic_break
-            or self.is_atx_header
+            or self.is_atx_heading
             or self.is_setext
             or self.is_code_block
             or self.token_name == MarkdownToken.token_html_block
@@ -120,14 +120,14 @@ class MarkdownToken:
         """
         Returns whether or not the current token is a setext element.
         """
-        return self.token_name == MarkdownToken.token_setext_header
+        return self.token_name == MarkdownToken.token_setext_heading
 
     @property
-    def is_atx_header(self):
+    def is_atx_heading(self):
         """
         Returns whether or not the current token is an atx element.
         """
-        return self.token_name == MarkdownToken.token_atx_header
+        return self.token_name == MarkdownToken.token_atx_heading
 
     @property
     def is_code_block(self):
@@ -206,23 +206,23 @@ class ParagraphMarkdownToken(MarkdownToken):
         self.compose_extra_data_field()
 
 
-class SetextHeaderMarkdownToken(MarkdownToken):
+class SetextHeadingMarkdownToken(MarkdownToken):
     """
-    Class to provide for an encapsulation of the setext header element.
+    Class to provide for an encapsulation of the setext heading element.
     """
 
-    def __init__(self, header_character, remaining_line):
-        self.header_character = header_character
+    def __init__(self, heading_character, remaining_line):
+        self.heading_character = heading_character
         self.remaining_line = remaining_line
         self.final_whitespace = ""
-        if self.header_character == "=":
+        if self.heading_character == "=":
             self.hash_count = 1
-        elif self.header_character == "-":
+        elif self.heading_character == "-":
             self.hash_count = 2
         else:
             self.hash_count = -1
         MarkdownToken.__init__(
-            self, MarkdownToken.token_setext_header, "",
+            self, MarkdownToken.token_setext_heading, "",
         )
         self.compose_extra_data_field()
 
@@ -240,7 +240,7 @@ class SetextHeaderMarkdownToken(MarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        self.extra_data = self.header_character + ":" + self.remaining_line
+        self.extra_data = self.heading_character + ":" + self.remaining_line
         if self.final_whitespace:
             self.extra_data = self.extra_data + ":" + self.final_whitespace
 
@@ -292,9 +292,9 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
     # pylint: enable=too-many-arguments
 
 
-class AtxHeaderMarkdownToken(MarkdownToken):
+class AtxHeadingMarkdownToken(MarkdownToken):
     """
-    Class to provide for an encapsulation of the atx header element.
+    Class to provide for an encapsulation of the atx heading element.
     """
 
     # pylint: disable=too-many-arguments
@@ -306,7 +306,7 @@ class AtxHeaderMarkdownToken(MarkdownToken):
         self.extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_atx_header,
+            MarkdownToken.token_atx_heading,
             str(hash_count)
             + ":"
             + str(remove_trailing_count)
@@ -337,14 +337,14 @@ class EndMarkdownToken(MarkdownToken):
         )
 
 
-class SetextHeaderEndMarkdownToken(EndMarkdownToken):
+class SetextHeadingEndMarkdownToken(EndMarkdownToken):
     """
-    Class to provide for an encapsulation of the end of a setext header element.
+    Class to provide for an encapsulation of the end of a setext heading element.
     """
 
     def __init__(self, extracted_whitespace, extra_whitespace_after_setext):
         super().__init__(
-            MarkdownToken.token_setext_header,
+            MarkdownToken.token_setext_heading,
             extracted_whitespace,
             extra_whitespace_after_setext,
         )

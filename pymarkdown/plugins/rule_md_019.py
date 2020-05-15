@@ -1,9 +1,9 @@
 """
 Module to implement a plugin that looks for multiple spaces after the hash
-mark on a atx header.
+mark on a atx heading.
 """
 from pymarkdown.markdown_token import (
-    AtxHeaderMarkdownToken,
+    AtxHeadingMarkdownToken,
     EndMarkdownToken,
     MarkdownToken,
     TextMarkdownToken,
@@ -14,12 +14,12 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 class RuleMd019(Plugin):
     """
     Class to implement a plugin that looks for multiple spaces after the hash
-    mark on a atx header.
+    mark on a atx heading.
     """
 
     def __init__(self):
         super().__init__()
-        self.__in_atx_header = None
+        self.__in_atx_heading = None
 
     def get_details(self):
         """
@@ -37,17 +37,17 @@ class RuleMd019(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.__in_atx_header = None
+        self.__in_atx_heading = None
 
     def next_token(self, token):
         """
         Event that a new token is being processed.
         """
-        if isinstance(token, AtxHeaderMarkdownToken):
-            self.__in_atx_header = not token.remove_trailing_count
+        if isinstance(token, AtxHeadingMarkdownToken):
+            self.__in_atx_heading = not token.remove_trailing_count
         elif isinstance(token, EndMarkdownToken):
             if token.type_name == MarkdownToken.token_paragraph:
-                self.__in_atx_header = False
+                self.__in_atx_heading = False
         elif isinstance(token, TextMarkdownToken):
-            if self.__in_atx_header and len(token.extracted_whitespace) > 1:
+            if self.__in_atx_heading and len(token.extracted_whitespace) > 1:
                 self.report_next_token_error(token)

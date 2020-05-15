@@ -12,7 +12,7 @@ import pytest
 def test_md019_good_single_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md019 directory that has atx headers with a single space
+    test/resources/rules/md019 directory that has atx headings with a single space
     after the initial hash.
     """
 
@@ -39,7 +39,7 @@ def test_md019_good_single_spacing():
 def test_md019_bad_multiple_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md019 directory that has atx headers with multiple spaces
+    test/resources/rules/md019 directory that has atx headings with multiple spaces
     after the initial hash.
     """
 
@@ -70,8 +70,8 @@ def test_md019_bad_multiple_spacing():
 def test_md019_bad_multiple_spacing_with_inline():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md019 directory that has atx headers with a single space
-    after the initial hash, with inline processing in the header for good measure.
+    test/resources/rules/md019 directory that has atx headings with a single space
+    after the initial hash, with inline processing in the heading for good measure.
     """
 
     # Arrange

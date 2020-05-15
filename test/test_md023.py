@@ -10,7 +10,7 @@ import pytest
 def test_md023_good_proper_indent_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD023 directory that has an atx header that is not indented
+    test/resources/rules/MD023 directory that has an atx heading that is not indented
     from the start of the line.
     """
 
@@ -37,7 +37,7 @@ def test_md023_good_proper_indent_atx():
 def test_md023_good_proper_indent_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD023 directory that has an setext header that is not indented
+    test/resources/rules/MD023 directory that has an setext heading that is not indented
     from the start of the line.
     """
 
@@ -64,7 +64,7 @@ def test_md023_good_proper_indent_setext():
 def test_md023_bad_improper_indent_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has an atx header that is indented from
+    test/resources/rules/md023 directory that has an atx heading that is indented from
     the start of the line.
     """
 
@@ -94,7 +94,7 @@ def test_md023_bad_improper_indent_atx():
 def test_md023_bad_improper_indent_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has a setext header that is indented from
+    test/resources/rules/md023 directory that has a setext heading that is indented from
     the start of the line.
     """
 

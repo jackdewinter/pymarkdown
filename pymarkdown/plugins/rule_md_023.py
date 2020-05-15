@@ -3,10 +3,10 @@ Module to implement a plugin that looks for headings that do not start at the
 beginning of the line.
 """
 from pymarkdown.markdown_token import (
-    AtxHeaderMarkdownToken,
+    AtxHeadingMarkdownToken,
     EndMarkdownToken,
     MarkdownToken,
-    SetextHeaderMarkdownToken,
+    SetextHeadingMarkdownToken,
     TextMarkdownToken,
 )
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -46,10 +46,10 @@ class RuleMd023(Plugin):
         """
         Event that a new token is being processed.
         """
-        if isinstance(token, (AtxHeaderMarkdownToken)):
+        if isinstance(token, (AtxHeadingMarkdownToken)):
             if token.extracted_whitespace:
                 self.report_next_token_error(token)
-        elif isinstance(token, (SetextHeaderMarkdownToken)):
+        elif isinstance(token, (SetextHeadingMarkdownToken)):
             self.__setext_start_token = token
             self.__any_leading_whitespace_detected = bool(token.remaining_line)
         elif isinstance(token, (TextMarkdownToken)):
@@ -57,7 +57,7 @@ class RuleMd023(Plugin):
                 if token.end_whitespace and " " in token.end_whitespace:
                     self.__any_leading_whitespace_detected = True
         elif isinstance(token, EndMarkdownToken):
-            if token.type_name in (MarkdownToken.token_setext_header,):
+            if token.type_name in (MarkdownToken.token_setext_heading,):
                 if token.extracted_whitespace:
                     self.__any_leading_whitespace_detected = True
 

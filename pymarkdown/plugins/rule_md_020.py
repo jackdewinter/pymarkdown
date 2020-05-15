@@ -1,12 +1,12 @@
 """
 Module to implement a plugin that looks for text in a paragraph where a line starts
-with what could be a closed atx header, except there is no spaces between the hashes
-and the text of the header, either at the start, end, or both.
+with what could be a closed atx heading, except there is no spaces between the hashes
+and the text of the heading, either at the start, end, or both.
 """
 import re
 
 from pymarkdown.markdown_token import (
-    AtxHeaderMarkdownToken,
+    AtxHeadingMarkdownToken,
     EndMarkdownToken,
     MarkdownToken,
     ParagraphMarkdownToken,
@@ -18,8 +18,8 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 class RuleMd020(Plugin):
     """
     Class to implement a plugin that looks for text in a paragraph where a line starts
-    with what could be a closed atx header, except there is no spaces between the hashes
-    and the text of the header, either at the start, end, or both.
+    with what could be a closed atx heading, except there is no spaces between the hashes
+    and the text of the heading, either at the start, end, or both.
     """
 
     def __init__(self):
@@ -55,7 +55,7 @@ class RuleMd020(Plugin):
         if (
             not (
                 isinstance(token, EndMarkdownToken)
-                and token.type_name == MarkdownToken.token_atx_header
+                and token.type_name == MarkdownToken.token_atx_heading
             )
             and self.__is_in_normal_atx
         ):
@@ -63,12 +63,12 @@ class RuleMd020(Plugin):
 
         if isinstance(token, ParagraphMarkdownToken):
             self.__last_paragraph_token = token
-        elif isinstance(token, AtxHeaderMarkdownToken):
+        elif isinstance(token, AtxHeadingMarkdownToken):
             self.__is_in_normal_atx = True
         elif isinstance(token, EndMarkdownToken):
             if token.type_name == MarkdownToken.token_paragraph:
                 self.__last_paragraph_token = None
-            elif token.type_name == MarkdownToken.token_atx_header:
+            elif token.type_name == MarkdownToken.token_atx_heading:
                 if self.__is_in_normal_atx and isinstance(
                     self.__last_atx_token, TextMarkdownToken
                 ):

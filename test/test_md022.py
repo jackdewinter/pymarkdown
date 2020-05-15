@@ -15,7 +15,7 @@ from .utils import write_temporary_configuration
 def test_md022_bad_proper_line_spacing_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that have proper default
+    test/resources/rules/MD022 directory that has atx headings that have proper default
     spacing both before and after the heading.
     """
 
@@ -42,7 +42,7 @@ def test_md022_bad_proper_line_spacing_atx():
 def test_md022_good_proper_line_spacing_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headers that have proper default
+    test/resources/rules/MD022 directory that has setext headings that have proper default
     spacing both before and after the heading.
     """
 
@@ -69,7 +69,7 @@ def test_md022_good_proper_line_spacing_setext():
 def test_md022_bad_no_line_spacing_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do not have proper
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
     default spacing both before and after the heading.
     """
 
@@ -106,7 +106,7 @@ def test_md022_bad_no_line_spacing_atx():
 def test_md022_bad_no_line_spacing_before_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do not have proper
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
     default spacing before the heading.
     """
 
@@ -137,7 +137,7 @@ def test_md022_bad_no_line_spacing_before_atx():
 def test_md022_bad_no_line_spacing_after_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do not have proper
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
     default spacing after the heading.
     """
 
@@ -171,7 +171,7 @@ def test_md022_bad_no_line_spacing_after_atx():
 def test_md022_good_atx_with_html_and_good_line_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do have proper
+    test/resources/rules/MD022 directory that has atx headings that do have proper
     default spacing before and after the heading, surrounded by html blocks.
     """
 
@@ -198,7 +198,7 @@ def test_md022_good_atx_with_html_and_good_line_spacing():
 def test_md022_bad_atx_with_html_and_bad_line_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do not have proper
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
     default spacing before and after the heading, surrounded by html blocks.
     """
 
@@ -232,7 +232,7 @@ def test_md022_bad_atx_with_html_and_bad_line_spacing():
 def test_md022_good_atx_with_code_block_and_good_line_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do have proper
+    test/resources/rules/MD022 directory that has atx headings that do have proper
     default spacing before and after the heading, surrounded by code blocks.
     """
 
@@ -259,7 +259,7 @@ def test_md022_good_atx_with_code_block_and_good_line_spacing():
 def test_md022_bad_atx_with_code_block_and_bad_line_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do not have proper
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
     default spacing before and after the heading, surrounded by code blocks.
     """
 
@@ -293,7 +293,7 @@ def test_md022_bad_atx_with_code_block_and_bad_line_spacing():
 def test_md022_good_atx_with_thematic_break_and_good_line_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do have proper
+    test/resources/rules/MD022 directory that has atx headings that do have proper
     default spacing before and after the heading, surrounded by thematic breaks.
     """
 
@@ -320,7 +320,7 @@ def test_md022_good_atx_with_thematic_break_and_good_line_spacing():
 def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do not have proper
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
     default spacing before and after the heading, surrounded by thematic breaks.
     """
 
@@ -354,11 +354,11 @@ def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing():
 def test_md022_bad_no_line_spacing_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headers that do have proper
+    test/resources/rules/MD022 directory that has setext headings that do have proper
     default spacing before the heading.
 
     Note that setext grabs the last paragraph before the marker and puts it as the
-    header.  As such, testing this for one line space before is implied as one line
+    heading.  As such, testing this for one line space before is implied as one line
     space is required to break up the paragraph.
     """
 
@@ -392,7 +392,7 @@ def test_md022_bad_no_line_spacing_setext():
 def test_md022_bad_no_line_spacing_after_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headers that do not have proper
+    test/resources/rules/MD022 directory that has setext headings that do not have proper
     default spacing before the heading.
     """
 
@@ -426,7 +426,7 @@ def test_md022_bad_no_line_spacing_after_setext():
 def test_md022_good_setext_with_code_block_and_good_line_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headers that do have proper
+    test/resources/rules/MD022 directory that has setext headings that do have proper
     default spacing before and after the heading, surrounded by code blocks.
     """
 
@@ -453,7 +453,7 @@ def test_md022_good_setext_with_code_block_and_good_line_spacing():
 def test_md022_bad_setext_with_code_block_and_bad_line_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headers that do not have proper
+    test/resources/rules/MD022 directory that has setext headings that do not have proper
     default spacing before and after the heading, surrounded by code blocks.
     """
 
@@ -487,7 +487,7 @@ def test_md022_bad_setext_with_code_block_and_bad_line_spacing():
 def test_md022_good_setext_with_html_and_good_line_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headers that do have proper
+    test/resources/rules/MD022 directory that has setext headings that do have proper
     default spacing before and after the heading, surrounded by html blocks.
     """
 
@@ -514,7 +514,7 @@ def test_md022_good_setext_with_html_and_good_line_spacing():
 def test_md022_bad_setext_with_html_and_bad_line_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headers that do not have proper
+    test/resources/rules/MD022 directory that has setext headings that do not have proper
     default spacing before and after the heading, surrounded by html blocks.
     """
 
@@ -548,7 +548,7 @@ def test_md022_bad_setext_with_html_and_bad_line_spacing():
 def test_md022_good_setext_with_thematic_break_and_good_line_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headers that do have proper
+    test/resources/rules/MD022 directory that has setext headings that do have proper
     default spacing before and after the heading, surrounded by thematic breaks.
     """
 
@@ -575,7 +575,7 @@ def test_md022_good_setext_with_thematic_break_and_good_line_spacing():
 def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headers that do not have proper
+    test/resources/rules/MD022 directory that has setext headings that do not have proper
     default spacing before and after the heading, surrounded by thematic breaks.
     """
 
@@ -609,7 +609,7 @@ def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing():
 def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do not have proper
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
     spacing before the heading with an alternate configuration.
     """
 
@@ -648,7 +648,7 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
 def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do have proper
+    test/resources/rules/MD022 directory that has atx headings that do have proper
     spacing before the heading with an alternate configuration.
     """
 
@@ -683,7 +683,7 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
 def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do not have proper
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
     spacing below the heading with an alternate configuration.
     """
 
@@ -725,7 +725,7 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
 def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do have proper
+    test/resources/rules/MD022 directory that has atx headings that do have proper
     spacing below the heading with an alternate configuration.
     """
 
@@ -760,7 +760,7 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
 def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines_both():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headers that do have proper
+    test/resources/rules/MD022 directory that has atx headings that do have proper
     spacing above and below the heading with an alternate configuration.
     """
 
@@ -792,10 +792,10 @@ def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines
 
 
 @pytest.mark.rules
-def test_md022_good_alternating_header_types():
+def test_md022_good_alternating_heading_types():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has alternating header types.
+    test/resources/rules/MD022 directory that has alternating heading types.
     """
 
     # Arrange
@@ -803,7 +803,7 @@ def test_md022_good_alternating_header_types():
     suppplied_arguments = [
         "--disable",
         "MD003",
-        "test/resources/rules/md022/alternating_header_types.md",
+        "test/resources/rules/md022/alternating_heading_types.md",
     ]
 
     expected_return_code = 0
@@ -820,10 +820,10 @@ def test_md022_good_alternating_header_types():
 
 
 @pytest.mark.rules
-def test_md022_bad_alternating_header_types_with_alternate_spacing():
+def test_md022_bad_alternating_heading_types_with_alternate_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has alternating header types with
+    test/resources/rules/MD022 directory that has alternating heading types with
     an alternate configuration.
     """
 
@@ -837,30 +837,30 @@ def test_md022_bad_alternating_header_types_with_alternate_spacing():
             "MD003",
             "-c",
             configuration_file,
-            "test/resources/rules/md022/alternating_header_types.md",
+            "test/resources/rules/md022/alternating_heading_types.md",
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md022/alternating_header_types.md:0:0: "
+            "test/resources/rules/md022/alternating_heading_types.md:0:0: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
-            + "test/resources/rules/md022/alternating_header_types.md:0:0: "
+            + "test/resources/rules/md022/alternating_heading_types.md:0:0: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
-            + "test/resources/rules/md022/alternating_header_types.md:0:0: "
+            + "test/resources/rules/md022/alternating_heading_types.md:0:0: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
-            + "test/resources/rules/md022/alternating_header_types.md:0:0: "
+            + "test/resources/rules/md022/alternating_heading_types.md:0:0: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
-            + "test/resources/rules/md022/alternating_header_types.md:0:0: "
+            + "test/resources/rules/md022/alternating_heading_types.md:0:0: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
-            + "test/resources/rules/md022/alternating_header_types.md:0:0: "
+            + "test/resources/rules/md022/alternating_heading_types.md:0:0: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
-            + "test/resources/rules/md022/alternating_header_types.md:0:0: "
+            + "test/resources/rules/md022/alternating_heading_types.md:0:0: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
         )

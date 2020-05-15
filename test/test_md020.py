@@ -12,7 +12,7 @@ import pytest
 def test_md020_good_good_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx header with good spacing
+    test/resources/rules/md020 directory that has a closed atx heading with good spacing
     inside of both hashes.
     """
 
@@ -39,7 +39,7 @@ def test_md020_good_good_spacing():
 def test_md020_bad_ignore_bad_atx_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has an atx header with bad spacing
+    test/resources/rules/md020 directory that has an atx heading with bad spacing
     inside of the starting hash, that should be ignored.
     """
 
@@ -71,7 +71,7 @@ def test_md020_bad_ignore_bad_atx_spacing():
 def test_md020_bad_missing_start_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx header with bad spacing
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
     inside of the start hashes.
     """
 
@@ -103,7 +103,7 @@ def test_md020_bad_missing_start_spacing():
 def test_md020_bad_missing_end_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx header with bad spacing
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
     inside of the end hashes.
     """
 
@@ -135,9 +135,9 @@ def test_md020_bad_missing_end_spacing():
 def test_md020_good_almost_missing_end_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx header that is almost
+    test/resources/rules/md020 directory that has a closed atx heading that is almost
     missing end spacing, except that the hashes are followed by something else, making
-    it a plain atx header.
+    it a plain atx heading.
     """
 
     # Arrange
@@ -163,7 +163,7 @@ def test_md020_good_almost_missing_end_spacing():
 def test_md020_bad_missing_both_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx header with bad spacing
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
     inside both of the hashes.
     """
 
@@ -192,17 +192,17 @@ def test_md020_bad_missing_both_spacing():
 
 
 @pytest.mark.rules
-def test_md020_good_with_setext_headers():
+def test_md020_good_with_setext_headings():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx header with bad spacing
-    inside of the start hashes, except that is is part of a setext header.
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, except that is is part of a setext heading.
     """
 
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md020/with_setext_headers.md",
+        "test/resources/rules/md020/with_setext_headings.md",
     ]
 
     expected_return_code = 0
@@ -222,7 +222,7 @@ def test_md020_good_with_setext_headers():
 def test_md020_good_with_code_blocks():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx header with bad spacing
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
     inside of the start hashes, except that is is part of a code block.
     """
 
@@ -249,7 +249,7 @@ def test_md020_good_with_code_blocks():
 def test_md020_good_with_html_blocks():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx header with bad spacing
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
     inside of the start hashes, except that is is part of a html block.
     """
 
@@ -276,7 +276,7 @@ def test_md020_good_with_html_blocks():
 def test_md020_bad_multiple_within_paragraph():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx header with bad spacing
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
     inside of the start hashes, multiple times in the same paragraph.
     """
 
@@ -308,7 +308,7 @@ def test_md020_bad_multiple_within_paragraph():
 def test_md020_bad_paragraphs_with_starting_whitespace():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx header with bad spacing
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
     inside of the start hashes, multiple times with varying amount of starting
     whitespace.
     """
@@ -345,7 +345,7 @@ def test_md020_bad_paragraphs_with_starting_whitespace():
 def test_md020_bad_single_paragraph_with_starting_whitespace():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx header with bad spacing
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
     inside of the start hashes, multiple times with varying amount of starting
     whitespace within a single paragraph.
     """

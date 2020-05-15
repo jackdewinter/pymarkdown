@@ -2,7 +2,7 @@
 Module to implement a plugin that looks for heading styles that are inconsistent
 throughout the document.
 """
-from pymarkdown.markdown_token import AtxHeaderMarkdownToken, SetextHeaderMarkdownToken
+from pymarkdown.markdown_token import AtxHeadingMarkdownToken, SetextHeadingMarkdownToken
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -69,15 +69,15 @@ class RuleMd003(Plugin):
         """
         Event that a new token is being processed.
         """
-        header_style_type, is_header_level_1_or_2 = self.__get_header_properties(token)
+        heading_style_type, is_heading_level_1_or_2 = self.__get_heading_properties(token)
 
-        is_header_bad = False
-        if header_style_type:
+        is_heading_bad = False
+        if heading_style_type:
             expected_style_type = None
             if not self.__actual_style_type:
-                self.__actual_style_type = header_style_type
+                self.__actual_style_type = heading_style_type
             elif self.__actual_style_type in RuleMd003.__simple_styles:
-                is_header_bad = bool(header_style_type != self.__actual_style_type)
+                is_heading_bad = bool(heading_style_type != self.__actual_style_type)
                 expected_style_type = self.__actual_style_type
             else:
 
@@ -91,45 +91,45 @@ class RuleMd003(Plugin):
                     base_atx_style = RuleMd003.__atx_closed_style
                 if not (
                     (
-                        is_header_level_1_or_2
-                        and header_style_type == RuleMd003.__setext_style
+                        is_heading_level_1_or_2
+                        and heading_style_type == RuleMd003.__setext_style
                     )
                     or (
-                        not is_header_level_1_or_2
-                        and header_style_type == base_atx_style
+                        not is_heading_level_1_or_2
+                        and heading_style_type == base_atx_style
                     )
                 ):
-                    is_header_bad = True
+                    is_heading_bad = True
 
-                    if is_header_level_1_or_2:
+                    if is_heading_level_1_or_2:
                         expected_style_type = RuleMd003.__setext_style
                     else:
                         expected_style_type = base_atx_style
 
-            if is_header_bad:
+            if is_heading_bad:
                 extra_data = (
                     "Expected: "
                     + str(expected_style_type)
                     + "; Actual: "
-                    + str(header_style_type)
+                    + str(heading_style_type)
                 )
                 self.report_next_token_error(token, extra_error_information=extra_data)
 
     @classmethod
-    def __get_header_properties(cls, token):
+    def __get_heading_properties(cls, token):
         """
-        Determine the header properties related to the current token.
+        Determine the heading properties related to the current token.
         """
 
-        header_style_type = None
-        is_header_level_1_or_2 = None
-        if isinstance(token, AtxHeaderMarkdownToken):
+        heading_style_type = None
+        is_heading_level_1_or_2 = None
+        if isinstance(token, AtxHeadingMarkdownToken):
             if token.remove_trailing_count:
-                header_style_type = RuleMd003.__atx_closed_style
+                heading_style_type = RuleMd003.__atx_closed_style
             else:
-                header_style_type = RuleMd003.__atx_style
-            is_header_level_1_or_2 = bool(token.hash_count < 3)
-        elif isinstance(token, SetextHeaderMarkdownToken):
-            header_style_type = RuleMd003.__setext_style
-            is_header_level_1_or_2 = True
-        return header_style_type, is_header_level_1_or_2
+                heading_style_type = RuleMd003.__atx_style
+            is_heading_level_1_or_2 = bool(token.hash_count < 3)
+        elif isinstance(token, SetextHeadingMarkdownToken):
+            heading_style_type = RuleMd003.__setext_style
+            is_heading_level_1_or_2 = True
+        return heading_style_type, is_heading_level_1_or_2

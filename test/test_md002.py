@@ -28,10 +28,10 @@ def test_md002_all_samples():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md002/improper_atx_header_start.md:0:0: "
+        "test/resources/rules/md002/improper_atx_heading_start.md:0:0: "
         + "MD002: First heading should be a top level heading "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
-        + "test/resources/rules/md002/improper_setext_header_start.md:0:0: "
+        + "test/resources/rules/md002/improper_setext_heading_start.md:0:0: "
         + "MD002: First heading should be a top level heading "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
     )
@@ -47,10 +47,10 @@ def test_md002_all_samples():
 
 
 @pytest.mark.rules
-def test_md002_good_proper_atx_header_start():
+def test_md002_good_proper_atx_heading_start():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md002 directory that starts with a h1 atx header.
+    test/resources/rules/md002 directory that starts with a h1 atx heading.
     """
 
     # Arrange
@@ -58,7 +58,7 @@ def test_md002_good_proper_atx_header_start():
     suppplied_arguments = [
         "-e",
         "MD002",
-        "test/resources/rules/md002/proper_atx_header_start.md",
+        "test/resources/rules/md002/proper_atx_heading_start.md",
     ]
 
     expected_return_code = 0
@@ -75,10 +75,10 @@ def test_md002_good_proper_atx_header_start():
 
 
 @pytest.mark.rules
-def test_md002_bad_proper_atx_header_start_with_alternate_configuration():
+def test_md002_bad_proper_atx_heading_start_with_alternate_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md002 directory that starts with a h1 atx header.  The modified
+    test/resources/rules/md002 directory that starts with a h1 atx heading.  The modified
     configuration will cause the file to be parsed with reported issues.
     """
 
@@ -92,12 +92,12 @@ def test_md002_bad_proper_atx_header_start_with_alternate_configuration():
             "MD002",
             "-c",
             configuration_file,
-            "test/resources/rules/md002/proper_atx_header_start.md",
+            "test/resources/rules/md002/proper_atx_heading_start.md",
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md002/proper_atx_header_start.md:0:0: "
+            "test/resources/rules/md002/proper_atx_heading_start.md:0:0: "
             + "MD002: First heading should be a top level heading "
             + "[Expected: h2; Actual: h1] (first-heading-h1,first-header-h1)\n"
         )
@@ -116,11 +116,11 @@ def test_md002_bad_proper_atx_header_start_with_alternate_configuration():
 
 
 @pytest.mark.rules
-def test_md002_good_proper_setext_header_start():
+def test_md002_good_proper_setext_heading_start():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md002 directory starting with a setext header of ====== to
-    create a h1 header.
+    test/resources/rules/md002 directory starting with a setext heading of ====== to
+    create a h1 heading.
     """
 
     # Arrange
@@ -128,7 +128,7 @@ def test_md002_good_proper_setext_header_start():
     suppplied_arguments = [
         "-e",
         "MD002",
-        "test/resources/rules/md002/proper_setext_header_start.md",
+        "test/resources/rules/md002/proper_setext_heading_start.md",
     ]
 
     expected_return_code = 0
@@ -145,11 +145,11 @@ def test_md002_good_proper_setext_header_start():
 
 
 @pytest.mark.rules
-def test_md002_bad_proper_setext_header_start_with_alternate_configuration():
+def test_md002_bad_proper_setext_heading_start_with_alternate_configuration():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md002 directory starting with a setext header of ====== to
-    create a h1 header.  The modified  configuration will cause the file to be parsed
+    test/resources/rules/md002 directory starting with a setext heading of ====== to
+    create a h1 heading.  The modified  configuration will cause the file to be parsed
     with reported issues.
     """
 
@@ -163,12 +163,12 @@ def test_md002_bad_proper_setext_header_start_with_alternate_configuration():
             "MD002",
             "-c",
             configuration_file,
-            "test/resources/rules/md002/proper_setext_header_start.md",
+            "test/resources/rules/md002/proper_setext_heading_start.md",
         ]
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md002/proper_setext_header_start.md:0:0: "
+            "test/resources/rules/md002/proper_setext_heading_start.md:0:0: "
             + "MD002: First heading should be a top level heading "
             + "[Expected: h2; Actual: h1] (first-heading-h1,first-header-h1)\n"
         )
@@ -187,10 +187,10 @@ def test_md002_bad_proper_setext_header_start_with_alternate_configuration():
 
 
 @pytest.mark.rules
-def test_md002_bad_improper_atx_header_start():
+def test_md002_bad_improper_atx_heading_start():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md002 directory that starts with a non-h1 header.
+    test/resources/rules/md002 directory that starts with a non-h1 heading.
     """
 
     # Arrange
@@ -198,12 +198,12 @@ def test_md002_bad_improper_atx_header_start():
     suppplied_arguments = [
         "-e",
         "MD002",
-        "test/resources/rules/md002/improper_atx_header_start.md",
+        "test/resources/rules/md002/improper_atx_heading_start.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md002/improper_atx_header_start.md:0:0: "
+        "test/resources/rules/md002/improper_atx_heading_start.md:0:0: "
         + "MD002: First heading should be a top level heading "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
     )
@@ -219,10 +219,10 @@ def test_md002_bad_improper_atx_header_start():
 
 
 @pytest.mark.rules
-def test_md002_good_improper_atx_header_start_with_alternate_configuration():
+def test_md002_good_improper_atx_heading_start_with_alternate_configuration():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md002 directory that starts with a non-h1 header.  The modified
+    test/resources/rules/md002 directory that starts with a non-h1 heading.  The modified
     configuration will allow the file to be parsed properly.
     """
 
@@ -236,7 +236,7 @@ def test_md002_good_improper_atx_header_start_with_alternate_configuration():
             "MD002",
             "-c",
             configuration_file,
-            "test/resources/rules/md002/improper_atx_header_start.md",
+            "test/resources/rules/md002/improper_atx_heading_start.md",
         ]
 
         expected_return_code = 0
@@ -256,11 +256,11 @@ def test_md002_good_improper_atx_header_start_with_alternate_configuration():
 
 
 @pytest.mark.rules
-def test_md002_bad_improper_setext_header_start():
+def test_md002_bad_improper_setext_heading_start():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md002 directory starting with a setext header of ----- to
-    create a h2 header.
+    test/resources/rules/md002 directory starting with a setext heading of ----- to
+    create a h2 heading.
     """
 
     # Arrange
@@ -270,12 +270,12 @@ def test_md002_bad_improper_setext_header_start():
         "MD003",
         "-e",
         "MD002",
-        "test/resources/rules/md002/improper_setext_header_start.md",
+        "test/resources/rules/md002/improper_setext_heading_start.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md002/improper_setext_header_start.md:0:0: "
+        "test/resources/rules/md002/improper_setext_heading_start.md:0:0: "
         + "MD002: First heading should be a top level heading "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
     )
@@ -291,11 +291,11 @@ def test_md002_bad_improper_setext_header_start():
 
 
 @pytest.mark.rules
-def test_md002_good_improper_setext_header_start_with_alternate_configuration():
+def test_md002_good_improper_setext_heading_start_with_alternate_configuration():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md002 directory starting with a setext header of ----- to
-    create a h2 header.   The modified configuration will allow the file to be parsed
+    test/resources/rules/md002 directory starting with a setext heading of ----- to
+    create a h2 heading.   The modified configuration will allow the file to be parsed
     properly.
     """
 
@@ -311,7 +311,7 @@ def test_md002_good_improper_setext_header_start_with_alternate_configuration():
             "MD002",
             "-c",
             configuration_file,
-            "test/resources/rules/md002/improper_setext_header_start.md",
+            "test/resources/rules/md002/improper_setext_heading_start.md",
         ]
 
         expected_return_code = 0

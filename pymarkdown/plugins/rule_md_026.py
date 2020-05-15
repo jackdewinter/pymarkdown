@@ -2,10 +2,10 @@
 Module to implement a plugin that looks for trailing punctuation in headings.
 """
 from pymarkdown.markdown_token import (
-    AtxHeaderMarkdownToken,
+    AtxHeadingMarkdownToken,
     EndMarkdownToken,
     MarkdownToken,
-    SetextHeaderMarkdownToken,
+    SetextHeadingMarkdownToken,
     TextMarkdownToken,
 )
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -19,7 +19,7 @@ class RuleMd026(Plugin):
     def __init__(self):
         super().__init__()
         self.__start_token = None
-        self.__header_text = None
+        self.__heading_text = None
         self.__punctuation = None
 
     def get_details(self):
@@ -48,29 +48,29 @@ class RuleMd026(Plugin):
         Event that the a new file to be scanned is starting.
         """
         self.__start_token = None
-        self.__header_text = None
+        self.__heading_text = None
 
     def next_token(self, token):
         """
         Event that a new token is being processed.
         """
-        if isinstance(token, (AtxHeaderMarkdownToken, SetextHeaderMarkdownToken)):
-            self.__header_text = ""
+        if isinstance(token, (AtxHeadingMarkdownToken, SetextHeadingMarkdownToken)):
+            self.__heading_text = ""
             self.__start_token = token
         elif isinstance(token, EndMarkdownToken):
             if token.type_name in (
-                MarkdownToken.token_atx_header,
-                MarkdownToken.token_setext_header,
+                MarkdownToken.token_atx_heading,
+                MarkdownToken.token_setext_heading,
             ):
 
-                if self.__header_text:
-                    if self.__header_text[-1] in self.__punctuation:
+                if self.__heading_text:
+                    if self.__heading_text[-1] in self.__punctuation:
                         self.report_next_token_error(self.__start_token)
                 self.__start_token = None
             else:
-                self.__header_text = ""
+                self.__heading_text = ""
         elif self.__start_token:
             if isinstance(token, TextMarkdownToken):
-                self.__header_text += token.token_text
+                self.__heading_text += token.token_text
             else:
-                self.__header_text = ""
+                self.__heading_text = ""

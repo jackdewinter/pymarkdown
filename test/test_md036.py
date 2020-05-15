@@ -13,7 +13,7 @@ from .utils import write_temporary_configuration
 def test_md036_proper_headings_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that normal atx headers.
+    test/resources/rules/md036 directory that normal atx headings.
     """
 
     # Arrange
@@ -39,7 +39,7 @@ def test_md036_proper_headings_atx():
 def test_md036_proper_headings_setext():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that normal setext headers.
+    test/resources/rules/md036 directory that normal setext headings.
     """
 
     # Arrange

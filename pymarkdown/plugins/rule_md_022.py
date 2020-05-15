@@ -3,11 +3,11 @@ Module to implement a plugin that looks for headings that are not surrounded by
 blank lines.
 """
 from pymarkdown.markdown_token import (
-    AtxHeaderMarkdownToken,
+    AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
     EndMarkdownToken,
     MarkdownToken,
-    SetextHeaderMarkdownToken,
+    SetextHeadingMarkdownToken,
     ThematicBreakMarkdownToken,
 )
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -23,11 +23,11 @@ class RuleMd022(Plugin):
         super().__init__()
         self.__blank_line_count = None
         self.__did_above_line_count_match = None
-        self.__start_header_token = None
-        self.__did_header_end = None
+        self.__start_heading_token = None
+        self.__did_heading_end = None
         self.__lines_above = None
         self.__lines_below = None
-        self.__start_header_blank_line_count = None
+        self.__start_heading_blank_line_count = None
 
     def get_details(self):
         """
@@ -59,8 +59,8 @@ class RuleMd022(Plugin):
         """
         self.__blank_line_count = -1
         self.__did_above_line_count_match = False
-        self.__start_header_token = None
-        self.__did_header_end = False
+        self.__start_heading_token = None
+        self.__did_heading_end = False
 
     def completed_file(self):
         """
@@ -77,49 +77,49 @@ class RuleMd022(Plugin):
         if isinstance(token, BlankLineMarkdownToken):
             if (self.__blank_line_count is not None) and self.__blank_line_count >= 0:
                 self.__blank_line_count += 1
-        if isinstance(token, (AtxHeaderMarkdownToken, SetextHeaderMarkdownToken)):
+        if isinstance(token, (AtxHeadingMarkdownToken, SetextHeadingMarkdownToken)):
             self.__did_above_line_count_match = bool(
                 self.__blank_line_count == -1
                 or self.__blank_line_count == self.__lines_above
             )
-            self.__start_header_token = token
-            self.__start_header_blank_line_count = self.__blank_line_count
-            self.__did_header_end = False
+            self.__start_heading_token = token
+            self.__start_heading_blank_line_count = self.__blank_line_count
+            self.__did_heading_end = False
         elif isinstance(token, ThematicBreakMarkdownToken):
             self.__blank_line_count = 0
         elif isinstance(token, EndMarkdownToken):
             if token.type_name in (
                 MarkdownToken.token_paragraph,
-                MarkdownToken.token_atx_header,
+                MarkdownToken.token_atx_heading,
                 MarkdownToken.token_html_block,
                 MarkdownToken.token_fenced_code_block,
                 MarkdownToken.token_indented_code_block,
                 MarkdownToken.token_thematic_break,
-                MarkdownToken.token_setext_header,
+                MarkdownToken.token_setext_heading,
             ):
                 self.__blank_line_count = 0
             else:
                 self.__blank_line_count = None
             if (
-                token.type_name == MarkdownToken.token_atx_header
-                or token.type_name == MarkdownToken.token_setext_header
+                token.type_name == MarkdownToken.token_atx_heading
+                or token.type_name == MarkdownToken.token_setext_heading
             ):
-                self.__did_header_end = True
+                self.__did_heading_end = True
 
     def perform_close_check(self, token):
         """
-        Perform any state checks necessary upon closing the header context.  Also
+        Perform any state checks necessary upon closing the heading context.  Also
         called at the end of a document to make sure the implicit close of the
         document is handled properly.
         """
 
         if (
-            (self.__start_header_token and self.__did_header_end)
+            (self.__start_heading_token and self.__did_heading_end)
         ) and self.__blank_line_count >= 0:
             if not isinstance(token, BlankLineMarkdownToken):
                 did_end_match = bool(self.__blank_line_count == self.__lines_below)
                 self.report_any_match_failures(did_end_match)
-                self.__start_header_token = None
+                self.__start_heading_token = None
 
     def report_any_match_failures(self, did_end_match):
         """
@@ -131,11 +131,11 @@ class RuleMd022(Plugin):
                 "Expected: "
                 + str(self.__lines_above)
                 + "; Actual: "
-                + str(self.__start_header_blank_line_count)
+                + str(self.__start_heading_blank_line_count)
                 + "; Above"
             )
             self.report_next_token_error(
-                self.__start_header_token, extra_error_information=extra_info
+                self.__start_heading_token, extra_error_information=extra_info
             )
         if not did_end_match:
             extra_info = (
@@ -146,5 +146,5 @@ class RuleMd022(Plugin):
                 + "; Below"
             )
             self.report_next_token_error(
-                self.__start_header_token, extra_error_information=extra_info
+                self.__start_heading_token, extra_error_information=extra_info
             )

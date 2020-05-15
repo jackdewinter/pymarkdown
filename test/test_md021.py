@@ -13,7 +13,7 @@ def test_md021_good_single_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md021 directory that has single spacing inside the hashes of
-    a closed atx header.
+    a closed atx heading.
     """
 
     # Arrange
@@ -40,7 +40,7 @@ def test_md021_bad_multiple_spacing_both():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md021 directory that has multiple spacing inside the hashes of
-    a closed atx header on both sides.
+    a closed atx heading on both sides.
     """
 
     # Arrange
@@ -72,7 +72,7 @@ def test_md021_bad_multiple_spacing_left():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md021 directory that has multiple spacing inside the hashes of
-    a closed atx header on the left.
+    a closed atx heading on the left.
     """
 
     # Arrange
@@ -104,7 +104,7 @@ def test_md021_bad_multiple_spacing_right():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md021 directory that has multiple spacing inside the hashes of
-    a closed atx header on the right.
+    a closed atx heading on the right.
     """
 
     # Arrange
@@ -136,7 +136,7 @@ def test_md021_good_multiple_spacing_with_inline():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md021 directory that has single spacing inside the hashes of
-    a closed atx header, with inline.
+    a closed atx heading, with inline.
     """
 
     # Arrange

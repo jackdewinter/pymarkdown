@@ -19,10 +19,10 @@ def test_md001_all_samples():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md001/improper_atx_header_incrementing.md:0:0: "
+        "test/resources/rules/md001/improper_atx_heading_incrementing.md:0:0: "
         + "MD001: Heading levels should only increment by one level at a time "
         + "[Expected: h2; Actual: h3] (heading-increment,header-increment)\n"
-        + "test/resources/rules/md001/improper_setext_header_incrementing.md:0:0: "
+        + "test/resources/rules/md001/improper_setext_heading_incrementing.md:0:0: "
         + "MD001: Heading levels should only increment by one level at a time "
         + "[Expected: h3; Actual: h4] (heading-increment,header-increment)\n"
     )
@@ -38,16 +38,16 @@ def test_md001_all_samples():
 
 
 @pytest.mark.rules
-def test_md001_good_proper_atx_header_incrementing():
+def test_md001_good_proper_atx_heading_incrementing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md001 directory using atx headers.
+    test/resources/rules/md001 directory using atx headings.
     """
 
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md001/proper_atx_header_incrementing.md"
+        "test/resources/rules/md001/proper_atx_heading_incrementing.md"
     ]
 
     expected_return_code = 0
@@ -64,11 +64,11 @@ def test_md001_good_proper_atx_header_incrementing():
 
 
 @pytest.mark.rules
-def test_md001_good_proper_setext_header_incrementing():
+def test_md001_good_proper_setext_heading_incrementing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md001 directory starting with a pair of setext headers and finishing
-    with a pair of atx headers.
+    test/resources/rules/md001 directory starting with a pair of setext headings and finishing
+    with a pair of atx headings.
     """
 
     # Arrange
@@ -76,7 +76,7 @@ def test_md001_good_proper_setext_header_incrementing():
     suppplied_arguments = [
         "--disable-rules",
         "MD003",
-        "test/resources/rules/md001/proper_setext_header_incrementing.md",
+        "test/resources/rules/md001/proper_setext_heading_incrementing.md",
     ]
 
     expected_return_code = 0
@@ -93,22 +93,22 @@ def test_md001_good_proper_setext_header_incrementing():
 
 
 @pytest.mark.rules
-def test_md001_bad_improper_atx_header_incrementing():
+def test_md001_bad_improper_atx_heading_incrementing():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md001 directory that has an atx header that is more than a 1
+    test/resources/rules/md001 directory that has an atx heading that is more than a 1
     step positive jump.
     """
 
     # Arrange
     scanner = MarkdownScanner()
     suppplied_arguments = [
-        "test/resources/rules/md001/improper_atx_header_incrementing.md"
+        "test/resources/rules/md001/improper_atx_heading_incrementing.md"
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md001/improper_atx_header_incrementing.md:0:0: "
+        "test/resources/rules/md001/improper_atx_heading_incrementing.md:0:0: "
         + "MD001: Heading levels should only increment by one level at a time "
         + "[Expected: h2; Actual: h3] (heading-increment,header-increment)\n"
     )
@@ -124,12 +124,12 @@ def test_md001_bad_improper_atx_header_incrementing():
 
 
 @pytest.mark.rules
-def test_md001_bad_improper_setext_header_incrementing():
+def test_md001_bad_improper_setext_heading_incrementing():
     """
     Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md001 directory that starts with a level 2 setext header and
-    is then followed by a level 4 atx header (as there is only a level 1 and 2 setext
-    header).
+    test/resources/rules/md001 directory that starts with a level 2 setext heading and
+    is then followed by a level 4 atx heading (as there is only a level 1 and 2 setext
+    heading).
     """
 
     # Arrange
@@ -137,12 +137,12 @@ def test_md001_bad_improper_setext_header_incrementing():
     suppplied_arguments = [
         "--disable-rules",
         "MD003",
-        "test/resources/rules/md001/improper_setext_header_incrementing.md",
+        "test/resources/rules/md001/improper_setext_heading_incrementing.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md001/improper_setext_header_incrementing.md:0:0: "
+        "test/resources/rules/md001/improper_setext_heading_incrementing.md:0:0: "
         + "MD001: Heading levels should only increment by one level at a time "
         + "[Expected: h3; Actual: h4] (heading-increment,header-increment)\n"
     )

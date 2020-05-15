@@ -5,14 +5,14 @@ import logging
 
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.markdown_token import (
-    AtxHeaderMarkdownToken,
+    AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
     EndMarkdownToken,
     FencedCodeBlockMarkdownToken,
     IndentedCodeBlockMarkdownToken,
     ParagraphMarkdownToken,
-    SetextHeaderEndMarkdownToken,
-    SetextHeaderMarkdownToken,
+    SetextHeadingEndMarkdownToken,
+    SetextHeadingMarkdownToken,
     TextMarkdownToken,
     ThematicBreakMarkdownToken,
 )
@@ -347,7 +347,7 @@ class LeafBlockProcessor:
                     extracted_whitespace_at_end = remaining_line[end_index:]
                     remaining_line = remaining_line[0:end_index]
                 new_tokens.append(
-                    AtxHeaderMarkdownToken(
+                    AtxHeadingMarkdownToken(
                         hash_count, remove_trailing_count, extracted_whitespace,
                     )
                 )
@@ -399,10 +399,10 @@ class LeafBlockProcessor:
                 # This is unusual.  Normally, close_open_blocks is used to close off
                 # blocks based on the stack token.  However, since the setext takes
                 # the last paragraph of text (see case 61) and translates it
-                # into a header, this has to be done separately, as there is no
+                # into a heading, this has to be done separately, as there is no
                 # stack token to close.
                 new_tokens.append(
-                    SetextHeaderEndMarkdownToken(
+                    SetextHeadingEndMarkdownToken(
                         extracted_whitespace, extra_whitespace_after_setext
                     )
                 )
@@ -410,7 +410,7 @@ class LeafBlockProcessor:
                 while not token_document[token_index].is_paragraph:
                     token_index -= 1
 
-                replacement_token = SetextHeaderMarkdownToken(
+                replacement_token = SetextHeadingMarkdownToken(
                     line_to_parse[start_index], token_document[token_index].extra_data,
                 )
                 token_document[token_index] = replacement_token

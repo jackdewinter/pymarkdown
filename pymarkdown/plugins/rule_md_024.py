@@ -1,30 +1,30 @@
 """
-Module to implement a plugin that looks for multiple header lines with the same
+Module to implement a plugin that looks for multiple heading lines with the same
 content.
 """
 from pymarkdown.markdown_token import (
-    AtxHeaderMarkdownToken,
+    AtxHeadingMarkdownToken,
     EndMarkdownToken,
     MarkdownToken,
-    SetextHeaderMarkdownToken,
+    SetextHeadingMarkdownToken,
 )
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd024(Plugin):
     """
-    Class to implement a plugin that looks for multiple header lines with the same
+    Class to implement a plugin that looks for multiple heading lines with the same
     content.
     """
 
     def __init__(self):
         super().__init__()
-        self.__header_text = None
+        self.__heading_text = None
         self.__start_token = None
         self.__hash_count = None
         self.__last_hash_count = None
         self.__siblings_only = None
-        self.__header_content_map = None
+        self.__heading_content_map = None
 
     def get_details(self):
         """
@@ -53,63 +53,63 @@ class RuleMd024(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.__header_text = None
+        self.__heading_text = None
         self.__start_token = None
         self.__hash_count = None
         self.__last_hash_count = None
         if self.__siblings_only:
-            self.__header_content_map = [{}, {}, {}, {}, {}, {}]
+            self.__heading_content_map = [{}, {}, {}, {}, {}, {}]
         else:
-            self.__header_content_map = [{}]
+            self.__heading_content_map = [{}]
 
     def next_token(self, token):
         """
         Event that a new token is being processed.
         """
         skip_this_token = False
-        if isinstance(token, (AtxHeaderMarkdownToken, SetextHeaderMarkdownToken)):
-            self.handle_header_start(token)
+        if isinstance(token, (AtxHeadingMarkdownToken, SetextHeadingMarkdownToken)):
+            self.handle_heading_start(token)
             skip_this_token = True
         elif isinstance(token, EndMarkdownToken):
             if token.type_name in (
-                MarkdownToken.token_atx_header,
-                MarkdownToken.token_setext_header,
+                MarkdownToken.token_atx_heading,
+                MarkdownToken.token_setext_heading,
             ):
-                self.handler_header_end()
+                self.handler_heading_end()
 
-        if not skip_this_token and self.__header_text is not None:
-            self.__header_text += str(token)
+        if not skip_this_token and self.__heading_text is not None:
+            self.__heading_text += str(token)
 
-    def handle_header_start(self, token):
+    def handle_heading_start(self, token):
         """
-        Process the start header token, atx or setext
+        Process the start heading token, atx or setext
         """
 
-        self.__header_text = ""
+        self.__heading_text = ""
         self.__start_token = token
         if self.__siblings_only:
             self.__hash_count = token.hash_count
         else:
             self.__hash_count = 1
 
-    def handler_header_end(self):
+    def handler_heading_end(self):
         """
-        Process the end header token, atx or setext
+        Process the end heading token, atx or setext
         """
 
         if self.__last_hash_count:
             while self.__last_hash_count < self.__hash_count:
                 self.__last_hash_count += 1
-                self.__header_content_map[self.__last_hash_count - 1] = {}
+                self.__heading_content_map[self.__last_hash_count - 1] = {}
             while self.__last_hash_count > self.__hash_count:
-                self.__header_content_map[self.__last_hash_count - 1] = {}
+                self.__heading_content_map[self.__last_hash_count - 1] = {}
                 self.__last_hash_count -= 1
 
-        past_headers_map = self.__header_content_map[self.__hash_count - 1]
+        past_headings_map = self.__heading_content_map[self.__hash_count - 1]
 
-        if self.__header_text in past_headers_map:
+        if self.__heading_text in past_headings_map:
             self.report_next_token_error(self.__start_token)
         else:
-            past_headers_map[self.__header_text] = self.__header_text
-        self.__header_text = None
+            past_headings_map[self.__heading_text] = self.__heading_text
+        self.__heading_text = None
         self.__last_hash_count = self.__hash_count
