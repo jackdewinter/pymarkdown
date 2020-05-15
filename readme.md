@@ -8,6 +8,10 @@
 
 - need to add line/column
 
+## Bugs - Character Entities
+
+- test_markdown_entity* various extra tests
+
 ## Bugs - SetExt
 
 - MD041 requires metadatqa
@@ -24,6 +28,8 @@
 
 ## Bugs - Links
 
+- Link_helper.py#86 - if link already registered, should warn?
+
 - inline link ( without any extra info
 - why does GFM not specify that between [ and ] for a LRD, no blanks are allowed?
   - maybe expound on 166 a bit?
@@ -36,9 +42,16 @@
 - what if bad link definition discovered multiple lines down, how to back track?
 - split up link definition within a block quote or list?
 
+## Bugs - Rounding Out Rules
+
+- MD018 - lists and block quotes
+- MD020 - lists and block quotes
+- MD022 - lists and block quotes and LRDs
+
 ## Bugs - Block Quote
 
 - block quotes that start and stop i.e. > then >> then > then >>>, etc.
+- "# TODO add case with >" for tests
 
 ## Bugs - List
 
@@ -54,6 +67,14 @@
 - 301, but with extra levels of block quotes
 - 301, with indented code blocks
 - 270 and check for indent levels after
+
+## Features - Extensions
+
+- tables
+- task list items
+- strikethrough
+- disallowed raw html
+- autolinks extension
 
 ## Features - Correctness - Whitespace and Punctuation
 
@@ -72,6 +93,7 @@
 ## Features - Performance
 
 - reduce html_helper functions?
+  - i.e. html_helper contains 2 for various elements?
 - collect_until_one_of_characters with backslashes?
 - rewrite transform to allow it to consume a Markdown file as it goes
 - modify parse_blocks_pass to consume lines as it goes, instead of requiring entire string in memory
