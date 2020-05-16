@@ -410,7 +410,7 @@ def test_hard_line_breaks_667():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """### foo\\"""
-    expected_tokens = ["[atx:3:0:]", "[text:foo\\: ]", "[end-atx::]"]
+    expected_tokens = ["[atx(1,1):3:0:]", "[text:foo\\: ]", "[end-atx::]"]
     expected_gfm = """<h3>foo\\</h3>"""
 
     # Act
@@ -432,7 +432,7 @@ def test_hard_line_breaks_668():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """### foo  """
-    expected_tokens = ["[atx:3:0:]", "[text:foo: ]", "[end-atx:  :]"]
+    expected_tokens = ["[atx(1,1):3:0:]", "[text:foo: ]", "[end-atx:  :]"]
     expected_gfm = """<h3>foo</h3>"""
 
     # Act

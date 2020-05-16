@@ -98,7 +98,7 @@ def test_md003_good_consistent_headings_setext():
 
 
 CONSISTENT_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx.md:0:0: "
+    "test/resources/rules/md003/headings_setext_with_atx.md:7:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx] (heading-style,header-style)\n"
 )
 
@@ -131,7 +131,7 @@ def test_md003_bad_consistent_headings_setext_with_atx():
 
 
 CONSISTENT_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx_closed.md:0:0: "
+    "test/resources/rules/md003/headings_setext_with_atx_closed.md:7:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
 )
 
@@ -231,9 +231,9 @@ def test_md003_good_atx_headings_atx():
 
 
 ATX_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx_closed.md:0:0: "
+    "test/resources/rules/md003/headings_atx_closed.md:1:1: "
     + "MD003: Heading style [Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx_closed.md:0:0: "
+    + "test/resources/rules/md003/headings_atx_closed.md:3:1: "
     + "MD003: Heading style [Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
 )
 
@@ -362,7 +362,7 @@ ATX_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
     + "MD003: Heading style [Expected: atx; Actual: setext] (heading-style,header-style)\n"
     + "test/resources/rules/md003/headings_setext_with_atx_closed.md:0:0: "
     + "MD003: Heading style [Expected: atx; Actual: setext] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_setext_with_atx_closed.md:0:0: "
+    + "test/resources/rules/md003/headings_setext_with_atx_closed.md:7:1: "
     + "MD003: Heading style [Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
 )
 
@@ -439,9 +439,9 @@ def test_md003_atx_all_samples():
 
 
 ATXCLOSED_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx.md:0:0: "
+    "test/resources/rules/md003/headings_atx.md:1:1: "
     + "MD003: Heading style [Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx.md:0:0: "
+    + "test/resources/rules/md003/headings_atx.md:3:1: "
     + "MD003: Heading style [Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
 )
 
@@ -564,7 +564,7 @@ ATXCLOSED_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
     + "MD003: Heading style [Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
     + "test/resources/rules/md003/headings_setext_with_atx.md:0:0: "
     + "MD003: Heading style [Expected: atx_closed; Actual: setext] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_setext_with_atx.md:0:0: "
+    + "test/resources/rules/md003/headings_setext_with_atx.md:7:1: "
     + "MD003: Heading style [Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
 )
 
@@ -684,9 +684,9 @@ def test_md003_atxclosed_all_samples():
 
 
 SETEXT_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx.md:0:0: "
+    "test/resources/rules/md003/headings_atx.md:1:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx.md:0:0: "
+    + "test/resources/rules/md003/headings_atx.md:3:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx] (heading-style,header-style)\n"
 )
 
@@ -726,9 +726,9 @@ def test_md003_bad_setext_headings_atx():
 
 
 SETEXT_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx_closed.md:0:0: "
+    "test/resources/rules/md003/headings_atx_closed.md:1:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx_closed.md:0:0: "
+    + "test/resources/rules/md003/headings_atx_closed.md:3:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
 )
 
@@ -805,7 +805,7 @@ def test_md003_good_setext_headings_setext():
 
 
 SETEXT_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx.md:0:0: "
+    "test/resources/rules/md003/headings_setext_with_atx.md:7:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx] (heading-style,header-style)\n"
 )
 
@@ -846,7 +846,7 @@ def test_md003_bad_setext_headings_setext_with_atx():
 
 
 SETEXT_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx_closed.md:0:0: "
+    "test/resources/rules/md003/headings_setext_with_atx_closed.md:7:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
 )
 
@@ -923,9 +923,9 @@ def test_md003_setext_all_samples():
 
 
 SETEXT_WITH_ATX_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx.md:0:0: "
+    "test/resources/rules/md003/headings_atx.md:1:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx.md:0:0: "
+    + "test/resources/rules/md003/headings_atx.md:3:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx] (heading-style,header-style)\n"
 )
 
@@ -965,9 +965,9 @@ def test_md003_bad_setext_with_atx_headings_atx():
 
 
 SETEXT_WITH_ATX_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx_closed.md:0:0: "
+    "test/resources/rules/md003/headings_atx_closed.md:1:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx_closed.md:0:0: "
+    + "test/resources/rules/md003/headings_atx_closed.md:3:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
 )
 
@@ -1082,7 +1082,7 @@ def test_md003_good_setext_with_atx_headings_setext_with_atx():
 
 
 SETEXT_WITH_ATX_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx_closed.md:0:0: "
+    "test/resources/rules/md003/headings_setext_with_atx_closed.md:7:1: "
     + "MD003: Heading style [Expected: atx; Actual: atx_closed] (heading-style,header-style)\n"
 )
 
@@ -1159,9 +1159,9 @@ def test_md003_setext_with_atx_all_samples():
 
 
 SETEXT_WITH_ATX_CLOSED_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx.md:0:0: "
+    "test/resources/rules/md003/headings_atx.md:1:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx.md:0:0: "
+    + "test/resources/rules/md003/headings_atx.md:3:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx] (heading-style,header-style)\n"
 )
 
@@ -1201,9 +1201,9 @@ def test_md003_bad_setext_with_atx_closed_headings_atx():
 
 
 SETEXT_WITH_ATX_CLOSED_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_atx_closed.md:0:0: "
+    "test/resources/rules/md003/headings_atx_closed.md:1:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
-    + "test/resources/rules/md003/headings_atx_closed.md:0:0: "
+    + "test/resources/rules/md003/headings_atx_closed.md:3:1: "
     + "MD003: Heading style [Expected: setext; Actual: atx_closed] (heading-style,header-style)\n"
 )
 
@@ -1280,7 +1280,7 @@ def test_md003_good_setext_with_atx_closed_headings_setext():
 
 
 SETEXT_WITH_ATX_CLOSED_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
-    "test/resources/rules/md003/headings_setext_with_atx.md:0:0: "
+    "test/resources/rules/md003/headings_setext_with_atx.md:7:1: "
     + "MD003: Heading style [Expected: atx_closed; Actual: atx] (heading-style,header-style)\n"
 )
 

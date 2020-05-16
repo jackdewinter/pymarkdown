@@ -52,7 +52,7 @@ def test_md024_bad_same_heading_content_atx():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_atx.md:0:0: "
+        "test/resources/rules/md024/same_heading_content_atx.md:3:1: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -82,9 +82,9 @@ def test_md024_bad_same_heading_in_siblings_atx():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_in_siblings_atx.md:0:0: "
+        "test/resources/rules/md024/same_heading_in_siblings_atx.md:7:1: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
-        + "test/resources/rules/md024/same_heading_in_siblings_atx.md:0:0: "
+        + "test/resources/rules/md024/same_heading_in_siblings_atx.md:11:1: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -114,7 +114,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_atx():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md:0:0: "
+        "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md:9:1: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -222,7 +222,7 @@ def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md024/same_heading_in_siblings_atx.md:0:0: "
+            "test/resources/rules/md024/same_heading_in_siblings_atx.md:7:1: "
             + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
         )
         expected_error = ""

@@ -348,3 +348,19 @@ class ParserHelper:
 
 
 # pylint: enable=too-many-public-methods
+
+
+# pylint: disable=too-few-public-methods
+class PositionMarker:
+    """
+    Class to provide an encapsulation of the location within the Markdown document.
+    """
+
+    def __init__(self, line_number, index_number, text_to_parse):
+        self.line_number = line_number
+        self.index_number = index_number
+        self.text_to_parse = text_to_parse
+        self.index_indent = 0
+
+
+# pylint: enable=too-few-public-methods

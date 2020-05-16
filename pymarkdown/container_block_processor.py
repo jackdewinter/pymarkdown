@@ -9,7 +9,7 @@ from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.list_block_processor import ListBlockProcessor
 from pymarkdown.markdown_token import TextMarkdownToken
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_helper import ParserHelper, PositionMarker
 
 LOGGER = logging.getLogger(__name__)
 
@@ -69,7 +69,7 @@ class ContainerBlockProcessor:
         token_document,
         close_open_blocks_fn,
         handle_blank_line_fn,
-        line_to_parse,
+        position_marker,
         ignore_link_definition_start,
         container_depth=0,
         foobar=None,
@@ -80,6 +80,8 @@ class ContainerBlockProcessor:
         whether or not to pass the (remaining parts of the) line to the leaf block
         processor.
         """
+        line_to_parse = position_marker.text_to_parse
+
         LOGGER.debug("Line:%s:", line_to_parse)
         no_para_start_if_empty = False
 
@@ -231,11 +233,18 @@ class ContainerBlockProcessor:
             container_level_tokens,
             close_open_blocks_fn,
         )
+
+        # TODO refactor to make indent unnecessary?
+        position_marker.index_indent = len(position_marker.text_to_parse) - len(
+            line_to_parse
+        )
+        position_marker.text_to_parse = line_to_parse
+        position_marker.index_number = start_index
         leaf_tokens, requeue_line_info = ContainerBlockProcessor.__process_leaf_tokens(
             token_stack,
             leaf_tokens,
             token_document,
-            line_to_parse,
+            position_marker,
             this_bq_count,
             removed_chars_at_start,
             no_para_start_if_empty,
@@ -515,6 +524,8 @@ class ContainerBlockProcessor:
             adj_block = end_of_bquote_start_index
 
         LOGGER.debug("adj_line_to_parse>>>%s<<<", str(adj_line_to_parse))
+
+        position_marker = PositionMarker(-1, -1, adj_line_to_parse)
         (
             _,
             line_to_parse,
@@ -524,7 +535,7 @@ class ContainerBlockProcessor:
             token_document,
             close_open_blocks_fn,
             handle_blank_line_fn,
-            adj_line_to_parse,
+            position_marker,
             False,
             container_depth=container_depth + 1,
             foobar=adj_block,
@@ -631,7 +642,7 @@ class ContainerBlockProcessor:
         token_stack,
         leaf_tokens,
         token_document,
-        line_to_parse,
+        position_marker,
         this_bq_count,
         removed_chars_at_start,
         no_para_start_if_empty,
@@ -641,14 +652,14 @@ class ContainerBlockProcessor:
         requeue_line_info = RequeueLineInfo()
         if not leaf_tokens:
             LOGGER.debug("parsing leaf>>")
+            position_marker.index_number = 0
             (
                 leaf_tokens,
                 requeue_line_info,
             ) = ContainerBlockProcessor.__parse_line_for_leaf_blocks(
                 token_stack,
                 token_document,
-                line_to_parse,
-                0,
+                position_marker,
                 this_bq_count,
                 removed_chars_at_start,
                 no_para_start_if_empty,
@@ -821,8 +832,7 @@ class ContainerBlockProcessor:
     def __parse_line_for_leaf_blocks(
         token_stack,
         token_document,
-        line_to_parse,
-        start_index,
+        position_marker,
         this_bq_count,
         removed_chars_at_start,
         no_para_start_if_empty,
@@ -833,6 +843,9 @@ class ContainerBlockProcessor:
         Parse the contents of a line for a leaf block.
         """
 
+        line_to_parse = position_marker.text_to_parse
+        start_index = position_marker.index_number
+
         LOGGER.debug("Leaf Line:%s:", line_to_parse.replace("\t", "\\t"))
         new_tokens = []
 
@@ -841,6 +854,7 @@ class ContainerBlockProcessor:
         start_index, extracted_whitespace = ParserHelper.extract_whitespace(
             line_to_parse, start_index
         )
+        position_marker.index_number = start_index
 
         pre_tokens = ContainerBlockProcessor.__close_indented_block_if_indent_not_there(
             token_stack, extracted_whitespace, token_document
@@ -856,6 +870,7 @@ class ContainerBlockProcessor:
             new_tokens,
             close_open_blocks_fn,
         )
+        position_marker.index_number = start_index
 
         (
             outer_processed,
@@ -884,7 +899,7 @@ class ContainerBlockProcessor:
         if not outer_processed:
             assert not new_tokens
             new_tokens = LeafBlockProcessor.parse_atx_headings(
-                line_to_parse, start_index, extracted_whitespace, close_open_blocks_fn
+                position_marker, extracted_whitespace, close_open_blocks_fn
             )
             if not new_tokens:
                 new_tokens = LeafBlockProcessor.parse_indented_code_block(

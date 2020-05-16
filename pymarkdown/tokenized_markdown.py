@@ -15,7 +15,7 @@ from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.markdown_token import BlankLineMarkdownToken
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_helper import ParserHelper, PositionMarker
 from pymarkdown.source_providers import InMemorySourceProvider
 from pymarkdown.stack_token import DocumentStackToken, ParagraphStackToken
 
@@ -106,6 +106,7 @@ class TokenizedMarkdown:
         ignore_link_definition_start = False
         LOGGER.debug("---%s---", str(token_to_use))
         LOGGER.debug("---")
+        line_number = 1
         while True:
             LOGGER.debug("next-line>>%s", str(token_to_use))
             LOGGER.debug("stack>>%s", str(self.stack))
@@ -143,6 +144,7 @@ class TokenizedMarkdown:
                     ) = self.__handle_blank_line(token_to_use, from_main_transform=True)
                 else:
                     LOGGER.debug("\n\nnormal lines")
+                    position_marker = PositionMarker(line_number, 0, token_to_use)
                     (
                         tokens_from_line,
                         _,
@@ -152,13 +154,15 @@ class TokenizedMarkdown:
                         self.tokenized_document,
                         self.__close_open_blocks,
                         self.__handle_blank_line,
-                        token_to_use,
+                        position_marker,
                         ignore_link_definition_start,
                     )
                     lines_to_requeue = requeue_line_info.lines_to_requeue
                     force_ignore_first_as_lrd = (
                         requeue_line_info.force_ignore_first_as_lrd
                     )
+
+            line_number += 1
 
             if lines_to_requeue:
                 for i in lines_to_requeue:

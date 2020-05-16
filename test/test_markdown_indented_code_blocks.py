@@ -332,7 +332,7 @@ Heading
     foo
 ----"""
     expected_tokens = [
-        "[atx:1:0:]",
+        "[atx(1,1):1:0:]",
         "[text:Heading: ]",
         "[end-atx::]",
         "[icode-block:    ]",

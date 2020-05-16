@@ -135,7 +135,7 @@ MD999>>next_line:# This is a test
 MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
-MD999>>token:[atx:1:0:]
+MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text:This is a test: ]
 MD999>>token:[end-atx::]
 MD999>>token:[BLANK:]
@@ -180,7 +180,7 @@ MD999>>next_line:# This is a test
 MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
-MD999>>token:[atx:1:0:]
+MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text:This is a test: ]
 MD999>>token:[end-atx::]
 MD999>>token:[BLANK:]
@@ -541,7 +541,7 @@ MD999>>next_line:# This is a test
 MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
-MD999>>token:[atx:1:0:]
+MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text:This is a test: ]
 MD999>>token:[end-atx::]
 MD999>>token:[BLANK:]
@@ -594,7 +594,7 @@ MD999>>next_line:# This is a test
 MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
-MD999>>token:[atx:1:0:]
+MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text:This is a test: ]
 MD999>>token:[end-atx::]
 MD999>>token:[BLANK:]
@@ -720,7 +720,7 @@ MD999>>next_line:# This is a test
 MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
-MD999>>token:[atx:1:0:]
+MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text:This is a test: ]
 MD999>>token:[end-atx::]
 MD999>>token:[BLANK:]
@@ -773,7 +773,7 @@ MD999>>next_line:# This is a test
 MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
-MD999>>token:[atx:1:0:]
+MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text:This is a test: ]
 MD999>>token:[end-atx::]
 MD999>>token:[BLANK:]
@@ -865,7 +865,7 @@ MD999>>next_line:# This is a test
 MD999>>next_line:
 MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
-MD999>>token:[atx:1:0:]
+MD999>>token:[atx(1,1):1:0:]
 """
         expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
 Plugin id 'MD999' had a critical failure during the 'next_token' action.

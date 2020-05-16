@@ -19,10 +19,10 @@ def test_md001_all_samples():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md001/improper_atx_heading_incrementing.md:0:0: "
+        "test/resources/rules/md001/improper_atx_heading_incrementing.md:3:1: "
         + "MD001: Heading levels should only increment by one level at a time "
         + "[Expected: h2; Actual: h3] (heading-increment,header-increment)\n"
-        + "test/resources/rules/md001/improper_setext_heading_incrementing.md:0:0: "
+        + "test/resources/rules/md001/improper_setext_heading_incrementing.md:4:1: "
         + "MD001: Heading levels should only increment by one level at a time "
         + "[Expected: h3; Actual: h4] (heading-increment,header-increment)\n"
     )
@@ -108,7 +108,7 @@ def test_md001_bad_improper_atx_heading_incrementing():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md001/improper_atx_heading_incrementing.md:0:0: "
+        "test/resources/rules/md001/improper_atx_heading_incrementing.md:3:1: "
         + "MD001: Heading levels should only increment by one level at a time "
         + "[Expected: h2; Actual: h3] (heading-increment,header-increment)\n"
     )
@@ -142,7 +142,7 @@ def test_md001_bad_improper_setext_heading_incrementing():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md001/improper_setext_heading_incrementing.md:0:0: "
+        "test/resources/rules/md001/improper_setext_heading_incrementing.md:4:1: "
         + "MD001: Heading levels should only increment by one level at a time "
         + "[Expected: h3; Actual: h4] (heading-increment,header-increment)\n"
     )

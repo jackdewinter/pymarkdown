@@ -32,11 +32,11 @@ class MarkdownToken:
     token_inline_link = "link"
     token_inline_image = "image"
 
-    def __init__(self, token_name, extra_data=None):
+    def __init__(self, token_name, extra_data=None, line_number=0, column_number=0):
         self.token_name = token_name
         self.extra_data = extra_data
-        self.line_number = 0
-        self.column_number = 0
+        self.line_number = line_number
+        self.column_number = column_number
 
     def __str__(self):
         add_extra = ""
@@ -47,7 +47,12 @@ class MarkdownToken:
             or self.token_name == MarkdownToken.token_block_quote
         ):
             add_extra = ":" + self.extra_data
-        return "[" + self.token_name + add_extra + "]"
+        colum_row_info = ""
+        if self.line_number or self.column_number:
+            colum_row_info = (
+                "(" + str(self.line_number) + "," + str(self.column_number) + ")"
+            )
+        return "[" + self.token_name + colum_row_info + add_extra + "]"
 
     def __repr__(self):
         return "'" + self.__str__() + "'"
@@ -299,11 +304,24 @@ class AtxHeadingMarkdownToken(MarkdownToken):
 
     # pylint: disable=too-many-arguments
     def __init__(
-        self, hash_count, remove_trailing_count, extracted_whitespace,
+        self,
+        hash_count,
+        remove_trailing_count,
+        extracted_whitespace,
+        position_marker=None,
     ):
         self.hash_count = hash_count
         self.remove_trailing_count = remove_trailing_count
         self.extracted_whitespace = extracted_whitespace
+
+        line_number = 0
+        column_number = 0
+        if position_marker:
+            line_number = position_marker.line_number
+            column_number = (
+                position_marker.index_number + position_marker.index_indent + 1
+            )
+
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_atx_heading,
@@ -312,6 +330,8 @@ class AtxHeadingMarkdownToken(MarkdownToken):
             + str(remove_trailing_count)
             + ":"
             + extracted_whitespace,
+            line_number=line_number,
+            column_number=column_number,
         )
 
     # pylint: enable=too-many-arguments

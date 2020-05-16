@@ -32,7 +32,14 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
         "parsed_tokens  : "
         + str(actual_tokens).replace("\n", "\\n").replace("\t", "\\t")
     )
-    assert len(expected_tokens) == len(actual_tokens), "List lengths are not the same."
+    assert len(expected_tokens) == len(actual_tokens), (
+        "List lengths are not the same: ("
+        + str(len(expected_tokens))
+        + ") vs "
+        + "("
+        + str(len(actual_tokens))
+        + ")"
+    )
     print("---")
 
     # pylint: disable=consider-using-enumerate

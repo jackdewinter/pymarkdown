@@ -28,7 +28,7 @@ def test_md002_all_samples():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md002/improper_atx_heading_start.md:0:0: "
+        "test/resources/rules/md002/improper_atx_heading_start.md:1:1: "
         + "MD002: First heading should be a top level heading "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
         + "test/resources/rules/md002/improper_setext_heading_start.md:0:0: "
@@ -97,7 +97,7 @@ def test_md002_bad_proper_atx_heading_start_with_alternate_configuration():
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md002/proper_atx_heading_start.md:0:0: "
+            "test/resources/rules/md002/proper_atx_heading_start.md:1:1: "
             + "MD002: First heading should be a top level heading "
             + "[Expected: h2; Actual: h1] (first-heading-h1,first-header-h1)\n"
         )
@@ -203,7 +203,7 @@ def test_md002_bad_improper_atx_heading_start():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md002/improper_atx_heading_start.md:0:0: "
+        "test/resources/rules/md002/improper_atx_heading_start.md:1:1: "
         + "MD002: First heading should be a top level heading "
         + "[Expected: h1; Actual: h2] (first-heading-h1,first-header-h1)\n"
     )

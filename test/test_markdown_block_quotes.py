@@ -23,7 +23,7 @@ def test_block_quotes_206():
 > baz"""
     expected_tokens = [
         "[block-quote:]",
-        "[atx:1:0:]",
+        "[atx(1,3):1:0:]",
         "[text:Foo: ]",
         "[end-atx::]",
         "[para:\n]",
@@ -60,7 +60,7 @@ def test_block_quotes_207():
 > baz"""
     expected_tokens = [
         "[block-quote:]",
-        "[atx:1:0:]",
+        "[atx(1,2):1:0:]",
         "[text:Foo: ]",
         "[end-atx::]",
         "[para:\n]",
@@ -97,7 +97,7 @@ def test_block_quotes_208():
  > baz"""
     expected_tokens = [
         "[block-quote:   ]",
-        "[atx:1:0:]",
+        "[atx(1,6):1:0:]",
         "[text:Foo: ]",
         "[end-atx::]",
         "[para:\n]",
@@ -165,7 +165,7 @@ def test_block_quotes_210():
 baz"""
     expected_tokens = [
         "[block-quote:]",
-        "[atx:1:0:]",
+        "[atx(1,3):1:0:]",
         "[text:Foo: ]",
         "[end-atx::]",
         "[para:\n]",

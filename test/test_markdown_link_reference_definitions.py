@@ -755,7 +755,7 @@ def test_link_reference_definitions_183():
 [foo]: /url
 > bar"""
     expected_tokens = [
-        "[atx:1:0:]",
+        "[atx(1,1):1:0:]",
         "[link:/url:]",
         "[text:Foo: ]",
         "[end-link::]",

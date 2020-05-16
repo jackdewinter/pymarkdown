@@ -588,7 +588,7 @@ def test_tabs_010():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """#\tFoo"""
-    expected_tokens = ["[atx:1:0:]", "[text:Foo:    ]", "[end-atx::]"]
+    expected_tokens = ["[atx(1,1):1:0:]", "[text:Foo:    ]", "[end-atx::]"]
     expected_gfm = """<h1>Foo</h1>"""
 
     # Act
