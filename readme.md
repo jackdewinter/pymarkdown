@@ -6,7 +6,21 @@
 
 ## Bugs - General
 
-- need to add line/column
+- add token for LRD
+- need to add line/column for
+  - atx
+  - setext
+  - thematic break
+  - html
+  - indented code block
+  - fenced code block
+  - blank lines
+  - paragraph
+  - text
+  - list
+  - block quote
+  - LRD
+  - inlines
 
 ## Bugs - Character Entities
 
@@ -14,7 +28,7 @@
 
 ## Bugs - SetExt
 
-- MD041 requires metadatqa
+- MD041 requires metadata
 
 ## Bugs - Tabs
 
@@ -85,7 +99,6 @@
 
 ## Features - Correctness
 
-- token for LRDs, even though consumed?
 - can we generate Markdown from tokens? do we have enough info?
 - go through any case that uses lazy and do un-lazy example
 - samples that end without a blank line, and add a blank line?
