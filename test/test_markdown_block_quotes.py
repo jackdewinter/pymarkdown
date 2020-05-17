@@ -240,7 +240,7 @@ def test_block_quotes_212():
         "[text:foo:]",
         "[end-para]",
         "[end-block-quote]",
-        "[tbreak:-::---]",
+        "[tbreak(2,1):-::---]",
     ]
     expected_gfm = """<blockquote>
 <p>foo</p>
@@ -663,7 +663,7 @@ def test_block_quotes_224():
         "[text:aaa:]",
         "[end-para]",
         "[end-block-quote]",
-        "[tbreak:*::***]",
+        "[tbreak(2,1):*::***]",
         "[block-quote:]",
         "[para:]",
         "[text:bbb:]",

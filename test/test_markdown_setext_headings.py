@@ -275,7 +275,7 @@ def test_setext_headings_055():
         "[icode-block:    ]",
         "[text:Foo\n---\n\nFoo:]",
         "[end-icode-block]",
-        "[tbreak:-::---]",
+        "[tbreak(5,1):-::---]",
     ]
     expected_gfm = """<pre><code>Foo
 ---
@@ -362,7 +362,7 @@ Foo
         "[para:]",
         "[text:Foo:]",
         "[end-para]",
-        "[tbreak:-::--- -]",
+        "[tbreak(5,1):-::--- -]",
     ]
     expected_gfm = """<p>Foo
 = =</p>
@@ -488,7 +488,7 @@ def test_setext_headings_062():
         "[text:Foo:]",
         "[end-para]",
         "[end-block-quote]",
-        "[tbreak:-::---]",
+        "[tbreak(2,1):-::---]",
     ]
     expected_gfm = """<blockquote>
 <p>Foo</p>
@@ -555,7 +555,7 @@ def test_setext_headings_064():
         "[text:Foo:]",
         "[end-para]",
         "[end-ulist]",
-        "[tbreak:-::---]",
+        "[tbreak(2,1):-::---]",
     ]
     expected_gfm = """<ul>
 <li>Foo</li>
@@ -588,7 +588,7 @@ def test_setext_headings_064a():
         "[text:Foo:]",
         "[end-para]",
         "[end-ulist]",
-        "[tbreak:-::---]",
+        "[tbreak(2,1):-::---]",
     ]
     expected_gfm = """<ul>
 <li>Foo</li>
@@ -645,7 +645,7 @@ Bar
 ---
 Baz"""
     expected_tokens = [
-        "[tbreak:-::---]",
+        "[tbreak(1,1):-::---]",
         "[setext:-:]",
         "[text:Foo:]",
         "[end-setext::]",
@@ -704,7 +704,7 @@ def test_setext_headings_068():
     transformer = TransformToGfm()
     source_markdown = """---
 ---"""
-    expected_tokens = ["[tbreak:-::---]", "[tbreak:-::---]"]
+    expected_tokens = ["[tbreak(1,1):-::---]", "[tbreak(2,1):-::---]"]
     expected_gfm = """<hr />
 <hr />"""
 
@@ -734,7 +734,7 @@ def test_setext_headings_069():
         "[text:foo:]",
         "[end-para]",
         "[end-ulist]",
-        "[tbreak:-::-----]",
+        "[tbreak(2,1):-::-----]",
     ]
     expected_gfm = """<ul>
 <li>foo</li>
@@ -767,7 +767,7 @@ def test_setext_headings_069a():
         "[text:foo:]",
         "[end-para]",
         "[end-ulist]",
-        "[tbreak:-::-----]",
+        "[tbreak(2,1):-::-----]",
     ]
     expected_gfm = """<ul>
 <li>foo</li>
@@ -798,7 +798,7 @@ def test_setext_headings_070():
         "[icode-block:    ]",
         "[text:foo:]",
         "[end-icode-block]",
-        "[tbreak:-::---]",
+        "[tbreak(2,1):-::---]",
     ]
     expected_gfm = """<pre><code>foo
 </code></pre>
@@ -830,7 +830,7 @@ def test_setext_headings_071():
         "[text:foo:]",
         "[end-para]",
         "[end-block-quote]",
-        "[tbreak:-::-----]",
+        "[tbreak(2,1):-::-----]",
     ]
     expected_gfm = """<blockquote>
 <p>foo</p>
@@ -930,7 +930,7 @@ baz"""
         "[text:Foo\nbar::\n]",
         "[end-para]",
         "[BLANK:]",
-        "[tbreak:-::---]",
+        "[tbreak(4,1):-::---]",
         "[BLANK:]",
         "[para:]",
         "[text:baz:]",
@@ -968,7 +968,7 @@ baz"""
         "[para:\n]",
         "[text:Foo\nbar::\n]",
         "[end-para]",
-        "[tbreak:*::* * *]",
+        "[tbreak(3,1):*::* * *]",
         "[para:]",
         "[text:baz:]",
         "[end-para]",

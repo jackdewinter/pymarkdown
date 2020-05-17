@@ -218,6 +218,8 @@ class LeafBlockProcessor:
         Determine whether or not we have a thematic break.
         """
 
+        # TODO refactor to use position_marker once lists done
+
         thematic_break_character = None
         end_of_break_index = None
         if (
@@ -249,8 +251,7 @@ class LeafBlockProcessor:
     # pylint: disable=too-many-arguments
     def parse_thematic_break(
         token_stack,
-        line_to_parse,
-        start_index,
+        position_marker,
         extracted_whitespace,
         this_bq_count,
         close_open_blocks_fn,
@@ -263,7 +264,9 @@ class LeafBlockProcessor:
         new_tokens = []
 
         start_char, index = LeafBlockProcessor.is_thematic_break(
-            line_to_parse, start_index, extracted_whitespace
+            position_marker.text_to_parse,
+            position_marker.index_number,
+            extracted_whitespace,
         )
         if start_char:
             if token_stack[-1].is_paragraph:
@@ -279,7 +282,10 @@ class LeafBlockProcessor:
                 ThematicBreakMarkdownToken(
                     start_char,
                     extracted_whitespace.replace("\t", "    "),
-                    line_to_parse[start_index:index].replace("\t", "    "),
+                    position_marker.text_to_parse[
+                        position_marker.index_number : index
+                    ].replace("\t", "    "),
+                    position_marker=position_marker,
                 )
             )
         return new_tokens
@@ -357,7 +363,7 @@ class LeafBlockProcessor:
                         hash_count,
                         remove_trailing_count,
                         extracted_whitespace,
-                        position_marker=position_marker,
+                        position_marker,
                     )
                 )
                 new_tokens.append(

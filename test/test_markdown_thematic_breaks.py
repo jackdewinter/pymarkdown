@@ -21,7 +21,11 @@ def test_thematic_breaks_013():
     source_markdown = """***
 ---
 ___"""
-    expected_tokens = ["[tbreak:*::***]", "[tbreak:-::---]", "[tbreak:_::___]"]
+    expected_tokens = [
+        "[tbreak(1,1):*::***]",
+        "[tbreak(2,1):-::---]",
+        "[tbreak(3,1):_::___]",
+    ]
     expected_gfm = """<hr />
 <hr />
 <hr />"""
@@ -124,7 +128,11 @@ def test_thematic_breaks_017():
     source_markdown = """ ***
   ***
    ***"""
-    expected_tokens = ["[tbreak:*: :***]", "[tbreak:*:  :***]", "[tbreak:*:   :***]"]
+    expected_tokens = [
+        "[tbreak(1,2):*: :***]",
+        "[tbreak(2,3):*:  :***]",
+        "[tbreak(3,4):*:   :***]",
+    ]
     expected_gfm = """<hr />
 <hr />
 <hr />"""
@@ -195,7 +203,7 @@ def test_thematic_breaks_020():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """_____________________________________"""
-    expected_tokens = ["[tbreak:_::_____________________________________]"]
+    expected_tokens = ["[tbreak(1,1):_::_____________________________________]"]
     expected_gfm = """<hr />"""
 
     # Act
@@ -217,7 +225,7 @@ def test_thematic_breaks_021():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """ - - -"""
-    expected_tokens = ["[tbreak:-: :- - -]"]
+    expected_tokens = ["[tbreak(1,2):-: :- - -]"]
     expected_gfm = """<hr />"""
 
     # Act
@@ -239,7 +247,7 @@ def test_thematic_breaks_022():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """ **  * ** * ** * **"""
-    expected_tokens = ["[tbreak:*: :**  * ** * ** * **]"]
+    expected_tokens = ["[tbreak(1,2):*: :**  * ** * ** * **]"]
     expected_gfm = """<hr />"""
 
     # Act
@@ -261,7 +269,7 @@ def test_thematic_breaks_023():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """-     -      -      -"""
-    expected_tokens = ["[tbreak:-::-     -      -      -]"]
+    expected_tokens = ["[tbreak(1,1):-::-     -      -      -]"]
     expected_gfm = """<hr />"""
 
     # Act
@@ -283,7 +291,7 @@ def test_thematic_breaks_024():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """- - - -    """
-    expected_tokens = ["[tbreak:-::- - - -    ]"]
+    expected_tokens = ["[tbreak(1,1):-::- - - -    ]"]
     expected_gfm = """<hr />"""
 
     # Act
@@ -388,7 +396,7 @@ def test_thematic_breaks_027():
         "[text:foo:]",
         "[end-para]",
         "[end-ulist]",
-        "[tbreak:*::***]",
+        "[tbreak(2,1):*::***]",
         "[ulist:-::2:]",
         "[para:]",
         "[text:bar:]",
@@ -428,7 +436,7 @@ bar"""
         "[para:]",
         "[text:Foo:]",
         "[end-para]",
-        "[tbreak:*::***]",
+        "[tbreak(2,1):*::***]",
         "[para:]",
         "[text:bar:]",
         "[end-para]",
@@ -496,7 +504,7 @@ def test_thematic_breaks_030():
         "[text:Foo:]",
         "[end-para]",
         "[end-ulist]",
-        "[tbreak:*::* * *]",
+        "[tbreak(2,1):*::* * *]",
         "[ulist:*::2:]",
         "[para:]",
         "[text:Bar:]",
@@ -537,7 +545,7 @@ def test_thematic_breaks_031():
         "[text:Foo:]",
         "[end-para]",
         "[li:2]",
-        "[tbreak:*::* * *]",
+        "[tbreak(2,3):*::* * *]",
         "[end-ulist]",
     ]
     expected_gfm = """<ul>

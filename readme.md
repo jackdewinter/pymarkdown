@@ -9,7 +9,6 @@
 - add token for LRD
 - need to add line/column for
   - setext
-  - thematic break
   - html
   - indented code block
   - fenced code block
@@ -17,6 +16,7 @@
   - paragraph
   - text
   - list
+    - refactor is_thematic_break
   - block quote
   - LRD
   - inlines

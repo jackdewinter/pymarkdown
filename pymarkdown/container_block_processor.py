@@ -928,8 +928,7 @@ class ContainerBlockProcessor:
                 )
                 new_tokens = LeafBlockProcessor.parse_thematic_break(
                     token_stack,
-                    line_to_parse,
-                    start_index,
+                    position_marker,
                     extracted_whitespace,
                     this_bq_count,
                     close_open_blocks_fn,

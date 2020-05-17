@@ -344,7 +344,7 @@ Heading
         "[icode-block:    ]",
         "[text:foo:]",
         "[end-icode-block]",
-        "[tbreak:-::----]",
+        "[tbreak(6,1):-::----]",
     ]
     expected_gfm = """<h1>Heading</h1>
 <pre><code>foo

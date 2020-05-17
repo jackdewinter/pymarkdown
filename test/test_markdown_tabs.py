@@ -108,7 +108,7 @@ def test_tabs_002b():
         "[icode-block:    ]",
         "[text:a simple\n  indented code block:]",
         "[end-icode-block]",
-        "[tbreak:-::---]",
+        "[tbreak(3,1):-::---]",
         "[icode-block:    ]",
         "[text:a simple\n  indented code block:  ]",
         "[end-icode-block]",
@@ -610,7 +610,7 @@ def test_tabs_011():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """*\t*\t*\t"""
-    expected_tokens = ["[tbreak:*::*    *    *    ]"]
+    expected_tokens = ["[tbreak(1,1):*::*    *    *    ]"]
     expected_gfm = """<hr />"""
 
     # Act

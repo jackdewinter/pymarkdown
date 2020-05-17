@@ -32,11 +32,27 @@ class MarkdownToken:
     token_inline_link = "link"
     token_inline_image = "image"
 
-    def __init__(self, token_name, extra_data=None, line_number=0, column_number=0):
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        token_name,
+        extra_data=None,
+        line_number=0,
+        column_number=0,
+        position_marker=None,
+    ):
         self.token_name = token_name
         self.extra_data = extra_data
+
+        if position_marker:
+            line_number = position_marker.line_number
+            column_number = (
+                position_marker.index_number + position_marker.index_indent + 1
+            )
         self.line_number = line_number
         self.column_number = column_number
+
+    # pylint: enable=too-many-arguments
 
     def __str__(self):
         add_extra = ""
@@ -304,23 +320,11 @@ class AtxHeadingMarkdownToken(MarkdownToken):
 
     # pylint: disable=too-many-arguments
     def __init__(
-        self,
-        hash_count,
-        remove_trailing_count,
-        extracted_whitespace,
-        position_marker=None,
+        self, hash_count, remove_trailing_count, extracted_whitespace, position_marker,
     ):
         self.hash_count = hash_count
         self.remove_trailing_count = remove_trailing_count
         self.extracted_whitespace = extracted_whitespace
-
-        line_number = 0
-        column_number = 0
-        if position_marker:
-            line_number = position_marker.line_number
-            column_number = (
-                position_marker.index_number + position_marker.index_indent + 1
-            )
 
         MarkdownToken.__init__(
             self,
@@ -330,8 +334,7 @@ class AtxHeadingMarkdownToken(MarkdownToken):
             + str(remove_trailing_count)
             + ":"
             + extracted_whitespace,
-            line_number=line_number,
-            column_number=column_number,
+            position_marker=position_marker,
         )
 
     # pylint: enable=too-many-arguments
@@ -557,11 +560,14 @@ class ThematicBreakMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the thematic break element.
     """
 
-    def __init__(self, start_character, extracted_whitespace, rest_of_line):
+    def __init__(
+        self, start_character, extracted_whitespace, rest_of_line, position_marker=None
+    ):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_thematic_break,
             start_character + ":" + extracted_whitespace + ":" + rest_of_line,
+            position_marker=position_marker,
         )
 
 

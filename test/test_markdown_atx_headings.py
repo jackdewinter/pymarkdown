@@ -453,11 +453,11 @@ def test_atx_headings_047():
 ## foo
 ****"""
     expected_tokens = [
-        "[tbreak:*::****]",
+        "[tbreak(1,1):*::****]",
         "[atx(2,1):2:0:]",
         "[text:foo: ]",
         "[end-atx::]",
-        "[tbreak:*::****]",
+        "[tbreak(3,1):*::****]",
     ]
     expected_gfm = """<hr />
 <h2>foo</h2>
