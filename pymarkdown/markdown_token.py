@@ -551,8 +551,10 @@ class HtmlBlockMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the html block element.
     """
 
-    def __init__(self):
-        MarkdownToken.__init__(self, MarkdownToken.token_html_block, "")
+    def __init__(self, position_marker):
+        MarkdownToken.__init__(
+            self, MarkdownToken.token_html_block, "", position_marker=position_marker
+        )
 
 
 class ThematicBreakMarkdownToken(MarkdownToken):
@@ -561,7 +563,7 @@ class ThematicBreakMarkdownToken(MarkdownToken):
     """
 
     def __init__(
-        self, start_character, extracted_whitespace, rest_of_line, position_marker=None
+        self, start_character, extracted_whitespace, rest_of_line, position_marker
     ):
         MarkdownToken.__init__(
             self,

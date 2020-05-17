@@ -289,7 +289,7 @@ def test_backslash_escapes_317():
     transformer = TransformToGfm()
     source_markdown = """<a href="/bar\\/)">"""
     expected_tokens = [
-        "[html-block]",
+        "[html-block(1,1)]",
         '[text:<a href="/bar\\/)">:]',
         "[end-html-block]",
     ]

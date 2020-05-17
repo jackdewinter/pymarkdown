@@ -9,7 +9,6 @@
 - add token for LRD
 - need to add line/column for
   - setext
-  - html
   - indented code block
   - fenced code block
   - blank lines

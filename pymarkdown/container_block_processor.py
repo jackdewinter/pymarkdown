@@ -743,8 +743,7 @@ class ContainerBlockProcessor:
     def __handle_html_block(
         outer_processed,
         token_stack,
-        line_to_parse,
-        start_index,
+        position_marker,
         extracted_whitespace,
         new_tokens,
         close_open_blocks_fn,
@@ -752,11 +751,14 @@ class ContainerBlockProcessor:
         """
         Take care of the processing for html blocks.
         """
+
+        LOGGER.debug(">>position_marker>>ttp>>%s>>", position_marker.text_to_parse)
+        LOGGER.debug(">>position_marker>>in>>%s>>", str(position_marker.index_number))
+        LOGGER.debug(">>position_marker>>ln>>%s>>", str(position_marker.line_number))
         if not outer_processed and not token_stack[-1].is_html_block:
             html_tokens = HtmlHelper.parse_html_block(
                 token_stack,
-                line_to_parse,
-                start_index,
+                position_marker,
                 extracted_whitespace,
                 close_open_blocks_fn,
             )
@@ -764,8 +766,8 @@ class ContainerBlockProcessor:
         if token_stack[-1].is_html_block:
             html_tokens = HtmlHelper.check_normal_html_block_end(
                 token_stack,
-                line_to_parse,
-                start_index,
+                position_marker.text_to_parse,
+                position_marker.index_number,
                 extracted_whitespace,
                 close_open_blocks_fn,
             )
@@ -889,8 +891,7 @@ class ContainerBlockProcessor:
         outer_processed = ContainerBlockProcessor.__handle_html_block(
             outer_processed,
             token_stack,
-            line_to_parse,
-            start_index,
+            position_marker,
             extracted_whitespace,
             new_tokens,
             close_open_blocks_fn,

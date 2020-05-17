@@ -1,6 +1,7 @@
 """
 Module to provide helper functions for parsing html.
 """
+import logging
 import string
 
 from pymarkdown.constants import Constants
@@ -11,6 +12,8 @@ from pymarkdown.markdown_token import (
 )
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.stack_token import HtmlBlockStackToken, ParagraphStackToken
+
+LOGGER = logging.getLogger(__name__)
 
 
 class HtmlHelper:
@@ -710,11 +713,7 @@ class HtmlHelper:
 
     @staticmethod
     def parse_html_block(
-        token_stack,
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
-        close_open_blocks_fn,
+        token_stack, position_marker, extracted_whitespace, close_open_blocks_fn,
     ):
         """
         Determine if we have the criteria that we need to start an HTML block.
@@ -724,13 +723,15 @@ class HtmlHelper:
         if (
             ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
         ) and ParserHelper.is_character_at_index(
-            line_to_parse, start_index, HtmlHelper.__html_block_start_character
+            position_marker.text_to_parse,
+            position_marker.index_number,
+            HtmlHelper.__html_block_start_character,
         ):
             (
                 html_block_type,
                 remaining_html_tag,
             ) = HtmlHelper.__determine_html_block_type(
-                token_stack, line_to_parse, start_index
+                token_stack, position_marker.text_to_parse, position_marker.index_number
             )
             if html_block_type:
                 new_tokens, _, _ = close_open_blocks_fn(
@@ -739,7 +740,7 @@ class HtmlHelper:
                 token_stack.append(
                     HtmlBlockStackToken(html_block_type, remaining_html_tag)
                 )
-                new_tokens.append(HtmlBlockMarkdownToken())
+                new_tokens.append(HtmlBlockMarkdownToken(position_marker))
         return new_tokens
 
     @staticmethod

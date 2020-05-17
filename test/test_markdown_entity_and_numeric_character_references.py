@@ -215,7 +215,7 @@ def test_character_references_327():
     transformer = TransformToGfm()
     source_markdown = '<a href="&ouml;&ouml;.html">'
     expected_tokens = [
-        "[html-block]",
+        "[html-block(1,1)]",
         '[text:<a href="&ouml;&ouml;.html">:]',
         "[end-html-block]",
     ]
