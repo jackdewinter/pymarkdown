@@ -82,16 +82,17 @@ class LeafBlockProcessor:
     # pylint: disable=too-many-locals
     @staticmethod
     def parse_fenced_code_block(
-        token_stack,
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
-        close_open_blocks_fn,
+        token_stack, position_marker, extracted_whitespace, close_open_blocks_fn,
     ):
         """
         Handle the parsing of a fenced code block
         """
-        LOGGER.debug("line>>%s>>index>>%s>>", line_to_parse, start_index)
+
+        LOGGER.debug(
+            "line>>%s>>index>>%s>>",
+            position_marker.text_to_parse,
+            position_marker.index_number,
+        )
         new_tokens = []
         (
             is_fence_start,
@@ -99,16 +100,19 @@ class LeafBlockProcessor:
             extracted_whitespace_before_info_string,
             collected_count,
         ) = LeafBlockProcessor.is_fenced_code_block(
-            line_to_parse, start_index, extracted_whitespace
+            position_marker.text_to_parse,
+            position_marker.index_number,
+            extracted_whitespace,
         )
         if is_fence_start and not token_stack[-1].is_html_block:
             if token_stack[-1].is_fenced_code_block:
                 LOGGER.debug("pfcb->end")
 
                 if (
-                    token_stack[-1].code_fence_character == line_to_parse[start_index]
+                    token_stack[-1].code_fence_character
+                    == position_marker.text_to_parse[position_marker.index_number]
                     and collected_count >= token_stack[-1].fence_character_count
-                    and non_whitespace_index >= len(line_to_parse)
+                    and non_whitespace_index >= len(position_marker.text_to_parse)
                 ):
                     new_tokens.append(
                         token_stack[-1].generate_close_token(extracted_whitespace)
@@ -117,19 +121,19 @@ class LeafBlockProcessor:
             else:
                 LOGGER.debug("pfcb->check")
                 if (
-                    line_to_parse[start_index]
+                    position_marker.text_to_parse[position_marker.index_number]
                     == LeafBlockProcessor.__fenced_start_tilde
                     or LeafBlockProcessor.__fenced_start_backtick
-                    not in line_to_parse[non_whitespace_index:]
+                    not in position_marker.text_to_parse[non_whitespace_index:]
                 ):
                     LOGGER.debug("pfcb->start")
                     (
                         after_extracted_text_index,
                         extracted_text,
                     ) = ParserHelper.extract_until_whitespace(
-                        line_to_parse, non_whitespace_index
+                        position_marker.text_to_parse, non_whitespace_index
                     )
-                    text_after_extracted_text = line_to_parse[
+                    text_after_extracted_text = position_marker.text_to_parse[
                         after_extracted_text_index:
                     ]
 
@@ -139,7 +143,9 @@ class LeafBlockProcessor:
 
                     token_stack.append(
                         FencedCodeBlockStackToken(
-                            code_fence_character=line_to_parse[start_index],
+                            code_fence_character=position_marker.text_to_parse[
+                                position_marker.index_number
+                            ],
                             fence_character_count=collected_count,
                             whitespace_start_count=ParserHelper.calculate_length(
                                 extracted_whitespace
@@ -152,12 +158,13 @@ class LeafBlockProcessor:
                     )
                     new_tokens.append(
                         FencedCodeBlockMarkdownToken(
-                            line_to_parse[start_index],
+                            position_marker.text_to_parse[position_marker.index_number],
                             collected_count,
                             extracted_text,
                             text_after_extracted_text,
                             extracted_whitespace,
                             extracted_whitespace_before_info_string,
+                            position_marker,
                         )
                     )
         elif (

@@ -239,7 +239,11 @@ def test_backslash_escapes_315():
     source_markdown = """~~~
 \\[\\]
 ~~~"""
-    expected_tokens = ["[fcode-block:~:3::::]", "[text:\\[\\]:]", "[end-fcode-block]"]
+    expected_tokens = [
+        "[fcode-block(1,1):~:3::::]",
+        "[text:\\[\\]:]",
+        "[end-fcode-block]",
+    ]
     expected_gfm = """<pre><code>\\[\\]
 </code></pre>"""
 
@@ -378,7 +382,7 @@ def test_backslash_escapes_320():
 foo
 ```"""
     expected_tokens = [
-        "[fcode-block:`:3:foo+bar::: ]",
+        "[fcode-block(1,1):`:3:foo+bar::: ]",
         "[text:foo:]",
         "[end-fcode-block]",
     ]
@@ -407,7 +411,7 @@ def test_backslash_escapes_320a():
 foo
 ```"""
     expected_tokens = [
-        "[fcode-block:`:3:foo+\\bar::: ]",
+        "[fcode-block(1,1):`:3:foo+\\bar::: ]",
         "[text:foo:]",
         "[end-fcode-block]",
     ]
@@ -436,7 +440,7 @@ def test_backslash_escapes_320b():
 foo
 ```"""
     expected_tokens = [
-        "[fcode-block:`:3:foo+bar\\::: ]",
+        "[fcode-block(1,1):`:3:foo+bar\\::: ]",
         "[text:foo:]",
         "[end-fcode-block]",
     ]

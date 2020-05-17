@@ -705,8 +705,7 @@ class ContainerBlockProcessor:
     def __handle_fenced_code_block(
         outer_processed,
         token_stack,
-        line_to_parse,
-        start_index,
+        position_marker,
         extracted_whitespace,
         new_tokens,
         close_open_blocks_fn,
@@ -720,8 +719,7 @@ class ContainerBlockProcessor:
                 extracted_whitespace,
             ) = LeafBlockProcessor.parse_fenced_code_block(
                 token_stack,
-                line_to_parse,
-                start_index,
+                position_marker,
                 extracted_whitespace,
                 close_open_blocks_fn,
             )
@@ -731,7 +729,10 @@ class ContainerBlockProcessor:
                 outer_processed = True
             elif token_stack[-1].is_fenced_code_block:
                 new_tokens.append(
-                    TextMarkdownToken(line_to_parse[start_index:], extracted_whitespace)
+                    TextMarkdownToken(
+                        position_marker.text_to_parse[position_marker.index_number :],
+                        extracted_whitespace,
+                    )
                 )
                 outer_processed = True
         return outer_processed
@@ -866,8 +867,7 @@ class ContainerBlockProcessor:
         outer_processed = ContainerBlockProcessor.__handle_fenced_code_block(
             outer_processed,
             token_stack,
-            line_to_parse,
-            start_index,
+            position_marker,
             extracted_whitespace,
             new_tokens,
             close_open_blocks_fn,

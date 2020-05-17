@@ -294,6 +294,7 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
         text_after_extracted_text,
         extracted_whitespace,
         extracted_whitespace_before_info_string,
+        position_marker,
     ):
         self.extracted_whitespace = extracted_whitespace
         self.extracted_text = extracted_text
@@ -311,6 +312,7 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
             + extracted_whitespace
             + ":"
             + extracted_whitespace_before_info_string,
+            position_marker=position_marker,
         )
 
     # pylint: enable=too-many-arguments

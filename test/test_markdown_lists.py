@@ -1561,7 +1561,7 @@ def test_list_items_298():
         "[text:a:]",
         "[end-para]",
         "[li:2]",
-        "[fcode-block:`:3::::]",
+        "[fcode-block(2,3):`:3::::]",
         "[text:b\n\n:]",
         "[end-fcode-block]",
         "[li:2]",
@@ -1718,7 +1718,7 @@ def test_list_items_301():
         "[text:b:]",
         "[end-para]",
         "[end-block-quote]",
-        "[fcode-block:`:3::::]",
+        "[fcode-block(3,3):`:3::::]",
         "[text:c:]",
         "[end-fcode-block]",
         "[li:2]",
@@ -1833,7 +1833,7 @@ def test_list_items_304():
    bar"""
     expected_tokens = [
         "[olist:.:1:3:]",
-        "[fcode-block:`:3::::]",
+        "[fcode-block(1,4):`:3::::]",
         "[text:foo:]",
         "[end-fcode-block]",
         "[BLANK:]",

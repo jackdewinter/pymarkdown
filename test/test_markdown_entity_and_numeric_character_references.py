@@ -303,7 +303,7 @@ foo
 ```
 """
     expected_tokens = [
-        "[fcode-block:`:3:föö::: ]",
+        "[fcode-block(1,1):`:3:föö::: ]",
         "[text:foo:]",
         "[end-fcode-block]",
         "[BLANK:]",

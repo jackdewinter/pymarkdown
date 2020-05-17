@@ -353,13 +353,13 @@ foo
 ```"""
     expected_tokens = [
         "[block-quote:]",
-        "[fcode-block:`:3::::]",
+        "[fcode-block(1,3):`:3::::]",
         "[end-fcode-block]",
         "[end-block-quote]",
         "[para:]",
         "[text:foo:]",
         "[end-para]",
-        "[fcode-block:`:3::::]",
+        "[fcode-block(3,1):`:3::::]",
         "[end-fcode-block]",
     ]
     expected_gfm = """<blockquote>
