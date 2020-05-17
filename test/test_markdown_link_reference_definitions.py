@@ -640,7 +640,7 @@ def test_link_reference_definitions_180():
 
 [foo]"""
     expected_tokens = [
-        "[icode-block:    ]",
+        "[icode-block(1,5):    ]",
         "[text:[foo]: /url &quot;title&quot;:]",
         "[end-icode-block]",
         "[BLANK:]",

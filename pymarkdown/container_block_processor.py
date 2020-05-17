@@ -905,8 +905,7 @@ class ContainerBlockProcessor:
             if not new_tokens:
                 new_tokens = LeafBlockProcessor.parse_indented_code_block(
                     token_stack,
-                    line_to_parse,
-                    start_index,
+                    position_marker,
                     extracted_whitespace,
                     removed_chars_at_start,
                 )

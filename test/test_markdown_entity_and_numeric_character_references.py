@@ -357,7 +357,7 @@ def test_character_references_332():
     transformer = TransformToGfm()
     source_markdown = """    f&ouml;f&ouml;"""
     expected_tokens = [
-        "[icode-block:    ]",
+        "[icode-block(1,5):    ]",
         "[text:f&amp;ouml;f&amp;ouml;:]",
         "[end-icode-block]",
     ]

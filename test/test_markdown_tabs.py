@@ -20,7 +20,7 @@ def test_tabs_001():
     transformer = TransformToGfm()
     source_markdown = """\tfoo\tbaz\t\tbim"""
     expected_tokens = [
-        "[icode-block:    ]",
+        "[icode-block(1,2):    ]",
         "[text:foo\tbaz\t\tbim:]",
         "[end-icode-block]",
     ]
@@ -47,7 +47,7 @@ def test_tabs_002():
     transformer = TransformToGfm()
     source_markdown = """  \tfoo\tbaz\t\tbim"""
     expected_tokens = [
-        "[icode-block:    ]",
+        "[icode-block(1,4):    ]",
         "[text:foo\tbaz\t\tbim:]",
         "[end-icode-block]",
     ]
@@ -74,7 +74,7 @@ def test_tabs_002a():
     transformer = TransformToGfm()
     source_markdown = """      foo    baz        bim"""
     expected_tokens = [
-        "[icode-block:    ]",
+        "[icode-block(1,7):    ]",
         "[text:foo    baz        bim:  ]",
         "[end-icode-block]",
     ]
@@ -105,11 +105,11 @@ def test_tabs_002b():
       a simple
       indented code block"""
     expected_tokens = [
-        "[icode-block:    ]",
+        "[icode-block(1,5):    ]",
         "[text:a simple\n  indented code block:]",
         "[end-icode-block]",
         "[tbreak(3,1):-::---]",
-        "[icode-block:    ]",
+        "[icode-block(4,7):    ]",
         "[text:a simple\n  indented code block:  ]",
         "[end-icode-block]",
     ]
@@ -142,7 +142,7 @@ def test_tabs_003():
     source_markdown = """    a\ta
     ὐ\ta"""
     expected_tokens = [
-        "[icode-block:    ]",
+        "[icode-block(1,5):    ]",
         "[text:a\ta\nὐ\ta:]",
         "[end-icode-block]",
     ]
@@ -218,7 +218,7 @@ def test_tabs_005():
         "[text:foo:]",
         "[end-para]",
         "[BLANK:]",
-        "[icode-block:    ]",
+        "[icode-block(3,3):    ]",
         "[text:bar:  ]",
         "[end-icode-block]",
         "[end-ulist]",
@@ -253,7 +253,7 @@ def test_tabs_006():
     source_markdown = """>\t\tfoo"""
     expected_tokens = [
         "[block-quote:]",
-        "[icode-block:    ]",
+        "[icode-block(1,4):    ]",
         "[text:foo:  ]",
         "[end-icode-block]",
         "[end-block-quote]",
@@ -284,7 +284,7 @@ def test_tabs_006a():
     source_markdown = """>   \tfoo"""
     expected_tokens = [
         "[block-quote:]",
-        "[icode-block:    ]",
+        "[icode-block(1,6):    ]",
         "[text:foo:  ]",
         "[end-icode-block]",
         "[end-block-quote]",
@@ -315,7 +315,7 @@ def test_tabs_006b():
     source_markdown = """>\t    foo"""
     expected_tokens = [
         "[block-quote:]",
-        "[icode-block:    ]",
+        "[icode-block(1,7):    ]",
         "[text:foo:  ]",
         "[end-icode-block]",
         "[end-block-quote]",
@@ -346,7 +346,7 @@ def test_tabs_006c():
     source_markdown = """>       foo"""
     expected_tokens = [
         "[block-quote:]",
-        "[icode-block:    ]",
+        "[icode-block(1,9):    ]",
         "[text:foo:  ]",
         "[end-icode-block]",
         "[end-block-quote]",
@@ -377,7 +377,7 @@ def test_tabs_007():
     source_markdown = """-\t\tfoo"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[icode-block:    ]",
+        "[icode-block(1,4):    ]",
         "[text:foo:  ]",
         "[end-icode-block]",
         "[end-ulist]",
@@ -410,7 +410,7 @@ def test_tabs_007a():
     source_markdown = """1)\t\tfoo"""
     expected_tokens = [
         "[olist:):1:3:]",
-        "[icode-block:    ]",
+        "[icode-block(1,5):    ]",
         "[text:foo: ]",
         "[end-icode-block]",
         "[end-olist]",
@@ -443,7 +443,7 @@ def test_tabs_007b():
     source_markdown = """01)\t\tfoo"""
     expected_tokens = [
         "[olist:):01:4:]",
-        "[icode-block:    ]",
+        "[icode-block(1,6):    ]",
         "[text:foo:]",
         "[end-icode-block]",
         "[end-olist]",
@@ -476,7 +476,7 @@ def test_tabs_007c():
     source_markdown = """001)\t\tfoo"""
     expected_tokens = [
         "[olist:):001:5:]",
-        "[icode-block:    ]",
+        "[icode-block(1,7):    ]",
         "[text:foo:   ]",
         "[end-icode-block]",
         "[end-olist]",
@@ -510,7 +510,7 @@ def test_tabs_008():
 \tbar"""  # noqa: E101,W191
     # noqa: E101
     expected_tokens = [
-        "[icode-block:    ]",
+        "[icode-block(1,5):    ]",
         "[text:foo\nbar:]",
         "[end-icode-block]",
     ]

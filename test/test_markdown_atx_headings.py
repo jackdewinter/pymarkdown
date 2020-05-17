@@ -239,7 +239,7 @@ def test_atx_headings_039():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """    # foo"""
-    expected_tokens = ["[icode-block:    ]", "[text:# foo:]", "[end-icode-block]"]
+    expected_tokens = ["[icode-block(1,5):    ]", "[text:# foo:]", "[end-icode-block]"]
     expected_gfm = """<pre><code># foo
 </code></pre>"""
 
