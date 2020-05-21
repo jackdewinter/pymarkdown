@@ -327,7 +327,7 @@ def test_setext_headings_057():
     transformer = TransformToGfm()
     source_markdown = """Foo
     ---"""
-    expected_tokens = ["[para:\n    ]", "[text:Foo\n---::\n]", "[end-para]"]
+    expected_tokens = ["[para(1,1):\n    ]", "[text:Foo\n---::\n]", "[end-para]"]
     expected_gfm = """<p>Foo
 ---</p>"""
 
@@ -355,11 +355,11 @@ def test_setext_headings_058():
 Foo
 --- -"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:Foo\n= =::\n]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para(4,1):]",
         "[text:Foo:]",
         "[end-para]",
         "[tbreak(5,1):-::--- -]",
@@ -446,14 +446,14 @@ of dashes"/>"""
         "[setext:-:]",
         "[text:`Foo:]",
         "[end-setext::]",
-        "[para:]",
+        "[para(3,1):]",
         "[text:`:]",
         "[end-para]",
         "[BLANK:]",
         "[setext:-:]",
         "[text:&lt;a title=&quot;a lot:]",
         "[end-setext::]",
-        "[para:]",
+        "[para(7,1):]",
         "[text:of dashes&quot;/&gt;:]",
         "[end-para]",
     ]
@@ -484,7 +484,7 @@ def test_setext_headings_062():
 ---"""
     expected_tokens = [
         "[block-quote:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:Foo:]",
         "[end-para]",
         "[end-block-quote]",
@@ -518,7 +518,7 @@ bar
 ==="""
     expected_tokens = [
         "[block-quote:]",
-        "[para:\n\n]",
+        "[para(1,3):\n\n]",
         "[text:foo\nbar\n===::\n\n]",
         "[end-para]",
         "[end-block-quote]",
@@ -551,7 +551,7 @@ def test_setext_headings_064():
 ---"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:Foo:]",
         "[end-para]",
         "[end-ulist]",
@@ -584,7 +584,7 @@ def test_setext_headings_064a():
 ---"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:Foo:]",
         "[end-para]",
         "[end-ulist]",
@@ -652,7 +652,7 @@ Baz"""
         "[setext:-:]",
         "[text:Bar:]",
         "[end-setext::]",
-        "[para:]",
+        "[para(6,1):]",
         "[text:Baz:]",
         "[end-para]",
     ]
@@ -681,7 +681,7 @@ def test_setext_headings_067():
     transformer = TransformToGfm()
     source_markdown = """
 ===="""
-    expected_tokens = ["[BLANK:]", "[para:]", "[text:====:]", "[end-para]"]
+    expected_tokens = ["[BLANK:]", "[para(2,1):]", "[text:====:]", "[end-para]"]
     expected_gfm = """<p>====</p>"""
 
     # Act
@@ -730,7 +730,7 @@ def test_setext_headings_069():
 -----"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
         "[end-ulist]",
@@ -763,7 +763,7 @@ def test_setext_headings_069a():
 -----"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
         "[end-ulist]",
@@ -826,7 +826,7 @@ def test_setext_headings_071():
 -----"""
     expected_tokens = [
         "[block-quote:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
         "[end-block-quote]",
@@ -885,14 +885,14 @@ bar
 ---
 baz"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:Foo:]",
         "[end-para]",
         "[BLANK:]",
         "[setext:-:]",
         "[text:bar:]",
         "[end-setext::]",
-        "[para:]",
+        "[para(5,1):]",
         "[text:baz:]",
         "[end-para]",
     ]
@@ -926,13 +926,13 @@ bar
 
 baz"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:Foo\nbar::\n]",
         "[end-para]",
         "[BLANK:]",
         "[tbreak(4,1):-::---]",
         "[BLANK:]",
-        "[para:]",
+        "[para(6,1):]",
         "[text:baz:]",
         "[end-para]",
     ]
@@ -965,11 +965,11 @@ bar
 * * *
 baz"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:Foo\nbar::\n]",
         "[end-para]",
         "[tbreak(3,1):*::* * *]",
-        "[para:]",
+        "[para(4,1):]",
         "[text:baz:]",
         "[end-para]",
     ]
@@ -1002,7 +1002,7 @@ bar
 \\---
 baz"""
     expected_tokens = [
-        "[para:\n\n\n]",
+        "[para(1,1):\n\n\n]",
         "[text:Foo\nbar\n---\nbaz::\n\n\n]",
         "[end-para]",
     ]

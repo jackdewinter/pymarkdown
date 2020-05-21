@@ -22,11 +22,11 @@ def test_block_inline_precedence_012():
 - two`"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:`one:]",
         "[end-para]",
         "[li:2]",
-        "[para:]",
+        "[para(2,3):]",
         "[text:two`:]",
         "[end-para]",
         "[end-ulist]",

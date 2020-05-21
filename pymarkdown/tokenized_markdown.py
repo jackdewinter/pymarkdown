@@ -111,6 +111,7 @@ class TokenizedMarkdown:
             LOGGER.debug("next-line>>%s", str(token_to_use))
             LOGGER.debug("stack>>%s", str(self.stack))
             LOGGER.debug("current_block>>%s", str(self.stack[-1]))
+            LOGGER.debug("line_number>>%s", str(line_number))
             LOGGER.debug("---")
 
             if did_start_close:
@@ -162,14 +163,9 @@ class TokenizedMarkdown:
                         requeue_line_info.force_ignore_first_as_lrd
                     )
 
-            line_number += 1
-
-            if lines_to_requeue:
-                for i in lines_to_requeue:
-                    requeue.insert(0, i)
-                ignore_link_definition_start = force_ignore_first_as_lrd
-            else:
-                ignore_link_definition_start = False
+            line_number, ignore_link_definition_start = TokenizedMarkdown.__xx(
+                line_number, lines_to_requeue, requeue, force_ignore_first_as_lrd
+            )
 
             LOGGER.debug("---\nbefore>>%s", str(self.tokenized_document))
             LOGGER.debug("before>>%s", str(tokens_from_line))
@@ -189,6 +185,25 @@ class TokenizedMarkdown:
             )
 
         return self.tokenized_document
+
+    @staticmethod
+    def __xx(line_number, lines_to_requeue, requeue, force_ignore_first_as_lrd):
+        number_of_lines_to_requeue = len(lines_to_requeue)
+        LOGGER.debug("\n\n---lines_to_requeue>>%s", str(number_of_lines_to_requeue))
+        if number_of_lines_to_requeue:
+            line_number -= number_of_lines_to_requeue - 1
+        else:
+            line_number += 1
+        LOGGER.debug("line_number>>%s\n---", str(line_number))
+
+        if lines_to_requeue:
+            for i in lines_to_requeue:
+                requeue.insert(0, i)
+            ignore_link_definition_start = force_ignore_first_as_lrd
+        else:
+            ignore_link_definition_start = False
+
+        return line_number, ignore_link_definition_start
 
     def __determine_next_token_process(
         self, requeue, did_start_close, did_started_close

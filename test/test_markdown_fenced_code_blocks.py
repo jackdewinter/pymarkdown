@@ -84,7 +84,7 @@ def test_fenced_code_blocks_091():
     source_markdown = """``
 foo
 ``"""
-    expected_tokens = ["[para:\n\n]", "[icode-span:foo]", "[end-para]"]
+    expected_tokens = ["[para(1,1):\n\n]", "[icode-span:foo]", "[end-para]"]
     expected_gfm = """<p><code>foo</code></p>"""
 
     # Act
@@ -295,7 +295,7 @@ bbb"""
         "[end-fcode-block]",
         "[end-block-quote]",
         "[BLANK:]",
-        "[para:]",
+        "[para(4,1):]",
         "[text:bbb:]",
         "[end-para]",
     ]
@@ -334,7 +334,7 @@ bbb"""
         "[end-fcode-block]",
         "[end-block-quote]",
         "[BLANK:]",
-        "[para:]",
+        "[para(4,1):]",
         "[text:bbb:]",
         "[end-para]",
     ]
@@ -373,7 +373,7 @@ bbb"""
         "[end-fcode-block]",
         "[end-block-quote]",
         "[BLANK:]",
-        "[para:]",
+        "[para(4,1):]",
         "[text:bbb:]",
         "[end-para]",
     ]
@@ -410,11 +410,11 @@ bbb"""
         "[fcode-block(1,3):`:3::::]",
         "[end-fcode-block]",
         "[end-block-quote]",
-        "[para:]",
+        "[para(2,1):]",
         "[text:aaa:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para(4,1):]",
         "[text:bbb:]",
         "[end-para]",
     ]
@@ -716,7 +716,7 @@ def test_fenced_code_blocks_108():
     source_markdown = """``` ```
 aaa"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[icode-span: ]",
         """[text:
 aaa::\n]""",
@@ -779,13 +779,13 @@ bar
 ```
 baz"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo:]",
         "[end-para]",
         "[fcode-block(2,1):`:3::::]",
         "[text:bar:]",
         "[end-fcode-block]",
-        "[para:]",
+        "[para(5,1):]",
         "[text:baz:]",
         "[end-para]",
     ]
@@ -944,7 +944,7 @@ def test_fenced_code_blocks_115():
     source_markdown = """``` aa ```
 foo"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[icode-span:aa]",
         """[text:
 foo::\n]""",

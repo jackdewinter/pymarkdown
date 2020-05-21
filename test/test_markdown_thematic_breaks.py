@@ -49,7 +49,7 @@ def test_thematic_breaks_014():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """+++"""
-    expected_tokens = ["[para:]", "[text:+++:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:+++:]", "[end-para]"]
     expected_gfm = """<p>+++</p>"""
 
     # Act
@@ -71,7 +71,7 @@ def test_thematic_breaks_015():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """==="""
-    expected_tokens = ["[para:]", "[text:===:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:===:]", "[end-para]"]
     expected_gfm = """<p>===</p>"""
 
     # Act
@@ -96,7 +96,7 @@ def test_thematic_breaks_016():
 **
 __"""
     expected_tokens = [
-        "[para:\n\n]",
+        "[para(1,1):\n\n]",
         "[text:--\n::\n]",
         "[text:**:]",
         "[text:\n::\n]",
@@ -180,7 +180,12 @@ def test_thematic_breaks_019():
     transformer = TransformToGfm()
     source_markdown = """Foo
     ***"""
-    expected_tokens = ["[para:\n    ]", "[text:Foo\n::\n]", "[text:***:]", "[end-para]"]
+    expected_tokens = [
+        "[para(1,1):\n    ]",
+        "[text:Foo\n::\n]",
+        "[text:***:]",
+        "[end-para]",
+    ]
     expected_gfm = """<p>Foo
 ***</p>"""
 
@@ -318,7 +323,7 @@ a------
 
 ---a---"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:_:]",
         "[text: :]",
         "[text:_:]",
@@ -329,11 +334,11 @@ a------
         "[text: a:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para(3,1):]",
         "[text:a------:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para(5,1):]",
         "[text:---a---:]",
         "[end-para]",
     ]
@@ -361,7 +366,7 @@ def test_thematic_breaks_026():
     transformer = TransformToGfm()
     source_markdown = """ *-*"""
     expected_tokens = [
-        "[para: ]",
+        "[para(1,2): ]",
         "[emphasis:1]",
         "[text:-:]",
         "[end-emphasis::1]",
@@ -392,13 +397,13 @@ def test_thematic_breaks_027():
 - bar"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
         "[end-ulist]",
         "[tbreak(2,1):*::***]",
         "[ulist:-::2:]",
-        "[para:]",
+        "[para(3,3):]",
         "[text:bar:]",
         "[end-para]",
         "[end-ulist]",
@@ -433,11 +438,11 @@ def test_thematic_breaks_028():
 ***
 bar"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:Foo:]",
         "[end-para]",
         "[tbreak(2,1):*::***]",
-        "[para:]",
+        "[para(3,1):]",
         "[text:bar:]",
         "[end-para]",
     ]
@@ -470,7 +475,7 @@ bar"""
         "[setext:-:]",
         "[text:Foo:]",
         "[end-setext::]",
-        "[para:]",
+        "[para(3,1):]",
         "[text:bar:]",
         "[end-para]",
     ]
@@ -500,13 +505,13 @@ def test_thematic_breaks_030():
 * Bar"""
     expected_tokens = [
         "[ulist:*::2:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:Foo:]",
         "[end-para]",
         "[end-ulist]",
         "[tbreak(2,1):*::* * *]",
         "[ulist:*::2:]",
-        "[para:]",
+        "[para(3,3):]",
         "[text:Bar:]",
         "[end-para]",
         "[end-ulist]",
@@ -541,7 +546,7 @@ def test_thematic_breaks_031():
 - * * *"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:Foo:]",
         "[end-para]",
         "[li:2]",

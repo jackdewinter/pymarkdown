@@ -174,11 +174,11 @@ def test_tabs_004():
     # noqa: E101,W191
     expected_tokens = [
         "[ulist:-::4:  ]",
-        "[para:]",
+        "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para(3,2):]",
         "[text:bar:]",
         "[end-para]",
         "[end-ulist]",
@@ -214,7 +214,7 @@ def test_tabs_005():
     # noqa: E101,W191
     expected_tokens = [
         "[ulist:-::2:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
         "[BLANK:]",
@@ -542,15 +542,15 @@ def test_tabs_009():
     # noqa: E101
     expected_tokens = [
         "[ulist:-::3: ]",
-        "[para:]",
+        "[para(1,4):]",
         "[text:foo:]",
         "[end-para]",
         "[ulist:-::5:   ]",
-        "[para:]",
+        "[para(2,6):]",
         "[text:bar:]",
         "[end-para]",
         "[ulist:-::7:\t ]",
-        "[para:]",
+        "[para(3,5):]",
         "[text:baz:]",
         "[end-para]",
         "[end-ulist]",

@@ -20,7 +20,7 @@ def test_backslash_escapes_308():
     transformer = TransformToGfm()
     source_markdown = """\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~:]",
         "[end-para]",
     ]
@@ -46,7 +46,7 @@ def test_backslash_escapes_309():
     transformer = TransformToGfm()
     source_markdown = """\\→\\A\\a\\ \\3\\φ\\«"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:\\→\\A\\a\\ \\3\\φ\\«:]",
         "[end-para]",
     ]
@@ -80,7 +80,7 @@ def test_backslash_escapes_310():
 \\[foo]: /url "not a reference"
 \\&ouml; not a character entity"""
     expected_tokens = [
-        "[para:\n\n\n\n\n\n\n\n]",
+        "[para(1,1):\n\n\n\n\n\n\n\n]",
         "[text:*not emphasized:]",
         "[text:*:]",
         "[text:\n&lt;br/&gt; not a tag\n[not a link::\n\n]",
@@ -126,7 +126,7 @@ def test_backslash_escapes_311():
     transformer = TransformToGfm()
     source_markdown = """\\\\*emphasis*"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:\\:]",
         "[emphasis:1]",
         "[text:emphasis:]",
@@ -156,7 +156,7 @@ def test_backslash_escapes_312():
     source_markdown = """foo\\
 bar"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:foo:]",
         "[hard-break:\\]",
         "[text:\nbar:]",
@@ -185,7 +185,7 @@ def test_backslash_escapes_313():
     transformer = TransformToGfm()
     source_markdown = """`` \\[\\` ``"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span:\\[\\`]",
         "[end-para]",
     ]
@@ -267,7 +267,7 @@ def test_backslash_escapes_316():
     transformer = TransformToGfm()
     source_markdown = """<http://example.com?find=\\*>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[uri-autolink:http://example.com?find=\\*]",
         "[end-para]",
     ]
@@ -319,7 +319,7 @@ def test_backslash_escapes_318():
     transformer = TransformToGfm()
     source_markdown = """[foo](/bar\\* "ti\\*tle")"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/bar*:ti*tle]",
         "[text:foo:]",
         "[end-link::]",
@@ -350,7 +350,7 @@ def test_backslash_escapes_319():
 [foo]: /bar\\* "ti\\*tle"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/bar*:ti*tle]",
         "[text:foo:]",
         "[end-link::]",

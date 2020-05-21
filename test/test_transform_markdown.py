@@ -18,11 +18,11 @@ def test_transform_with_debug_on():
 - two`"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:`one:]",
         "[end-para]",
         "[li:2]",
-        "[para:]",
+        "[para(2,3):]",
         "[text:two`:]",
         "[end-para]",
         "[end-ulist]",
@@ -46,11 +46,11 @@ def test_transform_with_debug_off():
 - two`"""
     expected_tokens = [
         "[ulist:-::2:]",
-        "[para:]",
+        "[para(1,3):]",
         "[text:`one:]",
         "[end-para]",
         "[li:2]",
-        "[para:]",
+        "[para(2,3):]",
         "[text:two`:]",
         "[end-para]",
         "[end-ulist]",

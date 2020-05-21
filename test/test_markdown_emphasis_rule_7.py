@@ -20,7 +20,7 @@ def test_emphasis_400():
     transformer = TransformToGfm()
     source_markdown = """**foo bar **"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:**:]",
         "[text:foo bar :]",
         "[text:**:]",
@@ -48,7 +48,7 @@ def test_emphasis_401():
     transformer = TransformToGfm()
     source_markdown = """**(**foo)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:**:]",
         "[text:(:]",
         "[text:**:]",
@@ -77,7 +77,7 @@ def test_emphasis_402():
     transformer = TransformToGfm()
     source_markdown = """*(**foo**)*"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[text:(:]",
         "[emphasis:2]",
@@ -110,7 +110,7 @@ def test_emphasis_403():
     source_markdown = """**Gomphocarpus (*Gomphocarpus physocarpus*, syn.
 *Asclepias physocarpa*)**"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[emphasis:2]",
         "[text:Gomphocarpus (:]",
         "[emphasis:1]",
@@ -147,7 +147,7 @@ def test_emphasis_404():
     transformer = TransformToGfm()
     source_markdown = """**foo "*bar*" foo**"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:2]",
         "[text:foo &quot;:]",
         "[emphasis:1]",
@@ -179,7 +179,7 @@ def test_emphasis_405():
     transformer = TransformToGfm()
     source_markdown = """**foo**bar"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:2]",
         "[text:foo:]",
         "[end-emphasis::2]",

@@ -66,7 +66,7 @@ def test_extra_003():
     transformer = TransformToGfm()
     source_markdown = "[link](!\"#$%&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~)"
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:!%22#$%25&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~:]",
         "[text:link:]",
         "[end-link::]",
@@ -101,7 +101,7 @@ def test_extra_004():
         "[link](!\"#$%12&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~)"
     )
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:!%22#$%12&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~:]",
         "[text:link:]",
         "[end-link::]",
@@ -131,7 +131,7 @@ def test_extra_005():
     transformer = TransformToGfm()
     source_markdown = "[link](http://google.com/search%)"
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:http://google.com/search%25:]",
         "[text:link:]",
         "[end-link::]",

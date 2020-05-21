@@ -32,7 +32,7 @@ _world_.
         "[text:<table><tr><td>\n<pre>\n**Hello**,:]",
         "[end-html-block]",
         "[BLANK:]",
-        "[para:\n]",
+        "[para(5,1):\n]",
         "[emphasis:1]",
         "[text:world:]",
         "[end-emphasis::1]",
@@ -82,7 +82,7 @@ okay."""
         "[text:<table>\n  <tr>\n    <td>\n           hi\n    </td>\n  </tr>\n</table>:]",
         "[end-html-block]",
         "[BLANK:]",
-        "[para:]",
+        "[para(9,1):]",
         "[text:okay.:]",
         "[end-para]",
     ]
@@ -181,7 +181,7 @@ def test_html_blocks_122():
         '[text:<DIV CLASS="foo">:]',
         "[end-html-block]",
         "[BLANK:]",
-        "[para:]",
+        "[para(3,1):]",
         "[emphasis:1]",
         "[text:Markdown:]",
         "[end-emphasis::1]",
@@ -282,7 +282,7 @@ def test_html_blocks_125():
         "[text:<div>\n*foo*:]",
         "[end-html-block]",
         "[BLANK:]",
-        "[para:]",
+        "[para(4,1):]",
         "[emphasis:1]",
         "[text:bar:]",
         "[end-emphasis::1]",
@@ -640,7 +640,7 @@ def test_html_blocks_137():
         "[text:<del>:]",
         "[end-html-block]",
         "[BLANK:]",
-        "[para:]",
+        "[para(3,1):]",
         "[emphasis:1]",
         "[text:foo:]",
         "[end-emphasis::1]",
@@ -674,7 +674,7 @@ def test_html_blocks_138():
     transformer = TransformToGfm()
     source_markdown = """<del>*foo*</del>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[raw-html:del]",
         "[emphasis:1]",
         "[text:foo:]",
@@ -715,7 +715,7 @@ okay"""
         "[BLANK:]",
         "[text:main :: IO ()\nmain = print $ parseTags tags\n</code></pre>:]",
         "[end-html-block]",
-        "[para:]",
+        "[para(7,1):]",
         "[text:okay:]",
         "[end-para]",
     ]
@@ -757,7 +757,7 @@ okay"""
         "[BLANK:]",
         '[text:document.getElementById("demo").innerHTML = "Hello JavaScript!";\n</script>:]',
         "[end-html-block]",
-        "[para:]",
+        "[para(6,1):]",
         "[text:okay:]",
         "[end-para]",
     ]
@@ -799,7 +799,7 @@ okay"""
         "[BLANK:]",
         "[text:p {color:blue;}\n</style>:]",
         "[end-html-block]",
-        "[para:]",
+        "[para(7,1):]",
         "[text:okay:]",
         "[end-para]",
     ]
@@ -874,7 +874,7 @@ bar"""
         "[end-html-block]",
         "[BLANK:]",
         "[end-block-quote]",
-        "[para:]",
+        "[para(4,1):]",
         "[text:bar:]",
         "[end-para]",
     ]
@@ -910,7 +910,7 @@ def test_html_blocks_144():
         "[text:<div>:]",
         "[end-html-block]",
         "[li:2]",
-        "[para:]",
+        "[para(2,3):]",
         "[text:foo:]",
         "[end-para]",
         "[end-ulist]",
@@ -950,12 +950,12 @@ foo"""
         "[text:<div>:]",
         "[end-html-block]",
         "[li:2]",
-        "[para:]",
+        "[para(2,3):]",
         "[text:foo:]",
         "[end-para]",
         "[BLANK:]",
         "[end-ulist]",
-        "[para:]",
+        "[para(4,1):]",
         "[text:foo:]",
         "[end-para]",
     ]
@@ -991,7 +991,7 @@ def test_html_blocks_145():
         "[html-block(1,1)]",
         "[text:<style>p{color:red;}</style>:]",
         "[end-html-block]",
-        "[para:]",
+        "[para(2,1):]",
         "[emphasis:1]",
         "[text:foo:]",
         "[end-emphasis::1]",
@@ -1024,7 +1024,7 @@ def test_html_blocks_146():
         "[html-block(1,1)]",
         "[text:<!-- foo -->*bar*:]",
         "[end-html-block]",
-        "[para:]",
+        "[para(2,1):]",
         "[emphasis:1]",
         "[text:baz:]",
         "[end-emphasis::1]",
@@ -1092,7 +1092,7 @@ okay"""
         "[BLANK:]",
         "[text:bar\n   baz -->:]",
         "[end-html-block]",
-        "[para:]",
+        "[para(5,1):]",
         "[text:okay:]",
         "[end-para]",
     ]
@@ -1134,7 +1134,7 @@ okay"""
         "[BLANK:]",
         "[text:?>:]",
         "[end-html-block]",
-        "[para:]",
+        "[para(6,1):]",
         "[text:okay:]",
         "[end-para]",
     ]
@@ -1210,7 +1210,7 @@ okay"""
         "[BLANK:]",
         "[text:return 0;\n  }\n}\n]]>:    ]",
         "[end-html-block]",
-        "[para:]",
+        "[para(13,1):]",
         "[text:okay:]",
         "[end-para]",
     ]
@@ -1319,7 +1319,7 @@ def test_html_blocks_154():
 bar
 </div>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:Foo:]",
         "[end-para]",
         "[html-block(2,1)]",
@@ -1385,7 +1385,7 @@ def test_html_blocks_156():
 <a href="bar">
 baz"""
     expected_tokens = [
-        "[para:\n\n]",
+        "[para(1,1):\n\n]",
         "[text:Foo\n::\n]",
         '[raw-html:a href="bar"]',
         "[text:\nbaz::\n]",
@@ -1423,7 +1423,7 @@ def test_html_blocks_157():
         "[text:<div>:]",
         "[end-html-block]",
         "[BLANK:]",
-        "[para:]",
+        "[para(3,1):]",
         "[emphasis:1]",
         "[text:Emphasized:]",
         "[end-emphasis::1]",
@@ -1680,7 +1680,7 @@ def test_html_blocks_cov2():
 >
 </x-table>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:&lt;/hrx:]",
         "[end-para]",
         "[block-quote:]",
@@ -1716,7 +1716,7 @@ def test_html_blocks_cov3():
     source_markdown = """<!bad>
 </x-table>"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:&lt;!bad&gt;\n::\n]",
         "[raw-html:/x-table]",
         "[end-para]",
@@ -1746,7 +1746,7 @@ def test_html_blocks_cov4():
 bad>
 </x-table>"""
     expected_tokens = [
-        "[para:\n\n]",
+        "[para(1,1):\n\n]",
         "[text:&lt;\nbad&gt;\n::\n\n]",
         "[raw-html:/x-table]",
         "[end-para]",

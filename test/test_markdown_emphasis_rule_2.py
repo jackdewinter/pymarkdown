@@ -20,7 +20,7 @@ def test_emphasis_366():
     transformer = TransformToGfm()
     source_markdown = """_foo bar_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[text:foo bar:]",
         "[end-emphasis::1]",
@@ -48,7 +48,7 @@ def test_emphasis_367():
     transformer = TransformToGfm()
     source_markdown = """_ foo bar_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:_:]",
         "[text: foo bar:]",
         "[text:_:]",
@@ -76,7 +76,7 @@ def test_emphasis_368():
     transformer = TransformToGfm()
     source_markdown = """a_"foo"_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:a:]",
         "[text:_:]",
         "[text:&quot;foo&quot;:]",
@@ -105,7 +105,7 @@ def test_emphasis_369():
     transformer = TransformToGfm()
     source_markdown = """foo_bar_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo:]",
         "[text:_:]",
         "[text:bar:]",
@@ -134,7 +134,7 @@ def test_emphasis_370():
     transformer = TransformToGfm()
     source_markdown = """5_6_78"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:5:]",
         "[text:_:]",
         "[text:6:]",
@@ -164,7 +164,7 @@ def test_emphasis_371():
     transformer = TransformToGfm()
     source_markdown = """пристаням_стремятся_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:пристаням:]",
         "[text:_:]",
         "[text:стремятся:]",
@@ -193,7 +193,7 @@ def test_emphasis_372():
     transformer = TransformToGfm()
     source_markdown = """aa_"bb"_cc"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:aa:]",
         "[text:_:]",
         "[text:&quot;bb&quot;:]",
@@ -223,7 +223,7 @@ def test_emphasis_373():
     transformer = TransformToGfm()
     source_markdown = """foo-_(bar)_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo-:]",
         "[emphasis:1]",
         "[text:(bar):]",

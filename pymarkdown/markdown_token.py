@@ -193,10 +193,12 @@ class ParagraphMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the paragraph element.
     """
 
-    def __init__(self, extracted_whitespace):
+    def __init__(self, extracted_whitespace, position_marker):
         self.extracted_whitespace = extracted_whitespace
         self.final_whitespace = ""
-        MarkdownToken.__init__(self, MarkdownToken.token_paragraph, "")
+        MarkdownToken.__init__(
+            self, MarkdownToken.token_paragraph, "", position_marker=position_marker
+        )
         self.compose_extra_data_field()
 
     def compose_extra_data_field(self):

@@ -22,11 +22,11 @@ def test_paragraph_blocks_189():
 
 bbb"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:aaa:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para(3,1):]",
         "[text:bbb:]",
         "[end-para]",
     ]
@@ -57,11 +57,11 @@ bbb
 ccc
 ddd"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:aaa\nbbb::\n]",
         "[end-para]",
         "[BLANK:]",
-        "[para:\n]",
+        "[para(4,1):\n]",
         "[text:ccc\nddd::\n]",
         "[end-para]",
     ]
@@ -93,12 +93,12 @@ def test_paragraph_blocks_191():
 
 bbb"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:aaa:]",
         "[end-para]",
         "[BLANK:]",
         "[BLANK:]",
-        "[para:]",
+        "[para(4,1):]",
         "[text:bbb:]",
         "[end-para]",
     ]
@@ -125,7 +125,7 @@ def test_paragraph_blocks_192():
     transformer = TransformToGfm()
     source_markdown = """  aaa
  bbb"""
-    expected_tokens = ["[para:  \n ]", "[text:aaa\nbbb::\n]", "[end-para]"]
+    expected_tokens = ["[para(1,3):  \n ]", "[text:aaa\nbbb::\n]", "[end-para]"]
     expected_gfm = """<p>aaa
 bbb</p>"""
 
@@ -151,7 +151,7 @@ def test_paragraph_blocks_193():
              bbb
                                        ccc"""
     expected_tokens = [
-        "[para:\n             \n                                       ]",
+        "[para(1,1):\n             \n                                       ]",
         "[text:aaa\nbbb\nccc::\n\n]",
         "[end-para]",
     ]
@@ -179,7 +179,7 @@ def test_paragraph_blocks_194():
     transformer = TransformToGfm()
     source_markdown = """   aaa
 bbb"""
-    expected_tokens = ["[para:   \n]", "[text:aaa\nbbb::\n]", "[end-para]"]
+    expected_tokens = ["[para(1,4):   \n]", "[text:aaa\nbbb::\n]", "[end-para]"]
     expected_gfm = """<p>aaa
 bbb</p>"""
 
@@ -207,7 +207,7 @@ bbb"""
         "[icode-block(1,5):    ]",
         "[text:aaa:]",
         "[end-icode-block]",
-        "[para:]",
+        "[para(2,1):]",
         "[text:bbb:]",
         "[end-para]",
     ]
@@ -238,7 +238,7 @@ bbb     """.replace(
         "\a", " "
     )
     expected_tokens = [
-        "[para:\n:     ]",
+        "[para(1,1):\n:     ]",
         "[text:aaa:]",
         "[hard-break:     ]",
         "[text:\nbbb::\n]",
@@ -268,7 +268,7 @@ def test_paragraph_blocks_196a():
     source_markdown = """aaa\t\t\t\t\t
 bbb\t\t\t\t\t"""
     expected_tokens = [
-        "[para:\n:\t\t\t\t\t]",
+        "[para(1,1):\n:\t\t\t\t\t]",
         "[text:aaa:]",
         "[hard-break:                    ]",
         "[text:\nbbb::\n]",

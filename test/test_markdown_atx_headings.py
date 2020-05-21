@@ -70,7 +70,7 @@ def test_atx_headings_033():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """####### foo"""
-    expected_tokens = ["[para:]", "[text:####### foo:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:####### foo:]", "[end-para]"]
     expected_gfm = """<p>####### foo</p>"""
 
     # Act
@@ -95,11 +95,11 @@ def test_atx_headings_034():
 
 #hashtag"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:#5 bolt:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para(3,1):]",
         "[text:#hashtag:]",
         "[end-para]",
     ]
@@ -125,7 +125,7 @@ def test_atx_headings_035():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """\\## foo"""
-    expected_tokens = ["[para:]", "[text:## foo:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:## foo:]", "[end-para]"]
     expected_gfm = """<p>## foo</p>"""
 
     # Act
@@ -263,7 +263,7 @@ def test_atx_headings_040():
     transformer = TransformToGfm()
     source_markdown = """foo
     # bar"""
-    expected_tokens = ["[para:\n    ]", "[text:foo\n# bar::\n]", "[end-para]"]
+    expected_tokens = ["[para(1,1):\n    ]", "[text:foo\n# bar::\n]", "[end-para]"]
     expected_gfm = """<p>foo
 # bar</p>"""
 
@@ -485,13 +485,13 @@ def test_atx_headings_048():
 # baz
 Bar foo"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:Foo bar:]",
         "[end-para]",
         "[atx(2,1):1:0:]",
         "[text:baz: ]",
         "[end-atx::]",
-        "[para:]",
+        "[para(3,1):]",
         "[text:Bar foo:]",
         "[end-para]",
     ]

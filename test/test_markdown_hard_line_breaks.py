@@ -24,7 +24,7 @@ baz""".replace(
         "\a", " "
     )
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:foo:]",
         "[hard-break:  ]",
         "[text:\nbaz::\n]",
@@ -54,7 +54,7 @@ def test_hard_line_breaks_655():
     source_markdown = """foo\\
 baz"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:foo:]",
         "[hard-break:\\]",
         "[text:\nbaz:]",
@@ -86,7 +86,7 @@ baz""".replace(
         "\a", " "
     )
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:foo:]",
         "[hard-break:       ]",
         "[text:\nbaz::\n]",
@@ -118,7 +118,7 @@ def test_hard_line_breaks_657():
         "\a", " "
     )
     expected_tokens = [
-        "[para:\n     ]",
+        "[para(1,1):\n     ]",
         "[text:foo:]",
         "[hard-break:  ]",
         "[text:\nbar::\n]",
@@ -148,7 +148,7 @@ def test_hard_line_breaks_658():
     source_markdown = """foo\\
      bar"""
     expected_tokens = [
-        "[para:\n     ]",
+        "[para(1,1):\n     ]",
         "[text:foo:]",
         "[hard-break:\\]",
         "[text:\nbar:]",
@@ -180,7 +180,7 @@ bar*""".replace(
         "\a", " "
     )
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[emphasis:1]",
         "[text:foo:]",
         "[hard-break:  ]",
@@ -214,7 +214,7 @@ bar*""".replace(
         "\a", " "
     )
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[emphasis:1]",
         "[text:foo:]",
         "[hard-break:\\]",
@@ -247,7 +247,7 @@ def test_hard_line_breaks_661():
 span`""".replace(
         "\a", " "
     )
-    expected_tokens = ["[para:\n]", "[icode-span:code   span]", "[end-para]"]
+    expected_tokens = ["[para(1,1):\n]", "[icode-span:code   span]", "[end-para]"]
     expected_gfm = """<p><code>code   span</code></p>"""
 
     # Act
@@ -270,7 +270,7 @@ def test_hard_line_breaks_662():
     transformer = TransformToGfm()
     source_markdown = """`code\\
 span`"""
-    expected_tokens = ["[para:\n]", "[icode-span:code\\ span]", "[end-para]"]
+    expected_tokens = ["[para(1,1):\n]", "[icode-span:code\\ span]", "[end-para]"]
     expected_gfm = """<p><code>code\\ span</code></p>"""
 
     # Act
@@ -295,7 +295,7 @@ def test_hard_line_breaks_663():
 bar">""".replace(
         "\a", " "
     )
-    expected_tokens = ["[para:\n]", '[raw-html:a href="foo  \nbar"]', "[end-para]"]
+    expected_tokens = ["[para(1,1):\n]", '[raw-html:a href="foo  \nbar"]', "[end-para]"]
     expected_gfm = """<p><a href="foo\a\a
 bar"></p>""".replace(
         "\a", " "
@@ -321,7 +321,7 @@ def test_hard_line_breaks_664():
     transformer = TransformToGfm()
     source_markdown = """<a href="foo\\
 bar">"""
-    expected_tokens = ["[para:\n]", '[raw-html:a href="foo\\\nbar"]', "[end-para]"]
+    expected_tokens = ["[para(1,1):\n]", '[raw-html:a href="foo\\\nbar"]', "[end-para]"]
     expected_gfm = """<p><a href="foo\\
 bar"></p>"""
 
@@ -344,7 +344,7 @@ def test_hard_line_breaks_665():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """foo\\"""
-    expected_tokens = ["[para:]", "[text:foo\\:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:foo\\:]", "[end-para]"]
     expected_gfm = """<p>foo\\</p>"""
 
     # Act
@@ -366,7 +366,7 @@ def test_hard_line_breaks_665a():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """foo \\"""
-    expected_tokens = ["[para:]", "[text:foo \\:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:foo \\:]", "[end-para]"]
     expected_gfm = """<p>foo \\</p>"""
 
     # Act
@@ -388,7 +388,7 @@ def test_hard_line_breaks_666():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """foo  """
-    expected_tokens = ["[para::  ]", "[text:foo:]", "[end-para]"]
+    expected_tokens = ["[para(1,1)::  ]", "[text:foo:]", "[end-para]"]
     expected_gfm = """<p>foo</p>"""
 
     # Act

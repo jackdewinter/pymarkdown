@@ -20,7 +20,7 @@ def test_emphasis_476():
     transformer = TransformToGfm()
     source_markdown = """***foo***"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[emphasis:2]",
         "[text:foo:]",
@@ -50,7 +50,7 @@ def test_emphasis_477():
     transformer = TransformToGfm()
     source_markdown = """_____foo_____"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[emphasis:2]",
         "[emphasis:2]",
@@ -82,7 +82,7 @@ def test_emphasis_478():
     transformer = TransformToGfm()
     source_markdown = """*foo _bar* baz_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[text:foo :]",
         "[text:_:]",
@@ -114,7 +114,7 @@ def test_emphasis_479():
     transformer = TransformToGfm()
     source_markdown = """*foo __bar *baz bim__ bam*"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[text:foo :]",
         "[emphasis:2]",
@@ -148,7 +148,7 @@ def test_emphasis_480():
     transformer = TransformToGfm()
     source_markdown = """**foo **bar baz**"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:**:]",
         "[text:foo :]",
         "[emphasis:2]",
@@ -178,7 +178,7 @@ def test_emphasis_481():
     transformer = TransformToGfm()
     source_markdown = """*foo *bar baz*"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:*:]",
         "[text:foo :]",
         "[emphasis:1]",
@@ -208,7 +208,7 @@ def test_emphasis_482():
     transformer = TransformToGfm()
     source_markdown = """*[bar*](/url)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:*:]",
         "[link:/url:]",
         "[text:bar:]",
@@ -238,7 +238,7 @@ def test_emphasis_483():
     transformer = TransformToGfm()
     source_markdown = """_foo [bar_](/url)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:_:]",
         "[text:foo :]",
         "[link:/url:]",
@@ -269,7 +269,7 @@ def test_emphasis_484():
     transformer = TransformToGfm()
     source_markdown = """*<img src="foo" title="*"/>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:*:]",
         '[raw-html:img src="foo" title="*"/]',
         "[end-para]",
@@ -295,7 +295,12 @@ def test_emphasis_485():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """**<a href="**">"""
-    expected_tokens = ["[para:]", "[text:**:]", '[raw-html:a href="**"]', "[end-para]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text:**:]",
+        '[raw-html:a href="**"]',
+        "[end-para]",
+    ]
     expected_gfm = """<p>**<a href="**"></p>"""
 
     # Act
@@ -317,7 +322,12 @@ def test_emphasis_486():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """__<a href="__">"""
-    expected_tokens = ["[para:]", "[text:__:]", '[raw-html:a href="__"]', "[end-para]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text:__:]",
+        '[raw-html:a href="__"]',
+        "[end-para]",
+    ]
     expected_gfm = """<p>__<a href="__"></p>"""
 
     # Act
@@ -340,7 +350,7 @@ def test_emphasis_487():
     transformer = TransformToGfm()
     source_markdown = """*a `*`*"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[text:a :]",
         "[icode-span:*]",
@@ -369,7 +379,7 @@ def test_emphasis_488():
     transformer = TransformToGfm()
     source_markdown = """_a `_`_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[text:a :]",
         "[icode-span:_]",
@@ -398,7 +408,7 @@ def test_emphasis_489():
     transformer = TransformToGfm()
     source_markdown = """**a<http://foo.bar/?q=**>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:**:]",
         "[text:a:]",
         "[uri-autolink:http://foo.bar/?q=**]",
@@ -428,7 +438,7 @@ def test_emphasis_490():
     transformer = TransformToGfm()
     source_markdown = """__a<http://foo.bar/?q=__>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:__:]",
         "[text:a:]",
         "[uri-autolink:http://foo.bar/?q=__]",

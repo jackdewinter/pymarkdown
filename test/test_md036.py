@@ -272,9 +272,9 @@ def test_md036_proper_emphasis_ending_with_punctuation_with_configuration():
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md036/proper_emphasis_ending_with_punctuation.md:0:0: "
+            "test/resources/rules/md036/proper_emphasis_ending_with_punctuation.md:1:1: "
             + "MD036: Emphasis used instead of a heading (no-emphasis-as-heading,no-emphasis-as-header)\n"
-            + "test/resources/rules/md036/proper_emphasis_ending_with_punctuation.md:0:0: "
+            + "test/resources/rules/md036/proper_emphasis_ending_with_punctuation.md:5:1: "
             + "MD036: Emphasis used instead of a heading (no-emphasis-as-heading,no-emphasis-as-header)\n"
         )
 
@@ -308,9 +308,9 @@ def test_md036_valid_emphasis_headings():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md036/valid_emphasis_headings.md:0:0: "
+        "test/resources/rules/md036/valid_emphasis_headings.md:1:1: "
         + "MD036: Emphasis used instead of a heading (no-emphasis-as-heading,no-emphasis-as-header)\n"
-        + "test/resources/rules/md036/valid_emphasis_headings.md:0:0: "
+        + "test/resources/rules/md036/valid_emphasis_headings.md:5:1: "
         + "MD036: Emphasis used instead of a heading (no-emphasis-as-heading,no-emphasis-as-header)\n"
     )
     expected_error = ""

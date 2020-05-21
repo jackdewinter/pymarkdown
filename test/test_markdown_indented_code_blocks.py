@@ -52,11 +52,11 @@ def test_indented_code_blocks_078():
     bar"""
     expected_tokens = [
         "[ulist:-::4:  ]",
-        "[para:]",
+        "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para(3,5):]",
         "[text:bar:]",
         "[end-para]",
         "[end-ulist]",
@@ -91,12 +91,12 @@ def test_indented_code_blocks_079():
     - bar"""
     expected_tokens = [
         "[olist:.:1:4:]",
-        "[para:]",
+        "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
         "[BLANK:]",
         "[ulist:-::6:    ]",
-        "[para:]",
+        "[para(3,7):]",
         "[text:bar:]",
         "[end-para]",
         "[end-ulist]",
@@ -234,7 +234,7 @@ def test_indented_code_blocks_083():
     transformer = TransformToGfm()
     source_markdown = """Foo
     bar"""
-    expected_tokens = ["[para:\n    ]", "[text:Foo\nbar::\n]", "[end-para]"]
+    expected_tokens = ["[para(1,1):\n    ]", "[text:Foo\nbar::\n]", "[end-para]"]
     expected_gfm = """<p>Foo
 bar</p>"""
 
@@ -262,7 +262,7 @@ bar"""
         "[icode-block(1,5):    ]",
         "[text:foo:]",
         "[end-icode-block]",
-        "[para:]",
+        "[para(2,1):]",
         "[text:bar:]",
         "[end-para]",
     ]
@@ -299,7 +299,7 @@ bar"""
         "[end-icode-block]",
         "[BLANK:]",
         "[BLANK:]",
-        "[para:]",
+        "[para(4,1):]",
         "[text:bar:]",
         "[end-para]",
     ]

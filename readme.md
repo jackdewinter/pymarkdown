@@ -10,7 +10,6 @@
 - need to add line/column for
   - setext
   - blank lines
-  - paragraph
   - text
   - list
     - refactor is_thematic_break

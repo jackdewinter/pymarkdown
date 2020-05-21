@@ -21,7 +21,7 @@ def test_raw_html_632():
     transformer = TransformToGfm()
     source_markdown = """<a><bab><c2c>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[raw-html:a]",
         "[raw-html:bab]",
         "[raw-html:c2c]",
@@ -48,7 +48,7 @@ def test_raw_html_633():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """<a/><b2/>"""
-    expected_tokens = ["[para:]", "[raw-html:a/]", "[raw-html:b2/]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[raw-html:a/]", "[raw-html:b2/]", "[end-para]"]
     expected_gfm = """<p><a/><b2/></p>"""
 
     # Act
@@ -72,7 +72,7 @@ def test_raw_html_634():
     source_markdown = """<a  /><b2
 data="foo" >"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[raw-html:a  /]",
         '[raw-html:b2\ndata="foo" ]',
         "[end-para]",
@@ -101,7 +101,7 @@ def test_raw_html_635():
     source_markdown = """<a foo="bar" bam = 'baz <em>"</em>'
 _boolean zoop:33=zoop:33 />"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         """[raw-html:a foo="bar" bam = 'baz <em>"</em>'
 _boolean zoop:33=zoop:33 /]""",
         "[end-para]",
@@ -129,7 +129,7 @@ def test_raw_html_636():
     transformer = TransformToGfm()
     source_markdown = """Foo <responsive-image src="foo.jpg" />"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:Foo :]",
         '[raw-html:responsive-image src="foo.jpg" /]',
         "[end-para]",
@@ -156,7 +156,7 @@ def test_raw_html_637():
     transformer = TransformToGfm()
     source_markdown = """<33> <__>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:&lt;33&gt; &lt;:]",
         "[text:__:]",
         "[text:&gt;:]",
@@ -184,7 +184,7 @@ def test_raw_html_638():
     transformer = TransformToGfm()
     source_markdown = """<a h*#ref="hi">"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:&lt;a h:]",
         "[text:*:]",
         "[text:#ref=&quot;hi&quot;&gt;:]",
@@ -212,7 +212,7 @@ def test_raw_html_639():
     transformer = TransformToGfm()
     source_markdown = """<a href="hi'> <a href=hi'>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;:]",
         "[end-para]",
     ]
@@ -238,7 +238,7 @@ def test_raw_html_639a():
     transformer = TransformToGfm()
     source_markdown = """<a href='hi"> <a href=hi">"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:&lt;a href='hi&quot;&gt; &lt;a href=hi&quot;&gt;:]",
         "[end-para]",
     ]
@@ -267,7 +267,7 @@ foo><bar/ >
 <foo bar=baz
 bim!bop />"""
     expected_tokens = [
-        "[para:\n\n\n]",
+        "[para(1,1):\n\n\n]",
         "[text:&lt; a&gt;&lt;\nfoo&gt;&lt;bar/ &gt;\n&lt;foo bar=baz\nbim!bop /&gt;::\n\n\n]",
         "[end-para]",
     ]
@@ -296,7 +296,7 @@ def test_raw_html_641():
     transformer = TransformToGfm()
     source_markdown = """<a href='bar'title=title>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:&lt;a href='bar'title=title&gt;:]",
         "[end-para]",
     ]
@@ -321,7 +321,12 @@ def test_raw_html_642():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """</a></foo >"""
-    expected_tokens = ["[para:]", "[raw-html:/a]", "[raw-html:/foo ]", "[end-para]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        "[raw-html:/a]",
+        "[raw-html:/foo ]",
+        "[end-para]",
+    ]
     expected_gfm = """<p></a></foo ></p>"""
 
     # Act
@@ -343,7 +348,7 @@ def test_raw_html_642a():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """</>"""
-    expected_tokens = ["[para:]", "[text:&lt;/&gt;:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:&lt;/&gt;:]", "[end-para]"]
     expected_gfm = """<p>&lt;/&gt;</p>"""
 
     # Act
@@ -366,7 +371,7 @@ def test_raw_html_643():
     transformer = TransformToGfm()
     source_markdown = """</a href="foo">"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:&lt;/a href=&quot;foo&quot;&gt;:]",
         "[end-para]",
     ]
@@ -393,7 +398,7 @@ def test_raw_html_644():
     source_markdown = """foo <!-- this is a
 comment - with hyphen -->"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:foo :]",
         "[raw-html:!-- this is a\ncomment - with hyphen --]",
         "[end-para]",
@@ -421,7 +426,7 @@ def test_raw_html_645():
     transformer = TransformToGfm()
     source_markdown = """foo <!-- not a comment -- two hyphens -->"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo &lt;!-- not a comment -- two hyphens --&gt;:]",
         "[end-para]",
     ]
@@ -449,11 +454,11 @@ def test_raw_html_646():
 
 foo <!-- foo--->"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo &lt;!--&gt; foo --&gt;:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para(3,1):]",
         "[text:foo &lt;!-- foo---&gt;:]",
         "[end-para]",
     ]
@@ -480,7 +485,7 @@ def test_raw_html_647():
     transformer = TransformToGfm()
     source_markdown = """foo <?php echo $a; ?>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo :]",
         "[raw-html:?php echo $a; ?]",
         "[end-para]",
@@ -507,7 +512,7 @@ def test_raw_html_648():
     transformer = TransformToGfm()
     source_markdown = """foo <!ELEMENT br EMPTY>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo :]",
         "[raw-html:!ELEMENT br EMPTY]",
         "[end-para]",
@@ -533,7 +538,7 @@ def test_raw_html_648a():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """foo <!ELEMENT>"""
-    expected_tokens = ["[para:]", "[text:foo &lt;!ELEMENT&gt;:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:foo &lt;!ELEMENT&gt;:]", "[end-para]"]
     expected_gfm = """<p>foo &lt;!ELEMENT&gt;</p>"""
 
     # Act
@@ -556,7 +561,7 @@ def test_raw_html_649():
     transformer = TransformToGfm()
     source_markdown = """foo <![CDATA[>&<]]>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo :]",
         "[raw-html:![CDATA[>&<]]]",
         "[end-para]",
@@ -583,7 +588,7 @@ def test_raw_html_650():
     transformer = TransformToGfm()
     source_markdown = """foo <a href="&ouml;">"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo :]",
         '[raw-html:a href="&ouml;"]',
         "[end-para]",
@@ -610,7 +615,7 @@ def test_raw_html_651():
     transformer = TransformToGfm()
     source_markdown = """foo <a href="\\*">"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo :]",
         '[raw-html:a href="\\*"]',
         "[end-para]",
@@ -637,7 +642,7 @@ def test_raw_html_652():
     transformer = TransformToGfm()
     source_markdown = """<a href="\\"">"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:&lt;a href=&quot;&quot;&quot;&gt;:]",
         "[end-para]",
     ]

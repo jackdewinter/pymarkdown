@@ -31,7 +31,7 @@ aaa
     expected_tokens = [
         "[BLANK:  ]",
         "[BLANK:]",
-        "[para:]",
+        "[para(3,1):]",
         "[text:aaa:]",
         "[end-para]",
         "[BLANK:  ]",

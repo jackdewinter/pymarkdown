@@ -21,7 +21,7 @@ def test_inline_links_493():
     transformer = TransformToGfm()
     source_markdown = """[link](/uri "title")"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/uri:title]",
         "[text:link:]",
         "[end-link::]",
@@ -49,7 +49,7 @@ def test_inline_links_494():
     transformer = TransformToGfm()
     source_markdown = """[link](/uri)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/uri:]",
         "[text:link:]",
         "[end-link::]",
@@ -77,7 +77,7 @@ def test_inline_links_495():
     transformer = TransformToGfm()
     source_markdown = """[link]()"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link::]",
         "[text:link:]",
         "[end-link::]",
@@ -105,7 +105,7 @@ def test_inline_links_496():
     transformer = TransformToGfm()
     source_markdown = """[link](<>)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link::]",
         "[text:link:]",
         "[end-link::]",
@@ -133,7 +133,7 @@ def test_inline_links_497():
     transformer = TransformToGfm()
     source_markdown = """[link](/my uri)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:link:]",
         "[text:]:]",
@@ -162,7 +162,7 @@ def test_inline_links_498():
     transformer = TransformToGfm()
     source_markdown = """[link](</my uri>)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/my%20uri:]",
         "[text:link:]",
         "[end-link::]",
@@ -191,7 +191,7 @@ def test_inline_links_499():
     source_markdown = """[link](foo
 bar)"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:[:]",
         "[text:link:]",
         "[text:]:]",
@@ -222,7 +222,7 @@ def test_inline_links_500():
     source_markdown = """[link](<foo
 bar>)"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:[:]",
         "[text:link:]",
         "[text:]:]",
@@ -254,7 +254,7 @@ def test_inline_links_501():
     transformer = TransformToGfm()
     source_markdown = """[a](<b)c>)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:b)c:]",
         "[text:a:]",
         "[end-link::]",
@@ -282,7 +282,7 @@ def test_inline_links_502():
     transformer = TransformToGfm()
     source_markdown = """[link](<foo\\>)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:link:]",
         "[text:]:]",
@@ -313,7 +313,7 @@ def test_inline_links_503():
 [a](<b)c>
 [a](<b>c)"""
     expected_tokens = [
-        "[para:\n\n]",
+        "[para(1,1):\n\n]",
         "[text:[:]",
         "[text:a:]",
         "[text:]:]",
@@ -354,7 +354,7 @@ def test_inline_links_504():
     transformer = TransformToGfm()
     source_markdown = """[link](\\(foo\\))"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:(foo):]",
         "[text:link:]",
         "[end-link::]",
@@ -382,7 +382,7 @@ def test_inline_links_505():
     transformer = TransformToGfm()
     source_markdown = """[link](foo(and(bar)))"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:foo(and(bar)):]",
         "[text:link:]",
         "[end-link::]",
@@ -410,7 +410,7 @@ def test_inline_links_506():
     transformer = TransformToGfm()
     source_markdown = """[link](foo\\(and\\(bar\\))"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:foo(and(bar):]",
         "[text:link:]",
         "[end-link::]",
@@ -438,7 +438,7 @@ def test_inline_links_507():
     transformer = TransformToGfm()
     source_markdown = """[link](<foo(and(bar)>)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:foo(and(bar):]",
         "[text:link:]",
         "[end-link::]",
@@ -466,7 +466,7 @@ def test_inline_links_507b():
     transformer = TransformToGfm()
     source_markdown = """[link](foo(and(bar))"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:link:]",
         "[text:]:]",
@@ -495,7 +495,7 @@ def test_inline_links_507c():
     transformer = TransformToGfm()
     source_markdown = """[link](foo(and(b(ar))"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:link:]",
         "[text:]:]",
@@ -524,7 +524,7 @@ def test_inline_links_508():
     transformer = TransformToGfm()
     source_markdown = """[link](foo\\)\\:)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:foo)::]",
         "[text:link:]",
         "[end-link::]",
@@ -556,19 +556,19 @@ def test_inline_links_509():
 
 [link](http://example.com?foo=3#frag)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:#fragment:]",
         "[text:link:]",
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para(3,1):]",
         "[link:http://example.com#fragment:]",
         "[text:link:]",
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para(5,1):]",
         "[link:http://example.com?foo=3#frag:]",
         "[text:link:]",
         "[end-link::]",
@@ -598,7 +598,7 @@ def test_inline_links_510():
     transformer = TransformToGfm()
     source_markdown = """[link](foo\\bar)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:foo%5Cbar:]",
         "[text:link:]",
         "[end-link::]",
@@ -626,7 +626,7 @@ def test_inline_links_511():
     transformer = TransformToGfm()
     source_markdown = """[link](foo%20b&auml;)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:foo%20b%C3%A4:]",
         "[text:link:]",
         "[end-link::]",
@@ -654,7 +654,7 @@ def test_inline_links_512():
     transformer = TransformToGfm()
     source_markdown = """[link]("title")"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:%22title%22:]",
         "[text:link:]",
         "[end-link::]",
@@ -684,7 +684,7 @@ def test_inline_links_513():
 [link](/url 'title')
 [link](/url (title))"""
     expected_tokens = [
-        "[para:\n\n]",
+        "[para(1,1):\n\n]",
         "[link:/url:title]",
         "[text:link:]",
         "[end-link::]",
@@ -722,7 +722,7 @@ def test_inline_links_514():
     transformer = TransformToGfm()
     source_markdown = """[link](/url "title \\"&quot;")"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/url:title &quot;&quot;]",
         "[text:link:]",
         "[end-link::]",
@@ -750,7 +750,7 @@ def test_inline_links_515():
     transformer = TransformToGfm()
     source_markdown = """[link](/url\u00A0"title")"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/url%C2%A0%22title%22:]",
         "[text:link:]",
         "[end-link::]",
@@ -778,7 +778,7 @@ def test_inline_links_515b():
     transformer = TransformToGfm()
     source_markdown = """[link](/url "title)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:link:]",
         "[text:]:]",
@@ -807,7 +807,7 @@ def test_inline_links_515c():
     transformer = TransformToGfm()
     source_markdown = """[link](/url (title))"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/url:title]",
         "[text:link:]",
         "[end-link::]",
@@ -835,7 +835,7 @@ def test_inline_links_515d():
     transformer = TransformToGfm()
     source_markdown = """[link](/url (title)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:link:]",
         "[text:]:]",
@@ -864,7 +864,7 @@ def test_inline_links_515e():
     transformer = TransformToGfm()
     source_markdown = """[link](/url (title(other)line))"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/url:title(other)line]",
         "[text:link:]",
         "[end-link::]",
@@ -892,7 +892,7 @@ def test_inline_links_515f():
     transformer = TransformToGfm()
     source_markdown = """[link](/url (title(other)line)) abc"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/url:title(other)line]",
         "[text:link:]",
         "[end-link::]",
@@ -921,7 +921,7 @@ def test_inline_links_515g():
     transformer = TransformToGfm()
     source_markdown = """[link](/url (title(otherline) abc"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:link:]",
         "[text:]:]",
@@ -950,7 +950,7 @@ def test_inline_links_516():
     transformer = TransformToGfm()
     source_markdown = """[link](/url "title "and" title")"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:link:]",
         "[text:]:]",
@@ -979,7 +979,7 @@ def test_inline_links_517():
     transformer = TransformToGfm()
     source_markdown = """[link](/url 'title "and" title')"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/url:title &quot;and&quot; title]",
         "[text:link:]",
         "[end-link::]",
@@ -1010,7 +1010,7 @@ def test_inline_links_518():
     source_markdown = """[link](   /uri
   "title"  )"""
     expected_tokens = [
-        "[para:\n  ]",
+        "[para(1,1):\n  ]",
         "[link:/uri:title]",
         "[text:link:]",
         "[end-link::]",
@@ -1038,7 +1038,7 @@ def test_inline_links_519():
     transformer = TransformToGfm()
     source_markdown = """[link] (/uri)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:link:]",
         "[text:]:]",
@@ -1067,7 +1067,7 @@ def test_inline_links_520():
     transformer = TransformToGfm()
     source_markdown = """[link [foo [bar]]](/uri)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/uri:]",
         "[text:link :]",
         "[text:[:]",
@@ -1101,7 +1101,7 @@ def test_inline_links_521():
     transformer = TransformToGfm()
     source_markdown = """[link] bar](/uri)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:link:]",
         "[text:]:]",
@@ -1132,7 +1132,7 @@ def test_inline_links_522():
     transformer = TransformToGfm()
     source_markdown = """[link [bar](/uri)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:link :]",
         "[link:/uri:]",
@@ -1162,7 +1162,7 @@ def test_inline_links_523():
     transformer = TransformToGfm()
     source_markdown = """[link \\[bar](/uri)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/uri:]",
         "[text:link [bar:]",
         "[end-link::]",
@@ -1190,7 +1190,7 @@ def test_inline_links_524():
     transformer = TransformToGfm()
     source_markdown = """[link *foo **bar** `#`*](/uri)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/uri:]",
         "[text:link :]",
         "[emphasis:1]",
@@ -1226,7 +1226,7 @@ def test_inline_links_525():
     transformer = TransformToGfm()
     source_markdown = """[![moon](moon.jpg)](/uri)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/uri:]",
         "[image:moon.jpg::moon]",
         "[end-link::]",
@@ -1254,7 +1254,7 @@ def test_inline_links_526():
     transformer = TransformToGfm()
     source_markdown = """[foo [bar](/uri)](/uri)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:foo :]",
         "[link:/uri:]",
@@ -1286,7 +1286,7 @@ def test_inline_links_526a():
     transformer = TransformToGfm()
     source_markdown = """[foo [bar](/uri1)](/uri2)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:foo :]",
         "[link:/uri1:]",
@@ -1318,7 +1318,7 @@ def test_inline_links_527():
     transformer = TransformToGfm()
     source_markdown = """[foo *[bar [baz](/uri)](/uri)*](/uri)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:foo :]",
         "[emphasis:1]",
@@ -1356,7 +1356,7 @@ def test_inline_links_527a():
     transformer = TransformToGfm()
     source_markdown = """[foo *[bar [baz](/uri1)](/uri2)*](/uri3)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:foo :]",
         "[emphasis:1]",
@@ -1397,7 +1397,7 @@ def test_inline_links_528():
     transformer = TransformToGfm()
     source_markdown = """![[[foo](uri1)](uri2)](uri3)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[image:uri2::]",
         "[text:[:]",
         "[link:uri1:]",
@@ -1428,7 +1428,7 @@ def test_inline_links_528a():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """![[foo](uri2)](uri3)"""
-    expected_tokens = ["[para:]", "[image:uri3::foo]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[image:uri3::foo]", "[end-para]"]
     expected_gfm = """<p><img src="uri3" alt="foo" /></p>"""
 
     # Act
@@ -1450,7 +1450,7 @@ def test_inline_links_528b():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """![[foo](uri2 "bar")](uri3)"""
-    expected_tokens = ["[para:]", "[image:uri3::foo]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[image:uri3::foo]", "[end-para]"]
     expected_gfm = """<p><img src="uri3" alt="foo" /></p>"""
 
     # Act
@@ -1473,7 +1473,7 @@ def test_inline_links_529():
     transformer = TransformToGfm()
     source_markdown = """*[foo*](/uri)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:*:]",
         "[link:/uri:]",
         "[text:foo:]",
@@ -1503,7 +1503,7 @@ def test_inline_links_530():
     transformer = TransformToGfm()
     source_markdown = """[foo *bar](baz*)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:baz*:]",
         "[text:foo :]",
         "[text:*:]",
@@ -1533,7 +1533,7 @@ def test_inline_links_531():
     transformer = TransformToGfm()
     source_markdown = """*foo [bar* baz]"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[text:foo :]",
         "[text:[:]",
@@ -1565,7 +1565,7 @@ def test_inline_links_532():
     transformer = TransformToGfm()
     source_markdown = """[foo <bar attr="](baz)">"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:foo :]",
         '[raw-html:bar attr="](baz)"]',
@@ -1593,7 +1593,7 @@ def test_inline_links_533():
     transformer = TransformToGfm()
     source_markdown = """[foo`](/uri)`"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:foo:]",
         "[icode-span:](/uri)]",
@@ -1621,7 +1621,7 @@ def test_inline_links_534():
     transformer = TransformToGfm()
     source_markdown = """[foo<http://example.com/?search=](uri)>"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:foo:]",
         "[uri-autolink:http://example.com/?search=](uri)]",

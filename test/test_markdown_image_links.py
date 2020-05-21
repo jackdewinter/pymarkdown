@@ -19,7 +19,7 @@ def test_image_link_580():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """![foo](/url "title")"""
-    expected_tokens = ["[para:]", "[image:/url:title:foo]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[image:/url:title:foo]", "[end-para]"]
     expected_gfm = """<p><img src="/url" alt="foo" title="title" /></p>"""
 
     # Act
@@ -45,7 +45,7 @@ def test_image_link_581():
 [foo *bar*]: train.jpg "train & tracks"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[image:train.jpg:train &amp; tracks:foo bar]",
         "[end-para]",
         "[BLANK:]",
@@ -74,7 +74,7 @@ def test_image_link_582():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """![foo ![bar](/url)](/url2)"""
-    expected_tokens = ["[para:]", "[image:/url2::foo bar]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[image:/url2::foo bar]", "[end-para]"]
     expected_gfm = """<p><img src="/url2" alt="foo bar" /></p>"""
 
     # Act
@@ -96,7 +96,7 @@ def test_image_link_583():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """![foo [bar](/url)](/url2)"""
-    expected_tokens = ["[para:]", "[image:/url2::foo bar]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[image:/url2::foo bar]", "[end-para]"]
     expected_gfm = """<p><img src="/url2" alt="foo bar" /></p>"""
 
     # Act
@@ -122,7 +122,7 @@ def test_image_link_584():
 [foo *bar*]: train.jpg "train & tracks"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[image:train.jpg:train &amp; tracks:foo bar]",
         "[end-para]",
         "[BLANK:]",
@@ -155,7 +155,7 @@ def test_image_link_585():
 [FOOBAR]: train.jpg "train & tracks"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[image:train.jpg:train &amp; tracks:foo bar]",
         "[end-para]",
         "[BLANK:]",
@@ -184,7 +184,7 @@ def test_image_link_586():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """![foo](train.jpg)"""
-    expected_tokens = ["[para:]", "[image:train.jpg::foo]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[image:train.jpg::foo]", "[end-para]"]
     expected_gfm = """<p><img src="train.jpg" alt="foo" /></p>"""
 
     # Act
@@ -207,7 +207,7 @@ def test_image_link_587():
     transformer = TransformToGfm()
     source_markdown = """My ![foo bar](/path/to/train.jpg  "title"   )"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:My :]",
         "[image:/path/to/train.jpg:title:foo bar]",
         "[end-para]",
@@ -235,7 +235,7 @@ def test_image_link_588():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """![foo](<url>)"""
-    expected_tokens = ["[para:]", "[image:url::foo]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[image:url::foo]", "[end-para]"]
     expected_gfm = """<p><img src="url" alt="foo" /></p>"""
 
     # Act
@@ -257,7 +257,7 @@ def test_image_link_589():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """![](/url)"""
-    expected_tokens = ["[para:]", "[image:/url::]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[image:/url::]", "[end-para]"]
     expected_gfm = """<p><img src="/url" alt="" /></p>"""
 
     # Act
@@ -281,7 +281,7 @@ def test_image_link_590():
     source_markdown = """![foo][bar]
 
 [bar]: /url"""
-    expected_tokens = ["[para:]", "[image:/url::foo]", "[end-para]", "[BLANK:]"]
+    expected_tokens = ["[para(1,1):]", "[image:/url::foo]", "[end-para]", "[BLANK:]"]
     expected_gfm = """<p><img src="/url" alt="foo" /></p>"""
 
     # Act
@@ -305,7 +305,7 @@ def test_image_link_591():
     source_markdown = """![foo][bar]
 
 [BAR]: /url"""
-    expected_tokens = ["[para:]", "[image:/url::foo]", "[end-para]", "[BLANK:]"]
+    expected_tokens = ["[para(1,1):]", "[image:/url::foo]", "[end-para]", "[BLANK:]"]
     expected_gfm = """<p><img src="/url" alt="foo" /></p>"""
 
     # Act
@@ -331,7 +331,7 @@ def test_image_link_592():
 [foo]: /url "title"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[image:/url:title:foo]",
         "[end-para]",
         "[BLANK:]",
@@ -362,7 +362,7 @@ def test_image_link_593():
 [*foo* bar]: /url "title"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[image:/url:title:foo bar]",
         "[end-para]",
         "[BLANK:]",
@@ -393,7 +393,7 @@ def test_image_link_594():
 [foo]: /url "title"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[image:/url:title:Foo]",
         "[end-para]",
         "[BLANK:]",
@@ -427,7 +427,7 @@ def test_image_link_595():
         "\a", " "
     )
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[image:/url:title:foo]",
         "[text:\n:: \n]",
         "[text:[:]",
@@ -462,7 +462,7 @@ def test_image_link_596():
 [foo]: /url "title"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[image:/url:title:foo]",
         "[end-para]",
         "[BLANK:]",
@@ -493,7 +493,7 @@ def test_image_link_597():
 [*foo* bar]: /url "title"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[image:/url:title:foo bar]",
         "[end-para]",
         "[BLANK:]",
@@ -524,7 +524,7 @@ def test_image_link_598():
 [[foo]]: /url "title"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:![:]",
         "[text:[:]",
         "[text:foo:]",
@@ -532,7 +532,7 @@ def test_image_link_598():
         "[text:]:]",
         "[end-para]",
         "[BLANK:]",
-        "[para:]",
+        "[para(3,1):]",
         "[text:[:]",
         "[text:[:]",
         "[text:foo:]",
@@ -568,7 +568,7 @@ def test_image_link_599():
 [foo]: /url "title"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[image:/url:title:Foo]",
         "[end-para]",
         "[BLANK:]",
@@ -599,7 +599,7 @@ def test_image_link_600():
 [foo]: /url "title"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:![foo:]",
         "[text:]:]",
         "[end-para]",
@@ -631,7 +631,7 @@ def test_image_link_601():
 [foo]: /url "title"
 """
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:!:]",
         "[link:/url:title]",
         "[text:foo:]",

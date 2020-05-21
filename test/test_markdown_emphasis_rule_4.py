@@ -20,7 +20,7 @@ def test_emphasis_380():
     transformer = TransformToGfm()
     source_markdown = """_foo bar _"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:_:]",
         "[text:foo bar :]",
         "[text:_:]",
@@ -48,7 +48,7 @@ def test_emphasis_381():
     transformer = TransformToGfm()
     source_markdown = """_(_foo)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:_:]",
         "[text:(:]",
         "[text:_:]",
@@ -77,7 +77,7 @@ def test_emphasis_382():
     transformer = TransformToGfm()
     source_markdown = """_(_foo_)_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[text:(:]",
         "[emphasis:1]",
@@ -109,7 +109,7 @@ def test_emphasis_383():
     transformer = TransformToGfm()
     source_markdown = """_foo_bar"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:_:]",
         "[text:foo:]",
         "[text:_:]",
@@ -138,7 +138,7 @@ def test_emphasis_384():
     transformer = TransformToGfm()
     source_markdown = """_пристаням_стремятся"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:_:]",
         "[text:пристаням:]",
         "[text:_:]",
@@ -167,7 +167,7 @@ def test_emphasis_385():
     transformer = TransformToGfm()
     source_markdown = """_foo_bar_baz_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[text:foo:]",
         "[text:_:]",
@@ -199,7 +199,7 @@ def test_emphasis_386():
     transformer = TransformToGfm()
     source_markdown = """_(bar)_."""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[text:(bar):]",
         "[end-emphasis::1]",

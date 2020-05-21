@@ -25,7 +25,7 @@ def test_character_references_321():
 &frac34; &HilbertSpace; &DifferentialD;
 &ClockwiseContourIntegral; &ngE;"""
     expected_tokens = [
-        "[para:\n\n]",
+        "[para(1,1):\n\n]",
         "[text:\u00A0 &amp; © Æ Ď\n¾ ℋ ⅆ\n∲ ≧̸::\n\n]",
         "[end-para]",
     ]
@@ -53,7 +53,7 @@ def test_character_references_322():
     transformer = TransformToGfm()
     source_markdown = """&#35; &#1234; &#992; &#0;"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:# Ӓ Ϡ �:]",
         "[end-para]",
     ]
@@ -79,7 +79,7 @@ def test_character_references_323():
     transformer = TransformToGfm()
     source_markdown = """&#X22; &#XD06; &#xcab;"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:&quot; ആ ಫ:]",
         "[end-para]",
     ]
@@ -108,7 +108,7 @@ def test_character_references_324():
 &#abcdef0;
 &ThisIsNotDefined; &hi?;"""
     expected_tokens = [
-        "[para:\n\n\n]",
+        "[para(1,1):\n\n\n]",
         "[text:&amp;nbsp &amp;x; &amp;#; &amp;#x;\n&amp;#87654321;\n&amp;#abcdef0;\n&amp;ThisIsNotDefined; &amp;hi?;::\n\n\n]",
         "[end-para]",
     ]
@@ -137,7 +137,7 @@ def test_character_references_324a():
     transformer = TransformToGfm()
     source_markdown = """&"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:&amp;:]",
         "[end-para]",
     ]
@@ -163,7 +163,7 @@ def test_character_references_325():
     transformer = TransformToGfm()
     source_markdown = """&copy"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:&amp;copy:]",
         "[end-para]",
     ]
@@ -189,7 +189,7 @@ def test_character_references_326():
     transformer = TransformToGfm()
     source_markdown = """&MadeUpEntity;"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:&amp;MadeUpEntity;:]",
         "[end-para]",
     ]
@@ -241,7 +241,7 @@ def test_character_references_328():
     transformer = TransformToGfm()
     source_markdown = '[foo](/f&ouml;&ouml; "f&ouml;&ouml;")'
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/f%C3%B6%C3%B6:föö]",
         "[text:foo:]",
         "[end-link::]",
@@ -271,7 +271,7 @@ def test_character_references_329():
 
 [foo]: /f&ouml;&ouml; "f&ouml;&ouml;\""""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[link:/f%C3%B6%C3%B6:föö]",
         "[text:foo:]",
         "[end-link::]",
@@ -331,7 +331,7 @@ def test_character_references_331():
     transformer = TransformToGfm()
     source_markdown = """`f&ouml;&ouml;`"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span:f&amp;ouml;&amp;ouml;]",
         "[end-para]",
     ]
@@ -385,7 +385,7 @@ def test_character_references_333():
     source_markdown = """&#42;foo&#42;
 *foo*"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[text:*foo*\n::\n]",
         "[emphasis:1]",
         "[text:foo:]",
@@ -417,12 +417,12 @@ def test_character_references_334():
 
 * foo"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:* foo:]",
         "[end-para]",
         "[BLANK:]",
         "[ulist:*::2:]",
-        "[para:]",
+        "[para(3,3):]",
         "[text:foo:]",
         "[end-para]",
         "[end-ulist]",
@@ -452,7 +452,7 @@ def test_character_references_335():
     transformer = TransformToGfm()
     source_markdown = """foo&#10;&#10;bar"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo\n\nbar:]",
         "[end-para]",
     ]
@@ -480,7 +480,7 @@ def test_character_references_336():
     transformer = TransformToGfm()
     source_markdown = """&#9;foo"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:\tfoo:]",
         "[end-para]",
     ]
@@ -506,7 +506,7 @@ def test_character_references_337():
     transformer = TransformToGfm()
     source_markdown = """[a](url &quot;tit&quot;)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:a:]",
         "[text:]:]",

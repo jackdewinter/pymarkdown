@@ -21,7 +21,7 @@ def test_code_spans_338():
     transformer = TransformToGfm()
     source_markdown = """`foo`"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span:foo]",
         "[end-para]",
     ]
@@ -47,7 +47,7 @@ def test_code_spans_339():
     transformer = TransformToGfm()
     source_markdown = """`` foo ` bar ``"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span:foo ` bar]",
         "[end-para]",
     ]
@@ -73,7 +73,7 @@ def test_code_spans_340():
     transformer = TransformToGfm()
     source_markdown = """` `` `"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span:``]",
         "[end-para]",
     ]
@@ -99,7 +99,7 @@ def test_code_spans_341():
     transformer = TransformToGfm()
     source_markdown = """`  ``  `"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span: `` ]",
         "[end-para]",
     ]
@@ -125,7 +125,7 @@ def test_code_spans_342():
     transformer = TransformToGfm()
     source_markdown = """` a`"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span: a]",
         "[end-para]",
     ]
@@ -151,7 +151,7 @@ def test_code_spans_343():
     transformer = TransformToGfm()
     source_markdown = """`\u00A0b\u00A0`"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span:\u00A0b\u00A0]",
         "[end-para]",
     ]
@@ -178,7 +178,7 @@ def test_code_spans_344():
     source_markdown = """` `
 `  `"""
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[icode-span: ]",
         "[text:\n::\n]",
         "[icode-span:  ]",
@@ -207,7 +207,7 @@ def test_code_spans_344a():
     transformer = TransformToGfm()
     source_markdown = """`   `"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span:   ]",
         "[end-para]",
     ]
@@ -237,7 +237,7 @@ bar
 baz
 ``"""
     expected_tokens = [
-        "[para:\n\n\n\n]",
+        "[para(1,1):\n\n\n\n]",
         "[icode-span:foo bar   baz]",
         "[end-para]",
     ]
@@ -265,7 +265,7 @@ def test_code_spans_346():
 foo 
 ``"""
     expected_tokens = [
-        "[para:\n\n]",
+        "[para(1,1):\n\n]",
         "[icode-span:foo ]",
         "[end-para]",
     ]
@@ -294,7 +294,7 @@ baz`""".replace(
         "\a", " "
     )
     expected_tokens = [
-        "[para:\n]",
+        "[para(1,1):\n]",
         "[icode-span:foo   bar  baz]",
         "[end-para]",
     ]
@@ -320,7 +320,7 @@ def test_code_spans_348():
     transformer = TransformToGfm()
     source_markdown = """`foo\\`bar`"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span:foo\\]",
         "[text:bar`:]",
         "[end-para]",
@@ -347,7 +347,7 @@ def test_code_spans_349():
     transformer = TransformToGfm()
     source_markdown = """``foo`bar``"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span:foo`bar]",
         "[end-para]",
     ]
@@ -373,7 +373,7 @@ def test_code_spans_350():
     transformer = TransformToGfm()
     source_markdown = """` foo `` bar `"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span:foo `` bar]",
         "[end-para]",
     ]
@@ -399,7 +399,7 @@ def test_code_spans_351():
     transformer = TransformToGfm()
     source_markdown = """*foo`*`"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:*:]",
         "[text:foo:]",
         "[icode-span:*]",
@@ -427,7 +427,7 @@ def test_code_spans_352():
     transformer = TransformToGfm()
     source_markdown = """[not a `link](/foo`)"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:[:]",
         "[text:not a :]",
         "[icode-span:link](/foo]",
@@ -456,7 +456,7 @@ def test_code_spans_353():
     transformer = TransformToGfm()
     source_markdown = """`<a href="`">`"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span:&lt;a href=&quot;]",
         "[text:&quot;&gt;`:]",
         "[end-para]",
@@ -482,7 +482,12 @@ def test_code_spans_354():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """<a href="`">`"""
-    expected_tokens = ["[para:]", '[raw-html:a href="`"]', "[text:`:]", "[end-para]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        '[raw-html:a href="`"]',
+        "[text:`:]",
+        "[end-para]",
+    ]
     expected_gfm = """<p><a href="`">`</p>"""
 
     # Act
@@ -505,7 +510,7 @@ def test_code_spans_355():
     transformer = TransformToGfm()
     source_markdown = """`<http://foo.bar.`baz>`"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[icode-span:&lt;http://foo.bar.]",
         "[text:baz&gt;`:]",
         "[end-para]",
@@ -532,7 +537,7 @@ def test_code_spans_356():
     transformer = TransformToGfm()
     source_markdown = """<http://foo.bar.`baz>`"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[uri-autolink:http://foo.bar.`baz]",
         "[text:`:]",
         "[end-para]",
@@ -559,7 +564,7 @@ def test_code_spans_357():
     transformer = TransformToGfm()
     source_markdown = """```foo``"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:```foo``:]",
         "[end-para]",
     ]
@@ -585,7 +590,7 @@ def test_code_spans_358():
     transformer = TransformToGfm()
     source_markdown = """`foo"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:`foo:]",
         "[end-para]",
     ]
@@ -611,7 +616,7 @@ def test_code_spans_359():
     transformer = TransformToGfm()
     source_markdown = """`foo``bar``"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:`foo:]",
         "[icode-span:bar]",
         "[end-para]",

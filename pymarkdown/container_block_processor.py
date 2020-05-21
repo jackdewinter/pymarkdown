@@ -845,19 +845,21 @@ class ContainerBlockProcessor:
         """
         Parse the contents of a line for a leaf block.
         """
-
-        line_to_parse = position_marker.text_to_parse
-        start_index = position_marker.index_number
-
-        LOGGER.debug("Leaf Line:%s:", line_to_parse.replace("\t", "\\t"))
+        LOGGER.debug(
+            "Leaf Line:%s:", position_marker.text_to_parse.replace("\t", "\\t")
+        )
         new_tokens = []
 
         requeue_line_info = RequeueLineInfo()
-        original_line_to_parse = line_to_parse[start_index:]
-        start_index, extracted_whitespace = ParserHelper.extract_whitespace(
-            line_to_parse, start_index
+        original_line_to_parse = position_marker.text_to_parse[
+            position_marker.index_number :
+        ]
+        (
+            position_marker.index_number,
+            extracted_whitespace,
+        ) = ParserHelper.extract_whitespace(
+            position_marker.text_to_parse, position_marker.index_number
         )
-        position_marker.index_number = start_index
 
         pre_tokens = ContainerBlockProcessor.__close_indented_block_if_indent_not_there(
             token_stack, extracted_whitespace, token_document
@@ -872,7 +874,6 @@ class ContainerBlockProcessor:
             new_tokens,
             close_open_blocks_fn,
         )
-        position_marker.index_number = start_index
 
         (
             outer_processed,
@@ -881,8 +882,8 @@ class ContainerBlockProcessor:
         ) = ContainerBlockProcessor.__handle_link_reference_definition(
             outer_processed,
             token_stack,
-            line_to_parse,
-            start_index,
+            position_marker.text_to_parse,
+            position_marker.index_number,
             extracted_whitespace,
             original_line_to_parse,
             ignore_link_definition_start,
@@ -916,8 +917,8 @@ class ContainerBlockProcessor:
                 new_tokens = LeafBlockProcessor.parse_setext_headings(
                     token_stack,
                     token_document,
-                    line_to_parse,
-                    start_index,
+                    position_marker.text_to_parse,
+                    position_marker.index_number,
                     extracted_whitespace,
                     this_bq_count,
                     stack_bq_count,
@@ -941,8 +942,7 @@ class ContainerBlockProcessor:
                 new_tokens = LeafBlockProcessor.parse_paragraph(
                     token_stack,
                     token_document,
-                    line_to_parse,
-                    start_index,
+                    position_marker,
                     extracted_whitespace,
                     this_bq_count,
                     no_para_start_if_empty,

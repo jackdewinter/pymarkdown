@@ -19,7 +19,7 @@ def test_emphasis_457():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """foo ___"""
-    expected_tokens = ["[para:]", "[text:foo :]", "[text:___:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:foo :]", "[text:___:]", "[end-para]"]
     expected_gfm = """<p>foo ___</p>"""
 
     # Act
@@ -42,7 +42,7 @@ def test_emphasis_458():
     transformer = TransformToGfm()
     source_markdown = """foo _\\__"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo :]",
         "[emphasis:1]",
         "[text:_:]",
@@ -71,7 +71,7 @@ def test_emphasis_459():
     transformer = TransformToGfm()
     source_markdown = """foo _*_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo :]",
         "[emphasis:1]",
         "[text:*:]",
@@ -99,7 +99,7 @@ def test_emphasis_460():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """foo _____"""
-    expected_tokens = ["[para:]", "[text:foo :]", "[text:_____:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:foo :]", "[text:_____:]", "[end-para]"]
     expected_gfm = """<p>foo _____</p>"""
 
     # Act
@@ -122,7 +122,7 @@ def test_emphasis_461():
     transformer = TransformToGfm()
     source_markdown = """foo __\\___"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo :]",
         "[emphasis:2]",
         "[text:_:]",
@@ -151,7 +151,7 @@ def test_emphasis_462():
     transformer = TransformToGfm()
     source_markdown = """foo __*__"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:foo :]",
         "[emphasis:2]",
         "[text:*:]",
@@ -180,7 +180,7 @@ def test_emphasis_463():
     transformer = TransformToGfm()
     source_markdown = """__foo_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:_:]",
         "[emphasis:1]",
         "[text:foo:]",
@@ -209,7 +209,7 @@ def test_emphasis_464():
     transformer = TransformToGfm()
     source_markdown = """_foo__"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[text:foo:]",
         "[end-emphasis::1]",
@@ -238,7 +238,7 @@ def test_emphasis_465():
     transformer = TransformToGfm()
     source_markdown = """___foo__"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:_:]",
         "[emphasis:2]",
         "[text:foo:]",
@@ -267,7 +267,7 @@ def test_emphasis_466():
     transformer = TransformToGfm()
     source_markdown = """____foo_"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[text:___:]",
         "[emphasis:1]",
         "[text:foo:]",
@@ -296,7 +296,7 @@ def test_emphasis_467():
     transformer = TransformToGfm()
     source_markdown = """__foo___"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:2]",
         "[text:foo:]",
         "[end-emphasis::2]",
@@ -325,7 +325,7 @@ def test_emphasis_468():
     transformer = TransformToGfm()
     source_markdown = """_foo____"""
     expected_tokens = [
-        "[para:]",
+        "[para(1,1):]",
         "[emphasis:1]",
         "[text:foo:]",
         "[end-emphasis::1]",

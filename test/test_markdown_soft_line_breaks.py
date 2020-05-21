@@ -21,7 +21,7 @@ def test_soft_line_breaks_669():
     transformer = TransformToGfm()
     source_markdown = """foo
 baz"""
-    expected_tokens = ["[para:\n]", "[text:foo\nbaz::\n]", "[end-para]"]
+    expected_tokens = ["[para(1,1):\n]", "[text:foo\nbaz::\n]", "[end-para]"]
     expected_gfm = """<p>foo
 baz</p>"""
 
@@ -47,7 +47,7 @@ def test_soft_line_breaks_670():
  baz""".replace(
         "\a", " "
     )
-    expected_tokens = ["[para:\n ]", "[text:foo\nbaz:: \n]", "[end-para]"]
+    expected_tokens = ["[para(1,1):\n ]", "[text:foo\nbaz:: \n]", "[end-para]"]
     expected_gfm = """<p>foo
 baz</p>"""
 

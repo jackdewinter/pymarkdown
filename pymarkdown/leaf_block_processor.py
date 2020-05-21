@@ -449,8 +449,7 @@ class LeafBlockProcessor:
     def parse_paragraph(
         token_stack,
         token_document,
-        line_to_parse,
-        start_index,
+        position_marker,
         extracted_whitespace,
         this_bq_count,
         no_para_start_if_empty,
@@ -462,7 +461,9 @@ class LeafBlockProcessor:
         """
         new_tokens = []
 
-        if no_para_start_if_empty and start_index >= len(line_to_parse):
+        if no_para_start_if_empty and position_marker.index_number >= len(
+            position_marker.text_to_parse
+        ):
             LOGGER.debug("Escaping paragraph due to empty w/ blank")
             return [BlankLineMarkdownToken("")]
 
@@ -490,11 +491,16 @@ class LeafBlockProcessor:
 
         if not token_stack[-1].is_paragraph:
             token_stack.append(ParagraphStackToken())
-            new_tokens.append(ParagraphMarkdownToken(extracted_whitespace))
+            new_tokens.append(
+                ParagraphMarkdownToken(extracted_whitespace, position_marker)
+            )
             extracted_whitespace = ""
 
         new_tokens.append(
-            TextMarkdownToken(line_to_parse[start_index:], extracted_whitespace)
+            TextMarkdownToken(
+                position_marker.text_to_parse[position_marker.index_number :],
+                extracted_whitespace,
+            )
         )
         return new_tokens
         # pylint: enable=too-many-arguments
