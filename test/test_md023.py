@@ -106,13 +106,13 @@ def test_md023_bad_improper_indent_setext():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md023/improper_indent_setext.md:0:0: "
+        "test/resources/rules/md023/improper_indent_setext.md:4:3: "
         + "MD023: Headings must start at the beginning of the line (heading-start-left, header-start-left)\n"
-        + "test/resources/rules/md023/improper_indent_setext.md:0:0: "
+        + "test/resources/rules/md023/improper_indent_setext.md:9:3: "
         + "MD023: Headings must start at the beginning of the line (heading-start-left, header-start-left)\n"
-        + "test/resources/rules/md023/improper_indent_setext.md:0:0: "
+        + "test/resources/rules/md023/improper_indent_setext.md:14:1: "
         + "MD023: Headings must start at the beginning of the line (heading-start-left, header-start-left)\n"
-        + "test/resources/rules/md023/improper_indent_setext.md:0:0: "
+        + "test/resources/rules/md023/improper_indent_setext.md:22:1: "
         + "MD023: Headings must start at the beginning of the line (heading-start-left, header-start-left)\n"
     )
     expected_error = ""

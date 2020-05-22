@@ -917,8 +917,7 @@ class ContainerBlockProcessor:
                 new_tokens = LeafBlockProcessor.parse_setext_headings(
                     token_stack,
                     token_document,
-                    position_marker.text_to_parse,
-                    position_marker.index_number,
+                    position_marker,
                     extracted_whitespace,
                     this_bq_count,
                     stack_bq_count,

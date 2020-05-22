@@ -391,8 +391,7 @@ class LeafBlockProcessor:
     def parse_setext_headings(
         token_stack,
         token_document,
-        line_to_parse,
-        start_index,
+        position_marker,
         extracted_whitespace,
         this_bq_count,
         stack_bq_count,
@@ -405,19 +404,25 @@ class LeafBlockProcessor:
         if (
             ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
             and ParserHelper.is_character_at_index_one_of(
-                line_to_parse, start_index, LeafBlockProcessor.__setext_characters
+                position_marker.text_to_parse,
+                position_marker.index_number,
+                LeafBlockProcessor.__setext_characters,
             )
             and token_stack[-1].is_paragraph
             and (this_bq_count == stack_bq_count)
         ):
             _, collected_to_index = ParserHelper.collect_while_character(
-                line_to_parse, start_index, line_to_parse[start_index]
+                position_marker.text_to_parse,
+                position_marker.index_number,
+                position_marker.text_to_parse[position_marker.index_number],
             )
             (
                 after_whitespace_index,
                 extra_whitespace_after_setext,
-            ) = ParserHelper.extract_whitespace(line_to_parse, collected_to_index)
-            if after_whitespace_index == len(line_to_parse):
+            ) = ParserHelper.extract_whitespace(
+                position_marker.text_to_parse, collected_to_index
+            )
+            if after_whitespace_index == len(position_marker.text_to_parse):
 
                 # This is unusual.  Normally, close_open_blocks is used to close off
                 # blocks based on the stack token.  However, since the setext takes
@@ -436,7 +441,9 @@ class LeafBlockProcessor:
                     token_index -= 1
 
                 replacement_token = SetextHeadingMarkdownToken(
-                    line_to_parse[start_index], token_document[token_index].extra_data,
+                    position_marker.text_to_parse[position_marker.index_number],
+                    token_document[token_index].extra_data,
+                    position_marker,
                 )
                 token_document[token_index] = replacement_token
                 del token_stack[-1]

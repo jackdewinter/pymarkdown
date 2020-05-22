@@ -8,7 +8,6 @@
 
 - add token for LRD
 - need to add line/column for
-  - setext
   - blank lines
   - text
   - list

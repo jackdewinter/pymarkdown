@@ -338,7 +338,7 @@ Heading
         "[icode-block(2,5):    ]",
         "[text:foo:]",
         "[end-icode-block]",
-        "[setext:-:]",
+        "[setext(4,1):-:]",
         "[text:Heading:]",
         "[end-setext::]",
         "[icode-block(5,5):    ]",

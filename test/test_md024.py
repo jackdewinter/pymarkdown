@@ -380,7 +380,7 @@ def test_md024_bad_same_heading_content_setext():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_setext.md:0:0: "
+        "test/resources/rules/md024/same_heading_content_setext.md:5:1: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -410,9 +410,9 @@ def test_md024_bad_same_heading_in_siblings_setext():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_in_siblings_setext.md:0:0: "
+        "test/resources/rules/md024/same_heading_in_siblings_setext.md:8:1: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
-        + "test/resources/rules/md024/same_heading_in_siblings_setext.md:0:0: "
+        + "test/resources/rules/md024/same_heading_in_siblings_setext.md:14:1: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -442,7 +442,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_setext():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md:0:0: "
+        "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md:11:1: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -550,7 +550,7 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md024/same_heading_in_siblings_setext.md:0:0: "
+            "test/resources/rules/md024/same_heading_in_siblings_setext.md:8:1: "
             + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
         )
         expected_error = ""

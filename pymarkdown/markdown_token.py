@@ -234,7 +234,7 @@ class SetextHeadingMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the setext heading element.
     """
 
-    def __init__(self, heading_character, remaining_line):
+    def __init__(self, heading_character, remaining_line, position_marker):
         self.heading_character = heading_character
         self.remaining_line = remaining_line
         self.final_whitespace = ""
@@ -245,7 +245,10 @@ class SetextHeadingMarkdownToken(MarkdownToken):
         else:
             self.hash_count = -1
         MarkdownToken.__init__(
-            self, MarkdownToken.token_setext_heading, "",
+            self,
+            MarkdownToken.token_setext_heading,
+            "",
+            position_marker=position_marker,
         )
         self.compose_extra_data_field()
 

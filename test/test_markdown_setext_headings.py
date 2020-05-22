@@ -25,14 +25,14 @@ def test_setext_headings_050():
 Foo *bar*
 ---------"""
     expected_tokens = [
-        "[setext:=:]",
+        "[setext(2,1):=:]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar:]",
         "[end-emphasis::1]",
         "[end-setext::]",
         "[BLANK:]",
-        "[setext:-:]",
+        "[setext(5,1):-:]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar:]",
@@ -64,7 +64,7 @@ def test_setext_headings_051():
 baz*
 ===="""
     expected_tokens = [
-        "[setext:=:]",
+        "[setext(3,1):=:]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar\nbaz::\n]",
@@ -96,7 +96,7 @@ def test_setext_headings_052():
 baz*\t
 ===="""
     expected_tokens = [
-        "[setext:=:  :\t]",
+        "[setext(3,1):=:  :\t]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar\nbaz::\n]",
@@ -128,7 +128,11 @@ def test_setext_headings_052a():
   b
   c
 ==="""
-    expected_tokens = ["[setext:=:  ]", "[text:a\nb\nc::\n  \n  ]", "[end-setext::]"]
+    expected_tokens = [
+        "[setext(4,1):=:  ]",
+        "[text:a\nb\nc::\n  \n  ]",
+        "[end-setext::]",
+    ]
     expected_gfm = """<h1>a
 b
 c</h1>"""
@@ -158,7 +162,7 @@ def test_setext_headings_052b():
         "\a", " "
     )
     expected_tokens = [
-        "[setext:=:  ]",
+        "[setext(4,1):=:  ]",
         "[text:a::  ]",
         "[hard-break:  ]",
         "[text:\nb::\n  ]",
@@ -194,11 +198,11 @@ def test_setext_headings_053():
 Foo
 ="""
     expected_tokens = [
-        "[setext:-:]",
+        "[setext(2,1):-:]",
         "[text:Foo:]",
         "[end-setext::]",
         "[BLANK:]",
-        "[setext:=:]",
+        "[setext(5,1):=:]",
         "[text:Foo:]",
         "[end-setext::]",
     ]
@@ -232,15 +236,15 @@ def test_setext_headings_054():
   Foo
   ==="""
     expected_tokens = [
-        "[setext:-:   ]",
+        "[setext(2,1):-:   ]",
         "[text:Foo:]",
         "[end-setext::]",
         "[BLANK:]",
-        "[setext:-:  ]",
+        "[setext(5,1):-:  ]",
         "[text:Foo:]",
         "[end-setext::]",
         "[BLANK:]",
-        "[setext:=:  ]",
+        "[setext(8,3):=:  ]",
         "[text:Foo:]",
         "[end-setext:  :]",
     ]
@@ -304,7 +308,7 @@ def test_setext_headings_056():
     transformer = TransformToGfm()
     source_markdown = """Foo
    ----      """
-    expected_tokens = ["[setext:-:]", "[text:Foo:]", "[end-setext:   :      ]"]
+    expected_tokens = ["[setext(2,4):-:]", "[text:Foo:]", "[end-setext:   :      ]"]
     expected_gfm = """<h2>Foo</h2>"""
 
     # Act
@@ -391,7 +395,7 @@ def test_setext_headings_059():
 -----""".replace(
         "\a", " "
     )
-    expected_tokens = ["[setext:-::  ]", "[text:Foo:]", "[end-setext::]"]
+    expected_tokens = ["[setext(2,1):-::  ]", "[text:Foo:]", "[end-setext::]"]
     expected_gfm = """<h2>Foo</h2>"""
 
     # Act
@@ -414,7 +418,7 @@ def test_setext_headings_060():
     transformer = TransformToGfm()
     source_markdown = """Foo\\
 ----"""
-    expected_tokens = ["[setext:-:]", "[text:Foo\\:]", "[end-setext::]"]
+    expected_tokens = ["[setext(2,1):-:]", "[text:Foo\\:]", "[end-setext::]"]
     expected_gfm = """<h2>Foo\\</h2>"""
 
     # Act
@@ -443,14 +447,14 @@ def test_setext_headings_061():
 ---
 of dashes"/>"""
     expected_tokens = [
-        "[setext:-:]",
+        "[setext(2,1):-:]",
         "[text:`Foo:]",
         "[end-setext::]",
         "[para(3,1):]",
         "[text:`:]",
         "[end-para]",
         "[BLANK:]",
-        "[setext:-:]",
+        "[setext(6,1):-:]",
         "[text:&lt;a title=&quot;a lot:]",
         "[end-setext::]",
         "[para(7,1):]",
@@ -616,7 +620,7 @@ def test_setext_headings_065():
     source_markdown = """Foo
 Bar
 ---"""
-    expected_tokens = ["[setext:-:]", "[text:Foo\nBar::\n]", "[end-setext::]"]
+    expected_tokens = ["[setext(3,1):-:]", "[text:Foo\nBar::\n]", "[end-setext::]"]
     expected_gfm = """<h2>Foo
 Bar</h2>"""
 
@@ -646,10 +650,10 @@ Bar
 Baz"""
     expected_tokens = [
         "[tbreak(1,1):-::---]",
-        "[setext:-:]",
+        "[setext(3,1):-:]",
         "[text:Foo:]",
         "[end-setext::]",
-        "[setext:-:]",
+        "[setext(5,1):-:]",
         "[text:Bar:]",
         "[end-setext::]",
         "[para(6,1):]",
@@ -857,7 +861,7 @@ def test_setext_headings_072():
     transformer = TransformToGfm()
     source_markdown = """\\> foo
 ------"""
-    expected_tokens = ["[setext:-:]", "[text:&gt; foo:]", "[end-setext::]"]
+    expected_tokens = ["[setext(2,1):-:]", "[text:&gt; foo:]", "[end-setext::]"]
     expected_gfm = """<h2>&gt; foo</h2>"""
 
     # Act
@@ -889,7 +893,7 @@ baz"""
         "[text:Foo:]",
         "[end-para]",
         "[BLANK:]",
-        "[setext:-:]",
+        "[setext(4,1):-:]",
         "[text:bar:]",
         "[end-setext::]",
         "[para(5,1):]",

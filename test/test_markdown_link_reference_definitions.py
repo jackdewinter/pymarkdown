@@ -794,7 +794,7 @@ bar
 ===
 [foo]"""
     expected_tokens = [
-        "[setext:=:]",
+        "[setext(3,1):=:]",
         "[text:bar:]",
         "[end-setext::]",
         "[para(4,1):]",

@@ -172,7 +172,7 @@ def test_md026_bad_ends_with_punctuation_setext():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md026/ends_with_punctuation_setext.md:0:0: "
+        "test/resources/rules/md026/ends_with_punctuation_setext.md:2:1: "
         + "MD026: Trailing punctuation in heading (no-trailing-punctuation)\n"
     )
     expected_error = ""

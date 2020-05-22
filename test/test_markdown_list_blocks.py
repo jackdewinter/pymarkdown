@@ -2087,7 +2087,7 @@ def test_list_blocks_278():
         "[text:Foo: ]",
         "[end-atx::]",
         "[li:2]",
-        "[setext:-:]",
+        "[setext(3,3):-:]",
         "[text:Bar:]",
         "[end-setext::]",
         "[para(4,3):]",
