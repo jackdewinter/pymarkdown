@@ -1480,7 +1480,7 @@ def test_list_items_296():
 </ul>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1512,6 +1512,7 @@ def test_list_items_297():
         "[text:b:]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(4,3):True::ref:: :/url:::::]",
         "[li:2]",
         "[para(5,3):]",
         "[text:d:]",
@@ -1531,7 +1532,7 @@ def test_list_items_297():
 </ul>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

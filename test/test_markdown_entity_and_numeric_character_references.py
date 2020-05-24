@@ -277,6 +277,7 @@ def test_character_references_329():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/f%C3%B6%C3%B6:/f&ouml;&ouml;: :föö:"f&ouml;&ouml;":]',
     ]
     expected_gfm = """<p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>"""
 

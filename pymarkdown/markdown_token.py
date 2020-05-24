@@ -17,6 +17,7 @@ class MarkdownToken:
     token_fenced_code_block = "fcode-block"
     token_thematic_break = "tbreak"
     token_block_quote = "block-quote"
+    token_link_reference_definition = "link-ref-def"
     token_atx_heading = "atx"
     token_setext_heading = "setext"
     token_unordered_list_start = "ulist"
@@ -488,6 +489,89 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
             + "':"
             + str(self)
         )
+
+
+# pylint: disable=too-many-instance-attributes
+class LinkReferenceDefinitionMarkdownToken(MarkdownToken):
+    """
+    Class to provide for an encapsulation of the link reference definition element.
+    """
+
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        did_add_definition,
+        extracted_whitespace,
+        link_name,
+        link_value,
+        link_debug,
+        position_marker,
+    ):
+        self.did_add_definition = did_add_definition
+        self.extracted_whitespace = extracted_whitespace
+        self.link_name = link_name
+
+        if link_value:
+            self.link_destination = link_value[0]
+            self.link_title = link_value[1]
+        else:
+            self.link_destination = ""
+            self.link_title = ""
+
+        if link_debug:
+            self.link_name_debug = link_debug[0]
+            if self.link_name_debug == self.link_name:
+                self.link_name_debug = ""
+            self.link_destination_whitespace = link_debug[1]
+            self.link_destination_raw = link_debug[2]
+            if self.link_destination_raw == self.link_destination:
+                self.link_destination_raw = ""
+            self.link_title_whitespace = link_debug[3]
+            self.link_title_raw = link_debug[4]
+            if self.link_title_raw == self.link_title:
+                self.link_title_raw = ""
+            self.end_whitespace = link_debug[5]
+        else:
+            self.link_name_debug = ""
+            self.link_destination_whitespace = ""
+            self.link_destination_raw = ""
+            self.link_title_whitespace = ""
+            self.link_title_raw = ""
+            self.end_whitespace = ""
+        extra_data = (
+            str(did_add_definition)
+            + ":"
+            + extracted_whitespace
+            + ":"
+            + link_name
+            + ":"
+            + self.link_name_debug
+            + ":"
+            + self.link_destination_whitespace
+            + ":"
+            + self.link_destination
+            + ":"
+            + self.link_destination_raw
+            + ":"
+            + self.link_title_whitespace
+            + ":"
+            + self.link_title
+            + ":"
+            + self.link_title_raw
+            + ":"
+            + self.end_whitespace
+        )
+        MarkdownToken.__init__(
+            self,
+            MarkdownToken.token_link_reference_definition,
+            extra_data,
+            position_marker=position_marker,
+        )
+
+    # pylint: enable=too-many-arguments
+
+
+# pylint: enable=too-many-instance-attributes
 
 
 class BlockQuoteMarkdownToken(MarkdownToken):

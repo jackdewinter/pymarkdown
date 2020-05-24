@@ -18,6 +18,7 @@ from pymarkdown.markdown_token import (
     ImageStartMarkdownToken,
     IndentedCodeBlockMarkdownToken,
     InlineCodeSpanMarkdownToken,
+    LinkReferenceDefinitionMarkdownToken,
     LinkStartMarkdownToken,
     MarkdownToken,
     NewListItemMarkdownToken,
@@ -155,6 +156,9 @@ class TransformToGfm:
                 token_to_check = actual_tokens[current_token_index - 2]
         LOGGER.debug("token_to_check-->%s", str(token_to_check))
         if token_to_check.is_blank_line:
+            LOGGER.debug(
+                "before_blank-->%s", str(actual_tokens[current_token_index - 2])
+            )
             if isinstance(
                 actual_tokens[current_token_index - 2],
                 (
@@ -167,6 +171,8 @@ class TransformToGfm:
             else:
                 LOGGER.debug("!!!LOOSE!!!")
                 return True
+        elif isinstance(token_to_check, LinkReferenceDefinitionMarkdownToken):
+            return True
         return False
 
     @classmethod
@@ -316,6 +322,10 @@ class TransformToGfm:
             HtmlBlockMarkdownToken,
             self.handle_start_html_block_token,
             self.handle_end_html_block_token,
+        )
+        self.register_handlers(
+            LinkReferenceDefinitionMarkdownToken,
+            self.handle_link_reference_definition_token,
         )
 
     def register_handlers(self, type_name, start_token_handler, end_token_handler=None):
@@ -704,6 +714,17 @@ class TransformToGfm:
         """
         assert transform_state
         output_html = output_html + "<" + next_token.raw_tag + ">"
+        return output_html
+
+    @classmethod
+    def handle_link_reference_definition_token(
+        cls, output_html, next_token, transform_state
+    ):
+        """
+        Handle the link reference definition token.
+        """
+        assert next_token
+        assert transform_state
         return output_html
 
     @classmethod

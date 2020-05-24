@@ -287,8 +287,10 @@ class LinkDefinitionStackToken(StackToken):
     Class to provide for a stack token for a possible link definition.
     """
 
-    def __init__(self):
+    def __init__(self, extracted_whitespace, position_marker):
+        self.extracted_whitespace = extracted_whitespace
         self.continuation_lines = []
+        self.start_position_marker = position_marker
         StackToken.__init__(self, StackToken.stack_link_definition)
 
     def add_continuation_line(self, new_line):

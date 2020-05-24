@@ -82,12 +82,14 @@ class LinkHelper:
             str(link_name),
             str(link_value),
         )
+        did_add_definition = False
         if link_name in LinkHelper.__link_definitions:
-            # TODO warning?
             LOGGER.debug(">>def already present>>%s", str(link_name))
         else:
             LinkHelper.__link_definitions[link_name] = link_value
+            did_add_definition = True
             LOGGER.debug(">>added def>>%s-->%s", str(link_name), str(link_value))
+        return did_add_definition
 
     @staticmethod
     def extract_link_label(line_to_parse, new_index, include_reference_colon=True):
@@ -153,36 +155,43 @@ class LinkHelper:
             line_to_parse[new_index:],
             ex_ws.replace("\n", "\\n"),
         )
+        start_index = new_index
         if new_index == len(line_to_parse) and not is_blank_line:
-            return False, new_index, None
+            return False, new_index, None, None, None
         if ex_ws and new_index < len(line_to_parse):
             inline_title, new_index = LinkHelper.__parse_link_title(
                 line_to_parse, new_index
             )
             if new_index == -1:
-                return False, -1, None
+                return False, -1, None, None, None
             if inline_title is None:
-                return False, new_index, None
-        return True, new_index, inline_title
+                return False, new_index, None, None, None
+        return (
+            True,
+            new_index,
+            inline_title,
+            ex_ws,
+            line_to_parse[start_index:new_index],
+        )
 
     @staticmethod
     def extract_link_destination(line_to_parse, new_index, is_blank_line):
         """
         Extract the link reference definition's link destination.
         """
-        new_index, _ = ParserHelper.collect_while_one_of_characters(
+        new_index, prefix_whitespace = ParserHelper.collect_while_one_of_characters(
             line_to_parse, new_index, Constants.whitespace
         )
         if new_index == len(line_to_parse) and not is_blank_line:
-            return False, new_index, None
+            return False, new_index, None, None, None
 
         LOGGER.debug("LD>>%s<<", line_to_parse[new_index:])
-        inline_link, new_index = LinkHelper.__parse_link_destination(
+        inline_link, new_index, inline_raw_link = LinkHelper.__parse_link_destination(
             line_to_parse, new_index
         )
         if new_index == -1:
-            return False, -1, None
-        return True, new_index, inline_link
+            return False, -1, None, None, None
+        return True, new_index, inline_link, prefix_whitespace, inline_raw_link
 
     @staticmethod
     def normalize_link_label(link_label):
@@ -438,6 +447,7 @@ class LinkHelper:
         """
 
         LOGGER.debug("parse_link_destination>>new_index>>%s>>", source_text[new_index:])
+        start_index = new_index
         if ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__angle_link_start
         ):
@@ -469,10 +479,10 @@ class LinkHelper:
                 str(ex_link),
             )
             if not ex_link:
-                return None, -1
+                return None, -1, None
 
         if new_index != -1 and "\n" in ex_link:
-            return None, -1
+            return None, -1, None
         LOGGER.debug(
             "handle_backslashes>>new_index>>%s>>ex_link>>%s>>",
             str(new_index),
@@ -488,7 +498,7 @@ class LinkHelper:
             str(new_index),
             str(ex_link),
         )
-        return ex_link, new_index
+        return ex_link, new_index, source_text[start_index:new_index]
 
     @staticmethod
     def __parse_link_title(source_text, new_index):
@@ -550,7 +560,7 @@ class LinkHelper:
         if not ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_format_inline_end
         ):
-            inline_link, new_index = LinkHelper.__parse_link_destination(
+            (inline_link, new_index, _,) = LinkHelper.__parse_link_destination(
                 source_text, new_index
             )
             if new_index != -1:

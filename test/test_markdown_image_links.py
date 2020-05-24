@@ -49,6 +49,7 @@ def test_image_link_581():
         "[image:train.jpg:train &amp; tracks:foo bar]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo *bar*:: :train.jpg:: :train &amp; tracks:"train & tracks":]',
         "[BLANK:]",
     ]
     expected_gfm = (
@@ -126,6 +127,7 @@ def test_image_link_584():
         "[image:train.jpg:train &amp; tracks:foo bar]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo *bar*:: :train.jpg:: :train &amp; tracks:"train & tracks":]',
         "[BLANK:]",
     ]
     expected_gfm = (
@@ -159,6 +161,7 @@ def test_image_link_585():
         "[image:train.jpg:train &amp; tracks:foo bar]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foobar:FOOBAR: :train.jpg:: :train &amp; tracks:"train & tracks":]',
         "[BLANK:]",
     ]
     expected_gfm = (
@@ -281,7 +284,13 @@ def test_image_link_590():
     source_markdown = """![foo][bar]
 
 [bar]: /url"""
-    expected_tokens = ["[para(1,1):]", "[image:/url::foo]", "[end-para]", "[BLANK:]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        "[image:/url::foo]",
+        "[end-para]",
+        "[BLANK:]",
+        "[link-ref-def(3,1):True::bar:: :/url:::::]",
+    ]
     expected_gfm = """<p><img src="/url" alt="foo" /></p>"""
 
     # Act
@@ -305,7 +314,13 @@ def test_image_link_591():
     source_markdown = """![foo][bar]
 
 [BAR]: /url"""
-    expected_tokens = ["[para(1,1):]", "[image:/url::foo]", "[end-para]", "[BLANK:]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        "[image:/url::foo]",
+        "[end-para]",
+        "[BLANK:]",
+        "[link-ref-def(3,1):True::bar:BAR: :/url:::::]",
+    ]
     expected_gfm = """<p><img src="/url" alt="foo" /></p>"""
 
     # Act
@@ -335,6 +350,7 @@ def test_image_link_592():
         "[image:/url:title:foo]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><img src="/url" alt="foo" title="title" /></p>"""
@@ -366,6 +382,7 @@ def test_image_link_593():
         "[image:/url:title:foo bar]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::*foo* bar:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><img src="/url" alt="foo bar" title="title" /></p>"""
@@ -397,6 +414,7 @@ def test_image_link_594():
         "[image:/url:title:Foo]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><img src="/url" alt="Foo" title="title" /></p>"""
@@ -434,6 +452,7 @@ def test_image_link_595():
         "[text:]:]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(4,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><img src="/url" alt="foo" title="title" />
@@ -466,6 +485,7 @@ def test_image_link_596():
         "[image:/url:title:foo]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><img src="/url" alt="foo" title="title" /></p>"""
@@ -497,6 +517,7 @@ def test_image_link_597():
         "[image:/url:title:foo bar]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::*foo* bar:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><img src="/url" alt="foo bar" title="title" /></p>"""
@@ -572,6 +593,7 @@ def test_image_link_599():
         "[image:/url:title:Foo]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><img src="/url" alt="Foo" title="title" /></p>"""
@@ -604,6 +626,7 @@ def test_image_link_600():
         "[text:]:]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p>![foo]</p>"""
@@ -638,6 +661,7 @@ def test_image_link_601():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p>!<a href="/url" title="title">foo</a></p>"""

@@ -30,6 +30,7 @@ def test_reference_links_535():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::bar:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""
@@ -68,6 +69,7 @@ def test_reference_links_536():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ref:: :/uri:::::]",
     ]
     expected_gfm = """<p><a href="/uri">link [foo [bar]]</a></p>"""
 
@@ -99,6 +101,7 @@ def test_reference_links_537():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ref:: :/uri:::::]",
     ]
     expected_gfm = """<p><a href="/uri">link [bar</a></p>"""
 
@@ -138,6 +141,7 @@ def test_reference_links_538():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ref:: :/uri:::::]",
     ]
     expected_gfm = """<p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>"""
 
@@ -169,6 +173,7 @@ def test_reference_links_539():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ref:: :/uri:::::]",
     ]
     expected_gfm = """<p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>"""
 
@@ -206,6 +211,7 @@ def test_reference_links_540():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ref:: :/uri:::::]",
     ]
     expected_gfm = """<p>[foo <a href="/uri">bar</a>]<a href="/uri">ref</a></p>"""
 
@@ -246,6 +252,7 @@ def test_reference_links_541():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ref:: :/uri:::::]",
     ]
     expected_gfm = (
         """<p>[foo <em>bar <a href="/uri">baz</a></em>]<a href="/uri">ref</a></p>"""
@@ -281,6 +288,7 @@ def test_reference_links_542():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ref:: :/uri:::::]",
     ]
     expected_gfm = """<p>*<a href="/uri">foo*</a></p>"""
 
@@ -315,6 +323,7 @@ def test_reference_links_543():
         "[text:*:]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ref:: :/uri:::::]",
     ]
     expected_gfm = """<p><a href="/uri">foo *bar</a>*</p>"""
 
@@ -346,6 +355,7 @@ def test_reference_links_544():
         '[raw-html:bar attr="][ref]"]',
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ref:: :/uri:::::]",
     ]
     expected_gfm = """<p>[foo <bar attr="][ref]"></p>"""
 
@@ -377,6 +387,7 @@ def test_reference_links_545():
         "[icode-span:][ref]]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ref:: :/uri:::::]",
     ]
     expected_gfm = """<p>[foo<code>][ref]</code></p>"""
 
@@ -408,6 +419,7 @@ def test_reference_links_546():
         "[uri-autolink:http://example.com/?search=][ref]]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ref:: :/uri:::::]",
     ]
     expected_gfm = """<p>[foo<a href="http://example.com/?search=%5D%5Bref%5D">http://example.com/?search=][ref]</a></p>"""
 
@@ -440,6 +452,7 @@ def test_reference_links_547():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::bar:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""
@@ -472,6 +485,7 @@ def test_reference_links_548():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ss:SS: :/url:::::]",
     ]
     expected_gfm = """<p><a href="/url">ẞ</a></p>"""
 
@@ -498,6 +512,7 @@ def test_reference_links_549():
 
 [Baz][Foo bar]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::foo bar:Foo\n  bar: :/url:::::]",
         "[BLANK:]",
         "[para(4,1):]",
         "[link:/url:]",
@@ -540,6 +555,7 @@ def test_reference_links_550():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::bar:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p>[foo] <a href="/url" title="title">bar</a></p>"""
@@ -578,6 +594,7 @@ def test_reference_links_551():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(4,1):True::bar:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p>[foo]
@@ -607,7 +624,9 @@ def test_reference_links_552():
 
 [bar][foo]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::foo:: :/url1:::::]",
         "[BLANK:]",
+        "[link-ref-def(3,1):False::foo:: :/url2:::::]",
         "[BLANK:]",
         "[para(5,1):]",
         "[link:/url1:]",
@@ -648,6 +667,7 @@ def test_reference_links_553():
         "[text:]:]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::foo!:: :/url:::::]",
     ]
     expected_gfm = """<p>[bar][foo!]</p>"""
 
@@ -815,6 +835,7 @@ def test_reference_links_557():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::ref\\[:: :/uri:::::]",
     ]
     expected_gfm = """<p><a href="/uri">foo</a></p>"""
 
@@ -840,6 +861,7 @@ def test_reference_links_558():
 
 [bar\\\\]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::bar\\\\:: :/uri:::::]",
         "[BLANK:]",
         "[para(3,1):]",
         "[link:/uri:]",
@@ -958,6 +980,7 @@ def test_reference_links_561():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""
@@ -994,6 +1017,7 @@ def test_reference_links_562():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::*foo* bar:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><a href="/url" title="title"><em>foo</em> bar</a></p>"""
@@ -1027,6 +1051,7 @@ def test_reference_links_563():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><a href="/url" title="title">Foo</a></p>"""
@@ -1066,6 +1091,7 @@ def test_reference_links_564():
         "[text:]:]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(4,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><a href="/url" title="title">foo</a>
@@ -1100,6 +1126,7 @@ def test_reference_links_565():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""
@@ -1136,6 +1163,7 @@ def test_reference_links_566():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::*foo* bar:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><a href="/url" title="title"><em>foo</em> bar</a></p>"""
@@ -1174,6 +1202,7 @@ def test_reference_links_567():
         "[text:]:]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::*foo* bar:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p>[<a href="/url" title="title"><em>foo</em> bar</a>]</p>"""
@@ -1209,6 +1238,7 @@ def test_reference_links_568():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::foo:: :/url:::::]",
     ]
     expected_gfm = """<p>[[bar <a href="/url">foo</a></p>"""
 
@@ -1241,6 +1271,7 @@ def test_reference_links_569():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p><a href="/url" title="title">Foo</a></p>"""
@@ -1274,6 +1305,7 @@ def test_reference_links_570():
         "[text: bar:]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::foo:: :/url:::::]",
     ]
     expected_gfm = """<p><a href="/url">foo</a> bar</p>"""
 
@@ -1309,6 +1341,7 @@ def test_reference_links_570a():
         "[text:]:]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p>[foo<a href=\"/url\" title=\"title\">foo</a>]</p>"""
@@ -1341,6 +1374,7 @@ def test_reference_links_571():
         "[text:]:]",
         "[end-para]",
         "[BLANK:]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
     ]
     expected_gfm = """<p>[foo]</p>"""
@@ -1367,6 +1401,7 @@ def test_reference_links_572():
 
 *[foo*]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::foo*:: :/url:::::]",
         "[BLANK:]",
         "[para(3,1):]",
         "[text:*:]",
@@ -1407,6 +1442,8 @@ def test_reference_links_573():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::foo:: :/url1:::::]",
+        "[link-ref-def(4,1):True::bar:: :/url2:::::]",
     ]
     expected_gfm = """<p><a href="/url2">foo</a></p>"""
 
@@ -1438,6 +1475,7 @@ def test_reference_links_574():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::foo:: :/url1:::::]",
     ]
     expected_gfm = """<p><a href="/url1">foo</a></p>"""
 
@@ -1469,6 +1507,7 @@ def test_reference_links_575():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::foo:: :/url1:::::]",
     ]
     expected_gfm = """<p><a href="">foo</a></p>"""
 
@@ -1501,6 +1540,7 @@ def test_reference_links_576():
         "[text:(not a link):]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::foo:: :/url1:::::]",
     ]
     expected_gfm = """<p><a href="/url1">foo</a>(not a link)</p>"""
 
@@ -1535,6 +1575,7 @@ def test_reference_links_577():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::baz:: :/url:::::]",
     ]
     expected_gfm = """<p>[foo]<a href="/url">bar</a></p>"""
 
@@ -1570,6 +1611,8 @@ def test_reference_links_578():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::baz:: :/url1:::::]",
+        "[link-ref-def(4,1):True::bar:: :/url2:::::]",
     ]
     expected_gfm = """<p><a href="/url2">foo</a><a href="/url1">baz</a></p>"""
 
@@ -1605,6 +1648,8 @@ def test_reference_links_579():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::baz:: :/url1:::::]",
+        "[link-ref-def(4,1):True::foo:: :/url2:::::]",
     ]
     expected_gfm = """<p>[foo]<a href="/url1">bar</a></p>"""
 

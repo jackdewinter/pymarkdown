@@ -6,14 +6,12 @@
 
 ## Bugs - General
 
-- add token for LRD
 - need to add line/column for
   - blank lines
   - text
   - list
     - refactor is_thematic_break
   - block quote
-  - LRD
   - inlines
 
 ## Bugs - Character Entities
@@ -36,7 +34,11 @@
 
 ## Bugs - Links
 
+- test_link_reference_definitions_183 is a partial lrd followed by bq, add cont+leaf blocks
 - Link_helper.py#86 - if link already registered, should warn?
+- 296 and 297 - added in case for LRD, but need to test:
+  - other types of blocks
+  - block, blank, then multiple blocks
 
 - inline link ( without any extra info
 - why does GFM not specify that between [ and ] for a LRD, no blanks are allowed?

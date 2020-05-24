@@ -271,18 +271,21 @@ class TokenizedMarkdown:
                 if until_this_index >= len(self.stack):
                     break
 
+            adjusted_tokens = []
             if self.stack[-1].was_link_definition_started:
                 LOGGER.debug(
                     "cob->process_link_reference_definition>>stopping link definition"
                 )
+                empty_position_marker = PositionMarker(-1, 0, "")
                 (
                     outer_processed,
                     did_complete_lrd,
                     did_pause_lrd,
                     lines_to_requeue,
                     force_ignore_first_as_lrd,
+                    adjusted_tokens,
                 ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-                    self.stack, "", 0, "", ""
+                    self.stack, empty_position_marker, "", ""
                 )
                 if caller_can_handle_requeue and lines_to_requeue:
                     break
@@ -295,7 +298,8 @@ class TokenizedMarkdown:
                 assert not did_pause_lrd
             else:
                 adjusted_tokens = self.__remove_top_element_from_stack()
-                new_tokens.extend(adjusted_tokens)
+
+            new_tokens.extend(adjusted_tokens)
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
         # pylint: enable=too-many-arguments
 
@@ -320,6 +324,7 @@ class TokenizedMarkdown:
         del self.stack[-1]
         return new_tokens
 
+    # pylint: disable=too-many-locals
     def __handle_blank_line(self, input_line, from_main_transform):
         """
         Handle the processing of a blank line.
@@ -362,14 +367,16 @@ class TokenizedMarkdown:
         new_tokens = None
         if self.stack[-1].was_link_definition_started:
             LOGGER.debug("process_link_reference_definition>>stopping link definition")
+            empty_position_marker = PositionMarker(-1, 0, "")
             (
                 _,
                 _,
                 did_pause_lrd,
                 lines_to_requeue,
                 force_ignore_first_as_lrd,
+                new_tokens,
             ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-                self.stack, "", 0, "", ""
+                self.stack, empty_position_marker, "", ""
             )
             assert not did_pause_lrd
         elif self.stack[-1].is_code_block:
@@ -405,6 +412,8 @@ class TokenizedMarkdown:
         assert non_whitespace_index == len(input_line)
         new_tokens.append(BlankLineMarkdownToken(extracted_whitespace))
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
+
+    # pylint: enable=too-many-locals
 
 
 # pylint: enable=too-few-public-methods

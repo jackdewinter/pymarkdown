@@ -121,8 +121,11 @@ class BlockQuoteProcessor:
         container_level_tokens = []
         removed_chars_at_start = 0
 
-        if BlockQuoteProcessor.is_block_quote_start(
-            line_to_parse, start_index, extracted_whitespace, adj_ws=adj_ws
+        if (
+            BlockQuoteProcessor.is_block_quote_start(
+                line_to_parse, start_index, extracted_whitespace, adj_ws=adj_ws
+            )
+            and not token_stack[-1].was_link_definition_started
         ):
             LOGGER.debug("clt>>block-start")
             (

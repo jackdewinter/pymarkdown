@@ -784,11 +784,11 @@ class ContainerBlockProcessor:
     def __handle_link_reference_definition(
         outer_processed,
         token_stack,
-        line_to_parse,
-        start_index,
+        position_marker,
         extracted_whitespace,
         original_line_to_parse,
         ignore_link_definition_start,
+        pre_tokens,
     ):
         """
         Take care of the processing for link reference definitions.
@@ -797,12 +797,13 @@ class ContainerBlockProcessor:
         # did_pause_lrd = False
 
         lines_to_requeue = []
+        new_tokens = []
         force_ignore_first_as_lrd = None
 
         if not outer_processed and not ignore_link_definition_start:
             LOGGER.debug(
                 "plflb-process_link_reference_definition>>outer_processed>>%s",
-                line_to_parse[start_index:],
+                position_marker.text_to_parse[position_marker.index_number :],
             )
             (
                 outer_processed,
@@ -810,10 +811,10 @@ class ContainerBlockProcessor:
                 _,  # did_pause_lrd,
                 lines_to_requeue,
                 force_ignore_first_as_lrd,
+                new_tokens,
             ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
                 token_stack,
-                line_to_parse,
-                start_index,
+                position_marker,
                 original_line_to_parse,
                 extracted_whitespace,
             )
@@ -825,6 +826,8 @@ class ContainerBlockProcessor:
                 str(lines_to_requeue),
                 str(len(lines_to_requeue)),
             )
+
+        pre_tokens.extend(new_tokens)
         return outer_processed, lines_to_requeue, force_ignore_first_as_lrd
 
     # pylint: enable=too-many-arguments, unused-argument
@@ -882,11 +885,11 @@ class ContainerBlockProcessor:
         ) = ContainerBlockProcessor.__handle_link_reference_definition(
             outer_processed,
             token_stack,
-            position_marker.text_to_parse,
-            position_marker.index_number,
+            position_marker,
             extracted_whitespace,
             original_line_to_parse,
             ignore_link_definition_start,
+            pre_tokens,
         )
 
         outer_processed = ContainerBlockProcessor.__handle_html_block(

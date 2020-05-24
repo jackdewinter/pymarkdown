@@ -22,6 +22,7 @@ def test_link_reference_definitions_161():
 
 [foo]"""
     expected_tokens = [
+        '[link-ref-def(1,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK:]",
         "[para(3,1):]",
         "[link:/url:title]",
@@ -57,6 +58,7 @@ def test_link_reference_definitions_162():
         "\a", " "
     )
     expected_tokens = [
+        "[link-ref-def(1,4):True:   :foo:: \n      :/url::  \n           :the title:'the title':  ]",
         "[BLANK:]",
         "[para(5,1):]",
         "[link:/url:the title]",
@@ -88,6 +90,7 @@ def test_link_reference_definitions_163():
 
 [Foo*bar\\]]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::foo*bar\\]:Foo*bar\\]::my_(url):: :title (with parens):'title (with parens)':]",
         "[BLANK:]",
         "[para(3,1):]",
         "[link:my_(url):title (with parens)]",
@@ -125,6 +128,7 @@ def test_link_reference_definitions_164():
 
 [Foo bar]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::foo bar:Foo bar:\n:my%20url:<my url>:\n:title:'title':]",
         "[BLANK:]",
         "[para(5,1):]",
         "[link:my%20url:title]",
@@ -160,6 +164,7 @@ line2
 
 [foo]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::foo:: :/url:: :\ntitle\nline1\nline2\n:'\ntitle\nline1\nline2\n':]",
         "[BLANK:]",
         "[para(7,1):]",
         "[link:/url:\ntitle\nline1\nline2\n]",
@@ -242,6 +247,7 @@ def test_link_reference_definitions_167():
 
 [foo]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::foo::\n:/url:::::]",
         "[BLANK:]",
         "[para(4,1):]",
         "[link:/url:]",
@@ -312,6 +318,7 @@ def test_link_reference_definitions_169():
 
 [foo]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::foo:: ::<>::::]",
         "[BLANK:]",
         "[para(3,1):]",
         "[link::]",
@@ -383,6 +390,7 @@ def test_link_reference_definitions_171():
 
 [foo]"""
     expected_tokens = [
+        '[link-ref-def(1,1):True::foo:: :/url%5Cbar*baz:/url\\bar\\*baz: :foo&quot;bar\\baz:"foo\\"bar\\baz":]',
         "[BLANK:]",
         "[para(3,1):]",
         "[link:/url%5Cbar*baz:foo&quot;bar\\baz]",
@@ -422,6 +430,7 @@ def test_link_reference_definitions_172():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::foo:: :url:::::]",
     ]
     expected_gfm = """<p><a href="url">foo</a></p>"""
 
@@ -454,6 +463,8 @@ def test_link_reference_definitions_173():
         "[end-link::]",
         "[end-para]",
         "[BLANK:]",
+        "[link-ref-def(3,1):True::foo:: :first:::::]",
+        "[link-ref-def(4,1):False::foo:: :second:::::]",
     ]
     expected_gfm = """<p><a href="first">foo</a></p>"""
 
@@ -479,6 +490,7 @@ def test_link_reference_definitions_174():
 
 [Foo]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::foo:FOO: :/url:::::]",
         "[BLANK:]",
         "[para(3,1):]",
         "[link:/url:]",
@@ -510,6 +522,7 @@ def test_link_reference_definitions_175():
 
 [αγω]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::αγω:ΑΓΩ: :/%CF%86%CE%BF%CF%85:/φου::::]",
         "[BLANK:]",
         "[para(3,1):]",
         "[link:/%CF%86%CE%BF%CF%85:]",
@@ -563,7 +576,12 @@ def test_link_reference_definitions_177():
 foo
 ]: /url
 bar"""
-    expected_tokens = ["[para(4,1):]", "[text:bar:]", "[end-para]"]
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo:\nfoo\n: :/url:::::]",
+        "[para(4,1):]",
+        "[text:bar:]",
+        "[end-para]",
+    ]
     expected_gfm = """<p>bar</p>"""
 
     # Act
@@ -615,7 +633,12 @@ def test_link_reference_definitions_179():
     transformer = TransformToGfm()
     source_markdown = """[foo]: /url
 "title" ok"""
-    expected_tokens = ["[para(2,1):]", "[text:&quot;title&quot; ok:]", "[end-para]"]
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo:: :/url:::::]",
+        "[para(2,1):]",
+        "[text:&quot;title&quot; ok:]",
+        "[end-para]",
+    ]
     expected_gfm = """<p>&quot;title&quot; ok</p>"""
 
     # Act
@@ -760,6 +783,7 @@ def test_link_reference_definitions_183():
         "[text:Foo: ]",
         "[end-link::]",
         "[end-atx::]",
+        "[link-ref-def(2,1):True::foo:: :/url:::::]",
         "[block-quote:]",
         "[para(3,3):]",
         "[text:bar:]",
@@ -794,6 +818,7 @@ bar
 ===
 [foo]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::foo:: :/url:::::]",
         "[setext(3,1):=:]",
         "[text:bar:]",
         "[end-setext::]",
@@ -828,6 +853,7 @@ def test_link_reference_definitions_185():
 ===
 [foo]"""
     expected_tokens = [
+        "[link-ref-def(1,1):True::foo:: :/url:::::]",
         "[para(2,1):\n]",
         "[text:===\n::\n]",
         "[link:/url:]",
@@ -865,6 +891,9 @@ def test_link_reference_definitions_186():
 [bar],
 [baz]"""
     expected_tokens = [
+        '[link-ref-def(1,1):True::foo:: :/foo-url:: :foo:"foo":]',
+        '[link-ref-def(2,1):True::bar:: :/bar-url::\n  :bar:"bar":]',
+        "[link-ref-def(4,1):True::baz:: :/baz-url:::::]",
         "[BLANK:]",
         "[para(6,1):\n\n]",
         "[link:/foo-url:foo]",
@@ -913,6 +942,7 @@ def test_link_reference_definitions_187():
         "[end-para]",
         "[BLANK:]",
         "[block-quote:]",
+        "[link-ref-def(3,3):True::foo:: :/url:::::]",
         "[end-block-quote]",
     ]
     expected_gfm = """<p><a href="/url">foo</a></p>
