@@ -55,7 +55,7 @@ def test_indented_code_blocks_078():
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         "[para(3,5):]",
         "[text:bar:]",
         "[end-para]",
@@ -94,7 +94,7 @@ def test_indented_code_blocks_079():
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         "[ulist:-::6:    ]",
         "[para(3,7):]",
         "[text:bar:]",
@@ -297,8 +297,8 @@ bar"""
         "[icode-block(1,5):    ]",
         "[text:foo:]",
         "[end-icode-block]",
-        "[BLANK:]",
-        "[BLANK:]",
+        "[BLANK(3,1):]",
+        "[BLANK(2,1):]",
         "[para(4,1):]",
         "[text:bar:]",
         "[end-para]",
@@ -406,12 +406,12 @@ def test_indented_code_blocks_087():
     foo
     """
     expected_tokens = [
-        "[BLANK:]",
-        "[BLANK:    ]",
+        "[BLANK(1,1):]",
+        "[BLANK(2,1):    ]",
         "[icode-block(3,5):    ]",
         "[text:foo:]",
         "[end-icode-block]",
-        "[BLANK:    ]",
+        "[BLANK(4,1):    ]",
     ]
     expected_gfm = """<pre><code>foo
 </code></pre>"""

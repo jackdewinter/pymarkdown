@@ -457,7 +457,7 @@ foo <!-- foo--->"""
         "[para(1,1):]",
         "[text:foo &lt;!--&gt; foo --&gt;:]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:foo &lt;!-- foo---&gt;:]",
         "[end-para]",

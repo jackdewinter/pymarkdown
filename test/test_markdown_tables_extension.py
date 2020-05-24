@@ -132,7 +132,7 @@ bar"""
         "[para(1,1):\n\n\n]",
         "[text:| abc | def |\n| --- | --- |\n| bar | baz |\nbar::\n\n\n]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(5,1):]",
         "[para(6,1):]",
         "[text:bar:]",
         "[end-para]",

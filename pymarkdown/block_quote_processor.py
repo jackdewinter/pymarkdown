@@ -5,7 +5,7 @@ import logging
 
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.markdown_token import BlockQuoteMarkdownToken
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_helper import ParserHelper, PositionMarker
 from pymarkdown.stack_token import (
     BlockQuoteStackToken,
     IndentedCodeBlockStackToken,
@@ -102,8 +102,7 @@ class BlockQuoteProcessor:
     @staticmethod
     def handle_block_quote_block(
         token_stack,
-        line_to_parse,
-        start_index,
+        position_marker,
         extracted_whitespace,
         adj_ws,
         this_bq_count,
@@ -120,6 +119,9 @@ class BlockQuoteProcessor:
         leaf_tokens = []
         container_level_tokens = []
         removed_chars_at_start = 0
+
+        line_to_parse = position_marker.text_to_parse
+        start_index = position_marker.index_number
 
         if (
             BlockQuoteProcessor.is_block_quote_start(
@@ -138,8 +140,7 @@ class BlockQuoteProcessor:
                 removed_chars_at_start,
             ) = BlockQuoteProcessor.__handle_block_quote_section(
                 token_stack,
-                line_to_parse,
-                start_index,
+                position_marker,
                 stack_bq_count,
                 extracted_whitespace,
                 close_open_blocks_fn,
@@ -242,8 +243,7 @@ class BlockQuoteProcessor:
     @staticmethod
     def __handle_block_quote_section(
         token_stack,
-        line_to_parse,
-        start_index,
+        position_marker,
         stack_bq_count,
         extracted_whitespace,
         close_open_blocks_fn,
@@ -252,6 +252,9 @@ class BlockQuoteProcessor:
         """
         Handle the processing of a section clearly identified as having block quotes.
         """
+
+        line_to_parse = position_marker.text_to_parse
+        start_index = position_marker.index_number
 
         LOGGER.debug(
             "IN>__handle_block_quote_section---%s<<<",
@@ -303,8 +306,15 @@ class BlockQuoteProcessor:
             removed_chars_at_start = start_index
 
             if not line_to_parse.strip():
+                adjusted_position_marker = PositionMarker(
+                    position_marker.line_number,
+                    len(position_marker.text_to_parse),
+                    position_marker.text_to_parse,
+                )
                 (leaf_tokens, lines_to_requeue, _,) = handle_blank_line_fn(
-                    line_to_parse, from_main_transform=False
+                    line_to_parse,
+                    from_main_transform=False,
+                    position_marker=adjusted_position_marker,
                 )
                 # TODO will need to deal with force_ignore_first_as_lrd
                 assert not lines_to_requeue

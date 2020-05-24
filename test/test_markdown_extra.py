@@ -19,7 +19,7 @@ def test_extra_001():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = ""
-    expected_tokens = ["[BLANK:]"]
+    expected_tokens = ["[BLANK(1,1):]"]
     expected_gfm = ""
 
     # Act
@@ -41,7 +41,7 @@ def test_extra_002():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = "   "
-    expected_tokens = ["[BLANK:   ]"]
+    expected_tokens = ["[BLANK(1,1):   ]"]
     expected_gfm = ""
 
     # Act

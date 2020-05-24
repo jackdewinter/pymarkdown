@@ -276,7 +276,7 @@ def test_character_references_329():
         "[text:foo:]",
         "[end-link::]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/f%C3%B6%C3%B6:/f&ouml;&ouml;: :föö:"f&ouml;&ouml;":]',
     ]
     expected_gfm = """<p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>"""
@@ -307,7 +307,7 @@ foo
         "[fcode-block(1,1):`:3:föö::: ]",
         "[text:foo:]",
         "[end-fcode-block]",
-        "[BLANK:]",
+        "[BLANK(4,1):]",
     ]
     expected_gfm = """<pre><code class="language-föö">foo
 </code></pre>"""
@@ -421,7 +421,7 @@ def test_character_references_334():
         "[para(1,1):]",
         "[text:* foo:]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         "[ulist:*::2:]",
         "[para(3,3):]",
         "[text:foo:]",

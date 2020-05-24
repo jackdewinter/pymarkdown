@@ -257,7 +257,7 @@ def test_fenced_code_blocks_097():
 aaa"""
     expected_tokens = [
         "[fcode-block(1,1):`:5::::]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         "[text:```\naaa:]",
         "[end-fcode-block]",
     ]
@@ -294,7 +294,7 @@ bbb"""
         "[text:aaa:]",
         "[end-fcode-block]",
         "[end-block-quote]",
-        "[BLANK:]",
+        "[BLANK(3,1):]",
         "[para(4,1):]",
         "[text:bbb:]",
         "[end-para]",
@@ -333,7 +333,7 @@ bbb"""
         "[text:aaa:]",
         "[end-fcode-block]",
         "[end-block-quote]",
-        "[BLANK:]",
+        "[BLANK(3,1):]",
         "[para(4,1):]",
         "[text:bbb:]",
         "[end-para]",
@@ -372,7 +372,7 @@ bbb"""
         "[text:&gt; aaa:]",
         "[end-fcode-block]",
         "[end-block-quote]",
-        "[BLANK:]",
+        "[BLANK(3,1):]",
         "[para(4,1):]",
         "[text:bbb:]",
         "[end-para]",
@@ -413,7 +413,7 @@ bbb"""
         "[para(2,1):]",
         "[text:aaa:]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(3,1):]",
         "[para(4,1):]",
         "[text:bbb:]",
         "[end-para]",
@@ -448,8 +448,8 @@ def test_fenced_code_blocks_099():
 ```"""
     expected_tokens = [
         "[fcode-block(1,1):`:3::::]",
-        "[BLANK:]",
-        "[BLANK:  ]",
+        "[BLANK(2,1):]",
+        "[BLANK(3,1):  ]",
         "[end-fcode-block]",
     ]
     expected_gfm = """<pre><code>

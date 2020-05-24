@@ -98,7 +98,7 @@ def test_atx_headings_034():
         "[para(1,1):]",
         "[text:#5 bolt:]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:#hashtag:]",
         "[end-para]",

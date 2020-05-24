@@ -420,7 +420,7 @@ def test_block_quotes_217():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """>"""
-    expected_tokens = ["[block-quote:]", "[BLANK:]", "[end-block-quote]"]
+    expected_tokens = ["[block-quote:]", "[BLANK(1,2):]", "[end-block-quote]"]
     expected_gfm = """<blockquote>
 </blockquote>"""
 
@@ -447,10 +447,10 @@ def test_block_quotes_218():
 > """
     expected_tokens = [
         "[block-quote:]",
-        "[BLANK:]",
-        "[BLANK: ]",
-        "[BLANK:]",
-        "[BLANK:]",
+        "[BLANK(1,2):]",
+        "[BLANK(2,4): ]",
+        "[BLANK(2,4):]",
+        "[BLANK(3,3):]",
         "[end-block-quote]",
     ]
     expected_gfm = """<blockquote>
@@ -479,12 +479,12 @@ def test_block_quotes_219():
 >  """
     expected_tokens = [
         "[block-quote:]",
-        "[BLANK:]",
+        "[BLANK(1,2):]",
         "[para(2,3):]",
         "[text:foo:]",
         "[end-para]",
-        "[BLANK: ]",
-        "[BLANK:]",
+        "[BLANK(3,4): ]",
+        "[BLANK(3,4):]",
         "[end-block-quote]",
     ]
     expected_gfm = """<blockquote>
@@ -518,7 +518,7 @@ def test_block_quotes_220():
         "[text:foo:]",
         "[end-para]",
         "[end-block-quote]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         "[block-quote:]",
         "[para(3,3):]",
         "[text:bar:]",
@@ -590,7 +590,7 @@ def test_block_quotes_222():
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(2,2):]",
         "[para(3,3):]",
         "[text:bar:]",
         "[end-para]",
@@ -737,7 +737,7 @@ baz"""
         "[text:bar:]",
         "[end-para]",
         "[end-block-quote]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:baz:]",
         "[end-para]",
@@ -773,7 +773,7 @@ baz"""
         "[para(1,3):]",
         "[text:bar:]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(2,2):]",
         "[end-block-quote]",
         "[para(3,1):]",
         "[text:baz:]",
@@ -893,7 +893,7 @@ def test_block_quotes_230():
         "[text:code:]",
         "[end-icode-block]",
         "[end-block-quote]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         "[block-quote:]",
         "[para(3,6):   ]",
         "[text:not code:]",

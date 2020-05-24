@@ -103,6 +103,10 @@ class ContainerBlockProcessor:
             init_bq,
         )
 
+        new_position_marker = PositionMarker(
+            position_marker.line_number, start_index, position_marker.text_to_parse
+        )
+
         end_container_indices = ContainerIndices(-1, -1, -1)
         (
             did_process,
@@ -117,8 +121,7 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
         ) = BlockQuoteProcessor.handle_block_quote_block(
             token_stack,
-            line_to_parse,
-            start_index,
+            new_position_marker,
             extracted_whitespace,
             adj_ws,
             this_bq_count,

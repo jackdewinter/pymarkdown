@@ -355,9 +355,9 @@ def test_backslash_escapes_319():
         "[text:foo:]",
         "[end-link::]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/bar*:/bar\\*: :ti*tle:"ti\\*tle":]',
-        "[BLANK:]",
+        "[BLANK(4,1):]",
     ]
     expected_gfm = """<p><a href="/bar*" title="ti*tle">foo</a></p>"""
 

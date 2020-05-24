@@ -42,7 +42,7 @@ new paragraph~~."""
         "[para(1,1):]",
         "[text:This ~~has a:]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:new paragraph~~.:]",
         "[end-para]",

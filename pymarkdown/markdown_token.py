@@ -182,10 +182,13 @@ class BlankLineMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the blank line element.
     """
 
-    def __init__(self, extracted_whitespace):
+    def __init__(self, extracted_whitespace, position_marker):
         self.extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
-            self, MarkdownToken.token_blank_line, extracted_whitespace
+            self,
+            MarkdownToken.token_blank_line,
+            extracted_whitespace,
+            position_marker=position_marker,
         )
 
 

@@ -136,16 +136,20 @@ class TokenizedMarkdown:
                     "\n\n\n\n\n\n\n\n\n\n>>lines_to_requeue>>%s", str(lines_to_requeue)
                 )
             else:
+                position_marker = PositionMarker(line_number, 0, token_to_use)
                 if not token_to_use or not token_to_use.strip():
                     LOGGER.debug("\n\nblank line")
                     (
                         tokens_from_line,
                         lines_to_requeue,
                         force_ignore_first_as_lrd,
-                    ) = self.__handle_blank_line(token_to_use, from_main_transform=True)
+                    ) = self.__handle_blank_line(
+                        token_to_use,
+                        from_main_transform=True,
+                        position_marker=position_marker,
+                    )
                 else:
                     LOGGER.debug("\n\nnormal lines")
-                    position_marker = PositionMarker(line_number, 0, token_to_use)
                     (
                         tokens_from_line,
                         _,
@@ -325,7 +329,9 @@ class TokenizedMarkdown:
         return new_tokens
 
     # pylint: disable=too-many-locals
-    def __handle_blank_line(self, input_line, from_main_transform):
+    def __handle_blank_line(
+        self, input_line, from_main_transform, position_marker=None
+    ):
         """
         Handle the processing of a blank line.
         """
@@ -410,7 +416,7 @@ class TokenizedMarkdown:
 
         LOGGER.debug("new_tokens>>%s", str(new_tokens))
         assert non_whitespace_index == len(input_line)
-        new_tokens.append(BlankLineMarkdownToken(extracted_whitespace))
+        new_tokens.append(BlankLineMarkdownToken(extracted_whitespace, position_marker))
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
 
     # pylint: enable=too-many-locals

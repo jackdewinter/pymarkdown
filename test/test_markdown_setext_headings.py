@@ -31,7 +31,7 @@ Foo *bar*
         "[text:bar:]",
         "[end-emphasis::1]",
         "[end-setext::]",
-        "[BLANK:]",
+        "[BLANK(3,1):]",
         "[setext(5,1):-:]",
         "[text:Foo :]",
         "[emphasis:1]",
@@ -201,7 +201,7 @@ Foo
         "[setext(2,1):-:]",
         "[text:Foo:]",
         "[end-setext::]",
-        "[BLANK:]",
+        "[BLANK(3,1):]",
         "[setext(5,1):=:]",
         "[text:Foo:]",
         "[end-setext::]",
@@ -239,11 +239,11 @@ def test_setext_headings_054():
         "[setext(2,1):-:   ]",
         "[text:Foo:]",
         "[end-setext::]",
-        "[BLANK:]",
+        "[BLANK(3,1):]",
         "[setext(5,1):-:  ]",
         "[text:Foo:]",
         "[end-setext::]",
-        "[BLANK:]",
+        "[BLANK(6,1):]",
         "[setext(8,3):=:  ]",
         "[text:Foo:]",
         "[end-setext:  :]",
@@ -362,7 +362,7 @@ Foo
         "[para(1,1):\n]",
         "[text:Foo\n= =::\n]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(3,1):]",
         "[para(4,1):]",
         "[text:Foo:]",
         "[end-para]",
@@ -453,7 +453,7 @@ of dashes"/>"""
         "[para(3,1):]",
         "[text:`:]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(4,1):]",
         "[setext(6,1):-:]",
         "[text:&lt;a title=&quot;a lot:]",
         "[end-setext::]",
@@ -685,7 +685,7 @@ def test_setext_headings_067():
     transformer = TransformToGfm()
     source_markdown = """
 ===="""
-    expected_tokens = ["[BLANK:]", "[para(2,1):]", "[text:====:]", "[end-para]"]
+    expected_tokens = ["[BLANK(1,1):]", "[para(2,1):]", "[text:====:]", "[end-para]"]
     expected_gfm = """<p>====</p>"""
 
     # Act
@@ -892,7 +892,7 @@ baz"""
         "[para(1,1):]",
         "[text:Foo:]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(2,1):]",
         "[setext(4,1):-:]",
         "[text:bar:]",
         "[end-setext::]",
@@ -933,9 +933,9 @@ baz"""
         "[para(1,1):\n]",
         "[text:Foo\nbar::\n]",
         "[end-para]",
-        "[BLANK:]",
+        "[BLANK(3,1):]",
         "[tbreak(4,1):-::---]",
-        "[BLANK:]",
+        "[BLANK(5,1):]",
         "[para(6,1):]",
         "[text:baz:]",
         "[end-para]",

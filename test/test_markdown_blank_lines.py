@@ -29,18 +29,18 @@ aaa
         "\a", " "
     )
     expected_tokens = [
-        "[BLANK:  ]",
-        "[BLANK:]",
+        "[BLANK(1,1):  ]",
+        "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:aaa:]",
         "[end-para]",
-        "[BLANK:  ]",
-        "[BLANK:]",
+        "[BLANK(4,1):  ]",
+        "[BLANK(5,1):]",
         "[atx(6,1):1:0:]",
         "[text:aaa: ]",
         "[end-atx::]",
-        "[BLANK:]",
-        "[BLANK:  ]",
+        "[BLANK(7,1):]",
+        "[BLANK(8,1):  ]",
     ]
     expected_gfm = """<p>aaa</p>
 <h1>aaa</h1>"""
