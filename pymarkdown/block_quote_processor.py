@@ -240,6 +240,7 @@ class BlockQuoteProcessor:
         return this_bq_count, start_index, adjusted_line
 
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-locals
     @staticmethod
     def __handle_block_quote_section(
         token_stack,
@@ -272,6 +273,7 @@ class BlockQuoteProcessor:
             str(start_index),
             line_to_parse.replace("\t", "\\t"),
         )
+        original_start_index = start_index
         (
             this_bq_count,
             start_index,
@@ -300,6 +302,8 @@ class BlockQuoteProcessor:
                 stack_bq_count,
                 extracted_whitespace,
                 close_open_blocks_fn,
+                position_marker,
+                original_start_index,
             )
 
             line_to_parse = line_to_parse[start_index:]
@@ -336,8 +340,11 @@ class BlockQuoteProcessor:
             this_bq_count,
             removed_chars_at_start,
         )
-        # pylint: enable=too-many-arguments
 
+    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-locals
+
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __ensure_stack_at_level(
         token_stack,
@@ -345,6 +352,8 @@ class BlockQuoteProcessor:
         stack_bq_count,
         extracted_whitespace,
         close_open_blocks_fn,
+        position_marker,
+        original_start_index,
     ):
         """
         Ensure that the block quote stack is at the proper level on the stack.
@@ -358,7 +367,28 @@ class BlockQuoteProcessor:
             while this_bq_count > stack_bq_count:
                 token_stack.append(BlockQuoteStackToken())
                 stack_bq_count += 1
-                container_level_tokens.append(
-                    BlockQuoteMarkdownToken(extracted_whitespace)
+
+                adjusted_position_marker = PositionMarker(
+                    position_marker.line_number,
+                    original_start_index,
+                    position_marker.text_to_parse,
                 )
+                container_level_tokens.append(
+                    BlockQuoteMarkdownToken(
+                        extracted_whitespace, adjusted_position_marker
+                    )
+                )
+
+                assert (
+                    position_marker.text_to_parse[original_start_index]
+                    == BlockQuoteProcessor.__block_quote_character
+                )
+                original_start_index += 1
+                if ParserHelper.is_character_at_index_whitespace(
+                    position_marker.text_to_parse, original_start_index
+                ):
+                    original_start_index += 1
+
         return container_level_tokens, stack_bq_count
+
+    # pylint: enable=too-many-arguments

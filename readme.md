@@ -20,6 +20,11 @@
 ## Bugs - SetExt
 
 - MD041 requires metadata
+  - implemented MD043 at the same time
+  - implement MD025 at the same time
+- MD023 with inline that includes leading spaces?
+- MD024 with whitespace, and inline differences
+- MD024 level 2 (me), level 3 (my), level 2 (me) -  should fire? is considered siblings?
 
 ## Bugs - Tabs
 
@@ -56,11 +61,14 @@
 - MD018 - lists and block quotes
 - MD020 - lists and block quotes
 - MD022 - lists and block quotes and LRDs
+- MD022 - should line 96-104 with all of the leaf node names be added to Markdown token?
+- MD022 - what if the document had a paragraph before the first heading?
 
 ## Bugs - Block Quote
 
 - block quotes that start and stop i.e. > then >> then > then >>>, etc.
 - "# TODO add case with >" for tests
+- 228 and 229 - what is the proper line/col for ">>>"?
 
 ## Bugs - List
 
@@ -106,6 +114,8 @@
 - scan GFM and ensure Unicode whitespace uses actual Unicode whitespace, not just whitespace
 - look for cases where " " is used, and convert to whitespace helper
 - complete list of Unicode punctuation characters
+- Atx headings only consider space, not whitespace?
+  - impact to MD018 to MD021?
 
 ## Features - Correctness
 

@@ -252,7 +252,7 @@ def test_tabs_006():
     transformer = TransformToGfm()
     source_markdown = """>\t\tfoo"""
     expected_tokens = [
-        "[block-quote:]",
+        "[block-quote(1,1):]",
         "[icode-block(1,4):    ]",
         "[text:foo:  ]",
         "[end-icode-block]",
@@ -283,7 +283,7 @@ def test_tabs_006a():
     transformer = TransformToGfm()
     source_markdown = """>   \tfoo"""
     expected_tokens = [
-        "[block-quote:]",
+        "[block-quote(1,1):]",
         "[icode-block(1,6):    ]",
         "[text:foo:  ]",
         "[end-icode-block]",
@@ -314,7 +314,7 @@ def test_tabs_006b():
     transformer = TransformToGfm()
     source_markdown = """>\t    foo"""
     expected_tokens = [
-        "[block-quote:]",
+        "[block-quote(1,1):]",
         "[icode-block(1,7):    ]",
         "[text:foo:  ]",
         "[end-icode-block]",
@@ -345,7 +345,7 @@ def test_tabs_006c():
     transformer = TransformToGfm()
     source_markdown = """>       foo"""
     expected_tokens = [
-        "[block-quote:]",
+        "[block-quote(1,1):]",
         "[icode-block(1,9):    ]",
         "[text:foo:  ]",
         "[end-icode-block]",

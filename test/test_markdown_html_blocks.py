@@ -868,7 +868,7 @@ def test_html_blocks_143():
 
 bar"""
     expected_tokens = [
-        "[block-quote:]",
+        "[block-quote(1,1):]",
         "[html-block(1,3)]",
         "[text:<div>\nfoo:]",
         "[end-html-block]",
@@ -1683,7 +1683,7 @@ def test_html_blocks_cov2():
         "[para(1,1):]",
         "[text:&lt;/hrx:]",
         "[end-para]",
-        "[block-quote:]",
+        "[block-quote(2,1):]",
         "[BLANK(2,2):]",
         "[html-block(3,1)]",
         "[text:</x-table>:]",

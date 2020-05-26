@@ -100,7 +100,7 @@ def test_tables_extension_201():
         "[para(1,1):\n\n]",
         "[text:| abc | def |\n| --- | --- |\n| bar | baz |::\n\n]",
         "[end-para]",
-        "[block-quote:]",
+        "[block-quote(4,1):]",
         "[para(4,3):]",
         "[text:bar:]",
         "[end-para]",

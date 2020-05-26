@@ -784,7 +784,7 @@ def test_link_reference_definitions_183():
         "[end-link::]",
         "[end-atx::]",
         "[link-ref-def(2,1):True::foo:: :/url:::::]",
-        "[block-quote:]",
+        "[block-quote(3,1):]",
         "[para(3,3):]",
         "[text:bar:]",
         "[end-para]",
@@ -941,7 +941,7 @@ def test_link_reference_definitions_187():
         "[end-link::]",
         "[end-para]",
         "[BLANK(2,1):]",
-        "[block-quote:]",
+        "[block-quote(3,1):]",
         "[link-ref-def(3,3):True::foo:: :/url:::::]",
         "[end-block-quote]",
     ]

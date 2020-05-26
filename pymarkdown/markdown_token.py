@@ -582,9 +582,12 @@ class BlockQuoteMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the block quote element.
     """
 
-    def __init__(self, extracted_whitespace):
+    def __init__(self, extracted_whitespace, position_marker):
         MarkdownToken.__init__(
-            self, MarkdownToken.token_block_quote, extracted_whitespace
+            self,
+            MarkdownToken.token_block_quote,
+            extracted_whitespace,
+            position_marker=position_marker,
         )
 
 
