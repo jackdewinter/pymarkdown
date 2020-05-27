@@ -905,11 +905,11 @@ def test_html_blocks_144():
     source_markdown = """- <div>
 - foo"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[html-block(1,3)]",
         "[text:<div>:]",
         "[end-html-block]",
-        "[li:2]",
+        "[li(2,1):2]",
         "[para(2,3):]",
         "[text:foo:]",
         "[end-para]",
@@ -945,11 +945,11 @@ def test_html_blocks_144a():
 
 foo"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[html-block(1,3)]",
         "[text:<div>:]",
         "[end-html-block]",
-        "[li:2]",
+        "[li(2,1):2]",
         "[para(2,3):]",
         "[text:foo:]",
         "[end-para]",

@@ -554,7 +554,7 @@ def test_setext_headings_064():
     source_markdown = """- Foo
 ---"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:Foo:]",
         "[end-para]",
@@ -587,7 +587,7 @@ def test_setext_headings_064a():
     source_markdown = """- Foo
 ---"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:Foo:]",
         "[end-para]",
@@ -733,7 +733,7 @@ def test_setext_headings_069():
     source_markdown = """- foo
 -----"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
@@ -766,7 +766,7 @@ def test_setext_headings_069a():
     source_markdown = """- foo
 -----"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",

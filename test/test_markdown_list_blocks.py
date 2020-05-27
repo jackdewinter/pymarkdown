@@ -73,7 +73,7 @@ def test_list_blocks_232():
 
     > A block quote."""
     expected_tokens = [
-        "[olist:.:1:4:]",
+        "[olist(1,1):.:1:4:]",
         "[para(1,5):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
         "[end-para]",
@@ -123,7 +123,7 @@ def test_list_blocks_233():
 
  two"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:one:]",
         "[end-para]",
@@ -160,7 +160,7 @@ def test_list_blocks_234():
 
   two"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:one:]",
         "[end-para]",
@@ -199,7 +199,7 @@ def test_list_blocks_235():
 
      two"""
     expected_tokens = [
-        "[ulist:-::6: ]",
+        "[ulist(1,2):-::6: ]",
         "[para(1,7):]",
         "[text:one:]",
         "[end-para]",
@@ -237,7 +237,7 @@ def test_list_blocks_236():
 
       two"""
     expected_tokens = [
-        "[ulist:-::6: ]",
+        "[ulist(1,2):-::6: ]",
         "[para(1,7):]",
         "[text:one:]",
         "[end-para]",
@@ -392,7 +392,7 @@ def test_list_blocks_240():
 
   bar"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
@@ -438,7 +438,7 @@ def test_list_blocks_241():
 
     > bam"""
     expected_tokens = [
-        "[olist:.:1:4:]",
+        "[olist(1,1):.:1:4:]",
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
@@ -495,7 +495,7 @@ def test_list_blocks_242():
 
       baz"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:Foo:]",
         "[end-para]",
@@ -536,7 +536,7 @@ def test_list_blocks_243():
     transformer = TransformToGfm()
     source_markdown = """123456789. ok"""
     expected_tokens = [
-        "[olist:.:123456789:11:]",
+        "[olist(1,1):.:123456789:11:]",
         "[para(1,12):]",
         "[text:ok:]",
         "[end-para]",
@@ -588,7 +588,7 @@ def test_list_blocks_245():
     transformer = TransformToGfm()
     source_markdown = """0. ok"""
     expected_tokens = [
-        "[olist:.:0:3:]",
+        "[olist(1,1):.:0:3:]",
         "[para(1,4):]",
         "[text:ok:]",
         "[end-para]",
@@ -618,7 +618,7 @@ def test_list_blocks_246():
     transformer = TransformToGfm()
     source_markdown = """003. ok"""
     expected_tokens = [
-        "[olist:.:003:5:]",
+        "[olist(1,1):.:003:5:]",
         "[para(1,6):]",
         "[text:ok:]",
         "[end-para]",
@@ -672,7 +672,7 @@ def test_list_blocks_248():
 
       bar"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
@@ -712,7 +712,7 @@ def test_list_blocks_249():
 
            bar"""
     expected_tokens = [
-        "[olist:.:10:7:  ]",
+        "[olist(1,3):.:10:7:  ]",
         "[para(1,8):]",
         "[text:foo:]",
         "[end-para]",
@@ -796,7 +796,7 @@ def test_list_blocks_251():
 
        more code"""
     expected_tokens = [
-        "[olist:.:1:3:]",
+        "[olist(1,1):.:1:3:]",
         "[icode-block(1,8):    ]",
         "[text:indented code:]",
         "[end-icode-block]",
@@ -844,7 +844,7 @@ def test_list_blocks_252():
 
        more code"""
     expected_tokens = [
-        "[olist:.:1:3:]",
+        "[olist(1,1):.:1:3:]",
         "[icode-block(1,9):    ]",
         "[text:indented code: ]",
         "[end-icode-block]",
@@ -923,7 +923,7 @@ def test_list_blocks_254():
 
   bar"""
     expected_tokens = [
-        "[ulist:-::5:]",
+        "[ulist(1,1):-::5:]",
         "[para(1,6):]",
         "[text:foo:]",
         "[end-para]",
@@ -960,7 +960,7 @@ def test_list_blocks_255():
 
    bar"""
     expected_tokens = [
-        "[ulist:-::3:]",
+        "[ulist(1,1):-::3:]",
         "[para(1,4):]",
         "[text:foo:]",
         "[end-para]",
@@ -1004,17 +1004,17 @@ def test_list_blocks_256():
 -
       baz"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[BLANK(1,2):]",
         "[para(2,3):]",
         "[text:foo:]",
         "[end-para]",
-        "[li:2]",
+        "[li(3,1):2]",
         "[BLANK(3,2):]",
         "[fcode-block(4,3):`:3::::]",
         "[text:bar:]",
         "[end-fcode-block]",
-        "[li:2]",
+        "[li(7,1):2]",
         "[BLANK(7,2):]",
         "[icode-block(8,7):    ]",
         "[text:baz:]",
@@ -1056,7 +1056,7 @@ def test_list_blocks_257():
         "\a", " "
     )
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[BLANK(1,5):]",
         "[para(2,3):]",
         "[text:foo:]",
@@ -1089,7 +1089,7 @@ def test_list_blocks_258():
 
   foo"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[BLANK(1,2):]",
         "[end-ulist]",
         "[BLANK(2,1):]",
@@ -1124,13 +1124,13 @@ def test_list_blocks_259():
 -
 - bar"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
-        "[li:2]",
+        "[li(2,1):2]",
         "[BLANK(2,2):]",
-        "[li:2]",
+        "[li(3,1):2]",
         "[para(3,3):]",
         "[text:bar:]",
         "[end-para]",
@@ -1166,13 +1166,13 @@ def test_list_blocks_260():
         "\a", " "
     )
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
-        "[li:2]",
+        "[li(2,1):2]",
         "[BLANK(2,5):]",
-        "[li:2]",
+        "[li(3,1):2]",
         "[para(3,3):]",
         "[text:bar:]",
         "[end-para]",
@@ -1206,13 +1206,13 @@ def test_list_blocks_261():
 2.
 3. bar"""
     expected_tokens = [
-        "[olist:.:1:3:]",
+        "[olist(1,1):.:1:3:]",
         "[para(1,4):]",
         "[text:foo:]",
         "[end-para]",
-        "[li:3]",
+        "[li(2,1):3]",
         "[BLANK(2,3):]",
-        "[li:3]",
+        "[li(3,1):3]",
         "[para(3,4):]",
         "[text:bar:]",
         "[end-para]",
@@ -1243,7 +1243,7 @@ def test_list_blocks_262():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """*"""
-    expected_tokens = ["[ulist:*::2:]", "[BLANK(1,2):]", "[end-ulist]"]
+    expected_tokens = ["[ulist(1,1):*::2:]", "[BLANK(1,2):]", "[end-ulist]"]
     expected_gfm = """<ul>
 <li></li>
 </ul>"""
@@ -1311,7 +1311,7 @@ def test_list_blocks_264():
 
      > A block quote."""
     expected_tokens = [
-        "[olist:.:1:5: ]",
+        "[olist(1,2):.:1:5: ]",
         "[para(1,6):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
         "[end-para]",
@@ -1364,7 +1364,7 @@ def test_list_blocks_265():
 
       > A block quote."""
     expected_tokens = [
-        "[olist:.:1:6:  ]",
+        "[olist(1,3):.:1:6:  ]",
         "[para(1,7):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
         "[end-para]",
@@ -1417,7 +1417,7 @@ def test_list_blocks_266():
 
        > A block quote."""
     expected_tokens = [
-        "[olist:.:1:7:   ]",
+        "[olist(1,4):.:1:7:   ]",
         "[para(1,8):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
         "[end-para]",
@@ -1507,7 +1507,7 @@ with two lines.
 
       > A block quote."""
     expected_tokens = [
-        "[olist:.:1:6:  ]",
+        "[olist(1,3):.:1:6:  ]",
         "[para(1,7):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
         "[end-para]",
@@ -1556,7 +1556,7 @@ def test_list_blocks_269():
     source_markdown = """  1.  A paragraph
     with two lines."""
     expected_tokens = [
-        "[olist:.:1:6:  ]",
+        "[olist(1,3):.:1:6:  ]",
         "[para(1,7):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
         "[end-para]",
@@ -1672,19 +1672,19 @@ def test_list_blocks_272():
     - baz
       - boo"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
-        "[ulist:-::4:  ]",
+        "[ulist(2,3):-::4:  ]",
         "[para(2,5):]",
         "[text:bar:]",
         "[end-para]",
-        "[ulist:-::6:    ]",
+        "[ulist(3,5):-::6:    ]",
         "[para(3,7):]",
         "[text:baz:]",
         "[end-para]",
-        "[ulist:-::8:      ]",
+        "[ulist(4,7):-::8:      ]",
         "[para(4,9):]",
         "[text:boo:]",
         "[end-para]",
@@ -1732,19 +1732,19 @@ def test_list_blocks_273():
   - baz
    - boo"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
-        "[li:3]",
+        "[li(2,2):3]",
         "[para(2,4):]",
         "[text:bar:]",
         "[end-para]",
-        "[li:4]",
+        "[li(3,3):4]",
         "[para(3,5):]",
         "[text:baz:]",
         "[end-para]",
-        "[li:5]",
+        "[li(4,4):5]",
         "[para(4,6):]",
         "[text:boo:]",
         "[end-para]",
@@ -1778,11 +1778,11 @@ def test_list_blocks_274():
     source_markdown = """10) foo
     - bar"""
     expected_tokens = [
-        "[olist:):10:4:]",
+        "[olist(1,1):):10:4:]",
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
-        "[ulist:-::6:    ]",
+        "[ulist(2,5):-::6:    ]",
         "[para(2,7):]",
         "[text:bar:]",
         "[end-para]",
@@ -1819,17 +1819,17 @@ def test_list_blocks_274a():
    - bar
 1. baz"""
     expected_tokens = [
-        "[olist:):1:3:]",
+        "[olist(1,1):):1:3:]",
         "[para(1,4):]",
         "[text:foo:]",
         "[end-para]",
-        "[ulist:-::5:   ]",
+        "[ulist(2,4):-::5:   ]",
         "[para(2,6):]",
         "[text:bar:]",
         "[end-para]",
         "[end-ulist]",
         "[end-olist]",
-        "[olist:.:1:3:]",
+        "[olist(3,1):.:1:3:]",
         "[para(3,4):]",
         "[text:baz:]",
         "[end-para]",
@@ -1868,17 +1868,17 @@ def test_list_blocks_274b():
    - bar
 - baz"""
     expected_tokens = [
-        "[olist:):1:3:]",
+        "[olist(1,1):):1:3:]",
         "[para(1,4):]",
         "[text:foo:]",
         "[end-para]",
-        "[ulist:-::5:   ]",
+        "[ulist(2,4):-::5:   ]",
         "[para(2,6):]",
         "[text:bar:]",
         "[end-para]",
         "[end-ulist]",
         "[end-olist]",
-        "[ulist:-::2:]",
+        "[ulist(3,1):-::2:]",
         "[para(3,3):]",
         "[text:baz:]",
         "[end-para]",
@@ -1917,17 +1917,17 @@ def test_list_blocks_274c():
   1) bar
 1) baz"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
-        "[olist:):1:5:  ]",
+        "[olist(2,3):):1:5:  ]",
         "[para(2,6):]",
         "[text:bar:]",
         "[end-para]",
         "[end-olist]",
         "[end-ulist]",
-        "[olist:):1:3:]",
+        "[olist(3,1):):1:3:]",
         "[para(3,4):]",
         "[text:baz:]",
         "[end-para]",
@@ -1965,12 +1965,12 @@ def test_list_blocks_275():
     source_markdown = """10) foo
    - bar"""
     expected_tokens = [
-        "[olist:):10:4:]",
+        "[olist(1,1):):10:4:]",
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
         "[end-olist]",
-        "[ulist:-::5:   ]",
+        "[ulist(2,4):-::5:   ]",
         "[para(2,6):]",
         "[text:bar:]",
         "[end-para]",
@@ -2003,8 +2003,8 @@ def test_list_blocks_276():
     transformer = TransformToGfm()
     source_markdown = """- - foo"""
     expected_tokens = [
-        "[ulist:-::2:]",
-        "[ulist:-::4:  ]",
+        "[ulist(1,1):-::2:]",
+        "[ulist(1,3):-::4:  ]",
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
@@ -2039,9 +2039,9 @@ def test_list_blocks_277():
     transformer = TransformToGfm()
     source_markdown = """1. - 2. foo"""
     expected_tokens = [
-        "[olist:.:1:3:]",
-        "[ulist:-::5:   ]",
-        "[olist:.:2:8:     ]",
+        "[olist(1,1):.:1:3:]",
+        "[ulist(1,4):-::5:   ]",
+        "[olist(1,6):.:2:8:     ]",
         "[para(1,9):]",
         "[text:foo:]",
         "[end-para]",
@@ -2084,11 +2084,11 @@ def test_list_blocks_278():
   ---
   baz"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[atx(1,3):1:0:]",
         "[text:Foo: ]",
         "[end-atx::]",
-        "[li:2]",
+        "[li(2,1):2]",
         "[setext(3,3):-:]",
         "[text:Bar:]",
         "[end-setext::]",

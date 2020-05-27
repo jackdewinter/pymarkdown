@@ -422,7 +422,7 @@ def test_character_references_334():
         "[text:* foo:]",
         "[end-para]",
         "[BLANK(2,1):]",
-        "[ulist:*::2:]",
+        "[ulist(3,1):*::2:]",
         "[para(3,3):]",
         "[text:foo:]",
         "[end-para]",

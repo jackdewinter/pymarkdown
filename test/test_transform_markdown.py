@@ -17,11 +17,11 @@ def test_transform_with_debug_on():
     source_markdown = """- `one
 - two`"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:`one:]",
         "[end-para]",
-        "[li:2]",
+        "[li(2,1):2]",
         "[para(2,3):]",
         "[text:two`:]",
         "[end-para]",
@@ -45,11 +45,11 @@ def test_transform_with_debug_off():
     source_markdown = """- `one
 - two`"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:`one:]",
         "[end-para]",
-        "[li:2]",
+        "[li(2,1):2]",
         "[para(2,3):]",
         "[text:two`:]",
         "[end-para]",

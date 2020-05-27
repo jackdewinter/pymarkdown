@@ -596,13 +596,16 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the unordered list start element.
     """
 
-    def __init__(self, list_start_sequence, indent_level, extracted_whitespace):
+    def __init__(
+        self, list_start_sequence, indent_level, extracted_whitespace, position_marker
+    ):
         self.indent_level = indent_level
         self.is_loose = True
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_unordered_list_start,
             list_start_sequence + "::" + str(indent_level) + ":" + extracted_whitespace,
+            position_marker=position_marker,
         )
 
 
@@ -611,12 +614,14 @@ class OrderedListStartMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the ordered list start element.
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         list_start_sequence,
         list_start_content,
         indent_level,
         extracted_whitespace,
+        position_marker,
     ):
         self.list_start_content = list_start_content
         self.indent_level = indent_level
@@ -631,7 +636,10 @@ class OrderedListStartMarkdownToken(MarkdownToken):
             + str(indent_level)
             + ":"
             + extracted_whitespace,
+            position_marker=position_marker,
         )
+
+    # pylint: enable=too-many-arguments
 
 
 class NewListItemMarkdownToken(MarkdownToken):
@@ -639,10 +647,13 @@ class NewListItemMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the new list item element.
     """
 
-    def __init__(self, indent_level):
+    def __init__(self, indent_level, position_marker):
         self.indent_level = indent_level
         MarkdownToken.__init__(
-            self, MarkdownToken.token_new_list_item, str(indent_level)
+            self,
+            MarkdownToken.token_new_list_item,
+            str(indent_level),
+            position_marker=position_marker,
         )
 
 

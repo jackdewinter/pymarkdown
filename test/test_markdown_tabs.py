@@ -173,7 +173,7 @@ def test_tabs_004():
 \tbar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist:-::4:  ]",
+        "[ulist(1,3):-::4:  ]",
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
@@ -213,7 +213,7 @@ def test_tabs_005():
 \t\tbar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
@@ -376,7 +376,7 @@ def test_tabs_007():
     transformer = TransformToGfm()
     source_markdown = """-\t\tfoo"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[ulist(1,1):-::2:]",
         "[icode-block(1,4):    ]",
         "[text:foo:  ]",
         "[end-icode-block]",
@@ -409,7 +409,7 @@ def test_tabs_007a():
     transformer = TransformToGfm()
     source_markdown = """1)\t\tfoo"""
     expected_tokens = [
-        "[olist:):1:3:]",
+        "[olist(1,1):):1:3:]",
         "[icode-block(1,5):    ]",
         "[text:foo: ]",
         "[end-icode-block]",
@@ -442,7 +442,7 @@ def test_tabs_007b():
     transformer = TransformToGfm()
     source_markdown = """01)\t\tfoo"""
     expected_tokens = [
-        "[olist:):01:4:]",
+        "[olist(1,1):):01:4:]",
         "[icode-block(1,6):    ]",
         "[text:foo:]",
         "[end-icode-block]",
@@ -475,7 +475,7 @@ def test_tabs_007c():
     transformer = TransformToGfm()
     source_markdown = """001)\t\tfoo"""
     expected_tokens = [
-        "[olist:):001:5:]",
+        "[olist(1,1):):001:5:]",
         "[icode-block(1,7):    ]",
         "[text:foo:   ]",
         "[end-icode-block]",
@@ -541,15 +541,15 @@ def test_tabs_009():
 \t - baz"""  # noqa: E101,W191
     # noqa: E101
     expected_tokens = [
-        "[ulist:-::3: ]",
+        "[ulist(1,2):-::3: ]",
         "[para(1,4):]",
         "[text:foo:]",
         "[end-para]",
-        "[ulist:-::5:   ]",
+        "[ulist(2,4):-::5:   ]",
         "[para(2,6):]",
         "[text:bar:]",
         "[end-para]",
-        "[ulist:-::7:\t ]",
+        "[ulist(3,3):-::7:\t ]",
         "[para(3,5):]",
         "[text:baz:]",
         "[end-para]",

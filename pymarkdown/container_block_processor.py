@@ -130,6 +130,11 @@ class ContainerBlockProcessor:
             handle_blank_line_fn,
         )
 
+        # TODO refactor so it doesn't need this!
+        new_position_marker = PositionMarker(
+            position_marker.line_number, start_index, line_to_parse
+        )
+
         (
             did_process,
             was_container_start,
@@ -144,8 +149,7 @@ class ContainerBlockProcessor:
             did_process,
             was_container_start,
             no_para_start_if_empty,
-            line_to_parse,
-            start_index,
+            new_position_marker,
             extracted_whitespace,
             adj_ws,
             stack_bq_count,
@@ -155,6 +159,10 @@ class ContainerBlockProcessor:
             close_open_blocks_fn,
         )
         container_level_tokens.extend(resultant_tokens)
+
+        new_position_marker = PositionMarker(
+            position_marker.line_number, start_index, line_to_parse
+        )
 
         (
             did_process,
@@ -170,8 +178,7 @@ class ContainerBlockProcessor:
             did_process,
             was_container_start,
             no_para_start_if_empty,
-            line_to_parse,
-            start_index,
+            new_position_marker,
             extracted_whitespace,
             adj_ws,
             stack_bq_count,
@@ -183,6 +190,9 @@ class ContainerBlockProcessor:
         container_level_tokens.extend(resultant_tokens)
 
         if not token_stack[-1].is_fenced_code_block:
+            new_position_marker = PositionMarker(
+                position_marker.line_number, start_index, line_to_parse
+            )
             (
                 line_to_parse,
                 leaf_tokens,
@@ -195,7 +205,7 @@ class ContainerBlockProcessor:
                 this_bq_count,
                 stack_bq_count,
                 no_para_start_if_empty,
-                line_to_parse,
+                new_position_marker,
                 end_container_indices,
                 leaf_tokens,
                 container_level_tokens,
@@ -369,7 +379,7 @@ class ContainerBlockProcessor:
         this_bq_count,
         stack_bq_count,
         no_para_start_if_empty,
-        line_to_parse,
+        position_marker,
         end_container_indices,
         leaf_tokens,
         container_level_tokens,
@@ -381,6 +391,8 @@ class ContainerBlockProcessor:
         Handle the processing of nested container blocks, as they can contain
         themselves and get somewhat messy.
         """
+
+        line_to_parse = position_marker.text_to_parse
 
         if was_container_start and line_to_parse:
             assert container_depth < 10
@@ -460,6 +472,7 @@ class ContainerBlockProcessor:
                     this_bq_count,
                     close_open_blocks_fn,
                     handle_blank_line_fn,
+                    position_marker,
                 )
             no_para_start_if_empty = True
         return (
@@ -515,6 +528,7 @@ class ContainerBlockProcessor:
         this_bq_count,
         close_open_blocks_fn,
         handle_blank_line_fn,
+        position_marker,
     ):
         """
         Look for container blocks that we can use.
@@ -528,7 +542,9 @@ class ContainerBlockProcessor:
 
         LOGGER.debug("adj_line_to_parse>>>%s<<<", str(adj_line_to_parse))
 
-        position_marker = PositionMarker(-1, -1, adj_line_to_parse)
+        position_marker = PositionMarker(
+            position_marker.line_number, -1, adj_line_to_parse
+        )
         (
             _,
             line_to_parse,

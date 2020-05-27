@@ -51,7 +51,7 @@ def test_indented_code_blocks_078():
 
     bar"""
     expected_tokens = [
-        "[ulist:-::4:  ]",
+        "[ulist(1,3):-::4:  ]",
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
@@ -90,12 +90,12 @@ def test_indented_code_blocks_079():
 
     - bar"""
     expected_tokens = [
-        "[olist:.:1:4:]",
+        "[olist(1,1):.:1:4:]",
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
         "[BLANK(2,1):]",
-        "[ulist:-::6:    ]",
+        "[ulist(3,5):-::6:    ]",
         "[para(3,7):]",
         "[text:bar:]",
         "[end-para]",

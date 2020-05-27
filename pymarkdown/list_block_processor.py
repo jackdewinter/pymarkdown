@@ -166,8 +166,7 @@ class ListBlockProcessor:
         did_process,
         was_container_start,
         no_para_start_if_empty,
-        line_to_parse,
-        start_index,
+        position_marker,
         extracted_whitespace,
         adj_ws,
         stack_bq_count,
@@ -179,6 +178,9 @@ class ListBlockProcessor:
         """
         Handle the processing of a ulist block.
         """
+        line_to_parse = position_marker.text_to_parse
+        start_index = position_marker.index_number
+
         end_of_ulist_start_index = -1
         container_level_tokens = []
         if not did_process:
@@ -227,7 +229,10 @@ class ListBlockProcessor:
                     start_index,
                 )
                 new_token = UnorderedListStartMarkdownToken(
-                    line_to_parse[start_index], indent_level, extracted_whitespace
+                    line_to_parse[start_index],
+                    indent_level,
+                    extracted_whitespace,
+                    position_marker,
                 )
 
                 (
@@ -245,6 +250,7 @@ class ListBlockProcessor:
                     indent_level,
                     current_container_blocks,
                     close_open_blocks_fn,
+                    position_marker,
                 )
                 assert new_container_level_tokens
                 container_level_tokens.extend(new_container_level_tokens)
@@ -270,8 +276,7 @@ class ListBlockProcessor:
         did_process,
         was_container_start,
         no_para_start_if_empty,
-        line_to_parse,
-        start_index,
+        position_marker,
         extracted_whitespace,
         adj_ws,
         stack_bq_count,
@@ -283,6 +288,9 @@ class ListBlockProcessor:
         """
         Handle the processing of a olist block.
         """
+        line_to_parse = position_marker.text_to_parse
+        start_index = position_marker.index_number
+
         end_of_olist_start_index = -1
         container_level_tokens = []
         if not did_process:
@@ -342,6 +350,7 @@ class ListBlockProcessor:
                     line_to_parse[start_index:index],
                     indent_level,
                     extracted_whitespace,
+                    position_marker,
                 )
 
                 (
@@ -359,6 +368,7 @@ class ListBlockProcessor:
                     indent_level,
                     current_container_blocks,
                     close_open_blocks_fn,
+                    position_marker,
                 )
                 assert new_container_level_tokens
                 container_level_tokens.extend(new_container_level_tokens)
@@ -582,6 +592,7 @@ class ListBlockProcessor:
         indent_level,
         current_container_blocks,
         close_open_blocks_fn,
+        position_marker,
     ):
         """
         Handle the processing of the last part of the list.
@@ -620,7 +631,9 @@ class ListBlockProcessor:
         else:
             LOGGER.debug("__post_list>>new list item>>")
             assert emit_li
-            container_level_tokens.append(NewListItemMarkdownToken(indent_level))
+            container_level_tokens.append(
+                NewListItemMarkdownToken(indent_level, position_marker)
+            )
         line_to_parse = (
             "".rjust(remaining_whitespace, " ") + line_to_parse[after_marker_ws_index:]
         )

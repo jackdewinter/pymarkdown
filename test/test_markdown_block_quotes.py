@@ -270,13 +270,13 @@ def test_block_quotes_213():
 - bar"""
     expected_tokens = [
         "[block-quote(1,1):]",
-        "[ulist:-::4:  ]",
+        "[ulist(1,3):-::4:  ]",
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
         "[end-ulist]",
         "[end-block-quote]",
-        "[ulist:-::2:]",
+        "[ulist(2,1):-::2:]",
         "[para(2,3):]",
         "[text:bar:]",
         "[end-para]",
