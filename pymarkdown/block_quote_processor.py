@@ -120,19 +120,19 @@ class BlockQuoteProcessor:
         container_level_tokens = []
         removed_chars_at_start = 0
 
-        line_to_parse = position_marker.text_to_parse
-        start_index = position_marker.index_number
-
         if (
             BlockQuoteProcessor.is_block_quote_start(
-                line_to_parse, start_index, extracted_whitespace, adj_ws=adj_ws
+                position_marker.text_to_parse,
+                position_marker.index_number,
+                extracted_whitespace,
+                adj_ws=adj_ws,
             )
             and not token_stack[-1].was_link_definition_started
         ):
             LOGGER.debug("clt>>block-start")
             (
-                line_to_parse,
-                start_index,
+                position_marker.text_to_parse,
+                position_marker.index_number,
                 leaf_tokens,
                 container_level_tokens,
                 stack_bq_count,
@@ -158,7 +158,7 @@ class BlockQuoteProcessor:
 
             did_process = True
             was_container_start = True
-            end_of_bquote_start_index = start_index
+            end_of_bquote_start_index = position_marker.index_number
 
         return (
             did_process,
@@ -166,8 +166,8 @@ class BlockQuoteProcessor:
             end_of_bquote_start_index,
             this_bq_count,
             stack_bq_count,
-            line_to_parse,
-            start_index,
+            position_marker.text_to_parse,
+            position_marker.index_number,
             leaf_tokens,
             container_level_tokens,
             removed_chars_at_start,
@@ -254,6 +254,7 @@ class BlockQuoteProcessor:
         Handle the processing of a section clearly identified as having block quotes.
         """
 
+        # TODO work on removing these
         line_to_parse = position_marker.text_to_parse
         start_index = position_marker.index_number
 

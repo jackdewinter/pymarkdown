@@ -178,16 +178,13 @@ class ListBlockProcessor:
         """
         Handle the processing of a ulist block.
         """
-        line_to_parse = position_marker.text_to_parse
-        start_index = position_marker.index_number
-
         end_of_ulist_start_index = -1
         container_level_tokens = []
         if not did_process:
             started_ulist, end_of_ulist_start_index = ListBlockProcessor.is_ulist_start(
                 token_stack,
-                line_to_parse,
-                start_index,
+                position_marker.text_to_parse,
+                position_marker.index_number,
                 extracted_whitespace,
                 adj_ws=adj_ws,
             )
@@ -205,8 +202,8 @@ class ListBlockProcessor:
                     stack_bq_count,
                 ) = ListBlockProcessor.__pre_list(
                     token_stack,
-                    line_to_parse,
-                    start_index,
+                    position_marker.text_to_parse,
+                    position_marker.index_number,
                     extracted_whitespace,
                     0,
                     stack_bq_count,
@@ -219,17 +216,17 @@ class ListBlockProcessor:
                     str(indent_level),
                     str(ws_before_marker),
                     str(ws_after_marker),
-                    str(start_index),
+                    str(position_marker.index_number),
                 )
                 new_stack = UnorderedListStackToken(
                     indent_level,
-                    line_to_parse[start_index],
+                    position_marker.text_to_parse[position_marker.index_number],
                     ws_before_marker,
                     ws_after_marker,
-                    start_index,
+                    position_marker.index_number,
                 )
                 new_token = UnorderedListStartMarkdownToken(
-                    line_to_parse[start_index],
+                    position_marker.text_to_parse[position_marker.index_number],
                     indent_level,
                     extracted_whitespace,
                     position_marker,
@@ -238,13 +235,13 @@ class ListBlockProcessor:
                 (
                     no_para_start_if_empty,
                     new_container_level_tokens,
-                    line_to_parse,
+                    position_marker.text_to_parse,
                 ) = ListBlockProcessor.__post_list(
                     token_stack,
                     token_document,
                     new_stack,
                     new_token,
-                    line_to_parse,
+                    position_marker.text_to_parse,
                     remaining_whitespace,
                     after_marker_ws_index,
                     indent_level,
@@ -262,7 +259,7 @@ class ListBlockProcessor:
             was_container_start,
             end_of_ulist_start_index,
             no_para_start_if_empty,
-            line_to_parse,
+            position_marker.text_to_parse,
             container_level_tokens,
             removed_chars_at_start,
         )
@@ -288,9 +285,6 @@ class ListBlockProcessor:
         """
         Handle the processing of a olist block.
         """
-        line_to_parse = position_marker.text_to_parse
-        start_index = position_marker.index_number
-
         end_of_olist_start_index = -1
         container_level_tokens = []
         if not did_process:
@@ -301,8 +295,8 @@ class ListBlockProcessor:
                 end_of_olist_start_index,
             ) = ListBlockProcessor.is_olist_start(
                 token_stack,
-                line_to_parse,
-                start_index,
+                position_marker.text_to_parse,
+                position_marker.index_number,
                 extracted_whitespace,
                 adj_ws=adj_ws,
             )
@@ -321,7 +315,7 @@ class ListBlockProcessor:
                     stack_bq_count,
                 ) = ListBlockProcessor.__pre_list(
                     token_stack,
-                    line_to_parse,
+                    position_marker.text_to_parse,
                     index,
                     extracted_whitespace,
                     my_count,
@@ -335,19 +329,21 @@ class ListBlockProcessor:
                     str(indent_level),
                     str(ws_before_marker),
                     str(ws_after_marker),
-                    str(start_index),
+                    str(position_marker.index_number),
                 )
 
                 new_stack = OrderedListStackToken(
                     indent_level,
-                    line_to_parse[start_index : index + 1],
+                    position_marker.text_to_parse[
+                        position_marker.index_number : index + 1
+                    ],
                     ws_before_marker,
                     ws_after_marker,
-                    start_index,
+                    position_marker.index_number,
                 )
                 new_token = OrderedListStartMarkdownToken(
-                    line_to_parse[index],
-                    line_to_parse[start_index:index],
+                    position_marker.text_to_parse[index],
+                    position_marker.text_to_parse[position_marker.index_number : index],
                     indent_level,
                     extracted_whitespace,
                     position_marker,
@@ -356,13 +352,13 @@ class ListBlockProcessor:
                 (
                     no_para_start_if_empty,
                     new_container_level_tokens,
-                    line_to_parse,
+                    position_marker.text_to_parse,
                 ) = ListBlockProcessor.__post_list(
                     token_stack,
                     token_document,
                     new_stack,
                     new_token,
-                    line_to_parse,
+                    position_marker.text_to_parse,
                     remaining_whitespace,
                     after_marker_ws_index,
                     indent_level,
@@ -379,7 +375,7 @@ class ListBlockProcessor:
             was_container_start,
             end_of_olist_start_index,
             no_para_start_if_empty,
-            line_to_parse,
+            position_marker.text_to_parse,
             container_level_tokens,
             removed_chars_at_start,
         )

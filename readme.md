@@ -8,10 +8,9 @@
 
 - need to add line/column for
   - text
-  - list
-    - refactor is_thematic_break
-  - block quote
   - inlines
+- rewrite position_marker to not allow outside modification
+  - requires clean up of how list and block quotes handle it
 
 ## Bugs - Character Entities
 

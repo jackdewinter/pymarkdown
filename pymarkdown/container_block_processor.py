@@ -80,9 +80,10 @@ class ContainerBlockProcessor:
         whether or not to pass the (remaining parts of the) line to the leaf block
         processor.
         """
+        # TODO work on removing this
         line_to_parse = position_marker.text_to_parse
 
-        LOGGER.debug("Line:%s:", line_to_parse)
+        LOGGER.debug("Line:%s:", position_marker.text_to_parse)
         no_para_start_if_empty = False
 
         start_index, extracted_whitespace = ParserHelper.extract_whitespace(
@@ -392,12 +393,10 @@ class ContainerBlockProcessor:
         themselves and get somewhat messy.
         """
 
-        line_to_parse = position_marker.text_to_parse
-
-        if was_container_start and line_to_parse:
+        if was_container_start and position_marker.text_to_parse:
             assert container_depth < 10
             nested_container_starts = ContainerBlockProcessor.__get_nested_container_starts(
-                token_stack, line_to_parse, end_container_indices,
+                token_stack, position_marker.text_to_parse, end_container_indices,
             )
 
             LOGGER.debug("check next container_start>stack>>%s", str(token_stack))
@@ -407,7 +406,7 @@ class ContainerBlockProcessor:
                 str(container_level_tokens),
             )
 
-            adj_line_to_parse = line_to_parse
+            adj_line_to_parse = position_marker.text_to_parse
 
             LOGGER.debug("check next container_start>pre>>%s<<", str(adj_line_to_parse))
             active_container_index = max(
@@ -463,7 +462,7 @@ class ContainerBlockProcessor:
                 or nested_container_starts.olist_index
                 or nested_container_starts.block_index
             ):
-                line_to_parse = ContainerBlockProcessor.__look_for_container_blocks(
+                position_marker.text_to_parse = ContainerBlockProcessor.__look_for_container_blocks(
                     adj_line_to_parse,
                     end_container_indices.block_index,
                     token_stack,
@@ -476,7 +475,7 @@ class ContainerBlockProcessor:
                 )
             no_para_start_if_empty = True
         return (
-            line_to_parse,
+            position_marker.text_to_parse,
             leaf_tokens,
             container_level_tokens,
             no_para_start_if_empty,

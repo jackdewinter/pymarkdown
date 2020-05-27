@@ -226,8 +226,6 @@ class LeafBlockProcessor:
         Determine whether or not we have a thematic break.
         """
 
-        # TODO refactor to use position_marker once lists done
-
         thematic_break_character = None
         end_of_break_index = None
         if (
