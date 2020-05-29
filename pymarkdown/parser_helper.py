@@ -351,6 +351,24 @@ class ParserHelper:
 
 
 # pylint: disable=too-few-public-methods
+class ParserState:
+    """
+    Class to provide for an encapsulation of the high level state of the parser.
+    """
+
+    def __init__(
+        self, token_stack, token_document, close_open_blocks_fn, handle_blank_line_fn
+    ):
+        self.token_stack = token_stack
+        self.token_document = token_document
+        self.close_open_blocks_fn = close_open_blocks_fn
+        self.handle_blank_line_fn = handle_blank_line_fn
+
+
+# pylint: enable=too-few-public-methods
+
+
+# pylint: disable=too-few-public-methods
 class PositionMarker:
     """
     Class to provide an encapsulation of the location within the Markdown document.

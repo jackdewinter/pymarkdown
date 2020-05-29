@@ -28,7 +28,7 @@ class ListBlockProcessor:
     @staticmethod
     # pylint: disable=too-many-arguments
     def is_ulist_start(
-        token_stack,
+        parser_state,
         line_to_parse,
         start_index,
         extracted_whitespace,
@@ -74,8 +74,8 @@ class ListBlockProcessor:
                 line_to_parse, start_index, extracted_whitespace
             )
             if not is_break and not (
-                token_stack[-1].is_paragraph
-                and not token_stack[-2].is_list
+                parser_state.token_stack[-1].is_paragraph
+                and not parser_state.token_stack[-2].is_list
                 and (after_all_whitespace_index == len(line_to_parse))
             ):
                 is_start = True
@@ -87,7 +87,7 @@ class ListBlockProcessor:
     # pylint: disable=too-many-arguments
     @staticmethod
     def is_olist_start(
-        token_stack,
+        parser_state,
         line_to_parse,
         start_index,
         extracted_whitespace,
@@ -138,8 +138,8 @@ class ListBlockProcessor:
                     line_to_parse, index, ListBlockProcessor.__olist_start_characters
                 )
                 and not (
-                    token_stack[-1].is_paragraph
-                    and not token_stack[-2].is_list
+                    parser_state.token_stack[-1].is_paragraph
+                    and not parser_state.token_stack[-2].is_list
                     and (
                         (end_whitespace_index == len(line_to_parse))
                         or olist_index_number != "1"
@@ -161,8 +161,7 @@ class ListBlockProcessor:
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def handle_ulist_block(
-        token_stack,
-        token_document,
+        parser_state,
         did_process,
         was_container_start,
         no_para_start_if_empty,
@@ -173,7 +172,6 @@ class ListBlockProcessor:
         this_bq_count,
         removed_chars_at_start,
         current_container_blocks,
-        close_open_blocks_fn,
     ):
         """
         Handle the processing of a ulist block.
@@ -182,7 +180,7 @@ class ListBlockProcessor:
         container_level_tokens = []
         if not did_process:
             started_ulist, end_of_ulist_start_index = ListBlockProcessor.is_ulist_start(
-                token_stack,
+                parser_state,
                 position_marker.text_to_parse,
                 position_marker.index_number,
                 extracted_whitespace,
@@ -201,14 +199,13 @@ class ListBlockProcessor:
                     container_level_tokens,
                     stack_bq_count,
                 ) = ListBlockProcessor.__pre_list(
-                    token_stack,
+                    parser_state,
                     position_marker.text_to_parse,
                     position_marker.index_number,
                     extracted_whitespace,
                     0,
                     stack_bq_count,
                     this_bq_count,
-                    close_open_blocks_fn,
                 )
 
                 LOGGER.debug(
@@ -237,8 +234,7 @@ class ListBlockProcessor:
                     new_container_level_tokens,
                     position_marker.text_to_parse,
                 ) = ListBlockProcessor.__post_list(
-                    token_stack,
-                    token_document,
+                    parser_state,
                     new_stack,
                     new_token,
                     position_marker.text_to_parse,
@@ -246,7 +242,6 @@ class ListBlockProcessor:
                     after_marker_ws_index,
                     indent_level,
                     current_container_blocks,
-                    close_open_blocks_fn,
                     position_marker,
                 )
                 assert new_container_level_tokens
@@ -268,8 +263,7 @@ class ListBlockProcessor:
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def handle_olist_block(
-        token_stack,
-        token_document,
+        parser_state,
         did_process,
         was_container_start,
         no_para_start_if_empty,
@@ -280,7 +274,6 @@ class ListBlockProcessor:
         this_bq_count,
         removed_chars_at_start,
         current_container_blocks,
-        close_open_blocks_fn,
     ):
         """
         Handle the processing of a olist block.
@@ -294,7 +287,7 @@ class ListBlockProcessor:
                 my_count,
                 end_of_olist_start_index,
             ) = ListBlockProcessor.is_olist_start(
-                token_stack,
+                parser_state,
                 position_marker.text_to_parse,
                 position_marker.index_number,
                 extracted_whitespace,
@@ -314,14 +307,13 @@ class ListBlockProcessor:
                     container_level_tokens,
                     stack_bq_count,
                 ) = ListBlockProcessor.__pre_list(
-                    token_stack,
+                    parser_state,
                     position_marker.text_to_parse,
                     index,
                     extracted_whitespace,
                     my_count,
                     stack_bq_count,
                     this_bq_count,
-                    close_open_blocks_fn,
                 )
 
                 LOGGER.debug(
@@ -354,8 +346,7 @@ class ListBlockProcessor:
                     new_container_level_tokens,
                     position_marker.text_to_parse,
                 ) = ListBlockProcessor.__post_list(
-                    token_stack,
-                    token_document,
+                    parser_state,
                     new_stack,
                     new_token,
                     position_marker.text_to_parse,
@@ -363,7 +354,6 @@ class ListBlockProcessor:
                     after_marker_ws_index,
                     indent_level,
                     current_container_blocks,
-                    close_open_blocks_fn,
                     position_marker,
                 )
                 assert new_container_level_tokens
@@ -381,26 +371,19 @@ class ListBlockProcessor:
         )
         # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def list_in_process(
-        token_stack,
-        token_document,
-        line_to_parse,
-        start_index,
-        extracted_whitespace,
-        ind,
-        close_open_blocks_fn,
+        parser_state, line_to_parse, start_index, extracted_whitespace, ind,
     ):
         """
         Handle the processing of a line where there is a list in process.
         """
         container_level_tokens = []
 
-        LOGGER.debug("!!!!!FOUND>>%s", str(token_stack[ind]))
-        LOGGER.debug("!!!!!FOUND>>%s", str(token_stack[ind].extra_data))
-        requested_list_indent = token_stack[ind].indent_level
-        before_ws_length = token_stack[ind].ws_before_marker
+        LOGGER.debug("!!!!!FOUND>>%s", str(parser_state.token_stack[ind]))
+        LOGGER.debug("!!!!!FOUND>>%s", str(parser_state.token_stack[ind].extra_data))
+        requested_list_indent = parser_state.token_stack[ind].indent_level
+        before_ws_length = parser_state.token_stack[ind].ws_before_marker
         LOGGER.debug(
             "!!!!!requested_list_indent>>%s,before_ws=%s",
             str(requested_list_indent),
@@ -410,14 +393,14 @@ class ListBlockProcessor:
         leading_space_length = ParserHelper.calculate_length(extracted_whitespace)
 
         started_ulist, _ = ListBlockProcessor.is_ulist_start(
-            token_stack,
+            parser_state,
             line_to_parse,
             start_index,
             extracted_whitespace,
             skip_whitespace_check=True,
         )
         started_olist, _, _, _ = ListBlockProcessor.is_olist_start(
-            token_stack,
+            parser_state,
             line_to_parse,
             start_index,
             extracted_whitespace,
@@ -426,13 +409,13 @@ class ListBlockProcessor:
 
         allow_list_continue = True
         if leading_space_length >= 4 and (started_ulist or started_olist):
-            allow_list_continue = not token_document[-1].is_blank_line
+            allow_list_continue = not parser_state.token_document[-1].is_blank_line
 
         LOGGER.debug(
             "leading_space_length>>%s>>requested_list_indent>>%s>>is_in_paragraph>>%s",
             str(leading_space_length),
             str(requested_list_indent),
-            str(token_stack[-1].is_paragraph),
+            str(parser_state.token_stack[-1].is_paragraph),
         )
         if leading_space_length >= requested_list_indent and allow_list_continue:
             line_to_parse = ListBlockProcessor.__adjust_line_for_list_in_process(
@@ -444,10 +427,10 @@ class ListBlockProcessor:
                 "leading_space_length>>%s>>adj requested_list_indent>>%s>>%s<<",
                 str(leading_space_length),
                 str(requested_list_indent),
-                str(token_stack[-1].is_paragraph),
+                str(parser_state.token_stack[-1].is_paragraph),
             )
             if (
-                token_stack[-1].is_paragraph
+                parser_state.token_stack[-1].is_paragraph
                 and leading_space_length >= requested_list_indent
                 and allow_list_continue
             ):
@@ -459,29 +442,21 @@ class ListBlockProcessor:
                 )
             else:
                 container_level_tokens = ListBlockProcessor.__check_for_list_closures(
-                    line_to_parse,
-                    token_stack,
-                    token_document,
-                    start_index,
-                    extracted_whitespace,
-                    close_open_blocks_fn,
-                    ind,
+                    parser_state, line_to_parse, start_index, extracted_whitespace, ind,
                 )
 
         return container_level_tokens, line_to_parse
-        # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
     def __pre_list(
-        token_stack,
+        parser_state,
         line_to_parse,
         start_index,
         extracted_whitespace,
         marker_width,
         stack_bq_count,
         this_bq_count,
-        close_open_blocks_fn,
     ):
         """
         Handle the processing of the first part of the list.
@@ -508,7 +483,7 @@ class ListBlockProcessor:
             container_level_tokens,
             stack_bq_count,
         ) = ListBlockProcessor.__handle_list_nesting(
-            token_stack, stack_bq_count, this_bq_count, close_open_blocks_fn
+            parser_state, stack_bq_count, this_bq_count
         )
         LOGGER.debug(
             ">>>>>XX>>%s>>%s<<", str(after_marker_ws_index), str(len(line_to_parse))
@@ -549,9 +524,7 @@ class ListBlockProcessor:
         # pylint: enable=too-many-arguments
 
     @staticmethod
-    def __handle_list_nesting(
-        token_stack, stack_bq_count, this_bq_count, close_open_blocks_fn
-    ):
+    def __handle_list_nesting(parser_state, stack_bq_count, this_bq_count):
         """
         Resolve any nesting issues with block quotes.
         """
@@ -564,12 +537,15 @@ class ListBlockProcessor:
         while this_bq_count < stack_bq_count:
 
             assert not container_level_tokens
-            inf = len(token_stack) - 1
-            while not token_stack[inf].is_block_quote:
+            inf = len(parser_state.token_stack) - 1
+            while not parser_state.token_stack[inf].is_block_quote:
                 inf -= 1
 
-            container_level_tokens, _, _ = close_open_blocks_fn(
-                until_this_index=inf, include_block_quotes=True, include_lists=True
+            container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
+                parser_state,
+                until_this_index=inf,
+                include_block_quotes=True,
+                include_lists=True,
             )
             LOGGER.debug("container_level_tokens>>%s", str(container_level_tokens))
             stack_bq_count -= 1
@@ -578,8 +554,7 @@ class ListBlockProcessor:
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def __post_list(
-        token_stack,
-        token_document,
+        parser_state,
         new_stack,
         new_token,
         line_to_parse,
@@ -587,7 +562,6 @@ class ListBlockProcessor:
         after_marker_ws_index,
         indent_level,
         current_container_blocks,
-        close_open_blocks_fn,
         position_marker,
     ):
         """
@@ -599,30 +573,30 @@ class ListBlockProcessor:
         emit_item = True
         emit_li = True
         did_find, last_list_index = LeafBlockProcessor.check_for_list_in_process(
-            token_stack
+            parser_state
         )
         if did_find:
             (
                 container_level_tokens,
                 emit_li,
             ) = ListBlockProcessor.__close_required_lists_after_start(
-                token_stack,
-                token_document,
-                last_list_index,
-                close_open_blocks_fn,
-                new_stack,
-                current_container_blocks,
+                parser_state, last_list_index, new_stack, current_container_blocks,
             )
             emit_item = False
         else:
-            LOGGER.debug("NOT list-in-process>>%s", str(token_stack[last_list_index]))
-            container_level_tokens, _, _ = close_open_blocks_fn()
+            LOGGER.debug(
+                "NOT list-in-process>>%s",
+                str(parser_state.token_stack[last_list_index]),
+            )
+            container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
+                parser_state
+            )
         LOGGER.debug("container_level_tokens>>%s", str(container_level_tokens))
 
         LOGGER.debug("__post_list>>before>>%s", str(container_level_tokens))
         if emit_item or not emit_li:
             LOGGER.debug("__post_list>>adding>>%s", str(new_token))
-            token_stack.append(new_stack)
+            parser_state.token_stack.append(new_stack)
             container_level_tokens.append(new_token)
         else:
             LOGGER.debug("__post_list>>new list item>>")
@@ -639,21 +613,17 @@ class ListBlockProcessor:
         # pylint: enable=too-many-locals, too-many-arguments
 
     @staticmethod
-    # pylint: disable=too-many-arguments
     def __close_required_lists_after_start(
-        token_stack,
-        token_document,
-        last_list_index,
-        close_open_blocks_fn,
-        new_stack,
-        current_container_blocks,
+        parser_state, last_list_index, new_stack, current_container_blocks,
     ):
         """
         After a list start, check to see if any others need closing.
         """
-        LOGGER.debug("list-in-process>>%s", str(token_stack[last_list_index]))
-        container_level_tokens, _, _ = close_open_blocks_fn(
-            until_this_index=last_list_index + 1
+        LOGGER.debug(
+            "list-in-process>>%s", str(parser_state.token_stack[last_list_index])
+        )
+        container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
+            parser_state, until_this_index=last_list_index + 1
         )
         LOGGER.debug("old-stack>>%s<<", str(container_level_tokens))
 
@@ -667,12 +637,7 @@ class ListBlockProcessor:
                 extra_tokens,
                 last_list_index,
             ) = ListBlockProcessor.__are_list_starts_equal(
-                token_stack,
-                token_document,
-                last_list_index,
-                new_stack,
-                current_container_blocks,
-                close_open_blocks_fn,
+                parser_state, last_list_index, new_stack, current_container_blocks,
             )
             LOGGER.debug("extra_tokens>>%s", str(extra_tokens))
             container_level_tokens.extend(extra_tokens)
@@ -681,7 +646,7 @@ class ListBlockProcessor:
                 (
                     did_find,
                     last_list_index,
-                ) = LeafBlockProcessor.check_for_list_in_process(token_stack)
+                ) = LeafBlockProcessor.check_for_list_in_process(parser_state)
                 LOGGER.debug(
                     "did_find>>%s--last_list_index--%s",
                     str(did_find),
@@ -690,20 +655,22 @@ class ListBlockProcessor:
                 assert did_find
                 LOGGER.debug(
                     "ARE-EQUAL>>stack>>%s>>new>>%s",
-                    str(token_stack[last_list_index]),
+                    str(parser_state.token_stack[last_list_index]),
                     str(new_stack),
                 )
                 if (
-                    token_stack[last_list_index].type_name == new_stack.type_name
-                    or new_stack.start_index > token_stack[last_list_index].start_index
+                    parser_state.token_stack[last_list_index].type_name
+                    == new_stack.type_name
+                    or new_stack.start_index
+                    > parser_state.token_stack[last_list_index].start_index
                 ):
                     pass
                 else:
                     repeat_check = True
             else:
                 LOGGER.debug("post_list>>close open blocks and emit")
-                close_tokens, _, _ = close_open_blocks_fn(
-                    until_this_index=last_list_index, include_lists=True
+                close_tokens, _, _ = parser_state.close_open_blocks_fn(
+                    parser_state, until_this_index=last_list_index, include_lists=True
                 )
                 assert close_tokens
                 container_level_tokens.extend(close_tokens)
@@ -711,7 +678,7 @@ class ListBlockProcessor:
                 (
                     did_find,
                     last_list_index,
-                ) = LeafBlockProcessor.check_for_list_in_process(token_stack)
+                ) = LeafBlockProcessor.check_for_list_in_process(parser_state)
                 LOGGER.debug(
                     "did_find>>%s--last_list_index--%s",
                     str(did_find),
@@ -720,27 +687,19 @@ class ListBlockProcessor:
                 if did_find:
                     LOGGER.debug(
                         "ARE-EQUAL>>stack>>%s>>new>>%s",
-                        str(token_stack[last_list_index]),
+                        str(parser_state.token_stack[last_list_index]),
                         str(new_stack),
                     )
                     if (
                         new_stack.indent_level
-                        <= token_stack[last_list_index].indent_level
+                        <= parser_state.token_stack[last_list_index].indent_level
                     ):
                         repeat_check = True
         return container_level_tokens, emit_li
 
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __are_list_starts_equal(
-        token_stack,
-        token_document,
-        last_list_index,
-        new_stack,
-        current_container_blocks,
-        close_open_blocks_fn,
+        parser_state, last_list_index, new_stack, current_container_blocks,
     ):
         """
         Check to see if the list starts are equal, and hence a continuation of
@@ -751,48 +710,52 @@ class ListBlockProcessor:
 
         LOGGER.debug(
             "ARE-EQUAL>>stack>>%s>>new>>%s",
-            str(token_stack[last_list_index]),
+            str(parser_state.token_stack[last_list_index]),
             str(new_stack),
         )
-        if token_stack[last_list_index] == new_stack:
-            balancing_tokens, _, _ = close_open_blocks_fn(
-                until_this_index=last_list_index, include_block_quotes=True
+        if parser_state.token_stack[last_list_index] == new_stack:
+            balancing_tokens, _, _ = parser_state.close_open_blocks_fn(
+                parser_state,
+                until_this_index=last_list_index,
+                include_block_quotes=True,
             )
             return True, True, balancing_tokens, last_list_index
 
-        document_token_index = len(token_document) - 1
+        document_token_index = len(parser_state.token_document) - 1
         while document_token_index >= 0 and not (
-            token_document[document_token_index].is_any_list_token
+            parser_state.token_document[document_token_index].is_any_list_token
         ):
             document_token_index -= 1
         assert document_token_index >= 0
 
         LOGGER.debug(
-            "ARE-EQUAL>>Last_List_token=%s", str(token_document[document_token_index])
+            "ARE-EQUAL>>Last_List_token=%s",
+            str(parser_state.token_document[document_token_index]),
         )
-        old_start_index = token_document[document_token_index].indent_level
+        old_start_index = parser_state.token_document[document_token_index].indent_level
 
-        old_last_marker_character = token_stack[last_list_index].list_character[-1]
+        old_last_marker_character = parser_state.token_stack[
+            last_list_index
+        ].list_character[-1]
         current_start_index = new_stack.ws_before_marker
         LOGGER.debug(
             "old>>%s>>%s",
-            str(token_stack[last_list_index].extra_data),
+            str(parser_state.token_stack[last_list_index].extra_data),
             old_last_marker_character,
         )
         LOGGER.debug(
             "new>>%s>>%s", str(new_stack.extra_data), new_stack.list_character[-1]
         )
         if (
-            token_stack[last_list_index].type_name == new_stack.type_name
+            parser_state.token_stack[last_list_index].type_name == new_stack.type_name
             and old_last_marker_character == new_stack.list_character[-1]
         ):
             do_not_emit, emit_li = ListBlockProcessor.__process_eligible_list_start(
+                parser_state,
                 balancing_tokens,
                 current_start_index,
                 old_start_index,
                 current_container_blocks,
-                token_stack,
-                close_open_blocks_fn,
             )
             return do_not_emit, emit_li, balancing_tokens, last_list_index
 
@@ -808,19 +771,16 @@ class ListBlockProcessor:
             return True, False, balancing_tokens, last_list_index
 
         LOGGER.debug("are_list_starts_equal>>False")
-        LOGGER.debug(">>%s", str(token_stack))
+        LOGGER.debug(">>%s", str(parser_state.token_stack))
         return False, False, balancing_tokens, last_list_index
-        # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __process_eligible_list_start(
+        parser_state,
         balancing_tokens,
         current_start_index,
         old_start_index,
         current_container_blocks,
-        token_stack,
-        close_open_blocks_fn,
     ):
         LOGGER.debug("are_list_starts_equal>>ELIGIBLE!!!")
         LOGGER.debug(
@@ -832,24 +792,28 @@ class ListBlockProcessor:
 
             LOGGER.debug("current_container_blocks>>%s", str(current_container_blocks))
             if len(current_container_blocks) > 1:
-                LOGGER.debug("current_container_blocks-->%s", str(token_stack))
-                last_stack_depth = token_stack[-1].ws_before_marker
+                LOGGER.debug(
+                    "current_container_blocks-->%s", str(parser_state.token_stack)
+                )
+                last_stack_depth = parser_state.token_stack[-1].ws_before_marker
                 while current_start_index < last_stack_depth:
-                    last_stack_index = token_stack.index(token_stack[-1])
-                    close_tokens, _, _ = close_open_blocks_fn(
-                        until_this_index=last_stack_index, include_lists=True
+                    last_stack_index = parser_state.token_stack.index(
+                        parser_state.token_stack[-1]
+                    )
+                    close_tokens, _, _ = parser_state.close_open_blocks_fn(
+                        parser_state,
+                        until_this_index=last_stack_index,
+                        include_lists=True,
                     )
                     assert close_tokens
                     balancing_tokens.extend(close_tokens)
                     LOGGER.debug("close_tokens>>%s", str(close_tokens))
-                    last_stack_depth = token_stack[-1].ws_before_marker
+                    last_stack_depth = parser_state.token_stack[-1].ws_before_marker
 
             return True, True
 
         LOGGER.debug("are_list_starts_equal>>True")
         return True, False
-
-    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __adjust_line_for_list_in_process(
@@ -863,16 +827,9 @@ class ListBlockProcessor:
         line_to_parse = "".rjust(remaining_indent, " ") + line_to_parse[start_index:]
         return line_to_parse
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __check_for_list_closures(
-        line_to_parse,
-        token_stack,
-        token_document,
-        start_index,
-        extracted_whitespace,
-        close_open_blocks_fn,
-        ind,
+        parser_state, line_to_parse, start_index, extracted_whitespace, ind,
     ):
         """
         Check to see if the list in progress and the level of lists shown require
@@ -880,8 +837,8 @@ class ListBlockProcessor:
         """
         container_level_tokens = []
         LOGGER.debug("ws(naa)>>line_to_parse>>%s<<", line_to_parse)
-        LOGGER.debug("ws(naa)>>stack>>%s", str(token_stack))
-        LOGGER.debug("ws(naa)>>tokens>>%s", str(token_document))
+        LOGGER.debug("ws(naa)>>stack>>%s", str(parser_state.token_stack))
+        LOGGER.debug("ws(naa)>>tokens>>%s", str(parser_state.token_document))
 
         is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
             line_to_parse,
@@ -891,14 +848,12 @@ class ListBlockProcessor:
         )
         LOGGER.debug("ws(naa)>>is_theme_break>>%s", str(is_theme_break))
 
-        if not token_stack[-1].is_paragraph or is_theme_break:
+        if not parser_state.token_stack[-1].is_paragraph or is_theme_break:
             LOGGER.debug("ws (normal and adjusted) not enough to continue")
 
-            container_level_tokens, _, _ = close_open_blocks_fn(
-                until_this_index=ind, include_lists=True
+            container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
+                parser_state, until_this_index=ind, include_lists=True
             )
         else:
             LOGGER.debug("ws (normal and adjusted) continue")
         return container_level_tokens
-
-    # pylint: enable=too-many-arguments

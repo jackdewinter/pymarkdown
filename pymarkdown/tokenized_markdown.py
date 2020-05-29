@@ -15,7 +15,7 @@ from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.markdown_token import BlankLineMarkdownToken
-from pymarkdown.parser_helper import ParserHelper, PositionMarker
+from pymarkdown.parser_helper import ParserHelper, ParserState, PositionMarker
 from pymarkdown.source_providers import InMemorySourceProvider
 from pymarkdown.stack_token import DocumentStackToken, ParagraphStackToken
 
@@ -114,6 +114,13 @@ class TokenizedMarkdown:
             LOGGER.debug("line_number>>%s", str(line_number))
             LOGGER.debug("---")
 
+            position_marker = PositionMarker(line_number, 0, token_to_use)
+            parser_state = ParserState(
+                self.stack,
+                self.tokenized_document,
+                TokenizedMarkdown.__close_open_blocks,
+                self.__handle_blank_line,
+            )
             if did_start_close:
                 LOGGER.debug("\n\ncleanup")
                 did_started_close = True
@@ -121,7 +128,8 @@ class TokenizedMarkdown:
                     _,
                     lines_to_requeue,
                     force_ignore_first_as_lrd,
-                ) = self.__close_open_blocks(
+                ) = TokenizedMarkdown.__close_open_blocks(
+                    parser_state,
                     self.tokenized_document,
                     include_block_quotes=True,
                     include_lists=True,
@@ -136,7 +144,6 @@ class TokenizedMarkdown:
                     "\n\n\n\n\n\n\n\n\n\n>>lines_to_requeue>>%s", str(lines_to_requeue)
                 )
             else:
-                position_marker = PositionMarker(line_number, 0, token_to_use)
                 if not token_to_use or not token_to_use.strip():
                     LOGGER.debug("\n\nblank line")
                     (
@@ -144,6 +151,7 @@ class TokenizedMarkdown:
                         lines_to_requeue,
                         force_ignore_first_as_lrd,
                     ) = self.__handle_blank_line(
+                        parser_state,
                         token_to_use,
                         from_main_transform=True,
                         position_marker=position_marker,
@@ -155,12 +163,7 @@ class TokenizedMarkdown:
                         _,
                         requeue_line_info,
                     ) = ContainerBlockProcessor.parse_line_for_container_blocks(
-                        self.stack,
-                        self.tokenized_document,
-                        self.__close_open_blocks,
-                        self.__handle_blank_line,
-                        position_marker,
-                        ignore_link_definition_start,
+                        parser_state, position_marker, ignore_link_definition_start,
                     )
                     lines_to_requeue = requeue_line_info.lines_to_requeue
                     force_ignore_first_as_lrd = (
@@ -233,8 +236,9 @@ class TokenizedMarkdown:
         return token_to_use, did_start_close, did_started_close
 
     # pylint: disable=too-many-arguments
+    @staticmethod
     def __close_open_blocks(
-        self,
+        parser_state,
         destination_array=None,
         only_these_blocks=None,
         include_block_quotes=False,
@@ -252,31 +256,35 @@ class TokenizedMarkdown:
         if destination_array:
             new_tokens = destination_array
 
-        while not self.stack[-1].is_document:
-            LOGGER.debug("cob>>%s", str(self.stack))
+        while not parser_state.token_stack[-1].is_document:
+            LOGGER.debug("cob>>%s", str(parser_state.token_stack))
             if only_these_blocks:
                 LOGGER.debug("cob-only-type>>%s", str(only_these_blocks))
-                LOGGER.debug("cob-only-type>>%s", str(type(self.stack[-1])))
+                LOGGER.debug(
+                    "cob-only-type>>%s", str(type(parser_state.token_stack[-1]))
+                )
                 # pylint: disable=unidiomatic-typecheck
-                if type(self.stack[-1]) not in only_these_blocks:
+                if type(parser_state.token_stack[-1]) not in only_these_blocks:
                     LOGGER.debug("cob>>not in only")
                     break
                 # pylint: enable=unidiomatic-typecheck
-            if not include_block_quotes and self.stack[-1].is_block_quote:
+            if not include_block_quotes and parser_state.token_stack[-1].is_block_quote:
                 LOGGER.debug("cob>>not block quotes")
                 break
-            if not include_lists and self.stack[-1].is_list:
+            if not include_lists and parser_state.token_stack[-1].is_list:
                 LOGGER.debug("cob>>not lists")
                 break
             if until_this_index != -1:
                 LOGGER.debug(
-                    "NOT ME!!!!%s<<%s<<", str(until_this_index), str(len(self.stack))
+                    "NOT ME!!!!%s<<%s<<",
+                    str(until_this_index),
+                    str(len(parser_state.token_stack)),
                 )
-                if until_this_index >= len(self.stack):
+                if until_this_index >= len(parser_state.token_stack):
                     break
 
             adjusted_tokens = []
-            if self.stack[-1].was_link_definition_started:
+            if parser_state.token_stack[-1].was_link_definition_started:
                 LOGGER.debug(
                     "cob->process_link_reference_definition>>stopping link definition"
                 )
@@ -289,7 +297,7 @@ class TokenizedMarkdown:
                     force_ignore_first_as_lrd,
                     adjusted_tokens,
                 ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-                    self.stack, empty_position_marker, "", ""
+                    parser_state, empty_position_marker, "", ""
                 )
                 if caller_can_handle_requeue and lines_to_requeue:
                     break
@@ -301,48 +309,52 @@ class TokenizedMarkdown:
                 )
                 assert not did_pause_lrd
             else:
-                adjusted_tokens = self.__remove_top_element_from_stack()
+                adjusted_tokens = TokenizedMarkdown.__remove_top_element_from_stack(
+                    parser_state
+                )
 
             new_tokens.extend(adjusted_tokens)
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
         # pylint: enable=too-many-arguments
 
-    def __remove_top_element_from_stack(self):
+    @staticmethod
+    def __remove_top_element_from_stack(parser_state):
         """
         Once it is decided that we need to remove the top element from the stack,
         make sure to do it uniformly.
         """
 
         new_tokens = []
-        LOGGER.debug("cob->te->%s", str(self.stack[-1]))
+        LOGGER.debug("cob->te->%s", str(parser_state.token_stack[-1]))
         extra_elements = []
-        if self.stack[-1].is_indented_code_block:
+        if parser_state.token_stack[-1].is_indented_code_block:
             extra_elements.extend(
                 ContainerBlockProcessor.extract_markdown_tokens_back_to_blank_line(
-                    self.tokenized_document
+                    parser_state
                 )
             )
 
-        new_tokens.append(self.stack[-1].generate_close_token())
+        new_tokens.append(parser_state.token_stack[-1].generate_close_token())
         new_tokens.extend(extra_elements)
-        del self.stack[-1]
+        del parser_state.token_stack[-1]
         return new_tokens
 
     # pylint: disable=too-many-locals
+    @staticmethod
     def __handle_blank_line(
-        self, input_line, from_main_transform, position_marker=None
+        parser_state, input_line, from_main_transform, position_marker=None
     ):
         """
         Handle the processing of a blank line.
         """
 
         if (
-            self.stack[-1].is_paragraph
-            and len(self.stack) >= 2
-            and self.stack[-2].is_list
+            parser_state.token_stack[-1].is_paragraph
+            and len(parser_state.token_stack) >= 2
+            and parser_state.token_stack[-2].is_list
         ):
             from_main_transform = False
-        elif self.stack[-1].is_list:
+        elif parser_state.token_stack[-1].is_list:
             from_main_transform = False
 
         close_only_these_blocks = None
@@ -359,19 +371,19 @@ class TokenizedMarkdown:
         )
 
         is_processing_list, in_index = LeafBlockProcessor.check_for_list_in_process(
-            self.stack
+            parser_state
         )
         LOGGER.debug(
             "is_processing_list>>%s>>in_index>>%s>>last_stack>>%s",
             str(is_processing_list),
             str(in_index),
-            str(self.stack[-1]),
+            str(parser_state.token_stack[-1]),
         )
 
         lines_to_requeue = []
         force_ignore_first_as_lrd = None
         new_tokens = None
-        if self.stack[-1].was_link_definition_started:
+        if parser_state.token_stack[-1].was_link_definition_started:
             LOGGER.debug("process_link_reference_definition>>stopping link definition")
             empty_position_marker = PositionMarker(-1, 0, "")
             (
@@ -382,34 +394,33 @@ class TokenizedMarkdown:
                 force_ignore_first_as_lrd,
                 new_tokens,
             ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-                self.stack, empty_position_marker, "", ""
+                parser_state, empty_position_marker, "", ""
             )
             assert not did_pause_lrd
-        elif self.stack[-1].is_code_block:
+        elif parser_state.token_stack[-1].is_code_block:
             stack_bq_count = BlockQuoteProcessor.count_of_block_quotes_on_stack(
-                self.stack
+                parser_state
             )
             if stack_bq_count:
                 LOGGER.debug("hbl>>code block within block quote")
             else:
                 LOGGER.debug("hbl>>code block")
                 new_tokens = []
-        elif self.stack[-1].is_html_block:
-            new_tokens = HtmlHelper.check_blank_html_block_end(
-                self.stack, self.__close_open_blocks
-            )
+        elif parser_state.token_stack[-1].is_html_block:
+            new_tokens = HtmlHelper.check_blank_html_block_end(parser_state)
         elif (
             is_processing_list
-            and self.tokenized_document[-1].is_blank_line
-            and self.tokenized_document[-2].is_list_start
+            and parser_state.token_document[-1].is_blank_line
+            and parser_state.token_document[-2].is_list_start
         ):
             LOGGER.debug("double blank in list")
-            new_tokens, _, _ = self.__close_open_blocks(
-                until_this_index=in_index, include_lists=True
+            new_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
+                parser_state, until_this_index=in_index, include_lists=True
             )
 
         if new_tokens is None:
-            new_tokens, _, _ = self.__close_open_blocks(
+            new_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
+                parser_state,
                 only_these_blocks=close_only_these_blocks,
                 include_block_quotes=do_include_block_quotes,
             )

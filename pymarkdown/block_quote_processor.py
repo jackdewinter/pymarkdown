@@ -42,27 +42,25 @@ class BlockQuoteProcessor:
         return False
 
     @staticmethod
-    def count_of_block_quotes_on_stack(token_stack):
+    def count_of_block_quotes_on_stack(parser_state):
         """
         Helper method to count the number of block quotes currently on the stack.
         """
 
         stack_bq_count = 0
-        for next_item_on_stack in token_stack:
+        for next_item_on_stack in parser_state.token_stack:
             if next_item_on_stack.is_block_quote:
                 stack_bq_count += 1
 
         return stack_bq_count
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def check_for_lazy_handling(
-        token_stack,
+        parser_state,
         this_bq_count,
         stack_bq_count,
         line_to_parse,
         extracted_whitespace,
-        close_open_blocks_fn,
     ):
         """
         Check if there is any processing to be handled during the handling of
@@ -83,32 +81,34 @@ class BlockQuoteProcessor:
             )
             LOGGER.debug("fenced_start?%s", str(is_fenced_start))
 
-            if token_stack[-1].is_code_block or is_fenced_start:
+            if parser_state.token_stack[-1].is_code_block or is_fenced_start:
                 LOGGER.debug("__check_for_lazy_handling>>code block")
                 assert not container_level_tokens
-                container_level_tokens, _, _ = close_open_blocks_fn(
-                    only_these_blocks=[BlockQuoteStackToken, type(token_stack[-1])],
+                container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
+                    parser_state,
+                    only_these_blocks=[
+                        BlockQuoteStackToken,
+                        type(parser_state.token_stack[-1]),
+                    ],
                     include_block_quotes=True,
                 )
             else:
                 LOGGER.debug("__check_for_lazy_handling>>not code block")
-                LOGGER.debug("__check_for_lazy_handling>>%s", str(token_stack))
+                LOGGER.debug(
+                    "__check_for_lazy_handling>>%s", str(parser_state.token_stack)
+                )
 
         return container_level_tokens
-        # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
-    # pylint: disable=too-many-locals
     @staticmethod
     def handle_block_quote_block(
-        token_stack,
+        parser_state,
         position_marker,
         extracted_whitespace,
         adj_ws,
         this_bq_count,
         stack_bq_count,
-        close_open_blocks_fn,
-        handle_blank_line_fn,
     ):
         """
         Handle the processing of a blockquote block.
@@ -127,7 +127,7 @@ class BlockQuoteProcessor:
                 extracted_whitespace,
                 adj_ws=adj_ws,
             )
-            and not token_stack[-1].was_link_definition_started
+            and not parser_state.token_stack[-1].was_link_definition_started
         ):
             LOGGER.debug("clt>>block-start")
             (
@@ -139,12 +139,7 @@ class BlockQuoteProcessor:
                 alt_this_bq_count,
                 removed_chars_at_start,
             ) = BlockQuoteProcessor.__handle_block_quote_section(
-                token_stack,
-                position_marker,
-                stack_bq_count,
-                extracted_whitespace,
-                close_open_blocks_fn,
-                handle_blank_line_fn,
+                parser_state, position_marker, stack_bq_count, extracted_whitespace,
             )
 
             # TODO for nesting, may need to augment with this_bq_count already set.
@@ -174,7 +169,6 @@ class BlockQuoteProcessor:
         )
 
     # pylint: enable=too-many-arguments
-    # pylint: enable=too-many-locals
 
     @staticmethod
     def __count_block_quote_starts(
@@ -239,21 +233,13 @@ class BlockQuoteProcessor:
             )
         return this_bq_count, start_index, adjusted_line
 
-    # pylint: disable=too-many-arguments
-    # pylint: disable=too-many-locals
     @staticmethod
     def __handle_block_quote_section(
-        token_stack,
-        position_marker,
-        stack_bq_count,
-        extracted_whitespace,
-        close_open_blocks_fn,
-        handle_blank_line_fn,
+        parser_state, position_marker, stack_bq_count, extracted_whitespace,
     ):
         """
         Handle the processing of a section clearly identified as having block quotes.
         """
-
         # TODO work on removing these
         line_to_parse = position_marker.text_to_parse
         start_index = position_marker.index_number
@@ -263,7 +249,7 @@ class BlockQuoteProcessor:
             line_to_parse.replace("\t", "\\t"),
         )
         LOGGER.debug("stack_bq_count--%s", str(stack_bq_count))
-        LOGGER.debug("token_stack[-1]--%s", str(token_stack[-1]))
+        LOGGER.debug("token_stack[-1]--%s", str(parser_state.token_stack[-1]))
 
         leaf_tokens = []
         container_level_tokens = []
@@ -283,7 +269,7 @@ class BlockQuoteProcessor:
             line_to_parse,
             start_index,
             stack_bq_count,
-            token_stack[-1].is_fenced_code_block,
+            parser_state.token_stack[-1].is_fenced_code_block,
         )
         LOGGER.debug(
             "__handle_block_quote_section---this_bq_count--%s--%s--%s--",
@@ -292,17 +278,16 @@ class BlockQuoteProcessor:
             line_to_parse.replace("\t", "\\t"),
         )
 
-        if not token_stack[-1].is_fenced_code_block:
+        if not parser_state.token_stack[-1].is_fenced_code_block:
             LOGGER.debug("handle_block_quote_section>>not fenced")
             (
                 container_level_tokens,
                 stack_bq_count,
             ) = BlockQuoteProcessor.__ensure_stack_at_level(
-                token_stack,
+                parser_state,
                 this_bq_count,
                 stack_bq_count,
                 extracted_whitespace,
-                close_open_blocks_fn,
                 position_marker,
                 original_start_index,
             )
@@ -316,7 +301,8 @@ class BlockQuoteProcessor:
                     len(position_marker.text_to_parse),
                     position_marker.text_to_parse,
                 )
-                (leaf_tokens, lines_to_requeue, _,) = handle_blank_line_fn(
+                (leaf_tokens, lines_to_requeue, _,) = parser_state.handle_blank_line_fn(
+                    parser_state,
                     line_to_parse,
                     from_main_transform=False,
                     position_marker=adjusted_position_marker,
@@ -342,17 +328,13 @@ class BlockQuoteProcessor:
             removed_chars_at_start,
         )
 
-    # pylint: enable=too-many-arguments
-    # pylint: enable=too-many-locals
-
     # pylint: disable=too-many-arguments
     @staticmethod
     def __ensure_stack_at_level(
-        token_stack,
+        parser_state,
         this_bq_count,
         stack_bq_count,
         extracted_whitespace,
-        close_open_blocks_fn,
         position_marker,
         original_start_index,
     ):
@@ -362,11 +344,12 @@ class BlockQuoteProcessor:
 
         container_level_tokens = []
         if this_bq_count > stack_bq_count:
-            container_level_tokens, _, _ = close_open_blocks_fn(
+            container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
+                parser_state,
                 only_these_blocks=[ParagraphStackToken, IndentedCodeBlockStackToken],
             )
             while this_bq_count > stack_bq_count:
-                token_stack.append(BlockQuoteStackToken())
+                parser_state.token_stack.append(BlockQuoteStackToken())
                 stack_bq_count += 1
 
                 adjusted_position_marker = PositionMarker(

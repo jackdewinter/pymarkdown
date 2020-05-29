@@ -79,10 +79,9 @@ class LeafBlockProcessor:
                 )
         return False, None, None, None
 
-    # pylint: disable=too-many-locals
     @staticmethod
     def parse_fenced_code_block(
-        token_stack, position_marker, extracted_whitespace, close_open_blocks_fn,
+        parser_state, position_marker, extracted_whitespace,
     ):
         """
         Handle the parsing of a fenced code block
@@ -104,20 +103,23 @@ class LeafBlockProcessor:
             position_marker.index_number,
             extracted_whitespace,
         )
-        if is_fence_start and not token_stack[-1].is_html_block:
-            if token_stack[-1].is_fenced_code_block:
+        if is_fence_start and not parser_state.token_stack[-1].is_html_block:
+            if parser_state.token_stack[-1].is_fenced_code_block:
                 LOGGER.debug("pfcb->end")
 
                 if (
-                    token_stack[-1].code_fence_character
+                    parser_state.token_stack[-1].code_fence_character
                     == position_marker.text_to_parse[position_marker.index_number]
-                    and collected_count >= token_stack[-1].fence_character_count
+                    and collected_count
+                    >= parser_state.token_stack[-1].fence_character_count
                     and non_whitespace_index >= len(position_marker.text_to_parse)
                 ):
                     new_tokens.append(
-                        token_stack[-1].generate_close_token(extracted_whitespace)
+                        parser_state.token_stack[-1].generate_close_token(
+                            extracted_whitespace
+                        )
                     )
-                    del token_stack[-1]
+                    del parser_state.token_stack[-1]
             else:
                 LOGGER.debug("pfcb->check")
                 if (
@@ -137,11 +139,11 @@ class LeafBlockProcessor:
                         after_extracted_text_index:
                     ]
 
-                    new_tokens, _, _ = close_open_blocks_fn(
-                        only_these_blocks=[ParagraphStackToken],
+                    new_tokens, _, _ = parser_state.close_open_blocks_fn(
+                        parser_state, only_these_blocks=[ParagraphStackToken],
                     )
 
-                    token_stack.append(
+                    parser_state.token_stack.append(
                         FencedCodeBlockStackToken(
                             code_fence_character=position_marker.text_to_parse[
                                 position_marker.index_number
@@ -168,8 +170,8 @@ class LeafBlockProcessor:
                         )
                     )
         elif (
-            token_stack[-1].is_fenced_code_block
-            and token_stack[-1].whitespace_start_count
+            parser_state.token_stack[-1].is_fenced_code_block
+            and parser_state.token_stack[-1].whitespace_start_count
             and extracted_whitespace
         ):
 
@@ -177,16 +179,16 @@ class LeafBlockProcessor:
                 extracted_whitespace
             )
             whitespace_left = max(
-                0, current_whitespace_length - token_stack[-1].whitespace_start_count
+                0,
+                current_whitespace_length
+                - parser_state.token_stack[-1].whitespace_start_count,
             )
             extracted_whitespace = "".rjust(whitespace_left, " ")
         return new_tokens, extracted_whitespace
 
-    # pylint: enable=too-many-locals
-
     @staticmethod
     def parse_indented_code_block(
-        token_stack, position_marker, extracted_whitespace, removed_chars_at_start,
+        parser_state, position_marker, extracted_whitespace, removed_chars_at_start,
     ):
         """
         Handle the parsing of an indented code block
@@ -198,14 +200,14 @@ class LeafBlockProcessor:
             ParserHelper.is_length_greater_than_or_equal_to(
                 extracted_whitespace, 4, start_index=removed_chars_at_start
             )
-            and not token_stack[-1].is_paragraph
+            and not parser_state.token_stack[-1].is_paragraph
         ):
             modified_whitespace_count = ParserHelper.calculate_length(
                 extracted_whitespace, start_index=removed_chars_at_start
             )
 
-            if not token_stack[-1].is_indented_code_block:
-                token_stack.append(IndentedCodeBlockStackToken())
+            if not parser_state.token_stack[-1].is_indented_code_block:
+                parser_state.token_stack.append(IndentedCodeBlockStackToken())
                 new_tokens.append(
                     IndentedCodeBlockMarkdownToken("".rjust(4), position_marker)
                 )
@@ -254,13 +256,11 @@ class LeafBlockProcessor:
         return thematic_break_character, end_of_break_index
 
     @staticmethod
-    # pylint: disable=too-many-arguments
     def parse_thematic_break(
-        token_stack,
+        parser_state,
         position_marker,
         extracted_whitespace,
         this_bq_count,
-        close_open_blocks_fn,
         stack_bq_count,
     ):
         """
@@ -275,11 +275,12 @@ class LeafBlockProcessor:
             extracted_whitespace,
         )
         if start_char:
-            if token_stack[-1].is_paragraph:
-                new_tokens.append(token_stack[-1].generate_close_token())
-                del token_stack[-1]
+            if parser_state.token_stack[-1].is_paragraph:
+                new_tokens.append(parser_state.token_stack[-1].generate_close_token())
+                del parser_state.token_stack[-1]
             if this_bq_count == 0 and stack_bq_count > 0:
-                new_tokens, _, _ = close_open_blocks_fn(
+                new_tokens, _, _ = parser_state.close_open_blocks_fn(
+                    parser_state,
                     destination_array=new_tokens,
                     only_these_blocks=[BlockQuoteStackToken],
                     include_block_quotes=True,
@@ -296,10 +297,8 @@ class LeafBlockProcessor:
             )
         return new_tokens
 
-    # pylint: enable=too-many-arguments
-
     @staticmethod
-    def parse_atx_headings(position_marker, extracted_whitespace, close_open_blocks_fn):
+    def parse_atx_headings(parser_state, position_marker, extracted_whitespace):
         """
         Handle the parsing of an atx heading.
         """
@@ -330,7 +329,9 @@ class LeafBlockProcessor:
                 or non_whitespace_index == len(position_marker.text_to_parse)
             ):
 
-                new_tokens, _, _ = close_open_blocks_fn(new_tokens)
+                new_tokens, _, _ = parser_state.close_open_blocks_fn(
+                    parser_state, new_tokens
+                )
                 remaining_line = position_marker.text_to_parse[non_whitespace_index:]
                 (
                     end_index,
@@ -384,11 +385,9 @@ class LeafBlockProcessor:
                 )
         return new_tokens
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def parse_setext_headings(
-        token_stack,
-        token_document,
+        parser_state,
         position_marker,
         extracted_whitespace,
         this_bq_count,
@@ -406,7 +405,7 @@ class LeafBlockProcessor:
                 position_marker.index_number,
                 LeafBlockProcessor.__setext_characters,
             )
-            and token_stack[-1].is_paragraph
+            and parser_state.token_stack[-1].is_paragraph
             and (this_bq_count == stack_bq_count)
         ):
             _, collected_to_index = ParserHelper.collect_while_character(
@@ -434,32 +433,28 @@ class LeafBlockProcessor:
                         extra_whitespace_after_setext,
                     )
                 )
-                token_index = len(token_document) - 1
-                while not token_document[token_index].is_paragraph:
+                token_index = len(parser_state.token_document) - 1
+                while not parser_state.token_document[token_index].is_paragraph:
                     token_index -= 1
 
                 replacement_token = SetextHeadingMarkdownToken(
                     position_marker.text_to_parse[position_marker.index_number],
-                    token_document[token_index].extra_data,
+                    parser_state.token_document[token_index].extra_data,
                     position_marker,
                 )
-                token_document[token_index] = replacement_token
-                del token_stack[-1]
+                parser_state.token_document[token_index] = replacement_token
+                del parser_state.token_stack[-1]
         return new_tokens
-
-    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
     def parse_paragraph(
-        token_stack,
-        token_document,
+        parser_state,
         position_marker,
         extracted_whitespace,
         this_bq_count,
         no_para_start_if_empty,
         stack_bq_count,
-        close_open_blocks_fn,
     ):
         """
         Handle the parsing of a paragraph.
@@ -479,23 +474,27 @@ class LeafBlockProcessor:
         )
 
         if (
-            len(token_document) >= 2
-            and token_document[-1].is_blank_line
-            and token_document[-2].is_any_list_token
+            len(parser_state.token_document) >= 2
+            and parser_state.token_document[-1].is_blank_line
+            and parser_state.token_document[-2].is_any_list_token
         ):
 
             did_find, last_list_index = LeafBlockProcessor.check_for_list_in_process(
-                token_stack
+                parser_state
             )
             assert did_find
-            new_tokens, _, _ = close_open_blocks_fn(until_this_index=last_list_index)
+            new_tokens, _, _ = parser_state.close_open_blocks_fn(
+                parser_state, until_this_index=last_list_index
+            )
         if stack_bq_count != 0 and this_bq_count == 0:
-            new_tokens, _, _ = close_open_blocks_fn(
-                only_these_blocks=[BlockQuoteStackToken], include_block_quotes=True,
+            new_tokens, _, _ = parser_state.close_open_blocks_fn(
+                parser_state,
+                only_these_blocks=[BlockQuoteStackToken],
+                include_block_quotes=True,
             )
 
-        if not token_stack[-1].is_paragraph:
-            token_stack.append(ParagraphStackToken())
+        if not parser_state.token_stack[-1].is_paragraph:
+            parser_state.token_stack.append(ParagraphStackToken())
             new_tokens.append(
                 ParagraphMarkdownToken(extracted_whitespace, position_marker)
             )
@@ -511,12 +510,12 @@ class LeafBlockProcessor:
         # pylint: enable=too-many-arguments
 
     @staticmethod
-    def check_for_list_in_process(token_stack):
+    def check_for_list_in_process(parser_state):
         """
         From the end of the stack, check to see if there is already a list in progress.
         """
 
-        stack_index = len(token_stack) - 1
-        while stack_index >= 0 and not token_stack[stack_index].is_list:
+        stack_index = len(parser_state.token_stack) - 1
+        while stack_index >= 0 and not parser_state.token_stack[stack_index].is_list:
             stack_index -= 1
         return stack_index >= 0, stack_index
