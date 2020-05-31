@@ -6,7 +6,11 @@ import pytest
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.transform_to_gfm import TransformToGfm
 
-from .utils import assert_if_lists_different, assert_if_strings_different
+from .utils import (
+    assert_if_lists_different,
+    assert_if_strings_different,
+    assert_token_consistency,
+)
 
 
 @pytest.mark.gfm
@@ -38,6 +42,7 @@ def test_emphasis_413():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -68,6 +73,7 @@ bar</em></p>"""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -100,6 +106,7 @@ def test_emphasis_415():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -132,6 +139,7 @@ def test_emphasis_416():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -163,6 +171,7 @@ def test_emphasis_417():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -194,6 +203,7 @@ def test_emphasis_418():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -226,6 +236,7 @@ def test_emphasis_419():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -258,6 +269,7 @@ def test_emphasis_420():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -288,6 +300,7 @@ def test_emphasis_421():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -319,6 +332,7 @@ def test_emphasis_422():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -350,6 +364,7 @@ def test_emphasis_423():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -381,6 +396,7 @@ def test_emphasis_424():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -413,6 +429,7 @@ def test_emphasis_425():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -450,6 +467,7 @@ def test_emphasis_426():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -486,6 +504,7 @@ def test_emphasis_427():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -519,6 +538,7 @@ def test_emphasis_428():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -546,6 +566,7 @@ def test_emphasis_429():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -573,3 +594,4 @@ def test_emphasis_430():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)

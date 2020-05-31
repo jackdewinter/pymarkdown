@@ -1,3 +1,4 @@
+# pylint: disable=too-many-lines
 """
 https://github.github.com/gfm/#link-reference-definitions
 """
@@ -6,7 +7,11 @@ import pytest
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.transform_to_gfm import TransformToGfm
 
-from .utils import assert_if_lists_different, assert_if_strings_different
+from .utils import (
+    assert_if_lists_different,
+    assert_if_strings_different,
+    assert_token_consistency,
+)
 
 
 @pytest.mark.gfm
@@ -39,6 +44,7 @@ def test_link_reference_definitions_161():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -75,6 +81,7 @@ def test_link_reference_definitions_162():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -111,6 +118,7 @@ def test_link_reference_definitions_163():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -145,6 +153,7 @@ def test_link_reference_definitions_164():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -185,6 +194,7 @@ line2
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -202,7 +212,6 @@ with blank line'
 
 [foo]"""
     expected_tokens = [
-        "[BLANK(2,1):]",
         "[para(1,1):]",
         "[text:[:]",
         "[text:foo:]",
@@ -231,6 +240,7 @@ with blank line'
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -264,6 +274,7 @@ def test_link_reference_definitions_167():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -279,7 +290,6 @@ def test_link_reference_definitions_168():
 
 [foo]"""
     expected_tokens = [
-        "[BLANK(2,1):]",
         "[para(1,1):]",
         "[text:[:]",
         "[text:foo:]",
@@ -303,6 +313,7 @@ def test_link_reference_definitions_168():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -335,6 +346,7 @@ def test_link_reference_definitions_169():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -375,6 +387,7 @@ def test_link_reference_definitions_170():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -409,6 +422,7 @@ def test_link_reference_definitions_171():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -441,6 +455,7 @@ def test_link_reference_definitions_172():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -475,6 +490,7 @@ def test_link_reference_definitions_173():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -507,6 +523,7 @@ def test_link_reference_definitions_174():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -539,6 +556,7 @@ def test_link_reference_definitions_175():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -561,6 +579,7 @@ def test_link_reference_definitions_176():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -591,6 +610,7 @@ bar"""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -620,6 +640,7 @@ def test_link_reference_definitions_178():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -648,6 +669,7 @@ def test_link_reference_definitions_179():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -684,6 +706,7 @@ def test_link_reference_definitions_180():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -722,6 +745,7 @@ def test_link_reference_definitions_181():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -763,6 +787,7 @@ def test_link_reference_definitions_182():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -802,6 +827,7 @@ def test_link_reference_definitions_183():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -819,7 +845,7 @@ bar
 [foo]"""
     expected_tokens = [
         "[link-ref-def(1,1):True::foo:: :/url:::::]",
-        "[setext(3,1):=:]",
+        "[setext(3,1):=::(2,1)]",
         "[text:bar:]",
         "[end-setext::]",
         "[para(4,1):]",
@@ -838,6 +864,7 @@ bar
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -871,6 +898,7 @@ def test_link_reference_definitions_185():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -920,6 +948,7 @@ def test_link_reference_definitions_186():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -956,6 +985,7 @@ def test_link_reference_definitions_187():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -978,3 +1008,4 @@ def test_link_reference_definitions_188():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)

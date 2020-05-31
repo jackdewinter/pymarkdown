@@ -5,7 +5,7 @@ import pytest
 
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
-from .utils import assert_if_lists_different
+from .utils import assert_if_lists_different, assert_token_consistency
 
 
 @pytest.mark.skip
@@ -24,6 +24,7 @@ def test_autolinks_621():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.skip
@@ -42,6 +43,7 @@ def test_autolinks_622():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.skip
@@ -62,6 +64,7 @@ Visit www.commonmark.org/a.b."""
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.skip
@@ -86,6 +89,7 @@ www.google.com/search?q=Markup+(business)))
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.skip
@@ -104,6 +108,7 @@ def test_autolinks_625():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.skip
@@ -124,6 +129,7 @@ www.google.com/search?q=commonmark&hl;"""
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.skip
@@ -142,6 +148,7 @@ def test_autolinks_627():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.skip
@@ -162,6 +169,7 @@ def test_autolinks_628():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.skip
@@ -180,6 +188,7 @@ def test_autolinks_629():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.skip
@@ -200,6 +209,7 @@ def test_autolinks_630():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.skip
@@ -224,3 +234,4 @@ a.b-c_d@a.b_"""
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)

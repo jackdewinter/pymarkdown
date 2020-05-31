@@ -3,7 +3,11 @@ https://github.github.com/gfm/#lists
 """
 import pytest
 
-from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.markdown_token import (
+    EndMarkdownToken,
+    MarkdownToken,
+    MarkdownTokenClass,
+)
 from pymarkdown.transform_to_gfm import TransformToGfm
 
 
@@ -16,7 +20,7 @@ def test_gfm_bad_token():
     # Arrange
     transformer = TransformToGfm()
     tokens_to_test = [
-        MarkdownToken("bad"),
+        MarkdownToken("bad", MarkdownTokenClass.INLINE_BLOCK),
     ]
 
     # Act

@@ -441,6 +441,7 @@ class LeafBlockProcessor:
                     position_marker.text_to_parse[position_marker.index_number],
                     parser_state.token_document[token_index].extra_data,
                     position_marker,
+                    parser_state.token_document[token_index],
                 )
                 parser_state.token_document[token_index] = replacement_token
                 del parser_state.token_stack[-1]

@@ -3,7 +3,7 @@ https://github.github.com/gfm/#task-list-items-extension-
 """
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
-from .utils import assert_if_lists_different
+from .utils import assert_if_lists_different, assert_token_consistency
 
 
 def test_task_list_items_279():
@@ -39,6 +39,7 @@ def test_task_list_items_279():
     # Assert
     # TODO revisit at end, not in back CommonMark spec
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 def test_task_list_items_280():
@@ -91,3 +92,4 @@ def test_task_list_items_280():
     # Assert
     # TODO revisit at end, not in back CommonMark spec
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)

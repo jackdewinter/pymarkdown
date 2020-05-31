@@ -112,6 +112,7 @@ class ContainerBlockProcessor:
             leaf_tokens,
             container_level_tokens,
             removed_chars_at_start,
+            did_blank,
         ) = BlockQuoteProcessor.handle_block_quote_block(
             parser_state,
             new_position_marker,
@@ -120,6 +121,11 @@ class ContainerBlockProcessor:
             this_bq_count,
             stack_bq_count,
         )
+        LOGGER.debug(">>container_level_tokens>>%s", str(container_level_tokens))
+        LOGGER.debug(">>did_blank>>%s", did_blank)
+        if did_blank:
+            container_level_tokens.extend(leaf_tokens)
+            return container_level_tokens, line_to_parse, RequeueLineInfo()
 
         # TODO refactor so it doesn't need this!
         new_position_marker = PositionMarker(
@@ -411,9 +417,7 @@ class ContainerBlockProcessor:
             )
 
             LOGGER.debug("leaf_tokens>>%s", str(leaf_tokens))
-            if leaf_tokens:
-                parser_state.token_document.extend(leaf_tokens)
-                leaf_tokens = []
+            assert not leaf_tokens
             if container_level_tokens:
                 parser_state.token_document.extend(container_level_tokens)
                 container_level_tokens = []
@@ -585,19 +589,19 @@ class ContainerBlockProcessor:
     ):
 
         LOGGER.debug("LINE-lazy>%s", line_to_parse)
-        if not leaf_tokens:
-            LOGGER.debug("clt>>lazy-check")
-            lazy_tokens = BlockQuoteProcessor.check_for_lazy_handling(
-                parser_state,
-                this_bq_count,
-                stack_bq_count,
-                line_to_parse,
-                extracted_whitespace,
-            )
-            if lazy_tokens:
-                LOGGER.debug("clt>>lazy-found")
-                container_level_tokens.extend(lazy_tokens)
-                did_process = True
+        assert not leaf_tokens
+        LOGGER.debug("clt>>lazy-check")
+        lazy_tokens = BlockQuoteProcessor.check_for_lazy_handling(
+            parser_state,
+            this_bq_count,
+            stack_bq_count,
+            line_to_parse,
+            extracted_whitespace,
+        )
+        if lazy_tokens:
+            LOGGER.debug("clt>>lazy-found")
+            container_level_tokens.extend(lazy_tokens)
+            did_process = True
 
         if did_process:
             LOGGER.debug(
@@ -620,31 +624,31 @@ class ContainerBlockProcessor:
         ignore_link_definition_start,
     ):
         requeue_line_info = RequeueLineInfo()
-        if not leaf_tokens:
-            LOGGER.debug("parsing leaf>>")
-            position_marker.index_number = 0
-            (
-                leaf_tokens,
-                requeue_line_info,
-            ) = ContainerBlockProcessor.__parse_line_for_leaf_blocks(
-                parser_state,
-                position_marker,
-                this_bq_count,
-                removed_chars_at_start,
-                no_para_start_if_empty,
-                ignore_link_definition_start,
-            )
-            LOGGER.debug("parsed leaf>>%s", str(leaf_tokens))
-            LOGGER.debug("parsed leaf>>%s", str(len(leaf_tokens)))
-            LOGGER.debug(
-                "parsed leaf>>lines_to_requeue>>%s>%s",
-                str(requeue_line_info.lines_to_requeue),
-                str(len(requeue_line_info.lines_to_requeue)),
-            )
-            LOGGER.debug(
-                "parsed leaf>>requeue_line_info.force_ignore_first_as_lrd>>%s>",
-                str(requeue_line_info.force_ignore_first_as_lrd),
-            )
+        assert not leaf_tokens
+        LOGGER.debug("parsing leaf>>")
+        position_marker.index_number = 0
+        (
+            leaf_tokens,
+            requeue_line_info,
+        ) = ContainerBlockProcessor.__parse_line_for_leaf_blocks(
+            parser_state,
+            position_marker,
+            this_bq_count,
+            removed_chars_at_start,
+            no_para_start_if_empty,
+            ignore_link_definition_start,
+        )
+        LOGGER.debug("parsed leaf>>%s", str(leaf_tokens))
+        LOGGER.debug("parsed leaf>>%s", str(len(leaf_tokens)))
+        LOGGER.debug(
+            "parsed leaf>>lines_to_requeue>>%s>%s",
+            str(requeue_line_info.lines_to_requeue),
+            str(len(requeue_line_info.lines_to_requeue)),
+        )
+        LOGGER.debug(
+            "parsed leaf>>requeue_line_info.force_ignore_first_as_lrd>>%s>",
+            str(requeue_line_info.force_ignore_first_as_lrd),
+        )
         return leaf_tokens, requeue_line_info
         # pylint: enable=too-many-arguments
 

@@ -6,7 +6,11 @@ import pytest
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.transform_to_gfm import TransformToGfm
 
-from .utils import assert_if_lists_different, assert_if_strings_different
+from .utils import (
+    assert_if_lists_different,
+    assert_if_strings_different,
+    assert_token_consistency,
+)
 
 
 # pylint: disable=too-many-lines
@@ -25,14 +29,14 @@ def test_setext_headings_050():
 Foo *bar*
 ---------"""
     expected_tokens = [
-        "[setext(2,1):=:]",
+        "[setext(2,1):=::(1,1)]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar:]",
         "[end-emphasis::1]",
         "[end-setext::]",
         "[BLANK(3,1):]",
-        "[setext(5,1):-:]",
+        "[setext(5,1):-::(4,1)]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar:]",
@@ -49,6 +53,7 @@ Foo *bar*
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -64,7 +69,7 @@ def test_setext_headings_051():
 baz*
 ===="""
     expected_tokens = [
-        "[setext(3,1):=:]",
+        "[setext(3,1):=::(1,1)]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar\nbaz::\n]",
@@ -81,6 +86,7 @@ baz</em></h1>"""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -96,7 +102,7 @@ def test_setext_headings_052():
 baz*\t
 ===="""
     expected_tokens = [
-        "[setext(3,1):=:  :\t]",
+        "[setext(3,1):=:  :(1,3):\t]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar\nbaz::\n]",
@@ -113,6 +119,7 @@ baz</em></h1>"""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -129,7 +136,7 @@ def test_setext_headings_052a():
   c
 ==="""
     expected_tokens = [
-        "[setext(4,1):=:  ]",
+        "[setext(4,1):=:  :(1,3)]",
         "[text:a\nb\nc::\n  \n  ]",
         "[end-setext::]",
     ]
@@ -144,6 +151,7 @@ c</h1>"""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -162,7 +170,7 @@ def test_setext_headings_052b():
         "\a", " "
     )
     expected_tokens = [
-        "[setext(4,1):=:  ]",
+        "[setext(4,1):=:  :(1,3)]",
         "[text:a::  ]",
         "[hard-break:  ]",
         "[text:\nb::\n  ]",
@@ -181,6 +189,7 @@ c</h1>"""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -198,11 +207,11 @@ def test_setext_headings_053():
 Foo
 ="""
     expected_tokens = [
-        "[setext(2,1):-:]",
+        "[setext(2,1):-::(1,1)]",
         "[text:Foo:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
-        "[setext(5,1):=:]",
+        "[setext(5,1):=::(4,1)]",
         "[text:Foo:]",
         "[end-setext::]",
     ]
@@ -216,6 +225,7 @@ Foo
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -236,15 +246,15 @@ def test_setext_headings_054():
   Foo
   ==="""
     expected_tokens = [
-        "[setext(2,1):-:   ]",
+        "[setext(2,1):-:   :(1,4)]",
         "[text:Foo:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
-        "[setext(5,1):-:  ]",
+        "[setext(5,1):-:  :(4,3)]",
         "[text:Foo:]",
         "[end-setext::]",
         "[BLANK(6,1):]",
-        "[setext(8,3):=:  ]",
+        "[setext(8,3):=:  :(7,3)]",
         "[text:Foo:]",
         "[end-setext:  :]",
     ]
@@ -259,6 +269,7 @@ def test_setext_headings_054():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -295,6 +306,7 @@ Foo
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -308,7 +320,11 @@ def test_setext_headings_056():
     transformer = TransformToGfm()
     source_markdown = """Foo
    ----      """
-    expected_tokens = ["[setext(2,4):-:]", "[text:Foo:]", "[end-setext:   :      ]"]
+    expected_tokens = [
+        "[setext(2,4):-::(1,1)]",
+        "[text:Foo:]",
+        "[end-setext:   :      ]",
+    ]
     expected_gfm = """<h2>Foo</h2>"""
 
     # Act
@@ -318,6 +334,7 @@ def test_setext_headings_056():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -342,6 +359,7 @@ def test_setext_headings_057():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -380,6 +398,7 @@ Foo
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -395,7 +414,7 @@ def test_setext_headings_059():
 -----""".replace(
         "\a", " "
     )
-    expected_tokens = ["[setext(2,1):-::  ]", "[text:Foo:]", "[end-setext::]"]
+    expected_tokens = ["[setext(2,1):-::(1,1):  ]", "[text:Foo:]", "[end-setext::]"]
     expected_gfm = """<h2>Foo</h2>"""
 
     # Act
@@ -405,6 +424,7 @@ def test_setext_headings_059():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -418,7 +438,7 @@ def test_setext_headings_060():
     transformer = TransformToGfm()
     source_markdown = """Foo\\
 ----"""
-    expected_tokens = ["[setext(2,1):-:]", "[text:Foo\\:]", "[end-setext::]"]
+    expected_tokens = ["[setext(2,1):-::(1,1)]", "[text:Foo\\:]", "[end-setext::]"]
     expected_gfm = """<h2>Foo\\</h2>"""
 
     # Act
@@ -428,6 +448,7 @@ def test_setext_headings_060():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -447,14 +468,14 @@ def test_setext_headings_061():
 ---
 of dashes"/>"""
     expected_tokens = [
-        "[setext(2,1):-:]",
+        "[setext(2,1):-::(1,1)]",
         "[text:`Foo:]",
         "[end-setext::]",
         "[para(3,1):]",
         "[text:`:]",
         "[end-para]",
         "[BLANK(4,1):]",
-        "[setext(6,1):-:]",
+        "[setext(6,1):-::(5,1)]",
         "[text:&lt;a title=&quot;a lot:]",
         "[end-setext::]",
         "[para(7,1):]",
@@ -473,6 +494,7 @@ of dashes"/>"""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -506,6 +528,7 @@ def test_setext_headings_062():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -540,6 +563,7 @@ bar
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -573,6 +597,7 @@ def test_setext_headings_064():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -606,6 +631,7 @@ def test_setext_headings_064a():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -620,7 +646,11 @@ def test_setext_headings_065():
     source_markdown = """Foo
 Bar
 ---"""
-    expected_tokens = ["[setext(3,1):-:]", "[text:Foo\nBar::\n]", "[end-setext::]"]
+    expected_tokens = [
+        "[setext(3,1):-::(1,1)]",
+        "[text:Foo\nBar::\n]",
+        "[end-setext::]",
+    ]
     expected_gfm = """<h2>Foo
 Bar</h2>"""
 
@@ -631,6 +661,7 @@ Bar</h2>"""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -650,10 +681,10 @@ Bar
 Baz"""
     expected_tokens = [
         "[tbreak(1,1):-::---]",
-        "[setext(3,1):-:]",
+        "[setext(3,1):-::(2,1)]",
         "[text:Foo:]",
         "[end-setext::]",
-        "[setext(5,1):-:]",
+        "[setext(5,1):-::(4,1)]",
         "[text:Bar:]",
         "[end-setext::]",
         "[para(6,1):]",
@@ -672,6 +703,7 @@ Baz"""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -695,6 +727,7 @@ def test_setext_headings_067():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -719,6 +752,7 @@ def test_setext_headings_068():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -752,6 +786,7 @@ def test_setext_headings_069():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -785,6 +820,7 @@ def test_setext_headings_069a():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -815,6 +851,7 @@ def test_setext_headings_070():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -848,6 +885,7 @@ def test_setext_headings_071():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -861,7 +899,7 @@ def test_setext_headings_072():
     transformer = TransformToGfm()
     source_markdown = """\\> foo
 ------"""
-    expected_tokens = ["[setext(2,1):-:]", "[text:&gt; foo:]", "[end-setext::]"]
+    expected_tokens = ["[setext(2,1):-::(1,1)]", "[text:&gt; foo:]", "[end-setext::]"]
     expected_gfm = """<h2>&gt; foo</h2>"""
 
     # Act
@@ -871,6 +909,7 @@ def test_setext_headings_072():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -893,7 +932,7 @@ baz"""
         "[text:Foo:]",
         "[end-para]",
         "[BLANK(2,1):]",
-        "[setext(4,1):-:]",
+        "[setext(4,1):-::(3,1)]",
         "[text:bar:]",
         "[end-setext::]",
         "[para(5,1):]",
@@ -911,6 +950,7 @@ baz"""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -952,6 +992,7 @@ bar</p>
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -989,6 +1030,7 @@ bar</p>
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -1022,3 +1064,4 @@ baz</p>"""
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)

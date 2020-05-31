@@ -5,7 +5,7 @@ import pytest
 
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
-from .utils import assert_if_lists_different
+from .utils import assert_if_lists_different, assert_token_consistency
 
 
 @pytest.mark.skip
@@ -34,3 +34,4 @@ def test_disallowed_raw_html_extension_653():
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)

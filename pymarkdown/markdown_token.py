@@ -1,8 +1,20 @@
 """
 Module to provide for an element that can be added to markdown parsing stream.
 """
+from enum import Enum
+
 from pymarkdown.constants import Constants
 from pymarkdown.parser_helper import ParserHelper
+
+
+class MarkdownTokenClass(Enum):
+    """
+    Enumeration to provide guidance on what class of token the token is.
+    """
+
+    CONTAINER_BLOCK = 0
+    LEAF_BLOCK = 1
+    INLINE_BLOCK = 2
 
 
 class MarkdownToken:
@@ -37,12 +49,14 @@ class MarkdownToken:
     def __init__(
         self,
         token_name,
+        token_class,
         extra_data=None,
         line_number=0,
         column_number=0,
         position_marker=None,
     ):
         self.token_name = token_name
+        self.token_class = token_class
         self.extra_data = extra_data
 
         if position_marker:
@@ -187,6 +201,7 @@ class BlankLineMarkdownToken(MarkdownToken):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_blank_line,
+            MarkdownTokenClass.LEAF_BLOCK,
             extracted_whitespace,
             position_marker=position_marker,
         )
@@ -201,7 +216,11 @@ class ParagraphMarkdownToken(MarkdownToken):
         self.extracted_whitespace = extracted_whitespace
         self.final_whitespace = ""
         MarkdownToken.__init__(
-            self, MarkdownToken.token_paragraph, "", position_marker=position_marker
+            self,
+            MarkdownToken.token_paragraph,
+            MarkdownTokenClass.LEAF_BLOCK,
+            "",
+            position_marker=position_marker,
         )
         self.compose_extra_data_field()
 
@@ -238,7 +257,7 @@ class SetextHeadingMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the setext heading element.
     """
 
-    def __init__(self, heading_character, remaining_line, position_marker):
+    def __init__(self, heading_character, remaining_line, position_marker, para_token):
         self.heading_character = heading_character
         self.remaining_line = remaining_line
         self.final_whitespace = ""
@@ -248,9 +267,16 @@ class SetextHeadingMarkdownToken(MarkdownToken):
             self.hash_count = 2
         else:
             self.hash_count = -1
+        if para_token:
+            self.original_line_number = para_token.line_number
+            self.original_column_number = para_token.column_number
+        else:
+            self.original_line_number = -1
+            self.original_column_number = -1
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_setext_heading,
+            MarkdownTokenClass.LEAF_BLOCK,
             "",
             position_marker=position_marker,
         )
@@ -270,7 +296,16 @@ class SetextHeadingMarkdownToken(MarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        self.extra_data = self.heading_character + ":" + self.remaining_line
+        self.extra_data = (
+            self.heading_character
+            + ":"
+            + self.remaining_line
+            + ":("
+            + str(self.original_line_number)
+            + ","
+            + str(self.original_column_number)
+            + ")"
+        )
         if self.final_whitespace:
             self.extra_data = self.extra_data + ":" + self.final_whitespace
 
@@ -284,6 +319,7 @@ class IndentedCodeBlockMarkdownToken(MarkdownToken):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_indented_code_block,
+            MarkdownTokenClass.LEAF_BLOCK,
             extracted_whitespace,
             position_marker=position_marker,
         )
@@ -310,6 +346,7 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_fenced_code_block,
+            MarkdownTokenClass.LEAF_BLOCK,
             fence_character
             + ":"
             + str(fence_count)
@@ -343,6 +380,7 @@ class AtxHeadingMarkdownToken(MarkdownToken):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_atx_heading,
+            MarkdownTokenClass.LEAF_BLOCK,
             str(hash_count)
             + ":"
             + str(remove_trailing_count)
@@ -370,7 +408,7 @@ class EndMarkdownToken(MarkdownToken):
             display_data = display_data + ":" + extra_end_data
 
         MarkdownToken.__init__(
-            self, "end-" + type_name, display_data,
+            self, "end-" + type_name, MarkdownTokenClass.INLINE_BLOCK, display_data,
         )
 
 
@@ -383,7 +421,9 @@ class TextMarkdownToken(MarkdownToken):
         self.token_text = token_text
         self.extracted_whitespace = extracted_whitespace
         self.end_whitespace = end_whitespace
-        MarkdownToken.__init__(self, MarkdownToken.token_text, "")
+        MarkdownToken.__init__(
+            self, MarkdownToken.token_text, MarkdownTokenClass.INLINE_BLOCK, ""
+        )
         self.compose_extra_data_field()
 
     def compose_extra_data_field(self):
@@ -567,6 +607,7 @@ class LinkReferenceDefinitionMarkdownToken(MarkdownToken):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_link_reference_definition,
+            MarkdownTokenClass.LEAF_BLOCK,
             extra_data,
             position_marker=position_marker,
         )
@@ -586,6 +627,7 @@ class BlockQuoteMarkdownToken(MarkdownToken):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_block_quote,
+            MarkdownTokenClass.CONTAINER_BLOCK,
             extracted_whitespace,
             position_marker=position_marker,
         )
@@ -604,6 +646,7 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_unordered_list_start,
+            MarkdownTokenClass.CONTAINER_BLOCK,
             list_start_sequence + "::" + str(indent_level) + ":" + extracted_whitespace,
             position_marker=position_marker,
         )
@@ -629,6 +672,7 @@ class OrderedListStartMarkdownToken(MarkdownToken):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_ordered_list_start,
+            MarkdownTokenClass.CONTAINER_BLOCK,
             list_start_sequence
             + ":"
             + list_start_content
@@ -652,6 +696,7 @@ class NewListItemMarkdownToken(MarkdownToken):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_new_list_item,
+            MarkdownTokenClass.CONTAINER_BLOCK,
             str(indent_level),
             position_marker=position_marker,
         )
@@ -664,7 +709,11 @@ class HtmlBlockMarkdownToken(MarkdownToken):
 
     def __init__(self, position_marker):
         MarkdownToken.__init__(
-            self, MarkdownToken.token_html_block, "", position_marker=position_marker
+            self,
+            MarkdownToken.token_html_block,
+            MarkdownTokenClass.LEAF_BLOCK,
+            "",
+            position_marker=position_marker,
         )
 
 
@@ -679,6 +728,7 @@ class ThematicBreakMarkdownToken(MarkdownToken):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_thematic_break,
+            MarkdownTokenClass.LEAF_BLOCK,
             start_character + ":" + extracted_whitespace + ":" + rest_of_line,
             position_marker=position_marker,
         )
@@ -691,7 +741,12 @@ class InlineCodeSpanMarkdownToken(MarkdownToken):
 
     def __init__(self, span_text):
         self.span_text = span_text
-        MarkdownToken.__init__(self, MarkdownToken.token_inline_code_span, span_text)
+        MarkdownToken.__init__(
+            self,
+            MarkdownToken.token_inline_code_span,
+            MarkdownTokenClass.INLINE_BLOCK,
+            span_text,
+        )
 
 
 class HardBreakMarkdownToken(MarkdownToken):
@@ -701,7 +756,12 @@ class HardBreakMarkdownToken(MarkdownToken):
 
     def __init__(self, line_end):
         self.line_end = line_end
-        MarkdownToken.__init__(self, MarkdownToken.token_inline_hard_break, line_end)
+        MarkdownToken.__init__(
+            self,
+            MarkdownToken.token_inline_hard_break,
+            MarkdownTokenClass.INLINE_BLOCK,
+            line_end,
+        )
 
 
 class UriAutolinkMarkdownToken(MarkdownToken):
@@ -712,7 +772,10 @@ class UriAutolinkMarkdownToken(MarkdownToken):
     def __init__(self, autolink_text):
         self.autolink_text = autolink_text
         MarkdownToken.__init__(
-            self, MarkdownToken.token_inline_uri_autolink, autolink_text
+            self,
+            MarkdownToken.token_inline_uri_autolink,
+            MarkdownTokenClass.INLINE_BLOCK,
+            autolink_text,
         )
 
 
@@ -725,7 +788,10 @@ class LinkStartMarkdownToken(MarkdownToken):
         self.link_uri = link_uri
         self.link_title = link_title
         MarkdownToken.__init__(
-            self, MarkdownToken.token_inline_link, link_uri + ":" + link_title
+            self,
+            MarkdownToken.token_inline_link,
+            MarkdownTokenClass.INLINE_BLOCK,
+            link_uri + ":" + link_title,
         )
 
 
@@ -741,6 +807,7 @@ class ImageStartMarkdownToken(MarkdownToken):
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_inline_image,
+            MarkdownTokenClass.INLINE_BLOCK,
             image_uri + ":" + image_title + ":" + image_alt_text,
         )
 
@@ -753,7 +820,10 @@ class EmailAutolinkMarkdownToken(MarkdownToken):
     def __init__(self, autolink_text):
         self.autolink_text = autolink_text
         MarkdownToken.__init__(
-            self, MarkdownToken.token_inline_email_autolink, autolink_text
+            self,
+            MarkdownToken.token_inline_email_autolink,
+            MarkdownTokenClass.INLINE_BLOCK,
+            autolink_text,
         )
 
 
@@ -764,7 +834,12 @@ class RawHtmlMarkdownToken(MarkdownToken):
 
     def __init__(self, raw_tag):
         self.raw_tag = raw_tag
-        MarkdownToken.__init__(self, MarkdownToken.token_inline_raw_html, raw_tag)
+        MarkdownToken.__init__(
+            self,
+            MarkdownToken.token_inline_raw_html,
+            MarkdownTokenClass.INLINE_BLOCK,
+            raw_tag,
+        )
 
 
 class EmphasisMarkdownToken(MarkdownToken):
@@ -775,7 +850,10 @@ class EmphasisMarkdownToken(MarkdownToken):
     def __init__(self, emphasis_length):
         self.emphasis_length = emphasis_length
         MarkdownToken.__init__(
-            self, MarkdownToken.token_inline_emphasis, str(emphasis_length)
+            self,
+            MarkdownToken.token_inline_emphasis,
+            MarkdownTokenClass.INLINE_BLOCK,
+            str(emphasis_length),
         )
 
 

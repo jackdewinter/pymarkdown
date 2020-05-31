@@ -115,6 +115,7 @@ class BlockQuoteProcessor:
         """
         did_process = False
         was_container_start = False
+        did_blank = False
         end_of_bquote_start_index = -1
         leaf_tokens = []
         container_level_tokens = []
@@ -138,6 +139,7 @@ class BlockQuoteProcessor:
                 stack_bq_count,
                 alt_this_bq_count,
                 removed_chars_at_start,
+                did_blank,
             ) = BlockQuoteProcessor.__handle_block_quote_section(
                 parser_state, position_marker, stack_bq_count, extracted_whitespace,
             )
@@ -166,6 +168,7 @@ class BlockQuoteProcessor:
             leaf_tokens,
             container_level_tokens,
             removed_chars_at_start,
+            did_blank,
         )
 
     # pylint: enable=too-many-arguments
@@ -251,6 +254,7 @@ class BlockQuoteProcessor:
         LOGGER.debug("stack_bq_count--%s", str(stack_bq_count))
         LOGGER.debug("token_stack[-1]--%s", str(parser_state.token_stack[-1]))
 
+        did_blank = False
         leaf_tokens = []
         container_level_tokens = []
         removed_chars_at_start = 0
@@ -296,11 +300,13 @@ class BlockQuoteProcessor:
             removed_chars_at_start = start_index
 
             if not line_to_parse.strip():
+                LOGGER.debug("call __handle_block_quote_section>>handle_blank_line")
                 adjusted_position_marker = PositionMarker(
                     position_marker.line_number,
                     len(position_marker.text_to_parse),
                     position_marker.text_to_parse,
                 )
+                did_blank = True
                 (leaf_tokens, lines_to_requeue, _,) = parser_state.handle_blank_line_fn(
                     parser_state,
                     line_to_parse,
@@ -326,6 +332,7 @@ class BlockQuoteProcessor:
             stack_bq_count,
             this_bq_count,
             removed_chars_at_start,
+            did_blank,
         )
 
     # pylint: disable=too-many-arguments

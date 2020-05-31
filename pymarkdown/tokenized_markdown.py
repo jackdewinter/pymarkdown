@@ -145,7 +145,7 @@ class TokenizedMarkdown:
                 )
             else:
                 if not token_to_use or not token_to_use.strip():
-                    LOGGER.debug("\n\nblank line")
+                    LOGGER.debug("call __parse_blocks_pass>>handle_blank_line")
                     (
                         tokens_from_line,
                         lines_to_requeue,
@@ -427,7 +427,11 @@ class TokenizedMarkdown:
 
         LOGGER.debug("new_tokens>>%s", str(new_tokens))
         assert non_whitespace_index == len(input_line)
-        new_tokens.append(BlankLineMarkdownToken(extracted_whitespace, position_marker))
+        if not force_ignore_first_as_lrd:
+            new_tokens.append(
+                BlankLineMarkdownToken(extracted_whitespace, position_marker)
+            )
+        LOGGER.debug("new_tokens>>%s", str(new_tokens))
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
 
     # pylint: enable=too-many-locals

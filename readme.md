@@ -82,12 +82,10 @@
 
 - 262 - tokenization incorrect
   - 217, 219 same with block quotes
-- 218, 219, 261 - extra blank line token?
 - 559, 560 - LRDs, huh?
 - 236, 255, etc - missing whitespace?
 - 087 - shouldn't it be inside of the indented code block?
 - extra001, 002? correct ?
-- 166, 168 extra blank?
 - 84a - bad position?
 - blank lines, if starts with 2 ws, is it (x,1) or (x,3)?
 

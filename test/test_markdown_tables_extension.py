@@ -3,7 +3,7 @@ https://github.github.com/gfm/#tables-extension-
 """
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
-from .utils import assert_if_lists_different
+from .utils import assert_if_lists_different, assert_token_consistency
 
 
 def test_tables_extension_198():
@@ -28,6 +28,7 @@ def test_tables_extension_198():
     # Assert
     # TODO Expect this to fail when tables are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 def test_tables_extension_199():
@@ -52,6 +53,7 @@ bar | baz"""
     # Assert
     # TODO Expect this to fail when tables are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 def test_tables_extension_200():
@@ -83,6 +85,7 @@ def test_tables_extension_200():
     # Assert
     # TODO Expect this to fail when tables are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 def test_tables_extension_201():
@@ -113,6 +116,7 @@ def test_tables_extension_201():
     # Assert
     # TODO Expect this to fail when tables are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 def test_tables_extension_202():
@@ -144,6 +148,7 @@ bar"""
     # Assert
     # TODO Expect this to fail when tables are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 def test_tables_extension_203():
@@ -168,6 +173,7 @@ def test_tables_extension_203():
     # Assert
     # TODO Expect this to fail when tables are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 def test_tables_extension_204():
@@ -193,6 +199,7 @@ def test_tables_extension_204():
     # Assert
     # TODO Expect this to fail when tables are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 def test_tables_extension_205():
@@ -216,3 +223,4 @@ def test_tables_extension_205():
     # Assert
     # TODO Expect this to fail when tables are implemented
     assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
