@@ -213,7 +213,7 @@ def test_list_blocks_235():
         "[end-para]",
         "[BLANK(2,1):]",
         "[end-ulist]",
-        "[icode-block(3,6):    ]",
+        "[icode-block(3,5):    ]",
         "[text:two: ]",
         "[end-icode-block]",
     ]
@@ -870,7 +870,7 @@ def test_list_blocks_252():
        more code"""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[icode-block(1,9):    ]",
+        "[icode-block(1,8):    ]",
         "[text:indented code: ]",
         "[end-icode-block]",
         "[BLANK(2,1):]",

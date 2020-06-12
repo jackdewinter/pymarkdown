@@ -123,7 +123,7 @@ def test_html_blocks_120():
   *hello*
          <foo><a>"""
     expected_tokens = [
-        "[html-block(1,2)]",
+        "[html-block(1,1)]",
         "[text:<div>\n  *hello*\n         <foo><a>: ]",
         "[end-html-block]",
     ]
@@ -1289,7 +1289,7 @@ def test_html_blocks_152():
 
     <!-- foo -->"""
     expected_tokens = [
-        "[html-block(1,3)]",
+        "[html-block(1,1)]",
         "[text:<!-- foo -->:  ]",
         "[end-html-block]",
         "[BLANK(2,1):]",
@@ -1324,7 +1324,7 @@ def test_html_blocks_153():
 
     <div>"""
     expected_tokens = [
-        "[html-block(1,3)]",
+        "[html-block(1,1)]",
         "[text:<div>:  ]",
         "[end-html-block]",
         "[BLANK(2,1):]",
@@ -1607,7 +1607,7 @@ def test_html_blocks_160():
         "[text:<table>:]",
         "[end-html-block]",
         "[BLANK(2,1):]",
-        "[html-block(3,3)]",
+        "[html-block(3,1)]",
         "[text:<tr>:  ]",
         "[end-html-block]",
         "[BLANK(4,1):]",
@@ -1615,7 +1615,7 @@ def test_html_blocks_160():
         "[text:&lt;td&gt;\n  Hi\n&lt;/td&gt;:]",
         "[end-icode-block]",
         "[BLANK(8,1):]",
-        "[html-block(9,3)]",
+        "[html-block(9,1)]",
         "[text:</tr>:  ]",
         "[end-html-block]",
         "[BLANK(10,1):]",

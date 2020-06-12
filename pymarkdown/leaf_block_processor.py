@@ -187,8 +187,194 @@ class LeafBlockProcessor:
         return new_tokens, extracted_whitespace
 
     @staticmethod
+    def __adjust_for_list_start(
+        original_line_to_parse,
+        last_list_start_index,
+        last_block_quote_index,
+        position_marker,
+    ):
+        LOGGER.debug("last_list_start_index>>%s>>", str(last_list_start_index))
+        LOGGER.debug(
+            "original_line_to_parse>>%s>>", original_line_to_parse.replace("\t", "\\t")
+        )
+        offset_index = 0
+        if last_list_start_index:
+            new_index, extracted_whitespace = ParserHelper.extract_whitespace_from_end(
+                original_line_to_parse, last_list_start_index
+            )
+            LOGGER.debug("new_index>>%s>>", str(new_index))
+            LOGGER.debug(
+                "extracted_whitespace>>%s>>",
+                str(extracted_whitespace).replace("\t", "\\t"),
+            )
+            if "\t" in extracted_whitespace:
+                last_block_quote_index = new_index
+                offset_index = 1
+                position_marker.index_indent = 0
+        return offset_index, last_block_quote_index
+
+    @staticmethod
+    def __adjust_for_block_quote(
+        original_line_to_parse,
+        last_block_quote_index,
+        position_marker,
+        extracted_whitespace,
+    ):
+        """
+        Block quotes cause indents, which need to be handled specifically.
+        """
+
+        during_original_whitespace = None
+        special_parse_start_index = 0
+        whitespace_to_parse = extracted_whitespace
+        block_quote_adjust_delta = 0
+
+        if last_block_quote_index:
+            (
+                block_quote_after_whitespace_index,
+                during_original_whitespace,
+            ) = ParserHelper.extract_whitespace(
+                original_line_to_parse, last_block_quote_index
+            )
+            if "\t" in during_original_whitespace:
+
+                LOGGER.debug(
+                    ".text_to_parse>[%s]",
+                    position_marker.text_to_parse.replace("\t", "\\t"),
+                )
+                LOGGER.debug(".index_number>>%s", str(position_marker.index_number))
+                LOGGER.debug(".index_indent>>%s", str(position_marker.index_indent))
+                LOGGER.debug("last_block_quote_index>>%s", str(last_block_quote_index))
+
+                # Make sure everything after the whitespace remains the same.
+                text_after_original_whitespace = original_line_to_parse[
+                    block_quote_after_whitespace_index:
+                ]
+                text_after_whitespace = position_marker.text_to_parse[
+                    position_marker.index_number :
+                ]
+                LOGGER.debug(
+                    "text_after_original_whitespace>[%s]",
+                    text_after_original_whitespace.replace("\t", "\\t"),
+                )
+                LOGGER.debug(
+                    "text_after_whitespace>[%s]",
+                    text_after_whitespace.replace("\t", "\\t"),
+                )
+                assert text_after_original_whitespace == text_after_whitespace
+
+                # Make sure the whitespace is within expected bounds.
+                during_current_whitespace = position_marker.text_to_parse[
+                    position_marker.index_number
+                    - len(extracted_whitespace) : position_marker.index_number
+                ]
+                LOGGER.debug(
+                    "during_current_whitespace>[%s]",
+                    during_current_whitespace.replace("\t", "\\t"),
+                )
+                LOGGER.debug(
+                    "during_original_whitespace>[%s]",
+                    during_original_whitespace.replace("\t", "\\t"),
+                )
+
+                current_whitespace_length = len(during_current_whitespace)
+                original_whitespace_length = (
+                    ParserHelper.calculate_length(
+                        during_original_whitespace, start_index=last_block_quote_index
+                    )
+                    - 1
+                )
+                LOGGER.debug(
+                    "current_whitespace_length[%s],original_whitespace_length[%s]",
+                    str(current_whitespace_length),
+                    str(original_whitespace_length),
+                )
+                assert current_whitespace_length <= original_whitespace_length
+
+                special_parse_start_index = last_block_quote_index + 1
+                if during_original_whitespace[0] == "\t":
+                    whitespace_to_parse = during_original_whitespace
+                    if (
+                        len(during_original_whitespace) > 1
+                        and during_original_whitespace[1] == "\t"
+                    ):
+                        block_quote_adjust_delta = -1
+                else:
+                    whitespace_to_parse = during_original_whitespace[1:]
+
+        return special_parse_start_index, whitespace_to_parse, block_quote_adjust_delta
+
+    @staticmethod
+    def __recalculate_whitespace(
+        special_parse_start_index, whitespace_to_parse, offset_index
+    ):
+        """
+        Recalculate the whitespace characteristics.
+        """
+
+        accumulated_whitespace_count = 0
+        actual_whitespace_index = 0
+        abc = 4 + offset_index
+
+        relative_whitespace_index = special_parse_start_index - offset_index
+        LOGGER.debug(
+            "whitespace_to_parse>>%s>>", whitespace_to_parse.replace("\t", "\\t")
+        )
+        LOGGER.debug("special_parse_start_index>>%s>>", str(special_parse_start_index))
+        LOGGER.debug(
+            "in>>index>>%s(%s)>>accumulated_whitespace_count>>%s",
+            str(actual_whitespace_index),
+            str(actual_whitespace_index + special_parse_start_index),
+            str(accumulated_whitespace_count),
+        )
+        while accumulated_whitespace_count < abc:
+            if whitespace_to_parse[actual_whitespace_index] == "\t":
+                LOGGER.debug(
+                    ">>relative_whitespace_index>>%s", str(relative_whitespace_index)
+                )
+                delta_whitespace = 4 - ((relative_whitespace_index) % 4)
+            else:
+                delta_whitespace = 1
+            LOGGER.debug(">>delta_whitespace>>%s", str(delta_whitespace))
+            accumulated_whitespace_count += delta_whitespace
+            relative_whitespace_index += delta_whitespace
+            actual_whitespace_index += 1
+            LOGGER.debug(
+                ">>index>>%s(%s)>>accumulated_whitespace_count>>%s",
+                str(actual_whitespace_index),
+                str(actual_whitespace_index + special_parse_start_index),
+                str(accumulated_whitespace_count),
+            )
+
+        LOGGER.debug(
+            "out>>index>>%s(%s)>>accumulated_whitespace_count>>%s",
+            str(actual_whitespace_index),
+            str(actual_whitespace_index + special_parse_start_index),
+            str(accumulated_whitespace_count),
+        )
+
+        adj_ws = whitespace_to_parse[0:actual_whitespace_index]
+        left_ws = whitespace_to_parse[actual_whitespace_index:]
+        LOGGER.warning(
+            "accumulated_whitespace_count>>%s", str(accumulated_whitespace_count)
+        )
+        LOGGER.warning("actual_whitespace_index>>%s", str(actual_whitespace_index))
+        LOGGER.warning("adj_ws>>%s<<", adj_ws.replace("\t", "\\t"))
+        LOGGER.warning("left_ws>>%s<<", left_ws.replace("\t", "\\t"))
+        LOGGER.warning("offset_index>>%s<<", str(offset_index))
+
+        return accumulated_whitespace_count, actual_whitespace_index, adj_ws, left_ws
+
+    # pylint: disable=too-many-arguments, too-many-locals
+    @staticmethod
     def parse_indented_code_block(
-        parser_state, position_marker, extracted_whitespace, removed_chars_at_start,
+        parser_state,
+        position_marker,
+        extracted_whitespace,
+        removed_chars_at_start,
+        original_line_to_parse,
+        last_block_quote_index,
+        last_list_start_index,
     ):
         """
         Handle the parsing of an indented code block
@@ -202,16 +388,72 @@ class LeafBlockProcessor:
             )
             and not parser_state.token_stack[-1].is_paragraph
         ):
-            modified_whitespace_count = ParserHelper.calculate_length(
-                extracted_whitespace, start_index=removed_chars_at_start
-            )
-
             if not parser_state.token_stack[-1].is_indented_code_block:
                 parser_state.token_stack.append(IndentedCodeBlockStackToken())
-                new_tokens.append(
-                    IndentedCodeBlockMarkdownToken("".rjust(4), position_marker)
+
+                (
+                    offset_index,
+                    last_block_quote_index,
+                ) = LeafBlockProcessor.__adjust_for_list_start(
+                    original_line_to_parse,
+                    last_list_start_index,
+                    last_block_quote_index,
+                    position_marker,
                 )
-                extracted_whitespace = "".rjust(modified_whitespace_count - 4)
+
+                (
+                    special_parse_start_index,
+                    whitespace_to_parse,
+                    block_quote_adjust_delta,
+                ) = LeafBlockProcessor.__adjust_for_block_quote(
+                    original_line_to_parse,
+                    last_block_quote_index,
+                    position_marker,
+                    extracted_whitespace,
+                )
+
+                (
+                    accumulated_whitespace_count,
+                    actual_whitespace_index,
+                    adj_ws,
+                    left_ws,
+                ) = LeafBlockProcessor.__recalculate_whitespace(
+                    special_parse_start_index, whitespace_to_parse, offset_index
+                )
+
+                # TODO revisit with tabs
+                line_number = position_marker.line_number
+                column_number = (
+                    position_marker.index_number
+                    + position_marker.index_indent
+                    - len(extracted_whitespace)
+                    + 1
+                )
+                if special_parse_start_index:
+                    column_number = (
+                        actual_whitespace_index
+                        + special_parse_start_index
+                        + block_quote_adjust_delta
+                    )
+                    excess_whitespace_count = accumulated_whitespace_count - 4
+                    excess_whitespace_count -= offset_index
+                    LOGGER.warning(
+                        "excess_whitespace_count>>%s>>accumulated_whitespace_count>>%s",
+                        str(excess_whitespace_count),
+                        str(accumulated_whitespace_count),
+                    )
+                    if excess_whitespace_count:
+                        left_ws = " ".rjust(excess_whitespace_count) + left_ws
+                else:
+                    column_number = column_number + actual_whitespace_index
+                LOGGER.warning("column_number>>%s", str(column_number))
+                new_tokens.append(
+                    IndentedCodeBlockMarkdownToken(adj_ws, line_number, column_number)
+                )
+                extracted_whitespace = left_ws
+                LOGGER.warning(
+                    "left_ws>>%s<<", extracted_whitespace.replace("\t", "\\t")
+                )
             new_tokens.append(
                 TextMarkdownToken(
                     position_marker.text_to_parse[position_marker.index_number :],
@@ -219,6 +461,8 @@ class LeafBlockProcessor:
                 )
             )
         return new_tokens
+
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def is_thematic_break(

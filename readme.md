@@ -9,6 +9,8 @@
 - need to add line/column for
   - text
   - inlines
+- make better use of `index_indent`
+- for all of the tokens that used position_marker, do we need =None any more?
 - rewrite position_marker to not allow outside modification
   - requires clean up of how list and block quotes handle it
 
@@ -86,7 +88,6 @@
 - 236, 255, etc - missing whitespace?
 - 087 - shouldn't it be inside of the indented code block?
 - extra001, 002? correct ?
-- 84a - bad position?
 - blank lines, if starts with 2 ws, is it (x,1) or (x,3)?
 
 ## Bugs - Block Quote/List Interaction

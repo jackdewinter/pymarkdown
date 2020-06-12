@@ -740,7 +740,9 @@ class HtmlHelper:
                 parser_state.token_stack.append(
                     HtmlBlockStackToken(html_block_type, remaining_html_tag)
                 )
-                new_tokens.append(HtmlBlockMarkdownToken(position_marker))
+                new_tokens.append(
+                    HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
+                )
         return new_tokens
 
     @staticmethod

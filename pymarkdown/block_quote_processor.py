@@ -120,6 +120,7 @@ class BlockQuoteProcessor:
         leaf_tokens = []
         container_level_tokens = []
         removed_chars_at_start = 0
+        last_block_quote_index = 0
 
         if (
             BlockQuoteProcessor.is_block_quote_start(
@@ -140,6 +141,7 @@ class BlockQuoteProcessor:
                 alt_this_bq_count,
                 removed_chars_at_start,
                 did_blank,
+                last_block_quote_index,
             ) = BlockQuoteProcessor.__handle_block_quote_section(
                 parser_state, position_marker, stack_bq_count, extracted_whitespace,
             )
@@ -169,6 +171,7 @@ class BlockQuoteProcessor:
             container_level_tokens,
             removed_chars_at_start,
             did_blank,
+            last_block_quote_index,
         )
 
     # pylint: enable=too-many-arguments
@@ -183,12 +186,14 @@ class BlockQuoteProcessor:
         """
 
         this_bq_count = 0
+        last_block_quote_index = -1
         adjusted_line = line_to_parse
         if stack_bq_count == 0 and is_top_of_stack_fenced_code_block:
             start_index -= 1
         else:
             this_bq_count += 1
             start_index += 1
+            last_block_quote_index = start_index
 
             LOGGER.debug(
                 "stack_bq_count--%s--is_top_of_stack_fenced_code_block--%s",
@@ -204,7 +209,7 @@ class BlockQuoteProcessor:
                         adjusted_tab_length = ParserHelper.calculate_length(
                             "\t", start_index=start_index
                         )
-                        LOGGER.debug("--%s--", adjusted_line.replace("\t", "\\t"))
+                        LOGGER.debug("adj--%s--", adjusted_line.replace("\t", "\\t"))
                         adjusted_line = (
                             adjusted_line[0:start_index]
                             + "".rjust(adjusted_tab_length)
@@ -228,14 +233,16 @@ class BlockQuoteProcessor:
                     break
                 this_bq_count += 1
                 start_index += 1
+                last_block_quote_index = start_index
 
             LOGGER.debug(
                 "__count_block_quote_starts--%s--%s--",
                 str(start_index),
                 adjusted_line.replace("\t", "\\t"),
             )
-        return this_bq_count, start_index, adjusted_line
+        return this_bq_count, start_index, adjusted_line, last_block_quote_index
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def __handle_block_quote_section(
         parser_state, position_marker, stack_bq_count, extracted_whitespace,
@@ -269,6 +276,7 @@ class BlockQuoteProcessor:
             this_bq_count,
             start_index,
             line_to_parse,
+            last_block_quote_index,
         ) = BlockQuoteProcessor.__count_block_quote_starts(
             line_to_parse,
             start_index,
@@ -333,7 +341,10 @@ class BlockQuoteProcessor:
             this_bq_count,
             removed_chars_at_start,
             did_blank,
+            last_block_quote_index,
         )
+
+    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod

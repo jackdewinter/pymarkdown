@@ -604,6 +604,11 @@ class ListBlockProcessor:
             container_level_tokens.append(
                 NewListItemMarkdownToken(indent_level, position_marker)
             )
+        LOGGER.debug(
+            "__post_list>>rem>>%s>>after_in>>%s",
+            str(remaining_whitespace),
+            str(after_marker_ws_index),
+        )
         line_to_parse = (
             "".rjust(remaining_whitespace, " ") + line_to_parse[after_marker_ws_index:]
         )

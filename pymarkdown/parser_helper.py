@@ -134,7 +134,7 @@ class ParserHelper:
         return index, source_string[start_index:index]
 
     @staticmethod
-    def extract_whitespace_from_end(source_string):
+    def extract_whitespace_from_end(source_string, start_index=None):
         """
         From the end of the string, continue extracting whitespace while we have it.
 
@@ -144,10 +144,15 @@ class ParserHelper:
         if not source_string:
             return 0, ""
 
-        index = len(source_string) - 1
+        if start_index is not None:
+            index = start_index - 1
+        else:
+            index = len(source_string) - 1
         while ParserHelper.is_character_at_index_whitespace(source_string, index):
             index -= 1
 
+        if start_index is not None:
+            return index + 1, source_string[index + 1 : start_index]
         return index + 1, source_string[index + 1 :]
 
     @staticmethod

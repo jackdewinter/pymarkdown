@@ -95,12 +95,41 @@ def assert_if_strings_different(expected_string, actual_string):
 
 
 def __calc_me(calc_token):
-    if calc_token.token_name == MarkdownToken.token_thematic_break:
-        depth = 1
-    else:
-        depth = -1
-        # assert False
+
+    depth = 1
+    if calc_token.token_name == MarkdownToken.token_paragraph:
+        depth = 22
     return depth
+
+
+def __calc_initial_whitespace(calc_token):
+
+    if calc_token.token_name in (
+        MarkdownToken.token_indented_code_block,
+        MarkdownToken.token_atx_heading,
+        MarkdownToken.token_ordered_list_start,
+        MarkdownToken.token_unordered_list_start,
+        MarkdownToken.token_thematic_break,
+        MarkdownToken.token_fenced_code_block,
+        MarkdownToken.token_block_quote,
+        MarkdownToken.token_link_reference_definition,
+    ):
+        indent_level = len(calc_token.extracted_whitespace)
+    elif calc_token.token_name == MarkdownToken.token_setext_heading:
+        indent_level = len(calc_token.remaining_line)
+    elif (
+        calc_token.token_name == MarkdownToken.token_html_block
+        or calc_token.token_name == MarkdownToken.token_blank_line
+    ):
+        indent_level = 0
+    elif calc_token.token_name == MarkdownToken.token_paragraph:
+        if "\n" in calc_token.extracted_whitespace:
+            indent_level = calc_token.extracted_whitespace.index("\n")
+        else:
+            indent_level = len(calc_token.extracted_whitespace)
+    else:
+        assert False
+    return indent_level
 
 
 def __calc_adjusted_position(markdown_token):
@@ -118,10 +147,10 @@ def assert_token_consistency(source_markdown, expected_tokens):
     Compare the markdown document against the tokens that are expected.
     """
 
-    assert source_markdown
-    # split_lines = source_markdown.split("\n")
-    # number_of_lines = len(split_lines)
-    # print(">>" + str(number_of_lines))
+    split_lines = source_markdown.split("\n")
+    number_of_lines = len(split_lines)
+    print(">>" + str(number_of_lines))
+
     last_token = None
     for current_token in expected_tokens:
         if current_token.token_class == MarkdownTokenClass.INLINE_BLOCK:
@@ -159,5 +188,8 @@ def assert_token_consistency(source_markdown, expected_tokens):
                 assert current_position.index_number > last_position.index_number
         else:
             assert current_position.line_number == 1
+
+            init_ws = __calc_initial_whitespace(current_token)
+            assert current_position.index_number == 1 + init_ws
 
         last_token = current_token

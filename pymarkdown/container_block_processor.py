@@ -63,6 +63,7 @@ class ContainerBlockProcessor:
 
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-statements
     @staticmethod
     def parse_line_for_container_blocks(
         parser_state,
@@ -79,6 +80,7 @@ class ContainerBlockProcessor:
         """
         # TODO work on removing this
         line_to_parse = position_marker.text_to_parse
+        original_line_to_parse = position_marker.text_to_parse + ""
 
         LOGGER.debug("Line:%s:", position_marker.text_to_parse)
         no_para_start_if_empty = False
@@ -101,6 +103,7 @@ class ContainerBlockProcessor:
         )
 
         end_container_indices = ContainerIndices(-1, -1, -1)
+        last_block_quote_index = 0
         (
             did_process,
             was_container_start,
@@ -113,6 +116,7 @@ class ContainerBlockProcessor:
             container_level_tokens,
             removed_chars_at_start,
             did_blank,
+            last_block_quote_index,
         ) = BlockQuoteProcessor.handle_block_quote_block(
             parser_state,
             new_position_marker,
@@ -132,6 +136,18 @@ class ContainerBlockProcessor:
             position_marker.line_number, start_index, line_to_parse
         )
 
+        LOGGER.debug(
+            "pre-ulist>>#%s#%s#%s#",
+            str(position_marker.index_number),
+            str(position_marker.index_indent),
+            position_marker.text_to_parse.replace("\t", "\\t"),
+        )
+        LOGGER.debug(
+            "pre-ulist>>#%s#%s#%s#",
+            str(new_position_marker.index_number),
+            str(new_position_marker.index_indent),
+            new_position_marker.text_to_parse.replace("\t", "\\t"),
+        )
         (
             did_process,
             was_container_start,
@@ -154,11 +170,35 @@ class ContainerBlockProcessor:
             current_container_blocks,
         )
         container_level_tokens.extend(resultant_tokens)
+        LOGGER.debug(
+            "post-ulist>>#%s#%s#%s#",
+            str(position_marker.index_number),
+            str(position_marker.index_indent),
+            position_marker.text_to_parse.replace("\t", "\\t"),
+        )
+        LOGGER.debug(
+            "post-ulist>>#%s#%s#%s#",
+            str(new_position_marker.index_number),
+            str(new_position_marker.index_indent),
+            new_position_marker.text_to_parse.replace("\t", "\\t"),
+        )
 
         new_position_marker = PositionMarker(
             position_marker.line_number, start_index, line_to_parse
         )
 
+        LOGGER.debug(
+            "pre-olist>>#%s#%s#%s#",
+            str(position_marker.index_number),
+            str(position_marker.index_indent),
+            position_marker.text_to_parse.replace("\t", "\\t"),
+        )
+        LOGGER.debug(
+            "pre-olist>>#%s#%s#%s#",
+            str(new_position_marker.index_number),
+            str(new_position_marker.index_indent),
+            new_position_marker.text_to_parse.replace("\t", "\\t"),
+        )
         (
             did_process,
             was_container_start,
@@ -181,6 +221,35 @@ class ContainerBlockProcessor:
             current_container_blocks,
         )
         container_level_tokens.extend(resultant_tokens)
+        LOGGER.debug(
+            "post-olist>>#%s#%s#%s#",
+            str(position_marker.index_number),
+            str(position_marker.index_indent),
+            position_marker.text_to_parse.replace("\t", "\\t"),
+        )
+        LOGGER.debug(
+            "post-olist>>#%s#%s#%s#",
+            str(new_position_marker.index_number),
+            str(new_position_marker.index_indent),
+            new_position_marker.text_to_parse.replace("\t", "\\t"),
+        )
+
+        LOGGER.debug("last_block_quote_index>>%s", str(last_block_quote_index))
+
+        LOGGER.debug("olist_index>>%s", str(end_container_indices.olist_index))
+        LOGGER.debug("ulist_index>>%s", str(end_container_indices.ulist_index))
+        LOGGER.debug("block_index>>%s", str(end_container_indices.block_index))
+
+        last_list_start_index = 0
+        if end_container_indices.block_index != -1:
+            assert last_block_quote_index in (
+                end_container_indices.block_index - 1,
+                end_container_indices.block_index,
+            )
+        elif end_container_indices.olist_index != -1:
+            last_list_start_index = end_container_indices.olist_index
+        elif end_container_indices.ulist_index != -1:
+            last_list_start_index = end_container_indices.ulist_index
 
         if not parser_state.token_stack[-1].is_fenced_code_block:
             new_position_marker = PositionMarker(
@@ -235,9 +304,9 @@ class ContainerBlockProcessor:
         )
 
         # TODO refactor to make indent unnecessary?
-        position_marker.index_indent = len(position_marker.text_to_parse) - len(
-            line_to_parse
-        )
+        position_marker.index_indent = len(original_line_to_parse) - len(line_to_parse)
+        LOGGER.debug(">>indent>>%s", str(position_marker.index_indent))
+
         position_marker.text_to_parse = line_to_parse
         position_marker.index_number = start_index
         leaf_tokens, requeue_line_info = ContainerBlockProcessor.__process_leaf_tokens(
@@ -248,6 +317,9 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             no_para_start_if_empty,
             ignore_link_definition_start,
+            original_line_to_parse,
+            last_block_quote_index,
+            last_list_start_index,
         )
 
         container_level_tokens.extend(leaf_tokens)
@@ -259,6 +331,7 @@ class ContainerBlockProcessor:
         return container_level_tokens, line_to_parse, requeue_line_info
         # pylint: enable=too-many-locals
         # pylint: enable=too-many-arguments
+        # pylint: enable=too-many-statements
 
     @staticmethod
     def __calculate_for_container_blocks(
@@ -622,6 +695,9 @@ class ContainerBlockProcessor:
         removed_chars_at_start,
         no_para_start_if_empty,
         ignore_link_definition_start,
+        original_line_to_parse,
+        last_block_quote_index,
+        last_list_start_index,
     ):
         requeue_line_info = RequeueLineInfo()
         assert not leaf_tokens
@@ -637,6 +713,9 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             no_para_start_if_empty,
             ignore_link_definition_start,
+            original_line_to_parse,
+            last_block_quote_index,
+            last_list_start_index,
         )
         LOGGER.debug("parsed leaf>>%s", str(leaf_tokens))
         LOGGER.debug("parsed leaf>>%s", str(len(leaf_tokens)))
@@ -785,9 +864,9 @@ class ContainerBlockProcessor:
         pre_tokens.extend(new_tokens)
         return outer_processed, lines_to_requeue, force_ignore_first_as_lrd
 
-    # pylint: enable=too-many-arguments, unused-argument
+    # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-locals
     @staticmethod
     def __parse_line_for_leaf_blocks(
         parser_state,
@@ -796,6 +875,9 @@ class ContainerBlockProcessor:
         removed_chars_at_start,
         no_para_start_if_empty,
         ignore_link_definition_start,
+        original_line_to_parsex,
+        last_block_quote_index,
+        last_list_start_index,
     ):
         """
         Parse the contents of a line for a leaf block.
@@ -806,6 +888,7 @@ class ContainerBlockProcessor:
         new_tokens = []
 
         requeue_line_info = RequeueLineInfo()
+        # TODO rename to avoid collision with parameter
         original_line_to_parse = position_marker.text_to_parse[
             position_marker.index_number :
         ]
@@ -862,6 +945,9 @@ class ContainerBlockProcessor:
                     position_marker,
                     extracted_whitespace,
                     removed_chars_at_start,
+                    original_line_to_parsex,
+                    last_block_quote_index,
+                    last_list_start_index,
                 )
             if not new_tokens:
                 stack_bq_count = BlockQuoteProcessor.count_of_block_quotes_on_stack(
@@ -903,4 +989,4 @@ class ContainerBlockProcessor:
         pre_tokens.extend(new_tokens)
         return pre_tokens, requeue_line_info
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals

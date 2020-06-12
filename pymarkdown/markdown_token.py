@@ -315,13 +315,15 @@ class IndentedCodeBlockMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the indented code block element.
     """
 
-    def __init__(self, extracted_whitespace, position_marker):
+    def __init__(self, extracted_whitespace, line_number, column_number):
+        self.extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_indented_code_block,
             MarkdownTokenClass.LEAF_BLOCK,
             extracted_whitespace,
-            position_marker=position_marker,
+            line_number=line_number,
+            column_number=column_number,
         )
 
 
@@ -624,6 +626,7 @@ class BlockQuoteMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, extracted_whitespace, position_marker):
+        self.extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_block_quote,
@@ -643,6 +646,7 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
     ):
         self.indent_level = indent_level
         self.is_loose = True
+        self.extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_unordered_list_start,
@@ -669,6 +673,7 @@ class OrderedListStartMarkdownToken(MarkdownToken):
         self.list_start_content = list_start_content
         self.indent_level = indent_level
         self.is_loose = True
+        self.extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_ordered_list_start,
@@ -707,13 +712,28 @@ class HtmlBlockMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the html block element.
     """
 
-    def __init__(self, position_marker):
+    def __init__(self, position_marker, extracted_whitespace):
+        extra_indent = len(extracted_whitespace)
+
+        if position_marker:
+            line_number = position_marker.line_number
+            column_number = (
+                position_marker.index_number
+                + position_marker.index_indent
+                + 1
+                - extra_indent
+            )
+        else:
+            line_number = -1
+            column_number = -1
+
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_html_block,
             MarkdownTokenClass.LEAF_BLOCK,
             "",
-            position_marker=position_marker,
+            line_number=line_number,
+            column_number=column_number,
         )
 
 
@@ -725,6 +745,7 @@ class ThematicBreakMarkdownToken(MarkdownToken):
     def __init__(
         self, start_character, extracted_whitespace, rest_of_line, position_marker
     ):
+        self.extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_thematic_break,

@@ -389,7 +389,7 @@ def test_indented_code_blocks_086():
     source_markdown = """        foo
     bar"""
     expected_tokens = [
-        "[icode-block(1,9):    ]",
+        "[icode-block(1,5):    ]",
         "[text:foo\nbar:    ]",
         "[end-icode-block]",
     ]
