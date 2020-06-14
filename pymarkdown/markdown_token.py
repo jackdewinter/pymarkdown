@@ -399,6 +399,8 @@ class EndMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the end element to a matching start.
     """
 
+    type_name_prefix = "end-"
+
     def __init__(self, type_name, extracted_whitespace, extra_end_data):
 
         self.type_name = type_name
@@ -410,7 +412,10 @@ class EndMarkdownToken(MarkdownToken):
             display_data = display_data + ":" + extra_end_data
 
         MarkdownToken.__init__(
-            self, "end-" + type_name, MarkdownTokenClass.INLINE_BLOCK, display_data,
+            self,
+            EndMarkdownToken.type_name_prefix + type_name,
+            MarkdownTokenClass.INLINE_BLOCK,
+            display_data,
         )
 
 
@@ -698,6 +703,7 @@ class NewListItemMarkdownToken(MarkdownToken):
 
     def __init__(self, indent_level, position_marker):
         self.indent_level = indent_level
+        self.extracted_whitespace = ""
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_new_list_item,

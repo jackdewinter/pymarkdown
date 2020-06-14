@@ -444,6 +444,20 @@ class ListBlockProcessor:
                 container_level_tokens = ListBlockProcessor.__check_for_list_closures(
                     parser_state, line_to_parse, start_index, extracted_whitespace, ind,
                 )
+                if parser_state.token_stack[-1].is_list:
+                    requested_list_indent = parser_state.token_stack[-1].indent_level
+                    LOGGER.warning(">>line_to_parse>>%s>>", line_to_parse)
+                    LOGGER.warning(">>start_index>>%s", str(start_index))
+                    LOGGER.warning(
+                        ">>requested_list_indent>>%s", str(requested_list_indent)
+                    )
+                    LOGGER.warning(">>before_ws_length>>%s", str(before_ws_length))
+                    line_to_parse = ListBlockProcessor.__adjust_line_for_list_in_process(
+                        line_to_parse,
+                        start_index,
+                        requested_list_indent,
+                        before_ws_length,
+                    )
 
         return container_level_tokens, line_to_parse
 

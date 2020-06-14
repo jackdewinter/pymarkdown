@@ -193,6 +193,7 @@ class LeafBlockProcessor:
         last_block_quote_index,
         position_marker,
     ):
+        did_process = False
         LOGGER.debug("last_list_start_index>>%s>>", str(last_list_start_index))
         LOGGER.debug(
             "original_line_to_parse>>%s>>", original_line_to_parse.replace("\t", "\\t")
@@ -211,10 +212,13 @@ class LeafBlockProcessor:
                 last_block_quote_index = new_index
                 offset_index = 1
                 position_marker.index_indent = 0
-        return offset_index, last_block_quote_index
+                did_process = True
+        return did_process, offset_index, last_block_quote_index
 
+    # pylint: disable=too-many-locals
     @staticmethod
-    def __adjust_for_block_quote(
+    def __adjust_for_block_quote_start(
+        force_me,
         original_line_to_parse,
         last_block_quote_index,
         position_marker,
@@ -224,20 +228,36 @@ class LeafBlockProcessor:
         Block quotes cause indents, which need to be handled specifically.
         """
 
+        did_process = False
         during_original_whitespace = None
         special_parse_start_index = 0
         whitespace_to_parse = extracted_whitespace
         block_quote_adjust_delta = 0
 
-        if last_block_quote_index:
+        LOGGER.debug(
+            "last_block_quote_index>>%s>>force_me>>%s",
+            str(last_block_quote_index),
+            str(force_me),
+        )
+        if last_block_quote_index or force_me:
+            LOGGER.debug(
+                "original_line_to_parse>[%s]>>last_block_quote_index>>%s",
+                original_line_to_parse.replace("\t", "\\t"),
+                str(last_block_quote_index),
+            )
             (
                 block_quote_after_whitespace_index,
                 during_original_whitespace,
             ) = ParserHelper.extract_whitespace(
                 original_line_to_parse, last_block_quote_index
             )
+            LOGGER.debug(
+                "during_original_whitespace>[%s]",
+                during_original_whitespace.replace("\t", "\\t"),
+            )
             if "\t" in during_original_whitespace:
 
+                did_process = True
                 LOGGER.debug(
                     ".text_to_parse>[%s]",
                     position_marker.text_to_parse.replace("\t", "\\t"),
@@ -302,7 +322,14 @@ class LeafBlockProcessor:
                 else:
                     whitespace_to_parse = during_original_whitespace[1:]
 
-        return special_parse_start_index, whitespace_to_parse, block_quote_adjust_delta
+        return (
+            did_process,
+            special_parse_start_index,
+            whitespace_to_parse,
+            block_quote_adjust_delta,
+        )
+
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def __recalculate_whitespace(
@@ -391,7 +418,10 @@ class LeafBlockProcessor:
             if not parser_state.token_stack[-1].is_indented_code_block:
                 parser_state.token_stack.append(IndentedCodeBlockStackToken())
 
+                did_process = False
+                LOGGER.debug(">>__adjust_for_list_start")
                 (
+                    did_process,
                     offset_index,
                     last_block_quote_index,
                 ) = LeafBlockProcessor.__adjust_for_list_start(
@@ -400,18 +430,40 @@ class LeafBlockProcessor:
                     last_block_quote_index,
                     position_marker,
                 )
+                LOGGER.debug("<<__adjust_for_list_start<<%s", str(did_process))
 
+                force_me = False
+                kludge_adjust = 0
+                if not did_process:
+                    LOGGER.warning(">>>>%s", str(parser_state.token_stack[-2]))
+                    if parser_state.token_stack[-2].is_list:
+                        LOGGER.warning(
+                            ">>indent>>%s", parser_state.token_stack[-2].indent_level,
+                        )
+                        last_block_quote_index = 0
+                        kludge_adjust = 1
+                        force_me = True
+
+                LOGGER.debug(">>__adjust_for_block_quote_start")
                 (
+                    did_process,
                     special_parse_start_index,
                     whitespace_to_parse,
                     block_quote_adjust_delta,
-                ) = LeafBlockProcessor.__adjust_for_block_quote(
+                ) = LeafBlockProcessor.__adjust_for_block_quote_start(
+                    force_me,
                     original_line_to_parse,
                     last_block_quote_index,
                     position_marker,
                     extracted_whitespace,
                 )
+                LOGGER.debug("<<__adjust_for_block_quote_start<<%s", str(did_process))
 
+                LOGGER.debug(
+                    "__recalculate_whitespace>>%s>>%s",
+                    whitespace_to_parse,
+                    str(offset_index),
+                )
                 (
                     accumulated_whitespace_count,
                     actual_whitespace_index,
@@ -435,15 +487,27 @@ class LeafBlockProcessor:
                         + special_parse_start_index
                         + block_quote_adjust_delta
                     )
-                    excess_whitespace_count = accumulated_whitespace_count - 4
-                    excess_whitespace_count -= offset_index
                     LOGGER.warning(
-                        "excess_whitespace_count>>%s>>accumulated_whitespace_count>>%s",
+                        "column_number(%s)=actual_whitespace_index(%s)+special_parse_start_index(%s)+block_quote_adjust_delta(%s)",
+                        str(column_number),
+                        str(actual_whitespace_index),
+                        str(special_parse_start_index),
+                        str(block_quote_adjust_delta),
+                    )
+                    excess_whitespace_count = (
+                        accumulated_whitespace_count - 4 - offset_index
+                    )
+                    LOGGER.warning(
+                        "excess_whitespace_count(%s)=accumulated_whitespace_count(%s)-4-offset_index(%s)",
                         str(excess_whitespace_count),
                         str(accumulated_whitespace_count),
+                        str(offset_index),
                     )
+                    LOGGER.warning("before>>%s>>", left_ws.replace("\t", "\\t"))
                     if excess_whitespace_count:
+                        excess_whitespace_count -= kludge_adjust
                         left_ws = " ".rjust(excess_whitespace_count) + left_ws
+                    LOGGER.warning("after>>%s>>", left_ws.replace("\t", "\\t"))
                 else:
                     column_number = column_number + actual_whitespace_index
                 LOGGER.warning("column_number>>%s", str(column_number))

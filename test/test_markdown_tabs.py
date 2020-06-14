@@ -206,6 +206,47 @@ def test_tabs_004():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    # assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_tabs_004a():
+    """
+    Test case 004a:  variation on 004
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """  - foo
+
+    bar"""  # noqa: E101,W191
+    # noqa: E101,W191
+    expected_tokens = [
+        "[ulist(1,3):-::4:  ]",
+        "[para(1,5):]",
+        "[text:foo:]",
+        "[end-para]",
+        "[BLANK(2,1):]",
+        "[para(3,5):]",
+        "[text:bar:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>foo</p>
+<p>bar</p>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
 
 
@@ -228,7 +269,7 @@ def test_tabs_005():
         "[text:foo:]",
         "[end-para]",
         "[BLANK(2,1):]",
-        "[icode-block(3,1):    ]",
+        "[icode-block(3,2):\t\t]",
         "[text:bar:  ]",
         "[end-icode-block]",
         "[end-ulist]",

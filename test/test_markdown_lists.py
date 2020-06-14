@@ -1925,7 +1925,7 @@ def test_list_items_305():
         "[end-para]",
         "[BLANK(3,1):]",
         "[end-ulist]",
-        "[para(4,3):  ]",
+        "[para(4,3):]",
         "[text:baz:]",
         "[end-para]",
         "[end-ulist]",
@@ -1942,6 +1942,118 @@ def test_list_items_305():
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+def test_list_items_305a():
+    """
+    Test case 305a:  variation on 305
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """* foo
+* foogle    
+  * bar
+
+  baz"""
+    expected_tokens = [
+        "[ulist(1,1):*::2:]",
+        "[para(1,3):]",
+        "[text:foo:]",
+        "[end-para]",
+        "[li(2,1):2]",
+        "[para(2,3)::    ]",
+        "[text:foogle:]",
+        "[end-para]",
+        "[ulist(3,3):*::4:  ]",
+        "[para(3,5):]",
+        "[text:bar:]",
+        "[end-para]",
+        "[BLANK(4,1):]",
+        "[end-ulist]",
+        "[para(5,3):]",
+        "[text:baz:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>foo</p>
+</li>
+<li>
+<p>foogle</p>
+<ul>
+<li>bar</li>
+</ul>
+<p>baz</p>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+def test_list_items_305b():
+    """
+    Test case 305b:  variation on 305
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """* foo
+ * foogle    
+   * bar
+
+   baz"""
+    expected_tokens = [
+        "[ulist(1,1):*::2:]",
+        "[para(1,3):]",
+        "[text:foo:]",
+        "[end-para]",
+        "[li(2,2):3]",
+        "[para(2,4)::    ]",
+        "[text:foogle:]",
+        "[end-para]",
+        "[ulist(3,4):*::5:   ]",
+        "[para(3,6):]",
+        "[text:bar:]",
+        "[end-para]",
+        "[BLANK(4,1):]",
+        "[end-ulist]",
+        "[para(5,4):]",
+        "[text:baz:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>foo</p>
+</li>
+<li>
+<p>foogle</p>
+<ul>
+<li>bar</li>
+</ul>
+<p>baz</p>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

@@ -31,6 +31,10 @@
 
 - check is_length_less_than_or_equal_to to see if any issues with tabs
   - most likely in conjunction with starting another type of block
+- 004
+  - tab is consumed as part of list prefix, not recorded anywhere, assumed to be spaces
+- variations on 005, mostly wired up for scenario
+  - what about tabs with plain icode? different depths?
 
 ## Bugs - AutoLinks
 
