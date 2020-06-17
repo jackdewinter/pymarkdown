@@ -148,8 +148,94 @@ def __calc_adjusted_position(markdown_token):
     return PositionMarker(line_number, index_number, "")
 
 
-# pylint: disable=too-many-branches, too-many-statements
-def assert_token_consistency(source_markdown, expected_tokens):  # noqa: C901
+def __maintain_block_stack(container_block_stack, current_token):
+    """
+    Maintain a stack of the block elements, to allow better understanding of
+    what container a given token is kept within.
+    """
+
+    print("--")
+    if current_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK:
+        if current_token.token_name == MarkdownToken.token_new_list_item:
+
+            if (
+                container_block_stack[-1].token_name
+                == MarkdownToken.token_new_list_item
+            ):
+                del container_block_stack[-1]
+
+        print(">>CON>>before>>" + str(container_block_stack))
+        container_block_stack.append(current_token)
+        print(">>CON>>after>>" + str(container_block_stack))
+    # TODO Do this better.
+    elif isinstance(current_token, EndMarkdownToken):
+
+        token_name_without_prefix = current_token.token_name[
+            len(EndMarkdownToken.type_name_prefix) :
+        ]
+        print("<<CON??" + token_name_without_prefix)
+        if token_name_without_prefix in (
+            MarkdownToken.token_block_quote,
+            MarkdownToken.token_unordered_list_start,
+            MarkdownToken.token_ordered_list_start,
+            MarkdownToken.token_new_list_item,
+        ):
+            print("<<CON<<before<<" + str(container_block_stack))
+
+            if (
+                container_block_stack[-1].token_name
+                == MarkdownToken.token_new_list_item
+            ):
+                del container_block_stack[-1]
+
+            assert container_block_stack[-1].token_name == token_name_without_prefix
+            del container_block_stack[-1]
+            print("<<CON<<after<<" + str(container_block_stack))
+
+
+def __validate_same_line(current_position, last_token, last_position):
+    assert last_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK
+    assert current_position.index_number > last_position.index_number
+
+
+def __validate_new_line(container_block_stack, current_token, current_position):
+    init_ws, had_tab = __calc_initial_whitespace(current_token)
+
+    if (
+        container_block_stack
+        and current_token.token_name != MarkdownToken.token_blank_line
+        and current_token.token_name != MarkdownToken.token_unordered_list_start
+        and current_token.token_name != MarkdownToken.token_ordered_list_start
+    ):
+        print("stack>>" + str(container_block_stack[-1]))
+        top_block = container_block_stack[-1]
+
+        if (
+            top_block.token_name == MarkdownToken.token_unordered_list_start
+            or top_block.token_name == MarkdownToken.token_ordered_list_start
+            or top_block.token_name == MarkdownToken.token_new_list_item
+        ):
+            print("indent>>" + str(top_block.indent_level))
+            init_ws += top_block.indent_level
+
+    print(">>current_position.index_number>>" + str(current_position.index_number))
+    print(">>current_position.index_indent>>" + str(current_position.index_indent))
+    print(">>1 + init_ws>>" + str(1 + init_ws))
+    if not had_tab:
+        assert current_position.index_number == 1 + init_ws, (
+            "Line:" + str(current_position.line_number) + ":" + str(current_token)
+        )
+
+
+def __validate_first_line(current_token, current_position):
+    assert current_position.line_number == 1
+
+    init_ws, had_tab = __calc_initial_whitespace(current_token)
+    if not had_tab:
+        assert current_position.index_number == 1 + init_ws
+
+
+def assert_token_consistency(source_markdown, expected_tokens):
     """
     Compare the markdown document against the tokens that are expected.
     """
@@ -169,43 +255,7 @@ def assert_token_consistency(source_markdown, expected_tokens):  # noqa: C901
 
         current_position = __calc_adjusted_position(current_token)
 
-        print("--")
-        if current_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK:
-            if current_token.token_name == MarkdownToken.token_new_list_item:
-
-                if (
-                    container_block_stack[-1].token_name
-                    == MarkdownToken.token_new_list_item
-                ):
-                    del container_block_stack[-1]
-
-            print(">>CON>>before>>" + str(container_block_stack))
-            container_block_stack.append(current_token)
-            print(">>CON>>after>>" + str(container_block_stack))
-        # TODO Do this better.
-        elif isinstance(current_token, EndMarkdownToken):
-
-            token_name_without_prefix = current_token.token_name[
-                len(EndMarkdownToken.type_name_prefix) :
-            ]
-            print("<<CON??" + token_name_without_prefix)
-            if token_name_without_prefix in (
-                MarkdownToken.token_block_quote,
-                MarkdownToken.token_unordered_list_start,
-                MarkdownToken.token_ordered_list_start,
-                MarkdownToken.token_new_list_item,
-            ):
-                print("<<CON<<before<<" + str(container_block_stack))
-
-                if (
-                    container_block_stack[-1].token_name
-                    == MarkdownToken.token_new_list_item
-                ):
-                    del container_block_stack[-1]
-
-                assert container_block_stack[-1].token_name == token_name_without_prefix
-                del container_block_stack[-1]
-                print("<<CON<<after<<" + str(container_block_stack))
+        __maintain_block_stack(container_block_stack, current_token)
 
         if isinstance(current_token, EndMarkdownToken):
             continue
@@ -237,6 +287,8 @@ def assert_token_consistency(source_markdown, expected_tokens):  # noqa: C901
             )
 
             # TODO later - block quotes ln 307-308 removes, but does not store anywhere
+            # Until block quotes are handled, if we see one in the stack, don't validate
+            # any more.
             found_block_quote = False
             for i in container_block_stack:
                 if i.token_name == MarkdownToken.token_block_quote:
@@ -246,58 +298,15 @@ def assert_token_consistency(source_markdown, expected_tokens):  # noqa: C901
                 continue
 
             if last_position.line_number == current_position.line_number:
-                assert last_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK
-                assert current_position.index_number > last_position.index_number
+                __validate_same_line(current_position, last_token, last_position)
             elif current_token.token_name == MarkdownToken.token_new_list_item:
                 # TODO later
                 pass
             else:
-                init_ws, had_tab = __calc_initial_whitespace(current_token)
-
-                if (
-                    container_block_stack
-                    and current_token.token_name != MarkdownToken.token_blank_line
-                    and current_token.token_name
-                    != MarkdownToken.token_unordered_list_start
-                    and current_token.token_name
-                    != MarkdownToken.token_ordered_list_start
-                ):
-                    print("stack>>" + str(container_block_stack[-1]))
-                    top_block = container_block_stack[-1]
-
-                    if (
-                        top_block.token_name == MarkdownToken.token_unordered_list_start
-                        or top_block.token_name
-                        == MarkdownToken.token_ordered_list_start
-                        or top_block.token_name == MarkdownToken.token_new_list_item
-                    ):
-                        print("indent>>" + str(top_block.indent_level))
-                        init_ws += top_block.indent_level
-
-                print(
-                    ">>current_position.index_number>>"
-                    + str(current_position.index_number)
+                __validate_new_line(
+                    container_block_stack, current_token, current_position
                 )
-                print(
-                    ">>current_position.index_indent>>"
-                    + str(current_position.index_indent)
-                )
-                print(">>1 + init_ws>>" + str(1 + init_ws))
-                if not had_tab:
-                    assert current_position.index_number == 1 + init_ws, (
-                        "Line:"
-                        + str(current_position.line_number)
-                        + ":"
-                        + str(current_token)
-                    )
         else:
-            assert current_position.line_number == 1
-
-            init_ws, had_tab = __calc_initial_whitespace(current_token)
-            if not had_tab:
-                assert current_position.index_number == 1 + init_ws
+            __validate_first_line(current_token, current_position)
 
         last_token = current_token
-
-
-# pylint: enable=too-many-branches, too-many-statements
