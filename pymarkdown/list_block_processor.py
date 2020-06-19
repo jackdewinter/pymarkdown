@@ -615,8 +615,11 @@ class ListBlockProcessor:
         else:
             LOGGER.debug("__post_list>>new list item>>")
             assert emit_li
+            LOGGER.debug("instead of-->%s", str(new_token))
             container_level_tokens.append(
-                NewListItemMarkdownToken(indent_level, position_marker)
+                NewListItemMarkdownToken(
+                    indent_level, position_marker, new_token.extracted_whitespace
+                )
             )
         LOGGER.debug(
             "__post_list>>rem>>%s>>after_in>>%s",

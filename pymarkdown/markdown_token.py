@@ -701,14 +701,14 @@ class NewListItemMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the new list item element.
     """
 
-    def __init__(self, indent_level, position_marker):
+    def __init__(self, indent_level, position_marker, extracted_whitespace):
         self.indent_level = indent_level
         self.extracted_whitespace = ""
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_new_list_item,
             MarkdownTokenClass.CONTAINER_BLOCK,
-            str(indent_level),
+            str(indent_level) + ":" + extracted_whitespace,
             position_marker=position_marker,
         )
 

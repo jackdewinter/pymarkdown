@@ -564,15 +564,17 @@ def test_thematic_breaks_031():
     # Arrange
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
-    source_markdown = """- Foo
+    source_markdown = """
+- Foo
 - * * *"""
     expected_tokens = [
-        "[ulist(1,1):-::2:]",
-        "[para(1,3):]",
+        "[BLANK(1,1):]",
+        "[ulist(2,1):-::2:]",
+        "[para(2,3):]",
         "[text:Foo:]",
         "[end-para]",
-        "[li(2,1):2]",
-        "[tbreak(2,3):*::* * *]",
+        "[li(3,1):2:]",
+        "[tbreak(3,3):*::* * *]",
         "[end-ulist]",
     ]
     expected_gfm = """<ul>

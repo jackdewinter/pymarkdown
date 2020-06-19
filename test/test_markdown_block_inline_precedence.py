@@ -29,7 +29,7 @@ def test_block_inline_precedence_012():
         "[para(1,3):]",
         "[text:`one:]",
         "[end-para]",
-        "[li(2,1):2]",
+        "[li(2,1):2:]",
         "[para(2,3):]",
         "[text:two`:]",
         "[end-para]",
