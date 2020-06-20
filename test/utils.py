@@ -154,32 +154,31 @@ def __maintain_block_stack(container_block_stack, current_token):
     what container a given token is kept within.
     """
 
-    print("--")
     if current_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK:
-        if current_token.token_name == MarkdownToken.token_new_list_item:
-
-            if (
-                container_block_stack[-1].token_name
-                == MarkdownToken.token_new_list_item
-            ):
-                del container_block_stack[-1]
-
+        print("--")
         print(">>CON>>before>>" + str(container_block_stack))
+        if (
+            current_token.is_new_list_item
+            and container_block_stack[-1].is_new_list_item
+        ):
+            del container_block_stack[-1]
+
         container_block_stack.append(current_token)
         print(">>CON>>after>>" + str(container_block_stack))
+
     # TODO Do this better.
     elif isinstance(current_token, EndMarkdownToken):
 
         token_name_without_prefix = current_token.token_name[
             len(EndMarkdownToken.type_name_prefix) :
         ]
-        print("<<CON??" + token_name_without_prefix)
         if token_name_without_prefix in (
             MarkdownToken.token_block_quote,
             MarkdownToken.token_unordered_list_start,
             MarkdownToken.token_ordered_list_start,
             MarkdownToken.token_new_list_item,
         ):
+            print("--")
             print("<<CON<<before<<" + str(container_block_stack))
 
             if (
@@ -200,14 +199,15 @@ def __validate_same_line(current_position, last_token, last_position):
 
 def __validate_new_line(container_block_stack, current_token, current_position):
     init_ws, had_tab = __calc_initial_whitespace(current_token)
+    print(">>init_ws(" + str(init_ws) + ")>>w/ tab=" + str(had_tab))
 
     if (
         container_block_stack
         and current_token.token_name != MarkdownToken.token_blank_line
         and current_token.token_name != MarkdownToken.token_unordered_list_start
         and current_token.token_name != MarkdownToken.token_ordered_list_start
+        and current_token.token_name != MarkdownToken.token_new_list_item
     ):
-        print("stack>>" + str(container_block_stack[-1]))
         top_block = container_block_stack[-1]
 
         if (
@@ -215,12 +215,23 @@ def __validate_new_line(container_block_stack, current_token, current_position):
             or top_block.token_name == MarkdownToken.token_ordered_list_start
             or top_block.token_name == MarkdownToken.token_new_list_item
         ):
-            print("indent>>" + str(top_block.indent_level))
             init_ws += top_block.indent_level
+    elif (
+        container_block_stack
+        and current_token.token_name == MarkdownToken.token_new_list_item
+    ):
+        assert container_block_stack[-1] == current_token
+        if len(container_block_stack) > 1:
+            top_block = container_block_stack[-2]
+            init_ws = (
+                top_block.column_number
+                - 1
+                + (current_token.indent_level - top_block.indent_level)
+            )
 
     print(">>current_position.index_number>>" + str(current_position.index_number))
     print(">>current_position.index_indent>>" + str(current_position.index_indent))
-    print(">>1 + init_ws>>" + str(1 + init_ws))
+    print(">>1 + init_ws(" + str(init_ws) + ")>>" + str(1 + init_ws))
     if not had_tab:
         assert current_position.index_number == 1 + init_ws, (
             "Line:" + str(current_position.line_number) + ":" + str(current_token)
@@ -299,9 +310,6 @@ def assert_token_consistency(source_markdown, expected_tokens):
 
             if last_position.line_number == current_position.line_number:
                 __validate_same_line(current_position, last_token, last_position)
-            elif current_token.token_name == MarkdownToken.token_new_list_item:
-                # TODO later
-                pass
             else:
                 __validate_new_line(
                     container_block_stack, current_token, current_position
