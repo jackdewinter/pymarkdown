@@ -11,7 +11,7 @@ def test_markdown_with_dash_l_only():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["-l"]
+    supplied_arguments = ["-l"]
 
     expected_return_code = 2
     expected_output = ""
@@ -25,7 +25,7 @@ main.py: error: the following arguments are required: path
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -40,7 +40,7 @@ def test_markdown_with_dash_l_on_bad_path():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["-l", "my-bad-path"]
+    supplied_arguments = ["-l", "my-bad-path"]
 
     expected_return_code = 1
     expected_output = ""
@@ -50,7 +50,7 @@ No Markdown files found.
 
     # Act
     execute_results = scanner.invoke_main(
-        arguments=suppplied_arguments, cwd=scanner.resource_directory
+        arguments=supplied_arguments, cwd=scanner.resource_directory
     )
 
     # Assert
@@ -66,7 +66,7 @@ def test_markdown_with_dash_l_on_non_md_directory():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["-l", "only-text"]
+    supplied_arguments = ["-l", "only-text"]
 
     expected_return_code = 1
     expected_output = ""
@@ -75,7 +75,7 @@ def test_markdown_with_dash_l_on_non_md_directory():
 
     # Act
     execute_results = scanner.invoke_main(
-        arguments=suppplied_arguments, cwd=scanner.resource_directory
+        arguments=supplied_arguments, cwd=scanner.resource_directory
     )
 
     # Assert
@@ -91,7 +91,7 @@ def test_markdown_with_dash_l_on_md_directory():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["-l", "simple"]
+    supplied_arguments = ["-l", "simple"]
 
     expected_return_code = 0
     expected_output = """simple/simple.md
@@ -100,7 +100,7 @@ def test_markdown_with_dash_l_on_md_directory():
 
     # Act
     execute_results = scanner.invoke_main(
-        arguments=suppplied_arguments, cwd=scanner.resource_directory
+        arguments=supplied_arguments, cwd=scanner.resource_directory
     )
 
     # Assert
@@ -116,7 +116,7 @@ def test_markdown_with_dash_l_on_mixed_directories():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["-l", "only-text", "simple"]
+    supplied_arguments = ["-l", "only-text", "simple"]
 
     expected_return_code = 0
     expected_output = """simple/simple.md
@@ -125,7 +125,7 @@ def test_markdown_with_dash_l_on_mixed_directories():
 
     # Act
     execute_results = scanner.invoke_main(
-        arguments=suppplied_arguments, cwd=scanner.resource_directory
+        arguments=supplied_arguments, cwd=scanner.resource_directory
     )
 
     # Assert
@@ -141,7 +141,7 @@ def test_markdown_with_dash_l_on_non_md_file():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["-l", "only-text/simple_text_file.txt"]
+    supplied_arguments = ["-l", "only-text/simple_text_file.txt"]
 
     expected_return_code = 1
     expected_output = ""
@@ -151,7 +151,7 @@ No Markdown files found.
 
     # Act
     execute_results = scanner.invoke_main(
-        arguments=suppplied_arguments, cwd=scanner.resource_directory
+        arguments=supplied_arguments, cwd=scanner.resource_directory
     )
 
     # Assert
@@ -167,7 +167,7 @@ def test_markdown_with_dash_l_on_md_file():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["-l", "simple/simple.md"]
+    supplied_arguments = ["-l", "simple/simple.md"]
 
     expected_return_code = 0
     expected_output = """simple/simple.md
@@ -176,7 +176,7 @@ def test_markdown_with_dash_l_on_md_file():
 
     # Act
     execute_results = scanner.invoke_main(
-        arguments=suppplied_arguments, cwd=scanner.resource_directory
+        arguments=supplied_arguments, cwd=scanner.resource_directory
     )
 
     # Assert
@@ -192,7 +192,7 @@ def test_markdown_with_dash_l_on_mixed_files():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["-l", "only-text/simple_text_file.txt", "simple/simple.md"]
+    supplied_arguments = ["-l", "only-text/simple_text_file.txt", "simple/simple.md"]
 
     expected_return_code = 0
     expected_output = """simple/simple.md
@@ -202,7 +202,7 @@ def test_markdown_with_dash_l_on_mixed_files():
 
     # Act
     execute_results = scanner.invoke_main(
-        arguments=suppplied_arguments, cwd=scanner.resource_directory
+        arguments=supplied_arguments, cwd=scanner.resource_directory
     )
 
     # Assert

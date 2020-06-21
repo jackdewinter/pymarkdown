@@ -199,6 +199,8 @@ class LinkReferenceDefinitionHelper:
         keep_going, new_index, collected_destination = LinkHelper.extract_link_label(
             line_to_parse, start_index + 1
         )
+        line_destination_whitespace = ""
+        inline_raw_link = ""
         if keep_going:
             (
                 keep_going,
@@ -209,6 +211,8 @@ class LinkReferenceDefinitionHelper:
             ) = LinkHelper.extract_link_destination(
                 line_to_parse, new_index, is_blank_line
             )
+        line_title_whitespace = ""
+        inline_raw_title = ""
         if keep_going:
             (
                 keep_going,
@@ -217,6 +221,7 @@ class LinkReferenceDefinitionHelper:
                 line_title_whitespace,
                 inline_raw_title,
             ) = LinkHelper.extract_link_title(line_to_parse, new_index, is_blank_line)
+        end_whitespace = ""
         if keep_going:
             (
                 keep_going,
@@ -225,6 +230,7 @@ class LinkReferenceDefinitionHelper:
             ) = LinkReferenceDefinitionHelper.__verify_link_definition_end(
                 line_to_parse, new_index
             )
+        normalized_destination = ""
         if keep_going:
             normalized_destination = LinkHelper.normalize_link_label(
                 collected_destination
@@ -242,7 +248,7 @@ class LinkReferenceDefinitionHelper:
         if end_whitespace and end_whitespace.endswith("\n"):
             end_whitespace = end_whitespace[0:-1]
 
-        LOGGER.debug(">>collected_destination(norml)>>%s", str(normalized_destination))
+        LOGGER.debug(">>collected_destination(normalized)>>%s", str(normalized_destination))
         LOGGER.debug(">>inline_link>>%s<<", str(inline_link))
         LOGGER.debug(">>inline_title>>%s<<", str(inline_title))
         parsed_lrd_tuple = (

@@ -18,7 +18,7 @@ def test_md002_all_samples():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--disable-rules",
         "MD003",
         "-e",
@@ -38,7 +38,7 @@ def test_md002_all_samples():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -55,7 +55,7 @@ def test_md002_good_proper_atx_heading_start():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "-e",
         "MD002",
         "test/resources/rules/md002/proper_atx_heading_start.md",
@@ -66,7 +66,7 @@ def test_md002_good_proper_atx_heading_start():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -85,9 +85,10 @@ def test_md002_bad_proper_atx_heading_start_with_alternate_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD002": {"level": 2}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-e",
             "MD002",
             "-c",
@@ -104,14 +105,14 @@ def test_md002_bad_proper_atx_heading_start_with_alternate_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -125,7 +126,7 @@ def test_md002_good_proper_setext_heading_start():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "-e",
         "MD002",
         "test/resources/rules/md002/proper_setext_heading_start.md",
@@ -136,7 +137,7 @@ def test_md002_good_proper_setext_heading_start():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -156,9 +157,10 @@ def test_md002_bad_proper_setext_heading_start_with_alternate_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD002": {"level": 2}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-e",
             "MD002",
             "-c",
@@ -175,14 +177,14 @@ def test_md002_bad_proper_setext_heading_start_with_alternate_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -195,7 +197,7 @@ def test_md002_bad_improper_atx_heading_start():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "-e",
         "MD002",
         "test/resources/rules/md002/improper_atx_heading_start.md",
@@ -210,7 +212,7 @@ def test_md002_bad_improper_atx_heading_start():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -229,9 +231,10 @@ def test_md002_good_improper_atx_heading_start_with_alternate_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD002": {"level": 2}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-e",
             "MD002",
             "-c",
@@ -244,14 +247,14 @@ def test_md002_good_improper_atx_heading_start_with_alternate_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -265,7 +268,7 @@ def test_md002_bad_improper_setext_heading_start():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--disable-rules",
         "MD003",
         "-e",
@@ -282,7 +285,7 @@ def test_md002_bad_improper_setext_heading_start():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -302,9 +305,10 @@ def test_md002_good_improper_setext_heading_start_with_alternate_configuration()
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD002": {"level": 2}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "--disable-rules",
             "MD003",
             "-e",
@@ -319,12 +323,12 @@ def test_md002_good_improper_setext_heading_start_with_alternate_configuration()
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)

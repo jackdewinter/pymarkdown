@@ -16,7 +16,7 @@ def test_md023_good_proper_indent_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md023/proper_indent_atx.md",
     ]
 
@@ -25,7 +25,7 @@ def test_md023_good_proper_indent_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -43,7 +43,7 @@ def test_md023_good_proper_indent_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md023/proper_indent_setext.md",
     ]
 
@@ -52,7 +52,7 @@ def test_md023_good_proper_indent_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -70,7 +70,7 @@ def test_md023_bad_improper_indent_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md023/improper_indent_atx.md",
     ]
 
@@ -82,7 +82,7 @@ def test_md023_bad_improper_indent_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -100,7 +100,7 @@ def test_md023_bad_improper_indent_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md023/improper_indent_setext.md",
     ]
 
@@ -118,7 +118,7 @@ def test_md023_bad_improper_indent_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(

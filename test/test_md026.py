@@ -19,7 +19,7 @@ def test_md026_good_ends_without_punctuation_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md026/ends_without_punctuation_atx.md",
     ]
 
@@ -28,7 +28,7 @@ def test_md026_good_ends_without_punctuation_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -46,7 +46,7 @@ def test_md026_bad_ends_with_punctuation_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md026/ends_with_punctuation_atx.md",
     ]
 
@@ -58,7 +58,7 @@ def test_md026_bad_ends_with_punctuation_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -76,7 +76,7 @@ def test_md026_good_ends_with_punctuation_then_inline_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md026/ends_with_punctuation_then_inline_atx.md",
     ]
 
@@ -85,7 +85,7 @@ def test_md026_good_ends_with_punctuation_then_inline_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -105,9 +105,10 @@ def test_md026_good_ends_with_punctuation_atx_with_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD026": {"punctuation": "?!"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md026/ends_with_punctuation_atx.md",
@@ -118,14 +119,14 @@ def test_md026_good_ends_with_punctuation_atx_with_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -139,7 +140,7 @@ def test_md026_good_ends_without_punctuation_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md026/ends_without_punctuation_setext.md",
     ]
 
@@ -148,7 +149,7 @@ def test_md026_good_ends_without_punctuation_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -166,7 +167,7 @@ def test_md026_bad_ends_with_punctuation_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md026/ends_with_punctuation_setext.md",
     ]
 
@@ -178,7 +179,7 @@ def test_md026_bad_ends_with_punctuation_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -196,7 +197,7 @@ def test_md026_good_ends_with_punctuation_then_inline_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md026/ends_with_punctuation_then_inline_setext.md",
     ]
 
@@ -205,7 +206,7 @@ def test_md026_good_ends_with_punctuation_then_inline_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -225,9 +226,10 @@ def test_md026_good_ends_with_punctuation_setext_with_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD026": {"punctuation": "?!"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md026/ends_with_punctuation_setext.md",
@@ -238,12 +240,12 @@ def test_md026_good_ends_with_punctuation_setext_with_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)

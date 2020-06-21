@@ -650,6 +650,7 @@ class ListBlockProcessor:
         LOGGER.debug("old-stack>>%s<<", str(container_level_tokens))
 
         repeat_check = True
+        emit_li = False
         while repeat_check:
             LOGGER.debug("start")
             repeat_check = False

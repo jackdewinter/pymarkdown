@@ -30,7 +30,7 @@ def write_temporary_configuration(supplied_configuration):
 
 def assert_if_lists_different(expected_tokens, actual_tokens):
     """
-    Compart two lists and make sure they are equal, asserting if not.
+    Compare two lists and make sure they are equal, asserting if not.
     """
 
     print("\n---")
@@ -83,7 +83,7 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
 
 def assert_if_strings_different(expected_string, actual_string):
     """
-    Compart two strings and make sure they are equal, asserting if not.
+    Compare two strings and make sure they are equal, asserting if not.
     """
 
     print(

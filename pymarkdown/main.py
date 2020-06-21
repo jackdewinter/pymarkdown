@@ -21,12 +21,13 @@ class PyMarkdownLint:
     Class to provide for a simple implementation of a title case algorithm.
     """
 
-    available_log_maps = {}
-    available_log_maps["CRITICAL"] = logging.CRITICAL
-    available_log_maps["ERROR"] = logging.ERROR
-    available_log_maps["WARNING"] = logging.WARNING
-    available_log_maps["INFO"] = logging.INFO
-    available_log_maps["DEBUG"] = logging.DEBUG
+    available_log_maps = {
+        "CRITICAL": logging.CRITICAL,
+        "ERROR": logging.ERROR,
+        "WARNING": logging.WARNING,
+        "INFO": logging.INFO,
+        "DEBUG": logging.DEBUG,
+    }
 
     def __init__(self):
         self.__version_number = "0.1.0"

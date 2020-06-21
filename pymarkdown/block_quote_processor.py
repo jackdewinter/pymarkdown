@@ -111,7 +111,7 @@ class BlockQuoteProcessor:
         stack_bq_count,
     ):
         """
-        Handle the processing of a blockquote block.
+        Handle the processing of a block quote block.
         """
         did_process = False
         was_container_start = False

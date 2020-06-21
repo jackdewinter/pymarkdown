@@ -19,7 +19,7 @@ def test_md024_good_different_heading_content_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md024/different_heading_content_atx.md",
     ]
 
@@ -28,7 +28,7 @@ def test_md024_good_different_heading_content_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -46,7 +46,7 @@ def test_md024_bad_same_heading_content_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md024/same_heading_content_atx.md",
     ]
 
@@ -58,7 +58,7 @@ def test_md024_bad_same_heading_content_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -76,7 +76,7 @@ def test_md024_bad_same_heading_in_siblings_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md024/same_heading_in_siblings_atx.md",
     ]
 
@@ -90,7 +90,7 @@ def test_md024_bad_same_heading_in_siblings_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -108,7 +108,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md",
     ]
 
@@ -120,7 +120,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -140,9 +140,10 @@ def test_md024_good_different_heading_content_atx_with_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD024": {"siblings_only": True}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md024/different_heading_content_atx.md",
@@ -153,14 +154,14 @@ def test_md024_good_different_heading_content_atx_with_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -176,9 +177,10 @@ def test_md024_good_same_heading_content_atx_with_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD024": {"siblings_only": True}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md024/same_heading_content_atx.md",
@@ -189,14 +191,14 @@ def test_md024_good_same_heading_content_atx_with_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -212,9 +214,10 @@ def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD024": {"siblings_only": True}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md024/same_heading_in_siblings_atx.md",
@@ -228,14 +231,14 @@ def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -251,9 +254,10 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD024": {"siblings_only": True}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md",
@@ -264,14 +268,14 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -287,9 +291,10 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_alternate_configur
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD024": {"allow_different_nesting": True}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md",
@@ -300,14 +305,14 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_alternate_configur
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -320,7 +325,7 @@ def test_md024_good_different_inline_heading_content_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md024/different_inline_heading_content_atx.md",
     ]
 
@@ -329,7 +334,7 @@ def test_md024_good_different_inline_heading_content_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -347,7 +352,7 @@ def test_md024_good_different_heading_content_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md024/different_heading_content_setext.md",
     ]
 
@@ -356,7 +361,7 @@ def test_md024_good_different_heading_content_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -374,7 +379,7 @@ def test_md024_bad_same_heading_content_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md024/same_heading_content_setext.md",
     ]
 
@@ -386,7 +391,7 @@ def test_md024_bad_same_heading_content_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -404,7 +409,7 @@ def test_md024_bad_same_heading_in_siblings_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md024/same_heading_in_siblings_setext.md",
     ]
 
@@ -418,7 +423,7 @@ def test_md024_bad_same_heading_in_siblings_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -436,7 +441,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md",
     ]
 
@@ -448,7 +453,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -468,9 +473,10 @@ def test_md024_good_different_heading_content_setext_with_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD024": {"siblings_only": True}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md024/different_heading_content_setext.md",
@@ -481,14 +487,14 @@ def test_md024_good_different_heading_content_setext_with_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -504,9 +510,10 @@ def test_md024_good_same_heading_content_setext_with_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD024": {"siblings_only": True}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md024/same_heading_content_setext.md",
@@ -517,14 +524,14 @@ def test_md024_good_same_heading_content_setext_with_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -540,9 +547,10 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD024": {"siblings_only": True}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md024/same_heading_in_siblings_setext.md",
@@ -556,14 +564,14 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -579,9 +587,10 @@ def test_md024_good_same_heading_but_not_in_siblings_setext_with_configuration()
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD024": {"siblings_only": True}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md",
@@ -592,12 +601,12 @@ def test_md024_good_same_heading_but_not_in_siblings_setext_with_configuration()
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)

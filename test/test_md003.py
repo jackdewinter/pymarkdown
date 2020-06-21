@@ -22,7 +22,7 @@ def test_md003_good_consistent_headings_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md003/headings_atx.md",
     ]
 
@@ -31,7 +31,7 @@ def test_md003_good_consistent_headings_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -51,7 +51,7 @@ def test_md003_good_consistent_headings_atx_closed():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md003/headings_atx_closed.md",
     ]
 
@@ -60,7 +60,7 @@ def test_md003_good_consistent_headings_atx_closed():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -80,7 +80,7 @@ def test_md003_good_consistent_headings_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md003/headings_setext.md",
     ]
 
@@ -89,7 +89,7 @@ def test_md003_good_consistent_headings_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -113,7 +113,7 @@ def test_md003_bad_consistent_headings_setext_with_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md003/headings_setext_with_atx.md",
     ]
 
@@ -122,7 +122,7 @@ def test_md003_bad_consistent_headings_setext_with_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -146,7 +146,7 @@ def test_md003_bad_consistent_headings_setext_with_atx_closed():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md003/headings_setext_with_atx_closed.md",
     ]
 
@@ -155,7 +155,7 @@ def test_md003_bad_consistent_headings_setext_with_atx_closed():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -172,7 +172,7 @@ def test_md003_consistent_all_samples():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["test/resources/rules/md003"]
+    supplied_arguments = ["test/resources/rules/md003"]
 
     expected_return_code = 1
     expected_output = (
@@ -185,7 +185,7 @@ def test_md003_consistent_all_samples():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -206,9 +206,10 @@ def test_md003_good_atx_headings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "atx"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_atx.md",
@@ -219,14 +220,14 @@ def test_md003_good_atx_headings_atx():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -248,9 +249,10 @@ def test_md003_bad_atx_headings_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "atx"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_atx_closed.md",
@@ -261,14 +263,14 @@ def test_md003_bad_atx_headings_atx_closed():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -290,9 +292,10 @@ def test_md003_bad_atx_headings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "atx"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext.md",
@@ -303,14 +306,14 @@ def test_md003_bad_atx_headings_setext():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -333,9 +336,10 @@ def test_md003_bad_atx_headings_setext_with_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "atx"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext_with_atx.md",
@@ -346,14 +350,14 @@ def test_md003_bad_atx_headings_setext_with_atx():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -378,9 +382,10 @@ def test_md003_bad_atx_headings_setext_with_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "atx"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext_with_atx_closed.md",
@@ -391,14 +396,14 @@ def test_md003_bad_atx_headings_setext_with_atx_closed():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -412,9 +417,10 @@ def test_md003_atx_all_samples():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "atx"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = ["-c", configuration_file, "test/resources/rules/md003"]
+        supplied_arguments = ["-c", configuration_file, "test/resources/rules/md003"]
 
         expected_return_code = 1
         expected_output = (
@@ -427,14 +433,14 @@ def test_md003_atx_all_samples():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -456,9 +462,10 @@ def test_md003_bad_atxclosed_headings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "atx_closed"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_atx.md",
@@ -469,14 +476,14 @@ def test_md003_bad_atxclosed_headings_atx():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -493,9 +500,10 @@ def test_md003_good_atxclosed_headings_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "atx_closed"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_atx_closed.md",
@@ -506,14 +514,14 @@ def test_md003_good_atxclosed_headings_atx_closed():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -535,9 +543,10 @@ def test_md003_bad_atxclosed_headings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "atx_closed"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext.md",
@@ -548,14 +557,14 @@ def test_md003_bad_atxclosed_headings_setext():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -580,9 +589,10 @@ def test_md003_bad_atxclosed_headings_setext_with_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "atx_closed"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext_with_atx.md",
@@ -593,14 +603,14 @@ def test_md003_bad_atxclosed_headings_setext_with_atx():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -623,9 +633,10 @@ def test_md003_bad_atxclosed_headings_setext_with_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "atx_closed"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext_with_atx_closed.md",
@@ -636,14 +647,14 @@ def test_md003_bad_atxclosed_headings_setext_with_atx_closed():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -657,9 +668,10 @@ def test_md003_atxclosed_all_samples():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "atx_closed"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = ["-c", configuration_file, "test/resources/rules/md003"]
+        supplied_arguments = ["-c", configuration_file, "test/resources/rules/md003"]
 
         expected_return_code = 1
         expected_output = (
@@ -672,14 +684,14 @@ def test_md003_atxclosed_all_samples():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -701,9 +713,10 @@ def test_md003_bad_setext_headings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_atx.md",
@@ -714,14 +727,14 @@ def test_md003_bad_setext_headings_atx():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -743,9 +756,10 @@ def test_md003_bad_setext_headings_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_atx_closed.md",
@@ -756,14 +770,14 @@ def test_md003_bad_setext_headings_atx_closed():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -780,9 +794,10 @@ def test_md003_good_setext_headings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext.md",
@@ -793,14 +808,14 @@ def test_md003_good_setext_headings_setext():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -821,9 +836,10 @@ def test_md003_bad_setext_headings_setext_with_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext_with_atx.md",
@@ -834,14 +850,14 @@ def test_md003_bad_setext_headings_setext_with_atx():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -862,9 +878,10 @@ def test_md003_bad_setext_headings_setext_with_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext_with_atx_closed.md",
@@ -875,14 +892,14 @@ def test_md003_bad_setext_headings_setext_with_atx_closed():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -896,9 +913,10 @@ def test_md003_setext_all_samples():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = ["-c", configuration_file, "test/resources/rules/md003"]
+        supplied_arguments = ["-c", configuration_file, "test/resources/rules/md003"]
 
         expected_return_code = 1
         expected_output = (
@@ -911,14 +929,14 @@ def test_md003_setext_all_samples():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -940,9 +958,10 @@ def test_md003_bad_setext_with_atx_headings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext_with_atx"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_atx.md",
@@ -953,14 +972,14 @@ def test_md003_bad_setext_with_atx_headings_atx():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -982,9 +1001,10 @@ def test_md003_bad_setext_with_atx_headings_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext_with_atx"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_atx_closed.md",
@@ -995,14 +1015,14 @@ def test_md003_bad_setext_with_atx_headings_atx_closed():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -1019,9 +1039,10 @@ def test_md003_good_setext_with_atx_headings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext_with_atx"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext.md",
@@ -1032,14 +1053,14 @@ def test_md003_good_setext_with_atx_headings_setext():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -1057,9 +1078,10 @@ def test_md003_good_setext_with_atx_headings_setext_with_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext_with_atx"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext_with_atx.md",
@@ -1070,14 +1092,14 @@ def test_md003_good_setext_with_atx_headings_setext_with_atx():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -1098,9 +1120,10 @@ def test_md003_bad_setext_with_atx_headings_setext_with_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext_with_atx"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext_with_atx_closed.md",
@@ -1111,14 +1134,14 @@ def test_md003_bad_setext_with_atx_headings_setext_with_atx_closed():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -1132,9 +1155,10 @@ def test_md003_setext_with_atx_all_samples():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext_with_atx"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = ["-c", configuration_file, "test/resources/rules/md003"]
+        supplied_arguments = ["-c", configuration_file, "test/resources/rules/md003"]
 
         expected_return_code = 1
         expected_output = (
@@ -1147,14 +1171,14 @@ def test_md003_setext_with_atx_all_samples():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -1176,9 +1200,10 @@ def test_md003_bad_setext_with_atx_closed_headings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext_with_atx_closed"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_atx.md",
@@ -1189,14 +1214,14 @@ def test_md003_bad_setext_with_atx_closed_headings_atx():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -1218,9 +1243,10 @@ def test_md003_bad_setext_with_atx_closed_headings_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext_with_atx_closed"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_atx_closed.md",
@@ -1231,14 +1257,14 @@ def test_md003_bad_setext_with_atx_closed_headings_atx_closed():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -1255,9 +1281,10 @@ def test_md003_good_setext_with_atx_closed_headings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext_with_atx_closed"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext.md",
@@ -1268,14 +1295,14 @@ def test_md003_good_setext_with_atx_closed_headings_setext():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -1296,9 +1323,10 @@ def test_md003_bad_setext_with_atx_closed_headings_setext_with_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext_with_atx_closed"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext_with_atx.md",
@@ -1309,14 +1337,14 @@ def test_md003_bad_setext_with_atx_closed_headings_setext_with_atx():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -1334,9 +1362,10 @@ def test_md003_good_setext_with_atx_closed_headings_setext_with_atx_closed():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext_with_atx_closed"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md003/headings_setext_with_atx_closed.md",
@@ -1349,14 +1378,14 @@ def test_md003_good_setext_with_atx_closed_headings_setext_with_atx_closed():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -1370,9 +1399,10 @@ def test_md003_setext_with_atx_closed_all_samples():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD003": {"style": "setext_with_atx_closed"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = ["-c", configuration_file, "test/resources/rules/md003"]
+        supplied_arguments = ["-c", configuration_file, "test/resources/rules/md003"]
 
         expected_return_code = 1
         expected_output = (
@@ -1385,12 +1415,12 @@ def test_md003_setext_with_atx_closed_all_samples():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)

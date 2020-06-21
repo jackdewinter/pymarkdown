@@ -229,7 +229,6 @@ class LeafBlockProcessor:
         """
 
         did_process = False
-        during_original_whitespace = None
         special_parse_start_index = 0
         whitespace_to_parse = extracted_whitespace
         block_quote_adjust_delta = 0
@@ -359,7 +358,7 @@ class LeafBlockProcessor:
                 LOGGER.debug(
                     ">>relative_whitespace_index>>%s", str(relative_whitespace_index)
                 )
-                delta_whitespace = 4 - ((relative_whitespace_index) % 4)
+                delta_whitespace = 4 - (relative_whitespace_index % 4)
             else:
                 delta_whitespace = 1
             LOGGER.debug(">>delta_whitespace>>%s", str(delta_whitespace))
@@ -418,7 +417,6 @@ class LeafBlockProcessor:
             if not parser_state.token_stack[-1].is_indented_code_block:
                 parser_state.token_stack.append(IndentedCodeBlockStackToken())
 
-                did_process = False
                 LOGGER.debug(">>__adjust_for_list_start")
                 (
                     did_process,
@@ -509,7 +507,7 @@ class LeafBlockProcessor:
                         left_ws = " ".rjust(excess_whitespace_count) + left_ws
                     LOGGER.warning("after>>%s>>", left_ws.replace("\t", "\\t"))
                 else:
-                    column_number = column_number + actual_whitespace_index
+                    column_number += actual_whitespace_index
                 LOGGER.warning("column_number>>%s", str(column_number))
                 new_tokens.append(
                     IndentedCodeBlockMarkdownToken(adj_ws, line_number, column_number)

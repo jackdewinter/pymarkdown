@@ -199,7 +199,7 @@ class InlineProcessor:
         """
         Handle the collection of special inline characters for later processing.
         """
-        preceeding_two = None
+        preceding_two = None
         following_two = None
         new_token = None
         repeat_count = 1
@@ -212,7 +212,7 @@ class InlineProcessor:
             )
             special_sequence = source_text[next_index:new_index]
 
-            preceeding_two = source_text[max(0, next_index - 2) : next_index]
+            preceding_two = source_text[max(0, next_index - 2) : next_index]
             following_two = source_text[
                 new_index : min(len(source_text), new_index + 2)
             ]
@@ -252,7 +252,7 @@ class InlineProcessor:
 
         if not new_token:
             new_token = SpecialTextMarkdownToken(
-                special_sequence, repeat_count, preceeding_two, following_two, is_active
+                special_sequence, repeat_count, preceding_two, following_two, is_active
             )
 
         inline_response = InlineResponse()

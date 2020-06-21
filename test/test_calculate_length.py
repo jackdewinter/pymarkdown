@@ -109,7 +109,7 @@ def test_calculate_length_space_then_tab_twice():
 
     # Arrange
     input_string = " \t"
-    input_string = input_string + input_string
+    input_string += input_string
     expected_output = 8
 
     # Act

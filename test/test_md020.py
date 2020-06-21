@@ -18,7 +18,7 @@ def test_md020_good_good_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md020/good_spacing.md",
     ]
 
@@ -27,7 +27,7 @@ def test_md020_good_good_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -45,7 +45,7 @@ def test_md020_bad_ignore_bad_atx_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md020/ignore_bad_atx_spacing.md",
     ]
 
@@ -59,7 +59,7 @@ def test_md020_bad_ignore_bad_atx_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -77,7 +77,7 @@ def test_md020_bad_missing_start_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md020/missing_start_spacing.md",
     ]
 
@@ -91,7 +91,7 @@ def test_md020_bad_missing_start_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -109,7 +109,7 @@ def test_md020_bad_missing_end_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md020/missing_end_spacing.md",
     ]
 
@@ -123,7 +123,7 @@ def test_md020_bad_missing_end_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -142,7 +142,7 @@ def test_md020_good_almost_missing_end_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md020/almost_missing_end_spacing.md",
     ]
 
@@ -151,7 +151,7 @@ def test_md020_good_almost_missing_end_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -169,7 +169,7 @@ def test_md020_bad_missing_both_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md020/missing_both_spacing.md",
     ]
 
@@ -183,7 +183,7 @@ def test_md020_bad_missing_both_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -201,7 +201,7 @@ def test_md020_good_with_setext_headings():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md020/with_setext_headings.md",
     ]
 
@@ -210,7 +210,7 @@ def test_md020_good_with_setext_headings():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -228,7 +228,7 @@ def test_md020_good_with_code_blocks():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md020/with_code_blocks.md",
     ]
 
@@ -237,7 +237,7 @@ def test_md020_good_with_code_blocks():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -255,7 +255,7 @@ def test_md020_good_with_html_blocks():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md020/with_html_blocks.md",
     ]
 
@@ -264,7 +264,7 @@ def test_md020_good_with_html_blocks():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -282,7 +282,7 @@ def test_md020_bad_multiple_within_paragraph():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md020/multiple_within_paragraph.md",
     ]
 
@@ -296,7 +296,7 @@ def test_md020_bad_multiple_within_paragraph():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -315,7 +315,7 @@ def test_md020_bad_paragraphs_with_starting_whitespace():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md020/paragraphs_with_starting_whitespace.md",
     ]
 
@@ -333,7 +333,7 @@ def test_md020_bad_paragraphs_with_starting_whitespace():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -352,7 +352,7 @@ def test_md020_bad_single_paragraph_with_starting_whitespace():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md",
     ]
 
@@ -370,7 +370,7 @@ def test_md020_bad_single_paragraph_with_starting_whitespace():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(

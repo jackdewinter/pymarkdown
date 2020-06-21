@@ -21,7 +21,7 @@ def test_md022_bad_proper_line_spacing_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/proper_line_spacing_atx.md",
     ]
 
@@ -30,7 +30,7 @@ def test_md022_bad_proper_line_spacing_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -48,7 +48,7 @@ def test_md022_good_proper_line_spacing_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/proper_line_spacing_setext.md",
     ]
 
@@ -57,7 +57,7 @@ def test_md022_good_proper_line_spacing_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -75,7 +75,7 @@ def test_md022_bad_no_line_spacing_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/no_line_spacing_atx.md",
     ]
 
@@ -94,7 +94,7 @@ def test_md022_bad_no_line_spacing_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -112,7 +112,7 @@ def test_md022_bad_no_line_spacing_before_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/no_line_spacing_before_atx.md",
     ]
 
@@ -125,7 +125,7 @@ def test_md022_bad_no_line_spacing_before_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -143,7 +143,7 @@ def test_md022_bad_no_line_spacing_after_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/no_line_spacing_after_atx.md",
     ]
 
@@ -159,7 +159,7 @@ def test_md022_bad_no_line_spacing_after_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -177,7 +177,7 @@ def test_md022_good_atx_with_html_and_good_line_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/atx_with_html_and_good_line_spacing.md",
     ]
 
@@ -186,7 +186,7 @@ def test_md022_good_atx_with_html_and_good_line_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -204,7 +204,7 @@ def test_md022_bad_atx_with_html_and_bad_line_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/atx_with_html_and_bad_line_spacing.md",
     ]
 
@@ -220,7 +220,7 @@ def test_md022_bad_atx_with_html_and_bad_line_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -238,7 +238,7 @@ def test_md022_good_atx_with_code_block_and_good_line_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/atx_with_code_block_and_good_line_spacing.md",
     ]
 
@@ -247,7 +247,7 @@ def test_md022_good_atx_with_code_block_and_good_line_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -265,7 +265,7 @@ def test_md022_bad_atx_with_code_block_and_bad_line_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/atx_with_code_block_and_bad_line_spacing.md",
     ]
 
@@ -281,7 +281,7 @@ def test_md022_bad_atx_with_code_block_and_bad_line_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -299,7 +299,7 @@ def test_md022_good_atx_with_thematic_break_and_good_line_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/atx_with_thematic_break_and_good_line_spacing.md",
     ]
 
@@ -308,7 +308,7 @@ def test_md022_good_atx_with_thematic_break_and_good_line_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -326,7 +326,7 @@ def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/atx_with_thematic_break_and_bad_line_spacing.md",
     ]
 
@@ -342,7 +342,7 @@ def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -364,7 +364,7 @@ def test_md022_bad_no_line_spacing_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/no_line_spacing_setext.md",
     ]
 
@@ -380,7 +380,7 @@ def test_md022_bad_no_line_spacing_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -398,7 +398,7 @@ def test_md022_bad_no_line_spacing_after_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/no_line_spacing_after_setext.md",
     ]
 
@@ -414,7 +414,7 @@ def test_md022_bad_no_line_spacing_after_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -432,7 +432,7 @@ def test_md022_good_setext_with_code_block_and_good_line_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/setext_with_code_block_and_good_line_spacing.md",
     ]
 
@@ -441,7 +441,7 @@ def test_md022_good_setext_with_code_block_and_good_line_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -459,7 +459,7 @@ def test_md022_bad_setext_with_code_block_and_bad_line_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/setext_with_code_block_and_bad_line_spacing.md",
     ]
 
@@ -475,7 +475,7 @@ def test_md022_bad_setext_with_code_block_and_bad_line_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -493,7 +493,7 @@ def test_md022_good_setext_with_html_and_good_line_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/setext_with_html_and_good_line_spacing.md",
     ]
 
@@ -502,7 +502,7 @@ def test_md022_good_setext_with_html_and_good_line_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -520,7 +520,7 @@ def test_md022_bad_setext_with_html_and_bad_line_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/setext_with_html_and_bad_line_spacing.md",
     ]
 
@@ -536,7 +536,7 @@ def test_md022_bad_setext_with_html_and_bad_line_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -554,7 +554,7 @@ def test_md022_good_setext_with_thematic_break_and_good_line_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/setext_with_thematic_break_and_good_line_spacing.md",
     ]
 
@@ -563,7 +563,7 @@ def test_md022_good_setext_with_thematic_break_and_good_line_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -581,7 +581,7 @@ def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md022/setext_with_thematic_break_and_bad_line_spacing.md",
     ]
 
@@ -597,7 +597,7 @@ def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -616,9 +616,10 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD022": {"lines_above": 2}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md022/proper_line_spacing_atx.md",
@@ -633,14 +634,14 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -655,9 +656,10 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD022": {"lines_above": 2}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md022/double_line_spacing_above_atx.md",
@@ -668,14 +670,14 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -690,9 +692,10 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD022": {"lines_below": 2}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md022/proper_line_spacing_atx.md",
@@ -710,14 +713,14 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -732,9 +735,10 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD022": {"lines_below": 2}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md022/double_line_spacing_below_atx.md",
@@ -745,14 +749,14 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -767,9 +771,10 @@ def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD022": {"lines_below": 2, "lines_above": 2}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md022/double_line_spacing_above_and_below_atx.md",
@@ -780,14 +785,14 @@ def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -800,7 +805,7 @@ def test_md022_good_alternating_heading_types():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--disable",
         "MD003",
         "test/resources/rules/md022/alternating_heading_types.md",
@@ -811,7 +816,7 @@ def test_md022_good_alternating_heading_types():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -830,9 +835,10 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD022": {"lines_below": 2, "lines_above": 2}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "--disable",
             "MD003",
             "-c",
@@ -867,14 +873,14 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 

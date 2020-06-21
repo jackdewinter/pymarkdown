@@ -283,7 +283,6 @@ class TokenizedMarkdown:
                 if until_this_index >= len(parser_state.token_stack):
                     break
 
-            adjusted_tokens = []
             if parser_state.token_stack[-1].was_link_definition_started:
                 LOGGER.debug(
                     "cob->process_link_reference_definition>>stopping link definition"

@@ -18,7 +18,7 @@ def test_md036_proper_headings_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md036/proper_headings_atx.md",
     ]
 
@@ -27,7 +27,7 @@ def test_md036_proper_headings_atx():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -44,7 +44,7 @@ def test_md036_proper_headings_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md036/proper_headings_setext.md",
     ]
 
@@ -53,7 +53,7 @@ def test_md036_proper_headings_setext():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -71,7 +71,7 @@ def test_md036_proper_emphasis_with_link():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md036/proper_emphasis_with_link.md",
     ]
 
@@ -80,7 +80,7 @@ def test_md036_proper_emphasis_with_link():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -98,7 +98,7 @@ def test_md036_proper_emphasis_with_text_then_link():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md036/proper_emphasis_with_text_then_link.md",
     ]
 
@@ -107,7 +107,7 @@ def test_md036_proper_emphasis_with_text_then_link():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -125,7 +125,7 @@ def test_md036_proper_emphasis_with_text_then_link_then_text():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md036/proper_emphasis_with_text_then_link_then_text.md",
     ]
 
@@ -134,7 +134,7 @@ def test_md036_proper_emphasis_with_text_then_link_then_text():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -152,7 +152,7 @@ def test_md036_proper_emphasis_with_text_end_emphasis_more_text():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md036/proper_emphasis_with_text_end_emphasis_more_text.md",
     ]
 
@@ -161,7 +161,7 @@ def test_md036_proper_emphasis_with_text_end_emphasis_more_text():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -179,7 +179,7 @@ def test_md036_proper_emphasis_within_text():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md036/proper_emphasis_within_text.md",
     ]
 
@@ -188,7 +188,7 @@ def test_md036_proper_emphasis_within_text():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -206,7 +206,7 @@ def test_md036_proper_emphasis_within_multiline_text():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md036/proper_emphasis_within_multiline_text.md",
     ]
 
@@ -215,7 +215,7 @@ def test_md036_proper_emphasis_within_multiline_text():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -233,7 +233,7 @@ def test_md036_proper_emphasis_ending_with_punctuation():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md036/proper_emphasis_ending_with_punctuation.md",
     ]
 
@@ -242,7 +242,7 @@ def test_md036_proper_emphasis_ending_with_punctuation():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -262,9 +262,10 @@ def test_md036_proper_emphasis_ending_with_punctuation_with_configuration():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD036": {"punctuation": ".!"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-c",
             configuration_file,
             "test/resources/rules/md036/proper_emphasis_ending_with_punctuation.md",
@@ -281,14 +282,14 @@ def test_md036_proper_emphasis_ending_with_punctuation_with_configuration():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -302,7 +303,7 @@ def test_md036_valid_emphasis_headings():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md036/valid_emphasis_headings.md",
     ]
 
@@ -316,7 +317,7 @@ def test_md036_valid_emphasis_headings():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(

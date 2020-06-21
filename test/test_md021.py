@@ -18,7 +18,7 @@ def test_md021_good_single_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md021/single_spacing.md",
     ]
 
@@ -27,7 +27,7 @@ def test_md021_good_single_spacing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -45,7 +45,7 @@ def test_md021_bad_multiple_spacing_both():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md021/multiple_spacing.md",
     ]
 
@@ -59,7 +59,7 @@ def test_md021_bad_multiple_spacing_both():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -77,7 +77,7 @@ def test_md021_bad_multiple_spacing_left():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md021/multiple_spacing_left.md",
     ]
 
@@ -91,7 +91,7 @@ def test_md021_bad_multiple_spacing_left():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -109,7 +109,7 @@ def test_md021_bad_multiple_spacing_right():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md021/multiple_spacing_right.md",
     ]
 
@@ -123,7 +123,7 @@ def test_md021_bad_multiple_spacing_right():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -141,7 +141,7 @@ def test_md021_good_multiple_spacing_with_inline():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md021/multiple_spacing_with_inline.md",
     ]
 
@@ -150,7 +150,7 @@ def test_md021_good_multiple_spacing_with_inline():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(

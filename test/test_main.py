@@ -15,7 +15,7 @@ def test_markdown_with_no_parameters():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = []
+    supplied_arguments = []
 
     expected_return_code = 2
     expected_output = ""
@@ -29,7 +29,7 @@ main.py: error: the following arguments are required: path
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -44,7 +44,7 @@ def test_markdown_with_dash_h():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["-h"]
+    supplied_arguments = ["-h"]
 
     expected_return_code = 0
     expected_output = """usage: main.py [-h] [--version] [-l] [-e ENABLE_RULES] [-d DISABLE_RULES]
@@ -80,7 +80,7 @@ optional arguments:
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -95,7 +95,7 @@ def test_markdown_with_dash_dash_version():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["--version"]
+    supplied_arguments = ["--version"]
 
     expected_return_code = 0
     expected_output = """main.py 0.1.0
@@ -103,7 +103,7 @@ def test_markdown_with_dash_dash_version():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -120,7 +120,7 @@ def test_markdown_with_dash_e_single_by_name():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "-e",
         "debug-only",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -148,7 +148,7 @@ MD999>>completed_file
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -165,7 +165,7 @@ def test_markdown_with_dash_e_single_by_id():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "-e",
         "MD999",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -193,7 +193,7 @@ MD999>>completed_file
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -210,7 +210,7 @@ def test_markdown_with_dash_d_single_by_name():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "-d",
         "single-trailing-newline",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -221,7 +221,7 @@ def test_markdown_with_dash_d_single_by_name():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -238,7 +238,7 @@ def test_markdown_with_dash_d_single_by_id():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "-d",
         "MD047",
         "test/resources/rules/md047/end_with_no_blank_line.md",
@@ -249,7 +249,7 @@ def test_markdown_with_dash_d_single_by_id():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -265,7 +265,7 @@ def test_markdown_with_dash_x_scan():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "-x-scan",
         "test/resources/rules/md047/end_with_no_blank_line.md",
     ]
@@ -277,7 +277,7 @@ File was not translated from Markdown text to Markdown tokens.
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -293,7 +293,7 @@ def test_markdown_with_dash_dash_log_level_debug(caplog):
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--log-level",
         "DEBUG",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -304,7 +304,7 @@ def test_markdown_with_dash_dash_log_level_debug(caplog):
     expected_error = """"""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -335,7 +335,7 @@ def test_markdown_with_dash_dash_log_level_info(caplog):
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--log-level",
         "INFO",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -346,7 +346,7 @@ def test_markdown_with_dash_dash_log_level_info(caplog):
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -377,7 +377,7 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog):
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--log-level",
         "invalid",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -395,7 +395,7 @@ main.py: error: argument --log-level: invalid log_level_type value: 'invalid'
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -425,16 +425,17 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
     """
 
     # Arrange
-    log_file_name = None
+    temp_file = None
     try:
         temp_file = tempfile.NamedTemporaryFile()
         log_file_name = temp_file.name
     finally:
-        temp_file.close()
+        if temp_file:
+            temp_file.close()
 
     try:
         scanner = MarkdownScanner()
-        suppplied_arguments = [
+        supplied_arguments = [
             "--log-level",
             "INFO",
             "--log-file",
@@ -447,7 +448,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
@@ -484,7 +485,7 @@ def test_markdown_with_dash_x_init():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "-x-init",
         "test/resources/rules/md047/end_with_no_blank_line.md",
     ]
@@ -504,7 +505,7 @@ def test_markdown_with_dash_x_init():
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -522,9 +523,10 @@ def test_markdown_with_dash_e_single_by_id_and_good_config():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD999": {"test_value": 2}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-e",
             "MD999",
             "-c",
@@ -554,14 +556,14 @@ MD999>>completed_file
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -575,9 +577,10 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD999": {"test_value": "fred"}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-e",
             "MD999",
             "-c",
@@ -607,14 +610,14 @@ MD999>>completed_file
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -627,9 +630,10 @@ def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = "not a json file"
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-e",
             "MD999",
             "-c",
@@ -646,14 +650,14 @@ def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
         )
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -667,7 +671,7 @@ def test_markdown_with_dash_e_single_by_id_and_non_present_config_file():
     scanner = MarkdownScanner()
     configuration_file = "not-exists"
     assert not os.path.exists(configuration_file)
-    suppplied_arguments = [
+    supplied_arguments = [
         "-e",
         "MD999",
         "-c",
@@ -683,7 +687,7 @@ def test_markdown_with_dash_e_single_by_id_and_non_present_config_file():
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -701,9 +705,10 @@ def test_markdown_with_dash_e_single_by_id_and_good_select_config():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD999": {"other_test_value": 2}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-e",
             "MD999",
             "-c",
@@ -733,14 +738,14 @@ MD999>>completed_file
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -754,9 +759,10 @@ def test_markdown_with_dash_e_single_by_id_and_bad_select_config():
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD999": {"other_test_value": 9}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-e",
             "MD999",
             "-c",
@@ -786,14 +792,14 @@ MD999>>completed_file
         expected_error = ""
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -806,9 +812,10 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_config_exception()
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD999": {"test_value": 10}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-e",
             "MD999",
             "-c",
@@ -826,14 +833,14 @@ Plugin id 'MD999' had a critical failure during the 'apply_configuration' action
 """
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 
@@ -846,9 +853,10 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_next_token_excepti
     # Arrange
     scanner = MarkdownScanner()
     supplied_configuration = {"MD999": {"test_value": 20}}
+    configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
-        suppplied_arguments = [
+        supplied_arguments = [
             "-e",
             "MD999",
             "-c",
@@ -872,14 +880,14 @@ Plugin id 'MD999' had a critical failure during the 'next_token' action.
 """
 
         # Act
-        execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
         execute_results.assert_results(
             expected_output, expected_error, expected_return_code
         )
     finally:
-        if os.path.exists(configuration_file):
+        if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
 

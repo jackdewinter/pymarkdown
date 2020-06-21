@@ -103,7 +103,6 @@ class ContainerBlockProcessor:
         )
 
         end_container_indices = ContainerIndices(-1, -1, -1)
-        last_block_quote_index = 0
         (
             did_process,
             was_container_start,
@@ -699,7 +698,6 @@ class ContainerBlockProcessor:
         last_block_quote_index,
         last_list_start_index,
     ):
-        requeue_line_info = RequeueLineInfo()
         assert not leaf_tokens
         LOGGER.debug("parsing leaf>>")
         position_marker.index_number = 0

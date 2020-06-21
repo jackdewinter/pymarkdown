@@ -15,7 +15,7 @@ def test_md047_all_samples():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["test/resources/rules/md047"]
+    supplied_arguments = ["test/resources/rules/md047"]
 
     expected_return_code = 1
     expected_output = (
@@ -26,7 +26,7 @@ def test_md047_all_samples():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -43,14 +43,14 @@ def test_md047_good_end_with_blank_line():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["test/resources/rules/md047/end_with_blank_line.md"]
+    supplied_arguments = ["test/resources/rules/md047/end_with_blank_line.md"]
 
     expected_return_code = 0
     expected_output = ""
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -67,7 +67,7 @@ def test_md047_bad_end_with_no_blank_line():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["test/resources/rules/md047/end_with_no_blank_line.md"]
+    supplied_arguments = ["test/resources/rules/md047/end_with_no_blank_line.md"]
 
     expected_return_code = 1
     expected_output = (
@@ -77,7 +77,7 @@ def test_md047_bad_end_with_no_blank_line():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(

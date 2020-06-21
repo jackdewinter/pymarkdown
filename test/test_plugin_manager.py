@@ -11,7 +11,7 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_path():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "MD047",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -25,7 +25,7 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_path():
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -40,7 +40,7 @@ def test_markdown_with_dash_dash_add_plugin_and_single_plugin_file():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/plugin_two.py",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -58,7 +58,7 @@ MD998>>completed_file
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -73,7 +73,7 @@ def test_markdown_with_dash_dash_add_plugin_and_single_plugin_directory():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -91,7 +91,7 @@ MD998>>completed_file
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -106,7 +106,7 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_plugin_file():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/not-a-python-file.txt",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -120,7 +120,7 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_plugin_file():
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -135,7 +135,7 @@ def test_markdown_with_dash_dash_add_plugin_and_missing_class():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/misnamed.py",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -149,7 +149,7 @@ def test_markdown_with_dash_dash_add_plugin_and_missing_class():
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -164,7 +164,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_starting_new_file.py",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -177,7 +177,7 @@ Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -192,7 +192,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_completed_file():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_completed_file.py",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -205,7 +205,7 @@ Plugin id 'MDE002' had a critical failure during the 'completed_file' action.
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -220,7 +220,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_next_line.py",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -233,7 +233,7 @@ Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -248,7 +248,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_stack_trace(
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--stack-trace",
         "--add-plugin",
         "test/resources/plugins/bad/bad_next_line.py",
@@ -263,7 +263,7 @@ Traceback (most recent call last):
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -293,7 +293,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_constructor():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_constructor.py",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -307,7 +307,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_constructor():
     )
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -322,7 +322,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_details():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_details.py",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -335,7 +335,7 @@ Plugin class 'BadDetails' had a critical failure loading the plugin details.
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -350,7 +350,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_details_with_stack_trace():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--stack-trace",
         "--add-plugin",
         "test/resources/plugins/bad/bad_details.py",
@@ -365,7 +365,7 @@ Traceback (most recent call last):
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -393,7 +393,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_string_detail_is_int.py",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -406,7 +406,7 @@ Plugin class 'BadStringDetailIsInt' returned an improperly typed value for field
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -421,7 +421,7 @@ def test_markdown_with_dash_dash_add_plugin_with_empty_string_detail():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_string_detail_is_empty.py",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -434,7 +434,7 @@ Plugin class 'BadStringDetailIsEmpty' returned an empty value for field name 'pl
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -449,7 +449,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_boolean_detail():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_boolean_detail_is_int.py",
         "test/resources/rules/md047/end_with_blank_line.md",
@@ -462,7 +462,7 @@ Plugin class 'BadBooleanDetailIsInt' returned an improperly typed value for fiel
 """
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(

@@ -15,7 +15,7 @@ def test_md001_all_samples():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = ["--disable-rules", "MD003", "test/resources/rules/md001"]
+    supplied_arguments = ["--disable-rules", "MD003", "test/resources/rules/md001"]
 
     expected_return_code = 1
     expected_output = (
@@ -29,7 +29,7 @@ def test_md001_all_samples():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -46,7 +46,7 @@ def test_md001_good_proper_atx_heading_incrementing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md001/proper_atx_heading_incrementing.md"
     ]
 
@@ -55,7 +55,7 @@ def test_md001_good_proper_atx_heading_incrementing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -73,7 +73,7 @@ def test_md001_good_proper_setext_heading_incrementing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--disable-rules",
         "MD003",
         "test/resources/rules/md001/proper_setext_heading_incrementing.md",
@@ -84,7 +84,7 @@ def test_md001_good_proper_setext_heading_incrementing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -102,7 +102,7 @@ def test_md001_bad_improper_atx_heading_incrementing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "test/resources/rules/md001/improper_atx_heading_incrementing.md"
     ]
 
@@ -115,7 +115,7 @@ def test_md001_bad_improper_atx_heading_incrementing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(
@@ -134,7 +134,7 @@ def test_md001_bad_improper_setext_heading_incrementing():
 
     # Arrange
     scanner = MarkdownScanner()
-    suppplied_arguments = [
+    supplied_arguments = [
         "--disable-rules",
         "MD003",
         "test/resources/rules/md001/improper_setext_heading_incrementing.md",
@@ -149,7 +149,7 @@ def test_md001_bad_improper_setext_heading_incrementing():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=suppplied_arguments)
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
     execute_results.assert_results(

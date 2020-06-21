@@ -78,12 +78,12 @@ class MarkdownToken:
             or self.token_name == MarkdownToken.token_block_quote
         ):
             add_extra = ":" + self.extra_data
-        colum_row_info = ""
+        column_row_info = ""
         if self.line_number or self.column_number:
-            colum_row_info = (
+            column_row_info = (
                 "(" + str(self.line_number) + "," + str(self.column_number) + ")"
             )
-        return "[" + self.token_name + colum_row_info + add_extra + "]"
+        return "[" + self.token_name + column_row_info + add_extra + "]"
 
     def __repr__(self):
         return "'" + self.__str__() + "'"
@@ -532,7 +532,7 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
             + str(self.active)
             + ",repeat="
             + str(self.repeat_count)
-            + ",preceeding='"
+            + ",preceding='"
             + str(self.preceding_two)
             + "',following='"
             + str(self.following_two)
