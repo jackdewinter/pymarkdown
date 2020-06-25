@@ -13,6 +13,7 @@
 - for all of the tokens that used position_marker, do we need =None any more?
 - rewrite position_marker to not allow outside modification
   - requires clean up of how list and block quotes handle it
+- add ex_ws into tokens for block quote, list starts, indented code block, html, and thematic break
 
 ## Bugs - Character Entities
 
@@ -35,6 +36,7 @@
   - tab is consumed as part of list prefix, not recorded anywhere, assumed to be spaces
 - variations on 005, mostly wired up for scenario
   - what about tabs with plain icode? different depths?
+- effect of lists and blocks with 1 tab and differing amounts of whitespace on followed text i.e. `- \tfoo' should produced a list item with foo, no icb as it would equate to 2 spaces
 
 ## Bugs - AutoLinks
 
@@ -86,10 +88,14 @@
 
 ## Bugs - Tokenization
 
+- 235, 236, 252, 255, etc - missing whitespace?
+- 086a
+- setext rename .remaining_line to .extracted_whitespace & fix consistency check
+- all leaf  in all container
+
 - 262 - tokenization incorrect
   - 217, 219 same with block quotes
 - 559, 560 - LRDs, huh?
-- 236, 255, etc - missing whitespace?
 - 087 - shouldn't it be inside of the indented code block?
 - extra001, 002? correct ?
 - blank lines, if starts with 2 ws, is it (x,1) or (x,3)?
