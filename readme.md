@@ -95,7 +95,6 @@
 - 262 - tokenization incorrect
   - 217, 219 same with block quotes
 - 559, 560 - LRDs, huh?
-- 087 - shouldn't it be inside of the indented code block?
 - extra001, 002? correct ?
 - blank lines, if starts with 2 ws, is it (x,1) or (x,3)?
 
