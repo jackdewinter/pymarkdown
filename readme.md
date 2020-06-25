@@ -89,7 +89,6 @@
 ## Bugs - Tokenization
 
 - 235, 236, 252, 255, etc - missing whitespace?
-- 086a
 - setext rename .remaining_line to .extracted_whitespace & fix consistency check
 - all leaf  in all container
 

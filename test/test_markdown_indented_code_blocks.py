@@ -408,6 +408,36 @@ bar
 
 
 @pytest.mark.gfm
+def test_indented_code_blocks_086a():
+    """
+    Test case 086a:  Modification of 86 to include more spaces so extracted != left
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """         foo
+    bar"""
+    expected_tokens = [
+        "[icode-block(1,5):    ]",
+        "[text:foo\nbar:     ]",
+        "[end-icode-block]",
+    ]
+    expected_gfm = """<pre><code>     foo
+bar
+</code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_indented_code_blocks_087():
     """
     Test case 087:  Blank lines preceding or following an indented code block are not included in it:

@@ -248,7 +248,9 @@ class LinkReferenceDefinitionHelper:
         if end_whitespace and end_whitespace.endswith("\n"):
             end_whitespace = end_whitespace[0:-1]
 
-        LOGGER.debug(">>collected_destination(normalized)>>%s", str(normalized_destination))
+        LOGGER.debug(
+            ">>collected_destination(normalized)>>%s", str(normalized_destination)
+        )
         LOGGER.debug(">>inline_link>>%s<<", str(inline_link))
         LOGGER.debug(">>inline_title>>%s<<", str(inline_title))
         parsed_lrd_tuple = (
