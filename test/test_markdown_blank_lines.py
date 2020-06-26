@@ -57,3 +57,37 @@ aaa
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
+
+@pytest.mark.gfm
+def test_blank_lines_197a():
+    """
+    Test case 197a:  Extra bl
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """\a\a
+\a
+aaa
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[BLANK(1,1):  ]",
+        "[BLANK(2,1): ]",
+        "[para(3,1):]",
+        "[text:aaa:]",
+        "[end-para]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p>aaa</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)

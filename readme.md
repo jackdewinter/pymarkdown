@@ -93,9 +93,12 @@
 
 - setext rename .remaining_line to .extracted_whitespace & fix consistency check
 - all leaf  in all container
+- 262 should be properly validated, border case as indent + 1 == bl.pos not >
+  - verify with empty list as well
+- blank lines as part of bquote or lists
+  - compare test_block_quotes_218 and test_list_blocks_260 vs test_blank_lines_197a
+  - also 257 - blank should start sooner
 
-- 262 - tokenization incorrect
-  - 217, 219 same with block quotes
 - 559, 560 - LRDs, huh?
 - extra001, 002? correct ?
 
