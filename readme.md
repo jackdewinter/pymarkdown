@@ -98,7 +98,6 @@
   - 217, 219 same with block quotes
 - 559, 560 - LRDs, huh?
 - extra001, 002? correct ?
-- blank lines, if starts with 2 ws, is it (x,1) or (x,3)?
 
 ## Bugs - Block Quote/List Interaction
 
