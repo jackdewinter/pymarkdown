@@ -37,6 +37,9 @@
 - variations on 005, mostly wired up for scenario
   - what about tabs with plain icode? different depths?
 - effect of lists and blocks with 1 tab and differing amounts of whitespace on followed text i.e. `- \tfoo' should produced a list item with foo, no icb as it would equate to 2 spaces
+- 235, 236, 252, 255
+  - need to account for the fact that indent may not be all spaces all the time
+  - for indented code blocks, starts at the start of the icb, else at the first non-ws
 
 ## Bugs - AutoLinks
 
@@ -88,7 +91,6 @@
 
 ## Bugs - Tokenization
 
-- 235, 236, 252, 255, etc - missing whitespace?
 - setext rename .remaining_line to .extracted_whitespace & fix consistency check
 - all leaf  in all container
 
