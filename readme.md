@@ -10,7 +10,6 @@
   - text
   - inlines
 - make better use of `index_indent`
-- for all of the tokens that used position_marker, do we need =None any more?
 - rewrite position_marker to not allow outside modification
   - requires clean up of how list and block quotes handle it
 - add ex_ws into tokens for block quote, list starts, indented code block, html, and thematic break
@@ -92,7 +91,7 @@
 ## Bugs - Tokenization
 
 - setext rename .remaining_line to .extracted_whitespace & fix consistency check
-- all leaf  in all container
+- all leaf in all container
 - 262 should be properly validated, border case as indent + 1 == bl.pos not >
   - verify with empty list as well
 - blank lines as part of bquote or lists
