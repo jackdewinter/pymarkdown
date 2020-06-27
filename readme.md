@@ -100,7 +100,6 @@
   - also 257 - blank should start sooner
 
 - 559, 560 - LRDs, huh?
-- extra001, 002? correct ?
 
 ## Bugs - Block Quote/List Interaction
 
