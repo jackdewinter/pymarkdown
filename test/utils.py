@@ -111,12 +111,10 @@ def __calc_initial_whitespace(calc_token):
         MarkdownToken.token_fenced_code_block,
         MarkdownToken.token_block_quote,
         MarkdownToken.token_link_reference_definition,
+        MarkdownToken.token_setext_heading,
     ):
         indent_level = len(calc_token.extracted_whitespace)
         had_tab = bool("\t" in calc_token.extracted_whitespace)
-    elif calc_token.token_name == MarkdownToken.token_setext_heading:
-        indent_level = len(calc_token.remaining_line)
-        had_tab = bool("\t" in calc_token.remaining_line)
     elif (
         calc_token.token_name == MarkdownToken.token_html_block
         or calc_token.token_name == MarkdownToken.token_blank_line

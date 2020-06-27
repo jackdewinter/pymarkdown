@@ -51,7 +51,7 @@ class RuleMd023(Plugin):
                 self.report_next_token_error(token)
         elif isinstance(token, SetextHeadingMarkdownToken):
             self.__setext_start_token = token
-            self.__any_leading_whitespace_detected = bool(token.remaining_line)
+            self.__any_leading_whitespace_detected = bool(token.extracted_whitespace)
         elif isinstance(token, TextMarkdownToken):
             if self.__setext_start_token and not self.__any_leading_whitespace_detected:
                 if token.end_whitespace and " " in token.end_whitespace:

@@ -1106,6 +1106,7 @@ def test_list_blocks_257():
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
 
+
 @pytest.mark.gfm
 def test_list_blocks_257a():
     """
@@ -1138,6 +1139,7 @@ def test_list_blocks_257a():
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
 
+
 @pytest.mark.gfm
 def test_list_blocks_257b():
     """
@@ -1169,6 +1171,7 @@ def test_list_blocks_257b():
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
+
 
 @pytest.mark.gfm
 def test_list_blocks_258():
@@ -1355,6 +1358,7 @@ def test_list_blocks_262():
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
 
+
 @pytest.mark.gfm
 def test_list_blocks_262a():
     """
@@ -1378,6 +1382,7 @@ def test_list_blocks_262a():
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
+
 
 @pytest.mark.gfm
 def test_list_blocks_263():

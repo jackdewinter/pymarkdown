@@ -90,7 +90,6 @@
 
 ## Bugs - Tokenization
 
-- setext rename .remaining_line to .extracted_whitespace & fix consistency check
 - all leaf in all container
 - 262 should be properly validated, border case as indent + 1 == bl.pos not >
   - verify with empty list as well

@@ -58,6 +58,7 @@ aaa
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
 
+
 @pytest.mark.gfm
 def test_blank_lines_197a():
     """
