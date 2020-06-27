@@ -99,8 +99,6 @@
   - compare test_block_quotes_218 and test_list_blocks_260 vs test_blank_lines_197a
   - also 257 - blank should start sooner
 
-- 559, 560 - LRDs, huh?
-
 ## Bugs - Block Quote/List Interaction
 
 - 300 with different list following
