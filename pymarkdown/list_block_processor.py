@@ -229,6 +229,7 @@ class ListBlockProcessor:
                     position_marker,
                 )
 
+                LOGGER.debug("__post_list>>pre>>%s>>", position_marker.text_to_parse)
                 (
                     no_para_start_if_empty,
                     new_container_level_tokens,
@@ -248,6 +249,7 @@ class ListBlockProcessor:
                 container_level_tokens.extend(new_container_level_tokens)
                 did_process = True
                 was_container_start = True
+                LOGGER.debug("__post_list>>post>>%s>>", position_marker.text_to_parse)
 
         return (
             did_process,
@@ -468,7 +470,7 @@ class ListBlockProcessor:
         line_to_parse,
         start_index,
         extracted_whitespace,
-        marker_width,
+        marker_width_minus_one,
         stack_bq_count,
         this_bq_count,
     ):
@@ -483,12 +485,15 @@ class ListBlockProcessor:
         ws_after_marker = ParserHelper.calculate_length(
             after_marker_whitespace, start_index=start_index + 1
         )
-        ws_before_marker = ParserHelper.calculate_length(extracted_whitespace)
-
         LOGGER.debug(
-            "--ws_before_marker>>%s>>marker_width>>%s",
+            "after-marker>>%s>>total=%s", after_marker_whitespace, str(ws_after_marker)
+        )
+
+        ws_before_marker = ParserHelper.calculate_length(extracted_whitespace)
+        LOGGER.debug(
+            "--ws_before_marker>>%s>>marker_width_minus_one>>%s",
             str(ws_before_marker),
-            str(marker_width),
+            str(marker_width_minus_one),
         )
         LOGGER.debug("--%s--%s", str(start_index), str(start_index + 1))
         # assert "\t" not in after_marker_whitespace
@@ -504,11 +509,13 @@ class ListBlockProcessor:
         )
         if after_marker_ws_index == len(line_to_parse):
             LOGGER.debug("BOOOOOOOM")
-            indent_level = 2 + marker_width
-            remaining_whitespace = 0
-            ws_after_marker = 1
+            indent_level = 2 + marker_width_minus_one
+            remaining_whitespace = ws_after_marker
+            ws_after_marker = 0
         else:
-            indent_level = ws_before_marker + 1 + ws_after_marker + marker_width
+            indent_level = (
+                ws_before_marker + 1 + ws_after_marker + marker_width_minus_one
+            )
             remaining_whitespace = 0
             LOGGER.debug(
                 "ws_after_marker>>%s<<indent_level<<%s<<rem<<%s<<",

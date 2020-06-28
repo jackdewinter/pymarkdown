@@ -81,8 +81,6 @@
 
 ## Bugs - List
 
-- 257,260 - blank lines and lists, should put leading space in token
-
 - blank line ending a list is parsed wrong into tokens
   - >>stack_count>>0>>#9:[end-ulist]
   - should be end and then blank, as the blank is outside of the list
@@ -91,11 +89,9 @@
 ## Bugs - Tokenization
 
 - all leaf in all container
-- 262 should be properly validated, border case as indent + 1 == bl.pos not >
-  - verify with empty list as well
-- blank lines as part of bquote or lists
-  - compare test_block_quotes_218 and test_list_blocks_260 vs test_blank_lines_197a
-  - also 257 - blank should start sooner
+- blank lines as part of bquote
+  - compare test_block_quotes_218 vs test_blank_lines_197a
+  - already fixed test_list_blocks_260, 257
 
 ## Bugs - Block Quote/List Interaction
 

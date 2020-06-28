@@ -62,7 +62,7 @@ aaa
 @pytest.mark.gfm
 def test_blank_lines_197a():
     """
-    Test case 197a:  Extra bl
+    Test case 197a:  Extra blanks to test
     """
 
     # Arrange

@@ -279,6 +279,7 @@ class ContainerBlockProcessor:
             LOGGER.debug(">>>>>>>>%s<<<<<<<<<<", line_to_parse)
             return container_level_tokens, line_to_parse, None
 
+        LOGGER.debug(">>__process_list_in_progress>>%s>>", line_to_parse)
         (
             did_process,
             line_to_parse,
@@ -291,6 +292,7 @@ class ContainerBlockProcessor:
             container_level_tokens,
             extracted_whitespace,
         )
+        LOGGER.debug(">>__process_list_in_progress>>%s>>", line_to_parse)
         ContainerBlockProcessor.__process_lazy_lines(
             parser_state,
             leaf_tokens,

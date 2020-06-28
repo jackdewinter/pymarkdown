@@ -1087,7 +1087,7 @@ def test_list_blocks_257():
     )
     expected_tokens = [
         "[ulist(1,1):-::2:]",
-        "[BLANK(1,5):]",
+        "[BLANK(1,2):   ]",
         "[para(2,3):]",
         "[text:foo:]",
         "[end-para]",
@@ -1270,7 +1270,7 @@ def test_list_blocks_260():
         "[text:foo:]",
         "[end-para]",
         "[li(2,1):2:]",
-        "[BLANK(2,5):]",
+        "[BLANK(2,2):   ]",
         "[li(3,1):2:]",
         "[para(3,3):]",
         "[text:bar:]",
@@ -1284,7 +1284,7 @@ def test_list_blocks_260():
 </ul>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

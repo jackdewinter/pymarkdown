@@ -190,9 +190,27 @@ def __maintain_block_stack(container_block_stack, current_token):
             print("<<CON<<after<<" + str(container_block_stack))
 
 
-def __validate_same_line(current_position, last_token, last_position):
+def __validate_same_line(current_token, current_position, last_token, last_position):
     assert last_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK
     assert current_position.index_number > last_position.index_number
+    if last_token.token_name != MarkdownToken.token_block_quote:
+        assert last_token.token_name in (
+            MarkdownToken.token_unordered_list_start,
+            MarkdownToken.token_ordered_list_start,
+            MarkdownToken.token_new_list_item,
+        )
+        print(">>current_token>>" + str(current_token))
+        print(">>current_position.index_number>>" + str(current_position.index_number))
+        print(">>last_token.indent_level>>" + str(last_token.indent_level))
+        if current_token.token_name == MarkdownToken.token_blank_line:
+            assert current_position.index_number == last_token.indent_level
+        elif current_token.token_name == MarkdownToken.token_indented_code_block:
+            assert (
+                current_position.index_number - len(current_token.extracted_whitespace)
+                == last_token.indent_level + 1
+            )
+        else:
+            assert current_position.index_number == last_token.indent_level + 1
 
 
 def __validate_new_line(container_block_stack, current_token, current_position):
@@ -307,7 +325,9 @@ def assert_token_consistency(source_markdown, expected_tokens):
                 continue
 
             if last_position.line_number == current_position.line_number:
-                __validate_same_line(current_position, last_token, last_position)
+                __validate_same_line(
+                    current_token, current_position, last_token, last_position
+                )
             else:
                 __validate_new_line(
                     container_block_stack, current_token, current_position

@@ -772,7 +772,11 @@ class LeafBlockProcessor:
             position_marker.text_to_parse
         ):
             LOGGER.debug("Escaping paragraph due to empty w/ blank")
-            return [BlankLineMarkdownToken("", position_marker)]
+            return [
+                BlankLineMarkdownToken(
+                    extracted_whitespace, position_marker, len(extracted_whitespace)
+                )
+            ]
 
         LOGGER.debug(
             "parse_paragraph>stack_bq_count>%s>this_bq_count>%s<",

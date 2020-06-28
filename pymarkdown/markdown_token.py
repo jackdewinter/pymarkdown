@@ -196,14 +196,27 @@ class BlankLineMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the blank line element.
     """
 
-    def __init__(self, extracted_whitespace, position_marker):
+    def __init__(self, extracted_whitespace, position_marker, column_delta=0):
         self.extracted_whitespace = extracted_whitespace
+
+        line_number = 0
+        column_number = 0
+        if position_marker:
+            line_number = position_marker.line_number
+            column_number = (
+                position_marker.index_number
+                + position_marker.index_indent
+                + 1
+                - column_delta
+            )
+
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_blank_line,
             MarkdownTokenClass.LEAF_BLOCK,
             extracted_whitespace,
-            position_marker=position_marker,
+            line_number=line_number,
+            column_number=column_number,
         )
 
 
@@ -257,7 +270,9 @@ class SetextHeadingMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the setext heading element.
     """
 
-    def __init__(self, heading_character, extracted_whitespace, position_marker, para_token):
+    def __init__(
+        self, heading_character, extracted_whitespace, position_marker, para_token
+    ):
         self.heading_character = heading_character
         self.extracted_whitespace = extracted_whitespace
         self.final_whitespace = ""
