@@ -188,10 +188,7 @@ class LeafBlockProcessor:
 
     @staticmethod
     def __adjust_for_list_start(
-        original_line_to_parse,
-        last_list_start_index,
-        last_block_quote_index,
-        position_marker,
+        original_line_to_parse, last_list_start_index, last_block_quote_index,
     ):
         did_process = False
         LOGGER.debug("last_list_start_index>>%s>>", str(last_list_start_index))
@@ -211,7 +208,6 @@ class LeafBlockProcessor:
             if "\t" in extracted_whitespace:
                 last_block_quote_index = new_index
                 offset_index = 1
-                position_marker.index_indent = 0
                 did_process = True
         return did_process, offset_index, last_block_quote_index
 
@@ -426,7 +422,6 @@ class LeafBlockProcessor:
                     original_line_to_parse,
                     last_list_start_index,
                     last_block_quote_index,
-                    position_marker,
                 )
                 LOGGER.debug("<<__adjust_for_list_start<<%s", str(did_process))
 

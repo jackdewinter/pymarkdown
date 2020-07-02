@@ -10,8 +10,6 @@
   - text
   - inlines
 - make better use of `index_indent`
-- rewrite position_marker to not allow outside modification
-  - requires clean up of how list and block quotes handle it
 - add ex_ws into tokens for block quote, list starts, indented code block, html, and thematic break
 
 ## Bugs - Character Entities
@@ -88,6 +86,7 @@
 
 ## Bugs - Tokenization
 
+- should be able to have tabs and not trigger bad tokens, should be excluded?
 - all leaf in all container
 - blank lines as part of bquote
   - compare test_block_quotes_218 vs test_blank_lines_197a

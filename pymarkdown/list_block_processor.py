@@ -178,6 +178,7 @@ class ListBlockProcessor:
         """
         end_of_ulist_start_index = -1
         container_level_tokens = []
+        adjusted_text_to_parse = position_marker.text_to_parse
         if not did_process:
             started_ulist, end_of_ulist_start_index = ListBlockProcessor.is_ulist_start(
                 parser_state,
@@ -233,7 +234,7 @@ class ListBlockProcessor:
                 (
                     no_para_start_if_empty,
                     new_container_level_tokens,
-                    position_marker.text_to_parse,
+                    adjusted_text_to_parse,
                 ) = ListBlockProcessor.__post_list(
                     parser_state,
                     new_stack,
@@ -249,14 +250,14 @@ class ListBlockProcessor:
                 container_level_tokens.extend(new_container_level_tokens)
                 did_process = True
                 was_container_start = True
-                LOGGER.debug("__post_list>>post>>%s>>", position_marker.text_to_parse)
+                LOGGER.debug("__post_list>>post>>%s>>", adjusted_text_to_parse)
 
         return (
             did_process,
             was_container_start,
             end_of_ulist_start_index,
             no_para_start_if_empty,
-            position_marker.text_to_parse,
+            adjusted_text_to_parse,
             container_level_tokens,
             removed_chars_at_start,
         )
@@ -282,6 +283,7 @@ class ListBlockProcessor:
         """
         end_of_olist_start_index = -1
         container_level_tokens = []
+        adjusted_text_to_parse = position_marker.text_to_parse
         if not did_process:
             (
                 started_olist,
@@ -346,7 +348,7 @@ class ListBlockProcessor:
                 (
                     no_para_start_if_empty,
                     new_container_level_tokens,
-                    position_marker.text_to_parse,
+                    adjusted_text_to_parse,
                 ) = ListBlockProcessor.__post_list(
                     parser_state,
                     new_stack,
@@ -367,7 +369,7 @@ class ListBlockProcessor:
             was_container_start,
             end_of_olist_start_index,
             no_para_start_if_empty,
-            position_marker.text_to_parse,
+            adjusted_text_to_parse,
             container_level_tokens,
             removed_chars_at_start,
         )

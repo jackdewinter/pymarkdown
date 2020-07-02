@@ -101,6 +101,7 @@ class BlockQuoteProcessor:
         return container_level_tokens
 
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-locals
     @staticmethod
     def handle_block_quote_block(
         parser_state,
@@ -122,6 +123,9 @@ class BlockQuoteProcessor:
         removed_chars_at_start = 0
         last_block_quote_index = 0
 
+        adjusted_text_to_parse = position_marker.text_to_parse
+        adjusted_index_number = position_marker.index_number
+
         if (
             BlockQuoteProcessor.is_block_quote_start(
                 position_marker.text_to_parse,
@@ -133,8 +137,8 @@ class BlockQuoteProcessor:
         ):
             LOGGER.debug("clt>>block-start")
             (
-                position_marker.text_to_parse,
-                position_marker.index_number,
+                adjusted_text_to_parse,
+                adjusted_index_number,
                 leaf_tokens,
                 container_level_tokens,
                 stack_bq_count,
@@ -157,7 +161,7 @@ class BlockQuoteProcessor:
 
             did_process = True
             was_container_start = True
-            end_of_bquote_start_index = position_marker.index_number
+            end_of_bquote_start_index = adjusted_index_number
 
         return (
             did_process,
@@ -165,8 +169,8 @@ class BlockQuoteProcessor:
             end_of_bquote_start_index,
             this_bq_count,
             stack_bq_count,
-            position_marker.text_to_parse,
-            position_marker.index_number,
+            adjusted_text_to_parse,
+            adjusted_index_number,
             leaf_tokens,
             container_level_tokens,
             removed_chars_at_start,
@@ -175,6 +179,7 @@ class BlockQuoteProcessor:
         )
 
     # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def __count_block_quote_starts(

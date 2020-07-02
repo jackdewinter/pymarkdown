@@ -15,6 +15,7 @@ LOGGER = logging.getLogger(__name__)
 
 
 # pylint: disable=too-few-public-methods
+# pylint: disable=too-many-lines
 class ContainerIndices:
     """
     Class to provide for encapsulation on a group of container indices.
@@ -305,15 +306,19 @@ class ContainerBlockProcessor:
         )
 
         # TODO refactor to make indent unnecessary?
-        position_marker.index_indent = len(original_line_to_parse) - len(line_to_parse)
-        LOGGER.debug(">>indent>>%s", str(position_marker.index_indent))
+        calculated_indent = len(original_line_to_parse) - len(line_to_parse)
+        LOGGER.debug(">>indent>>%s", str(calculated_indent))
 
-        position_marker.text_to_parse = line_to_parse
-        position_marker.index_number = start_index
+        newer_position_marker = PositionMarker(
+            position_marker.line_number,
+            start_index,
+            line_to_parse,
+            index_indent=calculated_indent,
+        )
         leaf_tokens, requeue_line_info = ContainerBlockProcessor.__process_leaf_tokens(
             parser_state,
             leaf_tokens,
-            position_marker,
+            newer_position_marker,
             this_bq_count,
             removed_chars_at_start,
             no_para_start_if_empty,
@@ -437,6 +442,7 @@ class ContainerBlockProcessor:
         Handle the processing of nested container blocks, as they can contain
         themselves and get somewhat messy.
         """
+        adjusted_text_to_parse = position_marker.text_to_parse
         if was_container_start and position_marker.text_to_parse:
             assert container_depth < 10
             nested_container_starts = ContainerBlockProcessor.__get_nested_container_starts(
@@ -509,7 +515,7 @@ class ContainerBlockProcessor:
                 or nested_container_starts.olist_index
                 or nested_container_starts.block_index
             ):
-                position_marker.text_to_parse = ContainerBlockProcessor.__look_for_container_blocks(
+                adjusted_text_to_parse = ContainerBlockProcessor.__look_for_container_blocks(
                     parser_state,
                     adj_line_to_parse,
                     end_container_indices.block_index,
@@ -519,7 +525,7 @@ class ContainerBlockProcessor:
                 )
             no_para_start_if_empty = True
         return (
-            position_marker.text_to_parse,
+            adjusted_text_to_parse,
             leaf_tokens,
             container_level_tokens,
             no_para_start_if_empty,
@@ -691,7 +697,7 @@ class ContainerBlockProcessor:
     def __process_leaf_tokens(
         parser_state,
         leaf_tokens,
-        position_marker,
+        xposition_marker,
         this_bq_count,
         removed_chars_at_start,
         no_para_start_if_empty,
@@ -702,7 +708,12 @@ class ContainerBlockProcessor:
     ):
         assert not leaf_tokens
         LOGGER.debug("parsing leaf>>")
-        position_marker.index_number = 0
+        position_marker = PositionMarker(
+            xposition_marker.line_number,
+            0,
+            xposition_marker.text_to_parse,
+            index_indent=xposition_marker.index_indent,
+        )
         (
             leaf_tokens,
             requeue_line_info,
@@ -870,7 +881,7 @@ class ContainerBlockProcessor:
     @staticmethod
     def __parse_line_for_leaf_blocks(
         parser_state,
-        position_marker,
+        xposition_marker,
         this_bq_count,
         removed_chars_at_start,
         no_para_start_if_empty,
@@ -883,20 +894,23 @@ class ContainerBlockProcessor:
         Parse the contents of a line for a leaf block.
         """
         LOGGER.debug(
-            "Leaf Line:%s:", position_marker.text_to_parse.replace("\t", "\\t")
+            "Leaf Line:%s:", xposition_marker.text_to_parse.replace("\t", "\\t")
         )
         new_tokens = []
 
         requeue_line_info = RequeueLineInfo()
         # TODO rename to avoid collision with parameter
-        original_line_to_parse = position_marker.text_to_parse[
-            position_marker.index_number :
+        original_line_to_parse = xposition_marker.text_to_parse[
+            xposition_marker.index_number :
         ]
-        (
-            position_marker.index_number,
-            extracted_whitespace,
-        ) = ParserHelper.extract_whitespace(
-            position_marker.text_to_parse, position_marker.index_number
+        (new_index_number, extracted_whitespace,) = ParserHelper.extract_whitespace(
+            xposition_marker.text_to_parse, xposition_marker.index_number
+        )
+        position_marker = PositionMarker(
+            xposition_marker.line_number,
+            new_index_number,
+            xposition_marker.text_to_parse,
+            index_indent=xposition_marker.index_indent,
         )
 
         pre_tokens = ContainerBlockProcessor.__close_indented_block_if_indent_not_there(
