@@ -169,7 +169,7 @@ def test_tabs_003():
 
 
 @pytest.mark.gfm
-def test_tabs_004():
+def test_tabs_004x():
     """
     Test case 004:  (part a) a continuation paragraph of a list item is indented with a tab; this has exactly the same effect as indentation with four spaces would
     """
@@ -637,7 +637,7 @@ def test_tabs_009():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    # assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm

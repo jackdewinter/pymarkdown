@@ -722,6 +722,46 @@ def test_list_blocks_248():
 
 
 @pytest.mark.gfm
+def test_list_blocks_248a():
+    """
+    Test case 248a:  mod'n
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- foo
+
+     bar"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text:foo:]",
+        "[end-para]",
+        "[BLANK(2,1):]",
+        "[para(3,6):   ]",
+        "[text:bar:]",
+        "[end-para]",
+        "[end-ulist]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>foo</p>
+<p>bar</p>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_list_blocks_249():
     """
     Test case 249:  And in this case it is 11 spaces:

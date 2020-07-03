@@ -10,7 +10,8 @@
   - text
   - inlines
 - make better use of `index_indent`
-- add ex_ws into tokens for block quote, list starts, indented code block, html, and thematic break
+- list start/new list item tokens should contain extracted w/s, to deal with lazy lines
+- add ex_ws into tokens for block quote
 
 ## Bugs - Character Entities
 

@@ -190,7 +190,18 @@ def __maintain_block_stack(container_block_stack, current_token):
             print("<<CON<<after<<" + str(container_block_stack))
 
 
-def __validate_same_line(current_token, current_position, last_token, last_position):
+def __validate_same_line(
+    container_block_stack, current_token, current_position, last_token, last_position
+):
+
+    print(">>__validate_same_line")
+    if container_block_stack:
+        top_block = container_block_stack[-1]
+        _, had_tab = __calc_initial_whitespace(top_block)
+        print(">>top_block>>w/ tab=" + str(had_tab))
+        if had_tab:
+            return
+
     assert last_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK
     assert current_position.index_number > last_position.index_number
     if last_token.token_name != MarkdownToken.token_block_quote:
@@ -214,8 +225,11 @@ def __validate_same_line(current_token, current_position, last_token, last_posit
 
 
 def __validate_new_line(container_block_stack, current_token, current_position):
+    print(">>__validate_new_line")
     init_ws, had_tab = __calc_initial_whitespace(current_token)
     print(">>init_ws(" + str(init_ws) + ")>>w/ tab=" + str(had_tab))
+    if had_tab:
+        return
 
     if (
         container_block_stack
@@ -225,6 +239,10 @@ def __validate_new_line(container_block_stack, current_token, current_position):
         and current_token.token_name != MarkdownToken.token_new_list_item
     ):
         top_block = container_block_stack[-1]
+        _, had_tab = __calc_initial_whitespace(top_block)
+        print(">>top_block>>w/ tab=" + str(had_tab))
+        if had_tab:
+            return
 
         if (
             top_block.token_name == MarkdownToken.token_unordered_list_start
@@ -254,7 +272,8 @@ def __validate_new_line(container_block_stack, current_token, current_position):
         )
 
 
-def __validate_first_line(current_token, current_position):
+def __validate_first_token(current_token, current_position):
+    print(">>__validate_first_line")
     assert current_position.line_number == 1
 
     init_ws, had_tab = __calc_initial_whitespace(current_token)
@@ -326,13 +345,17 @@ def assert_token_consistency(source_markdown, expected_tokens):
 
             if last_position.line_number == current_position.line_number:
                 __validate_same_line(
-                    current_token, current_position, last_token, last_position
+                    container_block_stack,
+                    current_token,
+                    current_position,
+                    last_token,
+                    last_position,
                 )
             else:
                 __validate_new_line(
                     container_block_stack, current_token, current_position
                 )
         else:
-            __validate_first_line(current_token, current_position)
+            __validate_first_token(current_token, current_position)
 
         last_token = current_token
