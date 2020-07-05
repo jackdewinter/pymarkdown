@@ -565,7 +565,7 @@ def test_list_items_287():
         "[para(2,5):]",
         "[text:bar:]",
         "[end-para]",
-        "[ulist(3,5):-::6:    ]",
+        "[ulist(3,5):-::6:    :      ]",
         "[para(3,7):]",
         "[text:baz:]",
         "[end-para]",
@@ -683,7 +683,7 @@ def test_list_items_289():
 
     code"""
     expected_tokens = [
-        "[ulist(1,1):-::4:]",
+        "[ulist(1,1):-::4::    ]",
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
@@ -864,7 +864,7 @@ def test_list_items_292():
    - d
     - e"""
     expected_tokens = [
-        "[ulist(1,1):-::2:]",
+        "[ulist(1,1):-::2::  ]",
         "[para(1,3):]",
         "[text:a:]",
         "[end-para]",
@@ -1068,7 +1068,7 @@ def test_list_items_293a():
   1. b
     1. c"""
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::   ]",
         "[para(1,4):]",
         "[text:a:]",
         "[end-para]",
@@ -1480,7 +1480,7 @@ def test_list_items_296():
   c
 - d"""
     expected_tokens = [
-        "[ulist(1,1):-::2:]",
+        "[ulist(1,1):-::2::  ]",
         "[para(1,3):]",
         "[text:a:]",
         "[end-para]",
@@ -1536,7 +1536,7 @@ def test_list_items_297():
   [ref]: /url
 - d"""
     expected_tokens = [
-        "[ulist(1,1):-::2:]",
+        "[ulist(1,1):-::2::  ]",
         "[para(1,3):]",
         "[text:a:]",
         "[end-para]",
@@ -1591,7 +1591,7 @@ def test_list_items_298():
   ```
 - c"""
     expected_tokens = [
-        "[ulist(1,1):-::2:]",
+        "[ulist(1,1):-::2::  \n  ]",
         "[para(1,3):]",
         "[text:a:]",
         "[end-para]",
@@ -1645,7 +1645,7 @@ def test_list_items_299():
         "[para(1,3):]",
         "[text:a:]",
         "[end-para]",
-        "[ulist(2,3):-::4:  ]",
+        "[ulist(2,3):-::4:  :    ]",
         "[para(2,5):]",
         "[text:b:]",
         "[end-para]",
@@ -1747,7 +1747,7 @@ def test_list_items_301():
   ```
 - d"""
     expected_tokens = [
-        "[ulist(1,1):-::2:]",
+        "[ulist(1,1):-::2::  \n  \n  ]",
         "[para(1,3):]",
         "[text:a:]",
         "[end-para]",
@@ -1873,7 +1873,7 @@ def test_list_items_304():
 
    bar"""
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::   \n   \n   ]",
         "[fcode-block(1,4):`:3::::]",
         "[text:foo:]",
         "[end-fcode-block]",
@@ -2053,7 +2053,7 @@ def test_list_items_305b():
 </ul>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

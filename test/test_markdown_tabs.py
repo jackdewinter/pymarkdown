@@ -182,7 +182,7 @@ def test_tabs_004x():
 \tbar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist(1,3):-::4:  ]",
+        "[ulist(1,3):-::4:  :]",
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
@@ -223,7 +223,7 @@ def test_tabs_004a():
     bar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist(1,3):-::4:  ]",
+        "[ulist(1,3):-::4:  :    ]",
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
@@ -264,7 +264,7 @@ def test_tabs_005():
 \t\tbar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist(1,1):-::2:]",
+        "[ulist(1,1):-::2::]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",

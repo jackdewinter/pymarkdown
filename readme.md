@@ -10,7 +10,7 @@
   - text
   - inlines
 - make better use of `index_indent`
-- list start/new list item tokens should contain extracted w/s, to deal with lazy lines
+- new list item tokens should contain extracted w/s, to deal with lazy lines
 - add ex_ws into tokens for block quote
 
 ## Bugs - Character Entities
@@ -84,6 +84,9 @@
   - >>stack_count>>0>>#9:[end-ulist]
   - should be end and then blank, as the blank is outside of the list
 - CommonMark and how handles non-initial cases for list starts
+- 269 and 305, and variations
+  - whitespace is not 100% correct
+  - weird cases in list_in_process
 
 ## Bugs - Tokenization
 

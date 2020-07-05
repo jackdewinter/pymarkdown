@@ -228,6 +228,7 @@ class ParagraphMarkdownToken(MarkdownToken):
     def __init__(self, extracted_whitespace, position_marker):
         self.extracted_whitespace = extracted_whitespace
         self.final_whitespace = ""
+        self.rehydrate_index = 0
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_paragraph,
@@ -664,16 +665,44 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
     def __init__(
         self, list_start_sequence, indent_level, extracted_whitespace, position_marker
     ):
+        self.list_start_sequence = list_start_sequence
         self.indent_level = indent_level
         self.is_loose = True
         self.extracted_whitespace = extracted_whitespace
+        self.leading_spaces = None
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_unordered_list_start,
             MarkdownTokenClass.CONTAINER_BLOCK,
-            list_start_sequence + "::" + str(indent_level) + ":" + extracted_whitespace,
+            "",
             position_marker=position_marker,
         )
+        self.compose_extra_data_field()
+
+    def compose_extra_data_field(self):
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+
+        self.extra_data = (
+            self.list_start_sequence
+            + "::"
+            + str(self.indent_level)
+            + ":"
+            + self.extracted_whitespace
+        )
+        if self.leading_spaces is not None:
+            self.extra_data += ":" + self.leading_spaces
+
+    def add_leading_spaces(self, ws_add):
+        """
+        Add any leading spaces to the token, separating them with line feeds.
+        """
+        if self.leading_spaces is None:
+            self.leading_spaces = ws_add
+        else:
+            self.leading_spaces += "\n" + ws_add
+        self.compose_extra_data_field()
 
 
 class OrderedListStartMarkdownToken(MarkdownToken):
@@ -690,25 +719,49 @@ class OrderedListStartMarkdownToken(MarkdownToken):
         extracted_whitespace,
         position_marker,
     ):
+        self.list_start_sequence = list_start_sequence
         self.list_start_content = list_start_content
         self.indent_level = indent_level
         self.is_loose = True
         self.extracted_whitespace = extracted_whitespace
+        self.leading_spaces = None
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_ordered_list_start,
             MarkdownTokenClass.CONTAINER_BLOCK,
-            list_start_sequence
-            + ":"
-            + list_start_content
-            + ":"
-            + str(indent_level)
-            + ":"
-            + extracted_whitespace,
+            "",
             position_marker=position_marker,
         )
+        self.compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
+
+    def compose_extra_data_field(self):
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+
+        self.extra_data = (
+            self.list_start_sequence
+            + ":"
+            + self.list_start_content
+            + ":"
+            + str(self.indent_level)
+            + ":"
+            + self.extracted_whitespace
+        )
+        if self.leading_spaces is not None:
+            self.extra_data += ":" + self.leading_spaces
+
+    def add_leading_spaces(self, ws_add):
+        """
+        Add any leading spaces to the token, separating them with line feeds.
+        """
+        if self.leading_spaces is None:
+            self.leading_spaces = ws_add
+        else:
+            self.leading_spaces += "\n" + ws_add
+        self.compose_extra_data_field()
 
 
 class NewListItemMarkdownToken(MarkdownToken):
@@ -767,6 +820,7 @@ class ThematicBreakMarkdownToken(MarkdownToken):
         self, start_character, extracted_whitespace, rest_of_line, position_marker
     ):
         self.extracted_whitespace = extracted_whitespace
+        self.rest_of_line = rest_of_line
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_thematic_break,

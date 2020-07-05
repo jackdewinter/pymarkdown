@@ -194,12 +194,14 @@ class ListStackToken(StackToken):
         ws_before_marker,
         ws_after_marker,
         start_index,
+        matching_markdown_token,
     ):
         self.indent_level = indent_level
         self.list_character = list_character
         self.ws_before_marker = ws_before_marker
         self.ws_after_marker = ws_after_marker
         self.start_index = start_index
+        self.matching_markdown_token = matching_markdown_token
         extra_data = (
             str(indent_level)
             + ":"
@@ -229,6 +231,7 @@ class OrderedListStackToken(ListStackToken):
         ws_before_marker,
         ws_after_marker,
         start_index,
+        matching_markdown_token,
     ):
         ListStackToken.__init__(
             self,
@@ -238,6 +241,7 @@ class OrderedListStackToken(ListStackToken):
             ws_before_marker,
             ws_after_marker,
             start_index,
+            matching_markdown_token,
         )
 
     # pylint: enable=too-many-arguments
@@ -256,6 +260,7 @@ class UnorderedListStackToken(ListStackToken):
         ws_before_marker,
         ws_after_marker,
         start_index,
+        matching_markdown_token,
     ):
         ListStackToken.__init__(
             self,
@@ -265,6 +270,7 @@ class UnorderedListStackToken(ListStackToken):
             ws_before_marker,
             ws_after_marker,
             start_index,
+            matching_markdown_token,
         )
 
     # pylint: enable=too-many-arguments

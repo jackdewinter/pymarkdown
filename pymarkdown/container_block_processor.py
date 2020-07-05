@@ -125,6 +125,7 @@ class ContainerBlockProcessor:
             this_bq_count,
             stack_bq_count,
         )
+        LOGGER.debug("text>>%s>>", line_to_parse)
         LOGGER.debug(">>container_level_tokens>>%s", str(container_level_tokens))
         LOGGER.debug(">>did_blank>>%s", did_blank)
         if did_blank:
@@ -182,6 +183,7 @@ class ContainerBlockProcessor:
             str(new_position_marker.index_indent),
             new_position_marker.text_to_parse.replace("\t", "\\t"),
         )
+        LOGGER.debug("text>>%s>>", line_to_parse)
 
         new_position_marker = PositionMarker(
             position_marker.line_number, start_index, line_to_parse
@@ -233,6 +235,7 @@ class ContainerBlockProcessor:
             str(new_position_marker.index_indent),
             new_position_marker.text_to_parse.replace("\t", "\\t"),
         )
+        LOGGER.debug("text>>%s>>", line_to_parse.replace(" ", "\\s"))
 
         LOGGER.debug("last_block_quote_index>>%s", str(last_block_quote_index))
 
@@ -255,6 +258,10 @@ class ContainerBlockProcessor:
             new_position_marker = PositionMarker(
                 position_marker.line_number, start_index, line_to_parse
             )
+            LOGGER.debug(
+                "__handle_nested_container_blocks>>%s>>",
+                line_to_parse.replace(" ", "\\s"),
+            )
             (
                 line_to_parse,
                 leaf_tokens,
@@ -272,6 +279,7 @@ class ContainerBlockProcessor:
                 container_level_tokens,
                 was_container_start,
             )
+            LOGGER.debug("text>>%s>>", line_to_parse.replace(" ", "\\s"))
 
         LOGGER.debug("removed_chars_at_start>>>%s", str(removed_chars_at_start))
 
@@ -280,7 +288,9 @@ class ContainerBlockProcessor:
             LOGGER.debug(">>>>>>>>%s<<<<<<<<<<", line_to_parse)
             return container_level_tokens, line_to_parse, None
 
-        LOGGER.debug(">>__process_list_in_progress>>%s>>", line_to_parse)
+        LOGGER.debug(
+            ">>__process_list_in_progress>>%s>>", line_to_parse.replace(" ", "\\s")
+        )
         (
             did_process,
             line_to_parse,
@@ -293,7 +303,9 @@ class ContainerBlockProcessor:
             container_level_tokens,
             extracted_whitespace,
         )
-        LOGGER.debug(">>__process_list_in_progress>>%s>>", line_to_parse)
+        LOGGER.debug(
+            ">>__process_list_in_progress>>%s>>", line_to_parse.replace(" ", "\\s")
+        )
         ContainerBlockProcessor.__process_lazy_lines(
             parser_state,
             leaf_tokens,
@@ -304,6 +316,7 @@ class ContainerBlockProcessor:
             did_process,
             container_level_tokens,
         )
+        LOGGER.debug("text>>%s>>", line_to_parse.replace(" ", "\\s"))
 
         # TODO refactor to make indent unnecessary?
         calculated_indent = len(original_line_to_parse) - len(line_to_parse)

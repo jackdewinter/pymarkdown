@@ -216,18 +216,19 @@ class ListBlockProcessor:
                     str(ws_after_marker),
                     str(position_marker.index_number),
                 )
+                new_token = UnorderedListStartMarkdownToken(
+                    position_marker.text_to_parse[position_marker.index_number],
+                    indent_level,
+                    extracted_whitespace,
+                    position_marker,
+                )
                 new_stack = UnorderedListStackToken(
                     indent_level,
                     position_marker.text_to_parse[position_marker.index_number],
                     ws_before_marker,
                     ws_after_marker,
                     position_marker.index_number,
-                )
-                new_token = UnorderedListStartMarkdownToken(
-                    position_marker.text_to_parse[position_marker.index_number],
-                    indent_level,
-                    extracted_whitespace,
-                    position_marker,
+                    new_token,
                 )
 
                 LOGGER.debug("__post_list>>pre>>%s>>", position_marker.text_to_parse)
@@ -328,6 +329,13 @@ class ListBlockProcessor:
                     str(position_marker.index_number),
                 )
 
+                new_token = OrderedListStartMarkdownToken(
+                    position_marker.text_to_parse[index],
+                    position_marker.text_to_parse[position_marker.index_number : index],
+                    indent_level,
+                    extracted_whitespace,
+                    position_marker,
+                )
                 new_stack = OrderedListStackToken(
                     indent_level,
                     position_marker.text_to_parse[
@@ -336,13 +344,7 @@ class ListBlockProcessor:
                     ws_before_marker,
                     ws_after_marker,
                     position_marker.index_number,
-                )
-                new_token = OrderedListStartMarkdownToken(
-                    position_marker.text_to_parse[index],
-                    position_marker.text_to_parse[position_marker.index_number : index],
-                    indent_level,
-                    extracted_whitespace,
-                    position_marker,
+                    new_token,
                 )
 
                 (
@@ -421,9 +423,25 @@ class ListBlockProcessor:
             str(requested_list_indent),
             str(parser_state.token_stack[-1].is_paragraph),
         )
+
+        used_indent = None
+
         if leading_space_length >= requested_list_indent and allow_list_continue:
-            line_to_parse = ListBlockProcessor.__adjust_line_for_list_in_process(
-                line_to_parse, start_index, leading_space_length, requested_list_indent,
+            LOGGER.debug("before>>%s>>", line_to_parse.replace(" ", "\\s"))
+            (
+                line_to_parse,
+                used_indent,
+            ) = ListBlockProcessor.__adjust_line_for_list_in_process(
+                line_to_parse,
+                start_index,
+                extracted_whitespace,
+                leading_space_length,
+                requested_list_indent,
+            )
+            LOGGER.debug(
+                "after>>%s>>%s>>",
+                line_to_parse.replace(" ", "\\s"),
+                used_indent.replace(" ", "\\s"),
             )
         else:
             requested_list_indent = requested_list_indent - before_ws_length
@@ -438,12 +456,23 @@ class ListBlockProcessor:
                 and leading_space_length >= requested_list_indent
                 and allow_list_continue
             ):
-                line_to_parse = ListBlockProcessor.__adjust_line_for_list_in_process(
+                LOGGER.debug(
+                    ">>line_to_parse>>%s>>", line_to_parse.replace("\n", "\\n")
+                )
+                (
+                    line_to_parse,
+                    used_indent,
+                ) = ListBlockProcessor.__adjust_line_for_list_in_process(
                     line_to_parse,
                     start_index,
-                    requested_list_indent,
+                    extracted_whitespace,
+                    leading_space_length,
                     requested_list_indent,
                 )
+                LOGGER.debug(
+                    ">>line_to_parse>>%s>>", line_to_parse.replace("\n", "\\n")
+                )
+                LOGGER.debug(">>used_indent>>%s>>", used_indent.replace("\n", "\\n"))
             else:
                 container_level_tokens = ListBlockProcessor.__check_for_list_closures(
                     parser_state, line_to_parse, start_index, extracted_whitespace, ind,
@@ -456,13 +485,21 @@ class ListBlockProcessor:
                         ">>requested_list_indent>>%s", str(requested_list_indent)
                     )
                     LOGGER.warning(">>before_ws_length>>%s", str(before_ws_length))
-                    line_to_parse = ListBlockProcessor.__adjust_line_for_list_in_process(
+                    (
+                        line_to_parse,
+                        _,
+                    ) = ListBlockProcessor.__adjust_line_for_list_in_process(
                         line_to_parse,
                         start_index,
+                        extracted_whitespace,
                         requested_list_indent,
                         before_ws_length,
                     )
 
+        if used_indent is not None:
+            parser_state.token_stack[ind].matching_markdown_token.add_leading_spaces(
+                used_indent
+            )
         return container_level_tokens, line_to_parse
 
     # pylint: disable=too-many-arguments
@@ -849,15 +886,33 @@ class ListBlockProcessor:
 
     @staticmethod
     def __adjust_line_for_list_in_process(
-        line_to_parse, start_index, leading_space_length, requested_list_indent
+        line_to_parse,
+        start_index,
+        leading_space,
+        leading_space_length,
+        requested_list_indent,
     ):
         """
         Alter the current line to better represent the current level of lists.
         """
-        LOGGER.debug("enough ws to continue")
         remaining_indent = leading_space_length - requested_list_indent
+        LOGGER.debug(
+            "enough ws to continue; line(%s),start_index(%s),leading_space(%s)",
+            line_to_parse,
+            str(start_index),
+            str(leading_space),
+        )
+        LOGGER.debug(
+            "enough ws to continue; lsl(%s)-rsi(%s)=ri(%s)",
+            str(leading_space_length),
+            str(requested_list_indent),
+            str(remaining_indent),
+        )
+        removed_whitespace = ""
+        if leading_space and "\t" not in leading_space:
+            removed_whitespace = leading_space[0:requested_list_indent]
         line_to_parse = "".rjust(remaining_indent, " ") + line_to_parse[start_index:]
-        return line_to_parse
+        return line_to_parse, removed_whitespace
 
     @staticmethod
     def __check_for_list_closures(
