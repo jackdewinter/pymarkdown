@@ -104,8 +104,6 @@ def __calc_initial_whitespace(calc_token):
     if calc_token.token_name in (
         MarkdownToken.token_indented_code_block,
         MarkdownToken.token_atx_heading,
-        MarkdownToken.token_ordered_list_start,
-        MarkdownToken.token_unordered_list_start,
         MarkdownToken.token_new_list_item,
         MarkdownToken.token_thematic_break,
         MarkdownToken.token_fenced_code_block,
@@ -115,6 +113,15 @@ def __calc_initial_whitespace(calc_token):
     ):
         indent_level = len(calc_token.extracted_whitespace)
         had_tab = bool("\t" in calc_token.extracted_whitespace)
+    elif (
+        calc_token.token_name == MarkdownToken.token_ordered_list_start
+        or calc_token.token_name == MarkdownToken.token_unordered_list_start
+    ):
+        indent_level = len(calc_token.extracted_whitespace)
+        had_tab = bool(
+            "\t" in calc_token.extracted_whitespace
+            or (calc_token.leading_spaces and "\t" in calc_token.leading_spaces)
+        )
     elif (
         calc_token.token_name == MarkdownToken.token_html_block
         or calc_token.token_name == MarkdownToken.token_blank_line
@@ -201,6 +208,11 @@ def __validate_same_line(
         print(">>top_block>>w/ tab=" + str(had_tab))
         if had_tab:
             return
+
+    _, had_tab = __calc_initial_whitespace(current_token)
+    print(">>current_token>>w/ tab=" + str(had_tab))
+    if had_tab:
+        return
 
     assert last_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK
     assert current_position.index_number > last_position.index_number

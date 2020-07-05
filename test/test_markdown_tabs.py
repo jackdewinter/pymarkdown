@@ -182,7 +182,7 @@ def test_tabs_004x():
 \tbar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist(1,3):-::4:  :]",
+        "[ulist(1,3):-::4:  :\t]",
         "[para(1,5):]",
         "[text:foo:]",
         "[end-para]",
@@ -206,7 +206,7 @@ def test_tabs_004x():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    # assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -264,7 +264,7 @@ def test_tabs_005():
 \t\tbar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist(1,1):-::2::]",
+        "[ulist(1,1):-::2::\t]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
@@ -452,7 +452,7 @@ def test_tabs_007():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    # assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -486,7 +486,7 @@ def test_tabs_007a():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    # assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -520,7 +520,7 @@ def test_tabs_007b():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    # assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -554,7 +554,7 @@ def test_tabs_007c():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    # assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm

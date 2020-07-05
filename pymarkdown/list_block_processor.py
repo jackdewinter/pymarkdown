@@ -909,8 +909,11 @@ class ListBlockProcessor:
             str(remaining_indent),
         )
         removed_whitespace = ""
-        if leading_space and "\t" not in leading_space:
-            removed_whitespace = leading_space[0:requested_list_indent]
+        if leading_space:
+            if "\t" in leading_space:
+                removed_whitespace = "\t"
+            else:
+                removed_whitespace = leading_space[0:requested_list_indent]
         line_to_parse = "".rjust(remaining_indent, " ") + line_to_parse[start_index:]
         return line_to_parse, removed_whitespace
 
