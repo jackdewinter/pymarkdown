@@ -1578,7 +1578,7 @@ def test_reference_links_576():
 [foo]: /url1"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:shortcut:/url1::not:::foo]",
+        "[link:shortcut:/url1:::::foo]",
         "[text:foo:]",
         "[end-link::]",
         "[text:(not a link):]",

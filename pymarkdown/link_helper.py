@@ -767,6 +767,7 @@ class LinkHelper:
                 text_from_blocks, new_index, "shortcut"
             )
             label_type = "shortcut"
+            pre_inline_link = ""
 
         token_to_append = None
         if update_index != -1:
