@@ -338,8 +338,14 @@ class LinkHelper:
                 image_alt_text = image_alt_text + inline_blocks[ind + 1].token_text
             elif isinstance(inline_blocks[ind + 1], ImageStartMarkdownToken):
                 image_alt_text = image_alt_text + inline_blocks[ind + 1].image_alt_text
+
+            LOGGER.debug(">>add>>%s<<%s", str(inline_blocks[ind + 1]), image_alt_text)
+
             del inline_blocks[ind + 1]
+
+        LOGGER.debug(">>before>>%s>>", image_alt_text)
         image_alt_text = image_alt_text + remaining_line
+        LOGGER.debug(">>after>>%s>>", image_alt_text)
         return image_alt_text
 
     @staticmethod
@@ -352,11 +358,44 @@ class LinkHelper:
         LOGGER.debug(">>collect_text_from_blocks>>suffix_text>>%s", str(suffix_text))
         collected_text = ""
         collect_index = ind + 1
+
+        inline_link_end_name = (
+            EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
+        )
+
         while collect_index < len(inline_blocks):
-            collected_text = collected_text + inline_blocks[collect_index].token_text
+
+            if (
+                inline_blocks[collect_index].token_name
+                == MarkdownToken.token_inline_link
+                or inline_blocks[collect_index].token_name == inline_link_end_name
+            ):
+                pass
+            elif (
+                inline_blocks[collect_index].token_name
+                == MarkdownToken.token_inline_image
+            ):
+                collected_text = (
+                    collected_text + inline_blocks[collect_index].image_alt_text
+                )
+            elif (
+                inline_blocks[collect_index].token_name
+                == MarkdownToken.token_inline_code_span
+            ):
+                collected_text = collected_text + inline_blocks[collect_index].span_text
+            else:
+                collected_text = (
+                    collected_text + inline_blocks[collect_index].token_text
+                )
+            LOGGER.debug(
+                ">>collect_text>>%s<<%s<<%s<<",
+                collected_text,
+                str(inline_blocks[collect_index]),
+                inline_blocks[collect_index].token_text,
+            )
             collect_index += 1
         collected_text = collected_text + suffix_text
-        LOGGER.debug(">>collect_text_from_blocks>>%s<<", str(collected_text))
+        LOGGER.debug(">>collect_text_from_blocks>>%s<<", collected_text)
         return collected_text
 
     @staticmethod

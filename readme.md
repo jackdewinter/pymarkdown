@@ -15,7 +15,7 @@
 
 - 081 - whitespace at start of lines in icb are not stored anywhere
 
-- 528b - word text gets inserted instead of actual text
+- 576? why is not getting left in token?
 - backslash in code span? what should it look like?
 - backslash and char ent in link label? tests?
 

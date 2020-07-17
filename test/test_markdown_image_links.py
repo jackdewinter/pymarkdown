@@ -87,7 +87,7 @@ def test_image_link_582():
     source_markdown = """![foo ![bar](/url)](/url2)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[image:inline:/url2::foo bar::::foo text]",
+        "[image:inline:/url2::foo bar::::foo bar]",
         "[end-para]",
     ]
     expected_gfm = """<p><img src="/url2" alt="foo bar" /></p>"""
@@ -114,7 +114,7 @@ def test_image_link_583():
     source_markdown = """![foo [bar](/url)](/url2)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[image:inline:/url2::foo bar::::foo textbartext]",
+        "[image:inline:/url2::foo bar::::foo bar]",
         "[end-para]",
     ]
     expected_gfm = """<p><img src="/url2" alt="foo bar" /></p>"""

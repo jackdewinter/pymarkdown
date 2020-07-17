@@ -135,7 +135,7 @@ def test_reference_links_538():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/uri::::ref:link *foo **bar** text*]",
+        "[link:full:/uri::::ref:link *foo **bar** #*]",
         "[text:link :]",
         "[emphasis:1]",
         "[text:foo :]",
@@ -176,7 +176,7 @@ def test_reference_links_539():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/uri::::ref:text]",
+        "[link:full:/uri::::ref:moon]",
         "[image:inline:moon.jpg::moon::::moon]",
         "[end-link::]",
         "[end-para]",
