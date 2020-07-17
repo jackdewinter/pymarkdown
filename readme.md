@@ -15,7 +15,6 @@
 
 - 081 - whitespace at start of lines in icb are not stored anywhere
 
-- backslash in code span? what should it look like?
 - backslash and char ent in link label? tests?
 
 ## Bugs - Character Entities
