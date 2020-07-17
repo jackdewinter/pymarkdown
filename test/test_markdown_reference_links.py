@@ -931,7 +931,6 @@ def test_reference_links_559():
         "[text:]:]",
         "[text:: /uri:]",
         "[end-para]",
-        "[BLANK(4,1):]",
     ]
     expected_gfm = """<p>[]</p>
 <p>[]: /uri</p>"""
@@ -973,7 +972,6 @@ def test_reference_links_560():
         "[text:]:]",
         "[text:: /uri:]",
         "[end-para]",
-        "[BLANK(6,1):]",
     ]
     expected_gfm = """<p>[
 ]</p>

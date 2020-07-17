@@ -569,7 +569,7 @@ def test_link_reference_definitions_176():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """[foo]: /url"""
-    expected_tokens = ['[link-ref-def(1,1):True::foo:: :/url:::::]']
+    expected_tokens = ["[link-ref-def(1,1):True::foo:: :/url:::::]"]
     expected_gfm = """"""
 
     # Act
@@ -998,7 +998,7 @@ def test_link_reference_definitions_188():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """[foo]: /url"""
-    expected_tokens = ['[link-ref-def(1,1):True::foo:: :/url:::::]']
+    expected_tokens = ["[link-ref-def(1,1):True::foo:: :/url:::::]"]
     expected_gfm = """"""
 
     # Act
@@ -1010,6 +1010,7 @@ def test_link_reference_definitions_188():
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
 
+
 @pytest.mark.gfm
 def test_link_reference_definitions_188a():
     """
@@ -1020,7 +1021,7 @@ def test_link_reference_definitions_188a():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """["""
-    expected_tokens = ['[para(1,1):]', '[text:[:]', '[end-para]', '[BLANK(2,1):]']
+    expected_tokens = ["[para(1,1):]", "[text:[:]", "[end-para]"]
     expected_gfm = """<p>[</p>"""
 
     # Act
@@ -1030,7 +1031,8 @@ def test_link_reference_definitions_188a():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    # assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
+
 
 @pytest.mark.gfm
 def test_link_reference_definitions_188b():
@@ -1042,7 +1044,7 @@ def test_link_reference_definitions_188b():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """[foo"""
-    expected_tokens = ['[para(1,1):]', '[text:[:]', '[text:foo:]', '[end-para]', '[BLANK(2,1):]']
+    expected_tokens = ["[para(1,1):]", "[text:[:]", "[text:foo:]", "[end-para]"]
     expected_gfm = """<p>[foo</p>"""
 
     # Act
@@ -1052,7 +1054,8 @@ def test_link_reference_definitions_188b():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    #assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
+
 
 @pytest.mark.gfm
 def test_link_reference_definitions_188c():
@@ -1064,7 +1067,13 @@ def test_link_reference_definitions_188c():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """[foo]"""
-    expected_tokens = ['[para(1,1):]', '[text:[:]', '[text:foo:]', '[text:]:]', '[end-para]']
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[end-para]",
+    ]
     expected_gfm = """<p>[foo]</p>"""
 
     # Act
@@ -1076,6 +1085,7 @@ def test_link_reference_definitions_188c():
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
 
+
 @pytest.mark.gfm
 def test_link_reference_definitions_188d():
     """
@@ -1086,7 +1096,14 @@ def test_link_reference_definitions_188d():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """[foo]:"""
-    expected_tokens = ['[para(1,1):]', '[text:[:]', '[text:foo:]', '[text:]:]', '[text:::]', '[end-para]', '[BLANK(2,1):]']
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[text:::]",
+        "[end-para]",
+    ]
     expected_gfm = """<p>[foo]:</p>"""
 
     # Act
@@ -1096,7 +1113,8 @@ def test_link_reference_definitions_188d():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    # assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
+
 
 @pytest.mark.gfm
 def test_link_reference_definitions_188e():
@@ -1108,7 +1126,14 @@ def test_link_reference_definitions_188e():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """[foo]: /url ("""
-    expected_tokens = ['[para(1,1):]', '[text:[:]', '[text:foo:]', '[text:]:]', '[text:: /url (:]', '[end-para]', '[BLANK(2,1):]']
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text:[:]",
+        "[text:foo:]",
+        "[text:]:]",
+        "[text:: /url (:]",
+        "[end-para]",
+    ]
     expected_gfm = """<p>[foo]: /url (</p>"""
 
     # Act
@@ -1118,4 +1143,4 @@ def test_link_reference_definitions_188e():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    #assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)

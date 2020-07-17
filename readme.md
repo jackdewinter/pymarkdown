@@ -14,7 +14,6 @@
 - add ex_ws into tokens for block quote
 
 - 081 - whitespace at start of lines in icb are not stored anywhere
-- 559, 560, 188* - extra blank line token causes mismatch with original text
 
 - 575?
 - 528b - word text gets inserted instead of actual text

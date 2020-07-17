@@ -90,6 +90,7 @@ class TokenizedMarkdown:
         except Exception as this_exception:
             raise BadTokenizationError() from this_exception
 
+    # pylint: disable=too-many-statements
     def __parse_blocks_pass(self):
         """
         The first pass at the tokens is to deal with blocks.
@@ -124,6 +125,10 @@ class TokenizedMarkdown:
             if did_start_close:
                 LOGGER.debug("\n\ncleanup")
 
+                was_link_definition_started_before_close = False
+                if self.stack[-1].was_link_definition_started:
+                    was_link_definition_started_before_close = True
+
                 did_started_close = True
                 (
                     tokens_from_line,
@@ -136,17 +141,21 @@ class TokenizedMarkdown:
                     include_lists=True,
                     caller_can_handle_requeue=True,
                 )
-                if self.stack[-1].was_link_definition_started:
-                    LOGGER.debug("partial linkdef:>>%s>>", self.stack[-1].get_joined_lines("]]"))
                 if tokens_from_line and not self.tokenized_document:
                     self.tokenized_document.extend(tokens_from_line)
+
                 if not lines_to_requeue:
                     break
+
+                if was_link_definition_started_before_close and not lines_to_requeue[0]:
+                    del lines_to_requeue[0]
+                    line_number -= 1
 
                 did_start_close = False
                 tokens_from_line = None
                 LOGGER.debug(
-                    "\n\n\n\n\n\n\n\n\n\n>>lines_to_requeue>>%s", str(lines_to_requeue)
+                    "\n\n>>lines_to_requeue>>%s",
+                    str(lines_to_requeue).replace("\n", "\\n"),
                 )
             else:
                 if not token_to_use or not token_to_use.strip():
@@ -197,6 +206,8 @@ class TokenizedMarkdown:
             )
 
         return self.tokenized_document
+
+    # pylint: enable=too-many-statements
 
     @staticmethod
     def __xx(line_number, lines_to_requeue, requeue, force_ignore_first_as_lrd):
