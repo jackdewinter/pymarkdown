@@ -569,7 +569,7 @@ def test_link_reference_definitions_176():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """[foo]: /url"""
-    expected_tokens = []
+    expected_tokens = ['[link-ref-def(1,1):True::foo:: :/url:::::]']
     expected_gfm = """"""
 
     # Act
@@ -579,7 +579,7 @@ def test_link_reference_definitions_176():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    # assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -998,7 +998,7 @@ def test_link_reference_definitions_188():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """[foo]: /url"""
-    expected_tokens = []
+    expected_tokens = ['[link-ref-def(1,1):True::foo:: :/url:::::]']
     expected_gfm = """"""
 
     # Act
@@ -1008,4 +1008,114 @@ def test_link_reference_definitions_188():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_188a():
+    """
+    Test case 188a:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """["""
+    expected_tokens = ['[para(1,1):]', '[text:[:]', '[end-para]', '[BLANK(2,1):]']
+    expected_gfm = """<p>[</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
     # assert_token_consistency(source_markdown, actual_tokens)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_188b():
+    """
+    Test case 188b:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo"""
+    expected_tokens = ['[para(1,1):]', '[text:[:]', '[text:foo:]', '[end-para]', '[BLANK(2,1):]']
+    expected_gfm = """<p>[foo</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    #assert_token_consistency(source_markdown, actual_tokens)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_188c():
+    """
+    Test case 188c:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo]"""
+    expected_tokens = ['[para(1,1):]', '[text:[:]', '[text:foo:]', '[text:]:]', '[end-para]']
+    expected_gfm = """<p>[foo]</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_188d():
+    """
+    Test case 188d:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo]:"""
+    expected_tokens = ['[para(1,1):]', '[text:[:]', '[text:foo:]', '[text:]:]', '[text:::]', '[end-para]', '[BLANK(2,1):]']
+    expected_gfm = """<p>[foo]:</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    # assert_token_consistency(source_markdown, actual_tokens)
+
+@pytest.mark.gfm
+def test_link_reference_definitions_188e():
+    """
+    Test case 188e:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo]: /url ("""
+    expected_tokens = ['[para(1,1):]', '[text:[:]', '[text:foo:]', '[text:]:]', '[text:: /url (:]', '[end-para]', '[BLANK(2,1):]']
+    expected_gfm = """<p>[foo]: /url (</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    #assert_token_consistency(source_markdown, actual_tokens)

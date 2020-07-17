@@ -123,9 +123,10 @@ class TokenizedMarkdown:
             )
             if did_start_close:
                 LOGGER.debug("\n\ncleanup")
+
                 did_started_close = True
                 (
-                    _,
+                    tokens_from_line,
                     lines_to_requeue,
                     force_ignore_first_as_lrd,
                 ) = TokenizedMarkdown.__close_open_blocks(
@@ -135,6 +136,10 @@ class TokenizedMarkdown:
                     include_lists=True,
                     caller_can_handle_requeue=True,
                 )
+                if self.stack[-1].was_link_definition_started:
+                    LOGGER.debug("partial linkdef:>>%s>>", self.stack[-1].get_joined_lines("]]"))
+                if tokens_from_line and not self.tokenized_document:
+                    self.tokenized_document.extend(tokens_from_line)
                 if not lines_to_requeue:
                     break
 
@@ -298,13 +303,30 @@ class TokenizedMarkdown:
                 ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
                     parser_state, empty_position_marker, "", ""
                 )
+                LOGGER.debug("BOOOM")
                 if caller_can_handle_requeue and lines_to_requeue:
+                    LOGGER.debug("BOOOM-->break")
                     break
                 assert not lines_to_requeue
                 LOGGER.debug(
-                    "cob->process_link_reference_definition>>outer_processed>>%s>did_complete_lrd>%s<",
+                    "cob->process_link_reference_definition>>outer_processed>>%s",
                     str(outer_processed),
+                )
+                LOGGER.debug(
+                    "cob->process_link_reference_definition>>did_complete_lrd>>%s",
                     str(did_complete_lrd),
+                )
+                LOGGER.debug(
+                    "cob->process_link_reference_definition>>lines_to_requeue>>%s",
+                    str(lines_to_requeue),
+                )
+                LOGGER.debug(
+                    "cob->process_link_reference_definition>>force_ignore_first_as_lrd>>%s",
+                    str(force_ignore_first_as_lrd),
+                )
+                LOGGER.debug(
+                    "cob->process_link_reference_definition>>adjusted_tokens>>%s",
+                    str(adjusted_tokens),
                 )
                 assert not did_pause_lrd
             else:
