@@ -141,7 +141,7 @@ def test_block_quotes_209():
     > baz"""
     expected_tokens = [
         "[icode-block(1,5):    ]",
-        "[text:&gt; # Foo\n&gt; bar\n&gt; baz:]",
+        "[text:\a>\a&gt;\a # Foo\n\a>\a&gt;\a bar\n\a>\a&gt;\a baz:]",
         "[end-icode-block]",
     ]
     expected_gfm = """<pre><code>&gt; # Foo
@@ -366,13 +366,13 @@ foo
 ```"""
     expected_tokens = [
         "[block-quote(1,1):]",
-        "[fcode-block(1,3):`:3::::]",
+        "[fcode-block(1,3):`:3::::::]",
         "[end-fcode-block]",
         "[end-block-quote]",
         "[para(2,1):]",
         "[text:foo:]",
         "[end-para]",
-        "[fcode-block(3,1):`:3::::]",
+        "[fcode-block(3,1):`:3::::::]",
         "[end-fcode-block]",
     ]
     expected_gfm = """<blockquote>

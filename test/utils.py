@@ -4,7 +4,9 @@ Module to provide helper methods for tests.
 import difflib
 import json
 import tempfile
+from test.transform_to_markdown import TransformToMarkdown
 
+from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.markdown_token import (
     EndMarkdownToken,
     MarkdownToken,
@@ -34,10 +36,20 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
     """
 
     print("\n---")
-    print("expected_tokens: " + str(expected_tokens))
+    print(
+        "expected_tokens: "
+        + str(expected_tokens)
+        .replace("\a", "\\a")
+        .replace("\\x07", "\\a")
+        .replace("\\\\x08", "\\b")
+    )
     print(
         "parsed_tokens  : "
-        + str(actual_tokens).replace("\n", "\\n").replace("\t", "\\t")
+        + str(actual_tokens)
+        .replace("\n", "\\n")
+        .replace("\t", "\\t")
+        .replace(InlineHelper.backspace_character, "\\b")
+        .replace("\a", "\\a")
     )
     assert len(expected_tokens) == len(actual_tokens), (
         "List lengths are not the same: ("
@@ -215,6 +227,8 @@ def __validate_same_line(
         return
 
     assert last_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK
+
+    # TODO replace > with computation for block quote cases
     assert current_position.index_number > last_position.index_number
     if last_token.token_name != MarkdownToken.token_block_quote:
         assert last_token.token_name in (
@@ -242,6 +256,8 @@ def __validate_new_line(container_block_stack, current_token, current_position):
     print(">>init_ws(" + str(init_ws) + ")>>w/ tab=" + str(had_tab))
     if had_tab:
         return
+
+    # TODO validate line number based on content, need enablement of inline
 
     if (
         container_block_stack
@@ -293,10 +309,12 @@ def __validate_first_token(current_token, current_position):
         assert current_position.index_number == 1 + init_ws
 
 
-def assert_token_consistency(source_markdown, expected_tokens):
+def assert_token_consistency(source_markdown, actual_tokens):
     """
     Compare the markdown document against the tokens that are expected.
     """
+
+    verify_markdown_roundtrip(source_markdown, actual_tokens)
 
     split_lines = source_markdown.split("\n")
     number_of_lines = len(split_lines)
@@ -304,7 +322,7 @@ def assert_token_consistency(source_markdown, expected_tokens):
 
     last_token = None
     container_block_stack = []
-    for current_token in expected_tokens:
+    for current_token in actual_tokens:
         if (
             current_token.token_class == MarkdownTokenClass.INLINE_BLOCK
             and not isinstance(current_token, EndMarkdownToken)
@@ -371,3 +389,40 @@ def assert_token_consistency(source_markdown, expected_tokens):
             __validate_first_token(current_token, current_position)
 
         last_token = current_token
+
+
+def verify_markdown_roundtrip(source_markdown, actual_tokens):
+    """
+    Verify that we can use the information in the tokens to do a round trip back
+    to the original Markdown that created the token.
+    """
+
+    if "\t" in source_markdown:
+        return
+
+    transformer = TransformToMarkdown()
+    original_markdown, avoid_processing = transformer.transform(actual_tokens)
+
+    if avoid_processing:
+        print("Processing of xx avoided")
+    else:
+        print(
+            "\n-=-=-\nExpected\n-=-=-\n"
+            + source_markdown
+            + "\n-=-=-\nActual\n-=-=-\n"
+            + original_markdown
+            + "\n-=-=-\n"
+        )
+        diff = difflib.ndiff(source_markdown, original_markdown)
+        diff_values = (
+            "\n-=-=-n"
+            + "\n".join(list(diff))
+            + "\n-=-=-expected\n"
+            + source_markdown.replace("\n", "\\n")
+            + "\n-=-=-actual\n"
+            + original_markdown.replace("\n", "\\n")
+            + "\n-=-=-\n"
+        )
+        assert source_markdown == original_markdown, (
+            "Strings are not equal." + diff_values
+        )

@@ -1294,7 +1294,7 @@ def test_html_blocks_152():
         "[end-html-block]",
         "[BLANK(2,1):]",
         "[icode-block(3,5):    ]",
-        "[text:&lt;!-- foo --&gt;:]",
+        "[text:\a<\a&lt;\a!-- foo --\a>\a&gt;\a:]",
         "[end-icode-block]",
     ]
     expected_gfm = """  <!-- foo -->
@@ -1329,7 +1329,7 @@ def test_html_blocks_153():
         "[end-html-block]",
         "[BLANK(2,1):]",
         "[icode-block(3,5):    ]",
-        "[text:&lt;div&gt;:]",
+        "[text:\a<\a&lt;\adiv\a>\a&gt;\a:]",
         "[end-icode-block]",
     ]
     expected_gfm = """  <div>
@@ -1612,7 +1612,7 @@ def test_html_blocks_160():
         "[end-html-block]",
         "[BLANK(4,1):]",
         "[icode-block(5,5):    ]",
-        "[text:&lt;td&gt;\n  Hi\n&lt;/td&gt;:]",
+        "[text:\a<\a&lt;\atd\a>\a&gt;\a\n  Hi\n\a<\a&lt;\a/td\a>\a&gt;\a:]",
         "[end-icode-block]",
         "[BLANK(8,1):]",
         "[html-block(9,1)]",
@@ -1731,7 +1731,7 @@ def test_html_blocks_cov2():
 </x-table>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:&lt;/hrx:]",
+        "[text:\a<\a&lt;\a/hrx:]",
         "[end-para]",
         "[block-quote(2,1):]",
         "[BLANK(2,2):]",
@@ -1768,7 +1768,7 @@ def test_html_blocks_cov3():
 </x-table>"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text:&lt;!bad&gt;\n::\n]",
+        "[text:\a<\a&lt;\a!bad\a>\a&gt;\a\n::\n]",
         "[raw-html:/x-table]",
         "[end-para]",
     ]
@@ -1799,7 +1799,7 @@ bad>
 </x-table>"""
     expected_tokens = [
         "[para(1,1):\n\n]",
-        "[text:&lt;\nbad&gt;\n::\n\n]",
+        "[text:\a<\a&lt;\a\nbad\a>\a&gt;\a\n::\n\n]",
         "[raw-html:/x-table]",
         "[end-para]",
     ]

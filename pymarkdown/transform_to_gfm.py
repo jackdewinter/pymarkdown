@@ -443,23 +443,86 @@ class TransformToGfm:
         return output_html
 
     @classmethod
+    def resolve_backspaces_from_text(cls, token_text):
+        """
+        As the backslashes signal a backslash that was used, and we need the
+        final text anyways, simply skip over that text.
+        """
+        adjusted_text_token = token_text
+        while InlineHelper.backspace_character in adjusted_text_token:
+            ing = adjusted_text_token.index(InlineHelper.backspace_character)
+            adjusted_text_token = (
+                adjusted_text_token[0 : ing - 1] + adjusted_text_token[ing + 1 :]
+            )
+        return adjusted_text_token
+
+    @classmethod
+    def resolve_references_from_text(cls, adjusted_text_token):
+        """
+        The alert characters signal that a replacement has occurred, so make sure
+        we take the right text from the replacement.
+        """
+        while "\a" in adjusted_text_token:
+            start_replacement_index = adjusted_text_token.index("\a")
+            middle_replacement_index = adjusted_text_token.index(
+                "\a", start_replacement_index + 1
+            )
+            end_replacement_index = adjusted_text_token.index(
+                "\a", middle_replacement_index + 1
+            )
+
+            if middle_replacement_index + 1 == end_replacement_index:
+                inner_start_replacement_index = adjusted_text_token.index(
+                    "\a", end_replacement_index + 1
+                )
+                inner_middle_replacement_index = adjusted_text_token.index(
+                    "\a", inner_start_replacement_index + 1
+                )
+                inner_end_replacement_index = adjusted_text_token.index(
+                    "\a", inner_middle_replacement_index + 1
+                )
+                replace_text = adjusted_text_token[
+                    inner_start_replacement_index + 1 : inner_middle_replacement_index
+                ]
+                assert inner_middle_replacement_index + 1 == inner_end_replacement_index
+                end_replacement_index = inner_end_replacement_index
+            else:
+                replace_text = adjusted_text_token[
+                    middle_replacement_index + 1 : end_replacement_index
+                ]
+            if start_replacement_index:
+                adjusted_text_token = (
+                    adjusted_text_token[0:start_replacement_index]
+                    + replace_text
+                    + adjusted_text_token[end_replacement_index + 1 :]
+                )
+            else:
+                adjusted_text_token = (
+                    replace_text + adjusted_text_token[end_replacement_index + 1 :]
+                )
+        return adjusted_text_token
+
+    @classmethod
     def handle_text_token(cls, output_html, next_token, transform_state):
         """
         Handle the text token.
         """
+        adjusted_text_token = cls.resolve_backspaces_from_text(next_token.token_text)
+        adjusted_text_token = cls.resolve_references_from_text(adjusted_text_token)
+
         if transform_state.is_in_code_block:
             output_html = (
-                output_html + next_token.extracted_whitespace + next_token.token_text
+                output_html + next_token.extracted_whitespace + adjusted_text_token
             )
         elif transform_state.is_in_html_block:
             output_html = (
                 output_html
                 + next_token.extracted_whitespace
-                + next_token.token_text
+                + adjusted_text_token
                 + "\n"
             )
         else:
-            output_html = output_html + next_token.token_text
+            output_html = output_html + adjusted_text_token
 
         return output_html
 
@@ -704,7 +767,11 @@ class TransformToGfm:
         Handle the code span token.
         """
         assert transform_state
-        output_html = output_html + "<code>" + next_token.span_text + "</code>"
+
+        adjusted_text_token = cls.resolve_backspaces_from_text(next_token.span_text)
+        adjusted_text_token = cls.resolve_references_from_text(adjusted_text_token)
+
+        output_html = output_html + "<code>" + adjusted_text_token + "</code>"
         return output_html
 
     @classmethod
@@ -800,6 +867,7 @@ class TransformToGfm:
             "",
             next_token.autolink_text,
             alternate_escape_map=TransformToGfm.uri_autolink_html_character_escape_map,
+            add_text_signature=False,
         )
         in_tag_text = ""
         for next_character in in_tag_pretext:
@@ -812,7 +880,9 @@ class TransformToGfm:
             else:
                 in_tag_text = in_tag_text + next_character
 
-        in_anchor_text = InlineHelper.append_text("", next_token.autolink_text)
+        in_anchor_text = InlineHelper.append_text(
+            "", next_token.autolink_text, add_text_signature=False
+        )
 
         output_html = (
             output_html + '<a href="' + in_tag_text + '">' + in_anchor_text + "</a>"

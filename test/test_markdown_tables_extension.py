@@ -69,11 +69,11 @@ def test_tables_extension_200():
 | b **\\|** im |"""
     expected_tokens = [
         "[para(1,1):\n\n\n]",
-        "[text:| f|oo  |\n| ------ |\n| b ::\n\n]",
+        "[text:| f\\\b|oo  |\n| ------ |\n| b ::\n\n]",
         "[icode-span:\\|]",
         "[text: az |\n| b ::\n]",
         "[emphasis:2]",
-        "[text:|:]",
+        "[text:\\\b|:]",
         "[end-emphasis::2]",
         "[text: im |:]",
         "[end-para]",

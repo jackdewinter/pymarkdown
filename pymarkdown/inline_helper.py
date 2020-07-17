@@ -59,6 +59,7 @@ class InlineResponse:
         self.new_tokens = None
         self.new_string_unresolved = None
         self.consume_rest_of_line = False
+        self.original_string = None
         self.clear_fields()
 
     def clear_fields(self):
@@ -70,6 +71,7 @@ class InlineResponse:
         self.new_tokens = None
         self.new_string_unresolved = None
         self.consume_rest_of_line = False
+        self.original_string = None
 
 
 # pylint: enable=too-few-public-methods
@@ -97,6 +99,8 @@ class InlineHelper:
     __angle_bracket_end = ">"
     code_span_bounds = "`"
     backslash_character = "\\"
+    backspace_character = "\b"
+    __alert_character = "\a"
     __entity_map = {}
     character_reference_start_character = "&"
     __numeric_character_reference_start_character = "#"
@@ -120,7 +124,7 @@ class InlineHelper:
         InlineHelper.__entity_map = InlineHelper.__load_entity_map(resource_path)
 
     @staticmethod
-    def handle_inline_backslash(inline_request):
+    def handle_inline_backslash(inline_request, add_text_signature=True):
         """
         Handle the inline case of having a backslash.
         """
@@ -140,7 +144,13 @@ class InlineHelper:
                 inline_request.source_text[inline_response.new_index]
                 in InlineHelper.__backslash_punctuation
             ):
-                inline_response.new_string = inline_request.source_text[
+                inline_response.new_string = ""
+                if add_text_signature:
+                    inline_response.new_string += (
+                        InlineHelper.backslash_character
+                        + InlineHelper.backspace_character
+                    )
+                inline_response.new_string += inline_request.source_text[
                     inline_response.new_index
                 ]
                 inline_response.new_string_unresolved = (
@@ -172,6 +182,7 @@ class InlineHelper:
             (
                 inline_response.new_string,
                 inline_response.new_index,
+                inline_response.original_string,
             ) = InlineHelper.__handle_numeric_character_reference(
                 inline_request.source_text, inline_response.new_index
             )
@@ -193,6 +204,7 @@ class InlineHelper:
                     end_index += 1
                     collected_string += InlineHelper.__character_reference_end_character
                     if collected_string in InlineHelper.__entity_map:
+                        inline_response.original_string = collected_string
                         collected_string = InlineHelper.__entity_map[collected_string]
                 inline_response.new_string = collected_string
                 inline_response.new_index = end_index
@@ -203,7 +215,17 @@ class InlineHelper:
         return inline_response
 
     @staticmethod
-    def handle_backslashes(source_text):
+    def lookup_named_entity(entity_to_lookup):
+        """
+        Lookup the given entity in the global lookup table.
+        """
+        found_entity_entry = None
+        if entity_to_lookup in InlineHelper.__entity_map:
+            found_entity_entry = InlineHelper.__entity_map[entity_to_lookup]
+        return found_entity_entry
+
+    @staticmethod
+    def handle_backslashes(source_text, add_text_signature=True):
         """
         Handle the processing of backslashes for anything other than the text
         blocks, which have additional needs for parsing.
@@ -219,8 +241,11 @@ class InlineHelper:
             current_char = source_text[next_index]
 
             inline_request = InlineRequest(source_text, next_index)
+            LOGGER.debug("handle_backslashes>>%s>>", current_char)
             if current_char == InlineHelper.backslash_character:
-                inline_response = InlineHelper.handle_inline_backslash(inline_request)
+                inline_response = InlineHelper.handle_inline_backslash(
+                    inline_request, add_text_signature=add_text_signature
+                )
                 new_string = inline_response.new_string
                 new_index = inline_response.new_index
             else:
@@ -233,6 +258,8 @@ class InlineHelper:
                 )
                 new_string = inline_response.new_string
                 new_index = inline_response.new_index
+
+            LOGGER.debug("handle_backslashes<<%s<<%s", new_string, str(new_index))
             current_string = current_string + new_string
             start_index = new_index
             next_index = ParserHelper.index_any_of(
@@ -244,7 +271,12 @@ class InlineHelper:
         return current_string
 
     @staticmethod
-    def append_text(string_to_append_to, text_to_append, alternate_escape_map=None):
+    def append_text(
+        string_to_append_to,
+        text_to_append,
+        alternate_escape_map=None,
+        add_text_signature=True,
+    ):
         """
         Append the text to the given string, doing any needed encoding as we go.
         """
@@ -257,11 +289,19 @@ class InlineHelper:
             text_to_append, alternate_escape_map.keys(), start_index
         )
         while next_index != -1:
-            string_to_append_to = (
-                string_to_append_to
-                + text_to_append[start_index:next_index]
-                + alternate_escape_map[text_to_append[next_index]]
-            )
+
+            string_part = text_to_append[start_index:next_index]
+            if add_text_signature:
+                string_part += (
+                    InlineHelper.__alert_character
+                    + text_to_append[next_index]
+                    + InlineHelper.__alert_character
+                )
+            string_part += alternate_escape_map[text_to_append[next_index]]
+            if add_text_signature:
+                string_part += InlineHelper.__alert_character
+
+            string_to_append_to += string_part
 
             start_index = next_index + 1
             next_index = ParserHelper.index_any_of(
@@ -485,6 +525,7 @@ class InlineHelper:
         Handle a character reference that is numeric in nature.
         """
 
+        original_reference = None
         new_index += 1
         translated_reference = -1
         if new_index < len(source_text) and (
@@ -541,11 +582,12 @@ class InlineHelper:
             == InlineHelper.__character_reference_end_character
         ):
             new_index += 1
+            original_reference = new_string + ";"
             if translated_reference == 0:
                 new_string = InlineHelper.__invalid_reference_character_substitute
             else:
                 new_string = chr(translated_reference)
-        return new_string, new_index
+        return new_string, new_index, original_reference
 
     @staticmethod
     def __load_entity_map(resource_path):
@@ -627,6 +669,7 @@ class InlineHelper:
                 text_to_parse, 1, InlineHelper.__valid_scheme_characters
             )
             uri_scheme = text_to_parse[0] + uri_scheme
+
         if (
             2 <= len(uri_scheme) <= 32
             and path_index < len(text_to_parse)
@@ -661,9 +704,11 @@ class InlineHelper:
             if not new_token:
                 new_token = InlineHelper.__parse_valid_email_autolink(between_brackets)
             if not new_token:
+                LOGGER.warning(">>between_brackets>>%s", str(between_brackets))
                 new_token, after_index = HtmlHelper.parse_raw_html(
                     between_brackets, remaining_line
                 )
+                LOGGER.warning(">>new_token>>%s", str(new_token))
                 if after_index != -1:
                     closing_angle_index = after_index + inline_request.next_index + 1
 

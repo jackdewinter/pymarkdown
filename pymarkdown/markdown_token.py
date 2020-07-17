@@ -6,6 +6,8 @@ from enum import Enum
 from pymarkdown.constants import Constants
 from pymarkdown.parser_helper import ParserHelper
 
+# pylint: disable=too-many-lines
+
 
 class MarkdownTokenClass(Enum):
     """
@@ -354,7 +356,9 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
         fence_character,
         fence_count,
         extracted_text,
+        pre_extracted_text,
         text_after_extracted_text,
+        pre_text_after_extracted_text,
         extracted_whitespace,
         extracted_whitespace_before_info_string,
         position_marker,
@@ -371,7 +375,11 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
             + ":"
             + extracted_text
             + ":"
+            + pre_extracted_text
+            + ":"
             + text_after_extracted_text
+            + ":"
+            + pre_text_after_extracted_text
             + ":"
             + extracted_whitespace
             + ":"
@@ -880,32 +888,97 @@ class LinkStartMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the link element.
     """
 
-    def __init__(self, link_uri, link_title):
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        link_uri,
+        pre_link_uri,
+        link_title,
+        pre_link_title,
+        ex_label,
+        label_type,
+        text_from_blocks,
+    ):
         self.link_uri = link_uri
         self.link_title = link_title
+        self.pre_link_uri = pre_link_uri
+        self.pre_link_title = pre_link_title
+        self.ex_label = ex_label
+        self.label_type = label_type
+        self.text_from_blocks = text_from_blocks
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_inline_link,
             MarkdownTokenClass.INLINE_BLOCK,
-            link_uri + ":" + link_title,
+            label_type
+            + ":"
+            + link_uri
+            + ":"
+            + link_title
+            + ":"
+            + pre_link_uri
+            + ":"
+            + pre_link_title
+            + ":"
+            + ex_label
+            + ":"
+            + text_from_blocks,
         )
 
+    # pylint: enable=too-many-arguments
 
+
+# pylint: disable=too-many-instance-attributes
 class ImageStartMarkdownToken(MarkdownToken):
     """
     Class to provide for an encapsulation of the image element.
     """
 
-    def __init__(self, image_uri, image_title, image_alt_text):
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        image_uri,
+        pre_image_uri,
+        image_title,
+        pre_image_title,
+        image_alt_text,
+        ex_label,
+        label_type,
+        text_from_blocks,
+    ):
         self.image_uri = image_uri
         self.image_title = image_title
         self.image_alt_text = image_alt_text
+        self.pre_image_uri = pre_image_uri
+        self.pre_image_title = pre_image_title
+        self.ex_label = ex_label
+        self.label_type = label_type
+        self.text_from_blocks = text_from_blocks
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_inline_image,
             MarkdownTokenClass.INLINE_BLOCK,
-            image_uri + ":" + image_title + ":" + image_alt_text,
+            label_type
+            + ":"
+            + image_uri
+            + ":"
+            + image_title
+            + ":"
+            + image_alt_text
+            + ":"
+            + pre_image_uri
+            + ":"
+            + pre_image_title
+            + ":"
+            + ex_label
+            + ":"
+            + text_from_blocks,
         )
+
+    # pylint: enable=too-many-arguments
+
+
+# pylint: enable=too-many-instance-attributes
 
 
 class EmailAutolinkMarkdownToken(MarkdownToken):

@@ -220,7 +220,7 @@ def test_emphasis_482():
     expected_tokens = [
         "[para(1,1):]",
         "[text:*:]",
-        "[link:/url:]",
+        "[link:inline:/url:::::bar*]",
         "[text:bar:]",
         "[text:*:]",
         "[end-link::]",
@@ -252,7 +252,7 @@ def test_emphasis_483():
         "[para(1,1):]",
         "[text:_:]",
         "[text:foo :]",
-        "[link:/url:]",
+        "[link:inline:/url:::::bar_]",
         "[text:bar:]",
         "[text:_:]",
         "[end-link::]",

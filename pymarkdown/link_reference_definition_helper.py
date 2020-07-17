@@ -206,6 +206,7 @@ class LinkReferenceDefinitionHelper:
                 keep_going,
                 new_index,
                 inline_link,
+                _,
                 line_destination_whitespace,
                 inline_raw_link,
             ) = LinkHelper.extract_link_destination(
@@ -218,6 +219,7 @@ class LinkReferenceDefinitionHelper:
                 keep_going,
                 new_index,
                 inline_title,
+                _,
                 line_title_whitespace,
                 inline_raw_title,
             ) = LinkHelper.extract_link_title(line_to_parse, new_index, is_blank_line)

@@ -457,7 +457,7 @@ def test_list_blocks_241():
         "[text:foo:]",
         "[end-para]",
         "[BLANK(2,1):]",
-        "[fcode-block(3,5):`:3::::]",
+        "[fcode-block(3,5):`:3::::::]",
         "[text:bar:]",
         "[end-fcode-block]",
         "[BLANK(6,1):]",
@@ -1080,7 +1080,7 @@ def test_list_blocks_256():
         "[end-para]",
         "[li(3,1):2:]",
         "[BLANK(3,2):]",
-        "[fcode-block(4,3):`:3::::]",
+        "[fcode-block(4,3):`:3::::::]",
         "[text:bar:]",
         "[end-fcode-block]",
         "[li(7,1):2:]",
@@ -1324,7 +1324,7 @@ def test_list_blocks_260():
 </ul>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1365,7 +1365,7 @@ def test_list_blocks_261():
 </ol>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1642,7 +1642,7 @@ def test_list_blocks_267():
         > A block quote."""
     expected_tokens = [
         "[icode-block(1,5):    ]",
-        "[text:1.  A paragraph\n    with two lines.\n\n        indented code\n\n    &gt; A block quote.:]",
+        "[text:1.  A paragraph\n    with two lines.\n\n        indented code\n\n    \a>\a&gt;\a A block quote.:]",
         "[end-icode-block]",
     ]
     expected_gfm = """<pre><code>1.  A paragraph
@@ -1807,7 +1807,7 @@ with two lines.</li>
 </ol>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

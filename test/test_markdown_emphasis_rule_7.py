@@ -157,11 +157,11 @@ def test_emphasis_404():
     expected_tokens = [
         "[para(1,1):]",
         "[emphasis:2]",
-        "[text:foo &quot;:]",
+        '[text:foo \a"\a&quot;\a:]',
         "[emphasis:1]",
         "[text:bar:]",
         "[end-emphasis::1]",
-        "[text:&quot; foo:]",
+        '[text:\a"\a&quot;\a foo:]',
         "[end-emphasis::2]",
         "[end-para]",
     ]

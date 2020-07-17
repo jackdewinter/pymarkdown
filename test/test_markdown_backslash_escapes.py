@@ -25,7 +25,7 @@ def test_backslash_escapes_308():
     source_markdown = """\\!\\\"\\#\\$\\%\\&\\'\\(\\)\\*\\+\\,\\-\\.\\/\\:\\;\\<\\=\\>\\?\\@\\[\\\\\\]\\^\\_\\`\\{\\|\\}\\~"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~:]",
+        "[text:\\\b!\\\b\a\"\a&quot;\a\\\b#\\\b$\\\b%\\\b\a&\a&amp;\a\\\b'\\\b(\\\b)\\\b*\\\b+\\\b,\\\b-\\\b.\\\b/\\\b:\\\b;\\\b\a<\a&lt;\a\\\b=\\\b\a>\a&gt;\a\\\b?\\\b@\\\b[\\\b\\\\\b]\\\b^\\\b_\\\b`\\\b{\\\b|\\\b}\\\b~:]",
         "[end-para]",
     ]
     expected_gfm = """<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>"""
@@ -87,19 +87,19 @@ def test_backslash_escapes_310():
 \\&ouml; not a character entity"""
     expected_tokens = [
         "[para(1,1):\n\n\n\n\n\n\n\n]",
-        "[text:*not emphasized:]",
+        "[text:\\\b*not emphasized:]",
         "[text:*:]",
-        "[text:\n&lt;br/&gt; not a tag\n[not a link::\n\n]",
+        "[text:\n\\\b\a<\a&lt;\abr/\a>\a&gt;\a not a tag\n\\\b[not a link::\n\n]",
         "[text:]:]",
         """[text:(/foo)
-`not code`
-1. not a list
-* not a list
-# not a heading
-[foo::\n\n\n\n\n]""",
+\\\b`not code`
+1\\\b. not a list
+\\\b* not a list
+\\\b# not a heading
+\\\b[foo::\n\n\n\n\n]""",
         "[text:]:]",
-        """[text:: /url &quot;not a reference&quot;
-&amp;ouml; not a character entity::\n]""",
+        """[text:: /url \a\"\a&quot;\anot a reference\a\"\a&quot;\a
+\\\b\a&\a&amp;\aouml; not a character entity::\n]""",
         "[end-para]",
     ]
     expected_gfm = """<p>*not emphasized*
@@ -134,7 +134,7 @@ def test_backslash_escapes_311():
     source_markdown = """\\\\*emphasis*"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\\:]",
+        "[text:\\\b\\:]",
         "[emphasis:1]",
         "[text:emphasis:]",
         "[end-emphasis::1]",
@@ -251,7 +251,7 @@ def test_backslash_escapes_315():
 \\[\\]
 ~~~"""
     expected_tokens = [
-        "[fcode-block(1,1):~:3::::]",
+        "[fcode-block(1,1):~:3::::::]",
         "[text:\\[\\]:]",
         "[end-fcode-block]",
     ]
@@ -334,7 +334,7 @@ def test_backslash_escapes_318():
     source_markdown = """[foo](/bar\\* "ti\\*tle")"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:/bar*:ti*tle]",
+        "[link:inline:/bar*:ti*tle:/bar\\*:ti\\*tle::foo]",
         "[text:foo:]",
         "[end-link::]",
         "[end-para]",
@@ -366,7 +366,7 @@ def test_backslash_escapes_319():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[link:/bar*:ti*tle]",
+        "[link:shortcut:/bar*:ti*tle::::foo]",
         "[text:foo:]",
         "[end-link::]",
         "[end-para]",
@@ -399,7 +399,7 @@ def test_backslash_escapes_320():
 foo
 ```"""
     expected_tokens = [
-        "[fcode-block(1,1):`:3:foo+bar::: ]",
+        "[fcode-block(1,1):`:3:foo+bar:foo\\+bar:::: ]",
         "[text:foo:]",
         "[end-fcode-block]",
     ]
@@ -429,7 +429,7 @@ def test_backslash_escapes_320a():
 foo
 ```"""
     expected_tokens = [
-        "[fcode-block(1,1):`:3:foo+\\bar::: ]",
+        "[fcode-block(1,1):`:3:foo+\\bar:foo\\+\\bar:::: ]",
         "[text:foo:]",
         "[end-fcode-block]",
     ]
@@ -459,11 +459,41 @@ def test_backslash_escapes_320b():
 foo
 ```"""
     expected_tokens = [
-        "[fcode-block(1,1):`:3:foo+bar\\::: ]",
+        "[fcode-block(1,1):`:3:foo+bar\\:foo\\+bar\\:::: ]",
         "[text:foo:]",
         "[end-fcode-block]",
     ]
     expected_gfm = """<pre><code class="language-foo+bar\\">foo
+</code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_backslash_escapes_320c():
+    """
+    Test case 320c:  (part 3) But they work in all other contexts, including URLs and link titles, link references, and info strings in fenced code blocks:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """``` foo \\+bar\\
+foo
+```"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3:foo:: +bar\\: \\+bar\\:: ]",
+        "[text:foo:]",
+        "[end-fcode-block]",
+    ]
+    expected_gfm = """<pre><code class="language-foo">foo
 </code></pre>"""
 
     # Act

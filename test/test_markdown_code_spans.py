@@ -477,8 +477,8 @@ def test_code_spans_353():
     source_markdown = """`<a href="`">`"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:&lt;a href=&quot;]",
-        "[text:&quot;&gt;`:]",
+        '[icode-span:\a<\a&lt;\aa href=\a"\a&quot;\a]',
+        '[text:\a"\a&quot;\a\a>\a&gt;\a`:]',
         "[end-para]",
     ]
     expected_gfm = """<p><code>&lt;a href=&quot;</code>&quot;&gt;`</p>"""
@@ -533,8 +533,8 @@ def test_code_spans_355():
     source_markdown = """`<http://foo.bar.`baz>`"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:&lt;http://foo.bar.]",
-        "[text:baz&gt;`:]",
+        "[icode-span:\a<\a&lt;\ahttp://foo.bar.]",
+        "[text:baz\a>\a&gt;\a`:]",
         "[end-para]",
     ]
     expected_gfm = """<p><code>&lt;http://foo.bar.</code>baz&gt;`</p>"""

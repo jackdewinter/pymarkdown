@@ -148,6 +148,7 @@ class LinkHelper:
         Extract the link reference definition's optional link title.
         """
         inline_title = ""
+        pre_inline_title = ""
         LOGGER.debug("before ws>>%s>", line_to_parse[new_index:])
         new_index, ex_ws = ParserHelper.extract_any_whitespace(line_to_parse, new_index)
         LOGGER.debug(
@@ -157,19 +158,20 @@ class LinkHelper:
         )
         start_index = new_index
         if new_index == len(line_to_parse) and not is_blank_line:
-            return False, new_index, None, None, None
+            return False, new_index, None, None, None, None
         if ex_ws and new_index < len(line_to_parse):
-            inline_title, new_index = LinkHelper.__parse_link_title(
+            inline_title, pre_inline_title, new_index = LinkHelper.__parse_link_title(
                 line_to_parse, new_index
             )
             if new_index == -1:
-                return False, -1, None, None, None
+                return False, -1, None, None, None, None
             if inline_title is None:
-                return False, new_index, None, None, None
+                return False, new_index, None, None, None, None
         return (
             True,
             new_index,
             inline_title,
+            pre_inline_title,
             ex_ws,
             line_to_parse[start_index:new_index],
         )
@@ -183,15 +185,25 @@ class LinkHelper:
             line_to_parse, new_index, Constants.whitespace
         )
         if new_index == len(line_to_parse) and not is_blank_line:
-            return False, new_index, None, None, None
+            return False, new_index, None, None, None, None
 
         LOGGER.debug("LD>>%s<<", line_to_parse[new_index:])
-        inline_link, new_index, inline_raw_link = LinkHelper.__parse_link_destination(
-            line_to_parse, new_index
-        )
+        (
+            inline_link,
+            pre_inline_link,
+            new_index,
+            inline_raw_link,
+        ) = LinkHelper.__parse_link_destination(line_to_parse, new_index)
         if new_index == -1:
-            return False, -1, None, None, None
-        return True, new_index, inline_link, prefix_whitespace, inline_raw_link
+            return False, -1, None, None, None, None
+        return (
+            True,
+            new_index,
+            inline_link,
+            pre_inline_link,
+            prefix_whitespace,
+            inline_raw_link,
+        )
 
     @staticmethod
     def normalize_link_label(link_label):
@@ -479,18 +491,23 @@ class LinkHelper:
                 str(ex_link),
             )
             if not ex_link:
-                return None, -1, None
+                return None, None, -1, None
 
         if new_index != -1 and "\n" in ex_link:
-            return None, -1, None
+            return None, None, -1, None
         LOGGER.debug(
             "handle_backslashes>>new_index>>%s>>ex_link>>%s>>",
             str(new_index),
             str(ex_link),
         )
+
+        pre_handle_link = ex_link
         if new_index != -1 and ex_link:
-            ex_link = InlineHelper.handle_backslashes(ex_link)
-        LOGGER.debug("urllib.parse.quote>>ex_link>>%s>>", str(ex_link))
+            ex_link = InlineHelper.handle_backslashes(ex_link, add_text_signature=False)
+        LOGGER.debug(
+            "urllib.parse.quote>>ex_link>>%s>>",
+            str(ex_link).replace(InlineHelper.backspace_character, "\\b"),
+        )
 
         ex_link = LinkHelper.__encode_link_destination(ex_link)
         LOGGER.debug(
@@ -498,7 +515,7 @@ class LinkHelper:
             str(new_index),
             str(ex_link),
         )
-        return ex_link, new_index, source_text[start_index:new_index]
+        return ex_link, pre_handle_link, new_index, source_text[start_index:new_index]
 
     @staticmethod
     def __parse_link_title(source_text, new_index):
@@ -508,6 +525,7 @@ class LinkHelper:
 
         LOGGER.debug("parse_link_title>>new_index>>%s>>", source_text[new_index:])
         ex_title = ""
+        pre_ex_title = ""
         if ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_title_single
         ):
@@ -536,13 +554,17 @@ class LinkHelper:
             str(new_index),
             str(ex_title),
         )
+        pre_ex_title = ex_title
         if ex_title is not None:
             ex_title = InlineHelper.append_text(
-                "", InlineHelper.handle_backslashes(ex_title)
+                "",
+                InlineHelper.handle_backslashes(ex_title, add_text_signature=False),
+                add_text_signature=False,
             )
+        LOGGER.debug("parse_link_title>>pre>>%s>>", str(pre_ex_title))
         LOGGER.debug("parse_link_title>>after>>%s>>", str(ex_title))
 
-        return ex_title, new_index
+        return ex_title, pre_ex_title, new_index
 
     @staticmethod
     def __process_inline_link_body(source_text, new_index):
@@ -552,7 +574,9 @@ class LinkHelper:
 
         LOGGER.debug("process_inline_link_body>>%s<<", source_text[new_index:])
         inline_link = ""
+        pre_inline_link = ""
         inline_title = ""
+        pre_inline_title = ""
         new_index, _ = ParserHelper.extract_any_whitespace(source_text, new_index)
         LOGGER.debug(
             "new_index>>%s>>source_text[]>>%s>", str(new_index), source_text[new_index:]
@@ -560,9 +584,12 @@ class LinkHelper:
         if not ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_format_inline_end
         ):
-            (inline_link, new_index, _,) = LinkHelper.__parse_link_destination(
-                source_text, new_index
-            )
+            (
+                inline_link,
+                pre_inline_link,
+                new_index,
+                _,
+            ) = LinkHelper.__parse_link_destination(source_text, new_index)
             if new_index != -1:
                 LOGGER.debug("before ws>>%s<", source_text[new_index:])
                 new_index, _ = ParserHelper.extract_any_whitespace(
@@ -572,9 +599,11 @@ class LinkHelper:
                 if ParserHelper.is_character_at_index_not(
                     source_text, new_index, LinkHelper.__link_format_inline_end
                 ):
-                    inline_title, new_index = LinkHelper.__parse_link_title(
-                        source_text, new_index
-                    )
+                    (
+                        inline_title,
+                        pre_inline_title,
+                        new_index,
+                    ) = LinkHelper.__parse_link_title(source_text, new_index)
                 if new_index != -1:
                     new_index, _ = ParserHelper.extract_any_whitespace(
                         source_text, new_index
@@ -598,7 +627,23 @@ class LinkHelper:
             str(inline_title),
             str(new_index),
         )
-        return inline_link, inline_title, new_index
+        return inline_link, pre_inline_link, inline_title, pre_inline_title, new_index
+
+    @staticmethod
+    def resolve_backspaces_from_text(token_text):
+        """
+        Deal with any backslash encoding in text with backspaces.
+        """
+        adjusted_text_token = token_text
+        while InlineHelper.backspace_character in adjusted_text_token:
+            next_backspace_index = adjusted_text_token.index(
+                InlineHelper.backspace_character
+            )
+            adjusted_text_token = (
+                adjusted_text_token[0 : next_backspace_index - 1]
+                + adjusted_text_token[next_backspace_index + 1 :]
+            )
+        return adjusted_text_token
 
     @staticmethod
     def __look_up_link(link_to_lookup, new_index, link_type):
@@ -608,6 +653,9 @@ class LinkHelper:
 
         inline_link = ""
         inline_title = ""
+
+        link_to_lookup = LinkHelper.resolve_backspaces_from_text(link_to_lookup)
+
         link_label = LinkHelper.normalize_link_label(link_to_lookup)
         if not link_label or link_label not in LinkHelper.__link_definitions:
             update_index = -1
@@ -655,25 +703,54 @@ class LinkHelper:
 
         (
             inline_link,
+            pre_inline_link,
             inline_title,
+            pre_inline_title,
             update_index,
             tried_full_reference_form,
+            ex_label,
+            label_type,
         ) = LinkHelper.__look_for_link_formats(source_text, new_index, text_from_blocks)
 
         if update_index == -1 and not tried_full_reference_form:
+            ex_label = ""
             LOGGER.debug("shortcut?")
-            LOGGER.debug(">>%s<<", str(inline_blocks))
-            LOGGER.debug(">>%s<<", str(text_from_blocks))
+            LOGGER.debug(
+                ">>%s<<",
+                str(inline_blocks).replace(InlineHelper.backspace_character, "\\b"),
+            )
+            LOGGER.debug(
+                ">>%s<<",
+                str(text_from_blocks).replace(InlineHelper.backspace_character, "\\b"),
+            )
+
             update_index, inline_link, inline_title = LinkHelper.__look_up_link(
                 text_from_blocks, new_index, "shortcut"
             )
+            label_type = "shortcut"
 
         token_to_append = None
         if update_index != -1:
             LOGGER.debug("<<<<<<<start_text<<<<<<<%s<<", str(start_text))
+            LOGGER.debug(">>inline_link>>%s>>", inline_link)
+            LOGGER.debug(">>pre_inline_link>>%s>>", pre_inline_link)
+            LOGGER.debug(">>inline_title>>%s>>", inline_title)
+            LOGGER.debug(">>pre_inline_title>>%s>>", pre_inline_title)
+            LOGGER.debug(">>text_from_blocks>>%s>>", text_from_blocks)
+            if pre_inline_link == inline_link:
+                pre_inline_link = ""
+            if pre_inline_title == inline_title:
+                pre_inline_title = ""
+            LOGGER.debug(">>pre_inline_link>>%s>>", pre_inline_link)
             if start_text == LinkHelper.__link_start_sequence:
                 inline_blocks[ind] = LinkStartMarkdownToken(
-                    link_uri=inline_link, link_title=inline_title
+                    inline_link,
+                    pre_inline_link,
+                    inline_title,
+                    pre_inline_title,
+                    ex_label,
+                    label_type,
+                    text_from_blocks,
                 )
                 token_to_append = EndMarkdownToken(
                     MarkdownToken.token_inline_link, "", ""
@@ -686,9 +763,14 @@ class LinkHelper:
                 )
 
                 inline_blocks[ind] = ImageStartMarkdownToken(
-                    image_uri=inline_link,
-                    image_title=inline_title,
-                    image_alt_text=image_alt_text,
+                    inline_link,
+                    pre_inline_link,
+                    inline_title,
+                    pre_inline_title,
+                    image_alt_text,
+                    ex_label,
+                    label_type,
+                    text_from_blocks,
                 )
                 LOGGER.debug("\n>>Image>>%s", str(inline_blocks))
                 LOGGER.debug(">>start_text>>%s<<", str(start_text))
@@ -714,8 +796,12 @@ class LinkHelper:
         Look for links in the various formats.
         """
         inline_link = ""
+        pre_inline_link = ""
         inline_title = ""
+        pre_inline_title = ""
         update_index = -1
+        ex_label = ""
+        label_type = ""
         tried_full_reference_form = False
         if ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_format_inline_start
@@ -723,9 +809,12 @@ class LinkHelper:
             LOGGER.debug("inline reference?")
             (
                 inline_link,
+                pre_inline_link,
                 inline_title,
+                pre_inline_title,
                 update_index,
             ) = LinkHelper.__process_inline_link_body(source_text, new_index + 1)
+            label_type = "inline"
         elif ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_format_reference_start
         ):
@@ -740,6 +829,7 @@ class LinkHelper:
                     text_from_blocks, after_open_index + 1, "collapsed reference",
                 )
                 tried_full_reference_form = True
+                label_type = "collapsed"
             else:
                 LOGGER.debug("full reference?")
                 LOGGER.debug(">>did_extract>>%s>", source_text[after_open_index:])
@@ -758,10 +848,20 @@ class LinkHelper:
                 )
                 if did_extract:
                     tried_full_reference_form = True
+                    label_type = "full"
                     update_index, inline_link, inline_title = LinkHelper.__look_up_link(
                         ex_label, after_label_index, "full reference"
                     )
-        return inline_link, inline_title, update_index, tried_full_reference_form
+        return (
+            inline_link,
+            pre_inline_link,
+            inline_title,
+            pre_inline_title,
+            update_index,
+            tried_full_reference_form,
+            ex_label,
+            label_type,
+        )
 
     @staticmethod
     def __encode_link_destination(link_to_encode):

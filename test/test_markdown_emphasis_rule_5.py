@@ -85,7 +85,7 @@ def test_emphasis_389():
         "[para(1,1):]",
         "[text:a:]",
         "[text:**:]",
-        "[text:&quot;foo&quot;:]",
+        '[text:\a"\a&quot;\afoo\a"\a&quot;\a:]',
         "[text:**:]",
         "[end-para]",
     ]

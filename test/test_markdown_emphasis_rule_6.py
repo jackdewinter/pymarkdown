@@ -116,7 +116,7 @@ def test_emphasis_394():
         "[para(1,1):]",
         "[text:a:]",
         "[text:__:]",
-        "[text:&quot;foo&quot;:]",
+        '[text:\a"\a&quot;\afoo\a"\a&quot;\a:]',
         "[text:__:]",
         "[end-para]",
     ]

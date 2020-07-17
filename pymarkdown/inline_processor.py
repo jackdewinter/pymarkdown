@@ -310,12 +310,18 @@ class InlineProcessor:
             InlineProcessor.__valid_inline_text_block_sequence_starts,
             start_index,
         )
+        LOGGER.debug(
+            "__process_inline_text_block>>%s>>%s", source_text, str(start_index)
+        )
         while next_index != -1:
 
             inline_response.clear_fields()
             reset_current_string = False
             whitespace_to_add = None
 
+            LOGGER.debug(
+                "__process_inline_text_block>>%s>>%s", str(start_index), str(next_index)
+            )
             remaining_line = source_text[start_index:next_index]
 
             inline_request = InlineRequest(
@@ -407,6 +413,15 @@ class InlineProcessor:
                 current_string_unresolved,
                 inline_response.new_string_unresolved,
                 inline_response.new_string,
+                inline_response.original_string,
+            )
+            LOGGER.debug(
+                "<<current_string<<%s<<%s<<", str(len(current_string)), current_string
+            )
+            LOGGER.debug(
+                "<<current_string_unresolved<<%s<<%s<<",
+                str(len(current_string_unresolved)),
+                current_string_unresolved,
             )
 
         return InlineProcessor.__complete_inline_block_processing(
@@ -446,8 +461,26 @@ class InlineProcessor:
         current_string_unresolved,
         new_string_unresolved,
         new_string,
+        original_string,
     ):
+        LOGGER.debug("__complete_inline_loop--current_string>>%s>>", current_string)
+        LOGGER.debug("__complete_inline_loop--new_string>>%s>>", new_string)
+        LOGGER.debug(
+            "__complete_inline_loop--new_string_unresolved>>%s>>",
+            str(new_string_unresolved),
+        )
+        LOGGER.debug(
+            "__complete_inline_loop--original_string>>%s>>", str(original_string)
+        )
+
+        if original_string is not None:
+            assert new_string_unresolved is None
+            current_string += "\a" + original_string + "\a"
+
         current_string = InlineHelper.append_text(current_string, new_string)
+
+        if original_string is not None:
+            current_string += "\a"
 
         if new_string_unresolved:
             current_string_unresolved = InlineHelper.append_text(

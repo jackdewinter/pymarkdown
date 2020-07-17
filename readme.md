@@ -13,6 +13,15 @@
 - new list item tokens should contain extracted w/s, to deal with lazy lines
 - add ex_ws into tokens for block quote
 
+- 081 - whitespace at start of lines in icb are not stored anywhere
+- 176, 188 - document with only LRD does not emit a LRD
+- 559, 560 - extra blank line token causes mismatch with original text
+
+- 575?
+- 528b - word text gets inserted instead of actual text
+- backslash in code span? what should it look like?
+- backslash and char ent in link label? tests?
+
 ## Bugs - Character Entities
 
 - test_markdown_entity* various extra tests

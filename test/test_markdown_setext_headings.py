@@ -145,7 +145,7 @@ b
 c</h1>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -476,10 +476,10 @@ of dashes"/>"""
         "[end-para]",
         "[BLANK(4,1):]",
         "[setext(6,1):-::(5,1)]",
-        "[text:&lt;a title=&quot;a lot:]",
+        '[text:\a<\a&lt;\aa title=\a"\a&quot;\aa lot:]',
         "[end-setext::]",
         "[para(7,1):]",
-        "[text:of dashes&quot;/&gt;:]",
+        '[text:of dashes\a"\a&quot;\a/\a>\a&gt;\a:]',
         "[end-para]",
     ]
     expected_gfm = """<h2>`Foo</h2>
@@ -899,7 +899,11 @@ def test_setext_headings_072():
     transformer = TransformToGfm()
     source_markdown = """\\> foo
 ------"""
-    expected_tokens = ["[setext(2,1):-::(1,1)]", "[text:&gt; foo:]", "[end-setext::]"]
+    expected_tokens = [
+        "[setext(2,1):-::(1,1)]",
+        "[text:\\\b\a>\a&gt;\a foo:]",
+        "[end-setext::]",
+    ]
     expected_gfm = """<h2>&gt; foo</h2>"""
 
     # Act
@@ -1049,7 +1053,7 @@ bar
 baz"""
     expected_tokens = [
         "[para(1,1):\n\n\n]",
-        "[text:Foo\nbar\n---\nbaz::\n\n\n]",
+        "[text:Foo\nbar\n\\\b---\nbaz::\n\n\n]",
         "[end-para]",
     ]
     expected_gfm = """<p>Foo

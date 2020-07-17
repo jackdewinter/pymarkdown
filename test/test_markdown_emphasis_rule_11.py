@@ -50,7 +50,7 @@ def test_emphasis_446():
         "[para(1,1):]",
         "[text:foo :]",
         "[emphasis:1]",
-        "[text:*:]",
+        "[text:\\\b*:]",
         "[end-emphasis::1]",
         "[end-para]",
     ]
@@ -133,7 +133,7 @@ def test_emphasis_449():
         "[para(1,1):]",
         "[text:foo :]",
         "[emphasis:2]",
-        "[text:*:]",
+        "[text:\\\b*:]",
         "[end-emphasis::2]",
         "[end-para]",
     ]

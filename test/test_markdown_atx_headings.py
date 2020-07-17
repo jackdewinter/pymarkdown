@@ -132,7 +132,7 @@ def test_atx_headings_035():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """\\## foo"""
-    expected_tokens = ["[para(1,1):]", "[text:## foo:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:\\\b## foo:]", "[end-para]"]
     expected_gfm = """<p>## foo</p>"""
 
     # Act
@@ -161,7 +161,7 @@ def test_atx_headings_036():
         "[emphasis:1]",
         "[text:bar:]",
         "[end-emphasis::1]",
-        "[text: *baz*:]",
+        "[text: \\\b*baz\\\b*:]",
         "[end-atx::]",
     ]
     expected_gfm = """<h1>foo <em>bar</em> *baz*</h1>"""
@@ -436,13 +436,13 @@ def test_atx_headings_046():
 # foo \\#"""
     expected_tokens = [
         "[atx(1,1):3:0:]",
-        "[text:foo ###: ]",
+        "[text:foo \\\b###: ]",
         "[end-atx::]",
         "[atx(2,1):2:0:]",
-        "[text:foo ###: ]",
+        "[text:foo #\\\b##: ]",
         "[end-atx::]",
         "[atx(3,1):1:0:]",
-        "[text:foo #: ]",
+        "[text:foo \\\b#: ]",
         "[end-atx::]",
     ]
     expected_gfm = """<h3>foo ###</h3>

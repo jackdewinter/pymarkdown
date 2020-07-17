@@ -79,6 +79,7 @@ class LeafBlockProcessor:
                 )
         return False, None, None, None
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def parse_fenced_code_block(
         parser_state, position_marker, extracted_whitespace,
@@ -154,16 +155,30 @@ class LeafBlockProcessor:
                             ),
                         )
                     )
-                    extracted_text = InlineHelper.handle_backslashes(extracted_text)
-                    text_after_extracted_text = InlineHelper.handle_backslashes(
-                        text_after_extracted_text
+
+                    pre_extracted_text = extracted_text
+                    pre_text_after_extracted_text = text_after_extracted_text
+
+                    extracted_text = InlineHelper.handle_backslashes(
+                        extracted_text, add_text_signature=False
                     )
+                    text_after_extracted_text = InlineHelper.handle_backslashes(
+                        text_after_extracted_text, add_text_signature=False
+                    )
+
+                    if pre_extracted_text == extracted_text:
+                        pre_extracted_text = ""
+                    if pre_text_after_extracted_text == text_after_extracted_text:
+                        pre_text_after_extracted_text = ""
+
                     new_tokens.append(
                         FencedCodeBlockMarkdownToken(
                             position_marker.text_to_parse[position_marker.index_number],
                             collected_count,
                             extracted_text,
+                            pre_extracted_text,
                             text_after_extracted_text,
+                            pre_text_after_extracted_text,
                             extracted_whitespace,
                             extracted_whitespace_before_info_string,
                             position_marker,
@@ -185,6 +200,8 @@ class LeafBlockProcessor:
             )
             extracted_whitespace = "".rjust(whitespace_left, " ")
         return new_tokens, extracted_whitespace
+
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def __adjust_for_list_start(
