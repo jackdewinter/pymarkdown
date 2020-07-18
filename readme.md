@@ -15,8 +15,6 @@
 
 - 081 - whitespace at start of lines in icb are not stored anywhere
 
-- backslash and char ent in link label? tests?
-
 ## Bugs - Character Entities
 
 - test_markdown_entity* various extra tests

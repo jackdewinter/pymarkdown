@@ -179,6 +179,8 @@ class InlineHelper:
             and inline_request.source_text[inline_response.new_index]
             == InlineHelper.__numeric_character_reference_start_character
         ):
+            original_new_index = inline_response.new_index
+            LOGGER.debug("here")
             (
                 inline_response.new_string,
                 inline_response.new_index,
@@ -186,7 +188,16 @@ class InlineHelper:
             ) = InlineHelper.__handle_numeric_character_reference(
                 inline_request.source_text, inline_response.new_index
             )
+            inline_response.new_string_unresolved = (
+                InlineHelper.character_reference_start_character
+                + inline_request.source_text[
+                    original_new_index : inline_response.new_index
+                ]
+            )
+            LOGGER.debug("here-->%s<--", inline_response.new_string)
+            LOGGER.debug("here-->%s<--", inline_response.new_string_unresolved)
         else:
+            LOGGER.debug("there")
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
                 inline_request.source_text,
                 inline_response.new_index,
@@ -203,11 +214,17 @@ class InlineHelper:
                 ):
                     end_index += 1
                     collected_string += InlineHelper.__character_reference_end_character
+                    original_collected_string = collected_string
                     if collected_string in InlineHelper.__entity_map:
                         inline_response.original_string = collected_string
                         collected_string = InlineHelper.__entity_map[collected_string]
+                        inline_response.new_string_unresolved = (
+                            original_collected_string
+                        )
                 inline_response.new_string = collected_string
                 inline_response.new_index = end_index
+                LOGGER.debug("there-->%s<--", inline_response.new_string)
+                LOGGER.debug("there-->%s<--", inline_response.new_string_unresolved)
             else:
                 inline_response.new_string = (
                     InlineHelper.character_reference_start_character

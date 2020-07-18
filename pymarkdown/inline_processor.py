@@ -283,6 +283,7 @@ class InlineProcessor:
         return recombined_text
 
     @staticmethod
+    # pylint: disable=too-many-statements
     def __process_inline_text_block(
         source_text, starting_whitespace="", whitespace_to_recombine=None
     ):
@@ -332,10 +333,12 @@ class InlineProcessor:
                 current_string_unresolved,
             )
             if source_text[next_index] in InlineProcessor.__inline_character_handlers:
+                LOGGER.debug("handler(before)>>%s<<", source_text[next_index])
                 proc_fn = InlineProcessor.__inline_character_handlers[
                     source_text[next_index]
                 ]
                 inline_response = proc_fn(inline_request)
+                LOGGER.debug("handler(after)>>%s<<", source_text[next_index])
             else:
                 assert source_text[next_index] == "\n"
                 LOGGER.debug(
@@ -365,6 +368,21 @@ class InlineProcessor:
                 LOGGER.debug(
                     "end_string(after)>>%s<<", str(end_string).replace("\n", "\\n")
                 )
+
+            LOGGER.debug("new_string-->%s<--", str(inline_response.new_string))
+            LOGGER.debug("new_index-->%s<--", str(inline_response.new_index))
+            LOGGER.debug("new_tokens-->%s<--", str(inline_response.new_tokens))
+            LOGGER.debug(
+                "new_string_unresolved-->%s<--",
+                str(inline_response.new_string_unresolved),
+            )
+            LOGGER.debug(
+                "consume_rest_of_line-->%s<--",
+                str(inline_response.consume_rest_of_line),
+            )
+            LOGGER.debug(
+                "original_string-->%s<--", str(inline_response.original_string)
+            )
 
             if inline_response.consume_rest_of_line:
                 inline_response.new_string = ""
@@ -416,12 +434,14 @@ class InlineProcessor:
                 inline_response.original_string,
             )
             LOGGER.debug(
-                "<<current_string<<%s<<%s<<", str(len(current_string)), current_string
+                "<<current_string<<%s<<%s<<",
+                str(len(current_string)),
+                current_string.replace("\b", "\\b").replace("\a", "\\a"),
             )
             LOGGER.debug(
                 "<<current_string_unresolved<<%s<<%s<<",
                 str(len(current_string_unresolved)),
-                current_string_unresolved,
+                current_string_unresolved.replace("\b", "\\b").replace("\a", "\\a"),
             )
 
         return InlineProcessor.__complete_inline_block_processing(
@@ -432,6 +452,8 @@ class InlineProcessor:
             end_string,
             starting_whitespace,
         )
+
+    # pylint: enable=too-many-statements
 
     @staticmethod
     def __add_recombined_whitespace(
@@ -470,26 +492,42 @@ class InlineProcessor:
             str(new_string_unresolved),
         )
         LOGGER.debug(
-            "__complete_inline_loop--original_string>>%s>>", str(original_string)
+            "__complete_inline_loop--original_string>>%s>>",
+            str(original_string).replace("\b", "\\b").replace("\a", "\\a"),
         )
 
         if original_string is not None:
-            assert new_string_unresolved is None
+            assert not new_string_unresolved or new_string_unresolved == original_string
             current_string += "\a" + original_string + "\a"
 
+        LOGGER.debug(
+            "__complete_inline_loop--current_string>>%s>>",
+            str(current_string).replace("\b", "\\b").replace("\a", "\\a"),
+        )
         current_string = InlineHelper.append_text(current_string, new_string)
+        LOGGER.debug(
+            "__complete_inline_loop--current_string>>%s>>",
+            str(current_string).replace("\b", "\\b").replace("\a", "\\a"),
+        )
 
         if original_string is not None:
             current_string += "\a"
 
+        LOGGER.debug(
+            "__complete_inline_loop--current_string>>%s>>",
+            str(current_string).replace("\b", "\\b").replace("\a", "\\a"),
+        )
         if new_string_unresolved:
-            current_string_unresolved = InlineHelper.append_text(
-                current_string_unresolved, new_string_unresolved
-            )
+            current_string_unresolved += new_string_unresolved
         else:
             current_string_unresolved = InlineHelper.append_text(
                 current_string_unresolved, new_string
             )
+
+        LOGGER.debug(
+            "__complete_inline_loop--current_string_unresolved>>%s>>",
+            str(current_string_unresolved).replace("\b", "\\b").replace("\a", "\\a"),
+        )
 
         if whitespace_to_add is not None:
             end_string = InlineHelper.modify_end_string(end_string, whitespace_to_add)

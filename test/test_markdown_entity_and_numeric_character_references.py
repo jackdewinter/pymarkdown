@@ -272,6 +272,35 @@ def test_character_references_328():
 
 
 @pytest.mark.gfm
+def test_character_references_328a():
+    """
+    Test case 328a:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = '[f&ouml;&ouml;](/f&ouml;&ouml; "f&ouml;&ouml;")'
+    expected_tokens = [
+        "[para(1,1):]",
+        "[link:inline:/f%C3%B6%C3%B6:föö:/f&ouml;&ouml;:f&ouml;&ouml;::f&ouml;&ouml;]",
+        "[text:f\a&ouml;\aö\a\a&ouml;\aö\a:]",
+        "[end-link::]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p><a href="/f%C3%B6%C3%B6" title="föö">föö</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_character_references_329():
     """
     Test case 329:  (part 3) Entity and numeric character references are recognized in any context besides code spans or code blocks, including URLs, link titles, and fenced code block info strings:

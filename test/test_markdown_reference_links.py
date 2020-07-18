@@ -909,6 +909,72 @@ def test_reference_links_558():
 
 
 @pytest.mark.gfm
+def test_reference_links_558a():
+    """
+    Test case 558a:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[bar&#x5C;]: /uri
+
+[bar&#x5C;]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar&#x5c;:bar&#x5C;: :/uri:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link:shortcut:/uri:::::bar&#x5C;]",
+        "[text:bar\a&#x5C;\a\\\a:]",
+        "[end-link::]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p><a href="/uri">bar\\</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_558b():
+    """
+    Test case 558a:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[bar&beta;]: /uri
+
+[bar&beta;]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar&beta;:: :/uri:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link:shortcut:/uri:::::bar&beta;]",
+        "[text:bar\a&beta;\aβ\a:]",
+        "[end-link::]",
+        "[end-para]",
+    ]
+    expected_gfm = """<p><a href="/uri">barβ</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_reference_links_559():
     """
     Test case 559:  (part 1) A link label must contain at least one non-whitespace character:
