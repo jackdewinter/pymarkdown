@@ -394,13 +394,13 @@ class LeafBlockProcessor:
 
         adj_ws = whitespace_to_parse[0:actual_whitespace_index]
         left_ws = whitespace_to_parse[actual_whitespace_index:]
-        LOGGER.warning(
+        LOGGER.debug(
             "accumulated_whitespace_count>>%s", str(accumulated_whitespace_count)
         )
-        LOGGER.warning("actual_whitespace_index>>%s", str(actual_whitespace_index))
-        LOGGER.warning("adj_ws>>%s<<", adj_ws.replace("\t", "\\t"))
-        LOGGER.warning("left_ws>>%s<<", left_ws.replace("\t", "\\t"))
-        LOGGER.warning("offset_index>>%s<<", str(offset_index))
+        LOGGER.debug("actual_whitespace_index>>%s", str(actual_whitespace_index))
+        LOGGER.debug("adj_ws>>%s<<", adj_ws.replace("\t", "\\t"))
+        LOGGER.debug("left_ws>>%s<<", left_ws.replace("\t", "\\t"))
+        LOGGER.debug("offset_index>>%s<<", str(offset_index))
 
         return accumulated_whitespace_count, actual_whitespace_index, adj_ws, left_ws
 
@@ -445,9 +445,9 @@ class LeafBlockProcessor:
                 force_me = False
                 kludge_adjust = 0
                 if not did_process:
-                    LOGGER.warning(">>>>%s", str(parser_state.token_stack[-2]))
+                    LOGGER.debug(">>>>%s", str(parser_state.token_stack[-2]))
                     if parser_state.token_stack[-2].is_list:
-                        LOGGER.warning(
+                        LOGGER.debug(
                             ">>indent>>%s", parser_state.token_stack[-2].indent_level,
                         )
                         last_block_quote_index = 0
@@ -497,7 +497,7 @@ class LeafBlockProcessor:
                         + special_parse_start_index
                         + block_quote_adjust_delta
                     )
-                    LOGGER.warning(
+                    LOGGER.debug(
                         "column_number(%s)=actual_whitespace_index(%s)+special_parse_start_index(%s)+block_quote_adjust_delta(%s)",
                         str(column_number),
                         str(actual_whitespace_index),
@@ -507,25 +507,25 @@ class LeafBlockProcessor:
                     excess_whitespace_count = (
                         accumulated_whitespace_count - 4 - offset_index
                     )
-                    LOGGER.warning(
+                    LOGGER.debug(
                         "excess_whitespace_count(%s)=accumulated_whitespace_count(%s)-4-offset_index(%s)",
                         str(excess_whitespace_count),
                         str(accumulated_whitespace_count),
                         str(offset_index),
                     )
-                    LOGGER.warning("before>>%s>>", left_ws.replace("\t", "\\t"))
+                    LOGGER.debug("before>>%s>>", left_ws.replace("\t", "\\t"))
                     if excess_whitespace_count:
                         excess_whitespace_count -= kludge_adjust
                         left_ws = " ".rjust(excess_whitespace_count) + left_ws
-                    LOGGER.warning("after>>%s>>", left_ws.replace("\t", "\\t"))
+                    LOGGER.debug("after>>%s>>", left_ws.replace("\t", "\\t"))
                 else:
                     column_number += actual_whitespace_index
-                LOGGER.warning("column_number>>%s", str(column_number))
+                LOGGER.debug("column_number>>%s", str(column_number))
                 new_tokens.append(
                     IndentedCodeBlockMarkdownToken(adj_ws, line_number, column_number)
                 )
                 extracted_whitespace = left_ws
-                LOGGER.warning(
+                LOGGER.debug(
                     "left_ws>>%s<<", extracted_whitespace.replace("\t", "\\t")
                 )
             new_tokens.append(

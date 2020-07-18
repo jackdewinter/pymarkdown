@@ -105,7 +105,7 @@ class InlineProcessor:
                     ]
                 elif coalesced_list[-1].is_setext:
                     combined_test = coalesced_results[coalesce_index].token_text
-                    LOGGER.warning(
+                    LOGGER.debug(
                         "combined_test>>%s", combined_test.replace("\n", "\\n")
                     )
                     processed_tokens = InlineProcessor.__process_inline_text_block(
@@ -116,7 +116,7 @@ class InlineProcessor:
                             coalesce_index
                         ].extracted_whitespace.replace("\t", "    "),
                     )
-                    LOGGER.warning(
+                    LOGGER.debug(
                         "processed_tokens>>%s",
                         str(processed_tokens).replace("\n", "\\n"),
                     )

@@ -479,12 +479,12 @@ class ListBlockProcessor:
                 )
                 if parser_state.token_stack[-1].is_list:
                     requested_list_indent = parser_state.token_stack[-1].indent_level
-                    LOGGER.warning(">>line_to_parse>>%s>>", line_to_parse)
-                    LOGGER.warning(">>start_index>>%s", str(start_index))
-                    LOGGER.warning(
+                    LOGGER.debug(">>line_to_parse>>%s>>", line_to_parse)
+                    LOGGER.debug(">>start_index>>%s", str(start_index))
+                    LOGGER.debug(
                         ">>requested_list_indent>>%s", str(requested_list_indent)
                     )
-                    LOGGER.warning(">>before_ws_length>>%s", str(before_ws_length))
+                    LOGGER.debug(">>before_ws_length>>%s", str(before_ws_length))
                     (
                         line_to_parse,
                         _,

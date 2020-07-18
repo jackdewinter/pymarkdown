@@ -721,11 +721,11 @@ class InlineHelper:
             if not new_token:
                 new_token = InlineHelper.__parse_valid_email_autolink(between_brackets)
             if not new_token:
-                LOGGER.warning(">>between_brackets>>%s", str(between_brackets))
+                LOGGER.debug(">>between_brackets>>%s", str(between_brackets))
                 new_token, after_index = HtmlHelper.parse_raw_html(
                     between_brackets, remaining_line
                 )
-                LOGGER.warning(">>new_token>>%s", str(new_token))
+                LOGGER.debug(">>new_token>>%s", str(new_token))
                 if after_index != -1:
                     closing_angle_index = after_index + inline_request.next_index + 1
 

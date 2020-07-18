@@ -192,13 +192,13 @@ chunk3
 </code></pre>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    # assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
