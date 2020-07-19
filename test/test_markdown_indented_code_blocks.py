@@ -25,7 +25,7 @@ def test_indented_code_blocks_077():
     source_markdown = """    a simple
       indented code block"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :\n    ]",
         "[text:a simple\n  indented code block:]",
         "[end-icode-block]",
     ]
@@ -141,7 +141,7 @@ def test_indented_code_blocks_080():
 
     - one"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :\n    \n\n    ]",
         "[text:\a<\a&lt;\aa/\a>\a&gt;\a\n*hi*\n\n- one:]",
         "[end-icode-block]",
     ]
@@ -178,7 +178,7 @@ def test_indented_code_blocks_081():
  
     chunk3"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :\n\n    \n  \n \n \n    ]",
         "[text:chunk1\n\nchunk2\n\n\n\nchunk3:]",
         "[end-icode-block]",
     ]
@@ -192,7 +192,7 @@ chunk3
 </code></pre>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -214,7 +214,7 @@ def test_indented_code_blocks_082():
       
       chunk2"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :\n    \n    ]",
         "[text:chunk1\n  \n  chunk2:]",
         "[end-icode-block]",
     ]
@@ -270,7 +270,7 @@ def test_indented_code_blocks_084():
     source_markdown = """    foo
 bar"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :]",
         "[text:foo:]",
         "[end-icode-block]",
         "[para(2,1):]",
@@ -306,7 +306,7 @@ def test_indented_code_blocks_084a():
 
 bar"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :]",
         "[text:foo:]",
         "[end-icode-block]",
         "[BLANK(3,1):]",
@@ -348,13 +348,13 @@ Heading
         "[atx(1,1):1:0:]",
         "[text:Heading: ]",
         "[end-atx::]",
-        "[icode-block(2,5):    ]",
+        "[icode-block(2,5):    :]",
         "[text:foo:]",
         "[end-icode-block]",
         "[setext(4,1):-::(3,1)]",
         "[text:Heading:]",
         "[end-setext::]",
-        "[icode-block(5,5):    ]",
+        "[icode-block(5,5):    :]",
         "[text:foo:]",
         "[end-icode-block]",
         "[tbreak(6,1):-::----]",
@@ -389,7 +389,7 @@ def test_indented_code_blocks_086():
     source_markdown = """        foo
     bar"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :\n    ]",
         "[text:foo\nbar:    ]",
         "[end-icode-block]",
     ]
@@ -419,12 +419,42 @@ def test_indented_code_blocks_086a():
     source_markdown = """         foo
     bar"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :\n    ]",
         "[text:foo\nbar:     ]",
         "[end-icode-block]",
     ]
     expected_gfm = """<pre><code>     foo
 bar
+</code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_indented_code_blocks_086b():
+    """
+    Test case 086ba:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """    foo
+         bar"""
+    expected_tokens = [
+        "[icode-block(1,5):    :\n    ]",
+        "[text:foo\n     bar:]",
+        "[end-icode-block]",
+    ]
+    expected_gfm = """<pre><code>foo
+     bar
 </code></pre>"""
 
     # Act
@@ -453,7 +483,7 @@ def test_indented_code_blocks_087():
     expected_tokens = [
         "[BLANK(1,1):]",
         "[BLANK(2,1):    ]",
-        "[icode-block(3,5):    ]",
+        "[icode-block(3,5):    :]",
         "[text:foo:]",
         "[end-icode-block]",
         "[BLANK(4,1):    ]",
@@ -481,7 +511,7 @@ def test_indented_code_blocks_088():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """    foo  """
-    expected_tokens = ["[icode-block(1,5):    ]", "[text:foo  :]", "[end-icode-block]"]
+    expected_tokens = ["[icode-block(1,5):    :]", "[text:foo  :]", "[end-icode-block]"]
     expected_gfm = """<pre><code>foo\a\a
 </code></pre>""".replace(
         "\a", " "

@@ -1,10 +1,13 @@
 """
 Module to provide for an element that can be added to markdown parsing stream.
 """
+import logging
 from enum import Enum
 
 from pymarkdown.constants import Constants
 from pymarkdown.parser_helper import ParserHelper
+
+LOGGER = logging.getLogger(__name__)
 
 # pylint: disable=too-many-lines
 
@@ -335,6 +338,7 @@ class IndentedCodeBlockMarkdownToken(MarkdownToken):
 
     def __init__(self, extracted_whitespace, line_number, column_number):
         self.extracted_whitespace = extracted_whitespace
+        self.indented_whitespace = ""
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_indented_code_block,
@@ -343,6 +347,20 @@ class IndentedCodeBlockMarkdownToken(MarkdownToken):
             line_number=line_number,
             column_number=column_number,
         )
+        self.compose_extra_data_field()
+
+    def compose_extra_data_field(self):
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        self.extra_data = self.extracted_whitespace + ":" + self.indented_whitespace
+
+    def add_indented_whitespace(self, indented_whitespace):
+        """
+        Add the indented whitespace that comes before the text.
+        """
+        self.indented_whitespace += "\n" + indented_whitespace
+        self.compose_extra_data_field()
 
 
 class FencedCodeBlockMarkdownToken(MarkdownToken):
@@ -505,15 +523,24 @@ class TextMarkdownToken(MarkdownToken):
             whitespace_present = other_text_token.extracted_whitespace
 
         whitespace_to_append = None
+        removed_whitespace = ""
         if not remove_leading_spaces:
             prefix_whitespace = whitespace_present
         elif remove_leading_spaces == -1:
             whitespace_to_append = whitespace_present
             prefix_whitespace = ""
         else:
+            LOGGER.debug(
+                "whitespace_present>>%s>>%s<<",
+                str(len(whitespace_present)),
+                str(whitespace_present),
+            )
+            LOGGER.debug("remove_leading_spaces>>%s<<", str(remove_leading_spaces))
             if len(whitespace_present) < remove_leading_spaces:
+                removed_whitespace = whitespace_present
                 prefix_whitespace = ""
             else:
+                removed_whitespace = whitespace_present[0:remove_leading_spaces]
                 prefix_whitespace = whitespace_present[remove_leading_spaces:]
 
         if whitespace_to_append is not None:
@@ -522,6 +549,7 @@ class TextMarkdownToken(MarkdownToken):
             )
         self.token_text = self.token_text + "\n" + prefix_whitespace + text_to_combine
         self.compose_extra_data_field()
+        return removed_whitespace
 
 
 class SpecialTextMarkdownToken(TextMarkdownToken):

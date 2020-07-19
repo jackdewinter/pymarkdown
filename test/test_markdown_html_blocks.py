@@ -1293,7 +1293,7 @@ def test_html_blocks_152():
         "[text:<!-- foo -->:  ]",
         "[end-html-block]",
         "[BLANK(2,1):]",
-        "[icode-block(3,5):    ]",
+        "[icode-block(3,5):    :]",
         "[text:\a<\a&lt;\a!-- foo --\a>\a&gt;\a:]",
         "[end-icode-block]",
     ]
@@ -1328,7 +1328,7 @@ def test_html_blocks_153():
         "[text:<div>:  ]",
         "[end-html-block]",
         "[BLANK(2,1):]",
-        "[icode-block(3,5):    ]",
+        "[icode-block(3,5):    :]",
         "[text:\a<\a&lt;\adiv\a>\a&gt;\a:]",
         "[end-icode-block]",
     ]
@@ -1611,7 +1611,7 @@ def test_html_blocks_160():
         "[text:<tr>:  ]",
         "[end-html-block]",
         "[BLANK(4,1):]",
-        "[icode-block(5,5):    ]",
+        "[icode-block(5,5):    :\n    \n    ]",
         "[text:\a<\a&lt;\atd\a>\a&gt;\a\n  Hi\n\a<\a&lt;\a/td\a>\a&gt;\a:]",
         "[end-icode-block]",
         "[BLANK(8,1):]",

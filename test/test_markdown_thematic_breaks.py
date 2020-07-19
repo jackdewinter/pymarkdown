@@ -165,7 +165,7 @@ def test_thematic_breaks_018():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """    ***"""
-    expected_tokens = ["[icode-block(1,5):    ]", "[text:***:]", "[end-icode-block]"]
+    expected_tokens = ["[icode-block(1,5):    :]", "[text:***:]", "[end-icode-block]"]
     expected_gfm = """<pre><code>***
 </code></pre>"""
 

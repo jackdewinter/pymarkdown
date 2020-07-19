@@ -287,7 +287,7 @@ def test_setext_headings_055():
     Foo
 ---"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :\n    \n\n    ]",
         "[text:Foo\n---\n\nFoo:]",
         "[end-icode-block]",
         "[tbreak(5,1):-::---]",
@@ -835,7 +835,7 @@ def test_setext_headings_070():
     source_markdown = """    foo
 ---"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :]",
         "[text:foo:]",
         "[end-icode-block]",
         "[tbreak(2,1):-::---]",

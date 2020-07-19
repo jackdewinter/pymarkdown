@@ -214,7 +214,7 @@ def test_paragraph_blocks_195():
     source_markdown = """    aaa
 bbb"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :]",
         "[text:aaa:]",
         "[end-icode-block]",
         "[para(2,1):]",

@@ -525,9 +525,7 @@ class LeafBlockProcessor:
                     IndentedCodeBlockMarkdownToken(adj_ws, line_number, column_number)
                 )
                 extracted_whitespace = left_ws
-                LOGGER.debug(
-                    "left_ws>>%s<<", extracted_whitespace.replace("\t", "\\t")
-                )
+                LOGGER.debug("left_ws>>%s<<", extracted_whitespace.replace("\t", "\\t"))
             new_tokens.append(
                 TextMarkdownToken(
                     position_marker.text_to_parse[position_marker.index_number :],

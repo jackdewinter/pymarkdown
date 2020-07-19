@@ -221,7 +221,7 @@ def test_backslash_escapes_314():
     transformer = TransformToGfm()
     source_markdown = """    \\[\\]"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :]",
         "[text:\\[\\]:]",
         "[end-icode-block]",
     ]

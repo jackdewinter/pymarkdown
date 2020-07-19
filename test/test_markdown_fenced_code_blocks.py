@@ -620,7 +620,7 @@ def test_fenced_code_blocks_104():
     aaa
     ```"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :\n    \n    ]",
         "[text:```\naaa\n```:]",
         "[end-icode-block]",
     ]

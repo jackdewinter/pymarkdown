@@ -403,7 +403,7 @@ def test_character_references_332():
     transformer = TransformToGfm()
     source_markdown = """    f&ouml;f&ouml;"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :]",
         "[text:f\a&\a&amp;\aouml;f\a&\a&amp;\aouml;:]",
         "[end-icode-block]",
     ]

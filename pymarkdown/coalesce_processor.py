@@ -34,7 +34,9 @@ class CoalesceProcessor:
                     LOGGER.debug("text-text>>%s<<", str(coalesced_list[-2]))
                     remove_leading_spaces = 0
                     if coalesced_list[-2].is_indented_code_block:
-                        remove_leading_spaces = len(coalesced_list[-2].extra_data)
+                        remove_leading_spaces = len(
+                            coalesced_list[-2].extracted_whitespace
+                        )
                     elif (
                         coalesced_list[-2].is_paragraph or coalesced_list[-2].is_setext
                     ):
@@ -47,10 +49,13 @@ class CoalesceProcessor:
                     LOGGER.debug(
                         "combine2>>%s", str(first_pass_results[coalesce_index])
                     )
-                    coalesced_list[-1].combine(
+                    indented_whitespace = coalesced_list[-1].combine(
                         first_pass_results[coalesce_index], remove_leading_spaces
                     )
                     LOGGER.debug("combined>>%s", str(coalesced_list[-1]))
+                    LOGGER.debug("indented_whitespace>>%s<<", str(indented_whitespace))
+                    if coalesced_list[-2].is_indented_code_block:
+                        coalesced_list[-2].add_indented_whitespace(indented_whitespace)
                     did_process = True
             if not did_process:
                 coalesced_list.append(first_pass_results[coalesce_index])

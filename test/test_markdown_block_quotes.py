@@ -140,7 +140,7 @@ def test_block_quotes_209():
     > bar
     > baz"""
     expected_tokens = [
-        "[icode-block(1,5):    ]",
+        "[icode-block(1,5):    :\n    \n    ]",
         "[text:\a>\a&gt;\a # Foo\n\a>\a&gt;\a bar\n\a>\a&gt;\a baz:]",
         "[end-icode-block]",
     ]
@@ -326,11 +326,11 @@ def test_block_quotes_214():
     bar"""
     expected_tokens = [
         "[block-quote(1,1):]",
-        "[icode-block(1,7):    ]",
+        "[icode-block(1,7):    :]",
         "[text:foo:]",
         "[end-icode-block]",
         "[end-block-quote]",
-        "[icode-block(2,5):    ]",
+        "[icode-block(2,5):    :]",
         "[text:bar:]",
         "[end-icode-block]",
     ]
@@ -915,7 +915,7 @@ def test_block_quotes_230():
 >    not code"""
     expected_tokens = [
         "[block-quote(1,1):]",
-        "[icode-block(1,7):    ]",
+        "[icode-block(1,7):    :]",
         "[text:code:]",
         "[end-icode-block]",
         "[end-block-quote]",

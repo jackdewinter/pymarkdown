@@ -702,7 +702,7 @@ def test_list_items_289():
         "[text:<!-- -->:]",
         "[end-html-block]",
         "[BLANK(8,1):]",
-        "[icode-block(9,5):    ]",
+        "[icode-block(9,5):    :]",
         "[text:code:]",
         "[end-icode-block]",
     ]
@@ -1030,7 +1030,7 @@ def test_list_items_293():
         "[end-para]",
         "[BLANK(4,1):]",
         "[end-olist]",
-        "[icode-block(5,5):    ]",
+        "[icode-block(5,5):    :]",
         "[text:3. c:]",
         "[end-icode-block]",
     ]

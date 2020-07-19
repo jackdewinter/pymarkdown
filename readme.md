@@ -13,8 +13,6 @@
 - new list item tokens should contain extracted w/s, to deal with lazy lines
 - add ex_ws into tokens for block quote
 
-- 081 - whitespace at start of lines in icb are not stored anywhere
-
 ## Bugs - Character Entities
 
 - test_markdown_entity* various extra tests

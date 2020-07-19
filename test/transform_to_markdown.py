@@ -142,8 +142,9 @@ class TransformToMarkdown:
         del self.block_stack[-1]
         return ""
 
-    # pylint: disable=consider-using-enumerate
     # pylint: disable=too-many-locals
+    # pylint: disable=too-many-statements
+    # pylint: disable=too-many-branches
     def rehydrate_text(self, next_token):
         """
         Rehydrate the text from the token.
@@ -212,6 +213,7 @@ class TransformToMarkdown:
                 main_text = self.reconstitute_indented_text(
                     main_text,
                     self.block_stack[-1].extracted_whitespace,
+                    self.block_stack[-1].indented_whitespace,
                     leading_whitespace,
                 )
                 prefix_text = ""
@@ -234,15 +236,25 @@ class TransformToMarkdown:
                         .replace("\n", "\\n")
                         .replace("\t", "\\t")
                     )
+
                     # TODO never incrementing?
                     parent_rehydrate_index = self.block_stack[-1].rehydrate_index
-                    for i in range(1, len(split_token_text)):
-                        print(">>" + str(i))
-                        joined_text = (
-                            split_parent_whitespace_text[parent_rehydrate_index + i]
-                            + split_token_text[i]
-                        )
-                        split_token_text[i] = joined_text
+
+                    rejoined_token_text = []
+                    for iterator in enumerate(split_token_text, start=0):
+                        print(">>" + str(iterator))
+                        if iterator[0] == 0:
+                            joined_text = iterator[1]
+                        else:
+                            joined_text = (
+                                split_parent_whitespace_text[
+                                    parent_rehydrate_index + iterator[0]
+                                ]
+                                + iterator[1]
+                            )
+                        rejoined_token_text.append(joined_text)
+                    split_token_text = rejoined_token_text
+
                     if next_token.end_whitespace:
                         split_end_whitespace_text = next_token.end_whitespace.split(
                             "\n"
@@ -254,16 +266,20 @@ class TransformToMarkdown:
                             .replace("\t", "\\t")
                         )
                         assert len(split_token_text) == len(split_end_whitespace_text)
-                        for i in range(0, len(split_token_text)):
-                            print(">>" + str(i))
+
+                        joined_token_text = []
+                        for iterator in enumerate(split_token_text):
+                            print(">>" + str(iterator))
                             joined_text = (
-                                split_token_text[i] + split_end_whitespace_text[i]
+                                iterator[1] + split_end_whitespace_text[iterator[0]]
                             )
-                            split_token_text[i] = joined_text
+                            joined_token_text.append(joined_text)
+                        split_token_text = joined_token_text
                     main_text = "\n".join(split_token_text)
         return prefix_text + leading_whitespace + main_text
 
-    # pylint: enable=consider-using-enumerate
+    # pylint: enable=too-many-statements
+    # pylint: enable=too-many-branches
     # pylint: enable=too-many-locals
 
     @classmethod
@@ -281,19 +297,48 @@ class TransformToMarkdown:
         return next_token.extracted_whitespace + next_token.rest_of_line + "\n"
 
     @classmethod
-    def reconstitute_indented_text(cls, main_text, prefix_text, leading_whitespace):
+    def reconstitute_indented_text(
+        cls, main_text, prefix_text, indented_whitespace, leading_whitespace
+    ):
         """
         For an indented code block, figure out the text that got us here.
         """
-        print(">>" + str(prefix_text) + ">>")
+        print(
+            "\n\nprefix_text>>"
+            + str(len(prefix_text))
+            + ">>"
+            + str(prefix_text).replace("\n", "\\n")
+            + ">>"
+        )
+        print(
+            "leading_whitespace>>"
+            + str(len(leading_whitespace))
+            + ">>"
+            + str(leading_whitespace).replace("\n", "\\n")
+            + ">>"
+        )
         split_main_text = main_text.split("\n")
-        print(">>" + str(split_main_text) + ">>")
+        print("split_main_text>>" + str(split_main_text).replace("\n", "\\n") + ">>")
+        print(
+            "indented_whitespace>>"
+            + str(indented_whitespace).replace("\n", "\\n")
+            + ">>"
+        )
+        split_indented_whitespace = (
+            prefix_text + leading_whitespace + indented_whitespace
+        ).split("\n")
+        print(
+            "split_indented_whitespace>>"
+            + str(split_indented_whitespace).replace("\n", "\\n")
+            + ">>"
+        )
+        assert len(split_main_text) == len(split_indented_whitespace)
+
         recombined_text = ""
-        for next_split in split_main_text:
-            if next_split:
-                recombined_text += prefix_text + leading_whitespace + next_split + "\n"
-                leading_whitespace = ""
-            else:
-                recombined_text += next_split + "\n"
-        print("<<" + recombined_text + ">>")
+        for iterator in enumerate(split_main_text):
+            recombined_text += (
+                split_indented_whitespace[iterator[0]] + iterator[1] + "\n"
+            )
+
+        print("<<" + recombined_text.replace("\n", "\\n") + ">>")
         return recombined_text
