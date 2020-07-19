@@ -42,16 +42,18 @@ class TransformToMarkdown:
                 transformed_data += self.rehydrate_paragraph(next_token)
             elif next_token.token_name == MarkdownToken.token_indented_code_block:
                 transformed_data += self.rehydrate_indented_code_block(next_token)
+            elif next_token.token_name == MarkdownToken.token_html_block:
+                transformed_data += self.rehydrate_html_block(next_token)
             elif next_token.token_name == MarkdownToken.token_text:
                 transformed_data += self.rehydrate_text(next_token)
             elif next_token.token_name == MarkdownToken.token_blank_line:
                 transformed_data += self.rehydrate_blank_line(next_token)
+
             elif (
                 next_token.token_name == MarkdownToken.token_unordered_list_start
                 or next_token.token_name == MarkdownToken.token_ordered_list_start
                 or next_token.token_name == MarkdownToken.token_block_quote
                 or next_token.token_name == MarkdownToken.token_fenced_code_block
-                or next_token.token_name == MarkdownToken.token_html_block
                 or next_token.token_name == MarkdownToken.token_setext_heading
                 or next_token.token_name == MarkdownToken.token_atx_heading
                 or next_token.token_name
@@ -77,6 +79,10 @@ class TransformToMarkdown:
                     transformed_data += self.rehydrate_paragraph_end(next_token)
                 elif adjusted_token_name == MarkdownToken.token_indented_code_block:
                     transformed_data += self.rehydrate_indented_code_block_end(
+                        next_token
+                    )
+                elif adjusted_token_name == MarkdownToken.token_html_block:
+                    transformed_data += self.rehydrate_html_block_end(
                         next_token
                     )
                 else:
@@ -137,6 +143,21 @@ class TransformToMarkdown:
     def rehydrate_indented_code_block_end(self, next_token):
         """
         Rehydrate the end of the indented code block from the token.
+        """
+        assert next_token
+        del self.block_stack[-1]
+        return ""
+
+    def rehydrate_html_block(self, next_token):
+        """
+        Rehydrate the html block from the token.
+        """
+        self.block_stack.append(next_token)
+        return ""
+
+    def rehydrate_html_block_end(self, next_token):
+        """
+        Rehydrate the end of the html block from the token.
         """
         assert next_token
         del self.block_stack[-1]
@@ -218,6 +239,8 @@ class TransformToMarkdown:
                 )
                 prefix_text = ""
                 leading_whitespace = ""
+            elif self.block_stack[-1].token_name == MarkdownToken.token_html_block:
+                main_text += "\n"
             elif self.block_stack[-1].token_name == MarkdownToken.token_paragraph:
                 if "\n" in main_text:
                     split_token_text = main_text.split("\n")
