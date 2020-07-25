@@ -61,7 +61,6 @@ class TransformToMarkdown:
                 or next_token.token_name
                 == MarkdownToken.token_link_reference_definition
                 or next_token.token_name == MarkdownToken.token_inline_code_span
-                or next_token.token_name == MarkdownToken.token_inline_raw_html
                 or next_token.token_name == MarkdownToken.token_inline_link
                 or next_token.token_name == MarkdownToken.token_inline_image
             ):
@@ -75,6 +74,8 @@ class TransformToMarkdown:
                 transformed_data += self.rehydrate_inline_uri_autolink(next_token)
             elif next_token.token_name == MarkdownToken.token_inline_email_autolink:
                 transformed_data += self.rehydrate_inline_email_autolink(next_token)
+            elif next_token.token_name == MarkdownToken.token_inline_raw_html:
+                transformed_data += self.rehydrate_inline_raw_html(next_token)
             elif next_token.token_name.startswith(EndMarkdownToken.type_name_prefix):
 
                 adjusted_token_name = next_token.token_name[
@@ -380,6 +381,13 @@ class TransformToMarkdown:
         Rehydrate the email autolink from the token.
         """
         return "<" + next_token.autolink_text + ">"
+
+    @classmethod
+    def rehydrate_inline_raw_html(cls, next_token):
+        """
+        Rehydrate the email raw html from the token.
+        """
+        return "<" + next_token.raw_tag + ">"
 
     @classmethod
     def rehydrate_thematic_break(cls, next_token):
