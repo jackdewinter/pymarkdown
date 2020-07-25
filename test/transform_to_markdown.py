@@ -61,8 +61,6 @@ class TransformToMarkdown:
                 or next_token.token_name
                 == MarkdownToken.token_link_reference_definition
                 or next_token.token_name == MarkdownToken.token_inline_code_span
-                or next_token.token_name == MarkdownToken.token_inline_uri_autolink
-                or next_token.token_name == MarkdownToken.token_inline_email_autolink
                 or next_token.token_name == MarkdownToken.token_inline_raw_html
                 or next_token.token_name == MarkdownToken.token_inline_link
                 or next_token.token_name == MarkdownToken.token_inline_image
@@ -73,6 +71,10 @@ class TransformToMarkdown:
                 transformed_data += self.rehydrate_hard_break(next_token)
             elif next_token.token_name == MarkdownToken.token_inline_emphasis:
                 transformed_data += self.rehydrate_inline_emphaisis(next_token)
+            elif next_token.token_name == MarkdownToken.token_inline_uri_autolink:
+                transformed_data += self.rehydrate_inline_uri_autolink(next_token)
+            elif next_token.token_name == MarkdownToken.token_inline_email_autolink:
+                transformed_data += self.rehydrate_inline_email_autolink(next_token)
             elif next_token.token_name.startswith(EndMarkdownToken.type_name_prefix):
 
                 adjusted_token_name = next_token.token_name[
@@ -364,6 +366,20 @@ class TransformToMarkdown:
         emphasis_length = int(split_end_data[0])
         emphasis_character = split_end_data[1]
         return "".rjust(emphasis_length, emphasis_character)
+
+    @classmethod
+    def rehydrate_inline_uri_autolink(cls, next_token):
+        """
+        Rehydrate the uri autolink from the token.
+        """
+        return "<" + next_token.autolink_text + ">"
+
+    @classmethod
+    def rehydrate_inline_email_autolink(cls, next_token):
+        """
+        Rehydrate the email autolink from the token.
+        """
+        return "<" + next_token.autolink_text + ">"
 
     @classmethod
     def rehydrate_thematic_break(cls, next_token):
