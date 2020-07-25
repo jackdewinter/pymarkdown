@@ -845,7 +845,7 @@ bar
 [foo]"""
     expected_tokens = [
         "[link-ref-def(1,1):True::foo:: :/url:::::]",
-        "[setext(3,1):=::(2,1)]",
+        "[setext(3,1):=:3::(2,1)]",
         "[text:bar:]",
         "[end-setext::]",
         "[para(4,1):]",

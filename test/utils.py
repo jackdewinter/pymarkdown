@@ -42,6 +42,7 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
         .replace("\a", "\\a")
         .replace("\\x07", "\\a")
         .replace("\\\\x08", "\\b")
+        .replace("\x02", "\\x02")
     )
     print(
         "parsed_tokens  : "
@@ -50,6 +51,7 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
         .replace("\t", "\\t")
         .replace(InlineHelper.backspace_character, "\\b")
         .replace("\a", "\\a")
+        .replace("\x02", "\\x02")
     )
     assert len(expected_tokens) == len(actual_tokens), (
         "List lengths are not the same: ("
@@ -72,6 +74,10 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             + str(len(expected_str))
             + ")>>"
             + expected_str.replace("\t", "\\t")
+            .replace("\n", "\\n")
+            .replace("\a", "\\a")
+            .replace("\b", "\\b")
+            .replace("\x02", "\\x02")
             + "<<"
         )
         print(
@@ -79,6 +85,10 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             + str(len(actual_str))
             + ")>>"
             + actual_str.replace("\t", "\\t")
+            .replace("\n", "\\n")
+            .replace("\a", "\\a")
+            .replace("\b", "\\b")
+            .replace("\x02", "\\x02")
             + "<<"
         )
 
@@ -408,9 +418,9 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
     else:
         print(
             "\n-=-=-\nExpected\n-=-=-\n"
-            + source_markdown
+            + source_markdown.replace("\x02", "\\x02")
             + "\n-=-=-\nActual\n-=-=-\n"
-            + original_markdown
+            + original_markdown.replace("\x02", "\\x02")
             + "\n-=-=-\n"
         )
         diff = difflib.ndiff(source_markdown, original_markdown)

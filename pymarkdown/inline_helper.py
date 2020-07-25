@@ -430,13 +430,20 @@ class InlineHelper:
         """
         new_tokens = []
 
+        LOGGER.debug(">>current_string>>%s>>", current_string.replace("\n", "\\n"))
+        LOGGER.debug(">>end_string>>%s>>", str(end_string).replace("\n", "\\n"))
+        LOGGER.debug(">>remaining_line>>%s>>", str(remaining_line).replace("\n", "\\n"))
         _, last_non_whitespace_index = ParserHelper.collect_backwards_while_character(
             remaining_line, -1, InlineHelper.__line_end_whitespace
         )
         LOGGER.debug(">>last_non_whitespace_index>>%s", str(last_non_whitespace_index))
-        LOGGER.debug(">>current_string>>%s>>", current_string.replace("\n", "\\n"))
         removed_end_whitespace = remaining_line[last_non_whitespace_index:]
         remaining_line = remaining_line[0:last_non_whitespace_index]
+        LOGGER.debug(
+            ">>removed_end_whitespace>>%s>>",
+            str(removed_end_whitespace).replace("\n", "\\n"),
+        )
+        LOGGER.debug(">>remaining_line>>%s>>", str(remaining_line).replace("\n", "\\n"))
 
         append_to_current_string = "\n"
         whitespace_to_add = None
@@ -461,6 +468,16 @@ class InlineHelper:
                 end_string, removed_end_whitespace
             )
 
+        LOGGER.debug(
+            "<<append_to_current_string<<%s<<",
+            str(append_to_current_string).replace("\n", "\\n"),
+        )
+        LOGGER.debug(
+            "<<whitespace_to_add<<%s<<", str(whitespace_to_add).replace("\n", "\\n")
+        )
+        LOGGER.debug("<<remaining_line<<%s<<", str(remaining_line).replace("\n", "\\n"))
+        LOGGER.debug("<<end_string<<%s<<", str(end_string).replace("\n", "\\n"))
+        LOGGER.debug("<<current_string<<%s<<", str(current_string).replace("\n", "\\n"))
         return (
             append_to_current_string,
             whitespace_to_add,

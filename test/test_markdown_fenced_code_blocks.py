@@ -848,7 +848,7 @@ bar
 ~~~
 # baz"""
     expected_tokens = [
-        "[setext(2,1):-::(1,1)]",
+        "[setext(2,1):-:3::(1,1)]",
         "[text:foo:]",
         "[end-setext::]",
         "[fcode-block(3,1):~:3::::::]",

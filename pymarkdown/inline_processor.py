@@ -6,7 +6,11 @@ import logging
 from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline_helper import InlineHelper, InlineRequest, InlineResponse
 from pymarkdown.link_helper import LinkHelper
-from pymarkdown.markdown_token import SpecialTextMarkdownToken, TextMarkdownToken
+from pymarkdown.markdown_token import (
+    MarkdownToken,
+    SpecialTextMarkdownToken,
+    TextMarkdownToken,
+)
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
@@ -106,7 +110,7 @@ class InlineProcessor:
                 elif coalesced_list[-1].is_setext:
                     combined_test = coalesced_results[coalesce_index].token_text
                     LOGGER.debug(
-                        "combined_test>>%s", combined_test.replace("\n", "\\n")
+                        "combined_text>>%s", combined_test.replace("\n", "\\n")
                     )
                     processed_tokens = InlineProcessor.__process_inline_text_block(
                         coalesced_results[coalesce_index].token_text.replace(
@@ -115,6 +119,7 @@ class InlineProcessor:
                         whitespace_to_recombine=coalesced_results[
                             coalesce_index
                         ].extracted_whitespace.replace("\t", "    "),
+                        is_setext=True,
                     )
                     LOGGER.debug(
                         "processed_tokens>>%s",
@@ -284,8 +289,12 @@ class InlineProcessor:
 
     @staticmethod
     # pylint: disable=too-many-statements
+    # pylint: disable=too-many-locals
     def __process_inline_text_block(
-        source_text, starting_whitespace="", whitespace_to_recombine=None
+        source_text,
+        starting_whitespace="",
+        whitespace_to_recombine=None,
+        is_setext=False,
     ):
         """
         Process a text block for any inline items.
@@ -302,7 +311,7 @@ class InlineProcessor:
 
         current_string = ""
         current_string_unresolved = ""
-        end_string = None
+        end_string = ""
 
         inline_response = InlineResponse()
 
@@ -311,8 +320,11 @@ class InlineProcessor:
             InlineProcessor.__valid_inline_text_block_sequence_starts,
             start_index,
         )
+        LOGGER.debug("__process_inline_text_block>>is_setext>>%s", str(is_setext))
         LOGGER.debug(
-            "__process_inline_text_block>>%s>>%s", source_text, str(start_index)
+            "__process_inline_text_block>>%s>>%s",
+            source_text.replace("\n", "\\n"),
+            str(start_index),
         )
         while next_index != -1:
 
@@ -342,7 +354,8 @@ class InlineProcessor:
             else:
                 assert source_text[next_index] == "\n"
                 LOGGER.debug(
-                    "end_string(before)>>%s<<", str(end_string).replace("\n", "\\n")
+                    "end_string(before)>>%s<<",
+                    str(end_string).replace("\n", "\\n").replace("\x02", "\\x02"),
                 )
                 (
                     inline_response.new_string,
@@ -355,33 +368,51 @@ class InlineProcessor:
                 ) = InlineHelper.handle_line_end(
                     next_index, remaining_line, end_string, current_string
                 )
-                end_string = InlineProcessor.__add_recombined_whitespace(
-                    bool(whitespace_to_recombine),
-                    source_text,
-                    inline_response,
-                    end_string,
+                LOGGER.debug(
+                    "handle_line_end>>new_tokens>>%s<<",
+                    str(inline_response.new_tokens)
+                    .replace("\n", "\\n")
+                    .replace("\x02", "\\x02"),
                 )
+                if not inline_response.new_tokens:
+                    end_string = InlineProcessor.__add_recombined_whitespace(
+                        bool(whitespace_to_recombine),
+                        source_text,
+                        inline_response,
+                        end_string,
+                        is_setext,
+                    )
                 LOGGER.debug(
                     "handle_line_end>>%s<<",
-                    source_text[inline_response.new_index :].replace("\n", "\\n"),
+                    source_text[inline_response.new_index :]
+                    .replace("\n", "\\n")
+                    .replace("\x02", "\\x02"),
                 )
                 LOGGER.debug(
-                    "end_string(after)>>%s<<", str(end_string).replace("\n", "\\n")
+                    "end_string(after)>>%s<<",
+                    str(end_string).replace("\n", "\\n").replace("\x02", "\\x02"),
                 )
 
-            LOGGER.debug("new_string-->%s<--", str(inline_response.new_string))
+            LOGGER.debug(
+                "new_string-->%s<--",
+                str(inline_response.new_string).replace("\n", "\\n"),
+            )
             LOGGER.debug("new_index-->%s<--", str(inline_response.new_index))
-            LOGGER.debug("new_tokens-->%s<--", str(inline_response.new_tokens))
+            LOGGER.debug(
+                "new_tokens-->%s<--",
+                str(inline_response.new_tokens).replace("\n", "\\n"),
+            )
             LOGGER.debug(
                 "new_string_unresolved-->%s<--",
-                str(inline_response.new_string_unresolved),
+                str(inline_response.new_string_unresolved).replace("\n", "\\n"),
             )
             LOGGER.debug(
                 "consume_rest_of_line-->%s<--",
                 str(inline_response.consume_rest_of_line),
             )
             LOGGER.debug(
-                "original_string-->%s<--", str(inline_response.original_string)
+                "original_string-->%s<--",
+                str(inline_response.original_string).replace("\n", "\\n"),
             )
 
             if inline_response.consume_rest_of_line:
@@ -396,6 +427,16 @@ class InlineProcessor:
                     current_string_unresolved, remaining_line
                 )
 
+            LOGGER.debug(
+                "current_string>>%s<<",
+                str(current_string).replace("\n", "\\n").replace("\x02", "\\x02"),
+            )
+            LOGGER.debug(
+                "current_string_unresolved>>%s<<",
+                str(current_string_unresolved)
+                .replace("\n", "\\n")
+                .replace("\x02", "\\x02"),
+            )
             if inline_response.new_tokens:
                 if current_string:
                     # assert end_string is None
@@ -436,14 +477,19 @@ class InlineProcessor:
             LOGGER.debug(
                 "<<current_string<<%s<<%s<<",
                 str(len(current_string)),
-                current_string.replace("\b", "\\b").replace("\a", "\\a"),
+                current_string.replace("\b", "\\b")
+                .replace("\a", "\\a")
+                .replace("\n", "\\n"),
             )
             LOGGER.debug(
                 "<<current_string_unresolved<<%s<<%s<<",
                 str(len(current_string_unresolved)),
-                current_string_unresolved.replace("\b", "\\b").replace("\a", "\\a"),
+                current_string_unresolved.replace("\b", "\\b")
+                .replace("\a", "\\a")
+                .replace("\n", "\\n"),
             )
 
+        LOGGER.debug("<<__complete_inline_block_processing<<")
         return InlineProcessor.__complete_inline_block_processing(
             inline_blocks,
             source_text,
@@ -451,18 +497,45 @@ class InlineProcessor:
             current_string,
             end_string,
             starting_whitespace,
+            is_setext,
         )
 
     # pylint: enable=too-many-statements
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def __add_recombined_whitespace(
-        did_recombine, source_text, inline_response, end_string
+        did_recombine, source_text, inline_response, end_string, is_setext
     ):
 
+        LOGGER.debug("__arw>>did_recombine>>%s>>", str(did_recombine))
+        LOGGER.debug(
+            "__arw>>end_string>>%s>>",
+            str(end_string).replace("\n", "\\n").replace("\x02", "\\x02"),
+        )
         if did_recombine:
+            LOGGER.debug(
+                "__arw>>source_text>>%s>>",
+                str(source_text).replace("\n", "\\n").replace("\x02", "\\x02"),
+            )
             new_index, extracted_whitespace = ParserHelper.extract_whitespace(
                 source_text, inline_response.new_index
+            )
+            LOGGER.debug(
+                "__arw>>%s>>",
+                str(source_text[0 : inline_response.new_index])
+                .replace("\n", "\\n")
+                .replace("\x02", "\\x02"),
+            )
+            LOGGER.debug(
+                "__arw>>%s>>",
+                str(source_text[inline_response.new_index :])
+                .replace("\n", "\\n")
+                .replace("\x02", "\\x02"),
+            )
+            LOGGER.debug(
+                "__arw>>extracted_whitespace>>%s>>",
+                str(extracted_whitespace).replace("\n", "\\n").replace("\x02", "\\x02"),
             )
             if extracted_whitespace:
                 inline_response.new_index = new_index
@@ -470,6 +543,12 @@ class InlineProcessor:
                     end_string += extracted_whitespace
                 else:
                     end_string = extracted_whitespace
+                if is_setext:
+                    end_string += "\x02"
+                LOGGER.debug(
+                    "__arw>>end_string>>%s>>",
+                    str(end_string).replace("\n", "\\n").replace("\x02", "\\x02"),
+                )
         return end_string
 
     @staticmethod
@@ -485,15 +564,23 @@ class InlineProcessor:
         new_string,
         original_string,
     ):
-        LOGGER.debug("__complete_inline_loop--current_string>>%s>>", current_string)
-        LOGGER.debug("__complete_inline_loop--new_string>>%s>>", new_string)
+        LOGGER.debug(
+            "__complete_inline_loop--current_string>>%s>>",
+            current_string.replace("\n", "\\n"),
+        )
+        LOGGER.debug(
+            "__complete_inline_loop--new_string>>%s>>", new_string.replace("\n", "\\n")
+        )
         LOGGER.debug(
             "__complete_inline_loop--new_string_unresolved>>%s>>",
-            str(new_string_unresolved),
+            str(new_string_unresolved).replace("\n", "\\n"),
         )
         LOGGER.debug(
             "__complete_inline_loop--original_string>>%s>>",
-            str(original_string).replace("\b", "\\b").replace("\a", "\\a"),
+            str(original_string)
+            .replace("\b", "\\b")
+            .replace("\a", "\\a")
+            .replace("\n", "\\n"),
         )
 
         if original_string is not None:
@@ -502,12 +589,18 @@ class InlineProcessor:
 
         LOGGER.debug(
             "__complete_inline_loop--current_string>>%s>>",
-            str(current_string).replace("\b", "\\b").replace("\a", "\\a"),
+            str(current_string)
+            .replace("\b", "\\b")
+            .replace("\a", "\\a")
+            .replace("\n", "\\n"),
         )
         current_string = InlineHelper.append_text(current_string, new_string)
         LOGGER.debug(
             "__complete_inline_loop--current_string>>%s>>",
-            str(current_string).replace("\b", "\\b").replace("\a", "\\a"),
+            str(current_string)
+            .replace("\b", "\\b")
+            .replace("\a", "\\a")
+            .replace("\n", "\\n"),
         )
 
         if original_string is not None:
@@ -515,7 +608,10 @@ class InlineProcessor:
 
         LOGGER.debug(
             "__complete_inline_loop--current_string>>%s>>",
-            str(current_string).replace("\b", "\\b").replace("\a", "\\a"),
+            str(current_string)
+            .replace("\b", "\\b")
+            .replace("\a", "\\a")
+            .replace("\n", "\\n"),
         )
         if new_string_unresolved:
             current_string_unresolved += new_string_unresolved
@@ -526,7 +622,10 @@ class InlineProcessor:
 
         LOGGER.debug(
             "__complete_inline_loop--current_string_unresolved>>%s>>",
-            str(current_string_unresolved).replace("\b", "\\b").replace("\a", "\\a"),
+            str(current_string_unresolved)
+            .replace("\b", "\\b")
+            .replace("\a", "\\a")
+            .replace("\n", "\\n"),
         )
 
         if whitespace_to_add is not None:
@@ -557,8 +656,36 @@ class InlineProcessor:
         current_string,
         end_string,
         starting_whitespace,
+        is_setext,
     ):
         have_processed_once = len(inline_blocks) != 0 or start_index != 0
+
+        LOGGER.debug(
+            "__cibp>inline_blocks>%s<", str(inline_blocks).replace("\n", "\\n")
+        )
+        LOGGER.debug("__cibp>source_text>%s<", str(source_text).replace("\n", "\\n"))
+        LOGGER.debug("__cibp>start_index>%s<", str(start_index).replace("\n", "\\n"))
+        LOGGER.debug(
+            "__cibp>current_string>%s<", str(current_string).replace("\n", "\\n")
+        )
+        LOGGER.debug("__cibp>end_string>%s<", str(end_string).replace("\n", "\\n"))
+        LOGGER.debug(
+            "__cibp>starting_whitespace>%s<",
+            str(starting_whitespace).replace("\n", "\\n"),
+        )
+        LOGGER.debug("__cibp>is_setext>%s<", str(is_setext).replace("\n", "\\n"))
+
+        if (
+            inline_blocks
+            and inline_blocks[-1].token_name == MarkdownToken.token_inline_hard_break
+        ):
+            start_index, extracted_whitespace = ParserHelper.extract_whitespace(
+                source_text, start_index
+            )
+            if end_string is None:
+                end_string = extracted_whitespace
+            else:
+                end_string += extracted_whitespace
 
         if start_index < len(source_text):
             current_string = InlineHelper.append_text(
@@ -573,7 +700,9 @@ class InlineProcessor:
                     current_string, starting_whitespace, end_whitespace=end_string
                 )
             )
-        LOGGER.debug(">>%s<<", str(inline_blocks))
+        LOGGER.debug(
+            ">>%s<<", str(inline_blocks).replace("\n", "\\n").replace("\x02", "\\x02")
+        )
 
         return EmphasisHelper.resolve_inline_emphasis(inline_blocks, None)
 

@@ -18,6 +18,7 @@ class TransformToMarkdown:
         """
         self.block_stack = []
 
+        # TODO do I still need this?
         resource_path = None
         if not resource_path:
             resource_path = os.path.join(
@@ -46,6 +47,8 @@ class TransformToMarkdown:
                 transformed_data += self.rehydrate_html_block(next_token)
             elif next_token.token_name == MarkdownToken.token_text:
                 transformed_data += self.rehydrate_text(next_token)
+            elif next_token.token_name == MarkdownToken.token_setext_heading:
+                transformed_data += self.rehydrate_setext_heading(next_token)
             elif next_token.token_name == MarkdownToken.token_blank_line:
                 transformed_data += self.rehydrate_blank_line(next_token)
 
@@ -82,9 +85,9 @@ class TransformToMarkdown:
                         next_token
                     )
                 elif adjusted_token_name == MarkdownToken.token_html_block:
-                    transformed_data += self.rehydrate_html_block_end(
-                        next_token
-                    )
+                    transformed_data += self.rehydrate_html_block_end(next_token)
+                elif adjusted_token_name == MarkdownToken.token_setext_heading:
+                    transformed_data += self.rehydrate_setext_heading_end(next_token)
                 else:
                     assert False, "end_next_token>>" + str(adjusted_token_name)
             else:
@@ -163,9 +166,34 @@ class TransformToMarkdown:
         del self.block_stack[-1]
         return ""
 
+    def rehydrate_setext_heading(self, next_token):
+        """
+        Rehydrate the setext heading from the token.
+        """
+        self.block_stack.append(next_token)
+        return next_token.extracted_whitespace
+
+    def rehydrate_setext_heading_end(self, next_token):
+        """
+        Rehydrate the end of the setext heading block from the token.
+        """
+        heading_character = self.block_stack[-1].heading_character
+        heading_character_count = self.block_stack[-1].heading_character_count
+        final_whitespace = self.block_stack[-1].final_whitespace
+        del self.block_stack[-1]
+        return (
+            final_whitespace
+            + "\n"
+            + next_token.extracted_whitespace
+            + "".rjust(heading_character_count, heading_character)
+            + next_token.extra_end_data
+            + "\n"
+        )
+
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-statements
     # pylint: disable=too-many-branches
+    # pylint: disable=too-many-nested-blocks
     def rehydrate_text(self, next_token):
         """
         Rehydrate the text from the token.
@@ -178,49 +206,7 @@ class TransformToMarkdown:
         print(
             ">>rehydrate_text>>" + main_text.replace("\a", "\\a").replace("\n", "\\n")
         )
-        while "\a" in main_text:
-            start_replacement_index = main_text.index("\a")
-            print(">>start_replacement_index>>" + str(start_replacement_index))
-            middle_replacement_index = main_text.index(
-                "\a", start_replacement_index + 1
-            )
-            print(">>middle_replacement_index>>" + str(middle_replacement_index))
-            end_replacement_index = main_text.index("\a", middle_replacement_index + 1)
-            print(">>end_replacement_index>>" + str(end_replacement_index))
-
-            replace_text = main_text[
-                start_replacement_index + 1 : middle_replacement_index
-            ]
-
-            # It is possible to have one level of nesting, so deal with it.
-            if middle_replacement_index + 1 == end_replacement_index:
-                inner_start_replacement_index = main_text.index(
-                    "\a", end_replacement_index + 1
-                )
-                inner_middle_replacement_index = main_text.index(
-                    "\a", inner_start_replacement_index + 1
-                )
-                inner_end_replacement_index = main_text.index(
-                    "\a", inner_middle_replacement_index + 1
-                )
-                assert inner_middle_replacement_index + 1 == inner_end_replacement_index
-                end_replacement_index = inner_end_replacement_index
-
-            if start_replacement_index:
-                main_text = (
-                    main_text[0:start_replacement_index]
-                    + replace_text
-                    + main_text[end_replacement_index + 1 :]
-                )
-            else:
-                main_text = replace_text + main_text[end_replacement_index + 1 :]
-            print(
-                ">>rehydrate_text>>"
-                + str(len(main_text))
-                + ">>"
-                + main_text.replace("\a", "\\a").replace("\n", "\\n")
-            )
-
+        main_text = self.resolve_replacement_markers(main_text)
         print(
             "<<rehydrate_text>>" + main_text.replace("\a", "\\a").replace("\n", "\\n")
         )
@@ -299,11 +285,58 @@ class TransformToMarkdown:
                             joined_token_text.append(joined_text)
                         split_token_text = joined_token_text
                     main_text = "\n".join(split_token_text)
+            elif self.block_stack[-1].token_name == MarkdownToken.token_setext_heading:
+                if "\n" in main_text:
+                    split_token_text = main_text.split("\n")
+                    split_parent_whitespace_text = next_token.end_whitespace.split("\n")
+                    print(
+                        ">>split_token_text>>"
+                        + str(split_token_text)
+                        .replace("\n", "\\n")
+                        .replace("\t", "\\t")
+                    )
+                    print(
+                        ">>split_parent_whitespace_text>>"
+                        + str(split_parent_whitespace_text)
+                        .replace("\n", "\\n")
+                        .replace("\t", "\\t")
+                    )
+
+                    # TODO never incrementing?
+                    parent_rehydrate_index = 0  # self.block_stack[-1].rehydrate_index
+
+                    rejoined_token_text = []
+                    for iterator in enumerate(split_token_text, start=0):
+                        print(">>iterator=" + str(iterator))
+                        split_setext_text = []
+                        ws_prefix_text = ""
+                        ws_suffix_text = ""
+                        if split_parent_whitespace_text[iterator[0]]:
+                            split_setext_text = split_parent_whitespace_text[
+                                iterator[0]
+                            ].split("\x02")
+                            print(">>split_setext_text=" + str(split_setext_text))
+                            if len(split_setext_text) == 1:
+                                if iterator[0] == 0:
+                                    ws_suffix_text = split_setext_text[0]
+                                else:
+                                    ws_prefix_text = split_setext_text[0]
+                            else:
+                                assert len(split_setext_text) == 2
+                                ws_prefix_text = split_setext_text[0]
+                                ws_suffix_text = split_setext_text[1]
+
+                        joined_text = ws_prefix_text + iterator[1] + ws_suffix_text
+                        rejoined_token_text.append(joined_text)
+
+                    print(">>rejoined_token_text=" + str(rejoined_token_text))
+                    main_text = "\n".join(rejoined_token_text)
         return prefix_text + leading_whitespace + main_text
 
     # pylint: enable=too-many-statements
     # pylint: enable=too-many-branches
     # pylint: enable=too-many-locals
+    # pylint: enable=too-many-nested-blocks
 
     @classmethod
     def rehydrate_hard_break(cls, next_token):
@@ -365,3 +398,53 @@ class TransformToMarkdown:
 
         print("<<" + recombined_text.replace("\n", "\\n") + ">>")
         return recombined_text
+
+    @classmethod
+    def resolve_replacement_markers(cls, main_text):
+        """
+        Resolve the alert characters (i.e. replacement markers) out of the text string.
+        """
+
+        while "\a" in main_text:
+            start_replacement_index = main_text.index("\a")
+            print(">>start_replacement_index>>" + str(start_replacement_index))
+            middle_replacement_index = main_text.index(
+                "\a", start_replacement_index + 1
+            )
+            print(">>middle_replacement_index>>" + str(middle_replacement_index))
+            end_replacement_index = main_text.index("\a", middle_replacement_index + 1)
+            print(">>end_replacement_index>>" + str(end_replacement_index))
+
+            replace_text = main_text[
+                start_replacement_index + 1 : middle_replacement_index
+            ]
+
+            # It is possible to have one level of nesting, so deal with it.
+            if middle_replacement_index + 1 == end_replacement_index:
+                inner_start_replacement_index = main_text.index(
+                    "\a", end_replacement_index + 1
+                )
+                inner_middle_replacement_index = main_text.index(
+                    "\a", inner_start_replacement_index + 1
+                )
+                inner_end_replacement_index = main_text.index(
+                    "\a", inner_middle_replacement_index + 1
+                )
+                assert inner_middle_replacement_index + 1 == inner_end_replacement_index
+                end_replacement_index = inner_end_replacement_index
+
+            if start_replacement_index:
+                main_text = (
+                    main_text[0:start_replacement_index]
+                    + replace_text
+                    + main_text[end_replacement_index + 1 :]
+                )
+            else:
+                main_text = replace_text + main_text[end_replacement_index + 1 :]
+            print(
+                ">>rehydrate_text>>"
+                + str(len(main_text))
+                + ">>"
+                + main_text.replace("\a", "\\a").replace("\n", "\\n")
+            )
+        return main_text

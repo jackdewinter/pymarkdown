@@ -45,15 +45,23 @@ class CoalesceProcessor:
                     LOGGER.debug(
                         "remove_leading_spaces>>%s", str(remove_leading_spaces)
                     )
-                    LOGGER.debug("combine1>>%s", str(coalesced_list[-1]))
                     LOGGER.debug(
-                        "combine2>>%s", str(first_pass_results[coalesce_index])
+                        "combine1>>%s", str(coalesced_list[-1]).replace("\n", "\\n")
+                    )
+                    LOGGER.debug(
+                        "combine2>>%s",
+                        str(first_pass_results[coalesce_index]).replace("\n", "\\n"),
                     )
                     indented_whitespace = coalesced_list[-1].combine(
                         first_pass_results[coalesce_index], remove_leading_spaces
                     )
-                    LOGGER.debug("combined>>%s", str(coalesced_list[-1]))
-                    LOGGER.debug("indented_whitespace>>%s<<", str(indented_whitespace))
+                    LOGGER.debug(
+                        "combined>>%s", str(coalesced_list[-1]).replace("\n", "\\n")
+                    )
+                    LOGGER.debug(
+                        "indented_whitespace>>%s<<",
+                        str(indented_whitespace).replace("\n", "\\n"),
+                    )
                     if coalesced_list[-2].is_indented_code_block:
                         coalesced_list[-2].add_indented_whitespace(indented_whitespace)
                     did_process = True

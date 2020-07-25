@@ -29,14 +29,14 @@ def test_setext_headings_050():
 Foo *bar*
 ---------"""
     expected_tokens = [
-        "[setext(2,1):=::(1,1)]",
+        "[setext(2,1):=:9::(1,1)]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar:]",
         "[end-emphasis::1]",
         "[end-setext::]",
         "[BLANK(3,1):]",
-        "[setext(5,1):-::(4,1)]",
+        "[setext(5,1):-:9::(4,1)]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar:]",
@@ -69,7 +69,7 @@ def test_setext_headings_051():
 baz*
 ===="""
     expected_tokens = [
-        "[setext(3,1):=::(1,1)]",
+        "[setext(3,1):=:4::(1,1)]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar\nbaz::\n]",
@@ -102,7 +102,7 @@ def test_setext_headings_052():
 baz*\t
 ===="""
     expected_tokens = [
-        "[setext(3,1):=:  :(1,3):\t]",
+        "[setext(3,1):=:4:  :(1,3):\t]",
         "[text:Foo :]",
         "[emphasis:1]",
         "[text:bar\nbaz::\n]",
@@ -136,8 +136,8 @@ def test_setext_headings_052a():
   c
 ==="""
     expected_tokens = [
-        "[setext(4,1):=:  :(1,3)]",
-        "[text:a\nb\nc::\n  \n  ]",
+        "[setext(4,1):=:3:  :(1,3)]",
+        "[text:a\nb\nc::\n  \x02\n  \x02]",
         "[end-setext::]",
     ]
     expected_gfm = """<h1>a
@@ -163,23 +163,132 @@ def test_setext_headings_052b():
     # Arrange
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
-    source_markdown = """  a\a\a
+    source_markdown = """  a\a
+  b\a
+  c
+===""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(4,1):=:3:  :(1,3)]",
+        "[text:a\nb\nc:: \n  \x02 \n  \x02]",
+        "[end-setext::]",
+    ]
+    expected_gfm = """<h1>a
+b
+c</h1>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_052c():
+    """
+    Test case 052a:  Deal with multiple lines that start with whitespace.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """  a\a
   b\a\a
   c
 ===""".replace(
         "\a", " "
     )
     expected_tokens = [
-        "[setext(4,1):=:  :(1,3)]",
-        "[text:a::  ]",
+        "[setext(4,1):=:3:  :(1,3)]",
+        "[text:a\nb:: \n  \x02]",
         "[hard-break:  ]",
-        "[text:\nb::\n  ]",
-        "[hard-break:  ]",
-        "[text:\nc::\n]",
+        "[text:\nc::\n  ]",
         "[end-setext::]",
     ]
-    expected_gfm = """<h1>a<br />
+    expected_gfm = """<h1>a
 b<br />
+c</h1>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_052d():
+    """
+    Test case 052a:  Deal with multiple lines that start with whitespace.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """  a\a
+  *b*\a
+  c
+===""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(4,1):=:3:  :(1,3)]",
+        "[text:a\n:: \n  \x02]",
+        "[emphasis:1]",
+        "[text:b:]",
+        "[end-emphasis::1]",
+        "[text:\nc:: \n  \x02]",
+        "[end-setext::]",
+    ]
+    expected_gfm = """<h1>a
+<em>b</em>
+c</h1>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_052e():
+    """
+    Test case 052a:  Deal with multiple lines that start with whitespace.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """  a\a
+  *b*\a\a
+  c
+===""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(4,1):=:3:  :(1,3)]",
+        "[text:a\n:: \n  \x02]",
+        "[emphasis:1]",
+        "[text:b:]",
+        "[end-emphasis::1]",
+        "[hard-break:  ]",
+        "[text:\nc::\n  ]",
+        "[end-setext::]",
+    ]
+    expected_gfm = """<h1>a
+<em>b</em><br />
 c</h1>"""
 
     # Act
@@ -207,11 +316,11 @@ def test_setext_headings_053():
 Foo
 ="""
     expected_tokens = [
-        "[setext(2,1):-::(1,1)]",
+        "[setext(2,1):-:25::(1,1)]",
         "[text:Foo:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
-        "[setext(5,1):=::(4,1)]",
+        "[setext(5,1):=:1::(4,1)]",
         "[text:Foo:]",
         "[end-setext::]",
     ]
@@ -246,15 +355,15 @@ def test_setext_headings_054():
   Foo
   ==="""
     expected_tokens = [
-        "[setext(2,1):-:   :(1,4)]",
+        "[setext(2,1):-:3:   :(1,4)]",
         "[text:Foo:]",
         "[end-setext::]",
         "[BLANK(3,1):]",
-        "[setext(5,1):-:  :(4,3)]",
+        "[setext(5,1):-:5:  :(4,3)]",
         "[text:Foo:]",
         "[end-setext::]",
         "[BLANK(6,1):]",
-        "[setext(8,3):=:  :(7,3)]",
+        "[setext(8,3):=:3:  :(7,3)]",
         "[text:Foo:]",
         "[end-setext:  :]",
     ]
@@ -321,7 +430,7 @@ def test_setext_headings_056():
     source_markdown = """Foo
    ----      """
     expected_tokens = [
-        "[setext(2,4):-::(1,1)]",
+        "[setext(2,4):-:4::(1,1)]",
         "[text:Foo:]",
         "[end-setext:   :      ]",
     ]
@@ -414,7 +523,7 @@ def test_setext_headings_059():
 -----""".replace(
         "\a", " "
     )
-    expected_tokens = ["[setext(2,1):-::(1,1):  ]", "[text:Foo:]", "[end-setext::]"]
+    expected_tokens = ["[setext(2,1):-:5::(1,1):  ]", "[text:Foo:]", "[end-setext::]"]
     expected_gfm = """<h2>Foo</h2>"""
 
     # Act
@@ -438,7 +547,7 @@ def test_setext_headings_060():
     transformer = TransformToGfm()
     source_markdown = """Foo\\
 ----"""
-    expected_tokens = ["[setext(2,1):-::(1,1)]", "[text:Foo\\:]", "[end-setext::]"]
+    expected_tokens = ["[setext(2,1):-:4::(1,1)]", "[text:Foo\\:]", "[end-setext::]"]
     expected_gfm = """<h2>Foo\\</h2>"""
 
     # Act
@@ -468,14 +577,14 @@ def test_setext_headings_061():
 ---
 of dashes"/>"""
     expected_tokens = [
-        "[setext(2,1):-::(1,1)]",
+        "[setext(2,1):-:4::(1,1)]",
         "[text:`Foo:]",
         "[end-setext::]",
         "[para(3,1):]",
         "[text:`:]",
         "[end-para]",
         "[BLANK(4,1):]",
-        "[setext(6,1):-::(5,1)]",
+        "[setext(6,1):-:3::(5,1)]",
         '[text:\a<\a&lt;\aa title=\a"\a&quot;\aa lot:]',
         "[end-setext::]",
         "[para(7,1):]",
@@ -647,7 +756,7 @@ def test_setext_headings_065():
 Bar
 ---"""
     expected_tokens = [
-        "[setext(3,1):-::(1,1)]",
+        "[setext(3,1):-:3::(1,1)]",
         "[text:Foo\nBar::\n]",
         "[end-setext::]",
     ]
@@ -681,10 +790,10 @@ Bar
 Baz"""
     expected_tokens = [
         "[tbreak(1,1):-::---]",
-        "[setext(3,1):-::(2,1)]",
+        "[setext(3,1):-:3::(2,1)]",
         "[text:Foo:]",
         "[end-setext::]",
-        "[setext(5,1):-::(4,1)]",
+        "[setext(5,1):-:3::(4,1)]",
         "[text:Bar:]",
         "[end-setext::]",
         "[para(6,1):]",
@@ -900,7 +1009,7 @@ def test_setext_headings_072():
     source_markdown = """\\> foo
 ------"""
     expected_tokens = [
-        "[setext(2,1):-::(1,1)]",
+        "[setext(2,1):-:6::(1,1)]",
         "[text:\\\b\a>\a&gt;\a foo:]",
         "[end-setext::]",
     ]
@@ -936,7 +1045,7 @@ baz"""
         "[text:Foo:]",
         "[end-para]",
         "[BLANK(2,1):]",
-        "[setext(4,1):-::(3,1)]",
+        "[setext(4,1):-:3::(3,1)]",
         "[text:bar:]",
         "[end-setext::]",
         "[para(5,1):]",

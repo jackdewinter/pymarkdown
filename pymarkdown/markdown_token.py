@@ -271,15 +271,23 @@ class ParagraphMarkdownToken(MarkdownToken):
         self.compose_extra_data_field()
 
 
+# pylint: disable=too-many-instance-attributes
 class SetextHeadingMarkdownToken(MarkdownToken):
     """
     Class to provide for an encapsulation of the setext heading element.
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(
-        self, heading_character, extracted_whitespace, position_marker, para_token
+        self,
+        heading_character,
+        heading_character_count,
+        extracted_whitespace,
+        position_marker,
+        para_token,
     ):
         self.heading_character = heading_character
+        self.heading_character_count = heading_character_count
         self.extracted_whitespace = extracted_whitespace
         self.final_whitespace = ""
         if self.heading_character == "=":
@@ -303,6 +311,8 @@ class SetextHeadingMarkdownToken(MarkdownToken):
         )
         self.compose_extra_data_field()
 
+    # pylint: enable=too-many-arguments
+
     def set_final_whitespace(self, whitespace_to_set):
         """
         Set the final whitespace for the paragraph. That is any whitespace at the very
@@ -320,6 +330,8 @@ class SetextHeadingMarkdownToken(MarkdownToken):
         self.extra_data = (
             self.heading_character
             + ":"
+            + str(self.heading_character_count)
+            + ":"
             + self.extracted_whitespace
             + ":("
             + str(self.original_line_number)
@@ -329,6 +341,9 @@ class SetextHeadingMarkdownToken(MarkdownToken):
         )
         if self.final_whitespace:
             self.extra_data = self.extra_data + ":" + self.final_whitespace
+
+
+# pylint: enable=too-many-instance-attributes
 
 
 class IndentedCodeBlockMarkdownToken(MarkdownToken):
