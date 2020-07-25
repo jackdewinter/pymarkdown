@@ -28,7 +28,7 @@ class TransformToMarkdown:
 
     # pylint: disable=too-many-boolean-expressions
     # pylint: disable=too-many-branches
-    def transform(self, actual_tokens):
+    def transform(self, actual_tokens):  # noqa: C901
         """
         Transform the incoming token stream back into Markdown.
         """
@@ -57,7 +57,6 @@ class TransformToMarkdown:
                 or next_token.token_name == MarkdownToken.token_ordered_list_start
                 or next_token.token_name == MarkdownToken.token_block_quote
                 or next_token.token_name == MarkdownToken.token_fenced_code_block
-                or next_token.token_name == MarkdownToken.token_setext_heading
                 or next_token.token_name == MarkdownToken.token_atx_heading
                 or next_token.token_name
                 == MarkdownToken.token_link_reference_definition
@@ -67,12 +66,13 @@ class TransformToMarkdown:
                 or next_token.token_name == MarkdownToken.token_inline_raw_html
                 or next_token.token_name == MarkdownToken.token_inline_link
                 or next_token.token_name == MarkdownToken.token_inline_image
-                or next_token.token_name == MarkdownToken.token_inline_emphasis
             ):
                 avoid_processing = True
                 break
             elif next_token.token_name == MarkdownToken.token_inline_hard_break:
                 transformed_data += self.rehydrate_hard_break(next_token)
+            elif next_token.token_name == MarkdownToken.token_inline_emphasis:
+                transformed_data += self.rehydrate_inline_emphaisis(next_token)
             elif next_token.token_name.startswith(EndMarkdownToken.type_name_prefix):
 
                 adjusted_token_name = next_token.token_name[
@@ -88,6 +88,8 @@ class TransformToMarkdown:
                     transformed_data += self.rehydrate_html_block_end(next_token)
                 elif adjusted_token_name == MarkdownToken.token_setext_heading:
                     transformed_data += self.rehydrate_setext_heading_end(next_token)
+                elif adjusted_token_name == MarkdownToken.token_inline_emphasis:
+                    transformed_data += self.rehydrate_inline_emphaisis_end(next_token)
                 else:
                     assert False, "end_next_token>>" + str(adjusted_token_name)
             else:
@@ -344,6 +346,24 @@ class TransformToMarkdown:
         Rehydrate the hard break text from the token.
         """
         return next_token.line_end
+
+    @classmethod
+    def rehydrate_inline_emphaisis(cls, next_token):
+        """
+        Rehydrate the emphasis text from the token.
+        """
+        return "".rjust(next_token.emphasis_length, next_token.emphasis_character)
+
+    @classmethod
+    def rehydrate_inline_emphaisis_end(cls, next_token):
+        """
+        Rehydrate the emphasis end text from the token.
+        """
+        print(".extra_end_data>>" + str(next_token.extra_end_data))
+        split_end_data = next_token.extra_end_data.split(":")
+        emphasis_length = int(split_end_data[0])
+        emphasis_character = split_end_data[1]
+        return "".rjust(emphasis_length, emphasis_character)
 
     @classmethod
     def rehydrate_thematic_break(cls, next_token):

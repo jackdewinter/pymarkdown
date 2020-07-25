@@ -434,9 +434,9 @@ def test_character_references_333():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text:\a&#42;\a*\afoo\a&#42;\a*\a\n::\n]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:foo:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-para]",
     ]
     expected_gfm = """<p>*foo*

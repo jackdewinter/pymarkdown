@@ -25,11 +25,11 @@ def test_emphasis_476():
     source_markdown = """***foo***"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:1]",
-        "[emphasis:2]",
+        "[emphasis:1:*]",
+        "[emphasis:2:*]",
         "[text:foo:]",
-        "[end-emphasis::2]",
-        "[end-emphasis::1]",
+        "[end-emphasis::2:*]",
+        "[end-emphasis::1:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><em><strong>foo</strong></em></p>"""
@@ -56,13 +56,13 @@ def test_emphasis_477():
     source_markdown = """_____foo_____"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:1]",
-        "[emphasis:2]",
-        "[emphasis:2]",
+        "[emphasis:1:_]",
+        "[emphasis:2:_]",
+        "[emphasis:2:_]",
         "[text:foo:]",
-        "[end-emphasis::2]",
-        "[end-emphasis::2]",
-        "[end-emphasis::1]",
+        "[end-emphasis::2:_]",
+        "[end-emphasis::2:_]",
+        "[end-emphasis::1:_]",
         "[end-para]",
     ]
     expected_gfm = """<p><em><strong><strong>foo</strong></strong></em></p>"""
@@ -89,11 +89,11 @@ def test_emphasis_478():
     source_markdown = """*foo _bar* baz_"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:foo :]",
         "[text:_:]",
         "[text:bar:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[text: baz:]",
         "[text:_:]",
         "[end-para]",
@@ -122,15 +122,15 @@ def test_emphasis_479():
     source_markdown = """*foo __bar *baz bim__ bam*"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:foo :]",
-        "[emphasis:2]",
+        "[emphasis:2:_]",
         "[text:bar :]",
         "[text:*:]",
         "[text:baz bim:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:_]",
         "[text: bam:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><em>foo <strong>bar *baz bim</strong> bam</em></p>"""
@@ -159,9 +159,9 @@ def test_emphasis_480():
         "[para(1,1):]",
         "[text:**:]",
         "[text:foo :]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:bar baz:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p>**foo <strong>bar baz</strong></p>"""
@@ -190,9 +190,9 @@ def test_emphasis_481():
         "[para(1,1):]",
         "[text:*:]",
         "[text:foo :]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:bar baz:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-para]",
     ]
     expected_gfm = """<p>*foo <em>bar baz</em></p>"""
@@ -366,10 +366,10 @@ def test_emphasis_487():
     source_markdown = """*a `*`*"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:a :]",
         "[icode-span:*]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><em>a <code>*</code></em></p>"""
@@ -396,10 +396,10 @@ def test_emphasis_488():
     source_markdown = """_a `_`_"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:1]",
+        "[emphasis:1:_]",
         "[text:a :]",
         "[icode-span:_]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:_]",
         "[end-para]",
     ]
     expected_gfm = """<p><em>a <code>_</code></em></p>"""

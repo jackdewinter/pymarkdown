@@ -135,9 +135,9 @@ def test_backslash_escapes_311():
     expected_tokens = [
         "[para(1,1):]",
         "[text:\\\b\\:]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:emphasis:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-para]",
     ]
     expected_gfm = """<p>\\<em>emphasis</em></p>"""

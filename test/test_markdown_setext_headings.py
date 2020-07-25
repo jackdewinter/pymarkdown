@@ -31,16 +31,16 @@ Foo *bar*
     expected_tokens = [
         "[setext(2,1):=:9::(1,1)]",
         "[text:Foo :]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:bar:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-setext::]",
         "[BLANK(3,1):]",
         "[setext(5,1):-:9::(4,1)]",
         "[text:Foo :]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:bar:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-setext::]",
     ]
     expected_gfm = """<h1>Foo <em>bar</em></h1>
@@ -71,9 +71,9 @@ baz*
     expected_tokens = [
         "[setext(3,1):=:4::(1,1)]",
         "[text:Foo :]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:bar\nbaz::\n]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-setext::]",
     ]
     expected_gfm = """<h1>Foo <em>bar
@@ -104,9 +104,9 @@ baz*\t
     expected_tokens = [
         "[setext(3,1):=:4:  :(1,3):\t]",
         "[text:Foo :]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:bar\nbaz::\n]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-setext::]",
     ]
     expected_gfm = """<h1>Foo <em>bar
@@ -242,9 +242,9 @@ def test_setext_headings_052d():
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
         "[text:a\n:: \n  \x02]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:b:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[text:\nc:: \n  \x02]",
         "[end-setext::]",
     ]
@@ -280,9 +280,9 @@ def test_setext_headings_052e():
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
         "[text:a\n:: \n  \x02]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:b:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[hard-break:  ]",
         "[text:\nc::\n  ]",
         "[end-setext::]",

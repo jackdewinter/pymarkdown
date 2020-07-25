@@ -384,9 +384,9 @@ def test_thematic_breaks_026():
     source_markdown = """ *-*"""
     expected_tokens = [
         "[para(1,2): ]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:-:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><em>-</em></p>"""

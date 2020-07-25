@@ -72,9 +72,9 @@ def test_tables_extension_200():
         "[text:| f\\\b|oo  |\n| ------ |\n| b ::\n\n]",
         "[icode-span:\\|]",
         "[text: az |\n| b ::\n]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:\\\b|:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[text: im |:]",
         "[end-para]",
     ]

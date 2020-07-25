@@ -25,9 +25,9 @@ def test_emphasis_387():
     source_markdown = """**foo bar**"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:foo bar:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>foo bar</strong></p>"""
@@ -114,9 +114,9 @@ def test_emphasis_390():
     expected_tokens = [
         "[para(1,1):]",
         "[text:foo:]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:bar:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p>foo<strong>bar</strong></p>"""

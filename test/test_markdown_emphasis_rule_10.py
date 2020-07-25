@@ -25,12 +25,12 @@ def test_emphasis_431():
     source_markdown = """**foo [bar](/url)**"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:foo :]",
         "[link:inline:/url:::::bar]",
         "[text:bar:]",
         "[end-link::]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>foo <a href="/url">bar</a></strong></p>"""
@@ -58,9 +58,9 @@ def test_emphasis_432():
 bar**"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:foo\nbar::\n]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>foo
@@ -88,13 +88,13 @@ def test_emphasis_433():
     source_markdown = """__foo _bar_ baz__"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
+        "[emphasis:2:_]",
         "[text:foo :]",
-        "[emphasis:1]",
+        "[emphasis:1:_]",
         "[text:bar:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:_]",
         "[text: baz:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:_]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>foo <em>bar</em> baz</strong></p>"""
@@ -121,13 +121,13 @@ def test_emphasis_434():
     source_markdown = """__foo __bar__ baz__"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
+        "[emphasis:2:_]",
         "[text:foo :]",
-        "[emphasis:2]",
+        "[emphasis:2:_]",
         "[text:bar:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:_]",
         "[text: baz:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:_]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>foo <strong>bar</strong> baz</strong></p>"""
@@ -154,12 +154,12 @@ def test_emphasis_435():
     source_markdown = """____foo__ bar__"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
-        "[emphasis:2]",
+        "[emphasis:2:_]",
+        "[emphasis:2:_]",
         "[text:foo:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:_]",
         "[text: bar:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:_]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong><strong>foo</strong> bar</strong></p>"""
@@ -186,12 +186,12 @@ def test_emphasis_436():
     source_markdown = """**foo **bar****"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:foo :]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:bar:]",
-        "[end-emphasis::2]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>foo <strong>bar</strong></strong></p>"""
@@ -218,13 +218,13 @@ def test_emphasis_437():
     source_markdown = """**foo *bar* baz**"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:foo :]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:bar:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[text: baz:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>foo <em>bar</em> baz</strong></p>"""
@@ -251,13 +251,13 @@ def test_emphasis_438():
     source_markdown = """**foo*bar*baz**"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:foo:]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:bar:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[text:baz:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>foo<em>bar</em>baz</strong></p>"""
@@ -284,12 +284,12 @@ def test_emphasis_439():
     source_markdown = """***foo* bar**"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
-        "[emphasis:1]",
+        "[emphasis:2:*]",
+        "[emphasis:1:*]",
         "[text:foo:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[text: bar:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong><em>foo</em> bar</strong></p>"""
@@ -316,12 +316,12 @@ def test_emphasis_440():
     source_markdown = """**foo *bar***"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:foo :]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:bar:]",
-        "[end-emphasis::1]",
-        "[end-emphasis::2]",
+        "[end-emphasis::1:*]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>foo <em>bar</em></strong></p>"""
@@ -349,17 +349,17 @@ def test_emphasis_441():
 bim* bop**"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:foo :]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:bar :]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:baz:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[text:\nbim::\n]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[text: bop:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>foo <em>bar <strong>baz</strong>
@@ -387,14 +387,14 @@ def test_emphasis_442():
     source_markdown = """**foo [*bar*](/url)**"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:foo :]",
         "[link:inline:/url:::::*bar*]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:bar:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-link::]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>foo <a href="/url"><em>bar</em></a></strong></p>"""

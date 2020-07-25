@@ -158,9 +158,9 @@ def test_atx_headings_036():
     expected_tokens = [
         "[atx(1,1):1:0:]",
         "[text:foo : ]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:bar:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[text: \\\b*baz\\\b*:]",
         "[end-atx::]",
     ]

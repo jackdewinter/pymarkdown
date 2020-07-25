@@ -940,7 +940,8 @@ class TransformToGfm:
         Handle the end emphasis token.
         """
         assert transform_state
-        if next_token.extra_end_data == "1":
+        split_end_data = next_token.extra_end_data.split(":")
+        if split_end_data[0] == "1":
             output_html += "</em>"
         else:
             output_html += "</strong>"

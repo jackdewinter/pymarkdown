@@ -84,13 +84,13 @@ def test_emphasis_402():
     source_markdown = """*(**foo**)*"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:(:]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:foo:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[text:):]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><em>(<strong>foo</strong>)</em></p>"""
@@ -118,17 +118,17 @@ def test_emphasis_403():
 *Asclepias physocarpa*)**"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:Gomphocarpus (:]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:Gomphocarpus physocarpus:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[text:, syn.\n::\n]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:Asclepias physocarpa:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[text:):]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.
@@ -156,13 +156,13 @@ def test_emphasis_404():
     source_markdown = """**foo "*bar*" foo**"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         '[text:foo \a"\a&quot;\a:]',
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:bar:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         '[text:\a"\a&quot;\a foo:]',
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>"""
@@ -189,9 +189,9 @@ def test_emphasis_405():
     source_markdown = """**foo**bar"""
     expected_tokens = [
         "[para(1,1):]",
-        "[emphasis:2]",
+        "[emphasis:2:*]",
         "[text:foo:]",
-        "[end-emphasis::2]",
+        "[end-emphasis::2:*]",
         "[text:bar:]",
         "[end-para]",
     ]

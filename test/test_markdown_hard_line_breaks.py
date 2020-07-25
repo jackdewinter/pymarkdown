@@ -190,11 +190,11 @@ bar*""".replace(
     )
     expected_tokens = [
         "[para(1,1):\n]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:foo:]",
         "[hard-break:  ]",
         "[text:\nbar::\n]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><em>foo<br />
@@ -225,11 +225,11 @@ bar*""".replace(
     )
     expected_tokens = [
         "[para(1,1):\n]",
-        "[emphasis:1]",
+        "[emphasis:1:*]",
         "[text:foo:]",
         "[hard-break:\\]",
         "[text:\nbar:]",
-        "[end-emphasis::1]",
+        "[end-emphasis::1:*]",
         "[end-para]",
     ]
     expected_gfm = """<p><em>foo<br />

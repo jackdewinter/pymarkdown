@@ -134,17 +134,21 @@ class EmphasisHelper:
         emphasis_length = 1
         if close_token.repeat_count >= 2 and open_token.repeat_count >= 2:
             emphasis_length = 2
+        emphasis_character = open_token.token_text[0]
 
         # add emph node in main stream
         start_index_in_blocks = inline_blocks.index(open_token)
         inline_blocks.insert(
-            start_index_in_blocks + 1, EmphasisMarkdownToken(emphasis_length),
+            start_index_in_blocks + 1,
+            EmphasisMarkdownToken(emphasis_length, emphasis_character),
         )
         end_index_in_blocks = inline_blocks.index(close_token)
         inline_blocks.insert(
             end_index_in_blocks,
             EndMarkdownToken(
-                MarkdownToken.token_inline_emphasis, "", str(emphasis_length),
+                MarkdownToken.token_inline_emphasis,
+                "",
+                str(emphasis_length) + ":" + emphasis_character,
             ),
         )
         end_index_in_blocks += 1

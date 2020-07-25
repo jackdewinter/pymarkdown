@@ -1059,13 +1059,14 @@ class EmphasisMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the inline emphasis element.
     """
 
-    def __init__(self, emphasis_length):
+    def __init__(self, emphasis_length, emphasis_character):
         self.emphasis_length = emphasis_length
+        self.emphasis_character = emphasis_character
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_inline_emphasis,
             MarkdownTokenClass.INLINE_BLOCK,
-            str(emphasis_length),
+            str(emphasis_length) + ":" + emphasis_character,
         )
 
 
