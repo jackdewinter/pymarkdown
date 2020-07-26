@@ -54,6 +54,8 @@ class TransformToMarkdown:
                 transformed_data += self.rehydrate_text(next_token)
             elif next_token.token_name == MarkdownToken.token_setext_heading:
                 transformed_data += self.rehydrate_setext_heading(next_token)
+            elif next_token.token_name == MarkdownToken.token_atx_heading:
+                transformed_data += self.rehydrate_atx_heading(next_token)
             elif next_token.token_name == MarkdownToken.token_blank_line:
                 transformed_data += self.rehydrate_blank_line(next_token)
 
@@ -61,7 +63,6 @@ class TransformToMarkdown:
                 next_token.token_name == MarkdownToken.token_unordered_list_start
                 or next_token.token_name == MarkdownToken.token_ordered_list_start
                 or next_token.token_name == MarkdownToken.token_block_quote
-                or next_token.token_name == MarkdownToken.token_atx_heading
                 or next_token.token_name
                 == MarkdownToken.token_link_reference_definition
                 or next_token.token_name == MarkdownToken.token_inline_link
@@ -100,6 +101,8 @@ class TransformToMarkdown:
                     transformed_data += self.rehydrate_html_block_end(next_token)
                 elif adjusted_token_name == MarkdownToken.token_setext_heading:
                     transformed_data += self.rehydrate_setext_heading_end(next_token)
+                elif adjusted_token_name == MarkdownToken.token_atx_heading:
+                    transformed_data += self.rehydrate_atx_heading_end(next_token)
                 elif adjusted_token_name == MarkdownToken.token_inline_emphasis:
                     transformed_data += self.rehydrate_inline_emphaisis_end(next_token)
                 else:
@@ -228,6 +231,33 @@ class TransformToMarkdown:
                 + "\n"
             )
         return ""
+
+    def rehydrate_atx_heading(self, next_token):
+        """
+        Rehydrate the atx heading block from the token.
+        """
+
+        self.block_stack.append(next_token)
+        return next_token.extracted_whitespace + "".rjust(next_token.hash_count, "#")
+
+    def rehydrate_atx_heading_end(self, next_token):
+        """
+        Rehydrate the end of the atx heading block from the token.
+        """
+
+        del self.block_stack[-1]
+        trailing_hashes = ""
+        if next_token.start_markdown_token.remove_trailing_count:
+            trailing_hashes = "".rjust(
+                next_token.start_markdown_token.remove_trailing_count, "#"
+            )
+
+        return (
+            next_token.extra_end_data
+            + trailing_hashes
+            + next_token.extracted_whitespace
+            + "\n"
+        )
 
     def rehydrate_setext_heading(self, next_token):
         """

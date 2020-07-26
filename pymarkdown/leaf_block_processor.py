@@ -628,6 +628,7 @@ class LeafBlockProcessor:
             )
         return new_tokens
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def parse_atx_headings(parser_state, position_marker, extracted_whitespace):
         """
@@ -696,26 +697,27 @@ class LeafBlockProcessor:
                 else:
                     extracted_whitespace_at_end = remaining_line[end_index:]
                     remaining_line = remaining_line[0:end_index]
-                new_tokens.append(
-                    AtxHeadingMarkdownToken(
-                        hash_count,
-                        remove_trailing_count,
-                        extracted_whitespace,
-                        position_marker,
-                    )
+                start_token = AtxHeadingMarkdownToken(
+                    hash_count,
+                    remove_trailing_count,
+                    extracted_whitespace,
+                    position_marker,
                 )
+                new_tokens.append(start_token)
                 new_tokens.append(
                     TextMarkdownToken(remaining_line, extracted_whitespace_at_start)
                 )
-                new_tokens.append(
-                    EndMarkdownToken(
-                        "atx",
-                        extracted_whitespace_at_end,
-                        extracted_whitespace_before_end,
-                        None,
-                    )
+                end_token = EndMarkdownToken(
+                    "atx",
+                    extracted_whitespace_at_end,
+                    extracted_whitespace_before_end,
+                    None,
                 )
+                end_token.start_markdown_token = start_token
+                new_tokens.append(end_token)
         return new_tokens
+
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def parse_setext_headings(
