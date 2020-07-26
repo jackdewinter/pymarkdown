@@ -377,7 +377,7 @@ def test_character_references_331():
     source_markdown = """`f&ouml;&ouml;`"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:f\a&\a&amp;\aouml;\a&\a&amp;\aouml;]",
+        "[icode-span:f\a&\a&amp;\aouml;\a&\a&amp;\aouml;:`::]",
         "[end-para]",
     ]
     expected_gfm = """<p><code>f&amp;ouml;&amp;ouml;</code></p>"""

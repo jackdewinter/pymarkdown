@@ -372,31 +372,42 @@ class InlineHelper:
             between_text = inline_request.source_text[
                 new_index:end_backtick_start_index
             ]
-            between_text = (
-                between_text.replace("\r\n", " ").replace("\r", " ").replace("\n", " ")
-            )
-
             LOGGER.debug(
                 "after_collect>%s>>%s>>%s<<",
                 between_text,
                 str(end_backtick_start_index),
                 inline_request.source_text[end_backtick_start_index:],
             )
+            leading_whitespace = ""
+            trailing_whitespace = ""
             if (
                 len(between_text) > 2
-                and between_text[0] == " "
-                and between_text[-1] == " "
+                and (between_text[0] == " " or between_text[0] == "\n")
+                and (between_text[-1] == " " or between_text[-1] == "\n")
             ):
                 stripped_between_attempt = between_text[1:-1]
                 if len(stripped_between_attempt.strip()) != 0:
+                    leading_whitespace = between_text[0]
+                    trailing_whitespace = between_text[-1]
                     between_text = stripped_between_attempt
+
+            between_text = between_text.replace("\n", "\a\n\a \a")
+            leading_whitespace = leading_whitespace.replace("\n", "\a\n\a \a")
+            trailing_whitespace = trailing_whitespace.replace("\n", "\a\n\a \a")
 
             between_text = InlineHelper.append_text("", between_text)
             LOGGER.debug("between_text>>%s<<", between_text)
             end_backtick_start_index += len(extracted_start_backticks)
             inline_response.new_string = ""
             inline_response.new_index = end_backtick_start_index
-            inline_response.new_tokens = [InlineCodeSpanMarkdownToken(between_text)]
+            inline_response.new_tokens = [
+                InlineCodeSpanMarkdownToken(
+                    between_text,
+                    extracted_start_backticks,
+                    leading_whitespace,
+                    trailing_whitespace,
+                )
+            ]
         return inline_response
 
     @staticmethod

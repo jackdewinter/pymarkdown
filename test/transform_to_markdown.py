@@ -7,6 +7,7 @@ from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 
 
+# pylint: disable=too-many-public-methods
 class TransformToMarkdown:
     """
     Class to provide for a transformation from tokens to a markdown document.
@@ -28,6 +29,7 @@ class TransformToMarkdown:
 
     # pylint: disable=too-many-boolean-expressions
     # pylint: disable=too-many-branches
+    # pylint: disable=too-many-statements
     def transform(self, actual_tokens):  # noqa: C901
         """
         Transform the incoming token stream back into Markdown.
@@ -60,7 +62,6 @@ class TransformToMarkdown:
                 or next_token.token_name == MarkdownToken.token_atx_heading
                 or next_token.token_name
                 == MarkdownToken.token_link_reference_definition
-                or next_token.token_name == MarkdownToken.token_inline_code_span
                 or next_token.token_name == MarkdownToken.token_inline_link
                 or next_token.token_name == MarkdownToken.token_inline_image
             ):
@@ -76,6 +77,8 @@ class TransformToMarkdown:
                 transformed_data += self.rehydrate_inline_email_autolink(next_token)
             elif next_token.token_name == MarkdownToken.token_inline_raw_html:
                 transformed_data += self.rehydrate_inline_raw_html(next_token)
+            elif next_token.token_name == MarkdownToken.token_inline_code_span:
+                transformed_data += self.rehydrate_inline_code_span(next_token)
             elif next_token.token_name.startswith(EndMarkdownToken.type_name_prefix):
 
                 adjusted_token_name = next_token.token_name[
@@ -112,6 +115,7 @@ class TransformToMarkdown:
 
     # pylint: enable=too-many-boolean-expressions
     # pylint: enable=too-many-branches
+    # pylint: enable=too-many-statements
 
     def rehydrate_paragraph(self, next_token):
         """
@@ -390,6 +394,27 @@ class TransformToMarkdown:
         return "<" + next_token.raw_tag + ">"
 
     @classmethod
+    def rehydrate_inline_code_span(cls, next_token):
+        """
+        Rehydrate the code span data from the token.
+        """
+
+        span_text = cls.resolve_replacement_markers(next_token.span_text)
+        leading_whitespace = cls.resolve_replacement_markers(
+            next_token.leading_whitespace
+        )
+        trailing_whitespace = cls.resolve_replacement_markers(
+            next_token.trailing_whitespace
+        )
+        return (
+            next_token.extracted_start_backticks
+            + leading_whitespace
+            + span_text
+            + trailing_whitespace
+            + next_token.extracted_start_backticks
+        )
+
+    @classmethod
     def rehydrate_thematic_break(cls, next_token):
         """
         Rehydrate the thematic break text from the token.
@@ -492,3 +517,6 @@ class TransformToMarkdown:
                 + main_text.replace("\a", "\\a").replace("\n", "\\n")
             )
         return main_text
+
+
+# pylint: enable=too-many-public-methods

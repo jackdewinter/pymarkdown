@@ -26,7 +26,7 @@ def test_code_spans_338():
     source_markdown = """`foo`"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:foo]",
+        "[icode-span:foo:`::]",
         "[end-para]",
     ]
     expected_gfm = """<p><code>foo</code></p>"""
@@ -53,7 +53,7 @@ def test_code_spans_339():
     source_markdown = """`` foo ` bar ``"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:foo ` bar]",
+        "[icode-span:foo ` bar:``: : ]",
         "[end-para]",
     ]
     expected_gfm = """<p><code>foo ` bar</code></p>"""
@@ -80,7 +80,7 @@ def test_code_spans_340():
     source_markdown = """` `` `"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:``]",
+        "[icode-span:``:`: : ]",
         "[end-para]",
     ]
     expected_gfm = """<p><code>``</code></p>"""
@@ -107,7 +107,7 @@ def test_code_spans_341():
     source_markdown = """`  ``  `"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span: `` ]",
+        "[icode-span: `` :`: : ]",
         "[end-para]",
     ]
     expected_gfm = """<p><code> `` </code></p>"""
@@ -134,7 +134,7 @@ def test_code_spans_342():
     source_markdown = """` a`"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span: a]",
+        "[icode-span: a:`::]",
         "[end-para]",
     ]
     expected_gfm = """<p><code> a</code></p>"""
@@ -161,7 +161,7 @@ def test_code_spans_343():
     source_markdown = """`\u00A0b\u00A0`"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:\u00A0b\u00A0]",
+        "[icode-span:\u00A0b\u00A0:`::]",
         "[end-para]",
     ]
     expected_gfm = """<p><code>\u00A0b\u00A0</code></p>"""
@@ -189,9 +189,9 @@ def test_code_spans_344():
 `  `"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[icode-span: ]",
+        "[icode-span: :`::]",
         "[text:\n::\n]",
-        "[icode-span:  ]",
+        "[icode-span:  :`::]",
         "[end-para]",
     ]
     expected_gfm = """<p><code> </code>
@@ -219,7 +219,7 @@ def test_code_spans_344a():
     source_markdown = """`   `"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:   ]",
+        "[icode-span:   :`::]",
         "[end-para]",
     ]
     expected_gfm = """<p><code>   </code></p>"""
@@ -250,7 +250,7 @@ baz
 ``"""
     expected_tokens = [
         "[para(1,1):\n\n\n\n]",
-        "[icode-span:foo bar   baz]",
+        "[icode-span:foo\a\n\a \abar  \a\n\a \abaz:``:\a\n\a \a:\a\n\a \a]",
         "[end-para]",
     ]
     expected_gfm = """<p><code>foo bar   baz</code></p>"""
@@ -279,7 +279,7 @@ foo
 ``"""
     expected_tokens = [
         "[para(1,1):\n\n]",
-        "[icode-span:foo ]",
+        "[icode-span:foo :``:\a\n\a \a:\a\n\a \a]",
         "[end-para]",
     ]
     expected_gfm = """<p><code>foo </code></p>"""
@@ -309,7 +309,7 @@ baz`""".replace(
     )
     expected_tokens = [
         "[para(1,1):\n]",
-        "[icode-span:foo   bar  baz]",
+        "[icode-span:foo   bar \a\n\a \abaz:`::]",
         "[end-para]",
     ]
     expected_gfm = """<p><code>foo   bar  baz</code></p>"""
@@ -336,7 +336,7 @@ def test_code_spans_348():
     source_markdown = """`foo\\`bar`"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:foo\\]",
+        "[icode-span:foo\\:`::]",
         "[text:bar`:]",
         "[end-para]",
     ]
@@ -364,7 +364,7 @@ def test_code_spans_349():
     source_markdown = """``foo`bar``"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:foo`bar]",
+        "[icode-span:foo`bar:``::]",
         "[end-para]",
     ]
     expected_gfm = """<p><code>foo`bar</code></p>"""
@@ -391,7 +391,7 @@ def test_code_spans_350():
     source_markdown = """` foo `` bar `"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:foo `` bar]",
+        "[icode-span:foo `` bar:`: : ]",
         "[end-para]",
     ]
     expected_gfm = """<p><code>foo `` bar</code></p>"""
@@ -420,7 +420,7 @@ def test_code_spans_351():
         "[para(1,1):]",
         "[text:*:]",
         "[text:foo:]",
-        "[icode-span:*]",
+        "[icode-span:*:`::]",
         "[end-para]",
     ]
     expected_gfm = """<p>*foo<code>*</code></p>"""
@@ -449,7 +449,7 @@ def test_code_spans_352():
         "[para(1,1):]",
         "[text:[:]",
         "[text:not a :]",
-        "[icode-span:link](/foo]",
+        "[icode-span:link](/foo:`::]",
         "[text:):]",
         "[end-para]",
     ]
@@ -477,7 +477,7 @@ def test_code_spans_353():
     source_markdown = """`<a href="`">`"""
     expected_tokens = [
         "[para(1,1):]",
-        '[icode-span:\a<\a&lt;\aa href=\a"\a&quot;\a]',
+        '[icode-span:\a<\a&lt;\aa href=\a"\a&quot;\a:`::]',
         '[text:\a"\a&quot;\a\a>\a&gt;\a`:]',
         "[end-para]",
     ]
@@ -533,7 +533,7 @@ def test_code_spans_355():
     source_markdown = """`<http://foo.bar.`baz>`"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:\a<\a&lt;\ahttp://foo.bar.]",
+        "[icode-span:\a<\a&lt;\ahttp://foo.bar.:`::]",
         "[text:baz\a>\a&gt;\a`:]",
         "[end-para]",
     ]
@@ -644,7 +644,7 @@ def test_code_spans_359():
     expected_tokens = [
         "[para(1,1):]",
         "[text:`foo:]",
-        "[icode-span:bar]",
+        "[icode-span:bar:``::]",
         "[end-para]",
     ]
     expected_gfm = """<p>`foo<code>bar</code></p>"""

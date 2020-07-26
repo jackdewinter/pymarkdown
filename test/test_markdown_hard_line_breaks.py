@@ -258,7 +258,11 @@ def test_hard_line_breaks_661():
 span`""".replace(
         "\a", " "
     )
-    expected_tokens = ["[para(1,1):\n]", "[icode-span:code   span]", "[end-para]"]
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[icode-span:code  \a\n\a \aspan:`::]",
+        "[end-para]",
+    ]
     expected_gfm = """<p><code>code   span</code></p>"""
 
     # Act
@@ -282,7 +286,11 @@ def test_hard_line_breaks_662():
     transformer = TransformToGfm()
     source_markdown = """`code\\
 span`"""
-    expected_tokens = ["[para(1,1):\n]", "[icode-span:code\\ span]", "[end-para]"]
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[icode-span:code\\\a\n\a \aspan:`::]",
+        "[end-para]",
+    ]
     expected_gfm = """<p><code>code\\ span</code></p>"""
 
     # Act

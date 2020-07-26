@@ -886,13 +886,28 @@ class InlineCodeSpanMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the inline code span element.
     """
 
-    def __init__(self, span_text):
+    def __init__(
+        self,
+        span_text,
+        extracted_start_backticks,
+        leading_whitespace,
+        trailing_whitespace,
+    ):
         self.span_text = span_text
+        self.extracted_start_backticks = extracted_start_backticks
+        self.leading_whitespace = leading_whitespace
+        self.trailing_whitespace = trailing_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_inline_code_span,
             MarkdownTokenClass.INLINE_BLOCK,
-            span_text,
+            span_text
+            + ":"
+            + extracted_start_backticks
+            + ":"
+            + leading_whitespace
+            + ":"
+            + trailing_whitespace,
         )
 
 

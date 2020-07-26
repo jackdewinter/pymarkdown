@@ -23,7 +23,12 @@ def test_inlines_307():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """`hi`lo`"""
-    expected_tokens = ["[para(1,1):]", "[icode-span:hi]", "[text:lo`:]", "[end-para]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        "[icode-span:hi:`::]",
+        "[text:lo`:]",
+        "[end-para]",
+    ]
     expected_gfm = """<p><code>hi</code>lo`</p>"""
 
     # Act

@@ -581,7 +581,7 @@ def test_atx_headings_extra_1():
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text:this is a : ]",
-        "[icode-span:fun]",
+        "[icode-span:fun:``::]",
         "[text: day:]",
         "[end-atx::]",
     ]

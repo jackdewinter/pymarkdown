@@ -90,7 +90,11 @@ def test_fenced_code_blocks_091():
     source_markdown = """``
 foo
 ``"""
-    expected_tokens = ["[para(1,1):\n\n]", "[icode-span:foo]", "[end-para]"]
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[icode-span:foo:``:\a\n\a \a:\a\n\a \a]",
+        "[end-para]",
+    ]
     expected_gfm = """<p><code>foo</code></p>"""
 
     # Act
@@ -743,7 +747,7 @@ def test_fenced_code_blocks_108():
 aaa"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[icode-span: ]",
+        "[icode-span: :```::]",
         """[text:
 aaa::\n]""",
         "[end-para]",
@@ -978,7 +982,7 @@ def test_fenced_code_blocks_115():
 foo"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[icode-span:aa]",
+        "[icode-span:aa:```: : ]",
         """[text:
 foo::\n]""",
         "[end-para]",
