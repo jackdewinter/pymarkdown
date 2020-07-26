@@ -253,7 +253,7 @@ def test_backslash_escapes_315():
     expected_tokens = [
         "[fcode-block(1,1):~:3::::::]",
         "[text:\\[\\]:]",
-        "[end-fcode-block]",
+        "[end-fcode-block::3]",
     ]
     expected_gfm = """<pre><code>\\[\\]
 </code></pre>"""
@@ -401,7 +401,7 @@ foo
     expected_tokens = [
         "[fcode-block(1,1):`:3:foo+bar:foo\\+bar:::: ]",
         "[text:foo:]",
-        "[end-fcode-block]",
+        "[end-fcode-block::3]",
     ]
     expected_gfm = """<pre><code class="language-foo+bar">foo
 </code></pre>"""
@@ -431,7 +431,7 @@ foo
     expected_tokens = [
         "[fcode-block(1,1):`:3:foo+\\bar:foo\\+\\bar:::: ]",
         "[text:foo:]",
-        "[end-fcode-block]",
+        "[end-fcode-block::3]",
     ]
     expected_gfm = """<pre><code class="language-foo+\\bar">foo
 </code></pre>"""
@@ -461,7 +461,7 @@ foo
     expected_tokens = [
         "[fcode-block(1,1):`:3:foo+bar\\:foo\\+bar\\:::: ]",
         "[text:foo:]",
-        "[end-fcode-block]",
+        "[end-fcode-block::3]",
     ]
     expected_gfm = """<pre><code class="language-foo+bar\\">foo
 </code></pre>"""
@@ -491,7 +491,7 @@ foo
     expected_tokens = [
         "[fcode-block(1,1):`:3:foo:: +bar\\: \\+bar\\:: ]",
         "[text:foo:]",
-        "[end-fcode-block]",
+        "[end-fcode-block::3]",
     ]
     expected_gfm = """<pre><code class="language-foo">foo
 </code></pre>"""

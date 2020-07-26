@@ -149,6 +149,7 @@ class EmphasisHelper:
                 MarkdownToken.token_inline_emphasis,
                 "",
                 str(emphasis_length) + ":" + emphasis_character,
+                None,
             ),
         )
         end_index_in_blocks += 1

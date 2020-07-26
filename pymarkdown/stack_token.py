@@ -50,7 +50,7 @@ class StackToken:
 
         assert self.stack_link_definition != self.type_name
 
-        return EndMarkdownToken(self.type_name, extracted_whitespace, None)
+        return EndMarkdownToken(self.type_name, extracted_whitespace, None, None)
 
     @property
     def is_document(self):
@@ -165,11 +165,16 @@ class FencedCodeBlockStackToken(StackToken):
     """
 
     def __init__(
-        self, code_fence_character, fence_character_count, whitespace_start_count
+        self,
+        code_fence_character,
+        fence_character_count,
+        whitespace_start_count,
+        start_markdown_token,
     ):
         self.code_fence_character = code_fence_character
         self.fence_character_count = fence_character_count
         self.whitespace_start_count = whitespace_start_count
+        self.start_markdown_token = start_markdown_token
         extra_data = (
             code_fence_character
             + ":"

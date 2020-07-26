@@ -43,6 +43,7 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
         .replace("\\x07", "\\a")
         .replace("\\\\x08", "\\b")
         .replace("\x02", "\\x02")
+        .replace("\x03", "\\x03")
     )
     print(
         "parsed_tokens  : "
@@ -52,6 +53,7 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
         .replace(InlineHelper.backspace_character, "\\b")
         .replace("\a", "\\a")
         .replace("\x02", "\\x02")
+        .replace("\x03", "\\x03")
     )
     assert len(expected_tokens) == len(actual_tokens), (
         "List lengths are not the same: ("
@@ -78,6 +80,7 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             .replace("\a", "\\a")
             .replace("\b", "\\b")
             .replace("\x02", "\\x02")
+            .replace("\x03", "\\x03")
             + "<<"
         )
         print(
@@ -89,6 +92,7 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             .replace("\a", "\\a")
             .replace("\b", "\\b")
             .replace("\x02", "\\x02")
+            .replace("\x03", "\\x03")
             + "<<"
         )
 
@@ -111,7 +115,28 @@ def assert_if_strings_different(expected_string, actual_string):
     print(
         "expected_string(" + str(len(expected_string)) + ")>>" + expected_string + "<<"
     )
+    print(
+        "expected_string>>"
+        + expected_string.replace("\t", "\\t")
+        .replace("\n", "\\n")
+        .replace("\a", "\\a")
+        .replace("\b", "\\b")
+        .replace("\x02", "\\x02")
+        .replace("\x03", "\\x03")
+        + "<<"
+    )
+
     print("actual_string  (" + str(len(actual_string)) + ")>>" + actual_string + "<<")
+    print(
+        "actual_string>>"
+        + actual_string.replace("\t", "\\t")
+        .replace("\n", "\\n")
+        .replace("\a", "\\a")
+        .replace("\b", "\\b")
+        .replace("\x02", "\\x02")
+        .replace("\x03", "\\x03")
+        + "<<"
+    )
 
     diff = difflib.ndiff(expected_string, actual_string)
 
@@ -419,8 +444,12 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
         print(
             "\n-=-=-\nExpected\n-=-=-\n"
             + source_markdown.replace("\x02", "\\x02")
+            .replace("\x03", "\\x03")
+            .replace("\n", "\\n")
             + "\n-=-=-\nActual\n-=-=-\n"
             + original_markdown.replace("\x02", "\\x02")
+            .replace("\x03", "\\x03")
+            .replace("\n", "\\n")
             + "\n-=-=-\n"
         )
         diff = difflib.ndiff(source_markdown, original_markdown)

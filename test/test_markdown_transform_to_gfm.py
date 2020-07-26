@@ -46,7 +46,7 @@ def test_gfm_bad_end_token():
     # Arrange
     transformer = TransformToGfm()
     tokens_to_test = [
-        EndMarkdownToken("bad", "", None),
+        EndMarkdownToken("bad", "", None, None),
     ]
 
     # Act

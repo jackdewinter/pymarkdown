@@ -509,11 +509,14 @@ class TransformToGfm:
         """
         adjusted_text_token = cls.resolve_backspaces_from_text(next_token.token_text)
         adjusted_text_token = cls.resolve_references_from_text(adjusted_text_token)
+        adjusted_text_token = adjusted_text_token.replace("\x03", "")
 
         if transform_state.is_in_code_block:
-            output_html = (
-                output_html + next_token.extracted_whitespace + adjusted_text_token
+            extracted_whitespace = cls.resolve_references_from_text(
+                next_token.extracted_whitespace
             )
+            extracted_whitespace = extracted_whitespace.replace("\x03", "")
+            output_html = output_html + extracted_whitespace + adjusted_text_token
         elif transform_state.is_in_html_block:
             output_html = (
                 output_html

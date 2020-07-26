@@ -378,6 +378,7 @@ class IndentedCodeBlockMarkdownToken(MarkdownToken):
         self.compose_extra_data_field()
 
 
+# pylint: disable=too-many-instance-attributes
 class FencedCodeBlockMarkdownToken(MarkdownToken):
     """
     Class to provide for an encapsulation of the fenced code block element.
@@ -398,6 +399,14 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
     ):
         self.extracted_whitespace = extracted_whitespace
         self.extracted_text = extracted_text
+        self.pre_extracted_text = pre_extracted_text
+        self.extracted_whitespace_before_info_string = (
+            extracted_whitespace_before_info_string
+        )
+        self.text_after_extracted_text = text_after_extracted_text
+        self.pre_text_after_extracted_text = pre_text_after_extracted_text
+        self.fence_character = fence_character
+        self.fence_count = fence_count
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_fenced_code_block,
@@ -421,6 +430,9 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
         )
 
     # pylint: enable=too-many-arguments
+
+
+# pylint: enable=too-many-instance-attributes
 
 
 class AtxHeadingMarkdownToken(MarkdownToken):
@@ -458,22 +470,31 @@ class EndMarkdownToken(MarkdownToken):
 
     type_name_prefix = "end-"
 
-    def __init__(self, type_name, extracted_whitespace, extra_end_data):
+    def __init__(
+        self, type_name, extracted_whitespace, extra_end_data, start_markdown_token
+    ):
 
         self.type_name = type_name
         self.extracted_whitespace = extracted_whitespace
         self.extra_end_data = extra_end_data
-
-        display_data = extracted_whitespace
-        if extra_end_data is not None:
-            display_data = display_data + ":" + extra_end_data
+        self.start_markdown_token = start_markdown_token
 
         MarkdownToken.__init__(
             self,
             EndMarkdownToken.type_name_prefix + type_name,
             MarkdownTokenClass.INLINE_BLOCK,
-            display_data,
+            "",
         )
+        self.compose_data_field()
+
+    def compose_data_field(self):
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        display_data = self.extracted_whitespace
+        if self.extra_end_data is not None:
+            display_data = display_data + ":" + self.extra_end_data
+        self.extra_data = display_data
 
 
 class TextMarkdownToken(MarkdownToken):

@@ -115,11 +115,15 @@ class LeafBlockProcessor:
                     >= parser_state.token_stack[-1].fence_character_count
                     and non_whitespace_index >= len(position_marker.text_to_parse)
                 ):
-                    new_tokens.append(
-                        parser_state.token_stack[-1].generate_close_token(
-                            extracted_whitespace
-                        )
+                    new_end_token = parser_state.token_stack[-1].generate_close_token(
+                        extracted_whitespace
                     )
+                    new_tokens.append(new_end_token)
+                    new_end_token.start_markdown_token = parser_state.token_stack[
+                        -1
+                    ].start_markdown_token
+                    new_end_token.extra_end_data = str(collected_count)
+                    new_end_token.compose_data_field()
                     del parser_state.token_stack[-1]
             else:
                 LOGGER.debug("pfcb->check")
@@ -144,18 +148,6 @@ class LeafBlockProcessor:
                         parser_state, only_these_blocks=[ParagraphStackToken],
                     )
 
-                    parser_state.token_stack.append(
-                        FencedCodeBlockStackToken(
-                            code_fence_character=position_marker.text_to_parse[
-                                position_marker.index_number
-                            ],
-                            fence_character_count=collected_count,
-                            whitespace_start_count=ParserHelper.calculate_length(
-                                extracted_whitespace
-                            ),
-                        )
-                    )
-
                     pre_extracted_text = extracted_text
                     pre_text_after_extracted_text = text_after_extracted_text
 
@@ -171,18 +163,34 @@ class LeafBlockProcessor:
                     if pre_text_after_extracted_text == text_after_extracted_text:
                         pre_text_after_extracted_text = ""
 
-                    new_tokens.append(
-                        FencedCodeBlockMarkdownToken(
-                            position_marker.text_to_parse[position_marker.index_number],
-                            collected_count,
-                            extracted_text,
-                            pre_extracted_text,
-                            text_after_extracted_text,
-                            pre_text_after_extracted_text,
-                            extracted_whitespace,
-                            extracted_whitespace_before_info_string,
-                            position_marker,
+                    new_token = FencedCodeBlockMarkdownToken(
+                        position_marker.text_to_parse[position_marker.index_number],
+                        collected_count,
+                        extracted_text,
+                        pre_extracted_text,
+                        text_after_extracted_text,
+                        pre_text_after_extracted_text,
+                        extracted_whitespace,
+                        extracted_whitespace_before_info_string,
+                        position_marker,
+                    )
+                    new_tokens.append(new_token)
+                    parser_state.token_stack.append(
+                        FencedCodeBlockStackToken(
+                            code_fence_character=position_marker.text_to_parse[
+                                position_marker.index_number
+                            ],
+                            fence_character_count=collected_count,
+                            whitespace_start_count=ParserHelper.calculate_length(
+                                extracted_whitespace
+                            ),
+                            start_markdown_token=new_token,
                         )
+                    )
+                    LOGGER.debug("StackToken-->%s<<", str(parser_state.token_stack[-1]))
+                    LOGGER.debug(
+                        "StackToken>start_markdown_token-->%s<<",
+                        str(parser_state.token_stack[-1].start_markdown_token),
                     )
         elif (
             parser_state.token_stack[-1].is_fenced_code_block
@@ -198,7 +206,14 @@ class LeafBlockProcessor:
                 current_whitespace_length
                 - parser_state.token_stack[-1].whitespace_start_count,
             )
-            extracted_whitespace = "".rjust(whitespace_left, " ")
+            LOGGER.debug("previous_ws>>%s", str(current_whitespace_length))
+            LOGGER.debug("whitespace_left>>%s", str(whitespace_left))
+            removed_whitespace = (
+                "\a"
+                + "".rjust(current_whitespace_length - whitespace_left, " ")
+                + "\a\x03\a"
+            )
+            extracted_whitespace = removed_whitespace + "".rjust(whitespace_left, " ")
         return new_tokens, extracted_whitespace
 
     # pylint: enable=too-many-locals
@@ -697,6 +712,7 @@ class LeafBlockProcessor:
                         "atx",
                         extracted_whitespace_at_end,
                         extracted_whitespace_before_end,
+                        None,
                     )
                 )
         return new_tokens
@@ -747,6 +763,7 @@ class LeafBlockProcessor:
                         MarkdownToken.token_setext_heading,
                         extracted_whitespace,
                         extra_whitespace_after_setext,
+                        None,
                     )
                 )
                 token_index = len(parser_state.token_document) - 1

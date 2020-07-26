@@ -36,6 +36,7 @@ class TransformToMarkdown:
         """
         transformed_data = ""
         avoid_processing = False
+        previous_token = None
 
         for next_token in actual_tokens:
             # pre_transform = transformed_data
@@ -47,6 +48,8 @@ class TransformToMarkdown:
                 transformed_data += self.rehydrate_indented_code_block(next_token)
             elif next_token.token_name == MarkdownToken.token_html_block:
                 transformed_data += self.rehydrate_html_block(next_token)
+            elif next_token.token_name == MarkdownToken.token_fenced_code_block:
+                transformed_data += self.rehydrate_fenced_code_block(next_token)
             elif next_token.token_name == MarkdownToken.token_text:
                 transformed_data += self.rehydrate_text(next_token)
             elif next_token.token_name == MarkdownToken.token_setext_heading:
@@ -58,7 +61,6 @@ class TransformToMarkdown:
                 next_token.token_name == MarkdownToken.token_unordered_list_start
                 or next_token.token_name == MarkdownToken.token_ordered_list_start
                 or next_token.token_name == MarkdownToken.token_block_quote
-                or next_token.token_name == MarkdownToken.token_fenced_code_block
                 or next_token.token_name == MarkdownToken.token_atx_heading
                 or next_token.token_name
                 == MarkdownToken.token_link_reference_definition
@@ -90,6 +92,10 @@ class TransformToMarkdown:
                     transformed_data += self.rehydrate_indented_code_block_end(
                         next_token
                     )
+                elif adjusted_token_name == MarkdownToken.token_fenced_code_block:
+                    transformed_data += self.rehydrate_fenced_code_block_end(
+                        next_token, previous_token
+                    )
                 elif adjusted_token_name == MarkdownToken.token_html_block:
                     transformed_data += self.rehydrate_html_block_end(next_token)
                 elif adjusted_token_name == MarkdownToken.token_setext_heading:
@@ -108,6 +114,7 @@ class TransformToMarkdown:
                 + transformed_data.replace("\n", "\\n").replace("\t", "\\t")
                 + "\n---"
             )
+            previous_token = next_token
 
         if transformed_data and transformed_data[-1] == "\n":
             transformed_data = transformed_data[0:-1]
@@ -175,6 +182,53 @@ class TransformToMarkdown:
         del self.block_stack[-1]
         return ""
 
+    def rehydrate_fenced_code_block(self, next_token):
+        """
+        Rehydrate the fenced code block from the token.
+        """
+        self.block_stack.append(next_token)
+
+        info_text = next_token.extracted_whitespace_before_info_string
+        if next_token.pre_extracted_text:
+            info_text += next_token.pre_extracted_text
+        else:
+            info_text += next_token.extracted_text
+        if next_token.pre_text_after_extracted_text:
+            info_text += next_token.pre_text_after_extracted_text
+        else:
+            info_text += next_token.text_after_extracted_text
+
+        return (
+            next_token.extracted_whitespace
+            + "".rjust(next_token.fence_count, next_token.fence_character)
+            + info_text
+            + "\n"
+        )
+
+    def rehydrate_fenced_code_block_end(self, next_token, previous_token):
+        """
+        Rehydrate the end of the fenced code block from the token.
+        """
+        start_token = next_token.start_markdown_token
+
+        if next_token.extra_data:
+            split_extra_data = next_token.extra_data.split(":")
+            assert len(split_extra_data) == 2
+            fence_count = int(split_extra_data[1])
+
+            prefix_whitespace = "\n"
+            if previous_token.is_blank_line or previous_token.is_fenced_code_block:
+                prefix_whitespace = ""
+            prefix_whitespace += next_token.extracted_whitespace
+
+            del self.block_stack[-1]
+            return (
+                prefix_whitespace
+                + "".rjust(fence_count, start_token.fence_character)
+                + "\n"
+            )
+        return ""
+
     def rehydrate_setext_heading(self, next_token):
         """
         Rehydrate the setext heading from the token.
@@ -220,7 +274,21 @@ class TransformToMarkdown:
             "<<rehydrate_text>>" + main_text.replace("\a", "\\a").replace("\n", "\\n")
         )
 
-        leading_whitespace = next_token.extracted_whitespace
+        print(
+            "<<leading_whitespace>>"
+            + next_token.extracted_whitespace.replace("\a", "\\a")
+            .replace("\n", "\\n")
+            .replace("\x03", "\\x03")
+        )
+        leading_whitespace = self.resolve_replacement_markers(
+            next_token.extracted_whitespace
+        )
+        print(
+            "<<leading_whitespace>>"
+            + leading_whitespace.replace("\a", "\\a")
+            .replace("\n", "\\n")
+            .replace("\x03", "\\x03")
+        )
         if self.block_stack:
             if (
                 self.block_stack[-1].token_name

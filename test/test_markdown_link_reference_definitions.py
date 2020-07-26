@@ -726,7 +726,7 @@ def test_link_reference_definitions_181():
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[text:[foo]: /url:]",
-        "[end-fcode-block]",
+        "[end-fcode-block::3]",
         "[BLANK(4,1):]",
         "[para(5,1):]",
         "[text:[:]",

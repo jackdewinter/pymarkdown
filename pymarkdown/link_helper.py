@@ -793,7 +793,7 @@ class LinkHelper:
                     text_from_blocks,
                 )
                 token_to_append = EndMarkdownToken(
-                    MarkdownToken.token_inline_link, "", ""
+                    MarkdownToken.token_inline_link, "", "", None
                 )
             else:
                 assert start_text == LinkHelper.image_start_sequence
