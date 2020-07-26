@@ -1008,7 +1008,7 @@ def test_reference_links_559():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    # assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
@@ -1051,7 +1051,7 @@ def test_reference_links_560():
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    # assert_token_consistency(source_markdown, actual_tokens)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 @pytest.mark.gfm
