@@ -6,6 +6,7 @@ import os
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
+from pymarkdown.parser_helper import ParserHelper
 
 
 # pylint: disable=too-many-public-methods
@@ -409,9 +410,7 @@ class TransformToMarkdown:
             return ""
 
         prefix_text = ""
-        main_text = next_token.token_text.replace(
-            InlineHelper.backspace_character, ""
-        ).replace("\x08", "")
+        main_text = ParserHelper.remove_backspaces_from_text(next_token.token_text)
 
         print(
             ">>rehydrate_text>>" + main_text.replace("\a", "\\a").replace("\n", "\\n")

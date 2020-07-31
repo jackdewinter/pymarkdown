@@ -5,6 +5,7 @@ import inspect
 import logging
 
 from pymarkdown.inline_helper import InlineHelper
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
@@ -443,20 +444,6 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def resolve_backspaces_from_text(cls, token_text):
-        """
-        As the backslashes signal a backslash that was used, and we need the
-        final text anyways, simply skip over that text.
-        """
-        adjusted_text_token = token_text
-        while InlineHelper.backspace_character in adjusted_text_token:
-            ing = adjusted_text_token.index(InlineHelper.backspace_character)
-            adjusted_text_token = (
-                adjusted_text_token[0 : ing - 1] + adjusted_text_token[ing + 1 :]
-            )
-        return adjusted_text_token
-
-    @classmethod
     def resolve_references_from_text(cls, adjusted_text_token):
         """
         The alert characters signal that a replacement has occurred, so make sure
@@ -507,7 +494,7 @@ class TransformToGfm:
         """
         Handle the text token.
         """
-        adjusted_text_token = cls.resolve_backspaces_from_text(next_token.token_text)
+        adjusted_text_token = ParserHelper.resolve_backspaces_from_text(next_token.token_text)
         adjusted_text_token = cls.resolve_references_from_text(adjusted_text_token)
         adjusted_text_token = adjusted_text_token.replace("\x03", "")
 
@@ -770,8 +757,7 @@ class TransformToGfm:
         Handle the code span token.
         """
         assert transform_state
-
-        adjusted_text_token = cls.resolve_backspaces_from_text(next_token.span_text)
+        adjusted_text_token = ParserHelper.resolve_backspaces_from_text(next_token.span_text)
         adjusted_text_token = cls.resolve_references_from_text(adjusted_text_token)
 
         output_html = output_html + "<code>" + adjusted_text_token + "</code>"

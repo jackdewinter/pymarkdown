@@ -7,6 +7,7 @@ import tempfile
 from test.transform_to_markdown import TransformToMarkdown
 
 from pymarkdown.inline_helper import InlineHelper
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.markdown_token import (
     EndMarkdownToken,
     MarkdownToken,
@@ -38,19 +39,17 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
     print("\n---")
     print(
         "expected_tokens: "
-        + str(expected_tokens)
+        + ParserHelper.make_value_visible(expected_tokens)
         .replace("\a", "\\a")
         .replace("\\x07", "\\a")
-        .replace("\\\\x08", "\\b")
         .replace("\x02", "\\x02")
         .replace("\x03", "\\x03")
     )
     print(
         "parsed_tokens  : "
-        + str(actual_tokens)
+        + ParserHelper.make_value_visible(actual_tokens)
         .replace("\n", "\\n")
         .replace("\t", "\\t")
-        .replace(InlineHelper.backspace_character, "\\b")
         .replace("\a", "\\a")
         .replace("\x02", "\\x02")
         .replace("\x03", "\\x03")
@@ -75,10 +74,9 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             "expected_tokens("
             + str(len(expected_str))
             + ")>>"
-            + expected_str.replace("\t", "\\t")
+            + ParserHelper.make_value_visible(expected_str)
             .replace("\n", "\\n")
             .replace("\a", "\\a")
-            .replace("\b", "\\b")
             .replace("\x02", "\\x02")
             .replace("\x03", "\\x03")
             + "<<"
@@ -87,10 +85,10 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             "actual_tokens  ("
             + str(len(actual_str))
             + ")>>"
-            + actual_str.replace("\t", "\\t")
+            + ParserHelper.make_value_visible(actual_str)
+            .replace("\t", "\\t")
             .replace("\n", "\\n")
             .replace("\a", "\\a")
-            .replace("\b", "\\b")
             .replace("\x02", "\\x02")
             .replace("\x03", "\\x03")
             + "<<"
@@ -117,10 +115,10 @@ def assert_if_strings_different(expected_string, actual_string):
     )
     print(
         "expected_string>>"
-        + expected_string.replace("\t", "\\t")
+        + ParserHelper.make_value_visible(expected_string)
+        .replace("\t", "\\t")
         .replace("\n", "\\n")
         .replace("\a", "\\a")
-        .replace("\b", "\\b")
         .replace("\x02", "\\x02")
         .replace("\x03", "\\x03")
         + "<<"
@@ -129,10 +127,10 @@ def assert_if_strings_different(expected_string, actual_string):
     print("actual_string  (" + str(len(actual_string)) + ")>>" + actual_string + "<<")
     print(
         "actual_string>>"
-        + actual_string.replace("\t", "\\t")
+        + ParserHelper.make_value_visible(actual_string)
+        .replace("\t", "\\t")
         .replace("\n", "\\n")
         .replace("\a", "\\a")
-        .replace("\b", "\\b")
         .replace("\x02", "\\x02")
         .replace("\x03", "\\x03")
         + "<<"
@@ -443,18 +441,18 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
     else:
         print(
             "\n-=-=-\nExpected\n-=-=-\n"
-            + source_markdown.replace("\x02", "\\x02")
+            + ParserHelper.make_value_visible(source_markdown)
+            .replace("\x02", "\\x02")
             .replace("\x03", "\\x03")
             .replace("\n", "\\n")
             .replace("\a", "\\a")
-            .replace("\b", "\\b")
             .replace("\t", "\\t")
             + "\n-=-=-\nActual\n-=-=-\n"
-            + original_markdown.replace("\x02", "\\x02")
+            + ParserHelper.make_value_visible(original_markdown)
+            .replace("\x02", "\\x02")
             .replace("\x03", "\\x03")
             .replace("\n", "\\n")
             .replace("\a", "\\a")
-            .replace("\b", "\\b")
             .replace("\t", "\\t")
             + "\n-=-=-\n"
         )

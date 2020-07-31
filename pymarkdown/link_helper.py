@@ -578,7 +578,7 @@ class LinkHelper:
             ex_link = InlineHelper.handle_backslashes(ex_link, add_text_signature=False)
         LOGGER.debug(
             "urllib.parse.quote>>ex_link>>%s>>",
-            str(ex_link).replace(InlineHelper.backspace_character, "\\b"),
+            ParserHelper.make_value_visible(ex_link)
         )
 
         ex_link = LinkHelper.__encode_link_destination(ex_link)
@@ -745,22 +745,6 @@ class LinkHelper:
         )
 
     @staticmethod
-    def resolve_backspaces_from_text(token_text):
-        """
-        Deal with any backslash encoding in text with backspaces.
-        """
-        adjusted_text_token = token_text
-        while InlineHelper.backspace_character in adjusted_text_token:
-            next_backspace_index = adjusted_text_token.index(
-                InlineHelper.backspace_character
-            )
-            adjusted_text_token = (
-                adjusted_text_token[0 : next_backspace_index - 1]
-                + adjusted_text_token[next_backspace_index + 1 :]
-            )
-        return adjusted_text_token
-
-    @staticmethod
     def __look_up_link(link_to_lookup, new_index, link_type):
         """
         Look up a link to see if it is present.
@@ -769,7 +753,7 @@ class LinkHelper:
         inline_link = ""
         inline_title = ""
 
-        link_to_lookup = LinkHelper.resolve_backspaces_from_text(link_to_lookup)
+        link_to_lookup = ParserHelper.resolve_backspaces_from_text(link_to_lookup)
 
         link_label = LinkHelper.normalize_link_label(link_to_lookup)
         if not link_label or link_label not in LinkHelper.__link_definitions:
@@ -810,8 +794,8 @@ class LinkHelper:
         LOGGER.debug("handle_link_types>>%s<<", source_text[new_index:])
         LOGGER.debug(
             "handle_link_types>>current_string_unresolved>>%s<<remaining_line<<%s>>",
-            str(current_string_unresolved).replace("\b", "\\b"),
-            str(remaining_line).replace("\b", "\\b"),
+            ParserHelper.make_value_visible(current_string_unresolved),
+            ParserHelper.make_value_visible(remaining_line),
         )
         text_from_blocks, text_from_blocks_raw = LinkHelper.__collect_text_from_blocks(
             inline_blocks, ind, current_string_unresolved + remaining_line
@@ -827,7 +811,7 @@ class LinkHelper:
             text_from_blocks_raw,
         )
         LOGGER.debug("handle_link_types>>text_from_blocks>>%s<<", text_from_blocks)
-        text_from_blocks = LinkHelper.resolve_backspaces_from_text(text_from_blocks)
+        text_from_blocks = ParserHelper.resolve_backspaces_from_text(text_from_blocks)
         LOGGER.debug("handle_link_types>>text_from_blocks>>%s<<", text_from_blocks)
 
         consume_rest_of_line = False
@@ -856,11 +840,11 @@ class LinkHelper:
             LOGGER.debug("shortcut?")
             LOGGER.debug(
                 ">>%s<<",
-                str(inline_blocks).replace(InlineHelper.backspace_character, "\\b"),
+                ParserHelper.make_value_visible(inline_blocks),
             )
             LOGGER.debug(
                 ">>%s<<",
-                str(text_from_blocks).replace(InlineHelper.backspace_character, "\\b"),
+                ParserHelper.make_value_visible(text_from_blocks),
             )
 
             update_index, inline_link, inline_title = LinkHelper.__look_up_link(
@@ -884,14 +868,7 @@ class LinkHelper:
                 pre_inline_title = ""
             LOGGER.debug(">>pre_inline_link>>%s>>", pre_inline_link)
 
-            while InlineHelper.backspace_character in text_from_blocks_raw:
-                backspace_index = text_from_blocks_raw.index(
-                    InlineHelper.backspace_character
-                )
-                text_from_blocks_raw = (
-                    text_from_blocks_raw[0 : backspace_index - 1]
-                    + text_from_blocks_raw[backspace_index + 1 :]
-                )
+            text_from_blocks_raw = ParserHelper.resolve_backspaces_from_text(text_from_blocks_raw)
             LOGGER.debug(">>text_from_blocks_raw>>%s>>", text_from_blocks_raw)
 
             if start_text == LinkHelper.__link_start_sequence:
@@ -1113,9 +1090,7 @@ class LinkHelper:
             if image_token.did_use_angle_start:
                 image_uri = "<" + image_uri + ">"
 
-            link_text = image_token.text_from_blocks.replace(
-                InlineHelper.backspace_character, ""
-            ).replace("\x08", "")
+            link_text = ParserHelper.remove_backspaces_from_text(image_token.text_from_blocks)
             image_text = (
                 "![" + link_text + "](" + image_token.before_link_whitespace + image_uri
             )
@@ -1138,9 +1113,7 @@ class LinkHelper:
                 )
             image_text += ")"
         elif image_token.label_type == "shortcut":
-            link_text = image_token.text_from_blocks.replace(
-                InlineHelper.backspace_character, ""
-            ).replace("\x08", "")
+            link_text = ParserHelper.remove_backspaces_from_text(image_token.text_from_blocks)
             image_text = "![" + link_text + "]"
         elif image_token.label_type == "full":
             image_text = (
@@ -1160,9 +1133,7 @@ class LinkHelper:
 
         link_text = ""
         if link_token.label_type == "shortcut":
-            link_label = link_token.text_from_blocks.replace(
-                InlineHelper.backspace_character, ""
-            ).replace("\x08", "")
+            link_label = ParserHelper.remove_backspaces_from_text(link_token.text_from_blocks)
             link_text = "[" + link_label + "]"
         elif link_token.label_type == "full":
 
@@ -1183,9 +1154,7 @@ class LinkHelper:
             if link_token.did_use_angle_start:
                 link_uri = "<" + link_uri + ">"
 
-            link_label = link_token.text_from_blocks.replace(
-                InlineHelper.backspace_character, ""
-            ).replace("\x08", "")
+            link_label = ParserHelper.remove_backspaces_from_text(link_token.text_from_blocks)
             link_text = (
                 "[" + link_label + "](" + link_token.before_link_whitespace + link_uri
             )

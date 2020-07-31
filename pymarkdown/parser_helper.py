@@ -9,6 +9,11 @@ class ParserHelper:
     Class to provide helper functions for parsing.
     """
 
+    __backspace_character = "\b"
+    backslash_character = "\\"
+
+    backslash_escape_sequence = backslash_character + __backspace_character
+
     @staticmethod
     def is_character_at_index(source_string, index_in_string, valid_character):
         """
@@ -350,6 +355,35 @@ class ParserHelper:
             )
         rebuilt_string = rebuilt_string + ex_str
         return rebuilt_string
+
+    @staticmethod
+    def make_value_visible(value_to_modify):
+        df = str(value_to_modify)
+        return df \
+            .replace(ParserHelper.__backspace_character, "\\b")
+
+    @staticmethod
+    def remove_backspaces_from_text(token_text):
+        main_text = token_text.replace(
+            ParserHelper.__backspace_character, ""
+        ).replace("\x08", "")
+        return main_text
+
+    @staticmethod
+    def resolve_backspaces_from_text(token_text):
+        """ParserHelper.make_value_visible
+        Deal with any backslash encoding in text with backspaces.
+        """
+        adjusted_text_token = token_text
+        while ParserHelper.__backspace_character in adjusted_text_token:
+            next_backspace_index = adjusted_text_token.index(
+                ParserHelper.__backspace_character
+            )
+            adjusted_text_token = (
+                adjusted_text_token[0 : next_backspace_index - 1]
+                + adjusted_text_token[next_backspace_index + 1 :]
+            )
+        return adjusted_text_token
 
 
 # pylint: enable=too-many-public-methods

@@ -499,14 +499,14 @@ class InlineProcessor:
             LOGGER.debug(
                 "<<current_string<<%s<<%s<<",
                 str(len(current_string)),
-                current_string.replace("\b", "\\b")
+                ParserHelper.make_value_visible(current_string)
                 .replace("\a", "\\a")
                 .replace("\n", "\\n"),
             )
             LOGGER.debug(
                 "<<current_string_unresolved<<%s<<%s<<",
                 str(len(current_string_unresolved)),
-                current_string_unresolved.replace("\b", "\\b")
+                ParserHelper.make_value_visible(current_string_unresolved)
                 .replace("\a", "\\a")
                 .replace("\n", "\\n"),
             )
@@ -593,15 +593,13 @@ class InlineProcessor:
         )
         LOGGER.debug(
             "__complete_inline_loop--new_string_unresolved>>%s>>",
-            str(new_string_unresolved)
-            .replace("\b", "\\b")
+            ParserHelper.make_value_visible(new_string_unresolved)
             .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )
         LOGGER.debug(
             "__complete_inline_loop--original_string>>%s>>",
-            str(original_string)
-            .replace("\b", "\\b")
+            ParserHelper.make_value_visible(original_string)
             .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )
@@ -612,16 +610,14 @@ class InlineProcessor:
 
         LOGGER.debug(
             "__complete_inline_loop--current_string>>%s>>",
-            str(current_string)
-            .replace("\b", "\\b")
+            ParserHelper.make_value_visible(current_string)
             .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )
         current_string = InlineHelper.append_text(current_string, new_string)
         LOGGER.debug(
             "__complete_inline_loop--current_string>>%s>>",
-            str(current_string)
-            .replace("\b", "\\b")
+            ParserHelper.make_value_visible(current_string)
             .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )
@@ -631,16 +627,14 @@ class InlineProcessor:
 
         LOGGER.debug(
             "__complete_inline_loop--current_string>>%s>>",
-            str(current_string)
-            .replace("\b", "\\b")
+            ParserHelper.make_value_visible(current_string)
             .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )
 
         LOGGER.debug(
             "new_string_unresolved>>%s>>",
-            str(new_string_unresolved)
-            .replace("\b", "\\b")
+            ParserHelper.make_value_visible(new_string_unresolved)
             .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )
@@ -653,8 +647,7 @@ class InlineProcessor:
 
         LOGGER.debug(
             "__complete_inline_loop--current_string_unresolved>>%s>>",
-            str(current_string_unresolved)
-            .replace("\b", "\\b")
+            ParserHelper.make_value_visible(current_string_unresolved)
             .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )

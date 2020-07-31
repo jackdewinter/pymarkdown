@@ -99,7 +99,6 @@ class InlineHelper:
     __angle_bracket_end = ">"
     code_span_bounds = "`"
     backslash_character = "\\"
-    backspace_character = "\b"
     __alert_character = "\a"
     __entity_map = {}
     character_reference_start_character = "&"
@@ -146,10 +145,7 @@ class InlineHelper:
             ):
                 inline_response.new_string = ""
                 if add_text_signature:
-                    inline_response.new_string += (
-                        InlineHelper.backslash_character
-                        + InlineHelper.backspace_character
-                    )
+                    inline_response.new_string += ParserHelper.backslash_escape_sequence
                 inline_response.new_string += inline_request.source_text[
                     inline_response.new_index
                 ]
