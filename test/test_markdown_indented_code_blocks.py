@@ -211,8 +211,10 @@ def test_indented_code_blocks_082():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """    chunk1
-      
-      chunk2"""
+\a\a\a\a\a\a
+      chunk2""".replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n    ]",
         "[text:chunk1\n  \n  chunk2:]",
@@ -220,6 +222,40 @@ def test_indented_code_blocks_082():
     ]
     expected_gfm = """<pre><code>chunk1
   
+  chunk2
+</code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_indented_code_blocks_082a():
+    """
+    Test case 082a:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """    chunk1
+\a\a\a\a
+      chunk2""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[icode-block(1,5):    :\n    \n    ]",
+        "[text:chunk1\n\n  chunk2:]",
+        "[end-icode-block]",
+    ]
+    expected_gfm = """<pre><code>chunk1
+
   chunk2
 </code></pre>"""
 

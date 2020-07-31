@@ -108,17 +108,22 @@ class InlineProcessor:
                         )
                     ]
                 elif coalesced_list[-1].is_setext:
-                    combined_test = coalesced_results[coalesce_index].token_text
+                    combined_text = coalesced_results[coalesce_index].token_text
+                    combined_whitespace_text = coalesced_results[
+                        coalesce_index
+                    ].extracted_whitespace.replace("\t", "    ")
                     LOGGER.debug(
-                        "combined_text>>%s", combined_test.replace("\n", "\\n")
+                        "combined_text>>%s", combined_text.replace("\n", "\\n")
+                    )
+                    LOGGER.debug(
+                        "combined_whitespace_text>>%s",
+                        combined_whitespace_text.replace("\n", "\\n"),
                     )
                     processed_tokens = InlineProcessor.__process_inline_text_block(
                         coalesced_results[coalesce_index].token_text.replace(
                             "\t", "    "
                         ),
-                        whitespace_to_recombine=coalesced_results[
-                            coalesce_index
-                        ].extracted_whitespace.replace("\t", "    "),
+                        whitespace_to_recombine=combined_whitespace_text,
                         is_setext=True,
                     )
                     LOGGER.debug(
@@ -138,15 +143,20 @@ class InlineProcessor:
                     assert coalesced_list[-1].is_paragraph
                     LOGGER.debug(
                         ">>before_add_ws>>%s>>add>>%s>>",
-                        str(coalesced_list[-1]),
-                        str(coalesced_results[coalesce_index].extracted_whitespace),
+                        str(coalesced_list[-1]).replace("\n", "\\n"),
+                        str(
+                            coalesced_results[coalesce_index].extracted_whitespace
+                        ).replace("\n", "\\n"),
                     )
                     coalesced_list[-1].add_whitespace(
                         coalesced_results[coalesce_index].extracted_whitespace.replace(
                             "\t", "    "
                         )
                     )
-                    LOGGER.debug(">>after_add_ws>>%s", str(coalesced_list[-1]))
+                    LOGGER.debug(
+                        ">>after_add_ws>>%s",
+                        str(coalesced_list[-1]).replace("\n", "\\n"),
+                    )
                     processed_tokens = InlineProcessor.__process_inline_text_block(
                         coalesced_results[coalesce_index].token_text.replace(
                             "\t", "    "
@@ -302,12 +312,24 @@ class InlineProcessor:
 
         inline_blocks = []
         start_index = 0
+        LOGGER.debug(
+            "__process_inline_text_block>>source_text>>%s",
+            str(source_text).replace("\n", "\\n"),
+        )
+        LOGGER.debug(
+            "__process_inline_text_block>>whitespace_to_recombine>>%s",
+            str(whitespace_to_recombine).replace("\n", "\\n"),
+        )
         if whitespace_to_recombine and " " in whitespace_to_recombine:
             source_text = InlineProcessor.__recombine_with_whitespace(
                 source_text, whitespace_to_recombine
             )
         else:
             whitespace_to_recombine = None
+        LOGGER.debug(
+            "__process_inline_text_block>>source_text>>%s",
+            str(source_text).replace("\n", "\\n"),
+        )
 
         current_string = ""
         current_string_unresolved = ""
@@ -573,7 +595,10 @@ class InlineProcessor:
         )
         LOGGER.debug(
             "__complete_inline_loop--new_string_unresolved>>%s>>",
-            str(new_string_unresolved).replace("\n", "\\n"),
+            str(new_string_unresolved)
+            .replace("\b", "\\b")
+            .replace("\a", "\\a")
+            .replace("\n", "\\n"),
         )
         LOGGER.debug(
             "__complete_inline_loop--original_string>>%s>>",
@@ -609,6 +634,14 @@ class InlineProcessor:
         LOGGER.debug(
             "__complete_inline_loop--current_string>>%s>>",
             str(current_string)
+            .replace("\b", "\\b")
+            .replace("\a", "\\a")
+            .replace("\n", "\\n"),
+        )
+
+        LOGGER.debug(
+            "new_string_unresolved>>%s>>",
+            str(new_string_unresolved)
             .replace("\b", "\\b")
             .replace("\a", "\\a")
             .replace("\n", "\\n"),

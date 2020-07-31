@@ -4,6 +4,7 @@ Module to provide for a transformation from tokens to a markdown document.
 import os
 
 from pymarkdown.inline_helper import InlineHelper
+from pymarkdown.link_helper import LinkHelper
 from pymarkdown.markdown_token import EndMarkdownToken, MarkdownToken
 
 
@@ -58,15 +59,17 @@ class TransformToMarkdown:
                 transformed_data += self.rehydrate_atx_heading(next_token)
             elif next_token.token_name == MarkdownToken.token_blank_line:
                 transformed_data += self.rehydrate_blank_line(next_token)
+            elif next_token.token_name == MarkdownToken.token_link_reference_definition:
+                transformed_data += self.rehydrate_link_reference_definition(next_token)
+            elif next_token.token_name == MarkdownToken.token_inline_link:
+                transformed_data += self.rehydrate_inline_link(next_token)
+            elif next_token.token_name == MarkdownToken.token_inline_image:
+                transformed_data += self.rehydrate_inline_image(next_token)
 
             elif (
                 next_token.token_name == MarkdownToken.token_unordered_list_start
                 or next_token.token_name == MarkdownToken.token_ordered_list_start
                 or next_token.token_name == MarkdownToken.token_block_quote
-                or next_token.token_name
-                == MarkdownToken.token_link_reference_definition
-                or next_token.token_name == MarkdownToken.token_inline_link
-                or next_token.token_name == MarkdownToken.token_inline_image
             ):
                 avoid_processing = True
                 break
@@ -105,6 +108,8 @@ class TransformToMarkdown:
                     transformed_data += self.rehydrate_atx_heading_end(next_token)
                 elif adjusted_token_name == MarkdownToken.token_inline_emphasis:
                     transformed_data += self.rehydrate_inline_emphaisis_end(next_token)
+                elif adjusted_token_name == MarkdownToken.token_inline_link:
+                    transformed_data += self.rehydrate_inline_link_end(next_token)
                 else:
                     assert False, "end_next_token>>" + str(adjusted_token_name)
             else:
@@ -232,6 +237,111 @@ class TransformToMarkdown:
             )
         return ""
 
+    def __insert_leading_whitespace_at_newlines(self, text_to_modify):
+        """
+        Deal with re-inserting any removed whitespace at the starts of lines.
+        """
+        if "\n" in text_to_modify:
+            owning_paragraph_token = None
+            for search_index in range(len(self.block_stack) - 1, -1, -1):
+                if (
+                    self.block_stack[search_index].token_name
+                    == MarkdownToken.token_paragraph
+                ):
+                    owning_paragraph_token = self.block_stack[search_index]
+                    break
+
+            split_text_to_modify = text_to_modify.split("\n")
+            split_parent_whitespace = owning_paragraph_token.extracted_whitespace.split(
+                "\n"
+            )
+            print(
+                "owning_paragraph_token>>>>>>>"
+                + str(owning_paragraph_token).replace("\n", "\\n")
+            )
+            print("opt>>text>" + str(split_text_to_modify).replace("\n", "\\n"))
+            print("opt>>ws>" + str(split_parent_whitespace))
+            print("opt>>rehydrate_index>" + str(owning_paragraph_token.rehydrate_index))
+
+            for modify_index in range(1, len(split_text_to_modify)):
+                print("-->" + str(modify_index))
+                split_text_to_modify[modify_index] = (
+                    split_parent_whitespace[
+                        modify_index + owning_paragraph_token.rehydrate_index
+                    ]
+                    + split_text_to_modify[modify_index]
+                )
+
+            print("opt>>text>" + str(split_text_to_modify).replace("\n", "\\n"))
+            took_lines = len(split_text_to_modify) - 1
+            owning_paragraph_token.rehydrate_index += took_lines
+            print("opt>>took>" + str(took_lines))
+            text_to_modify = "\n".join(split_text_to_modify)
+            print("opt>>text>" + str(text_to_modify).replace("\n", "\\n"))
+        return text_to_modify
+
+    def rehydrate_inline_image(self, next_token):
+        """
+        Rehydrate the image text from the token.
+        """
+
+        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+            return ""
+        rehydrated_text = LinkHelper.rehydrate_inline_image_text_from_token(next_token)
+        return self.__insert_leading_whitespace_at_newlines(rehydrated_text)
+
+    def rehydrate_inline_link(self, next_token):
+        """
+        Rehydrate the start of the link from the token.
+        """
+
+        self.block_stack.append(next_token)
+        rehydrated_text = LinkHelper.rehydrate_inline_link_text_from_token(next_token)
+        return self.__insert_leading_whitespace_at_newlines(rehydrated_text)
+
+    def rehydrate_inline_link_end(self, next_token):
+        """
+        Rehydrate the end of the link from the token.
+        """
+
+        assert next_token
+        del self.block_stack[-1]
+        return ""
+
+    @classmethod
+    def rehydrate_link_reference_definition(cls, next_token):
+        """
+        Rehydrate the link reference definition from the token.
+        """
+
+        if next_token.link_name_debug:
+            link_name = next_token.link_name_debug
+        else:
+            link_name = next_token.link_name
+
+        if next_token.link_destination_raw:
+            link_destination = next_token.link_destination_raw
+        else:
+            link_destination = next_token.link_destination
+
+        if next_token.link_title_raw:
+            link_title = next_token.link_title_raw
+        else:
+            link_title = next_token.link_title
+
+        return (
+            next_token.extracted_whitespace
+            + "["
+            + link_name
+            + "]:"
+            + next_token.link_destination_whitespace
+            + link_destination
+            + next_token.link_title_whitespace
+            + link_title
+            + next_token.end_whitespace
+            + "\n"
+        )
+
     def rehydrate_atx_heading(self, next_token):
         """
         Rehydrate the atx heading block from the token.
@@ -291,6 +401,13 @@ class TransformToMarkdown:
         """
         Rehydrate the text from the token.
         """
+
+        if (
+            self.block_stack[-1].token_name == MarkdownToken.token_inline_link
+            or self.block_stack[-1].token_name == MarkdownToken.token_inline_image
+        ):
+            return ""
+
         prefix_text = ""
         main_text = next_token.token_text.replace(
             InlineHelper.backspace_character, ""
@@ -353,9 +470,7 @@ class TransformToMarkdown:
                         .replace("\t", "\\t")
                     )
 
-                    # TODO never incrementing?
                     parent_rehydrate_index = self.block_stack[-1].rehydrate_index
-
                     rejoined_token_text = []
                     for iterator in enumerate(split_token_text, start=0):
                         print(">>" + str(iterator))
@@ -368,6 +483,7 @@ class TransformToMarkdown:
                                 ]
                                 + iterator[1]
                             )
+                            self.block_stack[-1].rehydrate_index += 1
                         rejoined_token_text.append(joined_text)
                     split_token_text = rejoined_token_text
 
@@ -445,63 +561,73 @@ class TransformToMarkdown:
     # pylint: enable=too-many-locals
     # pylint: enable=too-many-nested-blocks
 
-    @classmethod
-    def rehydrate_hard_break(cls, next_token):
+    def rehydrate_hard_break(self, next_token):
         """
         Rehydrate the hard break text from the token.
         """
+        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+            return ""
+
         return next_token.line_end
 
-    @classmethod
-    def rehydrate_inline_emphaisis(cls, next_token):
+    def rehydrate_inline_emphaisis(self, next_token):
         """
         Rehydrate the emphasis text from the token.
         """
+        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+            return ""
+
         return "".rjust(next_token.emphasis_length, next_token.emphasis_character)
 
-    @classmethod
-    def rehydrate_inline_emphaisis_end(cls, next_token):
+    def rehydrate_inline_emphaisis_end(self, next_token):
         """
         Rehydrate the emphasis end text from the token.
         """
+        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+            return ""
+
         print(".extra_end_data>>" + str(next_token.extra_end_data))
         split_end_data = next_token.extra_end_data.split(":")
         emphasis_length = int(split_end_data[0])
         emphasis_character = split_end_data[1]
         return "".rjust(emphasis_length, emphasis_character)
 
-    @classmethod
-    def rehydrate_inline_uri_autolink(cls, next_token):
+    def rehydrate_inline_uri_autolink(self, next_token):
         """
         Rehydrate the uri autolink from the token.
         """
+        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+            return ""
         return "<" + next_token.autolink_text + ">"
 
-    @classmethod
-    def rehydrate_inline_email_autolink(cls, next_token):
+    def rehydrate_inline_email_autolink(self, next_token):
         """
         Rehydrate the email autolink from the token.
         """
+        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+            return ""
         return "<" + next_token.autolink_text + ">"
 
-    @classmethod
-    def rehydrate_inline_raw_html(cls, next_token):
+    def rehydrate_inline_raw_html(self, next_token):
         """
         Rehydrate the email raw html from the token.
         """
+        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+            return ""
         return "<" + next_token.raw_tag + ">"
 
-    @classmethod
-    def rehydrate_inline_code_span(cls, next_token):
+    def rehydrate_inline_code_span(self, next_token):
         """
         Rehydrate the code span data from the token.
         """
+        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+            return ""
 
-        span_text = cls.resolve_replacement_markers(next_token.span_text)
-        leading_whitespace = cls.resolve_replacement_markers(
+        span_text = self.resolve_replacement_markers(next_token.span_text)
+        leading_whitespace = self.resolve_replacement_markers(
             next_token.leading_whitespace
         )
-        trailing_whitespace = cls.resolve_replacement_markers(
+        trailing_whitespace = self.resolve_replacement_markers(
             next_token.trailing_whitespace
         )
         return (

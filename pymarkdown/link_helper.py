@@ -20,6 +20,7 @@ from pymarkdown.parser_helper import ParserHelper
 LOGGER = logging.getLogger(__name__)
 
 
+# pylint: disable=too-many-lines
 class LinkHelper:
     """
     Class to helper with the parsing of links.
@@ -160,9 +161,12 @@ class LinkHelper:
         if new_index == len(line_to_parse) and not is_blank_line:
             return False, new_index, None, None, None, None
         if ex_ws and new_index < len(line_to_parse):
-            inline_title, pre_inline_title, new_index = LinkHelper.__parse_link_title(
-                line_to_parse, new_index
-            )
+            (
+                inline_title,
+                pre_inline_title,
+                new_index,
+                _,
+            ) = LinkHelper.__parse_link_title(line_to_parse, new_index)
             if new_index == -1:
                 return False, -1, None, None, None, None
             if inline_title is None:
@@ -193,6 +197,7 @@ class LinkHelper:
             pre_inline_link,
             new_index,
             inline_raw_link,
+            _,
         ) = LinkHelper.__parse_link_destination(line_to_parse, new_index)
         if new_index == -1:
             return False, -1, None, None, None, None
@@ -357,46 +362,72 @@ class LinkHelper:
         LOGGER.debug(">>collect_text_from_blocks>>%s", str(inline_blocks))
         LOGGER.debug(">>collect_text_from_blocks>>suffix_text>>%s", str(suffix_text))
         collected_text = ""
+        collected_text_raw = ""
         collect_index = ind + 1
 
         inline_link_end_name = (
             EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
         )
 
+        is_inside_of_link = False
         while collect_index < len(inline_blocks):
 
-            if (
+            LOGGER.debug(
+                ">>collect_text>>%s<<%s<<",
+                inline_blocks[collect_index].token_name,
+                str(inline_blocks[collect_index]),
+            )
+
+            if inline_blocks[collect_index].token_name == inline_link_end_name:
+                is_inside_of_link = False
+            elif (
                 inline_blocks[collect_index].token_name
                 == MarkdownToken.token_inline_link
-                or inline_blocks[collect_index].token_name == inline_link_end_name
             ):
-                pass
+                is_inside_of_link = True
+                raw_text = LinkHelper.rehydrate_inline_link_text_from_token(
+                    inline_blocks[collect_index]
+                )
+                collected_text_raw += raw_text
             elif (
                 inline_blocks[collect_index].token_name
                 == MarkdownToken.token_inline_image
             ):
-                collected_text = (
-                    collected_text + inline_blocks[collect_index].image_alt_text
+                raw_text = LinkHelper.rehydrate_inline_image_text_from_token(
+                    inline_blocks[collect_index]
                 )
+                collected_text_raw += raw_text
+                collected_text += inline_blocks[collect_index].image_alt_text
             elif (
                 inline_blocks[collect_index].token_name
                 == MarkdownToken.token_inline_code_span
             ):
-                collected_text = collected_text + inline_blocks[collect_index].span_text
-            else:
-                collected_text = (
-                    collected_text + inline_blocks[collect_index].token_text
-                )
+                converted_text = "`" + inline_blocks[collect_index].span_text + "`"
+                collected_text += converted_text
+                collected_text_raw += converted_text
+            elif not is_inside_of_link:
+                collected_text += inline_blocks[collect_index].token_text
+                collected_text_raw += inline_blocks[collect_index].token_text
             LOGGER.debug(
                 ">>collect_text>>%s<<%s<<%s<<",
                 collected_text,
                 str(inline_blocks[collect_index]),
                 inline_blocks[collect_index].token_text,
             )
+            LOGGER.debug(
+                ">>collected_text_raw>>%s<<", collected_text_raw,
+            )
             collect_index += 1
-        collected_text = collected_text + suffix_text
+
+        LOGGER.debug(
+            ">>collect_text_from_blocks>>%s<<%s<<", collected_text, suffix_text
+        )
+        LOGGER.debug(">>collected_text_raw>>%s<<%s<<", collected_text_raw, suffix_text)
+        collected_text += suffix_text
+        collected_text_raw += suffix_text
         LOGGER.debug(">>collect_text_from_blocks>>%s<<", collected_text)
-        return collected_text
+        LOGGER.debug(">>collected_text_raw>>%s<<", collected_text_raw)
+        return collected_text, collected_text_raw
 
     @staticmethod
     def __parse_angle_link_destination(source_text, new_index):
@@ -499,6 +530,7 @@ class LinkHelper:
 
         LOGGER.debug("parse_link_destination>>new_index>>%s>>", source_text[new_index:])
         start_index = new_index
+        did_use_angle_start = False
         if ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__angle_link_start
         ):
@@ -507,6 +539,7 @@ class LinkHelper:
                 str(new_index),
                 str(source_text[new_index:]),
             )
+            did_use_angle_start = True
             new_index, ex_link = LinkHelper.__parse_angle_link_destination(
                 source_text, new_index
             )
@@ -530,10 +563,10 @@ class LinkHelper:
                 str(ex_link),
             )
             if not ex_link:
-                return None, None, -1, None
+                return None, None, -1, None, None
 
         if new_index != -1 and "\n" in ex_link:
-            return None, None, -1, None
+            return None, None, -1, None, None
         LOGGER.debug(
             "handle_backslashes>>new_index>>%s>>ex_link>>%s>>",
             str(new_index),
@@ -554,7 +587,13 @@ class LinkHelper:
             str(new_index),
             str(ex_link),
         )
-        return ex_link, pre_handle_link, new_index, source_text[start_index:new_index]
+        return (
+            ex_link,
+            pre_handle_link,
+            new_index,
+            source_text[start_index:new_index],
+            did_use_angle_start,
+        )
 
     @staticmethod
     def __parse_link_title(source_text, new_index):
@@ -565,21 +604,25 @@ class LinkHelper:
         LOGGER.debug("parse_link_title>>new_index>>%s>>", source_text[new_index:])
         ex_title = ""
         pre_ex_title = ""
+        bounding_character = ""
         if ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_title_single
         ):
+            bounding_character = LinkHelper.__link_title_single
             new_index, ex_title = InlineHelper.extract_bounded_string(
                 source_text, new_index + 1, LinkHelper.__link_title_single, None
             )
         elif ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_title_double
         ):
+            bounding_character = LinkHelper.__link_title_double
             new_index, ex_title = InlineHelper.extract_bounded_string(
                 source_text, new_index + 1, LinkHelper.__link_title_double, None
             )
         elif ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_title_parenthesis_open
         ):
+            bounding_character = LinkHelper.__link_title_parenthesis_open
             new_index, ex_title = InlineHelper.extract_bounded_string(
                 source_text,
                 new_index + 1,
@@ -603,7 +646,7 @@ class LinkHelper:
         LOGGER.debug("parse_link_title>>pre>>%s>>", str(pre_ex_title))
         LOGGER.debug("parse_link_title>>after>>%s>>", str(ex_title))
 
-        return ex_title, pre_ex_title, new_index
+        return ex_title, pre_ex_title, new_index, bounding_character
 
     @staticmethod
     def __process_inline_link_body(source_text, new_index):
@@ -616,25 +659,45 @@ class LinkHelper:
         pre_inline_link = ""
         inline_title = ""
         pre_inline_title = ""
-        new_index, _ = ParserHelper.extract_any_whitespace(source_text, new_index)
+        did_use_angle_start = ""
+        bounding_character = ""
+        before_title_whitespace = ""
+        after_title_whitespace = ""
+
+        new_index, before_link_whitespace = ParserHelper.extract_any_whitespace(
+            source_text, new_index
+        )
+
         LOGGER.debug(
             "new_index>>%s>>source_text[]>>%s>", str(new_index), source_text[new_index:]
         )
         if not ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_format_inline_end
         ):
+            LOGGER.debug(">>search for link destination")
             (
                 inline_link,
                 pre_inline_link,
                 new_index,
                 _,
+                did_use_angle_start,
             ) = LinkHelper.__parse_link_destination(source_text, new_index)
+            LOGGER.debug(
+                ">>link destination>>%s>>%s>>",
+                source_text.replace("\n", "\\n"),
+                str(new_index),
+            )
             if new_index != -1:
-                LOGGER.debug("before ws>>%s<", source_text[new_index:])
-                new_index, _ = ParserHelper.extract_any_whitespace(
-                    source_text, new_index
+                LOGGER.debug(
+                    "before ws>>%s<", source_text[new_index:].replace("\n", "\\n")
                 )
-                LOGGER.debug("after ws>>%s>", source_text[new_index:])
+                (
+                    new_index,
+                    before_title_whitespace,
+                ) = ParserHelper.extract_any_whitespace(source_text, new_index)
+                LOGGER.debug(
+                    "after ws>>%s>", source_text[new_index:].replace("\n", "\\n")
+                )
                 if ParserHelper.is_character_at_index_not(
                     source_text, new_index, LinkHelper.__link_format_inline_end
                 ):
@@ -642,11 +705,13 @@ class LinkHelper:
                         inline_title,
                         pre_inline_title,
                         new_index,
+                        bounding_character,
                     ) = LinkHelper.__parse_link_title(source_text, new_index)
                 if new_index != -1:
-                    new_index, _ = ParserHelper.extract_any_whitespace(
-                        source_text, new_index
-                    )
+                    (
+                        new_index,
+                        after_title_whitespace,
+                    ) = ParserHelper.extract_any_whitespace(source_text, new_index)
         LOGGER.debug(
             "inline_link>>%s>>inline_title>>%s>new_index>%s>",
             str(inline_link),
@@ -666,7 +731,18 @@ class LinkHelper:
             str(inline_title),
             str(new_index),
         )
-        return inline_link, pre_inline_link, inline_title, pre_inline_title, new_index
+        return (
+            inline_link,
+            pre_inline_link,
+            inline_title,
+            pre_inline_title,
+            new_index,
+            did_use_angle_start,
+            bounding_character,
+            before_link_whitespace,
+            before_title_whitespace,
+            after_title_whitespace,
+        )
 
     @staticmethod
     def resolve_backspaces_from_text(token_text):
@@ -707,6 +783,7 @@ class LinkHelper:
 
     # pylint: disable=too-many-arguments
     # pylint: disable=too-many-locals
+    # pylint: disable=too-many-statements
     @staticmethod
     def __handle_link_types(
         inline_blocks,
@@ -727,19 +804,40 @@ class LinkHelper:
             str(ind),
             str(len(inline_blocks)),
         )
+        LOGGER.debug(
+            "handle_link_types>source_text>>%s<<", source_text.replace("\n", "\\n")
+        )
         LOGGER.debug("handle_link_types>>%s<<", source_text[new_index:])
         LOGGER.debug(
             "handle_link_types>>current_string_unresolved>>%s<<remaining_line<<%s>>",
-            str(current_string_unresolved),
-            str(remaining_line),
+            str(current_string_unresolved).replace("\b", "\\b"),
+            str(remaining_line).replace("\b", "\\b"),
         )
-        text_from_blocks = LinkHelper.__collect_text_from_blocks(
+        text_from_blocks, text_from_blocks_raw = LinkHelper.__collect_text_from_blocks(
             inline_blocks, ind, current_string_unresolved + remaining_line
         )
+        LOGGER.debug(
+            "handle_link_types>>text_from_blocks>>%s<<%s<<",
+            str(len(text_from_blocks)),
+            text_from_blocks,
+        )
+        LOGGER.debug(
+            "handle_link_types>>text_from_blocks_raw>>%s<<%s<<",
+            str(len(text_from_blocks_raw)),
+            text_from_blocks_raw,
+        )
+        LOGGER.debug("handle_link_types>>text_from_blocks>>%s<<", text_from_blocks)
+        while InlineHelper.backspace_character in text_from_blocks:
+            backspace_index = text_from_blocks.index(InlineHelper.backspace_character)
+            text_from_blocks = (
+                text_from_blocks[0 : backspace_index - 1]
+                + text_from_blocks[backspace_index + 1 :]
+            )
         LOGGER.debug("handle_link_types>>text_from_blocks>>%s<<", text_from_blocks)
 
         consume_rest_of_line = False
 
+        LOGGER.debug("__look_for_link_formats>>%s>>", str(new_index))
         (
             inline_link,
             pre_inline_link,
@@ -749,8 +847,15 @@ class LinkHelper:
             tried_full_reference_form,
             ex_label,
             label_type,
+            did_use_angle_start,
+            inline_title_bounding_character,
+            before_link_whitespace,
+            before_title_whitespace,
+            after_title_whitespace,
         ) = LinkHelper.__look_for_link_formats(source_text, new_index, text_from_blocks)
 
+        # u != -1 - inline valid
+        # tried_full_reference_form - collapsed or full valid
         if update_index == -1 and not tried_full_reference_form:
             ex_label = ""
             LOGGER.debug("shortcut?")
@@ -770,6 +875,7 @@ class LinkHelper:
             pre_inline_link = ""
 
         token_to_append = None
+        LOGGER.debug("<<<<<<<update_index<<<<<<<%s<<", str(update_index))
         if update_index != -1:
             LOGGER.debug("<<<<<<<start_text<<<<<<<%s<<", str(start_text))
             LOGGER.debug(">>inline_link>>%s>>", inline_link)
@@ -782,6 +888,17 @@ class LinkHelper:
             if pre_inline_title == inline_title:
                 pre_inline_title = ""
             LOGGER.debug(">>pre_inline_link>>%s>>", pre_inline_link)
+
+            while InlineHelper.backspace_character in text_from_blocks_raw:
+                backspace_index = text_from_blocks_raw.index(
+                    InlineHelper.backspace_character
+                )
+                text_from_blocks_raw = (
+                    text_from_blocks_raw[0 : backspace_index - 1]
+                    + text_from_blocks_raw[backspace_index + 1 :]
+                )
+            LOGGER.debug(">>text_from_blocks_raw>>%s>>", text_from_blocks_raw)
+
             if start_text == LinkHelper.__link_start_sequence:
                 inline_blocks[ind] = LinkStartMarkdownToken(
                     inline_link,
@@ -790,7 +907,12 @@ class LinkHelper:
                     pre_inline_title,
                     ex_label,
                     label_type,
-                    text_from_blocks,
+                    text_from_blocks_raw,
+                    did_use_angle_start,
+                    inline_title_bounding_character,
+                    before_link_whitespace,
+                    before_title_whitespace,
+                    after_title_whitespace,
                 )
                 token_to_append = EndMarkdownToken(
                     MarkdownToken.token_inline_link, "", "", None
@@ -798,8 +920,18 @@ class LinkHelper:
             else:
                 assert start_text == LinkHelper.image_start_sequence
                 consume_rest_of_line = True
+                LOGGER.debug(
+                    "\n>>__consume_text_for_image_alt_text>>%s>>", str(inline_blocks)
+                )
+                LOGGER.debug("\n>>__consume_text_for_image_alt_text>>%s>>", str(ind))
+                LOGGER.debug(
+                    "\n>>__consume_text_for_image_alt_text>>%s>>", str(remaining_line)
+                )
                 image_alt_text = LinkHelper.__consume_text_for_image_alt_text(
                     inline_blocks, ind, remaining_line
+                )
+                LOGGER.debug(
+                    "\n>>__consume_text_for_image_alt_text>>%s>>", str(image_alt_text)
                 )
 
                 inline_blocks[ind] = ImageStartMarkdownToken(
@@ -810,7 +942,12 @@ class LinkHelper:
                     image_alt_text,
                     ex_label,
                     label_type,
-                    text_from_blocks,
+                    text_from_blocks_raw,
+                    did_use_angle_start,
+                    inline_title_bounding_character,
+                    before_link_whitespace,
+                    before_title_whitespace,
+                    after_title_whitespace,
                 )
                 LOGGER.debug("\n>>Image>>%s", str(inline_blocks))
                 LOGGER.debug(">>start_text>>%s<<", str(start_text))
@@ -827,9 +964,11 @@ class LinkHelper:
         )
         return update_index, token_to_append, consume_rest_of_line
 
+    # pylint: enable=too-many-statements
     # pylint: enable=too-many-arguments
     # pylint: enable=too-many-locals
 
+    # pylint: disable=too-many-locals
     @staticmethod
     def __look_for_link_formats(source_text, new_index, text_from_blocks):
         """
@@ -842,17 +981,27 @@ class LinkHelper:
         update_index = -1
         ex_label = ""
         label_type = ""
+        did_use_angle_start = ""
+        bounding_character = ""
+        before_link_whitespace = ""
+        before_title_whitespace = ""
+        after_title_whitespace = ""
         tried_full_reference_form = False
         if ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_format_inline_start
         ):
-            LOGGER.debug("inline reference?")
+            LOGGER.debug("inline reference? >>%s>>", str(new_index))
             (
                 inline_link,
                 pre_inline_link,
                 inline_title,
                 pre_inline_title,
                 update_index,
+                did_use_angle_start,
+                bounding_character,
+                before_link_whitespace,
+                before_title_whitespace,
+                after_title_whitespace,
             ) = LinkHelper.__process_inline_link_body(source_text, new_index + 1)
             label_type = "inline"
         elif ParserHelper.is_character_at_index(
@@ -901,7 +1050,14 @@ class LinkHelper:
             tried_full_reference_form,
             ex_label,
             label_type,
+            did_use_angle_start,
+            bounding_character,
+            before_link_whitespace,
+            before_title_whitespace,
+            after_title_whitespace,
         )
+
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def __encode_link_destination(link_to_encode):
@@ -940,3 +1096,123 @@ class LinkHelper:
                 before_data, safe=LinkHelper.__link_safe_characters
             )
         return encoded_link
+
+    @staticmethod
+    def rehydrate_inline_image_text_from_token(image_token):
+        """
+        Given an image token, rehydrate it's original text from the token.
+        """
+
+        if image_token.pre_image_uri:
+            image_uri = image_token.pre_image_uri
+        else:
+            image_uri = image_token.image_uri
+
+        if image_token.pre_image_title:
+            image_title = image_token.pre_image_title
+        else:
+            image_title = image_token.image_title
+
+        image_text = ""
+        if image_token.label_type == "inline":
+            if image_token.did_use_angle_start:
+                image_uri = "<" + image_uri + ">"
+
+            link_text = image_token.text_from_blocks.replace(
+                InlineHelper.backspace_character, ""
+            ).replace("\x08", "")
+            image_text = (
+                "![" + link_text + "](" + image_token.before_link_whitespace + image_uri
+            )
+            if image_title:
+                title_prefix = '"'
+                title_suffix = '"'
+                if image_token.inline_title_bounding_character == "'":
+                    title_prefix = "'"
+                    title_suffix = "'"
+                elif image_token.inline_title_bounding_character == "(":
+                    title_prefix = "("
+                    title_suffix = ")"
+
+                image_text += (
+                    image_token.before_title_whitespace
+                    + title_prefix
+                    + image_title
+                    + title_suffix
+                    + image_token.after_title_whitespace
+                )
+            image_text += ")"
+        elif image_token.label_type == "shortcut":
+            link_text = image_token.text_from_blocks.replace(
+                InlineHelper.backspace_character, ""
+            ).replace("\x08", "")
+            image_text = "![" + link_text + "]"
+        elif image_token.label_type == "full":
+            image_text = (
+                "![" + image_token.text_from_blocks + "][" + image_token.ex_label + "]"
+            )
+        elif image_token.label_type == "collapsed":
+            image_text = "![" + image_token.text_from_blocks + "][]"
+
+        return image_text
+
+    @staticmethod
+    def rehydrate_inline_link_text_from_token(link_token):
+        """
+        Given a link token, rehydrate it's original text from the token.
+        """
+
+        link_text = ""
+        if link_token.label_type == "shortcut":
+            link_label = link_token.text_from_blocks.replace(
+                InlineHelper.backspace_character, ""
+            ).replace("\x08", "")
+            link_text = "[" + link_label + "]"
+        elif link_token.label_type == "full":
+
+            link_text = (
+                "[" + link_token.text_from_blocks + "][" + link_token.ex_label + "]"
+            )
+
+        elif link_token.label_type == "collapsed":
+
+            link_text = "[" + link_token.text_from_blocks + "][]"
+        elif link_token.label_type == "inline":
+
+            if link_token.pre_link_uri:
+                link_uri = link_token.pre_link_uri
+            else:
+                link_uri = link_token.link_uri
+            if link_token.did_use_angle_start:
+                link_uri = "<" + link_uri + ">"
+
+            link_label = link_token.text_from_blocks.replace(
+                InlineHelper.backspace_character, ""
+            ).replace("\x08", "")
+            link_text = (
+                "[" + link_label + "](" + link_token.before_link_whitespace + link_uri
+            )
+            if link_token.link_title:
+                title_prefix = '"'
+                title_suffix = '"'
+                if link_token.inline_title_bounding_character == "'":
+                    title_prefix = "'"
+                    title_suffix = "'"
+                elif link_token.inline_title_bounding_character == "(":
+                    title_prefix = "("
+                    title_suffix = ")"
+
+                if link_token.pre_link_title:
+                    link_title = link_token.pre_link_title
+                else:
+                    link_title = link_token.link_title
+
+                link_text += (
+                    link_token.before_title_whitespace
+                    + title_prefix
+                    + link_title
+                    + title_suffix
+                    + link_token.after_title_whitespace
+                )
+            link_text += ")"
+        return link_text

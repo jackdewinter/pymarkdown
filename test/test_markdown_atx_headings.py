@@ -280,7 +280,7 @@ def test_atx_headings_040():
 # bar</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

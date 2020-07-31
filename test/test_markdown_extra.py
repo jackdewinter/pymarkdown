@@ -67,7 +67,7 @@ def test_extra_003():
     source_markdown = "[link](!\"#$%&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~)"
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:!%22#$%25&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~::!\"#$%&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~:::link]",
+        "[link:inline:!%22#$%25&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~::!\"#$%&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~:::link:False::::]",
         "[text:link:]",
         "[end-link::]",
         "[end-para]",
@@ -102,7 +102,7 @@ def test_extra_004():
     )
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:!%22#$%12&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~::!\"#$%12&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~:::link]",
+        "[link:inline:!%22#$%12&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~::!\"#$%12&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~:::link:False::::]",
         "[text:link:]",
         "[end-link::]",
         "[end-para]",
@@ -132,7 +132,7 @@ def test_extra_005():
     source_markdown = "[link](http://google.com/search%)"
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:http://google.com/search%25::http://google.com/search%:::link]",
+        "[link:inline:http://google.com/search%25::http://google.com/search%:::link:False::::]",
         "[text:link:]",
         "[end-link::]",
         "[end-para]",

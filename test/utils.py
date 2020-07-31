@@ -446,10 +446,16 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
             + source_markdown.replace("\x02", "\\x02")
             .replace("\x03", "\\x03")
             .replace("\n", "\\n")
+            .replace("\a", "\\a")
+            .replace("\b", "\\b")
+            .replace("\t", "\\t")
             + "\n-=-=-\nActual\n-=-=-\n"
             + original_markdown.replace("\x02", "\\x02")
             .replace("\x03", "\\x03")
             .replace("\n", "\\n")
+            .replace("\a", "\\a")
+            .replace("\b", "\\b")
+            .replace("\t", "\\t")
             + "\n-=-=-\n"
         )
         diff = difflib.ndiff(source_markdown, original_markdown)

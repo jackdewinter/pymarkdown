@@ -334,7 +334,7 @@ def test_backslash_escapes_318():
     source_markdown = """[foo](/bar\\* "ti\\*tle")"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:/bar*:ti*tle:/bar\\*:ti\\*tle::foo]",
+        '[link:inline:/bar*:ti*tle:/bar\\*:ti\\*tle::foo:False:":: :]',
         "[text:foo:]",
         "[end-link::]",
         "[end-para]",
@@ -366,7 +366,7 @@ def test_backslash_escapes_319():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[link:shortcut:/bar*:ti*tle::::foo]",
+        "[link:shortcut:/bar*:ti*tle::::foo:::::]",
         "[text:foo:]",
         "[end-link::]",
         "[end-para]",

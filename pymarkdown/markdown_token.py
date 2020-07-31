@@ -962,6 +962,7 @@ class UriAutolinkMarkdownToken(MarkdownToken):
         )
 
 
+# pylint: disable=too-many-instance-attributes
 class LinkStartMarkdownToken(MarkdownToken):
     """
     Class to provide for an encapsulation of the link element.
@@ -977,6 +978,11 @@ class LinkStartMarkdownToken(MarkdownToken):
         ex_label,
         label_type,
         text_from_blocks,
+        did_use_angle_start,
+        inline_title_bounding_character,
+        before_link_whitespace,
+        before_title_whitespace,
+        after_title_whitespace,
     ):
         self.link_uri = link_uri
         self.link_title = link_title
@@ -985,6 +991,11 @@ class LinkStartMarkdownToken(MarkdownToken):
         self.ex_label = ex_label
         self.label_type = label_type
         self.text_from_blocks = text_from_blocks
+        self.did_use_angle_start = did_use_angle_start
+        self.inline_title_bounding_character = inline_title_bounding_character
+        self.before_link_whitespace = before_link_whitespace
+        self.before_title_whitespace = before_title_whitespace
+        self.after_title_whitespace = after_title_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_inline_link,
@@ -1001,10 +1012,23 @@ class LinkStartMarkdownToken(MarkdownToken):
             + ":"
             + ex_label
             + ":"
-            + text_from_blocks,
+            + text_from_blocks
+            + ":"
+            + str(did_use_angle_start)
+            + ":"
+            + inline_title_bounding_character
+            + ":"
+            + before_link_whitespace
+            + ":"
+            + before_title_whitespace
+            + ":"
+            + after_title_whitespace,
         )
 
     # pylint: enable=too-many-arguments
+
+
+# pylint: enable=too-many-instance-attributes
 
 
 # pylint: disable=too-many-instance-attributes
@@ -1024,6 +1048,11 @@ class ImageStartMarkdownToken(MarkdownToken):
         ex_label,
         label_type,
         text_from_blocks,
+        did_use_angle_start,
+        inline_title_bounding_character,
+        before_link_whitespace,
+        before_title_whitespace,
+        after_title_whitespace,
     ):
         self.image_uri = image_uri
         self.image_title = image_title
@@ -1033,6 +1062,11 @@ class ImageStartMarkdownToken(MarkdownToken):
         self.ex_label = ex_label
         self.label_type = label_type
         self.text_from_blocks = text_from_blocks
+        self.did_use_angle_start = did_use_angle_start
+        self.inline_title_bounding_character = inline_title_bounding_character
+        self.before_link_whitespace = before_link_whitespace
+        self.before_title_whitespace = before_title_whitespace
+        self.after_title_whitespace = after_title_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_inline_image,
@@ -1051,7 +1085,17 @@ class ImageStartMarkdownToken(MarkdownToken):
             + ":"
             + ex_label
             + ":"
-            + text_from_blocks,
+            + text_from_blocks
+            + ":"
+            + str(did_use_angle_start)
+            + ":"
+            + inline_title_bounding_character
+            + ":"
+            + before_link_whitespace
+            + ":"
+            + before_title_whitespace
+            + ":"
+            + after_title_whitespace,
         )
 
     # pylint: enable=too-many-arguments

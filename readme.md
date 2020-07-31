@@ -63,6 +63,8 @@
 - 553 with other in-lines?
 - what if bad link definition discovered multiple lines down, how to back track?
 - split up link definition within a block quote or list?
+- 518, but in a setext
+- possible to merge link token and image token more closely?
 
 ## Bugs - Rounding Out Rules
 
