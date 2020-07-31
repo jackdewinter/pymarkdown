@@ -561,12 +561,10 @@ class InlineProcessor:
             )
             if extracted_whitespace:
                 inline_response.new_index = new_index
-                if end_string:
-                    end_string += extracted_whitespace
-                else:
-                    end_string = extracted_whitespace
-                if is_setext:
-                    end_string += "\x02"
+                assert end_string is not None
+                end_string += extracted_whitespace
+                assert is_setext
+                end_string += "\x02"
                 LOGGER.debug(
                     "__arw>>end_string>>%s>>",
                     str(end_string).replace("\n", "\\n").replace("\x02", "\\x02"),

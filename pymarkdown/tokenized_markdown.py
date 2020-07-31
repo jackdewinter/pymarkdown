@@ -147,9 +147,11 @@ class TokenizedMarkdown:
                 if not lines_to_requeue:
                     break
 
-                if was_link_definition_started_before_close and not lines_to_requeue[0]:
-                    del lines_to_requeue[0]
-                    line_number -= 1
+                assert was_link_definition_started_before_close
+                assert not lines_to_requeue[0]
+
+                del lines_to_requeue[0]
+                line_number -= 1
 
                 did_start_close = False
                 tokens_from_line = None

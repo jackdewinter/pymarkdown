@@ -827,12 +827,7 @@ class LinkHelper:
             text_from_blocks_raw,
         )
         LOGGER.debug("handle_link_types>>text_from_blocks>>%s<<", text_from_blocks)
-        while InlineHelper.backspace_character in text_from_blocks:
-            backspace_index = text_from_blocks.index(InlineHelper.backspace_character)
-            text_from_blocks = (
-                text_from_blocks[0 : backspace_index - 1]
-                + text_from_blocks[backspace_index + 1 :]
-            )
+        text_from_blocks = LinkHelper.resolve_backspaces_from_text(text_from_blocks)
         LOGGER.debug("handle_link_types>>text_from_blocks>>%s<<", text_from_blocks)
 
         consume_rest_of_line = False
@@ -1151,7 +1146,8 @@ class LinkHelper:
             image_text = (
                 "![" + image_token.text_from_blocks + "][" + image_token.ex_label + "]"
             )
-        elif image_token.label_type == "collapsed":
+        else:
+            assert image_token.label_type == "collapsed"
             image_text = "![" + image_token.text_from_blocks + "][]"
 
         return image_text
@@ -1177,7 +1173,8 @@ class LinkHelper:
         elif link_token.label_type == "collapsed":
 
             link_text = "[" + link_token.text_from_blocks + "][]"
-        elif link_token.label_type == "inline":
+        else:
+            assert link_token.label_type == "inline"
 
             if link_token.pre_link_uri:
                 link_uri = link_token.pre_link_uri
