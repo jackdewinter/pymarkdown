@@ -500,14 +500,12 @@ class InlineProcessor:
                 "<<current_string<<%s<<%s<<",
                 str(len(current_string)),
                 ParserHelper.make_value_visible(current_string)
-                .replace("\a", "\\a")
                 .replace("\n", "\\n"),
             )
             LOGGER.debug(
                 "<<current_string_unresolved<<%s<<%s<<",
                 str(len(current_string_unresolved)),
                 ParserHelper.make_value_visible(current_string_unresolved)
-                .replace("\a", "\\a")
                 .replace("\n", "\\n"),
             )
 
@@ -594,48 +592,40 @@ class InlineProcessor:
         LOGGER.debug(
             "__complete_inline_loop--new_string_unresolved>>%s>>",
             ParserHelper.make_value_visible(new_string_unresolved)
-            .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )
         LOGGER.debug(
             "__complete_inline_loop--original_string>>%s>>",
             ParserHelper.make_value_visible(original_string)
-            .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )
 
+        LOGGER.debug(
+            "__complete_inline_loop--current_string>>%s>>",
+            ParserHelper.make_value_visible(current_string)
+            .replace("\n", "\\n"),
+        )
         if original_string is not None:
             assert not new_string_unresolved or new_string_unresolved == original_string
-            current_string += "\a" + original_string + "\a"
-
+            current_string += ParserHelper.create_replacement_markers(original_string, InlineHelper.append_text("", new_string))
+        else:
+            current_string = InlineHelper.append_text(current_string, new_string)
         LOGGER.debug(
             "__complete_inline_loop--current_string>>%s>>",
             ParserHelper.make_value_visible(current_string)
-            .replace("\a", "\\a")
-            .replace("\n", "\\n"),
-        )
-        current_string = InlineHelper.append_text(current_string, new_string)
-        LOGGER.debug(
-            "__complete_inline_loop--current_string>>%s>>",
-            ParserHelper.make_value_visible(current_string)
-            .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )
 
-        if original_string is not None:
-            current_string += "\a"
 
         LOGGER.debug(
             "__complete_inline_loop--current_string>>%s>>",
             ParserHelper.make_value_visible(current_string)
-            .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )
 
         LOGGER.debug(
             "new_string_unresolved>>%s>>",
             ParserHelper.make_value_visible(new_string_unresolved)
-            .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )
         if new_string_unresolved:
@@ -648,7 +638,6 @@ class InlineProcessor:
         LOGGER.debug(
             "__complete_inline_loop--current_string_unresolved>>%s>>",
             ParserHelper.make_value_visible(current_string_unresolved)
-            .replace("\a", "\\a")
             .replace("\n", "\\n"),
         )
 

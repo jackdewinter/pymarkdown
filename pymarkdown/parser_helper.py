@@ -10,6 +10,8 @@ class ParserHelper:
     """
 
     __backspace_character = "\b"
+    __alert_character = "\a"
+
     backslash_character = "\\"
 
     backslash_escape_sequence = backslash_character + __backspace_character
@@ -360,7 +362,10 @@ class ParserHelper:
     def make_value_visible(value_to_modify):
         df = str(value_to_modify)
         return df \
-            .replace(ParserHelper.__backspace_character, "\\b")
+            .replace(ParserHelper.__backspace_character, "\\b") \
+            .replace(ParserHelper.__alert_character, "\\a") \
+            .replace("\\x07", "\\a") \
+            .replace("\\x08", "\\b")
 
     @staticmethod
     def remove_backspaces_from_text(token_text):
@@ -385,6 +390,106 @@ class ParserHelper:
             )
         return adjusted_text_token
 
+    @staticmethod
+    def create_replacement_markers(replace_this_string, with_this_string):
+        return ParserHelper.__alert_character \
+            + replace_this_string \
+            + ParserHelper.__alert_character \
+            + with_this_string \
+            + ParserHelper.__alert_character
+
+    @staticmethod
+    def resolve_replacement_markers_from_text(main_text):
+        """
+        Resolve the alert characters (i.e. replacement markers) out of the text string.
+        """
+
+        while ParserHelper.__alert_character in main_text:
+            start_replacement_index = main_text.index(ParserHelper.__alert_character)
+            middle_replacement_index = main_text.index(
+                ParserHelper.__alert_character, start_replacement_index + 1
+            )
+            end_replacement_index = main_text.index(ParserHelper.__alert_character, middle_replacement_index + 1)
+
+            replace_text = main_text[
+                start_replacement_index + 1 : middle_replacement_index
+            ]
+
+            # It is possible to have one level of nesting, so deal with it.
+            if middle_replacement_index + 1 == end_replacement_index:
+                inner_start_replacement_index = main_text.index(
+                    ParserHelper.__alert_character, end_replacement_index + 1
+                )
+                inner_middle_replacement_index = main_text.index(
+                    ParserHelper.__alert_character, inner_start_replacement_index + 1
+                )
+                inner_end_replacement_index = main_text.index(
+                    ParserHelper.__alert_character, inner_middle_replacement_index + 1
+                )
+                assert inner_middle_replacement_index + 1 == inner_end_replacement_index
+                end_replacement_index = inner_end_replacement_index
+
+            if start_replacement_index:
+                main_text = (
+                    main_text[0:start_replacement_index]
+                    + replace_text
+                    + main_text[end_replacement_index + 1 :]
+                )
+            else:
+                main_text = replace_text + main_text[end_replacement_index + 1 :]
+            print(
+                ">>rehydrate_text>>"
+                + str(len(main_text))
+                + ">>"
+                + ParserHelper.make_value_visible(main_text).replace("\n", "\\n")
+            )
+        return main_text
+
+    @staticmethod
+    def resolve_references_from_text(adjusted_text_token):
+        """
+        The alert characters signal that a replacement has occurred, so make sure
+        we take the right text from the replacement.
+        """
+        while ParserHelper.__alert_character in adjusted_text_token:
+            start_replacement_index = adjusted_text_token.index(ParserHelper.__alert_character)
+            middle_replacement_index = adjusted_text_token.index(
+                ParserHelper.__alert_character, start_replacement_index + 1
+            )
+            end_replacement_index = adjusted_text_token.index(
+                ParserHelper.__alert_character, middle_replacement_index + 1
+            )
+
+            if middle_replacement_index + 1 == end_replacement_index:
+                inner_start_replacement_index = adjusted_text_token.index(
+                    ParserHelper.__alert_character, end_replacement_index + 1
+                )
+                inner_middle_replacement_index = adjusted_text_token.index(
+                    ParserHelper.__alert_character, inner_start_replacement_index + 1
+                )
+                inner_end_replacement_index = adjusted_text_token.index(
+                    ParserHelper.__alert_character, inner_middle_replacement_index + 1
+                )
+                replace_text = adjusted_text_token[
+                    inner_start_replacement_index + 1 : inner_middle_replacement_index
+                ]
+                assert inner_middle_replacement_index + 1 == inner_end_replacement_index
+                end_replacement_index = inner_end_replacement_index
+            else:
+                replace_text = adjusted_text_token[
+                    middle_replacement_index + 1 : end_replacement_index
+                ]
+            if start_replacement_index:
+                adjusted_text_token = (
+                    adjusted_text_token[0:start_replacement_index]
+                    + replace_text
+                    + adjusted_text_token[end_replacement_index + 1 :]
+                )
+            else:
+                adjusted_text_token = (
+                    replace_text + adjusted_text_token[end_replacement_index + 1 :]
+                )
+        return adjusted_text_token
 
 # pylint: enable=too-many-public-methods
 

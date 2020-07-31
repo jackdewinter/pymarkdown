@@ -99,7 +99,6 @@ class InlineHelper:
     __angle_bracket_end = ">"
     code_span_bounds = "`"
     backslash_character = "\\"
-    __alert_character = "\a"
     __entity_map = {}
     character_reference_start_character = "&"
     __numeric_character_reference_start_character = "#"
@@ -304,15 +303,11 @@ class InlineHelper:
         while next_index != -1:
 
             string_part = text_to_append[start_index:next_index]
+            escaped_part = alternate_escape_map[text_to_append[next_index]]
             if add_text_signature:
-                string_part += (
-                    InlineHelper.__alert_character
-                    + text_to_append[next_index]
-                    + InlineHelper.__alert_character
-                )
-            string_part += alternate_escape_map[text_to_append[next_index]]
-            if add_text_signature:
-                string_part += InlineHelper.__alert_character
+                string_part += ParserHelper.create_replacement_markers(text_to_append[next_index], escaped_part)
+            else:
+                string_part += escaped_part
 
             string_to_append_to += string_part
 
@@ -387,9 +382,10 @@ class InlineHelper:
                     trailing_whitespace = between_text[-1]
                     between_text = stripped_between_attempt
 
-            between_text = between_text.replace("\n", "\a\n\a \a")
-            leading_whitespace = leading_whitespace.replace("\n", "\a\n\a \a")
-            trailing_whitespace = trailing_whitespace.replace("\n", "\a\n\a \a")
+            replaced_newline = ParserHelper.create_replacement_markers("\n", " ")
+            between_text = between_text.replace("\n", replaced_newline)
+            leading_whitespace = leading_whitespace.replace("\n", replaced_newline)
+            trailing_whitespace = trailing_whitespace.replace("\n", replaced_newline)
 
             between_text = InlineHelper.append_text("", between_text)
             LOGGER.debug("between_text>>%s<<", between_text)

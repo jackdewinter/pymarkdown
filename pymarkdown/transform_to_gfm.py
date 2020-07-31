@@ -444,62 +444,16 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def resolve_references_from_text(cls, adjusted_text_token):
-        """
-        The alert characters signal that a replacement has occurred, so make sure
-        we take the right text from the replacement.
-        """
-        while "\a" in adjusted_text_token:
-            start_replacement_index = adjusted_text_token.index("\a")
-            middle_replacement_index = adjusted_text_token.index(
-                "\a", start_replacement_index + 1
-            )
-            end_replacement_index = adjusted_text_token.index(
-                "\a", middle_replacement_index + 1
-            )
-
-            if middle_replacement_index + 1 == end_replacement_index:
-                inner_start_replacement_index = adjusted_text_token.index(
-                    "\a", end_replacement_index + 1
-                )
-                inner_middle_replacement_index = adjusted_text_token.index(
-                    "\a", inner_start_replacement_index + 1
-                )
-                inner_end_replacement_index = adjusted_text_token.index(
-                    "\a", inner_middle_replacement_index + 1
-                )
-                replace_text = adjusted_text_token[
-                    inner_start_replacement_index + 1 : inner_middle_replacement_index
-                ]
-                assert inner_middle_replacement_index + 1 == inner_end_replacement_index
-                end_replacement_index = inner_end_replacement_index
-            else:
-                replace_text = adjusted_text_token[
-                    middle_replacement_index + 1 : end_replacement_index
-                ]
-            if start_replacement_index:
-                adjusted_text_token = (
-                    adjusted_text_token[0:start_replacement_index]
-                    + replace_text
-                    + adjusted_text_token[end_replacement_index + 1 :]
-                )
-            else:
-                adjusted_text_token = (
-                    replace_text + adjusted_text_token[end_replacement_index + 1 :]
-                )
-        return adjusted_text_token
-
-    @classmethod
     def handle_text_token(cls, output_html, next_token, transform_state):
         """
         Handle the text token.
         """
         adjusted_text_token = ParserHelper.resolve_backspaces_from_text(next_token.token_text)
-        adjusted_text_token = cls.resolve_references_from_text(adjusted_text_token)
+        adjusted_text_token = ParserHelper.resolve_references_from_text(adjusted_text_token)
         adjusted_text_token = adjusted_text_token.replace("\x03", "")
 
         if transform_state.is_in_code_block:
-            extracted_whitespace = cls.resolve_references_from_text(
+            extracted_whitespace = ParserHelper.resolve_references_from_text(
                 next_token.extracted_whitespace
             )
             extracted_whitespace = extracted_whitespace.replace("\x03", "")
@@ -758,7 +712,7 @@ class TransformToGfm:
         """
         assert transform_state
         adjusted_text_token = ParserHelper.resolve_backspaces_from_text(next_token.span_text)
-        adjusted_text_token = cls.resolve_references_from_text(adjusted_text_token)
+        adjusted_text_token = ParserHelper.resolve_references_from_text(adjusted_text_token)
 
         output_html = output_html + "<code>" + adjusted_text_token + "</code>"
         return output_html

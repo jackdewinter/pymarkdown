@@ -413,25 +413,25 @@ class TransformToMarkdown:
         main_text = ParserHelper.remove_backspaces_from_text(next_token.token_text)
 
         print(
-            ">>rehydrate_text>>" + main_text.replace("\a", "\\a").replace("\n", "\\n")
+            ">>rehydrate_text>>" + ParserHelper.make_value_visible(main_text).replace("\n", "\\n")
         )
-        main_text = self.resolve_replacement_markers(main_text)
+        main_text = ParserHelper.resolve_replacement_markers_from_text(main_text)
         print(
-            "<<rehydrate_text>>" + main_text.replace("\a", "\\a").replace("\n", "\\n")
+            "<<rehydrate_text>>" + ParserHelper.make_value_visible(main_text).replace("\n", "\\n")
         )
 
         print(
             "<<leading_whitespace>>"
-            + next_token.extracted_whitespace.replace("\a", "\\a")
+            + ParserHelper.make_value_visible(next_token.extracted_whitespace)
             .replace("\n", "\\n")
             .replace("\x03", "\\x03")
         )
-        leading_whitespace = self.resolve_replacement_markers(
+        leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
             next_token.extracted_whitespace
         )
         print(
             "<<leading_whitespace>>"
-            + leading_whitespace.replace("\a", "\\a")
+            + ParserHelper.make_value_visible(leading_whitespace)
             .replace("\n", "\\n")
             .replace("\x03", "\\x03")
         )
@@ -622,11 +622,11 @@ class TransformToMarkdown:
         if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
             return ""
 
-        span_text = self.resolve_replacement_markers(next_token.span_text)
-        leading_whitespace = self.resolve_replacement_markers(
+        span_text = ParserHelper.resolve_replacement_markers_from_text(next_token.span_text)
+        leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
             next_token.leading_whitespace
         )
-        trailing_whitespace = self.resolve_replacement_markers(
+        trailing_whitespace = ParserHelper.resolve_replacement_markers_from_text(
             next_token.trailing_whitespace
         )
         return (
@@ -690,56 +690,5 @@ class TransformToMarkdown:
 
         print("<<" + recombined_text.replace("\n", "\\n") + ">>")
         return recombined_text
-
-    @classmethod
-    def resolve_replacement_markers(cls, main_text):
-        """
-        Resolve the alert characters (i.e. replacement markers) out of the text string.
-        """
-
-        while "\a" in main_text:
-            start_replacement_index = main_text.index("\a")
-            print(">>start_replacement_index>>" + str(start_replacement_index))
-            middle_replacement_index = main_text.index(
-                "\a", start_replacement_index + 1
-            )
-            print(">>middle_replacement_index>>" + str(middle_replacement_index))
-            end_replacement_index = main_text.index("\a", middle_replacement_index + 1)
-            print(">>end_replacement_index>>" + str(end_replacement_index))
-
-            replace_text = main_text[
-                start_replacement_index + 1 : middle_replacement_index
-            ]
-
-            # It is possible to have one level of nesting, so deal with it.
-            if middle_replacement_index + 1 == end_replacement_index:
-                inner_start_replacement_index = main_text.index(
-                    "\a", end_replacement_index + 1
-                )
-                inner_middle_replacement_index = main_text.index(
-                    "\a", inner_start_replacement_index + 1
-                )
-                inner_end_replacement_index = main_text.index(
-                    "\a", inner_middle_replacement_index + 1
-                )
-                assert inner_middle_replacement_index + 1 == inner_end_replacement_index
-                end_replacement_index = inner_end_replacement_index
-
-            if start_replacement_index:
-                main_text = (
-                    main_text[0:start_replacement_index]
-                    + replace_text
-                    + main_text[end_replacement_index + 1 :]
-                )
-            else:
-                main_text = replace_text + main_text[end_replacement_index + 1 :]
-            print(
-                ">>rehydrate_text>>"
-                + str(len(main_text))
-                + ">>"
-                + main_text.replace("\a", "\\a").replace("\n", "\\n")
-            )
-        return main_text
-
 
 # pylint: enable=too-many-public-methods
