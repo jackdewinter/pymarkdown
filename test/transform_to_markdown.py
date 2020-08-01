@@ -423,7 +423,6 @@ class TransformToMarkdown:
         print(
             "<<leading_whitespace>>"
             + ParserHelper.make_value_visible(next_token.extracted_whitespace)
-            .replace("\x03", "\\x03")
         )
         leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
             next_token.extracted_whitespace
@@ -431,7 +430,6 @@ class TransformToMarkdown:
         print(
             "<<leading_whitespace>>"
             + ParserHelper.make_value_visible(leading_whitespace)
-            .replace("\x03", "\\x03")
         )
         if self.block_stack:
             if (

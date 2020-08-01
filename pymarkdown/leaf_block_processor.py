@@ -209,8 +209,8 @@ class LeafBlockProcessor:
             LOGGER.debug("previous_ws>>%s", str(current_whitespace_length))
             LOGGER.debug("whitespace_left>>%s", str(whitespace_left))
             removed_whitespace = \
-                ParserHelper.create_replacement_markers(\
-                    "".rjust(current_whitespace_length - whitespace_left, " "), "\x03")
+                ParserHelper.create_replace_with_nothing_marker(\
+                    "".rjust(current_whitespace_length - whitespace_left, " "))
             extracted_whitespace = removed_whitespace + "".rjust(whitespace_left, " ")
         return new_tokens, extracted_whitespace
 

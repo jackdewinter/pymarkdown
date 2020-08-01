@@ -40,12 +40,10 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
     print(
         "expected_tokens: "
         + ParserHelper.make_value_visible(expected_tokens)
-        .replace("\x03", "\\x03")
     )
     print(
         "parsed_tokens  : "
         + ParserHelper.make_value_visible(actual_tokens)
-        .replace("\x03", "\\x03")
     )
     assert len(expected_tokens) == len(actual_tokens), (
         "List lengths are not the same: ("
@@ -68,7 +66,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             + str(len(expected_str))
             + ")>>"
             + ParserHelper.make_value_visible(expected_str)
-            .replace("\x03", "\\x03")
             + "<<"
         )
         print(
@@ -76,7 +73,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             + str(len(actual_str))
             + ")>>"
             + ParserHelper.make_value_visible(actual_str)
-            .replace("\x03", "\\x03")
             + "<<"
         )
 
@@ -102,7 +98,6 @@ def assert_if_strings_different(expected_string, actual_string):
     print(
         "expected_string>>"
         + ParserHelper.make_value_visible(expected_string)
-        .replace("\x03", "\\x03")
         + "<<"
     )
 
@@ -110,7 +105,6 @@ def assert_if_strings_different(expected_string, actual_string):
     print(
         "actual_string>>"
         + ParserHelper.make_value_visible(actual_string)
-        .replace("\x03", "\\x03")
         + "<<"
     )
 
@@ -420,10 +414,8 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
         print(
             "\n-=-=-\nExpected\n-=-=-\n"
             + ParserHelper.make_value_visible(source_markdown)
-            .replace("\x03", "\\x03")
             + "\n-=-=-\nActual\n-=-=-\n"
             + ParserHelper.make_value_visible(original_markdown)
-            .replace("\x03", "\\x03")
             + "\n-=-=-\n"
         )
         diff = difflib.ndiff(source_markdown, original_markdown)

@@ -12,6 +12,7 @@ class ParserHelper:
     __backspace_character = "\b"
     __alert_character = "\a"
     whitespace_split_character = "\x02"
+    __replace_noop_character = "\x03"
 
     backslash_character = "\\"
     newline_character = "\n"
@@ -367,8 +368,10 @@ class ParserHelper:
         return df \
             .replace(ParserHelper.__backspace_character, "\\b") \
             .replace(ParserHelper.__alert_character, "\\a") \
-            .replace(ParserHelper.whitespace_split_character, "\\x02")\
             .replace(ParserHelper.tab_character, "\\t") \
+            .replace(ParserHelper.newline_character, "\\n") \
+            .replace(ParserHelper.whitespace_split_character, "\\x02")\
+            .replace(ParserHelper.__replace_noop_character, "\\x03")\
             .replace("\\x07", "\\a") \
             .replace("\\x08", "\\b")
 
@@ -403,6 +406,14 @@ class ParserHelper:
             + ParserHelper.__alert_character \
             + with_this_string \
             + ParserHelper.__alert_character
+
+    @staticmethod
+    def create_replace_with_nothing_marker(replace_this_string):
+        return ParserHelper.create_replacement_markers(replace_this_string, ParserHelper.__replace_noop_character)
+
+    @staticmethod
+    def resolve_noops_from_text(token_text):
+        return token_text.replace(ParserHelper.__replace_noop_character, "")
 
     @staticmethod
     def resolve_replacement_markers_from_text(main_text):
