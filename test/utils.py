@@ -45,7 +45,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
     print(
         "parsed_tokens  : "
         + ParserHelper.make_value_visible(actual_tokens)
-        .replace("\t", "\\t")
         .replace("\x03", "\\x03")
     )
     assert len(expected_tokens) == len(actual_tokens), (
@@ -77,7 +76,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             + str(len(actual_str))
             + ")>>"
             + ParserHelper.make_value_visible(actual_str)
-            .replace("\t", "\\t")
             .replace("\x03", "\\x03")
             + "<<"
         )
@@ -104,7 +102,6 @@ def assert_if_strings_different(expected_string, actual_string):
     print(
         "expected_string>>"
         + ParserHelper.make_value_visible(expected_string)
-        .replace("\t", "\\t")
         .replace("\x03", "\\x03")
         + "<<"
     )
@@ -113,7 +110,6 @@ def assert_if_strings_different(expected_string, actual_string):
     print(
         "actual_string>>"
         + ParserHelper.make_value_visible(actual_string)
-        .replace("\t", "\\t")
         .replace("\x03", "\\x03")
         + "<<"
     )
@@ -139,15 +135,15 @@ def __calc_initial_whitespace(calc_token):
         MarkdownToken.token_setext_heading,
     ):
         indent_level = len(calc_token.extracted_whitespace)
-        had_tab = bool("\t" in calc_token.extracted_whitespace)
+        had_tab = bool(ParserHelper.tab_character in calc_token.extracted_whitespace)
     elif (
         calc_token.token_name == MarkdownToken.token_ordered_list_start
         or calc_token.token_name == MarkdownToken.token_unordered_list_start
     ):
         indent_level = len(calc_token.extracted_whitespace)
         had_tab = bool(
-            "\t" in calc_token.extracted_whitespace
-            or (calc_token.leading_spaces and "\t" in calc_token.leading_spaces)
+            ParserHelper.tab_character in calc_token.extracted_whitespace
+            or (calc_token.leading_spaces and ParserHelper.tab_character in calc_token.leading_spaces)
         )
     elif (
         calc_token.token_name == MarkdownToken.token_html_block
@@ -161,9 +157,9 @@ def __calc_initial_whitespace(calc_token):
             first_para_ws = calc_token.extracted_whitespace[0:end_of_line_index]
         else:
             first_para_ws = calc_token.extracted_whitespace
-        print(">>first_para_ws>>" + first_para_ws.replace("\t", "\\t") + ">>")
+        print(">>first_para_ws>>" + ParserHelper.make_value_visible(first_para_ws) + ">>")
         indent_level = len(first_para_ws)
-        had_tab = bool("\t" in first_para_ws)
+        had_tab = bool(ParserHelper.tab_character in first_para_ws)
         print(">>indent_level>>" + str(indent_level) + ">>had_tab>>" + str(had_tab))
     else:
         assert False, "Token " + calc_token.token_name + " not handled."
@@ -412,7 +408,7 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
     to the original Markdown that created the token.
     """
 
-    if "\t" in source_markdown:
+    if ParserHelper.tab_character in source_markdown:
         return
 
     transformer = TransformToMarkdown()
@@ -425,11 +421,9 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
             "\n-=-=-\nExpected\n-=-=-\n"
             + ParserHelper.make_value_visible(source_markdown)
             .replace("\x03", "\\x03")
-            .replace("\t", "\\t")
             + "\n-=-=-\nActual\n-=-=-\n"
             + ParserHelper.make_value_visible(original_markdown)
             .replace("\x03", "\\x03")
-            .replace("\t", "\\t")
             + "\n-=-=-\n"
         )
         diff = difflib.ndiff(source_markdown, original_markdown)

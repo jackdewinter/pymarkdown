@@ -210,17 +210,17 @@ class BlockQuoteProcessor:
                 if ParserHelper.is_character_at_index_whitespace(
                     adjusted_line, start_index
                 ):
-                    if adjusted_line[start_index] == "\t":
+                    if adjusted_line[start_index] == ParserHelper.tab_character:
                         adjusted_tab_length = ParserHelper.calculate_length(
-                            "\t", start_index=start_index
+                            ParserHelper.tab_character, start_index=start_index
                         )
-                        LOGGER.debug("adj--%s--", adjusted_line.replace("\t", "\\t"))
+                        LOGGER.debug("adj--%s--", ParserHelper.make_value_visible(adjusted_line))
                         adjusted_line = (
                             adjusted_line[0:start_index]
                             + "".rjust(adjusted_tab_length)
                             + adjusted_line[start_index + 1 :]
                         )
-                        LOGGER.debug("--%s--", adjusted_line.replace("\t", "\\t"))
+                        LOGGER.debug("--%s--", ParserHelper.make_value_visible(adjusted_line))
                     start_index += 1
 
                 if is_top_of_stack_fenced_code_block and (
@@ -243,7 +243,7 @@ class BlockQuoteProcessor:
             LOGGER.debug(
                 "__count_block_quote_starts--%s--%s--",
                 str(start_index),
-                adjusted_line.replace("\t", "\\t"),
+                ParserHelper.make_value_visible(adjusted_line),
             )
         return this_bq_count, start_index, adjusted_line, last_block_quote_index
 
@@ -261,7 +261,7 @@ class BlockQuoteProcessor:
 
         LOGGER.debug(
             "IN>__handle_block_quote_section---%s<<<",
-            line_to_parse.replace("\t", "\\t"),
+            ParserHelper.make_value_visible(line_to_parse),
         )
         LOGGER.debug("stack_bq_count--%s", str(stack_bq_count))
         LOGGER.debug("token_stack[-1]--%s", str(parser_state.token_stack[-1]))
@@ -274,7 +274,7 @@ class BlockQuoteProcessor:
         LOGGER.debug(
             "__handle_block_quote_section---%s--%s--",
             str(start_index),
-            line_to_parse.replace("\t", "\\t"),
+            ParserHelper.make_value_visible(line_to_parse),
         )
         original_start_index = start_index
         (
@@ -292,7 +292,7 @@ class BlockQuoteProcessor:
             "__handle_block_quote_section---this_bq_count--%s--%s--%s--",
             str(this_bq_count),
             str(start_index),
-            line_to_parse.replace("\t", "\\t"),
+            ParserHelper.make_value_visible(line_to_parse),
         )
 
         if not parser_state.token_stack[-1].is_fenced_code_block:
@@ -334,7 +334,7 @@ class BlockQuoteProcessor:
 
         LOGGER.debug(
             "OUT>__handle_block_quote_section---%s<<<",
-            line_to_parse.replace("\t", "\\t"),
+            ParserHelper.make_value_visible(line_to_parse),
         )
 
         return (

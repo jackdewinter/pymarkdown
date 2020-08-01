@@ -84,7 +84,7 @@ class InlineProcessor:
         LOGGER.info("-----")
         for next_token in coalesced_results:
             LOGGER.info(
-                ">>%s<<", ParserHelper.make_value_visible(next_token).replace("\t", "\\t")
+                ">>%s<<", ParserHelper.make_value_visible(next_token)
             )
         LOGGER.info("-----")
 
@@ -111,7 +111,7 @@ class InlineProcessor:
                     combined_text = coalesced_results[coalesce_index].token_text
                     combined_whitespace_text = coalesced_results[
                         coalesce_index
-                    ].extracted_whitespace.replace("\t", "    ")
+                    ].extracted_whitespace.replace(ParserHelper.tab_character, "    ")
                     LOGGER.debug(
                         "combined_text>>%s", ParserHelper.make_value_visible(combined_text)
                     )
@@ -121,7 +121,7 @@ class InlineProcessor:
                     )
                     processed_tokens = InlineProcessor.__process_inline_text_block(
                         coalesced_results[coalesce_index].token_text.replace(
-                            "\t", "    "
+                            ParserHelper.tab_character, "    "
                         ),
                         whitespace_to_recombine=combined_whitespace_text,
                         is_setext=True,
@@ -133,10 +133,10 @@ class InlineProcessor:
                 elif coalesced_list[-1].is_atx_heading:
                     processed_tokens = InlineProcessor.__process_inline_text_block(
                         coalesced_results[coalesce_index].token_text.replace(
-                            "\t", "    "
+                            ParserHelper.tab_character, "    "
                         ),
                         coalesced_results[coalesce_index].extracted_whitespace.replace(
-                            "\t", "    "
+                            ParserHelper.tab_character, "    "
                         ),
                     )
                 else:
@@ -150,7 +150,7 @@ class InlineProcessor:
                     )
                     coalesced_list[-1].add_whitespace(
                         coalesced_results[coalesce_index].extracted_whitespace.replace(
-                            "\t", "    "
+                            ParserHelper.tab_character, "    "
                         )
                     )
                     LOGGER.debug(
@@ -159,7 +159,7 @@ class InlineProcessor:
                     )
                     processed_tokens = InlineProcessor.__process_inline_text_block(
                         coalesced_results[coalesce_index].token_text.replace(
-                            "\t", "    "
+                            ParserHelper.tab_character, "    "
                         ),
                     )
                 coalesced_list.extend(processed_tokens)

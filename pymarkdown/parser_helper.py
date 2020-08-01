@@ -15,6 +15,7 @@ class ParserHelper:
 
     backslash_character = "\\"
     newline_character = "\n"
+    tab_character = "\t"
 
     backslash_escape_sequence = backslash_character + __backspace_character
 
@@ -64,7 +65,7 @@ class ParserHelper:
 
         return 0 <= index_in_string < len(source_string) and (
             source_string[index_in_string] == " "
-            or source_string[index_in_string] == "\t"
+            or source_string[index_in_string] == ParserHelper.tab_character
         )
 
     @staticmethod
@@ -303,7 +304,7 @@ class ParserHelper:
 
         string_length = start_index
         for source_character in source_string:
-            if source_character == "\t":
+            if source_character == ParserHelper.tab_character:
                 string_length = int((string_length + 4) / 4) * 4
             else:
                 string_length += 1
@@ -367,6 +368,7 @@ class ParserHelper:
             .replace(ParserHelper.__backspace_character, "\\b") \
             .replace(ParserHelper.__alert_character, "\\a") \
             .replace(ParserHelper.whitespace_split_character, "\\x02")\
+            .replace(ParserHelper.tab_character, "\\t") \
             .replace("\\x07", "\\a") \
             .replace("\\x08", "\\b")
 

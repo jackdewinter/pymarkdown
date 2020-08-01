@@ -120,7 +120,7 @@ class TransformToMarkdown:
                 ">>>>"
                 + str(next_token)
                 + "\n---\n"
-                + ParserHelper.make_value_visible(transformed_data).replace("\t", "\\t")
+                + ParserHelper.make_value_visible(transformed_data)
                 + "\n---"
             )
             previous_token = next_token
@@ -457,12 +457,10 @@ class TransformToMarkdown:
                     print(
                         ">>split_token_text>>"
                         + ParserHelper.make_value_visible(split_token_text)
-                        .replace("\t", "\\t")
                     )
                     print(
                         ">>split_parent_whitespace_text>>"
                         + ParserHelper.make_value_visible(split_parent_whitespace_text)
-                        .replace("\t", "\\t")
                     )
 
                     parent_rehydrate_index = self.block_stack[-1].rehydrate_index
@@ -489,7 +487,6 @@ class TransformToMarkdown:
                         print(
                             ">>split_end_whitespace_text>>"
                             + ParserHelper.make_value_visible(split_end_whitespace_text)
-                            .replace("\t", "\\t")
                         )
                         assert len(split_token_text) == len(split_end_whitespace_text)
 
@@ -509,12 +506,10 @@ class TransformToMarkdown:
                     print(
                         ">>split_token_text>>"
                         + ParserHelper.make_value_visible(split_token_text)
-                        .replace("\t", "\\t")
                     )
                     print(
                         ">>split_parent_whitespace_text>>"
                         + ParserHelper.make_value_visible(split_parent_whitespace_text)
-                        .replace("\t", "\\t")
                     )
 
                     # TODO never incrementing?

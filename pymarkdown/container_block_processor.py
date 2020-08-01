@@ -141,13 +141,13 @@ class ContainerBlockProcessor:
             "pre-ulist>>#%s#%s#%s#",
             str(position_marker.index_number),
             str(position_marker.index_indent),
-            position_marker.text_to_parse.replace("\t", "\\t"),
+            ParserHelper.make_value_visible(position_marker.text_to_parse),
         )
         LOGGER.debug(
             "pre-ulist>>#%s#%s#%s#",
             str(new_position_marker.index_number),
             str(new_position_marker.index_indent),
-            new_position_marker.text_to_parse.replace("\t", "\\t"),
+            ParserHelper.make_value_visible(new_position_marker.text_to_parse),
         )
         (
             did_process,
@@ -175,13 +175,13 @@ class ContainerBlockProcessor:
             "post-ulist>>#%s#%s#%s#",
             str(position_marker.index_number),
             str(position_marker.index_indent),
-            position_marker.text_to_parse.replace("\t", "\\t"),
+            ParserHelper.make_value_visible(position_marker.text_to_parse),
         )
         LOGGER.debug(
             "post-ulist>>#%s#%s#%s#",
             str(new_position_marker.index_number),
             str(new_position_marker.index_indent),
-            new_position_marker.text_to_parse.replace("\t", "\\t"),
+            ParserHelper.make_value_visible(new_position_marker.text_to_parse),
         )
         LOGGER.debug("text>>%s>>", line_to_parse)
 
@@ -193,13 +193,13 @@ class ContainerBlockProcessor:
             "pre-olist>>#%s#%s#%s#",
             str(position_marker.index_number),
             str(position_marker.index_indent),
-            position_marker.text_to_parse.replace("\t", "\\t"),
+            ParserHelper.make_value_visible(position_marker.text_to_parse),
         )
         LOGGER.debug(
             "pre-olist>>#%s#%s#%s#",
             str(new_position_marker.index_number),
             str(new_position_marker.index_indent),
-            new_position_marker.text_to_parse.replace("\t", "\\t"),
+            ParserHelper.make_value_visible(new_position_marker.text_to_parse),
         )
         (
             did_process,
@@ -227,13 +227,13 @@ class ContainerBlockProcessor:
             "post-olist>>#%s#%s#%s#",
             str(position_marker.index_number),
             str(position_marker.index_indent),
-            position_marker.text_to_parse.replace("\t", "\\t"),
+            ParserHelper.make_value_visible(position_marker.text_to_parse),
         )
         LOGGER.debug(
             "post-olist>>#%s#%s#%s#",
             str(new_position_marker.index_number),
             str(new_position_marker.index_indent),
-            new_position_marker.text_to_parse.replace("\t", "\\t"),
+            ParserHelper.make_value_visible(new_position_marker.text_to_parse),
         )
         LOGGER.debug("text>>%s>>", line_to_parse.replace(" ", "\\s"))
 
@@ -907,7 +907,7 @@ class ContainerBlockProcessor:
         Parse the contents of a line for a leaf block.
         """
         LOGGER.debug(
-            "Leaf Line:%s:", xposition_marker.text_to_parse.replace("\t", "\\t")
+            "Leaf Line:%s:", ParserHelper.make_value_visible(xposition_marker.text_to_parse)
         )
         new_tokens = []
 

@@ -535,7 +535,6 @@ class ListBlockProcessor:
             str(marker_width_minus_one),
         )
         LOGGER.debug("--%s--%s", str(start_index), str(start_index + 1))
-        # assert "\t" not in after_marker_whitespace
 
         (
             container_level_tokens,
@@ -910,8 +909,8 @@ class ListBlockProcessor:
         )
         removed_whitespace = ""
         assert leading_space
-        if "\t" in leading_space:
-            removed_whitespace = "\t"
+        if ParserHelper.tab_character in leading_space:
+            removed_whitespace = ParserHelper.tab_character
         else:
             removed_whitespace = leading_space[0:requested_list_indent]
         line_to_parse = "".rjust(remaining_indent, " ") + line_to_parse[start_index:]

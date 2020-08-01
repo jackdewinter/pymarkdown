@@ -210,7 +210,7 @@ class LeafBlockProcessor:
             LOGGER.debug("whitespace_left>>%s", str(whitespace_left))
             removed_whitespace = \
                 ParserHelper.create_replacement_markers(\
-                "".rjust(current_whitespace_length - whitespace_left, " "), "\x03")
+                    "".rjust(current_whitespace_length - whitespace_left, " "), "\x03")
             extracted_whitespace = removed_whitespace + "".rjust(whitespace_left, " ")
         return new_tokens, extracted_whitespace
 
@@ -223,7 +223,7 @@ class LeafBlockProcessor:
         did_process = False
         LOGGER.debug("last_list_start_index>>%s>>", str(last_list_start_index))
         LOGGER.debug(
-            "original_line_to_parse>>%s>>", original_line_to_parse.replace("\t", "\\t")
+            "original_line_to_parse>>%s>>", ParserHelper.make_value_visible(original_line_to_parse)
         )
         offset_index = 0
         if last_list_start_index:
@@ -233,9 +233,9 @@ class LeafBlockProcessor:
             LOGGER.debug("new_index>>%s>>", str(new_index))
             LOGGER.debug(
                 "extracted_whitespace>>%s>>",
-                str(extracted_whitespace).replace("\t", "\\t"),
+                ParserHelper.make_value_visible(extracted_whitespace),
             )
-            if "\t" in extracted_whitespace:
+            if ParserHelper.tab_character in extracted_whitespace:
                 last_block_quote_index = new_index
                 offset_index = 1
                 did_process = True
@@ -267,7 +267,7 @@ class LeafBlockProcessor:
         if last_block_quote_index or force_me:
             LOGGER.debug(
                 "original_line_to_parse>[%s]>>last_block_quote_index>>%s",
-                original_line_to_parse.replace("\t", "\\t"),
+                ParserHelper.make_value_visible(original_line_to_parse),
                 str(last_block_quote_index),
             )
             (
@@ -278,14 +278,14 @@ class LeafBlockProcessor:
             )
             LOGGER.debug(
                 "during_original_whitespace>[%s]",
-                during_original_whitespace.replace("\t", "\\t"),
+                ParserHelper.make_value_visible(during_original_whitespace),
             )
-            if "\t" in during_original_whitespace:
+            if ParserHelper.tab_character in during_original_whitespace:
 
                 did_process = True
                 LOGGER.debug(
                     ".text_to_parse>[%s]",
-                    position_marker.text_to_parse.replace("\t", "\\t"),
+                    ParserHelper.make_value_visible(position_marker),
                 )
                 LOGGER.debug(".index_number>>%s", str(position_marker.index_number))
                 LOGGER.debug(".index_indent>>%s", str(position_marker.index_indent))
@@ -300,11 +300,11 @@ class LeafBlockProcessor:
                 ]
                 LOGGER.debug(
                     "text_after_original_whitespace>[%s]",
-                    text_after_original_whitespace.replace("\t", "\\t"),
+                    ParserHelper.make_value_visible(text_after_original_whitespace),
                 )
                 LOGGER.debug(
                     "text_after_whitespace>[%s]",
-                    text_after_whitespace.replace("\t", "\\t"),
+                    ParserHelper.make_value_visible(text_after_whitespace),
                 )
                 assert text_after_original_whitespace == text_after_whitespace
 
@@ -315,11 +315,11 @@ class LeafBlockProcessor:
                 ]
                 LOGGER.debug(
                     "during_current_whitespace>[%s]",
-                    during_current_whitespace.replace("\t", "\\t"),
+                    ParserHelper.make_value_visible(during_current_whitespace),
                 )
                 LOGGER.debug(
                     "during_original_whitespace>[%s]",
-                    during_original_whitespace.replace("\t", "\\t"),
+                    ParserHelper.make_value_visible(during_original_whitespace),
                 )
 
                 current_whitespace_length = len(during_current_whitespace)
@@ -337,11 +337,11 @@ class LeafBlockProcessor:
                 assert current_whitespace_length <= original_whitespace_length
 
                 special_parse_start_index = last_block_quote_index + 1
-                if during_original_whitespace[0] == "\t":
+                if during_original_whitespace[0] == ParserHelper.tab_character:
                     whitespace_to_parse = during_original_whitespace
                     if (
                         len(during_original_whitespace) > 1
-                        and during_original_whitespace[1] == "\t"
+                        and during_original_whitespace[1] == ParserHelper.tab_character
                     ):
                         block_quote_adjust_delta = -1
                 else:
@@ -370,7 +370,7 @@ class LeafBlockProcessor:
 
         relative_whitespace_index = special_parse_start_index - offset_index
         LOGGER.debug(
-            "whitespace_to_parse>>%s>>", whitespace_to_parse.replace("\t", "\\t")
+            "whitespace_to_parse>>%s>>", ParserHelper.make_value_visible(whitespace_to_parse)
         )
         LOGGER.debug("special_parse_start_index>>%s>>", str(special_parse_start_index))
         LOGGER.debug(
@@ -380,7 +380,7 @@ class LeafBlockProcessor:
             str(accumulated_whitespace_count),
         )
         while accumulated_whitespace_count < abc:
-            if whitespace_to_parse[actual_whitespace_index] == "\t":
+            if whitespace_to_parse[actual_whitespace_index] == ParserHelper.tab_character:
                 LOGGER.debug(
                     ">>relative_whitespace_index>>%s", str(relative_whitespace_index)
                 )
@@ -411,8 +411,8 @@ class LeafBlockProcessor:
             "accumulated_whitespace_count>>%s", str(accumulated_whitespace_count)
         )
         LOGGER.debug("actual_whitespace_index>>%s", str(actual_whitespace_index))
-        LOGGER.debug("adj_ws>>%s<<", adj_ws.replace("\t", "\\t"))
-        LOGGER.debug("left_ws>>%s<<", left_ws.replace("\t", "\\t"))
+        LOGGER.debug("adj_ws>>%s<<", ParserHelper.make_value_visible(adj_ws))
+        LOGGER.debug("left_ws>>%s<<", ParserHelper.make_value_visible(left_ws))
         LOGGER.debug("offset_index>>%s<<", str(offset_index))
 
         return accumulated_whitespace_count, actual_whitespace_index, adj_ws, left_ws
@@ -526,11 +526,11 @@ class LeafBlockProcessor:
                         str(accumulated_whitespace_count),
                         str(offset_index),
                     )
-                    LOGGER.debug("before>>%s>>", left_ws.replace("\t", "\\t"))
+                    LOGGER.debug("before>>%s>>", ParserHelper.make_value_visible(left_ws))
                     if excess_whitespace_count:
                         excess_whitespace_count -= kludge_adjust
                         left_ws = " ".rjust(excess_whitespace_count) + left_ws
-                    LOGGER.debug("after>>%s>>", left_ws.replace("\t", "\\t"))
+                    LOGGER.debug("after>>%s>>", ParserHelper.make_value_visible(left_ws))
                 else:
                     column_number += actual_whitespace_index
                 LOGGER.debug("column_number>>%s", str(column_number))
@@ -538,7 +538,7 @@ class LeafBlockProcessor:
                     IndentedCodeBlockMarkdownToken(adj_ws, line_number, column_number)
                 )
                 extracted_whitespace = left_ws
-                LOGGER.debug("left_ws>>%s<<", extracted_whitespace.replace("\t", "\\t"))
+                LOGGER.debug("left_ws>>%s<<", ParserHelper.make_value_visible(extracted_whitespace))
             new_tokens.append(
                 TextMarkdownToken(
                     position_marker.text_to_parse[position_marker.index_number :],
@@ -617,10 +617,10 @@ class LeafBlockProcessor:
             new_tokens.append(
                 ThematicBreakMarkdownToken(
                     start_char,
-                    extracted_whitespace.replace("\t", "    "),
+                    extracted_whitespace.replace(ParserHelper.tab_character, "    "),
                     position_marker.text_to_parse[
                         position_marker.index_number : index
-                    ].replace("\t", "    "),
+                    ].replace(ParserHelper.tab_character, "    "),
                     position_marker=position_marker,
                 )
             )
