@@ -374,7 +374,7 @@ class IndentedCodeBlockMarkdownToken(MarkdownToken):
         """
         Add the indented whitespace that comes before the text.
         """
-        self.indented_whitespace += "\n" + indented_whitespace
+        self.indented_whitespace += ParserHelper.newline_character + indented_whitespace
         self.compose_extra_data_field()
 
 
@@ -581,9 +581,9 @@ class TextMarkdownToken(MarkdownToken):
 
         if whitespace_to_append is not None:
             self.extracted_whitespace = (
-                self.extracted_whitespace + "\n" + whitespace_to_append
+                self.extracted_whitespace + ParserHelper.newline_character + whitespace_to_append
             )
-        self.token_text = self.token_text + "\n" + prefix_whitespace + text_to_combine
+        self.token_text = self.token_text + ParserHelper.newline_character + prefix_whitespace + text_to_combine
         self.compose_extra_data_field()
         return removed_whitespace
 
@@ -773,7 +773,7 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
         if self.leading_spaces is None:
             self.leading_spaces = ws_add
         else:
-            self.leading_spaces += "\n" + ws_add
+            self.leading_spaces += ParserHelper.newline_character + ws_add
         self.compose_extra_data_field()
 
 
@@ -832,7 +832,7 @@ class OrderedListStartMarkdownToken(MarkdownToken):
         if self.leading_spaces is None:
             self.leading_spaces = ws_add
         else:
-            self.leading_spaces += "\n" + ws_add
+            self.leading_spaces += ParserHelper.newline_character + ws_add
         self.compose_extra_data_field()
 
 

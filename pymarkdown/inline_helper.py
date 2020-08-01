@@ -133,7 +133,7 @@ class InlineHelper:
         inline_response.new_string_unresolved = ""
         if inline_response.new_index >= len(inline_request.source_text) or (
             inline_response.new_index < len(inline_request.source_text)
-            and inline_request.source_text[inline_response.new_index] == "\n"
+            and inline_request.source_text[inline_response.new_index] == ParserHelper.newline_character
         ):
             inline_response.new_string = InlineHelper.backslash_character
             inline_response.new_string_unresolved = inline_response.new_string
@@ -373,8 +373,8 @@ class InlineHelper:
             trailing_whitespace = ""
             if (
                 len(between_text) > 2
-                and (between_text[0] == " " or between_text[0] == "\n")
-                and (between_text[-1] == " " or between_text[-1] == "\n")
+                and (between_text[0] == " " or between_text[0] == ParserHelper.newline_character)
+                and (between_text[-1] == " " or between_text[-1] == ParserHelper.newline_character)
             ):
                 stripped_between_attempt = between_text[1:-1]
                 if len(stripped_between_attempt.strip()) != 0:
@@ -382,10 +382,10 @@ class InlineHelper:
                     trailing_whitespace = between_text[-1]
                     between_text = stripped_between_attempt
 
-            replaced_newline = ParserHelper.create_replacement_markers("\n", " ")
-            between_text = between_text.replace("\n", replaced_newline)
-            leading_whitespace = leading_whitespace.replace("\n", replaced_newline)
-            trailing_whitespace = trailing_whitespace.replace("\n", replaced_newline)
+            replaced_newline = ParserHelper.create_replacement_markers(ParserHelper.newline_character, " ")
+            between_text = between_text.replace(ParserHelper.newline_character, replaced_newline)
+            leading_whitespace = leading_whitespace.replace(ParserHelper.newline_character, replaced_newline)
+            trailing_whitespace = trailing_whitespace.replace(ParserHelper.newline_character, replaced_newline)
 
             between_text = InlineHelper.append_text("", between_text)
             LOGGER.debug("between_text>>%s<<", between_text)
@@ -414,16 +414,16 @@ class InlineHelper:
         )
         LOGGER.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>NewLine")
         if end_string:
-            LOGGER.debug(">>end_string>>%s>>", end_string.replace("\n", "\\n"))
+            LOGGER.debug(">>end_string>>%s>>", ParserHelper.make_value_visible(end_string))
         LOGGER.debug(
             ">>removed_end_whitespace>>%s>>",
-            removed_end_whitespace.replace("\n", "\\n"),
+            ParserHelper.make_value_visible(removed_end_whitespace),
         )
         if end_string is None:
-            end_string = removed_end_whitespace + "\n"
+            end_string = removed_end_whitespace + ParserHelper.newline_character
         else:
-            end_string = end_string + removed_end_whitespace + "\n"
-        LOGGER.debug(">>end_string>>%s>>", end_string.replace("\n", "\\n"))
+            end_string = end_string + removed_end_whitespace + ParserHelper.newline_character
+        LOGGER.debug(">>end_string>>%s>>", ParserHelper.make_value_visible(end_string))
         return end_string
 
     @staticmethod
@@ -433,9 +433,9 @@ class InlineHelper:
         """
         new_tokens = []
 
-        LOGGER.debug(">>current_string>>%s>>", current_string.replace("\n", "\\n"))
-        LOGGER.debug(">>end_string>>%s>>", str(end_string).replace("\n", "\\n"))
-        LOGGER.debug(">>remaining_line>>%s>>", str(remaining_line).replace("\n", "\\n"))
+        LOGGER.debug(">>current_string>>%s>>", ParserHelper.make_value_visible(current_string))
+        LOGGER.debug(">>end_string>>%s>>", ParserHelper.make_value_visible(end_string))
+        LOGGER.debug(">>remaining_line>>%s>>", ParserHelper.make_value_visible(remaining_line))
         _, last_non_whitespace_index = ParserHelper.collect_backwards_while_character(
             remaining_line, -1, InlineHelper.__line_end_whitespace
         )
@@ -444,11 +444,11 @@ class InlineHelper:
         remaining_line = remaining_line[0:last_non_whitespace_index]
         LOGGER.debug(
             ">>removed_end_whitespace>>%s>>",
-            str(removed_end_whitespace).replace("\n", "\\n"),
+            ParserHelper.make_value_visible(removed_end_whitespace),
         )
-        LOGGER.debug(">>remaining_line>>%s>>", str(remaining_line).replace("\n", "\\n"))
+        LOGGER.debug(">>remaining_line>>%s>>", ParserHelper.make_value_visible(remaining_line))
 
-        append_to_current_string = "\n"
+        append_to_current_string = ParserHelper.newline_character
         whitespace_to_add = None
         LOGGER.debug(
             ">>len(r_e_w)>>%s>>rem>>%s>>",
@@ -473,14 +473,14 @@ class InlineHelper:
 
         LOGGER.debug(
             "<<append_to_current_string<<%s<<",
-            str(append_to_current_string).replace("\n", "\\n"),
+            ParserHelper.make_value_visible(append_to_current_string),
         )
         LOGGER.debug(
-            "<<whitespace_to_add<<%s<<", str(whitespace_to_add).replace("\n", "\\n")
+            "<<whitespace_to_add<<%s<<", ParserHelper.make_value_visible(whitespace_to_add)
         )
-        LOGGER.debug("<<remaining_line<<%s<<", str(remaining_line).replace("\n", "\\n"))
-        LOGGER.debug("<<end_string<<%s<<", str(end_string).replace("\n", "\\n"))
-        LOGGER.debug("<<current_string<<%s<<", str(current_string).replace("\n", "\\n"))
+        LOGGER.debug("<<remaining_line<<%s<<", ParserHelper.make_value_visible(remaining_line))
+        LOGGER.debug("<<end_string<<%s<<", ParserHelper.make_value_visible(end_string))
+        LOGGER.debug("<<current_string<<%s<<", ParserHelper.make_value_visible(current_string))
         return (
             append_to_current_string,
             whitespace_to_add,

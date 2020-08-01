@@ -45,7 +45,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
     print(
         "parsed_tokens  : "
         + ParserHelper.make_value_visible(actual_tokens)
-        .replace("\n", "\\n")
         .replace("\t", "\\t")
         .replace("\x03", "\\x03")
     )
@@ -70,7 +69,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             + str(len(expected_str))
             + ")>>"
             + ParserHelper.make_value_visible(expected_str)
-            .replace("\n", "\\n")
             .replace("\x03", "\\x03")
             + "<<"
         )
@@ -80,7 +78,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             + ")>>"
             + ParserHelper.make_value_visible(actual_str)
             .replace("\t", "\\t")
-            .replace("\n", "\\n")
             .replace("\x03", "\\x03")
             + "<<"
         )
@@ -108,7 +105,6 @@ def assert_if_strings_different(expected_string, actual_string):
         "expected_string>>"
         + ParserHelper.make_value_visible(expected_string)
         .replace("\t", "\\t")
-        .replace("\n", "\\n")
         .replace("\x03", "\\x03")
         + "<<"
     )
@@ -118,7 +114,6 @@ def assert_if_strings_different(expected_string, actual_string):
         "actual_string>>"
         + ParserHelper.make_value_visible(actual_string)
         .replace("\t", "\\t")
-        .replace("\n", "\\n")
         .replace("\x03", "\\x03")
         + "<<"
     )
@@ -161,8 +156,8 @@ def __calc_initial_whitespace(calc_token):
         indent_level = 0
     elif calc_token.token_name == MarkdownToken.token_paragraph:
 
-        if "\n" in calc_token.extracted_whitespace:
-            end_of_line_index = calc_token.extracted_whitespace.index("\n")
+        if ParserHelper.newline_character in calc_token.extracted_whitespace:
+            end_of_line_index = calc_token.extracted_whitespace.index(ParserHelper.newline_character)
             first_para_ws = calc_token.extracted_whitespace[0:end_of_line_index]
         else:
             first_para_ws = calc_token.extracted_whitespace
@@ -336,7 +331,7 @@ def assert_token_consistency(source_markdown, actual_tokens):
 
     verify_markdown_roundtrip(source_markdown, actual_tokens)
 
-    split_lines = source_markdown.split("\n")
+    split_lines = source_markdown.split(ParserHelper.newline_character)
     number_of_lines = len(split_lines)
     print(">>" + str(number_of_lines))
 
@@ -430,12 +425,10 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
             "\n-=-=-\nExpected\n-=-=-\n"
             + ParserHelper.make_value_visible(source_markdown)
             .replace("\x03", "\\x03")
-            .replace("\n", "\\n")
             .replace("\t", "\\t")
             + "\n-=-=-\nActual\n-=-=-\n"
             + ParserHelper.make_value_visible(original_markdown)
             .replace("\x03", "\\x03")
-            .replace("\n", "\\n")
             .replace("\t", "\\t")
             + "\n-=-=-\n"
         )
@@ -444,9 +437,9 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
             "\n-=-=-n"
             + "\n".join(list(diff))
             + "\n-=-=-expected\n"
-            + source_markdown.replace("\n", "\\n")
+            + ParserHelper.make_value_visible(source_markdown)
             + "\n-=-=-actual\n"
-            + original_markdown.replace("\n", "\\n")
+            + ParserHelper.make_value_visible(original_markdown)
             + "\n-=-=-\n"
         )
         assert source_markdown == original_markdown, (

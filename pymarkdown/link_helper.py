@@ -155,7 +155,7 @@ class LinkHelper:
         LOGGER.debug(
             "after ws>>%s>ex_ws>%s",
             line_to_parse[new_index:],
-            ex_ws.replace("\n", "\\n"),
+            ParserHelper.make_value_visible(ex_ws),
         )
         start_index = new_index
         if new_index == len(line_to_parse) and not is_blank_line:
@@ -565,7 +565,7 @@ class LinkHelper:
             if not ex_link:
                 return None, None, -1, None, None
 
-        if new_index != -1 and "\n" in ex_link:
+        if new_index != -1 and ParserHelper.newline_character in ex_link:
             return None, None, -1, None, None
         LOGGER.debug(
             "handle_backslashes>>new_index>>%s>>ex_link>>%s>>",
@@ -684,19 +684,19 @@ class LinkHelper:
             ) = LinkHelper.__parse_link_destination(source_text, new_index)
             LOGGER.debug(
                 ">>link destination>>%s>>%s>>",
-                source_text.replace("\n", "\\n"),
+                ParserHelper.make_value_visible(source_text),
                 str(new_index),
             )
             if new_index != -1:
                 LOGGER.debug(
-                    "before ws>>%s<", source_text[new_index:].replace("\n", "\\n")
+                    "before ws>>%s<", ParserHelper.make_value_visible(source_text[new_index:])
                 )
                 (
                     new_index,
                     before_title_whitespace,
                 ) = ParserHelper.extract_any_whitespace(source_text, new_index)
                 LOGGER.debug(
-                    "after ws>>%s>", source_text[new_index:].replace("\n", "\\n")
+                    "after ws>>%s>", ParserHelper.make_value_visible(source_text[new_index:])
                 )
                 if ParserHelper.is_character_at_index_not(
                     source_text, new_index, LinkHelper.__link_format_inline_end
@@ -789,7 +789,7 @@ class LinkHelper:
             str(len(inline_blocks)),
         )
         LOGGER.debug(
-            "handle_link_types>source_text>>%s<<", source_text.replace("\n", "\\n")
+            "handle_link_types>source_text>>%s<<", ParserHelper.make_value_visible(source_text)
         )
         LOGGER.debug("handle_link_types>>%s<<", source_text[new_index:])
         LOGGER.debug(

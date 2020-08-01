@@ -157,7 +157,7 @@ class TokenizedMarkdown:
                 tokens_from_line = None
                 LOGGER.debug(
                     "\n\n>>lines_to_requeue>>%s",
-                    str(lines_to_requeue).replace("\n", "\\n"),
+                    ParserHelper.make_value_visible(lines_to_requeue),
                 )
             else:
                 if not token_to_use or not token_to_use.strip():

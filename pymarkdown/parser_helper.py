@@ -14,6 +14,7 @@ class ParserHelper:
     whitespace_split_character = "\x02"
 
     backslash_character = "\\"
+    newline_character = "\n"
 
     backslash_escape_sequence = backslash_character + __backspace_character
 
@@ -443,7 +444,7 @@ class ParserHelper:
                 ">>rehydrate_text>>"
                 + str(len(main_text))
                 + ">>"
-                + ParserHelper.make_value_visible(main_text).replace("\n", "\\n")
+                + ParserHelper.make_value_visible(main_text)
             )
         return main_text
 

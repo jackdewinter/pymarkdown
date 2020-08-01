@@ -120,12 +120,12 @@ class TransformToMarkdown:
                 ">>>>"
                 + str(next_token)
                 + "\n---\n"
-                + transformed_data.replace("\n", "\\n").replace("\t", "\\t")
+                + ParserHelper.make_value_visible(transformed_data).replace("\t", "\\t")
                 + "\n---"
             )
             previous_token = next_token
 
-        if transformed_data and transformed_data[-1] == "\n":
+        if transformed_data and transformed_data[-1] == ParserHelper.newline_character:
             transformed_data = transformed_data[0:-1]
         return transformed_data, avoid_processing
 
@@ -140,8 +140,8 @@ class TransformToMarkdown:
         self.block_stack.append(next_token)
         next_token.rehydrate_index = 0
         extracted_whitespace = next_token.extracted_whitespace
-        if "\n" in extracted_whitespace:
-            line_end_index = extracted_whitespace.index("\n")
+        if ParserHelper.newline_character in extracted_whitespace:
+            line_end_index = extracted_whitespace.index(ParserHelper.newline_character)
             extracted_whitespace = extracted_whitespace[0:line_end_index]
         return extracted_whitespace
 
@@ -152,14 +152,14 @@ class TransformToMarkdown:
         assert next_token
         top_stack_token = self.block_stack[-1]
         del self.block_stack[-1]
-        return top_stack_token.final_whitespace + "\n"
+        return top_stack_token.final_whitespace + ParserHelper.newline_character
 
     @classmethod
     def rehydrate_blank_line(cls, next_token):
         """
         Rehydrate the blank line from the token.
         """
-        return next_token.extracted_whitespace + "\n"
+        return next_token.extracted_whitespace + ParserHelper.newline_character
 
     def rehydrate_indented_code_block(self, next_token):
         """
@@ -211,7 +211,7 @@ class TransformToMarkdown:
             next_token.extracted_whitespace
             + "".rjust(next_token.fence_count, next_token.fence_character)
             + info_text
-            + "\n"
+            + ParserHelper.newline_character
         )
 
     def rehydrate_fenced_code_block_end(self, next_token, previous_token):
@@ -225,7 +225,7 @@ class TransformToMarkdown:
             assert len(split_extra_data) == 2
             fence_count = int(split_extra_data[1])
 
-            prefix_whitespace = "\n"
+            prefix_whitespace = ParserHelper.newline_character
             if previous_token.is_blank_line or previous_token.is_fenced_code_block:
                 prefix_whitespace = ""
             prefix_whitespace += next_token.extracted_whitespace
@@ -234,7 +234,7 @@ class TransformToMarkdown:
             return (
                 prefix_whitespace
                 + "".rjust(fence_count, start_token.fence_character)
-                + "\n"
+                + ParserHelper.newline_character
             )
         return ""
 
@@ -242,7 +242,7 @@ class TransformToMarkdown:
         """
         Deal with re-inserting any removed whitespace at the starts of lines.
         """
-        if "\n" in text_to_modify:
+        if ParserHelper.newline_character in text_to_modify:
             owning_paragraph_token = None
             for search_index in range(len(self.block_stack) - 1, -1, -1):
                 if (
@@ -252,15 +252,15 @@ class TransformToMarkdown:
                     owning_paragraph_token = self.block_stack[search_index]
                     break
 
-            split_text_to_modify = text_to_modify.split("\n")
+            split_text_to_modify = text_to_modify.split(ParserHelper.newline_character)
             split_parent_whitespace = owning_paragraph_token.extracted_whitespace.split(
-                "\n"
+                ParserHelper.newline_character
             )
             print(
                 "owning_paragraph_token>>>>>>>"
-                + str(owning_paragraph_token).replace("\n", "\\n")
+                + ParserHelper.make_value_visible(owning_paragraph_token)
             )
-            print("opt>>text>" + str(split_text_to_modify).replace("\n", "\\n"))
+            print("opt>>text>" + ParserHelper.make_value_visible(split_text_to_modify))
             print("opt>>ws>" + str(split_parent_whitespace))
             print("opt>>rehydrate_index>" + str(owning_paragraph_token.rehydrate_index))
 
@@ -273,12 +273,12 @@ class TransformToMarkdown:
                     + split_text_to_modify[modify_index]
                 )
 
-            print("opt>>text>" + str(split_text_to_modify).replace("\n", "\\n"))
+            print("opt>>text>" + ParserHelper.make_value_visible(split_text_to_modify))
             took_lines = len(split_text_to_modify) - 1
             owning_paragraph_token.rehydrate_index += took_lines
             print("opt>>took>" + str(took_lines))
-            text_to_modify = "\n".join(split_text_to_modify)
-            print("opt>>text>" + str(text_to_modify).replace("\n", "\\n"))
+            text_to_modify = ParserHelper.newline_character.join(split_text_to_modify)
+            print("opt>>text>" + ParserHelper.make_value_visible(text_to_modify))
         return text_to_modify
 
     def rehydrate_inline_image(self, next_token):
@@ -340,7 +340,7 @@ class TransformToMarkdown:
             + next_token.link_title_whitespace
             + link_title
             + next_token.end_whitespace
-            + "\n"
+            + ParserHelper.newline_character
         )
 
     def rehydrate_atx_heading(self, next_token):
@@ -367,7 +367,7 @@ class TransformToMarkdown:
             next_token.extra_end_data
             + trailing_hashes
             + next_token.extracted_whitespace
-            + "\n"
+            + ParserHelper.newline_character
         )
 
     def rehydrate_setext_heading(self, next_token):
@@ -387,11 +387,11 @@ class TransformToMarkdown:
         del self.block_stack[-1]
         return (
             final_whitespace
-            + "\n"
+            + ParserHelper.newline_character
             + next_token.extracted_whitespace
             + "".rjust(heading_character_count, heading_character)
             + next_token.extra_end_data
-            + "\n"
+            + ParserHelper.newline_character
         )
 
     # pylint: disable=too-many-locals
@@ -413,17 +413,16 @@ class TransformToMarkdown:
         main_text = ParserHelper.remove_backspaces_from_text(next_token.token_text)
 
         print(
-            ">>rehydrate_text>>" + ParserHelper.make_value_visible(main_text).replace("\n", "\\n")
+            ">>rehydrate_text>>" + ParserHelper.make_value_visible(main_text)
         )
         main_text = ParserHelper.resolve_replacement_markers_from_text(main_text)
         print(
-            "<<rehydrate_text>>" + ParserHelper.make_value_visible(main_text).replace("\n", "\\n")
+            "<<rehydrate_text>>" + ParserHelper.make_value_visible(main_text)
         )
 
         print(
             "<<leading_whitespace>>"
             + ParserHelper.make_value_visible(next_token.extracted_whitespace)
-            .replace("\n", "\\n")
             .replace("\x03", "\\x03")
         )
         leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
@@ -432,7 +431,6 @@ class TransformToMarkdown:
         print(
             "<<leading_whitespace>>"
             + ParserHelper.make_value_visible(leading_whitespace)
-            .replace("\n", "\\n")
             .replace("\x03", "\\x03")
         )
         if self.block_stack:
@@ -449,23 +447,21 @@ class TransformToMarkdown:
                 prefix_text = ""
                 leading_whitespace = ""
             elif self.block_stack[-1].token_name == MarkdownToken.token_html_block:
-                main_text += "\n"
+                main_text += ParserHelper.newline_character
             elif self.block_stack[-1].token_name == MarkdownToken.token_paragraph:
-                if "\n" in main_text:
-                    split_token_text = main_text.split("\n")
+                if ParserHelper.newline_character in main_text:
+                    split_token_text = main_text.split(ParserHelper.newline_character)
                     split_parent_whitespace_text = self.block_stack[
                         -1
-                    ].extracted_whitespace.split("\n")
+                    ].extracted_whitespace.split(ParserHelper.newline_character)
                     print(
                         ">>split_token_text>>"
-                        + str(split_token_text)
-                        .replace("\n", "\\n")
+                        + ParserHelper.make_value_visible(split_token_text)
                         .replace("\t", "\\t")
                     )
                     print(
                         ">>split_parent_whitespace_text>>"
-                        + str(split_parent_whitespace_text)
-                        .replace("\n", "\\n")
+                        + ParserHelper.make_value_visible(split_parent_whitespace_text)
                         .replace("\t", "\\t")
                     )
 
@@ -488,12 +484,11 @@ class TransformToMarkdown:
 
                     if next_token.end_whitespace:
                         split_end_whitespace_text = next_token.end_whitespace.split(
-                            "\n"
+                            ParserHelper.newline_character
                         )
                         print(
                             ">>split_end_whitespace_text>>"
-                            + str(split_end_whitespace_text)
-                            .replace("\n", "\\n")
+                            + ParserHelper.make_value_visible(split_end_whitespace_text)
                             .replace("\t", "\\t")
                         )
                         assert len(split_token_text) == len(split_end_whitespace_text)
@@ -506,21 +501,19 @@ class TransformToMarkdown:
                             )
                             joined_token_text.append(joined_text)
                         split_token_text = joined_token_text
-                    main_text = "\n".join(split_token_text)
+                    main_text = ParserHelper.newline_character.join(split_token_text)
             elif self.block_stack[-1].token_name == MarkdownToken.token_setext_heading:
-                if "\n" in main_text:
-                    split_token_text = main_text.split("\n")
-                    split_parent_whitespace_text = next_token.end_whitespace.split("\n")
+                if ParserHelper.newline_character in main_text:
+                    split_token_text = main_text.split(ParserHelper.newline_character)
+                    split_parent_whitespace_text = next_token.end_whitespace.split(ParserHelper.newline_character)
                     print(
                         ">>split_token_text>>"
-                        + str(split_token_text)
-                        .replace("\n", "\\n")
+                        + ParserHelper.make_value_visible(split_token_text)
                         .replace("\t", "\\t")
                     )
                     print(
                         ">>split_parent_whitespace_text>>"
-                        + str(split_parent_whitespace_text)
-                        .replace("\n", "\\n")
+                        + ParserHelper.make_value_visible(split_parent_whitespace_text)
                         .replace("\t", "\\t")
                     )
 
@@ -552,7 +545,7 @@ class TransformToMarkdown:
                         rejoined_token_text.append(joined_text)
 
                     print(">>rejoined_token_text=" + str(rejoined_token_text))
-                    main_text = "\n".join(rejoined_token_text)
+                    main_text = ParserHelper.newline_character.join(rejoined_token_text)
         return prefix_text + leading_whitespace + main_text
 
     # pylint: enable=too-many-statements
@@ -642,7 +635,7 @@ class TransformToMarkdown:
         """
         Rehydrate the thematic break text from the token.
         """
-        return next_token.extracted_whitespace + next_token.rest_of_line + "\n"
+        return next_token.extracted_whitespace + next_token.rest_of_line + ParserHelper.newline_character
 
     @classmethod
     def reconstitute_indented_text(
@@ -652,32 +645,32 @@ class TransformToMarkdown:
         For an indented code block, figure out the text that got us here.
         """
         print(
-            "\n\nprefix_text>>"
+            "prefix_text>>"
             + str(len(prefix_text))
             + ">>"
-            + str(prefix_text).replace("\n", "\\n")
+            + ParserHelper.make_value_visible(prefix_text)
             + ">>"
         )
         print(
             "leading_whitespace>>"
             + str(len(leading_whitespace))
             + ">>"
-            + str(leading_whitespace).replace("\n", "\\n")
+            + ParserHelper.make_value_visible(leading_whitespace)
             + ">>"
         )
-        split_main_text = main_text.split("\n")
-        print("split_main_text>>" + str(split_main_text).replace("\n", "\\n") + ">>")
+        split_main_text = main_text.split(ParserHelper.newline_character)
+        print("split_main_text>>" + ParserHelper.make_value_visible(split_main_text) + ">>")
         print(
             "indented_whitespace>>"
-            + str(indented_whitespace).replace("\n", "\\n")
+            + ParserHelper.make_value_visible(indented_whitespace)
             + ">>"
         )
         split_indented_whitespace = (
             prefix_text + leading_whitespace + indented_whitespace
-        ).split("\n")
+        ).split(ParserHelper.newline_character)
         print(
             "split_indented_whitespace>>"
-            + str(split_indented_whitespace).replace("\n", "\\n")
+            + ParserHelper.make_value_visible(split_indented_whitespace)
             + ">>"
         )
         assert len(split_main_text) == len(split_indented_whitespace)
@@ -685,10 +678,10 @@ class TransformToMarkdown:
         recombined_text = ""
         for iterator in enumerate(split_main_text):
             recombined_text += (
-                split_indented_whitespace[iterator[0]] + iterator[1] + "\n"
+                split_indented_whitespace[iterator[0]] + iterator[1] + ParserHelper.newline_character
             )
 
-        print("<<" + recombined_text.replace("\n", "\\n") + ">>")
+        print("<<" + ParserHelper.make_value_visible(recombined_text) + ">>")
         return recombined_text
 
 # pylint: enable=too-many-public-methods

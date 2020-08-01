@@ -457,7 +457,7 @@ class ListBlockProcessor:
                 and allow_list_continue
             ):
                 LOGGER.debug(
-                    ">>line_to_parse>>%s>>", line_to_parse.replace("\n", "\\n")
+                    ">>line_to_parse>>%s>>", ParserHelper.make_value_visible(line_to_parse)
                 )
                 (
                     line_to_parse,
@@ -470,9 +470,9 @@ class ListBlockProcessor:
                     requested_list_indent,
                 )
                 LOGGER.debug(
-                    ">>line_to_parse>>%s>>", line_to_parse.replace("\n", "\\n")
+                    ">>line_to_parse>>%s>>", ParserHelper.make_value_visible(line_to_parse)
                 )
-                LOGGER.debug(">>used_indent>>%s>>", used_indent.replace("\n", "\\n"))
+                LOGGER.debug(">>used_indent>>%s>>", ParserHelper.make_value_visible(used_indent))
             else:
                 container_level_tokens = ListBlockProcessor.__check_for_list_closures(
                     parser_state, line_to_parse, start_index, extracted_whitespace, ind,

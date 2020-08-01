@@ -2,7 +2,7 @@
 Module to provide for an element that can be added to the stack.
 """
 from pymarkdown.markdown_token import EndMarkdownToken
-
+from pymarkdown.parser_helper import ParserHelper
 
 class StackToken:
     """
@@ -317,5 +317,5 @@ class LinkDefinitionStackToken(StackToken):
 
         joined_lines = ""
         for next_line in self.continuation_lines:
-            joined_lines = joined_lines + next_line + "\n"
+            joined_lines = joined_lines + next_line + ParserHelper.newline_character
         return joined_lines + join_suffix
