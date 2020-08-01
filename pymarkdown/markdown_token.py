@@ -581,9 +581,16 @@ class TextMarkdownToken(MarkdownToken):
 
         if whitespace_to_append is not None:
             self.extracted_whitespace = (
-                self.extracted_whitespace + ParserHelper.newline_character + whitespace_to_append
+                self.extracted_whitespace
+                + ParserHelper.newline_character
+                + whitespace_to_append
             )
-        self.token_text = self.token_text + ParserHelper.newline_character + prefix_whitespace + text_to_combine
+        self.token_text = (
+            self.token_text
+            + ParserHelper.newline_character
+            + prefix_whitespace
+            + text_to_combine
+        )
         self.compose_extra_data_field()
         return removed_whitespace
 

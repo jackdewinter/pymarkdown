@@ -208,9 +208,9 @@ class LeafBlockProcessor:
             )
             LOGGER.debug("previous_ws>>%s", str(current_whitespace_length))
             LOGGER.debug("whitespace_left>>%s", str(whitespace_left))
-            removed_whitespace = \
-                ParserHelper.create_replace_with_nothing_marker(\
-                    "".rjust(current_whitespace_length - whitespace_left, " "))
+            removed_whitespace = ParserHelper.create_replace_with_nothing_marker(
+                "".rjust(current_whitespace_length - whitespace_left, " ")
+            )
             extracted_whitespace = removed_whitespace + "".rjust(whitespace_left, " ")
         return new_tokens, extracted_whitespace
 
@@ -223,7 +223,8 @@ class LeafBlockProcessor:
         did_process = False
         LOGGER.debug("last_list_start_index>>%s>>", str(last_list_start_index))
         LOGGER.debug(
-            "original_line_to_parse>>%s>>", ParserHelper.make_value_visible(original_line_to_parse)
+            "original_line_to_parse>>%s>>",
+            ParserHelper.make_value_visible(original_line_to_parse),
         )
         offset_index = 0
         if last_list_start_index:
@@ -370,7 +371,8 @@ class LeafBlockProcessor:
 
         relative_whitespace_index = special_parse_start_index - offset_index
         LOGGER.debug(
-            "whitespace_to_parse>>%s>>", ParserHelper.make_value_visible(whitespace_to_parse)
+            "whitespace_to_parse>>%s>>",
+            ParserHelper.make_value_visible(whitespace_to_parse),
         )
         LOGGER.debug("special_parse_start_index>>%s>>", str(special_parse_start_index))
         LOGGER.debug(
@@ -380,7 +382,10 @@ class LeafBlockProcessor:
             str(accumulated_whitespace_count),
         )
         while accumulated_whitespace_count < abc:
-            if whitespace_to_parse[actual_whitespace_index] == ParserHelper.tab_character:
+            if (
+                whitespace_to_parse[actual_whitespace_index]
+                == ParserHelper.tab_character
+            ):
                 LOGGER.debug(
                     ">>relative_whitespace_index>>%s", str(relative_whitespace_index)
                 )
@@ -526,11 +531,15 @@ class LeafBlockProcessor:
                         str(accumulated_whitespace_count),
                         str(offset_index),
                     )
-                    LOGGER.debug("before>>%s>>", ParserHelper.make_value_visible(left_ws))
+                    LOGGER.debug(
+                        "before>>%s>>", ParserHelper.make_value_visible(left_ws)
+                    )
                     if excess_whitespace_count:
                         excess_whitespace_count -= kludge_adjust
                         left_ws = " ".rjust(excess_whitespace_count) + left_ws
-                    LOGGER.debug("after>>%s>>", ParserHelper.make_value_visible(left_ws))
+                    LOGGER.debug(
+                        "after>>%s>>", ParserHelper.make_value_visible(left_ws)
+                    )
                 else:
                     column_number += actual_whitespace_index
                 LOGGER.debug("column_number>>%s", str(column_number))
@@ -538,7 +547,10 @@ class LeafBlockProcessor:
                     IndentedCodeBlockMarkdownToken(adj_ws, line_number, column_number)
                 )
                 extracted_whitespace = left_ws
-                LOGGER.debug("left_ws>>%s<<", ParserHelper.make_value_visible(extracted_whitespace))
+                LOGGER.debug(
+                    "left_ws>>%s<<",
+                    ParserHelper.make_value_visible(extracted_whitespace),
+                )
             new_tokens.append(
                 TextMarkdownToken(
                     position_marker.text_to_parse[position_marker.index_number :],

@@ -578,7 +578,7 @@ class LinkHelper:
             ex_link = InlineHelper.handle_backslashes(ex_link, add_text_signature=False)
         LOGGER.debug(
             "urllib.parse.quote>>ex_link>>%s>>",
-            ParserHelper.make_value_visible(ex_link)
+            ParserHelper.make_value_visible(ex_link),
         )
 
         ex_link = LinkHelper.__encode_link_destination(ex_link)
@@ -689,14 +689,16 @@ class LinkHelper:
             )
             if new_index != -1:
                 LOGGER.debug(
-                    "before ws>>%s<", ParserHelper.make_value_visible(source_text[new_index:])
+                    "before ws>>%s<",
+                    ParserHelper.make_value_visible(source_text[new_index:]),
                 )
                 (
                     new_index,
                     before_title_whitespace,
                 ) = ParserHelper.extract_any_whitespace(source_text, new_index)
                 LOGGER.debug(
-                    "after ws>>%s>", ParserHelper.make_value_visible(source_text[new_index:])
+                    "after ws>>%s>",
+                    ParserHelper.make_value_visible(source_text[new_index:]),
                 )
                 if ParserHelper.is_character_at_index_not(
                     source_text, new_index, LinkHelper.__link_format_inline_end
@@ -789,7 +791,8 @@ class LinkHelper:
             str(len(inline_blocks)),
         )
         LOGGER.debug(
-            "handle_link_types>source_text>>%s<<", ParserHelper.make_value_visible(source_text)
+            "handle_link_types>source_text>>%s<<",
+            ParserHelper.make_value_visible(source_text),
         )
         LOGGER.debug("handle_link_types>>%s<<", source_text[new_index:])
         LOGGER.debug(
@@ -839,12 +842,10 @@ class LinkHelper:
             ex_label = ""
             LOGGER.debug("shortcut?")
             LOGGER.debug(
-                ">>%s<<",
-                ParserHelper.make_value_visible(inline_blocks),
+                ">>%s<<", ParserHelper.make_value_visible(inline_blocks),
             )
             LOGGER.debug(
-                ">>%s<<",
-                ParserHelper.make_value_visible(text_from_blocks),
+                ">>%s<<", ParserHelper.make_value_visible(text_from_blocks),
             )
 
             update_index, inline_link, inline_title = LinkHelper.__look_up_link(
@@ -868,7 +869,9 @@ class LinkHelper:
                 pre_inline_title = ""
             LOGGER.debug(">>pre_inline_link>>%s>>", pre_inline_link)
 
-            text_from_blocks_raw = ParserHelper.resolve_backspaces_from_text(text_from_blocks_raw)
+            text_from_blocks_raw = ParserHelper.resolve_backspaces_from_text(
+                text_from_blocks_raw
+            )
             LOGGER.debug(">>text_from_blocks_raw>>%s>>", text_from_blocks_raw)
 
             if start_text == LinkHelper.__link_start_sequence:
@@ -1090,7 +1093,9 @@ class LinkHelper:
             if image_token.did_use_angle_start:
                 image_uri = "<" + image_uri + ">"
 
-            link_text = ParserHelper.remove_backspaces_from_text(image_token.text_from_blocks)
+            link_text = ParserHelper.remove_backspaces_from_text(
+                image_token.text_from_blocks
+            )
             image_text = (
                 "![" + link_text + "](" + image_token.before_link_whitespace + image_uri
             )
@@ -1113,7 +1118,9 @@ class LinkHelper:
                 )
             image_text += ")"
         elif image_token.label_type == "shortcut":
-            link_text = ParserHelper.remove_backspaces_from_text(image_token.text_from_blocks)
+            link_text = ParserHelper.remove_backspaces_from_text(
+                image_token.text_from_blocks
+            )
             image_text = "![" + link_text + "]"
         elif image_token.label_type == "full":
             image_text = (
@@ -1133,7 +1140,9 @@ class LinkHelper:
 
         link_text = ""
         if link_token.label_type == "shortcut":
-            link_label = ParserHelper.remove_backspaces_from_text(link_token.text_from_blocks)
+            link_label = ParserHelper.remove_backspaces_from_text(
+                link_token.text_from_blocks
+            )
             link_text = "[" + link_label + "]"
         elif link_token.label_type == "full":
 
@@ -1154,7 +1163,9 @@ class LinkHelper:
             if link_token.did_use_angle_start:
                 link_uri = "<" + link_uri + ">"
 
-            link_label = ParserHelper.remove_backspaces_from_text(link_token.text_from_blocks)
+            link_label = ParserHelper.remove_backspaces_from_text(
+                link_token.text_from_blocks
+            )
             link_text = (
                 "[" + link_label + "](" + link_token.before_link_whitespace + link_uri
             )

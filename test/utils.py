@@ -6,14 +6,12 @@ import json
 import tempfile
 from test.transform_to_markdown import TransformToMarkdown
 
-from pymarkdown.inline_helper import InlineHelper
-from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.markdown_token import (
     EndMarkdownToken,
     MarkdownToken,
     MarkdownTokenClass,
 )
-from pymarkdown.parser_helper import PositionMarker
+from pymarkdown.parser_helper import ParserHelper, PositionMarker
 
 
 def write_temporary_configuration(supplied_configuration):
@@ -37,14 +35,8 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
     """
 
     print("\n---")
-    print(
-        "expected_tokens: "
-        + ParserHelper.make_value_visible(expected_tokens)
-    )
-    print(
-        "parsed_tokens  : "
-        + ParserHelper.make_value_visible(actual_tokens)
-    )
+    print("expected_tokens: " + ParserHelper.make_value_visible(expected_tokens))
+    print("parsed_tokens  : " + ParserHelper.make_value_visible(actual_tokens))
     assert len(expected_tokens) == len(actual_tokens), (
         "List lengths are not the same: ("
         + str(len(expected_tokens))
@@ -95,18 +87,10 @@ def assert_if_strings_different(expected_string, actual_string):
     print(
         "expected_string(" + str(len(expected_string)) + ")>>" + expected_string + "<<"
     )
-    print(
-        "expected_string>>"
-        + ParserHelper.make_value_visible(expected_string)
-        + "<<"
-    )
+    print("expected_string>>" + ParserHelper.make_value_visible(expected_string) + "<<")
 
     print("actual_string  (" + str(len(actual_string)) + ")>>" + actual_string + "<<")
-    print(
-        "actual_string>>"
-        + ParserHelper.make_value_visible(actual_string)
-        + "<<"
-    )
+    print("actual_string>>" + ParserHelper.make_value_visible(actual_string) + "<<")
 
     diff = difflib.ndiff(expected_string, actual_string)
 
@@ -137,7 +121,10 @@ def __calc_initial_whitespace(calc_token):
         indent_level = len(calc_token.extracted_whitespace)
         had_tab = bool(
             ParserHelper.tab_character in calc_token.extracted_whitespace
-            or (calc_token.leading_spaces and ParserHelper.tab_character in calc_token.leading_spaces)
+            or (
+                calc_token.leading_spaces
+                and ParserHelper.tab_character in calc_token.leading_spaces
+            )
         )
     elif (
         calc_token.token_name == MarkdownToken.token_html_block
@@ -147,11 +134,15 @@ def __calc_initial_whitespace(calc_token):
     elif calc_token.token_name == MarkdownToken.token_paragraph:
 
         if ParserHelper.newline_character in calc_token.extracted_whitespace:
-            end_of_line_index = calc_token.extracted_whitespace.index(ParserHelper.newline_character)
+            end_of_line_index = calc_token.extracted_whitespace.index(
+                ParserHelper.newline_character
+            )
             first_para_ws = calc_token.extracted_whitespace[0:end_of_line_index]
         else:
             first_para_ws = calc_token.extracted_whitespace
-        print(">>first_para_ws>>" + ParserHelper.make_value_visible(first_para_ws) + ">>")
+        print(
+            ">>first_para_ws>>" + ParserHelper.make_value_visible(first_para_ws) + ">>"
+        )
         indent_level = len(first_para_ws)
         had_tab = bool(ParserHelper.tab_character in first_para_ws)
         print(">>indent_level>>" + str(indent_level) + ">>had_tab>>" + str(had_tab))

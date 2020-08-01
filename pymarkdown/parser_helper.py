@@ -364,28 +364,34 @@ class ParserHelper:
 
     @staticmethod
     def make_value_visible(value_to_modify):
-        df = str(value_to_modify)
-        return df \
-            .replace(ParserHelper.__backspace_character, "\\b") \
-            .replace(ParserHelper.__alert_character, "\\a") \
-            .replace(ParserHelper.tab_character, "\\t") \
-            .replace(ParserHelper.newline_character, "\\n") \
-            .replace(ParserHelper.whitespace_split_character, "\\x02")\
-            .replace(ParserHelper.__replace_noop_character, "\\x03")\
-            .replace("\\x07", "\\a") \
+        """
+        For the given value, turn it into a string if necessary, and then replace
+        any known "invisible" characters with more visible strings.
+        """
+        return (
+            str(value_to_modify)
+            .replace(ParserHelper.__backspace_character, "\\b")
+            .replace(ParserHelper.__alert_character, "\\a")
+            .replace(ParserHelper.tab_character, "\\t")
+            .replace(ParserHelper.newline_character, "\\n")
+            .replace(ParserHelper.whitespace_split_character, "\\x02")
+            .replace(ParserHelper.__replace_noop_character, "\\x03")
+            .replace("\\x07", "\\a")
             .replace("\\x08", "\\b")
-
+        )
 
     @staticmethod
     def remove_backspaces_from_text(token_text):
-        main_text = token_text.replace(
-            ParserHelper.__backspace_character, ""
-        ).replace("\x08", "")
-        return main_text
+        """
+        Remove any backspaces from the text.
+        """
+        return token_text.replace(ParserHelper.__backspace_character, "").replace(
+            "\x08", ""
+        )
 
     @staticmethod
     def resolve_backspaces_from_text(token_text):
-        """ParserHelper.make_value_visible
+        """
         Deal with any backslash encoding in text with backspaces.
         """
         adjusted_text_token = token_text
@@ -401,18 +407,32 @@ class ParserHelper:
 
     @staticmethod
     def create_replacement_markers(replace_this_string, with_this_string):
-        return ParserHelper.__alert_character \
-            + replace_this_string \
-            + ParserHelper.__alert_character \
-            + with_this_string \
+        """
+        Create a replacement marker indicating that the first string is being replaced
+        by the second string.
+        """
+        return (
+            ParserHelper.__alert_character
+            + replace_this_string
             + ParserHelper.__alert_character
+            + with_this_string
+            + ParserHelper.__alert_character
+        )
 
     @staticmethod
     def create_replace_with_nothing_marker(replace_this_string):
-        return ParserHelper.create_replacement_markers(replace_this_string, ParserHelper.__replace_noop_character)
+        """
+        Create a replacement marker of the given string with the noop character.
+        """
+        return ParserHelper.create_replacement_markers(
+            replace_this_string, ParserHelper.__replace_noop_character
+        )
 
     @staticmethod
     def resolve_noops_from_text(token_text):
+        """
+        Resolve the replacement noop character out of the text string.
+        """
         return token_text.replace(ParserHelper.__replace_noop_character, "")
 
     @staticmethod
@@ -425,7 +445,9 @@ class ParserHelper:
             middle_replacement_index = main_text.index(
                 ParserHelper.__alert_character, start_replacement_index + 1
             )
-            end_replacement_index = main_text.index(ParserHelper.__alert_character, middle_replacement_index + 1)
+            end_replacement_index = main_text.index(
+                ParserHelper.__alert_character, middle_replacement_index + 1
+            )
 
             replace_text = main_text[
                 start_replacement_index + 1 : middle_replacement_index
@@ -468,7 +490,9 @@ class ParserHelper:
         we take the right text from the replacement.
         """
         while ParserHelper.__alert_character in adjusted_text_token:
-            start_replacement_index = adjusted_text_token.index(ParserHelper.__alert_character)
+            start_replacement_index = adjusted_text_token.index(
+                ParserHelper.__alert_character
+            )
             middle_replacement_index = adjusted_text_token.index(
                 ParserHelper.__alert_character, start_replacement_index + 1
             )
@@ -506,6 +530,7 @@ class ParserHelper:
                     replace_text + adjusted_text_token[end_replacement_index + 1 :]
                 )
         return adjusted_text_token
+
 
 # pylint: enable=too-many-public-methods
 

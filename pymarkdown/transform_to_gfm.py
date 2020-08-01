@@ -5,7 +5,6 @@ import inspect
 import logging
 
 from pymarkdown.inline_helper import InlineHelper
-from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
@@ -32,6 +31,7 @@ from pymarkdown.markdown_token import (
     UnorderedListStartMarkdownToken,
     UriAutolinkMarkdownToken,
 )
+from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
 
@@ -448,15 +448,21 @@ class TransformToGfm:
         """
         Handle the text token.
         """
-        adjusted_text_token = ParserHelper.resolve_backspaces_from_text(next_token.token_text)
-        adjusted_text_token = ParserHelper.resolve_references_from_text(adjusted_text_token)
+        adjusted_text_token = ParserHelper.resolve_backspaces_from_text(
+            next_token.token_text
+        )
+        adjusted_text_token = ParserHelper.resolve_references_from_text(
+            adjusted_text_token
+        )
         adjusted_text_token = ParserHelper.resolve_noops_from_text(adjusted_text_token)
 
         if transform_state.is_in_code_block:
             extracted_whitespace = ParserHelper.resolve_references_from_text(
                 next_token.extracted_whitespace
             )
-            extracted_whitespace = ParserHelper.resolve_noops_from_text(extracted_whitespace)
+            extracted_whitespace = ParserHelper.resolve_noops_from_text(
+                extracted_whitespace
+            )
             output_html = output_html + extracted_whitespace + adjusted_text_token
         elif transform_state.is_in_html_block:
             output_html = (
@@ -498,7 +504,11 @@ class TransformToGfm:
         Handle the black line token.
         """
         if transform_state.is_in_fenced_code_block:
-            output_html = output_html + next_token.extracted_whitespace + ParserHelper.newline_character
+            output_html = (
+                output_html
+                + next_token.extracted_whitespace
+                + ParserHelper.newline_character
+            )
         elif transform_state.is_in_html_block:
             output_html += ParserHelper.newline_character
         return output_html
@@ -558,7 +568,11 @@ class TransformToGfm:
         """
         assert next_token
         transform_state.is_in_code_block = False
-        output_html += ParserHelper.newline_character + "</code></pre>" + ParserHelper.newline_character
+        output_html += (
+            ParserHelper.newline_character
+            + "</code></pre>"
+            + ParserHelper.newline_character
+        )
         return output_html
 
     @classmethod
@@ -597,7 +611,10 @@ class TransformToGfm:
             )
         inner_tag = "<code" + inner_tag + ">"
 
-        if not output_html.endswith(inner_tag) and output_html[-1] != ParserHelper.newline_character:
+        if (
+            not output_html.endswith(inner_tag)
+            and output_html[-1] != ParserHelper.newline_character
+        ):
             output_html += ParserHelper.newline_character
         elif (
             output_html[-1] == ParserHelper.newline_character
@@ -657,7 +674,8 @@ class TransformToGfm:
             output_html
             + "</h"
             + str(transform_state.actual_tokens[fenced_token].hash_count)
-            + ">" + ParserHelper.newline_character
+            + ">"
+            + ParserHelper.newline_character
         )
         return output_html
 
@@ -690,7 +708,9 @@ class TransformToGfm:
         else:
             inner_tag = "2"
 
-        output_html = output_html + "</h" + inner_tag + ">" + ParserHelper.newline_character
+        output_html = (
+            output_html + "</h" + inner_tag + ">" + ParserHelper.newline_character
+        )
         return output_html
 
     @classmethod
@@ -711,8 +731,12 @@ class TransformToGfm:
         Handle the code span token.
         """
         assert transform_state
-        adjusted_text_token = ParserHelper.resolve_backspaces_from_text(next_token.span_text)
-        adjusted_text_token = ParserHelper.resolve_references_from_text(adjusted_text_token)
+        adjusted_text_token = ParserHelper.resolve_backspaces_from_text(
+            next_token.span_text
+        )
+        adjusted_text_token = ParserHelper.resolve_references_from_text(
+            adjusted_text_token
+        )
 
         output_html = output_html + "<code>" + adjusted_text_token + "</code>"
         return output_html
@@ -768,7 +792,9 @@ class TransformToGfm:
         if next_token.list_start_content != "1":
             list_start = int(next_token.list_start_content)
             ostart_attribute = ' start="' + str(list_start) + '"'
-        transform_state.add_leading_text = "<ol" + ostart_attribute + ">" + ParserHelper.newline_character + "<li>"
+        transform_state.add_leading_text = (
+            "<ol" + ostart_attribute + ">" + ParserHelper.newline_character + "<li>"
+        )
         return output_html
 
     def handle_start_unordered_list_token(
@@ -782,7 +808,9 @@ class TransformToGfm:
             transform_state.actual_token_index,
             next_token,
         )
-        transform_state.add_leading_text = "<ul>" + ParserHelper.newline_character + "<li>"
+        transform_state.add_leading_text = (
+            "<ul>" + ParserHelper.newline_character + "<li>"
+        )
         return output_html
 
     def handle_end_list_token(
@@ -795,9 +823,13 @@ class TransformToGfm:
             transform_state.actual_tokens, transform_state.actual_token_index,
         )
         if next_token.type_name == MarkdownToken.token_unordered_list_start:
-            transform_state.add_trailing_text = "</li>" + ParserHelper.newline_character + "</ul>"
+            transform_state.add_trailing_text = (
+                "</li>" + ParserHelper.newline_character + "</ul>"
+            )
         else:
-            transform_state.add_trailing_text = "</li>" + ParserHelper.newline_character + "</ol>"
+            transform_state.add_trailing_text = (
+                "</li>" + ParserHelper.newline_character + "</ol>"
+            )
         return output_html
 
     @classmethod

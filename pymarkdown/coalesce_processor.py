@@ -2,6 +2,7 @@
 Processing to coalesce a text tokens with a list of tokens.
 """
 import logging
+
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
@@ -47,17 +48,21 @@ class CoalesceProcessor:
                         "remove_leading_spaces>>%s", str(remove_leading_spaces)
                     )
                     LOGGER.debug(
-                        "combine1>>%s", ParserHelper.make_value_visible(coalesced_list[-1])
+                        "combine1>>%s",
+                        ParserHelper.make_value_visible(coalesced_list[-1]),
                     )
                     LOGGER.debug(
                         "combine2>>%s",
-                        ParserHelper.make_value_visible(first_pass_results[coalesce_index]),
+                        ParserHelper.make_value_visible(
+                            first_pass_results[coalesce_index]
+                        ),
                     )
                     indented_whitespace = coalesced_list[-1].combine(
                         first_pass_results[coalesce_index], remove_leading_spaces
                     )
                     LOGGER.debug(
-                        "combined>>%s", ParserHelper.make_value_visible(coalesced_list[-1])
+                        "combined>>%s",
+                        ParserHelper.make_value_visible(coalesced_list[-1]),
                     )
                     LOGGER.debug(
                         "indented_whitespace>>%s<<",

@@ -214,13 +214,17 @@ class BlockQuoteProcessor:
                         adjusted_tab_length = ParserHelper.calculate_length(
                             ParserHelper.tab_character, start_index=start_index
                         )
-                        LOGGER.debug("adj--%s--", ParserHelper.make_value_visible(adjusted_line))
+                        LOGGER.debug(
+                            "adj--%s--", ParserHelper.make_value_visible(adjusted_line)
+                        )
                         adjusted_line = (
                             adjusted_line[0:start_index]
                             + "".rjust(adjusted_tab_length)
                             + adjusted_line[start_index + 1 :]
                         )
-                        LOGGER.debug("--%s--", ParserHelper.make_value_visible(adjusted_line))
+                        LOGGER.debug(
+                            "--%s--", ParserHelper.make_value_visible(adjusted_line)
+                        )
                     start_index += 1
 
                 if is_top_of_stack_fenced_code_block and (

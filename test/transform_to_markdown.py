@@ -412,13 +412,9 @@ class TransformToMarkdown:
         prefix_text = ""
         main_text = ParserHelper.remove_backspaces_from_text(next_token.token_text)
 
-        print(
-            ">>rehydrate_text>>" + ParserHelper.make_value_visible(main_text)
-        )
+        print(">>rehydrate_text>>" + ParserHelper.make_value_visible(main_text))
         main_text = ParserHelper.resolve_replacement_markers_from_text(main_text)
-        print(
-            "<<rehydrate_text>>" + ParserHelper.make_value_visible(main_text)
-        )
+        print("<<rehydrate_text>>" + ParserHelper.make_value_visible(main_text))
 
         print(
             "<<leading_whitespace>>"
@@ -500,7 +496,9 @@ class TransformToMarkdown:
             elif self.block_stack[-1].token_name == MarkdownToken.token_setext_heading:
                 if ParserHelper.newline_character in main_text:
                     split_token_text = main_text.split(ParserHelper.newline_character)
-                    split_parent_whitespace_text = next_token.end_whitespace.split(ParserHelper.newline_character)
+                    split_parent_whitespace_text = next_token.end_whitespace.split(
+                        ParserHelper.newline_character
+                    )
                     print(
                         ">>split_token_text>>"
                         + ParserHelper.make_value_visible(split_token_text)
@@ -608,7 +606,9 @@ class TransformToMarkdown:
         if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
             return ""
 
-        span_text = ParserHelper.resolve_replacement_markers_from_text(next_token.span_text)
+        span_text = ParserHelper.resolve_replacement_markers_from_text(
+            next_token.span_text
+        )
         leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
             next_token.leading_whitespace
         )
@@ -628,7 +628,11 @@ class TransformToMarkdown:
         """
         Rehydrate the thematic break text from the token.
         """
-        return next_token.extracted_whitespace + next_token.rest_of_line + ParserHelper.newline_character
+        return (
+            next_token.extracted_whitespace
+            + next_token.rest_of_line
+            + ParserHelper.newline_character
+        )
 
     @classmethod
     def reconstitute_indented_text(
@@ -652,7 +656,11 @@ class TransformToMarkdown:
             + ">>"
         )
         split_main_text = main_text.split(ParserHelper.newline_character)
-        print("split_main_text>>" + ParserHelper.make_value_visible(split_main_text) + ">>")
+        print(
+            "split_main_text>>"
+            + ParserHelper.make_value_visible(split_main_text)
+            + ">>"
+        )
         print(
             "indented_whitespace>>"
             + ParserHelper.make_value_visible(indented_whitespace)
@@ -671,10 +679,13 @@ class TransformToMarkdown:
         recombined_text = ""
         for iterator in enumerate(split_main_text):
             recombined_text += (
-                split_indented_whitespace[iterator[0]] + iterator[1] + ParserHelper.newline_character
+                split_indented_whitespace[iterator[0]]
+                + iterator[1]
+                + ParserHelper.newline_character
             )
 
         print("<<" + ParserHelper.make_value_visible(recombined_text) + ">>")
         return recombined_text
+
 
 # pylint: enable=too-many-public-methods

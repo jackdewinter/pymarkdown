@@ -40,7 +40,9 @@ class InlineProcessor:
         Initialize the inline processor subsystem.
         """
         InlineProcessor.__inline_character_handlers = {}
-        InlineProcessor.__valid_inline_text_block_sequence_starts = ParserHelper.newline_character
+        InlineProcessor.__valid_inline_text_block_sequence_starts = (
+            ParserHelper.newline_character
+        )
         InlineProcessor.register_handlers(
             InlineHelper.code_span_bounds, InlineHelper.handle_inline_backtick
         )
@@ -83,9 +85,7 @@ class InlineProcessor:
         LOGGER.info("coalesced_results")
         LOGGER.info("-----")
         for next_token in coalesced_results:
-            LOGGER.info(
-                ">>%s<<", ParserHelper.make_value_visible(next_token)
-            )
+            LOGGER.info(">>%s<<", ParserHelper.make_value_visible(next_token))
         LOGGER.info("-----")
 
         coalesced_list = []
@@ -113,7 +113,8 @@ class InlineProcessor:
                         coalesce_index
                     ].extracted_whitespace.replace(ParserHelper.tab_character, "    ")
                     LOGGER.debug(
-                        "combined_text>>%s", ParserHelper.make_value_visible(combined_text)
+                        "combined_text>>%s",
+                        ParserHelper.make_value_visible(combined_text),
                     )
                     LOGGER.debug(
                         "combined_whitespace_text>>%s",
@@ -283,7 +284,9 @@ class InlineProcessor:
     @staticmethod
     def __recombine_with_whitespace(source_text, whitespace_to_recombine):
         split_source_text = source_text.split(ParserHelper.newline_character)
-        split_whitespace_to_recombine = whitespace_to_recombine.split(ParserHelper.newline_character)
+        split_whitespace_to_recombine = whitespace_to_recombine.split(
+            ParserHelper.newline_character
+        )
         assert len(split_source_text) == len(split_whitespace_to_recombine)
         recombined_text = None
         for split_index, next_split_source in enumerate(split_source_text):
@@ -392,7 +395,7 @@ class InlineProcessor:
                 )
                 LOGGER.debug(
                     "handle_line_end>>new_tokens>>%s<<",
-                    ParserHelper.make_value_visible(inline_response.new_tokens)
+                    ParserHelper.make_value_visible(inline_response.new_tokens),
                 )
                 if not inline_response.new_tokens:
                     end_string = InlineProcessor.__add_recombined_whitespace(
@@ -404,7 +407,9 @@ class InlineProcessor:
                     )
                 LOGGER.debug(
                     "handle_line_end>>%s<<",
-                    ParserHelper.make_value_visible(source_text[inline_response.new_index :])
+                    ParserHelper.make_value_visible(
+                        source_text[inline_response.new_index :]
+                    ),
                 )
                 LOGGER.debug(
                     "end_string(after)>>%s<<",
@@ -446,12 +451,11 @@ class InlineProcessor:
                 )
 
             LOGGER.debug(
-                "current_string>>%s<<",
-                ParserHelper.make_value_visible(current_string),
+                "current_string>>%s<<", ParserHelper.make_value_visible(current_string),
             )
             LOGGER.debug(
                 "current_string_unresolved>>%s<<",
-                ParserHelper.make_value_visible(current_string_unresolved)
+                ParserHelper.make_value_visible(current_string_unresolved),
             )
             if inline_response.new_tokens:
                 if current_string:
@@ -493,12 +497,12 @@ class InlineProcessor:
             LOGGER.debug(
                 "<<current_string<<%s<<%s<<",
                 str(len(current_string)),
-                ParserHelper.make_value_visible(current_string)
+                ParserHelper.make_value_visible(current_string),
             )
             LOGGER.debug(
                 "<<current_string_unresolved<<%s<<%s<<",
                 str(len(current_string_unresolved)),
-                ParserHelper.make_value_visible(current_string_unresolved)
+                ParserHelper.make_value_visible(current_string_unresolved),
             )
 
         LOGGER.debug("<<__complete_inline_block_processing<<")
@@ -522,8 +526,7 @@ class InlineProcessor:
 
         LOGGER.debug("__arw>>did_recombine>>%s>>", str(did_recombine))
         LOGGER.debug(
-            "__arw>>end_string>>%s>>",
-            ParserHelper.make_value_visible(end_string),
+            "__arw>>end_string>>%s>>", ParserHelper.make_value_visible(end_string),
         )
         if did_recombine:
             LOGGER.debug(
@@ -535,11 +538,15 @@ class InlineProcessor:
             )
             LOGGER.debug(
                 "__arw>>%s>>",
-                ParserHelper.make_value_visible(source_text[0 : inline_response.new_index])
+                ParserHelper.make_value_visible(
+                    source_text[0 : inline_response.new_index]
+                ),
             )
             LOGGER.debug(
                 "__arw>>%s>>",
-                ParserHelper.make_value_visible(source_text[inline_response.new_index :])
+                ParserHelper.make_value_visible(
+                    source_text[inline_response.new_index :]
+                ),
             )
             LOGGER.debug(
                 "__arw>>extracted_whitespace>>%s>>",
@@ -575,40 +582,42 @@ class InlineProcessor:
             ParserHelper.make_value_visible(current_string),
         )
         LOGGER.debug(
-            "__complete_inline_loop--new_string>>%s>>", ParserHelper.make_value_visible(new_string)
+            "__complete_inline_loop--new_string>>%s>>",
+            ParserHelper.make_value_visible(new_string),
         )
         LOGGER.debug(
             "__complete_inline_loop--new_string_unresolved>>%s>>",
-            ParserHelper.make_value_visible(new_string_unresolved)
+            ParserHelper.make_value_visible(new_string_unresolved),
         )
         LOGGER.debug(
             "__complete_inline_loop--original_string>>%s>>",
-            ParserHelper.make_value_visible(original_string)
+            ParserHelper.make_value_visible(original_string),
         )
 
         LOGGER.debug(
             "__complete_inline_loop--current_string>>%s>>",
-            ParserHelper.make_value_visible(current_string)
+            ParserHelper.make_value_visible(current_string),
         )
         if original_string is not None:
             assert not new_string_unresolved or new_string_unresolved == original_string
-            current_string += ParserHelper.create_replacement_markers(original_string, InlineHelper.append_text("", new_string))
+            current_string += ParserHelper.create_replacement_markers(
+                original_string, InlineHelper.append_text("", new_string)
+            )
         else:
             current_string = InlineHelper.append_text(current_string, new_string)
         LOGGER.debug(
             "__complete_inline_loop--current_string>>%s>>",
-            ParserHelper.make_value_visible(current_string)
+            ParserHelper.make_value_visible(current_string),
         )
-
 
         LOGGER.debug(
             "__complete_inline_loop--current_string>>%s>>",
-            ParserHelper.make_value_visible(current_string)
+            ParserHelper.make_value_visible(current_string),
         )
 
         LOGGER.debug(
             "new_string_unresolved>>%s>>",
-            ParserHelper.make_value_visible(new_string_unresolved)
+            ParserHelper.make_value_visible(new_string_unresolved),
         )
         if new_string_unresolved:
             current_string_unresolved += new_string_unresolved
@@ -619,7 +628,7 @@ class InlineProcessor:
 
         LOGGER.debug(
             "__complete_inline_loop--current_string_unresolved>>%s>>",
-            ParserHelper.make_value_visible(current_string_unresolved)
+            ParserHelper.make_value_visible(current_string_unresolved),
         )
 
         if whitespace_to_add is not None:
@@ -657,12 +666,18 @@ class InlineProcessor:
         LOGGER.debug(
             "__cibp>inline_blocks>%s<", ParserHelper.make_value_visible(inline_blocks)
         )
-        LOGGER.debug("__cibp>source_text>%s<", ParserHelper.make_value_visible(source_text))
-        LOGGER.debug("__cibp>start_index>%s<", ParserHelper.make_value_visible(start_index))
+        LOGGER.debug(
+            "__cibp>source_text>%s<", ParserHelper.make_value_visible(source_text)
+        )
+        LOGGER.debug(
+            "__cibp>start_index>%s<", ParserHelper.make_value_visible(start_index)
+        )
         LOGGER.debug(
             "__cibp>current_string>%s<", ParserHelper.make_value_visible(current_string)
         )
-        LOGGER.debug("__cibp>end_string>%s<", ParserHelper.make_value_visible(end_string))
+        LOGGER.debug(
+            "__cibp>end_string>%s<", ParserHelper.make_value_visible(end_string)
+        )
         LOGGER.debug(
             "__cibp>starting_whitespace>%s<",
             ParserHelper.make_value_visible(starting_whitespace),
@@ -694,9 +709,7 @@ class InlineProcessor:
                     current_string, starting_whitespace, end_whitespace=end_string
                 )
             )
-        LOGGER.debug(
-            ">>%s<<", ParserHelper.make_value_visible(inline_blocks)
-        )
+        LOGGER.debug(">>%s<<", ParserHelper.make_value_visible(inline_blocks))
 
         return EmphasisHelper.resolve_inline_emphasis(inline_blocks, None)
 

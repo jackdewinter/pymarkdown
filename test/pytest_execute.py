@@ -8,6 +8,7 @@ import os
 import sys
 import traceback
 from abc import ABC, abstractmethod
+
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
@@ -64,9 +65,12 @@ class InProcessResult:
                 diff_values = "\n".join(list(diff)) + "\n---\n"
 
                 LOGGER.warning(
-                    "actual>>%s", ParserHelper.make_value_visible(actual_stream.getvalue())
+                    "actual>>%s",
+                    ParserHelper.make_value_visible(actual_stream.getvalue()),
                 )
-                LOGGER.warning("expect>>%s", ParserHelper.make_value_visible(expected_text))
+                LOGGER.warning(
+                    "expect>>%s", ParserHelper.make_value_visible(expected_text)
+                )
                 assert False, stream_name + " not as expected:\n" + diff_values
 
     def assert_results(

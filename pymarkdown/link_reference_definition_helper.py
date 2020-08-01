@@ -47,7 +47,9 @@ class LinkReferenceDefinitionHelper:
             start_index, extracted_whitespace = ParserHelper.extract_whitespace(
                 line_to_parse, 0
             )
-            LOGGER.debug(">>line_to_parse>>%s<<", ParserHelper.make_value_visible(line_to_parse))
+            LOGGER.debug(
+                ">>line_to_parse>>%s<<", ParserHelper.make_value_visible(line_to_parse)
+            )
 
         if was_started:
             LOGGER.debug(">>parse_link_reference_definition>>was_started")
@@ -245,7 +247,9 @@ class LinkReferenceDefinitionHelper:
 
         assert new_index != -1
 
-        if not inline_title and line_title_whitespace.endswith(ParserHelper.newline_character):
+        if not inline_title and line_title_whitespace.endswith(
+            ParserHelper.newline_character
+        ):
             line_title_whitespace = line_title_whitespace[0:-1]
         if end_whitespace and end_whitespace.endswith(ParserHelper.newline_character):
             end_whitespace = end_whitespace[0:-1]
@@ -377,7 +381,9 @@ class LinkReferenceDefinitionHelper:
             start_index, extracted_whitespace = ParserHelper.extract_whitespace(
                 line_to_parse, 0
             )
-            LOGGER.debug(">>line_to_parse>>%s<<", ParserHelper.make_value_visible(line_to_parse))
+            LOGGER.debug(
+                ">>line_to_parse>>%s<<", ParserHelper.make_value_visible(line_to_parse)
+            )
             (
                 did_complete_lrd,
                 end_lrd_index,

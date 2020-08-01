@@ -907,7 +907,8 @@ class ContainerBlockProcessor:
         Parse the contents of a line for a leaf block.
         """
         LOGGER.debug(
-            "Leaf Line:%s:", ParserHelper.make_value_visible(xposition_marker.text_to_parse)
+            "Leaf Line:%s:",
+            ParserHelper.make_value_visible(xposition_marker.text_to_parse),
         )
         new_tokens = []
 
