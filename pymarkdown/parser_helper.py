@@ -11,6 +11,7 @@ class ParserHelper:
 
     __backspace_character = "\b"
     __alert_character = "\a"
+    whitespace_split_character = "\x02"
 
     backslash_character = "\\"
 
@@ -364,8 +365,10 @@ class ParserHelper:
         return df \
             .replace(ParserHelper.__backspace_character, "\\b") \
             .replace(ParserHelper.__alert_character, "\\a") \
+            .replace(ParserHelper.whitespace_split_character, "\\x02")\
             .replace("\\x07", "\\a") \
             .replace("\\x08", "\\b")
+
 
     @staticmethod
     def remove_backspaces_from_text(token_text):
@@ -403,7 +406,6 @@ class ParserHelper:
         """
         Resolve the alert characters (i.e. replacement markers) out of the text string.
         """
-
         while ParserHelper.__alert_character in main_text:
             start_replacement_index = main_text.index(ParserHelper.__alert_character)
             middle_replacement_index = main_text.index(

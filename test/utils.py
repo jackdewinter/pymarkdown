@@ -40,7 +40,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
     print(
         "expected_tokens: "
         + ParserHelper.make_value_visible(expected_tokens)
-        .replace("\x02", "\\x02")
         .replace("\x03", "\\x03")
     )
     print(
@@ -48,7 +47,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
         + ParserHelper.make_value_visible(actual_tokens)
         .replace("\n", "\\n")
         .replace("\t", "\\t")
-        .replace("\x02", "\\x02")
         .replace("\x03", "\\x03")
     )
     assert len(expected_tokens) == len(actual_tokens), (
@@ -73,7 +71,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             + ")>>"
             + ParserHelper.make_value_visible(expected_str)
             .replace("\n", "\\n")
-            .replace("\x02", "\\x02")
             .replace("\x03", "\\x03")
             + "<<"
         )
@@ -84,7 +81,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             + ParserHelper.make_value_visible(actual_str)
             .replace("\t", "\\t")
             .replace("\n", "\\n")
-            .replace("\x02", "\\x02")
             .replace("\x03", "\\x03")
             + "<<"
         )
@@ -113,7 +109,6 @@ def assert_if_strings_different(expected_string, actual_string):
         + ParserHelper.make_value_visible(expected_string)
         .replace("\t", "\\t")
         .replace("\n", "\\n")
-        .replace("\x02", "\\x02")
         .replace("\x03", "\\x03")
         + "<<"
     )
@@ -124,7 +119,6 @@ def assert_if_strings_different(expected_string, actual_string):
         + ParserHelper.make_value_visible(actual_string)
         .replace("\t", "\\t")
         .replace("\n", "\\n")
-        .replace("\x02", "\\x02")
         .replace("\x03", "\\x03")
         + "<<"
     )
@@ -435,13 +429,11 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
         print(
             "\n-=-=-\nExpected\n-=-=-\n"
             + ParserHelper.make_value_visible(source_markdown)
-            .replace("\x02", "\\x02")
             .replace("\x03", "\\x03")
             .replace("\n", "\\n")
             .replace("\t", "\\t")
             + "\n-=-=-\nActual\n-=-=-\n"
             + ParserHelper.make_value_visible(original_markdown)
-            .replace("\x02", "\\x02")
             .replace("\x03", "\\x03")
             .replace("\n", "\\n")
             .replace("\t", "\\t")

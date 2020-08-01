@@ -377,7 +377,7 @@ class InlineProcessor:
                 assert source_text[next_index] == "\n"
                 LOGGER.debug(
                     "end_string(before)>>%s<<",
-                    str(end_string).replace("\n", "\\n").replace("\x02", "\\x02"),
+                    ParserHelper.make_value_visible(end_string).replace("\n", "\\n"),
                 )
                 (
                     inline_response.new_string,
@@ -392,9 +392,8 @@ class InlineProcessor:
                 )
                 LOGGER.debug(
                     "handle_line_end>>new_tokens>>%s<<",
-                    str(inline_response.new_tokens)
-                    .replace("\n", "\\n")
-                    .replace("\x02", "\\x02"),
+                    ParserHelper.make_value_visible(inline_response.new_tokens)
+                    .replace("\n", "\\n"),
                 )
                 if not inline_response.new_tokens:
                     end_string = InlineProcessor.__add_recombined_whitespace(
@@ -406,13 +405,12 @@ class InlineProcessor:
                     )
                 LOGGER.debug(
                     "handle_line_end>>%s<<",
-                    source_text[inline_response.new_index :]
+                    ParserHelper.make_value_visible(source_text[inline_response.new_index :])
                     .replace("\n", "\\n")
-                    .replace("\x02", "\\x02"),
                 )
                 LOGGER.debug(
                     "end_string(after)>>%s<<",
-                    str(end_string).replace("\n", "\\n").replace("\x02", "\\x02"),
+                    ParserHelper.make_value_visible(end_string).replace("\n", "\\n"),
                 )
 
             LOGGER.debug(
@@ -451,13 +449,12 @@ class InlineProcessor:
 
             LOGGER.debug(
                 "current_string>>%s<<",
-                str(current_string).replace("\n", "\\n").replace("\x02", "\\x02"),
+                ParserHelper.make_value_visible(current_string).replace("\n", "\\n"),
             )
             LOGGER.debug(
                 "current_string_unresolved>>%s<<",
-                str(current_string_unresolved)
-                .replace("\n", "\\n")
-                .replace("\x02", "\\x02"),
+                ParserHelper.make_value_visible(current_string_unresolved)
+                .replace("\n", "\\n"),
             )
             if inline_response.new_tokens:
                 if current_string:
@@ -531,41 +528,39 @@ class InlineProcessor:
         LOGGER.debug("__arw>>did_recombine>>%s>>", str(did_recombine))
         LOGGER.debug(
             "__arw>>end_string>>%s>>",
-            str(end_string).replace("\n", "\\n").replace("\x02", "\\x02"),
+            ParserHelper.make_value_visible(end_string).replace("\n", "\\n"),
         )
         if did_recombine:
             LOGGER.debug(
                 "__arw>>source_text>>%s>>",
-                str(source_text).replace("\n", "\\n").replace("\x02", "\\x02"),
+                ParserHelper.make_value_visible(source_text).replace("\n", "\\n"),
             )
             new_index, extracted_whitespace = ParserHelper.extract_whitespace(
                 source_text, inline_response.new_index
             )
             LOGGER.debug(
                 "__arw>>%s>>",
-                str(source_text[0 : inline_response.new_index])
+                ParserHelper.make_value_visible(source_text[0 : inline_response.new_index])
                 .replace("\n", "\\n")
-                .replace("\x02", "\\x02"),
             )
             LOGGER.debug(
                 "__arw>>%s>>",
-                str(source_text[inline_response.new_index :])
+                ParserHelper.make_value_visible(source_text[inline_response.new_index :])
                 .replace("\n", "\\n")
-                .replace("\x02", "\\x02"),
             )
             LOGGER.debug(
                 "__arw>>extracted_whitespace>>%s>>",
-                str(extracted_whitespace).replace("\n", "\\n").replace("\x02", "\\x02"),
+                ParserHelper.make_value_visible(extracted_whitespace).replace("\n", "\\n"),
             )
             if extracted_whitespace:
                 inline_response.new_index = new_index
                 assert end_string is not None
                 end_string += extracted_whitespace
                 assert is_setext
-                end_string += "\x02"
+                end_string += ParserHelper.whitespace_split_character
                 LOGGER.debug(
                     "__arw>>end_string>>%s>>",
-                    str(end_string).replace("\n", "\\n").replace("\x02", "\\x02"),
+                    ParserHelper.make_value_visible(end_string).replace("\n", "\\n"),
                 )
         return end_string
 
@@ -714,7 +709,7 @@ class InlineProcessor:
                 )
             )
         LOGGER.debug(
-            ">>%s<<", str(inline_blocks).replace("\n", "\\n").replace("\x02", "\\x02")
+            ">>%s<<", ParserHelper.make_value_visible(inline_blocks).replace("\n", "\\n")
         )
 
         return EmphasisHelper.resolve_inline_emphasis(inline_blocks, None)

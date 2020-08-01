@@ -536,7 +536,7 @@ class TransformToMarkdown:
                         if split_parent_whitespace_text[iterator[0]]:
                             split_setext_text = split_parent_whitespace_text[
                                 iterator[0]
-                            ].split("\x02")
+                            ].split(ParserHelper.whitespace_split_character)
                             print(">>split_setext_text=" + str(split_setext_text))
                             if len(split_setext_text) == 1:
                                 if iterator[0] == 0:
