@@ -90,7 +90,7 @@ def assert_if_strings_different(expected_string, actual_string):
     print("expected_string>>" + ParserHelper.make_value_visible(expected_string) + "<<")
 
     print("actual_string  (" + str(len(actual_string)) + ")>>" + actual_string + "<<")
-    print("actual_string>>" + ParserHelper.make_value_visible(actual_string) + "<<")
+    print("actual_string  >>" + ParserHelper.make_value_visible(actual_string) + "<<")
 
     diff = difflib.ndiff(expected_string, actual_string)
 

@@ -235,7 +235,7 @@ class InlineProcessor:
         else:
             if special_sequence[0] == LinkHelper.link_label_end:
                 LOGGER.debug(
-                    "POSSIBLE LINK CLOSE_FOUND>>%s>>%s>>",
+                    "POSSIBLE LINK CLOSE_FOUND(%s)>>%s>>",
                     str(special_length),
                     special_sequence,
                 )

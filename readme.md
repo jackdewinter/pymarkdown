@@ -140,6 +140,8 @@
 ## document current restrictions
 
 - nested block quotes and nested lists are okay, but not together
-- currently do not pass one test with a link inside of an image link
+- currently do not pass one test with a link inside of a link inside of an image link
+  - did further research
+  - posted [discussion in commonmark](https://talk.commonmark.org/t/spec-algorithm-error-in-links-within-links-within-images/3571)
 - multi-line link reference definitions within a list of block quote not adequately tested
 - no install/setup support currently
