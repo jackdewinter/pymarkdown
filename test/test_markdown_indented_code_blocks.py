@@ -142,7 +142,7 @@ def test_indented_code_blocks_080():
     - one"""
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n\n    ]",
-        "[text:\a<\a&lt;\aa/\a>\a&gt;\a\n*hi*\n\n- one:]",
+        "[text:\a<\a&lt;\aa/\a>\a&gt;\a\n*hi*\n\x03\n- one:]",
         "[end-icode-block]",
     ]
     expected_gfm = """<pre><code>&lt;a/&gt;
@@ -179,7 +179,7 @@ def test_indented_code_blocks_081():
     chunk3"""
     expected_tokens = [
         "[icode-block(1,5):    :\n\n    \n  \n \n \n    ]",
-        "[text:chunk1\n\nchunk2\n\n\n\nchunk3:]",
+        "[text:chunk1\n\x03\nchunk2\n\x03\n\x03\n\x03\nchunk3:]",
         "[end-icode-block]",
     ]
     expected_gfm = """<pre><code>chunk1
@@ -217,7 +217,7 @@ def test_indented_code_blocks_082():
     )
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n    ]",
-        "[text:chunk1\n  \n  chunk2:]",
+        "[text:chunk1\n\x03  \n  chunk2:]",
         "[end-icode-block]",
     ]
     expected_gfm = """<pre><code>chunk1
@@ -251,7 +251,7 @@ def test_indented_code_blocks_082a():
     )
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n    ]",
-        "[text:chunk1\n\n  chunk2:]",
+        "[text:chunk1\n\x03\n  chunk2:]",
         "[end-icode-block]",
     ]
     expected_gfm = """<pre><code>chunk1

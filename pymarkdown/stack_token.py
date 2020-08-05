@@ -239,6 +239,7 @@ class OrderedListStackToken(ListStackToken):
         start_index,
         matching_markdown_token,
     ):
+        self.last_new_list_token = None
         ListStackToken.__init__(
             self,
             StackToken.stack_ordered_list,
@@ -268,6 +269,10 @@ class UnorderedListStackToken(ListStackToken):
         start_index,
         matching_markdown_token,
     ):
+        self.indent_level = indent_level
+        self.ws_before_marker = ws_before_marker
+        self.ws_after_marker = ws_after_marker
+        self.last_new_list_token = None
         ListStackToken.__init__(
             self,
             StackToken.stack_unordered_list,

@@ -455,6 +455,7 @@ class TransformToGfm:
             adjusted_text_token
         )
         adjusted_text_token = ParserHelper.resolve_noops_from_text(adjusted_text_token)
+        adjusted_text_token = ParserHelper.resolve_blechs_from_text(adjusted_text_token)
 
         if transform_state.is_in_code_block:
             extracted_whitespace = ParserHelper.resolve_references_from_text(

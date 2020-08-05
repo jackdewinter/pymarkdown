@@ -12,7 +12,11 @@ from pymarkdown.markdown_token import (
     UnorderedListStartMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.stack_token import OrderedListStackToken, UnorderedListStackToken
+from pymarkdown.stack_token import (
+    OrderedListStackToken,
+    StackToken,
+    UnorderedListStackToken,
+)
 
 LOGGER = logging.getLogger(__name__)
 
@@ -388,6 +392,9 @@ class ListBlockProcessor:
 
         LOGGER.debug("!!!!!FOUND>>%s", str(parser_state.token_stack[ind]))
         LOGGER.debug("!!!!!FOUND>>%s", str(parser_state.token_stack[ind].extra_data))
+        LOGGER.debug("!!!!!ALL>>%s", str(parser_state.token_stack))
+        LOGGER.debug("!!!!!ALL>>%s", str(parser_state.token_document))
+
         requested_list_indent = parser_state.token_stack[ind].indent_level
         before_ws_length = parser_state.token_stack[ind].ws_before_marker
         LOGGER.debug(
@@ -427,7 +434,8 @@ class ListBlockProcessor:
         used_indent = None
 
         if leading_space_length >= requested_list_indent and allow_list_continue:
-            LOGGER.debug("before>>%s>>", line_to_parse.replace(" ", "\\s"))
+
+            LOGGER.debug("before>>%s>>", line_to_parse)
             (
                 line_to_parse,
                 used_indent,
@@ -439,9 +447,7 @@ class ListBlockProcessor:
                 requested_list_indent,
             )
             LOGGER.debug(
-                "after>>%s>>%s>>",
-                line_to_parse.replace(" ", "\\s"),
-                used_indent.replace(" ", "\\s"),
+                "after>>%s>>%s>>", line_to_parse, used_indent,
             )
         else:
             requested_list_indent = requested_list_indent - before_ws_length
@@ -665,11 +671,18 @@ class ListBlockProcessor:
             LOGGER.debug("__post_list>>new list item>>")
             assert emit_li
             LOGGER.debug("instead of-->%s", str(new_token))
-            container_level_tokens.append(
-                NewListItemMarkdownToken(
-                    indent_level, position_marker, new_token.extracted_whitespace
-                )
+
+            top_stack_item = parser_state.token_stack[-1]
+            assert (
+                top_stack_item.type_name == StackToken.stack_unordered_list
+                or top_stack_item.type_name == StackToken.stack_ordered_list
             )
+
+            new_token = NewListItemMarkdownToken(
+                indent_level, position_marker, new_token.extracted_whitespace
+            )
+            top_stack_item.last_new_list_token = new_token
+            container_level_tokens.append(new_token)
         LOGGER.debug(
             "__post_list>>rem>>%s>>after_in>>%s",
             str(remaining_whitespace),

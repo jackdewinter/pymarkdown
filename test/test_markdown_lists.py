@@ -15,7 +15,7 @@ from .utils import (
 
 # pylint: disable=too-many-lines
 @pytest.mark.gfm
-def test_list_items_281():
+def test_list_items_281x():
     """
     Test case 281:  (part 1) Changing the bullet or ordered list delimiter starts a new list:
     """
@@ -850,7 +850,7 @@ def test_list_items_291():
 
 
 @pytest.mark.gfm
-def test_list_items_292():
+def test_list_items_292x():
     """
     Test case 292:  Note, however, that list items may not be indented more than three spaces. Here - e is treated as a paragraph continuation line, because it is indented more than three spaces:
     """
@@ -877,7 +877,7 @@ def test_list_items_292():
         "[text:c:]",
         "[end-para]",
         "[li(4,4):5:   ]",
-        "[para(4,6):\n  ]",
+        "[para(4,6):\n\x04]",
         "[text:d\n- e::\n]",
         "[end-para]",
         "[end-ulist]",
@@ -891,7 +891,7 @@ def test_list_items_292():
 </ul>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1597,7 +1597,7 @@ def test_list_items_298():
         "[end-para]",
         "[li(2,1):2:]",
         "[fcode-block(2,3):`:3::::::]",
-        "[text:b\n\n:]",
+        "[text:b\n\x03\n\x03:]",
         "[end-fcode-block::3]",
         "[li(7,1):2:]",
         "[para(7,3):]",

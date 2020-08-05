@@ -22,6 +22,7 @@ from pymarkdown.stack_token import (
     FencedCodeBlockStackToken,
     IndentedCodeBlockStackToken,
     ParagraphStackToken,
+    StackToken,
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -794,6 +795,7 @@ class LeafBlockProcessor:
         return new_tokens
 
     # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-locals
     @staticmethod
     def parse_paragraph(
         parser_state,
@@ -824,6 +826,52 @@ class LeafBlockProcessor:
             str(this_bq_count),
         )
 
+        adjusted_whitespace_length = 0
+
+        top_list_token = None
+        for stack_index in range(len(parser_state.token_stack) - 1, 0, -1):
+            if (
+                parser_state.token_stack[stack_index].type_name
+                == StackToken.stack_unordered_list
+            ):
+                top_list_token = parser_state.token_stack[stack_index]
+                break
+        LOGGER.debug(">>list-owners>>%s", str(top_list_token))
+        if top_list_token:
+            ex_ws_length = len(extracted_whitespace)
+            LOGGER.debug(">>owners-indent>>%s", str(top_list_token.indent_level))
+            LOGGER.debug(">>ws_before_marker>>%s", str(top_list_token.ws_before_marker))
+            LOGGER.debug(">>ws_after_marker>>%s", str(top_list_token.ws_after_marker))
+            LOGGER.debug(
+                ">>last_new_list_token>>%s", str(top_list_token.last_new_list_token)
+            )
+            LOGGER.debug(">>extracted_whitespace>>%s", str(ex_ws_length))
+            LOGGER.debug(
+                ">>pm>>%s>>%s>>",
+                str(len(position_marker.text_to_parse)),
+                position_marker.text_to_parse,
+            )
+
+            dominant_indent = top_list_token.indent_level
+            if top_list_token.last_new_list_token:
+                dominant_indent = top_list_token.last_new_list_token.indent_level
+            LOGGER.debug(">>dominant_indent>>%s>>", str(dominant_indent))
+
+            original_list_indent = top_list_token.indent_level - 2
+            indent_delta = 0
+            if top_list_token.ws_after_marker > 1:
+                indent_delta = top_list_token.ws_after_marker - 1
+            original_text_indent = (
+                ex_ws_length
+                + top_list_token.indent_level
+                - top_list_token.ws_before_marker
+                - indent_delta
+            )
+            LOGGER.debug(">>original_list_indent>>%s>>", str(original_list_indent))
+            LOGGER.debug(">>original_text_indent>%s>>", str(original_text_indent))
+            if dominant_indent > original_text_indent >= 4:
+                adjusted_whitespace_length = dominant_indent - original_text_indent
+
         if (
             len(parser_state.token_document) >= 2
             and parser_state.token_document[-1].is_blank_line
@@ -837,11 +885,18 @@ class LeafBlockProcessor:
             new_tokens, _, _ = parser_state.close_open_blocks_fn(
                 parser_state, until_this_index=last_list_index
             )
+
         if stack_bq_count != 0 and this_bq_count == 0:
             new_tokens, _, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 only_these_blocks=[BlockQuoteStackToken],
                 include_block_quotes=True,
+            )
+
+        if adjusted_whitespace_length:
+            LOGGER.debug(">>GGHHJJ!!>>%s>>", str(adjusted_whitespace_length))
+            extracted_whitespace = "".ljust(
+                adjusted_whitespace_length, ParserHelper.blech_character
             )
 
         if not parser_state.token_stack[-1].is_paragraph:
@@ -858,7 +913,9 @@ class LeafBlockProcessor:
             )
         )
         return new_tokens
-        # pylint: enable=too-many-arguments
+
+    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-locals
 
     @staticmethod
     def check_for_list_in_process(parser_state):

@@ -1501,6 +1501,7 @@ def test_inline_links_527a():
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
 
+
 @pytest.mark.skip
 @pytest.mark.gfm
 def test_inline_links_528():
@@ -1512,7 +1513,13 @@ def test_inline_links_528():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """![[[foo](uri1)](uri2)](uri3)"""
-    expected_tokens = ['[para(1,1):]', '[image:inline:uri2::foo::::[[foo](uri1):False::::]', '[text:]:]', '[text:(uri3):]', '[end-para]']
+    expected_tokens = [
+        "[para(1,1):]",
+        "[image:inline:uri2::foo::::[[foo](uri1):False::::]",
+        "[text:]:]",
+        "[text:(uri3):]",
+        "[end-para]",
+    ]
     expected_gfm = """<p><img src="uri3" alt="[foo](uri2)" /></p>"""
 
     # Act
@@ -1578,6 +1585,7 @@ def test_inline_links_528b():
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
 
+
 @pytest.mark.gfm
 def test_inline_links_528c():
     """
@@ -1588,7 +1596,11 @@ def test_inline_links_528c():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """![![[foo](uri1)](uri2)](uri3)"""
-    expected_tokens = ['[para(1,1):]', '[image:inline:uri3::foo::::![[foo](uri1)](uri2):False::::]', '[end-para]']
+    expected_tokens = [
+        "[para(1,1):]",
+        "[image:inline:uri3::foo::::![[foo](uri1)](uri2):False::::]",
+        "[end-para]",
+    ]
     expected_gfm = """<p><img src="uri3" alt="foo" /></p>"""
 
     # Act

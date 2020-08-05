@@ -5,7 +5,7 @@ import logging
 from enum import Enum
 
 from pymarkdown.constants import Constants
-from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_helper import ParserHelper, PositionMarker
 
 LOGGER = logging.getLogger(__name__)
 
@@ -550,9 +550,11 @@ class TextMarkdownToken(MarkdownToken):
         If remove_leading_spaces == 0, then.
         """
 
+        blank_line_sequence = ""
         if other_text_token.is_blank_line:
             text_to_combine = ""
             whitespace_present = other_text_token.extra_data
+            blank_line_sequence = ParserHelper.replace_noop_character
         else:
             assert other_text_token.is_text
             text_to_combine = other_text_token.token_text
@@ -588,6 +590,7 @@ class TextMarkdownToken(MarkdownToken):
         self.token_text = (
             self.token_text
             + ParserHelper.newline_character
+            + blank_line_sequence
             + prefix_whitespace
             + text_to_combine
         )
@@ -758,6 +761,21 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
         )
         self.compose_extra_data_field()
 
+    def create_copy(self):
+        """
+        Create a copy of this token.
+        """
+        new_position_marker = PositionMarker(self.line_number, self.column_number, "")
+        new_token = UnorderedListStartMarkdownToken(
+            self.list_start_sequence,
+            self.indent_level,
+            self.extracted_whitespace,
+            new_position_marker,
+        )
+        new_token.is_loose = self.is_loose
+        new_token.leading_spaces = self.leading_spaces
+        return new_token
+
     def compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
@@ -850,7 +868,7 @@ class NewListItemMarkdownToken(MarkdownToken):
 
     def __init__(self, indent_level, position_marker, extracted_whitespace):
         self.indent_level = indent_level
-        self.extracted_whitespace = ""
+        self.extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_new_list_item,

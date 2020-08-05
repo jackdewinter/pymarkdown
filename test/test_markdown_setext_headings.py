@@ -397,7 +397,7 @@ def test_setext_headings_055():
 ---"""
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n\n    ]",
-        "[text:Foo\n---\n\nFoo:]",
+        "[text:Foo\n---\n\x03\nFoo:]",
         "[end-icode-block]",
         "[tbreak(5,1):-::---]",
     ]

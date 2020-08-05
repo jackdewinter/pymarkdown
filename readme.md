@@ -89,6 +89,14 @@
 - 269 and 305, and variations
   - whitespace is not 100% correct
   - weird cases in list_in_process
+- code span inside of a list
+- multi-line link inside of a list
+- 242 with variations on where the blank lines are
+- 276 with extra level of depth, with olist/olist, ulist/olist, and olist/ulist
+- 256 with extra spaces on blanks
+- 256 with other list types for last instead of just li
+- 292x with sublists, does start sooner?
+- 292x with ordered lists?
 
 ## Bugs - Tokenization
 
@@ -126,6 +134,7 @@
 ## Features - Correctness
 
 - can we generate Markdown from tokens? do we have enough info?
+  - go back and see if can replace some of the end token fiddling with start_markdown_token
 - go through any case that uses lazy and do un-lazy example
 - samples that end without a blank line, and add a blank line?
 

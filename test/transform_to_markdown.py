@@ -31,7 +31,9 @@ class TransformToMarkdown:
 
     # pylint: disable=too-many-boolean-expressions
     # pylint: disable=too-many-branches
+    # pylint: disable=too-many-locals
     # pylint: disable=too-many-statements
+    # pylint: disable=too-many-nested-blocks
     def transform(self, actual_tokens):  # noqa: C901
         """
         Transform the incoming token stream back into Markdown.
@@ -40,88 +42,183 @@ class TransformToMarkdown:
         avoid_processing = False
         previous_token = None
 
-        for next_token in actual_tokens:
-            # pre_transform = transformed_data
-            if next_token.token_name == MarkdownToken.token_thematic_break:
-                transformed_data += self.rehydrate_thematic_break(next_token)
-            elif next_token.token_name == MarkdownToken.token_paragraph:
-                transformed_data += self.rehydrate_paragraph(next_token)
-            elif next_token.token_name == MarkdownToken.token_indented_code_block:
-                transformed_data += self.rehydrate_indented_code_block(next_token)
-            elif next_token.token_name == MarkdownToken.token_html_block:
-                transformed_data += self.rehydrate_html_block(next_token)
-            elif next_token.token_name == MarkdownToken.token_fenced_code_block:
-                transformed_data += self.rehydrate_fenced_code_block(next_token)
-            elif next_token.token_name == MarkdownToken.token_text:
-                transformed_data += self.rehydrate_text(next_token)
-            elif next_token.token_name == MarkdownToken.token_setext_heading:
-                transformed_data += self.rehydrate_setext_heading(next_token)
-            elif next_token.token_name == MarkdownToken.token_atx_heading:
-                transformed_data += self.rehydrate_atx_heading(next_token)
-            elif next_token.token_name == MarkdownToken.token_blank_line:
-                transformed_data += self.rehydrate_blank_line(next_token)
-            elif next_token.token_name == MarkdownToken.token_link_reference_definition:
-                transformed_data += self.rehydrate_link_reference_definition(next_token)
-            elif next_token.token_name == MarkdownToken.token_inline_link:
-                transformed_data += self.rehydrate_inline_link(next_token)
-            elif next_token.token_name == MarkdownToken.token_inline_image:
-                transformed_data += self.rehydrate_inline_image(next_token)
-
-            elif (
-                next_token.token_name == MarkdownToken.token_unordered_list_start
-                or next_token.token_name == MarkdownToken.token_ordered_list_start
-                or next_token.token_name == MarkdownToken.token_block_quote
-            ):
+        list_token_stack = []
+        continue_seq = ""
+        delayed_continue = ""
+        for token_index, next_token in enumerate(actual_tokens):
+            print(
+                ">>>>"
+                + ParserHelper.make_value_visible(next_token)
+                + "-->"
+                + ParserHelper.make_value_visible(transformed_data)
+                + "<--"
+            )
+            next_one = None
+            if token_index < len(actual_tokens) - 1:
+                next_one = actual_tokens[token_index + 1]
+            new_data = ""
+            skip_merge = False
+            if next_token.token_name == MarkdownToken.token_block_quote:
                 avoid_processing = True
                 break
+            if next_token.token_name == MarkdownToken.token_ordered_list_start:
+                avoid_processing = True
+                break
+
+            if next_token.token_name == MarkdownToken.token_unordered_list_start:
+                new_data, continue_seq = self.rehydrate_unordered_list_start(
+                    next_token, list_token_stack, previous_token, next_one
+                )
+                skip_merge = True
+            elif next_token.token_name == MarkdownToken.token_new_list_item:
+                new_data, continue_seq = self.rehydrate_next_list_item(
+                    next_token, list_token_stack, next_one
+                )
+                skip_merge = True
+            elif next_token.token_name == MarkdownToken.token_thematic_break:
+                new_data = self.rehydrate_thematic_break(next_token)
+            elif next_token.token_name == MarkdownToken.token_paragraph:
+                new_data = self.rehydrate_paragraph(next_token)
+            elif next_token.token_name == MarkdownToken.token_indented_code_block:
+                new_data = self.rehydrate_indented_code_block(next_token)
+            elif next_token.token_name == MarkdownToken.token_html_block:
+                new_data = self.rehydrate_html_block(next_token)
+            elif next_token.token_name == MarkdownToken.token_fenced_code_block:
+                new_data = self.rehydrate_fenced_code_block(next_token)
+            elif next_token.token_name == MarkdownToken.token_text:
+                new_data = self.rehydrate_text(next_token)
+            elif next_token.token_name == MarkdownToken.token_setext_heading:
+                new_data = self.rehydrate_setext_heading(next_token)
+            elif next_token.token_name == MarkdownToken.token_atx_heading:
+                new_data = self.rehydrate_atx_heading(next_token)
+            elif next_token.token_name == MarkdownToken.token_blank_line:
+                new_data = self.rehydrate_blank_line(next_token)
+            elif next_token.token_name == MarkdownToken.token_link_reference_definition:
+                new_data = self.rehydrate_link_reference_definition(next_token)
+            elif next_token.token_name == MarkdownToken.token_inline_link:
+                new_data = self.rehydrate_inline_link(next_token)
+            elif next_token.token_name == MarkdownToken.token_inline_image:
+                new_data = self.rehydrate_inline_image(next_token)
             elif next_token.token_name == MarkdownToken.token_inline_hard_break:
-                transformed_data += self.rehydrate_hard_break(next_token)
+                new_data = self.rehydrate_hard_break(next_token)
             elif next_token.token_name == MarkdownToken.token_inline_emphasis:
-                transformed_data += self.rehydrate_inline_emphaisis(next_token)
+                new_data = self.rehydrate_inline_emphaisis(next_token)
             elif next_token.token_name == MarkdownToken.token_inline_uri_autolink:
-                transformed_data += self.rehydrate_inline_uri_autolink(next_token)
+                new_data = self.rehydrate_inline_uri_autolink(next_token)
             elif next_token.token_name == MarkdownToken.token_inline_email_autolink:
-                transformed_data += self.rehydrate_inline_email_autolink(next_token)
+                new_data = self.rehydrate_inline_email_autolink(next_token)
             elif next_token.token_name == MarkdownToken.token_inline_raw_html:
-                transformed_data += self.rehydrate_inline_raw_html(next_token)
+                new_data = self.rehydrate_inline_raw_html(next_token)
             elif next_token.token_name == MarkdownToken.token_inline_code_span:
-                transformed_data += self.rehydrate_inline_code_span(next_token)
+                new_data = self.rehydrate_inline_code_span(next_token)
             elif next_token.token_name.startswith(EndMarkdownToken.type_name_prefix):
 
                 adjusted_token_name = next_token.token_name[
                     len(EndMarkdownToken.type_name_prefix) :
                 ]
                 if adjusted_token_name == MarkdownToken.token_paragraph:
-                    transformed_data += self.rehydrate_paragraph_end(next_token)
+                    new_data = self.rehydrate_paragraph_end(next_token)
                 elif adjusted_token_name == MarkdownToken.token_indented_code_block:
-                    transformed_data += self.rehydrate_indented_code_block_end(
-                        next_token
-                    )
+                    new_data = self.rehydrate_indented_code_block_end(next_token)
                 elif adjusted_token_name == MarkdownToken.token_fenced_code_block:
-                    transformed_data += self.rehydrate_fenced_code_block_end(
+                    new_data = self.rehydrate_fenced_code_block_end(
                         next_token, previous_token
                     )
                 elif adjusted_token_name == MarkdownToken.token_html_block:
-                    transformed_data += self.rehydrate_html_block_end(next_token)
+                    new_data = self.rehydrate_html_block_end(next_token)
                 elif adjusted_token_name == MarkdownToken.token_setext_heading:
-                    transformed_data += self.rehydrate_setext_heading_end(next_token)
+                    new_data = self.rehydrate_setext_heading_end(next_token)
                 elif adjusted_token_name == MarkdownToken.token_atx_heading:
-                    transformed_data += self.rehydrate_atx_heading_end(next_token)
+                    new_data = self.rehydrate_atx_heading_end(next_token)
                 elif adjusted_token_name == MarkdownToken.token_inline_emphasis:
-                    transformed_data += self.rehydrate_inline_emphaisis_end(next_token)
+                    new_data = self.rehydrate_inline_emphaisis_end(next_token)
                 elif adjusted_token_name == MarkdownToken.token_inline_link:
-                    transformed_data += self.rehydrate_inline_link_end(next_token)
+                    new_data = self.rehydrate_inline_link_end(next_token)
+                elif adjusted_token_name == MarkdownToken.token_unordered_list_start:
+                    new_data, continue_seq = self.rehydrate_unordered_list_start_end(
+                        next_token, list_token_stack
+                    )
+                    delayed_continue = continue_seq
                 else:
                     assert False, "end_next_token>>" + str(adjusted_token_name)
             else:
                 assert False, "next_token>>" + str(next_token)
 
+            if skip_merge:
+                delayed_continue = ""
+
+            block_should_end_with_newline = False
+            if next_token.token_name == "end-fcode-block":
+                block_should_end_with_newline = True
+                delayed_continue = ""
+            elif next_token.token_name == "end-setext":
+                block_should_end_with_newline = True
+
+            if (
+                delayed_continue
+                and new_data
+                and next_token.token_name != MarkdownToken.token_blank_line
+            ):
+                new_data = delayed_continue + new_data
+                delayed_continue = ""
+
+            if not skip_merge and continue_seq:
+                if ParserHelper.replace_noop_character in new_data:
+                    split_new_data = new_data.split("\n")
+                    split_new_data_length = len(split_new_data)
+                    if new_data.endswith("\n"):
+                        split_new_data_length -= 1
+                    for split_index in range(1, split_new_data_length):
+                        if (
+                            split_new_data[split_index]
+                            and split_new_data[split_index][0]
+                            == ParserHelper.replace_noop_character
+                        ):
+                            replacement_data = split_new_data[split_index][1:]
+                        else:
+                            replacement_data = (
+                                continue_seq + split_new_data[split_index]
+                            )
+                        split_new_data[split_index] = replacement_data
+                    new_data = "\n".join(split_new_data)
+                elif not block_should_end_with_newline and new_data.endswith("\n"):
+                    delayed_continue = continue_seq
+                elif "\n" in new_data:
+                    block_ends_with_newline = (
+                        block_should_end_with_newline and new_data.endswith("\n")
+                    )
+                    if ParserHelper.blech_character in new_data:
+                        split_new_data = new_data.split("\n")
+                        for next_split_item in range(1, len(split_new_data)):
+                            next_continue_separator = continue_seq
+                            next_data_item = split_new_data[next_split_item]
+                            while next_data_item.startswith(
+                                ParserHelper.blech_character
+                            ):
+                                next_continue_separator = next_continue_separator[1:]
+                                next_data_item = next_data_item[1:]
+                            next_continue_separator += next_data_item
+                            split_new_data[next_split_item] = next_continue_separator
+                        new_data = "\n".join(split_new_data)
+                    else:
+                        new_data = new_data.replace("\n", "\n" + continue_seq)
+
+                    if (
+                        block_ends_with_newline
+                        and next_one
+                        and next_one.token_name == MarkdownToken.token_new_list_item
+                    ):
+                        new_data = new_data[0 : -len(continue_seq)]
+            new_data = ParserHelper.resolve_noops_from_text(new_data)
+
+            transformed_data += new_data
+
             print(
                 ">>>>"
-                + str(next_token)
-                + "\n---\n"
+                + ParserHelper.make_value_visible(next_token)
+                + "-->"
                 + ParserHelper.make_value_visible(transformed_data)
-                + "\n---"
+                + "<--"
             )
             previous_token = next_token
 
@@ -132,6 +229,8 @@ class TransformToMarkdown:
     # pylint: enable=too-many-boolean-expressions
     # pylint: enable=too-many-branches
     # pylint: enable=too-many-statements
+    # pylint: enable=too-many-nested-blocks
+    # pylint: enable=too-many-locals
 
     def rehydrate_paragraph(self, next_token):
         """
@@ -237,6 +336,71 @@ class TransformToMarkdown:
                 + ParserHelper.newline_character
             )
         return ""
+
+    @classmethod
+    def rehydrate_unordered_list_start(
+        cls, current_token, list_token_stack, previous_token, next_token
+    ):
+        """
+        Rehydrate the unordered list start token.
+        """
+        new_instance = current_token.create_copy()
+        list_token_stack.append(new_instance)
+
+        previous_indent = 0
+        extracted_whitespace = current_token.extracted_whitespace
+        if (
+            previous_token
+            and previous_token.token_name == MarkdownToken.token_unordered_list_start
+        ):
+            previous_indent = previous_token.indent_level
+            assert len(current_token.extracted_whitespace) == previous_indent
+            extracted_whitespace = ""
+
+        start_seq = extracted_whitespace + current_token.list_start_sequence
+        if next_token.token_name != MarkdownToken.token_blank_line:
+            start_seq = start_seq.ljust(
+                current_token.indent_level - previous_indent, " "
+            )
+        continue_seq = "".ljust(current_token.indent_level, " ")
+        return start_seq, continue_seq
+
+    @classmethod
+    def rehydrate_unordered_list_start_end(cls, next_token, list_token_stack):
+        """
+        Rehydrate the unordered list end token.
+        """
+        assert next_token
+        del list_token_stack[-1]
+        if list_token_stack:
+            continue_seq = "".ljust(list_token_stack[-1].indent_level, " ")
+        else:
+            continue_seq = ""
+        return "", continue_seq
+
+    @classmethod
+    def rehydrate_next_list_item(cls, current_token, list_token_stack, next_token):
+        """
+        Rehydrate the next list item token.
+        """
+        if list_token_stack[-1].token_name == MarkdownToken.token_unordered_list_start:
+            list_token_stack[-1].indent_level = current_token.indent_level
+            list_token_stack[
+                -1
+            ].extracted_whitespace = current_token.extracted_whitespace
+            list_token_stack[-1].compose_extra_data_field()
+
+            start_seq = (
+                current_token.extracted_whitespace
+                + list_token_stack[-1].list_start_sequence
+            )
+            if next_token.token_name != MarkdownToken.token_blank_line:
+                start_seq = start_seq.ljust(list_token_stack[-1].indent_level, " ")
+            continue_seq = "".ljust(list_token_stack[-1].indent_level, " ")
+        else:
+            assert False
+
+        return start_seq, continue_seq
 
     def __insert_leading_whitespace_at_newlines(self, text_to_modify):
         """

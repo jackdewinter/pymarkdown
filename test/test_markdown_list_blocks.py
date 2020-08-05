@@ -516,7 +516,7 @@ def test_list_blocks_242():
         "[end-para]",
         "[BLANK(2,1):]",
         "[icode-block(3,7):    :\n\n\n    ]",
-        "[text:bar\n\n\nbaz:]",
+        "[text:bar\n\x03\n\x03\nbaz:]",
         "[end-icode-block]",
         "[end-ulist]",
     ]
@@ -1642,7 +1642,7 @@ def test_list_blocks_267():
         > A block quote."""
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n\n    \n\n    ]",
-        "[text:1.  A paragraph\n    with two lines.\n\n        indented code\n\n    \a>\a&gt;\a A block quote.:]",
+        "[text:1.  A paragraph\n    with two lines.\n\x03\n        indented code\n\x03\n    \a>\a&gt;\a A block quote.:]",
         "[end-icode-block]",
     ]
     expected_gfm = """<pre><code>1.  A paragraph
