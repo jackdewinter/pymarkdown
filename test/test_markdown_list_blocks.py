@@ -145,7 +145,7 @@ def test_list_blocks_233():
 <p>two</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1078,12 +1078,12 @@ def test_list_blocks_256():
         "[para(2,3):]",
         "[text:foo:]",
         "[end-para]",
-        "[li(3,1):2:]",
+        "[li(3,1):2::]",
         "[BLANK(3,2):]",
         "[fcode-block(4,3):`:3::::::]",
         "[text:bar:]",
         "[end-fcode-block::3]",
-        "[li(7,1):2:]",
+        "[li(7,1):2::]",
         "[BLANK(7,2):]",
         "[icode-block(8,7):    :]",
         "[text:baz:]",
@@ -1266,9 +1266,9 @@ def test_list_blocks_259():
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
-        "[li(2,1):2:]",
+        "[li(2,1):2::]",
         "[BLANK(2,2):]",
-        "[li(3,1):2:]",
+        "[li(3,1):2::]",
         "[para(3,3):]",
         "[text:bar:]",
         "[end-para]",
@@ -1309,9 +1309,9 @@ def test_list_blocks_260():
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
-        "[li(2,1):2:]",
+        "[li(2,1):2::]",
         "[BLANK(2,2):   ]",
-        "[li(3,1):2:]",
+        "[li(3,1):2::]",
         "[para(3,3):]",
         "[text:bar:]",
         "[end-para]",
@@ -1350,9 +1350,9 @@ def test_list_blocks_261():
         "[para(1,4):]",
         "[text:foo:]",
         "[end-para]",
-        "[li(2,1):3:]",
+        "[li(2,1):3::2]",
         "[BLANK(2,3):]",
-        "[li(3,1):3:]",
+        "[li(3,1):3::3]",
         "[para(3,4):]",
         "[text:bar:]",
         "[end-para]",
@@ -1718,7 +1718,7 @@ with two lines.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_269():
+def test_list_blocks_269x():
     """
     Test case 269:  Indentation can be partially deleted:
     """
@@ -1795,8 +1795,8 @@ def test_list_blocks_269b():
     source_markdown = """  1.  A paragraph
      with two lines."""
     expected_tokens = [
-        "[olist(1,3):.:1:6:  :    ]",
-        "[para(1,7):\n ]",
+        "[olist(1,3):.:1:6:  :     ]",
+        "[para(1,7):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
         "[end-para]",
         "[end-olist]",
@@ -1804,6 +1804,41 @@ def test_list_blocks_269b():
     expected_gfm = """<ol>
 <li>A paragraph
 with two lines.</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_269c():
+    """
+    Test case 269c:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """  1.  A paragraph
+     with more than
+    the two lines."""
+    expected_tokens = [
+        "[olist(1,3):.:1:6:  :     \n    ]",
+        "[para(1,7):\n\n]",
+        "[text:A paragraph\nwith more than\nthe two lines.::\n\n]",
+        "[end-para]",
+        "[end-olist]",
+    ]
+    expected_gfm = """<ol>
+<li>A paragraph
+with more than
+the two lines.</li>
 </ol>"""
 
     # Act
@@ -1979,15 +2014,15 @@ def test_list_blocks_273():
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
-        "[li(2,2):3: ]",
+        "[li(2,2):3: :]",
         "[para(2,4):]",
         "[text:bar:]",
         "[end-para]",
-        "[li(3,3):4:  ]",
+        "[li(3,3):4:  :]",
         "[para(3,5):]",
         "[text:baz:]",
         "[end-para]",
-        "[li(4,4):5:   ]",
+        "[li(4,4):5:   :]",
         "[para(4,6):]",
         "[text:boo:]",
         "[end-para]",
@@ -2339,7 +2374,7 @@ def test_list_blocks_278():
         "[atx(1,3):1:0:]",
         "[text:Foo: ]",
         "[end-atx::]",
-        "[li(2,1):2:]",
+        "[li(2,1):2::]",
         "[setext(3,3):-:3::(2,3)]",
         "[text:Bar:]",
         "[end-setext::]",

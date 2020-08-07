@@ -45,6 +45,7 @@ class TransformToMarkdown:
         list_token_stack = []
         continue_seq = ""
         delayed_continue = ""
+        print("---\nTransformToMarkdown\n---")
         for token_index, next_token in enumerate(actual_tokens):
             print(
                 ">>>>"
@@ -62,10 +63,11 @@ class TransformToMarkdown:
                 avoid_processing = True
                 break
             if next_token.token_name == MarkdownToken.token_ordered_list_start:
-                avoid_processing = True
-                break
-
-            if next_token.token_name == MarkdownToken.token_unordered_list_start:
+                new_data, continue_seq = self.rehydrate_ordered_list_start(
+                    next_token, list_token_stack, previous_token, next_one
+                )
+                skip_merge = True
+            elif next_token.token_name == MarkdownToken.token_unordered_list_start:
                 new_data, continue_seq = self.rehydrate_unordered_list_start(
                     next_token, list_token_stack, previous_token, next_one
                 )
@@ -139,6 +141,11 @@ class TransformToMarkdown:
                         next_token, list_token_stack
                     )
                     delayed_continue = continue_seq
+                elif adjusted_token_name == MarkdownToken.token_ordered_list_start:
+                    new_data, continue_seq = self.rehydrate_ordered_list_start_end(
+                        next_token, list_token_stack
+                    )
+                    delayed_continue = continue_seq
                 else:
                     assert False, "end_next_token>>" + str(adjusted_token_name)
             else:
@@ -147,6 +154,10 @@ class TransformToMarkdown:
             if skip_merge:
                 delayed_continue = ""
 
+            top_of_list_token_stack = None
+            if list_token_stack:
+                top_of_list_token_stack = list_token_stack[-1]
+
             block_should_end_with_newline = False
             if next_token.token_name == "end-fcode-block":
                 block_should_end_with_newline = True
@@ -154,16 +165,32 @@ class TransformToMarkdown:
             elif next_token.token_name == "end-setext":
                 block_should_end_with_newline = True
 
+            print(
+                "?>"
+                + ParserHelper.make_value_visible(delayed_continue)
+                + ">>"
+                + ParserHelper.make_value_visible(new_data)
+                + ">>"
+            )
             if (
                 delayed_continue
                 and new_data
                 and next_token.token_name != MarkdownToken.token_blank_line
             ):
+                print("nd>")
                 new_data = delayed_continue + new_data
                 delayed_continue = ""
 
+            print(
+                "s/c>"
+                + ParserHelper.make_value_visible(skip_merge)
+                + ">>"
+                + ParserHelper.make_value_visible(continue_seq)
+                + ">>"
+            )
             if not skip_merge and continue_seq:
                 if ParserHelper.replace_noop_character in new_data:
+                    print("1>>")
                     split_new_data = new_data.split("\n")
                     split_new_data_length = len(split_new_data)
                     if new_data.endswith("\n"):
@@ -182,12 +209,29 @@ class TransformToMarkdown:
                         split_new_data[split_index] = replacement_data
                     new_data = "\n".join(split_new_data)
                 elif not block_should_end_with_newline and new_data.endswith("\n"):
+                    print("2>>")
                     delayed_continue = continue_seq
                 elif "\n" in new_data:
+                    print(
+                        "3>>block_should_end_with_newline>>"
+                        + str(block_should_end_with_newline)
+                        + ">>new_data>>"
+                        + ParserHelper.make_value_visible(new_data)
+                    )
                     block_ends_with_newline = (
                         block_should_end_with_newline and new_data.endswith("\n")
                     )
+                    print("3>>block_ends_with_newline>>" + str(block_ends_with_newline))
+                    remove_trailing_newline = False
+                    if (
+                        block_ends_with_newline
+                        and next_one.token_name == MarkdownToken.token_blank_line
+                    ):
+                        print("3remove_trailing_newline>>")
+                        remove_trailing_newline = True
+                        new_data = new_data[0:-1]
                     if ParserHelper.blech_character in new_data:
+                        print("3a>>")
                         split_new_data = new_data.split("\n")
                         for next_split_item in range(1, len(split_new_data)):
                             next_continue_separator = continue_seq
@@ -200,19 +244,54 @@ class TransformToMarkdown:
                             next_continue_separator += next_data_item
                             split_new_data[next_split_item] = next_continue_separator
                         new_data = "\n".join(split_new_data)
-                    else:
-                        new_data = new_data.replace("\n", "\n" + continue_seq)
+                    elif top_of_list_token_stack.leading_spaces:
+                        split_new_data = new_data.split("\n")
+                        print("3b>>" + str(split_new_data) + "<")
+                        print(
+                            "top_of_list_token_stack>>"
+                            + ParserHelper.make_value_visible(top_of_list_token_stack)
+                            + "<"
+                        )
+                        split_leading_spaces = top_of_list_token_stack.leading_spaces.split(
+                            "\n"
+                        )
+                        print(
+                            "top_of_list_token_stack>>"
+                            + str(top_of_list_token_stack.leading_spaces_index)
+                            + "<"
+                            + ParserHelper.make_value_visible(
+                                top_of_list_token_stack.leading_spaces
+                            )
+                            + "<"
+                        )
+                        new_data = split_new_data[0]
+                        for i in range(1, len(split_new_data)):
+                            print("::" + str(i) + "::" + split_new_data[i] + "::")
+                            new_data += (
+                                "\n"
+                                + split_leading_spaces[
+                                    top_of_list_token_stack.leading_spaces_index
+                                ]
+                                + split_new_data[i]
+                            )
+                            top_of_list_token_stack.leading_spaces_index += 1
 
+                    if remove_trailing_newline:
+                        new_data += "\n"
                     if (
                         block_ends_with_newline
                         and next_one
                         and next_one.token_name == MarkdownToken.token_new_list_item
                     ):
+                        print("4>>")
                         new_data = new_data[0 : -len(continue_seq)]
+            print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
             new_data = ParserHelper.resolve_noops_from_text(new_data)
+            print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
 
             transformed_data += new_data
 
+            print("---")
             print(
                 ">>>>"
                 + ParserHelper.make_value_visible(next_token)
@@ -220,6 +299,8 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(transformed_data)
                 + "<--"
             )
+            print(">>stack-->" + ParserHelper.make_value_visible(list_token_stack))
+            print("---")
             previous_token = next_token
 
         if transformed_data and transformed_data[-1] == ParserHelper.newline_character:
@@ -338,6 +419,38 @@ class TransformToMarkdown:
         return ""
 
     @classmethod
+    def rehydrate_ordered_list_start(
+        cls, current_token, list_token_stack, previous_token, next_token
+    ):
+        """
+        Rehydrate the unordered list start token.
+        """
+        new_instance = current_token.create_copy()
+        list_token_stack.append(new_instance)
+
+        previous_indent = 0
+        extracted_whitespace = current_token.extracted_whitespace
+        if previous_token and (
+            previous_token.token_name == MarkdownToken.token_unordered_list_start
+            or previous_token.token_name == MarkdownToken.token_ordered_list_start
+        ):
+            previous_indent = previous_token.indent_level
+            assert len(current_token.extracted_whitespace) == previous_indent
+            extracted_whitespace = ""
+
+        start_seq = (
+            extracted_whitespace
+            + current_token.list_start_content
+            + current_token.list_start_sequence
+        )
+        if next_token.token_name != MarkdownToken.token_blank_line:
+            start_seq = start_seq.ljust(
+                current_token.indent_level - previous_indent, " "
+            )
+        continue_seq = "".ljust(current_token.indent_level, " ")
+        return start_seq, continue_seq
+
+    @classmethod
     def rehydrate_unordered_list_start(
         cls, current_token, list_token_stack, previous_token, next_token
     ):
@@ -349,9 +462,9 @@ class TransformToMarkdown:
 
         previous_indent = 0
         extracted_whitespace = current_token.extracted_whitespace
-        if (
-            previous_token
-            and previous_token.token_name == MarkdownToken.token_unordered_list_start
+        if previous_token and (
+            previous_token.token_name == MarkdownToken.token_unordered_list_start
+            or previous_token.token_name == MarkdownToken.token_ordered_list_start
         ):
             previous_indent = previous_token.indent_level
             assert len(current_token.extracted_whitespace) == previous_indent
@@ -379,11 +492,27 @@ class TransformToMarkdown:
         return "", continue_seq
 
     @classmethod
+    def rehydrate_ordered_list_start_end(cls, next_token, list_token_stack):
+        """
+        Rehydrate the ordered list end token.
+        """
+        assert next_token
+        del list_token_stack[-1]
+        if list_token_stack:
+            continue_seq = "".ljust(list_token_stack[-1].indent_level, " ")
+        else:
+            continue_seq = ""
+        return "", continue_seq
+
+    @classmethod
     def rehydrate_next_list_item(cls, current_token, list_token_stack, next_token):
         """
         Rehydrate the next list item token.
         """
-        if list_token_stack[-1].token_name == MarkdownToken.token_unordered_list_start:
+        if (
+            list_token_stack[-1].token_name == MarkdownToken.token_unordered_list_start
+            or list_token_stack[-1].token_name == MarkdownToken.token_ordered_list_start
+        ):
             list_token_stack[-1].indent_level = current_token.indent_level
             list_token_stack[
                 -1
@@ -392,6 +521,7 @@ class TransformToMarkdown:
 
             start_seq = (
                 current_token.extracted_whitespace
+                + current_token.list_start_content
                 + list_token_stack[-1].list_start_sequence
             )
             if next_token.token_name != MarkdownToken.token_blank_line:

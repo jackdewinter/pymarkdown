@@ -573,7 +573,7 @@ def test_thematic_breaks_031():
         "[para(2,3):]",
         "[text:Foo:]",
         "[end-para]",
-        "[li(3,1):2:]",
+        "[li(3,1):2::]",
         "[tbreak(3,3):*::* * *]",
         "[end-ulist]",
     ]

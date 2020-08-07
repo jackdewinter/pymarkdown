@@ -450,6 +450,10 @@ class ListBlockProcessor:
                 "after>>%s>>%s>>", line_to_parse, used_indent,
             )
         else:
+            LOGGER.debug(
+                "requested_list_indent>>%s<<", str(requested_list_indent),
+            )
+            original_requested_list_indent = requested_list_indent
             requested_list_indent = requested_list_indent - before_ws_length
             LOGGER.debug(
                 "leading_space_length>>%s>>adj requested_list_indent>>%s>>%s<<",
@@ -462,8 +466,9 @@ class ListBlockProcessor:
                 and leading_space_length >= requested_list_indent
                 and allow_list_continue
             ):
+                assert True
                 LOGGER.debug(
-                    ">>line_to_parse>>%s>>",
+                    "1>>line_to_parse>>%s>>",
                     ParserHelper.make_value_visible(line_to_parse),
                 )
                 (
@@ -474,7 +479,7 @@ class ListBlockProcessor:
                     start_index,
                     extracted_whitespace,
                     leading_space_length,
-                    requested_list_indent,
+                    original_requested_list_indent,
                 )
                 LOGGER.debug(
                     ">>line_to_parse>>%s>>",
@@ -484,10 +489,16 @@ class ListBlockProcessor:
                     ">>used_indent>>%s>>", ParserHelper.make_value_visible(used_indent)
                 )
             else:
+                assert True
+                LOGGER.debug(
+                    "2>>line_to_parse>>%s>>",
+                    ParserHelper.make_value_visible(line_to_parse),
+                )
                 container_level_tokens = ListBlockProcessor.__check_for_list_closures(
                     parser_state, line_to_parse, start_index, extracted_whitespace, ind,
                 )
                 if parser_state.token_stack[-1].is_list:
+                    LOGGER.debug(">>in list>>")
                     requested_list_indent = parser_state.token_stack[-1].indent_level
                     LOGGER.debug(">>line_to_parse>>%s>>", line_to_parse)
                     LOGGER.debug(">>start_index>>%s", str(start_index))
@@ -678,8 +689,18 @@ class ListBlockProcessor:
                 or top_stack_item.type_name == StackToken.stack_ordered_list
             )
 
+            list_start_content = ""
+            if top_stack_item.type_name == StackToken.stack_ordered_list:
+                list_start_content = new_token.list_start_content
+                LOGGER.debug("ordered->start-->%s", str(new_token.list_start_content))
+            else:
+                LOGGER.debug("unordered->start-->")
+
             new_token = NewListItemMarkdownToken(
-                indent_level, position_marker, new_token.extracted_whitespace
+                indent_level,
+                position_marker,
+                new_token.extracted_whitespace,
+                list_start_content,
             )
             top_stack_item.last_new_list_token = new_token
             container_level_tokens.append(new_token)

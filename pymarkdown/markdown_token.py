@@ -752,6 +752,7 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
         self.is_loose = True
         self.extracted_whitespace = extracted_whitespace
         self.leading_spaces = None
+        self.leading_spaces_index = 0
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_unordered_list_start,
@@ -765,7 +766,9 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
         """
         Create a copy of this token.
         """
-        new_position_marker = PositionMarker(self.line_number, self.column_number, "")
+        new_position_marker = PositionMarker(
+            self.line_number, self.column_number - 1, ""
+        )
         new_token = UnorderedListStartMarkdownToken(
             self.list_start_sequence,
             self.indent_level,
@@ -774,6 +777,7 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
         )
         new_token.is_loose = self.is_loose
         new_token.leading_spaces = self.leading_spaces
+        new_token.compose_extra_data_field()
         return new_token
 
     def compose_extra_data_field(self):
@@ -802,6 +806,7 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
         self.compose_extra_data_field()
 
 
+# pylint: disable=too-many-instance-attributes
 class OrderedListStartMarkdownToken(MarkdownToken):
     """
     Class to provide for an encapsulation of the ordered list start element.
@@ -822,6 +827,7 @@ class OrderedListStartMarkdownToken(MarkdownToken):
         self.is_loose = True
         self.extracted_whitespace = extracted_whitespace
         self.leading_spaces = None
+        self.leading_spaces_index = 0
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_ordered_list_start,
@@ -832,6 +838,25 @@ class OrderedListStartMarkdownToken(MarkdownToken):
         self.compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
+
+    def create_copy(self):
+        """
+        Create a copy of this token.
+        """
+        new_position_marker = PositionMarker(
+            self.line_number, self.column_number - 1, ""
+        )
+        new_token = OrderedListStartMarkdownToken(
+            self.list_start_sequence,
+            self.list_start_content,
+            self.indent_level,
+            self.extracted_whitespace,
+            new_position_marker,
+        )
+        new_token.is_loose = self.is_loose
+        new_token.leading_spaces = self.leading_spaces
+        new_token.compose_extra_data_field()
+        return new_token
 
     def compose_extra_data_field(self):
         """
@@ -861,19 +886,25 @@ class OrderedListStartMarkdownToken(MarkdownToken):
         self.compose_extra_data_field()
 
 
+# pylint: enable=too-many-instance-attributes
+
+
 class NewListItemMarkdownToken(MarkdownToken):
     """
     Class to provide for an encapsulation of the new list item element.
     """
 
-    def __init__(self, indent_level, position_marker, extracted_whitespace):
+    def __init__(
+        self, indent_level, position_marker, extracted_whitespace, list_start_content
+    ):
         self.indent_level = indent_level
         self.extracted_whitespace = extracted_whitespace
+        self.list_start_content = list_start_content
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_new_list_item,
             MarkdownTokenClass.CONTAINER_BLOCK,
-            str(indent_level) + ":" + extracted_whitespace,
+            str(indent_level) + ":" + extracted_whitespace + ":" + list_start_content,
             position_marker=position_marker,
         )
 
