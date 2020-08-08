@@ -59,9 +59,8 @@ class TransformState:
 
 
 # pylint: enable=too-many-instance-attributes
-# pylint: enable=too-few-public-methods
 
-# pylint: disable=too-many-public-methods
+
 class TransformToGfm:
     """
     Class to provide for a transformation from markdown tokens to html for GFM.
@@ -252,81 +251,81 @@ class TransformToGfm:
         self.end_token_handlers = {}
 
         self.register_handlers(
-            ThematicBreakMarkdownToken, self.handle_thematic_break_token
+            ThematicBreakMarkdownToken, self.__handle_thematic_break_token
         )
-        self.register_handlers(HardBreakMarkdownToken, self.handle_hard_break_token)
+        self.register_handlers(HardBreakMarkdownToken, self.__handle_hard_break_token)
         self.register_handlers(
             AtxHeadingMarkdownToken,
-            self.handle_start_atx_heading_token,
-            self.handle_end_atx_heading_token,
+            self.__handle_start_atx_heading_token,
+            self.__handle_end_atx_heading_token,
         )
         self.register_handlers(
             LinkStartMarkdownToken,
-            self.handle_start_link_token,
-            self.handle_end_link_token,
+            self.__handle_start_link_token,
+            self.__handle_end_link_token,
         )
-        self.register_handlers(ImageStartMarkdownToken, self.handle_image_token)
+        self.register_handlers(ImageStartMarkdownToken, self.__handle_image_token)
         self.register_handlers(
-            InlineCodeSpanMarkdownToken, self.handle_inline_code_span_token
+            InlineCodeSpanMarkdownToken, self.__handle_inline_code_span_token
         )
-        self.register_handlers(RawHtmlMarkdownToken, self.handle_raw_html_token)
+        self.register_handlers(RawHtmlMarkdownToken, self.__handle_raw_html_token)
         self.register_handlers(
-            EmailAutolinkMarkdownToken, self.handle_email_autolink_token
+            EmailAutolinkMarkdownToken, self.__handle_email_autolink_token
         )
-        self.register_handlers(UriAutolinkMarkdownToken, self.handle_uri_autolink)
+        self.register_handlers(UriAutolinkMarkdownToken, self.__handle_uri_autolink)
         self.register_handlers(
             SetextHeadingMarkdownToken,
-            self.handle_start_setext_heading_token,
-            self.handle_end_setext_heading_token,
+            self.__handle_start_setext_heading_token,
+            self.__handle_end_setext_heading_token,
         )
         self.register_handlers(
             EmphasisMarkdownToken,
-            self.handle_start_emphasis_token,
-            self.handle_end_emphasis_token,
+            self.__handle_start_emphasis_token,
+            self.__handle_end_emphasis_token,
         )
-        self.register_handlers(TextMarkdownToken, self.handle_text_token)
+        self.register_handlers(TextMarkdownToken, self.__handle_text_token)
         self.register_handlers(
             ParagraphMarkdownToken,
-            self.handle_start_paragraph_token,
-            self.handle_end_paragraph_token,
+            self.__handle_start_paragraph_token,
+            self.__handle_end_paragraph_token,
         )
-        self.register_handlers(BlankLineMarkdownToken, self.handle_blank_line_token)
+        self.register_handlers(BlankLineMarkdownToken, self.__handle_blank_line_token)
         self.register_handlers(
             BlockQuoteMarkdownToken,
-            self.handle_start_block_quote_token,
-            self.handle_end_block_quote_token,
+            self.__handle_start_block_quote_token,
+            self.__handle_end_block_quote_token,
         )
         self.register_handlers(
             IndentedCodeBlockMarkdownToken,
-            self.handle_start_indented_code_block_token,
-            self.handle_end_indented_code_block_token,
+            self.__handle_start_indented_code_block_token,
+            self.__handle_end_indented_code_block_token,
         )
         self.register_handlers(
             FencedCodeBlockMarkdownToken,
-            self.handle_start_fenced_code_block_token,
-            self.handle_end_fenced_code_block_token,
+            self.__handle_start_fenced_code_block_token,
+            self.__handle_end_fenced_code_block_token,
         )
         self.register_handlers(
-            NewListItemMarkdownToken, self.handle_new_list_item_token
+            NewListItemMarkdownToken, self.__handle_new_list_item_token
         )
         self.register_handlers(
             OrderedListStartMarkdownToken,
-            self.handle_start_ordered_list_token,
-            self.handle_end_list_token,
+            self.__handle_start_ordered_list_token,
+            self.__handle_end_list_token,
         )
         self.register_handlers(
             UnorderedListStartMarkdownToken,
-            self.handle_start_unordered_list_token,
-            self.handle_end_list_token,
+            self.__handle_start_unordered_list_token,
+            self.__handle_end_list_token,
         )
         self.register_handlers(
             HtmlBlockMarkdownToken,
-            self.handle_start_html_block_token,
-            self.handle_end_html_block_token,
+            self.__handle_start_html_block_token,
+            self.__handle_end_html_block_token,
         )
         self.register_handlers(
             LinkReferenceDefinitionMarkdownToken,
-            self.handle_link_reference_definition_token,
+            self.__handle_link_reference_definition_token,
         )
 
     def register_handlers(self, type_name, start_token_handler, end_token_handler=None):
@@ -392,10 +391,10 @@ class TransformToGfm:
             )
 
             if transform_state.add_trailing_text:
-                output_html = self.apply_trailing_text(output_html, transform_state)
+                output_html = self.__apply_trailing_text(output_html, transform_state)
 
             if transform_state.add_leading_text:
-                output_html = self.apply_leading_text(output_html, transform_state)
+                output_html = self.__apply_leading_text(output_html, transform_state)
 
             LOGGER.debug("------")
             LOGGER.debug(
@@ -415,7 +414,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def apply_trailing_text(cls, output_html, transform_state):
+    def __apply_trailing_text(cls, output_html, transform_state):
         """
         Apply any trailing text to the output.
         """
@@ -432,7 +431,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def apply_leading_text(cls, output_html, transform_state):
+    def __apply_leading_text(cls, output_html, transform_state):
         """
         Apply any leading text to the output.
         """
@@ -444,7 +443,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_text_token(cls, output_html, next_token, transform_state):
+    def __handle_text_token(cls, output_html, next_token, transform_state):
         """
         Handle the text token.
         """
@@ -478,7 +477,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_start_paragraph_token(cls, output_html, next_token, transform_state):
+    def __handle_start_paragraph_token(cls, output_html, next_token, transform_state):
         """
         Handle the start paragraph token.
         """
@@ -490,7 +489,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_end_paragraph_token(cls, output_html, next_token, transform_state):
+    def __handle_end_paragraph_token(cls, output_html, next_token, transform_state):
         """
         Handle the end paragraph token.
         """
@@ -500,7 +499,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_blank_line_token(cls, output_html, next_token, transform_state):
+    def __handle_blank_line_token(cls, output_html, next_token, transform_state):
         """
         Handle the black line token.
         """
@@ -515,7 +514,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_start_block_quote_token(cls, output_html, next_token, transform_state):
+    def __handle_start_block_quote_token(cls, output_html, next_token, transform_state):
         """
         Handle the start block quote token.
         """
@@ -526,7 +525,7 @@ class TransformToGfm:
         transform_state.is_in_loose_list = True
         return output_html
 
-    def handle_end_block_quote_token(self, output_html, next_token, transform_state):
+    def __handle_end_block_quote_token(self, output_html, next_token, transform_state):
         """
         Handle the end block quote token.
         """
@@ -540,7 +539,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_start_indented_code_block_token(
+    def __handle_start_indented_code_block_token(
         cls, output_html, next_token, transform_state
     ):
         """
@@ -561,7 +560,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_end_indented_code_block_token(
+    def __handle_end_indented_code_block_token(
         cls, output_html, next_token, transform_state
     ):
         """
@@ -577,7 +576,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_start_fenced_code_block_token(
+    def __handle_start_fenced_code_block_token(
         cls, output_html, next_token, transform_state
     ):
         """
@@ -592,7 +591,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_end_fenced_code_block_token(
+    def __handle_end_fenced_code_block_token(
         cls, output_html, next_token, transform_state
     ):
         """
@@ -630,7 +629,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_thematic_break_token(cls, output_html, next_token, transform_state):
+    def __handle_thematic_break_token(cls, output_html, next_token, transform_state):
         """
         Handle the thematic break token.
         """
@@ -643,7 +642,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_hard_break_token(cls, output_html, next_token, transform_state):
+    def __handle_hard_break_token(cls, output_html, next_token, transform_state):
         """
         Handle the hard line break token.
         """
@@ -653,7 +652,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_start_atx_heading_token(cls, output_html, next_token, transform_state):
+    def __handle_start_atx_heading_token(cls, output_html, next_token, transform_state):
         """
         Handle the start atx heading token.
         """
@@ -662,7 +661,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_end_atx_heading_token(cls, output_html, next_token, transform_state):
+    def __handle_end_atx_heading_token(cls, output_html, next_token, transform_state):
         """
         Handle the end atx heading token.
         """
@@ -681,7 +680,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_start_setext_heading_token(
+    def __handle_start_setext_heading_token(
         cls, output_html, next_token, transform_state
     ):
         """
@@ -696,7 +695,9 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_end_setext_heading_token(cls, output_html, next_token, transform_state):
+    def __handle_end_setext_heading_token(
+        cls, output_html, next_token, transform_state
+    ):
         """
         Handle the end setext heading token.
         """
@@ -715,7 +716,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_new_list_item_token(cls, output_html, next_token, transform_state):
+    def __handle_new_list_item_token(cls, output_html, next_token, transform_state):
         """
         Handle the new list item token.
         """
@@ -727,7 +728,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_inline_code_span_token(cls, output_html, next_token, transform_state):
+    def __handle_inline_code_span_token(cls, output_html, next_token, transform_state):
         """
         Handle the code span token.
         """
@@ -743,7 +744,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_raw_html_token(cls, output_html, next_token, transform_state):
+    def __handle_raw_html_token(cls, output_html, next_token, transform_state):
         """
         Handle the raw html token.
         """
@@ -752,7 +753,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_link_reference_definition_token(
+    def __handle_link_reference_definition_token(
         cls, output_html, next_token, transform_state
     ):
         """
@@ -763,7 +764,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_email_autolink_token(cls, output_html, next_token, transform_state):
+    def __handle_email_autolink_token(cls, output_html, next_token, transform_state):
         """
         Handle the email autolink token.
         """
@@ -778,7 +779,7 @@ class TransformToGfm:
         )
         return output_html
 
-    def handle_start_ordered_list_token(
+    def __handle_start_ordered_list_token(
         self, output_html, next_token, transform_state,
     ):
         """
@@ -798,7 +799,7 @@ class TransformToGfm:
         )
         return output_html
 
-    def handle_start_unordered_list_token(
+    def __handle_start_unordered_list_token(
         self, output_html, next_token, transform_state,
     ):
         """
@@ -814,7 +815,7 @@ class TransformToGfm:
         )
         return output_html
 
-    def handle_end_list_token(
+    def __handle_end_list_token(
         self, output_html, next_token, transform_state,
     ):
         """
@@ -834,7 +835,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_uri_autolink(cls, output_html, next_token, transform_state):
+    def __handle_uri_autolink(cls, output_html, next_token, transform_state):
         """
         Handle the uri autolink token.
         """
@@ -866,7 +867,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_start_html_block_token(cls, output_html, next_token, transform_state):
+    def __handle_start_html_block_token(cls, output_html, next_token, transform_state):
         """
         Handle the start html block token.
         """
@@ -890,7 +891,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_end_html_block_token(cls, output_html, next_token, transform_state):
+    def __handle_end_html_block_token(cls, output_html, next_token, transform_state):
         """
         Handle the end html block token.
         """
@@ -899,7 +900,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_start_emphasis_token(cls, output_html, next_token, transform_state):
+    def __handle_start_emphasis_token(cls, output_html, next_token, transform_state):
         """
         Handle the start emphasis token.
         """
@@ -911,7 +912,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_end_emphasis_token(cls, output_html, next_token, transform_state):
+    def __handle_end_emphasis_token(cls, output_html, next_token, transform_state):
         """
         Handle the end emphasis token.
         """
@@ -924,7 +925,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_start_link_token(cls, output_html, next_token, transform_state):
+    def __handle_start_link_token(cls, output_html, next_token, transform_state):
         """
         Handle the start link token.
         """
@@ -937,7 +938,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_end_link_token(cls, output_html, next_token, transform_state):
+    def __handle_end_link_token(cls, output_html, next_token, transform_state):
         """
         Handle the end link token.
         """
@@ -947,7 +948,7 @@ class TransformToGfm:
         return output_html
 
     @classmethod
-    def handle_image_token(cls, output_html, next_token, transform_state):
+    def __handle_image_token(cls, output_html, next_token, transform_state):
         """
         Handle the image token.
         """
@@ -959,6 +960,3 @@ class TransformToGfm:
             output_html = output_html + 'title="' + next_token.image_title + '" '
         output_html += "/>"
         return output_html
-
-
-# pylint: enable=too-few-public-methods

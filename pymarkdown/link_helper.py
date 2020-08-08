@@ -767,9 +767,7 @@ class LinkHelper:
             inline_title = LinkHelper.__link_definitions[link_label][1]
         return update_index, inline_link, inline_title
 
-    # pylint: disable=too-many-arguments
-    # pylint: disable=too-many-locals
-    # pylint: disable=too-many-statements
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __handle_link_types(
         inline_blocks,
@@ -857,80 +855,26 @@ class LinkHelper:
         token_to_append = None
         LOGGER.debug("<<<<<<<update_index<<<<<<<%s<<", str(update_index))
         if update_index != -1:
-            LOGGER.debug("<<<<<<<start_text<<<<<<<%s<<", str(start_text))
-            LOGGER.debug(">>inline_link>>%s>>", inline_link)
-            LOGGER.debug(">>pre_inline_link>>%s>>", pre_inline_link)
-            LOGGER.debug(">>inline_title>>%s>>", inline_title)
-            LOGGER.debug(">>pre_inline_title>>%s>>", pre_inline_title)
-            LOGGER.debug(">>text_from_blocks>>%s>>", text_from_blocks)
-            if pre_inline_link == inline_link:
-                pre_inline_link = ""
-            if pre_inline_title == inline_title:
-                pre_inline_title = ""
-            LOGGER.debug(">>pre_inline_link>>%s>>", pre_inline_link)
-
-            text_from_blocks_raw = ParserHelper.resolve_backspaces_from_text(
-                text_from_blocks_raw
+            consume_rest_of_line, token_to_append = LinkHelper.__create_link_token(
+                start_text,
+                inline_link,
+                pre_inline_link,
+                inline_title,
+                pre_inline_title,
+                text_from_blocks,
+                text_from_blocks_raw,
+                inline_blocks,
+                ind,
+                did_use_angle_start,
+                inline_title_bounding_character,
+                before_link_whitespace,
+                before_title_whitespace,
+                after_title_whitespace,
+                ex_label,
+                label_type,
+                remaining_line,
+                current_string_unresolved,
             )
-            LOGGER.debug(">>text_from_blocks_raw>>%s>>", text_from_blocks_raw)
-
-            if start_text == LinkHelper.__link_start_sequence:
-                inline_blocks[ind] = LinkStartMarkdownToken(
-                    inline_link,
-                    pre_inline_link,
-                    inline_title,
-                    pre_inline_title,
-                    ex_label,
-                    label_type,
-                    text_from_blocks_raw,
-                    did_use_angle_start,
-                    inline_title_bounding_character,
-                    before_link_whitespace,
-                    before_title_whitespace,
-                    after_title_whitespace,
-                )
-                token_to_append = EndMarkdownToken(
-                    MarkdownToken.token_inline_link, "", "", None
-                )
-            else:
-                assert start_text == LinkHelper.image_start_sequence
-                consume_rest_of_line = True
-                LOGGER.debug(
-                    "\n>>__consume_text_for_image_alt_text>>%s>>", str(inline_blocks)
-                )
-                LOGGER.debug("\n>>__consume_text_for_image_alt_text>>%s>>", str(ind))
-                LOGGER.debug(
-                    "\n>>__consume_text_for_image_alt_text>>%s>>", str(remaining_line)
-                )
-                image_alt_text = LinkHelper.__consume_text_for_image_alt_text(
-                    inline_blocks, ind, remaining_line
-                )
-                LOGGER.debug(
-                    "\n>>__consume_text_for_image_alt_text>>%s>>", str(image_alt_text)
-                )
-
-                inline_blocks[ind] = ImageStartMarkdownToken(
-                    inline_link,
-                    pre_inline_link,
-                    inline_title,
-                    pre_inline_title,
-                    image_alt_text,
-                    ex_label,
-                    label_type,
-                    text_from_blocks_raw,
-                    did_use_angle_start,
-                    inline_title_bounding_character,
-                    before_link_whitespace,
-                    before_title_whitespace,
-                    after_title_whitespace,
-                )
-                LOGGER.debug("\n>>Image>>%s", str(inline_blocks))
-                LOGGER.debug(">>start_text>>%s<<", str(start_text))
-                LOGGER.debug(">>remaining_line>>%s<<", str(remaining_line))
-                LOGGER.debug(
-                    ">>current_string_unresolved>>%s<<", str(current_string_unresolved)
-                )
-                # assert False
 
         LOGGER.debug(
             "handle_link_types<update_index<%s<<%s<<",
@@ -939,9 +883,112 @@ class LinkHelper:
         )
         return update_index, token_to_append, consume_rest_of_line
 
-    # pylint: enable=too-many-statements
-    # pylint: enable=too-many-arguments
-    # pylint: enable=too-many-locals
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    # pylint: disable=too-many-arguments, too-many-locals
+    @staticmethod
+    def __create_link_token(
+        start_text,
+        inline_link,
+        pre_inline_link,
+        inline_title,
+        pre_inline_title,
+        text_from_blocks,
+        text_from_blocks_raw,
+        inline_blocks,
+        ind,
+        did_use_angle_start,
+        inline_title_bounding_character,
+        before_link_whitespace,
+        before_title_whitespace,
+        after_title_whitespace,
+        ex_label,
+        label_type,
+        remaining_line,
+        current_string_unresolved,
+    ):
+        """
+        Create the right type of link token.
+        """
+        consume_rest_of_line = False
+        token_to_append = None
+
+        LOGGER.debug("<<<<<<<start_text<<<<<<<%s<<", str(start_text))
+        LOGGER.debug(">>inline_link>>%s>>", inline_link)
+        LOGGER.debug(">>pre_inline_link>>%s>>", pre_inline_link)
+        LOGGER.debug(">>inline_title>>%s>>", inline_title)
+        LOGGER.debug(">>pre_inline_title>>%s>>", pre_inline_title)
+        LOGGER.debug(">>text_from_blocks>>%s>>", text_from_blocks)
+        if pre_inline_link == inline_link:
+            pre_inline_link = ""
+        if pre_inline_title == inline_title:
+            pre_inline_title = ""
+        LOGGER.debug(">>pre_inline_link>>%s>>", pre_inline_link)
+
+        text_from_blocks_raw = ParserHelper.resolve_backspaces_from_text(
+            text_from_blocks_raw
+        )
+        LOGGER.debug(">>text_from_blocks_raw>>%s>>", text_from_blocks_raw)
+
+        if start_text == LinkHelper.__link_start_sequence:
+            inline_blocks[ind] = LinkStartMarkdownToken(
+                inline_link,
+                pre_inline_link,
+                inline_title,
+                pre_inline_title,
+                ex_label,
+                label_type,
+                text_from_blocks_raw,
+                did_use_angle_start,
+                inline_title_bounding_character,
+                before_link_whitespace,
+                before_title_whitespace,
+                after_title_whitespace,
+            )
+            token_to_append = EndMarkdownToken(
+                MarkdownToken.token_inline_link, "", "", None
+            )
+        else:
+            assert start_text == LinkHelper.image_start_sequence
+            consume_rest_of_line = True
+            LOGGER.debug(
+                "\n>>__consume_text_for_image_alt_text>>%s>>", str(inline_blocks)
+            )
+            LOGGER.debug("\n>>__consume_text_for_image_alt_text>>%s>>", str(ind))
+            LOGGER.debug(
+                "\n>>__consume_text_for_image_alt_text>>%s>>", str(remaining_line)
+            )
+            image_alt_text = LinkHelper.__consume_text_for_image_alt_text(
+                inline_blocks, ind, remaining_line
+            )
+            LOGGER.debug(
+                "\n>>__consume_text_for_image_alt_text>>%s>>", str(image_alt_text)
+            )
+
+            inline_blocks[ind] = ImageStartMarkdownToken(
+                inline_link,
+                pre_inline_link,
+                inline_title,
+                pre_inline_title,
+                image_alt_text,
+                ex_label,
+                label_type,
+                text_from_blocks_raw,
+                did_use_angle_start,
+                inline_title_bounding_character,
+                before_link_whitespace,
+                before_title_whitespace,
+                after_title_whitespace,
+            )
+            LOGGER.debug("\n>>Image>>%s", str(inline_blocks))
+            LOGGER.debug(">>start_text>>%s<<", str(start_text))
+            LOGGER.debug(">>remaining_line>>%s<<", str(remaining_line))
+            LOGGER.debug(
+                ">>current_string_unresolved>>%s<<", str(current_string_unresolved)
+            )
+        return consume_rest_of_line, token_to_append
+
+    # pylint: enable=too-many-arguments, too-many-locals
 
     # pylint: disable=too-many-locals
     @staticmethod

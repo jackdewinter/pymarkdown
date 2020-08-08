@@ -47,10 +47,9 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
     )
     print("---")
 
-    # pylint: disable=consider-using-enumerate
-    for element_index in range(0, len(expected_tokens)):
+    for element_index, next_expected_token in enumerate(expected_tokens):
 
-        expected_str = str(expected_tokens[element_index])
+        expected_str = str(next_expected_token)
         actual_str = str(actual_tokens[element_index])
 
         print(
@@ -76,7 +75,6 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
             "List items " + str(element_index) + " are not equal." + diff_values
         )
     print("---\nToken lists are equal.\n---")
-    # pylint: enable=consider-using-enumerate
 
 
 def assert_if_strings_different(expected_string, actual_string):

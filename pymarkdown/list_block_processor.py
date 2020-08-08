@@ -631,7 +631,7 @@ class ListBlockProcessor:
             stack_bq_count -= 1
         return container_level_tokens, stack_bq_count
 
-    # pylint: disable=too-many-locals, too-many-arguments
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __post_list(
         parser_state,
@@ -681,29 +681,13 @@ class ListBlockProcessor:
         else:
             LOGGER.debug("__post_list>>new list item>>")
             assert emit_li
-            LOGGER.debug("instead of-->%s", str(new_token))
-
-            top_stack_item = parser_state.token_stack[-1]
-            assert (
-                top_stack_item.type_name == StackToken.stack_unordered_list
-                or top_stack_item.type_name == StackToken.stack_ordered_list
-            )
-
-            list_start_content = ""
-            if top_stack_item.type_name == StackToken.stack_ordered_list:
-                list_start_content = new_token.list_start_content
-                LOGGER.debug("ordered->start-->%s", str(new_token.list_start_content))
-            else:
-                LOGGER.debug("unordered->start-->")
-
-            new_token = NewListItemMarkdownToken(
+            ListBlockProcessor.__post_list_use_new_list_item(
+                parser_state,
+                new_token,
+                container_level_tokens,
                 indent_level,
                 position_marker,
-                new_token.extracted_whitespace,
-                list_start_content,
             )
-            top_stack_item.last_new_list_token = new_token
-            container_level_tokens.append(new_token)
         LOGGER.debug(
             "__post_list>>rem>>%s>>after_in>>%s",
             str(remaining_whitespace),
@@ -715,7 +699,35 @@ class ListBlockProcessor:
         LOGGER.debug("__post_list>>after>>%s", str(container_level_tokens))
 
         return True, container_level_tokens, line_to_parse
-        # pylint: enable=too-many-locals, too-many-arguments
+        # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __post_list_use_new_list_item(
+        parser_state, new_token, container_level_tokens, indent_level, position_marker
+    ):
+        LOGGER.debug("instead of-->%s", str(new_token))
+
+        top_stack_item = parser_state.token_stack[-1]
+        assert (
+            top_stack_item.type_name == StackToken.stack_unordered_list
+            or top_stack_item.type_name == StackToken.stack_ordered_list
+        )
+
+        list_start_content = ""
+        if top_stack_item.type_name == StackToken.stack_ordered_list:
+            list_start_content = new_token.list_start_content
+            LOGGER.debug("ordered->start-->%s", str(new_token.list_start_content))
+        else:
+            LOGGER.debug("unordered->start-->")
+
+        new_token = NewListItemMarkdownToken(
+            indent_level,
+            position_marker,
+            new_token.extracted_whitespace,
+            list_start_content,
+        )
+        top_stack_item.last_new_list_token = new_token
+        container_level_tokens.append(new_token)
 
     @staticmethod
     def __close_required_lists_after_start(
