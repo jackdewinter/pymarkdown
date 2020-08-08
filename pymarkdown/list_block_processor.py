@@ -21,6 +21,7 @@ from pymarkdown.stack_token import (
 LOGGER = logging.getLogger(__name__)
 
 
+# pylint: disable=too-many-lines
 class ListBlockProcessor:
     """
     Class to provide processing for the list blocks.
@@ -694,7 +695,8 @@ class ListBlockProcessor:
             str(after_marker_ws_index),
         )
         line_to_parse = (
-            "".rjust(remaining_whitespace, " ") + line_to_parse[after_marker_ws_index:]
+            ParserHelper.repeat_string(" ", remaining_whitespace)
+            + line_to_parse[after_marker_ws_index:]
         )
         LOGGER.debug("__post_list>>after>>%s", str(container_level_tokens))
 
@@ -963,7 +965,10 @@ class ListBlockProcessor:
             removed_whitespace = ParserHelper.tab_character
         else:
             removed_whitespace = leading_space[0:requested_list_indent]
-        line_to_parse = "".rjust(remaining_indent, " ") + line_to_parse[start_index:]
+        line_to_parse = (
+            ParserHelper.repeat_string(" ", remaining_indent)
+            + line_to_parse[start_index:]
+        )
         return line_to_parse, removed_whitespace
 
     @staticmethod

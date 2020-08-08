@@ -539,6 +539,13 @@ class ParserHelper:
                 )
         return adjusted_text_token
 
+    @staticmethod
+    def repeat_string(string_to_repeat, repeat_count):
+        """
+        Repeat the given character the specified number of times.
+        """
+        return "".rjust(repeat_count, string_to_repeat)
+
 
 # pylint: enable=too-many-public-methods
 

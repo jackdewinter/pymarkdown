@@ -219,7 +219,7 @@ class BlockQuoteProcessor:
                         )
                         adjusted_line = (
                             adjusted_line[0:start_index]
-                            + "".rjust(adjusted_tab_length)
+                            + ParserHelper.repeat_string(" ", adjusted_tab_length)
                             + adjusted_line[start_index + 1 :]
                         )
                         LOGGER.debug(

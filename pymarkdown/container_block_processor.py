@@ -504,7 +504,10 @@ class ContainerBlockProcessor:
                 str(stack_bq_count),
                 str(this_bq_count),
             )
-            adj_line_to_parse = "".rjust(active_container_index) + adj_line_to_parse
+            adj_line_to_parse = (
+                ParserHelper.repeat_string(" ", active_container_index)
+                + adj_line_to_parse
+            )
             LOGGER.debug(
                 "check next container_start>post<<%s<<", str(adj_line_to_parse)
             )

@@ -210,9 +210,13 @@ class LeafBlockProcessor:
             LOGGER.debug("previous_ws>>%s", str(current_whitespace_length))
             LOGGER.debug("whitespace_left>>%s", str(whitespace_left))
             removed_whitespace = ParserHelper.create_replace_with_nothing_marker(
-                "".rjust(current_whitespace_length - whitespace_left, " ")
+                ParserHelper.repeat_string(
+                    " ", current_whitespace_length - whitespace_left
+                )
             )
-            extracted_whitespace = removed_whitespace + "".rjust(whitespace_left, " ")
+            extracted_whitespace = removed_whitespace + ParserHelper.repeat_string(
+                " ", whitespace_left
+            )
         return new_tokens, extracted_whitespace
 
     # pylint: enable=too-many-locals
@@ -895,8 +899,8 @@ class LeafBlockProcessor:
 
         if adjusted_whitespace_length:
             LOGGER.debug(">>GGHHJJ!!>>%s>>", str(adjusted_whitespace_length))
-            extracted_whitespace = "".ljust(
-                adjusted_whitespace_length, ParserHelper.blech_character
+            extracted_whitespace = ParserHelper.repeat_string(
+                ParserHelper.blech_character, adjusted_whitespace_length
             )
 
         if not parser_state.token_stack[-1].is_paragraph:
