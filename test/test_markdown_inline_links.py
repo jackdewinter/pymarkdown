@@ -1189,7 +1189,7 @@ def test_inline_links_520():
     expected_gfm = """<p><a href="/uri">link [foo [bar]]</a></p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1502,7 +1502,6 @@ def test_inline_links_527a():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_inline_links_528():
     """
@@ -1515,15 +1514,13 @@ def test_inline_links_528():
     source_markdown = """![[[foo](uri1)](uri2)](uri3)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[image:inline:uri2::foo::::[[foo](uri1):False::::]",
-        "[text:]:]",
-        "[text:(uri3):]",
+        "[image:inline:uri3::[foo](uri2)::::[[foo](uri1)](uri2):False::::]",
         "[end-para]",
     ]
     expected_gfm = """<p><img src="uri3" alt="[foo](uri2)" /></p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

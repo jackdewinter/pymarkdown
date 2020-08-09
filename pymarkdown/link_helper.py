@@ -249,6 +249,9 @@ class LinkHelper:
         updated_index = -1
         token_to_append = None
 
+        LOGGER.debug("LOOKING FOR START")
+        LinkHelper.__display_specials_in_tokens(inline_blocks)
+
         valid_special_start_text = None
         search_index = len(inline_blocks) - 1
         while search_index >= 0:
@@ -280,12 +283,14 @@ class LinkHelper:
                         )
                         if updated_index != -1:
                             is_valid = True
-                        else:
-                            inline_blocks[search_index].active = False
-                        break
-                    LOGGER.debug("  not active")
-                else:
-                    LOGGER.debug("  not link")
+                            break
+
+                    LOGGER.debug("  not active:%s", str(search_index))
+                    LinkHelper.__revert_token_to_normal_text_token(
+                        inline_blocks, search_index
+                    )
+                    break
+                LOGGER.debug("  not link")
             search_index -= 1
 
         LOGGER.debug(
@@ -312,6 +317,8 @@ class LinkHelper:
             LOGGER.debug("resolve_inline_emphasis>>%s\n", str(inline_blocks))
 
             if valid_special_start_text == LinkHelper.__link_start_sequence:
+                LOGGER.debug("DEACTIVATING")
+                LinkHelper.__display_specials_in_tokens(inline_blocks)
                 for deactivate_token in inline_blocks:
                     if isinstance(deactivate_token, SpecialTextMarkdownToken):
                         LOGGER.debug(
@@ -322,11 +329,46 @@ class LinkHelper:
                             == LinkHelper.__link_start_sequence
                         ):
                             deactivate_token.active = False
+                LOGGER.debug("DEACTIVATED")
+                LinkHelper.__display_specials_in_tokens(inline_blocks)
             return updated_index, True, token_to_append, consume_rest_of_line
         is_active = False
         return new_index, is_active, token_to_append, consume_rest_of_line
 
     # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __revert_token_to_normal_text_token(inline_blocks, search_index):
+        """
+        Revert this token from a special text token back to a normal text token.
+        """
+
+        LOGGER.debug("REVERTING")
+        LinkHelper.__display_specials_in_tokens(inline_blocks)
+
+        text_token_to_replace = inline_blocks[search_index]
+        replacement_token = text_token_to_replace.create_copy()
+        inline_blocks.insert(search_index, replacement_token)
+        del inline_blocks[search_index + 1]
+
+        LOGGER.debug("REVERTED")
+        LinkHelper.__display_specials_in_tokens(inline_blocks)
+
+    @staticmethod
+    def __display_specials_in_tokens(inline_blocks):
+        display_string = ""
+        for deactivate_token in inline_blocks:
+            if isinstance(deactivate_token, SpecialTextMarkdownToken):
+                display_string += (
+                    ",>>Spec:"
+                    + str(deactivate_token.active)
+                    + ":"
+                    + str(deactivate_token)
+                    + "<<"
+                )
+            else:
+                display_string += "," + str(deactivate_token)
+        LOGGER.debug(display_string[1:])
 
     @staticmethod
     def __consume_text_for_image_alt_text(inline_blocks, ind, remaining_line):
@@ -338,11 +380,12 @@ class LinkHelper:
         LOGGER.debug(">>%s<<", str(inline_blocks[ind + 1 :]))
         while len(inline_blocks) > (ind + 1):
             if isinstance(inline_blocks[ind + 1], SpecialTextMarkdownToken):
-                pass
+                if inline_blocks[ind + 1].token_text == "]":
+                    image_alt_text += inline_blocks[ind + 1].token_text
             elif isinstance(inline_blocks[ind + 1], TextMarkdownToken):
-                image_alt_text = image_alt_text + inline_blocks[ind + 1].token_text
+                image_alt_text += inline_blocks[ind + 1].token_text
             elif isinstance(inline_blocks[ind + 1], ImageStartMarkdownToken):
-                image_alt_text = image_alt_text + inline_blocks[ind + 1].image_alt_text
+                image_alt_text += inline_blocks[ind + 1].image_alt_text
 
             LOGGER.debug(">>add>>%s<<%s", str(inline_blocks[ind + 1]), image_alt_text)
 

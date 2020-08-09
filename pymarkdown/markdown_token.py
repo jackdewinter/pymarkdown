@@ -511,6 +511,15 @@ class TextMarkdownToken(MarkdownToken):
         )
         self.compose_extra_data_field()
 
+    def create_copy(self):
+        """
+        Create a copy of this token.
+        """
+        new_token = TextMarkdownToken(
+            self.token_text, self.extracted_whitespace, self.end_whitespace,
+        )
+        return new_token
+
     def compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
