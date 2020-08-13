@@ -5,6 +5,7 @@ import inspect
 
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.markdown_token import (
+    BlockQuoteMarkdownToken,
     AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
     EmailAutolinkMarkdownToken,
@@ -61,6 +62,9 @@ class TransformToMarkdown:
         )
         self.register_container_handlers(
             NewListItemMarkdownToken, self.__rehydrate_next_list_item
+        )
+        self.register_container_handlers(
+            BlockQuoteMarkdownToken, self.__rehydrate_block_quote, self.__rehydrate_block_quote_end
         )
 
         self.start_token_handlers = {}
@@ -192,7 +196,7 @@ class TransformToMarkdown:
         print("---\nTransformToMarkdown\n---")
         for token_index, current_token in enumerate(actual_tokens):
             print(
-                ">>>>"
+                "\n\n>>>>"
                 + ParserHelper.make_value_visible(current_token)
                 + "-->"
                 + ParserHelper.make_value_visible(transformed_data)
@@ -267,35 +271,7 @@ class TransformToMarkdown:
             transformed_data = transformed_data[0:-1]
         return transformed_data, avoid_processing
 
-    # pylint: disable=too-many-arguments
-    def __perform_container_post_processing(
-        self,
-        current_token,
-        new_data,
-        skip_merge,
-        delayed_continue,
-        continue_sequence,
-        next_token,
-    ):
-        """
-        Perform any post processing required by the containers.  This is intentionally
-        kept separate to ensure that the leaf and inline processing is distinct and
-        separate.
-        """
-
-        top_of_list_token_stack = None
-        if self.list_token_stack:
-            top_of_list_token_stack = self.list_token_stack[-1]
-
-        if (
-            top_of_list_token_stack
-            and top_of_list_token_stack.token_name
-            != MarkdownToken.token_unordered_list_start
-            and top_of_list_token_stack.token_name
-            != MarkdownToken.token_ordered_list_start
-        ):
-            return new_data, delayed_continue, continue_sequence
-
+    def __perform_container_post_processing_lists(self, current_token, new_data, skip_merge, delayed_continue, continue_sequence, next_token, top_of_list_token_stack):
         if skip_merge:
             delayed_continue = ""
 
@@ -343,6 +319,41 @@ class TransformToMarkdown:
         new_data = ParserHelper.resolve_noops_from_text(new_data)
         print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
         return new_data, delayed_continue, continue_sequence
+
+    # pylint: disable=too-many-arguments
+    def __perform_container_post_processing(
+        self,
+        current_token,
+        new_data,
+        skip_merge,
+        delayed_continue,
+        continue_sequence,
+        next_token,
+    ):
+        """
+        Perform any post processing required by the containers.  This is intentionally
+        kept separate to ensure that the leaf and inline processing is distinct and
+        separate.
+        """
+
+        top_of_list_token_stack = None
+        if self.list_token_stack:
+            top_of_list_token_stack = self.list_token_stack[-1]
+
+        if not top_of_list_token_stack:
+            return ParserHelper.resolve_noops_from_text(new_data), delayed_continue, continue_sequence
+
+        if (
+            top_of_list_token_stack.token_name
+            == MarkdownToken.token_unordered_list_start
+            or top_of_list_token_stack.token_name
+            == MarkdownToken.token_ordered_list_start
+        ):
+            return self.__perform_container_post_processing_lists(\
+                current_token, new_data, skip_merge, delayed_continue, continue_sequence, next_token, top_of_list_token_stack)
+        assert False
+
+        #__perform_container_post_processing_block_quote
 
     # pylint: enable=too-many-arguments
 
@@ -619,6 +630,15 @@ class TransformToMarkdown:
             )
         continue_sequence = ParserHelper.repeat_string(" ", current_token.indent_level)
         return start_sequence, continue_sequence
+
+    def __rehydrate_block_quote(self, current_token, previous_token, next_token):
+        return "", ""
+
+    def __rehydrate_block_quote_end(self, current_token):
+        return "", "", ""
+
+    def __perform_container_post_processing_block_quote(self, current_token, new_data, skip_merge, delayed_continue, continue_sequence, next_token, top_of_list_token_stack):
+        return "", "", ""
 
     def __rehydrate_unordered_list_start(
         self, current_token, previous_token, next_token

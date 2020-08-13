@@ -498,22 +498,29 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
         print("Processing of xx avoided")
     else:
         print(
-            "\n-=-=-\nExpected\n-=-=-\n"
+            "\n-=-=-\nExpected\n-=-=-\n-->"
             + ParserHelper.make_value_visible(source_markdown)
-            + "\n-=-=-\nActual\n-=-=-\n"
+            + "<--\n-=-=-\nActual\n-=-=-\n-->"
             + ParserHelper.make_value_visible(original_markdown)
-            + "\n-=-=-\n"
+            + "<--\n-=-=-\n"
         )
         diff = difflib.ndiff(source_markdown, original_markdown)
         diff_values = (
             "\n-=-=-n"
             + "\n".join(list(diff))
-            + "\n-=-=-expected\n"
+            + "\n-=-=-expected\n-->"
             + ParserHelper.make_value_visible(source_markdown)
-            + "\n-=-=-actual\n"
+            + "<--\n-=-=-actual\n-->"
             + ParserHelper.make_value_visible(original_markdown)
-            + "\n-=-=-\n"
+            + "<--\n-=-=-\n"
         )
+        if False:
+            for i in source_markdown:
+                print(">>" + str(ord(i)))
+            print("--")
+            for i in original_markdown:
+                print(">>" + str(ord(i)))
+
         assert source_markdown == original_markdown, (
             "Strings are not equal." + diff_values
         )
