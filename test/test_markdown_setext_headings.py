@@ -618,7 +618,7 @@ def test_setext_headings_062():
     source_markdown = """> Foo
 ---"""
     expected_tokens = [
-        "[block-quote(1,1):]",
+        "[block-quote(1,1)::> ]",
         "[para(1,3):]",
         "[text:Foo:]",
         "[end-para]",
@@ -653,7 +653,7 @@ def test_setext_headings_063():
 bar
 ==="""
     expected_tokens = [
-        "[block-quote(1,1):]",
+        "[block-quote(1,1)::> ]",
         "[para(1,3):\n\n]",
         "[text:foo\nbar\n===::\n\n]",
         "[end-para]",
@@ -975,7 +975,7 @@ def test_setext_headings_071():
     source_markdown = """> foo
 -----"""
     expected_tokens = [
-        "[block-quote(1,1):]",
+        "[block-quote(1,1)::> ]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",

@@ -897,7 +897,7 @@ def test_html_blocks_143():
 
 bar"""
     expected_tokens = [
-        "[block-quote(1,1):]",
+        "[block-quote(1,1)::> \n> \n]",
         "[html-block(1,3)]",
         "[text:<div>\nfoo:]",
         "[end-html-block]",
@@ -914,7 +914,7 @@ foo
 <p>bar</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1718,7 +1718,7 @@ def test_html_blocks_cov1():
 
 
 @pytest.mark.gfm
-def test_html_blocks_cov2():
+def test_html_blocks_cov2x():
     """
     Test case cov2:  Based on coverage analysis.
     """
@@ -1733,7 +1733,7 @@ def test_html_blocks_cov2():
         "[para(1,1):]",
         "[text:\a<\a&lt;\a/hrx:]",
         "[end-para]",
-        "[block-quote(2,1):]",
+        "[block-quote(2,1)::>\n]",
         "[BLANK(2,2):]",
         "[html-block(3,1)]",
         "[text:</x-table>:]",
@@ -1746,7 +1746,83 @@ def test_html_blocks_cov2():
 </blockquote>"""
 
     # Act
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_cov2a():
+    """
+    Test case cov2:  Based on coverage analysis.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """</hrx
+>
+> </x-table>"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text:\a<\a&lt;\a/hrx:]",
+        "[end-para]",
+        "[block-quote(2,1)::>\n> ]",
+        "[BLANK(2,2):]",
+        "[html-block(3,3)]",
+        "[text:</x-table>:]",
+        "[end-html-block]",
+        "[end-block-quote]",
+    ]
+    expected_gfm = """<p>&lt;/hrx</p>
+<blockquote>
+</x-table>
+</blockquote>"""
+
+    # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_cov2b():
+    """
+    Test case cov2:  Based on coverage analysis.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """</hrx
+>
+ </x-table>"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text:\a<\a&lt;\a/hrx:]",
+        "[end-para]",
+        "[block-quote(2,1)::>\n]",
+        "[BLANK(2,2):]",
+        "[html-block(3,1)]",
+        "[text:</x-table>: ]",
+        "[end-html-block]",
+        "[end-block-quote]",
+    ]
+    expected_gfm = """<p>&lt;/hrx</p>
+<blockquote>
+ </x-table>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

@@ -452,6 +452,9 @@ class TokenizedMarkdown:
                 parser_state, until_this_index=in_index, include_lists=True
             )
 
+        if from_main_transform:
+            TokenizedMarkdown.__handle_blank_line_in_block_quote(parser_state)
+
         if new_tokens is None:
             new_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state,
@@ -469,6 +472,26 @@ class TokenizedMarkdown:
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
 
     # pylint: enable=too-many-locals
+
+    @staticmethod
+    def __handle_blank_line_in_block_quote(parser_state):
+        found_bq = None
+        LOGGER.debug("blank--look for bq")
+        for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):
+            LOGGER.debug(
+                "blank--%s--%s",
+                str(stack_index),
+                ParserHelper.make_value_visible(parser_state.token_stack[stack_index]),
+            )
+            if parser_state.token_stack[stack_index].is_block_quote:
+                found_bq = parser_state.token_stack[stack_index]
+                break
+            if parser_state.token_stack[stack_index].is_list:
+                break
+
+        LOGGER.debug("blank>>bq_start>>%s", ParserHelper.make_value_visible(found_bq))
+        if found_bq:
+            found_bq.matching_markdown_token.add_leading_spaces("")
 
 
 # pylint: enable=too-few-public-methods

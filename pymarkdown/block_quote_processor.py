@@ -281,6 +281,7 @@ class BlockQuoteProcessor:
             ParserHelper.make_value_visible(line_to_parse),
         )
         original_start_index = start_index
+        original_line_to_parse = line_to_parse
         (
             this_bq_count,
             start_index,
@@ -298,6 +299,13 @@ class BlockQuoteProcessor:
             str(start_index),
             ParserHelper.make_value_visible(line_to_parse),
         )
+        LOGGER.debug(
+            "ORIG-->WS[%s]--SI[%s]--[%s]",
+            extracted_whitespace,
+            str(original_start_index),
+            str(original_line_to_parse),
+        )
+        LOGGER.debug("NOW -->SI[%s]--[%s]", str(start_index), str(line_to_parse))
 
         if not parser_state.token_stack[-1].is_fenced_code_block:
             LOGGER.debug("handle_block_quote_section>>not fenced")
@@ -313,8 +321,32 @@ class BlockQuoteProcessor:
                 original_start_index,
             )
 
+            removed_text = (
+                extracted_whitespace
+                + line_to_parse[position_marker.index_number : start_index]
+            )
+            LOGGER.debug(
+                "==EWS[%s],OSI[%s],SI[%s],LTP[%s]",
+                extracted_whitespace,
+                str(original_start_index),
+                str(position_marker.index_number),
+                position_marker.text_to_parse,
+            )
             line_to_parse = line_to_parse[start_index:]
             removed_chars_at_start = start_index
+            LOGGER.debug("==REM[%s],LTP[%s]", str(removed_text), str(line_to_parse))
+
+            found_stack_token = None
+            for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):
+                LOGGER.debug(
+                    "--%s--%s",
+                    str(stack_index),
+                    str(parser_state.token_stack[stack_index]),
+                )
+                if parser_state.token_stack[stack_index].is_block_quote:
+                    found_stack_token = parser_state.token_stack[stack_index]
+                    break
+            found_stack_token.matching_markdown_token.add_leading_spaces(removed_text)
 
             if not line_to_parse.strip():
                 LOGGER.debug("call __handle_block_quote_section>>handle_blank_line")
@@ -376,18 +408,12 @@ class BlockQuoteProcessor:
                 only_these_blocks=[ParagraphStackToken, IndentedCodeBlockStackToken],
             )
             while this_bq_count > stack_bq_count:
-                parser_state.token_stack.append(BlockQuoteStackToken())
                 stack_bq_count += 1
 
                 adjusted_position_marker = PositionMarker(
                     position_marker.line_number,
                     original_start_index,
                     position_marker.text_to_parse,
-                )
-                container_level_tokens.append(
-                    BlockQuoteMarkdownToken(
-                        extracted_whitespace, adjusted_position_marker
-                    )
                 )
 
                 assert (
@@ -399,6 +425,15 @@ class BlockQuoteProcessor:
                     position_marker.text_to_parse, original_start_index
                 ):
                     original_start_index += 1
+
+                new_markdown_token = BlockQuoteMarkdownToken(
+                    extracted_whitespace, adjusted_position_marker
+                )
+
+                container_level_tokens.append(new_markdown_token)
+                parser_state.token_stack.append(
+                    BlockQuoteStackToken(new_markdown_token)
+                )
 
         return container_level_tokens, stack_bq_count
 

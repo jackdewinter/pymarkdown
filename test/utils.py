@@ -262,6 +262,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
     ):
         top_block = container_block_stack[-1]
         _, had_tab = __calc_initial_whitespace(top_block)
+        print(">>top_block>>=" + ParserHelper.make_value_visible(top_block))
         print(">>top_block>>w/ tab=" + str(had_tab))
         if had_tab:
             return
@@ -272,6 +273,17 @@ def __validate_new_line(container_block_stack, current_token, current_position):
             or top_block.token_name == MarkdownToken.token_new_list_item
         ):
             init_ws += top_block.indent_level
+        elif (
+            container_block_stack
+            and container_block_stack[-1] != current_token
+            and current_token.token_name != MarkdownToken.token_blank_line
+            and top_block.token_name == MarkdownToken.token_block_quote
+        ):
+
+            split_leading_spaces = top_block.leading_spaces.split("\n")
+            print(">>in bq>>split>" + str(split_leading_spaces))
+            print(">>in bq>>index>" + str(top_block.leading_text_index))
+            init_ws += len(split_leading_spaces[top_block.leading_text_index])
     elif (
         container_block_stack
         and current_token.token_name == MarkdownToken.token_new_list_item
@@ -283,6 +295,21 @@ def __validate_new_line(container_block_stack, current_token, current_position):
                 top_block.column_number
                 - 1
                 + (current_token.indent_level - top_block.indent_level)
+            )
+    elif (
+        container_block_stack
+        and current_token.token_name == MarkdownToken.token_blank_line
+    ):
+        if container_block_stack[-1].token_name == MarkdownToken.token_block_quote:
+            init_ws += len(current_token.extracted_whitespace)
+            split_leading_spaces = container_block_stack[-1].leading_spaces.split("\n")
+            print(">>blank_line>>split>" + str(split_leading_spaces))
+            print(
+                ">>blank_line>>index>"
+                + str(container_block_stack[-1].leading_text_index)
+            )
+            init_ws += len(
+                split_leading_spaces[container_block_stack[-1].leading_text_index]
             )
 
     print(">>current_position.index_number>>" + str(current_position.index_number))
@@ -303,6 +330,7 @@ def __validate_first_token(current_token, current_position):
         assert current_position.index_number == 1 + init_ws
 
 
+# pylint: disable=too-many-branches,too-many-statements
 def assert_token_consistency(source_markdown, actual_tokens):
     """
     Compare the markdown document against the tokens that are expected.
@@ -310,17 +338,34 @@ def assert_token_consistency(source_markdown, actual_tokens):
 
     verify_markdown_roundtrip(source_markdown, actual_tokens)
 
+    print("---\nLine/Column Numbers\n---")
+
     split_lines = source_markdown.split(ParserHelper.newline_character)
     number_of_lines = len(split_lines)
-    print(">>" + str(number_of_lines))
+    print("Total lines in source document: " + str(number_of_lines))
 
     last_token = None
     container_block_stack = []
-    for current_token in actual_tokens:
+    for ind, current_token in enumerate(actual_tokens):
+        print("\n\n-->" + ParserHelper.make_value_visible(current_token))
         if (
             current_token.token_class == MarkdownTokenClass.INLINE_BLOCK
             and not isinstance(current_token, EndMarkdownToken)
         ):
+            print("Inline, skipping")
+            if (
+                container_block_stack
+                and container_block_stack[-1].token_name
+                == MarkdownToken.token_block_quote
+                and current_token.token_name == MarkdownToken.token_text
+            ):
+                print("xxx:" + ParserHelper.make_value_visible(actual_tokens[ind - 1]))
+                if actual_tokens[ind - 1].token_name == MarkdownToken.token_html_block:
+                    container_block_stack[-1].leading_text_index += 1
+                    print(
+                        ">>implicit newline>>index>"
+                        + str(container_block_stack[-1].leading_text_index)
+                    )
             continue
 
         current_position = __calc_adjusted_position(current_token)
@@ -328,7 +373,36 @@ def assert_token_consistency(source_markdown, actual_tokens):
         __maintain_block_stack(container_block_stack, current_token)
 
         if isinstance(current_token, EndMarkdownToken):
+            print("end token, skipping")
+            if (
+                container_block_stack
+                and container_block_stack[-1].token_name
+                == MarkdownToken.token_block_quote
+            ):
+                print("block quotes: looking for implicit newlines")
+                if (
+                    current_token.token_name
+                    == EndMarkdownToken.type_name_prefix
+                    + MarkdownToken.token_atx_heading
+                    or current_token.token_name
+                    == EndMarkdownToken.type_name_prefix + MarkdownToken.token_paragraph
+                    or current_token.token_name
+                    == EndMarkdownToken.type_name_prefix
+                    + MarkdownToken.token_html_block
+                ):
+                    container_block_stack[-1].leading_text_index += 1
+                    print(
+                        ">>implicit newline>>index>"
+                        + str(container_block_stack[-1].leading_text_index)
+                    )
             continue
+
+        if current_token.token_name == MarkdownToken.token_block_quote:
+            print("block token index reset")
+            print(
+                ">>start bq>>index>" + str(container_block_stack[-1].leading_text_index)
+            )
+            current_token.leading_text_index = 0
 
         print("--")
         print(
@@ -356,16 +430,20 @@ def assert_token_consistency(source_markdown, actual_tokens):
                 + ")"
             )
 
-            # TODO later - block quotes ln 307-308 removes, but does not store anywhere
-            # Until block quotes are handled, if we see one in the stack, don't validate
-            # any more.
-            found_block_quote = False
-            for i in container_block_stack:
-                if i.token_name == MarkdownToken.token_block_quote:
-                    found_block_quote = True
-            if found_block_quote:
-                last_token = current_token
-                continue
+            top_block_token = None
+            for next_container_block in container_block_stack:
+                if next_container_block.token_name == MarkdownToken.token_block_quote:
+                    top_block_token = next_container_block
+                elif (
+                    next_container_block.token_name
+                    == MarkdownToken.token_unordered_list_start
+                    or next_container_block.token_name
+                    == MarkdownToken.token_ordered_list_start
+                ):
+                    break
+            print(
+                "top_block_token>>" + ParserHelper.make_value_visible(top_block_token)
+            )
 
             if last_position.line_number == current_position.line_number:
                 __validate_same_line(
@@ -379,10 +457,29 @@ def assert_token_consistency(source_markdown, actual_tokens):
                 __validate_new_line(
                     container_block_stack, current_token, current_position
                 )
+
+            print(
+                "top_block_token<<" + ParserHelper.make_value_visible(top_block_token)
+            )
+            if top_block_token:
+                print(
+                    "current_token<<" + ParserHelper.make_value_visible(current_token)
+                )
+                if top_block_token != current_token and (
+                    current_token.token_name == MarkdownToken.token_blank_line
+                ):
+                    print(
+                        ">>saw bl>>index>"
+                        + str(container_block_stack[-1].leading_text_index)
+                    )
+                    top_block_token.leading_text_index += 1
         else:
             __validate_first_token(current_token, current_position)
 
         last_token = current_token
+
+
+# pylint: enable=too-many-branches,too-many-statements
 
 
 def verify_markdown_roundtrip(source_markdown, actual_tokens):

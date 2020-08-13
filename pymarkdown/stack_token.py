@@ -147,7 +147,8 @@ class BlockQuoteStackToken(StackToken):
     Class to provide for a stack token for a block quote.
     """
 
-    def __init__(self):
+    def __init__(self, matching_markdown_token):
+        self.matching_markdown_token = matching_markdown_token
         StackToken.__init__(self, StackToken.stack_block_quote)
 
 

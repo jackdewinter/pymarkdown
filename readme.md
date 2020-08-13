@@ -79,6 +79,8 @@
 - block quotes that start and stop i.e. > then >> then > then >>>, etc.
 - "# TODO add case with >" for tests
 - 228 and 229 - what is the proper line/col for ">>>"?
+- tests like cov2 with blank before, after, and both for html blocks and other blocks
+- tests like cov2 with multiple lines for block items, like html
 
 ## Bugs - List
 
@@ -149,8 +151,5 @@
 ## document current restrictions
 
 - nested block quotes and nested lists are okay, but not together
-- currently do not pass one test with a link inside of a link inside of an image link
-  - did further research
-  - posted [discussion in commonmark](https://talk.commonmark.org/t/spec-algorithm-error-in-links-within-links-within-images/3571)
 - multi-line link reference definitions within a list of block quote not adequately tested
 - no install/setup support currently

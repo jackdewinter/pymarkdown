@@ -306,7 +306,7 @@ def test_fenced_code_blocks_098():
 
 bbb"""
     expected_tokens = [
-        "[block-quote(1,1):]",
+        "[block-quote(1,1)::> \n]",
         "[fcode-block(1,3):`:3::::::]",
         "[text:aaa:]",
         "[end-fcode-block]",
@@ -346,7 +346,7 @@ def test_fenced_code_blocks_098a():
 
 bbb"""
     expected_tokens = [
-        "[block-quote(1,1):]",
+        "[block-quote(1,1)::> \n]",
         "[fcode-block(1,3):`:3::::::]",
         "[text:aaa:]",
         "[end-fcode-block]",
@@ -386,7 +386,7 @@ def test_fenced_code_blocks_098b():
 
 bbb"""
     expected_tokens = [
-        "[block-quote(1,1):]",
+        "[block-quote(1,1)::> \n]",
         "[fcode-block(1,3):`:3::::::]",
         "[text:\a>\a&gt;\a aaa:]",
         "[end-fcode-block]",
@@ -426,7 +426,7 @@ aaa
 
 bbb"""
     expected_tokens = [
-        "[block-quote(1,1):]",
+        "[block-quote(1,1)::> ]",
         "[fcode-block(1,3):`:3::::::]",
         "[end-fcode-block]",
         "[end-block-quote]",

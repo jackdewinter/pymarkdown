@@ -739,13 +739,32 @@ class BlockQuoteMarkdownToken(MarkdownToken):
 
     def __init__(self, extracted_whitespace, position_marker):
         self.extracted_whitespace = extracted_whitespace
+        self.leading_spaces = ""
+        self.leading_text_index = 0
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_block_quote,
             MarkdownTokenClass.CONTAINER_BLOCK,
-            extracted_whitespace,
+            extracted_whitespace + ":" + self.leading_spaces,
             position_marker=position_marker,
         )
+        self.compose_extra_data_field()
+
+    def add_leading_spaces(self, leading_spaces_to_add):
+        """
+        Add any leading spaces to the token, separating them with line feeds.
+        """
+        if self.leading_spaces:
+            self.leading_spaces += "\n"
+        self.leading_spaces += leading_spaces_to_add
+        self.compose_extra_data_field()
+
+    def compose_extra_data_field(self):
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+
+        self.extra_data = self.extracted_whitespace + ":" + self.leading_spaces
 
 
 class UnorderedListStartMarkdownToken(MarkdownToken):

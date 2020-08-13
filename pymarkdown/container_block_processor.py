@@ -808,6 +808,7 @@ class ContainerBlockProcessor:
                 outer_processed = True
         return outer_processed
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_html_block(
         parser_state,
@@ -815,6 +816,7 @@ class ContainerBlockProcessor:
         position_marker,
         extracted_whitespace,
         new_tokens,
+        removed_chars_at_start,
     ):
         """
         Take care of the processing for html blocks.
@@ -837,8 +839,23 @@ class ContainerBlockProcessor:
             )
             assert html_tokens
             new_tokens.extend(html_tokens)
+
+            LOGGER.debug("YYYYYYYYYYYY")
+            LOGGER.debug("YYYYYYYYYYYY:%s:", str(removed_chars_at_start))
+            if (
+                len(parser_state.token_stack) > 1
+                and parser_state.token_stack[-2].is_block_quote
+                and not removed_chars_at_start
+            ):
+                LOGGER.debug("YYYYYYYYYYYY:%s:", str(extracted_whitespace))
+                parser_state.token_stack[-2].matching_markdown_token.add_leading_spaces(
+                    ""
+                )
             outer_processed = True
+
         return outer_processed
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -963,6 +980,7 @@ class ContainerBlockProcessor:
             position_marker,
             extracted_whitespace,
             new_tokens,
+            removed_chars_at_start,
         )
 
         if not outer_processed:
