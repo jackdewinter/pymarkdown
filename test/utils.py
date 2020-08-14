@@ -514,12 +514,6 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
             + ParserHelper.make_value_visible(original_markdown)
             + "<--\n-=-=-\n"
         )
-        if False:
-            for i in source_markdown:
-                print(">>" + str(ord(i)))
-            print("--")
-            for i in original_markdown:
-                print(">>" + str(ord(i)))
 
         assert source_markdown == original_markdown, (
             "Strings are not equal." + diff_values

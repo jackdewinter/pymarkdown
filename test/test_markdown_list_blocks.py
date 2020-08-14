@@ -775,7 +775,7 @@ def test_list_blocks_249():
            bar"""
     expected_tokens = [
         "[olist(1,3):.:10:7:  :       ]",
-        "[para(1,8):]",
+        "[para(1,8):\x04\x04\x04]",
         "[text:foo:]",
         "[end-para]",
         "[BLANK(2,1):]",

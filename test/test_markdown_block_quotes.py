@@ -172,7 +172,7 @@ def test_block_quotes_210():
 > bar
 baz"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
+        "[block-quote(1,1)::> \n> \n]",
         "[atx(1,3):1:0:]",
         "[text:Foo: ]",
         "[end-atx::]",
@@ -210,7 +210,7 @@ def test_block_quotes_211():
 baz
 > foo"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
+        "[block-quote(1,1)::> \n\n> ]",
         "[para(1,3):\n\n]",
         "[text:bar\nbaz\nfoo::\n\n]",
         "[end-para]",
@@ -404,7 +404,7 @@ def test_block_quotes_216():
     source_markdown = """> foo
     - bar"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
+        "[block-quote(1,1)::> \n]",
         "[para(1,3):\n    ]",
         "[text:foo\n- bar::\n]",
         "[end-para]",
@@ -720,7 +720,7 @@ def test_block_quotes_225():
     source_markdown = """> bar
 baz"""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
+        "[block-quote(1,1)::> \n]",
         "[para(1,3):\n]",
         "[text:bar\nbaz::\n]",
         "[end-para]",
@@ -792,7 +792,7 @@ def test_block_quotes_227():
 >
 baz"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n>]",
+        "[block-quote(1,1)::> \n>\n]",
         "[para(1,3):]",
         "[text:bar:]",
         "[end-para]",
@@ -831,7 +831,7 @@ bar"""
     expected_tokens = [
         "[block-quote(1,1)::]",
         "[block-quote(1,3)::]",
-        "[block-quote(1,5)::> > > ]",
+        "[block-quote(1,5)::> > > \n]",
         "[para(1,7):\n]",
         "[text:foo\nbar::\n]",
         "[end-para]",

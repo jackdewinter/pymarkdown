@@ -117,6 +117,7 @@ class BlockQuoteProcessor:
         did_process = False
         was_container_start = False
         did_blank = False
+        text_removed_by_container = None
         end_of_bquote_start_index = -1
         leaf_tokens = []
         container_level_tokens = []
@@ -146,6 +147,7 @@ class BlockQuoteProcessor:
                 removed_chars_at_start,
                 did_blank,
                 last_block_quote_index,
+                text_removed_by_container,
             ) = BlockQuoteProcessor.__handle_block_quote_section(
                 parser_state, position_marker, stack_bq_count, extracted_whitespace,
             )
@@ -176,6 +178,7 @@ class BlockQuoteProcessor:
             removed_chars_at_start,
             did_blank,
             last_block_quote_index,
+            text_removed_by_container,
         )
 
     # pylint: enable=too-many-arguments
@@ -251,7 +254,7 @@ class BlockQuoteProcessor:
             )
         return this_bq_count, start_index, adjusted_line, last_block_quote_index
 
-    # pylint: disable=too-many-locals
+    # pylint: disable=too-many-locals, too-many-statements
     @staticmethod
     def __handle_block_quote_section(
         parser_state, position_marker, stack_bq_count, extracted_whitespace,
@@ -262,6 +265,8 @@ class BlockQuoteProcessor:
         # TODO work on removing these
         line_to_parse = position_marker.text_to_parse
         start_index = position_marker.index_number
+
+        text_removed_by_container = None
 
         LOGGER.debug(
             "IN>__handle_block_quote_section---%s<<<",
@@ -336,7 +341,7 @@ class BlockQuoteProcessor:
             removed_chars_at_start = start_index
             LOGGER.debug("==REM[%s],LTP[%s]", str(removed_text), str(line_to_parse))
 
-            found_stack_token = None
+            found_bq_stack_token = None
             for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):
                 LOGGER.debug(
                     "--%s--%s",
@@ -344,9 +349,12 @@ class BlockQuoteProcessor:
                     str(parser_state.token_stack[stack_index]),
                 )
                 if parser_state.token_stack[stack_index].is_block_quote:
-                    found_stack_token = parser_state.token_stack[stack_index]
+                    found_bq_stack_token = parser_state.token_stack[stack_index]
                     break
-            found_stack_token.matching_markdown_token.add_leading_spaces(removed_text)
+            found_bq_stack_token.matching_markdown_token.add_leading_spaces(
+                removed_text
+            )
+            text_removed_by_container = removed_text
 
             if not line_to_parse.strip():
                 LOGGER.debug("call __handle_block_quote_section>>handle_blank_line")
@@ -366,7 +374,23 @@ class BlockQuoteProcessor:
                 assert not lines_to_requeue
         else:
             LOGGER.debug("handle_block_quote_section>>fenced")
+            removed_text = line_to_parse[0:start_index]
             line_to_parse = line_to_parse[start_index:]
+
+            found_bq_stack_token = None
+            for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):
+                LOGGER.debug(
+                    "--%s--%s",
+                    str(stack_index),
+                    str(parser_state.token_stack[stack_index]),
+                )
+                if parser_state.token_stack[stack_index].is_block_quote:
+                    found_bq_stack_token = parser_state.token_stack[stack_index]
+                    break
+            if found_bq_stack_token:
+                found_bq_stack_token.matching_markdown_token.add_leading_spaces(
+                    removed_text
+                )
 
         LOGGER.debug(
             "OUT>__handle_block_quote_section---%s<<<",
@@ -383,9 +407,10 @@ class BlockQuoteProcessor:
             removed_chars_at_start,
             did_blank,
             last_block_quote_index,
+            text_removed_by_container,
         )
 
-    # pylint: enable=too-many-locals
+    # pylint: enable=too-many-locals, too-many-statements
 
     # pylint: disable=too-many-arguments
     @staticmethod

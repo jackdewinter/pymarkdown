@@ -759,6 +759,20 @@ class BlockQuoteMarkdownToken(MarkdownToken):
         self.leading_spaces += leading_spaces_to_add
         self.compose_extra_data_field()
 
+    def create_copy(self):
+        """
+        Create a copy of this token.
+        """
+        new_position_marker = PositionMarker(
+            self.line_number, self.column_number - 1, ""
+        )
+        new_token = BlockQuoteMarkdownToken(
+            self.extracted_whitespace, new_position_marker,
+        )
+        new_token.leading_spaces = self.leading_spaces
+        new_token.compose_extra_data_field()
+        return new_token
+
     def compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.

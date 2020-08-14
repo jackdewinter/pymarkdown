@@ -804,6 +804,7 @@ def test_link_reference_definitions_183():
 > bar"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
+        "[text:\a \a\x03\a:]",
         "[link:shortcut:/url:::::Foo:::::]",
         "[text:Foo: ]",
         "[end-link::]",

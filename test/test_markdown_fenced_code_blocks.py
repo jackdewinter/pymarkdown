@@ -293,7 +293,7 @@ aaa
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_098():
+def test_fenced_code_blocks_098x():
     """
     Test case 098:  (part c) Unclosed code blocks are closed by the end of the document (or the enclosing block quote or list item):
     """
@@ -306,7 +306,7 @@ def test_fenced_code_blocks_098():
 
 bbb"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n]",
+        "[block-quote(1,1)::> \n> \n]",
         "[fcode-block(1,3):`:3::::::]",
         "[text:aaa:]",
         "[end-fcode-block]",
@@ -346,7 +346,7 @@ def test_fenced_code_blocks_098a():
 
 bbb"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n]",
+        "[block-quote(1,1)::> \n>\n]",
         "[fcode-block(1,3):`:3::::::]",
         "[text:aaa:]",
         "[end-fcode-block]",
@@ -386,7 +386,7 @@ def test_fenced_code_blocks_098b():
 
 bbb"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n]",
+        "[block-quote(1,1)::> \n>\n]",
         "[fcode-block(1,3):`:3::::::]",
         "[text:\a>\a&gt;\a aaa:]",
         "[end-fcode-block]",

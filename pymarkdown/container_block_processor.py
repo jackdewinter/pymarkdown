@@ -117,6 +117,7 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             did_blank,
             last_block_quote_index,
+            text_removed_by_container,
         ) = BlockQuoteProcessor.handle_block_quote_block(
             parser_state,
             new_position_marker,
@@ -339,6 +340,7 @@ class ContainerBlockProcessor:
             original_line_to_parse,
             last_block_quote_index,
             last_list_start_index,
+            text_removed_by_container,
         )
 
         container_level_tokens.extend(leaf_tokens)
@@ -721,6 +723,7 @@ class ContainerBlockProcessor:
         original_line_to_parse,
         last_block_quote_index,
         last_list_start_index,
+        text_removed_by_container,
     ):
         assert not leaf_tokens
         LOGGER.debug("parsing leaf>>")
@@ -743,6 +746,7 @@ class ContainerBlockProcessor:
             original_line_to_parse,
             last_block_quote_index,
             last_list_start_index,
+            text_removed_by_container,
         )
         LOGGER.debug("parsed leaf>>%s", str(leaf_tokens))
         LOGGER.debug("parsed leaf>>%s", str(len(leaf_tokens)))
@@ -922,6 +926,7 @@ class ContainerBlockProcessor:
         original_line_to_parsex,
         last_block_quote_index,
         last_list_start_index,
+        text_removed_by_container,
     ):
         """
         Parse the contents of a line for a leaf block.
@@ -1031,6 +1036,7 @@ class ContainerBlockProcessor:
                     this_bq_count,
                     no_para_start_if_empty,
                     stack_bq_count,
+                    text_removed_by_container,
                 )
 
         # assert new_tokens or did_complete_lrd or did_pause_lrd or lines_to_requeue

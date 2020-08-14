@@ -376,6 +376,7 @@ class ParserHelper:
             .replace(ParserHelper.tab_character, "\\t")
             .replace(ParserHelper.newline_character, "\\n")
             .replace(ParserHelper.whitespace_split_character, "\\x02")
+            .replace(ParserHelper.replace_noop_character, "\\x03")
             .replace(ParserHelper.blech_character, "\\x04")
             .replace("\\x07", "\\a")
             .replace("\\x08", "\\b")

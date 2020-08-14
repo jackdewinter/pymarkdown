@@ -132,6 +132,24 @@ class InlineProcessor:
                         ParserHelper.make_value_visible(processed_tokens),
                     )
                 elif coalesced_list[-1].is_atx_heading:
+                    LOGGER.debug(
+                        "atx-block>>%s<<",
+                        ParserHelper.make_value_visible(
+                            coalesced_results[coalesce_index]
+                        ),
+                    )
+                    LOGGER.debug(
+                        "atx-block-text>>%s<<",
+                        ParserHelper.make_value_visible(
+                            coalesced_results[coalesce_index].token_text
+                        ),
+                    )
+                    LOGGER.debug(
+                        "atx-block-ws>>%s<<",
+                        ParserHelper.make_value_visible(
+                            coalesced_results[coalesce_index].extracted_whitespace
+                        ),
+                    )
                     processed_tokens = InlineProcessor.__process_inline_text_block(
                         coalesced_results[coalesce_index].token_text.replace(
                             ParserHelper.tab_character, "    "
@@ -316,11 +334,15 @@ class InlineProcessor:
         inline_blocks = []
         start_index = 0
         LOGGER.debug(
-            "__process_inline_text_block>>source_text>>%s",
+            "__process_inline_text_block>>source_text>>%s>",
             ParserHelper.make_value_visible(source_text),
         )
         LOGGER.debug(
-            "__process_inline_text_block>>whitespace_to_recombine>>%s",
+            "__process_inline_text_block>>starting_whitespace>>%s>",
+            ParserHelper.make_value_visible(starting_whitespace),
+        )
+        LOGGER.debug(
+            "__process_inline_text_block>>whitespace_to_recombine>>%s>",
             ParserHelper.make_value_visible(whitespace_to_recombine),
         )
         if whitespace_to_recombine and " " in whitespace_to_recombine:
@@ -457,6 +479,17 @@ class InlineProcessor:
                 "current_string_unresolved>>%s<<",
                 ParserHelper.make_value_visible(current_string_unresolved),
             )
+            LOGGER.debug(
+                "inline_blocks>>%s<<", ParserHelper.make_value_visible(inline_blocks),
+            )
+            LOGGER.debug(
+                "inline_response.new_tokens>>%s<<",
+                ParserHelper.make_value_visible(inline_response.new_tokens),
+            )
+            LOGGER.debug(
+                "starting_whitespace>>%s<<",
+                ParserHelper.make_value_visible(starting_whitespace),
+            )
             if inline_response.new_tokens:
                 if current_string:
                     # assert end_string is None
@@ -470,8 +503,24 @@ class InlineProcessor:
                     reset_current_string = True
                     starting_whitespace = ""
                     end_string = None
+                elif starting_whitespace:
+                    inline_blocks.append(
+                        TextMarkdownToken(
+                            ParserHelper.create_replace_with_nothing_marker(
+                                starting_whitespace
+                            ),
+                            "",
+                        )
+                    )
 
                 inline_blocks.extend(inline_response.new_tokens)
+            LOGGER.debug(
+                "starting_whitespace>>%s<<",
+                ParserHelper.make_value_visible(starting_whitespace),
+            )
+            LOGGER.debug(
+                "inline_blocks>>%s<<", ParserHelper.make_value_visible(inline_blocks),
+            )
 
             if reset_current_string:
                 current_string = ""

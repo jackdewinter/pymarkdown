@@ -5,9 +5,9 @@ import inspect
 
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.markdown_token import (
-    BlockQuoteMarkdownToken,
     AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
+    BlockQuoteMarkdownToken,
     EmailAutolinkMarkdownToken,
     EmphasisMarkdownToken,
     EndMarkdownToken,
@@ -45,7 +45,7 @@ class TransformToMarkdown:
         Initializes a new instance of the TransformToMarkdown class.
         """
         self.block_stack = []
-        self.list_token_stack = []
+        self.container_token_stack = []
 
         self.start_container_token_handlers = {}
         self.end_container_token_handlers = {}
@@ -64,7 +64,9 @@ class TransformToMarkdown:
             NewListItemMarkdownToken, self.__rehydrate_next_list_item
         )
         self.register_container_handlers(
-            BlockQuoteMarkdownToken, self.__rehydrate_block_quote, self.__rehydrate_block_quote_end
+            BlockQuoteMarkdownToken,
+            self.__rehydrate_block_quote,
+            self.__rehydrate_block_quote_end,
         )
 
         self.start_token_handlers = {}
@@ -183,6 +185,7 @@ class TransformToMarkdown:
                 handler_instance.token_name
             ] = end_token_handler
 
+    # pylint: disable=too-many-locals, too-many-branches
     def transform(self, actual_tokens):
         """
         Transform the incoming token stream back into Markdown.
@@ -191,9 +194,22 @@ class TransformToMarkdown:
         avoid_processing = False
         previous_token = None
 
+        print("---\nTransformToMarkdown\n---")
+        has_list = False
+        has_block_quote = False
+        for current_token in actual_tokens:
+            if (
+                current_token.token_name == MarkdownToken.token_unordered_list_start
+                or current_token.token_name == MarkdownToken.token_ordered_list_start
+            ):
+                has_list = True
+            elif current_token.token_name == MarkdownToken.token_block_quote:
+                has_block_quote = True
+        if has_list and has_block_quote:
+            return None, True
+
         continue_sequence = ""
         delayed_continue = ""
-        print("---\nTransformToMarkdown\n---")
         for token_index, current_token in enumerate(actual_tokens):
             print(
                 "\n\n>>>>"
@@ -207,10 +223,6 @@ class TransformToMarkdown:
                 next_token = actual_tokens[token_index + 1]
             new_data = ""
             skip_merge = False
-
-            if current_token.token_name == MarkdownToken.token_block_quote:
-                avoid_processing = True
-                break
 
             if current_token.token_name in self.start_container_token_handlers:
                 start_handler_fn = self.start_container_token_handlers[
@@ -228,7 +240,7 @@ class TransformToMarkdown:
 
                 if current_token.type_name in self.end_token_handlers:
                     end_handler_fn = self.end_token_handlers[current_token.type_name]
-                    new_data = end_handler_fn(current_token, previous_token)
+                    new_data = end_handler_fn(current_token, previous_token, next_token)
                 elif current_token.type_name in self.end_container_token_handlers:
                     end_handler_fn = self.end_container_token_handlers[
                         current_token.type_name
@@ -263,7 +275,10 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(transformed_data)
                 + "<--"
             )
-            print(">>stack-->" + ParserHelper.make_value_visible(self.list_token_stack))
+            print(
+                ">>stack-->"
+                + ParserHelper.make_value_visible(self.container_token_stack)
+            )
             print("---")
             previous_token = current_token
 
@@ -271,7 +286,20 @@ class TransformToMarkdown:
             transformed_data = transformed_data[0:-1]
         return transformed_data, avoid_processing
 
-    def __perform_container_post_processing_lists(self, current_token, new_data, skip_merge, delayed_continue, continue_sequence, next_token, top_of_list_token_stack):
+    # pylint: enable=too-many-locals, too-many-branches
+
+    # pylint: disable=too-many-arguments
+    # pylint: disable=unused-argument
+    def __perform_container_post_processing_lists(
+        self,
+        current_token,
+        new_data,
+        skip_merge,
+        delayed_continue,
+        continue_sequence,
+        next_token,
+        top_of_list_token_stack,
+    ):
         if skip_merge:
             delayed_continue = ""
 
@@ -320,6 +348,9 @@ class TransformToMarkdown:
         print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
         return new_data, delayed_continue, continue_sequence
 
+    # pylint: enable=unused-argument
+    # pylint: enable=too-many-arguments
+
     # pylint: disable=too-many-arguments
     def __perform_container_post_processing(
         self,
@@ -337,11 +368,15 @@ class TransformToMarkdown:
         """
 
         top_of_list_token_stack = None
-        if self.list_token_stack:
-            top_of_list_token_stack = self.list_token_stack[-1]
+        if self.container_token_stack:
+            top_of_list_token_stack = self.container_token_stack[-1]
 
         if not top_of_list_token_stack:
-            return ParserHelper.resolve_noops_from_text(new_data), delayed_continue, continue_sequence
+            return (
+                ParserHelper.resolve_noops_from_text(new_data),
+                delayed_continue,
+                continue_sequence,
+            )
 
         if (
             top_of_list_token_stack.token_name
@@ -349,11 +384,25 @@ class TransformToMarkdown:
             or top_of_list_token_stack.token_name
             == MarkdownToken.token_ordered_list_start
         ):
-            return self.__perform_container_post_processing_lists(\
-                current_token, new_data, skip_merge, delayed_continue, continue_sequence, next_token, top_of_list_token_stack)
-        assert False
-
-        #__perform_container_post_processing_block_quote
+            return self.__perform_container_post_processing_lists(
+                current_token,
+                new_data,
+                skip_merge,
+                delayed_continue,
+                continue_sequence,
+                next_token,
+                top_of_list_token_stack,
+            )
+        assert top_of_list_token_stack.token_name == MarkdownToken.token_block_quote
+        return self.__perform_container_post_processing_block_quote(
+            current_token,
+            new_data,
+            skip_merge,
+            delayed_continue,
+            continue_sequence,
+            next_token,
+            top_of_list_token_stack,
+        )
 
     # pylint: enable=too-many-arguments
 
@@ -502,17 +551,18 @@ class TransformToMarkdown:
         if ParserHelper.newline_character in extracted_whitespace:
             line_end_index = extracted_whitespace.index(ParserHelper.newline_character)
             extracted_whitespace = extracted_whitespace[0:line_end_index]
-        return extracted_whitespace
+        return ParserHelper.resolve_blechs_from_text(extracted_whitespace)
 
-    def __rehydrate_paragraph_end(self, current_token, previous_token):
+    # pylint: disable=unused-argument
+    def __rehydrate_paragraph_end(self, current_token, previous_token, next_token):
         """
         Rehydrate the end of the paragraph block from the token.
         """
-        assert current_token
-        assert previous_token
         top_stack_token = self.block_stack[-1]
         del self.block_stack[-1]
         return top_stack_token.final_whitespace + ParserHelper.newline_character
+
+    # pylint: enable=unused-argument
 
     @classmethod
     def __rehydrate_blank_line(cls, current_token):
@@ -528,14 +578,17 @@ class TransformToMarkdown:
         self.block_stack.append(current_token)
         return ""
 
-    def __rehydrate_indented_code_block_end(self, current_token, previous_token):
+    # pylint: disable=unused-argument
+    def __rehydrate_indented_code_block_end(
+        self, current_token, previous_token, next_token
+    ):
         """
         Rehydrate the end of the indented code block from the token.
         """
-        assert current_token
-        assert previous_token
         del self.block_stack[-1]
         return ""
+
+    # pylint: enable=unused-argument
 
     def __rehydrate_html_block(self, current_token):
         """
@@ -544,14 +597,15 @@ class TransformToMarkdown:
         self.block_stack.append(current_token)
         return ""
 
-    def __rehydrate_html_block_end(self, current_token, previous_token):
+    # pylint: disable=unused-argument
+    def __rehydrate_html_block_end(self, current_token, previous_token, next_token):
         """
         Rehydrate the end of the html block from the token.
         """
-        assert current_token
-        assert previous_token
         del self.block_stack[-1]
         return ""
+
+    # pylint: enable=unused-argument
 
     def __rehydrate_fenced_code_block(self, current_token):
         """
@@ -578,7 +632,9 @@ class TransformToMarkdown:
             + ParserHelper.newline_character
         )
 
-    def __rehydrate_fenced_code_block_end(self, current_token, previous_token):
+    def __rehydrate_fenced_code_block_end(
+        self, current_token, previous_token, next_token
+    ):
         """
         Rehydrate the end of the fenced code block from the token.
         """
@@ -600,14 +656,21 @@ class TransformToMarkdown:
                 + ParserHelper.repeat_string(start_token.fence_character, fence_count)
                 + ParserHelper.newline_character
             )
-        return ""
+
+        code_end_sequence = ""
+        if (
+            next_token is not None
+            and previous_token.token_name != MarkdownToken.token_fenced_code_block
+        ):
+            code_end_sequence = "\n"
+        return code_end_sequence
 
     def __rehydrate_ordered_list_start(self, current_token, previous_token, next_token):
         """
         Rehydrate the unordered list start token.
         """
         new_instance = current_token.create_copy()
-        self.list_token_stack.append(new_instance)
+        self.container_token_stack.append(new_instance)
 
         previous_indent = 0
         extracted_whitespace = current_token.extracted_whitespace
@@ -631,14 +694,114 @@ class TransformToMarkdown:
         continue_sequence = ParserHelper.repeat_string(" ", current_token.indent_level)
         return start_sequence, continue_sequence
 
+    # pylint: disable=unused-argument
     def __rehydrate_block_quote(self, current_token, previous_token, next_token):
-        return "", ""
+        new_instance = current_token.create_copy()
+        self.container_token_stack.append(new_instance)
+
+        print(">bquote>" + ParserHelper.make_value_visible(new_instance))
+        split_leading_spaces = new_instance.leading_spaces.split("\n")
+        print(
+            ">split_leading_spaces>"
+            + ParserHelper.make_value_visible(split_leading_spaces)
+        )
+        print(">leading_text_index>" + str(new_instance.leading_text_index))
+        selected_leading_sequence = split_leading_spaces[
+            new_instance.leading_text_index
+        ]
+        new_instance.leading_text_index += 1
+        print(">leading_text_index>" + str(new_instance.leading_text_index))
+        return selected_leading_sequence, ""
 
     def __rehydrate_block_quote_end(self, current_token):
-        return "", "", ""
+        assert current_token
+        del self.container_token_stack[-1]
+        continue_sequence = ""
+        return "", continue_sequence, continue_sequence
 
-    def __perform_container_post_processing_block_quote(self, current_token, new_data, skip_merge, delayed_continue, continue_sequence, next_token, top_of_list_token_stack):
-        return "", "", ""
+    # pylint: enable=unused-argument
+
+    # pylint: disable=too-many-arguments
+    # pylint: disable=unused-argument
+    @classmethod
+    def __perform_container_post_processing_block_quote(
+        cls,
+        current_token,
+        new_data,
+        skip_merge,
+        delayed_continue,
+        continue_sequence,
+        next_token,
+        top_of_list_token_stack,
+    ):
+
+        if "\n" in new_data:
+            composed_data = ""
+            print(
+                "<<composed_data<<"
+                + ParserHelper.make_value_visible(composed_data)
+                + "<<new<<"
+                + ParserHelper.make_value_visible(new_data)
+                + "<<"
+            )
+            while "\n" in new_data:
+                print(">>[" + ParserHelper.make_value_visible(new_data) + "]<<")
+                split_leading_spaces = top_of_list_token_stack.leading_spaces.split(
+                    "\n"
+                )
+                print(
+                    ">split_leading_spaces>"
+                    + str(len(split_leading_spaces))
+                    + ">"
+                    + ParserHelper.make_value_visible(split_leading_spaces)
+                )
+                print(
+                    ">leading_text_index>"
+                    + str(top_of_list_token_stack.leading_text_index)
+                )
+
+                next_newline_index = new_data.index("\n")
+                composed_data += new_data[0:next_newline_index] + "\n"
+                if top_of_list_token_stack.leading_text_index < len(
+                    split_leading_spaces
+                ):
+                    composed_data += split_leading_spaces[
+                        top_of_list_token_stack.leading_text_index
+                    ]
+                else:
+                    assert top_of_list_token_stack.leading_text_index == len(
+                        split_leading_spaces
+                    )
+                top_of_list_token_stack.leading_text_index += 1
+                new_data = new_data[next_newline_index + 1 :]
+                print(
+                    ">>composed_data>>"
+                    + ParserHelper.make_value_visible(composed_data)
+                    + ">>new>>"
+                    + ParserHelper.make_value_visible(new_data)
+                    + ">>"
+                )
+            print(
+                "<<composed_data<<"
+                + ParserHelper.make_value_visible(composed_data)
+                + "<<new<<"
+                + ParserHelper.make_value_visible(new_data)
+                + "<<"
+            )
+            composed_data += new_data
+            print(
+                "<<composed_data<<"
+                + ParserHelper.make_value_visible(composed_data)
+                + "<<new<<"
+                + ParserHelper.make_value_visible(new_data)
+                + "<<"
+            )
+            new_data = composed_data
+
+        return new_data, delayed_continue, continue_sequence
+
+    # pylint: enable=unused-argument
+    # pylint: enable=too-many-arguments
 
     def __rehydrate_unordered_list_start(
         self, current_token, previous_token, next_token
@@ -647,7 +810,7 @@ class TransformToMarkdown:
         Rehydrate the unordered list start token.
         """
         new_instance = current_token.create_copy()
-        self.list_token_stack.append(new_instance)
+        self.container_token_stack.append(new_instance)
 
         previous_indent = 0
         extracted_whitespace = current_token.extracted_whitespace
@@ -667,67 +830,79 @@ class TransformToMarkdown:
         continue_sequence = ParserHelper.repeat_string(" ", current_token.indent_level)
         return start_sequence, continue_sequence
 
+    # pylint: disable=unused-argument
     def __rehydrate_unordered_list_start_end(self, current_token):
         """
         Rehydrate the unordered list end token.
         """
-        assert current_token
-        del self.list_token_stack[-1]
-        if self.list_token_stack:
-            continue_sequence = ParserHelper.repeat_string(
-                " ", self.list_token_stack[-1].indent_level
-            )
+        del self.container_token_stack[-1]
+        if self.container_token_stack:
+            if (
+                self.container_token_stack[-1].token_name
+                == MarkdownToken.token_unordered_list_start
+                or self.container_token_stack[-1].token_name
+                == MarkdownToken.token_ordered_list_start
+            ):
+                continue_sequence = ParserHelper.repeat_string(
+                    " ", self.container_token_stack[-1].indent_level
+                )
         else:
             continue_sequence = ""
         return "", continue_sequence, continue_sequence
 
+    # pylint: enable=unused-argument
+
+    # pylint: disable=unused-argument
     def __rehydrate_ordered_list_start_end(self, current_token):
         """
         Rehydrate the ordered list end token.
         """
-        assert current_token
-        del self.list_token_stack[-1]
-        if self.list_token_stack:
+        del self.container_token_stack[-1]
+        if self.container_token_stack:
             continue_sequence = ParserHelper.repeat_string(
-                " ", self.list_token_stack[-1].indent_level
+                " ", self.container_token_stack[-1].indent_level
             )
         else:
             continue_sequence = ""
         return "", continue_sequence, continue_sequence
 
+    # pylint: enable=unused-argument
+
+    # pylint: disable=unused-argument
     def __rehydrate_next_list_item(self, current_token, previous_token, next_token):
         """
         Rehydrate the next list item token.
         """
-        assert previous_token
         if (
-            self.list_token_stack[-1].token_name
+            self.container_token_stack[-1].token_name
             == MarkdownToken.token_unordered_list_start
-            or self.list_token_stack[-1].token_name
+            or self.container_token_stack[-1].token_name
             == MarkdownToken.token_ordered_list_start
         ):
-            self.list_token_stack[-1].indent_level = current_token.indent_level
-            self.list_token_stack[
+            self.container_token_stack[-1].indent_level = current_token.indent_level
+            self.container_token_stack[
                 -1
             ].extracted_whitespace = current_token.extracted_whitespace
-            self.list_token_stack[-1].compose_extra_data_field()
+            self.container_token_stack[-1].compose_extra_data_field()
 
             start_sequence = (
                 current_token.extracted_whitespace
                 + current_token.list_start_content
-                + self.list_token_stack[-1].list_start_sequence
+                + self.container_token_stack[-1].list_start_sequence
             )
             if next_token.token_name != MarkdownToken.token_blank_line:
                 start_sequence = start_sequence.ljust(
-                    self.list_token_stack[-1].indent_level, " "
+                    self.container_token_stack[-1].indent_level, " "
                 )
             continue_sequence = ParserHelper.repeat_string(
-                " ", self.list_token_stack[-1].indent_level
+                " ", self.container_token_stack[-1].indent_level
             )
         else:
             assert False
 
         return start_sequence, continue_sequence
+
+    # pylint: enable=unused-argument
 
     def __insert_leading_whitespace_at_newlines(self, text_to_modify):
         """
@@ -795,21 +970,21 @@ class TransformToMarkdown:
         )
         return self.__insert_leading_whitespace_at_newlines(rehydrated_text)
 
-    def __rehydrate_inline_link_end(self, current_token, previous_token):
+    # pylint: disable=unused-argument
+    def __rehydrate_inline_link_end(self, current_token, previous_token, next_token):
         """
         Rehydrate the end of the link from the token.
         """
-        assert current_token
-        assert previous_token
         del self.block_stack[-1]
         return ""
+
+    # pylint: enable=unused-argument
 
     @classmethod
     def __rehydrate_link_reference_definition(cls, current_token):
         """
         Rehydrate the link reference definition from the token.
         """
-
         if current_token.link_name_debug:
             link_name = current_token.link_name_debug
         else:
@@ -842,18 +1017,16 @@ class TransformToMarkdown:
         """
         Rehydrate the atx heading block from the token.
         """
-
         self.block_stack.append(current_token)
         return current_token.extracted_whitespace + ParserHelper.repeat_string(
             "#", current_token.hash_count
         )
 
-    def __rehydrate_atx_heading_end(self, current_token, previous_token):
+    # pylint: disable=unused-argument
+    def __rehydrate_atx_heading_end(self, current_token, previous_token, next_token):
         """
         Rehydrate the end of the atx heading block from the token.
         """
-
-        assert previous_token
         del self.block_stack[-1]
         trailing_hashes = ""
         if current_token.start_markdown_token.remove_trailing_count:
@@ -868,6 +1041,8 @@ class TransformToMarkdown:
             + ParserHelper.newline_character
         )
 
+    # pylint: enable=unused-argument
+
     def __rehydrate_setext_heading(self, current_token):
         """
         Rehydrate the setext heading from the token.
@@ -875,11 +1050,11 @@ class TransformToMarkdown:
         self.block_stack.append(current_token)
         return current_token.extracted_whitespace
 
-    def __rehydrate_setext_heading_end(self, current_token, previous_token):
+    # pylint: disable=unused-argument
+    def __rehydrate_setext_heading_end(self, current_token, previous_token, next_token):
         """
         Rehydrate the end of the setext heading block from the token.
         """
-        assert previous_token
         heading_character = self.block_stack[-1].heading_character
         heading_character_count = self.block_stack[-1].heading_character_count
         final_whitespace = self.block_stack[-1].final_whitespace
@@ -892,6 +1067,8 @@ class TransformToMarkdown:
             + current_token.extra_end_data
             + ParserHelper.newline_character
         )
+
+    # pylint: enable=unused-argument
 
     def __rehydrate_text(self, current_token):
         """
@@ -965,11 +1142,13 @@ class TransformToMarkdown:
             current_token.emphasis_character, current_token.emphasis_length
         )
 
-    def __rehydrate_inline_emphaisis_end(self, current_token, previous_token):
+    # pylint: disable=unused-argument
+    def __rehydrate_inline_emphaisis_end(
+        self, current_token, previous_token, next_token
+    ):
         """
         Rehydrate the emphasis end text from the token.
         """
-        assert previous_token
         if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
             return ""
 
@@ -978,6 +1157,8 @@ class TransformToMarkdown:
         emphasis_length = int(split_end_data[0])
         emphasis_character = split_end_data[1]
         return ParserHelper.repeat_string(emphasis_character, emphasis_length)
+
+    # pylint: enable=unused-argument
 
     def __rehydrate_inline_uri_autolink(self, current_token):
         """

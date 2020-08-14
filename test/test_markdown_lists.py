@@ -1073,7 +1073,7 @@ def test_list_items_293a():
         "[text:a:]",
         "[end-para]",
         "[li(2,3):5:  :1]",
-        "[para(2,6):\n ]",
+        "[para(2,6):\n\x04]",
         "[text:b\n1. c::\n]",
         "[end-para]",
         "[end-olist]",

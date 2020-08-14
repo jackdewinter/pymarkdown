@@ -653,7 +653,7 @@ def test_setext_headings_063():
 bar
 ==="""
     expected_tokens = [
-        "[block-quote(1,1)::> ]",
+        "[block-quote(1,1)::> \n\n]",
         "[para(1,3):\n\n]",
         "[text:foo\nbar\n===::\n\n]",
         "[end-para]",

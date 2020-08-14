@@ -897,7 +897,7 @@ def test_html_blocks_143():
 
 bar"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> \n]",
+        "[block-quote(1,1)::> \n> \n\n]",
         "[html-block(1,3)]",
         "[text:<div>\nfoo:]",
         "[end-html-block]",
@@ -914,7 +914,7 @@ foo
 <p>bar</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
