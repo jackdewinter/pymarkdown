@@ -236,7 +236,7 @@ bbb"""
 
 
 @pytest.mark.gfm
-def test_paragraph_blocks_196():
+def test_paragraph_blocks_196x():
     """
     Test case 196:  Final spaces are stripped before inline parsing, so a paragraph that ends with two or more spaces will not end with a hard line break.
     """

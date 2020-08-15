@@ -119,6 +119,9 @@
 - 301, but with extra levels of block quotes
 - 301, with indented code blocks
 - 270 and check for indent levels after
+- check to make sure indents work properly for a list containing a block quote where the
+  block quote ends and there is more data for that item within the list
+- same as before, just a bq with a list
 
 ## Features - Extensions
 

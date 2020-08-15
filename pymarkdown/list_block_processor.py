@@ -382,6 +382,7 @@ class ListBlockProcessor:
         )
         # pylint: enable=too-many-arguments
 
+    # pylint: disable=too-many-statements
     @staticmethod
     def list_in_process(
         parser_state, line_to_parse, start_index, extracted_whitespace, ind,
@@ -498,10 +499,48 @@ class ListBlockProcessor:
                 container_level_tokens = ListBlockProcessor.__check_for_list_closures(
                     parser_state, line_to_parse, start_index, extracted_whitespace, ind,
                 )
-                if parser_state.token_stack[-1].is_list:
+
+                LOGGER.debug(
+                    "2>>__check_for_list_closures>>%s>>",
+                    ParserHelper.make_value_visible(container_level_tokens),
+                )
+                LOGGER.debug(
+                    "2>>parser_state.token_stack>>%s>>",
+                    ParserHelper.make_value_visible(parser_state.token_stack),
+                )
+                LOGGER.debug(
+                    "2>>ind>>%s>>", ParserHelper.make_value_visible(ind),
+                )
+
+                found_owning_list = None
+                if container_level_tokens:
+                    (
+                        did_find,
+                        last_list_index,
+                    ) = LeafBlockProcessor.check_for_list_in_process(parser_state)
+                    LOGGER.debug(
+                        "2>>did_find>>%s>>%s>>",
+                        ParserHelper.make_value_visible(did_find),
+                        ParserHelper.make_value_visible(last_list_index),
+                    )
+                    if did_find:
+                        ind = last_list_index
+                        found_owning_list = parser_state.token_stack[ind]
+                else:
+                    if parser_state.token_stack[ind].is_list:
+                        found_owning_list = parser_state.token_stack[ind]
+
+                if found_owning_list:
                     LOGGER.debug(">>in list>>")
-                    requested_list_indent = parser_state.token_stack[-1].indent_level
+                    requested_list_indent = found_owning_list.indent_level
+                    if found_owning_list.last_new_list_token:
+                        requested_list_indent = (
+                            found_owning_list.last_new_list_token.indent_level
+                        )
                     LOGGER.debug(">>line_to_parse>>%s>>", line_to_parse)
+                    LOGGER.debug(
+                        ">>extracted_whitespace>>%s<<", str(extracted_whitespace)
+                    )
                     LOGGER.debug(">>start_index>>%s", str(start_index))
                     LOGGER.debug(
                         ">>requested_list_indent>>%s", str(requested_list_indent)
@@ -509,20 +548,37 @@ class ListBlockProcessor:
                     LOGGER.debug(">>before_ws_length>>%s", str(before_ws_length))
                     (
                         line_to_parse,
-                        _,
+                        used_indent,
                     ) = ListBlockProcessor.__adjust_line_for_list_in_process(
                         line_to_parse,
                         start_index,
                         extracted_whitespace,
-                        requested_list_indent,
                         before_ws_length,
+                        requested_list_indent,
                     )
+                    LOGGER.debug(">>line_to_parse>>%s", str(line_to_parse))
+                    LOGGER.debug(">>used_indent>>%s<<", str(used_indent))
 
+        LOGGER.debug(">>used_indent>>%s<<", str(used_indent))
         if used_indent is not None:
+            LOGGER.debug(
+                ">>adj_before>>%s<<",
+                ParserHelper.make_value_visible(
+                    parser_state.token_stack[ind].matching_markdown_token
+                ),
+            )
             parser_state.token_stack[ind].matching_markdown_token.add_leading_spaces(
                 used_indent
             )
+            LOGGER.debug(
+                ">>adj_after>>%s<<",
+                ParserHelper.make_value_visible(
+                    parser_state.token_stack[ind].matching_markdown_token
+                ),
+            )
         return container_level_tokens, line_to_parse
+
+    # pylint: enable=too-many-statements
 
     # pylint: disable=too-many-arguments
     @staticmethod

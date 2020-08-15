@@ -1673,13 +1673,13 @@ def test_list_blocks_268():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """  1.  A paragraph
-with two lines.
+ with two lines.
 
           indented code
 
       > A block quote."""
     expected_tokens = [
-        "[olist(1,3):.:1:6:  :      ]",
+        "[olist(1,3):.:1:6:  : \n      ]",
         "[para(1,7):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
         "[end-para]",
@@ -1762,8 +1762,8 @@ def test_list_blocks_269a():
     source_markdown = """  1.  A paragraph
    with two lines."""
     expected_tokens = [
-        "[olist(1,3):.:1:6:  ]",
-        "[para(1,7):\n   ]",
+        "[olist(1,3):.:1:6:  :   ]",
+        "[para(1,7):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
         "[end-para]",
         "[end-olist]",

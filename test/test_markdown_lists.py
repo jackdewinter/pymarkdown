@@ -1777,7 +1777,7 @@ def test_list_items_301():
 </ul>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1915,7 +1915,7 @@ def test_list_items_305():
 
   baz"""
     expected_tokens = [
-        "[ulist(1,1):*::2:]",
+        "[ulist(1,1):*::2::  ]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
@@ -1950,6 +1950,7 @@ def test_list_items_305():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
+@pytest.mark.gfm
 def test_list_items_305a():
     """
     Test case 305a:  variation on 305
@@ -1964,7 +1965,7 @@ def test_list_items_305a():
 
   baz"""
     expected_tokens = [
-        "[ulist(1,1):*::2:]",
+        "[ulist(1,1):*::2::  ]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
@@ -2006,6 +2007,7 @@ def test_list_items_305a():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
+@pytest.mark.gfm
 def test_list_items_305b():
     """
     Test case 305b:  variation on 305
@@ -2020,7 +2022,7 @@ def test_list_items_305b():
 
    baz"""
     expected_tokens = [
-        "[ulist(1,1):*::2:]",
+        "[ulist(1,1):*::2::   ]",
         "[para(1,3):]",
         "[text:foo:]",
         "[end-para]",
@@ -2053,7 +2055,7 @@ def test_list_items_305b():
 </ul>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
