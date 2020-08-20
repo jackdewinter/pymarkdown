@@ -291,14 +291,20 @@ class TransformToMarkdown:
                 + "<--"
             )
             print(
-                ">>stack-->"
+                ">>container-stack-->"
                 + ParserHelper.make_value_visible(self.container_token_stack)
+            )
+            print(
+                ">>block_stack-->" + ParserHelper.make_value_visible(self.block_stack)
             )
             print("---")
             previous_token = current_token
 
         if transformed_data and transformed_data[-1] == ParserHelper.newline_character:
             transformed_data = transformed_data[0:-1]
+
+        assert not self.block_stack
+        assert not self.container_token_stack
         return transformed_data, avoid_processing
 
     # pylint: enable=too-many-locals, too-many-branches
@@ -318,10 +324,10 @@ class TransformToMarkdown:
         if skip_merge:
             delayed_continue = ""
 
+        # TODO handle this better?
         block_should_end_with_newline = False
         if current_token.token_name == "end-fcode-block":
             block_should_end_with_newline = True
-            delayed_continue = ""
         elif current_token.token_name == "end-setext":
             block_should_end_with_newline = True
 
@@ -515,6 +521,8 @@ class TransformToMarkdown:
         Merge the leaf data with the container data.
         """
 
+        # TODO can this be simplified like block quote?
+
         if ParserHelper.replace_noop_character in new_data:
             print("1>>")
             new_data = self.__merge_with_noop_in_data(new_data, continue_sequence)
@@ -662,9 +670,9 @@ class TransformToMarkdown:
         """
         start_token = current_token.start_markdown_token
 
-        if current_token.extra_data:
+        if not current_token.was_forced:
             split_extra_data = current_token.extra_data.split(":")
-            assert len(split_extra_data) == 2
+            assert len(split_extra_data) >= 2
             fence_count = int(split_extra_data[1])
 
             prefix_whitespace = ParserHelper.newline_character
@@ -685,6 +693,7 @@ class TransformToMarkdown:
             and previous_token.token_name != MarkdownToken.token_fenced_code_block
         ):
             code_end_sequence = "\n"
+        del self.block_stack[-1]
         return code_end_sequence
 
     def __rehydrate_ordered_list_start(self, current_token, previous_token, next_token):

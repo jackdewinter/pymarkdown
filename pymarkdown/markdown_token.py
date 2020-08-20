@@ -470,14 +470,21 @@ class EndMarkdownToken(MarkdownToken):
 
     type_name_prefix = "end-"
 
+    # pylint: disable=too-many-arguments
     def __init__(
-        self, type_name, extracted_whitespace, extra_end_data, start_markdown_token
+        self,
+        type_name,
+        extracted_whitespace,
+        extra_end_data,
+        start_markdown_token,
+        was_forced,
     ):
 
         self.type_name = type_name
         self.extracted_whitespace = extracted_whitespace
         self.extra_end_data = extra_end_data
         self.start_markdown_token = start_markdown_token
+        self.was_forced = was_forced
 
         MarkdownToken.__init__(
             self,
@@ -487,13 +494,19 @@ class EndMarkdownToken(MarkdownToken):
         )
         self.compose_data_field()
 
+    # pylint: enable=too-many-arguments
+
     def compose_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        display_data = self.extracted_whitespace
+        display_data = ""
         if self.extra_end_data is not None:
-            display_data = display_data + ":" + self.extra_end_data
+            display_data += self.extracted_whitespace
+        display_data += ":"
+        if self.extra_end_data is not None:
+            display_data += self.extra_end_data
+        display_data += ":" + str(self.was_forced)
         self.extra_data = display_data
 
 

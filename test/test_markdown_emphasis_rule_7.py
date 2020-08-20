@@ -28,7 +28,7 @@ def test_emphasis_400():
         "[text:**:]",
         "[text:foo bar :]",
         "[text:**:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>**foo bar **</p>"""
 
@@ -58,7 +58,7 @@ def test_emphasis_401():
         "[text:(:]",
         "[text:**:]",
         "[text:foo):]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>**(**foo)</p>"""
 
@@ -88,10 +88,10 @@ def test_emphasis_402():
         "[text:(:]",
         "[emphasis:2:*]",
         "[text:foo:]",
-        "[end-emphasis::2:*]",
+        "[end-emphasis::2:*:False]",
         "[text:):]",
-        "[end-emphasis::1:*]",
-        "[end-para]",
+        "[end-emphasis::1:*:False]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><em>(<strong>foo</strong>)</em></p>"""
 
@@ -122,14 +122,14 @@ def test_emphasis_403():
         "[text:Gomphocarpus (:]",
         "[emphasis:1:*]",
         "[text:Gomphocarpus physocarpus:]",
-        "[end-emphasis::1:*]",
+        "[end-emphasis::1:*:False]",
         "[text:, syn.\n::\n]",
         "[emphasis:1:*]",
         "[text:Asclepias physocarpa:]",
-        "[end-emphasis::1:*]",
+        "[end-emphasis::1:*:False]",
         "[text:):]",
-        "[end-emphasis::2:*]",
-        "[end-para]",
+        "[end-emphasis::2:*:False]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><strong>Gomphocarpus (<em>Gomphocarpus physocarpus</em>, syn.
 <em>Asclepias physocarpa</em>)</strong></p>"""
@@ -160,10 +160,10 @@ def test_emphasis_404():
         '[text:foo \a"\a&quot;\a:]',
         "[emphasis:1:*]",
         "[text:bar:]",
-        "[end-emphasis::1:*]",
+        "[end-emphasis::1:*:False]",
         '[text:\a"\a&quot;\a foo:]',
-        "[end-emphasis::2:*]",
-        "[end-para]",
+        "[end-emphasis::2:*:False]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><strong>foo &quot;<em>bar</em>&quot; foo</strong></p>"""
 
@@ -191,9 +191,9 @@ def test_emphasis_405():
         "[para(1,1):]",
         "[emphasis:2:*]",
         "[text:foo:]",
-        "[end-emphasis::2:*]",
+        "[end-emphasis::2:*:False]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><strong>foo</strong>bar</p>"""
 

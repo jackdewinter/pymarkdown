@@ -69,8 +69,8 @@ def test_extra_003():
         "[para(1,1):]",
         "[link:inline:!%22#$%25&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~::!\"#$%&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~:::link:False::::]",
         "[text:link:]",
-        "[end-link::]",
-        "[end-para]",
+        "[end-link:::False]",
+        "[end-para:::True]",
     ]
     expected_gfm = '<p><a href="!%22#$%25&amp;\'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~">link</a></p>'
 
@@ -104,8 +104,8 @@ def test_extra_004():
         "[para(1,1):]",
         "[link:inline:!%22#$%12&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~::!\"#$%12&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~:::link:False::::]",
         "[text:link:]",
-        "[end-link::]",
-        "[end-para]",
+        "[end-link:::False]",
+        "[end-para:::True]",
     ]
     expected_gfm = '<p><a href="!%22#$%12&amp;\'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D%5E_%60a-z%7B%7C%7D~">link</a></p>'
 
@@ -134,8 +134,8 @@ def test_extra_005():
         "[para(1,1):]",
         "[link:inline:http://google.com/search%25::http://google.com/search%:::link:False::::]",
         "[text:link:]",
-        "[end-link::]",
-        "[end-para]",
+        "[end-link:::False]",
+        "[end-para:::True]",
     ]
     expected_gfm = '<p><a href="http://google.com/search%25">link</a></p>'
 

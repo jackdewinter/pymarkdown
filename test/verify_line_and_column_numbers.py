@@ -16,15 +16,20 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
     based on the data in the tokens.
     """
     print("---\nLine/Column Numbers\n---")
-    print("---\nLine/Column Numbers\n---")
 
     split_lines = source_markdown.split(ParserHelper.newline_character)
     number_of_lines = len(split_lines)
     print("Total lines in source document: " + str(number_of_lines))
 
     last_token = None
+    last_token_index = None
     container_block_stack = []
+    token_stack = []
+
     for ind, current_token in enumerate(actual_tokens):
+
+        remember_token_as_last_token = True
+
         print("\n\n-->" + ParserHelper.make_value_visible(current_token))
         if (
             current_token.token_class == MarkdownTokenClass.INLINE_BLOCK
@@ -52,6 +57,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
 
         if isinstance(current_token, EndMarkdownToken):
             print("end token, skipping")
+            __pop_from_stack_if_required(token_stack, current_token)
             if (
                 container_block_stack
                 and container_block_stack[-1].token_name
@@ -131,9 +137,19 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
                     last_token,
                     last_position,
                 )
+                remember_token_as_last_token = __push_to_stack_if_required(
+                    token_stack, current_token
+                )
             else:
                 __validate_new_line(
                     container_block_stack, current_token, current_position
+                )
+                remember_token_as_last_token = __verify_token_height(
+                    current_token,
+                    last_token,
+                    last_token_index,
+                    actual_tokens,
+                    token_stack,
                 )
 
             print(
@@ -153,9 +169,209 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
                     top_block_token.leading_text_index += 1
         else:
             __validate_first_token(current_token, current_position)
+            remember_token_as_last_token = __push_to_stack_if_required(
+                token_stack, current_token
+            )
 
-        last_token = current_token
+        if remember_token_as_last_token:
+            print("saving last")
+            last_token = current_token
+            last_token_index = ind
+        else:
+            print("skipping last")
+
+    print("Total lines in source document: " + str(number_of_lines))
+    __validate_block_token_height(
+        last_token, None, number_of_lines, True, None, actual_tokens, token_stack
+    )
+
+    assert not token_stack
+    assert not container_block_stack
     # pylint: enable=too-many-branches,too-many-statements
+
+
+def __push_to_stack_if_required(token_stack, current_token):
+    print(
+        "__push_to_stack_if_required->before->"
+        + ParserHelper.make_value_visible(token_stack)
+    )
+    remember_token_as_last_token = True
+
+    # TODO replace with attribute from token?
+    if (
+        current_token.token_name != MarkdownToken.token_blank_line
+        and current_token.token_name != MarkdownToken.token_new_list_item
+        and current_token.token_name != MarkdownToken.token_link_reference_definition
+        and current_token.token_name != MarkdownToken.token_thematic_break
+    ):
+        token_stack.append(current_token)
+    else:
+        if token_stack and (
+            token_stack[-1].token_name == MarkdownToken.token_html_block
+            or token_stack[-1].token_name == MarkdownToken.token_fenced_code_block
+        ):
+            remember_token_as_last_token = False
+    print(
+        "__push_to_stack_if_required->after->"
+        + str(remember_token_as_last_token)
+        + ":"
+        + ParserHelper.make_value_visible(token_stack)
+    )
+    return remember_token_as_last_token
+
+
+def __pop_from_stack_if_required(token_stack, current_token):
+    print(
+        "__pop_from_stack_if_required->current_token->"
+        + ParserHelper.make_value_visible(current_token)
+    )
+    print(
+        "__pop_from_stack_if_required->before->"
+        + ParserHelper.make_value_visible(token_stack)
+    )
+    assert token_stack
+    if (
+        EndMarkdownToken.type_name_prefix + token_stack[-1].token_name
+        == current_token.token_name
+    ):
+        del token_stack[-1]
+    print(
+        "__pop_from_stack_if_required->after->"
+        + ParserHelper.make_value_visible(token_stack)
+    )
+
+
+def __count_newlines_in_text(text_to_examine):
+    """
+    Count the number of new line characters in a given string.
+    """
+    original_length = len(text_to_examine)
+    removed_length = len(text_to_examine.replace("\n", ""))
+    return original_length - removed_length
+
+
+# pylint: disable=too-many-arguments,too-many-branches
+def __validate_block_token_height(
+    last_token,
+    current_token,
+    last_line_number,
+    was_last,
+    last_token_index,
+    actual_tokens,
+    token_stack,
+):
+    print("last_token:" + ParserHelper.make_value_visible(last_token))
+    print("last_token_index:" + ParserHelper.make_value_visible(last_token_index))
+    print("last_line_number:" + ParserHelper.make_value_visible(last_line_number))
+    print("was_last:" + ParserHelper.make_value_visible(was_last))
+    if was_last:
+        return
+
+    skip_check = False
+    if current_token and current_token.token_name == MarkdownToken.token_blank_line:
+        print("blank:" + ParserHelper.make_value_visible(token_stack))
+        if token_stack and (
+            token_stack[-1].token_name == MarkdownToken.token_html_block
+            or token_stack[-1].token_name == MarkdownToken.token_fenced_code_block
+        ):
+            skip_check = True
+
+    if last_token.token_name == MarkdownToken.token_paragraph:
+        token_height = 1 + __count_newlines_in_text(last_token.extracted_whitespace)
+    elif last_token.token_name == MarkdownToken.token_indented_code_block:
+        token_height = 1 + __count_newlines_in_text(last_token.indented_whitespace)
+    elif (
+        last_token.token_name == MarkdownToken.token_html_block
+        or last_token.token_name == MarkdownToken.token_fenced_code_block
+    ):
+        current_token_index = last_token_index + 1
+        end_name = EndMarkdownToken.type_name_prefix + last_token.token_name
+        token_height = 0
+        if last_token.token_name == MarkdownToken.token_fenced_code_block:
+            token_height += 1
+        while actual_tokens[current_token_index].token_name != end_name:
+            if (
+                actual_tokens[current_token_index].token_name
+                == MarkdownToken.token_text
+            ):
+                token_height += 1 + __count_newlines_in_text(
+                    actual_tokens[current_token_index].token_text
+                )
+            else:
+                assert (
+                    actual_tokens[current_token_index].token_name
+                    == MarkdownToken.token_blank_line
+                )
+                token_height += 1
+            current_token_index += 1
+        if last_token.token_name == MarkdownToken.token_fenced_code_block:
+            if not actual_tokens[current_token_index].was_forced:
+                token_height += 1
+    elif last_token.token_name == MarkdownToken.token_blank_line:
+        token_height = 1
+    elif last_token.token_name == MarkdownToken.token_link_reference_definition:
+        token_height = (
+            1
+            + __count_newlines_in_text(last_token.extracted_whitespace)
+            + __count_newlines_in_text(last_token.link_name_debug)
+            + __count_newlines_in_text(last_token.link_destination_whitespace)
+            + __count_newlines_in_text(last_token.link_title_raw)
+            + __count_newlines_in_text(last_token.link_title_whitespace)
+        )
+    elif (
+        last_token.token_name == MarkdownToken.token_thematic_break
+        or last_token.token_name == MarkdownToken.token_atx_heading
+    ):
+        token_height = 1
+    elif last_token.token_name == MarkdownToken.token_setext_heading:
+        token_height = last_token.line_number - last_token.original_line_number
+    else:
+        assert False, "Token " + last_token.token_name + " not supported."
+
+    if not skip_check:
+        delta = last_token.line_number
+        print(
+            "delta:"
+            + ParserHelper.make_value_visible(delta)
+            + "; height:"
+            + str(token_height)
+        )
+        delta += token_height
+        print("calc current_line_number:" + ParserHelper.make_value_visible(delta))
+        assert delta == last_line_number, (
+            "Calculated line number '"
+            + str(delta)
+            + "' does not equal the actual line number '"
+            + str(last_line_number)
+            + "'."
+        )
+
+
+# pylint: enable=too-many-arguments,too-many-branches
+
+
+def __verify_token_height(
+    current_token, last_token, last_token_index, actual_tokens, token_stack
+):
+    remember_token_as_last_token = __push_to_stack_if_required(
+        token_stack, current_token
+    )
+    assert last_token
+    print("current_token:" + ParserHelper.make_value_visible(current_token))
+
+    token_line_number = current_token.line_number
+    if current_token.token_name == MarkdownToken.token_setext_heading:
+        token_line_number = current_token.original_line_number
+    __validate_block_token_height(
+        last_token,
+        current_token,
+        token_line_number,
+        False,
+        last_token_index,
+        actual_tokens,
+        token_stack,
+    )
+    return remember_token_as_last_token
 
 
 def __validate_same_line(

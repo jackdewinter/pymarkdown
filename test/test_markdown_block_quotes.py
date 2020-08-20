@@ -29,11 +29,11 @@ def test_block_quotes_206():
         "[block-quote(1,1)::> \n> \n> ]",
         "[atx(1,3):1:0:]",
         "[text:Foo: ]",
-        "[end-atx::]",
+        "[end-atx:::False]",
         "[para(2,3):\n]",
         "[text:bar\nbaz::\n]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <h1>Foo</h1>
@@ -67,11 +67,11 @@ def test_block_quotes_207():
         "[block-quote(1,1)::>\n>\n> ]",
         "[atx(1,2):1:0:]",
         "[text:Foo: ]",
-        "[end-atx::]",
+        "[end-atx:::False]",
         "[para(2,2):\n]",
         "[text:bar\nbaz::\n]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <h1>Foo</h1>
@@ -105,11 +105,11 @@ def test_block_quotes_208():
         "[block-quote(1,4):   :   > \n   > \n > ]",
         "[atx(1,6):1:0:]",
         "[text:Foo: ]",
-        "[end-atx::]",
+        "[end-atx:::False]",
         "[para(2,6):\n]",
         "[text:bar\nbaz::\n]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <h1>Foo</h1>
@@ -142,7 +142,7 @@ def test_block_quotes_209():
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n    ]",
         "[text:\a>\a&gt;\a # Foo\n\a>\a&gt;\a bar\n\a>\a&gt;\a baz:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>&gt; # Foo
 &gt; bar
@@ -175,11 +175,11 @@ baz"""
         "[block-quote(1,1)::> \n> \n]",
         "[atx(1,3):1:0:]",
         "[text:Foo: ]",
-        "[end-atx::]",
+        "[end-atx:::False]",
         "[para(2,3):\n]",
         "[text:bar\nbaz::\n]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <h1>Foo</h1>
@@ -213,8 +213,8 @@ baz
         "[block-quote(1,1)::> \n\n> ]",
         "[para(1,3):\n\n]",
         "[text:bar\nbaz\nfoo::\n\n]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>bar
@@ -248,8 +248,8 @@ def test_block_quotes_212():
         "[block-quote(1,1)::> ]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
         "[tbreak(2,1):-::---]",
     ]
     expected_gfm = """<blockquote>
@@ -284,14 +284,14 @@ def test_block_quotes_213():
         "[ulist(1,3):-::4:  ]",
         "[para(1,5):]",
         "[text:foo:]",
-        "[end-para]",
-        "[end-ulist]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
         "[ulist(2,1):-::2:]",
         "[para(2,3):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<blockquote>
 <ul>
@@ -328,11 +328,11 @@ def test_block_quotes_214():
         "[block-quote(1,1)::> ]",
         "[icode-block(1,7):    :]",
         "[text:foo:]",
-        "[end-icode-block]",
-        "[end-block-quote]",
+        "[end-icode-block:::True]",
+        "[end-block-quote:::True]",
         "[icode-block(2,5):    :]",
         "[text:bar:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<blockquote>
 <pre><code>foo
@@ -367,13 +367,13 @@ foo
     expected_tokens = [
         "[block-quote(1,1)::> ]",
         "[fcode-block(1,3):`:3::::::]",
-        "[end-fcode-block]",
-        "[end-block-quote]",
+        "[end-fcode-block:::True]",
+        "[end-block-quote:::True]",
         "[para(2,1):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::False]",
         "[fcode-block(3,1):`:3::::::]",
-        "[end-fcode-block]",
+        "[end-fcode-block:::True]",
     ]
     expected_gfm = """<blockquote>
 <pre><code></code></pre>
@@ -407,8 +407,8 @@ def test_block_quotes_216():
         "[block-quote(1,1)::> \n]",
         "[para(1,3):\n    ]",
         "[text:foo\n- bar::\n]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>foo
@@ -435,7 +435,11 @@ def test_block_quotes_217():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """>"""
-    expected_tokens = ["[block-quote(1,1)::>]", "[BLANK(1,2):]", "[end-block-quote]"]
+    expected_tokens = [
+        "[block-quote(1,1)::>]",
+        "[BLANK(1,2):]",
+        "[end-block-quote:::True]",
+    ]
     expected_gfm = """<blockquote>
 </blockquote>"""
 
@@ -466,13 +470,13 @@ def test_block_quotes_218():
         "[BLANK(1,2):]",
         "[BLANK(2,4): ]",
         "[BLANK(3,3):]",
-        "[end-block-quote]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 </blockquote>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -498,9 +502,9 @@ def test_block_quotes_219():
         "[BLANK(1,2):]",
         "[para(2,3):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(3,4): ]",
-        "[end-block-quote]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>foo</p>
@@ -532,14 +536,14 @@ def test_block_quotes_220():
         "[block-quote(1,1)::> \n]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
         "[BLANK(2,1):]",
         "[block-quote(3,1)::> ]",
         "[para(3,3):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>foo</p>
@@ -573,8 +577,8 @@ def test_block_quotes_221():
         "[block-quote(1,1)::> \n> ]",
         "[para(1,3):\n]",
         "[text:foo\nbar::\n]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>foo
@@ -607,12 +611,12 @@ def test_block_quotes_222():
         "[block-quote(1,1)::> \n>\n> ]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,2):]",
         "[para(3,3):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>foo</p>
@@ -643,12 +647,12 @@ def test_block_quotes_223():
     expected_tokens = [
         "[para(1,1):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[block-quote(2,1)::> ]",
         "[para(2,3):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<p>foo</p>
 <blockquote>
@@ -681,14 +685,14 @@ def test_block_quotes_224():
         "[block-quote(1,1)::> ]",
         "[para(1,3):]",
         "[text:aaa:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
         "[tbreak(2,1):*::***]",
         "[block-quote(3,1)::> ]",
         "[para(3,3):]",
         "[text:bbb:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>aaa</p>
@@ -723,8 +727,8 @@ baz"""
         "[block-quote(1,1)::> \n]",
         "[para(1,3):\n]",
         "[text:bar\nbaz::\n]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>bar
@@ -757,12 +761,12 @@ baz"""
         "[block-quote(1,1)::> \n]",
         "[para(1,3):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:baz:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>bar</p>
@@ -795,12 +799,12 @@ baz"""
         "[block-quote(1,1)::> \n>\n]",
         "[para(1,3):]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,2):]",
-        "[end-block-quote]",
+        "[end-block-quote:::False]",
         "[para(3,1):]",
         "[text:baz:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<blockquote>
 <p>bar</p>
@@ -834,10 +838,10 @@ bar"""
         "[block-quote(1,5)::> > > \n]",
         "[para(1,7):\n]",
         "[text:foo\nbar::\n]",
-        "[end-para]",
-        "[end-block-quote]",
-        "[end-block-quote]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <blockquote>
@@ -876,10 +880,10 @@ def test_block_quotes_229():
         "[block-quote(1,3)::>>> \n> \n>>]",
         "[para(1,5):\n\n]",
         "[text:foo\nbar\nbaz::\n\n]",
-        "[end-para]",
-        "[end-block-quote]",
-        "[end-block-quote]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <blockquote>
@@ -917,14 +921,14 @@ def test_block_quotes_230():
         "[block-quote(1,1)::> \n]",
         "[icode-block(1,7):    :]",
         "[text:code:]",
-        "[end-icode-block]",
-        "[end-block-quote]",
+        "[end-icode-block:::True]",
+        "[end-block-quote:::True]",
         "[BLANK(2,1):]",
         "[block-quote(3,1)::> ]",
         "[para(3,6):   ]",
         "[text:not code:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <pre><code>code

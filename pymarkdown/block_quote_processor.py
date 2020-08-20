@@ -91,6 +91,7 @@ class BlockQuoteProcessor:
                         type(parser_state.token_stack[-1]),
                     ],
                     include_block_quotes=True,
+                    was_forced=True,
                 )
             else:
                 LOGGER.debug("__check_for_lazy_handling>>not code block")
@@ -342,7 +343,8 @@ class BlockQuoteProcessor:
             LOGGER.debug("==REM[%s],LTP[%s]", str(removed_text), str(line_to_parse))
 
             found_bq_stack_token = None
-            for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):
+            stack_index = len(parser_state.token_stack) - 1
+            while True:
                 LOGGER.debug(
                     "--%s--%s",
                     str(stack_index),
@@ -351,6 +353,7 @@ class BlockQuoteProcessor:
                 if parser_state.token_stack[stack_index].is_block_quote:
                     found_bq_stack_token = parser_state.token_stack[stack_index]
                     break
+                stack_index -= 1
             found_bq_stack_token.matching_markdown_token.add_leading_spaces(
                 removed_text
             )
@@ -431,6 +434,7 @@ class BlockQuoteProcessor:
             container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 only_these_blocks=[ParagraphStackToken, IndentedCodeBlockStackToken],
+                was_forced=True,
             )
             while this_bq_count > stack_bq_count:
                 stack_bq_count += 1

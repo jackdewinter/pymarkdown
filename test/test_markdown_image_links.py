@@ -26,7 +26,7 @@ def test_image_link_580():
     expected_tokens = [
         "[para(1,1):]",
         '[image:inline:/url:title:foo::::foo:False:":: :]',
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="/url" alt="foo" title="title" /></p>"""
 
@@ -53,7 +53,7 @@ def test_image_link_580a():
     expected_tokens = [
         "[para(1,1):]",
         "[image:inline:/url:title:foo::::foo:False:':: :]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="/url" alt="foo" title="title" /></p>"""
 
@@ -80,7 +80,7 @@ def test_image_link_580b():
     expected_tokens = [
         "[para(1,1):]",
         "[image:inline:/url:title:foo::::foo:False:(:: :]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="/url" alt="foo" title="title" /></p>"""
 
@@ -107,7 +107,7 @@ def test_image_link_580c():
     expected_tokens = [
         "[para(1,1):]",
         "[image:inline:/my%20url:title:foo:/my url:::foo:True:(:: :]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="/my%20url" alt="foo" title="title" /></p>"""
 
@@ -134,7 +134,7 @@ def test_image_link_580d():
     expected_tokens = [
         "[para(1,1):]",
         "[image:inline:/my%20url:title &amp; treaty:foo:/my url:title & treaty::foo:True:(:: :]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = (
         """<p><img src="/my%20url" alt="foo" title="title &amp; treaty" /></p>"""
@@ -166,7 +166,7 @@ def test_image_link_581():
     expected_tokens = [
         "[para(1,1):]",
         "[image:shortcut:train.jpg:train &amp; tracks:foo bar::::foo *bar*:::::]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo *bar*:: :train.jpg:: :train &amp; tracks:"train & tracks":]',
         "[BLANK(4,1):]",
@@ -198,7 +198,7 @@ def test_image_link_582():
     expected_tokens = [
         "[para(1,1):]",
         "[image:inline:/url2::foo bar::::foo ![bar](/url):False::::]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="/url2" alt="foo bar" /></p>"""
 
@@ -225,7 +225,7 @@ def test_image_link_583():
     expected_tokens = [
         "[para(1,1):]",
         "[image:inline:/url2::foo bar::::foo [bar](/url):False::::]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="/url2" alt="foo bar" /></p>"""
 
@@ -255,7 +255,7 @@ def test_image_link_584():
     expected_tokens = [
         "[para(1,1):]",
         "[image:collapsed:train.jpg:train &amp; tracks:foo bar::::foo *bar*:::::]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo *bar*:: :train.jpg:: :train &amp; tracks:"train & tracks":]',
         "[BLANK(4,1):]",
@@ -290,7 +290,7 @@ def test_image_link_585():
     expected_tokens = [
         "[para(1,1):]",
         "[image:full:train.jpg:train &amp; tracks:foo bar:::foobar:foo *bar*:::::]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foobar:FOOBAR: :train.jpg:: :train &amp; tracks:"train & tracks":]',
         "[BLANK(4,1):]",
@@ -322,7 +322,7 @@ def test_image_link_586():
     expected_tokens = [
         "[para(1,1):]",
         "[image:inline:train.jpg::foo::::foo:False::::]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="train.jpg" alt="foo" /></p>"""
 
@@ -350,7 +350,7 @@ def test_image_link_587():
         "[para(1,1):]",
         "[text:My :]",
         '[image:inline:/path/to/train.jpg:title:foo bar::::foo bar:False:"::  :   ]',
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = (
         """<p>My <img src="/path/to/train.jpg" alt="foo bar" title="title" /></p>"""
@@ -379,7 +379,7 @@ def test_image_link_588():
     expected_tokens = [
         "[para(1,1):]",
         "[image:inline:url::foo::::foo:True::::]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="url" alt="foo" /></p>"""
 
@@ -406,7 +406,7 @@ def test_image_link_589():
     expected_tokens = [
         "[para(1,1):]",
         "[image:inline:/url:::::::False::::]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="/url" alt="" /></p>"""
 
@@ -435,7 +435,7 @@ def test_image_link_590():
     expected_tokens = [
         "[para(1,1):]",
         "[image:full:/url::foo:::bar:foo:::::]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::bar:: :/url:::::]",
     ]
@@ -466,7 +466,7 @@ def test_image_link_591():
     expected_tokens = [
         "[para(1,1):]",
         "[image:full:/url::foo:::bar:foo:::::]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::bar:BAR: :/url:::::]",
     ]
@@ -498,7 +498,7 @@ def test_image_link_592():
     expected_tokens = [
         "[para(1,1):]",
         "[image:collapsed:/url:title:foo::::foo:::::]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK(4,1):]",
@@ -531,7 +531,7 @@ def test_image_link_593():
     expected_tokens = [
         "[para(1,1):]",
         "[image:collapsed:/url:title:foo bar::::*foo* bar:::::]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::*foo* bar:: :/url:: :title:"title":]',
         "[BLANK(4,1):]",
@@ -564,7 +564,7 @@ def test_image_link_594():
     expected_tokens = [
         "[para(1,1):]",
         "[image:collapsed:/url:title:Foo::::Foo:::::]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK(4,1):]",
@@ -603,7 +603,7 @@ def test_image_link_595():
         "[text:\n:: \n]",
         "[text:[:]",
         "[text:]:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(3,1):]",
         '[link-ref-def(4,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK(5,1):]",
@@ -637,7 +637,7 @@ def test_image_link_596():
     expected_tokens = [
         "[para(1,1):]",
         "[image:shortcut:/url:title:foo::::foo:::::]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK(4,1):]",
@@ -670,7 +670,7 @@ def test_image_link_597():
     expected_tokens = [
         "[para(1,1):]",
         "[image:shortcut:/url:title:foo bar::::*foo* bar:::::]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::*foo* bar:: :/url:: :title:"title":]',
         "[BLANK(4,1):]",
@@ -707,7 +707,7 @@ def test_image_link_598():
         "[text:foo:]",
         "[text:]:]",
         "[text:]:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:[:]",
@@ -716,7 +716,7 @@ def test_image_link_598():
         "[text:]:]",
         "[text:]:]",
         '[text:: /url \a"\a&quot;\atitle\a"\a&quot;\a:]',
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<p>![[foo]]</p>
@@ -748,7 +748,7 @@ def test_image_link_599():
     expected_tokens = [
         "[para(1,1):]",
         "[image:shortcut:/url:title:Foo::::Foo:::::]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK(4,1):]",
@@ -782,7 +782,7 @@ def test_image_link_600():
         "[para(1,1):]",
         "[text:!\\\b[foo:]",
         "[text:]:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK(4,1):]",
@@ -817,8 +817,8 @@ def test_image_link_601():
         "[text:\\\b!:]",
         "[link:shortcut:/url:title::::foo:::::]",
         "[text:foo:]",
-        "[end-link::]",
-        "[end-para]",
+        "[end-link:::False]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
         "[BLANK(4,1):]",

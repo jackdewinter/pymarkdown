@@ -26,7 +26,7 @@ def test_backslash_escapes_308():
     expected_tokens = [
         "[para(1,1):]",
         "[text:\\\b!\\\b\a\"\a&quot;\a\\\b#\\\b$\\\b%\\\b\a&\a&amp;\a\\\b'\\\b(\\\b)\\\b*\\\b+\\\b,\\\b-\\\b.\\\b/\\\b:\\\b;\\\b\a<\a&lt;\a\\\b=\\\b\a>\a&gt;\a\\\b?\\\b@\\\b[\\\b\\\\\b]\\\b^\\\b_\\\b`\\\b{\\\b|\\\b}\\\b~:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>!&quot;#$%&amp;'()*+,-./:;&lt;=&gt;?@[\\]^_`{|}~</p>"""
 
@@ -53,7 +53,7 @@ def test_backslash_escapes_309():
     expected_tokens = [
         "[para(1,1):]",
         "[text:\\→\\A\\a\\ \\3\\φ\\«:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>\\→\\A\\a\\ \\3\\φ\\«</p>"""
 
@@ -100,7 +100,7 @@ def test_backslash_escapes_310():
         "[text:]:]",
         """[text:: /url \a\"\a&quot;\anot a reference\a\"\a&quot;\a
 \\\b\a&\a&amp;\aouml; not a character entity::\n]""",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>*not emphasized*
 &lt;br/&gt; not a tag
@@ -137,8 +137,8 @@ def test_backslash_escapes_311():
         "[text:\\\b\\:]",
         "[emphasis:1:*]",
         "[text:emphasis:]",
-        "[end-emphasis::1:*]",
-        "[end-para]",
+        "[end-emphasis::1:*:False]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>\\<em>emphasis</em></p>"""
 
@@ -168,7 +168,7 @@ bar"""
         "[text:foo:]",
         "[hard-break:\\]",
         "[text:\nbar:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
 bar</p>"""
@@ -196,7 +196,7 @@ def test_backslash_escapes_313():
     expected_tokens = [
         "[para(1,1):]",
         "[icode-span:\\[\\`:``: : ]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><code>\\[\\`</code></p>"""
 
@@ -223,7 +223,7 @@ def test_backslash_escapes_314():
     expected_tokens = [
         "[icode-block(1,5):    :]",
         "[text:\\[\\]:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>\\[\\]
 </code></pre>"""
@@ -253,7 +253,7 @@ def test_backslash_escapes_315():
     expected_tokens = [
         "[fcode-block(1,1):~:3::::::]",
         "[text:\\[\\]:]",
-        "[end-fcode-block::3]",
+        "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>\\[\\]
 </code></pre>"""
@@ -281,7 +281,7 @@ def test_backslash_escapes_316():
     expected_tokens = [
         "[para(1,1):]",
         "[uri-autolink:http://example.com?find=\\*]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="http://example.com?find=%5C*">http://example.com?find=\\*</a></p>"""
 
@@ -308,7 +308,7 @@ def test_backslash_escapes_317():
     expected_tokens = [
         "[html-block(1,1)]",
         '[text:<a href="/bar\\/)">:]',
-        "[end-html-block]",
+        "[end-html-block:::True]",
     ]
     expected_gfm = """<a href="/bar\\/)">"""
 
@@ -336,8 +336,8 @@ def test_backslash_escapes_318():
         "[para(1,1):]",
         '[link:inline:/bar*:ti*tle:/bar\\*:ti\\*tle::foo:False:":: :]',
         "[text:foo:]",
-        "[end-link::]",
-        "[end-para]",
+        "[end-link:::False]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/bar*" title="ti*tle">foo</a></p>"""
 
@@ -368,8 +368,8 @@ def test_backslash_escapes_319():
         "[para(1,1):]",
         "[link:shortcut:/bar*:ti*tle::::foo:::::]",
         "[text:foo:]",
-        "[end-link::]",
-        "[end-para]",
+        "[end-link:::False]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/bar*:/bar\\*: :ti*tle:"ti\\*tle":]',
         "[BLANK(4,1):]",
@@ -401,7 +401,7 @@ foo
     expected_tokens = [
         "[fcode-block(1,1):`:3:foo+bar:foo\\+bar:::: ]",
         "[text:foo:]",
-        "[end-fcode-block::3]",
+        "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code class="language-foo+bar">foo
 </code></pre>"""
@@ -431,7 +431,7 @@ foo
     expected_tokens = [
         "[fcode-block(1,1):`:3:foo+\\bar:foo\\+\\bar:::: ]",
         "[text:foo:]",
-        "[end-fcode-block::3]",
+        "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code class="language-foo+\\bar">foo
 </code></pre>"""
@@ -461,7 +461,7 @@ foo
     expected_tokens = [
         "[fcode-block(1,1):`:3:foo+bar\\:foo\\+bar\\:::: ]",
         "[text:foo:]",
-        "[end-fcode-block::3]",
+        "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code class="language-foo+bar\\">foo
 </code></pre>"""
@@ -491,7 +491,7 @@ foo
     expected_tokens = [
         "[fcode-block(1,1):`:3:foo:: +bar\\: \\+bar\\:: ]",
         "[text:foo:]",
-        "[end-fcode-block::3]",
+        "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code class="language-foo">foo
 </code></pre>"""

@@ -27,7 +27,7 @@ def test_indented_code_blocks_077():
     expected_tokens = [
         "[icode-block(1,5):    :\n    ]",
         "[text:a simple\n  indented code block:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>a simple
   indented code block
@@ -59,12 +59,12 @@ def test_indented_code_blocks_078():
         "[ulist(1,3):-::4:  :    ]",
         "[para(1,5):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,5):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -99,14 +99,14 @@ def test_indented_code_blocks_079():
         "[olist(1,1):.:1:4:]",
         "[para(1,5):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[ulist(3,5):-::6:    ]",
         "[para(3,7):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -143,7 +143,7 @@ def test_indented_code_blocks_080():
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n\n    ]",
         "[text:\a<\a&lt;\aa/\a>\a&gt;\a\n*hi*\n\x03\n- one:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>&lt;a/&gt;
 *hi*
@@ -180,7 +180,7 @@ def test_indented_code_blocks_081():
     expected_tokens = [
         "[icode-block(1,5):    :\n\n    \n  \n \n \n    ]",
         "[text:chunk1\n\x03\nchunk2\n\x03\n\x03\n\x03\nchunk3:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>chunk1
 
@@ -218,7 +218,7 @@ def test_indented_code_blocks_082():
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n    ]",
         "[text:chunk1\n\x03  \n  chunk2:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>chunk1
   
@@ -252,7 +252,7 @@ def test_indented_code_blocks_082a():
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n    ]",
         "[text:chunk1\n\x03\n  chunk2:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>chunk1
 
@@ -280,7 +280,7 @@ def test_indented_code_blocks_083():
     transformer = TransformToGfm()
     source_markdown = """Foo
     bar"""
-    expected_tokens = ["[para(1,1):\n    ]", "[text:Foo\nbar::\n]", "[end-para]"]
+    expected_tokens = ["[para(1,1):\n    ]", "[text:Foo\nbar::\n]", "[end-para:::True]"]
     expected_gfm = """<p>Foo
 bar</p>"""
 
@@ -308,10 +308,10 @@ bar"""
     expected_tokens = [
         "[icode-block(1,5):    :]",
         "[text:foo:]",
-        "[end-icode-block]",
+        "[end-icode-block:::False]",
         "[para(2,1):]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<pre><code>foo
 </code></pre>
@@ -344,12 +344,12 @@ bar"""
     expected_tokens = [
         "[icode-block(1,5):    :]",
         "[text:foo:]",
-        "[end-icode-block]",
-        "[BLANK(3,1):]",
+        "[end-icode-block:::False]",
         "[BLANK(2,1):]",
+        "[BLANK(3,1):]",
         "[para(4,1):]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<pre><code>foo
 </code></pre>
@@ -383,16 +383,16 @@ Heading
     expected_tokens = [
         "[atx(1,1):1:0:]",
         "[text:Heading: ]",
-        "[end-atx::]",
+        "[end-atx:::False]",
         "[icode-block(2,5):    :]",
         "[text:foo:]",
-        "[end-icode-block]",
+        "[end-icode-block:::False]",
         "[setext(4,1):-:6::(3,1)]",
         "[text:Heading:]",
-        "[end-setext::]",
+        "[end-setext:::False]",
         "[icode-block(5,5):    :]",
         "[text:foo:]",
-        "[end-icode-block]",
+        "[end-icode-block:::False]",
         "[tbreak(6,1):-::----]",
     ]
     expected_gfm = """<h1>Heading</h1>
@@ -427,7 +427,7 @@ def test_indented_code_blocks_086():
     expected_tokens = [
         "[icode-block(1,5):    :\n    ]",
         "[text:foo\nbar:    ]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>    foo
 bar
@@ -457,7 +457,7 @@ def test_indented_code_blocks_086a():
     expected_tokens = [
         "[icode-block(1,5):    :\n    ]",
         "[text:foo\nbar:     ]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>     foo
 bar
@@ -487,7 +487,7 @@ def test_indented_code_blocks_086b():
     expected_tokens = [
         "[icode-block(1,5):    :\n    ]",
         "[text:foo\n     bar:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>foo
      bar
@@ -521,7 +521,7 @@ def test_indented_code_blocks_087():
         "[BLANK(2,1):    ]",
         "[icode-block(3,5):    :]",
         "[text:foo:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
         "[BLANK(4,1):    ]",
     ]
     expected_gfm = """<pre><code>foo
@@ -547,7 +547,11 @@ def test_indented_code_blocks_088():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """    foo  """
-    expected_tokens = ["[icode-block(1,5):    :]", "[text:foo  :]", "[end-icode-block]"]
+    expected_tokens = [
+        "[icode-block(1,5):    :]",
+        "[text:foo  :]",
+        "[end-icode-block:::True]",
+    ]
     expected_gfm = """<pre><code>foo\a\a
 </code></pre>""".replace(
         "\a", " "

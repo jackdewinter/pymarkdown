@@ -29,7 +29,7 @@ def test_raw_html_632():
         "[raw-html:a]",
         "[raw-html:bab]",
         "[raw-html:c2c]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><a><bab><c2c></p>"""
 
@@ -53,7 +53,12 @@ def test_raw_html_633():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """<a/><b2/>"""
-    expected_tokens = ["[para(1,1):]", "[raw-html:a/]", "[raw-html:b2/]", "[end-para]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        "[raw-html:a/]",
+        "[raw-html:b2/]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<p><a/><b2/></p>"""
 
     # Act
@@ -81,7 +86,7 @@ data="foo" >"""
         "[para(1,1):\n]",
         "[raw-html:a  /]",
         '[raw-html:b2\ndata="foo" ]',
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><a  /><b2
 data="foo" ></p>"""
@@ -111,7 +116,7 @@ _boolean zoop:33=zoop:33 />"""
         "[para(1,1):\n]",
         """[raw-html:a foo="bar" bam = 'baz <em>"</em>'
 _boolean zoop:33=zoop:33 /]""",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><a foo="bar" bam = 'baz <em>"</em>'
 _boolean zoop:33=zoop:33 /></p>"""
@@ -140,7 +145,7 @@ def test_raw_html_636():
         "[para(1,1):]",
         "[text:Foo :]",
         '[raw-html:responsive-image src="foo.jpg" /]',
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>Foo <responsive-image src="foo.jpg" /></p>"""
 
@@ -169,7 +174,7 @@ def test_raw_html_637():
         "[text:\a<\a&lt;\a33\a>\a&gt;\a \a<\a&lt;\a:]",
         "[text:__:]",
         "[text:\a>\a&gt;\a:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;33&gt; &lt;__&gt;</p>"""
 
@@ -198,7 +203,7 @@ def test_raw_html_638():
         "[text:\a<\a&lt;\aa h:]",
         "[text:*:]",
         '[text:#ref=\a"\a&quot;\ahi\a"\a&quot;\a\a>\a&gt;\a:]',
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;a h*#ref=&quot;hi&quot;&gt;</p>"""
 
@@ -225,7 +230,7 @@ def test_raw_html_639():
     expected_tokens = [
         "[para(1,1):]",
         "[text:\a<\a&lt;\aa href=\a\"\a&quot;\ahi'\a>\a&gt;\a \a<\a&lt;\aa href=hi'\a>\a&gt;\a:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;a href=&quot;hi'&gt; &lt;a href=hi'&gt;</p>"""
 
@@ -252,7 +257,7 @@ def test_raw_html_639a():
     expected_tokens = [
         "[para(1,1):]",
         '[text:\a<\a&lt;\aa href=\'hi\a"\a&quot;\a\a>\a&gt;\a \a<\a&lt;\aa href=hi\a"\a&quot;\a\a>\a&gt;\a:]',
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;a href='hi&quot;&gt; &lt;a href=hi&quot;&gt;</p>"""
 
@@ -282,7 +287,7 @@ bim!bop />"""
     expected_tokens = [
         "[para(1,1):\n\n\n]",
         "[text:\a<\a&lt;\a a\a>\a&gt;\a\a<\a&lt;\a\nfoo\a>\a&gt;\a\a<\a&lt;\abar/ \a>\a&gt;\a\n\a<\a&lt;\afoo bar=baz\nbim!bop /\a>\a&gt;\a::\n\n\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt; a&gt;&lt;
 foo&gt;&lt;bar/ &gt;
@@ -312,7 +317,7 @@ def test_raw_html_641():
     expected_tokens = [
         "[para(1,1):]",
         "[text:\a<\a&lt;\aa href='bar'title=title\a>\a&gt;\a:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;a href='bar'title=title&gt;</p>"""
 
@@ -340,7 +345,7 @@ def test_raw_html_642():
         "[para(1,1):]",
         "[raw-html:/a]",
         "[raw-html:/foo ]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p></a></foo ></p>"""
 
@@ -364,7 +369,11 @@ def test_raw_html_642a():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """</>"""
-    expected_tokens = ["[para(1,1):]", "[text:\a<\a&lt;\a/\a>\a&gt;\a:]", "[end-para]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text:\a<\a&lt;\a/\a>\a&gt;\a:]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<p>&lt;/&gt;</p>"""
 
     # Act
@@ -390,7 +399,7 @@ def test_raw_html_643():
     expected_tokens = [
         "[para(1,1):]",
         '[text:\a<\a&lt;\a/a href=\a"\a&quot;\afoo\a"\a&quot;\a\a>\a&gt;\a:]',
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;/a href=&quot;foo&quot;&gt;</p>"""
 
@@ -419,7 +428,7 @@ comment - with hyphen -->"""
         "[para(1,1):\n]",
         "[text:foo :]",
         "[raw-html:!-- this is a\ncomment - with hyphen --]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo <!-- this is a
 comment - with hyphen --></p>"""
@@ -447,7 +456,7 @@ def test_raw_html_645():
     expected_tokens = [
         "[para(1,1):]",
         "[text:foo \a<\a&lt;\a!-- not a comment -- two hyphens --\a>\a&gt;\a:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo &lt;!-- not a comment -- two hyphens --&gt;</p>"""
 
@@ -476,11 +485,11 @@ foo <!-- foo--->"""
     expected_tokens = [
         "[para(1,1):]",
         "[text:foo \a<\a&lt;\a!--\a>\a&gt;\a foo --\a>\a&gt;\a:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:foo \a<\a&lt;\a!-- foo---\a>\a&gt;\a:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo &lt;!--&gt; foo --&gt;</p>
 <p>foo &lt;!-- foo---&gt;</p>"""
@@ -509,7 +518,7 @@ def test_raw_html_647():
         "[para(1,1):]",
         "[text:foo :]",
         "[raw-html:?php echo $a; ?]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo <?php echo $a; ?></p>"""
 
@@ -537,7 +546,7 @@ def test_raw_html_648():
         "[para(1,1):]",
         "[text:foo :]",
         "[raw-html:!ELEMENT br EMPTY]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo <!ELEMENT br EMPTY></p>"""
 
@@ -564,7 +573,7 @@ def test_raw_html_648a():
     expected_tokens = [
         "[para(1,1):]",
         "[text:foo \a<\a&lt;\a!ELEMENT\a>\a&gt;\a:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo &lt;!ELEMENT&gt;</p>"""
 
@@ -592,7 +601,7 @@ def test_raw_html_649():
         "[para(1,1):]",
         "[text:foo :]",
         "[raw-html:![CDATA[>&<]]]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo <![CDATA[>&<]]></p>"""
 
@@ -620,7 +629,7 @@ def test_raw_html_650():
         "[para(1,1):]",
         "[text:foo :]",
         '[raw-html:a href="&ouml;"]',
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo <a href="&ouml;"></p>"""
 
@@ -648,7 +657,7 @@ def test_raw_html_651():
         "[para(1,1):]",
         "[text:foo :]",
         '[raw-html:a href="\\*"]',
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo <a href="\\*"></p>"""
 
@@ -675,7 +684,7 @@ def test_raw_html_652():
     expected_tokens = [
         "[para(1,1):]",
         '[text:\a<\a&lt;\aa href=\a"\a&quot;\a\\\b\a"\a&quot;\a\a"\a&quot;\a\a>\a&gt;\a:]',
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;a href=&quot;&quot;&quot;&gt;</p>"""
 

@@ -527,8 +527,8 @@ class ListBlockProcessor:
                         ind = last_list_index
                         found_owning_list = parser_state.token_stack[ind]
                 else:
-                    if parser_state.token_stack[ind].is_list:
-                        found_owning_list = parser_state.token_stack[ind]
+                    assert parser_state.token_stack[ind].is_list
+                    found_owning_list = parser_state.token_stack[ind]
 
                 if found_owning_list:
                     LOGGER.debug(">>in list>>")
@@ -726,7 +726,7 @@ class ListBlockProcessor:
                 str(parser_state.token_stack[last_list_index]),
             )
             container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
-                parser_state
+                parser_state, was_forced=True
             )
         LOGGER.debug("container_level_tokens>>%s", str(container_level_tokens))
 

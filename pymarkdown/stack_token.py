@@ -44,14 +44,16 @@ class StackToken:
             )
         return NotImplemented
 
-    def generate_close_token(self, extracted_whitespace=None):
+    def generate_close_token(self, extracted_whitespace=None, was_forced=False):
         """
         Generate the token emitted to close off the current stack token
         """
 
         assert self.stack_link_definition != self.type_name
 
-        return EndMarkdownToken(self.type_name, extracted_whitespace, None, None)
+        return EndMarkdownToken(
+            self.type_name, extracted_whitespace, None, None, was_forced
+        )
 
     @property
     def is_document(self):

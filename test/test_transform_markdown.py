@@ -20,12 +20,12 @@ def test_transform_with_debug_on():
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:`one:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[li(2,1):2::]",
         "[para(2,3):]",
         "[text:two`:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
 
     # Act
@@ -48,12 +48,12 @@ def test_transform_with_debug_off():
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:`one:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[li(2,1):2::]",
         "[para(2,3):]",
         "[text:two`:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
 
     # Act

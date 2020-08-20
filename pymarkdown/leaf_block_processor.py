@@ -621,8 +621,16 @@ class LeafBlockProcessor:
             extracted_whitespace,
         )
         if start_char:
+            # TODO why not use close?
+            force_paragraph_close_if_present = False
+            if this_bq_count == 0 and stack_bq_count > 0:
+                force_paragraph_close_if_present = True
             if parser_state.token_stack[-1].is_paragraph:
-                new_tokens.append(parser_state.token_stack[-1].generate_close_token())
+                new_tokens.append(
+                    parser_state.token_stack[-1].generate_close_token(
+                        was_forced=force_paragraph_close_if_present
+                    )
+                )
                 del parser_state.token_stack[-1]
             if this_bq_count == 0 and stack_bq_count > 0:
                 new_tokens, _, _ = parser_state.close_open_blocks_fn(
@@ -630,6 +638,7 @@ class LeafBlockProcessor:
                     destination_array=new_tokens,
                     only_these_blocks=[BlockQuoteStackToken],
                     include_block_quotes=True,
+                    was_forced=True,
                 )
             new_tokens.append(
                 ThematicBreakMarkdownToken(
@@ -727,6 +736,7 @@ class LeafBlockProcessor:
                     extracted_whitespace_at_end,
                     extracted_whitespace_before_end,
                     None,
+                    False,
                 )
                 end_token.start_markdown_token = start_token
                 new_tokens.append(end_token)
@@ -781,6 +791,7 @@ class LeafBlockProcessor:
                         extracted_whitespace,
                         extra_whitespace_after_setext,
                         None,
+                        False,
                     )
                 )
                 token_index = len(parser_state.token_document) - 1

@@ -27,7 +27,7 @@ def test_inlines_307():
         "[para(1,1):]",
         "[icode-span:hi:`::]",
         "[text:lo`:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><code>hi</code>lo`</p>"""
 

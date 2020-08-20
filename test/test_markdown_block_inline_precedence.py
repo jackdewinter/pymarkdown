@@ -28,12 +28,12 @@ def test_block_inline_precedence_012():
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:`one:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[li(2,1):2::]",
         "[para(2,3):]",
         "[text:two`:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>`one</li>

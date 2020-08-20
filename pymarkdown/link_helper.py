@@ -989,7 +989,7 @@ class LinkHelper:
                 after_title_whitespace,
             )
             token_to_append = EndMarkdownToken(
-                MarkdownToken.token_inline_link, "", "", None
+                MarkdownToken.token_inline_link, "", "", None, False
             )
         else:
             assert start_text == LinkHelper.image_start_sequence

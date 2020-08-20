@@ -19,7 +19,7 @@ def test_tables_extension_198():
     expected_tokens = [
         "[para(1,1):\n\n]",
         "[text:| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
 
     # Act
@@ -44,7 +44,7 @@ bar | baz"""
     expected_tokens = [
         "[para(1,1):\n\n]",
         "[text:| abc | defghi |\n:-: | -----------:\nbar | baz::\n\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
 
     # Act
@@ -74,9 +74,9 @@ def test_tables_extension_200():
         "[text: az |\n| b ::\n]",
         "[emphasis:2:*]",
         "[text:\\\b|:]",
-        "[end-emphasis::2:*]",
+        "[end-emphasis::2:*:False]",
         "[text: im |:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
 
     # Act
@@ -102,12 +102,12 @@ def test_tables_extension_201():
     expected_tokens = [
         "[para(1,1):\n\n]",
         "[text:| abc | def |\n| --- | --- |\n| bar | baz |::\n\n]",
-        "[end-para]",
+        "[end-para:::True]",
         "[block-quote(4,1)::> ]",
         "[para(4,3):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
 
     # Act
@@ -135,11 +135,11 @@ bar"""
     expected_tokens = [
         "[para(1,1):\n\n\n]",
         "[text:| abc | def |\n| --- | --- |\n| bar | baz |\nbar::\n\n\n]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(5,1):]",
         "[para(6,1):]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
 
     # Act
@@ -164,7 +164,7 @@ def test_tables_extension_203():
     expected_tokens = [
         "[para(1,1):\n\n]",
         "[text:| abc | def |\n| --- |\n| bar |::\n\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
 
     # Act
@@ -190,7 +190,7 @@ def test_tables_extension_204():
     expected_tokens = [
         "[para(1,1):\n\n\n]",
         "[text:| abc | def |\n| --- | --- |\n| bar |\n| bar | baz | boo |::\n\n\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
 
     # Act
@@ -214,7 +214,7 @@ def test_tables_extension_205():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text:| abc | def |\n| --- | --- |::\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
 
     # Act

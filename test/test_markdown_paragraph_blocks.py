@@ -28,11 +28,11 @@ bbb"""
     expected_tokens = [
         "[para(1,1):]",
         "[text:aaa:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:bbb:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>aaa</p>
 <p>bbb</p>"""
@@ -64,11 +64,11 @@ ddd"""
     expected_tokens = [
         "[para(1,1):\n]",
         "[text:aaa\nbbb::\n]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):\n]",
         "[text:ccc\nddd::\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>aaa
 bbb</p>
@@ -101,12 +101,12 @@ bbb"""
     expected_tokens = [
         "[para(1,1):]",
         "[text:aaa:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[BLANK(3,1):]",
         "[para(4,1):]",
         "[text:bbb:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>aaa</p>
 <p>bbb</p>"""
@@ -132,7 +132,7 @@ def test_paragraph_blocks_192():
     transformer = TransformToGfm()
     source_markdown = """  aaa
  bbb"""
-    expected_tokens = ["[para(1,3):  \n ]", "[text:aaa\nbbb::\n]", "[end-para]"]
+    expected_tokens = ["[para(1,3):  \n ]", "[text:aaa\nbbb::\n]", "[end-para:::True]"]
     expected_gfm = """<p>aaa
 bbb</p>"""
 
@@ -161,7 +161,7 @@ def test_paragraph_blocks_193():
     expected_tokens = [
         "[para(1,1):\n             \n                                       ]",
         "[text:aaa\nbbb\nccc::\n\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>aaa
 bbb
@@ -188,7 +188,7 @@ def test_paragraph_blocks_194():
     transformer = TransformToGfm()
     source_markdown = """   aaa
 bbb"""
-    expected_tokens = ["[para(1,4):   \n]", "[text:aaa\nbbb::\n]", "[end-para]"]
+    expected_tokens = ["[para(1,4):   \n]", "[text:aaa\nbbb::\n]", "[end-para:::True]"]
     expected_gfm = """<p>aaa
 bbb</p>"""
 
@@ -216,10 +216,10 @@ bbb"""
     expected_tokens = [
         "[icode-block(1,5):    :]",
         "[text:aaa:]",
-        "[end-icode-block]",
+        "[end-icode-block:::False]",
         "[para(2,1):]",
         "[text:bbb:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<pre><code>aaa
 </code></pre>
@@ -253,7 +253,7 @@ bbb     """.replace(
         "[text:aaa:]",
         "[hard-break:     ]",
         "[text:\nbbb::\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>aaa<br />
 bbb</p>"""
@@ -284,7 +284,7 @@ bbb\t\t\t\t\t"""
         "[text:aaa:]",
         "[hard-break:                    ]",
         "[text:\nbbb::\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>aaa<br />
 bbb</p>"""

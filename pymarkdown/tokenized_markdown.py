@@ -140,6 +140,7 @@ class TokenizedMarkdown:
                     include_block_quotes=True,
                     include_lists=True,
                     caller_can_handle_requeue=True,
+                    was_forced=True,
                 )
                 if tokens_from_line and not self.tokenized_document:
                     self.tokenized_document.extend(tokens_from_line)
@@ -160,6 +161,8 @@ class TokenizedMarkdown:
                     ParserHelper.make_value_visible(lines_to_requeue),
                 )
             else:
+                LOGGER.debug(">>>>%s", str(self.tokenized_document))
+
                 if not token_to_use or not token_to_use.strip():
                     LOGGER.debug("call __parse_blocks_pass>>handle_blank_line")
                     (
@@ -186,6 +189,7 @@ class TokenizedMarkdown:
                         requeue_line_info.force_ignore_first_as_lrd
                     )
 
+                LOGGER.debug("<<<<%s", str(self.tokenized_document))
             line_number, ignore_link_definition_start = TokenizedMarkdown.__xx(
                 line_number, lines_to_requeue, requeue, force_ignore_first_as_lrd
             )
@@ -253,7 +257,7 @@ class TokenizedMarkdown:
 
         return token_to_use, did_start_close, did_started_close
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-locals
     @staticmethod
     def __close_open_blocks(
         parser_state,
@@ -263,6 +267,7 @@ class TokenizedMarkdown:
         include_lists=False,
         until_this_index=-1,
         caller_can_handle_requeue=False,
+        was_forced=False,
     ):
         """
         Close any open blocks that are currently on the stack.
@@ -274,7 +279,10 @@ class TokenizedMarkdown:
         if destination_array:
             new_tokens = destination_array
 
+        LOGGER.debug("cob-start>>%s", str(parser_state.token_stack))
         while not parser_state.token_stack[-1].is_document:
+
+            was_close_forced = was_forced
             LOGGER.debug("cob>>%s", str(parser_state.token_stack))
             if only_these_blocks:
                 LOGGER.debug("cob-only-type>>%s", str(only_these_blocks))
@@ -300,6 +308,7 @@ class TokenizedMarkdown:
                 )
                 if until_this_index >= len(parser_state.token_stack):
                     break
+                was_close_forced = True
 
             if parser_state.token_stack[-1].was_link_definition_started:
                 LOGGER.debug(
@@ -344,22 +353,26 @@ class TokenizedMarkdown:
                 assert not did_pause_lrd
             else:
                 adjusted_tokens = TokenizedMarkdown.__remove_top_element_from_stack(
-                    parser_state
+                    parser_state, was_close_forced
                 )
 
             new_tokens.extend(adjusted_tokens)
+
+        LOGGER.debug("cob-end>>%s", str(parser_state.token_stack))
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
-        # pylint: enable=too-many-arguments
+
+    # pylint: enable=too-many-arguments,too-many-locals
 
     @staticmethod
-    def __remove_top_element_from_stack(parser_state):
+    def __remove_top_element_from_stack(parser_state, was_forced):
         """
         Once it is decided that we need to remove the top element from the stack,
         make sure to do it uniformly.
         """
 
         new_tokens = []
-        LOGGER.debug("cob->te->%s", str(parser_state.token_stack[-1]))
+        LOGGER.debug("cob->top_element->%s", str(parser_state.token_stack[-1]))
+        LOGGER.debug("cob->was_forced->%s", str(was_forced))
         extra_elements = []
         if parser_state.token_stack[-1].is_indented_code_block:
             extra_elements.extend(
@@ -368,7 +381,9 @@ class TokenizedMarkdown:
                 )
             )
 
-        new_tokens.append(parser_state.token_stack[-1].generate_close_token())
+        new_tokens.append(
+            parser_state.token_stack[-1].generate_close_token(was_forced=was_forced)
+        )
         new_tokens.extend(extra_elements)
         del parser_state.token_stack[-1]
         return new_tokens
@@ -460,6 +475,7 @@ class TokenizedMarkdown:
                 parser_state,
                 only_these_blocks=close_only_these_blocks,
                 include_block_quotes=do_include_block_quotes,
+                was_forced=True,
             )
 
         LOGGER.debug("new_tokens>>%s", str(new_tokens))

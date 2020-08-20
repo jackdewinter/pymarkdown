@@ -80,6 +80,7 @@
 
 ## Bugs - Block Quote
 
+- leaf block prc#624 - why 2 separate?
 - block quotes that start and stop i.e. > then >> then > then >>>, etc.
 - "# TODO add case with >" for tests
 - 228 and 229 - what is the proper line/col for ">>>"?
@@ -91,6 +92,8 @@
 - blank line ending a list is parsed wrong into tokens
   - >>stack_count>>0>>#9:[end-ulist]
   - should be end and then blank, as the blank is outside of the list
+  - 233 and 235, should blank and end-list tokens be reversed?
+- does post processing for Markdown transformer need to be complicated
 - CommonMark and how handles non-initial cases for list starts
 - 269 and 305, and variations
   - whitespace is not 100% correct
@@ -103,6 +106,7 @@
 - 256 with other list types for last instead of just li
 - 292x with sublists, does start sooner?
 - 292x with ordered lists?
+- 2-3 levels of lists with lazy continuation lines
 
 ## Bugs - Tokenization
 

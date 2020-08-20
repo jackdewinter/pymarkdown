@@ -228,16 +228,6 @@ class InlineHelper:
         return inline_response
 
     @staticmethod
-    def lookup_named_entity(entity_to_lookup):
-        """
-        Lookup the given entity in the global lookup table.
-        """
-        found_entity_entry = None
-        if entity_to_lookup in InlineHelper.__entity_map:
-            found_entity_entry = InlineHelper.__entity_map[entity_to_lookup]
-        return found_entity_entry
-
-    @staticmethod
     def handle_backslashes(source_text, add_text_signature=True):
         """
         Handle the processing of backslashes for anything other than the text

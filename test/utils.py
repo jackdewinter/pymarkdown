@@ -115,7 +115,7 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
     original_markdown, avoid_processing = transformer.transform(actual_tokens)
 
     if avoid_processing:
-        print("Processing of xx avoided")
+        print("Comparison of generated Markdown against original Markdown shipped.")
     else:
         print(
             "\n-=-=-\nExpected\n-=-=-\n-->"

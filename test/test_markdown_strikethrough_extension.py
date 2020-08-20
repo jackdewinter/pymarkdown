@@ -42,11 +42,11 @@ new paragraph~~."""
     expected_tokens = [
         "[para(1,1):]",
         "[text:This ~~has a:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:new paragraph~~.:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
 
     # Act

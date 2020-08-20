@@ -31,7 +31,7 @@ def test_character_references_321():
     expected_tokens = [
         "[para(1,1):\n\n]",
         "[text:\a&nbsp;\a\u00A0\a \a&amp;\a\a&\a&amp;\a\a \a&copy;\a©\a \a&AElig;\aÆ\a \a&Dcaron;\aĎ\a\n\a&frac34;\a¾\a \a&HilbertSpace;\aℋ\a \a&DifferentialD;\aⅆ\a\n\a&ClockwiseContourIntegral;\a∲\a \a&ngE;\a≧̸\a::\n\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>\u00A0 &amp; © Æ Ď
 ¾ ℋ ⅆ
@@ -60,7 +60,7 @@ def test_character_references_322():
     expected_tokens = [
         "[para(1,1):]",
         "[text:\a&#35;\a#\a \a&#1234;\aӒ\a \a&#992;\aϠ\a \a&#0;\a�\a:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p># Ӓ Ϡ �</p>"""
 
@@ -87,7 +87,7 @@ def test_character_references_323():
     expected_tokens = [
         "[para(1,1):]",
         '[text:\a&#X22;\a\a"\a&quot;\a\a \a&#XD06;\aആ\a \a&#xcab;\aಫ\a:]',
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&quot; ആ ಫ</p>"""
 
@@ -117,7 +117,7 @@ def test_character_references_324():
     expected_tokens = [
         "[para(1,1):\n\n\n]",
         "[text:\a&\a&amp;\anbsp \a&\a&amp;\ax; \a&\a&amp;\a#; \a&\a&amp;\a#x;\n\a&\a&amp;\a#87654321;\n\a&\a&amp;\a#abcdef0;\n\a&\a&amp;\aThisIsNotDefined; \a&\a&amp;\ahi?;::\n\n\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;
 &amp;#87654321;
@@ -147,7 +147,7 @@ def test_character_references_324a():
     expected_tokens = [
         "[para(1,1):]",
         "[text:\a&\a&amp;\a:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&amp;</p>"""
 
@@ -174,7 +174,7 @@ def test_character_references_325():
     expected_tokens = [
         "[para(1,1):]",
         "[text:\a&\a&amp;\acopy:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&amp;copy</p>"""
 
@@ -201,7 +201,7 @@ def test_character_references_326():
     expected_tokens = [
         "[para(1,1):]",
         "[text:\a&\a&amp;\aMadeUpEntity;:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>&amp;MadeUpEntity;</p>"""
 
@@ -228,7 +228,7 @@ def test_character_references_327():
     expected_tokens = [
         "[html-block(1,1)]",
         '[text:<a href="&ouml;&ouml;.html">:]',
-        "[end-html-block]",
+        "[end-html-block:::True]",
     ]
     expected_gfm = """<a href="&ouml;&ouml;.html">"""
 
@@ -256,8 +256,8 @@ def test_character_references_328():
         "[para(1,1):]",
         '[link:inline:/f%C3%B6%C3%B6:föö:/f&ouml;&ouml;:f&ouml;&ouml;::foo:False:":: :]',
         "[text:foo:]",
-        "[end-link::]",
-        "[end-para]",
+        "[end-link:::False]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>"""
 
@@ -285,8 +285,8 @@ def test_character_references_328a():
         "[para(1,1):]",
         '[link:inline:/f%C3%B6%C3%B6:föö:/f&ouml;&ouml;:f&ouml;&ouml;::f&ouml;&ouml;:False:":: :]',
         "[text:f\a&ouml;\aö\a\a&ouml;\aö\a:]",
-        "[end-link::]",
-        "[end-para]",
+        "[end-link:::False]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/f%C3%B6%C3%B6" title="föö">föö</a></p>"""
 
@@ -316,8 +316,8 @@ def test_character_references_329():
         "[para(1,1):]",
         "[link:shortcut:/f%C3%B6%C3%B6:föö::::foo:::::]",
         "[text:foo:]",
-        "[end-link::]",
-        "[end-para]",
+        "[end-link:::False]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/f%C3%B6%C3%B6:/f&ouml;&ouml;: :föö:"f&ouml;&ouml;":]',
     ]
@@ -349,7 +349,7 @@ foo
     expected_tokens = [
         "[fcode-block(1,1):`:3:föö:f&ouml;&ouml;:::: ]",
         "[text:foo:]",
-        "[end-fcode-block::3]",
+        "[end-fcode-block::3:False]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<pre><code class="language-föö">foo
@@ -378,7 +378,7 @@ def test_character_references_331():
     expected_tokens = [
         "[para(1,1):]",
         "[icode-span:f\a&\a&amp;\aouml;\a&\a&amp;\aouml;:`::]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><code>f&amp;ouml;&amp;ouml;</code></p>"""
 
@@ -405,7 +405,7 @@ def test_character_references_332():
     expected_tokens = [
         "[icode-block(1,5):    :]",
         "[text:f\a&\a&amp;\aouml;f\a&\a&amp;\aouml;:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>f&amp;ouml;f&amp;ouml;
 </code></pre>"""
@@ -436,8 +436,8 @@ def test_character_references_333():
         "[text:\a&#42;\a*\afoo\a&#42;\a*\a\n::\n]",
         "[emphasis:1:*]",
         "[text:foo:]",
-        "[end-emphasis::1:*]",
-        "[end-para]",
+        "[end-emphasis::1:*:False]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>*foo*
 <em>foo</em></p>"""
@@ -467,13 +467,13 @@ def test_character_references_334():
     expected_tokens = [
         "[para(1,1):]",
         "[text:\a&#42;\a*\a foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[ulist(3,1):*::2:]",
         "[para(3,3):]",
         "[text:foo:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<p>* foo</p>
 <ul>
@@ -503,7 +503,7 @@ def test_character_references_335():
     expected_tokens = [
         "[para(1,1):]",
         "[text:foo\a&#10;\a\n\a\a&#10;\a\n\abar:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo
 
@@ -532,7 +532,7 @@ def test_character_references_336():
     expected_tokens = [
         "[para(1,1):]",
         "[text:\a&#9;\a\t\afoo:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>\tfoo</p>"""
 
@@ -562,7 +562,7 @@ def test_character_references_337():
         "[text:a:]",
         "[text:]:]",
         '[text:(url \a&quot;\a\a"\a&quot;\a\atit\a&quot;\a\a"\a&quot;\a\a):]',
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>[a](url &quot;tit&quot;)</p>"""
 

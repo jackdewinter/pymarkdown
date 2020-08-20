@@ -32,17 +32,17 @@ with two lines.
     expected_tokens = [
         "[para(1,1):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(3,1):]",
         "[icode-block(4,5):    :]",
         "[text:indented code:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
         "[BLANK(5,1):]",
         "[block-quote(6,1)::> ]",
         "[para(6,3):]",
         "[text:A block quote.:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<p>A paragraph
 with two lines.</p>
@@ -81,18 +81,18 @@ def test_list_blocks_232():
         "[olist(1,1):.:1:4::    \n    ]",
         "[para(1,5):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(3,1):]",
         "[icode-block(4,9):    :]",
         "[text:indented code:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
         "[BLANK(5,1):]",
         "[block-quote(6,5):    :    > ]",
         "[para(6,7):]",
         "[text:A block quote.:]",
-        "[end-para]",
-        "[end-block-quote]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -132,12 +132,12 @@ def test_list_blocks_233():
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:one:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
-        "[end-ulist]",
+        "[end-ulist:::True]",
         "[para(3,2): ]",
         "[text:two:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<ul>
 <li>one</li>
@@ -145,7 +145,7 @@ def test_list_blocks_233():
 <p>two</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -170,12 +170,12 @@ def test_list_blocks_234():
         "[ulist(1,1):-::2::  ]",
         "[para(1,3):]",
         "[text:one:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,3):]",
         "[text:two:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -210,12 +210,12 @@ def test_list_blocks_235():
         "[ulist(1,2):-::6: ]",
         "[para(1,7):]",
         "[text:one:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
-        "[end-ulist]",
+        "[end-ulist:::True]",
         "[icode-block(3,5):    :]",
         "[text:two: ]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<ul>
 <li>one</li>
@@ -249,12 +249,12 @@ def test_list_blocks_236():
         "[ulist(1,2):-::6: :      ]",
         "[para(1,7):]",
         "[text:one:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,7):]",
         "[text:two:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -335,8 +335,8 @@ def test_list_blocks_238():
         "[para:]",
         "[text:bar:]",
         "[text:baz:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <blockquote>
@@ -372,11 +372,11 @@ def test_list_blocks_239():
     expected_tokens = [
         "[para(1,1):]",
         "[text:-one:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:2.two:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>-one</p>
 <p>2.two</p>"""
@@ -408,13 +408,13 @@ def test_list_blocks_240():
         "[ulist(1,1):-::2::  ]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[BLANK(3,1):]",
         "[para(4,3):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -455,22 +455,22 @@ def test_list_blocks_241():
         "[olist(1,1):.:1:4::    \n    \n    \n    ]",
         "[para(1,5):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[fcode-block(3,5):`:3::::::]",
         "[text:bar:]",
-        "[end-fcode-block::3]",
+        "[end-fcode-block::3:False]",
         "[BLANK(6,1):]",
         "[para(7,5):]",
         "[text:baz:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(8,1):]",
         "[block-quote(9,5):    :    > ]",
         "[para(9,7):]",
         "[text:bam:]",
-        "[end-para]",
-        "[end-block-quote]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -513,12 +513,12 @@ def test_list_blocks_242():
         "[ulist(1,1):-::2::  \n  ]",
         "[para(1,3):]",
         "[text:Foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[icode-block(3,7):    :\n\n\n    ]",
         "[text:bar\n\x03\n\x03\nbaz:]",
-        "[end-icode-block]",
-        "[end-ulist]",
+        "[end-icode-block:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -555,8 +555,8 @@ def test_list_blocks_243():
         "[olist(1,1):.:123456789:11:]",
         "[para(1,12):]",
         "[text:ok:]",
-        "[end-para]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol start="123456789">
 <li>ok</li>
@@ -582,7 +582,11 @@ def test_list_blocks_244():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """1234567890. not ok"""
-    expected_tokens = ["[para(1,1):]", "[text:1234567890. not ok:]", "[end-para]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text:1234567890. not ok:]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<p>1234567890. not ok</p>"""
 
     # Act
@@ -609,8 +613,8 @@ def test_list_blocks_245():
         "[olist(1,1):.:0:3:]",
         "[para(1,4):]",
         "[text:ok:]",
-        "[end-para]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol start="0">
 <li>ok</li>
@@ -640,8 +644,8 @@ def test_list_blocks_246():
         "[olist(1,1):.:003:5:]",
         "[para(1,6):]",
         "[text:ok:]",
-        "[end-para]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol start="3">
 <li>ok</li>
@@ -667,7 +671,7 @@ def test_list_blocks_247():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """-1. not ok"""
-    expected_tokens = ["[para(1,1):]", "[text:-1. not ok:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:-1. not ok:]", "[end-para:::True]"]
     expected_gfm = """<p>-1. not ok</p>"""
 
     # Act
@@ -696,12 +700,12 @@ def test_list_blocks_248():
         "[ulist(1,1):-::2::  ]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[icode-block(3,7):    :]",
         "[text:bar:]",
-        "[end-icode-block]",
-        "[end-ulist]",
+        "[end-icode-block:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -737,12 +741,12 @@ def test_list_blocks_248a():
         "[ulist(1,1):-::2::  ]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,6):   ]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -777,12 +781,12 @@ def test_list_blocks_249():
         "[olist(1,3):.:10:7:  :       ]",
         "[para(1,8):\x04\x04\x04]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[icode-block(3,12):    :]",
         "[text:bar:]",
-        "[end-icode-block]",
-        "[end-olist]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol start="10">
 <li>
@@ -819,15 +823,15 @@ paragraph
     expected_tokens = [
         "[icode-block(1,5):    :]",
         "[text:indented code:]",
-        "[end-icode-block]",
+        "[end-icode-block:::False]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:paragraph:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(4,1):]",
         "[icode-block(5,5):    :]",
         "[text:more code:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>indented code
 </code></pre>
@@ -863,16 +867,16 @@ def test_list_blocks_251():
         "[olist(1,1):.:1:3::   \n   ]",
         "[icode-block(1,8):    :]",
         "[text:indented code:]",
-        "[end-icode-block]",
+        "[end-icode-block:::False]",
         "[BLANK(2,1):]",
         "[para(3,4):]",
         "[text:paragraph:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(4,1):]",
         "[icode-block(5,8):    :]",
         "[text:more code:]",
-        "[end-icode-block]",
-        "[end-olist]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -912,16 +916,16 @@ def test_list_blocks_252():
         "[olist(1,1):.:1:3::   \n   ]",
         "[icode-block(1,8):    :]",
         "[text:indented code: ]",
-        "[end-icode-block]",
+        "[end-icode-block:::False]",
         "[BLANK(2,1):]",
         "[para(3,4):]",
         "[text:paragraph:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(4,1):]",
         "[icode-block(5,8):    :]",
         "[text:more code:]",
-        "[end-icode-block]",
-        "[end-olist]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -958,11 +962,11 @@ bar"""
     expected_tokens = [
         "[para(1,4):   ]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo</p>
 <p>bar</p>"""
@@ -993,12 +997,12 @@ def test_list_blocks_254():
         "[ulist(1,1):-::5:]",
         "[para(1,6):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
-        "[end-ulist]",
+        "[end-ulist:::True]",
         "[para(3,3):  ]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<ul>
 <li>foo</li>
@@ -1031,12 +1035,12 @@ def test_list_blocks_255():
         "[ulist(1,1):-::3::   ]",
         "[para(1,4):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,4):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -1077,18 +1081,18 @@ def test_list_blocks_256():
         "[BLANK(1,2):]",
         "[para(2,3):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[li(3,1):2::]",
         "[BLANK(3,2):]",
         "[fcode-block(4,3):`:3::::::]",
         "[text:bar:]",
-        "[end-fcode-block::3]",
+        "[end-fcode-block::3:False]",
         "[li(7,1):2::]",
         "[BLANK(7,2):]",
         "[icode-block(8,7):    :]",
         "[text:baz:]",
-        "[end-icode-block]",
-        "[end-ulist]",
+        "[end-icode-block:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>foo</li>
@@ -1130,8 +1134,8 @@ def test_list_blocks_257():
         "[BLANK(1,2):   ]",
         "[para(2,3):]",
         "[text:foo:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>foo</li>
@@ -1163,8 +1167,8 @@ def test_list_blocks_257a():
         "[BLANK(1,2):]",
         "[para(2,3):]",
         "[text:foo:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>foo</li>
@@ -1196,8 +1200,8 @@ def test_list_blocks_257b():
         "[BLANK(1,3):]",
         "[para(2,4):]",
         "[text:foo:]",
-        "[end-para]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>foo</li>
@@ -1228,11 +1232,11 @@ def test_list_blocks_258():
     expected_tokens = [
         "[ulist(1,1):-::2:]",
         "[BLANK(1,2):]",
-        "[end-ulist]",
+        "[end-ulist:::True]",
         "[BLANK(2,1):]",
         "[para(3,3):  ]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<ul>
 <li></li>
@@ -1265,14 +1269,14 @@ def test_list_blocks_259():
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[li(2,1):2::]",
         "[BLANK(2,2):]",
         "[li(3,1):2::]",
         "[para(3,3):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>foo</li>
@@ -1308,14 +1312,14 @@ def test_list_blocks_260():
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[li(2,1):2::]",
         "[BLANK(2,2):   ]",
         "[li(3,1):2::]",
         "[para(3,3):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>foo</li>
@@ -1349,14 +1353,14 @@ def test_list_blocks_261():
         "[olist(1,1):.:1:3:]",
         "[para(1,4):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[li(2,1):3::2]",
         "[BLANK(2,3):]",
         "[li(3,1):3::3]",
         "[para(3,4):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>foo</li>
@@ -1384,7 +1388,7 @@ def test_list_blocks_262():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """*"""
-    expected_tokens = ["[ulist(1,1):*::2:]", "[BLANK(1,2):]", "[end-ulist]"]
+    expected_tokens = ["[ulist(1,1):*::2:]", "[BLANK(1,2):]", "[end-ulist:::True]"]
     expected_gfm = """<ul>
 <li></li>
 </ul>"""
@@ -1409,7 +1413,7 @@ def test_list_blocks_262a():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """1."""
-    expected_tokens = ["[olist(1,1):.:1:3:]", "[BLANK(1,3):]", "[end-olist]"]
+    expected_tokens = ["[olist(1,1):.:1:3:]", "[BLANK(1,3):]", "[end-olist:::True]"]
     expected_gfm = """<ol>
 <li></li>
 </ol>"""
@@ -1442,11 +1446,11 @@ foo
         "[para(1,1):\n]",
         "[text:foo\n::\n]",
         "[text:*:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):\n]",
         "[text:foo\n1.::\n]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>foo
 *</p>
@@ -1482,18 +1486,18 @@ def test_list_blocks_264():
         "[olist(1,2):.:1:5: :     \n     ]",
         "[para(1,6):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(3,1):]",
         "[icode-block(4,10):    :]",
         "[text:indented code:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
         "[BLANK(5,1):]",
         "[block-quote(6,6):     :     > ]",
         "[para(6,8):]",
         "[text:A block quote.:]",
-        "[end-para]",
-        "[end-block-quote]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -1536,18 +1540,18 @@ def test_list_blocks_265():
         "[olist(1,3):.:1:6:  :      \n      ]",
         "[para(1,7):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(3,1):]",
         "[icode-block(4,11):    :]",
         "[text:indented code:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
         "[BLANK(5,1):]",
         "[block-quote(6,7):      :      > ]",
         "[para(6,9):]",
         "[text:A block quote.:]",
-        "[end-para]",
-        "[end-block-quote]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -1590,18 +1594,18 @@ def test_list_blocks_266():
         "[olist(1,4):.:1:7:   :       \n       ]",
         "[para(1,8):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(3,1):]",
         "[icode-block(4,12):    :]",
         "[text:indented code:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
         "[BLANK(5,1):]",
         "[block-quote(6,8):       :       > ]",
         "[para(6,10):]",
         "[text:A block quote.:]",
-        "[end-para]",
-        "[end-block-quote]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -1643,7 +1647,7 @@ def test_list_blocks_267():
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n\n    \n\n    ]",
         "[text:1.  A paragraph\n    with two lines.\n\x03\n        indented code\n\x03\n    \a>\a&gt;\a A block quote.:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>1.  A paragraph
     with two lines.
@@ -1682,18 +1686,18 @@ def test_list_blocks_268():
         "[olist(1,3):.:1:6:  : \n      ]",
         "[para(1,7):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(3,1):]",
         "[icode-block(4,11):    :]",
         "[text:indented code:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
         "[BLANK(5,1):]",
         "[block-quote(6,7):      :      > ]",
         "[para(6,9):]",
         "[text:A block quote.:]",
-        "[end-para]",
-        "[end-block-quote]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -1732,8 +1736,8 @@ def test_list_blocks_269x():
         "[olist(1,3):.:1:6:  :    ]",
         "[para(1,7):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
-        "[end-para]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>A paragraph
@@ -1765,8 +1769,8 @@ def test_list_blocks_269a():
         "[olist(1,3):.:1:6:  :   ]",
         "[para(1,7):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
-        "[end-para]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>A paragraph
@@ -1798,8 +1802,8 @@ def test_list_blocks_269b():
         "[olist(1,3):.:1:6:  :     ]",
         "[para(1,7):\n]",
         "[text:A paragraph\nwith two lines.::\n]",
-        "[end-para]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>A paragraph
@@ -1832,8 +1836,8 @@ def test_list_blocks_269c():
         "[olist(1,3):.:1:6:  :     \n    ]",
         "[para(1,7):\n\n]",
         "[text:A paragraph\nwith more than\nthe two lines.::\n\n]",
-        "[end-para]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>A paragraph
@@ -1869,8 +1873,8 @@ continued here."""
         "[para(1,8):]",
         "[text:bar:]",
         "[text:baz:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <ol>
@@ -1911,8 +1915,8 @@ def test_list_blocks_271():
         "[para(1,8):]",
         "[text:bar:]",
         "[text:baz:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <ol>
@@ -1952,23 +1956,23 @@ def test_list_blocks_272():
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[ulist(2,3):-::4:  ]",
         "[para(2,5):]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[ulist(3,5):-::6:    ]",
         "[para(3,7):]",
         "[text:baz:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[ulist(4,7):-::8:      ]",
         "[para(4,9):]",
         "[text:boo:]",
-        "[end-para]",
-        "[end-ulist]",
-        "[end-ulist]",
-        "[end-ulist]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>foo
@@ -2013,20 +2017,20 @@ def test_list_blocks_273():
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[li(2,2):3: :]",
         "[para(2,4):]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[li(3,3):4:  :]",
         "[para(3,5):]",
         "[text:baz:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[li(4,4):5:   :]",
         "[para(4,6):]",
         "[text:boo:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>foo</li>
@@ -2060,13 +2064,13 @@ def test_list_blocks_274():
         "[olist(1,1):):10:4:]",
         "[para(1,5):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[ulist(2,5):-::6:    ]",
         "[para(2,7):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol start="10">
 <li>foo
@@ -2102,18 +2106,18 @@ def test_list_blocks_274a():
         "[olist(1,1):):1:3:]",
         "[para(1,4):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[ulist(2,4):-::5:   ]",
         "[para(2,6):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
         "[olist(3,1):.:1:3:]",
         "[para(3,4):]",
         "[text:baz:]",
-        "[end-para]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>foo
@@ -2152,18 +2156,18 @@ def test_list_blocks_274b():
         "[olist(1,1):):1:3:]",
         "[para(1,4):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[ulist(2,4):-::5:   ]",
         "[para(2,6):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
         "[ulist(3,1):-::2:]",
         "[para(3,3):]",
         "[text:baz:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ol>
 <li>foo
@@ -2202,18 +2206,18 @@ def test_list_blocks_274c():
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[olist(2,3):):1:5:  ]",
         "[para(2,6):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-olist]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-ulist:::True]",
         "[olist(3,1):):1:3:]",
         "[para(3,4):]",
         "[text:baz:]",
-        "[end-para]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ul>
 <li>foo
@@ -2251,13 +2255,13 @@ def test_list_blocks_275():
         "[olist(1,1):):10:4:]",
         "[para(1,5):]",
         "[text:foo:]",
-        "[end-para]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
         "[ulist(2,4):-::5:   ]",
         "[para(2,6):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ol start="10">
 <li>foo</li>
@@ -2291,9 +2295,9 @@ def test_list_blocks_276():
         "[ulist(1,3):-::4:  ]",
         "[para(1,5):]",
         "[text:foo:]",
-        "[end-para]",
-        "[end-ulist]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -2329,10 +2333,10 @@ def test_list_blocks_277():
         "[olist(1,6):.:2:8:     ]",
         "[para(1,9):]",
         "[text:foo:]",
-        "[end-para]",
-        "[end-olist]",
-        "[end-ulist]",
-        "[end-olist]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -2373,15 +2377,15 @@ def test_list_blocks_278():
         "[ulist(1,1):-::2::  \n  ]",
         "[atx(1,3):1:0:]",
         "[text:Foo: ]",
-        "[end-atx::]",
+        "[end-atx:::False]",
         "[li(2,1):2::]",
         "[setext(3,3):-:3::(2,3)]",
         "[text:Bar:]",
-        "[end-setext::]",
+        "[end-setext:::False]",
         "[para(4,3):]",
         "[text:baz:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>

@@ -26,7 +26,7 @@ def test_tabs_001():
     expected_tokens = [
         "[icode-block(1,2):\t:]",
         "[text:foo\tbaz\t\tbim:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>foo\tbaz\t\tbim
 </code></pre>"""
@@ -54,7 +54,7 @@ def test_tabs_002():
     expected_tokens = [
         "[icode-block(1,4):  \t:]",
         "[text:foo\tbaz\t\tbim:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>foo\tbaz\t\tbim
 </code></pre>"""
@@ -82,7 +82,7 @@ def test_tabs_002a():
     expected_tokens = [
         "[icode-block(1,5):    :]",
         "[text:foo    baz        bim:  ]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>  foo    baz        bim
 </code></pre>"""
@@ -114,11 +114,11 @@ def test_tabs_002b():
     expected_tokens = [
         "[icode-block(1,5):    :\n    ]",
         "[text:a simple\n  indented code block:]",
-        "[end-icode-block]",
+        "[end-icode-block:::False]",
         "[tbreak(3,1):-::---]",
         "[icode-block(4,5):    :\n    ]",
         "[text:a simple\n  indented code block:  ]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>a simple
   indented code block
@@ -152,7 +152,7 @@ def test_tabs_003():
     expected_tokens = [
         "[icode-block(1,5):    :\n    ]",
         "[text:a\ta\nὐ\ta:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>a\ta
 ὐ\ta
@@ -185,12 +185,12 @@ def test_tabs_004x():
         "[ulist(1,3):-::4:  :\t]",
         "[para(1,5):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,2):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -226,12 +226,12 @@ def test_tabs_004a():
         "[ulist(1,3):-::4:  :    ]",
         "[para(1,5):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,5):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -267,12 +267,12 @@ def test_tabs_005():
         "[ulist(1,1):-::2::\t]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[icode-block(3,2):\t\t:]",
         "[text:bar:  ]",
-        "[end-icode-block]",
-        "[end-ulist]",
+        "[end-icode-block:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -307,8 +307,8 @@ def test_tabs_006():
         "[block-quote(1,1)::> ]",
         "[icode-block(1,3):\t\t:]",
         "[text:foo:  ]",
-        "[end-icode-block]",
-        "[end-block-quote]",
+        "[end-icode-block:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <pre><code>  foo
@@ -339,8 +339,8 @@ def test_tabs_006a():
         "[block-quote(1,1)::> ]",
         "[icode-block(1,5):  \t:]",
         "[text:foo:  ]",
-        "[end-icode-block]",
-        "[end-block-quote]",
+        "[end-icode-block:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <pre><code>  foo
@@ -371,8 +371,8 @@ def test_tabs_006b():
         "[block-quote(1,1)::> ]",
         "[icode-block(1,5):\t  :]",
         "[text:foo:  ]",
-        "[end-icode-block]",
-        "[end-block-quote]",
+        "[end-icode-block:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <pre><code>  foo
@@ -403,8 +403,8 @@ def test_tabs_006c():
         "[block-quote(1,1)::> ]",
         "[icode-block(1,7):    :]",
         "[text:foo:  ]",
-        "[end-icode-block]",
-        "[end-block-quote]",
+        "[end-icode-block:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <pre><code>  foo
@@ -435,8 +435,8 @@ def test_tabs_007():
         "[ulist(1,1):-::2:]",
         "[icode-block(1,3):\t\t:]",
         "[text:foo:  ]",
-        "[end-icode-block]",
-        "[end-ulist]",
+        "[end-icode-block:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -469,8 +469,8 @@ def test_tabs_007a():
         "[olist(1,1):):1:3:]",
         "[icode-block(1,4):\t\t:]",
         "[text:foo: ]",
-        "[end-icode-block]",
-        "[end-olist]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -503,8 +503,8 @@ def test_tabs_007b():
         "[olist(1,1):):01:4:]",
         "[icode-block(1,5):\t\t:]",
         "[text:foo:]",
-        "[end-icode-block]",
-        "[end-olist]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol start="1">
 <li>
@@ -537,8 +537,8 @@ def test_tabs_007c():
         "[olist(1,1):):001:5:]",
         "[icode-block(1,6):\t\t:]",
         "[text:foo:   ]",
-        "[end-icode-block]",
-        "[end-olist]",
+        "[end-icode-block:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol start="1">
 <li>
@@ -572,7 +572,7 @@ def test_tabs_008():
     expected_tokens = [
         "[icode-block(1,5):    :\n\t]",
         "[text:foo\nbar:]",
-        "[end-icode-block]",
+        "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>foo
 bar
@@ -605,18 +605,18 @@ def test_tabs_009():
         "[ulist(1,2):-::3: ]",
         "[para(1,4):]",
         "[text:foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[ulist(2,4):-::5:   ]",
         "[para(2,6):]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[ulist(3,3):-::7:\t ]",
         "[para(3,5):]",
         "[text:baz:]",
-        "[end-para]",
-        "[end-ulist]",
-        "[end-ulist]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>foo
@@ -650,7 +650,7 @@ def test_tabs_010():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """#\tFoo"""
-    expected_tokens = ["[atx(1,1):1:0:]", "[text:Foo:    ]", "[end-atx::]"]
+    expected_tokens = ["[atx(1,1):1:0:]", "[text:Foo:    ]", "[end-atx:::False]"]
     expected_gfm = """<h1>Foo</h1>"""
 
     # Act

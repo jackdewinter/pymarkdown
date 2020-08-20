@@ -28,7 +28,7 @@ def test_emphasis_406():
         "[text:__:]",
         "[text:foo bar :]",
         "[text:__:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>__foo bar __</p>"""
 
@@ -58,7 +58,7 @@ def test_emphasis_407():
         "[text:(:]",
         "[text:__:]",
         "[text:foo):]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>__(__foo)</p>"""
 
@@ -88,10 +88,10 @@ def test_emphasis_408():
         "[text:(:]",
         "[emphasis:2:_]",
         "[text:foo:]",
-        "[end-emphasis::2:_]",
+        "[end-emphasis::2:_:False]",
         "[text:):]",
-        "[end-emphasis::1:_]",
-        "[end-para]",
+        "[end-emphasis::1:_:False]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><em>(<strong>foo</strong>)</em></p>"""
 
@@ -121,7 +121,7 @@ def test_emphasis_409():
         "[text:foo:]",
         "[text:__:]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>__foo__bar</p>"""
 
@@ -151,7 +151,7 @@ def test_emphasis_410():
         "[text:пристаням:]",
         "[text:__:]",
         "[text:стремятся:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>__пристаням__стремятся</p>"""
 
@@ -183,8 +183,8 @@ def test_emphasis_411():
         "[text:bar:]",
         "[text:__:]",
         "[text:baz:]",
-        "[end-emphasis::2:_]",
-        "[end-para]",
+        "[end-emphasis::2:_:False]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><strong>foo__bar__baz</strong></p>"""
 
@@ -212,9 +212,9 @@ def test_emphasis_412():
         "[para(1,1):]",
         "[emphasis:2:_]",
         "[text:(bar):]",
-        "[end-emphasis::2:_]",
+        "[end-emphasis::2:_:False]",
         "[text:.:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><strong>(bar)</strong>.</p>"""
 

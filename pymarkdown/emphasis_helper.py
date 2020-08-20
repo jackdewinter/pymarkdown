@@ -150,6 +150,7 @@ class EmphasisHelper:
                 "",
                 str(emphasis_length) + ":" + emphasis_character,
                 None,
+                False,
             ),
         )
         end_index_in_blocks += 1

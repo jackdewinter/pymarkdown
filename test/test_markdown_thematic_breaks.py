@@ -54,7 +54,7 @@ def test_thematic_breaks_014():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """+++"""
-    expected_tokens = ["[para(1,1):]", "[text:+++:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:+++:]", "[end-para:::True]"]
     expected_gfm = """<p>+++</p>"""
 
     # Act
@@ -77,7 +77,7 @@ def test_thematic_breaks_015():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """==="""
-    expected_tokens = ["[para(1,1):]", "[text:===:]", "[end-para]"]
+    expected_tokens = ["[para(1,1):]", "[text:===:]", "[end-para:::True]"]
     expected_gfm = """<p>===</p>"""
 
     # Act
@@ -108,7 +108,7 @@ __"""
         "[text:**:]",
         "[text:\n::\n]",
         "[text:__:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>--
 **
@@ -165,7 +165,11 @@ def test_thematic_breaks_018():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """    ***"""
-    expected_tokens = ["[icode-block(1,5):    :]", "[text:***:]", "[end-icode-block]"]
+    expected_tokens = [
+        "[icode-block(1,5):    :]",
+        "[text:***:]",
+        "[end-icode-block:::True]",
+    ]
     expected_gfm = """<pre><code>***
 </code></pre>"""
 
@@ -194,7 +198,7 @@ def test_thematic_breaks_019():
         "[para(1,1):\n    ]",
         "[text:Foo\n::\n]",
         "[text:***:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>Foo
 ***</p>"""
@@ -348,15 +352,15 @@ a------
         "[text: :]",
         "[text:_:]",
         "[text: a:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text:a------:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[BLANK(4,1):]",
         "[para(5,1):]",
         "[text:---a---:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>_ _ _ _ a</p>
 <p>a------</p>
@@ -386,8 +390,8 @@ def test_thematic_breaks_026():
         "[para(1,2): ]",
         "[emphasis:1:*]",
         "[text:-:]",
-        "[end-emphasis::1:*]",
-        "[end-para]",
+        "[end-emphasis::1:*:False]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p><em>-</em></p>"""
 
@@ -417,14 +421,14 @@ def test_thematic_breaks_027():
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
         "[text:foo:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
         "[tbreak(2,1):*::***]",
         "[ulist(3,1):-::2:]",
         "[para(3,3):]",
         "[text:bar:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>foo</li>
@@ -459,11 +463,11 @@ bar"""
     expected_tokens = [
         "[para(1,1):]",
         "[text:Foo:]",
-        "[end-para]",
+        "[end-para:::False]",
         "[tbreak(2,1):*::***]",
         "[para(3,1):]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<p>Foo</p>
 <hr />
@@ -494,10 +498,10 @@ bar"""
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text:Foo:]",
-        "[end-setext::]",
+        "[end-setext:::False]",
         "[para(3,1):]",
         "[text:bar:]",
-        "[end-para]",
+        "[end-para:::True]",
     ]
     expected_gfm = """<h2>Foo</h2>
 <p>bar</p>"""
@@ -528,14 +532,14 @@ def test_thematic_breaks_030():
         "[ulist(1,1):*::2:]",
         "[para(1,3):]",
         "[text:Foo:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
         "[tbreak(2,1):*::* * *]",
         "[ulist(3,1):*::2:]",
         "[para(3,3):]",
         "[text:Bar:]",
-        "[end-para]",
-        "[end-ulist]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>Foo</li>
@@ -572,10 +576,10 @@ def test_thematic_breaks_031():
         "[ulist(2,1):-::2:]",
         "[para(2,3):]",
         "[text:Foo:]",
-        "[end-para]",
+        "[end-para:::True]",
         "[li(3,1):2::]",
         "[tbreak(3,3):*::* * *]",
-        "[end-ulist]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>Foo</li>

@@ -773,11 +773,12 @@ class ContainerBlockProcessor:
         ):
             pre_tokens.append(parser_state.token_stack[-1].generate_close_token())
             del parser_state.token_stack[-1]
-            pre_tokens.extend(
-                ContainerBlockProcessor.extract_markdown_tokens_back_to_blank_line(
-                    parser_state
-                )
+
+            extracted_blank_line_tokens = ContainerBlockProcessor.extract_markdown_tokens_back_to_blank_line(
+                parser_state
             )
+            extracted_blank_line_tokens.reverse()
+            pre_tokens.extend(extracted_blank_line_tokens)
         return pre_tokens
 
     @staticmethod
