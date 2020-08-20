@@ -181,8 +181,9 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
             print("skipping last")
 
     print("Total lines in source document: " + str(number_of_lines))
+
     __validate_block_token_height(
-        last_token, None, number_of_lines, True, None, actual_tokens, token_stack
+        last_token, None, number_of_lines + 1, True, last_token_index, actual_tokens, token_stack
     )
 
     assert not token_stack
@@ -264,8 +265,6 @@ def __validate_block_token_height(
     print("last_token_index:" + ParserHelper.make_value_visible(last_token_index))
     print("last_line_number:" + ParserHelper.make_value_visible(last_line_number))
     print("was_last:" + ParserHelper.make_value_visible(was_last))
-    if was_last:
-        return
 
     skip_check = False
     if current_token and current_token.token_name == MarkdownToken.token_blank_line:
@@ -276,6 +275,7 @@ def __validate_block_token_height(
         ):
             skip_check = True
 
+    delta = last_token.line_number
     if last_token.token_name == MarkdownToken.token_paragraph:
         token_height = 1 + __count_newlines_in_text(last_token.extracted_whitespace)
     elif last_token.token_name == MarkdownToken.token_indented_code_block:
@@ -324,12 +324,12 @@ def __validate_block_token_height(
     ):
         token_height = 1
     elif last_token.token_name == MarkdownToken.token_setext_heading:
-        token_height = last_token.line_number - last_token.original_line_number
+        token_height = last_token.line_number - last_token.original_line_number + 1
+        delta = last_token.original_line_number
     else:
         assert False, "Token " + last_token.token_name + " not supported."
 
     if not skip_check:
-        delta = last_token.line_number
         print(
             "delta:"
             + ParserHelper.make_value_visible(delta)
