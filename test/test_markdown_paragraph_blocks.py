@@ -27,11 +27,11 @@ def test_paragraph_blocks_189():
 bbb"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:aaa:]",
+        "[text(1,1):aaa:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[text:bbb:]",
+        "[text(3,1):bbb:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>aaa</p>
@@ -63,17 +63,59 @@ ccc
 ddd"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text:aaa\nbbb::\n]",
+        "[text(1,1):aaa\nbbb::\n]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):\n]",
-        "[text:ccc\nddd::\n]",
+        "[text(4,1):ccc\nddd::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>aaa
 bbb</p>
 <p>ccc
 ddd</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_blocks_190a():
+    """
+    Test case 189:  Paragraphs can contain multiple lines, but no blank lines:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """aaa
+bbb
+ccc
+
+ddd
+eee
+fff"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):aaa\nbbb\nccc::\n\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[para(5,1):\n\n]",
+        "[text(5,1):ddd\neee\nfff::\n\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>aaa
+bbb
+ccc</p>
+<p>ddd
+eee
+fff</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -100,12 +142,12 @@ def test_paragraph_blocks_191():
 bbb"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:aaa:]",
+        "[text(1,1):aaa:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[BLANK(3,1):]",
         "[para(4,1):]",
-        "[text:bbb:]",
+        "[text(4,1):bbb:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>aaa</p>
@@ -132,7 +174,11 @@ def test_paragraph_blocks_192():
     transformer = TransformToGfm()
     source_markdown = """  aaa
  bbb"""
-    expected_tokens = ["[para(1,3):  \n ]", "[text:aaa\nbbb::\n]", "[end-para:::True]"]
+    expected_tokens = [
+        "[para(1,3):  \n ]",
+        "[text(1,3):aaa\nbbb::\n]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<p>aaa
 bbb</p>"""
 
@@ -160,7 +206,7 @@ def test_paragraph_blocks_193():
                                        ccc"""
     expected_tokens = [
         "[para(1,1):\n             \n                                       ]",
-        "[text:aaa\nbbb\nccc::\n\n]",
+        "[text(1,1):aaa\nbbb\nccc::\n\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>aaa
@@ -188,7 +234,11 @@ def test_paragraph_blocks_194():
     transformer = TransformToGfm()
     source_markdown = """   aaa
 bbb"""
-    expected_tokens = ["[para(1,4):   \n]", "[text:aaa\nbbb::\n]", "[end-para:::True]"]
+    expected_tokens = [
+        "[para(1,4):   \n]",
+        "[text(1,4):aaa\nbbb::\n]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<p>aaa
 bbb</p>"""
 
@@ -215,10 +265,10 @@ def test_paragraph_blocks_195():
 bbb"""
     expected_tokens = [
         "[icode-block(1,5):    :]",
-        "[text:aaa:]",
+        "[text(1,5):aaa:]",
         "[end-icode-block:::False]",
         "[para(2,1):]",
-        "[text:bbb:]",
+        "[text(2,1):bbb:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<pre><code>aaa
@@ -250,16 +300,16 @@ bbb     """.replace(
     )
     expected_tokens = [
         "[para(1,1):\n:     ]",
-        "[text:aaa:]",
+        "[text(1,1):aaa:]",
         "[hard-break:     ]",
-        "[text:\nbbb::\n]",
+        "[text(2,1):\nbbb::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>aaa<br />
 bbb</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -281,9 +331,9 @@ def test_paragraph_blocks_196a():
 bbb\t\t\t\t\t"""
     expected_tokens = [
         "[para(1,1):\n:\t\t\t\t\t]",
-        "[text:aaa:]",
+        "[text(1,1):aaa:]",
         "[hard-break:                    ]",
-        "[text:\nbbb::\n]",
+        "[text(2,1):\nbbb::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>aaa<br />

@@ -765,7 +765,7 @@ class HtmlHelper:
 
     @staticmethod
     def check_normal_html_block_end(
-        parser_state, line_to_parse, start_index, extracted_whitespace,
+        parser_state, line_to_parse, start_index, extracted_whitespace, position_marker
     ):
         """
         Check to see if we have encountered the end of the current HTML block
@@ -773,7 +773,11 @@ class HtmlHelper:
         """
 
         new_tokens = [
-            TextMarkdownToken(line_to_parse[start_index:], extracted_whitespace)
+            TextMarkdownToken(
+                line_to_parse[start_index:],
+                extracted_whitespace,
+                position_marker=position_marker,
+            )
         ]
 
         is_block_terminated = False

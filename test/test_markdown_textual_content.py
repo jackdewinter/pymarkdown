@@ -24,7 +24,11 @@ def test_textual_content_671():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """hello $.;'there"""
-    expected_tokens = ["[para(1,1):]", "[text:hello $.;'there:]", "[end-para:::True]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):hello $.;'there:]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<p>hello $.;'there</p>"""
 
     # Act
@@ -47,7 +51,7 @@ def test_textual_content_672():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """Foo χρῆν"""
-    expected_tokens = ["[para(1,1):]", "[text:Foo χρῆν:]", "[end-para:::True]"]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):Foo χρῆν:]", "[end-para:::True]"]
     expected_gfm = """<p>Foo χρῆν</p>"""
 
     # Act
@@ -72,7 +76,7 @@ def test_textual_content_673():
     source_markdown = """Multiple     spaces"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:Multiple     spaces:]",
+        "[text(1,1):Multiple     spaces:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>Multiple     spaces</p>"""

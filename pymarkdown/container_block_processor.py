@@ -808,6 +808,7 @@ class ContainerBlockProcessor:
                     TextMarkdownToken(
                         position_marker.text_to_parse[position_marker.index_number :],
                         extracted_whitespace,
+                        position_marker=position_marker,
                     )
                 )
                 outer_processed = True
@@ -841,6 +842,7 @@ class ContainerBlockProcessor:
                 position_marker.text_to_parse,
                 position_marker.index_number,
                 extracted_whitespace,
+                position_marker,
             )
             assert html_tokens
             new_tokens.extend(html_tokens)

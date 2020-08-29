@@ -151,6 +151,34 @@ def test_image_link_580d():
 
 
 @pytest.mark.gfm
+def test_image_link_580e():
+    """
+    Test case 580:  (part 1) Syntax for images is like the syntax for links, with one difference
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """![foo](/url "title") abc"""
+    expected_tokens = [
+        "[para(1,1):]",
+        '[image:inline:/url:title:foo::::foo:False:":: :]',
+        "[text(1,21): abc:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><img src="/url" alt="foo" title="title" /> abc</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_image_link_581():
     """
     Test case 581:  (part 2) Syntax for images is like the syntax for links, with one difference
@@ -348,7 +376,7 @@ def test_image_link_587():
     source_markdown = """My ![foo bar](/path/to/train.jpg  "title"   )"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:My :]",
+        "[text(1,1):My :]",
         '[image:inline:/path/to/train.jpg:title:foo bar::::foo bar:False:"::  :   ]',
         "[end-para:::True]",
     ]
@@ -516,6 +544,77 @@ def test_image_link_592():
 
 
 @pytest.mark.gfm
+def test_image_link_592a():
+    """
+    Test case 592:  (part 1) Collapsed:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """![foo][]\a
+
+[foo]: /url "title"
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):: ]",
+        "[image:collapsed:/url:title:foo::::foo:::::]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p><img src="/url" alt="foo" title="title" /></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_image_link_592b():
+    """
+    Test case 592:  (part 1) Collapsed:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """![foo][]\atext
+
+[foo]: /url "title"
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):]",
+        "[image:collapsed:/url:title:foo::::foo:::::]",
+        "[text(1,9): text:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p><img src="/url" alt="foo" title="title" /> text</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_image_link_593():
     """
     Test case 593:  (part 2) Collapsed:
@@ -600,9 +699,9 @@ def test_image_link_595():
     expected_tokens = [
         "[para(1,1):\n]",
         "[image:shortcut:/url:title:foo::::foo:::::]",
-        "[text:\n:: \n]",
-        "[text:[:]",
-        "[text:]:]",
+        "[text(1,7):\n:: \n]",
+        "[text(2,1):[:]",
+        "[text(2,2):]:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         '[link-ref-def(4,1):True::foo:: :/url:: :title:"title":]',
@@ -702,20 +801,20 @@ def test_image_link_598():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[text:![:]",
-        "[text:[:]",
-        "[text:foo:]",
-        "[text:]:]",
-        "[text:]:]",
+        "[text(1,1):![:]",
+        "[text(1,3):[:]",
+        "[text(1,4):foo:]",
+        "[text(1,7):]:]",
+        "[text(1,8):]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[text:[:]",
-        "[text:[:]",
-        "[text:foo:]",
-        "[text:]:]",
-        "[text:]:]",
-        '[text:: /url \a"\a&quot;\atitle\a"\a&quot;\a:]',
+        "[text(3,1):[:]",
+        "[text(3,2):[:]",
+        "[text(3,3):foo:]",
+        "[text(3,6):]:]",
+        "[text(3,7):]:]",
+        '[text(3,8):: /url \a"\a&quot;\atitle\a"\a&quot;\a:]',
         "[end-para:::True]",
         "[BLANK(4,1):]",
     ]
@@ -756,7 +855,7 @@ def test_image_link_599():
     expected_gfm = """<p><img src="/url" alt="Foo" title="title" /></p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -780,8 +879,8 @@ def test_image_link_600():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[text:!\\\b[foo:]",
-        "[text:]:]",
+        "[text(1,1):!\\\b[foo:]",
+        "[text(1,6):]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
@@ -814,9 +913,9 @@ def test_image_link_601():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\\\b!:]",
+        "[text(1,1):\\\b!:]",
         "[link:shortcut:/url:title::::foo:::::]",
-        "[text:foo:]",
+        "[text(1,4):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",

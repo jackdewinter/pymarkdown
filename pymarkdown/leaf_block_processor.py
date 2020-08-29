@@ -560,6 +560,7 @@ class LeafBlockProcessor:
                 TextMarkdownToken(
                     position_marker.text_to_parse[position_marker.index_number :],
                     extracted_whitespace,
+                    position_marker=position_marker,
                 )
             )
         return new_tokens
@@ -729,7 +730,11 @@ class LeafBlockProcessor:
                 )
                 new_tokens.append(start_token)
                 new_tokens.append(
-                    TextMarkdownToken(remaining_line, extracted_whitespace_at_start)
+                    TextMarkdownToken(
+                        remaining_line,
+                        extracted_whitespace_at_start,
+                        position_marker=position_marker,
+                    )
                 )
                 end_token = EndMarkdownToken(
                     "atx",
@@ -911,6 +916,7 @@ class LeafBlockProcessor:
             TextMarkdownToken(
                 position_marker.text_to_parse[position_marker.index_number :],
                 extracted_whitespace,
+                position_marker=position_marker,
             )
         )
         return new_tokens

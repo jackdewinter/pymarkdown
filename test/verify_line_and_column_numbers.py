@@ -9,7 +9,7 @@ from pymarkdown.markdown_token import (
 from pymarkdown.parser_helper import ParserHelper, PositionMarker
 
 
-# pylint: disable=too-many-branches,too-many-statements
+# pylint: disable=too-many-branches,too-many-statements,too-many-locals
 def verify_line_and_column_numbers(source_markdown, actual_tokens):
     """
     Verify that the line numbers and column numbers in tokens are as expected,
@@ -183,12 +183,28 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
     print("Total lines in source document: " + str(number_of_lines))
 
     __validate_block_token_height(
-        last_token, None, number_of_lines + 1, True, last_token_index, actual_tokens, token_stack
+        last_token,
+        None,
+        number_of_lines + 1,
+        True,
+        last_token_index,
+        actual_tokens,
+        token_stack,
     )
+    print(">>last_token:" + ParserHelper.make_value_visible(last_token))
+    next_token_index = last_token_index + 1
+    while next_token_index < len(actual_tokens):
+        print(
+            "-token:" + ParserHelper.make_value_visible(actual_tokens[next_token_index])
+        )
+        next_token_index += 1
+    print("<<[EOL]")
 
     assert not token_stack
     assert not container_block_stack
-    # pylint: enable=too-many-branches,too-many-statements
+
+
+# pylint: enable=too-many-branches,too-many-statements,too-many-locals
 
 
 def __push_to_stack_if_required(token_stack, current_token):
@@ -357,7 +373,14 @@ def __verify_token_height(
         token_stack, current_token
     )
     assert last_token
-    print("current_token:" + ParserHelper.make_value_visible(current_token))
+    print(">>last_token:" + ParserHelper.make_value_visible(last_token))
+    next_token_index = last_token_index + 1
+    while actual_tokens[next_token_index] != current_token:
+        print(
+            "-token:" + ParserHelper.make_value_visible(actual_tokens[next_token_index])
+        )
+        next_token_index += 1
+    print("<<current_token:" + ParserHelper.make_value_visible(current_token))
 
     token_line_number = current_token.line_number
     if current_token.token_name == MarkdownToken.token_setext_heading:

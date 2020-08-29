@@ -29,9 +29,9 @@ baz""".replace(
     )
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text:foo:]",
+        "[text(1,1):foo:]",
         "[hard-break:  ]",
-        "[text:\nbaz::\n]",
+        "[text(2,1):\nbaz::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
@@ -60,9 +60,9 @@ def test_hard_line_breaks_655():
 baz"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text:foo:]",
+        "[text(1,1):foo:]",
         "[hard-break:\\]",
-        "[text:\nbaz:]",
+        "[text(2,1):\nbaz:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
@@ -93,9 +93,9 @@ baz""".replace(
     )
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text:foo:]",
+        "[text(1,1):foo:]",
         "[hard-break:       ]",
-        "[text:\nbaz::\n]",
+        "[text(2,1):\nbaz::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
@@ -126,9 +126,9 @@ def test_hard_line_breaks_657():
     )
     expected_tokens = [
         "[para(1,1):\n     ]",
-        "[text:foo:]",
+        "[text(1,1):foo:]",
         "[hard-break:  ]",
-        "[text:\nbar::\n]",
+        "[text(2,6):\nbar::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
@@ -157,9 +157,9 @@ def test_hard_line_breaks_658():
      bar"""
     expected_tokens = [
         "[para(1,1):\n     ]",
-        "[text:foo:]",
+        "[text(1,1):foo:]",
         "[hard-break:\\]",
-        "[text:\nbar:]",
+        "[text(2,6):\nbar:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
@@ -190,11 +190,11 @@ bar*""".replace(
     )
     expected_tokens = [
         "[para(1,1):\n]",
-        "[emphasis:1:*]",
-        "[text:foo:]",
+        "[emphasis(1,1):1:*]",
+        "[text(1,2):foo:]",
         "[hard-break:  ]",
-        "[text:\nbar::\n]",
-        "[end-emphasis::1:*:False]",
+        "[text(2,1):\nbar::\n]",
+        "[end-emphasis(2,4)::1:*:False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>foo<br />
@@ -225,11 +225,11 @@ bar*""".replace(
     )
     expected_tokens = [
         "[para(1,1):\n]",
-        "[emphasis:1:*]",
-        "[text:foo:]",
+        "[emphasis(1,1):1:*]",
+        "[text(1,2):foo:]",
         "[hard-break:\\]",
-        "[text:\nbar:]",
-        "[end-emphasis::1:*:False]",
+        "[text(2,1):\nbar:]",
+        "[end-emphasis(2,4)::1:*:False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>foo<br />
@@ -375,7 +375,7 @@ def test_hard_line_breaks_665():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """foo\\"""
-    expected_tokens = ["[para(1,1):]", "[text:foo\\:]", "[end-para:::True]"]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):foo\\:]", "[end-para:::True]"]
     expected_gfm = """<p>foo\\</p>"""
 
     # Act
@@ -398,7 +398,7 @@ def test_hard_line_breaks_665a():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """foo \\"""
-    expected_tokens = ["[para(1,1):]", "[text:foo \\:]", "[end-para:::True]"]
+    expected_tokens = ["[para(1,1):]", "[text(1,1):foo \\:]", "[end-para:::True]"]
     expected_gfm = """<p>foo \\</p>"""
 
     # Act
@@ -421,7 +421,7 @@ def test_hard_line_breaks_666():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """foo  """
-    expected_tokens = ["[para(1,1)::  ]", "[text:foo:]", "[end-para:::True]"]
+    expected_tokens = ["[para(1,1)::  ]", "[text(1,1):foo:]", "[end-para:::True]"]
     expected_gfm = """<p>foo</p>"""
 
     # Act
@@ -444,7 +444,7 @@ def test_hard_line_breaks_667():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """### foo\\"""
-    expected_tokens = ["[atx(1,1):3:0:]", "[text:foo\\: ]", "[end-atx:::False]"]
+    expected_tokens = ["[atx(1,1):3:0:]", "[text(1,5):foo\\: ]", "[end-atx:::False]"]
     expected_gfm = """<h3>foo\\</h3>"""
 
     # Act
@@ -467,7 +467,7 @@ def test_hard_line_breaks_668():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """### foo  """
-    expected_tokens = ["[atx(1,1):3:0:]", "[text:foo: ]", "[end-atx:  ::False]"]
+    expected_tokens = ["[atx(1,1):3:0:]", "[text(1,5):foo: ]", "[end-atx:  ::False]"]
     expected_gfm = """<h3>foo</h3>"""
 
     # Act

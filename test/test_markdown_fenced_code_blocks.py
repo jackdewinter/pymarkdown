@@ -29,7 +29,7 @@ def test_fenced_code_blocks_089():
 ```"""
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[text:\a<\a&lt;\a\n \a>\a&gt;\a:]",
+        "[text(2,1):\a<\a&lt;\a\n \a>\a&gt;\a:]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>&lt;
@@ -61,7 +61,7 @@ def test_fenced_code_blocks_090():
 ~~~"""
     expected_tokens = [
         "[fcode-block(1,1):~:3::::::]",
-        "[text:\a<\a&lt;\a\n \a>\a&gt;\a:]",
+        "[text(2,1):\a<\a&lt;\a\n \a>\a&gt;\a:]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>&lt;
@@ -122,7 +122,7 @@ aaa
 ```"""
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[text:aaa\n~~~:]",
+        "[text(2,1):aaa\n~~~:]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>aaa
@@ -154,7 +154,7 @@ aaa
 ~~~"""
     expected_tokens = [
         "[fcode-block(1,1):~:3::::::]",
-        "[text:aaa\n```:]",
+        "[text(2,1):aaa\n```:]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>aaa
@@ -186,7 +186,7 @@ aaa
 ``````"""
     expected_tokens = [
         "[fcode-block(1,1):`:4::::::]",
-        "[text:aaa\n```:]",
+        "[text(2,1):aaa\n```:]",
         "[end-fcode-block::6:False]",
     ]
     expected_gfm = """<pre><code>aaa
@@ -218,7 +218,7 @@ aaa
 ~~~~"""
     expected_tokens = [
         "[fcode-block(1,1):~:4::::::]",
-        "[text:aaa\n~~~:]",
+        "[text(2,1):aaa\n~~~:]",
         "[end-fcode-block::4:False]",
     ]
     expected_gfm = """<pre><code>aaa
@@ -274,7 +274,7 @@ aaa"""
     expected_tokens = [
         "[fcode-block(1,1):`:5::::::]",
         "[BLANK(2,1):]",
-        "[text:```\naaa:]",
+        "[text(3,1):```\naaa:]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<pre><code>
@@ -308,12 +308,12 @@ bbb"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n]",
         "[fcode-block(1,3):`:3::::::]",
-        "[text:aaa:]",
+        "[text(2,3):aaa:]",
         "[end-fcode-block:::True]",
         "[end-block-quote:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):]",
-        "[text:bbb:]",
+        "[text(4,1):bbb:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -348,12 +348,12 @@ bbb"""
     expected_tokens = [
         "[block-quote(1,1)::> \n>\n]",
         "[fcode-block(1,3):`:3::::::]",
-        "[text:aaa:]",
+        "[text(2,2):aaa:]",
         "[end-fcode-block:::True]",
         "[end-block-quote:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):]",
-        "[text:bbb:]",
+        "[text(4,1):bbb:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -363,7 +363,7 @@ bbb"""
 <p>bbb</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -388,12 +388,12 @@ bbb"""
     expected_tokens = [
         "[block-quote(1,1)::> \n>\n]",
         "[fcode-block(1,3):`:3::::::]",
-        "[text:\a>\a&gt;\a aaa:]",
+        "[text(2,2):\a>\a&gt;\a aaa:]",
         "[end-fcode-block:::True]",
         "[end-block-quote:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):]",
-        "[text:bbb:]",
+        "[text(4,1):bbb:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -403,7 +403,7 @@ bbb"""
 <p>bbb</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -431,11 +431,11 @@ bbb"""
         "[end-fcode-block:::True]",
         "[end-block-quote:::True]",
         "[para(2,1):]",
-        "[text:aaa:]",
+        "[text(2,1):aaa:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):]",
-        "[text:bbb:]",
+        "[text(4,1):bbb:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -465,8 +465,10 @@ def test_fenced_code_blocks_099():
     transformer = TransformToGfm()
     source_markdown = """```
 
-  
-```"""
+\a\a
+```""".replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
         "[BLANK(2,1):]",
@@ -526,7 +528,7 @@ aaa
 ```"""
     expected_tokens = [
         "[fcode-block(1,2):`:3::::: :]",
-        "[text:aaa\naaa:\a \a\x03\a]",
+        "[text(2,2):aaa\naaa:\a \a\x03\a]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>aaa
@@ -559,7 +561,7 @@ aaa
   ```"""
     expected_tokens = [
         "[fcode-block(1,3):`:3:::::  :]",
-        "[text:aaa\n\a  \a\x03\aaaa\naaa:]",
+        "[text(2,1):aaa\n\a  \a\x03\aaaa\naaa:]",
         "[end-fcode-block:  :3:False]",
     ]
     expected_gfm = """<pre><code>aaa
@@ -593,7 +595,7 @@ def test_fenced_code_blocks_103():
    ```"""
     expected_tokens = [
         "[fcode-block(1,4):`:3:::::   :]",
-        "[text:aaa\n\a   \a\x03\a aaa\n\a  \a\x03\aaaa:\a   \a\x03\a]",
+        "[text(2,4):aaa\n\a   \a\x03\a aaa\n\a  \a\x03\aaaa:\a   \a\x03\a]",
         "[end-fcode-block:   :3:False]",
     ]
     expected_gfm = """<pre><code>aaa
@@ -625,7 +627,7 @@ def test_fenced_code_blocks_104():
     ```"""
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n    ]",
-        "[text:```\naaa\n```:]",
+        "[text(1,5):```\naaa\n```:]",
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>```
@@ -657,7 +659,7 @@ aaa
   ```"""
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[text:aaa:]",
+        "[text(2,1):aaa:]",
         "[end-fcode-block:  :3:False]",
     ]
     expected_gfm = """<pre><code>aaa
@@ -687,14 +689,14 @@ aaa
   ```"""
     expected_tokens = [
         "[fcode-block(1,4):`:3:::::   :]",
-        "[text:aaa:]",
+        "[text(2,1):aaa:]",
         "[end-fcode-block:  :3:False]",
     ]
     expected_gfm = """<pre><code>aaa
 </code></pre>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -717,7 +719,7 @@ aaa
     ```"""
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[text:aaa\n    ```:]",
+        "[text(2,1):aaa\n    ```:]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<pre><code>aaa
@@ -748,7 +750,7 @@ aaa"""
     expected_tokens = [
         "[para(1,1):\n]",
         "[icode-span: :```::]",
-        """[text:
+        """[text(1,8):
 aaa::\n]""",
         "[end-para:::True]",
     ]
@@ -779,7 +781,7 @@ aaa
 ~~~ ~~"""
     expected_tokens = [
         "[fcode-block(1,1):~:6::::::]",
-        "[text:aaa\n~~~ ~~:]",
+        "[text(2,1):aaa\n~~~ ~~:]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<pre><code>aaa
@@ -812,13 +814,13 @@ bar
 baz"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:foo:]",
+        "[text(1,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(2,1):`:3::::::]",
-        "[text:bar:]",
+        "[text(3,1):bar:]",
         "[end-fcode-block::3:False]",
         "[para(5,1):]",
-        "[text:baz:]",
+        "[text(5,1):baz:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo</p>
@@ -827,7 +829,7 @@ baz"""
 <p>baz</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -853,13 +855,13 @@ bar
 # baz"""
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
-        "[text:foo:]",
+        "[text(1,1):foo:]",
         "[end-setext:::False]",
         "[fcode-block(3,1):~:3::::::]",
-        "[text:bar:]",
+        "[text(4,1):bar:]",
         "[end-fcode-block::3:False]",
         "[atx(6,1):1:0:]",
-        "[text:baz: ]",
+        "[text(6,3):baz: ]",
         "[end-atx:::False]",
     ]
     expected_gfm = """<h2>foo</h2>
@@ -893,7 +895,7 @@ end
 ```"""
     expected_tokens = [
         "[fcode-block(1,1):`:3:ruby:::::]",
-        "[text:def foo(x)\n  return 3\nend:]",
+        "[text(2,1):def foo(x)\n  return 3\nend:]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code class="language-ruby">def foo(x)
@@ -927,7 +929,7 @@ end
 ~~~~~~~"""
     expected_tokens = [
         "[fcode-block(1,1):~:4:ruby:: startline=3 $%@#$:::    ]",
-        "[text:def foo(x)\n  return 3\nend:]",
+        "[text(2,1):def foo(x)\n  return 3\nend:]",
         "[end-fcode-block::7:False]",
     ]
     expected_gfm = """<pre><code class="language-ruby">def foo(x)
@@ -983,7 +985,7 @@ foo"""
     expected_tokens = [
         "[para(1,1):\n]",
         "[icode-span:aa:```: : ]",
-        """[text:
+        """[text(1,11):
 foo::\n]""",
         "[end-para:::True]",
     ]
@@ -1014,7 +1016,7 @@ foo
 ~~~"""
     expected_tokens = [
         "[fcode-block(1,1):~:3:aa:: ``` ~~~::: ]",
-        "[text:foo:]",
+        "[text(2,1):foo:]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code class="language-aa">foo
@@ -1044,7 +1046,7 @@ def test_fenced_code_blocks_117():
 ```"""
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[text:``` aaa:]",
+        "[text(2,1):``` aaa:]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>``` aaa

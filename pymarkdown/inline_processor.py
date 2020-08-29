@@ -7,13 +7,17 @@ from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline_helper import InlineHelper, InlineRequest, InlineResponse
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.markdown_token import (
+    EndMarkdownToken,
     MarkdownToken,
+    MarkdownTokenClass,
     SpecialTextMarkdownToken,
     TextMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
+
+# pylint: disable=too-many-lines
 
 
 # pylint: disable=too-few-public-methods
@@ -78,6 +82,7 @@ class InlineProcessor:
         )
 
     @staticmethod
+    # pylint: disable=too-many-branches, too-many-statements, too-many-nested-blocks
     def parse_inline(coalesced_results):
         """
         Parse and resolve any inline elements.
@@ -88,8 +93,19 @@ class InlineProcessor:
             LOGGER.info(">>%s<<", ParserHelper.make_value_visible(next_token))
         LOGGER.info("-----")
 
+        coalesced_stack = []
+
         coalesced_list = []
         coalesced_list.extend(coalesced_results[0:1])
+
+        current_token = coalesced_results[0]
+        LOGGER.debug("STACK?:%s", ParserHelper.make_value_visible(current_token))
+        if current_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK:
+            LOGGER.debug("STACK:%s", ParserHelper.make_value_visible(coalesced_stack))
+            coalesced_stack.append(current_token)
+            LOGGER.debug("STACK-ADD:%s", ParserHelper.make_value_visible(current_token))
+            LOGGER.debug("STACK:%s", ParserHelper.make_value_visible(coalesced_stack))
+
         for coalesce_index in range(1, len(coalesced_results)):
             if coalesced_results[coalesce_index].is_text and (
                 coalesced_list[-1].is_paragraph
@@ -97,14 +113,65 @@ class InlineProcessor:
                 or coalesced_list[-1].is_atx_heading
                 or coalesced_list[-1].is_code_block
             ):
+                LOGGER.info("coalesced_results:%s<", str(coalesced_list[-1]))
                 if coalesced_list[-1].is_code_block:
                     encoded_text = InlineHelper.append_text(
                         "", coalesced_results[coalesce_index].token_text
                     )
+                    line_number_delta = 0
+                    new_column_number = coalesced_list[-1].column_number
+                    if (
+                        coalesced_list[-1].token_name
+                        == MarkdownToken.token_fenced_code_block
+                    ):
+                        line_number_delta = 1
+                        new_column_number = 1
+
+                        if coalesced_stack:
+                            LOGGER.debug(
+                                "COAL_STACK:%s",
+                                ParserHelper.make_value_visible(coalesced_stack[-1]),
+                            )
+                            assert coalesced_stack[-1].leading_spaces
+                            split_leading_spaces = coalesced_stack[
+                                -1
+                            ].leading_spaces.split("\n")
+                            LOGGER.debug(
+                                "COAL_STACK:%s",
+                                ParserHelper.make_value_visible(split_leading_spaces),
+                            )
+                            assert len(split_leading_spaces) >= 2
+                            LOGGER.info(
+                                "coalesced_stack:%s<",
+                                ParserHelper.make_value_visible(split_leading_spaces),
+                            )
+                            new_column_number += len(split_leading_spaces[1])
+                        else:
+                            leading_whitespace = coalesced_results[
+                                coalesce_index
+                            ].extracted_whitespace
+                            if "\n" in leading_whitespace:
+                                newline_index = leading_whitespace.index("\n")
+                                leading_whitespace = leading_whitespace[0:newline_index]
+                            LOGGER.info(
+                                "leading_whitespace:%s<",
+                                ParserHelper.make_value_visible(leading_whitespace),
+                            )
+                            leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
+                                leading_whitespace
+                            )
+                            LOGGER.info(
+                                "leading_whitespace:%s<",
+                                ParserHelper.make_value_visible(leading_whitespace),
+                            )
+                            new_column_number += len(leading_whitespace)
                     processed_tokens = [
                         TextMarkdownToken(
                             encoded_text,
                             coalesced_results[coalesce_index].extracted_whitespace,
+                            line_number=coalesced_list[-1].line_number
+                            + line_number_delta,
+                            column_number=new_column_number,
                         )
                     ]
                 elif coalesced_list[-1].is_setext:
@@ -126,6 +193,11 @@ class InlineProcessor:
                         ),
                         whitespace_to_recombine=combined_whitespace_text,
                         is_setext=True,
+                        para_space=coalesced_results[
+                            coalesce_index
+                        ].extracted_whitespace,
+                        line_number=coalesced_results[coalesce_index].line_number,
+                        column_number=coalesced_results[coalesce_index].column_number,
                     )
                     LOGGER.debug(
                         "processed_tokens>>%s",
@@ -157,6 +229,10 @@ class InlineProcessor:
                         coalesced_results[coalesce_index].extracted_whitespace.replace(
                             ParserHelper.tab_character, "    "
                         ),
+                        line_number=coalesced_results[coalesce_index].line_number,
+                        column_number=coalesced_results[coalesce_index].column_number
+                        + len(coalesced_results[coalesce_index].extracted_whitespace)
+                        + coalesced_list[-1].hash_count,
                     )
                 else:
                     assert coalesced_list[-1].is_paragraph
@@ -180,11 +256,58 @@ class InlineProcessor:
                         coalesced_results[coalesce_index].token_text.replace(
                             ParserHelper.tab_character, "    "
                         ),
+                        is_para=True,
+                        para_space=coalesced_results[
+                            coalesce_index
+                        ].extracted_whitespace,
+                        line_number=coalesced_results[coalesce_index].line_number,
+                        column_number=coalesced_results[coalesce_index].column_number,
                     )
                 coalesced_list.extend(processed_tokens)
             else:
                 coalesced_list.append(coalesced_results[coalesce_index])
+
+            current_token = coalesced_results[coalesce_index]
+            LOGGER.debug("STACK?:%s", ParserHelper.make_value_visible(current_token))
+            if (
+                current_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK
+                and current_token.token_name != MarkdownToken.token_new_list_item
+            ):
+                LOGGER.debug(
+                    "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
+                )
+                coalesced_stack.append(current_token)
+                LOGGER.debug(
+                    "STACK-ADD:%s", ParserHelper.make_value_visible(current_token)
+                )
+                LOGGER.debug(
+                    "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
+                )
+
+            elif isinstance(current_token, EndMarkdownToken):
+                LOGGER.debug("END:%s", ParserHelper.make_value_visible(current_token))
+                LOGGER.debug(
+                    "END:%s", ParserHelper.make_value_visible(current_token.type_name)
+                )
+                if (
+                    current_token.type_name == MarkdownToken.token_unordered_list_start
+                    or current_token.type_name == MarkdownToken.token_ordered_list_start
+                    or current_token.type_name == MarkdownToken.token_block_quote
+                ):
+                    LOGGER.debug(
+                        "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
+                    )
+                    del coalesced_stack[-1]
+                    LOGGER.debug(
+                        "STACK-REMOVE:%s",
+                        ParserHelper.make_value_visible(current_token),
+                    )
+                    LOGGER.debug(
+                        "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
+                    )
         return coalesced_list
+
+    # pylint: enable=too-many-branches, too-many-statements, too-many-nested-blocks
 
     @staticmethod
     def __handle_inline_special_single_character(inline_request):
@@ -195,6 +318,8 @@ class InlineProcessor:
             1,
             inline_request.remaining_line,
             inline_request.current_string_unresolved,
+            inline_request.line_number,
+            inline_request.column_number,
         )
 
     @staticmethod
@@ -211,6 +336,8 @@ class InlineProcessor:
                 2,
                 inline_request.remaining_line,
                 inline_request.current_string_unresolved,
+                inline_request.line_number,
+                inline_request.column_number,
             )
             assert not inline_response.consume_rest_of_line
         else:
@@ -219,8 +346,7 @@ class InlineProcessor:
             inline_response.new_index = inline_request.next_index + 1
         return inline_response
 
-    # pylint: disable=too-many-arguments
-    # pylint: disable=too-many-locals
+    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
     @staticmethod
     def __handle_inline_special(
         source_text,
@@ -229,6 +355,8 @@ class InlineProcessor:
         special_length,
         remaining_line,
         current_string_unresolved,
+        line_number,
+        column_number,
     ):
         """
         Handle the collection of special inline characters for later processing.
@@ -239,6 +367,7 @@ class InlineProcessor:
         repeat_count = 1
         is_active = True
         consume_rest_of_line = False
+        column_number += len(remaining_line)
         special_sequence = source_text[next_index : next_index + special_length]
         if special_length == 1 and special_sequence in EmphasisHelper.inline_emphasis:
             repeat_count, new_index = ParserHelper.collect_while_character(
@@ -264,6 +393,10 @@ class InlineProcessor:
                 )
                 LOGGER.debug(">>source_text>>%s<<", source_text[next_index:])
                 LOGGER.debug("")
+                old_inline_blocks_count = len(inline_blocks)
+                old_inline_blocks_last_token = None
+                if inline_blocks:
+                    old_inline_blocks_last_token = inline_blocks[-1]
                 (
                     new_index,
                     is_active,
@@ -276,28 +409,60 @@ class InlineProcessor:
                     remaining_line,
                     current_string_unresolved,
                 )
+                LOGGER.debug(">>next_index>>%s<<", str(next_index))
+                LOGGER.debug(">>new_index>>%s<<", str(new_index))
                 LOGGER.debug(">>inline_blocks>>%s<<", str(inline_blocks))
                 LOGGER.debug(">>new_token>>%s<<", str(new_token))
                 LOGGER.debug(">>source_text>>%s<<", source_text[new_index:])
                 LOGGER.debug(">>consume_rest_of_line>>%s<<", str(consume_rest_of_line))
+                LOGGER.debug(
+                    ">>old_inline_blocks_count>>%s<<", str(old_inline_blocks_count)
+                )
+                LOGGER.debug(">>len(inline_blocks)>>%s<<", str(len(inline_blocks)))
+
+                # TODO why does image not return a new token?
+                if (
+                    new_token
+                    or old_inline_blocks_count != len(inline_blocks)
+                    or (
+                        inline_blocks
+                        and old_inline_blocks_last_token != inline_blocks[-1]
+                    )
+                ):
+                    if inline_blocks[-1].token_name == MarkdownToken.token_inline_image:
+                        repeat_count = (new_index - next_index) + len(remaining_line)
+                        LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
+                        LOGGER.debug(">>column_number>>%s<<", str(column_number))
+                        # assert False
+                    else:
+                        repeat_count = new_index - next_index
+                        LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
             else:
                 repeat_count = special_length
                 new_index = next_index + special_length
 
         if not new_token:
             new_token = SpecialTextMarkdownToken(
-                special_sequence, repeat_count, preceding_two, following_two, is_active
+                special_sequence,
+                repeat_count,
+                preceding_two,
+                following_two,
+                is_active,
+                line_number,
+                column_number,
             )
 
+        LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
         inline_response = InlineResponse()
         inline_response.new_string = ""
         inline_response.new_index = new_index
         inline_response.new_tokens = [new_token]
         inline_response.consume_rest_of_line = consume_rest_of_line
+        inline_response.delta_line_number = 0
+        inline_response.delta_column_number = repeat_count
         return inline_response
 
-    # pylint: enable=too-many-arguments
-    # pylint: enable=too-many-locals
+    # pylint: enable=too-many-arguments, too-many-locals, too-many-statements
 
     @staticmethod
     def __recombine_with_whitespace(source_text, whitespace_to_recombine):
@@ -319,13 +484,16 @@ class InlineProcessor:
         return recombined_text
 
     @staticmethod
-    # pylint: disable=too-many-statements
-    # pylint: disable=too-many-locals
+    # pylint: disable=too-many-statements, too-many-locals, too-many-arguments, too-many-branches
     def __process_inline_text_block(
         source_text,
         starting_whitespace="",
         whitespace_to_recombine=None,
         is_setext=False,
+        is_para=False,
+        para_space=None,
+        line_number=0,
+        column_number=0,
     ):
         """
         Process a text block for any inline items.
@@ -345,6 +513,15 @@ class InlineProcessor:
             "__process_inline_text_block>>whitespace_to_recombine>>%s>",
             ParserHelper.make_value_visible(whitespace_to_recombine),
         )
+        if line_number != 0:
+            LOGGER.debug(
+                "__process_inline_text_block>>line_number>>%s>",
+                ParserHelper.make_value_visible(line_number),
+            )
+            LOGGER.debug(
+                "__process_inline_text_block>>column_number>>%s>",
+                ParserHelper.make_value_visible(column_number),
+            )
         if whitespace_to_recombine and " " in whitespace_to_recombine:
             source_text = InlineProcessor.__recombine_with_whitespace(
                 source_text, whitespace_to_recombine
@@ -356,11 +533,22 @@ class InlineProcessor:
             ParserHelper.make_value_visible(source_text),
         )
 
+        last_line_number = line_number
+        last_column_number = column_number
+        LOGGER.debug(
+            ">>Token_start>>%s,%s<<", str(last_line_number), str(last_column_number),
+        )
+
         current_string = ""
         current_string_unresolved = ""
         end_string = ""
 
         inline_response = InlineResponse()
+        fold_space = None
+        LOGGER.debug("__process_inline_text_block>>is_para>>%s", str(is_para))
+        if is_para or is_setext:
+            fold_space = para_space.split("\n")
+        LOGGER.debug("__process_inline_text_block>>fold_space>>%s", str(fold_space))
 
         next_index = ParserHelper.index_any_of(
             source_text,
@@ -375,14 +563,26 @@ class InlineProcessor:
         )
         while next_index != -1:
 
+            LOGGER.debug(
+                "\n\n>>Token_start>>%s,%s<<",
+                str(last_line_number),
+                str(last_column_number),
+            )
             inline_response.clear_fields()
             reset_current_string = False
             whitespace_to_add = None
+
+            was_new_line = False
 
             LOGGER.debug(
                 "__process_inline_text_block>>%s>>%s", str(start_index), str(next_index)
             )
             remaining_line = source_text[start_index:next_index]
+
+            old_inline_blocks_count = len(inline_blocks)
+            old_inline_blocks_last_token = None
+            if inline_blocks:
+                old_inline_blocks_last_token = inline_blocks[-1]
 
             inline_request = InlineRequest(
                 source_text,
@@ -390,14 +590,26 @@ class InlineProcessor:
                 inline_blocks,
                 remaining_line,
                 current_string_unresolved,
+                line_number,
+                column_number,
             )
             if source_text[next_index] in InlineProcessor.__inline_character_handlers:
                 LOGGER.debug("handler(before)>>%s<<", source_text[next_index])
+                LOGGER.debug("column_number>>%s<<", str(column_number))
                 proc_fn = InlineProcessor.__inline_character_handlers[
                     source_text[next_index]
                 ]
                 inline_response = proc_fn(inline_request)
                 LOGGER.debug("handler(after)>>%s<<", source_text[next_index])
+                LOGGER.debug(
+                    "delta_column>>%s<<", str(inline_response.delta_column_number)
+                )
+
+                line_number += inline_response.delta_line_number
+                column_number += inline_response.delta_column_number
+                LOGGER.debug(
+                    "handler(after)>>%s,%s<<", str(line_number), str(column_number)
+                )
             else:
                 assert source_text[next_index] == ParserHelper.newline_character
                 LOGGER.debug(
@@ -420,6 +632,7 @@ class InlineProcessor:
                     ParserHelper.make_value_visible(inline_response.new_tokens),
                 )
                 if not inline_response.new_tokens:
+                    LOGGER.debug("ws")
                     end_string = InlineProcessor.__add_recombined_whitespace(
                         bool(whitespace_to_recombine),
                         source_text,
@@ -427,6 +640,7 @@ class InlineProcessor:
                         end_string,
                         is_setext,
                     )
+                    LOGGER.debug("ws>%s<", ParserHelper.make_value_visible(end_string))
                 LOGGER.debug(
                     "handle_line_end>>%s<<",
                     ParserHelper.make_value_visible(
@@ -437,6 +651,7 @@ class InlineProcessor:
                     "end_string(after)>>%s<<",
                     ParserHelper.make_value_visible(end_string),
                 )
+                was_new_line = True
 
             LOGGER.debug(
                 "new_string-->%s<--",
@@ -461,10 +676,13 @@ class InlineProcessor:
             )
 
             if inline_response.consume_rest_of_line:
+                LOGGER.debug("consume_rest_of_line>>%s<", str(remaining_line))
                 inline_response.new_string = ""
                 reset_current_string = True
                 inline_response.new_tokens = None
+                remaining_line = ""
             else:
+                LOGGER.debug("append_rest_of_line>>%s<", str(remaining_line))
                 current_string = InlineHelper.append_text(
                     current_string, remaining_line
                 )
@@ -493,27 +711,57 @@ class InlineProcessor:
             if inline_response.new_tokens:
                 if current_string:
                     # assert end_string is None
+                    LOGGER.debug(">>>text1")
                     inline_blocks.append(
                         TextMarkdownToken(
                             current_string,
                             starting_whitespace,
                             end_whitespace=end_string,
+                            line_number=last_line_number,
+                            column_number=last_column_number,
                         )
                     )
                     reset_current_string = True
                     starting_whitespace = ""
                     end_string = None
                 elif starting_whitespace:
+                    LOGGER.debug(">>>text2")
                     inline_blocks.append(
                         TextMarkdownToken(
                             ParserHelper.create_replace_with_nothing_marker(
                                 starting_whitespace
                             ),
                             "",
+                            line_number=last_line_number,
+                            column_number=last_column_number,
                         )
                     )
 
                 inline_blocks.extend(inline_response.new_tokens)
+
+            LOGGER.debug(
+                "l/c(before)>>%s,%s<<",
+                ParserHelper.make_value_visible(line_number),
+                ParserHelper.make_value_visible(column_number),
+            )
+            if was_new_line:
+                LOGGER.debug("l/c(before)>>newline")
+                line_number += 1
+                column_number = 1
+                if fold_space:
+                    LOGGER.debug("fold_space(before)>>%s<<", str(fold_space))
+                    fold_space = fold_space[1:]
+                    LOGGER.debug("fold_space(after)>>%s<<", str(fold_space))
+                    column_number += len(fold_space[0])
+
+            else:
+                column_number += len(remaining_line)
+            LOGGER.debug(
+                "l/c(after)>>%s,%s<<",
+                ParserHelper.make_value_visible(line_number),
+                ParserHelper.make_value_visible(column_number),
+            )
+
             LOGGER.debug(
                 "starting_whitespace>>%s<<",
                 ParserHelper.make_value_visible(starting_whitespace),
@@ -521,10 +769,37 @@ class InlineProcessor:
             LOGGER.debug(
                 "inline_blocks>>%s<<", ParserHelper.make_value_visible(inline_blocks),
             )
+            LOGGER.debug(
+                "reset_current_string>>%s<<",
+                ParserHelper.make_value_visible(reset_current_string),
+            )
 
             if reset_current_string:
                 current_string = ""
                 current_string_unresolved = ""
+            LOGGER.debug("pos>>%s,%s<<", str(line_number), str(column_number))
+            LOGGER.debug(
+                "last>>%s,%s<<", str(last_line_number), str(last_column_number)
+            )
+            LOGGER.debug(
+                "old>>%s>>now>>%s<<",
+                str(old_inline_blocks_count),
+                str(len(inline_blocks)),
+            )
+            if old_inline_blocks_count != len(inline_blocks) or (
+                old_inline_blocks_last_token
+                and old_inline_blocks_last_token != inline_blocks[-1]
+            ):
+                last_line_number = line_number
+                last_column_number = column_number
+            LOGGER.debug(
+                "last>>%s,%s<<", str(last_line_number), str(last_column_number)
+            )
+            LOGGER.debug(
+                ">>Token_start>>%s,%s<<",
+                str(last_line_number),
+                str(last_column_number),
+            )
 
             (
                 start_index,
@@ -563,10 +838,11 @@ class InlineProcessor:
             end_string,
             starting_whitespace,
             is_setext,
+            line_number=last_line_number,
+            column_number=last_column_number,
         )
 
-    # pylint: enable=too-many-statements
-    # pylint: enable=too-many-locals
+    # pylint: enable=too-many-statements, too-many-locals, too-many-arguments, too-many-branches
 
     @staticmethod
     def __add_recombined_whitespace(
@@ -709,6 +985,8 @@ class InlineProcessor:
         end_string,
         starting_whitespace,
         is_setext,
+        line_number,
+        column_number,
     ):
         have_processed_once = len(inline_blocks) != 0 or start_index != 0
 
@@ -755,7 +1033,11 @@ class InlineProcessor:
         if current_string or not have_processed_once:
             inline_blocks.append(
                 TextMarkdownToken(
-                    current_string, starting_whitespace, end_whitespace=end_string
+                    current_string,
+                    starting_whitespace,
+                    end_whitespace=end_string,
+                    line_number=line_number,
+                    column_number=column_number,
                 )
             )
         LOGGER.debug(">>%s<<", ParserHelper.make_value_visible(inline_blocks))

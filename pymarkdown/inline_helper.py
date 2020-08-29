@@ -34,12 +34,16 @@ class InlineRequest:
         inline_blocks=None,
         remaining_line=None,
         current_string_unresolved=None,
+        line_number=None,
+        column_number=None,
     ):
         self.source_text = source_text
         self.next_index = next_index
         self.inline_blocks = inline_blocks
         self.remaining_line = remaining_line
         self.current_string_unresolved = current_string_unresolved
+        self.line_number = line_number
+        self.column_number = column_number
 
     # pylint: enable=too-many-arguments
 
@@ -47,7 +51,7 @@ class InlineRequest:
 # pylint: enable=too-few-public-methods
 
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods,too-many-arguments,too-many-instance-attributes
 class InlineResponse:
     """
     Class to hold the response from the inline handle_* functions.
@@ -60,6 +64,8 @@ class InlineResponse:
         self.new_string_unresolved = None
         self.consume_rest_of_line = False
         self.original_string = None
+        self.delta_line_number = 0
+        self.delta_column_number = 0
         self.clear_fields()
 
     def clear_fields(self):
@@ -72,9 +78,11 @@ class InlineResponse:
         self.new_string_unresolved = None
         self.consume_rest_of_line = False
         self.original_string = None
+        self.delta_line_number = 0
+        self.delta_column_number = 0
 
 
-# pylint: enable=too-few-public-methods
+# pylint: enable=too-few-public-methods,too-many-arguments,too-many-instance-attributes
 
 
 class InlineHelper:
@@ -160,6 +168,10 @@ class InlineHelper:
                 inline_response.new_string_unresolved = inline_response.new_string
             inline_response.new_index += 1
 
+        inline_response.delta_line_number = 0
+        inline_response.delta_column_number = (
+            inline_response.new_index - inline_request.next_index
+        )
         return inline_response
 
     @staticmethod
@@ -407,6 +419,10 @@ class InlineHelper:
                     trailing_whitespace,
                 )
             ]
+        inline_response.delta_line_number = 0
+        inline_response.delta_column_number = (
+            inline_response.new_index - inline_request.next_index
+        )
         return inline_response
 
     @staticmethod
@@ -779,4 +795,8 @@ class InlineHelper:
         else:
             inline_response.new_string = InlineHelper.angle_bracket_start
             inline_response.new_index = inline_request.next_index + 1
+        inline_response.delta_line_number = 0
+        inline_response.delta_column_number = (
+            inline_response.new_index - inline_request.next_index
+        )
         return inline_response

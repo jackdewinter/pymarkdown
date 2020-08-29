@@ -51,9 +51,9 @@ def test_md018_bad_ignore_bad_atx_closed_spacing():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/ignore_bad_atx_closed_spacing.md:0:0: "
+        "test/resources/rules/md018/ignore_bad_atx_closed_spacing.md:1:1: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md018/ignore_bad_atx_closed_spacing.md:0:0: "
+        + "test/resources/rules/md018/ignore_bad_atx_closed_spacing.md:3:1: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -83,8 +83,8 @@ def test_md018_bad_missing_atx_start_spacing():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/missing_start_spacing.md:0:0: MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/missing_start_spacing.md:0:0: MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
+        "test/resources/rules/md018/missing_start_spacing.md:1:1: MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
+        + "test/resources/rules/md018/missing_start_spacing.md:3:1: MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
     )
     expected_error = ""
 
@@ -194,9 +194,9 @@ def test_md018_bad_multiple_within_paragraph():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/multiple_within_paragraph.md:0:0: "
+        "test/resources/rules/md018/multiple_within_paragraph.md:1:1: "
         + "MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/multiple_within_paragraph.md:0:0: "
+        + "test/resources/rules/md018/multiple_within_paragraph.md:1:1: "
         + "MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -226,13 +226,13 @@ def test_md018_bad_paragraphs_with_starting_whitespace():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/paragraphs_with_starting_whitespace.md:0:0: "
+        "test/resources/rules/md018/paragraphs_with_starting_whitespace.md:1:1: "
         + "MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/paragraphs_with_starting_whitespace.md:0:0: "
+        + "test/resources/rules/md018/paragraphs_with_starting_whitespace.md:3:2: "
         + "MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/paragraphs_with_starting_whitespace.md:0:0: "
+        + "test/resources/rules/md018/paragraphs_with_starting_whitespace.md:5:3: "
         + "MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/paragraphs_with_starting_whitespace.md:0:0: "
+        + "test/resources/rules/md018/paragraphs_with_starting_whitespace.md:7:4: "
         + "MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
     )
     expected_error = ""
@@ -263,13 +263,13 @@ def test_md018_bad_single_paragraph_with_starting_whitespace():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:0:0: "
+        "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:1:1: "
         + "MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:0:0: "
+        + "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:1:1: "
         + "MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:0:0: "
+        + "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:1:1: "
         + "MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:0:0: "
+        + "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:1:1: "
         + "MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
     )
     expected_error = ""

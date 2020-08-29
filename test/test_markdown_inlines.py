@@ -26,7 +26,7 @@ def test_inlines_307():
     expected_tokens = [
         "[para(1,1):]",
         "[icode-span:hi:`::]",
-        "[text:lo`:]",
+        "[text(1,5):lo`:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><code>hi</code>lo`</p>"""

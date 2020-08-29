@@ -6,20 +6,42 @@
 
 ## Bugs - General
 
-- need to add line/column for
-  - text
-  - inlines
 - make better use of `index_indent`
-- new list item tokens should contain extracted w/s, to deal with lazy lines
-- add ex_ws into tokens for block quote
+- merge leading_spaces code from both container tokens
+- refactor `for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):`
+  from different areas into one helper function
+  - leaf parse_paragraph
+  - len(parser_state
+- use built in `is_x` functions instead of `token_name`
+- end tokens should all have start tokens that caused them?
+- where is `elif starting_whitespace:` used? why? better way to do it?
+- image token handling confusing and non-standard
+- fenced code block handling of line/col could be better
 
 ## Bugs - Character Entities
 
 - test_markdown_entity* various extra tests
 
+## Bugs - Inline line/col
+
+- test_html_blocks_143a
+  - not tracking properly, but 143 is
+  - check +1 and ensure that they are dealing with extra newlines properly
+  - check other ones as well that do the same thing
+
+- backslashes - 600
+- atx heading text, 183
+- raw html, 500
+- links, 518b
+- images, with newline in title?
+- lrds spanning lines
+- code span
+
 ## Bugs - Atx
 
 - cases like 183 where first non-ws character is an inline specifier
+  - can this be fixed in a way that does not require the other fix to add
+   starting_whitespace after the fact?
 
 ## Bugs - SetExt
 
@@ -72,8 +94,14 @@
 
 ## Bugs - Rounding Out Rules
 
-- MD018 - lists and block quotes
-- MD020 - lists and block quotes
+- MD018
+  - for multiple occurrences inside of a single paragraph, reporting line/col of starting token
+  - whitespace starts, etc.
+  - lists and block quotes
+- MD020
+  - for multiple occurrences inside of a single paragraph, reporting line/col of starting token
+  - whitespace starts, etc.
+  - lists and block quotes
 - MD022 - lists and block quotes and LRDs
 - MD022 - should line 96-104 with all of the leaf node names be added to Markdown token?
 - MD022 - what if the document had a paragraph before the first heading?

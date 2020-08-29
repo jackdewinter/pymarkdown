@@ -30,17 +30,17 @@ Foo *bar*
 ---------"""
     expected_tokens = [
         "[setext(2,1):=:9::(1,1)]",
-        "[text:Foo :]",
-        "[emphasis:1:*]",
-        "[text:bar:]",
-        "[end-emphasis::1:*:False]",
+        "[text(1,1):Foo :]",
+        "[emphasis(1,5):1:*]",
+        "[text(1,6):bar:]",
+        "[end-emphasis(1,9)::1:*:False]",
         "[end-setext:::False]",
         "[BLANK(3,1):]",
         "[setext(5,1):-:9::(4,1)]",
-        "[text:Foo :]",
-        "[emphasis:1:*]",
-        "[text:bar:]",
-        "[end-emphasis::1:*:False]",
+        "[text(4,1):Foo :]",
+        "[emphasis(4,5):1:*]",
+        "[text(4,6):bar:]",
+        "[end-emphasis(4,9)::1:*:False]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h1>Foo <em>bar</em></h1>
@@ -70,10 +70,10 @@ baz*
 ===="""
     expected_tokens = [
         "[setext(3,1):=:4::(1,1)]",
-        "[text:Foo :]",
-        "[emphasis:1:*]",
-        "[text:bar\nbaz::\n]",
-        "[end-emphasis::1:*:False]",
+        "[text(1,1):Foo :]",
+        "[emphasis(1,5):1:*]",
+        "[text(1,6):bar\nbaz::\n]",
+        "[end-emphasis(2,4)::1:*:False]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h1>Foo <em>bar
@@ -103,10 +103,10 @@ baz*\t
 ===="""
     expected_tokens = [
         "[setext(3,1):=:4:  :(1,3):\t]",
-        "[text:Foo :]",
-        "[emphasis:1:*]",
-        "[text:bar\nbaz::\n]",
-        "[end-emphasis::1:*:False]",
+        "[text(1,3):Foo :]",
+        "[emphasis(1,7):1:*]",
+        "[text(1,8):bar\nbaz::\n]",
+        "[end-emphasis(2,4)::1:*:False]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h1>Foo <em>bar
@@ -137,7 +137,7 @@ def test_setext_headings_052a():
 ==="""
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
-        "[text:a\nb\nc::\n  \x02\n  \x02]",
+        "[text(1,3):a\nb\nc::\n  \x02\n  \x02]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h1>a
@@ -145,7 +145,7 @@ b
 c</h1>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -171,7 +171,7 @@ def test_setext_headings_052b():
     )
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
-        "[text:a\nb\nc:: \n  \x02 \n  \x02]",
+        "[text(1,3):a\nb\nc:: \n  \x02 \n  \x02]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h1>a
@@ -205,9 +205,9 @@ def test_setext_headings_052c():
     )
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
-        "[text:a\nb:: \n  \x02]",
+        "[text(1,3):a\nb:: \n  \x02]",
         "[hard-break:  ]",
-        "[text:\nc::\n  ]",
+        "[text(3,3):\nc::\n  ]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h1>a
@@ -241,11 +241,11 @@ def test_setext_headings_052d():
     )
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
-        "[text:a\n:: \n  \x02]",
-        "[emphasis:1:*]",
-        "[text:b:]",
-        "[end-emphasis::1:*:False]",
-        "[text:\nc:: \n  \x02]",
+        "[text(1,3):a\n:: \n  \x02]",
+        "[emphasis(2,3):1:*]",
+        "[text(2,4):b:]",
+        "[end-emphasis(2,5)::1:*:False]",
+        "[text(2,6):\nc:: \n  \x02]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h1>a
@@ -279,12 +279,12 @@ def test_setext_headings_052e():
     )
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
-        "[text:a\n:: \n  \x02]",
-        "[emphasis:1:*]",
-        "[text:b:]",
-        "[end-emphasis::1:*:False]",
+        "[text(1,3):a\n:: \n  \x02]",
+        "[emphasis(2,3):1:*]",
+        "[text(2,4):b:]",
+        "[end-emphasis(2,5)::1:*:False]",
         "[hard-break:  ]",
-        "[text:\nc::\n  ]",
+        "[text(3,3):\nc::\n  ]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h1>a
@@ -317,11 +317,11 @@ Foo
 ="""
     expected_tokens = [
         "[setext(2,1):-:25::(1,1)]",
-        "[text:Foo:]",
+        "[text(1,1):Foo:]",
         "[end-setext:::False]",
         "[BLANK(3,1):]",
         "[setext(5,1):=:1::(4,1)]",
-        "[text:Foo:]",
+        "[text(4,1):Foo:]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h2>Foo</h2>
@@ -356,15 +356,15 @@ def test_setext_headings_054():
   ==="""
     expected_tokens = [
         "[setext(2,1):-:3:   :(1,4)]",
-        "[text:Foo:]",
+        "[text(1,4):Foo:]",
         "[end-setext:::False]",
         "[BLANK(3,1):]",
         "[setext(5,1):-:5:  :(4,3)]",
-        "[text:Foo:]",
+        "[text(4,3):Foo:]",
         "[end-setext:::False]",
         "[BLANK(6,1):]",
         "[setext(8,3):=:3:  :(7,3)]",
-        "[text:Foo:]",
+        "[text(7,3):Foo:]",
         "[end-setext:  ::False]",
     ]
     expected_gfm = """<h2>Foo</h2>
@@ -397,7 +397,7 @@ def test_setext_headings_055():
 ---"""
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n\n    ]",
-        "[text:Foo\n---\n\x03\nFoo:]",
+        "[text(1,5):Foo\n---\n\x03\nFoo:]",
         "[end-icode-block:::False]",
         "[tbreak(5,1):-::---]",
     ]
@@ -409,7 +409,7 @@ Foo
 <hr />"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -431,7 +431,7 @@ def test_setext_headings_056():
    ----      """
     expected_tokens = [
         "[setext(2,4):-:4::(1,1)]",
-        "[text:Foo:]",
+        "[text(1,1):Foo:]",
         "[end-setext:   :      :False]",
     ]
     expected_gfm = """<h2>Foo</h2>"""
@@ -457,7 +457,11 @@ def test_setext_headings_057():
     transformer = TransformToGfm()
     source_markdown = """Foo
     ---"""
-    expected_tokens = ["[para(1,1):\n    ]", "[text:Foo\n---::\n]", "[end-para:::True]"]
+    expected_tokens = [
+        "[para(1,1):\n    ]",
+        "[text(1,1):Foo\n---::\n]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<p>Foo
 ---</p>"""
 
@@ -487,11 +491,11 @@ Foo
 --- -"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text:Foo\n= =::\n]",
+        "[text(1,1):Foo\n= =::\n]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):]",
-        "[text:Foo:]",
+        "[text(4,1):Foo:]",
         "[end-para:::False]",
         "[tbreak(5,1):-::--- -]",
     ]
@@ -525,7 +529,7 @@ def test_setext_headings_059():
     )
     expected_tokens = [
         "[setext(2,1):-:5::(1,1):  ]",
-        "[text:Foo:]",
+        "[text(1,1):Foo:]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h2>Foo</h2>"""
@@ -553,7 +557,7 @@ def test_setext_headings_060():
 ----"""
     expected_tokens = [
         "[setext(2,1):-:4::(1,1)]",
-        "[text:Foo\\:]",
+        "[text(1,1):Foo\\:]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h2>Foo\\</h2>"""
@@ -586,17 +590,17 @@ def test_setext_headings_061():
 of dashes"/>"""
     expected_tokens = [
         "[setext(2,1):-:4::(1,1)]",
-        "[text:`Foo:]",
+        "[text(1,1):`Foo:]",
         "[end-setext:::False]",
         "[para(3,1):]",
-        "[text:`:]",
+        "[text(3,1):`:]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[setext(6,1):-:3::(5,1)]",
-        '[text:\a<\a&lt;\aa title=\a"\a&quot;\aa lot:]',
+        '[text(5,1):\a<\a&lt;\aa title=\a"\a&quot;\aa lot:]',
         "[end-setext:::False]",
         "[para(7,1):]",
-        '[text:of dashes\a"\a&quot;\a/\a>\a&gt;\a:]',
+        '[text(7,1):of dashes\a"\a&quot;\a/\a>\a&gt;\a:]',
         "[end-para:::True]",
     ]
     expected_gfm = """<h2>`Foo</h2>
@@ -628,7 +632,7 @@ def test_setext_headings_062():
     expected_tokens = [
         "[block-quote(1,1)::> ]",
         "[para(1,3):]",
-        "[text:Foo:]",
+        "[text(1,3):Foo:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[tbreak(2,1):-::---]",
@@ -663,7 +667,7 @@ bar
     expected_tokens = [
         "[block-quote(1,1)::> \n\n]",
         "[para(1,3):\n\n]",
-        "[text:foo\nbar\n===::\n\n]",
+        "[text(1,3):foo\nbar\n===::\n\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -697,7 +701,7 @@ def test_setext_headings_064():
     expected_tokens = [
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
-        "[text:Foo:]",
+        "[text(1,3):Foo:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[tbreak(2,1):-::---]",
@@ -731,7 +735,7 @@ def test_setext_headings_064a():
     expected_tokens = [
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
-        "[text:Foo:]",
+        "[text(1,3):Foo:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[tbreak(2,1):-::---]",
@@ -765,7 +769,7 @@ Bar
 ---"""
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
-        "[text:Foo\nBar::\n]",
+        "[text(1,1):Foo\nBar::\n]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h2>Foo
@@ -799,13 +803,13 @@ Baz"""
     expected_tokens = [
         "[tbreak(1,1):-::---]",
         "[setext(3,1):-:3::(2,1)]",
-        "[text:Foo:]",
+        "[text(2,1):Foo:]",
         "[end-setext:::False]",
         "[setext(5,1):-:3::(4,1)]",
-        "[text:Bar:]",
+        "[text(4,1):Bar:]",
         "[end-setext:::False]",
         "[para(6,1):]",
-        "[text:Baz:]",
+        "[text(6,1):Baz:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<hr />
@@ -837,7 +841,7 @@ def test_setext_headings_067():
     expected_tokens = [
         "[BLANK(1,1):]",
         "[para(2,1):]",
-        "[text:====:]",
+        "[text(2,1):====:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>====</p>"""
@@ -891,7 +895,7 @@ def test_setext_headings_069():
     expected_tokens = [
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
-        "[text:foo:]",
+        "[text(1,3):foo:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[tbreak(2,1):-::-----]",
@@ -925,7 +929,7 @@ def test_setext_headings_069a():
     expected_tokens = [
         "[ulist(1,1):-::2:]",
         "[para(1,3):]",
-        "[text:foo:]",
+        "[text(1,3):foo:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[tbreak(2,1):-::-----]",
@@ -958,7 +962,7 @@ def test_setext_headings_070():
 ---"""
     expected_tokens = [
         "[icode-block(1,5):    :]",
-        "[text:foo:]",
+        "[text(1,5):foo:]",
         "[end-icode-block:::False]",
         "[tbreak(2,1):-::---]",
     ]
@@ -990,7 +994,7 @@ def test_setext_headings_071():
     expected_tokens = [
         "[block-quote(1,1)::> ]",
         "[para(1,3):]",
-        "[text:foo:]",
+        "[text(1,3):foo:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[tbreak(2,1):-::-----]",
@@ -1023,7 +1027,7 @@ def test_setext_headings_072():
 ------"""
     expected_tokens = [
         "[setext(2,1):-:6::(1,1)]",
-        "[text:\\\b\a>\a&gt;\a foo:]",
+        "[text(1,1):\\\b\a>\a&gt;\a foo:]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h2>&gt; foo</h2>"""
@@ -1055,14 +1059,14 @@ bar
 baz"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:Foo:]",
+        "[text(1,1):Foo:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[setext(4,1):-:3::(3,1)]",
-        "[text:bar:]",
+        "[text(3,1):bar:]",
         "[end-setext:::False]",
         "[para(5,1):]",
-        "[text:baz:]",
+        "[text(5,1):baz:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>Foo</p>
@@ -1097,13 +1101,13 @@ bar
 baz"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text:Foo\nbar::\n]",
+        "[text(1,1):Foo\nbar::\n]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[tbreak(4,1):-::---]",
         "[BLANK(5,1):]",
         "[para(6,1):]",
-        "[text:baz:]",
+        "[text(6,1):baz:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>Foo
@@ -1137,11 +1141,11 @@ bar
 baz"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text:Foo\nbar::\n]",
+        "[text(1,1):Foo\nbar::\n]",
         "[end-para:::False]",
         "[tbreak(3,1):*::* * *]",
         "[para(4,1):]",
-        "[text:baz:]",
+        "[text(4,1):baz:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>Foo
@@ -1175,7 +1179,7 @@ bar
 baz"""
     expected_tokens = [
         "[para(1,1):\n\n\n]",
-        "[text:Foo\nbar\n\\\b---\nbaz::\n\n\n]",
+        "[text(1,1):Foo\nbar\n\\\b---\nbaz::\n\n\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>Foo

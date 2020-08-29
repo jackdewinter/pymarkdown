@@ -237,7 +237,7 @@ def test_autolinks_610():
     source_markdown = """<http://foo.bar/baz bim>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\a<\a&lt;\ahttp://foo.bar/baz bim\a>\a&gt;\a:]",
+        "[text(1,1):\a<\a&lt;\ahttp://foo.bar/baz bim\a>\a&gt;\a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;http://foo.bar/baz bim&gt;</p>"""
@@ -403,7 +403,7 @@ def test_autolinks_614():
     source_markdown = """<foo\\+@bar.example.com>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\a<\a&lt;\afoo\\\b+@bar.example.com\a>\a&gt;\a:]",
+        "[text(1,1):\a<\a&lt;\afoo\\\b+@bar.example.com\a>\a&gt;\a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;foo+@bar.example.com&gt;</p>"""
@@ -430,7 +430,7 @@ def test_autolinks_615():
     source_markdown = """<>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\a<\a&lt;\a\a>\a&gt;\a:]",
+        "[text(1,1):\a<\a&lt;\a\a>\a&gt;\a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;&gt;</p>"""
@@ -457,7 +457,7 @@ def test_autolinks_616():
     source_markdown = """< http://foo.bar >"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\a<\a&lt;\a http://foo.bar \a>\a&gt;\a:]",
+        "[text(1,1):\a<\a&lt;\a http://foo.bar \a>\a&gt;\a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt; http://foo.bar &gt;</p>"""
@@ -484,7 +484,7 @@ def test_autolinks_617():
     source_markdown = """<m:abc>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\a<\a&lt;\am:abc\a>\a&gt;\a:]",
+        "[text(1,1):\a<\a&lt;\am:abc\a>\a&gt;\a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;m:abc&gt;</p>"""
@@ -511,7 +511,7 @@ def test_autolinks_618():
     source_markdown = """<foo.bar.baz>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\a<\a&lt;\afoo.bar.baz\a>\a&gt;\a:]",
+        "[text(1,1):\a<\a&lt;\afoo.bar.baz\a>\a&gt;\a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;foo.bar.baz&gt;</p>"""
@@ -538,7 +538,7 @@ def test_autolinks_619():
     source_markdown = """http://example.com"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:http://example.com:]",
+        "[text(1,1):http://example.com:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>http://example.com</p>"""
@@ -565,7 +565,7 @@ def test_autolinks_620():
     source_markdown = """foo@bar.example.com"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:foo@bar.example.com:]",
+        "[text(1,1):foo@bar.example.com:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo@bar.example.com</p>"""

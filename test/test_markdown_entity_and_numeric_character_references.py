@@ -30,7 +30,7 @@ def test_character_references_321():
 &ClockwiseContourIntegral; &ngE;"""
     expected_tokens = [
         "[para(1,1):\n\n]",
-        "[text:\a&nbsp;\a\u00A0\a \a&amp;\a\a&\a&amp;\a\a \a&copy;\a©\a \a&AElig;\aÆ\a \a&Dcaron;\aĎ\a\n\a&frac34;\a¾\a \a&HilbertSpace;\aℋ\a \a&DifferentialD;\aⅆ\a\n\a&ClockwiseContourIntegral;\a∲\a \a&ngE;\a≧̸\a::\n\n]",
+        "[text(1,1):\a&nbsp;\a\u00A0\a \a&amp;\a\a&\a&amp;\a\a \a&copy;\a©\a \a&AElig;\aÆ\a \a&Dcaron;\aĎ\a\n\a&frac34;\a¾\a \a&HilbertSpace;\aℋ\a \a&DifferentialD;\aⅆ\a\n\a&ClockwiseContourIntegral;\a∲\a \a&ngE;\a≧̸\a::\n\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>\u00A0 &amp; © Æ Ď
@@ -59,7 +59,7 @@ def test_character_references_322():
     source_markdown = """&#35; &#1234; &#992; &#0;"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\a&#35;\a#\a \a&#1234;\aӒ\a \a&#992;\aϠ\a \a&#0;\a�\a:]",
+        "[text(1,1):\a&#35;\a#\a \a&#1234;\aӒ\a \a&#992;\aϠ\a \a&#0;\a�\a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p># Ӓ Ϡ �</p>"""
@@ -86,7 +86,7 @@ def test_character_references_323():
     source_markdown = """&#X22; &#XD06; &#xcab;"""
     expected_tokens = [
         "[para(1,1):]",
-        '[text:\a&#X22;\a\a"\a&quot;\a\a \a&#XD06;\aആ\a \a&#xcab;\aಫ\a:]',
+        '[text(1,1):\a&#X22;\a\a"\a&quot;\a\a \a&#XD06;\aആ\a \a&#xcab;\aಫ\a:]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&quot; ആ ಫ</p>"""
@@ -116,7 +116,7 @@ def test_character_references_324():
 &ThisIsNotDefined; &hi?;"""
     expected_tokens = [
         "[para(1,1):\n\n\n]",
-        "[text:\a&\a&amp;\anbsp \a&\a&amp;\ax; \a&\a&amp;\a#; \a&\a&amp;\a#x;\n\a&\a&amp;\a#87654321;\n\a&\a&amp;\a#abcdef0;\n\a&\a&amp;\aThisIsNotDefined; \a&\a&amp;\ahi?;::\n\n\n]",
+        "[text(1,1):\a&\a&amp;\anbsp \a&\a&amp;\ax; \a&\a&amp;\a#; \a&\a&amp;\a#x;\n\a&\a&amp;\a#87654321;\n\a&\a&amp;\a#abcdef0;\n\a&\a&amp;\aThisIsNotDefined; \a&\a&amp;\ahi?;::\n\n\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&amp;nbsp &amp;x; &amp;#; &amp;#x;
@@ -146,7 +146,7 @@ def test_character_references_324a():
     source_markdown = """&"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\a&\a&amp;\a:]",
+        "[text(1,1):\a&\a&amp;\a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&amp;</p>"""
@@ -173,7 +173,7 @@ def test_character_references_325():
     source_markdown = """&copy"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\a&\a&amp;\acopy:]",
+        "[text(1,1):\a&\a&amp;\acopy:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&amp;copy</p>"""
@@ -200,7 +200,7 @@ def test_character_references_326():
     source_markdown = """&MadeUpEntity;"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\a&\a&amp;\aMadeUpEntity;:]",
+        "[text(1,1):\a&\a&amp;\aMadeUpEntity;:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&amp;MadeUpEntity;</p>"""
@@ -227,7 +227,7 @@ def test_character_references_327():
     source_markdown = '<a href="&ouml;&ouml;.html">'
     expected_tokens = [
         "[html-block(1,1)]",
-        '[text:<a href="&ouml;&ouml;.html">:]',
+        '[text(1,1):<a href="&ouml;&ouml;.html">:]',
         "[end-html-block:::True]",
     ]
     expected_gfm = """<a href="&ouml;&ouml;.html">"""
@@ -255,7 +255,7 @@ def test_character_references_328():
     expected_tokens = [
         "[para(1,1):]",
         '[link:inline:/f%C3%B6%C3%B6:föö:/f&ouml;&ouml;:f&ouml;&ouml;::foo:False:":: :]',
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
     ]
@@ -284,7 +284,7 @@ def test_character_references_328a():
     expected_tokens = [
         "[para(1,1):]",
         '[link:inline:/f%C3%B6%C3%B6:föö:/f&ouml;&ouml;:f&ouml;&ouml;::f&ouml;&ouml;:False:":: :]',
-        "[text:f\a&ouml;\aö\a\a&ouml;\aö\a:]",
+        "[text(1,2):f\a&ouml;\aö\a\a&ouml;\aö\a:]",
         "[end-link:::False]",
         "[end-para:::True]",
     ]
@@ -315,7 +315,7 @@ def test_character_references_329():
     expected_tokens = [
         "[para(1,1):]",
         "[link:shortcut:/f%C3%B6%C3%B6:föö::::foo:::::]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -348,7 +348,7 @@ foo
 """
     expected_tokens = [
         "[fcode-block(1,1):`:3:föö:f&ouml;&ouml;:::: ]",
-        "[text:foo:]",
+        "[text(2,1):foo:]",
         "[end-fcode-block::3:False]",
         "[BLANK(4,1):]",
     ]
@@ -404,7 +404,7 @@ def test_character_references_332():
     source_markdown = """    f&ouml;f&ouml;"""
     expected_tokens = [
         "[icode-block(1,5):    :]",
-        "[text:f\a&\a&amp;\aouml;f\a&\a&amp;\aouml;:]",
+        "[text(1,5):f\a&\a&amp;\aouml;f\a&\a&amp;\aouml;:]",
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>f&amp;ouml;f&amp;ouml;
@@ -433,10 +433,10 @@ def test_character_references_333():
 *foo*"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text:\a&#42;\a*\afoo\a&#42;\a*\a\n::\n]",
-        "[emphasis:1:*]",
-        "[text:foo:]",
-        "[end-emphasis::1:*:False]",
+        "[text(1,1):\a&#42;\a*\afoo\a&#42;\a*\a\n::\n]",
+        "[emphasis(2,1):1:*]",
+        "[text(2,2):foo:]",
+        "[end-emphasis(2,5)::1:*:False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>*foo*
@@ -466,12 +466,12 @@ def test_character_references_334():
 * foo"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\a&#42;\a*\a foo:]",
+        "[text(1,1):\a&#42;\a*\a foo:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[ulist(3,1):*::2:]",
         "[para(3,3):]",
-        "[text:foo:]",
+        "[text(3,3):foo:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
@@ -502,7 +502,7 @@ def test_character_references_335():
     source_markdown = """foo&#10;&#10;bar"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:foo\a&#10;\a\n\a\a&#10;\a\n\abar:]",
+        "[text(1,1):foo\a&#10;\a\n\a\a&#10;\a\n\abar:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo
@@ -531,7 +531,7 @@ def test_character_references_336():
     source_markdown = """&#9;foo"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\a&#9;\a\t\afoo:]",
+        "[text(1,1):\a&#9;\a\t\afoo:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>\tfoo</p>"""
@@ -558,10 +558,10 @@ def test_character_references_337():
     source_markdown = """[a](url &quot;tit&quot;)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:a:]",
-        "[text:]:]",
-        '[text:(url \a&quot;\a\a"\a&quot;\a\atit\a&quot;\a\a"\a&quot;\a\a):]',
+        "[text(1,1):[:]",
+        "[text(1,2):a:]",
+        "[text(1,3):]:]",
+        '[text(1,4):(url \a&quot;\a\a"\a&quot;\a\atit\a&quot;\a\a"\a&quot;\a\a):]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[a](url &quot;tit&quot;)</p>"""

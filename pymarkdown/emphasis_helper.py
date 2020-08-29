@@ -137,10 +137,25 @@ class EmphasisHelper:
         emphasis_character = open_token.token_text[0]
 
         # add emph node in main stream
+        LOGGER.debug("open_token>>%s", str(open_token))
+        LOGGER.debug("close_token>>%s", str(close_token))
+
+        LOGGER.debug("open_token.repeat_count>>%s", str(open_token.repeat_count))
+        LOGGER.debug("emphasis_length>>%s", str(emphasis_length))
+        open_column_number_delta = 0
+        if emphasis_length < open_token.repeat_count:
+            open_column_number_delta = open_token.repeat_count - emphasis_length
+        LOGGER.debug("open_column_number_delta>>%s", str(open_column_number_delta))
+
         start_index_in_blocks = inline_blocks.index(open_token)
         inline_blocks.insert(
             start_index_in_blocks + 1,
-            EmphasisMarkdownToken(emphasis_length, emphasis_character),
+            EmphasisMarkdownToken(
+                emphasis_length,
+                emphasis_character,
+                line_number=open_token.line_number,
+                column_number=open_token.column_number + open_column_number_delta,
+            ),
         )
         end_index_in_blocks = inline_blocks.index(close_token)
         inline_blocks.insert(
@@ -151,6 +166,8 @@ class EmphasisHelper:
                 str(emphasis_length) + ":" + emphasis_character,
                 None,
                 False,
+                line_number=close_token.line_number,
+                column_number=close_token.column_number,
             ),
         )
         end_index_in_blocks += 1
@@ -161,7 +178,7 @@ class EmphasisHelper:
             str(end_index_in_blocks),
             close_token.show_process_emphasis(),
         )
-        close_token.reduce_repeat_count(emphasis_length)
+        close_token.reduce_repeat_count(emphasis_length, adjust_column_number=True)
         if not close_token.repeat_count:
             inline_blocks.remove(close_token)
             LOGGER.debug("close_token>>removed")

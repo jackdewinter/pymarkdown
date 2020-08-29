@@ -41,11 +41,11 @@ def test_strikethrough_492():
 new paragraph~~."""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:This ~~has a:]",
+        "[text(1,1):This ~~has a:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[text:new paragraph~~.:]",
+        "[text(3,1):new paragraph~~.:]",
         "[end-para:::True]",
     ]
 

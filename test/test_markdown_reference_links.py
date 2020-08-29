@@ -30,7 +30,7 @@ def test_reference_links_535():
     expected_tokens = [
         "[para(1,1):]",
         "[link:full:/url:title:::bar:foo:::::]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -38,6 +38,79 @@ def test_reference_links_535():
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_535a():
+    """
+    Test case 535:  Here is a simple example:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo][bar]\a
+
+[bar]: /url "title"
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):: ]",
+        "[link:full:/url:title:::bar:foo:::::]",
+        "[text(1,2):foo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        '[link-ref-def(3,1):True::bar:: :/url:: :title:"title":]',
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_535b():
+    """
+    Test case 535:  Here is a simple example:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo][bar] abc
+
+[bar]: /url "title"
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[link:full:/url:title:::bar:foo:::::]",
+        "[text(1,2):foo:]",
+        "[end-link:::False]",
+        "[text(1,11): abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        '[link-ref-def(3,1):True::bar:: :/url:: :title:"title":]',
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p><a href="/url" title="title">foo</a> abc</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -64,13 +137,13 @@ def test_reference_links_536():
     expected_tokens = [
         "[para(1,1):]",
         "[link:full:/uri::::ref:link [foo [bar]]:::::]",
-        "[text:link :]",
-        "[text:[:]",
-        "[text:foo :]",
-        "[text:[:]",
-        "[text:bar:]",
-        "[text:]:]",
-        "[text:]:]",
+        "[text(1,2):link :]",
+        "[text(1,7):[:]",
+        "[text(1,8):foo :]",
+        "[text(1,12):[:]",
+        "[text(1,13):bar:]",
+        "[text(1,16):]:]",
+        "[text(1,17):]:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -103,7 +176,7 @@ def test_reference_links_537():
     expected_tokens = [
         "[para(1,1):]",
         "[link:full:/uri::::ref:link \\[bar:::::]",
-        "[text:link \\\b[bar:]",
+        "[text(1,2):link \\\b[bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -136,15 +209,15 @@ def test_reference_links_538():
     expected_tokens = [
         "[para(1,1):]",
         "[link:full:/uri::::ref:link *foo **bar** `#`*:::::]",
-        "[text:link :]",
-        "[emphasis:1:*]",
-        "[text:foo :]",
-        "[emphasis:2:*]",
-        "[text:bar:]",
-        "[end-emphasis::2:*:False]",
-        "[text: :]",
+        "[text(1,2):link :]",
+        "[emphasis(1,7):1:*]",
+        "[text(1,8):foo :]",
+        "[emphasis(1,12):2:*]",
+        "[text(1,14):bar:]",
+        "[end-emphasis(1,17)::2:*:False]",
+        "[text(1,19): :]",
         "[icode-span:#:`::]",
-        "[end-emphasis::1:*:False]",
+        "[end-emphasis(1,23)::1:*:False]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -209,14 +282,14 @@ def test_reference_links_540():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:foo :]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo :]",
         "[link:inline:/uri:::::bar:False::::]",
-        "[text:bar:]",
+        "[text(1,7):bar:]",
         "[end-link:::False]",
-        "[text:]:]",
+        "[text(1,17):]:]",
         "[link:shortcut:/uri:::::ref:::::]",
-        "[text:ref:]",
+        "[text(1,19):ref:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -248,17 +321,17 @@ def test_reference_links_541():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:foo :]",
-        "[emphasis:1:*]",
-        "[text:bar :]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo :]",
+        "[emphasis(1,6):1:*]",
+        "[text(1,7):bar :]",
         "[link:full:/uri::::ref:baz:::::]",
-        "[text:baz:]",
+        "[text(1,12):baz:]",
         "[end-link:::False]",
-        "[end-emphasis::1:*:False]",
-        "[text:]:]",
+        "[end-emphasis(1,21)::1:*:False]",
+        "[text(1,22):]:]",
         "[link:shortcut:/uri:::::ref:::::]",
-        "[text:ref:]",
+        "[text(1,24):ref:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -292,10 +365,10 @@ def test_reference_links_542():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:*:]",
+        "[text(1,1):*:]",
         "[link:full:/uri::::ref:foo*:::::]",
-        "[text:foo:]",
-        "[text:*:]",
+        "[text(1,3):foo:]",
+        "[text(1,6):*:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -328,11 +401,11 @@ def test_reference_links_543():
     expected_tokens = [
         "[para(1,1):]",
         "[link:full:/uri::::ref:foo *bar:::::]",
-        "[text:foo :]",
-        "[text:*:]",
-        "[text:bar:]",
+        "[text(1,2):foo :]",
+        "[text(1,6):*:]",
+        "[text(1,7):bar:]",
         "[end-link:::False]",
-        "[text:*:]",
+        "[text(1,16):*:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::ref:: :/uri:::::]",
@@ -363,8 +436,8 @@ def test_reference_links_544():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:foo :]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo :]",
         '[raw-html:bar attr="][ref]"]',
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -396,8 +469,8 @@ def test_reference_links_545():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:foo:]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo:]",
         "[icode-span:][ref]:`::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -429,8 +502,8 @@ def test_reference_links_546():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:foo:]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo:]",
         "[uri-autolink:http://example.com/?search=][ref]]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -464,7 +537,7 @@ def test_reference_links_547():
     expected_tokens = [
         "[para(1,1):]",
         "[link:full:/url:title:::BaR:foo:::::]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -498,7 +571,7 @@ def test_reference_links_548():
     expected_tokens = [
         "[para(1,1):]",
         "[link:shortcut:/url:::::ẞ:::::]",
-        "[text:ẞ:]",
+        "[text(1,2):ẞ:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -534,7 +607,7 @@ def test_reference_links_549():
         "[BLANK(3,1):]",
         "[para(4,1):]",
         "[link:full:/url::::Foo bar:Baz:::::]",
-        "[text:Baz:]",
+        "[text(4,2):Baz:]",
         "[end-link:::False]",
         "[end-para:::True]",
     ]
@@ -565,12 +638,12 @@ def test_reference_links_550():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:foo:]",
-        "[text:]:]",
-        "[text: :]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo:]",
+        "[text(1,5):]:]",
+        "[text(1,6): :]",
         "[link:shortcut:/url:title::::bar:::::]",
-        "[text:bar:]",
+        "[text(1,8):bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -605,12 +678,12 @@ def test_reference_links_551():
 """
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text:[:]",
-        "[text:foo:]",
-        "[text:]:]",
-        "[text:\n::\n]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo:]",
+        "[text(1,5):]:]",
+        "[text(1,6):\n::\n]",
         "[link:shortcut:/url:title::::bar:::::]",
-        "[text:bar:]",
+        "[text(2,2):bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
@@ -651,7 +724,7 @@ def test_reference_links_552():
         "[BLANK(4,1):]",
         "[para(5,1):]",
         "[link:full:/url1::::foo:bar:::::]",
-        "[text:bar:]",
+        "[text(5,2):bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
     ]
@@ -681,12 +754,12 @@ def test_reference_links_553():
 [foo!]: /url"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:bar:]",
-        "[text:]:]",
-        "[text:[:]",
-        "[text:foo\\\b!:]",
-        "[text:]:]",
+        "[text(1,1):[:]",
+        "[text(1,2):bar:]",
+        "[text(1,5):]:]",
+        "[text(1,6):[:]",
+        "[text(1,7):foo\\\b!:]",
+        "[text(1,12):]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::foo!:: :/url:::::]",
@@ -717,21 +790,21 @@ def test_reference_links_554():
 [ref[]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:foo:]",
-        "[text:]:]",
-        "[text:[:]",
-        "[text:ref:]",
-        "[text:[:]",
-        "[text:]:]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo:]",
+        "[text(1,5):]:]",
+        "[text(1,6):[:]",
+        "[text(1,7):ref:]",
+        "[text(1,10):[:]",
+        "[text(1,11):]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[text:[:]",
-        "[text:ref:]",
-        "[text:[:]",
-        "[text:]:]",
-        "[text:: /uri:]",
+        "[text(3,1):[:]",
+        "[text(3,2):ref:]",
+        "[text(3,5):[:]",
+        "[text(3,6):]:]",
+        "[text(3,7):: /uri:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[foo][ref[]</p>
@@ -761,25 +834,25 @@ def test_reference_links_555():
 [ref[bar]]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:foo:]",
-        "[text:]:]",
-        "[text:[:]",
-        "[text:ref:]",
-        "[text:[:]",
-        "[text:bar:]",
-        "[text:]:]",
-        "[text:]:]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo:]",
+        "[text(1,5):]:]",
+        "[text(1,6):[:]",
+        "[text(1,7):ref:]",
+        "[text(1,10):[:]",
+        "[text(1,11):bar:]",
+        "[text(1,14):]:]",
+        "[text(1,15):]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[text:[:]",
-        "[text:ref:]",
-        "[text:[:]",
-        "[text:bar:]",
-        "[text:]:]",
-        "[text:]:]",
-        "[text:: /uri:]",
+        "[text(3,1):[:]",
+        "[text(3,2):ref:]",
+        "[text(3,5):[:]",
+        "[text(3,6):bar:]",
+        "[text(3,9):]:]",
+        "[text(3,10):]:]",
+        "[text(3,11):: /uri:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[foo][ref[bar]]</p>
@@ -809,24 +882,24 @@ def test_reference_links_556():
 [[[foo]]]: /url"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:[:]",
-        "[text:[:]",
-        "[text:foo:]",
-        "[text:]:]",
-        "[text:]:]",
-        "[text:]:]",
+        "[text(1,1):[:]",
+        "[text(1,2):[:]",
+        "[text(1,3):[:]",
+        "[text(1,4):foo:]",
+        "[text(1,7):]:]",
+        "[text(1,8):]:]",
+        "[text(1,9):]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[text:[:]",
-        "[text:[:]",
-        "[text:[:]",
-        "[text:foo:]",
-        "[text:]:]",
-        "[text:]:]",
-        "[text:]:]",
-        "[text:: /url:]",
+        "[text(3,1):[:]",
+        "[text(3,2):[:]",
+        "[text(3,3):[:]",
+        "[text(3,4):foo:]",
+        "[text(3,7):]:]",
+        "[text(3,8):]:]",
+        "[text(3,9):]:]",
+        "[text(3,10):: /url:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[[[foo]]]</p>
@@ -857,7 +930,7 @@ def test_reference_links_557():
     expected_tokens = [
         "[para(1,1):]",
         "[link:full:/uri::::ref\\[:foo:::::]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -892,7 +965,7 @@ def test_reference_links_558():
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[link:shortcut:/uri:::::bar\\\\:::::]",
-        "[text:bar\\\b\\:]",
+        "[text(3,2):bar\\\b\\:]",
         "[end-link:::False]",
         "[end-para:::True]",
     ]
@@ -925,7 +998,7 @@ def test_reference_links_558a():
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[link:shortcut:/uri:::::bar&#x5C;:::::]",
-        "[text:bar\a&#x5C;\a\\\a:]",
+        "[text(3,2):bar\a&#x5C;\a\\\a:]",
         "[end-link:::False]",
         "[end-para:::True]",
     ]
@@ -958,7 +1031,7 @@ def test_reference_links_558b():
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[link:shortcut:/uri:::::bar&beta;:::::]",
-        "[text:bar\a&beta;\aβ\a:]",
+        "[text(3,2):bar\a&beta;\aβ\a:]",
         "[end-link:::False]",
         "[end-para:::True]",
     ]
@@ -988,14 +1061,14 @@ def test_reference_links_559():
 []: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:]:]",
+        "[text(1,1):[:]",
+        "[text(1,2):]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[text:[:]",
-        "[text:]:]",
-        "[text:: /uri:]",
+        "[text(3,1):[:]",
+        "[text(3,2):]:]",
+        "[text(3,3):: /uri:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[]</p>
@@ -1027,16 +1100,16 @@ def test_reference_links_560():
  ]: /uri"""
     expected_tokens = [
         "[para(1,1):\n ]",
-        "[text:[:]",
-        "[text:\n::\n]",
-        "[text:]:]",
+        "[text(1,1):[:]",
+        "[text(1,2):\n::\n]",
+        "[text(2,2):]:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):\n ]",
-        "[text:[:]",
-        "[text:\n::\n]",
-        "[text:]:]",
-        "[text:: /uri:]",
+        "[text(4,1):[:]",
+        "[text(4,2):\n::\n]",
+        "[text(5,2):]:]",
+        "[text(5,3):: /uri:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[
@@ -1070,7 +1143,7 @@ def test_reference_links_561():
     expected_tokens = [
         "[para(1,1):]",
         "[link:collapsed:/url:title::::foo:::::]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -1105,10 +1178,10 @@ def test_reference_links_562():
     expected_tokens = [
         "[para(1,1):]",
         "[link:collapsed:/url:title::::*foo* bar:::::]",
-        "[emphasis:1:*]",
-        "[text:foo:]",
-        "[end-emphasis::1:*:False]",
-        "[text: bar:]",
+        "[emphasis(1,2):1:*]",
+        "[text(1,3):foo:]",
+        "[end-emphasis(1,6)::1:*:False]",
+        "[text(1,7): bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -1143,7 +1216,7 @@ def test_reference_links_563():
     expected_tokens = [
         "[para(1,1):]",
         "[link:collapsed:/url:title::::Foo:::::]",
-        "[text:Foo:]",
+        "[text(1,2):Foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -1181,11 +1254,11 @@ def test_reference_links_564():
     expected_tokens = [
         "[para(1,1):\n]",
         "[link:shortcut:/url:title::::foo:::::]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
-        "[text:\n:: \n]",
-        "[text:[:]",
-        "[text:]:]",
+        "[text(1,6):\n:: \n]",
+        "[text(2,1):[:]",
+        "[text(2,2):]:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         '[link-ref-def(4,1):True::foo:: :/url:: :title:"title":]',
@@ -1220,7 +1293,7 @@ def test_reference_links_565():
     expected_tokens = [
         "[para(1,1):]",
         "[link:shortcut:/url:title::::foo:::::]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -1255,10 +1328,10 @@ def test_reference_links_566():
     expected_tokens = [
         "[para(1,1):]",
         "[link:shortcut:/url:title::::*foo* bar:::::]",
-        "[emphasis:1:*]",
-        "[text:foo:]",
-        "[end-emphasis::1:*:False]",
-        "[text: bar:]",
+        "[emphasis(1,2):1:*]",
+        "[text(1,3):foo:]",
+        "[end-emphasis(1,6)::1:*:False]",
+        "[text(1,7): bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -1292,14 +1365,14 @@ def test_reference_links_567():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
+        "[text(1,1):[:]",
         "[link:shortcut:/url:title::::*foo* bar:::::]",
-        "[emphasis:1:*]",
-        "[text:foo:]",
-        "[end-emphasis::1:*:False]",
-        "[text: bar:]",
+        "[emphasis(1,3):1:*]",
+        "[text(1,4):foo:]",
+        "[end-emphasis(1,7)::1:*:False]",
+        "[text(1,8): bar:]",
         "[end-link:::False]",
-        "[text:]:]",
+        "[text(1,13):]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::*foo* bar:: :/url:: :title:"title":]',
@@ -1331,11 +1404,11 @@ def test_reference_links_568():
 [foo]: /url"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:[:]",
-        "[text:bar :]",
+        "[text(1,1):[:]",
+        "[text(1,2):[:]",
+        "[text(1,3):bar :]",
         "[link:shortcut:/url:::::foo:::::]",
-        "[text:foo:]",
+        "[text(1,8):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -1369,7 +1442,7 @@ def test_reference_links_569():
     expected_tokens = [
         "[para(1,1):]",
         "[link:shortcut:/url:title::::Foo:::::]",
-        "[text:Foo:]",
+        "[text(1,2):Foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -1403,9 +1476,9 @@ def test_reference_links_570():
     expected_tokens = [
         "[para(1,1):]",
         "[link:shortcut:/url:::::foo:::::]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
-        "[text: bar:]",
+        "[text(1,6): bar:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::foo:: :/url:::::]",
@@ -1437,12 +1510,12 @@ def test_reference_links_570a():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:foo:]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo:]",
         "[link:shortcut:/url:title::::foo:::::]",
-        "[text:foo:]",
+        "[text(1,6):foo:]",
         "[end-link:::False]",
-        "[text:]:]",
+        "[text(1,10):]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
@@ -1475,8 +1548,8 @@ def test_reference_links_571():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[text:\\\b[foo:]",
-        "[text:]:]",
+        "[text(1,1):\\\b[foo:]",
+        "[text(1,6):]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',
@@ -1510,10 +1583,10 @@ def test_reference_links_572():
         "[link-ref-def(1,1):True::foo*:: :/url:::::]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[text:*:]",
+        "[text(3,1):*:]",
         "[link:shortcut:/url:::::foo*:::::]",
-        "[text:foo:]",
-        "[text:*:]",
+        "[text(3,3):foo:]",
+        "[text(3,6):*:]",
         "[end-link:::False]",
         "[end-para:::True]",
     ]
@@ -1545,7 +1618,7 @@ def test_reference_links_573():
     expected_tokens = [
         "[para(1,1):]",
         "[link:full:/url2::::bar:foo:::::]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -1579,7 +1652,7 @@ def test_reference_links_574():
     expected_tokens = [
         "[para(1,1):]",
         "[link:collapsed:/url1:::::foo:::::]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -1612,7 +1685,7 @@ def test_reference_links_575():
     expected_tokens = [
         "[para(1,1):]",
         "[link:inline::::::foo:::::]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -1645,9 +1718,9 @@ def test_reference_links_576():
     expected_tokens = [
         "[para(1,1):]",
         "[link:shortcut:/url1:::::foo:False::: :]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
-        "[text:(not a link):]",
+        "[text(1,6):(not a link):]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::foo:: :/url1:::::]",
@@ -1678,11 +1751,11 @@ def test_reference_links_577():
 [baz]: /url"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:foo:]",
-        "[text:]:]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo:]",
+        "[text(1,5):]:]",
         "[link:full:/url::::baz:bar:::::]",
-        "[text:bar:]",
+        "[text(1,7):bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -1716,10 +1789,10 @@ def test_reference_links_578():
     expected_tokens = [
         "[para(1,1):]",
         "[link:full:/url2::::bar:foo:::::]",
-        "[text:foo:]",
+        "[text(1,2):foo:]",
         "[end-link:::False]",
         "[link:shortcut:/url1:::::baz:::::]",
-        "[text:baz:]",
+        "[text(1,12):baz:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -1753,11 +1826,11 @@ def test_reference_links_579():
 [foo]: /url2"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:[:]",
-        "[text:foo:]",
-        "[text:]:]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo:]",
+        "[text(1,5):]:]",
         "[link:full:/url1::::baz:bar:::::]",
-        "[text:bar:]",
+        "[text(1,7):bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",

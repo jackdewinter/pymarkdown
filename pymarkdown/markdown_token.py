@@ -75,6 +75,12 @@ class MarkdownToken:
     # pylint: enable=too-many-arguments
 
     def __str__(self):
+        return self.debug_string()
+
+    def debug_string(self, include_column_row_info=True):
+        """
+        More customizable version of __str__ that allows for options.
+        """
         add_extra = ""
         if (
             self.extra_data
@@ -84,7 +90,7 @@ class MarkdownToken:
         ):
             add_extra = ":" + self.extra_data
         column_row_info = ""
-        if self.line_number or self.column_number:
+        if include_column_row_info and (self.line_number or self.column_number):
             column_row_info = (
                 "(" + str(self.line_number) + "," + str(self.column_number) + ")"
             )
@@ -478,6 +484,8 @@ class EndMarkdownToken(MarkdownToken):
         extra_end_data,
         start_markdown_token,
         was_forced,
+        line_number=0,
+        column_number=0,
     ):
 
         self.type_name = type_name
@@ -491,6 +499,8 @@ class EndMarkdownToken(MarkdownToken):
             EndMarkdownToken.type_name_prefix + type_name,
             MarkdownTokenClass.INLINE_BLOCK,
             "",
+            line_number=line_number,
+            column_number=column_number,
         )
         self.compose_data_field()
 
@@ -515,21 +525,42 @@ class TextMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the text element.
     """
 
-    def __init__(self, token_text, extracted_whitespace, end_whitespace=None):
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        token_text,
+        extracted_whitespace,
+        end_whitespace=None,
+        position_marker=None,
+        line_number=0,
+        column_number=0,
+    ):
         self.token_text = token_text
         self.extracted_whitespace = extracted_whitespace
         self.end_whitespace = end_whitespace
         MarkdownToken.__init__(
-            self, MarkdownToken.token_text, MarkdownTokenClass.INLINE_BLOCK, ""
+            self,
+            MarkdownToken.token_text,
+            MarkdownTokenClass.INLINE_BLOCK,
+            "",
+            position_marker=position_marker,
+            line_number=line_number,
+            column_number=column_number,
         )
         self.compose_extra_data_field()
+
+    # pylint: enable=too-many-arguments
 
     def create_copy(self):
         """
         Create a copy of this token.
         """
         new_token = TextMarkdownToken(
-            self.token_text, self.extracted_whitespace, self.end_whitespace,
+            self.token_text,
+            self.extracted_whitespace,
+            self.end_whitespace,
+            line_number=self.line_number,
+            column_number=self.column_number,
         )
         return new_token
 
@@ -627,21 +658,37 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
 
     # pylint: disable=too-many-arguments
     def __init__(
-        self, token_text, repeat_count, preceding_two, following_two, is_active=True
+        self,
+        token_text,
+        repeat_count,
+        preceding_two,
+        following_two,
+        is_active=True,
+        line_number=0,
+        column_number=0,
     ):
         self.repeat_count = repeat_count
         self.active = is_active
         self.preceding_two = preceding_two
         self.following_two = following_two
-        TextMarkdownToken.__init__(self, token_text, "", "")
+        TextMarkdownToken.__init__(
+            self,
+            token_text,
+            "",
+            "",
+            line_number=line_number,
+            column_number=column_number,
+        )
 
     # pylint: enable=too-many-arguments
 
-    def reduce_repeat_count(self, emphasis_length):
+    def reduce_repeat_count(self, emphasis_length, adjust_column_number=False):
         """
         Reduce the repeat count by the specified amount.
         """
         self.repeat_count = self.repeat_count - emphasis_length
+        if adjust_column_number:
+            self.column_number += emphasis_length
 
     def show_process_emphasis(self):
         """
@@ -1250,7 +1297,9 @@ class EmphasisMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the inline emphasis element.
     """
 
-    def __init__(self, emphasis_length, emphasis_character):
+    def __init__(
+        self, emphasis_length, emphasis_character, line_number=0, column_number=0
+    ):
         self.emphasis_length = emphasis_length
         self.emphasis_character = emphasis_character
         MarkdownToken.__init__(
@@ -1258,6 +1307,8 @@ class EmphasisMarkdownToken(MarkdownToken):
             MarkdownToken.token_inline_emphasis,
             MarkdownTokenClass.INLINE_BLOCK,
             str(emphasis_length) + ":" + emphasis_character,
+            line_number=line_number,
+            column_number=column_number,
         )
 
 

@@ -25,7 +25,7 @@ def test_tabs_001():
     source_markdown = """\tfoo\tbaz\t\tbim"""
     expected_tokens = [
         "[icode-block(1,2):\t:]",
-        "[text:foo\tbaz\t\tbim:]",
+        "[text(1,2):foo\tbaz\t\tbim:]",
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>foo\tbaz\t\tbim
@@ -53,7 +53,7 @@ def test_tabs_002():
     source_markdown = """  \tfoo\tbaz\t\tbim"""
     expected_tokens = [
         "[icode-block(1,4):  \t:]",
-        "[text:foo\tbaz\t\tbim:]",
+        "[text(1,4):foo\tbaz\t\tbim:]",
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>foo\tbaz\t\tbim
@@ -81,7 +81,7 @@ def test_tabs_002a():
     source_markdown = """      foo    baz        bim"""
     expected_tokens = [
         "[icode-block(1,5):    :]",
-        "[text:foo    baz        bim:  ]",
+        "[text(1,5):foo    baz        bim:  ]",
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>  foo    baz        bim
@@ -113,11 +113,11 @@ def test_tabs_002b():
       indented code block"""
     expected_tokens = [
         "[icode-block(1,5):    :\n    ]",
-        "[text:a simple\n  indented code block:]",
+        "[text(1,5):a simple\n  indented code block:]",
         "[end-icode-block:::False]",
         "[tbreak(3,1):-::---]",
         "[icode-block(4,5):    :\n    ]",
-        "[text:a simple\n  indented code block:  ]",
+        "[text(4,5):a simple\n  indented code block:  ]",
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>a simple
@@ -151,7 +151,7 @@ def test_tabs_003():
     ὐ\ta"""
     expected_tokens = [
         "[icode-block(1,5):    :\n    ]",
-        "[text:a\ta\nὐ\ta:]",
+        "[text(1,5):a\ta\nὐ\ta:]",
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>a\ta
@@ -184,11 +184,11 @@ def test_tabs_004x():
     expected_tokens = [
         "[ulist(1,3):-::4:  :\t]",
         "[para(1,5):]",
-        "[text:foo:]",
+        "[text(1,5):foo:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,2):]",
-        "[text:bar:]",
+        "[text(3,2):bar:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
@@ -225,11 +225,11 @@ def test_tabs_004a():
     expected_tokens = [
         "[ulist(1,3):-::4:  :    ]",
         "[para(1,5):]",
-        "[text:foo:]",
+        "[text(1,5):foo:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,5):]",
-        "[text:bar:]",
+        "[text(3,5):bar:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
@@ -266,11 +266,11 @@ def test_tabs_005():
     expected_tokens = [
         "[ulist(1,1):-::2::\t]",
         "[para(1,3):]",
-        "[text:foo:]",
+        "[text(1,3):foo:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[icode-block(3,2):\t\t:]",
-        "[text:bar:  ]",
+        "[text(3,2):bar:  ]",
         "[end-icode-block:::True]",
         "[end-ulist:::True]",
     ]
@@ -306,7 +306,7 @@ def test_tabs_006():
     expected_tokens = [
         "[block-quote(1,1)::> ]",
         "[icode-block(1,3):\t\t:]",
-        "[text:foo:  ]",
+        "[text(1,3):foo:  ]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -338,7 +338,7 @@ def test_tabs_006a():
     expected_tokens = [
         "[block-quote(1,1)::> ]",
         "[icode-block(1,5):  \t:]",
-        "[text:foo:  ]",
+        "[text(1,5):foo:  ]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -370,7 +370,7 @@ def test_tabs_006b():
     expected_tokens = [
         "[block-quote(1,1)::> ]",
         "[icode-block(1,5):\t  :]",
-        "[text:foo:  ]",
+        "[text(1,5):foo:  ]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -402,7 +402,7 @@ def test_tabs_006c():
     expected_tokens = [
         "[block-quote(1,1)::> ]",
         "[icode-block(1,7):    :]",
-        "[text:foo:  ]",
+        "[text(1,7):foo:  ]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -434,7 +434,7 @@ def test_tabs_007():
     expected_tokens = [
         "[ulist(1,1):-::2:]",
         "[icode-block(1,3):\t\t:]",
-        "[text:foo:  ]",
+        "[text(1,3):foo:  ]",
         "[end-icode-block:::True]",
         "[end-ulist:::True]",
     ]
@@ -468,7 +468,7 @@ def test_tabs_007a():
     expected_tokens = [
         "[olist(1,1):):1:3:]",
         "[icode-block(1,4):\t\t:]",
-        "[text:foo: ]",
+        "[text(1,4):foo: ]",
         "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
@@ -502,7 +502,7 @@ def test_tabs_007b():
     expected_tokens = [
         "[olist(1,1):):01:4:]",
         "[icode-block(1,5):\t\t:]",
-        "[text:foo:]",
+        "[text(1,5):foo:]",
         "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
@@ -536,7 +536,7 @@ def test_tabs_007c():
     expected_tokens = [
         "[olist(1,1):):001:5:]",
         "[icode-block(1,6):\t\t:]",
-        "[text:foo:   ]",
+        "[text(1,6):foo:   ]",
         "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
@@ -571,7 +571,7 @@ def test_tabs_008():
     # noqa: E101
     expected_tokens = [
         "[icode-block(1,5):    :\n\t]",
-        "[text:foo\nbar:]",
+        "[text(1,5):foo\nbar:]",
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>foo
@@ -604,15 +604,15 @@ def test_tabs_009():
     expected_tokens = [
         "[ulist(1,2):-::3: ]",
         "[para(1,4):]",
-        "[text:foo:]",
+        "[text(1,4):foo:]",
         "[end-para:::True]",
         "[ulist(2,4):-::5:   ]",
         "[para(2,6):]",
-        "[text:bar:]",
+        "[text(2,6):bar:]",
         "[end-para:::True]",
         "[ulist(3,3):-::7:\t ]",
         "[para(3,5):]",
-        "[text:baz:]",
+        "[text(3,5):baz:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[end-ulist:::True]",
@@ -650,7 +650,7 @@ def test_tabs_010():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """#\tFoo"""
-    expected_tokens = ["[atx(1,1):1:0:]", "[text:Foo:    ]", "[end-atx:::False]"]
+    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):Foo:    ]", "[end-atx:::False]"]
     expected_gfm = """<h1>Foo</h1>"""
 
     # Act

@@ -12,6 +12,8 @@ from .utils import (
     assert_token_consistency,
 )
 
+# pylint: disable=too-many-lines
+
 
 @pytest.mark.gfm
 def test_block_quotes_206():
@@ -28,10 +30,10 @@ def test_block_quotes_206():
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
         "[atx(1,3):1:0:]",
-        "[text:Foo: ]",
+        "[text(1,5):Foo: ]",
         "[end-atx:::False]",
         "[para(2,3):\n]",
-        "[text:bar\nbaz::\n]",
+        "[text(2,3):bar\nbaz::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -39,6 +41,113 @@ def test_block_quotes_206():
 <h1>Foo</h1>
 <p>bar
 baz</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_206a():
+    """
+    Test case 206:  Here is a simple example:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> Foo
+> bar
+> baz"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[para(1,3):\n\n]",
+        "[text(1,3):Foo\nbar\nbaz::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>Foo
+bar
+baz</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_206b():
+    """
+    Test case 206:  Here is a simple example:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> Foo
+bar
+baz"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n\n]",
+        "[para(1,3):\n\n]",
+        "[text(1,3):Foo\nbar\nbaz::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>Foo
+bar
+baz</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_206c():
+    """
+    Test case 206:  Here is a simple example:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> Foo
+ bar
+  baz
+   bofo"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n\n\n]",
+        "[para(1,3):\n \n  \n   ]",
+        "[text(1,3):Foo\nbar\nbaz\nbofo::\n\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>Foo
+bar
+baz
+bofo</p>
 </blockquote>"""
 
     # Act
@@ -66,10 +175,10 @@ def test_block_quotes_207():
     expected_tokens = [
         "[block-quote(1,1)::>\n>\n> ]",
         "[atx(1,2):1:0:]",
-        "[text:Foo: ]",
+        "[text(1,4):Foo: ]",
         "[end-atx:::False]",
         "[para(2,2):\n]",
-        "[text:bar\nbaz::\n]",
+        "[text(2,2):bar\nbaz::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -104,10 +213,10 @@ def test_block_quotes_208():
     expected_tokens = [
         "[block-quote(1,4):   :   > \n   > \n > ]",
         "[atx(1,6):1:0:]",
-        "[text:Foo: ]",
+        "[text(1,8):Foo: ]",
         "[end-atx:::False]",
         "[para(2,6):\n]",
-        "[text:bar\nbaz::\n]",
+        "[text(2,6):bar\nbaz::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -141,7 +250,7 @@ def test_block_quotes_209():
     > baz"""
     expected_tokens = [
         "[icode-block(1,5):    :\n    \n    ]",
-        "[text:\a>\a&gt;\a # Foo\n\a>\a&gt;\a bar\n\a>\a&gt;\a baz:]",
+        "[text(1,5):\a>\a&gt;\a # Foo\n\a>\a&gt;\a bar\n\a>\a&gt;\a baz:]",
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<pre><code>&gt; # Foo
@@ -174,10 +283,10 @@ baz"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n]",
         "[atx(1,3):1:0:]",
-        "[text:Foo: ]",
+        "[text(1,5):Foo: ]",
         "[end-atx:::False]",
         "[para(2,3):\n]",
-        "[text:bar\nbaz::\n]",
+        "[text(2,3):bar\nbaz::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -212,7 +321,7 @@ baz
     expected_tokens = [
         "[block-quote(1,1)::> \n\n> ]",
         "[para(1,3):\n\n]",
-        "[text:bar\nbaz\nfoo::\n\n]",
+        "[text(1,3):bar\nbaz\nfoo::\n\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -247,7 +356,7 @@ def test_block_quotes_212():
     expected_tokens = [
         "[block-quote(1,1)::> ]",
         "[para(1,3):]",
-        "[text:foo:]",
+        "[text(1,3):foo:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[tbreak(2,1):-::---]",
@@ -283,13 +392,13 @@ def test_block_quotes_213():
         "[block-quote(1,1)::> ]",
         "[ulist(1,3):-::4:  ]",
         "[para(1,5):]",
-        "[text:foo:]",
+        "[text(1,5):foo:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[end-block-quote:::True]",
         "[ulist(2,1):-::2:]",
         "[para(2,3):]",
-        "[text:bar:]",
+        "[text(2,3):bar:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
@@ -327,11 +436,11 @@ def test_block_quotes_214():
     expected_tokens = [
         "[block-quote(1,1)::> ]",
         "[icode-block(1,7):    :]",
-        "[text:foo:]",
+        "[text(1,7):foo:]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
         "[icode-block(2,5):    :]",
-        "[text:bar:]",
+        "[text(2,5):bar:]",
         "[end-icode-block:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -370,7 +479,7 @@ foo
         "[end-fcode-block:::True]",
         "[end-block-quote:::True]",
         "[para(2,1):]",
-        "[text:foo:]",
+        "[text(2,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(3,1):`:3::::::]",
         "[end-fcode-block:::True]",
@@ -406,7 +515,7 @@ def test_block_quotes_216():
     expected_tokens = [
         "[block-quote(1,1)::> \n]",
         "[para(1,3):\n    ]",
-        "[text:foo\n- bar::\n]",
+        "[text(1,3):foo\n- bar::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -501,7 +610,7 @@ def test_block_quotes_219():
         "[block-quote(1,1)::>\n> \n> ]",
         "[BLANK(1,2):]",
         "[para(2,3):]",
-        "[text:foo:]",
+        "[text(2,3):foo:]",
         "[end-para:::True]",
         "[BLANK(3,4): ]",
         "[end-block-quote:::True]",
@@ -535,13 +644,13 @@ def test_block_quotes_220():
     expected_tokens = [
         "[block-quote(1,1)::> \n]",
         "[para(1,3):]",
-        "[text:foo:]",
+        "[text(1,3):foo:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[BLANK(2,1):]",
         "[block-quote(3,1)::> ]",
         "[para(3,3):]",
-        "[text:bar:]",
+        "[text(3,3):bar:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -576,7 +685,7 @@ def test_block_quotes_221():
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
         "[para(1,3):\n]",
-        "[text:foo\nbar::\n]",
+        "[text(1,3):foo\nbar::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -610,11 +719,133 @@ def test_block_quotes_222():
     expected_tokens = [
         "[block-quote(1,1)::> \n>\n> ]",
         "[para(1,3):]",
-        "[text:foo:]",
+        "[text(1,3):foo:]",
         "[end-para:::True]",
         "[BLANK(2,2):]",
         "[para(3,3):]",
-        "[text:bar:]",
+        "[text(3,3):bar:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>foo</p>
+<p>bar</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_222a():
+    """
+    Test case 222a:  To get a block quote with two paragraphs, use:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> foo
+>\a
+> bar""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):foo:]",
+        "[end-para:::True]",
+        "[BLANK(2,3):]",
+        "[para(3,3):]",
+        "[text(3,3):bar:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>foo</p>
+<p>bar</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_222b():
+    """
+    Test case 222a:  To get a block quote with two paragraphs, use:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> foo
+>\a\a
+> bar""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):foo:]",
+        "[end-para:::True]",
+        "[BLANK(2,4): ]",
+        "[para(3,3):]",
+        "[text(3,3):bar:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>foo</p>
+<p>bar</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_222c():
+    """
+    Test case 222a:  To get a block quote with two paragraphs, use:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> foo
+>
+>
+> bar""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>\n>\n> ]",
+        "[para(1,3):]",
+        "[text(1,3):foo:]",
+        "[end-para:::True]",
+        "[BLANK(2,2):]",
+        "[BLANK(3,2):]",
+        "[para(4,3):]",
+        "[text(4,3):bar:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -646,11 +877,11 @@ def test_block_quotes_223():
 > bar"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text:foo:]",
+        "[text(1,1):foo:]",
         "[end-para:::True]",
         "[block-quote(2,1)::> ]",
         "[para(2,3):]",
-        "[text:bar:]",
+        "[text(2,3):bar:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -684,13 +915,13 @@ def test_block_quotes_224():
     expected_tokens = [
         "[block-quote(1,1)::> ]",
         "[para(1,3):]",
-        "[text:aaa:]",
+        "[text(1,3):aaa:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[tbreak(2,1):*::***]",
         "[block-quote(3,1)::> ]",
         "[para(3,3):]",
-        "[text:bbb:]",
+        "[text(3,3):bbb:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -726,7 +957,7 @@ baz"""
     expected_tokens = [
         "[block-quote(1,1)::> \n]",
         "[para(1,3):\n]",
-        "[text:bar\nbaz::\n]",
+        "[text(1,3):bar\nbaz::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -760,12 +991,12 @@ baz"""
     expected_tokens = [
         "[block-quote(1,1)::> \n]",
         "[para(1,3):]",
-        "[text:bar:]",
+        "[text(1,3):bar:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[text:baz:]",
+        "[text(3,1):baz:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -798,12 +1029,12 @@ baz"""
     expected_tokens = [
         "[block-quote(1,1)::> \n>\n]",
         "[para(1,3):]",
-        "[text:bar:]",
+        "[text(1,3):bar:]",
         "[end-para:::True]",
         "[BLANK(2,2):]",
         "[end-block-quote:::False]",
         "[para(3,1):]",
-        "[text:baz:]",
+        "[text(3,1):baz:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -837,7 +1068,7 @@ bar"""
         "[block-quote(1,3)::]",
         "[block-quote(1,5)::> > > \n]",
         "[para(1,7):\n]",
-        "[text:foo\nbar::\n]",
+        "[text(1,7):foo\nbar::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
@@ -879,7 +1110,7 @@ def test_block_quotes_229():
         "[block-quote(1,2)::]",
         "[block-quote(1,3)::>>> \n> \n>>]",
         "[para(1,5):\n\n]",
-        "[text:foo\nbar\nbaz::\n\n]",
+        "[text(1,5):foo\nbar\nbaz::\n\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-block-quote:::True]",
@@ -920,13 +1151,13 @@ def test_block_quotes_230():
     expected_tokens = [
         "[block-quote(1,1)::> \n]",
         "[icode-block(1,7):    :]",
-        "[text:code:]",
+        "[text(1,7):code:]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
         "[BLANK(2,1):]",
         "[block-quote(3,1)::> ]",
         "[para(3,6):   ]",
-        "[text:not code:]",
+        "[text(3,6):not code:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]

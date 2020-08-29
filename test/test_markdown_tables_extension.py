@@ -18,7 +18,7 @@ def test_tables_extension_198():
 | baz | bim |"""
     expected_tokens = [
         "[para(1,1):\n\n]",
-        "[text:| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n]",
+        "[text(1,1):| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n]",
         "[end-para:::True]",
     ]
 
@@ -43,7 +43,7 @@ def test_tables_extension_199():
 bar | baz"""
     expected_tokens = [
         "[para(1,1):\n\n]",
-        "[text:| abc | defghi |\n:-: | -----------:\nbar | baz::\n\n]",
+        "[text(1,1):| abc | defghi |\n:-: | -----------:\nbar | baz::\n\n]",
         "[end-para:::True]",
     ]
 
@@ -69,13 +69,13 @@ def test_tables_extension_200():
 | b **\\|** im |"""
     expected_tokens = [
         "[para(1,1):\n\n\n]",
-        "[text:| f\\\b|oo  |\n| ------ |\n| b ::\n\n]",
+        "[text(1,1):| f\\\b|oo  |\n| ------ |\n| b ::\n\n]",
         "[icode-span:\\|:`::]",
-        "[text: az |\n| b ::\n]",
-        "[emphasis:2:*]",
-        "[text:\\\b|:]",
-        "[end-emphasis::2:*:False]",
-        "[text: im |:]",
+        "[text(3,9): az |\n| b ::\n]",
+        "[emphasis(4,5):2:*]",
+        "[text(4,7):\\\b|:]",
+        "[end-emphasis(4,9)::2:*:False]",
+        "[text(4,11): im |:]",
         "[end-para:::True]",
     ]
 
@@ -101,11 +101,11 @@ def test_tables_extension_201():
 > bar"""
     expected_tokens = [
         "[para(1,1):\n\n]",
-        "[text:| abc | def |\n| --- | --- |\n| bar | baz |::\n\n]",
+        "[text(1,1):| abc | def |\n| --- | --- |\n| bar | baz |::\n\n]",
         "[end-para:::True]",
         "[block-quote(4,1)::> ]",
         "[para(4,3):]",
-        "[text:bar:]",
+        "[text(4,3):bar:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -134,11 +134,11 @@ bar
 bar"""
     expected_tokens = [
         "[para(1,1):\n\n\n]",
-        "[text:| abc | def |\n| --- | --- |\n| bar | baz |\nbar::\n\n\n]",
+        "[text(1,1):| abc | def |\n| --- | --- |\n| bar | baz |\nbar::\n\n\n]",
         "[end-para:::True]",
         "[BLANK(5,1):]",
         "[para(6,1):]",
-        "[text:bar:]",
+        "[text(6,1):bar:]",
         "[end-para:::True]",
     ]
 
@@ -163,7 +163,7 @@ def test_tables_extension_203():
 | bar |"""
     expected_tokens = [
         "[para(1,1):\n\n]",
-        "[text:| abc | def |\n| --- |\n| bar |::\n\n]",
+        "[text(1,1):| abc | def |\n| --- |\n| bar |::\n\n]",
         "[end-para:::True]",
     ]
 
@@ -189,7 +189,7 @@ def test_tables_extension_204():
 | bar | baz | boo |"""
     expected_tokens = [
         "[para(1,1):\n\n\n]",
-        "[text:| abc | def |\n| --- | --- |\n| bar |\n| bar | baz | boo |::\n\n\n]",
+        "[text(1,1):| abc | def |\n| --- | --- |\n| bar |\n| bar | baz | boo |::\n\n\n]",
         "[end-para:::True]",
     ]
 
@@ -213,7 +213,7 @@ def test_tables_extension_205():
 | --- | --- |"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[text:| abc | def |\n| --- | --- |::\n]",
+        "[text(1,1):| abc | def |\n| --- | --- |::\n]",
         "[end-para:::True]",
     ]
 

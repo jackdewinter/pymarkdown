@@ -78,13 +78,12 @@ class RuleMd024(Plugin):
                 self.handler_heading_end()
 
         if not skip_this_token and self.__heading_text is not None:
-            self.__heading_text += str(token)
+            self.__heading_text += token.debug_string(include_column_row_info=False)
 
     def handle_heading_start(self, token):
         """
         Process the start heading token, atx or setext
         """
-
         self.__heading_text = ""
         self.__start_token = token
         if self.__siblings_only:
