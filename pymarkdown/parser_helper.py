@@ -484,12 +484,6 @@ class ParserHelper:
                 )
             else:
                 main_text = replace_text + main_text[end_replacement_index + 1 :]
-            print(
-                ">>rehydrate_text>>"
-                + str(len(main_text))
-                + ">>"
-                + ParserHelper.make_value_visible(main_text)
-            )
         return main_text
 
     @staticmethod

@@ -640,6 +640,7 @@ def test_tabs_009():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_tabs_010():
     """

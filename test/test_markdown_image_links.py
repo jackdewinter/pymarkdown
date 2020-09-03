@@ -880,7 +880,7 @@ def test_image_link_600():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):!\\\b[foo:]",
-        "[text(1,6):]:]",
+        "[text(1,7):]:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',

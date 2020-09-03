@@ -8,6 +8,7 @@ from pymarkdown.markdown_token import (
     MarkdownToken,
     TextMarkdownToken,
 )
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -49,5 +50,8 @@ class RuleMd019(Plugin):
             if token.type_name == MarkdownToken.token_paragraph:
                 self.__in_atx_heading = False
         elif isinstance(token, TextMarkdownToken):
-            if self.__in_atx_heading and len(token.extracted_whitespace) > 1:
+            resolved_extracted_whitespace = ParserHelper.resolve_replacement_markers_from_text(
+                token.extracted_whitespace
+            )
+            if self.__in_atx_heading and len(resolved_extracted_whitespace) > 1:
                 self.report_next_token_error(token)

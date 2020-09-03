@@ -344,6 +344,7 @@ class InlineProcessor:
             inline_response = InlineResponse()
             inline_response.new_string = LinkHelper.image_start_sequence[0]
             inline_response.new_index = inline_request.next_index + 1
+            inline_response.delta_column_number = 1
         return inline_response
 
     # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
@@ -367,7 +368,10 @@ class InlineProcessor:
         repeat_count = 1
         is_active = True
         consume_rest_of_line = False
+        LOGGER.debug(">>column_number>>%s<<", str(column_number))
+        LOGGER.debug(">>remaining_line>>%s<<", str(remaining_line))
         column_number += len(remaining_line)
+        LOGGER.debug(">>column_number>>%s<<", str(column_number))
         special_sequence = source_text[next_index : next_index + special_length]
         if special_length == 1 and special_sequence in EmphasisHelper.inline_emphasis:
             repeat_count, new_index = ParserHelper.collect_while_character(
@@ -442,6 +446,7 @@ class InlineProcessor:
                 new_index = next_index + special_length
 
         if not new_token:
+            LOGGER.debug(">>create>>%s,%s<<", str(line_number), str(column_number))
             new_token = SpecialTextMarkdownToken(
                 special_sequence,
                 repeat_count,
@@ -568,6 +573,9 @@ class InlineProcessor:
                 str(last_line_number),
                 str(last_column_number),
             )
+            LOGGER.debug(
+                ">>inline_blocks>>%s<<", ParserHelper.make_value_visible(inline_blocks)
+            )
             inline_response.clear_fields()
             reset_current_string = False
             whitespace_to_add = None
@@ -609,6 +617,10 @@ class InlineProcessor:
                 column_number += inline_response.delta_column_number
                 LOGGER.debug(
                     "handler(after)>>%s,%s<<", str(line_number), str(column_number)
+                )
+                LOGGER.debug(
+                    "handler(after)>>new_tokens>>%s<<",
+                    ParserHelper.make_value_visible(inline_response.new_tokens),
                 )
             else:
                 assert source_text[next_index] == ParserHelper.newline_character
@@ -728,10 +740,10 @@ class InlineProcessor:
                     LOGGER.debug(">>>text2")
                     inline_blocks.append(
                         TextMarkdownToken(
+                            "",
                             ParserHelper.create_replace_with_nothing_marker(
                                 starting_whitespace
                             ),
-                            "",
                             line_number=last_line_number,
                             column_number=last_column_number,
                         )

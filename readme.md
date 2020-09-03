@@ -17,6 +17,10 @@
 - where is `elif starting_whitespace:` used? why? better way to do it?
 - image token handling confusing and non-standard
 - fenced code block handling of line/col could be better
+- why is space after atx in text?
+- why does hard break not have \n?
+- HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
+- verifying vs validating?
 
 ## Bugs - Character Entities
 
