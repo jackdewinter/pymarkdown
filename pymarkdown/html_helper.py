@@ -543,7 +543,7 @@ class HtmlHelper:
         return valid_raw_html, parse_index
 
     @staticmethod
-    def parse_raw_html(only_between_angles, remaining_line):
+    def parse_raw_html(only_between_angles, remaining_line, line_number, column_number):
         """
         Given an open HTML tag character (<), try the various possibilities for
         types of tag, and determine if any of them parse validly.
@@ -588,7 +588,10 @@ class HtmlHelper:
             valid_raw_html = HtmlHelper.__parse_raw_declaration(only_between_angles)
 
         if valid_raw_html:
-            return RawHtmlMarkdownToken(valid_raw_html), remaining_line_parse_index
+            return (
+                RawHtmlMarkdownToken(valid_raw_html, line_number, column_number),
+                remaining_line_parse_index,
+            )
         return None, -1
 
     @staticmethod

@@ -21,6 +21,11 @@
 - why does hard break not have \n?
 - HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
 - verifying vs validating?
+- 634a in bq and in list
+- raw html, 500
+- links, 518b
+  - links with LF in link_label
+  - each inline token surrounded by text
 
 ## Bugs - Character Entities
 
@@ -35,8 +40,6 @@
 
 - backslashes - 600
 - atx heading text, 183
-- raw html, 500
-- links, 518b
 - images, with newline in title?
 - lrds spanning lines
 - code span

@@ -13,6 +13,7 @@ from pymarkdown.markdown_token import (
     EmailAutolinkMarkdownToken,
     HardBreakMarkdownToken,
     InlineCodeSpanMarkdownToken,
+    MarkdownToken,
     UriAutolinkMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
@@ -779,9 +780,18 @@ class InlineHelper:
             if not new_token:
                 new_token = InlineHelper.__parse_valid_email_autolink(between_brackets)
             if not new_token:
-                LOGGER.debug(">>between_brackets>>%s", str(between_brackets))
+
+                new_column_number = inline_request.column_number
+                LOGGER.debug(">>between_brackets>>%s<<", str(between_brackets))
+                LOGGER.debug(">>new_column_number>>%s", str(new_column_number))
+                new_column_number += len(inline_request.remaining_line)
+                LOGGER.debug(">>new_column_number>>%s", str(new_column_number))
+
                 new_token, after_index = HtmlHelper.parse_raw_html(
-                    between_brackets, remaining_line
+                    between_brackets,
+                    remaining_line,
+                    inline_request.line_number,
+                    new_column_number,
                 )
                 LOGGER.debug(">>new_token>>%s", str(new_token))
                 if after_index != -1:
@@ -795,8 +805,29 @@ class InlineHelper:
         else:
             inline_response.new_string = InlineHelper.angle_bracket_start
             inline_response.new_index = inline_request.next_index + 1
+
         inline_response.delta_line_number = 0
-        inline_response.delta_column_number = (
-            inline_response.new_index - inline_request.next_index
-        )
+        if (
+            new_token
+            and new_token.token_name == MarkdownToken.token_inline_raw_html
+            and "\n" in new_token.raw_tag
+        ):
+            split_raw_tag = new_token.raw_tag.split("\n")
+            LOGGER.debug(
+                ">>split_raw_tag>>%s<<", ParserHelper.make_value_visible(split_raw_tag)
+            )
+            inline_response.delta_line_number += len(split_raw_tag) - 1
+            length_of_last_elements = len(split_raw_tag[-1])
+            LOGGER.debug(
+                ">>xx>>%s<<", ParserHelper.make_value_visible(length_of_last_elements)
+            )
+            inline_response.delta_column_number = -(length_of_last_elements + 2)
+            LOGGER.debug(
+                ">>delta_column_number>>%s<<",
+                ParserHelper.make_value_visible(inline_response.delta_column_number),
+            )
+        else:
+            inline_response.delta_column_number = (
+                inline_response.new_index - inline_request.next_index
+            )
         return inline_response

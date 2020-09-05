@@ -220,7 +220,7 @@ def test_emphasis_482():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):*:]",
-        "[link:inline:/url:::::bar*:False::::]",
+        "[link(1,2):inline:/url:::::bar*:False::::]",
         "[text(1,3):bar:]",
         "[text(1,6):*:]",
         "[end-link:::False]",
@@ -252,7 +252,7 @@ def test_emphasis_483():
         "[para(1,1):]",
         "[text(1,1):_:]",
         "[text(1,2):foo :]",
-        "[link:inline:/url:::::bar_:False::::]",
+        "[link(1,6):inline:/url:::::bar_:False::::]",
         "[text(1,7):bar:]",
         "[text(1,10):_:]",
         "[end-link:::False]",
@@ -283,7 +283,7 @@ def test_emphasis_484():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):*:]",
-        '[raw-html:img src="foo" title="*"/]',
+        '[raw-html(1,2):img src="foo" title="*"/]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>*<img src="foo" title="*"/></p>"""
@@ -311,7 +311,7 @@ def test_emphasis_485():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):**:]",
-        '[raw-html:a href="**"]',
+        '[raw-html(1,3):a href="**"]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>**<a href="**"></p>"""
@@ -339,7 +339,7 @@ def test_emphasis_486():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):__:]",
-        '[raw-html:a href="__"]',
+        '[raw-html(1,3):a href="__"]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>__<a href="__"></p>"""

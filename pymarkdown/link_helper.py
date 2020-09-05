@@ -973,6 +973,8 @@ class LinkHelper:
         )
         LOGGER.debug(">>text_from_blocks_raw>>%s>>", text_from_blocks_raw)
 
+        line_number = inline_blocks[ind].line_number
+        column_number = inline_blocks[ind].column_number
         if start_text == LinkHelper.__link_start_sequence:
             inline_blocks[ind] = LinkStartMarkdownToken(
                 inline_link,
@@ -987,6 +989,8 @@ class LinkHelper:
                 before_link_whitespace,
                 before_title_whitespace,
                 after_title_whitespace,
+                line_number,
+                column_number,
             )
             token_to_append = EndMarkdownToken(
                 MarkdownToken.token_inline_link, "", "", None, False

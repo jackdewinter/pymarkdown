@@ -759,14 +759,17 @@ def __verify_first_inline_paragraph(last_non_inline_token, first_inline_token):
     elif first_inline_token.token_name == MarkdownToken.token_inline_emphasis:
         assert first_inline_token.line_number == last_non_inline_token.line_number
         assert first_inline_token.column_number == last_non_inline_token.column_number
+    elif first_inline_token.token_name == MarkdownToken.token_inline_raw_html:
+        assert first_inline_token.line_number == last_non_inline_token.line_number
+        assert first_inline_token.column_number == last_non_inline_token.column_number
+    elif first_inline_token.token_name == MarkdownToken.token_inline_link:
+        assert first_inline_token.line_number == last_non_inline_token.line_number
+        assert first_inline_token.column_number == last_non_inline_token.column_number
 
     elif first_inline_token.token_name == MarkdownToken.token_inline_hard_break:
         assert first_inline_token.line_number == 0
         assert first_inline_token.column_number == 0
     elif first_inline_token.token_name == MarkdownToken.token_inline_code_span:
-        assert first_inline_token.line_number == 0
-        assert first_inline_token.column_number == 0
-    elif first_inline_token.token_name == MarkdownToken.token_inline_raw_html:
         assert first_inline_token.line_number == 0
         assert first_inline_token.column_number == 0
     elif first_inline_token.token_name == MarkdownToken.token_inline_uri_autolink:
@@ -776,9 +779,6 @@ def __verify_first_inline_paragraph(last_non_inline_token, first_inline_token):
         assert first_inline_token.line_number == 0
         assert first_inline_token.column_number == 0
     elif first_inline_token.token_name == MarkdownToken.token_inline_image:
-        assert first_inline_token.line_number == 0
-        assert first_inline_token.column_number == 0
-    elif first_inline_token.token_name == MarkdownToken.token_inline_link:
         assert first_inline_token.line_number == 0
         assert first_inline_token.column_number == 0
 
@@ -851,169 +851,63 @@ def __verify_next_inline(  # noqa: C901
     estimated_line_number = previous_inline_token.line_number
     estiated_column_number = previous_inline_token.column_number
 
+    print(
+        ">>before-"
+        + previous_inline_token.token_name
+        + ">>"
+        + str(estimated_line_number)
+        + ","
+        + str(estiated_column_number)
+    )
+
     if previous_inline_token.token_name == MarkdownToken.token_text:
-
-        current_line = previous_inline_token.token_text
-        if (
-            pre_previous_inline_token
-            and pre_previous_inline_token.token_name
-            == MarkdownToken.token_inline_hard_break
-        ):
-            assert current_line.startswith("\n")
-            current_line = current_line[1:]
-        else:
-            if (
-                not pre_previous_inline_token
-                and last_token.token_name == MarkdownToken.token_atx_heading
-            ):
-                pass
-            else:
-                current_line = previous_inline_token.extracted_whitespace + current_line
-
-        print("last_token>" + ParserHelper.make_value_visible(last_token) + "<")
-        split_extracted_whitespace = None
-        split_end_whitespace = None
-        if last_token.token_name == MarkdownToken.token_paragraph:
-            print(
-                "last_token.rehydrate_index>"
-                + ParserHelper.make_value_visible(last_token.rehydrate_index)
-                + "<"
-            )
-            split_extracted_whitespace = last_token.extracted_whitespace.split("\n")
-            print(
-                "split_extracted_whitespace>"
-                + ParserHelper.make_value_visible(split_extracted_whitespace)
-                + "<"
-            )
-        elif (
-            last_token.token_name == MarkdownToken.token_setext_heading
-            and previous_inline_token.end_whitespace
-        ):
-            split_end_whitespace = previous_inline_token.end_whitespace.split("\n")
-            print(
-                "split_end_whitespace>"
-                + ParserHelper.make_value_visible(split_end_whitespace)
-                + "<"
-            )
-            split_end_whitespace = split_end_whitespace[-1]
-            print(
-                "split_end_whitespace>"
-                + ParserHelper.make_value_visible(split_end_whitespace)
-                + "<"
-            )
-            if split_end_whitespace:
-                assert split_end_whitespace.endswith("\x02")
-                split_end_whitespace = split_end_whitespace[0:-1]
-                print(
-                    "split_end_whitespace>"
-                    + ParserHelper.make_value_visible(split_end_whitespace)
-                    + "<"
-                )
-                split_end_whitespace = len(split_end_whitespace)
-                print(
-                    "split_end_whitespace>"
-                    + ParserHelper.make_value_visible(split_end_whitespace)
-                    + "<"
-                )
-
-        split_current_line = current_line.split("\n")
-        print(
-            "split_current_line>"
-            + ParserHelper.make_value_visible(split_current_line)
-            + "<"
+        estimated_line_number, estiated_column_number = __verify_next_inline_text(
+            last_token,
+            pre_previous_inline_token,
+            previous_inline_token,
+            estimated_line_number,
+            estiated_column_number,
         )
-        delta_line = len(split_current_line) - 1
-
-        if split_extracted_whitespace and last_token.rehydrate_index < len(
-            split_extracted_whitespace
-        ):
-            rehydrate_index = last_token.rehydrate_index
-            for next_line_index in range(1, len(split_current_line)):
-                combined_index = next_line_index - 1 + rehydrate_index
-                print("combined_index:" + str(combined_index))
-                print(
-                    "split_extracted_whitespace["
-                    + str(combined_index)
-                    + "]>"
-                    + ParserHelper.make_value_visible(
-                        split_extracted_whitespace[combined_index]
-                    )
-                    + "<"
-                )
-                print(
-                    "split_current_line["
-                    + str(next_line_index)
-                    + "]>"
-                    + ParserHelper.make_value_visible(
-                        split_current_line[next_line_index]
-                    )
-                    + "<"
-                )
-                split_current_line[next_line_index] = (
-                    split_extracted_whitespace[combined_index]
-                    + split_current_line[next_line_index]
-                )
-                last_token.rehydrate_index += 1
-            print(
-                "split_current_line>"
-                + ParserHelper.make_value_visible(split_current_line)
-                + "<"
-            )
-
-        split_current_line = split_current_line[-1]
-        print(
-            "split_current_line>"
-            + ParserHelper.make_value_visible(split_current_line)
-            + "<"
-        )
-        split_current_line = ParserHelper.remove_backspaces_from_text(
-            split_current_line
-        )
-        split_current_line = ParserHelper.resolve_replacement_markers_from_text(
-            split_current_line
-        )
-        print(
-            "split_current_line>"
-            + ParserHelper.make_value_visible(split_current_line)
-            + "<"
-        )
-        delta_column = len(split_current_line)
-
-        estimated_line_number += delta_line
-        if delta_line:
-            estiated_column_number = 1
-        estiated_column_number += delta_column
-        if split_end_whitespace:
-            estiated_column_number += split_end_whitespace
     elif previous_inline_token.token_name == MarkdownToken.token_inline_emphasis:
-        estiated_column_number += previous_inline_token.emphasis_length
+        (
+            estimated_line_number,
+            estiated_column_number,
+        ) = __verify_next_inline_emphasis_start(
+            previous_inline_token, estimated_line_number, estiated_column_number,
+        )
     elif (
         previous_inline_token.token_name
         == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_emphasis
     ):
-
-        print(">>" + str(previous_inline_token.extra_end_data) + "<<")
-        split_extra_end_data = previous_inline_token.extra_end_data.split(":")
-        print(">>" + str(split_extra_end_data) + "<<")
-        estiated_column_number += int(split_extra_end_data[0])
+        (
+            estimated_line_number,
+            estiated_column_number,
+        ) = __verify_next_inline_emphasis_end(
+            previous_inline_token, estimated_line_number, estiated_column_number,
+        )
     elif previous_inline_token.token_name == MarkdownToken.token_blank_line:
-        estimated_line_number += 1
-        estiated_column_number = 1
-        if current_inline_token.token_name == MarkdownToken.token_text:
-            estiated_column_number += len(current_inline_token.extracted_whitespace)
-
+        estimated_line_number, estiated_column_number = __verify_next_inline_blank_line(
+            current_inline_token, estimated_line_number, estiated_column_number,
+        )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_hard_break:
         assert False
     elif previous_inline_token.token_name == MarkdownToken.token_inline_code_span:
         assert False
     elif previous_inline_token.token_name == MarkdownToken.token_inline_raw_html:
-        assert False
+        estimated_line_number, estiated_column_number = __verify_next_inline_raw_html(
+            previous_inline_token, estimated_line_number, estiated_column_number,
+        )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_uri_autolink:
         assert False
     elif previous_inline_token.token_name == MarkdownToken.token_inline_email_autolink:
         assert False
     elif previous_inline_token.token_name == MarkdownToken.token_inline_link:
-        assert False
+        (
+            estimated_line_number,
+            estiated_column_number,
+        ) = __verify_next_inline_inline_link(
+            estimated_line_number, estiated_column_number,
+        )
     elif (
         previous_inline_token.token_name
         == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
@@ -1024,10 +918,17 @@ def __verify_next_inline(  # noqa: C901
     else:
         assert False, previous_inline_token.token_name
 
+    print(
+        ">>before-blank>>"
+        + str(estimated_line_number)
+        + ","
+        + str(estiated_column_number)
+    )
     if current_inline_token.token_name == MarkdownToken.token_blank_line:
         if previous_inline_token.token_name != MarkdownToken.token_blank_line:
             estimated_line_number += 1
         estiated_column_number = 1
+    print(">>after>>" + str(estimated_line_number) + "," + str(estiated_column_number))
 
     assert estimated_line_number == current_inline_token.line_number, (
         ">>est>"
@@ -1046,6 +947,196 @@ def __verify_next_inline(  # noqa: C901
 # pylint: enable=too-many-branches,too-many-statements,too-many-locals
 
 
+def __verify_next_inline_blank_line(
+    current_inline_token, estimated_line_number, estiated_column_number,
+):
+    estimated_line_number += 1
+    estiated_column_number = 1
+    if current_inline_token.token_name == MarkdownToken.token_text:
+        estiated_column_number += len(current_inline_token.extracted_whitespace)
+    return estimated_line_number, estiated_column_number
+
+
+def __verify_next_inline_inline_link(
+    estimated_line_number, estiated_column_number,
+):
+    estiated_column_number += 1
+    return estimated_line_number, estiated_column_number
+
+
+def __verify_next_inline_raw_html(
+    previous_inline_token, estimated_line_number, estiated_column_number,
+):
+
+    if "\n" in previous_inline_token.raw_tag:
+        split_raw_tag = previous_inline_token.raw_tag.split("\n")
+        estimated_line_number += len(split_raw_tag) - 1
+        estiated_column_number = len(split_raw_tag[-1]) + 2
+    else:
+        estiated_column_number += len(previous_inline_token.raw_tag) + 2
+    return estimated_line_number, estiated_column_number
+
+
+def __verify_next_inline_emphasis_start(
+    previous_inline_token, estimated_line_number, estiated_column_number,
+):
+    estiated_column_number += previous_inline_token.emphasis_length
+    return estimated_line_number, estiated_column_number
+
+
+def __verify_next_inline_emphasis_end(
+    previous_inline_token, estimated_line_number, estiated_column_number,
+):
+    print(">>" + str(previous_inline_token.extra_end_data) + "<<")
+    split_extra_end_data = previous_inline_token.extra_end_data.split(":")
+    print(">>" + str(split_extra_end_data) + "<<")
+    estiated_column_number += int(split_extra_end_data[0])
+    return estimated_line_number, estiated_column_number
+
+
+# pylint: disable=too-many-statements, too-many-arguments
+def __verify_next_inline_text(
+    last_token,
+    pre_previous_inline_token,
+    previous_inline_token,
+    estimated_line_number,
+    estiated_column_number,
+):
+    current_line = previous_inline_token.token_text
+    if (
+        pre_previous_inline_token
+        and pre_previous_inline_token.token_name
+        == MarkdownToken.token_inline_hard_break
+    ):
+        assert current_line.startswith("\n")
+        current_line = current_line[1:]
+    else:
+        if (
+            not pre_previous_inline_token
+            and last_token.token_name == MarkdownToken.token_atx_heading
+        ):
+            pass
+        else:
+            current_line = previous_inline_token.extracted_whitespace + current_line
+
+    print("last_token>" + ParserHelper.make_value_visible(last_token) + "<")
+    split_extracted_whitespace = None
+    split_end_whitespace = None
+    if last_token.token_name == MarkdownToken.token_paragraph:
+        print(
+            "last_token.rehydrate_index>"
+            + ParserHelper.make_value_visible(last_token.rehydrate_index)
+            + "<"
+        )
+        split_extracted_whitespace = last_token.extracted_whitespace.split("\n")
+        print(
+            "split_extracted_whitespace>"
+            + ParserHelper.make_value_visible(split_extracted_whitespace)
+            + "<"
+        )
+    elif (
+        last_token.token_name == MarkdownToken.token_setext_heading
+        and previous_inline_token.end_whitespace
+    ):
+        split_end_whitespace = previous_inline_token.end_whitespace.split("\n")
+        print(
+            "split_end_whitespace>"
+            + ParserHelper.make_value_visible(split_end_whitespace)
+            + "<"
+        )
+        split_end_whitespace = split_end_whitespace[-1]
+        print(
+            "split_end_whitespace>"
+            + ParserHelper.make_value_visible(split_end_whitespace)
+            + "<"
+        )
+        if split_end_whitespace:
+            assert split_end_whitespace.endswith("\x02")
+            split_end_whitespace = split_end_whitespace[0:-1]
+            print(
+                "split_end_whitespace>"
+                + ParserHelper.make_value_visible(split_end_whitespace)
+                + "<"
+            )
+            split_end_whitespace = len(split_end_whitespace)
+            print(
+                "split_end_whitespace>"
+                + ParserHelper.make_value_visible(split_end_whitespace)
+                + "<"
+            )
+
+    split_current_line = current_line.split("\n")
+    print(
+        "split_current_line>"
+        + ParserHelper.make_value_visible(split_current_line)
+        + "<"
+    )
+    delta_line = len(split_current_line) - 1
+
+    if split_extracted_whitespace and last_token.rehydrate_index < len(
+        split_extracted_whitespace
+    ):
+        rehydrate_index = last_token.rehydrate_index
+        for next_line_index in range(1, len(split_current_line)):
+            combined_index = next_line_index - 1 + rehydrate_index
+            print("combined_index:" + str(combined_index))
+            print(
+                "split_extracted_whitespace["
+                + str(combined_index)
+                + "]>"
+                + ParserHelper.make_value_visible(
+                    split_extracted_whitespace[combined_index]
+                )
+                + "<"
+            )
+            print(
+                "split_current_line["
+                + str(next_line_index)
+                + "]>"
+                + ParserHelper.make_value_visible(split_current_line[next_line_index])
+                + "<"
+            )
+            split_current_line[next_line_index] = (
+                split_extracted_whitespace[combined_index]
+                + split_current_line[next_line_index]
+            )
+            last_token.rehydrate_index += 1
+        print(
+            "split_current_line>"
+            + ParserHelper.make_value_visible(split_current_line)
+            + "<"
+        )
+
+    split_current_line = split_current_line[-1]
+    print(
+        "split_current_line>"
+        + ParserHelper.make_value_visible(split_current_line)
+        + "<"
+    )
+    split_current_line = ParserHelper.remove_backspaces_from_text(split_current_line)
+    split_current_line = ParserHelper.resolve_replacement_markers_from_text(
+        split_current_line
+    )
+    print(
+        "split_current_line>"
+        + ParserHelper.make_value_visible(split_current_line)
+        + "<"
+    )
+    delta_column = len(split_current_line)
+
+    estimated_line_number += delta_line
+    if delta_line:
+        estiated_column_number = 1
+    estiated_column_number += delta_column
+    if split_end_whitespace:
+        estiated_column_number += split_end_whitespace
+    return estimated_line_number, estiated_column_number
+
+
+# pylint: enable=too-many-statements, too-many-arguments
+
+
+# pylint: disable=too-many-branches
 def verify_inline(
     actual_tokens, last_token, last_token_index, current_token, last_token_stack
 ):
@@ -1097,14 +1188,18 @@ def verify_inline(
         last_token.rehydrate_index = 1
 
     if inline_tokens:
+        link_stack = []
         for token_index, current_inline_token in enumerate(inline_tokens):
             print(
                 str(token_index)
                 + "-token:"
                 + ParserHelper.make_value_visible(current_inline_token)
             )
+            print("  links:" + ParserHelper.make_value_visible(link_stack))
             if not token_index:
-                __verify_first_inline(last_token, inline_tokens[0], last_token_stack)
+                __verify_first_inline(
+                    last_token, current_inline_token, last_token_stack
+                )
             else:
                 pre_last_token = None
                 if token_index >= 2:
@@ -1116,9 +1211,22 @@ def verify_inline(
                     current_inline_token,
                 )
 
+            if current_inline_token.token_name == MarkdownToken.token_inline_link:
+                link_stack.append(current_inline_token)
+            elif (
+                current_inline_token.token_name
+                == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
+            ):
+                del link_stack[-1]
+
+        assert not link_stack
+
         # verify_last_inline(inline_tokens[-1], current_inline_token)
 
     if next_token_index < len(actual_tokens):
         print("<<current_token:" + ParserHelper.make_value_visible(current_token))
     else:
         print("<<[EOL]")
+
+
+# pylint: enable=too-many-branches

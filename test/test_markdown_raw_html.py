@@ -26,9 +26,9 @@ def test_raw_html_632():
     source_markdown = """<a><bab><c2c>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[raw-html:a]",
-        "[raw-html:bab]",
-        "[raw-html:c2c]",
+        "[raw-html(1,1):a]",
+        "[raw-html(1,4):bab]",
+        "[raw-html(1,9):c2c]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a><bab><c2c></p>"""
@@ -55,8 +55,8 @@ def test_raw_html_633():
     source_markdown = """<a/><b2/>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[raw-html:a/]",
-        "[raw-html:b2/]",
+        "[raw-html(1,1):a/]",
+        "[raw-html(1,5):b2/]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a/><b2/></p>"""
@@ -84,8 +84,8 @@ def test_raw_html_634():
 data="foo" >"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[raw-html:a  /]",
-        '[raw-html:b2\ndata="foo" ]',
+        "[raw-html(1,1):a  /]",
+        '[raw-html(1,7):b2\ndata="foo" ]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a  /><b2
@@ -93,6 +93,37 @@ data="foo" ></p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_raw_html_634a():
+    """
+    Test case 634:  Whitespace is allowed:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """<a  /><b2
+data="foo" ><c>"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[raw-html(1,1):a  /]",
+        '[raw-html(1,7):b2\ndata="foo" ]',
+        "[raw-html(2,13):c]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a  /><b2
+data="foo" ><c></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -114,7 +145,7 @@ def test_raw_html_635():
 _boolean zoop:33=zoop:33 />"""
     expected_tokens = [
         "[para(1,1):\n]",
-        """[raw-html:a foo="bar" bam = 'baz <em>"</em>'
+        """[raw-html(1,1):a foo="bar" bam = 'baz <em>"</em>'
 _boolean zoop:33=zoop:33 /]""",
         "[end-para:::True]",
     ]
@@ -144,13 +175,13 @@ def test_raw_html_636():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):Foo :]",
-        '[raw-html:responsive-image src="foo.jpg" /]',
+        '[raw-html(1,5):responsive-image src="foo.jpg" /]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>Foo <responsive-image src="foo.jpg" /></p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -343,8 +374,8 @@ def test_raw_html_642():
     source_markdown = """</a></foo >"""
     expected_tokens = [
         "[para(1,1):]",
-        "[raw-html:/a]",
-        "[raw-html:/foo ]",
+        "[raw-html(1,1):/a]",
+        "[raw-html(1,5):/foo ]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p></a></foo ></p>"""
@@ -427,7 +458,7 @@ comment - with hyphen -->"""
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):foo :]",
-        "[raw-html:!-- this is a\ncomment - with hyphen --]",
+        "[raw-html(1,5):!-- this is a\ncomment - with hyphen --]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo <!-- this is a
@@ -517,7 +548,7 @@ def test_raw_html_647():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):foo :]",
-        "[raw-html:?php echo $a; ?]",
+        "[raw-html(1,5):?php echo $a; ?]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo <?php echo $a; ?></p>"""
@@ -545,7 +576,7 @@ def test_raw_html_648():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):foo :]",
-        "[raw-html:!ELEMENT br EMPTY]",
+        "[raw-html(1,5):!ELEMENT br EMPTY]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo <!ELEMENT br EMPTY></p>"""
@@ -600,7 +631,7 @@ def test_raw_html_649():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):foo :]",
-        "[raw-html:![CDATA[>&<]]]",
+        "[raw-html(1,5):![CDATA[>&<]]]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo <![CDATA[>&<]]></p>"""
@@ -628,7 +659,7 @@ def test_raw_html_650():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):foo :]",
-        '[raw-html:a href="&ouml;"]',
+        '[raw-html(1,5):a href="&ouml;"]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo <a href="&ouml;"></p>"""
@@ -656,7 +687,7 @@ def test_raw_html_651():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):foo :]",
-        '[raw-html:a href="\\*"]',
+        '[raw-html(1,5):a href="\\*"]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo <a href="\\*"></p>"""

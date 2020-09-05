@@ -15,7 +15,7 @@ from .utils import (
 
 # pylint: disable=too-many-lines
 @pytest.mark.gfm
-def test_inline_links_493():
+def test_inline_links_493x():
     """
     Test case 493:  Here is a simple inline link:
     """
@@ -26,7 +26,7 @@ def test_inline_links_493():
     source_markdown = """[link](/uri "title")"""
     expected_tokens = [
         "[para(1,1):]",
-        '[link:inline:/uri:title::::link:False:":: :]',
+        '[link(1,1):inline:/uri:title::::link:False:":: :]',
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -55,7 +55,7 @@ def test_inline_links_493a():
     source_markdown = """[link](/uri "title") """
     expected_tokens = [
         "[para(1,1):: ]",
-        '[link:inline:/uri:title::::link:False:":: :]',
+        '[link(1,1):inline:/uri:title::::link:False:":: :]',
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -84,7 +84,7 @@ def test_inline_links_493b():
     source_markdown = """[link](/uri "title") abc"""
     expected_tokens = [
         "[para(1,1):]",
-        '[link:inline:/uri:title::::link:False:":: :]',
+        '[link(1,1):inline:/uri:title::::link:False:":: :]',
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[text(1,21): abc:]",
@@ -114,7 +114,7 @@ def test_inline_links_494():
     source_markdown = """[link](/uri)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:/uri:::::link:False::::]",
+        "[link(1,1):inline:/uri:::::link:False::::]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -143,7 +143,7 @@ def test_inline_links_495():
     source_markdown = """[link]()"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline::::::link:::::]",
+        "[link(1,1):inline::::::link:::::]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -172,7 +172,7 @@ def test_inline_links_496():
     source_markdown = """[link](<>)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline::::::link:True::::]",
+        "[link(1,1):inline::::::link:True::::]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -231,7 +231,7 @@ def test_inline_links_498():
     source_markdown = """[link](</my uri>)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:/my%20uri::/my uri:::link:True::::]",
+        "[link(1,1):inline:/my%20uri::/my uri:::link:True::::]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -297,15 +297,15 @@ bar>)"""
         "[text(1,2):link:]",
         "[text(1,6):]:]",
         "[text(1,7):(:]",
-        "[raw-html:foo\nbar]",
-        "[text(1,17):):]",
+        "[raw-html(1,8):foo\nbar]",
+        "[text(2,5):):]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[link](<foo
 bar>)</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -326,7 +326,7 @@ def test_inline_links_501():
     source_markdown = """[a](<b)c>)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:b)c:::::a:True::::]",
+        "[link(1,1):inline:b)c:::::a:True::::]",
         "[text(1,2):a:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -399,7 +399,7 @@ def test_inline_links_503():
         "[text(3,2):a:]",
         "[text(3,3):]:]",
         "[text(3,4):(:]",
-        "[raw-html:b]",
+        "[raw-html(3,5):b]",
         "[text(3,8):c):]",
         "[end-para:::True]",
     ]
@@ -429,7 +429,7 @@ def test_inline_links_504():
     source_markdown = """[link](\\(foo\\))"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:(foo)::\\(foo\\):::link:False::::]",
+        "[link(1,1):inline:(foo)::\\(foo\\):::link:False::::]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -458,7 +458,7 @@ def test_inline_links_505():
     source_markdown = """[link](foo(and(bar)))"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:foo(and(bar)):::::link:False::::]",
+        "[link(1,1):inline:foo(and(bar)):::::link:False::::]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -487,7 +487,7 @@ def test_inline_links_506():
     source_markdown = """[link](foo\\(and\\(bar\\))"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:foo(and(bar)::foo\\(and\\(bar\\):::link:False::::]",
+        "[link(1,1):inline:foo(and(bar)::foo\\(and\\(bar\\):::link:False::::]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -516,7 +516,7 @@ def test_inline_links_507():
     source_markdown = """[link](<foo(and(bar)>)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:foo(and(bar):::::link:True::::]",
+        "[link(1,1):inline:foo(and(bar):::::link:True::::]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -605,7 +605,7 @@ def test_inline_links_508():
     source_markdown = """[link](foo\\)\\:)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:foo):::foo\\)\\::::link:False::::]",
+        "[link(1,1):inline:foo):::foo\\)\\::::link:False::::]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -638,19 +638,19 @@ def test_inline_links_509():
 [link](http://example.com?foo=3#frag)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:#fragment:::::link:False::::]",
+        "[link(1,1):inline:#fragment:::::link:False::::]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[link:inline:http://example.com#fragment:::::link:False::::]",
+        "[link(3,1):inline:http://example.com#fragment:::::link:False::::]",
         "[text(3,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[para(5,1):]",
-        "[link:inline:http://example.com?foo=3#frag:::::link:False::::]",
+        "[link(5,1):inline:http://example.com?foo=3#frag:::::link:False::::]",
         "[text(5,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -681,7 +681,7 @@ def test_inline_links_510():
     source_markdown = """[link](foo\\bar)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:foo%5Cbar::foo\\bar:::link:False::::]",
+        "[link(1,1):inline:foo%5Cbar::foo\\bar:::link:False::::]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -710,7 +710,7 @@ def test_inline_links_511():
     source_markdown = """[link](foo%20b&auml;)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:foo%20b%C3%A4::foo%20b&auml;:::link:False::::]",
+        "[link(1,1):inline:foo%20b%C3%A4::foo%20b&auml;:::link:False::::]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -739,7 +739,7 @@ def test_inline_links_512():
     source_markdown = """[link]("title")"""
     expected_tokens = [
         "[para(1,1):]",
-        '[link:inline:%22title%22::"title":::link:False::::]',
+        '[link(1,1):inline:%22title%22::"title":::link:False::::]',
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -770,15 +770,15 @@ def test_inline_links_513():
 [link](/url (title))"""
     expected_tokens = [
         "[para(1,1):\n\n]",
-        '[link:inline:/url:title::::link:False:":: :]',
+        '[link(1,1):inline:/url:title::::link:False:":: :]',
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[text(1,21):\n::\n]",
-        "[link:inline:/url:title::::link:False:':: :]",
+        "[link(2,1):inline:/url:title::::link:False:':: :]",
         "[text(2,2):link:]",
         "[end-link:::False]",
         "[text(2,21):\n::\n]",
-        "[link:inline:/url:title::::link:False:(:: :]",
+        "[link(3,1):inline:/url:title::::link:False:(:: :]",
         "[text(3,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -809,7 +809,7 @@ def test_inline_links_514():
     source_markdown = """[link](/url "title \\"&quot;")"""
     expected_tokens = [
         "[para(1,1):]",
-        '[link:inline:/url:title &quot;&quot;::title \\"&quot;::link:False:":: :]',
+        '[link(1,1):inline:/url:title &quot;&quot;::title \\"&quot;::link:False:":: :]',
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -838,7 +838,7 @@ def test_inline_links_515():
     source_markdown = """[link](/url\u00A0"title")"""
     expected_tokens = [
         "[para(1,1):]",
-        '[link:inline:/url%C2%A0%22title%22::/url\u00A0"title":::link:False::::]',
+        '[link(1,1):inline:/url%C2%A0%22title%22::/url\u00A0"title":::link:False::::]',
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -897,7 +897,7 @@ def test_inline_links_515c():
     source_markdown = """[link](/url (title))"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:/url:title::::link:False:(:: :]",
+        "[link(1,1):inline:/url:title::::link:False:(:: :]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -956,7 +956,7 @@ def test_inline_links_515e():
     source_markdown = """[link](/url (title(other)line))"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:/url:title(other)line::::link:False:(:: :]",
+        "[link(1,1):inline:/url:title(other)line::::link:False:(:: :]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -985,7 +985,7 @@ def test_inline_links_515f():
     source_markdown = """[link](/url (title(other)line)) abc"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:/url:title(other)line::::link:False:(:: :]",
+        "[link(1,1):inline:/url:title(other)line::::link:False:(:: :]",
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[text(1,32): abc:]",
@@ -1075,7 +1075,7 @@ def test_inline_links_517():
     source_markdown = """[link](/url 'title "and" title')"""
     expected_tokens = [
         "[para(1,1):]",
-        '[link:inline:/url:title &quot;and&quot; title::title "and" title::link:False:\':: :]',
+        '[link(1,1):inline:/url:title &quot;and&quot; title::title "and" title::link:False:\':: :]',
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1107,7 +1107,7 @@ def test_inline_links_518():
   "title"  )"""
     expected_tokens = [
         "[para(1,1):\n  ]",
-        '[link:inline:/uri:title::::link:False:":   :\n:  ]',
+        '[link(1,1):inline:/uri:title::::link:False:":   :\n:  ]',
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1139,7 +1139,7 @@ def test_inline_links_518a():
     )"""
     expected_tokens = [
         "[para(1,1):\n    \n    \n    ]",
-        '[link:inline:/uri:title::::link:False:":\n:\n:\n]',
+        '[link(1,1):inline:/uri:title::::link:False:":\n:\n:\n]',
         "[text(1,2):link:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1174,7 +1174,7 @@ def test_inline_links_518b():
     expected_tokens = [
         "[para(1,1):\n\n    \n    \n    \n  ]",
         "[text(1,1):abc\n::\n]",
-        '[link:inline:/uri:title::::link:False:":\n:\n:\n]',
+        '[link(2,1):inline:/uri:title::::link:False:":\n:\n:\n]',
         "[text(2,2):link:]",
         "[end-link:::False]",
         "[text(2,23):\ndef::\n]",
@@ -1234,7 +1234,7 @@ def test_inline_links_520():
     source_markdown = """[link [foo [bar]]](/uri)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:/uri:::::link [foo [bar]]:False::::]",
+        "[link(1,1):inline:/uri:::::link [foo [bar]]:False::::]",
         "[text(1,2):link :]",
         "[text(1,7):[:]",
         "[text(1,8):foo :]",
@@ -1303,7 +1303,7 @@ def test_inline_links_522():
         "[para(1,1):]",
         "[text(1,1):[:]",
         "[text(1,2):link :]",
-        "[link:inline:/uri:::::bar:False::::]",
+        "[link(1,7):inline:/uri:::::bar:False::::]",
         "[text(1,8):bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1332,7 +1332,7 @@ def test_inline_links_523():
     source_markdown = """[link \\[bar](/uri)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:/uri:::::link \\[bar:False::::]",
+        "[link(1,1):inline:/uri:::::link \\[bar:False::::]",
         "[text(1,2):link \\\b[bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1361,7 +1361,7 @@ def test_inline_links_524():
     source_markdown = """[link *foo **bar** `#`*](/uri)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:/uri:::::link *foo **bar** `#`*:False::::]",
+        "[link(1,1):inline:/uri:::::link *foo **bar** `#`*:False::::]",
         "[text(1,2):link :]",
         "[emphasis(1,7):1:*]",
         "[text(1,8):foo :]",
@@ -1398,7 +1398,7 @@ def test_inline_links_525():
     source_markdown = """[![moon](moon.jpg)](/uri)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:/uri:::::![moon](moon.jpg):False::::]",
+        "[link(1,1):inline:/uri:::::![moon](moon.jpg):False::::]",
         "[image:inline:moon.jpg::moon::::moon:False::::]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1429,7 +1429,7 @@ def test_inline_links_526():
         "[para(1,1):]",
         "[text(1,1):[:]",
         "[text(1,2):foo :]",
-        "[link:inline:/uri:::::bar:False::::]",
+        "[link(1,6):inline:/uri:::::bar:False::::]",
         "[text(1,7):bar:]",
         "[end-link:::False]",
         "[text(1,17):]:]",
@@ -1462,7 +1462,7 @@ def test_inline_links_526a():
         "[para(1,1):]",
         "[text(1,1):[:]",
         "[text(1,2):foo :]",
-        "[link:inline:/uri1:::::bar:False::::]",
+        "[link(1,6):inline:/uri1:::::bar:False::::]",
         "[text(1,7):bar:]",
         "[end-link:::False]",
         "[text(1,18):]:]",
@@ -1498,7 +1498,7 @@ def test_inline_links_527():
         "[emphasis(1,6):1:*]",
         "[text(1,7):[:]",
         "[text(1,8):bar :]",
-        "[link:inline:/uri:::::baz:False::::]",
+        "[link(1,12):inline:/uri:::::baz:False::::]",
         "[text(1,13):baz:]",
         "[end-link:::False]",
         "[text(1,23):]:]",
@@ -1537,7 +1537,7 @@ def test_inline_links_527a():
         "[emphasis(1,6):1:*]",
         "[text(1,7):[:]",
         "[text(1,8):bar :]",
-        "[link:inline:/uri1:::::baz:False::::]",
+        "[link(1,12):inline:/uri1:::::baz:False::::]",
         "[text(1,13):baz:]",
         "[end-link:::False]",
         "[text(1,24):]:]",
@@ -1682,7 +1682,7 @@ def test_inline_links_529():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):*:]",
-        "[link:inline:/uri:::::foo*:False::::]",
+        "[link(1,2):inline:/uri:::::foo*:False::::]",
         "[text(1,3):foo:]",
         "[text(1,6):*:]",
         "[end-link:::False]",
@@ -1712,7 +1712,7 @@ def test_inline_links_530():
     source_markdown = """[foo *bar](baz*)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline:baz*:::::foo *bar:False::::]",
+        "[link(1,1):inline:baz*:::::foo *bar:False::::]",
         "[text(1,2):foo :]",
         "[text(1,6):*:]",
         "[text(1,7):bar:]",
@@ -1778,7 +1778,7 @@ def test_inline_links_532():
         "[para(1,1):]",
         "[text(1,1):[:]",
         "[text(1,2):foo :]",
-        '[raw-html:bar attr="](baz)"]',
+        '[raw-html(1,6):bar attr="](baz)"]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[foo <bar attr="](baz)"></p>"""

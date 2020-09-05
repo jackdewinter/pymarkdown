@@ -41,7 +41,7 @@ _world_.
         "[text(5,2):world:]",
         "[end-emphasis(5,7)::1:_:False]",
         "[text(5,8):.\n::\n]",
-        "[raw-html:/pre]",
+        "[raw-html(6,1):/pre]",
         "[end-para:::False]",
         "[html-block(7,1)]",
         "[text(7,1):</td></tr></table>:]",
@@ -699,11 +699,11 @@ def test_html_blocks_138():
     source_markdown = """<del>*foo*</del>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[raw-html:del]",
+        "[raw-html(1,1):del]",
         "[emphasis(1,6):1:*]",
         "[text(1,7):foo:]",
         "[end-emphasis(1,10)::1:*:False]",
-        "[raw-html:/del]",
+        "[raw-html(1,11):/del]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><del><em>foo</em></del></p>"""
@@ -1510,7 +1510,7 @@ baz"""
     expected_tokens = [
         "[para(1,1):\n\n]",
         "[text(1,1):Foo\n::\n]",
-        '[raw-html:a href="bar"]',
+        '[raw-html(2,1):a href="bar"]',
         "[text(2,15):\nbaz::\n]",
         "[end-para:::True]",
     ]
@@ -1925,7 +1925,7 @@ def test_html_blocks_cov3():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):\a<\a&lt;\a!bad\a>\a&gt;\a\n::\n]",
-        "[raw-html:/x-table]",
+        "[raw-html(2,1):/x-table]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;!bad&gt;
@@ -1956,7 +1956,7 @@ bad>
     expected_tokens = [
         "[para(1,1):\n\n]",
         "[text(1,1):\a<\a&lt;\a\nbad\a>\a&gt;\a\n::\n\n]",
-        "[raw-html:/x-table]",
+        "[raw-html(3,1):/x-table]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&lt;

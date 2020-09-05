@@ -581,6 +581,7 @@ class InlineProcessor:
             whitespace_to_add = None
 
             was_new_line = False
+            was_column_number_reset = False
 
             LOGGER.debug(
                 "__process_inline_text_block>>%s>>%s", str(start_index), str(next_index)
@@ -603,6 +604,10 @@ class InlineProcessor:
             )
             if source_text[next_index] in InlineProcessor.__inline_character_handlers:
                 LOGGER.debug("handler(before)>>%s<<", source_text[next_index])
+                LOGGER.debug(
+                    "current_string_unresolved>>%s<<", str(current_string_unresolved)
+                )
+                LOGGER.debug("remaining_line>>%s<<", str(remaining_line))
                 LOGGER.debug("column_number>>%s<<", str(column_number))
                 proc_fn = InlineProcessor.__inline_character_handlers[
                     source_text[next_index]
@@ -614,7 +619,11 @@ class InlineProcessor:
                 )
 
                 line_number += inline_response.delta_line_number
-                column_number += inline_response.delta_column_number
+                if inline_response.delta_column_number < 0:
+                    column_number = -(inline_response.delta_column_number)
+                    was_column_number_reset = True
+                else:
+                    column_number += inline_response.delta_column_number
                 LOGGER.debug(
                     "handler(after)>>%s,%s<<", str(line_number), str(column_number)
                 )
@@ -766,7 +775,7 @@ class InlineProcessor:
                     LOGGER.debug("fold_space(after)>>%s<<", str(fold_space))
                     column_number += len(fold_space[0])
 
-            else:
+            elif not was_column_number_reset:
                 column_number += len(remaining_line)
             LOGGER.debug(
                 "l/c(after)>>%s,%s<<",

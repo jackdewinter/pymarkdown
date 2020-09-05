@@ -318,7 +318,7 @@ bar">""".replace(
     )
     expected_tokens = [
         "[para(1,1):\n]",
-        '[raw-html:a href="foo  \nbar"]',
+        '[raw-html(1,1):a href="foo  \nbar"]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="foo\a\a
@@ -349,7 +349,7 @@ def test_hard_line_breaks_664():
 bar">"""
     expected_tokens = [
         "[para(1,1):\n]",
-        '[raw-html:a href="foo\\\nbar"]',
+        '[raw-html(1,1):a href="foo\\\nbar"]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="foo\\

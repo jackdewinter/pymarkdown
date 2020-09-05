@@ -29,7 +29,7 @@ def test_reference_links_535():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/url:title:::bar:foo:::::]",
+        "[link(1,1):full:/url:title:::bar:foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -66,7 +66,7 @@ def test_reference_links_535a():
     )
     expected_tokens = [
         "[para(1,1):: ]",
-        "[link:full:/url:title:::bar:foo:::::]",
+        "[link(1,1):full:/url:title:::bar:foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -101,7 +101,7 @@ def test_reference_links_535b():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/url:title:::bar:foo:::::]",
+        "[link(1,1):full:/url:title:::bar:foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[text(1,11): abc:]",
@@ -136,7 +136,7 @@ def test_reference_links_536():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/uri::::ref:link [foo [bar]]:::::]",
+        "[link(1,1):full:/uri::::ref:link [foo [bar]]:::::]",
         "[text(1,2):link :]",
         "[text(1,7):[:]",
         "[text(1,8):foo :]",
@@ -175,7 +175,7 @@ def test_reference_links_537():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/uri::::ref:link \\[bar:::::]",
+        "[link(1,1):full:/uri::::ref:link \\[bar:::::]",
         "[text(1,2):link \\\b[bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -208,7 +208,7 @@ def test_reference_links_538():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/uri::::ref:link *foo **bar** `#`*:::::]",
+        "[link(1,1):full:/uri::::ref:link *foo **bar** `#`*:::::]",
         "[text(1,2):link :]",
         "[emphasis(1,7):1:*]",
         "[text(1,8):foo :]",
@@ -249,7 +249,7 @@ def test_reference_links_539():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/uri::::ref:![moon](moon.jpg):::::]",
+        "[link(1,1):full:/uri::::ref:![moon](moon.jpg):::::]",
         "[image:inline:moon.jpg::moon::::moon:False::::]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -284,11 +284,11 @@ def test_reference_links_540():
         "[para(1,1):]",
         "[text(1,1):[:]",
         "[text(1,2):foo :]",
-        "[link:inline:/uri:::::bar:False::::]",
+        "[link(1,6):inline:/uri:::::bar:False::::]",
         "[text(1,7):bar:]",
         "[end-link:::False]",
         "[text(1,17):]:]",
-        "[link:shortcut:/uri:::::ref:::::]",
+        "[link(1,18):shortcut:/uri:::::ref:::::]",
         "[text(1,19):ref:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -325,12 +325,12 @@ def test_reference_links_541():
         "[text(1,2):foo :]",
         "[emphasis(1,6):1:*]",
         "[text(1,7):bar :]",
-        "[link:full:/uri::::ref:baz:::::]",
+        "[link(1,11):full:/uri::::ref:baz:::::]",
         "[text(1,12):baz:]",
         "[end-link:::False]",
         "[end-emphasis(1,21)::1:*:False]",
         "[text(1,22):]:]",
-        "[link:shortcut:/uri:::::ref:::::]",
+        "[link(1,23):shortcut:/uri:::::ref:::::]",
         "[text(1,24):ref:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -366,7 +366,7 @@ def test_reference_links_542():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):*:]",
-        "[link:full:/uri::::ref:foo*:::::]",
+        "[link(1,2):full:/uri::::ref:foo*:::::]",
         "[text(1,3):foo:]",
         "[text(1,6):*:]",
         "[end-link:::False]",
@@ -400,7 +400,7 @@ def test_reference_links_543():
 [ref]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/uri::::ref:foo *bar:::::]",
+        "[link(1,1):full:/uri::::ref:foo *bar:::::]",
         "[text(1,2):foo :]",
         "[text(1,6):*:]",
         "[text(1,7):bar:]",
@@ -438,7 +438,7 @@ def test_reference_links_544():
         "[para(1,1):]",
         "[text(1,1):[:]",
         "[text(1,2):foo :]",
-        '[raw-html:bar attr="][ref]"]',
+        '[raw-html(1,6):bar attr="][ref]"]',
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::ref:: :/uri:::::]",
@@ -536,7 +536,7 @@ def test_reference_links_547():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/url:title:::BaR:foo:::::]",
+        "[link(1,1):full:/url:title:::BaR:foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -570,7 +570,7 @@ def test_reference_links_548():
 [SS]: /url"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:shortcut:/url:::::ẞ:::::]",
+        "[link(1,1):shortcut:/url:::::ẞ:::::]",
         "[text(1,2):ẞ:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -606,7 +606,7 @@ def test_reference_links_549():
         "[link-ref-def(1,1):True::foo bar:Foo\n  bar: :/url:::::]",
         "[BLANK(3,1):]",
         "[para(4,1):]",
-        "[link:full:/url::::Foo bar:Baz:::::]",
+        "[link(4,1):full:/url::::Foo bar:Baz:::::]",
         "[text(4,2):Baz:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -642,7 +642,7 @@ def test_reference_links_550():
         "[text(1,2):foo:]",
         "[text(1,5):]:]",
         "[text(1,6): :]",
-        "[link:shortcut:/url:title::::bar:::::]",
+        "[link(1,7):shortcut:/url:title::::bar:::::]",
         "[text(1,8):bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -682,7 +682,7 @@ def test_reference_links_551():
         "[text(1,2):foo:]",
         "[text(1,5):]:]",
         "[text(1,6):\n::\n]",
-        "[link:shortcut:/url:title::::bar:::::]",
+        "[link(2,1):shortcut:/url:title::::bar:::::]",
         "[text(2,2):bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -723,7 +723,7 @@ def test_reference_links_552():
         "[link-ref-def(3,1):False::foo:: :/url2:::::]",
         "[BLANK(4,1):]",
         "[para(5,1):]",
-        "[link:full:/url1::::foo:bar:::::]",
+        "[link(5,1):full:/url1::::foo:bar:::::]",
         "[text(5,2):bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -929,7 +929,7 @@ def test_reference_links_557():
 [ref\\[]: /uri"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/uri::::ref\\[:foo:::::]",
+        "[link(1,1):full:/uri::::ref\\[:foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -964,7 +964,7 @@ def test_reference_links_558():
         "[link-ref-def(1,1):True::bar\\\\:: :/uri:::::]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[link:shortcut:/uri:::::bar\\\\:::::]",
+        "[link(3,1):shortcut:/uri:::::bar\\\\:::::]",
         "[text(3,2):bar\\\b\\:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -997,7 +997,7 @@ def test_reference_links_558a():
         "[link-ref-def(1,1):True::bar&#x5c;:bar&#x5C;: :/uri:::::]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[link:shortcut:/uri:::::bar&#x5C;:::::]",
+        "[link(3,1):shortcut:/uri:::::bar&#x5C;:::::]",
         "[text(3,2):bar\a&#x5C;\a\\\a:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1030,7 +1030,7 @@ def test_reference_links_558b():
         "[link-ref-def(1,1):True::bar&beta;:: :/uri:::::]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
-        "[link:shortcut:/uri:::::bar&beta;:::::]",
+        "[link(3,1):shortcut:/uri:::::bar&beta;:::::]",
         "[text(3,2):bar\a&beta;\aβ\a:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1142,7 +1142,7 @@ def test_reference_links_561():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[link:collapsed:/url:title::::foo:::::]",
+        "[link(1,1):collapsed:/url:title::::foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1177,7 +1177,7 @@ def test_reference_links_562():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[link:collapsed:/url:title::::*foo* bar:::::]",
+        "[link(1,1):collapsed:/url:title::::*foo* bar:::::]",
         "[emphasis(1,2):1:*]",
         "[text(1,3):foo:]",
         "[end-emphasis(1,6)::1:*:False]",
@@ -1215,7 +1215,7 @@ def test_reference_links_563():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[link:collapsed:/url:title::::Foo:::::]",
+        "[link(1,1):collapsed:/url:title::::Foo:::::]",
         "[text(1,2):Foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1253,7 +1253,7 @@ def test_reference_links_564():
     )
     expected_tokens = [
         "[para(1,1):\n]",
-        "[link:shortcut:/url:title::::foo:::::]",
+        "[link(1,1):shortcut:/url:title::::foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[text(1,6):\n:: \n]",
@@ -1292,7 +1292,7 @@ def test_reference_links_565():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[link:shortcut:/url:title::::foo:::::]",
+        "[link(1,1):shortcut:/url:title::::foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1327,7 +1327,7 @@ def test_reference_links_566():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[link:shortcut:/url:title::::*foo* bar:::::]",
+        "[link(1,1):shortcut:/url:title::::*foo* bar:::::]",
         "[emphasis(1,2):1:*]",
         "[text(1,3):foo:]",
         "[end-emphasis(1,6)::1:*:False]",
@@ -1366,7 +1366,7 @@ def test_reference_links_567():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):[:]",
-        "[link:shortcut:/url:title::::*foo* bar:::::]",
+        "[link(1,2):shortcut:/url:title::::*foo* bar:::::]",
         "[emphasis(1,3):1:*]",
         "[text(1,4):foo:]",
         "[end-emphasis(1,7)::1:*:False]",
@@ -1407,7 +1407,7 @@ def test_reference_links_568():
         "[text(1,1):[:]",
         "[text(1,2):[:]",
         "[text(1,3):bar :]",
-        "[link:shortcut:/url:::::foo:::::]",
+        "[link(1,7):shortcut:/url:::::foo:::::]",
         "[text(1,8):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1441,7 +1441,7 @@ def test_reference_links_569():
 """
     expected_tokens = [
         "[para(1,1):]",
-        "[link:shortcut:/url:title::::Foo:::::]",
+        "[link(1,1):shortcut:/url:title::::Foo:::::]",
         "[text(1,2):Foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1475,7 +1475,7 @@ def test_reference_links_570():
 [foo]: /url"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:shortcut:/url:::::foo:::::]",
+        "[link(1,1):shortcut:/url:::::foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[text(1,6): bar:]",
@@ -1512,7 +1512,7 @@ def test_reference_links_570a():
         "[para(1,1):]",
         "[text(1,1):[:]",
         "[text(1,2):foo:]",
-        "[link:shortcut:/url:title::::foo:::::]",
+        "[link(1,5):shortcut:/url:title::::foo:::::]",
         "[text(1,6):foo:]",
         "[end-link:::False]",
         "[text(1,10):]:]",
@@ -1584,7 +1584,7 @@ def test_reference_links_572():
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[text(3,1):*:]",
-        "[link:shortcut:/url:::::foo*:::::]",
+        "[link(3,2):shortcut:/url:::::foo*:::::]",
         "[text(3,3):foo:]",
         "[text(3,6):*:]",
         "[end-link:::False]",
@@ -1617,7 +1617,7 @@ def test_reference_links_573():
 [bar]: /url2"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/url2::::bar:foo:::::]",
+        "[link(1,1):full:/url2::::bar:foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1651,7 +1651,7 @@ def test_reference_links_574():
 [foo]: /url1"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:collapsed:/url1:::::foo:::::]",
+        "[link(1,1):collapsed:/url1:::::foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1684,7 +1684,7 @@ def test_reference_links_575():
 [foo]: /url1"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:inline::::::foo:::::]",
+        "[link(1,1):inline::::::foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1717,7 +1717,7 @@ def test_reference_links_576():
 [foo]: /url1"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:shortcut:/url1:::::foo:False::: :]",
+        "[link(1,1):shortcut:/url1:::::foo:False::: :]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[text(1,6):(not a link):]",
@@ -1754,7 +1754,7 @@ def test_reference_links_577():
         "[text(1,1):[:]",
         "[text(1,2):foo:]",
         "[text(1,5):]:]",
-        "[link:full:/url::::baz:bar:::::]",
+        "[link(1,6):full:/url::::baz:bar:::::]",
         "[text(1,7):bar:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1788,10 +1788,10 @@ def test_reference_links_578():
 [bar]: /url2"""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:full:/url2::::bar:foo:::::]",
+        "[link(1,1):full:/url2::::bar:foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
-        "[link:shortcut:/url1:::::baz:::::]",
+        "[link(1,11):shortcut:/url1:::::baz:::::]",
         "[text(1,12):baz:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1829,7 +1829,7 @@ def test_reference_links_579():
         "[text(1,1):[:]",
         "[text(1,2):foo:]",
         "[text(1,5):]:]",
-        "[link:full:/url1::::baz:bar:::::]",
+        "[link(1,6):full:/url1::::baz:bar:::::]",
         "[text(1,7):bar:]",
         "[end-link:::False]",
         "[end-para:::True]",

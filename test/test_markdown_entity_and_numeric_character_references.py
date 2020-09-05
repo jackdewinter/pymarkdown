@@ -254,7 +254,7 @@ def test_character_references_328():
     source_markdown = '[foo](/f&ouml;&ouml; "f&ouml;&ouml;")'
     expected_tokens = [
         "[para(1,1):]",
-        '[link:inline:/f%C3%B6%C3%B6:föö:/f&ouml;&ouml;:f&ouml;&ouml;::foo:False:":: :]',
+        '[link(1,1):inline:/f%C3%B6%C3%B6:föö:/f&ouml;&ouml;:f&ouml;&ouml;::foo:False:":: :]',
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -283,7 +283,7 @@ def test_character_references_328a():
     source_markdown = '[f&ouml;&ouml;](/f&ouml;&ouml; "f&ouml;&ouml;")'
     expected_tokens = [
         "[para(1,1):]",
-        '[link:inline:/f%C3%B6%C3%B6:föö:/f&ouml;&ouml;:f&ouml;&ouml;::f&ouml;&ouml;:False:":: :]',
+        '[link(1,1):inline:/f%C3%B6%C3%B6:föö:/f&ouml;&ouml;:f&ouml;&ouml;::f&ouml;&ouml;:False:":: :]',
         "[text(1,2):f\a&ouml;\aö\a\a&ouml;\aö\a:]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -314,7 +314,7 @@ def test_character_references_329():
 [foo]: /f&ouml;&ouml; "f&ouml;&ouml;\""""
     expected_tokens = [
         "[para(1,1):]",
-        "[link:shortcut:/f%C3%B6%C3%B6:föö::::foo:::::]",
+        "[link(1,1):shortcut:/f%C3%B6%C3%B6:föö::::foo:::::]",
         "[text(1,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",

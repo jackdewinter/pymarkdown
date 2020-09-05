@@ -505,7 +505,7 @@ def test_code_spans_354():
     source_markdown = """<a href="`">`"""
     expected_tokens = [
         "[para(1,1):]",
-        '[raw-html:a href="`"]',
+        '[raw-html(1,1):a href="`"]',
         "[text(1,13):`:]",
         "[end-para:::True]",
     ]

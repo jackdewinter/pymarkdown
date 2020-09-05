@@ -914,7 +914,7 @@ def test_image_link_601():
     expected_tokens = [
         "[para(1,1):]",
         "[text(1,1):\\\b!:]",
-        "[link:shortcut:/url:title::::foo:::::]",
+        "[link(1,3):shortcut:/url:title::::foo:::::]",
         "[text(1,4):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",

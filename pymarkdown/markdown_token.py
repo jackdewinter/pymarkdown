@@ -1141,6 +1141,8 @@ class LinkStartMarkdownToken(MarkdownToken):
         before_link_whitespace,
         before_title_whitespace,
         after_title_whitespace,
+        line_number,
+        column_number,
     ):
         self.link_uri = link_uri
         self.link_title = link_title
@@ -1181,6 +1183,8 @@ class LinkStartMarkdownToken(MarkdownToken):
             + before_title_whitespace
             + ":"
             + after_title_whitespace,
+            line_number=line_number,
+            column_number=column_number,
         )
 
     # pylint: enable=too-many-arguments
@@ -1282,13 +1286,15 @@ class RawHtmlMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the inline raw html element.
     """
 
-    def __init__(self, raw_tag):
+    def __init__(self, raw_tag, line_number, column_number):
         self.raw_tag = raw_tag
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_inline_raw_html,
             MarkdownTokenClass.INLINE_BLOCK,
             raw_tag,
+            line_number=line_number,
+            column_number=column_number,
         )
 
 
