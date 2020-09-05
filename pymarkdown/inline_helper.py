@@ -362,6 +362,8 @@ class InlineHelper:
             )
 
         inline_response = InlineResponse()
+        inline_response.delta_line_number = -1
+
         if end_backtick_start_index == -1:
             inline_response.new_string = extracted_start_backticks
             inline_response.new_index = new_index
@@ -412,18 +414,40 @@ class InlineHelper:
             end_backtick_start_index += len(extracted_start_backticks)
             inline_response.new_string = ""
             inline_response.new_index = end_backtick_start_index
+
+            new_column_number = inline_request.column_number
+            LOGGER.debug(">>new_column_number>>%s", str(new_column_number))
+            new_column_number += len(inline_request.remaining_line)
+            LOGGER.debug(">>new_column_number>>%s", str(new_column_number))
+
             inline_response.new_tokens = [
                 InlineCodeSpanMarkdownToken(
                     between_text,
                     extracted_start_backticks,
                     leading_whitespace,
                     trailing_whitespace,
+                    inline_request.line_number,
+                    new_column_number,
                 )
             ]
-        inline_response.delta_line_number = 0
-        inline_response.delta_column_number = (
-            inline_response.new_index - inline_request.next_index
-        )
+
+            if "\n" in between_text:
+                split_between_text = between_text.split("\n")
+                inline_response.delta_line_number = len(split_between_text) - 1
+                length_of_last_elements = len(split_between_text[-1])
+                inline_response.delta_column_number = -(length_of_last_elements + 2)
+                LOGGER.debug(
+                    ">>delta_column_number>>%s<<",
+                    ParserHelper.make_value_visible(
+                        inline_response.delta_column_number
+                    ),
+                )
+
+        if inline_response.delta_line_number == -1:
+            inline_response.delta_line_number = 0
+            inline_response.delta_column_number = (
+                inline_response.new_index - inline_request.next_index
+            )
         return inline_response
 
     @staticmethod

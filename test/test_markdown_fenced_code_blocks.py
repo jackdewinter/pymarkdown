@@ -92,7 +92,7 @@ foo
 ``"""
     expected_tokens = [
         "[para(1,1):\n\n]",
-        "[icode-span:foo:``:\a\n\a \a:\a\n\a \a]",
+        "[icode-span(1,1):foo:``:\a\n\a \a:\a\n\a \a]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><code>foo</code></p>"""
@@ -749,7 +749,7 @@ def test_fenced_code_blocks_108():
 aaa"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[icode-span: :```::]",
+        "[icode-span(1,1): :```::]",
         """[text(1,8):
 aaa::\n]""",
         "[end-para:::True]",
@@ -984,7 +984,7 @@ def test_fenced_code_blocks_115():
 foo"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[icode-span:aa:```: : ]",
+        "[icode-span(1,1):aa:```: : ]",
         """[text(1,11):
 foo::\n]""",
         "[end-para:::True]",

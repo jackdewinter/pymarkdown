@@ -368,7 +368,7 @@ def test_emphasis_487():
         "[para(1,1):]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):a :]",
-        "[icode-span:*:`::]",
+        "[icode-span(1,4):*:`::]",
         "[end-emphasis(1,7)::1:*:False]",
         "[end-para:::True]",
     ]
@@ -398,7 +398,7 @@ def test_emphasis_488():
         "[para(1,1):]",
         "[emphasis(1,1):1:_]",
         "[text(1,2):a :]",
-        "[icode-span:_:`::]",
+        "[icode-span(1,4):_:`::]",
         "[end-emphasis(1,7)::1:_:False]",
         "[end-para:::True]",
     ]

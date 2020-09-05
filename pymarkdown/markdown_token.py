@@ -1065,12 +1065,15 @@ class InlineCodeSpanMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the inline code span element.
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         span_text,
         extracted_start_backticks,
         leading_whitespace,
         trailing_whitespace,
+        line_number,
+        column_number,
     ):
         self.span_text = span_text
         self.extracted_start_backticks = extracted_start_backticks
@@ -1087,7 +1090,11 @@ class InlineCodeSpanMarkdownToken(MarkdownToken):
             + leading_whitespace
             + ":"
             + trailing_whitespace,
+            line_number=line_number,
+            column_number=column_number,
         )
+
+    # pylint: enable=too-many-arguments
 
 
 class HardBreakMarkdownToken(MarkdownToken):

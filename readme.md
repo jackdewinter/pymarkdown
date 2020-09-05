@@ -26,6 +26,9 @@
 - links, 518b
   - links with LF in link_label
   - each inline token surrounded by text
+- code span and other multiline inline
+  - code span with and without multiline, surrounded by text, like 662,091
+  - multiple lengths of ticks, whitespace
 
 ## Bugs - Character Entities
 
@@ -42,7 +45,6 @@
 - atx heading text, 183
 - images, with newline in title?
 - lrds spanning lines
-- code span
 
 ## Bugs - Atx
 

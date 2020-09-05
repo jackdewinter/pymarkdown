@@ -260,7 +260,7 @@ span`""".replace(
     )
     expected_tokens = [
         "[para(1,1):\n]",
-        "[icode-span:code  \a\n\a \aspan:`::]",
+        "[icode-span(1,1):code  \a\n\a \aspan:`::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><code>code   span</code></p>"""
@@ -288,7 +288,7 @@ def test_hard_line_breaks_662():
 span`"""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[icode-span:code\\\a\n\a \aspan:`::]",
+        "[icode-span(1,1):code\\\a\n\a \aspan:`::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><code>code\\ span</code></p>"""

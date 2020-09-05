@@ -195,7 +195,7 @@ def test_backslash_escapes_313():
     source_markdown = """`` \\[\\` ``"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:\\[\\`:``: : ]",
+        "[icode-span(1,1):\\[\\`:``: : ]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><code>\\[\\`</code></p>"""

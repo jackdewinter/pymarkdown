@@ -771,11 +771,11 @@ def __verify_first_inline_paragraph(last_non_inline_token, first_inline_token):
     elif first_inline_token.token_name == MarkdownToken.token_inline_email_autolink:
         assert first_inline_token.line_number == last_non_inline_token.line_number
         assert first_inline_token.column_number == last_non_inline_token.column_number
+    elif first_inline_token.token_name == MarkdownToken.token_inline_code_span:
+        assert first_inline_token.line_number == last_non_inline_token.line_number
+        assert first_inline_token.column_number == last_non_inline_token.column_number
 
     elif first_inline_token.token_name == MarkdownToken.token_inline_hard_break:
-        assert first_inline_token.line_number == 0
-        assert first_inline_token.column_number == 0
-    elif first_inline_token.token_name == MarkdownToken.token_inline_code_span:
         assert first_inline_token.line_number == 0
         assert first_inline_token.column_number == 0
     elif first_inline_token.token_name == MarkdownToken.token_inline_image:
@@ -892,7 +892,9 @@ def __verify_next_inline(  # noqa: C901
     elif previous_inline_token.token_name == MarkdownToken.token_inline_hard_break:
         assert False
     elif previous_inline_token.token_name == MarkdownToken.token_inline_code_span:
-        assert False
+        estimated_line_number, estiated_column_number = __verify_next_inline_code_span(
+            previous_inline_token, estimated_line_number, estiated_column_number,
+        )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_raw_html:
         estimated_line_number, estiated_column_number = __verify_next_inline_raw_html(
             previous_inline_token, estimated_line_number, estiated_column_number,
@@ -987,6 +989,37 @@ def __verify_next_inline_raw_html(
         estiated_column_number = len(split_raw_tag[-1]) + 2
     else:
         estiated_column_number += len(previous_inline_token.raw_tag) + 2
+    return estimated_line_number, estiated_column_number
+
+
+def __verify_next_inline_code_span(
+    previous_inline_token, estimated_line_number, estiated_column_number
+):
+
+    resolved_span_text = ParserHelper.remove_backspaces_from_text(
+        previous_inline_token.span_text
+    )
+    resolved_span_text = ParserHelper.resolve_replacement_markers_from_text(
+        resolved_span_text
+    )
+
+    leading_ws_length = len(previous_inline_token.leading_whitespace)
+    trailing_ws_length = len(previous_inline_token.trailing_whitespace)
+    backtick_length = len(previous_inline_token.extracted_start_backticks)
+
+    if "\n" in resolved_span_text:
+        split_span_text = resolved_span_text.split("\n")
+        estimated_line_number += len(split_span_text) - 1
+        estiated_column_number = (
+            len(split_span_text[-1]) + 1 + trailing_ws_length + backtick_length
+        )
+    else:
+        estiated_column_number += (
+            len(resolved_span_text)
+            + (2 * backtick_length)
+            + leading_ws_length
+            + trailing_ws_length
+        )
     return estimated_line_number, estiated_column_number
 
 

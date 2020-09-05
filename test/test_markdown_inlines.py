@@ -25,7 +25,7 @@ def test_inlines_307():
     source_markdown = """`hi`lo`"""
     expected_tokens = [
         "[para(1,1):]",
-        "[icode-span:hi:`::]",
+        "[icode-span(1,1):hi:`::]",
         "[text(1,5):lo`:]",
         "[end-para:::True]",
     ]

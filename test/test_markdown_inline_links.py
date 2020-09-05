@@ -1369,7 +1369,7 @@ def test_inline_links_524():
         "[text(1,14):bar:]",
         "[end-emphasis(1,17)::2:*:False]",
         "[text(1,19): :]",
-        "[icode-span:#:`::]",
+        "[icode-span(1,20):#:`::]",
         "[end-emphasis(1,23)::1:*:False]",
         "[end-link:::False]",
         "[end-para:::True]",
@@ -1807,7 +1807,7 @@ def test_inline_links_533():
         "[para(1,1):]",
         "[text(1,1):[:]",
         "[text(1,2):foo:]",
-        "[icode-span:](/uri):`::]",
+        "[icode-span(1,5):](/uri):`::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[foo<code>](/uri)</code></p>"""

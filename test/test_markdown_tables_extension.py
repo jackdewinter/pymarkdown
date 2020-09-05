@@ -70,7 +70,7 @@ def test_tables_extension_200():
     expected_tokens = [
         "[para(1,1):\n\n\n]",
         "[text(1,1):| f\\\b|oo  |\n| ------ |\n| b ::\n\n]",
-        "[icode-span:\\|:`::]",
+        "[icode-span(3,5):\\|:`::]",
         "[text(3,9): az |\n| b ::\n]",
         "[emphasis(4,5):2:*]",
         "[text(4,7):\\\b|:]",
