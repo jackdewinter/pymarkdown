@@ -765,17 +765,17 @@ def __verify_first_inline_paragraph(last_non_inline_token, first_inline_token):
     elif first_inline_token.token_name == MarkdownToken.token_inline_link:
         assert first_inline_token.line_number == last_non_inline_token.line_number
         assert first_inline_token.column_number == last_non_inline_token.column_number
+    elif first_inline_token.token_name == MarkdownToken.token_inline_uri_autolink:
+        assert first_inline_token.line_number == last_non_inline_token.line_number
+        assert first_inline_token.column_number == last_non_inline_token.column_number
+    elif first_inline_token.token_name == MarkdownToken.token_inline_email_autolink:
+        assert first_inline_token.line_number == last_non_inline_token.line_number
+        assert first_inline_token.column_number == last_non_inline_token.column_number
 
     elif first_inline_token.token_name == MarkdownToken.token_inline_hard_break:
         assert first_inline_token.line_number == 0
         assert first_inline_token.column_number == 0
     elif first_inline_token.token_name == MarkdownToken.token_inline_code_span:
-        assert first_inline_token.line_number == 0
-        assert first_inline_token.column_number == 0
-    elif first_inline_token.token_name == MarkdownToken.token_inline_uri_autolink:
-        assert first_inline_token.line_number == 0
-        assert first_inline_token.column_number == 0
-    elif first_inline_token.token_name == MarkdownToken.token_inline_email_autolink:
         assert first_inline_token.line_number == 0
         assert first_inline_token.column_number == 0
     elif first_inline_token.token_name == MarkdownToken.token_inline_image:
@@ -898,9 +898,13 @@ def __verify_next_inline(  # noqa: C901
             previous_inline_token, estimated_line_number, estiated_column_number,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_uri_autolink:
-        assert False
+        estimated_line_number, estiated_column_number = __verify_next_inline_autolink(
+            previous_inline_token, estimated_line_number, estiated_column_number,
+        )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_email_autolink:
-        assert False
+        estimated_line_number, estiated_column_number = __verify_next_inline_autolink(
+            previous_inline_token, estimated_line_number, estiated_column_number,
+        )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_link:
         (
             estimated_line_number,
@@ -962,6 +966,15 @@ def __verify_next_inline_inline_link(
 ):
     estiated_column_number += 1
     return estimated_line_number, estiated_column_number
+
+
+def __verify_next_inline_autolink(
+    previous_inline_token, estimated_line_number, estiated_column_number
+):
+    return (
+        estimated_line_number,
+        estiated_column_number + len(previous_inline_token.autolink_text) + 2,
+    )
 
 
 def __verify_next_inline_raw_html(

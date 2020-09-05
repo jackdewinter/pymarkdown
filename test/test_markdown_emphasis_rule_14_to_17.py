@@ -428,7 +428,7 @@ def test_emphasis_489():
         "[para(1,1):]",
         "[text(1,1):**:]",
         "[text(1,3):a:]",
-        "[uri-autolink:http://foo.bar/?q=**]",
+        "[uri-autolink(1,4):http://foo.bar/?q=**]",
         "[end-para:::True]",
     ]
     expected_gfm = (
@@ -459,7 +459,7 @@ def test_emphasis_490():
         "[para(1,1):]",
         "[text(1,1):__:]",
         "[text(1,3):a:]",
-        "[uri-autolink:http://foo.bar/?q=__]",
+        "[uri-autolink(1,4):http://foo.bar/?q=__]",
         "[end-para:::True]",
     ]
     expected_gfm = (

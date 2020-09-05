@@ -1836,7 +1836,7 @@ def test_inline_links_534():
         "[para(1,1):]",
         "[text(1,1):[:]",
         "[text(1,2):foo:]",
-        "[uri-autolink:http://example.com/?search=](uri)]",
+        "[uri-autolink(1,5):http://example.com/?search=](uri)]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[foo<a href="http://example.com/?search=%5D(uri)">http://example.com/?search=](uri)</a></p>"""

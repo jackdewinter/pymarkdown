@@ -561,7 +561,7 @@ def test_code_spans_356():
     source_markdown = """<http://foo.bar.`baz>`"""
     expected_tokens = [
         "[para(1,1):]",
-        "[uri-autolink:http://foo.bar.`baz]",
+        "[uri-autolink(1,1):http://foo.bar.`baz]",
         "[text(1,22):`:]",
         "[end-para:::True]",
     ]

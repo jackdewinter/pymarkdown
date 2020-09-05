@@ -25,7 +25,7 @@ def test_autolinks_602():
     source_markdown = """<http://foo.bar.baz>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[uri-autolink:http://foo.bar.baz]",
+        "[uri-autolink(1,1):http://foo.bar.baz]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="http://foo.bar.baz">http://foo.bar.baz</a></p>"""
@@ -52,7 +52,7 @@ def test_autolinks_603():
     source_markdown = """<http://foo.bar.baz/test?q=hello&id=22&boolean>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[uri-autolink:http://foo.bar.baz/test?q=hello&id=22&boolean]",
+        "[uri-autolink(1,1):http://foo.bar.baz/test?q=hello&id=22&boolean]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean">http://foo.bar.baz/test?q=hello&amp;id=22&amp;boolean</a></p>"""
@@ -79,7 +79,7 @@ def test_autolinks_604():
     source_markdown = """<irc://foo.bar:2233/baz>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[uri-autolink:irc://foo.bar:2233/baz]",
+        "[uri-autolink(1,1):irc://foo.bar:2233/baz]",
         "[end-para:::True]",
     ]
     expected_gfm = (
@@ -108,7 +108,7 @@ def test_autolinks_605():
     source_markdown = """<MAILTO:FOO@BAR.BAZ>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[uri-autolink:MAILTO:FOO@BAR.BAZ]",
+        "[uri-autolink(1,1):MAILTO:FOO@BAR.BAZ]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="MAILTO:FOO@BAR.BAZ">MAILTO:FOO@BAR.BAZ</a></p>"""
@@ -133,7 +133,11 @@ def test_autolinks_606():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """<a+b+c:d>"""
-    expected_tokens = ["[para(1,1):]", "[uri-autolink:a+b+c:d]", "[end-para:::True]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        "[uri-autolink(1,1):a+b+c:d]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<p><a href="a+b+c:d">a+b+c:d</a></p>"""
 
     # Act
@@ -158,7 +162,7 @@ def test_autolinks_607():
     source_markdown = """<made-up-scheme://foo,bar>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[uri-autolink:made-up-scheme://foo,bar]",
+        "[uri-autolink(1,1):made-up-scheme://foo,bar]",
         "[end-para:::True]",
     ]
     expected_gfm = (
@@ -185,7 +189,11 @@ def test_autolinks_608():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """<http://../>"""
-    expected_tokens = ["[para(1,1):]", "[uri-autolink:http://../]", "[end-para:::True]"]
+    expected_tokens = [
+        "[para(1,1):]",
+        "[uri-autolink(1,1):http://../]",
+        "[end-para:::True]",
+    ]
     expected_gfm = """<p><a href="http://../">http://../</a></p>"""
 
     # Act
@@ -210,7 +218,7 @@ def test_autolinks_609():
     source_markdown = """<localhost:5001/foo>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[uri-autolink:localhost:5001/foo]",
+        "[uri-autolink(1,1):localhost:5001/foo]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="localhost:5001/foo">localhost:5001/foo</a></p>"""
@@ -264,7 +272,7 @@ def test_autolinks_611():
     source_markdown = """<http://example.com/\\[\\>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[uri-autolink:http://example.com/\\[\\]",
+        "[uri-autolink(1,1):http://example.com/\\[\\]",
         "[end-para:::True]",
     ]
     expected_gfm = (
@@ -293,7 +301,7 @@ def test_autolinks_611a():
     source_markdown = """<http://example.com/\u2122\u20AC>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[uri-autolink:http://example.com/™€]",
+        "[uri-autolink(1,1):http://example.com/™€]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="http://example.com/%E2%84%A2%E2%82%AC">http://example.com/™€</a></p>"""
@@ -320,7 +328,7 @@ def test_autolinks_611b():
     source_markdown = """<http://abcdefjhijklmnopqrstuvwxyz!"#$%&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`{}|~ABC>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[uri-autolink:http://abcdefjhijklmnopqrstuvwxyz!\"#$%&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`{}|~ABC]",
+        "[uri-autolink(1,1):http://abcdefjhijklmnopqrstuvwxyz!\"#$%&'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`{}|~ABC]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="http://abcdefjhijklmnopqrstuvwxyz!%22#$%25&amp;'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ%5B%5C%5D%5E_%60%7B%7D%7C~ABC">http://abcdefjhijklmnopqrstuvwxyz!&quot;#$%&amp;'()*+,-./0123456789:;=?@ABCDEFGHIJKLMNOPQRSTUVWXYZ[\\]^_`{}|~ABC</a></p>"""
@@ -347,7 +355,7 @@ def test_autolinks_612():
     source_markdown = """<foo@bar.example.com>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[email-autolink:foo@bar.example.com]",
+        "[email-autolink(1,1):foo@bar.example.com]",
         "[end-para:::True]",
     ]
     expected_gfm = (
@@ -376,7 +384,7 @@ def test_autolinks_613():
     source_markdown = """<foo+special@Bar.baz-bar0.com>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[email-autolink:foo+special@Bar.baz-bar0.com]",
+        "[email-autolink(1,1):foo+special@Bar.baz-bar0.com]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="mailto:foo+special@Bar.baz-bar0.com">foo+special@Bar.baz-bar0.com</a></p>"""

@@ -504,7 +504,7 @@ def test_reference_links_546():
         "[para(1,1):]",
         "[text(1,1):[:]",
         "[text(1,2):foo:]",
-        "[uri-autolink:http://example.com/?search=][ref]]",
+        "[uri-autolink(1,5):http://example.com/?search=][ref]]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::ref:: :/uri:::::]",

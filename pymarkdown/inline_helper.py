@@ -721,16 +721,16 @@ class InlineHelper:
         return approved_entity_map
 
     @staticmethod
-    def __parse_valid_email_autolink(text_to_parse):
+    def __parse_valid_email_autolink(text_to_parse, line_number, column_number):
         """
         Parse a possible email autolink and determine if it is valid.
         """
         if re.match(InlineHelper.__valid_email_regex, text_to_parse):
-            return EmailAutolinkMarkdownToken(text_to_parse)
+            return EmailAutolinkMarkdownToken(text_to_parse, line_number, column_number)
         return None
 
     @staticmethod
-    def __parse_valid_uri_autolink(text_to_parse):
+    def __parse_valid_uri_autolink(text_to_parse, line_number, column_number):
         """
         Parse a possible uri autolink and determine if it is valid.
         """
@@ -757,7 +757,9 @@ class InlineHelper:
                     break
                 path_index += 1
             if path_index == len(text_to_parse):
-                return UriAutolinkMarkdownToken(text_to_parse)
+                return UriAutolinkMarkdownToken(
+                    text_to_parse, line_number, column_number
+                )
         return None
 
     @staticmethod
@@ -776,17 +778,22 @@ class InlineHelper:
             ]
             remaining_line = inline_request.source_text[inline_request.next_index + 1 :]
             closing_angle_index += 1
-            new_token = InlineHelper.__parse_valid_uri_autolink(between_brackets)
+
+            new_column_number = inline_request.column_number
+            LOGGER.debug(">>new_column_number>>%s", str(new_column_number))
+            new_column_number += len(inline_request.remaining_line)
+            LOGGER.debug(">>new_column_number>>%s", str(new_column_number))
+
+            new_token = InlineHelper.__parse_valid_uri_autolink(
+                between_brackets, inline_request.line_number, new_column_number
+            )
             if not new_token:
-                new_token = InlineHelper.__parse_valid_email_autolink(between_brackets)
+                new_token = InlineHelper.__parse_valid_email_autolink(
+                    between_brackets, inline_request.line_number, new_column_number
+                )
             if not new_token:
 
-                new_column_number = inline_request.column_number
                 LOGGER.debug(">>between_brackets>>%s<<", str(between_brackets))
-                LOGGER.debug(">>new_column_number>>%s", str(new_column_number))
-                new_column_number += len(inline_request.remaining_line)
-                LOGGER.debug(">>new_column_number>>%s", str(new_column_number))
-
                 new_token, after_index = HtmlHelper.parse_raw_html(
                     between_brackets,
                     remaining_line,

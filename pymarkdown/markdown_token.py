@@ -1110,13 +1110,15 @@ class UriAutolinkMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the inline uri autolink element.
     """
 
-    def __init__(self, autolink_text):
+    def __init__(self, autolink_text, line_number, column_number):
         self.autolink_text = autolink_text
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_inline_uri_autolink,
             MarkdownTokenClass.INLINE_BLOCK,
             autolink_text,
+            line_number=line_number,
+            column_number=column_number,
         )
 
 
@@ -1271,13 +1273,15 @@ class EmailAutolinkMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the inline email autolink element.
     """
 
-    def __init__(self, autolink_text):
+    def __init__(self, autolink_text, line_number, column_number):
         self.autolink_text = autolink_text
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_inline_email_autolink,
             MarkdownTokenClass.INLINE_BLOCK,
             autolink_text,
+            line_number=line_number,
+            column_number=column_number,
         )
 
 

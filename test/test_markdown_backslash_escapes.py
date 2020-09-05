@@ -280,7 +280,7 @@ def test_backslash_escapes_316():
     source_markdown = """<http://example.com?find=\\*>"""
     expected_tokens = [
         "[para(1,1):]",
-        "[uri-autolink:http://example.com?find=\\*]",
+        "[uri-autolink(1,1):http://example.com?find=\\*]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="http://example.com?find=%5C*">http://example.com?find=\\*</a></p>"""
