@@ -19,6 +19,10 @@
 - fenced code block handling of line/col could be better
 - why is space after atx in text?
 - why does hard break not have \n?
+  - hard break followed by 3 spaces, then emphasis
+  - variations of 52e with extra spaces after, etc.
+    - variation with start of 52e, then hard break, then something like start of 52e again i.e. make /x02 splitter come into affect
+  - hard break followed by each inline type
 - HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
 - verifying vs validating?
 - 634a in bq and in list
@@ -29,6 +33,10 @@
 - code span and other multiline inline
   - code span with and without multiline, surrounded by text, like 662,091
   - multiple lengths of ticks, whitespace
+- atx heading text, 183
+- backslashes - 600
+  - verify with before and after with all valid inline
+- track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi 
 
 ## Bugs - Character Entities
 
@@ -41,8 +49,6 @@
   - check +1 and ensure that they are dealing with extra newlines properly
   - check other ones as well that do the same thing
 
-- backslashes - 600
-- atx heading text, 183
 - images, with newline in title?
 - lrds spanning lines
 

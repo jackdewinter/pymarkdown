@@ -206,7 +206,7 @@ def test_setext_headings_052c():
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
         "[text(1,3):a\nb:: \n  \x02]",
-        "[hard-break:  ]",
+        "[hard-break(2,4):  ]",
         "[text(3,3):\nc::\n  ]",
         "[end-setext:::False]",
     ]
@@ -283,7 +283,7 @@ def test_setext_headings_052e():
         "[emphasis(2,3):1:*]",
         "[text(2,4):b:]",
         "[end-emphasis(2,5)::1:*:False]",
-        "[hard-break:  ]",
+        "[hard-break(2,6):  ]",
         "[text(3,3):\nc::\n  ]",
         "[end-setext:::False]",
     ]

@@ -1102,13 +1102,15 @@ class HardBreakMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the inline hard line break element.
     """
 
-    def __init__(self, line_end):
+    def __init__(self, line_end, line_number, column_number):
         self.line_end = line_end
         MarkdownToken.__init__(
             self,
             MarkdownToken.token_inline_hard_break,
             MarkdownTokenClass.INLINE_BLOCK,
             line_end,
+            line_number=line_number,
+            column_number=column_number,
         )
 
 

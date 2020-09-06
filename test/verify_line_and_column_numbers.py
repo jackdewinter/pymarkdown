@@ -890,7 +890,13 @@ def __verify_next_inline(  # noqa: C901
             current_inline_token, estimated_line_number, estiated_column_number,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_hard_break:
-        assert False
+        estimated_line_number, estiated_column_number = __verify_next_inline_hard_break(
+            last_token,
+            previous_inline_token,
+            current_inline_token,
+            estimated_line_number,
+            estiated_column_number,
+        )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_code_span:
         estimated_line_number, estiated_column_number = __verify_next_inline_code_span(
             previous_inline_token, estimated_line_number, estiated_column_number,
@@ -990,6 +996,41 @@ def __verify_next_inline_raw_html(
     else:
         estiated_column_number += len(previous_inline_token.raw_tag) + 2
     return estimated_line_number, estiated_column_number
+
+
+# pylint: disable=unused-argument
+def __verify_next_inline_hard_break(
+    last_token,
+    previous_inline_token,
+    current_inline_token,
+    estimated_line_number,
+    estiated_column_number,
+):
+    new_column_number = 1
+    if last_token.token_name == MarkdownToken.token_paragraph:
+        split_whitespace = last_token.extracted_whitespace.split("\n")
+        ws_for_new_line = split_whitespace[last_token.rehydrate_index]
+        last_token.rehydrate_index += 1
+        new_column_number += len(ws_for_new_line)
+    elif last_token.token_name == MarkdownToken.token_setext_heading:
+        assert current_inline_token.token_name == MarkdownToken.token_text
+        assert current_inline_token.token_text.startswith("\n")
+        assert current_inline_token.end_whitespace.startswith("\n")
+        split_whitespace = current_inline_token.end_whitespace.split("\n")
+        print(
+            "split_whitespace>"
+            + ParserHelper.make_value_visible(split_whitespace)
+            + "<"
+        )
+        ws_for_new_line = split_whitespace[1]
+        print(
+            "ws_for_new_line>" + ParserHelper.make_value_visible(ws_for_new_line) + "<"
+        )
+        new_column_number += len(ws_for_new_line)
+    return estimated_line_number + 1, new_column_number
+
+
+# pylint: enable=unused-argument
 
 
 def __verify_next_inline_code_span(

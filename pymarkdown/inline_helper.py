@@ -478,8 +478,16 @@ class InlineHelper:
         LOGGER.debug(">>end_string>>%s>>", ParserHelper.make_value_visible(end_string))
         return end_string
 
+    # pylint: disable=too-many-arguments
     @staticmethod
-    def handle_line_end(next_index, remaining_line, end_string, current_string):
+    def handle_line_end(
+        next_index,
+        remaining_line,
+        end_string,
+        current_string,
+        line_number,
+        column_number,
+    ):
         """
         Handle the inline case of having the end of line character encountered.
         """
@@ -513,16 +521,27 @@ class InlineHelper:
             str(len(removed_end_whitespace)),
             remaining_line,
         )
+
+        adj_hard_column = column_number + len(remaining_line)
+
         if (
             len(removed_end_whitespace) == 0
             and len(current_string) >= 1
             and current_string[len(current_string) - 1]
             == InlineHelper.backslash_character
         ):
-            new_tokens.append(HardBreakMarkdownToken(InlineHelper.backslash_character))
+            new_tokens.append(
+                HardBreakMarkdownToken(
+                    InlineHelper.backslash_character, line_number, adj_hard_column - 1
+                )
+            )
             current_string = current_string[0:-1]
         elif len(removed_end_whitespace) >= 2:
-            new_tokens.append(HardBreakMarkdownToken(removed_end_whitespace))
+            new_tokens.append(
+                HardBreakMarkdownToken(
+                    removed_end_whitespace, line_number, adj_hard_column
+                )
+            )
             whitespace_to_add = ""
         else:
             end_string = InlineHelper.modify_end_string(
@@ -553,6 +572,8 @@ class InlineHelper:
             end_string,
             current_string,
         )
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def extract_bounded_string(

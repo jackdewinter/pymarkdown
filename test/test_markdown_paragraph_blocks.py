@@ -301,7 +301,7 @@ bbb     """.replace(
     expected_tokens = [
         "[para(1,1):\n:     ]",
         "[text(1,1):aaa:]",
-        "[hard-break:     ]",
+        "[hard-break(1,4):     ]",
         "[text(2,1):\nbbb::\n]",
         "[end-para:::True]",
     ]
@@ -332,7 +332,7 @@ bbb\t\t\t\t\t"""
     expected_tokens = [
         "[para(1,1):\n:\t\t\t\t\t]",
         "[text(1,1):aaa:]",
-        "[hard-break:                    ]",
+        "[hard-break(1,4):                    ]",
         "[text(2,1):\nbbb::\n]",
         "[end-para:::True]",
     ]

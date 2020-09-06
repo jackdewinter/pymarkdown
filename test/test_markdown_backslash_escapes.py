@@ -166,7 +166,7 @@ bar"""
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):foo:]",
-        "[hard-break:\\]",
+        "[hard-break(1,4):\\]",
         "[text(2,1):\nbar:]",
         "[end-para:::True]",
     ]

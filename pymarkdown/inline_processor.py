@@ -646,7 +646,12 @@ class InlineProcessor:
                     end_string,
                     current_string,
                 ) = InlineHelper.handle_line_end(
-                    next_index, remaining_line, end_string, current_string
+                    next_index,
+                    remaining_line,
+                    end_string,
+                    current_string,
+                    line_number,
+                    column_number,
                 )
                 LOGGER.debug(
                     "handle_line_end>>new_tokens>>%s<<",
