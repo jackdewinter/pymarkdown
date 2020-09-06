@@ -1210,7 +1210,7 @@ class ImageStartMarkdownToken(MarkdownToken):
     Class to provide for an encapsulation of the image element.
     """
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     def __init__(
         self,
         image_uri,
@@ -1226,6 +1226,8 @@ class ImageStartMarkdownToken(MarkdownToken):
         before_link_whitespace,
         before_title_whitespace,
         after_title_whitespace,
+        line_number,
+        column_number,
     ):
         self.image_uri = image_uri
         self.image_title = image_title
@@ -1269,9 +1271,11 @@ class ImageStartMarkdownToken(MarkdownToken):
             + before_title_whitespace
             + ":"
             + after_title_whitespace,
+            line_number=line_number,
+            column_number=column_number,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
 
 # pylint: enable=too-many-instance-attributes

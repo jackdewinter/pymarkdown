@@ -23,6 +23,7 @@
   - variations of 52e with extra spaces after, etc.
     - variation with start of 52e, then hard break, then something like start of 52e again i.e. make /x02 splitter come into affect
   - hard break followed by each inline type
+  - hard break at start of text?
 - HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
 - verifying vs validating?
 - 634a in bq and in list
@@ -36,6 +37,11 @@
 - atx heading text, 183
 - backslashes - 600
   - verify with before and after with all valid inline
+- images, with newline in title?
+  - text before and after
+  - different image link types, with variations on their values
+  - 525 with text and other inlines before and after
+  - need "full" example of image
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi 
 
 ## Bugs - Character Entities
@@ -48,9 +54,6 @@
   - not tracking properly, but 143 is
   - check +1 and ensure that they are dealing with extra newlines properly
   - check other ones as well that do the same thing
-
-- images, with newline in title?
-- lrds spanning lines
 
 ## Bugs - Atx
 

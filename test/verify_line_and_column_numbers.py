@@ -774,11 +774,11 @@ def __verify_first_inline_paragraph(last_non_inline_token, first_inline_token):
     elif first_inline_token.token_name == MarkdownToken.token_inline_code_span:
         assert first_inline_token.line_number == last_non_inline_token.line_number
         assert first_inline_token.column_number == last_non_inline_token.column_number
+    elif first_inline_token.token_name == MarkdownToken.token_inline_image:
+        assert first_inline_token.line_number == last_non_inline_token.line_number
+        assert first_inline_token.column_number == last_non_inline_token.column_number
 
     elif first_inline_token.token_name == MarkdownToken.token_inline_hard_break:
-        assert first_inline_token.line_number == 0
-        assert first_inline_token.column_number == 0
-    elif first_inline_token.token_name == MarkdownToken.token_inline_image:
         assert first_inline_token.line_number == 0
         assert first_inline_token.column_number == 0
 
@@ -920,12 +920,17 @@ def __verify_next_inline(  # noqa: C901
         ) = __verify_next_inline_inline_link(
             estimated_line_number, estiated_column_number,
         )
+    elif previous_inline_token.token_name == MarkdownToken.token_inline_image:
+        (
+            estimated_line_number,
+            estiated_column_number,
+        ) = __verify_next_inline_inline_image(
+            previous_inline_token, estimated_line_number, estiated_column_number,
+        )
     elif (
         previous_inline_token.token_name
         == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
     ):
-        assert False
-    elif previous_inline_token.token_name == MarkdownToken.token_inline_image:
         assert False
     else:
         assert False, previous_inline_token.token_name
@@ -973,6 +978,47 @@ def __verify_next_inline_inline_link(
     estimated_line_number, estiated_column_number,
 ):
     estiated_column_number += 1
+    return estimated_line_number, estiated_column_number
+
+
+def __verify_next_inline_inline_image(
+    previous_inline_token, estimated_line_number, estiated_column_number
+):
+
+    label_data = previous_inline_token.image_alt_text
+    if previous_inline_token.ex_label:
+        label_data = previous_inline_token.ex_label
+
+    url_data = previous_inline_token.image_uri
+    if previous_inline_token.pre_image_uri:
+        url_data = previous_inline_token.pre_image_uri
+
+    title_data = previous_inline_token.image_title
+    if previous_inline_token.pre_image_title:
+        title_data = previous_inline_token.pre_image_title
+
+    print(">>before>>" + str(estiated_column_number))
+    estiated_column_number += 2 + 1 + len(label_data)
+    print(">>before-1>>" + str(estiated_column_number))
+    if previous_inline_token.label_type == "inline":
+        estiated_column_number += (
+            2
+            + len(previous_inline_token.before_link_whitespace)
+            + len(url_data)
+            + len(previous_inline_token.before_title_whitespace)
+        )
+
+        if previous_inline_token.inline_title_bounding_character:
+            estiated_column_number += (
+                2 + len(title_data) + len(previous_inline_token.after_title_whitespace)
+            )
+    elif previous_inline_token.label_type == "shortcut":
+        pass
+    elif previous_inline_token.label_type == "collapsed":
+        estiated_column_number += 2
+    else:
+        assert previous_inline_token.label_type == "full"
+        assert False
     return estimated_line_number, estiated_column_number
 
 

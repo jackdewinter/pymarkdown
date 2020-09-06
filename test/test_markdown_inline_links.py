@@ -1399,7 +1399,7 @@ def test_inline_links_525():
     expected_tokens = [
         "[para(1,1):]",
         "[link(1,1):inline:/uri:::::![moon](moon.jpg):False::::]",
-        "[image:inline:moon.jpg::moon::::moon:False::::]",
+        "[image(1,2):inline:moon.jpg::moon::::moon:False::::]",
         "[end-link:::False]",
         "[end-para:::True]",
     ]
@@ -1573,7 +1573,7 @@ def test_inline_links_528():
     source_markdown = """![[[foo](uri1)](uri2)](uri3)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[image:inline:uri3::[foo](uri2)::::[[foo](uri1)](uri2):False::::]",
+        "[image(1,1):inline:uri3::[foo](uri2)::::[[foo](uri1)](uri2):False::::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="uri3" alt="[foo](uri2)" /></p>"""
@@ -1600,7 +1600,7 @@ def test_inline_links_528a():
     source_markdown = """![[foo](uri2)](uri3)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[image:inline:uri3::foo::::[foo](uri2):False::::]",
+        "[image(1,1):inline:uri3::foo::::[foo](uri2):False::::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="uri3" alt="foo" /></p>"""
@@ -1627,7 +1627,7 @@ def test_inline_links_528b():
     source_markdown = """![[foo](uri2 "bar")](uri3)"""
     expected_tokens = [
         "[para(1,1):]",
-        '[image:inline:uri3::foo::::[foo](uri2 "bar"):False::::]',
+        '[image(1,1):inline:uri3::foo::::[foo](uri2 "bar"):False::::]',
         "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="uri3" alt="foo" /></p>"""
@@ -1654,7 +1654,7 @@ def test_inline_links_528c():
     source_markdown = """![![[foo](uri1)](uri2)](uri3)"""
     expected_tokens = [
         "[para(1,1):]",
-        "[image:inline:uri3::foo::::![[foo](uri1)](uri2):False::::]",
+        "[image(1,1):inline:uri3::foo::::![[foo](uri1)](uri2):False::::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><img src="uri3" alt="foo" /></p>"""

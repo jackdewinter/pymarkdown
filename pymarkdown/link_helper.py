@@ -1026,6 +1026,8 @@ class LinkHelper:
                 before_link_whitespace,
                 before_title_whitespace,
                 after_title_whitespace,
+                line_number,
+                column_number,
             )
             LOGGER.debug("\n>>Image>>%s", str(inline_blocks))
             LOGGER.debug(">>start_text>>%s<<", str(start_text))

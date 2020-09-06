@@ -250,7 +250,7 @@ def test_reference_links_539():
     expected_tokens = [
         "[para(1,1):]",
         "[link(1,1):full:/uri::::ref:![moon](moon.jpg):::::]",
-        "[image:inline:moon.jpg::moon::::moon:False::::]",
+        "[image(1,2):inline:moon.jpg::moon::::moon:False::::]",
         "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
