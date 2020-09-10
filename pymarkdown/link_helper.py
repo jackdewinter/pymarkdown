@@ -993,7 +993,7 @@ class LinkHelper:
                 column_number,
             )
             token_to_append = EndMarkdownToken(
-                MarkdownToken.token_inline_link, "", "", None, False
+                MarkdownToken.token_inline_link, "", "", inline_blocks[ind], False
             )
         else:
             assert start_text == LinkHelper.image_start_sequence

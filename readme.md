@@ -4,7 +4,7 @@
 
 - determine which errors to print and which to log
 
-## Bugs - General
+## Bugs - General - Nice To Have
 
 - make better use of `index_indent`
 - merge leading_spaces code from both container tokens
@@ -17,6 +17,22 @@
 - where is `elif starting_whitespace:` used? why? better way to do it?
 - image token handling confusing and non-standard
 - fenced code block handling of line/col could be better
+- HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
+- verifying vs validating?
+- verify which inlines cannot contain newlines and verify with line/col
+  - autolinks
+  - raw_html
+- track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
+- all types of end-inlines and inlines at end i.e. 50
+
+## Bugs - General - Solve
+
+- links, 518b
+- fenced, 99 with more blanks
+- html block skipped
+
+## Bugs - General - Uncategorized
+
 - why is space after atx in text?
 - why does hard break not have \n?
   - hard break followed by 3 spaces, then emphasis
@@ -24,8 +40,6 @@
     - variation with start of 52e, then hard break, then something like start of 52e again i.e. make /x02 splitter come into affect
   - hard break followed by each inline type
   - hard break at start of text?
-- HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
-- verifying vs validating?
 - 634a in bq and in list
 - raw html, 500
 - links, 518b
@@ -42,7 +56,6 @@
   - different image link types, with variations on their values
   - 525 with text and other inlines before and after
   - need "full" example of image
-- track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi 
 
 ## Bugs - Character Entities
 
