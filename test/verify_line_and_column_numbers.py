@@ -50,7 +50,13 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
                     + ParserHelper.make_value_visible(actual_tokens[ind - 1])
                 )
                 if actual_tokens[ind - 1].token_name == MarkdownToken.token_html_block:
-                    container_block_stack[-1].leading_text_index += 1
+                    newlines_in_text_token = __count_newlines_in_text(
+                        current_token.token_text
+                    )
+                    print(">>newlines_in_text_token>" + str(newlines_in_text_token))
+                    container_block_stack[
+                        -1
+                    ].leading_text_index += newlines_in_text_token
                     print(
                         ">>implicit newline>>index>"
                         + str(container_block_stack[-1].leading_text_index)
@@ -462,8 +468,6 @@ def __validate_new_line(container_block_stack, current_token, current_position):
     print(">>init_ws(" + str(init_ws) + ")>>w/ tab=" + str(had_tab))
     if had_tab:
         return
-
-    # TODO validate line number based on content, need enablement of inline
 
     if (
         container_block_stack

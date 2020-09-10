@@ -29,7 +29,6 @@
 
 - links, 518b
 - fenced, 99 with more blanks
-- html block skipped
 
 ## Bugs - General - Uncategorized
 
@@ -60,13 +59,6 @@
 ## Bugs - Character Entities
 
 - test_markdown_entity* various extra tests
-
-## Bugs - Inline line/col
-
-- test_html_blocks_143a
-  - not tracking properly, but 143 is
-  - check +1 and ensure that they are dealing with extra newlines properly
-  - check other ones as well that do the same thing
 
 ## Bugs - Atx
 

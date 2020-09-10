@@ -960,7 +960,6 @@ foo
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_html_blocks_143a():
     """
@@ -990,6 +989,94 @@ bar"""
 <div>
 foo
 bar
+</blockquote>
+<p>bar</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_143b():
+    """
+    Test case 143b:  (part 2) If there is no matching end tag, the block will end at the end of the document (or the enclosing block quote or list item):
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> <div>
+> foo
+> bar
+> baz
+
+bar"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n\n]",
+        "[html-block(1,3)]",
+        "[text(1,3):<div>\nfoo\nbar\nbaz:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+        "[end-block-quote:::False]",
+        "[para(6,1):]",
+        "[text(6,1):bar:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<div>
+foo
+bar
+baz
+</blockquote>
+<p>bar</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_143c():
+    """
+    Test case 143b:  (part 2) If there is no matching end tag, the block will end at the end of the document (or the enclosing block quote or list item):
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> <div>
+>foo
+> bar
+>baz
+
+bar"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>\n> \n>\n\n]",
+        "[html-block(1,3)]",
+        "[text(1,3):<div>\nfoo\nbar\nbaz:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+        "[end-block-quote:::False]",
+        "[para(6,1):]",
+        "[text(6,1):bar:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<div>
+foo
+bar
+baz
 </blockquote>
 <p>bar</p>"""
 
