@@ -21,7 +21,7 @@ from pymarkdown.parser_helper import ParserHelper
 LOGGER = logging.getLogger(__name__)
 
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods, too-many-instance-attributes
 class InlineRequest:
     """
     Class to hold the request information to pass on to the handle_* functions.
@@ -37,6 +37,7 @@ class InlineRequest:
         current_string_unresolved=None,
         line_number=None,
         column_number=None,
+        para_owner=None,
     ):
         self.source_text = source_text
         self.next_index = next_index
@@ -45,6 +46,7 @@ class InlineRequest:
         self.current_string_unresolved = current_string_unresolved
         self.line_number = line_number
         self.column_number = column_number
+        self.para_owner = para_owner
 
     # pylint: enable=too-many-arguments
 

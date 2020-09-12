@@ -10,6 +10,7 @@ from pymarkdown.markdown_token import (
     MarkdownToken,
     SpecialTextMarkdownToken,
 )
+from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
 
@@ -32,7 +33,11 @@ class EmphasisHelper:
         delimiter_stack = []
         special_count = 0
         for next_block in inline_blocks:
-            LOGGER.debug("special_count>>%s>>%s", str(special_count), str(next_block))
+            LOGGER.debug(
+                "special_count>>%s>>%s",
+                str(special_count),
+                ParserHelper.make_value_visible(next_block),
+            )
             special_count += 1
             if not isinstance(next_block, SpecialTextMarkdownToken):
                 continue

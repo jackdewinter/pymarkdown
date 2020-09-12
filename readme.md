@@ -27,7 +27,6 @@
 
 ## Bugs - General - Solve
 
-- links, 518b
 - fenced, 99 with more blanks
 
 ## Bugs - General - Uncategorized
@@ -44,6 +43,7 @@
 - links, 518b
   - links with LF in link_label
   - each inline token surrounded by text
+  - 518b inside of list and/or block quote
 - code span and other multiline inline
   - code span with and without multiline, surrounded by text, like 662,091
   - multiple lengths of ticks, whitespace
@@ -53,8 +53,12 @@
 - images, with newline in title?
   - text before and after
   - different image link types, with variations on their values
-  - 525 with text and other inlines before and after
+  - 525 with text and other inlines before and after, newlines, etc
   - need "full" example of image
+- all multiline elements within a paragaph (and other containers that allow newline)
+  - make sure line/column is tracking text indenting on each line
+  - combinations together
+  - 518 series, but for SetExt and other containers
 
 ## Bugs - Character Entities
 

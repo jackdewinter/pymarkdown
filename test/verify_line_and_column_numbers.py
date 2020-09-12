@@ -50,7 +50,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
                     + ParserHelper.make_value_visible(actual_tokens[ind - 1])
                 )
                 if actual_tokens[ind - 1].token_name == MarkdownToken.token_html_block:
-                    newlines_in_text_token = __count_newlines_in_text(
+                    newlines_in_text_token = ParserHelper.count_newlines_in_text(
                         current_token.token_text
                     )
                     print(">>newlines_in_text_token>" + str(newlines_in_text_token))
@@ -271,15 +271,6 @@ def __pop_from_stack_if_required(token_stack, current_token):
     )
 
 
-def __count_newlines_in_text(text_to_examine):
-    """
-    Count the number of new line characters in a given string.
-    """
-    original_length = len(text_to_examine)
-    removed_length = len(text_to_examine.replace("\n", ""))
-    return original_length - removed_length
-
-
 # pylint: disable=too-many-arguments,too-many-branches
 def __validate_block_token_height(
     last_token,
@@ -304,9 +295,13 @@ def __validate_block_token_height(
 
     delta = last_token.line_number
     if last_token.token_name == MarkdownToken.token_paragraph:
-        token_height = 1 + __count_newlines_in_text(last_token.extracted_whitespace)
+        token_height = 1 + ParserHelper.count_newlines_in_text(
+            last_token.extracted_whitespace
+        )
     elif last_token.token_name == MarkdownToken.token_indented_code_block:
-        token_height = 1 + __count_newlines_in_text(last_token.indented_whitespace)
+        token_height = 1 + ParserHelper.count_newlines_in_text(
+            last_token.indented_whitespace
+        )
     elif (
         last_token.token_name == MarkdownToken.token_html_block
         or last_token.token_name == MarkdownToken.token_fenced_code_block
@@ -321,7 +316,7 @@ def __validate_block_token_height(
                 actual_tokens[current_token_index].token_name
                 == MarkdownToken.token_text
             ):
-                token_height += 1 + __count_newlines_in_text(
+                token_height += 1 + ParserHelper.count_newlines_in_text(
                     actual_tokens[current_token_index].token_text
                 )
             else:
@@ -339,11 +334,13 @@ def __validate_block_token_height(
     elif last_token.token_name == MarkdownToken.token_link_reference_definition:
         token_height = (
             1
-            + __count_newlines_in_text(last_token.extracted_whitespace)
-            + __count_newlines_in_text(last_token.link_name_debug)
-            + __count_newlines_in_text(last_token.link_destination_whitespace)
-            + __count_newlines_in_text(last_token.link_title_raw)
-            + __count_newlines_in_text(last_token.link_title_whitespace)
+            + ParserHelper.count_newlines_in_text(last_token.extracted_whitespace)
+            + ParserHelper.count_newlines_in_text(last_token.link_name_debug)
+            + ParserHelper.count_newlines_in_text(
+                last_token.link_destination_whitespace
+            )
+            + ParserHelper.count_newlines_in_text(last_token.link_title_raw)
+            + ParserHelper.count_newlines_in_text(last_token.link_title_whitespace)
         )
     elif (
         last_token.token_name == MarkdownToken.token_thematic_break

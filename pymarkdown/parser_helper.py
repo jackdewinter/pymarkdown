@@ -364,6 +364,22 @@ class ParserHelper:
         return rebuilt_string
 
     @staticmethod
+    def count_characters_in_text(text_to_examine, text_to_look_for):
+        """
+        Count the number of a given character in a given string.
+        """
+        original_length = len(text_to_examine)
+        removed_length = len(text_to_examine.replace(text_to_look_for, ""))
+        return original_length - removed_length
+
+    @staticmethod
+    def count_newlines_in_text(text_to_examine):
+        """
+        Count the number of new line characters in a given string.
+        """
+        return ParserHelper.count_characters_in_text(text_to_examine, "\n")
+
+    @staticmethod
     def make_value_visible(value_to_modify):
         """
         For the given value, turn it into a string if necessary, and then replace
