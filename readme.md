@@ -6,14 +6,16 @@
 
 ## Bugs - General - Nice To Have
 
+- use built in `is_x` functions instead of `token_name`
+- end tokens should all have start tokens that caused them?
+- why does fcb with only newlines and newlines with ws not fold down to text?
+
 - make better use of `index_indent`
 - merge leading_spaces code from both container tokens
 - refactor `for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):`
   from different areas into one helper function
   - leaf parse_paragraph
   - len(parser_state
-- use built in `is_x` functions instead of `token_name`
-- end tokens should all have start tokens that caused them?
 - where is `elif starting_whitespace:` used? why? better way to do it?
 - image token handling confusing and non-standard
 - fenced code block handling of line/col could be better
@@ -24,14 +26,12 @@
   - raw_html
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
 - all types of end-inlines and inlines at end i.e. 50
+- why is space after atx in text?
 
 ## Bugs - General - Solve
 
-- fenced, 99 with more blanks
-
 ## Bugs - General - Uncategorized
 
-- why is space after atx in text?
 - why does hard break not have \n?
   - hard break followed by 3 spaces, then emphasis
   - variations of 52e with extra spaces after, etc.

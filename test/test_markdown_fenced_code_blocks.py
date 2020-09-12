@@ -455,7 +455,7 @@ bbb"""
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_099():
+def test_fenced_code_blocks_099x():
     """
     Test case 099:  A code block can have all empty lines as its content:
     """
@@ -476,8 +476,216 @@ def test_fenced_code_blocks_099():
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>
-  
-</code></pre>"""
+\a\a
+</code></pre>""".replace(
+        "\a", " "
+    )
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_099a():
+    """
+    Test case 099a:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """```
+
+\a\a
+
+```""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[BLANK(2,1):]",
+        "[BLANK(3,1):  ]",
+        "[BLANK(4,1):]",
+        "[end-fcode-block::3:False]",
+    ]
+    expected_gfm = """<pre><code>
+\a\a
+
+</code></pre>""".replace(
+        "\a", " "
+    )
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_099b():
+    """
+    Test case 099b:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """```
+
+\a
+\a\a
+\a
+
+```""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[BLANK(2,1):]",
+        "[BLANK(3,1): ]",
+        "[BLANK(4,1):  ]",
+        "[BLANK(5,1): ]",
+        "[BLANK(6,1):]",
+        "[end-fcode-block::3:False]",
+    ]
+    expected_gfm = """<pre><code>
+\a
+\a\a
+\a
+
+</code></pre>""".replace(
+        "\a", " "
+    )
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_099c():
+    """
+    Test case 099c:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """```
+z
+\a
+\a\a
+\a
+z
+```""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):z\n\x03 \n\x03  \n\x03 \nz:]",
+        "[end-fcode-block::3:False]",
+    ]
+    expected_gfm = """<pre><code>z
+\a
+\a\a
+\a
+z
+</code></pre>""".replace(
+        "\a", " "
+    )
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_099d():
+    """
+    Test case 099c:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """```
+z
+\a
+z
+```""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):z\n\x03 \nz:]",
+        "[end-fcode-block::3:False]",
+    ]
+    expected_gfm = """<pre><code>z
+\a
+z
+</code></pre>""".replace(
+        "\a", " "
+    )
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_099e():
+    """
+    Test case 099e:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """```
+\a
+\a\a
+\a
+```""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[BLANK(2,1): ]",
+        "[BLANK(3,1):  ]",
+        "[BLANK(4,1): ]",
+        "[end-fcode-block::3:False]",
+    ]
+    expected_gfm = """<pre><code>\a
+\a\a
+\a
+</code></pre>""".replace(
+        "\a", " "
+    )
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

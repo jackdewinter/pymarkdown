@@ -688,15 +688,26 @@ def __verify_first_inline_fenced_code_block(
         or first_inline_token.token_name == MarkdownToken.token_blank_line
     )
 
+    print(">last_token_stack>" + ParserHelper.make_value_visible(last_token_stack))
     if len(last_token_stack) > 1:
         split_leading_spaces = last_token_stack[-2].leading_spaces.split("\n")
         col_pos = len(split_leading_spaces[1])
     else:
-        resolved_extracted_whitespace = ParserHelper.resolve_replacement_markers_from_text(
-            first_inline_token.extracted_whitespace
-        )
-        col_pos = len(resolved_extracted_whitespace)
+        if first_inline_token.token_name == MarkdownToken.token_blank_line:
+            col_pos = 0
+        else:
+            resolved_extracted_whitespace = ParserHelper.resolve_replacement_markers_from_text(
+                first_inline_token.extracted_whitespace
+            )
+            print(
+                ">resolved_extracted_whitespace>"
+                + ParserHelper.make_value_visible(resolved_extracted_whitespace)
+                + "<"
+            )
+            col_pos = len(resolved_extracted_whitespace)
 
+    print(">first_inline_token.column_number>" + str(first_inline_token.column_number))
+    print(">col_pos>" + str(col_pos))
     assert last_non_inline_token.line_number + 1 == first_inline_token.line_number
     assert first_inline_token.column_number == 1 + col_pos
 
