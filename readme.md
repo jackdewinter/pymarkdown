@@ -40,7 +40,6 @@
   - hard break at start of text?
 - 634a in bq and in list
 - links, 518b
-  - links with LF in link_label
   - each inline token surrounded by text
   - 518b inside of list and/or block quote
 - code span and other multiline inline
