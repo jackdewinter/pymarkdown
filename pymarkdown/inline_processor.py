@@ -909,6 +909,7 @@ class InlineProcessor:
                             column_number=last_column_number,
                         )
                     )
+                    starting_whitespace = ""
 
                 inline_blocks.extend(inline_response.new_tokens)
 

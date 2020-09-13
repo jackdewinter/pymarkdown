@@ -26,7 +26,6 @@
   - raw_html
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
 - all types of end-inlines and inlines at end i.e. 50
-- why is space after atx in text?
 
 ## Bugs - General - Solve
 
@@ -45,13 +44,12 @@
 - code span and other multiline inline
   - code span with and without multiline, surrounded by text, like 662,091
   - multiple lengths of ticks, whitespace
-- atx heading text, 183
 - backslashes - 600
   - verify with before and after with all valid inline
 - images, with newline in title?
   - text before and after
   - different image link types, with variations on their values
-  - 525 with text and other inlines before and after, newlines, etc
+  - 525 with text and other inlines before and after, newlines, etc.
   - need "full" example of image
 - all multiline elements within a paragaph (and other containers that allow newline)
   - make sure line/column is tracking text indenting on each line

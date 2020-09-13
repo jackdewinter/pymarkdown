@@ -806,7 +806,7 @@ def test_link_reference_definitions_183():
         "[atx(1,1):1:0:]",
         "[text(1,3)::\a \a\x03\a]",
         "[link(1,3):shortcut:/url:::::Foo:::::]",
-        "[text(1,4):Foo: ]",
+        "[text(1,4):Foo:]",
         "[end-link:::False]",
         "[end-atx:::False]",
         "[link-ref-def(2,1):True::foo:: :/url:::::]",

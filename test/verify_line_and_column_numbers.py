@@ -743,39 +743,17 @@ def __verify_first_inline_atx(last_non_inline_token, first_inline_token):
     Handle the case where the last non-inline token is an Atx Heading token.
     """
 
+    assert (
+        first_inline_token.token_name == MarkdownToken.token_text
+    ), first_inline_token.token_name
+
+    replaced_extracted_whitespace = ParserHelper.resolve_replacement_markers_from_text(
+        first_inline_token.extracted_whitespace
+    )
     col_pos = last_non_inline_token.column_number + last_non_inline_token.hash_count
-
-    if first_inline_token.token_name == MarkdownToken.token_text:
-        replaced_extracted_whitespace = ParserHelper.resolve_replacement_markers_from_text(
-            first_inline_token.extracted_whitespace
-        )
-        col_pos += len(replaced_extracted_whitespace)
-        assert first_inline_token.line_number == last_non_inline_token.line_number
-        assert first_inline_token.column_number == col_pos
-    elif first_inline_token.token_name == MarkdownToken.token_inline_hard_break:
-        assert False
-    elif first_inline_token.token_name == MarkdownToken.token_inline_code_span:
-        assert False
-    elif first_inline_token.token_name == MarkdownToken.token_inline_raw_html:
-        assert False
-    elif first_inline_token.token_name == MarkdownToken.token_inline_uri_autolink:
-        assert False
-    elif first_inline_token.token_name == MarkdownToken.token_inline_email_autolink:
-        assert False
-    elif first_inline_token.token_name == MarkdownToken.token_inline_emphasis:
-        assert False
-    elif first_inline_token.token_name == MarkdownToken.token_blank_line:
-        assert False
-    elif first_inline_token.token_name == MarkdownToken.token_inline_image:
-        assert False
-
-    # if a link is first, it creates the whitespace in a text token before it
-    else:
-        assert (
-            first_inline_token.token_name != MarkdownToken.token_inline_link
-            and first_inline_token.token_name
-            != EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
-        ), first_inline_token.token_name
+    col_pos += len(replaced_extracted_whitespace)
+    assert first_inline_token.line_number == last_non_inline_token.line_number
+    assert first_inline_token.column_number == col_pos
 
 
 def __verify_first_inline_paragraph(last_non_inline_token, first_inline_token):
