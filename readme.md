@@ -200,8 +200,7 @@
 
 ## Features - Correctness
 
-- can we generate Markdown from tokens? do we have enough info?
-  - go back and see if can replace some of the end token fiddling with start_markdown_token
+- go back and see if can replace some of the end token fiddling with start_markdown_token
 - go through any case that uses lazy and do un-lazy example
 - samples that end without a blank line, and add a blank line?
 
