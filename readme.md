@@ -39,7 +39,6 @@
   - hard break followed by each inline type
   - hard break at start of text?
 - 634a in bq and in list
-- raw html, 500
 - links, 518b
   - links with LF in link_label
   - each inline token surrounded by text
