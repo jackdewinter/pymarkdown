@@ -899,7 +899,7 @@ def __verify_next_inline(  # noqa: C901
         return
 
     estimated_line_number = previous_inline_token.line_number
-    estiated_column_number = previous_inline_token.column_number
+    estimated_column_number = previous_inline_token.column_number
 
     print(
         ">>before-"
@@ -907,23 +907,23 @@ def __verify_next_inline(  # noqa: C901
         + ">>"
         + str(estimated_line_number)
         + ","
-        + str(estiated_column_number)
+        + str(estimated_column_number)
     )
 
     if previous_inline_token.token_name == MarkdownToken.token_text:
-        estimated_line_number, estiated_column_number = __verify_next_inline_text(
+        estimated_line_number, estimated_column_number = __verify_next_inline_text(
             last_token,
             pre_previous_inline_token,
             previous_inline_token,
             estimated_line_number,
-            estiated_column_number,
+            estimated_column_number,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_emphasis:
         (
             estimated_line_number,
-            estiated_column_number,
+            estimated_column_number,
         ) = __verify_next_inline_emphasis_start(
-            previous_inline_token, estimated_line_number, estiated_column_number,
+            previous_inline_token, estimated_line_number, estimated_column_number,
         )
     elif (
         previous_inline_token.token_name
@@ -931,51 +931,57 @@ def __verify_next_inline(  # noqa: C901
     ):
         (
             estimated_line_number,
-            estiated_column_number,
+            estimated_column_number,
         ) = __verify_next_inline_emphasis_end(
-            previous_inline_token, estimated_line_number, estiated_column_number,
+            previous_inline_token, estimated_line_number, estimated_column_number,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_blank_line:
-        estimated_line_number, estiated_column_number = __verify_next_inline_blank_line(
-            current_inline_token, estimated_line_number, estiated_column_number,
+        (
+            estimated_line_number,
+            estimated_column_number,
+        ) = __verify_next_inline_blank_line(
+            current_inline_token, estimated_line_number, estimated_column_number,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_hard_break:
-        estimated_line_number, estiated_column_number = __verify_next_inline_hard_break(
+        (
+            estimated_line_number,
+            estimated_column_number,
+        ) = __verify_next_inline_hard_break(
             last_token,
             previous_inline_token,
             current_inline_token,
             estimated_line_number,
-            estiated_column_number,
+            estimated_column_number,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_code_span:
-        estimated_line_number, estiated_column_number = __verify_next_inline_code_span(
-            previous_inline_token, estimated_line_number, estiated_column_number,
+        estimated_line_number, estimated_column_number = __verify_next_inline_code_span(
+            previous_inline_token, estimated_line_number, estimated_column_number,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_raw_html:
-        estimated_line_number, estiated_column_number = __verify_next_inline_raw_html(
-            previous_inline_token, estimated_line_number, estiated_column_number,
+        estimated_line_number, estimated_column_number = __verify_next_inline_raw_html(
+            previous_inline_token, estimated_line_number, estimated_column_number,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_uri_autolink:
-        estimated_line_number, estiated_column_number = __verify_next_inline_autolink(
-            previous_inline_token, estimated_line_number, estiated_column_number,
+        estimated_line_number, estimated_column_number = __verify_next_inline_autolink(
+            previous_inline_token, estimated_line_number, estimated_column_number,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_email_autolink:
-        estimated_line_number, estiated_column_number = __verify_next_inline_autolink(
-            previous_inline_token, estimated_line_number, estiated_column_number,
+        estimated_line_number, estimated_column_number = __verify_next_inline_autolink(
+            previous_inline_token, estimated_line_number, estimated_column_number,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_link:
         (
             estimated_line_number,
-            estiated_column_number,
+            estimated_column_number,
         ) = __verify_next_inline_inline_link(
-            estimated_line_number, estiated_column_number,
+            estimated_line_number, estimated_column_number,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_image:
         (
             estimated_line_number,
-            estiated_column_number,
+            estimated_column_number,
         ) = __verify_next_inline_inline_image(
-            previous_inline_token, estimated_line_number, estiated_column_number,
+            previous_inline_token, estimated_line_number, estimated_column_number,
         )
     elif (
         previous_inline_token.token_name
@@ -989,13 +995,13 @@ def __verify_next_inline(  # noqa: C901
         ">>before-blank>>"
         + str(estimated_line_number)
         + ","
-        + str(estiated_column_number)
+        + str(estimated_column_number)
     )
     if current_inline_token.token_name == MarkdownToken.token_blank_line:
         if previous_inline_token.token_name != MarkdownToken.token_blank_line:
             estimated_line_number += 1
-        estiated_column_number = 1
-    print(">>after>>" + str(estimated_line_number) + "," + str(estiated_column_number))
+        estimated_column_number = 1
+    print(">>after>>" + str(estimated_line_number) + "," + str(estimated_column_number))
 
     assert estimated_line_number == current_inline_token.line_number, (
         ">>est>"
@@ -1003,9 +1009,9 @@ def __verify_next_inline(  # noqa: C901
         + ">act>"
         + str(current_inline_token.line_number)
     )
-    assert estiated_column_number == current_inline_token.column_number, (
+    assert estimated_column_number == current_inline_token.column_number, (
         ">>est>"
-        + str(estiated_column_number)
+        + str(estimated_column_number)
         + ">act>"
         + str(current_inline_token.column_number)
     )
@@ -1015,24 +1021,24 @@ def __verify_next_inline(  # noqa: C901
 
 
 def __verify_next_inline_blank_line(
-    current_inline_token, estimated_line_number, estiated_column_number,
+    current_inline_token, estimated_line_number, estimated_column_number,
 ):
     estimated_line_number += 1
-    estiated_column_number = 1
+    estimated_column_number = 1
     if current_inline_token.token_name == MarkdownToken.token_text:
-        estiated_column_number += len(current_inline_token.extracted_whitespace)
-    return estimated_line_number, estiated_column_number
+        estimated_column_number += len(current_inline_token.extracted_whitespace)
+    return estimated_line_number, estimated_column_number
 
 
 def __verify_next_inline_inline_link(
-    estimated_line_number, estiated_column_number,
+    estimated_line_number, estimated_column_number,
 ):
-    estiated_column_number += 1
-    return estimated_line_number, estiated_column_number
+    estimated_column_number += 1
+    return estimated_line_number, estimated_column_number
 
 
 def __verify_next_inline_inline_image(
-    previous_inline_token, estimated_line_number, estiated_column_number
+    previous_inline_token, estimated_line_number, estimated_column_number
 ):
 
     label_data = previous_inline_token.image_alt_text
@@ -1047,11 +1053,11 @@ def __verify_next_inline_inline_image(
     if previous_inline_token.pre_image_title:
         title_data = previous_inline_token.pre_image_title
 
-    print(">>before>>" + str(estiated_column_number))
-    estiated_column_number += 2 + 1 + len(label_data)
-    print(">>before-1>>" + str(estiated_column_number))
+    print(">>before>>" + str(estimated_column_number))
+    estimated_column_number += 2 + 1 + len(label_data)
+    print(">>before-1>>" + str(estimated_column_number))
     if previous_inline_token.label_type == "inline":
-        estiated_column_number += (
+        estimated_column_number += (
             2
             + len(previous_inline_token.before_link_whitespace)
             + len(url_data)
@@ -1059,39 +1065,39 @@ def __verify_next_inline_inline_image(
         )
 
         if previous_inline_token.inline_title_bounding_character:
-            estiated_column_number += (
+            estimated_column_number += (
                 2 + len(title_data) + len(previous_inline_token.after_title_whitespace)
             )
     elif previous_inline_token.label_type == "shortcut":
         pass
     elif previous_inline_token.label_type == "collapsed":
-        estiated_column_number += 2
+        estimated_column_number += 2
     else:
         assert previous_inline_token.label_type == "full"
         assert False
-    return estimated_line_number, estiated_column_number
+    return estimated_line_number, estimated_column_number
 
 
 def __verify_next_inline_autolink(
-    previous_inline_token, estimated_line_number, estiated_column_number
+    previous_inline_token, estimated_line_number, estimated_column_number
 ):
     return (
         estimated_line_number,
-        estiated_column_number + len(previous_inline_token.autolink_text) + 2,
+        estimated_column_number + len(previous_inline_token.autolink_text) + 2,
     )
 
 
 def __verify_next_inline_raw_html(
-    previous_inline_token, estimated_line_number, estiated_column_number,
+    previous_inline_token, estimated_line_number, estimated_column_number,
 ):
 
     if "\n" in previous_inline_token.raw_tag:
         split_raw_tag = previous_inline_token.raw_tag.split("\n")
         estimated_line_number += len(split_raw_tag) - 1
-        estiated_column_number = len(split_raw_tag[-1]) + 2
+        estimated_column_number = len(split_raw_tag[-1]) + 2
     else:
-        estiated_column_number += len(previous_inline_token.raw_tag) + 2
-    return estimated_line_number, estiated_column_number
+        estimated_column_number += len(previous_inline_token.raw_tag) + 2
+    return estimated_line_number, estimated_column_number
 
 
 # pylint: disable=unused-argument
@@ -1100,7 +1106,7 @@ def __verify_next_inline_hard_break(
     previous_inline_token,
     current_inline_token,
     estimated_line_number,
-    estiated_column_number,
+    estimated_column_number,
 ):
     new_column_number = 1
     if last_token.token_name == MarkdownToken.token_paragraph:
@@ -1130,7 +1136,7 @@ def __verify_next_inline_hard_break(
 
 
 def __verify_next_inline_code_span(
-    previous_inline_token, estimated_line_number, estiated_column_number
+    previous_inline_token, estimated_line_number, estimated_column_number
 ):
 
     resolved_span_text = ParserHelper.remove_backspaces_from_text(
@@ -1147,34 +1153,34 @@ def __verify_next_inline_code_span(
     if "\n" in resolved_span_text:
         split_span_text = resolved_span_text.split("\n")
         estimated_line_number += len(split_span_text) - 1
-        estiated_column_number = (
+        estimated_column_number = (
             len(split_span_text[-1]) + 1 + trailing_ws_length + backtick_length
         )
     else:
-        estiated_column_number += (
+        estimated_column_number += (
             len(resolved_span_text)
             + (2 * backtick_length)
             + leading_ws_length
             + trailing_ws_length
         )
-    return estimated_line_number, estiated_column_number
+    return estimated_line_number, estimated_column_number
 
 
 def __verify_next_inline_emphasis_start(
-    previous_inline_token, estimated_line_number, estiated_column_number,
+    previous_inline_token, estimated_line_number, estimated_column_number,
 ):
-    estiated_column_number += previous_inline_token.emphasis_length
-    return estimated_line_number, estiated_column_number
+    estimated_column_number += previous_inline_token.emphasis_length
+    return estimated_line_number, estimated_column_number
 
 
 def __verify_next_inline_emphasis_end(
-    previous_inline_token, estimated_line_number, estiated_column_number,
+    previous_inline_token, estimated_line_number, estimated_column_number,
 ):
     print(">>" + str(previous_inline_token.extra_end_data) + "<<")
     split_extra_end_data = previous_inline_token.extra_end_data.split(":")
     print(">>" + str(split_extra_end_data) + "<<")
-    estiated_column_number += int(split_extra_end_data[0])
-    return estimated_line_number, estiated_column_number
+    estimated_column_number += int(split_extra_end_data[0])
+    return estimated_line_number, estimated_column_number
 
 
 # pylint: disable=too-many-statements, too-many-arguments
@@ -1183,7 +1189,7 @@ def __verify_next_inline_text(
     pre_previous_inline_token,
     previous_inline_token,
     estimated_line_number,
-    estiated_column_number,
+    estimated_column_number,
 ):
     current_line = previous_inline_token.token_text
     if (
@@ -1309,11 +1315,11 @@ def __verify_next_inline_text(
 
     estimated_line_number += delta_line
     if delta_line:
-        estiated_column_number = 1
-    estiated_column_number += delta_column
+        estimated_column_number = 1
+    estimated_column_number += delta_column
     if split_end_whitespace:
-        estiated_column_number += split_end_whitespace
-    return estimated_line_number, estiated_column_number
+        estimated_column_number += split_end_whitespace
+    return estimated_line_number, estimated_column_number
 
 
 # pylint: enable=too-many-statements, too-many-arguments

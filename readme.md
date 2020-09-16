@@ -29,9 +29,7 @@
 
 ## Bugs - General - Solve
 
-- estiated_column_number
 - verify that any special characters used can be recognized and specially escaped
-- 52e - make new case with different indent levels for each
 - why?  shouldn't each one be of the proper length?
 ```
   if split_extracted_whitespace and last_token.rehydrate_index < len(

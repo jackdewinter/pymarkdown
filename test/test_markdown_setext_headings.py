@@ -302,6 +302,45 @@ c</h1>"""
 
 
 @pytest.mark.gfm
+def test_setext_headings_052f():
+    """
+    Test case 052f:  Deal with multiple lines that start with whitespace.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """  a\a
+   *b*\a\a
+ c
+===""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(4,1):=:3:  :(1,3)]",
+        "[text(1,3):a\n:: \n   \x02]",
+        "[emphasis(2,4):1:*]",
+        "[text(2,5):b:]",
+        "[end-emphasis(2,6)::1:*:False]",
+        "[hard-break(2,7):  ]",
+        "[text(3,2):\nc::\n ]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h1>a
+<em>b</em><br />
+c</h1>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_setext_headings_053():
     """
     Test case 053:  The underlining can be any length:
