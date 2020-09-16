@@ -29,6 +29,20 @@
 
 ## Bugs - General - Solve
 
+- estiated_column_number
+- verify that any special characters used can be recognized and specially escaped
+- 52e - make new case with different indent levels for each
+- why?  shouldn't each one be of the proper length?
+```
+  if split_extracted_whitespace and last_token.rehydrate_index < len(
+            split_extracted_whitespace
+        ):
+```
+- verify that 2 blank lines solution
+`if previous_inline_token.token_name != MarkdownToken.token_blank_line`
+does not affect single line and 3+ line solutions
+  - why needed?
+
 ## Bugs - General - Uncategorized
 
 - why does hard break not have \n?
@@ -39,7 +53,6 @@
   - hard break at start of text?
 - 634a in bq and in list
 - links, 518b
-  - each inline token surrounded by text
   - 518b inside of list and/or block quote
 - code span and other multiline inline
   - code span with and without multiline, surrounded by text, like 662,091
@@ -54,7 +67,7 @@
 - all multiline elements within a paragaph (and other containers that allow newline)
   - make sure line/column is tracking text indenting on each line
   - combinations together
-  - 518 series, but for SetExt and other containers
+  - 518 series, but for SetExt and Atx containers
 
 ## Bugs - Character Entities
 

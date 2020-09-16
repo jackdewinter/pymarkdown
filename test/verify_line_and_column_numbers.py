@@ -810,21 +810,63 @@ def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
             == first_inline_token.column_number
         )
     elif first_inline_token.token_name == MarkdownToken.token_inline_emphasis:
-        assert False
+        assert (
+            last_non_inline_token.original_line_number == first_inline_token.line_number
+        )
+        assert (
+            last_non_inline_token.original_column_number
+            == first_inline_token.column_number
+        )
     elif first_inline_token.token_name == MarkdownToken.token_inline_hard_break:
         assert False
     elif first_inline_token.token_name == MarkdownToken.token_inline_code_span:
-        assert False
+        assert (
+            last_non_inline_token.original_line_number == first_inline_token.line_number
+        )
+        assert (
+            last_non_inline_token.original_column_number
+            == first_inline_token.column_number
+        )
     elif first_inline_token.token_name == MarkdownToken.token_inline_raw_html:
-        assert False
+        assert (
+            last_non_inline_token.original_line_number == first_inline_token.line_number
+        )
+        assert (
+            last_non_inline_token.original_column_number
+            == first_inline_token.column_number
+        )
     elif first_inline_token.token_name == MarkdownToken.token_inline_uri_autolink:
-        assert False
+        assert (
+            last_non_inline_token.original_line_number == first_inline_token.line_number
+        )
+        assert (
+            last_non_inline_token.original_column_number
+            == first_inline_token.column_number
+        )
     elif first_inline_token.token_name == MarkdownToken.token_inline_email_autolink:
-        assert False
+        assert (
+            last_non_inline_token.original_line_number == first_inline_token.line_number
+        )
+        assert (
+            last_non_inline_token.original_column_number
+            == first_inline_token.column_number
+        )
     elif first_inline_token.token_name == MarkdownToken.token_inline_image:
-        assert False
+        assert (
+            last_non_inline_token.original_line_number == first_inline_token.line_number
+        )
+        assert (
+            last_non_inline_token.original_column_number
+            == first_inline_token.column_number
+        )
     elif first_inline_token.token_name == MarkdownToken.token_inline_link:
-        assert False
+        assert (
+            last_non_inline_token.original_line_number == first_inline_token.line_number
+        )
+        assert (
+            last_non_inline_token.original_column_number
+            == first_inline_token.column_number
+        )
     elif (
         first_inline_token.token_name
         == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
@@ -1342,6 +1384,8 @@ def __handle_last_token_end_link(
         len(last_inline_token.start_markdown_token.after_title_whitespace.split("\n"))
         - 1
     )
+    if last_block_token.token_name == MarkdownToken.token_setext_heading:
+        inline_height += 1
     return inline_height, use_line_number_from_start_token
 
 
@@ -1370,6 +1414,8 @@ def __handle_last_token_image(
     inline_height += len(last_inline_token.before_link_whitespace.split("\n")) - 1
     inline_height += len(last_inline_token.before_title_whitespace.split("\n")) - 1
     inline_height += len(last_inline_token.after_title_whitespace.split("\n")) - 1
+    if last_block_token.token_name == MarkdownToken.token_setext_heading:
+        inline_height += 1
     return inline_height
 
 
@@ -1383,6 +1429,9 @@ def __handle_last_token_code_span(
     inline_height = len(last_inline_token.span_text.split("\n")) - 1
     inline_height += len(last_inline_token.leading_whitespace.split("\n")) - 1
     inline_height += len(last_inline_token.trailing_whitespace.split("\n")) - 1
+
+    if last_block_token.token_name == MarkdownToken.token_setext_heading:
+        inline_height += 1
     return inline_height
 
 
@@ -1393,7 +1442,10 @@ def __handle_last_token_code_span(
 def __handle_last_token_autolink(
     last_block_token, second_last_inline_token, current_token, last_inline_token,
 ):
-    return 0
+    inline_height = 0
+    if last_block_token.token_name == MarkdownToken.token_setext_heading:
+        inline_height += 1
+    return inline_height
 
 
 # pylint: enable=unused-argument
@@ -1404,6 +1456,8 @@ def __handle_last_token_raw_html(
     last_block_token, second_last_inline_token, current_token, last_inline_token,
 ):
     inline_height = len(last_inline_token.raw_tag.split("\n")) - 1
+    if last_block_token.token_name == MarkdownToken.token_setext_heading:
+        inline_height += 1
     return inline_height
 
 
@@ -1462,6 +1516,7 @@ def __verify_last_inline(
     Verify the last inline against the next block token.
     """
 
+    print("---\n__verify_last_inline\n---")
     print("last_block_token>>" + ParserHelper.make_value_visible(last_block_token))
     print(
         "current_block_token>>" + ParserHelper.make_value_visible(current_block_token)
@@ -1579,7 +1634,7 @@ def __verify_last_inline(
 
 # pylint: enable=too-many-arguments
 
-# pylint: disable=too-many-branches, too-many-arguments
+# pylint: disable=too-many-branches, too-many-arguments, too-many-statements
 def __verify_inline(
     actual_tokens,
     last_block_token,
@@ -1643,6 +1698,7 @@ def __verify_inline(
         last_block_token.rehydrate_index = 1
 
     if inline_tokens:
+        print(">inline_tokens>" + ParserHelper.make_value_visible(inline_tokens))
         link_stack = []
         for token_index, current_inline_token in enumerate(inline_tokens):
             print(
@@ -1684,10 +1740,18 @@ def __verify_inline(
             assert current_block_token
             if current_block_token.token_name == MarkdownToken.token_setext_heading:
                 number_of_lines = current_block_token.original_line_number - 1
+                print("number_of_lines from setext>" + str(number_of_lines))
             else:
                 number_of_lines = current_block_token.line_number - 1
+                print("number_of_lines from normal>" + str(number_of_lines))
         else:
+            print("number_of_lines is not None>" + str(number_of_lines))
             assert not current_block_token
+
+        # if last_block_token.token_name == MarkdownToken.token_setext_heading:
+        #    number_of_lines = last_block_token.line_number - 1
+        #    print("number_of_lines SETEXT>" + str(number_of_lines))
+
         last_inline_token = inline_tokens[-1]
         __verify_last_inline(
             last_block_token,
@@ -1707,4 +1771,4 @@ def __verify_inline(
         print("<<[EOL]")
 
 
-# pylint: enable=too-many-branches, too-many-arguments
+# pylint: enable=too-many-branches, too-many-arguments, too-many-statements
