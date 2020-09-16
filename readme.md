@@ -30,12 +30,6 @@
 ## Bugs - General - Solve
 
 - verify that any special characters used can be recognized and specially escaped
-- why?  shouldn't each one be of the proper length?
-```
-  if split_extracted_whitespace and last_token.rehydrate_index < len(
-            split_extracted_whitespace
-        ):
-```
 - verify that 2 blank lines solution
 `if previous_inline_token.token_name != MarkdownToken.token_blank_line`
 does not affect single line and 3+ line solutions

@@ -1113,6 +1113,7 @@ def __verify_next_inline_hard_break(
         split_whitespace = last_token.extracted_whitespace.split("\n")
         ws_for_new_line = split_whitespace[last_token.rehydrate_index]
         last_token.rehydrate_index += 1
+        print(">>>>>>>>>>rehydrate_index1>" + str(last_token.rehydrate_index))
         new_column_number += len(ws_for_new_line)
     elif last_token.token_name == MarkdownToken.token_setext_heading:
         assert current_inline_token.token_name == MarkdownToken.token_text
@@ -1262,6 +1263,9 @@ def __verify_next_inline_text(
     )
     delta_line = len(split_current_line) - 1
 
+    if split_extracted_whitespace and last_token.rehydrate_index > 1:
+        assert last_token.rehydrate_index <= len(split_extracted_whitespace)
+
     if split_extracted_whitespace and last_token.rehydrate_index < len(
         split_extracted_whitespace
     ):
@@ -1290,6 +1294,7 @@ def __verify_next_inline_text(
                 + split_current_line[next_line_index]
             )
             last_token.rehydrate_index += 1
+            print(">>>>>>>>>>rehydrate_index2>" + str(last_token.rehydrate_index))
         print(
             "split_current_line>"
             + ParserHelper.make_value_visible(split_current_line)
@@ -1702,6 +1707,7 @@ def __verify_inline(
 
     if last_block_token.token_name == MarkdownToken.token_paragraph:
         last_block_token.rehydrate_index = 1
+        print(">>>>>>>>>>rehydrate_index3>" + str(last_block_token.rehydrate_index))
 
     if inline_tokens:
         print(">inline_tokens>" + ParserHelper.make_value_visible(inline_tokens))
