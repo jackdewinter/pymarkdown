@@ -45,8 +45,6 @@
 - code span and other multiline inline
   - code span with and without multiline, surrounded by text, like 662,091
   - multiple lengths of ticks, whitespace
-- backslashes - 600
-  - verify with before and after with all valid inline
 - images, with newline in title?
   - text before and after
   - different image link types, with variations on their values
