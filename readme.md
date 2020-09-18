@@ -30,10 +30,6 @@
 ## Bugs - General - Solve
 
 - verify that any special characters used can be recognized and specially escaped
-- verify that 2 blank lines solution
-`if previous_inline_token.token_name != MarkdownToken.token_blank_line`
-does not affect single line and 3+ line solutions
-  - why needed?
 
 ## Bugs - General - Uncategorized
 

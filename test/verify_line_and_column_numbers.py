@@ -1355,12 +1355,14 @@ def __handle_last_token_text(
         inline_height = len(resolved_text.split("\n")) - 1
     elif last_block_token.token_name == MarkdownToken.token_fenced_code_block:
         inline_height = len(resolved_text.split("\n")) - 1
-        assert (
-            current_token.token_name
-            == EndMarkdownToken.type_name_prefix + MarkdownToken.token_fenced_code_block
-        )
-        if not current_token.was_forced:
-            inline_height += 1
+        if current_token:
+            assert (
+                current_token.token_name
+                == EndMarkdownToken.type_name_prefix
+                + MarkdownToken.token_fenced_code_block
+            )
+            if not current_token.was_forced:
+                inline_height += 1
     else:
         assert (
             last_block_token.token_name == MarkdownToken.token_setext_heading

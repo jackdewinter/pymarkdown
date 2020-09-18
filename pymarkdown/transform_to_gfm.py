@@ -56,6 +56,8 @@ class TransformState:
         self.add_leading_text = None
         self.actual_tokens = actual_tokens
         self.actual_token_index = 0
+        self.next_token = None
+        self.last_token = None
 
 
 # pylint: enable=too-many-instance-attributes
@@ -359,6 +361,11 @@ class TransformToGfm:
         for next_token in transform_state.actual_tokens:
             transform_state.add_trailing_text = None
             transform_state.add_leading_text = None
+            transform_state.next_token = None
+            if (transform_state.actual_token_index + 1) < len(actual_tokens):
+                transform_state.next_token = actual_tokens[
+                    transform_state.actual_token_index + 1
+                ]
             if next_token.token_name in self.start_token_handlers:
                 start_handler_fn = self.start_token_handlers[next_token.token_name]
                 output_html = start_handler_fn(output_html, next_token, transform_state)
@@ -408,6 +415,7 @@ class TransformToGfm:
                 ParserHelper.make_value_visible(transform_state.transform_stack),
             )
 
+            transform_state.last_token = next_token
             transform_state.actual_token_index += 1
         if output_html.endswith(ParserHelper.newline_character):
             output_html = output_html[:-1]
@@ -457,6 +465,19 @@ class TransformToGfm:
         adjusted_text_token = ParserHelper.resolve_blechs_from_text(adjusted_text_token)
 
         if transform_state.is_in_code_block:
+            if transform_state.is_in_fenced_code_block:
+                if (
+                    transform_state.last_token.token_name
+                    == MarkdownToken.token_blank_line
+                ):
+                    if (
+                        transform_state.actual_tokens[
+                            transform_state.actual_token_index - 2
+                        ].token_name
+                        == MarkdownToken.token_blank_line
+                    ):
+                        output_html += "\n"
+
             extracted_whitespace = ParserHelper.resolve_references_from_text(
                 next_token.extracted_whitespace
             )
@@ -504,11 +525,19 @@ class TransformToGfm:
         Handle the black line token.
         """
         if transform_state.is_in_fenced_code_block:
-            output_html = (
-                output_html
-                + next_token.extracted_whitespace
-                + ParserHelper.newline_character
-            )
+            if (
+                transform_state.last_token.token_name
+                != MarkdownToken.token_fenced_code_block
+                or transform_state.next_token.token_name
+                != MarkdownToken.token_blank_line
+            ):
+                output_html = (
+                    output_html
+                    + ParserHelper.newline_character
+                    + next_token.extracted_whitespace
+                )
+            else:
+                output_html = output_html + next_token.extracted_whitespace
         elif transform_state.is_in_html_block:
             output_html += ParserHelper.newline_character
         return output_html
@@ -622,6 +651,8 @@ class TransformToGfm:
                 transform_state.actual_token_index - 1
             ].is_text
         ):
+            output_html += ParserHelper.newline_character
+        elif transform_state.last_token.token_name == MarkdownToken.token_blank_line:
             output_html += ParserHelper.newline_character
         output_html += "</code></pre>" + ParserHelper.newline_character
         transform_state.is_in_code_block = False
