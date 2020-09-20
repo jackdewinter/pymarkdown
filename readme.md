@@ -29,8 +29,6 @@
 
 ## Bugs - General - Solve
 
-- verify that any special characters used can be recognized and specially escaped
-
 ## Bugs - General - Uncategorized
 
 - why does hard break not have \n?

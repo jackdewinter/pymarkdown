@@ -1,6 +1,9 @@
 """
 Module to provide helper functions for parsing.
 """
+import logging
+
+LOGGER = logging.getLogger(__name__)
 
 
 # pylint: disable=too-many-public-methods
@@ -14,6 +17,7 @@ class ParserHelper:
     whitespace_split_character = "\x02"
     replace_noop_character = "\x03"
     blech_character = "\x04"
+    escape_character = "\x05"
 
     backslash_character = "\\"
     newline_character = "\n"
@@ -394,32 +398,79 @@ class ParserHelper:
             .replace(ParserHelper.whitespace_split_character, "\\x02")
             .replace(ParserHelper.replace_noop_character, "\\x03")
             .replace(ParserHelper.blech_character, "\\x04")
+            .replace(ParserHelper.escape_character, "\\x05")
             .replace("\\x07", "\\a")
             .replace("\\x08", "\\b")
         )
+
+    @staticmethod
+    def valid_characters_to_escape():
+        """
+        List of valid characters that can be escaped.
+        """
+        return (
+            ParserHelper.__backspace_character
+            + ParserHelper.__alert_character
+            + ParserHelper.whitespace_split_character
+            + ParserHelper.replace_noop_character
+            + ParserHelper.blech_character
+            + ParserHelper.escape_character
+        )
+
+    @staticmethod
+    def escape_special_characters(string_to_escape):
+        """
+        Build another string that has any special characters in the argument escaped.
+        """
+        escaped_string = ""
+        characters_to_escape = ParserHelper.valid_characters_to_escape()
+        for next_char_index, next_character in enumerate(string_to_escape):
+            if ParserHelper.is_character_at_index_one_of(
+                string_to_escape, next_char_index, characters_to_escape
+            ):
+                escaped_string += ParserHelper.escape_character
+            escaped_string += next_character
+        return escaped_string
 
     @staticmethod
     def remove_backspaces_from_text(token_text):
         """
         Remove any backspaces from the text.
         """
-        return token_text.replace(ParserHelper.__backspace_character, "").replace(
-            "\x08", ""
+        start_index = 0
+        adjusted_text_token = token_text[0:]
+        next_backspace_index = ParserHelper.__find_with_escape(
+            adjusted_text_token, ParserHelper.__backspace_character, start_index
         )
+        while next_backspace_index != -1:
+            adjusted_text_token = (
+                adjusted_text_token[0:next_backspace_index]
+                + adjusted_text_token[next_backspace_index + 1 :]
+            )
+            start_index = next_backspace_index
+            next_backspace_index = ParserHelper.__find_with_escape(
+                adjusted_text_token, ParserHelper.__backspace_character, start_index
+            )
+        return adjusted_text_token
 
     @staticmethod
     def resolve_backspaces_from_text(token_text):
         """
         Deal with any backslash encoding in text with backspaces.
         """
-        adjusted_text_token = token_text
-        while ParserHelper.__backspace_character in adjusted_text_token:
-            next_backspace_index = adjusted_text_token.index(
-                ParserHelper.__backspace_character
-            )
+        start_index = 0
+        adjusted_text_token = token_text[0:]
+        next_backspace_index = ParserHelper.__find_with_escape(
+            adjusted_text_token, ParserHelper.__backspace_character, start_index
+        )
+        while next_backspace_index != -1:
             adjusted_text_token = (
                 adjusted_text_token[0 : next_backspace_index - 1]
                 + adjusted_text_token[next_backspace_index + 1 :]
+            )
+            start_index = next_backspace_index
+            next_backspace_index = ParserHelper.__find_with_escape(
+                adjusted_text_token, ParserHelper.__backspace_character, start_index
             )
         return adjusted_text_token
 
@@ -447,26 +498,92 @@ class ParserHelper:
         )
 
     @staticmethod
+    def __remove_sequence_from_text(token_text, sequence_to_remove):
+        """
+        Resolve the specific character out of the text string.
+        """
+        start_index = 0
+        adjusted_text_token = token_text[0:]
+        next_backspace_index = ParserHelper.__find_with_escape(
+            adjusted_text_token, sequence_to_remove, start_index
+        )
+        while next_backspace_index != -1:
+            adjusted_text_token = (
+                adjusted_text_token[0:next_backspace_index]
+                + adjusted_text_token[next_backspace_index + 1 :]
+            )
+            start_index = next_backspace_index
+            next_backspace_index = ParserHelper.__find_with_escape(
+                adjusted_text_token, sequence_to_remove, start_index
+            )
+        return adjusted_text_token
+
+    @staticmethod
     def resolve_noops_from_text(token_text):
         """
         Resolve the replacement noop character out of the text string.
         """
-        return token_text.replace(ParserHelper.replace_noop_character, "")
+        return ParserHelper.__remove_sequence_from_text(
+            token_text, ParserHelper.replace_noop_character
+        )
 
     @staticmethod
     def resolve_blechs_from_text(token_text):
         """
         Resolve the blech character out of the text string.
         """
-        return token_text.replace(ParserHelper.blech_character, "")
+        return ParserHelper.__remove_sequence_from_text(
+            token_text, ParserHelper.blech_character
+        )
+
+    @staticmethod
+    def resolve_escapes_from_text(token_text):
+        """
+        Resolve any escapes from the text, leaving only what they escaped.
+        """
+        start_index = 0
+        adjusted_text_token = token_text[0:]
+        next_backspace_index = ParserHelper.__find_with_escape(
+            adjusted_text_token, ParserHelper.escape_character, start_index
+        )
+        while next_backspace_index != -1:
+            LOGGER.debug(
+                "before>%s>%s>",
+                str(len(adjusted_text_token)),
+                ParserHelper.make_value_visible(adjusted_text_token),
+            )
+            adjusted_text_token = (
+                adjusted_text_token[0:next_backspace_index]
+                + adjusted_text_token[next_backspace_index + 1 :]
+            )
+            LOGGER.debug(
+                "after>%s>%s",
+                str(len(adjusted_text_token)),
+                ParserHelper.make_value_visible(adjusted_text_token),
+            )
+            start_index = next_backspace_index + 1
+            next_backspace_index = ParserHelper.__find_with_escape(
+                adjusted_text_token, ParserHelper.escape_character, start_index
+            )
+        return adjusted_text_token
+
+    @staticmethod
+    def remove_escapes_from_text(token_text):
+        """
+        Remove any escape characters from the text.
+        """
+        return ParserHelper.resolve_escapes_from_text(token_text)
 
     @staticmethod
     def resolve_replacement_markers_from_text(main_text):
         """
         Resolve the alert characters (i.e. replacement markers) out of the text string.
         """
-        while ParserHelper.__alert_character in main_text:
-            start_replacement_index = main_text.index(ParserHelper.__alert_character)
+        start_index = 0
+        start_replacement_index = ParserHelper.__find_with_escape(
+            main_text, ParserHelper.__alert_character, start_index
+        )
+        while start_replacement_index != -1:
             middle_replacement_index = main_text.index(
                 ParserHelper.__alert_character, start_replacement_index + 1
             )
@@ -492,6 +609,7 @@ class ParserHelper:
                 assert inner_middle_replacement_index + 1 == inner_end_replacement_index
                 end_replacement_index = inner_end_replacement_index
 
+            length_before_mod = len(main_text)
             if start_replacement_index:
                 main_text = (
                     main_text[0:start_replacement_index]
@@ -500,7 +618,44 @@ class ParserHelper:
                 )
             else:
                 main_text = replace_text + main_text[end_replacement_index + 1 :]
+            length_after_mod = len(main_text)
+            start_index = (
+                end_replacement_index + 1 + (length_after_mod - length_before_mod)
+            )
+            start_replacement_index = ParserHelper.__find_with_escape(
+                main_text, ParserHelper.__alert_character, start_index
+            )
         return main_text
+
+    @staticmethod
+    def __find_with_escape(adjusted_text_token, find_char, start_index):
+        repeat_me = True
+        found_index = -1
+        LOGGER.debug(
+            "token>%s>%s",
+            str(len(adjusted_text_token)),
+            ParserHelper.make_value_visible(adjusted_text_token),
+        )
+        LOGGER.debug("find_char>%s", ParserHelper.make_value_visible(find_char))
+        LOGGER.debug("start_index>%s", str(start_index))
+        while repeat_me and start_index < len(adjusted_text_token):
+            repeat_me = False
+            LOGGER.debug("start>%s", str(start_index))
+            start_replacement_index = adjusted_text_token.find(find_char, start_index)
+            LOGGER.debug("start_replacement_index>%s", str(start_replacement_index))
+            if (
+                start_replacement_index != -1
+                and start_replacement_index > 0
+                and adjusted_text_token[start_replacement_index - 1]
+                == ParserHelper.escape_character
+            ):
+                repeat_me = True
+                start_index = start_replacement_index + 1
+                LOGGER.debug("look>%s", str(start_index))
+            else:
+                found_index = start_replacement_index
+                LOGGER.debug("found>%s", str(found_index))
+        return found_index
 
     @staticmethod
     def resolve_references_from_text(adjusted_text_token):
@@ -508,10 +663,16 @@ class ParserHelper:
         The alert characters signal that a replacement has occurred, so make sure
         we take the right text from the replacement.
         """
-        while ParserHelper.__alert_character in adjusted_text_token:
-            start_replacement_index = adjusted_text_token.index(
-                ParserHelper.__alert_character
-            )
+        start_index = 0
+        LOGGER.debug(
+            "adjusted_text_token>%s",
+            ParserHelper.make_value_visible(adjusted_text_token),
+        )
+        start_replacement_index = ParserHelper.__find_with_escape(
+            adjusted_text_token, ParserHelper.__alert_character, start_index
+        )
+        LOGGER.debug("start_replacement_index>%s", str(start_replacement_index))
+        while start_replacement_index != -1:
             middle_replacement_index = adjusted_text_token.index(
                 ParserHelper.__alert_character, start_replacement_index + 1
             )
@@ -538,6 +699,8 @@ class ParserHelper:
                 replace_text = adjusted_text_token[
                     middle_replacement_index + 1 : end_replacement_index
                 ]
+
+            length_before_mod = len(adjusted_text_token)
             if start_replacement_index:
                 adjusted_text_token = (
                     adjusted_text_token[0:start_replacement_index]
@@ -548,6 +711,15 @@ class ParserHelper:
                 adjusted_text_token = (
                     replace_text + adjusted_text_token[end_replacement_index + 1 :]
                 )
+            length_after_mod = len(adjusted_text_token)
+            start_index = (
+                end_replacement_index + 1 + (length_after_mod - length_before_mod)
+            )
+            LOGGER.debug("start_index>%s", str(start_index))
+            start_replacement_index = ParserHelper.__find_with_escape(
+                adjusted_text_token, ParserHelper.__alert_character, start_index
+            )
+            LOGGER.debug("start_replacement_index>%s", str(start_replacement_index))
         return adjusted_text_token
 
     @staticmethod

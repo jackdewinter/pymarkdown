@@ -329,6 +329,7 @@ class InlineHelper:
 
         return string_to_append_to
 
+    # pylint: disable=too-many-statements
     @staticmethod
     def handle_inline_backtick(inline_request):
         """
@@ -375,7 +376,7 @@ class InlineHelper:
             ]
             LOGGER.debug(
                 "after_collect>%s>>%s>>%s<<",
-                between_text,
+                ParserHelper.make_value_visible(between_text),
                 str(end_backtick_start_index),
                 inline_request.source_text[end_backtick_start_index:],
             )
@@ -401,6 +402,13 @@ class InlineHelper:
             replaced_newline = ParserHelper.create_replacement_markers(
                 ParserHelper.newline_character, " "
             )
+            LOGGER.debug(
+                "between_text>>%s<<", ParserHelper.make_value_visible(between_text)
+            )
+            between_text = ParserHelper.escape_special_characters(between_text)
+            LOGGER.debug(
+                "between_text>>%s<<", ParserHelper.make_value_visible(between_text)
+            )
             between_text = between_text.replace(
                 ParserHelper.newline_character, replaced_newline
             )
@@ -411,8 +419,13 @@ class InlineHelper:
                 ParserHelper.newline_character, replaced_newline
             )
 
+            LOGGER.debug(
+                "between_text>>%s<<", ParserHelper.make_value_visible(between_text)
+            )
             between_text = InlineHelper.append_text("", between_text)
-            LOGGER.debug("between_text>>%s<<", between_text)
+            LOGGER.debug(
+                "between_text>>%s<<", ParserHelper.make_value_visible(between_text)
+            )
             end_backtick_start_index += len(extracted_start_backticks)
             inline_response.new_string = ""
             inline_response.new_index = end_backtick_start_index
@@ -451,6 +464,8 @@ class InlineHelper:
                 inline_response.new_index - inline_request.next_index
             )
         return inline_response
+
+    # pylint: enable=too-many-statements
 
     @staticmethod
     def modify_end_string(end_string, removed_end_whitespace):

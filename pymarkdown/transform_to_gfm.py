@@ -463,6 +463,9 @@ class TransformToGfm:
         )
         adjusted_text_token = ParserHelper.resolve_noops_from_text(adjusted_text_token)
         adjusted_text_token = ParserHelper.resolve_blechs_from_text(adjusted_text_token)
+        adjusted_text_token = ParserHelper.resolve_escapes_from_text(
+            adjusted_text_token
+        )
 
         if transform_state.is_in_code_block:
             if transform_state.is_in_fenced_code_block:
@@ -764,10 +767,10 @@ class TransformToGfm:
         Handle the code span token.
         """
         assert transform_state
-        adjusted_text_token = ParserHelper.resolve_backspaces_from_text(
+        adjusted_text_token = ParserHelper.resolve_references_from_text(
             next_token.span_text
         )
-        adjusted_text_token = ParserHelper.resolve_references_from_text(
+        adjusted_text_token = ParserHelper.resolve_escapes_from_text(
             adjusted_text_token
         )
 

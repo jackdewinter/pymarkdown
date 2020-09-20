@@ -1140,11 +1140,8 @@ def __verify_next_inline_code_span(
     previous_inline_token, estimated_line_number, estimated_column_number
 ):
 
-    resolved_span_text = ParserHelper.remove_backspaces_from_text(
-        previous_inline_token.span_text
-    )
     resolved_span_text = ParserHelper.resolve_replacement_markers_from_text(
-        resolved_span_text
+        previous_inline_token.span_text
     )
 
     leading_ws_length = len(previous_inline_token.leading_whitespace)
@@ -1311,6 +1308,7 @@ def __verify_next_inline_text(
     split_current_line = ParserHelper.resolve_replacement_markers_from_text(
         split_current_line
     )
+    split_current_line = ParserHelper.remove_escapes_from_text(split_current_line)
     print(
         "split_current_line>"
         + ParserHelper.make_value_visible(split_current_line)

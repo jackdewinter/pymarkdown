@@ -68,6 +68,21 @@ class InlineProcessor:
             LinkHelper.image_start_sequence[0],
             InlineProcessor.__handle_inline_image_link_start_character,
         )
+        for i in ParserHelper.valid_characters_to_escape():
+            InlineProcessor.register_handlers(
+                i, InlineProcessor.__handle_inline_control_character
+            )
+
+    @staticmethod
+    def __handle_inline_control_character(inline_request):
+        inline_response = InlineResponse()
+        inline_response.new_index = inline_request.next_index + 1
+        inline_response.new_string = (
+            ParserHelper.escape_character
+            + inline_request.source_text[inline_request.next_index]
+        )
+        inline_response.delta_column_number = 1
+        return inline_response
 
     @staticmethod
     def register_handlers(inline_character, start_token_handler):
@@ -699,6 +714,15 @@ class InlineProcessor:
             fold_space = para_space.split("\n")
         LOGGER.debug("__process_inline_text_block>>fold_space>>%s", str(fold_space))
 
+        LOGGER.debug(
+            "starts>%s<",
+            ParserHelper.make_value_visible(
+                InlineProcessor.__valid_inline_text_block_sequence_starts
+            ),
+        )
+        LOGGER.debug(
+            "look>%s<", ParserHelper.make_value_visible(source_text[start_index:])
+        )
         next_index = ParserHelper.index_any_of(
             source_text,
             InlineProcessor.__valid_inline_text_block_sequence_starts,
@@ -748,9 +772,13 @@ class InlineProcessor:
                 para_owner,
             )
             if source_text[next_index] in InlineProcessor.__inline_character_handlers:
-                LOGGER.debug("handler(before)>>%s<<", source_text[next_index])
                 LOGGER.debug(
-                    "current_string_unresolved>>%s<<", str(current_string_unresolved)
+                    "handler(before)>>%s<<",
+                    ParserHelper.make_value_visible(source_text[next_index]),
+                )
+                LOGGER.debug(
+                    "current_string_unresolved>>%s<<",
+                    ParserHelper.make_value_visible(current_string_unresolved),
                 )
                 LOGGER.debug("remaining_line>>%s<<", str(remaining_line))
                 LOGGER.debug("column_number>>%s<<", str(column_number))
@@ -758,7 +786,10 @@ class InlineProcessor:
                     source_text[next_index]
                 ]
                 inline_response = proc_fn(inline_request)
-                LOGGER.debug("handler(after)>>%s<<", source_text[next_index])
+                LOGGER.debug(
+                    "handler(after)>>%s<<",
+                    ParserHelper.make_value_visible(source_text[next_index]),
+                )
                 LOGGER.debug(
                     "delta_column>>%s<<", str(inline_response.delta_column_number)
                 )
@@ -929,6 +960,11 @@ class InlineProcessor:
                 column_number += len(fold_space[0])
 
             elif not was_column_number_reset:
+                LOGGER.debug(
+                    "l/c(remaining_line)>>%s,%s<<",
+                    str(len(remaining_line)),
+                    ParserHelper.make_value_visible(remaining_line),
+                )
                 column_number += len(remaining_line)
             LOGGER.debug(
                 "l/c(after)>>%s,%s<<",

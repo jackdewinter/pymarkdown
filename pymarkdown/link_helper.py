@@ -799,6 +799,7 @@ class LinkHelper:
         inline_title = ""
 
         link_to_lookup = ParserHelper.resolve_backspaces_from_text(link_to_lookup)
+        link_to_lookup = ParserHelper.remove_escapes_from_text(link_to_lookup)
 
         link_label = LinkHelper.normalize_link_label(link_to_lookup)
         if not link_label or link_label not in LinkHelper.__link_definitions:
@@ -1239,6 +1240,7 @@ class LinkHelper:
             link_label = ParserHelper.remove_backspaces_from_text(
                 link_token.text_from_blocks
             )
+            link_label = ParserHelper.remove_escapes_from_text(link_label)
             link_text = "[" + link_label + "]"
         elif link_token.label_type == "full":
 
@@ -1262,6 +1264,7 @@ class LinkHelper:
             link_label = ParserHelper.remove_backspaces_from_text(
                 link_token.text_from_blocks
             )
+            link_label = ParserHelper.remove_escapes_from_text(link_label)
             link_text = (
                 "[" + link_label + "](" + link_token.before_link_whitespace + link_uri
             )

@@ -400,8 +400,18 @@ class TransformToMarkdown:
             top_of_list_token_stack = self.container_token_stack[-1]
 
         if not top_of_list_token_stack:
+            print("nada")
+
+            if self.block_stack and (
+                self.block_stack[-1].token_name == MarkdownToken.token_fenced_code_block
+                or self.block_stack[-1].token_name
+                == MarkdownToken.token_indented_code_block
+            ):
+                data_to_emit = ParserHelper.resolve_noops_from_text(new_data)
+            else:
+                data_to_emit = new_data
             return (
-                ParserHelper.resolve_noops_from_text(new_data),
+                data_to_emit,
                 delayed_continue,
                 continue_sequence,
             )
@@ -412,6 +422,7 @@ class TransformToMarkdown:
             or top_of_list_token_stack.token_name
             == MarkdownToken.token_ordered_list_start
         ):
+            print("lists")
             return self.__perform_container_post_processing_lists(
                 current_token,
                 new_data,
@@ -422,6 +433,7 @@ class TransformToMarkdown:
                 top_of_list_token_stack,
             )
         assert top_of_list_token_stack.token_name == MarkdownToken.token_block_quote
+        print("bq")
         return self.__perform_container_post_processing_block_quote(
             current_token,
             new_data,
@@ -1158,10 +1170,15 @@ class TransformToMarkdown:
             return ""
 
         prefix_text = ""
+        print(
+            ">>rehydrate_text>>"
+            + ParserHelper.make_value_visible(current_token.token_text)
+        )
         main_text = ParserHelper.remove_backspaces_from_text(current_token.token_text)
 
         print(">>rehydrate_text>>" + ParserHelper.make_value_visible(main_text))
         main_text = ParserHelper.resolve_replacement_markers_from_text(main_text)
+        main_text = ParserHelper.remove_escapes_from_text(main_text)
         print("<<rehydrate_text>>" + ParserHelper.make_value_visible(main_text))
 
         print(
@@ -1171,6 +1188,7 @@ class TransformToMarkdown:
         leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
             current_token.extracted_whitespace
         )
+        leading_whitespace = ParserHelper.remove_escapes_from_text(leading_whitespace)
         print(
             "<<leading_whitespace>>"
             + ParserHelper.make_value_visible(leading_whitespace)
@@ -1196,6 +1214,15 @@ class TransformToMarkdown:
                 main_text = self.__reconstitute_paragraph_text(main_text, current_token)
             elif self.block_stack[-1].token_name == MarkdownToken.token_setext_heading:
                 main_text = self.__reconstitute_setext_text(main_text, current_token)
+        print(
+            "<<prefix_text>>"
+            + ParserHelper.make_value_visible(prefix_text)
+            + "<<leading_whitespace>>"
+            + ParserHelper.make_value_visible(leading_whitespace)
+            + "<<main_text>>"
+            + ParserHelper.make_value_visible(main_text)
+            + "<<"
+        )
         return prefix_text + leading_whitespace + main_text
 
     # pylint: enable=unused-argument
@@ -1288,6 +1315,7 @@ class TransformToMarkdown:
         span_text = ParserHelper.resolve_replacement_markers_from_text(
             current_token.span_text
         )
+        span_text = ParserHelper.remove_escapes_from_text(span_text)
         leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
             current_token.leading_whitespace
         )
