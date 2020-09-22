@@ -855,7 +855,7 @@ def test_image_link_599():
     expected_gfm = """<p><img src="/url" alt="Foo" title="title" /></p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

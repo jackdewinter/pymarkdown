@@ -165,7 +165,7 @@ def test_emphasis_417():
     expected_gfm = """<p><em><em>foo</em> bar</em></p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -197,7 +197,7 @@ def test_emphasis_418():
     expected_gfm = """<p><em>foo <em>bar</em></em></p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

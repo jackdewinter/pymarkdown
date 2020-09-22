@@ -734,7 +734,7 @@ def test_fenced_code_blocks_099f():
     )
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1202,7 +1202,7 @@ baz"""
 <p>baz</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

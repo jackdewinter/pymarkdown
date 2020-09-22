@@ -42,6 +42,36 @@ def test_raw_html_632():
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
 
+@pytest.mark.gfm
+def test_raw_html_632a():
+    """
+    Test case 632a:  Here are some simple open tags:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """each <a> tag <bab> is <c2c> different"""
+    expected_tokens = [
+        '[para(1,1):]', 
+        '[text(1,1):each :]', 
+        '[raw-html(1,6):a]', 
+        '[text(1,9): tag :]', 
+        '[raw-html(1,14):bab]', 
+        '[text(1,19): is :]', 
+        '[raw-html(1,23):c2c]', 
+        '[text(1,28): different:]', 
+        '[end-para:::True]']
+    expected_gfm = """<p>each <a> tag <bab> is <c2c> different</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 @pytest.mark.gfm
 def test_raw_html_633():
@@ -123,7 +153,7 @@ data="foo" ><c>"""
 data="foo" ><c></p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -181,7 +211,7 @@ def test_raw_html_636():
     expected_gfm = """<p>Foo <responsive-image src="foo.jpg" /></p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -616,7 +646,6 @@ def test_raw_html_648a():
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
-
 
 @pytest.mark.gfm
 def test_raw_html_649():

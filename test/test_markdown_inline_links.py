@@ -305,7 +305,7 @@ bar>)"""
 bar>)</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1115,7 +1115,7 @@ def test_inline_links_518x():
     expected_gfm = """<p><a href="/uri" title="title">link</a></p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1966,7 +1966,7 @@ def test_inline_links_530():
     expected_gfm = """<p><a href="baz*">foo *bar</a></p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

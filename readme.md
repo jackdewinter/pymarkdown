@@ -31,6 +31,11 @@
 
 ## Bugs - General - Uncategorized
 
+- images, with newline in title?
+  - text before and after
+  - different image link types, with variations on their values
+  - 525 with text and other inlines before and after, newlines, etc.
+  - need "full" example of image
 - why does hard break not have \n?
   - hard break followed by 3 spaces, then emphasis
   - variations of 52e with extra spaces after, etc.
@@ -43,11 +48,6 @@
 - code span and other multiline inline
   - code span with and without multiline, surrounded by text, like 662,091
   - multiple lengths of ticks, whitespace
-- images, with newline in title?
-  - text before and after
-  - different image link types, with variations on their values
-  - 525 with text and other inlines before and after, newlines, etc.
-  - need "full" example of image
 - all multiline elements within a paragaph (and other containers that allow newline)
   - make sure line/column is tracking text indenting on each line
   - combinations together

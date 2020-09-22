@@ -56,7 +56,7 @@ def test_atx_headings_032():
 <h6>foo</h6>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

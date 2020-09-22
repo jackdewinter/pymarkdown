@@ -390,7 +390,7 @@ def test_textual_content_extra_14():
     expected_gfm = """<p>[foo\bbar](/bar\b &quot;ti\btle&quot;)</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
