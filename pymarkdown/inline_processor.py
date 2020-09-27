@@ -483,8 +483,10 @@ class InlineProcessor:
                 ):
                     if inline_blocks[-1].token_name == MarkdownToken.token_inline_image:
                         repeat_count = (new_index - next_index) + len(remaining_line)
+                        delta_line, repeat_count = \
+                            InlineProcessor.xxxx(para_owner, inline_blocks[-1], delta_line, repeat_count)
+                        LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
                         LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
-                        LOGGER.debug(">>column_number>>%s<<", str(column_number))
                     elif (
                         new_token
                         and new_token.token_name
@@ -499,104 +501,11 @@ class InlineProcessor:
                         )
                         assert new_token.start_markdown_token
                         repeat_count = new_index - next_index
+                        LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
                         LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
-                        if (
-                            "\n" in str(new_token.start_markdown_token)
-                            and new_token.start_markdown_token.label_type == "inline"
-                        ):
-                            LOGGER.debug(
-                                ">>para_owner>>%s<<",
-                                ParserHelper.make_value_visible(para_owner),
-                            )
-                            LOGGER.debug(
-                                ">>para_owner.rehydrate_index>>%s<<",
-                                ParserHelper.make_value_visible(
-                                    para_owner.rehydrate_index
-                                ),
-                            )
-                            split_paragraph_lines = para_owner.extracted_whitespace.split(
-                                "\n"
-                            )
-                            LOGGER.debug(
-                                ">>split_paragraph_lines>>%s<<",
-                                ParserHelper.make_value_visible(split_paragraph_lines),
-                            )
-
-                            active_link_uri = new_token.start_markdown_token.link_uri
-                            if new_token.start_markdown_token.pre_link_uri:
-                                active_link_uri = (
-                                    new_token.start_markdown_token.pre_link_uri
-                                )
-
-                            active_link_title = (
-                                new_token.start_markdown_token.link_title
-                            )
-                            if new_token.start_markdown_token.pre_link_title:
-                                active_link_title = (
-                                    new_token.start_markdown_token.pre_link_title
-                                )
-
-                            link_part_lengths = [0] * 5
-                            link_part_lengths[0] = len(active_link_uri) + len(
-                                new_token.start_markdown_token.before_title_whitespace
-                            )
-                            link_part_lengths[1] = 1
-                            link_part_lengths[2] = len(active_link_title) + 1
-                            link_part_lengths[3] = len(
-                                new_token.start_markdown_token.after_title_whitespace
-                            )
-                            link_part_lengths[4] = 0
-
-                            link_part_index = -2
-                            newline_count = ParserHelper.count_newlines_in_text(
-                                new_token.start_markdown_token.text_from_blocks
-                            )
-                            if newline_count:
-                                link_part_index = -1
-                            newline_count = ParserHelper.count_newlines_in_text(
-                                new_token.start_markdown_token.before_link_whitespace
-                            )
-                            if newline_count:
-                                delta_line += newline_count
-                                para_owner.rehydrate_index += newline_count
-
-                                link_part_index = 0
-                            newline_count = ParserHelper.count_newlines_in_text(
-                                new_token.start_markdown_token.before_title_whitespace
-                            )
-                            if newline_count:
-                                delta_line += newline_count
-                                para_owner.rehydrate_index += newline_count
-
-                                link_part_index = 1
-                            newline_count = ParserHelper.count_newlines_in_text(
-                                active_link_title
-                            )
-                            if newline_count:
-                                delta_line += newline_count
-                                para_owner.rehydrate_index += newline_count
-
-                                link_part_lengths[2] = len(active_link_title[-1]) + 1
-                                link_part_index = 2
-                            newline_count = ParserHelper.count_newlines_in_text(
-                                new_token.start_markdown_token.after_title_whitespace
-                            )
-                            if newline_count:
-                                delta_line += newline_count
-                                para_owner.rehydrate_index += newline_count
-
-                                link_part_index = 4
-                            assert (
-                                link_part_index > -2
-                            ), "Newline in link token not accounted for."
-                            if link_part_index >= 0:
-                                link_part_lengths[4] = len(
-                                    split_paragraph_lines[para_owner.rehydrate_index]
-                                )
-                                link_part_lengths[:link_part_index] = [
-                                    0
-                                ] * link_part_index
-                                repeat_count = -(2 + sum(link_part_lengths))
+                        delta_line, repeat_count = InlineProcessor.xxxx(para_owner, new_token.start_markdown_token, delta_line, repeat_count)
+                        LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
+                        LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
                     else:
                         repeat_count = new_index - next_index
                         LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
@@ -616,6 +525,7 @@ class InlineProcessor:
                 column_number,
             )
 
+        LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
         LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
         inline_response = InlineResponse()
         inline_response.new_string = ""
@@ -627,6 +537,172 @@ class InlineProcessor:
         return inline_response
 
     # pylint: enable=too-many-arguments, too-many-locals, too-many-statements, too-many-branches, too-many-nested-blocks
+
+    @staticmethod
+    def xxxx(para_owner, current_token, delta_line, repeat_count):
+        LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
+        LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
+        if (
+            "\n" in str(current_token)
+        ):
+            LOGGER.debug(
+                ">>para_owner>>%s<<",
+                ParserHelper.make_value_visible(para_owner),
+            )
+            LOGGER.debug(
+                ">>para_owner.rehydrate_index>>%s<<",
+                ParserHelper.make_value_visible(
+                    para_owner.rehydrate_index
+                ),
+            )
+            split_paragraph_lines = para_owner.extracted_whitespace.split(
+                "\n"
+            )
+            LOGGER.debug(
+                ">>split_paragraph_lines>>%s<<",
+                ParserHelper.make_value_visible(split_paragraph_lines),
+            )
+
+            if current_token.token_name == MarkdownToken.token_inline_image:
+                active_link_uri = current_token.image_uri
+                if current_token.pre_image_uri:
+                    active_link_uri = (
+                        current_token.pre_image_uri
+                    )
+                active_link_title = (
+                    current_token.image_title
+                )
+                if current_token.pre_image_title:
+                    active_link_title = (
+                        current_token.pre_image_title
+                    )
+            else:
+                active_link_uri = current_token.link_uri
+                if current_token.pre_link_uri:
+                    active_link_uri = (
+                        current_token.pre_link_uri
+                    )
+
+                active_link_title = (
+                    current_token.link_title
+                )
+                if current_token.pre_link_title:
+                    active_link_title = (
+                        current_token.pre_link_title
+                    )
+
+            if current_token.label_type == "inline":
+                link_part_lengths = [0] * 5
+                link_part_lengths[0] = len(active_link_uri) + len(
+                    current_token.before_title_whitespace
+                )
+                if current_token.inline_title_bounding_character:
+                    link_part_lengths[1] = 1
+                    link_part_lengths[2] = len(active_link_title) + 1
+                    link_part_lengths[3] = len(
+                        current_token.after_title_whitespace
+                    )
+                link_part_lengths[4] = 0
+
+                LOGGER.debug(">>link_part_lengths>>%s<<", str(link_part_lengths))
+
+                link_part_index = -2
+                newline_count = ParserHelper.count_newlines_in_text(
+                    current_token.text_from_blocks
+                )
+                if newline_count:
+                    link_part_index = -1
+                    #delta_line += newline_count
+                    para_owner.rehydrate_index += newline_count
+                newline_count = ParserHelper.count_newlines_in_text(
+                    current_token.before_link_whitespace
+                )
+                if newline_count:
+                    LOGGER.debug(">>before_link_whitespace")
+                    delta_line += newline_count
+                    para_owner.rehydrate_index += newline_count
+
+                    link_part_index = 0
+                newline_count = ParserHelper.count_newlines_in_text(
+                    current_token.before_title_whitespace
+                )
+                if newline_count:
+                    LOGGER.debug(">>before_title_whitespace")
+                    delta_line += newline_count
+                    para_owner.rehydrate_index += newline_count
+
+                    link_part_index = 1
+                newline_count = ParserHelper.count_newlines_in_text(
+                    active_link_title
+                )
+                if newline_count:
+                    LOGGER.debug(">>active_link_title")
+                    delta_line += newline_count
+                    para_owner.rehydrate_index += newline_count
+
+                    split_active_link_title = active_link_title.split("\n")
+                    link_part_lengths[2] = len(split_active_link_title[-1]) + 1
+                    link_part_index = 2
+                newline_count = ParserHelper.count_newlines_in_text(
+                    current_token.after_title_whitespace
+                )
+                if newline_count:
+                    LOGGER.debug(">>after_title_whitespace")
+                    delta_line += newline_count
+                    para_owner.rehydrate_index += newline_count
+
+                    link_part_index = 4
+                assert (
+                    link_part_index > -2
+                ), "Newline in link token not accounted for."
+
+                LOGGER.debug(">>link_part_index>>%s<<", str(link_part_index))
+                LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
+
+                if link_part_index >= 0:
+                    link_part_lengths[4] = len(
+                        split_paragraph_lines[para_owner.rehydrate_index]
+                    )
+                    link_part_lengths[:link_part_index] = [
+                        0
+                    ] * link_part_index
+                    repeat_count = -(2 + sum(link_part_lengths))
+                    LOGGER.debug(">>link_part_lengths>>%s<<", str(link_part_lengths))
+                    LOGGER.debug(">>repeat_count>>%s<<", str(delta_line))
+            elif current_token.label_type == "full":
+                link_part_index = -2
+                newline_count = ParserHelper.count_newlines_in_text(
+                    current_token.text_from_blocks
+                )
+                if newline_count:
+                    LOGGER.debug(">>text_from_blocks")
+                    link_part_index = -1
+                newline_count = ParserHelper.count_newlines_in_text(
+                    current_token.ex_label
+                )
+                if newline_count:
+                    LOGGER.debug(">>ex_label")
+                    delta_line += newline_count
+                    para_owner.rehydrate_index += newline_count
+
+                    sd = current_token.ex_label.split("\n")
+
+                    link_part_index = 0
+                    repeat_count = -(len(sd) + 1)
+            elif current_token.label_type == "shortcut" or current_token.label_type == "collapsed":
+                link_part_index = -2
+                newline_count = ParserHelper.count_newlines_in_text(
+                    current_token.text_from_blocks
+                )
+                if newline_count:
+                    LOGGER.debug(">>text_from_blocks")
+                    link_part_index = -1
+            else:
+                LOGGER.debug(">>current_token.label_type>>%s<<", str(current_token.label_type))
+                assert False
+
+        LOGGER.debug(">>delta_line>>%s<<repeat_count>>%s<<", str(delta_line), str(repeat_count))
+        return delta_line, repeat_count
 
     @staticmethod
     def __recombine_with_whitespace(source_text, whitespace_to_recombine):
@@ -781,6 +857,7 @@ class InlineProcessor:
                     ParserHelper.make_value_visible(current_string_unresolved),
                 )
                 LOGGER.debug("remaining_line>>%s<<", str(remaining_line))
+                LOGGER.debug("line_number>>%s<<", str(line_number))
                 LOGGER.debug("column_number>>%s<<", str(column_number))
                 proc_fn = InlineProcessor.__inline_character_handlers[
                     source_text[next_index]
@@ -789,6 +866,9 @@ class InlineProcessor:
                 LOGGER.debug(
                     "handler(after)>>%s<<",
                     ParserHelper.make_value_visible(source_text[next_index]),
+                )
+                LOGGER.debug(
+                    "delta_line_number>>%s<<", str(inline_response.delta_line_number)
                 )
                 LOGGER.debug(
                     "delta_column>>%s<<", str(inline_response.delta_column_number)
@@ -1220,6 +1300,8 @@ class InlineProcessor:
             ParserHelper.make_value_visible(starting_whitespace),
         )
         LOGGER.debug("__cibp>is_setext>%s<", ParserHelper.make_value_visible(is_setext))
+        LOGGER.debug("__cibp>line_number>%s<", ParserHelper.make_value_visible(line_number))
+        LOGGER.debug("__cibp>column_number>%s<", ParserHelper.make_value_visible(column_number))
 
         if (
             inline_blocks

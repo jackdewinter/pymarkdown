@@ -448,9 +448,12 @@ class InlineHelper:
 
             if "\n" in between_text:
                 split_between_text = between_text.split("\n")
+                assert split_between_text[-2].endswith("\a")
+                last_between_text = "\a" + split_between_text[-1]
+                last_between_text = ParserHelper.resolve_replacement_markers_from_text(last_between_text)
                 inline_response.delta_line_number = len(split_between_text) - 1
-                length_of_last_elements = len(split_between_text[-1])
-                inline_response.delta_column_number = -(length_of_last_elements + 2)
+                length_of_last_elements = len(last_between_text)
+                inline_response.delta_column_number = -(length_of_last_elements + 1 + len(trailing_whitespace) + len(extracted_start_backticks))
                 LOGGER.debug(
                     ">>delta_column_number>>%s<<",
                     ParserHelper.make_value_visible(

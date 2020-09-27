@@ -6,9 +6,17 @@
 
 ## Bugs - General - Nice To Have
 
+- verifying vs validating?
+
 - use built in `is_x` functions instead of `token_name`
 - end tokens should all have start tokens that caused them?
 - why does fcb with only newlines and newlines with ws not fold down to text?
+- HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
+
+- cases like 183 where first non-ws character is an inline specifier
+  - can this be fixed in a way that does not require the other fix to add
+   starting_whitespace after the fact?
+- where is `elif starting_whitespace:` used? why? better way to do it?
 
 - make better use of `index_indent`
 - merge leading_spaces code from both container tokens
@@ -16,23 +24,34 @@
   from different areas into one helper function
   - leaf parse_paragraph
   - len(parser_state
-- where is `elif starting_whitespace:` used? why? better way to do it?
+
 - image token handling confusing and non-standard
 - fenced code block handling of line/col could be better
-- HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
-- verifying vs validating?
-- verify which inlines cannot contain newlines and verify with line/col
-  - autolinks
-  - raw_html
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
 - all types of end-inlines and inlines at end i.e. 50
 
 ## Bugs - General - Solve
 
+- group A off by 6 with char entity
+  - test_paragraph_extra_74
+  - test_paragraph_extra_79
+  - test_paragraph_extra_82
+  - test_paragraph_extra_84
+  - test_paragraph_extra_86
+  - test_paragraph_extra_88
+  - test_paragraph_extra_68
+- group B - off by 2 with backslash
+  - test_paragraph_extra_88a
+  - test_paragraph_extra_81a
+- group C - ?
+  - test_paragraph_extra_80a
+  - test_paragraph_extra_88a
+  - test_paragraph_extra_89a
+- finish adding 78+ for images
+
 ## Bugs - General - Uncategorized
 
-- images, with newline in title?
-  - text before and after
+- images
   - different image link types, with variations on their values
   - 525 with text and other inlines before and after, newlines, etc.
   - need "full" example of image
@@ -45,8 +64,7 @@
 - 634a in bq and in list
 - links, 518b
   - 518b inside of list and/or block quote
-- code span and other multiline inline
-  - code span with and without multiline, surrounded by text, like 662,091
+- code span
   - multiple lengths of ticks, whitespace
 - all multiline elements within a paragaph (and other containers that allow newline)
   - make sure line/column is tracking text indenting on each line
@@ -56,12 +74,6 @@
 ## Bugs - Character Entities
 
 - test_markdown_entity* various extra tests
-
-## Bugs - Atx
-
-- cases like 183 where first non-ws character is an inline specifier
-  - can this be fixed in a way that does not require the other fix to add
-   starting_whitespace after the fact?
 
 ## Bugs - SetExt
 

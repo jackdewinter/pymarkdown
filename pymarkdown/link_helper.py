@@ -897,6 +897,7 @@ class LinkHelper:
             pre_inline_link = ""
 
         token_to_append = None
+        LOGGER.debug("<<<<<<<new_index<<<<<<<%s<<", str(new_index))
         LOGGER.debug("<<<<<<<update_index<<<<<<<%s<<", str(update_index))
         if update_index != -1:
             consume_rest_of_line, token_to_append = LinkHelper.__create_link_token(
@@ -973,6 +974,7 @@ class LinkHelper:
             text_from_blocks_raw
         )
         LOGGER.debug(">>text_from_blocks_raw>>%s>>", text_from_blocks_raw)
+        LOGGER.debug(">>inline_blocks[ind]>>%s>>", inline_blocks[ind])
 
         line_number = inline_blocks[ind].line_number
         column_number = inline_blocks[ind].column_number
@@ -1194,7 +1196,7 @@ class LinkHelper:
                 image_token.text_from_blocks
             )
             image_text = (
-                "![" + link_text + "](" + image_token.before_link_whitespace + image_uri
+                "![" + link_text + "](" + image_token.before_link_whitespace + image_uri +                     image_token.before_title_whitespace
             )
             if image_title:
                 title_prefix = '"'
@@ -1207,8 +1209,7 @@ class LinkHelper:
                     title_suffix = ")"
 
                 image_text += (
-                    image_token.before_title_whitespace
-                    + title_prefix
+                    title_prefix
                     + image_title
                     + title_suffix
                     + image_token.after_title_whitespace

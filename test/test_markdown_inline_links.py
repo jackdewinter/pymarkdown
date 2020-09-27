@@ -1316,7 +1316,7 @@ def test_inline_links_518f():
         '[link(2,1):inline:/uri:tit\nle::::link:False:":: : ]',
         "[text(2,2):link:]",
         "[end-link:::False]",
-        "[text(3,7):\ndef::\n]",
+        "[text(3,8):\ndef::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc\n<a href="/uri" title="tit
@@ -1351,7 +1351,7 @@ def test_inline_links_518g():
         '[link(2,1):inline:/uri:t\\it\nle::t\\\\it\nle::link:False:":: : ]',
         "[text(2,2):link:]",
         "[end-link:::False]",
-        "[text(3,7):\ndef::\n]",
+        "[text(3,8):\ndef::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc\n<a href="/uri" title="t\\it
@@ -1421,7 +1421,7 @@ le" )
         '[link(2,1):inline:/my%20uri:tit\nle:/my uri:::link:True:":: : ]',
         "[text(2,2):link:]",
         "[end-link:::False]",
-        "[text(3,5):\ndef::\n]",
+        "[text(3,6):\ndef::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc\n<a href="/my%20uri" title="tit\nle">link</a>\ndef</p>"""
