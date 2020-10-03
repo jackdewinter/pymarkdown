@@ -1049,7 +1049,7 @@ baz
 @pytest.mark.gfm
 def test_html_blocks_143c():
     """
-    Test case 143b:  (part 2) If there is no matching end tag, the block will end at the end of the document (or the enclosing block quote or list item):
+    Test case 143c:  (part 2) If there is no matching end tag, the block will end at the end of the document (or the enclosing block quote or list item):
     """
 
     # Arrange

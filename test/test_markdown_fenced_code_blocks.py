@@ -863,6 +863,48 @@ aaa
 
 
 @pytest.mark.gfm
+def test_fenced_code_blocks_099j():
+    """
+    Test case 099h:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """`````
+
+
+bbb
+
+ccc
+
+```
+aaa
+`````"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:5::::::]",
+        "[BLANK(2,1):]",
+        "[BLANK(3,1):]",
+        "[text(4,1):bbb:]",
+        "[BLANK(5,1):]",
+        "[text(6,1):ccc:]",
+        "[BLANK(7,1):]",
+        "[text(8,1):```\naaa:]",
+        "[end-fcode-block::5:False]",
+    ]
+    expected_gfm = """<pre><code>\n\nbbb\nccc\n```\naaa\n</code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_fenced_code_blocks_100():
     """
     Test case 100:  A code block can be empty:

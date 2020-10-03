@@ -236,6 +236,7 @@ class LinkHelper:
         next_index,
         remaining_line,
         current_string_unresolved,
+        xx_fn,
     ):
         """
         Given that a link close character has been found, process it to see if
@@ -243,6 +244,12 @@ class LinkHelper:
         """
 
         LOGGER.debug(">>look_for_link_or_image>>%s<<", str(inline_blocks))
+        LOGGER.debug(">>source_text>>%s<<", str(source_text))
+        LOGGER.debug(">>next_index>>%s<<", str(next_index))
+        LOGGER.debug(">>remaining_line>>%s<<", str(remaining_line))
+        LOGGER.debug(
+            ">>current_string_unresolved>>%s<<", str(current_string_unresolved)
+        )
         is_valid = False
         consume_rest_of_line = False
         new_index = next_index + 1
@@ -280,6 +287,7 @@ class LinkHelper:
                             valid_special_start_text,
                             remaining_line,
                             current_string_unresolved,
+                            xx_fn,
                         )
                         if updated_index != -1:
                             is_valid = True
@@ -371,30 +379,39 @@ class LinkHelper:
         LOGGER.debug(display_string[1:])
 
     @staticmethod
-    def __consume_text_for_image_alt_text(inline_blocks, ind, remaining_line):
+    def __consume_text_for_image_alt_text(
+        inline_blocks, ind, remaining_line, text_from_blocks_raw, xx_fn
+    ):
         """
         Consume text from the inline blocks to use as part of the image's alt text.
         """
 
         image_alt_text = ""
+        LOGGER.debug("len(inline_blocks)>>%s<<", str(len(inline_blocks)))
+        LOGGER.debug("ind>>%s<<", str(ind))
         LOGGER.debug(">>%s<<", str(inline_blocks[ind + 1 :]))
-        while len(inline_blocks) > (ind + 1):
-            if isinstance(inline_blocks[ind + 1], SpecialTextMarkdownToken):
-                if inline_blocks[ind + 1].token_text == "]":
+        if len(inline_blocks) > (ind + 1):
+            while len(inline_blocks) > (ind + 1):
+                if isinstance(inline_blocks[ind + 1], SpecialTextMarkdownToken):
+                    if inline_blocks[ind + 1].token_text == "]":
+                        image_alt_text += inline_blocks[ind + 1].token_text
+                elif isinstance(inline_blocks[ind + 1], TextMarkdownToken):
                     image_alt_text += inline_blocks[ind + 1].token_text
-            elif isinstance(inline_blocks[ind + 1], TextMarkdownToken):
-                image_alt_text += inline_blocks[ind + 1].token_text
-            elif isinstance(inline_blocks[ind + 1], ImageStartMarkdownToken):
-                image_alt_text += inline_blocks[ind + 1].image_alt_text
+                elif isinstance(inline_blocks[ind + 1], ImageStartMarkdownToken):
+                    image_alt_text += inline_blocks[ind + 1].image_alt_text
 
-            LOGGER.debug(">>add>>%s<<%s", str(inline_blocks[ind + 1]), image_alt_text)
+                LOGGER.debug(
+                    ">>add>>%s<<%s", str(inline_blocks[ind + 1]), image_alt_text
+                )
 
-            del inline_blocks[ind + 1]
-
-        LOGGER.debug(">>before>>%s>>", image_alt_text)
-        image_alt_text = image_alt_text + remaining_line
-        LOGGER.debug(">>after>>%s>>", image_alt_text)
-        return image_alt_text
+                del inline_blocks[ind + 1]
+            LOGGER.debug(">>before>>%s>>", image_alt_text)
+            image_alt_text = image_alt_text + remaining_line
+            LOGGER.debug(">>after>>%s>>", image_alt_text)
+        else:
+            image_alt_text = xx_fn(text_from_blocks_raw)
+            image_alt_text = ParserHelper.resolve_backspaces_from_text(image_alt_text)
+        return image_alt_text, text_from_blocks_raw
 
     @staticmethod
     def __collect_text_from_blocks(inline_blocks, ind, suffix_text):
@@ -821,6 +838,7 @@ class LinkHelper:
         start_text,
         remaining_line,
         current_string_unresolved,
+        xx_fn,
     ):
         """
         After finding a link specifier, figure out what type of link it is.
@@ -848,16 +866,22 @@ class LinkHelper:
         LOGGER.debug(
             "handle_link_types>>text_from_blocks>>%s<<%s<<",
             str(len(text_from_blocks)),
-            text_from_blocks,
+            ParserHelper.make_value_visible(text_from_blocks),
         )
         LOGGER.debug(
             "handle_link_types>>text_from_blocks_raw>>%s<<%s<<",
             str(len(text_from_blocks_raw)),
-            text_from_blocks_raw,
+            ParserHelper.make_value_visible(text_from_blocks_raw),
         )
-        LOGGER.debug("handle_link_types>>text_from_blocks>>%s<<", text_from_blocks)
+        LOGGER.debug(
+            "handle_link_types>>text_from_blocks>>%s<<",
+            ParserHelper.make_value_visible(text_from_blocks),
+        )
         text_from_blocks = ParserHelper.resolve_backspaces_from_text(text_from_blocks)
-        LOGGER.debug("handle_link_types>>text_from_blocks>>%s<<", text_from_blocks)
+        LOGGER.debug(
+            "handle_link_types>>text_from_blocks>>%s<<",
+            ParserHelper.make_value_visible(text_from_blocks),
+        )
 
         consume_rest_of_line = False
 
@@ -877,6 +901,7 @@ class LinkHelper:
             before_title_whitespace,
             after_title_whitespace,
         ) = LinkHelper.__look_for_link_formats(source_text, new_index, text_from_blocks)
+        LOGGER.debug("__look_for_link_formats>>update_index>>%s>>", str(update_index))
 
         # u != -1 - inline valid
         # tried_full_reference_form - collapsed or full valid
@@ -919,6 +944,7 @@ class LinkHelper:
                 label_type,
                 remaining_line,
                 current_string_unresolved,
+                xx_fn,
             )
 
         LOGGER.debug(
@@ -951,6 +977,7 @@ class LinkHelper:
         label_type,
         remaining_line,
         current_string_unresolved,
+        xx_fn,
     ):
         """
         Create the right type of link token.
@@ -1008,8 +1035,11 @@ class LinkHelper:
             LOGGER.debug(
                 "\n>>__consume_text_for_image_alt_text>>%s>>", str(remaining_line)
             )
-            image_alt_text = LinkHelper.__consume_text_for_image_alt_text(
-                inline_blocks, ind, remaining_line
+            (
+                image_alt_text,
+                text_from_blocks_raw,
+            ) = LinkHelper.__consume_text_for_image_alt_text(
+                inline_blocks, ind, remaining_line, text_from_blocks_raw, xx_fn
             )
             LOGGER.debug(
                 "\n>>__consume_text_for_image_alt_text>>%s>>", str(image_alt_text)
@@ -1196,7 +1226,12 @@ class LinkHelper:
                 image_token.text_from_blocks
             )
             image_text = (
-                "![" + link_text + "](" + image_token.before_link_whitespace + image_uri +                     image_token.before_title_whitespace
+                "!["
+                + link_text
+                + "]("
+                + image_token.before_link_whitespace
+                + image_uri
+                + image_token.before_title_whitespace
             )
             if image_title:
                 title_prefix = '"'

@@ -32,22 +32,7 @@
 
 ## Bugs - General - Solve
 
-- group A off by 6 with char entity
-  - test_paragraph_extra_74
-  - test_paragraph_extra_79
-  - test_paragraph_extra_82
-  - test_paragraph_extra_84
-  - test_paragraph_extra_86
-  - test_paragraph_extra_88
-  - test_paragraph_extra_68
-- group B - off by 2 with backslash
-  - test_paragraph_extra_88a
-  - test_paragraph_extra_81a
-- group C - ?
-  - test_paragraph_extra_80a
-  - test_paragraph_extra_88a
-  - test_paragraph_extra_89a
-- finish adding 78+ for images
+- are links getting verified properly in checks? images are, can't find link code for same
 
 ## Bugs - General - Uncategorized
 
@@ -64,12 +49,15 @@
 - 634a in bq and in list
 - links, 518b
   - 518b inside of list and/or block quote
+  - links with & and \ with inner link to mine
+  - 90a but split with char escape that is newline
 - code span
   - multiple lengths of ticks, whitespace
 - all multiline elements within a paragaph (and other containers that allow newline)
   - make sure line/column is tracking text indenting on each line
   - combinations together
   - 518 series, but for SetExt and Atx containers
+- coalesce with blank lines in fenced code block?
 
 ## Bugs - Character Entities
 

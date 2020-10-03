@@ -544,7 +544,6 @@ def __validate_first_token(current_token, current_position):
 
 
 def __calc_initial_whitespace(calc_token):
-
     had_tab = False
     if calc_token.token_name in (
         MarkdownToken.token_indented_code_block,
@@ -981,7 +980,10 @@ def __verify_next_inline(  # noqa: C901
             estimated_line_number,
             estimated_column_number,
         ) = __verify_next_inline_inline_image(
-            last_token, previous_inline_token, estimated_line_number, estimated_column_number,
+            last_token,
+            previous_inline_token,
+            estimated_line_number,
+            estimated_column_number,
         )
     elif (
         previous_inline_token.token_name
@@ -1003,11 +1005,18 @@ def __verify_next_inline(  # noqa: C901
         estimated_column_number = 1
     print(">>after>>" + str(estimated_line_number) + "," + str(estimated_column_number))
 
-    assert estimated_line_number == current_inline_token.line_number and estimated_column_number == current_inline_token.column_number, (
+    assert (
+        estimated_line_number == current_inline_token.line_number
+        and estimated_column_number == current_inline_token.column_number
+    ), (
         ">>est>"
-        + str(estimated_line_number) + "," + str(estimated_column_number)
+        + str(estimated_line_number)
+        + ","
+        + str(estimated_column_number)
         + ">act>"
-        + str(current_inline_token.line_number) + "," + str(current_inline_token.column_number)
+        + str(current_inline_token.line_number)
+        + ","
+        + str(current_inline_token.column_number)
     )
 
 
@@ -1031,12 +1040,158 @@ def __verify_next_inline_inline_link(
     return estimated_line_number, estimated_column_number
 
 
+# pylint: disable=too-many-branches, too-many-statements, too-many-arguments, too-many-locals
+def __verify_next_inline_inline_image_inline(
+    previous_inline_token,
+    para_owner,
+    before_link_whitespace,
+    before_title_whitespace,
+    label_data_raw,
+    title_data,
+    url_data,
+    split_paragraph_lines,
+    estimated_line_number,
+    estimated_column_number,
+):
+
+    include_part_1 = True
+    include_part_2 = True
+    include_part_3 = True
+    include_part_4 = True
+    include_part_5 = True
+    newline_count = ParserHelper.count_newlines_in_text(
+        previous_inline_token.text_from_blocks
+    )
+    if newline_count:
+        estimated_line_number += newline_count
+        para_owner.rehydrate_index += newline_count
+        estimated_column_number = 0
+        print("text_from_blocks>>estimated_line_number>>" + str(estimated_line_number))
+
+        include_part_1 = False
+        split_text_from_blocks = label_data_raw.split("\n")
+        label_data_raw = split_text_from_blocks[-1]
+    newline_count = ParserHelper.count_newlines_in_text(before_link_whitespace)
+    if newline_count:
+        estimated_line_number += newline_count
+        para_owner.rehydrate_index += newline_count
+        estimated_column_number = 0
+        print(
+            "before_link_whitespace>>estimated_line_number>>"
+            + str(estimated_line_number)
+        )
+
+        include_part_1 = False
+        include_part_2 = False
+        split_before_link_whitespace = before_link_whitespace.split("\n")
+        before_link_whitespace = split_before_link_whitespace[-1]
+    newline_count = ParserHelper.count_newlines_in_text(before_title_whitespace)
+    if newline_count:
+        estimated_line_number += newline_count
+        para_owner.rehydrate_index += newline_count
+        estimated_column_number = 0
+        print(
+            "before_title_whitespace>>estimated_line_number>>"
+            + str(estimated_line_number)
+        )
+
+        include_part_1 = False
+        include_part_2 = False
+        include_part_3 = False
+        print(
+            "before_title_whitespace>"
+            + ParserHelper.make_value_visible(before_title_whitespace)
+            + "<"
+        )
+        split_before_title_whitespace = before_title_whitespace.split("\n")
+        before_title_whitespace = split_before_title_whitespace[-1]
+    newline_count = ParserHelper.count_newlines_in_text(title_data)
+    if newline_count:
+        estimated_line_number += newline_count
+        para_owner.rehydrate_index += newline_count
+        estimated_column_number = 0
+        print("title_data>>estimated_line_number>>" + str(estimated_line_number))
+
+        include_part_1 = False
+        include_part_2 = False
+        include_part_3 = False
+        include_part_4 = False
+        split_title_data = title_data.split("\n")
+        title_data = split_title_data[-1]
+    newline_count = ParserHelper.count_newlines_in_text(
+        previous_inline_token.after_title_whitespace
+    )
+    if newline_count:
+        estimated_line_number += newline_count
+        para_owner.rehydrate_index += newline_count
+        estimated_column_number = 0
+        print(
+            "after_title_whitespace>>estimated_line_number>>"
+            + str(estimated_line_number)
+        )
+
+        include_part_1 = False
+        include_part_2 = False
+        include_part_3 = False
+        include_part_4 = False
+        include_part_5 = False
+
+    print(">>estimated_column_number>>" + str(estimated_column_number))
+    if include_part_1:
+        estimated_column_number += 1
+        print(">>include_part_1>>" + str(estimated_column_number))
+    if include_part_2:
+        estimated_column_number += len(label_data_raw) + 1 + 1
+        print(
+            ">>label_data_raw>>"
+            + ParserHelper.make_value_visible(label_data_raw)
+            + "<<"
+        )
+        print(">>include_part_2>>" + str(estimated_column_number))
+    if include_part_3:
+        estimated_column_number += len(before_link_whitespace) + len(url_data)
+        if previous_inline_token.did_use_angle_start:
+            estimated_column_number += 2
+        print(">>include_part_3>>" + str(estimated_column_number))
+    if include_part_4:
+        print(">>include_part_4>>" + str(before_title_whitespace) + "<")
+        estimated_column_number += len(before_title_whitespace)
+        print(">>include_part_4>>" + str(estimated_column_number))
+    if previous_inline_token.inline_title_bounding_character:
+        if include_part_4:
+            estimated_column_number += 1
+            print(">>include_part_4a>>" + str(estimated_column_number))
+        if include_part_5:
+            estimated_column_number += (
+                len(title_data) + 1 + len(previous_inline_token.after_title_whitespace)
+            )
+            print(">>include_part_5>>" + str(estimated_column_number))
+    estimated_column_number += +1
+    if not include_part_1:
+        print(">>split_paragraph_lines>>" + str(split_paragraph_lines))
+        print(">>para_owner.rehydrate_index>>" + str(para_owner.rehydrate_index))
+        estimated_column_number += len(
+            split_paragraph_lines[para_owner.rehydrate_index - 1]
+        )
+    estimated_column_number += 1
+    print(">>estimated_column_number>>" + str(estimated_column_number))
+    return estimated_line_number, estimated_column_number
+
+
+# pylint: enable=too-many-branches, too-many-statements, too-many-arguments, too-many-locals
+
+# pylint: disable=too-many-locals, too-many-branches, too-many-statements
 def __verify_next_inline_inline_image(
     last_token, previous_inline_token, estimated_line_number, estimated_column_number
 ):
 
-    print(">>image_alt_text>>" + ParserHelper.make_value_visible(previous_inline_token.image_alt_text))
-    print(">>ex_label>>" + ParserHelper.make_value_visible(previous_inline_token.ex_label))
+    print(
+        ">>image_alt_text>>"
+        + ParserHelper.make_value_visible(previous_inline_token.image_alt_text)
+    )
+    print(
+        ">>ex_label>>" + ParserHelper.make_value_visible(previous_inline_token.ex_label)
+    )
     label_data = previous_inline_token.image_alt_text
     if previous_inline_token.ex_label:
         label_data = previous_inline_token.ex_label
@@ -1055,21 +1210,89 @@ def __verify_next_inline_inline_image(
         title_data = previous_inline_token.pre_image_title
 
     print(">>last_token>>" + ParserHelper.make_value_visible(last_token))
+    print(
+        ">>previous_inline_token>>"
+        + ParserHelper.make_value_visible(previous_inline_token)
+    )
+    print(">>label_data>>" + ParserHelper.make_value_visible(label_data))
+    print(">>url_data>>" + ParserHelper.make_value_visible(url_data))
+    print(">>title_data>>" + ParserHelper.make_value_visible(title_data))
     para_owner = None
     split_paragraph_lines = None
     if last_token.token_name == MarkdownToken.token_paragraph:
         print(">>last_token_index>>" + str(last_token.rehydrate_index))
         para_owner = last_token
-        split_paragraph_lines = para_owner.extracted_whitespace.split(
-            "\n"
-        )
+        split_paragraph_lines = para_owner.extracted_whitespace.split("\n")
     print(">>before>>" + str(estimated_column_number))
     if previous_inline_token.label_type == "inline":
-        f1 = True
-        f2 = True
-        f3 = True
-        f4 = True
-        f5 = True
+        (
+            estimated_line_number,
+            estimated_column_number,
+        ) = __verify_next_inline_inline_image_inline(
+            previous_inline_token,
+            para_owner,
+            before_link_whitespace,
+            before_title_whitespace,
+            previous_inline_token.text_from_blocks,
+            title_data,
+            url_data,
+            split_paragraph_lines,
+            estimated_line_number,
+            estimated_column_number,
+        )
+    elif previous_inline_token.label_type == "shortcut":
+        label_text = previous_inline_token.text_from_blocks
+        token_prefix = 1
+        newline_count = ParserHelper.count_newlines_in_text(label_text)
+        if newline_count:
+            estimated_line_number += newline_count
+            para_owner.rehydrate_index += newline_count
+            estimated_column_number = 0
+
+            split_label_text = label_text.split("\n")
+            label_text = split_label_text[-1]
+            token_prefix = 0
+        estimated_column_number += 2 + token_prefix + len(label_text)
+
+    elif previous_inline_token.label_type == "collapsed":
+        image_alt_text = previous_inline_token.image_alt_text
+        if previous_inline_token.text_from_blocks:
+            image_alt_text = previous_inline_token.text_from_blocks
+
+        token_prefix = 1
+        newline_count = ParserHelper.count_newlines_in_text(image_alt_text)
+        if newline_count:
+            estimated_line_number += newline_count
+            para_owner.rehydrate_index += newline_count
+            estimated_column_number = 0
+
+            split_label_text = image_alt_text.split("\n")
+            image_alt_text = split_label_text[-1]
+            token_prefix = 0
+
+        estimated_column_number += 2
+        estimated_column_number += 2 + token_prefix + len(image_alt_text)
+    else:
+        assert previous_inline_token.label_type == "full"
+
+        image_alt_text = previous_inline_token.image_alt_text
+        if previous_inline_token.text_from_blocks:
+            image_alt_text = previous_inline_token.text_from_blocks
+
+        print(
+            ">>image_alt_text>>"
+            + str(len(image_alt_text))
+            + ">>"
+            + ParserHelper.make_value_visible(image_alt_text)
+        )
+        print(
+            ">>label_data>>"
+            + str(len(label_data))
+            + ">>"
+            + ParserHelper.make_value_visible(label_data)
+        )
+
+        token_prefix = 3
         newline_count = ParserHelper.count_newlines_in_text(
             previous_inline_token.text_from_blocks
         )
@@ -1077,112 +1300,42 @@ def __verify_next_inline_inline_image(
             estimated_line_number += newline_count
             para_owner.rehydrate_index += newline_count
             estimated_column_number = 0
-            print("text_from_blocks>>estimated_line_number>>" + str(estimated_line_number))
 
-            f1 = False
-            st = previous_inline_token.text_from_blocks.split("\n")
-            label_data = st[-1]
+            split_label_text = image_alt_text.split("\n")
+            image_alt_text = split_label_text[-1]
+            token_prefix = 2
         newline_count = ParserHelper.count_newlines_in_text(
-            before_link_whitespace
+            previous_inline_token.ex_label
         )
         if newline_count:
             estimated_line_number += newline_count
             para_owner.rehydrate_index += newline_count
             estimated_column_number = 0
-            print("before_link_whitespace>>estimated_line_number>>" + str(estimated_line_number))
 
-            f1 = False
-            f2 = False
-            st = before_link_whitespace.split("\n")
-            before_link_whitespace = st[-1]
-        newline_count = ParserHelper.count_newlines_in_text(
-            before_title_whitespace
+            split_label_text = previous_inline_token.ex_label.split("\n")
+            image_alt_text = split_label_text[-1]
+            token_prefix = 0
+
+        print(
+            ">>image_alt_text>>"
+            + str(len(image_alt_text))
+            + ">>"
+            + ParserHelper.make_value_visible(image_alt_text)
         )
-        if newline_count:
-            estimated_line_number += newline_count
-            para_owner.rehydrate_index += newline_count
-            estimated_column_number = 0
-            print("before_title_whitespace>>estimated_line_number>>" + str(estimated_line_number))
-
-            f1 = False
-            f2 = False
-            f3 = False
-            print("before_title_whitespace>" + ParserHelper.make_value_visible(before_title_whitespace) + "<")
-            st = before_title_whitespace.split("\n")
-            before_title_whitespace = st[-1]
-        newline_count = ParserHelper.count_newlines_in_text(
-            title_data
+        print(
+            ">>label_data>>"
+            + str(len(label_data))
+            + ">>"
+            + ParserHelper.make_value_visible(label_data)
         )
-        if newline_count:
-            estimated_line_number += newline_count
-            para_owner.rehydrate_index += newline_count
-            estimated_column_number = 0
-            print("title_data>>estimated_line_number>>" + str(estimated_line_number))
 
-            f1 = False
-            f2 = False
-            f3 = False
-            f4 = False
-            st = title_data.split("\n")
-            title_data = st[-1]
-        newline_count = ParserHelper.count_newlines_in_text(
-            previous_inline_token.after_title_whitespace
-        )
-        if newline_count:
-            estimated_line_number += newline_count
-            para_owner.rehydrate_index += newline_count
-            estimated_column_number = 0
-            print("after_title_whitespace>>estimated_line_number>>" + str(estimated_line_number))
-
-            f1 = False
-            f2 = False
-            f3 = False
-            f4 = False
-            f5 = False
-
-        print(">>estimated_column_number>>" + str(estimated_column_number))
-        if f1:
-            estimated_column_number += 1
-            print(">>f1>>" + str(estimated_column_number))
-        if f2:
-            estimated_column_number += len(label_data) + 1 + 1
-            print(">>f2>>" + str(estimated_column_number))
-        if f3:
-            estimated_column_number += len(before_link_whitespace) + len(url_data)
-            if previous_inline_token.did_use_angle_start:
-                estimated_column_number += 2
-            print(">>f3>>" + str(estimated_column_number))
-        if f4:
-            print(">>f4>>" + str(before_title_whitespace) + "<")
-            estimated_column_number += len(before_title_whitespace)
-            print(">>f4>>" + str(estimated_column_number))
-        if previous_inline_token.inline_title_bounding_character:
-            if f4:
-                estimated_column_number += 1
-                print(">>f4a>>" + str(estimated_column_number))
-            if f5:
-                estimated_column_number += len(title_data) + 1 + len(previous_inline_token.after_title_whitespace)
-                print(">>f5>>" + str(estimated_column_number))
-        estimated_column_number += (
-            + 1
-        )
-        if not f1:
-            print(">>split_paragraph_lines>>" + str(split_paragraph_lines))
-            print(">>para_owner.rehydrate_index>>" + str(para_owner.rehydrate_index))
-            estimated_column_number += len(
-                split_paragraph_lines[para_owner.rehydrate_index - 1]
-            )
-        estimated_column_number += 1
-        print(">>estimated_column_number>>" + str(estimated_column_number))
-    elif previous_inline_token.label_type == "shortcut":
-        estimated_column_number += 2 + 1 + len(label_data)
-    elif previous_inline_token.label_type == "collapsed":
-        estimated_column_number += 2
-        estimated_column_number += 2 + 1 + len(label_data)
-    else:
-        assert previous_inline_token.label_type == "full"
-        assert False
+        if token_prefix:
+            estimated_column_number += token_prefix + len(label_data)
+        estimated_column_number += 2 + len(image_alt_text)
     return estimated_line_number, estimated_column_number
+
+
+# pylint: enable=too-many-locals, too-many-branches, too-many-statements
 
 
 def __verify_next_inline_autolink(

@@ -240,6 +240,10 @@ class InlineHelper:
                 inline_response.new_string = (
                     InlineHelper.character_reference_start_character
                 )
+        inline_response.delta_line_number = 0
+        inline_response.delta_column_number = (
+            inline_response.new_index - inline_request.next_index
+        )
         return inline_response
 
     @staticmethod
@@ -329,7 +333,7 @@ class InlineHelper:
 
         return string_to_append_to
 
-    # pylint: disable=too-many-statements
+    # pylint: disable=too-many-statements, too-many-locals
     @staticmethod
     def handle_inline_backtick(inline_request):
         """
@@ -450,10 +454,17 @@ class InlineHelper:
                 split_between_text = between_text.split("\n")
                 assert split_between_text[-2].endswith("\a")
                 last_between_text = "\a" + split_between_text[-1]
-                last_between_text = ParserHelper.resolve_replacement_markers_from_text(last_between_text)
+                last_between_text = ParserHelper.resolve_replacement_markers_from_text(
+                    last_between_text
+                )
                 inline_response.delta_line_number = len(split_between_text) - 1
                 length_of_last_elements = len(last_between_text)
-                inline_response.delta_column_number = -(length_of_last_elements + 1 + len(trailing_whitespace) + len(extracted_start_backticks))
+                inline_response.delta_column_number = -(
+                    length_of_last_elements
+                    + 1
+                    + len(trailing_whitespace)
+                    + len(extracted_start_backticks)
+                )
                 LOGGER.debug(
                     ">>delta_column_number>>%s<<",
                     ParserHelper.make_value_visible(
@@ -468,7 +479,7 @@ class InlineHelper:
             )
         return inline_response
 
-    # pylint: enable=too-many-statements
+    # pylint: enable=too-many-statements, too-many-locals
 
     @staticmethod
     def modify_end_string(end_string, removed_end_whitespace):
