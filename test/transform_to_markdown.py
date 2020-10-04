@@ -991,29 +991,36 @@ class TransformToMarkdown:
                     break
 
             split_text_to_modify = text_to_modify.split(ParserHelper.newline_character)
-            split_parent_whitespace = owning_paragraph_token.extracted_whitespace.split(
-                ParserHelper.newline_character
-            )
-            print(
-                "owning_paragraph_token>>>>>>>"
-                + ParserHelper.make_value_visible(owning_paragraph_token)
-            )
+            if owning_paragraph_token:
+                split_parent_whitespace = owning_paragraph_token.extracted_whitespace.split(
+                    ParserHelper.newline_character
+                )
+                print(
+                    "owning_paragraph_token>>>>>>>"
+                    + ParserHelper.make_value_visible(owning_paragraph_token)
+                )
+                print(
+                    "opt>>rehydrate_index>"
+                    + str(owning_paragraph_token.rehydrate_index)
+                )
+                print("opt>>ws>" + str(split_parent_whitespace))
             print("opt>>text>" + ParserHelper.make_value_visible(split_text_to_modify))
-            print("opt>>ws>" + str(split_parent_whitespace))
-            print("opt>>rehydrate_index>" + str(owning_paragraph_token.rehydrate_index))
 
             for modify_index in range(1, len(split_text_to_modify)):
                 print("-->" + str(modify_index))
-                split_text_to_modify[modify_index] = (
-                    split_parent_whitespace[
+                paragraph_whitespace = ""
+                if owning_paragraph_token:
+                    paragraph_whitespace = split_parent_whitespace[
                         modify_index + owning_paragraph_token.rehydrate_index
                     ]
-                    + split_text_to_modify[modify_index]
+                split_text_to_modify[modify_index] = (
+                    paragraph_whitespace + split_text_to_modify[modify_index]
                 )
 
             print("opt>>text>" + ParserHelper.make_value_visible(split_text_to_modify))
             took_lines = len(split_text_to_modify) - 1
-            owning_paragraph_token.rehydrate_index += took_lines
+            if owning_paragraph_token:
+                owning_paragraph_token.rehydrate_index += took_lines
             print("opt>>took>" + str(took_lines))
             text_to_modify = ParserHelper.newline_character.join(split_text_to_modify)
             print("opt>>text>" + ParserHelper.make_value_visible(text_to_modify))

@@ -1241,3 +1241,3875 @@ def test_setext_headings_extra_42():
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_43():
+    """
+    Test case extra 43:  SetExt heading with code span with newline inside
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a`code
+span`a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[icode-span(1,2):code\a\n\a \aspan:`::]",
+        "[text(2,6):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<code>code span</code>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_44():
+    """
+    Test case extra 44:  SetExt heading with raw HTML with newline inside
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a<raw
+html='cool'>a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[raw-html(1,2):raw\nhtml='cool']",
+        "[text(2,13):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<raw\nhtml='cool'>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_45():
+    """
+    Test case extra 45:  SetExt heading with URI autolink with newline inside, renders invalid
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a<http://www.
+google.com>a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a\a<\a&lt;\ahttp://www.\ngoogle.com\a>\a&gt;\aa::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a&lt;http://www.\ngoogle.com&gt;a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_46():
+    """
+    Test case extra 46:  SetExt heading with email autolink with newline inside, renders invalid
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a<foo@bar
+.com>a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a\a<\a&lt;\afoo@bar\n.com\a>\a&gt;\aa::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a&lt;foo@bar\n.com&gt;a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_47():
+    """
+    Test case extra 47:  SetExt heading with inline link with newline in label
+    ??? repeat of 518 series?
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Fo
+o](/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Fo\no:False:":: :]',
+        "[text(1,3):Fo\no::\n]",
+        "[end-link:::False]",
+        "[text(2,19):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Fo\no</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_48():
+    """
+    Test case extra 48:  SetExt heading with inline link with newline in pre-URI space
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](
+/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:":\n: :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,16):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_48a():
+    """
+    Test case extra 48a:  48 with whitespace before newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](\a\a
+/uri "testing")a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:":  \n: :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,16):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_48b():
+    """
+    Test case extra 48b:  48 with whitespace after newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](
+   /uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:":\n   : :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,19):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_48c():
+    """
+    Test case extra 48c:  48 with whitespace before and after newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](\a\a
+   /uri "testing")a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:":  \n   : :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,19):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_49():
+    """
+    Test case extra 49:  SetExt heading with inline link with newline in URI, invalidating it
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/ur
+i "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[text(1,2):[:]",
+        "[text(1,3):Foo:]",
+        "[text(1,6):]:]",
+        '[text(1,7):(/ur\ni \a"\a&quot;\atesting\a"\a&quot;\a)a::\n]',
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a[Foo](/ur\ni &quot;testing&quot;)a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_50x():
+    """
+    Test case extra 50:  SetExt heading with inline link with newline in post-URI space
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri\a
+"testing")a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:":: \n:]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,11):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_50a():
+    """
+    Test case extra 50:  50 with whitespace before newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri\a\a
+"testing")a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:"::  \n:]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,11):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_50b():
+    """
+    Test case extra 50:  50 with whitespace after newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri
+   "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:"::\n   :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,14):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_50c():
+    """
+    Test case extra 50c:  50 with whitespace before and after newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri\a\a
+   "testing")a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:"::  \n   :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,14):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_51():
+    """
+    Test case extra 51:  SetExt heading with inline link with newline in title
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri "test
+ing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:test\ning::::Foo:False:":: :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,6):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="test\ning">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_52x():
+    """
+    Test case extra 52:  SetExt heading with inline link with newline after title
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri "testing"
+)a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:":: :\n]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,2):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_52a():
+    """
+    Test case extra 52:  52 with whitespace before newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri "testing"\a\a
+)a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:":: :  \n]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,2):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_52b():
+    """
+    Test case extra 52b:  52 with whitespace after newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri "testing"
+  )a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:":: :\n  ]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,4):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_52c():
+    """
+    Test case extra 52c:  52 with whitespace before and after newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri "testing"\a\a
+  )a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:":: :  \n  ]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,4):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_53():
+    """
+    Test case extra 53:  SetExt heading with full link with newline in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo
+bar][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::bar:foo\nbar:::::]",
+        "[text(1,3):foo\nbar::\n]",
+        "[end-link:::False]",
+        "[text(2,10):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo\nbar</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_54():
+    """
+    Test case extra 54:  SetExt heading with full link with newline in reference
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo][ba
+r]a
+---
+
+[ba\nr]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::ba\nr:foo:::::]",
+        "[text(1,3):foo:]",
+        "[end-link:::False]",
+        "[text(2,3):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba r:ba\nr: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_55():
+    """
+    Test case extra 55:  SetExt heading with shortcut link with newline in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[ba
+r]a
+---
+
+[ba\nr]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):shortcut:/url:title::::ba\nr:::::]",
+        "[text(1,3):ba\nr::\n]",
+        "[end-link:::False]",
+        "[text(2,3):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba r:ba\nr: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">ba\nr</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_56():
+    """
+    Test case extra 56:  SetExt heading with collapsed link with newline in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[ba
+r][]a
+---
+
+[ba\nr]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):collapsed:/url:title::::ba\nr:::::]",
+        "[text(1,3):ba\nr::\n]",
+        "[end-link:::False]",
+        "[text(2,5):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba r:ba\nr: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">ba\nr</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_57():
+    """
+    Test case extra 57:  SetExt heading with collapsed link with newline in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[
+bar][]a
+---
+
+[\nbar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):collapsed:/url:title::::\nbar:::::]",
+        "[text(1,3):\nbar::\n]",
+        "[end-link:::False]",
+        "[text(2,7):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::bar:\nbar: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">\nbar</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_58():
+    """
+    Test case extra 58:  SetExt heading with full link with newline in reference
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo][
+bar]a
+---
+
+[\nbar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::\nbar:foo:::::]",
+        "[text(1,3):foo:]",
+        "[end-link:::False]",
+        "[text(2,5):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::bar:\nbar: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_59():
+    """
+    Test case extra 59:  SetExt heading with inline image with newline between image chars, invalidating it.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a!
+[Foo](/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a!\n::\n]",
+        '[link(2,1):inline:/uri:testing::::Foo:False:":: :]',
+        "[text(2,2):Foo:]",
+        "[end-link:::False]",
+        "[text(2,22):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a!\n<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_60():
+    """
+    Test case extra 60:  SetExt heading with inline link with newline in label but not title.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Fo
+o](/uri)a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):inline:/uri:::::Fo\no:False::::]",
+        "[text(1,3):Fo\no::\n]",
+        "[end-link:::False]",
+        "[text(2,9):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri">Fo\no</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_61():
+    """
+    Test case extra 61:  SetExt heading with inline image with newline in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![fo
+o](/url "title")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/url:title:fo\no::::fo\no:False:":: :]',
+        "[text(2,17):a::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="fo\no" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_62():
+    """
+    Test case extra 62:  SetExt heading with inline image with newline before URI
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](
+/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":\n: :]',
+        "[text(2,16):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_62a():
+    """
+    Test case extra 62a:  62 with whitespace before newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](\a\a
+/uri "testing")a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":  \n: :]',
+        "[text(2,16):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_62b():
+    """
+    Test case extra 62b:  62 with whitespace after newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](
+   /uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":\n   : :]',
+        "[text(2,19):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_62c():
+    """
+    Test case extra 62c:  62 with whitespace before and after newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](\a\a
+   /uri "testing")a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":  \n   : :]',
+        "[text(2,19):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_63():
+    """
+    Test case extra 63:  SetExt heading with inline image with newline in the URI, invalidating it
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/ur
+i "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):Foo:]",
+        "[text(1,7):]:]",
+        '[text(1,8):(/ur\ni \a"\a&quot;\atesting\a"\a&quot;\a)a::\n]',
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a![Foo](/ur\ni &quot;testing&quot;)a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_64x():
+    """
+    Test case extra 64:  SetExt heading with inline image with newline after the URI
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri
+"testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:"::\n:]',
+        "[text(2,11):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_64a():
+    """
+    Test case extra 64a:  64 with whitespace before newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri\a\a
+"testing")a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:"::  \n:]',
+        "[text(2,11):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_64b():
+    """
+    Test case extra 64b:  64 with whitespace after newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri
+ "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:"::\n :]',
+        "[text(2,12):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_64c():
+    """
+    Test case extra 64c:  64 with whitespace before and after newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri\a\a
+ "testing")a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:"::  \n :]',
+        "[text(2,12):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_65():
+    """
+    Test case extra 65:  SetExt heading with inline image with newline after the URI and no text
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri
+)a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/uri::Foo::::Foo:False:::\n:]",
+        "[text(2,2):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_66():
+    """
+    Test case extra 66:  SetExt heading with inline image with newline in the title
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri "test
+ing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:test\ning:Foo::::Foo:False:":: :]',
+        "[text(2,6):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test\ning" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_67():
+    """
+    Test case extra 67:  SetExt heading with inline image with newline after the title
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri "testing"
+)a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":: :\n]',
+        "[text(2,2):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_67a():
+    """
+    Test case extra 67a:  67 with whitespace before newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri "testing"\a\a
+)a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":: :  \n]',
+        "[text(2,2):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_67b():
+    """
+    Test case extra 67b:  67 with whitespace after newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri "testing"
+   )a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":: :\n   ]',
+        "[text(2,5):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_67c():
+    """
+    Test case extra 67c:  67 with whitespace before and after newline
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri "testing"\a\a
+   )a
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":: :  \n   ]',
+        "[text(2,5):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_68x():
+    """
+    Test case extra 68:  SetExt heading with link containing label with replacement
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Fo&beta;o](/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Fo&beta;o:False:":: :]',
+        "[text(1,3):Fo\a&beta;\aβ\ao:]",
+        "[end-link:::False]",
+        "[text(1,29):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foβo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_68a():
+    """
+    Test case extra 68a:  68 without special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Foo:False:":: :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(1,23):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_68b():
+    """
+    Test case extra 68b:  68 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Fo
+&beta;o](/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Fo\n&beta;o:False:":: :]',
+        "[text(1,3):Fo\n\a&beta;\aβ\ao::\n]",
+        "[end-link:::False]",
+        "[text(2,25):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Fo\nβo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_69():
+    """
+    Test case extra 69:  SetExt heading with link containing label with backslash
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Fo\\]o](/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Fo\\]o:False:":: :]',
+        "[text(1,3):Fo\\\b]o:]",
+        "[end-link:::False]",
+        "[text(1,25):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Fo]o</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_69a():
+    """
+    Test case extra 69a:  69 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Fo
+\\]o](/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testing::::Fo\n\\]o:False:":: :]',
+        "[text(1,3):Fo\n\\\b]o::\n]",
+        "[end-link:::False]",
+        "[text(2,21):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testing">Fo\n]o</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_70():
+    """
+    Test case extra 70:  SetExt heading with link containing uri with space
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](</my uri> "testing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/my%20uri:testing:/my uri:::Foo:True:":: :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(1,28):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/my%20uri" title="testing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_70a():
+    """
+    Test case extra 70a:  70 with newline before special characters, rendering it invalid
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](</my
+ uri> "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[text(1,2):[:]",
+        "[text(1,3):Foo:]",
+        "[text(1,6):]:]",
+        '[text(1,7):(\a<\a&lt;\a/my\nuri\a>\a&gt;\a \a"\a&quot;\atesting\a"\a&quot;\a)a::\n \x02]',
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a[Foo](&lt;/my\nuri&gt; &quot;testing&quot;)a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_71():
+    """
+    Test case extra 71:  SetExt heading with link containing title with replacement
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri "test&beta;ing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:testβing::test&beta;ing::Foo:False:":: :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(1,29):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="testβing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_71a():
+    """
+    Test case extra 71a:  71 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri "test
+&beta;ing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:test\nβing::test\n&beta;ing::Foo:False:":: :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,12):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="test\nβing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_72():
+    """
+    Test case extra 72:  SetExt heading with link containing title with backslash
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri "test\\#ing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:test#ing::test\\#ing::Foo:False:":: :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(1,25):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="test#ing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_72a():
+    """
+    Test case extra 72a:  72 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[Foo](/uri "test
+\\#ing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[link(1,2):inline:/uri:test\n#ing::test\n\\#ing::Foo:False:":: :]',
+        "[text(1,3):Foo:]",
+        "[end-link:::False]",
+        "[text(2,8):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<a href="/uri" title="test\n#ing">Foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_73():
+    """
+    Test case extra 73:  SetExt heading with image containing label with replacement
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Fo&beta;o](/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foβo::::Fo&beta;o:False:":: :]',
+        "[text(1,30):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foβo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_73a():
+    """
+    Test case extra 73a:  73 without special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":: :]',
+        "[text(1,24):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_73b():
+    """
+    Test case extra 73b:  73 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Fo
+&beta;o](/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Fo\nβo::::Fo\n&beta;o:False:":: :]',
+        "[text(2,25):a::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Fo\nβo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_74():
+    """
+    Test case extra 74:  SetExt heading with image containing label with backslash
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Fo\\]o](/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Fo]o::::Fo\\]o:False:":: :]',
+        "[text(1,26):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Fo]o" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_74a():
+    """
+    Test case extra 74a:  74 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Fo
+\\]o](/uri "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testing:Fo\n]o::::Fo\n\\]o:False:":: :]',
+        "[text(2,21):a::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Fo\n]o" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_75():
+    """
+    Test case extra 75:  SetExt heading with image containing uri with space
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](</my uri> "testing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/my%20uri:testing:Foo:/my uri:::Foo:True:":: :]',
+        "[text(1,29):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/my%20uri" alt="Foo" title="testing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_75a():
+    """
+    Test case extra 75a:  75 with newline before special characters, invalidating it
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](</my
+ uri> "testing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):Foo:]",
+        "[text(1,7):]:]",
+        '[text(1,8):(\a<\a&lt;\a/my\nuri\a>\a&gt;\a \a"\a&quot;\atesting\a"\a&quot;\a)a::\n \x02]',
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a![Foo](&lt;/my\nuri&gt; &quot;testing&quot;)a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_76():
+    """
+    Test case extra 76:  SetExt heading with image containing title with replacement
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri "test&beta;ing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:testβing:Foo::test&beta;ing::Foo:False:":: :]',
+        "[text(1,30):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testβing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_76a():
+    """
+    Test case extra 76a:  76 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri "test
+&beta;ing")a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:test\nβing:Foo::test\n&beta;ing::Foo:False:":: :]',
+        "[text(2,12):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test\nβing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_77():
+    """
+    Test case extra 77:  SetExt heading with image containing title with backslash
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri "test\\#ing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:test#ing:Foo::test\\#ing::Foo:False:":: :]',
+        "[text(1,26):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test#ing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_77a():
+    """
+    Test case extra 77a:  77 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![Foo](/uri "test\\#ing")a
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:test#ing:Foo::test\\#ing::Foo:False:":: :]',
+        "[text(1,26):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test#ing" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_78():
+    """
+    Test case extra 78:  SetExt heading with full link with backslash in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo\\#bar][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::bar:foo\\#bar:::::]",
+        "[text(1,3):foo\\\b#bar:]",
+        "[end-link:::False]",
+        "[text(1,17):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo#bar</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_78a():
+    """
+    Test case extra 78a:  78 with newline before special chars
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo
+\\#bar][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::bar:foo\n\\#bar:::::]",
+        "[text(1,3):foo\n\\\b#bar::\n]",
+        "[end-link:::False]",
+        "[text(2,12):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo\n#bar</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_79():
+    """
+    Test case extra 79:  SetExt heading with full link with replacement in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo&beta;bar][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::bar:foo&beta;bar:::::]",
+        "[text(1,3):foo\a&beta;\aβ\abar:]",
+        "[end-link:::False]",
+        "[text(1,21):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">fooβbar</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_79a():
+    """
+    Test case extra 79a:  79 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo
+&beta;bar][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::bar:foo\n&beta;bar:::::]",
+        "[text(1,3):foo\n\a&beta;\aβ\abar::\n]",
+        "[end-link:::False]",
+        "[text(2,16):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo\nβbar</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_80():
+    """
+    Test case extra 80:  SetExt heading with full link with replacement in reference
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo][ba&beta;r]a
+---
+
+[ba&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::ba&beta;r:foo:::::]",
+        "[text(1,3):foo:]",
+        "[end-link:::False]",
+        "[text(1,18):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_80a():
+    """
+    Test case extra 80a:  80 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo][ba
+&beta;r]a
+---
+
+[ba
+&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::ba\n&beta;r:foo:::::]",
+        "[text(1,3):foo:]",
+        "[end-link:::False]",
+        "[text(2,9):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_81():
+    """
+    Test case extra 81:  SetExt heading with full link with backspace in reference
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo][ba\\]r]a
+---
+
+[ba\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::ba\\]r:foo:::::]",
+        "[text(1,3):foo:]",
+        "[end-link:::False]",
+        "[text(1,14):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_81a():
+    """
+    Test case extra 81a:  81 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo][ba
+\\]r]a
+---
+
+[ba
+\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::ba\n\\]r:foo:::::]",
+        "[text(1,3):foo:]",
+        "[end-link:::False]",
+        "[text(2,5):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_82():
+    """
+    Test case extra 82:  SetExt heading with shortcut link with replacement in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[ba&beta;r]a
+---
+
+[ba&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):shortcut:/url:title::::ba&beta;r:::::]",
+        "[text(1,3):ba\a&beta;\aβ\ar:]",
+        "[end-link:::False]",
+        "[text(1,13):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">baβr</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_82a():
+    """
+    Test case extra 82a:  82 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[ba
+&beta;r]a
+---
+
+[ba
+&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):shortcut:/url:title::::ba\n&beta;r:::::]",
+        "[text(1,3):ba\n\a&beta;\aβ\ar::\n]",
+        "[end-link:::False]",
+        "[text(2,9):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">ba\nβr</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_83():
+    """
+    Test case extra 83:  SetExt heading with shortcut link with backslash in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[ba\\]r]a
+---
+
+[ba\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):shortcut:/url:title::::ba\\]r:::::]",
+        "[text(1,3):ba\\\b]r:]",
+        "[end-link:::False]",
+        "[text(1,9):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">ba]r</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_83a():
+    """
+    Test case extra 83a:  83 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[ba
+\\]r]a
+---
+
+[ba
+\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):shortcut:/url:title::::ba\n\\]r:::::]",
+        "[text(1,3):ba\n\\\b]r::\n]",
+        "[end-link:::False]",
+        "[text(2,5):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">ba\n]r</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_84x():
+    """
+    Test case extra 84:  SetExt heading with collapsed link with replacement in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[ba&beta;r][]a
+---
+
+[ba&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):collapsed:/url:title::::ba&beta;r:::::]",
+        "[text(1,3):ba\a&beta;\aβ\ar:]",
+        "[end-link:::False]",
+        "[text(1,15):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">baβr</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_84a():
+    """
+    Test case extra 84a:  84 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[ba
+&beta;r][]a
+---
+
+[ba
+&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):collapsed:/url:title::::ba\n&beta;r:::::]",
+        "[text(1,3):ba\n\a&beta;\aβ\ar::\n]",
+        "[end-link:::False]",
+        "[text(2,11):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">ba\nβr</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_85():
+    """
+    Test case extra 85:  SetExt heading with collapsed link with backslash in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[ba\\]r][]a
+---
+
+[ba\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):collapsed:/url:title::::ba\\]r:::::]",
+        "[text(1,3):ba\\\b]r:]",
+        "[end-link:::False]",
+        "[text(1,11):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">ba]r</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_85a():
+    """
+    Test case extra 85a:  85 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[ba
+\\]r][]a
+---
+
+[ba
+\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):collapsed:/url:title::::ba\n\\]r:::::]",
+        "[text(1,3):ba\n\\\b]r::\n]",
+        "[end-link:::False]",
+        "[text(2,7):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">ba\n]r</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_86x():
+    """
+    Test case extra 86:  SetExt heading with full link with replacement in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[fo&beta;o][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::bar:fo&beta;o:::::]",
+        "[text(1,3):fo\a&beta;\aβ\ao:]",
+        "[end-link:::False]",
+        "[text(1,18):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foβo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_86a():
+    """
+    Test case extra 86a:  86 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[fo
+&beta;o][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::bar:fo\n&beta;o:::::]",
+        "[text(1,3):fo\n\a&beta;\aβ\ao::\n]",
+        "[end-link:::False]",
+        "[text(2,14):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">fo\nβo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_87():
+    """
+    Test case extra 87:  SetExt heading with full link with backslash in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[fo\\]o][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::bar:fo\\]o:::::]",
+        "[text(1,3):fo\\\b]o:]",
+        "[end-link:::False]",
+        "[text(1,14):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">fo]o</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_87a():
+    """
+    Test case extra 87a:  87 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[fo
+\\]o][bar]a
+---
+
+[\nbar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::bar:fo\n\\]o:::::]",
+        "[text(1,3):fo\n\\\b]o::\n]",
+        "[end-link:::False]",
+        "[text(2,10):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::bar:\nbar: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">fo\n]o</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_88x():
+    """
+    Test case extra 88:  SetExt heading with full link with backslash in link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo][ba\\]r]a
+---
+
+[ba\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::ba\\]r:foo:::::]",
+        "[text(1,3):foo:]",
+        "[end-link:::False]",
+        "[text(1,14):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_88a():
+    """
+    Test case extra 88a:  88 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo][ba
+\\]r]a
+---
+
+[ba
+\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::ba\n\\]r:foo:::::]",
+        "[text(1,3):foo:]",
+        "[end-link:::False]",
+        "[text(2,5):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_89x():
+    """
+    Test case extra 89:  SetExt heading with full link with replacement in link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo][ba&beta;r]a
+---
+
+[ba&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::ba&beta;r:foo:::::]",
+        "[text(1,3):foo:]",
+        "[end-link:::False]",
+        "[text(1,18):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_89a():
+    """
+    Test case extra 88a:  88 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[foo][ba
+&beta;r]a
+---
+
+[ba
+&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[link(1,2):full:/url:title:::ba\n&beta;r:foo:::::]",
+        "[text(1,3):foo:]",
+        "[end-link:::False]",
+        "[text(2,9):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_90x():
+    """
+    Test case extra 90:  SetExt heading with full image with backslash in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo\\#bar][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo#bar:::bar:foo\\#bar:::::]",
+        "[text(1,18):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="foo#bar" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_90a():
+    """
+    Test case extra 90a:  90 with newline before special chars
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo
+\\#bar][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo\n#bar:::bar:foo\n\\#bar:::::]",
+        "[text(2,12):a::\n]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="foo\n#bar" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_91x():
+    """
+    Test case extra 91:  SetExt heading with full image with replacement in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo&beta;bar][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:fooβbar:::bar:foo&beta;bar:::::]",
+        "[text(1,22):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="fooβbar" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_91a():
+    """
+    Test case extra 91a:  91 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo
+&beta;bar][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo\nβbar:::bar:foo\n&beta;bar:::::]",
+        "[text(2,16):a::\n]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="foo\nβbar" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_92x():
+    """
+    Test case extra 92:  SetExt heading with full image with replacement in reference
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo][ba&beta;r]a
+---
+
+[ba&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo:::ba&beta;r:foo:::::]",
+        "[text(1,19):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_92a():
+    """
+    Test case extra 92a:  92 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo][ba
+&beta;r]a
+---
+
+[ba
+&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo:::ba\n&beta;r:foo:::::]",
+        "[text(2,9):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_93x():
+    """
+    Test case extra 93:  SetExt heading with full image with backspace in reference
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo][ba\\]r]a
+---
+
+[ba\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo:::ba\\]r:foo:::::]",
+        "[text(1,15):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_93a():
+    """
+    Test case extra 93a:  93 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo][ba
+\\]r]a
+---
+
+[ba
+\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo:::ba\n\\]r:foo:::::]",
+        "[text(2,5):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_94x():
+    """
+    Test case extra 94:  SetExt heading with shortcut image with replacement in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![ba&beta;r]a
+---
+
+[ba&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):shortcut:/url:title:baβr::::ba&beta;r:::::]",
+        "[text(1,14):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="baβr" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_94a():
+    """
+    Test case extra 94a:  94 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![ba
+&beta;r]a
+---
+
+[ba
+&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):shortcut:/url:title:ba\nβr::::ba\n&beta;r:::::]",
+        "[text(2,9):a::\n]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="ba\nβr" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_95x():
+    """
+    Test case extra 95:  SetExt heading with shortcut image with backslash in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![ba\\]r]a
+---
+
+[ba\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):shortcut:/url:title:ba]r::::ba\\]r:::::]",
+        "[text(1,10):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="ba]r" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_95a():
+    """
+    Test case extra 95a:  95 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![ba
+\\]r]a
+---
+
+[ba
+\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):shortcut:/url:title:ba\n]r::::ba\n\\]r:::::]",
+        "[text(2,5):a::\n]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="ba\n]r" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_96x():
+    """
+    Test case extra 96:  SetExt heading with collapsed image with replacement in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![ba&beta;r][]a
+---
+
+[ba&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):collapsed:/url:title:baβr::::ba&beta;r:::::]",
+        "[text(1,16):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="baβr" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_96a():
+    """
+    Test case extra 96a:  96 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![ba
+&beta;r][]a
+---
+
+[ba
+&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):collapsed:/url:title:ba\nβr::::ba\n&beta;r:::::]",
+        "[text(2,11):a::\n]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="ba\nβr" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_97x():
+    """
+    Test case extra 97:  SetExt heading with collapsed image with backslash in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![ba\\]r][]a
+---
+
+[ba\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):collapsed:/url:title:ba]r::::ba\\]r:::::]",
+        "[text(1,12):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="ba]r" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_97a():
+    """
+    Test case extra 97a:  97 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![ba
+\\]r][]a
+---
+
+[ba
+\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):collapsed:/url:title:ba\n]r::::ba\n\\]r:::::]",
+        "[text(2,7):a::\n]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="ba\n]r" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_98x():
+    """
+    Test case extra 98:  SetExt heading with full image with replacement in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![fo&beta;o][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foβo:::bar:fo&beta;o:::::]",
+        "[text(1,19):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="foβo" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_98a():
+    """
+    Test case extra 98a:  98 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![fo
+&beta;o][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:fo\nβo:::bar:fo\n&beta;o:::::]",
+        "[text(2,14):a::\n]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="fo\nβo" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_99x():
+    """
+    Test case extra 99:  SetExt heading with full image with backslash in label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![fo\\]o][bar]a
+---
+
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:fo]o:::bar:fo\\]o:::::]",
+        "[text(1,15):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="fo]o" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_99a():
+    """
+    Test case extra 99a:  99 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![fo
+\\]o][bar]a
+---
+
+[\nbar]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:fo\n]o:::bar:fo\n\\]o:::::]",
+        "[text(2,10):a::\n]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::bar:\nbar: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="fo\n]o" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_a0x():
+    """
+    Test case extra A0:  SetExt heading with full image with backslash in link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo][ba\\]r]a
+---
+
+[ba\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo:::ba\\]r:foo:::::]",
+        "[text(1,15):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_a0a():
+    """
+    Test case extra A0a:  A0 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo][ba
+\\]r]a
+---
+
+[ba
+\\]r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo:::ba\n\\]r:foo:::::]",
+        "[text(2,5):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_a1x():
+    """
+    Test case extra A1:  SetExt heading with full image with replacement in link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo][ba&beta;r]a
+---
+
+[ba&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo:::ba&beta;r:foo:::::]",
+        "[text(1,19):a:]",
+        "[end-setext:::False]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_a1a():
+    """
+    Test case extra A1a:  A1 with newline before special characters
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo][ba
+&beta;r]a
+---
+
+[ba
+&beta;r]: /url 'title'"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo:::ba\n&beta;r:foo:::::]",
+        "[text(2,9):a:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_a2():
+    """
+    Test case extra A2:  SetExt heading with full image with x in url link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![fo
+o](</my url>)a
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/my%20url::fo\no:/my url:::fo\no:True::::]",
+        "[text(2,14):a::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<img src="/my%20url" alt="fo\no" />a</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)

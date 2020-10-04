@@ -1231,7 +1231,7 @@ span`a"""
     expected_gfm = """<p>a<code>code span</code>a</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

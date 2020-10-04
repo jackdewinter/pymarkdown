@@ -1041,7 +1041,7 @@ def __verify_next_inline_inline_link(
 
 
 # pylint: disable=too-many-branches, too-many-statements, too-many-arguments, too-many-locals
-def __verify_next_inline_inline_image_inline(
+def __verify_next_inline_inline_image_inline(  # noqa: C901
     previous_inline_token,
     para_owner,
     before_link_whitespace,
@@ -1059,12 +1059,16 @@ def __verify_next_inline_inline_image_inline(
     include_part_3 = True
     include_part_4 = True
     include_part_5 = True
+
+    after_title_whitespace = previous_inline_token.after_title_whitespace
+
     newline_count = ParserHelper.count_newlines_in_text(
         previous_inline_token.text_from_blocks
     )
     if newline_count:
         estimated_line_number += newline_count
-        para_owner.rehydrate_index += newline_count
+        if para_owner:
+            para_owner.rehydrate_index += newline_count
         estimated_column_number = 0
         print("text_from_blocks>>estimated_line_number>>" + str(estimated_line_number))
 
@@ -1074,7 +1078,8 @@ def __verify_next_inline_inline_image_inline(
     newline_count = ParserHelper.count_newlines_in_text(before_link_whitespace)
     if newline_count:
         estimated_line_number += newline_count
-        para_owner.rehydrate_index += newline_count
+        if para_owner:
+            para_owner.rehydrate_index += newline_count
         estimated_column_number = 0
         print(
             "before_link_whitespace>>estimated_line_number>>"
@@ -1088,7 +1093,8 @@ def __verify_next_inline_inline_image_inline(
     newline_count = ParserHelper.count_newlines_in_text(before_title_whitespace)
     if newline_count:
         estimated_line_number += newline_count
-        para_owner.rehydrate_index += newline_count
+        if para_owner:
+            para_owner.rehydrate_index += newline_count
         estimated_column_number = 0
         print(
             "before_title_whitespace>>estimated_line_number>>"
@@ -1108,7 +1114,8 @@ def __verify_next_inline_inline_image_inline(
     newline_count = ParserHelper.count_newlines_in_text(title_data)
     if newline_count:
         estimated_line_number += newline_count
-        para_owner.rehydrate_index += newline_count
+        if para_owner:
+            para_owner.rehydrate_index += newline_count
         estimated_column_number = 0
         print("title_data>>estimated_line_number>>" + str(estimated_line_number))
 
@@ -1118,12 +1125,11 @@ def __verify_next_inline_inline_image_inline(
         include_part_4 = False
         split_title_data = title_data.split("\n")
         title_data = split_title_data[-1]
-    newline_count = ParserHelper.count_newlines_in_text(
-        previous_inline_token.after_title_whitespace
-    )
+    newline_count = ParserHelper.count_newlines_in_text(after_title_whitespace)
     if newline_count:
         estimated_line_number += newline_count
-        para_owner.rehydrate_index += newline_count
+        if para_owner:
+            para_owner.rehydrate_index += newline_count
         estimated_column_number = 0
         print(
             "after_title_whitespace>>estimated_line_number>>"
@@ -1135,6 +1141,8 @@ def __verify_next_inline_inline_image_inline(
         include_part_3 = False
         include_part_4 = False
         include_part_5 = False
+        split_after_title_whitespace = after_title_whitespace.split("\n")
+        after_title_whitespace = split_after_title_whitespace[-1]
 
     print(">>estimated_column_number>>" + str(estimated_column_number))
     if include_part_1:
@@ -1162,12 +1170,13 @@ def __verify_next_inline_inline_image_inline(
             estimated_column_number += 1
             print(">>include_part_4a>>" + str(estimated_column_number))
         if include_part_5:
-            estimated_column_number += (
-                len(title_data) + 1 + len(previous_inline_token.after_title_whitespace)
-            )
+            estimated_column_number += len(title_data) + 1 + len(after_title_whitespace)
             print(">>include_part_5>>" + str(estimated_column_number))
+        else:
+            estimated_column_number += len(after_title_whitespace)
+            print(">>include_part_5a>>" + str(estimated_column_number))
     estimated_column_number += +1
-    if not include_part_1:
+    if not include_part_1 and para_owner:
         print(">>split_paragraph_lines>>" + str(split_paragraph_lines))
         print(">>para_owner.rehydrate_index>>" + str(para_owner.rehydrate_index))
         estimated_column_number += len(
@@ -1181,7 +1190,7 @@ def __verify_next_inline_inline_image_inline(
 # pylint: enable=too-many-branches, too-many-statements, too-many-arguments, too-many-locals
 
 # pylint: disable=too-many-locals, too-many-branches, too-many-statements
-def __verify_next_inline_inline_image(
+def __verify_next_inline_inline_image(  # noqa: C901
     last_token, previous_inline_token, estimated_line_number, estimated_column_number
 ):
 
@@ -1246,7 +1255,8 @@ def __verify_next_inline_inline_image(
         newline_count = ParserHelper.count_newlines_in_text(label_text)
         if newline_count:
             estimated_line_number += newline_count
-            para_owner.rehydrate_index += newline_count
+            if para_owner:
+                para_owner.rehydrate_index += newline_count
             estimated_column_number = 0
 
             split_label_text = label_text.split("\n")
@@ -1263,7 +1273,8 @@ def __verify_next_inline_inline_image(
         newline_count = ParserHelper.count_newlines_in_text(image_alt_text)
         if newline_count:
             estimated_line_number += newline_count
-            para_owner.rehydrate_index += newline_count
+            if para_owner:
+                para_owner.rehydrate_index += newline_count
             estimated_column_number = 0
 
             split_label_text = image_alt_text.split("\n")
@@ -1298,7 +1309,8 @@ def __verify_next_inline_inline_image(
         )
         if newline_count:
             estimated_line_number += newline_count
-            para_owner.rehydrate_index += newline_count
+            if para_owner:
+                para_owner.rehydrate_index += newline_count
             estimated_column_number = 0
 
             split_label_text = image_alt_text.split("\n")
@@ -1309,7 +1321,8 @@ def __verify_next_inline_inline_image(
         )
         if newline_count:
             estimated_line_number += newline_count
-            para_owner.rehydrate_index += newline_count
+            if para_owner:
+                para_owner.rehydrate_index += newline_count
             estimated_column_number = 0
 
             split_label_text = previous_inline_token.ex_label.split("\n")
