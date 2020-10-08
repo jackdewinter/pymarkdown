@@ -62,7 +62,7 @@ baz"""
         "[para(1,1):\n]",
         "[text(1,1):foo:]",
         "[hard-break(1,4):\\]",
-        "[text(2,1):\nbaz:]",
+        "[text(2,1):\nbaz::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
@@ -159,7 +159,7 @@ def test_hard_line_breaks_658():
         "[para(1,1):\n     ]",
         "[text(1,1):foo:]",
         "[hard-break(1,4):\\]",
-        "[text(2,6):\nbar:]",
+        "[text(2,6):\nbar::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
@@ -228,7 +228,7 @@ bar*""".replace(
         "[emphasis(1,1):1:*]",
         "[text(1,2):foo:]",
         "[hard-break(1,5):\\]",
-        "[text(2,1):\nbar:]",
+        "[text(2,1):\nbar::\n]",
         "[end-emphasis(2,4)::1:*:False]",
         "[end-para:::True]",
     ]

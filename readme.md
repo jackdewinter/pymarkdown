@@ -33,13 +33,11 @@
 ## Bugs - General - Solve
 
 - are links getting verified properly in checks? images are, can't find link code for same
+- 518h has a link label with text that has a newline
+  - need other multiline elements in label and verify
 
 ## Bugs - General - Uncategorized
 
-- images
-  - different image link types, with variations on their values
-  - 525 with text and other inlines before and after, newlines, etc.
-  - need "full" example of image
 - why does hard break not have \n?
   - hard break followed by 3 spaces, then emphasis
   - variations of 52e with extra spaces after, etc.
@@ -53,10 +51,6 @@
   - 90a but split with char escape that is newline
 - code span
   - multiple lengths of ticks, whitespace
-- all multiline elements within a paragaph (and other containers that allow newline)
-  - make sure line/column is tracking text indenting on each line
-  - combinations together
-  - 518 series, but for SetExt and Atx containers
 - coalesce with blank lines in fenced code block?
 
 ## Bugs - Character Entities

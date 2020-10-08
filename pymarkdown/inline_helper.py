@@ -567,6 +567,7 @@ class InlineHelper:
                 )
             )
             current_string = current_string[0:-1]
+            whitespace_to_add = ""
         elif len(removed_end_whitespace) >= 2:
             new_tokens.append(
                 HardBreakMarkdownToken(

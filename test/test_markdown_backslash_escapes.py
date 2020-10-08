@@ -167,7 +167,7 @@ bar"""
         "[para(1,1):\n]",
         "[text(1,1):foo:]",
         "[hard-break(1,4):\\]",
-        "[text(2,1):\nbar:]",
+        "[text(2,1):\nbar::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />

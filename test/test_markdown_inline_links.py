@@ -1240,7 +1240,7 @@ def test_inline_links_518d():
     source_markdown = """abc
 [link](
  /uri
-  "title" )
+  "title" )a
   def"""
     expected_tokens = [
         "[para(1,1):\n\n \n  \n  ]",
@@ -1248,10 +1248,10 @@ def test_inline_links_518d():
         '[link(2,1):inline:/uri:title::::link:False:":\n:\n: ]',
         "[text(2,2):link:]",
         "[end-link:::False]",
-        "[text(4,12):\ndef::\n]",
+        "[text(4,12):a\ndef::\n]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>abc\n<a href="/uri" title="title">link</a>\ndef</p>"""
+    expected_gfm = """<p>abc\n<a href="/uri" title="title">link</a>a\ndef</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

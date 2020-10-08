@@ -38,7 +38,10 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
             current_token.token_class == MarkdownTokenClass.INLINE_BLOCK
             and not isinstance(current_token, EndMarkdownToken)
         ):
-            print("Inline, skipping")
+            print("Inline, skipping" + ParserHelper.make_value_visible(token_stack))
+            if token_stack:
+                print(">>" + ParserHelper.make_value_visible(token_stack[-1]))
+
             if (
                 container_block_stack
                 and container_block_stack[-1].token_name
@@ -890,11 +893,52 @@ def __verify_next_inline(  # noqa: C901
         previous_inline_token.line_number == 0
         and previous_inline_token.column_number == 0
     ):
+        print(
+            "  previous has no position: "
+            + ParserHelper.make_value_visible(previous_inline_token)
+        )
         return
     if (
         current_inline_token.line_number == 0
         and current_inline_token.column_number == 0
     ):
+        print(
+            "  current has no position: "
+            + ParserHelper.make_value_visible(current_inline_token)
+        )
+        print("  last_token: " + ParserHelper.make_value_visible(last_token))
+
+        if (
+            current_inline_token.token_name
+            == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
+            and last_token.token_name == MarkdownToken.token_paragraph
+        ):
+            newline_count1 = ParserHelper.count_newlines_in_text(
+                current_inline_token.start_markdown_token.before_link_whitespace
+            )
+            newline_count2 = ParserHelper.count_newlines_in_text(
+                current_inline_token.start_markdown_token.link_uri
+            )
+            newline_count3 = ParserHelper.count_newlines_in_text(
+                current_inline_token.start_markdown_token.before_title_whitespace
+            )
+            newline_count4 = ParserHelper.count_newlines_in_text(
+                current_inline_token.start_markdown_token.link_title
+            )
+            newline_count5 = ParserHelper.count_newlines_in_text(
+                current_inline_token.start_markdown_token.after_title_whitespace
+            )
+
+            newline_count = (
+                newline_count1
+                + newline_count2
+                + newline_count3
+                + newline_count4
+                + newline_count5
+            )
+            print(">>>>>>>>>>newline_count>" + str(newline_count))
+            last_token.rehydrate_index += newline_count
+            print(">>>>>>>>>>rehydrate_index>" + str(last_token.rehydrate_index))
         return
 
     estimated_line_number = previous_inline_token.line_number
@@ -985,11 +1029,6 @@ def __verify_next_inline(  # noqa: C901
             estimated_line_number,
             estimated_column_number,
         )
-    elif (
-        previous_inline_token.token_name
-        == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
-    ):
-        assert False
     else:
         assert False, previous_inline_token.token_name
 
@@ -1533,9 +1572,6 @@ def __verify_next_inline_text(
     )
     delta_line = len(split_current_line) - 1
 
-    if split_extracted_whitespace and last_token.rehydrate_index > 1:
-        assert last_token.rehydrate_index <= len(split_extracted_whitespace)
-
     if split_extracted_whitespace and last_token.rehydrate_index < len(
         split_extracted_whitespace
     ):
@@ -1618,6 +1654,30 @@ def __handle_last_token_text(
             == MarkdownToken.token_inline_hard_break
         ):
             inline_height -= 1
+
+        print(
+            "last_block_token.rehydrate_index>>" + str(last_block_token.rehydrate_index)
+        )
+        print(
+            "last_block_token.extracted_whitespace>>"
+            + ParserHelper.make_value_visible(last_block_token.extracted_whitespace)
+        )
+        num_newlines = ParserHelper.count_newlines_in_text(
+            last_block_token.extracted_whitespace
+        )
+        print("num_newlines>>" + str(num_newlines))
+        if last_block_token.rehydrate_index > 1:
+            assert (
+                last_block_token.rehydrate_index == num_newlines
+                or last_block_token.rehydrate_index == (num_newlines + 1)
+            ), (
+                "rehydrate_index ("
+                + str(last_block_token.rehydrate_index)
+                + ") != num_newlines("
+                + str(num_newlines)
+                + ")"
+            )
+
     elif (
         last_block_token.token_name == MarkdownToken.token_html_block
         or last_block_token.token_name == MarkdownToken.token_indented_code_block
@@ -1918,7 +1978,7 @@ def __verify_last_inline(
 
 # pylint: enable=too-many-arguments
 
-# pylint: disable=too-many-branches, too-many-arguments, too-many-statements
+# pylint: disable=too-many-branches, too-many-arguments, too-many-statements, too-many-locals
 def __verify_inline(
     actual_tokens,
     last_block_token,
@@ -1992,6 +2052,7 @@ def __verify_inline(
                 + ParserHelper.make_value_visible(current_inline_token)
             )
             print("  links:" + ParserHelper.make_value_visible(link_stack))
+            print(">>>>>>")
             if not token_index:
                 __verify_first_inline(
                     last_block_token, current_inline_token, last_token_stack
@@ -2007,6 +2068,7 @@ def __verify_inline(
                     current_inline_token,
                 )
 
+            print("<<<<<<")
             if current_inline_token.token_name == MarkdownToken.token_inline_link:
                 link_stack.append(current_inline_token)
             elif (
@@ -2014,6 +2076,21 @@ def __verify_inline(
                 == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
             ):
                 del link_stack[-1]
+            elif (
+                link_stack
+                and last_block_token.token_name == MarkdownToken.token_paragraph
+            ):
+                print(
+                    "inside link: "
+                    + ParserHelper.make_value_visible(current_inline_token)
+                )
+                if "\n" in str(current_inline_token):
+                    assert current_inline_token.token_name == MarkdownToken.token_text
+
+                    newlines_in_text_token = ParserHelper.count_newlines_in_text(
+                        current_inline_token.token_text
+                    )
+                    last_block_token.rehydrate_index += newlines_in_text_token
 
         assert not link_stack
 
@@ -2056,4 +2133,4 @@ def __verify_inline(
         print("<<[EOL]")
 
 
-# pylint: enable=too-many-branches, too-many-arguments, too-many-statements
+# pylint: enable=too-many-branches, too-many-arguments, too-many-statements, too-many-locals

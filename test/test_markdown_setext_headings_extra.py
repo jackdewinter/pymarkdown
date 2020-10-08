@@ -665,6 +665,132 @@ def test_setext_headings_extra_22():
 
 
 @pytest.mark.gfm
+def test_setext_headings_extra_22a():
+    """
+    Test case extra 22a:  SetExt heading ends with a backslash as in a hard line break
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """this was \\
+another line
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):this was :]",
+        "[hard-break(1,10):\\]",
+        "[text(2,1):\nanother line::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>this was <br />\nanother line</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_22b():
+    """
+    Test case extra 22a:  SetExt heading ends with a backslash as in a hard line break
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """this was
+another line
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):this was\nanother line::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>this was\nanother line</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_22c():
+    """
+    Test case extra 22a:  SetExt heading ends with a backslash as in a hard line break
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """this was\a\a\a
+another line
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):this was:]",
+        "[hard-break(1,9):   ]",
+        "[text(2,1):\nanother line::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>this was<br />\nanother line</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_22d():
+    """
+    Test case extra 22a:  SetExt heading ends with a backslash as in a hard line break
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """this was\a\a\a
+ another line
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):this was:]",
+        "[hard-break(1,9):   ]",
+        "[text(2,2):\nanother line::\n ]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>this was<br />\nanother line</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_setext_headings_extra_23():
     """
     Test case extra 23:  SetExt heading ends with 2+ spaces as in a hard line break
@@ -683,6 +809,39 @@ def test_setext_headings_extra_23():
         "[end-setext:::False]",
     ]
     expected_gfm = """<h2>what? no line break?</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_23a():
+    """
+    Test case extra 23a:  SetExt heading ends with 2+ spaces as in a hard line break
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """what? no line break?\a\a\a
+woe is me
+---""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):what? no line break?:]",
+        "[hard-break(1,21):   ]",
+        "[text(2,1):\nwoe is me::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>what? no line break?<br />\nwoe is me</h2>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
