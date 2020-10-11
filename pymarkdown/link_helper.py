@@ -13,7 +13,6 @@ from pymarkdown.markdown_token import (
     LinkStartMarkdownToken,
     MarkdownToken,
     SpecialTextMarkdownToken,
-    TextMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
 
@@ -395,9 +394,45 @@ class LinkHelper:
                 if isinstance(inline_blocks[ind + 1], SpecialTextMarkdownToken):
                     if inline_blocks[ind + 1].token_text == "]":
                         image_alt_text += inline_blocks[ind + 1].token_text
-                elif isinstance(inline_blocks[ind + 1], TextMarkdownToken):
+                elif inline_blocks[ind + 1].token_name == MarkdownToken.token_text:
                     image_alt_text += inline_blocks[ind + 1].token_text
-                elif isinstance(inline_blocks[ind + 1], ImageStartMarkdownToken):
+                elif (
+                    inline_blocks[ind + 1].token_name
+                    == MarkdownToken.token_inline_raw_html
+                ):
+                    image_alt_text += "<" + inline_blocks[ind + 1].raw_tag + ">"
+                elif (
+                    inline_blocks[ind + 1].token_name
+                    == MarkdownToken.token_inline_code_span
+                ):
+                    image_alt_text += ParserHelper.resolve_references_from_text(
+                        inline_blocks[ind + 1].span_text
+                    )
+                elif (
+                    inline_blocks[ind + 1].token_name
+                    == MarkdownToken.token_inline_code_span
+                ):
+                    image_alt_text += ParserHelper.resolve_references_from_text(
+                        inline_blocks[ind + 1].span_text
+                    )
+                elif (
+                    inline_blocks[ind + 1].token_name == MarkdownToken.token_inline_link
+                ):
+                    pass
+                elif (
+                    inline_blocks[ind + 1].token_name
+                    == EndMarkdownToken.type_name_prefix
+                    + MarkdownToken.token_inline_link
+                ):
+                    pass
+                else:
+                    assert (
+                        inline_blocks[ind + 1].token_name
+                        == MarkdownToken.token_inline_image
+                    ), (
+                        "Not handled: "
+                        + ParserHelper.make_value_visible(inline_blocks[ind + 1])
+                    )
                     image_alt_text += inline_blocks[ind + 1].image_alt_text
 
                 LOGGER.debug(
@@ -463,6 +498,13 @@ class LinkHelper:
                 == MarkdownToken.token_inline_code_span
             ):
                 converted_text = "`" + inline_blocks[collect_index].span_text + "`"
+                collected_text += converted_text
+                collected_text_raw += converted_text
+            elif (
+                inline_blocks[collect_index].token_name
+                == MarkdownToken.token_inline_raw_html
+            ):
+                converted_text = "<" + inline_blocks[collect_index].raw_tag + ">"
                 collected_text += converted_text
                 collected_text_raw += converted_text
             elif not is_inside_of_link:
@@ -816,6 +858,9 @@ class LinkHelper:
         inline_title = ""
 
         link_to_lookup = ParserHelper.resolve_backspaces_from_text(link_to_lookup)
+        link_to_lookup = ParserHelper.resolve_replacement_markers_from_text(
+            link_to_lookup
+        )
         link_to_lookup = ParserHelper.remove_escapes_from_text(link_to_lookup)
 
         link_label = LinkHelper.normalize_link_label(link_to_lookup)
@@ -1117,10 +1162,13 @@ class LinkHelper:
                 source_text, after_open_index, LinkHelper.__link_format_reference_end
             ):
                 LOGGER.debug("collapsed reference")
-                LOGGER.debug(">>%s>>", text_from_blocks)
+                LOGGER.debug(
+                    ">>%s>>", ParserHelper.make_value_visible(text_from_blocks)
+                )
                 update_index, inline_link, inline_title = LinkHelper.__look_up_link(
                     text_from_blocks, after_open_index + 1, "collapsed reference",
                 )
+                LOGGER.debug("collapsed reference>update_index>%s", str(update_index))
                 tried_full_reference_form = True
                 label_type = "collapsed"
             else:

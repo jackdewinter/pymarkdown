@@ -916,6 +916,7 @@ class InlineProcessor:
         current_string = ""
         current_string_unresolved = ""
         end_string = ""
+        LOGGER.debug("1<<end_string<<%s<<", ParserHelper.make_value_visible(end_string))
 
         inline_response = InlineResponse()
         fold_space = None
@@ -954,6 +955,24 @@ class InlineProcessor:
             LOGGER.debug(
                 ">>inline_blocks>>%s<<", ParserHelper.make_value_visible(inline_blocks)
             )
+            LOGGER.debug(
+                ">>current_string>>%s<<",
+                ParserHelper.make_value_visible(current_string),
+            )
+            LOGGER.debug(
+                ">>current_string_unresolved>>%s<<",
+                ParserHelper.make_value_visible(current_string_unresolved),
+            )
+            LOGGER.debug(
+                ">>current_string_unresolved>>%s<<",
+                ParserHelper.make_value_visible(current_string_unresolved),
+            )
+            LOGGER.debug(
+                ">>source_text[]>>%s<<%s<<",
+                ParserHelper.make_value_visible(source_text[next_index]),
+                ParserHelper.make_value_visible(source_text[next_index:]),
+            )
+
             inline_response.clear_fields()
             reset_current_string = False
             whitespace_to_add = None
@@ -1044,6 +1063,9 @@ class InlineProcessor:
                     column_number,
                 )
                 LOGGER.debug(
+                    "2<<end_string<<%s<<", ParserHelper.make_value_visible(end_string)
+                )
+                LOGGER.debug(
                     "handle_line_end>>new_tokens>>%s<<",
                     ParserHelper.make_value_visible(inline_response.new_tokens),
                 )
@@ -1055,6 +1077,10 @@ class InlineProcessor:
                         inline_response,
                         end_string,
                         is_setext,
+                    )
+                    LOGGER.debug(
+                        "3<<end_string<<%s<<",
+                        ParserHelper.make_value_visible(end_string),
                     )
                     LOGGER.debug("ws>%s<", ParserHelper.make_value_visible(end_string))
                 LOGGER.debug(
@@ -1142,6 +1168,10 @@ class InlineProcessor:
                     reset_current_string = True
                     starting_whitespace = ""
                     end_string = None
+                    LOGGER.debug(
+                        "4<<end_string<<%s<<",
+                        ParserHelper.make_value_visible(end_string),
+                    )
                 elif starting_whitespace:
                     LOGGER.debug(">>>text2")
                     inline_blocks.append(
@@ -1225,6 +1255,9 @@ class InlineProcessor:
                 str(last_column_number),
             )
 
+            LOGGER.debug(
+                "5<<end_string<<%s<<", ParserHelper.make_value_visible(end_string)
+            )
             (
                 start_index,
                 next_index,
@@ -1243,6 +1276,9 @@ class InlineProcessor:
                 inline_response.original_string,
             )
             LOGGER.debug(
+                "6<<end_string<<%s<<", ParserHelper.make_value_visible(end_string)
+            )
+            LOGGER.debug(
                 "<<current_string<<%s<<%s<<",
                 str(len(current_string)),
                 ParserHelper.make_value_visible(current_string),
@@ -1254,6 +1290,10 @@ class InlineProcessor:
             )
 
         LOGGER.debug("<<__complete_inline_block_processing<<")
+        LOGGER.debug(
+            "<<__complete_inline_block_processing<<end_string<<%s<<",
+            ParserHelper.make_value_visible(end_string),
+        )
         return InlineProcessor.__complete_inline_block_processing(
             inline_blocks,
             source_text,

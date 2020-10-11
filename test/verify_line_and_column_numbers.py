@@ -1101,6 +1101,8 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
 
     after_title_whitespace = previous_inline_token.after_title_whitespace
 
+    label_data_raw = ParserHelper.resolve_replacement_markers_from_text(label_data_raw)
+
     newline_count = ParserHelper.count_newlines_in_text(
         previous_inline_token.text_from_blocks
     )
@@ -1273,6 +1275,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
         split_paragraph_lines = para_owner.extracted_whitespace.split("\n")
     print(">>before>>" + str(estimated_column_number))
     if previous_inline_token.label_type == "inline":
+        print(">>>>>>>>>inline")
         (
             estimated_line_number,
             estimated_column_number,
@@ -1289,10 +1292,14 @@ def __verify_next_inline_inline_image(  # noqa: C901
             estimated_column_number,
         )
     elif previous_inline_token.label_type == "shortcut":
+        print(">>>>>>>>>shortcut")
         label_text = previous_inline_token.text_from_blocks
         token_prefix = 1
         newline_count = ParserHelper.count_newlines_in_text(label_text)
         if newline_count:
+            print(">>x>>" + ParserHelper.make_value_visible(label_text))
+            label_text = ParserHelper.resolve_replacement_markers_from_text(label_text)
+            print(">>x>>" + ParserHelper.make_value_visible(label_text))
             estimated_line_number += newline_count
             if para_owner:
                 para_owner.rehydrate_index += newline_count
@@ -1304,6 +1311,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
         estimated_column_number += 2 + token_prefix + len(label_text)
 
     elif previous_inline_token.label_type == "collapsed":
+        print(">>>>>>>>>collapsed")
         image_alt_text = previous_inline_token.image_alt_text
         if previous_inline_token.text_from_blocks:
             image_alt_text = previous_inline_token.text_from_blocks
@@ -1311,6 +1319,11 @@ def __verify_next_inline_inline_image(  # noqa: C901
         token_prefix = 1
         newline_count = ParserHelper.count_newlines_in_text(image_alt_text)
         if newline_count:
+            print(">>x>>" + ParserHelper.make_value_visible(image_alt_text))
+            image_alt_text = ParserHelper.resolve_replacement_markers_from_text(
+                image_alt_text
+            )
+            print(">>x>>" + ParserHelper.make_value_visible(image_alt_text))
             estimated_line_number += newline_count
             if para_owner:
                 para_owner.rehydrate_index += newline_count
@@ -1324,6 +1337,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
         estimated_column_number += 2 + token_prefix + len(image_alt_text)
     else:
         assert previous_inline_token.label_type == "full"
+        print(">>>>>>>>>full")
 
         image_alt_text = previous_inline_token.image_alt_text
         if previous_inline_token.text_from_blocks:
@@ -1343,10 +1357,14 @@ def __verify_next_inline_inline_image(  # noqa: C901
         )
 
         token_prefix = 3
-        newline_count = ParserHelper.count_newlines_in_text(
-            previous_inline_token.text_from_blocks
-        )
+        newline_count = ParserHelper.count_newlines_in_text(image_alt_text)
         if newline_count:
+            print(">>x>>" + ParserHelper.make_value_visible(image_alt_text))
+            image_alt_text = ParserHelper.resolve_replacement_markers_from_text(
+                image_alt_text
+            )
+            print(">>x>>" + ParserHelper.make_value_visible(image_alt_text))
+
             estimated_line_number += newline_count
             if para_owner:
                 para_owner.rehydrate_index += newline_count
@@ -1979,7 +1997,7 @@ def __verify_last_inline(
 # pylint: enable=too-many-arguments
 
 # pylint: disable=too-many-branches, too-many-arguments, too-many-statements, too-many-locals
-def __verify_inline(
+def __verify_inline(  # noqa: C901
     actual_tokens,
     last_block_token,
     block_token_index,
@@ -2085,12 +2103,30 @@ def __verify_inline(
                     + ParserHelper.make_value_visible(current_inline_token)
                 )
                 if "\n" in str(current_inline_token):
-                    assert current_inline_token.token_name == MarkdownToken.token_text
-
-                    newlines_in_text_token = ParserHelper.count_newlines_in_text(
-                        current_inline_token.token_text
-                    )
-                    last_block_token.rehydrate_index += newlines_in_text_token
+                    if (
+                        current_inline_token.token_name
+                        == MarkdownToken.token_inline_code_span
+                    ):
+                        newlines_in_text_token = ParserHelper.count_newlines_in_text(
+                            current_inline_token.span_text
+                        )
+                        last_block_token.rehydrate_index += newlines_in_text_token
+                    elif (
+                        current_inline_token.token_name
+                        == MarkdownToken.token_inline_raw_html
+                    ):
+                        newlines_in_text_token = ParserHelper.count_newlines_in_text(
+                            current_inline_token.raw_tag
+                        )
+                        last_block_token.rehydrate_index += newlines_in_text_token
+                    else:
+                        assert (
+                            current_inline_token.token_name == MarkdownToken.token_text
+                        )
+                        newlines_in_text_token = ParserHelper.count_newlines_in_text(
+                            current_inline_token.token_text
+                        )
+                        last_block_token.rehydrate_index += newlines_in_text_token
 
         assert not link_stack
 

@@ -33,8 +33,7 @@
 ## Bugs - General - Solve
 
 - are links getting verified properly in checks? images are, can't find link code for same
-- 518h has a link label with text that has a newline
-  - need other multiline elements in label and verify
+- test_paragraph_extra_b5 - adding extra newline somewhere, possibly not clearing after previous image?
 
 ## Bugs - General - Uncategorized
 
