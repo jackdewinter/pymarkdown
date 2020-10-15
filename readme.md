@@ -33,7 +33,8 @@
 ## Bugs - General - Solve
 
 - are links getting verified properly in checks? images are, can't find link code for same
-- test_paragraph_extra_b5 - adding extra newline somewhere, possibly not clearing after previous image?
+- need comprehensive table with tests that qualify for each test case i.e. para_extra
+  with different groups, links and images
 
 ## Bugs - General - Uncategorized
 

@@ -2114,7 +2114,7 @@ o](/url "title")a"""
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         '[image(1,2):inline:/url:title:fo\no::::fo\no:False:":: :]',
-        "[text(2,17):a::\n]",
+        "[text(2,17):a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<img src="/url" alt="fo\no" title="title" />a</p>"""
@@ -3012,7 +3012,7 @@ def test_paragraph_extra_73b():
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Fo\nβo::::Fo\n&beta;o:False:":: :]',
-        "[text(2,25):a::\n]",
+        "[text(2,25):a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<img src="/uri" alt="Fo\nβo" title="testing" />a</p>"""
@@ -3071,7 +3071,7 @@ def test_paragraph_extra_74a():
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Fo\n]o::::Fo\n\\]o:False:":: :]',
-        "[text(2,21):a::\n]",
+        "[text(2,21):a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<img src="/uri" alt="Fo\n]o" title="testing" />a</p>"""
@@ -4174,7 +4174,7 @@ def test_paragraph_extra_90a():
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo\n#bar:::bar:foo\n\\#bar:::::]",
-        "[text(2,12):a::\n]",
+        "[text(2,12):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
@@ -4241,7 +4241,7 @@ def test_paragraph_extra_91a():
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo\nβbar:::bar:foo\n&beta;bar:::::]",
-        "[text(2,16):a::\n]",
+        "[text(2,16):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
@@ -4445,7 +4445,7 @@ def test_paragraph_extra_94a():
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         "[image(1,2):shortcut:/url:title:ba\nβr::::ba\n&beta;r:::::]",
-        "[text(2,9):a::\n]",
+        "[text(2,9):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
@@ -4513,7 +4513,7 @@ def test_paragraph_extra_95a():
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         "[image(1,2):shortcut:/url:title:ba\n]r::::ba\n\\]r:::::]",
-        "[text(2,5):a::\n]",
+        "[text(2,5):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
@@ -4581,7 +4581,7 @@ def test_paragraph_extra_96a():
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         "[image(1,2):collapsed:/url:title:ba\nβr::::ba\n&beta;r:::::]",
-        "[text(2,11):a::\n]",
+        "[text(2,11):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
@@ -4649,7 +4649,7 @@ def test_paragraph_extra_97a():
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         "[image(1,2):collapsed:/url:title:ba\n]r::::ba\n\\]r:::::]",
-        "[text(2,7):a::\n]",
+        "[text(2,7):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
@@ -4716,7 +4716,7 @@ def test_paragraph_extra_98a():
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:fo\nβo:::bar:fo\n&beta;o:::::]",
-        "[text(2,14):a::\n]",
+        "[text(2,14):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
@@ -4783,7 +4783,7 @@ def test_paragraph_extra_99a():
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:fo\n]o:::bar:fo\n\\]o:::::]",
-        "[text(2,10):a::\n]",
+        "[text(2,10):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:\nbar: :/url:: :title:'title':]",
@@ -4951,7 +4951,7 @@ o](</my url>)a"""
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         "[image(1,2):inline:/my%20url::fo\no:/my url:::fo\no:True::::]",
-        "[text(2,14):a::\n]",
+        "[text(2,14):a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<img src="/my%20url" alt="fo\no" />a</p>"""
@@ -5416,7 +5416,6 @@ fg>nk]a
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_extra_b5():
     """
@@ -5434,13 +5433,13 @@ nk](/uri "title" )
         "[para(1,1):\n\n\n ]",
         "[text(1,1):abc\n::\n]",
         '[image(2,1):inline:/uri:title:li\nnk::::li\nnk:False:":: : ]',
-        "[text(3,19):\ndef::\n\n]",
+        "[text(3,19):\ndef::\n]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc\n<img src="/uri" alt="li\nnk" title="title" />\ndef</p>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -5534,7 +5533,7 @@ nk][bar]a
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:li\nnk:::bar:li\nnk:::::]",
-        "[text(2,9):a::\n]",
+        "[text(2,9):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
@@ -5636,7 +5635,7 @@ nk][]a
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         "[image(1,2):collapsed:/url:title:li\nnk::::li\nnk:::::]",
-        "[text(2,6):a::\n]",
+        "[text(2,6):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::li nk:li\nnk: :/url:: :title:'title':]",
@@ -5738,7 +5737,7 @@ nk]a
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         "[image(1,2):shortcut:/url:title:li\nnk::::li\nnk:::::]",
-        "[text(2,4):a::\n]",
+        "[text(2,4):a:]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::li nk:li\nnk: :/url:: :title:'title':]",

@@ -212,6 +212,10 @@ class InlineProcessor:
                             column_number=new_column_number,
                         )
                     ]
+                    LOGGER.debug(
+                        "new Text>>%s>>",
+                        ParserHelper.make_value_visible(processed_tokens),
+                    )
                 elif coalesced_list[-1].is_setext:
                     combined_text = coalesced_results[coalesce_index].token_text
                     combined_whitespace_text = coalesced_results[
@@ -968,6 +972,9 @@ class InlineProcessor:
                 ParserHelper.make_value_visible(current_string_unresolved),
             )
             LOGGER.debug(
+                ">>end_string>>%s<<", ParserHelper.make_value_visible(end_string),
+            )
+            LOGGER.debug(
                 ">>source_text[]>>%s<<%s<<",
                 ParserHelper.make_value_visible(source_text[next_index]),
                 ParserHelper.make_value_visible(source_text[next_index:]),
@@ -1125,6 +1132,10 @@ class InlineProcessor:
                 reset_current_string = True
                 inline_response.new_tokens = None
                 remaining_line = ""
+                end_string = None
+                LOGGER.debug(
+                    "9<<end_string<<%s<<", ParserHelper.make_value_visible(end_string),
+                )
             else:
                 LOGGER.debug("append_rest_of_line>>%s<", str(remaining_line))
                 current_string = InlineHelper.append_text(
@@ -1165,6 +1176,9 @@ class InlineProcessor:
                             column_number=last_column_number,
                         )
                     )
+                    LOGGER.debug(
+                        "new Text>>%s>>", ParserHelper.make_value_visible(inline_blocks)
+                    )
                     reset_current_string = True
                     starting_whitespace = ""
                     end_string = None
@@ -1184,7 +1198,12 @@ class InlineProcessor:
                             column_number=last_column_number,
                         )
                     )
+                    LOGGER.debug(
+                        "new Text>>%s>>", ParserHelper.make_value_visible(inline_blocks)
+                    )
                     starting_whitespace = ""
+                    # end_string = None
+                    # reset_current_string = True
 
                 inline_blocks.extend(inline_response.new_tokens)
 
