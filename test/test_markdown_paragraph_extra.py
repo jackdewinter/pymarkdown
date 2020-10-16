@@ -5820,3 +5820,287 @@ fg>nk]a
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_c7():
+    """
+    Test case extra c7:  Paragraph with link split over 2 lines followed by text split over 2 lines
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[li<de
+fg>nk](/url)a
+b
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):a:]",
+        "[link(1,2):inline:/url:::::li<de\nfg>nk:False::::]",
+        "[text(1,3):li:]",
+        "[raw-html(1,5):de\nfg]",
+        "[text(2,4):nk:]",
+        "[end-link:::False]",
+        "[text(2,13):a\nb::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p>a<a href="/url">li<de\nfg>nk</a>a\nb</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_c8():
+    """
+    Test case extra c8:  Paragraph with image split over 2 lines followed by text split over 2 lines
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![li<de
+fg>nk](/url)a
+b
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/url::li<de\nfg>nk::::li<de\nfg>nk:False::::]",
+        "[text(2,13):a\nb::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p>a<img src="/url" alt="li<de\nfg>nk" />a\nb</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_c9():
+    """
+    Test case extra c9:  Paragraph with link split over 2 lines followed by code span split over 2 lines
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[li<de
+fg>nk](/url)`a
+b`
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):a:]",
+        "[link(1,2):inline:/url:::::li<de\nfg>nk:False::::]",
+        "[text(1,3):li:]",
+        "[raw-html(1,5):de\nfg]",
+        "[text(2,4):nk:]",
+        "[end-link:::False]",
+        "[icode-span(2,13):a\a\n\a \ab:`::]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p>a<a href="/url">li<de\nfg>nk</a><code>a b</code></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_d0():
+    """
+    Test case extra d0:  Paragraph with image split over 2 lines followed by code span split over 2 lines
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![li<de
+fg>nk](/url)`a
+b`
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/url::li<de\nfg>nk::::li<de\nfg>nk:False::::]",
+        "[icode-span(2,13):a\a\n\a \ab:`::]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p>a<img src="/url" alt="li<de\nfg>nk" /><code>a b</code></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_d1():
+    """
+    Test case extra d1:  Paragraph with image split over 2 lines followed by raw html split over 2 lines
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[li<de
+fg>nk](/url)<a
+b>
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):a:]",
+        "[link(1,2):inline:/url:::::li<de\nfg>nk:False::::]",
+        "[text(1,3):li:]",
+        "[raw-html(1,5):de\nfg]",
+        "[text(2,4):nk:]",
+        "[end-link:::False]",
+        "[raw-html(2,13):a\nb]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p>a<a href="/url">li<de\nfg>nk</a><a\nb></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_d2():
+    """
+    Test case extra d2:  Paragraph with image split over 2 lines followed by raw html split over 2 lines
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![li<de
+fg>nk](/url)<a
+b>
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/url::li<de\nfg>nk::::li<de\nfg>nk:False::::]",
+        "[raw-html(2,13):a\nb]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p>a<img src="/url" alt="li<de\nfg>nk" /><a\nb></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_d3():
+    """
+    Test case extra d3:  Paragraph with link split over 2 lines followed by emphasis split over 2 lines
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a[li<de
+fg>nk](/url)*a
+b*
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):a:]",
+        "[link(1,2):inline:/url:::::li<de\nfg>nk:False::::]",
+        "[text(1,3):li:]",
+        "[raw-html(1,5):de\nfg]",
+        "[text(2,4):nk:]",
+        "[end-link:::False]",
+        "[emphasis(2,13):1:*]",
+        "[text(2,14):a\nb::\n]",
+        "[end-emphasis(3,2)::1:*:False]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p>a<a href="/url">li<de\nfg>nk</a><em>a\nb</em></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_d4():
+    """
+    Test case extra d4:  Paragraph with image split over 2 lines followed by emphasis split over 2 lines
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![li<de
+fg>nk](/url)*a
+b*
+"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/url::li<de\nfg>nk::::li<de\nfg>nk:False::::]",
+        "[emphasis(2,13):1:*]",
+        "[text(2,14):a\nb::\n]",
+        "[end-emphasis(3,2)::1:*:False]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<p>a<img src="/url" alt="li<de\nfg>nk" /><em>a\nb</em></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)

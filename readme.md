@@ -36,7 +36,6 @@
 - are links getting verified properly in checks? images are, can't find link code for same
 - need comprehensive table with tests that qualify for each test case i.e. para_extra
   with different groups, links and images
-- repeat __handle_last_token_text with paragraphs ending with other inlines
 
 ## Bugs - General - Uncategorized
 
