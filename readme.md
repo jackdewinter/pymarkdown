@@ -11,6 +11,7 @@
 - use built in `is_x` functions instead of `token_name`
 - end tokens should all have start tokens that caused them?
 - why does fcb with only newlines and newlines with ws not fold down to text?
+  - coalesce with blank lines in fenced code block?
 - HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
 
 - cases like 183 where first non-ws character is an inline specifier
@@ -35,6 +36,7 @@
 - are links getting verified properly in checks? images are, can't find link code for same
 - need comprehensive table with tests that qualify for each test case i.e. para_extra
   with different groups, links and images
+- repeat __handle_last_token_text with paragraphs ending with other inlines
 
 ## Bugs - General - Uncategorized
 
@@ -51,7 +53,6 @@
   - 90a but split with char escape that is newline
 - code span
   - multiple lengths of ticks, whitespace
-- coalesce with blank lines in fenced code block?
 
 ## Bugs - Character Entities
 

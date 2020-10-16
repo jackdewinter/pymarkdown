@@ -17,7 +17,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
     Verify that the line numbers and column numbers in tokens are as expected,
     based on the data in the tokens.
     """
-    print("---\nLine/Column Numbers\n---")
+    print("\n\n---\nLine/Column Numbers\n---")
 
     split_lines = source_markdown.split(ParserHelper.newline_character)
     number_of_lines = len(split_lines)
@@ -883,7 +883,11 @@ def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
 
 # pylint: disable=too-many-branches,too-many-statements,too-many-locals
 def __verify_next_inline(  # noqa: C901
-    last_token, pre_previous_inline_token, previous_inline_token, current_inline_token
+    last_token,
+    pre_previous_inline_token,
+    previous_inline_token,
+    current_inline_token,
+    link_stack,
 ):
     """
     Verify any pair of inline tokens past the first inline token.
@@ -998,7 +1002,11 @@ def __verify_next_inline(  # noqa: C901
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_code_span:
         estimated_line_number, estimated_column_number = __verify_next_inline_code_span(
-            previous_inline_token, estimated_line_number, estimated_column_number,
+            last_token,
+            previous_inline_token,
+            estimated_line_number,
+            estimated_column_number,
+            link_stack,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_raw_html:
         estimated_line_number, estimated_column_number = __verify_next_inline_raw_html(
@@ -1467,7 +1475,11 @@ def __verify_next_inline_hard_break(
 
 
 def __verify_next_inline_code_span(
-    previous_inline_token, estimated_line_number, estimated_column_number
+    last_token,
+    previous_inline_token,
+    estimated_line_number,
+    estimated_column_number,
+    link_stack,
 ):
 
     resolved_span_text = ParserHelper.resolve_replacement_markers_from_text(
@@ -1479,11 +1491,28 @@ def __verify_next_inline_code_span(
     backtick_length = len(previous_inline_token.extracted_start_backticks)
 
     if "\n" in resolved_span_text:
+        print(
+            ">>estimated_line/column=("
+            + str(estimated_line_number)
+            + ","
+            + str(estimated_column_number)
+        )
         split_span_text = resolved_span_text.split("\n")
-        estimated_line_number += len(split_span_text) - 1
+        num_columns = len(split_span_text) - 1
+        estimated_line_number += num_columns
         estimated_column_number = (
             len(split_span_text[-1]) + 1 + trailing_ws_length + backtick_length
         )
+        print(
+            ">>estimated_line/column=("
+            + str(estimated_line_number)
+            + ","
+            + str(estimated_column_number)
+        )
+
+        print(">>link_stack=" + ParserHelper.make_value_visible(link_stack))
+        if last_token.token_name == MarkdownToken.token_paragraph and not link_stack:
+            last_token.rehydrate_index += num_columns
     else:
         estimated_column_number += (
             len(resolved_span_text)
@@ -1676,6 +1705,10 @@ def __handle_last_token_text(
         print(
             "last_block_token.rehydrate_index>>" + str(last_block_token.rehydrate_index)
         )
+        last_block_token.rehydrate_index += inline_height
+        print(
+            "last_block_token.rehydrate_index>>" + str(last_block_token.rehydrate_index)
+        )
         print(
             "last_block_token.extracted_whitespace>>"
             + ParserHelper.make_value_visible(last_block_token.extracted_whitespace)
@@ -1685,10 +1718,7 @@ def __handle_last_token_text(
         )
         print("num_newlines>>" + str(num_newlines))
         if last_block_token.rehydrate_index > 1:
-            assert (
-                last_block_token.rehydrate_index == num_newlines
-                or last_block_token.rehydrate_index == (num_newlines + 1)
-            ), (
+            assert last_block_token.rehydrate_index == (num_newlines + 1), (
                 "rehydrate_index ("
                 + str(last_block_token.rehydrate_index)
                 + ") != num_newlines("
@@ -2009,6 +2039,8 @@ def __verify_inline(  # noqa: C901
     Validate the inline tokens between block tokens.
     """
 
+    print("\n\n>>__verify_inline:" + ParserHelper.make_value_visible(last_block_token))
+
     print(">>last_block_token:" + ParserHelper.make_value_visible(last_block_token))
     print(
         ">>current_block_token:" + ParserHelper.make_value_visible(current_block_token)
@@ -2084,6 +2116,7 @@ def __verify_inline(  # noqa: C901
                     pre_last_token,
                     inline_tokens[token_index - 1],
                     current_inline_token,
+                    link_stack,
                 )
 
             print("<<<<<<")
@@ -2167,6 +2200,7 @@ def __verify_inline(  # noqa: C901
         )
     else:
         print("<<[EOL]")
+    print("<<__verify_inline\n\n")
 
 
 # pylint: enable=too-many-branches, too-many-arguments, too-many-statements, too-many-locals

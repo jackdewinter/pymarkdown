@@ -1507,10 +1507,8 @@ class InlineProcessor:
             start_index, extracted_whitespace = ParserHelper.extract_whitespace(
                 source_text, start_index
             )
-            if end_string is None:
-                end_string = extracted_whitespace
-            else:
-                end_string += extracted_whitespace
+            assert end_string
+            end_string += extracted_whitespace
 
         if start_index < len(source_text):
             current_string = InlineHelper.append_text(

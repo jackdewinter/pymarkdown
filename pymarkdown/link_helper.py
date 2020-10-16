@@ -409,13 +409,6 @@ class LinkHelper:
                         inline_blocks[ind + 1].span_text
                     )
                 elif (
-                    inline_blocks[ind + 1].token_name
-                    == MarkdownToken.token_inline_code_span
-                ):
-                    image_alt_text += ParserHelper.resolve_references_from_text(
-                        inline_blocks[ind + 1].span_text
-                    )
-                elif (
                     inline_blocks[ind + 1].token_name == MarkdownToken.token_inline_link
                 ):
                     pass
