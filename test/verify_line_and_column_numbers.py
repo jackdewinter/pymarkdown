@@ -880,6 +880,50 @@ def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
     else:
         assert False, first_inline_token.token_name
 
+def __verify_next_inline_handle_previous_end(previous_inline_token):
+    print(
+        "  previous has no position: "
+        + ParserHelper.make_value_visible(previous_inline_token)
+    )
+
+def __verify_next_inline_handle_current_end(last_token, current_inline_token):
+    print(
+        "  current has no position: "
+        + ParserHelper.make_value_visible(current_inline_token)
+    )
+    print("  last_token: " + ParserHelper.make_value_visible(last_token))
+
+    if (
+        current_inline_token.token_name
+        == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
+        and last_token.token_name == MarkdownToken.token_paragraph
+    ):
+        newline_count1 = ParserHelper.count_newlines_in_text(
+            current_inline_token.start_markdown_token.before_link_whitespace
+        )
+        newline_count2 = ParserHelper.count_newlines_in_text(
+            current_inline_token.start_markdown_token.link_uri
+        )
+        newline_count3 = ParserHelper.count_newlines_in_text(
+            current_inline_token.start_markdown_token.before_title_whitespace
+        )
+        newline_count4 = ParserHelper.count_newlines_in_text(
+            current_inline_token.start_markdown_token.link_title
+        )
+        newline_count5 = ParserHelper.count_newlines_in_text(
+            current_inline_token.start_markdown_token.after_title_whitespace
+        )
+
+        newline_count = (
+            newline_count1
+            + newline_count2
+            + newline_count3
+            + newline_count4
+            + newline_count5
+        )
+        print(">>>>>>>>>>newline_count>" + str(newline_count))
+        last_token.rehydrate_index += newline_count
+        print(">>>>>>>>>>rehydrate_index>" + str(last_token.rehydrate_index))
 
 # pylint: disable=too-many-branches,too-many-statements,too-many-locals
 def __verify_next_inline(  # noqa: C901
@@ -897,52 +941,13 @@ def __verify_next_inline(  # noqa: C901
         previous_inline_token.line_number == 0
         and previous_inline_token.column_number == 0
     ):
-        print(
-            "  previous has no position: "
-            + ParserHelper.make_value_visible(previous_inline_token)
-        )
+        __verify_next_inline_handle_previous_end(previous_inline_token)
         return
     if (
         current_inline_token.line_number == 0
         and current_inline_token.column_number == 0
     ):
-        print(
-            "  current has no position: "
-            + ParserHelper.make_value_visible(current_inline_token)
-        )
-        print("  last_token: " + ParserHelper.make_value_visible(last_token))
-
-        if (
-            current_inline_token.token_name
-            == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
-            and last_token.token_name == MarkdownToken.token_paragraph
-        ):
-            newline_count1 = ParserHelper.count_newlines_in_text(
-                current_inline_token.start_markdown_token.before_link_whitespace
-            )
-            newline_count2 = ParserHelper.count_newlines_in_text(
-                current_inline_token.start_markdown_token.link_uri
-            )
-            newline_count3 = ParserHelper.count_newlines_in_text(
-                current_inline_token.start_markdown_token.before_title_whitespace
-            )
-            newline_count4 = ParserHelper.count_newlines_in_text(
-                current_inline_token.start_markdown_token.link_title
-            )
-            newline_count5 = ParserHelper.count_newlines_in_text(
-                current_inline_token.start_markdown_token.after_title_whitespace
-            )
-
-            newline_count = (
-                newline_count1
-                + newline_count2
-                + newline_count3
-                + newline_count4
-                + newline_count5
-            )
-            print(">>>>>>>>>>newline_count>" + str(newline_count))
-            last_token.rehydrate_index += newline_count
-            print(">>>>>>>>>>rehydrate_index>" + str(last_token.rehydrate_index))
+        __verify_next_inline_handle_current_end(last_token, current_inline_token)
         return
 
     estimated_line_number = previous_inline_token.line_number
