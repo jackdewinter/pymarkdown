@@ -2462,10 +2462,6 @@ def __verify_inline(  # noqa: C901
             print("number_of_lines is not None>" + str(number_of_lines))
             assert not current_block_token
 
-        # if last_block_token.token_name == MarkdownToken.token_setext_heading:
-        #    number_of_lines = last_block_token.line_number - 1
-        #    print("number_of_lines SETEXT>" + str(number_of_lines))
-
         last_inline_token = inline_tokens[-1]
         __verify_last_inline(
             last_block_token,
