@@ -33,11 +33,8 @@
 
 ## Bugs - General - Solve
 
-- are links getting verified properly in checks? images are, can't find link code for same
-  - more correctly, link needs to be verified when end link token is seen
-  - similarly, end-emphasis token needs to be verified
-  - more generally, both tokens are not being verified properly because the end
-    tokens are not being verified properly, just skipped over
+- add verification for links with the endlink as the last element
+- add verification for links+emphasis as the last 2 inline elements
 - need comprehensive table with tests that qualify for each test case i.e. para_extra
   with different groups, links and images
 

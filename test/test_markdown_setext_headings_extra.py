@@ -6448,3 +6448,75 @@ b*
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_d5():
+    """
+    Test case extra d5:  SetExt with link split at the whitespaces
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """abc
+[link](
+ /uri
+  "title"
+   )
+  def
+---"""
+    expected_tokens = [
+        "[setext(7,1):-:3::(1,1)]",
+        "[text(1,1):abc\n::\n]",
+        '[link(2,1):inline:/uri:title::::link:False:":\n :\n  :\n   ]',
+        "[text(2,2):link:]",
+        "[end-link:::False]",
+        "[text(5,5):\ndef::\n  \x02]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>abc\n<a href="/uri" title="title">link</a>\ndef</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_d6():
+    """
+    Test case extra d6:  SetExt with image split at the whitespaces
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """abc
+![link](
+ /uri
+  "title"
+   )
+  def
+---"""
+    expected_tokens = [
+        "[setext(7,1):-:3::(1,1)]",
+        "[text(1,1):abc\n::\n]",
+        '[image(2,1):inline:/uri:title:link::::link:False:":\n :\n  :\n   ]',
+        "[text(5,5):\ndef::\n  \x02]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>abc\n<img src="/uri" alt="link" title="title" />\ndef</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
