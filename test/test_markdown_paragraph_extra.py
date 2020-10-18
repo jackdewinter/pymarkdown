@@ -6174,3 +6174,139 @@ def test_paragraph_extra_d6():
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_d7():
+    """
+    Test case extra d7:  Paragraph with link surrounded by emphasis
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """abc
+*[link](/uri "title")*
+def"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):abc\n::\n]",
+        "[emphasis(2,1):1:*]",
+        '[link(2,2):inline:/uri:title::::link:False:":: :]',
+        "[text(2,3):link:]",
+        "[end-link:::False]",
+        "[end-emphasis(2,22)::1:*:False]",
+        "[text(2,23):\ndef::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc\n<em><a href="/uri" title="title">link</a></em>\ndef</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_d8():
+    """
+    Test case extra d8:  Paragraph with image surrounded by emphasis
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """abc
+*![link](/uri "title")*
+def"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):abc\n::\n]",
+        "[emphasis(2,1):1:*]",
+        '[image(2,2):inline:/uri:title:link::::link:False:":: :]',
+        "[end-emphasis(2,23)::1:*:False]",
+        "[text(2,24):\ndef::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = (
+        """<p>abc\n<em><img src="/uri" alt="link" title="title" /></em>\ndef</p>"""
+    )
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_d9():
+    """
+    Test case extra d9:  Paragraph with emphasis inside of link label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """abc
+[*link*](/uri "title")
+def"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):abc\n::\n]",
+        '[link(2,1):inline:/uri:title::::*link*:False:":: :]',
+        "[emphasis(2,2):1:*]",
+        "[text(2,3):link:]",
+        "[end-emphasis(2,7)::1:*:False]",
+        "[end-link:::False]",
+        "[text(2,23):\ndef::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc\n<a href="/uri" title="title"><em>link</em></a>\ndef</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_e0():
+    """
+    Test case extra e0:  Paragraph with emphasis inside of image label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """abc
+![*link*](/uri "title")
+def"""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):abc\n::\n]",
+        '[image(2,1):inline:/uri:title:link::::*link*:False:":: :]',
+        "[text(2,24):\ndef::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc\n<img src="/uri" alt="link" title="title" />\ndef</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)

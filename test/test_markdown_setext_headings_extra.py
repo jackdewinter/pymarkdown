@@ -6520,3 +6520,147 @@ def test_setext_headings_extra_d6():
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_d7():
+    """
+    Test case extra d7:  SetExt with link surrounded by emphasis
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """abc
+*[link](/uri "title")*
+def
+---"""
+    expected_tokens = [
+        "[setext(4,1):-:3::(1,1)]",
+        "[text(1,1):abc\n::\n]",
+        "[emphasis(2,1):1:*]",
+        '[link(2,2):inline:/uri:title::::link:False:":: :]',
+        "[text(2,3):link:]",
+        "[end-link:::False]",
+        "[end-emphasis(2,22)::1:*:False]",
+        "[text(2,23):\ndef::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = (
+        """<h2>abc\n<em><a href="/uri" title="title">link</a></em>\ndef</h2>"""
+    )
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_d8():
+    """
+    Test case extra d8:  SetExt with image surrounded by emphasis
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """abc
+*![link](/uri "title")*
+def
+---"""
+    expected_tokens = [
+        "[setext(4,1):-:3::(1,1)]",
+        "[text(1,1):abc\n::\n]",
+        "[emphasis(2,1):1:*]",
+        '[image(2,2):inline:/uri:title:link::::link:False:":: :]',
+        "[end-emphasis(2,23)::1:*:False]",
+        "[text(2,24):\ndef::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = (
+        """<h2>abc\n<em><img src="/uri" alt="link" title="title" /></em>\ndef</h2>"""
+    )
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_d9():
+    """
+    Test case extra d9:  SetExt with emphasis inside of link label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """abc
+[*link*](/uri "title")
+def
+---"""
+    expected_tokens = [
+        "[setext(4,1):-:3::(1,1)]",
+        "[text(1,1):abc\n::\n]",
+        '[link(2,1):inline:/uri:title::::*link*:False:":: :]',
+        "[emphasis(2,2):1:*]",
+        "[text(2,3):link:]",
+        "[end-emphasis(2,7)::1:*:False]",
+        "[end-link:::False]",
+        "[text(2,23):\ndef::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = (
+        """<h2>abc\n<a href="/uri" title="title"><em>link</em></a>\ndef</h2>"""
+    )
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_extra_e0():
+    """
+    Test case extra e0:  SetExt with emphasis inside of image label
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """abc
+![*link*](/uri "title")
+def
+---"""
+    expected_tokens = [
+        "[setext(4,1):-:3::(1,1)]",
+        "[text(1,1):abc\n::\n]",
+        '[image(2,1):inline:/uri:title:link::::*link*:False:":: :]',
+        "[text(2,24):\ndef::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>abc\n<img src="/uri" alt="link" title="title" />\ndef</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)

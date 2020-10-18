@@ -33,8 +33,6 @@
 
 ## Bugs - General - Solve
 
-- add verification for links with the endlink as the last element
-- add verification for links+emphasis as the last 2 inline elements
 - need comprehensive table with tests that qualify for each test case i.e. para_extra
   with different groups, links and images
 
