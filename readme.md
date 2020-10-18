@@ -49,8 +49,6 @@
   - 518b inside of list and/or block quote
   - links with & and \ with inner link to mine
   - 90a but split with char escape that is newline
-- code span
-  - multiple lengths of ticks, whitespace
 
 ## Bugs - Character Entities
 

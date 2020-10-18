@@ -660,7 +660,7 @@ def test_code_spans_359():
 
 
 @pytest.mark.gfm
-def test_code_spans_extra1():
+def test_code_spans_extra_01():
     """
     Test case 115:
     """
@@ -680,6 +680,93 @@ foo"""
     ]
     expected_gfm = """<p>aa<code>a a</code>aa
 foo</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_code_spans_extra_02():
+    """
+    Test case 02:  Paragraph with single code span start and no space outside and inside
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """aa`aa`aa"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):aa:]",
+        "[icode-span(1,3):aa:`::]",
+        "[text(1,7):aa:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>aa<code>aa</code>aa</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_code_spans_extra_03():
+    """
+    Test case 03:  Paragraph with double code span start and one space outside and inside
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """aa `` aa `` aa"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):aa :]",
+        "[icode-span(1,4):aa:``: : ]",
+        "[text(1,12): aa:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>aa <code>aa</code> aa</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_code_spans_extra_04():
+    """
+    Test case 04:  Paragraph with triple code span start and three spaces outside and inside
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """aa  ```  aa  ```  aa"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):aa  :]",
+        "[icode-span(1,5): aa :```: : ]",
+        "[text(1,17):  aa:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>aa  <code> aa </code>  aa</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
