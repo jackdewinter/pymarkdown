@@ -34,8 +34,6 @@
 
 ## Bugs - General - Solve
 
-- need comprehensive table with tests that qualify for each test case i.e. para_extra
-  with different groups, links and images
 - start making token fields private with setters
   - look for places where common access patterns can be used i.e. link_title
 - is HTML transformer using text_from_chars, instead of other field?
