@@ -30,11 +30,16 @@
 - fenced code block handling of line/col could be better
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
 - all types of end-inlines and inlines at end i.e. 50
+- possible to merge link token and image token more closely?
 
 ## Bugs - General - Solve
 
 - need comprehensive table with tests that qualify for each test case i.e. para_extra
   with different groups, links and images
+- start making token fields private with setters
+  - look for places where common access patterns can be used i.e. link_title
+- is HTML transformer using text_from_chars, instead of other field?
+  - see https://github.com/jackdewinter/pymarkdown/commit/a506ddd3bda08a8ca1d97a7b0d68c114325b545e `extra_74`
 
 ## Bugs - General - Uncategorized
 
@@ -101,7 +106,6 @@
 - what if bad link definition discovered multiple lines down, how to back track?
 - split up link definition within a block quote or list?
 - 518, but in a setext
-- possible to merge link token and image token more closely?
 
 ## Bugs - Rounding Out Rules
 

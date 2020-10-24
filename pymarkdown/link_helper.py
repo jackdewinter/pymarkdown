@@ -1306,6 +1306,7 @@ class LinkHelper:
 
         return image_text
 
+    # pylint: disable=too-many-branches
     @staticmethod
     def rehydrate_inline_link_text_from_token(link_token):
         """
@@ -1367,5 +1368,9 @@ class LinkHelper:
                     + title_suffix
                     + link_token.after_title_whitespace
                 )
+            else:
+                link_text += link_token.before_title_whitespace
             link_text += ")"
         return link_text
+
+    # pylint: enable=too-many-branches
