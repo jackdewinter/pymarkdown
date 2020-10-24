@@ -38,6 +38,18 @@
   - look for places where common access patterns can be used i.e. link_title
 - is HTML transformer using text_from_chars, instead of other field?
   - see https://github.com/jackdewinter/pymarkdown/commit/a506ddd3bda08a8ca1d97a7b0d68c114325b545e `extra_74`
+- K Series of tests - some issues
+  - test_paragraph_extra_46c - test\verify_line_and_column_numbers.py:1946
+  - test_paragraph_extra_53b - test\verify_line_and_column_numbers.py:1946
+  - test_paragraph_extra_55b - test\verify_line_and_column_numbers.py:1946
+  - test_paragraph_extra_56b - test\verify_line_and_column_numbers.py:1946
+  - test_paragraph_extra_61a - test\verify_line_and_column_numbers.py:1946
+  - test_paragraph_extra_61b - pymarkdown\inline_processor.py:746
+  - test_paragraph_extra_62d - test\verify_line_and_column_numbers.py:1122
+  - test_paragraph_extra_63a - test\verify_line_and_column_numbers.py:1122
+  - test_paragraph_extra_63c - test\verify_line_and_column_numbers.py:1122
+  - test_paragraph_extra_64d - test\verify_line_and_column_numbers.py:1122
+  - test_paragraph_extra_66a - pymarkdown\inline_processor.py:746
 
 ## Bugs - General - Uncategorized
 
@@ -51,7 +63,6 @@
 - links, 518b
   - 518b inside of list and/or block quote
   - links with & and \ with inner link to mine
-  - 90a but split with char escape that is newline
 
 ## Bugs - Character Entities
 

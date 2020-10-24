@@ -13,6 +13,7 @@ Legend:
 - Series G - Link/image with backslash and character entity in various parts of link
 - Series H - Link/image with text/code span/raw html in label of various link types
 - Series J - Link/image with various combinations with other inline tokens
+- Series K - use of `&#xa;` instead of \n (all verified against babelmark)
 
 | t | s | x | y | z |
 | -- | --- | --- | --- | --- |
@@ -76,6 +77,7 @@ Legend:
 |Erh |raw html with newline| `a<raw\nhtml='cool'>a` | test_paragraph_extra_44 |
 |Eua |URI autolink with newline| `a<http://www.\ngoogle.com>a` | test_paragraph_extra_45 |
 |Eea |email autolink with newline| `a<foo@bar\n.com>a` | test_paragraph_extra_46 |
+|Eem |emphasis with newline| `a*foo\nbar*a` | test_paragraph_extra_46b |
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
@@ -229,3 +231,34 @@ Legend:
 |J7i |inline image with emphasis in label| `abc\n![*link*](/uri "title")\ndef` | test_paragraph_extra_e0 |
 |J8 | inline link without title newline label| `a[fo\no](</my url>)a` | test_paragraph_extra_a2 |
 |J8i | inline image without title newline label| `a![fo\no](</my url>)a` | test_paragraph_extra_a2 |
+
+| t | s | x | y | z |
+| --- | --- | --- | --- | --- |
+|K1  | xxx | `a[fo&#xa;o](/url "title")a` | test_paragraph_extra_61a |
+|K1i | xxx | `a![fo&#xa;o](/url "title")a` | test_paragraph_extra_61b |
+|K2  | xxx | `a[Foo](&#xa;/uri "testing")a` | test_paragraph_extra_62d |
+|K2i | xxx | `a![Foo](&#xa;/uri "testing")a` | test_paragraph_extra_62e |
+|K3  | xxx | `a[Foo](/ur&#xa;i "testing")a` | test_paragraph_extra_63a |
+|K3i | xxx | `a![Foo](/ur&#xa;i "testing")a` | test_paragraph_extra_63b |
+|K3a | xxx | `a[Foo](</ur&#xa;i> "testing")a` | test_paragraph_extra_63c |
+|K3ai| xxx | `a![Foo](</ur&#xa;i> "testing")a` | test_paragraph_extra_63d |
+|K4  | xxx | `a[Foo](/uri&#xa;"testing")a` | test_paragraph_extra_64d |
+|K4i | xxx | `a![Foo](/uri&#xa;"testing")a` | test_paragraph_extra_64e |
+|K5  | xxx | `a[Foo](/uri "test&#xa;ing")a` | test_paragraph_extra_66a |
+|K5i | xxx | `a![Foo](/uri "test&#xa;ing")a` | test_paragraph_extra_66b |
+|K6  | xxx | `a[Foo](/uri "testing"&#xa;)a` | test_paragraph_extra_67d |
+|K6i | xxx | `a![Foo](/uri "testing"&#xa;)a` | test_paragraph_extra_67e |
+|K7  | xxx | `a[foo&#xa;bar][bar]a` | test_paragraph_extra_53b |
+|K7i | xxx | `a![foo&#xa;bar][bar]a` | test_paragraph_extra_53c |
+|K8  | xxx | `a[foo][ba&#xa;r]a` | test_paragraph_extra_54b |
+|K8i | xxx | `a![foo][ba&#xa;r]a` | test_paragraph_extra_54c |
+|K9  | xxx | `a[ba&#xa;r]a` | test_paragraph_extra_55b |
+|K9i | xxx | `a![ba&#xa;r]a` | test_paragraph_extra_55c |
+|K10 | xxx | `a[ba&#xa;r][]a` | test_paragraph_extra_56b |
+|K10i| xxx | `a![ba&#xa;r][]a` | test_paragraph_extra_56c |
+|K11 |emphasis with newline| `a*foo&#xa;bar*a` | test_paragraph_extra_46c |
+|K12 |code span with newline| ` a``code&#xa;span``a ` | test_paragraph_extra_43a |
+|K13 |raw html with newline| `a<raw&#xa;html='cool'>a` | test_paragraph_extra_44a |
+|K14 |URI autolink with newline| `a<http://www.&#xa;google.com>a` | test_paragraph_extra_45a |
+|K15 |email autolink with newline| `a<foo@bar&#xa;.com>a` | test_paragraph_extra_46a |
+
