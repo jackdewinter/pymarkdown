@@ -882,7 +882,7 @@ def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
 
 
 # pylint: disable=too-many-branches,too-many-locals,too-many-statements
-def __verify_next_inline_handle_previous_end(
+def __verify_next_inline_handle_previous_end(  # noqa: C901
     last_token, previous_inline_token, current_inline_token, inline_tokens, token_index
 ):
     print(
@@ -935,13 +935,19 @@ def __verify_next_inline_handle_previous_end(
     if parent_cur_token.label_type == "inline":
         print(">>inline")
 
+        link_uri = parent_cur_token.link_uri
+        if parent_cur_token.pre_link_uri:
+            link_uri = parent_cur_token.pre_link_uri
+
         link_title = parent_cur_token.link_title
         if parent_cur_token.pre_link_title:
             link_title = parent_cur_token.pre_link_title
 
         part_1 = 2
         part_2 = len(parent_cur_token.before_link_whitespace)
-        part_3 = len(parent_cur_token.link_uri)
+        part_3 = len(link_uri)
+        if parent_cur_token.did_use_angle_start:
+            part_3 += 2
         part_4 = len(parent_cur_token.before_title_whitespace)
         part_5 = 0
         part_6 = 0
@@ -1066,6 +1072,8 @@ def __verify_next_inline_handle_previous_end(
     ):
         previous_rehydrate_index = last_token.rehydrate_index
         last_token.rehydrate_index -= previous_line_number_delta
+        print("rehydrate_index(saved)=" + str(previous_rehydrate_index))
+        print("last_token.rehydrate_index=" + str(last_token.rehydrate_index))
 
     new_estimated_line_number, new_estimated_column_number = __process_previous_token(
         last_token,
@@ -1079,6 +1087,7 @@ def __verify_next_inline_handle_previous_end(
 
     if previous_rehydrate_index:
         last_token.rehydrate_index = previous_rehydrate_index
+        print("rehydrate_index(restored)=" + str(last_token.rehydrate_index))
     print(
         "after->("
         + str(new_estimated_line_number)
@@ -1138,18 +1147,22 @@ def __verify_next_inline_handle_current_end(last_token, current_inline_token):
         == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
         and last_token.token_name == MarkdownToken.token_paragraph
     ):
+        pre_link_title = current_inline_token.start_markdown_token.link_title
+        if current_inline_token.start_markdown_token.pre_link_title:
+            pre_link_title = current_inline_token.start_markdown_token.pre_link_title
+
+        pre_link_uri = current_inline_token.start_markdown_token.link_uri
+        if current_inline_token.start_markdown_token.pre_link_uri:
+            pre_link_uri = current_inline_token.start_markdown_token.pre_link_uri
+
         newline_count1 = ParserHelper.count_newlines_in_text(
             current_inline_token.start_markdown_token.before_link_whitespace
         )
-        newline_count2 = ParserHelper.count_newlines_in_text(
-            current_inline_token.start_markdown_token.link_uri
-        )
+        newline_count2 = ParserHelper.count_newlines_in_text(pre_link_uri)
         newline_count3 = ParserHelper.count_newlines_in_text(
             current_inline_token.start_markdown_token.before_title_whitespace
         )
-        newline_count4 = ParserHelper.count_newlines_in_text(
-            current_inline_token.start_markdown_token.link_title
-        )
+        newline_count4 = ParserHelper.count_newlines_in_text(pre_link_title)
         newline_count5 = ParserHelper.count_newlines_in_text(
             current_inline_token.start_markdown_token.after_title_whitespace
         )
@@ -1163,7 +1176,10 @@ def __verify_next_inline_handle_current_end(last_token, current_inline_token):
         )
         print(">>>>>>>>>>newline_count>" + str(newline_count))
         last_token.rehydrate_index += newline_count
-        print(">>>>>>>>>>rehydrate_index>" + str(last_token.rehydrate_index))
+        print(
+            "rehydrate_index(__verify_next_inline_handle_current_end)>"
+            + str(last_token.rehydrate_index)
+        )
 
 
 # pylint: disable=too-many-arguments
@@ -1398,6 +1414,10 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
         estimated_line_number += newline_count
         if para_owner:
             para_owner.rehydrate_index += newline_count
+            print(
+                "rehydrate_index(__verify_next_inline_inline_image_inline#1)>"
+                + str(para_owner.rehydrate_index)
+            )
         estimated_column_number = 0
         print("text_from_blocks>>estimated_line_number>>" + str(estimated_line_number))
 
@@ -1409,6 +1429,10 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
         estimated_line_number += newline_count
         if para_owner:
             para_owner.rehydrate_index += newline_count
+            print(
+                "rehydrate_index(__verify_next_inline_inline_image_inline#2)>"
+                + str(para_owner.rehydrate_index)
+            )
         estimated_column_number = 0
         print(
             "before_link_whitespace>>estimated_line_number>>"
@@ -1424,6 +1448,10 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
         estimated_line_number += newline_count
         if para_owner:
             para_owner.rehydrate_index += newline_count
+            print(
+                "rehydrate_index(__verify_next_inline_inline_image_inline#3)>"
+                + str(para_owner.rehydrate_index)
+            )
         estimated_column_number = 0
         print(
             "before_title_whitespace>>estimated_line_number>>"
@@ -1445,6 +1473,10 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
         estimated_line_number += newline_count
         if para_owner:
             para_owner.rehydrate_index += newline_count
+            print(
+                "rehydrate_index(__verify_next_inline_inline_image_inline#4)>"
+                + str(para_owner.rehydrate_index)
+            )
         estimated_column_number = 0
         print("title_data>>estimated_line_number>>" + str(estimated_line_number))
 
@@ -1459,6 +1491,10 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
         estimated_line_number += newline_count
         if para_owner:
             para_owner.rehydrate_index += newline_count
+            print(
+                "rehydrate_index(__verify_next_inline_inline_image_inline#5)>"
+                + str(para_owner.rehydrate_index)
+            )
         estimated_column_number = 0
         print(
             "after_title_whitespace>>estimated_line_number>>"
@@ -1508,6 +1544,10 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
     if not include_part_1 and para_owner:
         print(">>split_paragraph_lines>>" + str(split_paragraph_lines))
         print(">>para_owner.rehydrate_index>>" + str(para_owner.rehydrate_index))
+        print(
+            "rehydrate_index(__verify_next_inline_inline_image_inline#6)>"
+            + str(para_owner.rehydrate_index)
+        )
         estimated_column_number += len(
             split_paragraph_lines[para_owner.rehydrate_index - 1]
         )
@@ -1591,6 +1631,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
             estimated_line_number += newline_count
             if para_owner:
                 para_owner.rehydrate_index += newline_count
+                print("rehydrate_index(shortcut)>" + str(para_owner.rehydrate_index))
             estimated_column_number = 0
 
             split_label_text = label_text.split("\n")
@@ -1615,6 +1656,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
             estimated_line_number += newline_count
             if para_owner:
                 para_owner.rehydrate_index += newline_count
+                print("rehydrate_index(collapsed)>" + str(para_owner.rehydrate_index))
             estimated_column_number = 0
 
             split_label_text = image_alt_text.split("\n")
@@ -1656,6 +1698,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
             estimated_line_number += newline_count
             if para_owner:
                 para_owner.rehydrate_index += newline_count
+                print("rehydrate_index(full#1)>" + str(para_owner.rehydrate_index))
             estimated_column_number = 0
 
             split_label_text = image_alt_text.split("\n")
@@ -1668,6 +1711,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
             estimated_line_number += newline_count
             if para_owner:
                 para_owner.rehydrate_index += newline_count
+                print("rehydrate_index(full#2)>" + str(para_owner.rehydrate_index))
             estimated_column_number = 0
 
             split_label_text = previous_inline_token.ex_label.split("\n")
@@ -1731,7 +1775,10 @@ def __verify_next_inline_hard_break(
         split_whitespace = last_token.extracted_whitespace.split("\n")
         ws_for_new_line = split_whitespace[last_token.rehydrate_index]
         last_token.rehydrate_index += 1
-        print(">>>>>>>>>>rehydrate_index1>" + str(last_token.rehydrate_index))
+        print(
+            "rehydrate_index(__verify_next_inline_hard_break)>"
+            + str(last_token.rehydrate_index)
+        )
         new_column_number += len(ws_for_new_line)
     elif last_token.token_name == MarkdownToken.token_setext_heading:
         assert current_inline_token.token_name == MarkdownToken.token_text
@@ -1793,6 +1840,10 @@ def __verify_next_inline_code_span(
         print(">>link_stack=" + ParserHelper.make_value_visible(link_stack))
         if last_token.token_name == MarkdownToken.token_paragraph and not link_stack:
             last_token.rehydrate_index += num_columns
+            print(
+                "rehydrate_index(__verify_next_inline_code_span)>"
+                + str(last_token.rehydrate_index)
+            )
     else:
         estimated_column_number += (
             len(resolved_span_text)
@@ -1818,6 +1869,54 @@ def __verify_next_inline_emphasis_end(
     print(">>" + str(split_extra_end_data) + "<<")
     estimated_column_number += int(split_extra_end_data[0])
     return estimated_line_number, estimated_column_number
+
+
+def __create_newline_tuple():
+
+    newline_pattern_list = []
+    newline_pattern_list.append("\a&NewLine;\a")
+    newline_pattern_list.append("\a&#xa;\a")
+    newline_pattern_list.append("\a&#xA;\a")
+    newline_pattern_list.append("\a&#Xa;\a")
+    newline_pattern_list.append("\a&#XA;\a")
+
+    prefix = ""
+    while (1 + len(prefix)) <= 6:
+        prefix += "0"
+        newline_pattern_list.append("\a&#x" + prefix + "a;\a")
+        newline_pattern_list.append("\a&#x" + prefix + "A;\a")
+        newline_pattern_list.append("\a&#X" + prefix + "a;\a")
+        newline_pattern_list.append("\a&#X" + prefix + "A;\a")
+
+    prefix = ""
+    newline_pattern_list.append("\a&#10;\a")
+    while (2 + len(prefix)) <= 7:
+        prefix += "0"
+        newline_pattern_list.append("\a&#" + prefix + "10;\a")
+
+    return tuple(newline_pattern_list)
+
+
+def __handle_newline_character_entity_split(split_current_line):
+
+    try_again = True
+    while try_again:
+        try_again = False
+        for search_index in range(1, len(split_current_line)):
+            print(">>search_index>>" + str(search_index))
+            if split_current_line[search_index].startswith("\a") and split_current_line[
+                search_index - 1
+            ].endswith(__create_newline_tuple()):
+                combined_line = (
+                    split_current_line[search_index - 1]
+                    + "\n"
+                    + split_current_line[search_index]
+                )
+                split_current_line[search_index - 1] = combined_line
+                del split_current_line[search_index]
+                try_again = True
+                break
+    return split_current_line
 
 
 # pylint: disable=too-many-statements, too-many-arguments
@@ -1898,12 +1997,20 @@ def __verify_next_inline_text(
         + ParserHelper.make_value_visible(split_current_line)
         + "<"
     )
+    split_current_line = __handle_newline_character_entity_split(split_current_line)
+    print(
+        "split_current_line>"
+        + ParserHelper.make_value_visible(split_current_line)
+        + "<"
+    )
+
     delta_line = len(split_current_line) - 1
 
     if split_extracted_whitespace and last_token.rehydrate_index < len(
         split_extracted_whitespace
     ):
         rehydrate_index = last_token.rehydrate_index
+        print("rehydrate_index(__verify_next_inline_text)>" + str(rehydrate_index))
         for next_line_index in range(1, len(split_current_line)):
             combined_index = next_line_index - 1 + rehydrate_index
             print("combined_index:" + str(combined_index))
@@ -1928,7 +2035,10 @@ def __verify_next_inline_text(
                 + split_current_line[next_line_index]
             )
             last_token.rehydrate_index += 1
-            print(">>>>>>>>>>rehydrate_index2>" + str(last_token.rehydrate_index))
+            print(
+                "rehydrate_index(__verify_next_inline_text#2)>"
+                + str(last_token.rehydrate_index)
+            )
         print(
             "split_current_line>"
             + ParserHelper.make_value_visible(split_current_line)
@@ -1988,7 +2098,8 @@ def __handle_last_token_text(
         )
         last_block_token.rehydrate_index += inline_height
         print(
-            "last_block_token.rehydrate_index>>" + str(last_block_token.rehydrate_index)
+            "rehydrate_index(__handle_last_token_text)>>"
+            + str(last_block_token.rehydrate_index)
         )
         print(
             "last_block_token.extracted_whitespace>>"
@@ -2371,7 +2482,7 @@ def __verify_inline(  # noqa: C901
 
     if last_block_token.token_name == MarkdownToken.token_paragraph:
         last_block_token.rehydrate_index = 1
-        print(">>>>>>>>>>rehydrate_index3>" + str(last_block_token.rehydrate_index))
+        print("rehydrate_index(start#1)>>" + str(last_block_token.rehydrate_index))
 
     if inline_tokens:
         print(">inline_tokens>" + ParserHelper.make_value_visible(inline_tokens))
@@ -2423,26 +2534,57 @@ def __verify_inline(  # noqa: C901
                         current_inline_token.token_name
                         == MarkdownToken.token_inline_code_span
                     ):
+                        # Don't need to resolve replacement characters as the & in
+                        # the replacement is changed to an &amp; + the rest.
                         newlines_in_text_token = ParserHelper.count_newlines_in_text(
                             current_inline_token.span_text
                         )
                         last_block_token.rehydrate_index += newlines_in_text_token
+                        print(
+                            "rehydrate_index(start#2)>>"
+                            + str(last_block_token.rehydrate_index)
+                        )
                     elif (
                         current_inline_token.token_name
                         == MarkdownToken.token_inline_raw_html
                     ):
+                        # Don't need to resolve replacement characters as the & in
+                        # the replacement and following characters are not interpretted.
                         newlines_in_text_token = ParserHelper.count_newlines_in_text(
                             current_inline_token.raw_tag
                         )
                         last_block_token.rehydrate_index += newlines_in_text_token
+                        print(
+                            "rehydrate_index(start#3)>>"
+                            + str(last_block_token.rehydrate_index)
+                        )
                     else:
                         assert (
                             current_inline_token.token_name == MarkdownToken.token_text
                         )
-                        newlines_in_text_token = ParserHelper.count_newlines_in_text(
+                        print(
+                            "current_inline_token.token_text>>"
+                            + ParserHelper.make_value_visible(
+                                current_inline_token.token_text
+                            )
+                        )
+
+                        token_text = ParserHelper.resolve_replacement_markers_from_text(
                             current_inline_token.token_text
                         )
+                        print(
+                            "token_text>>" + ParserHelper.make_value_visible(token_text)
+                        )
+
+                        newlines_in_text_token = ParserHelper.count_newlines_in_text(
+                            token_text
+                        )
+                        print("newlines_in_text_token>>" + str(newlines_in_text_token))
                         last_block_token.rehydrate_index += newlines_in_text_token
+                        print(
+                            "rehydrate_index(start#4)>>"
+                            + str(last_block_token.rehydrate_index)
+                        )
 
         assert not link_stack
 

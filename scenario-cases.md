@@ -234,31 +234,46 @@ Legend:
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
-|K1  | xxx | `a[fo&#xa;o](/url "title")a` | test_paragraph_extra_61a |
-|K1i | xxx | `a![fo&#xa;o](/url "title")a` | test_paragraph_extra_61b |
-|K2  | xxx | `a[Foo](&#xa;/uri "testing")a` | test_paragraph_extra_62d |
-|K2i | xxx | `a![Foo](&#xa;/uri "testing")a` | test_paragraph_extra_62e |
-|K3  | xxx | `a[Foo](/ur&#xa;i "testing")a` | test_paragraph_extra_63a |
-|K3i | xxx | `a![Foo](/ur&#xa;i "testing")a` | test_paragraph_extra_63b |
-|K3a | xxx | `a[Foo](</ur&#xa;i> "testing")a` | test_paragraph_extra_63c |
-|K3ai| xxx | `a![Foo](</ur&#xa;i> "testing")a` | test_paragraph_extra_63d |
-|K4  | xxx | `a[Foo](/uri&#xa;"testing")a` | test_paragraph_extra_64d |
-|K4i | xxx | `a![Foo](/uri&#xa;"testing")a` | test_paragraph_extra_64e |
-|K5  | xxx | `a[Foo](/uri "test&#xa;ing")a` | test_paragraph_extra_66a |
-|K5i | xxx | `a![Foo](/uri "test&#xa;ing")a` | test_paragraph_extra_66b |
-|K6  | xxx | `a[Foo](/uri "testing"&#xa;)a` | test_paragraph_extra_67d |
-|K6i | xxx | `a![Foo](/uri "testing"&#xa;)a` | test_paragraph_extra_67e |
-|K7  | xxx | `a[foo&#xa;bar][bar]a` | test_paragraph_extra_53b |
-|K7i | xxx | `a![foo&#xa;bar][bar]a` | test_paragraph_extra_53c |
-|K8  | xxx | `a[foo][ba&#xa;r]a` | test_paragraph_extra_54b |
-|K8i | xxx | `a![foo][ba&#xa;r]a` | test_paragraph_extra_54c |
-|K9  | xxx | `a[ba&#xa;r]a` | test_paragraph_extra_55b |
-|K9i | xxx | `a![ba&#xa;r]a` | test_paragraph_extra_55c |
-|K10 | xxx | `a[ba&#xa;r][]a` | test_paragraph_extra_56b |
-|K10i| xxx | `a![ba&#xa;r][]a` | test_paragraph_extra_56c |
+|K1  |inline link with CE newline in label| `a[fo&#xa;o](/url "title")a` | test_paragraph_extra_61a |
+|K1i |inline image with CE newline in label| `a![fo&#xa;o](/url "title")a` | test_paragraph_extra_61b |
+|K1a |inline link with large-X CE newline in label| `a[fo&#Xa;o](/url "title")a` | test_paragraph_extra_61c |
+|K1ai|inline image with large-X CE newline in label| `a![fo&#Xa;o](/url "title")a` | test_paragraph_extra_61ca |
+|K1b |inline link with large-A CE newline in label| `a[fo&#xA;o](/url "title")a` | test_paragraph_extra_61h |
+|K1bi|inline image with large-A CE newline in label| `a![fo&#xA;o](/url "title")a` | test_paragraph_extra_61ha |
+|K1c |inline link with leading hex zeroes CE newline in label| `a[fo&#x00000a;o](/url "title")a` | test_paragraph_extra_61d |
+|K1ci|inline image with leading hex zeroes CE newline in label| `a![fo&#x00000a;o](/url "title")a` | test_paragraph_extra_61da |
+|K1d |inline link with decimal CE newline in label| `a[fo&#10;o](/url "title")a` | test_paragraph_extra_61e |
+|K1di|inline image with decimal CE newline in label| `a![fo&#10;o](/url "title")a` | test_paragraph_extra_61ea |
+|K1e |inline link with leading decimal zeroes CE newline in label| `a[fo&#0000010;o](/url "title")a` | test_paragraph_extra_61f |
+|K1ei|inline image with leading decimal zeroes CE newline in label| `a![fo&#0000010;o](/url "title")a` | test_paragraph_extra_61fa |
+|K1f |inline link with named CE newline in label| `a[fo&NewLine;o](/url "title")a` | test_paragraph_extra_61g |
+|K1fa|inline image with named CE newline in label| `a![fo&NewLine;o](/url "title")a` | test_paragraph_extra_61ga |
+|K2  |inline link with CE newline instead of pre-url ws| `a[Foo](&#xa;/uri "testing")a` | test_paragraph_extra_62d |
+|K2i |inline image with CE newline instead of pre-url ws| `a![Foo](&#xa;/uri "testing")a` | test_paragraph_extra_62e |
+|K3  |inline link with CE newline in url| `a[Foo](/ur&#xa;i "testing")a` | test_paragraph_extra_63a |
+|K3i |inline image with CE newline in url| `a![Foo](/ur&#xa;i "testing")a` | test_paragraph_extra_63b |
+|K3a |inline link with CE newline in bounded url| `a[Foo](</ur&#xa;i> "testing")a` | test_paragraph_extra_63c |
+|K3ai|inline image with CE newline in bounded url| `a![Foo](</ur&#xa;i> "testing")a` | test_paragraph_extra_63d |
+|K4  |inline link with CE newline instead of post-url ws| `a[Foo](/uri&#xa;"testing")a` | test_paragraph_extra_64d |
+|K4i |inline image with CE newline instead of post-url ws| `a![Foo](/uri&#xa;"testing")a` | test_paragraph_extra_64e |
+|K5  |inline link with CE newline in title| `a[Foo](/uri "test&#xa;ing")a` | test_paragraph_extra_66a |
+|K5i |inline image with CE newline in title| `a![Foo](/uri "test&#xa;ing")a` | test_paragraph_extra_66b |
+|K6  |inline link with CE newline instead of post-title ws| `a[Foo](/uri "testing"&#xa;)a` | test_paragraph_extra_67d |
+|K6i |inline image with CE newline instead of post-title ws| `a![Foo](/uri "testing"&#xa;)a` | test_paragraph_extra_67e |
+|K7  |full link with CE newline in label| `a[foo&#xa;bar][bar]a` | test_paragraph_extra_53b |
+|K7i |full image with CE newline in label| `a![foo&#xa;bar][bar]a` | test_paragraph_extra_53c |
+|K8  |full link with CE newline in reference| `a[foo][ba&#xa;r]a` | test_paragraph_extra_54b |
+|K8i |full image with CE newline in reference| `a![foo][ba&#xa;r]a` | test_paragraph_extra_54c |
+|K9  |shortcut link with CE newline in label| `a[ba&#xa;r]a` | test_paragraph_extra_55b |
+|K9i |shortcut image with CE newline in label| `a![ba&#xa;r]a` | test_paragraph_extra_55c |
+|K10 |collapsed link with CE newline in label| `a[ba&#xa;r][]a` | test_paragraph_extra_56b |
+|K10i|collapsed image with CE newline in label| `a![ba&#xa;r][]a` | test_paragraph_extra_56c |
 |K11 |emphasis with newline| `a*foo&#xa;bar*a` | test_paragraph_extra_46c |
 |K12 |code span with newline| ` a``code&#xa;span``a ` | test_paragraph_extra_43a |
+|K12a|code span with char entity newline| `` a`code &#xa; span`a `` | test_paragraph_extra_43b |
 |K13 |raw html with newline| `a<raw&#xa;html='cool'>a` | test_paragraph_extra_44a |
+|K13a|raw html with char entity newline 1| `a<raw &#xa; html='cool'>a` | test_paragraph_extra_44b |
+|K13b|raw html with char entity newline 2| `a<raw html='cool &#xa; man'>a` | test_paragraph_extra_44c |
 |K14 |URI autolink with newline| `a<http://www.&#xa;google.com>a` | test_paragraph_extra_45a |
 |K15 |email autolink with newline| `a<foo@bar&#xa;.com>a` | test_paragraph_extra_46a |
 

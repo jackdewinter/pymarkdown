@@ -743,7 +743,7 @@ class InlineProcessor:
             last_spaces = current_token.after_title_whitespace[:]
 
             link_part_index = 4
-        assert link_part_index > -2, "Newline in link token not accounted for."
+        # assert link_part_index > -2, "Newline in link token not accounted for."
 
         LOGGER.debug(">>link_part_index>>%s<<", str(link_part_index))
         LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
@@ -779,6 +779,22 @@ class InlineProcessor:
     ):
         LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
         LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
+        if current_token.token_name == MarkdownToken.token_inline_image:
+            active_link_uri = current_token.image_uri
+            if current_token.pre_image_uri:
+                active_link_uri = current_token.pre_image_uri
+            active_link_title = current_token.image_title
+            if current_token.pre_image_title:
+                active_link_title = current_token.pre_image_title
+        else:
+            active_link_uri = current_token.link_uri
+            if current_token.pre_link_uri:
+                active_link_uri = current_token.pre_link_uri
+
+            active_link_title = current_token.link_title
+            if current_token.pre_link_title:
+                active_link_title = current_token.pre_link_title
+
         if "\n" in str(current_token):
             LOGGER.debug(
                 ">>para_owner>>%s<<", ParserHelper.make_value_visible(para_owner),
@@ -794,22 +810,6 @@ class InlineProcessor:
                     ">>split_paragraph_lines>>%s<<",
                     ParserHelper.make_value_visible(split_paragraph_lines),
                 )
-
-            if current_token.token_name == MarkdownToken.token_inline_image:
-                active_link_uri = current_token.image_uri
-                if current_token.pre_image_uri:
-                    active_link_uri = current_token.pre_image_uri
-                active_link_title = current_token.image_title
-                if current_token.pre_image_title:
-                    active_link_title = current_token.pre_image_title
-            else:
-                active_link_uri = current_token.link_uri
-                if current_token.pre_link_uri:
-                    active_link_uri = current_token.pre_link_uri
-
-                active_link_title = current_token.link_title
-                if current_token.pre_link_title:
-                    active_link_title = current_token.pre_link_title
 
             if current_token.label_type == "inline":
                 delta_line, repeat_count = InlineProcessor.__calculate_inline_deltas(
