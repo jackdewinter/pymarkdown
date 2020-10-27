@@ -38,7 +38,9 @@
   - look for places where common access patterns can be used i.e. link_title
 - is HTML transformer using text_from_chars, instead of other field?
   - see https://github.com/jackdewinter/pymarkdown/commit/a506ddd3bda08a8ca1d97a7b0d68c114325b545e `extra_74`
-  
+- inline patterns with image link within normal link
+- missing any combinations of inline tokens for images
+
 ## Bugs - General - Uncategorized
 
 - why does hard break not have \n?
