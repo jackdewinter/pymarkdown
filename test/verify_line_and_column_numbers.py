@@ -1273,6 +1273,7 @@ def __process_previous_token(
             previous_inline_token,
             estimated_line_number,
             estimated_column_number,
+            link_stack,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_emphasis:
         (
@@ -1926,6 +1927,7 @@ def __verify_next_inline_text(
     previous_inline_token,
     estimated_line_number,
     estimated_column_number,
+    link_stack,
 ):
     current_line = previous_inline_token.token_text
     if (
@@ -2034,7 +2036,9 @@ def __verify_next_inline_text(
                 split_extracted_whitespace[combined_index]
                 + split_current_line[next_line_index]
             )
-            last_token.rehydrate_index += 1
+            print(">>link_stack=" + ParserHelper.make_value_visible(link_stack))
+            if not link_stack:
+                last_token.rehydrate_index += 1
             print(
                 "rehydrate_index(__verify_next_inline_text#2)>"
                 + str(last_token.rehydrate_index)

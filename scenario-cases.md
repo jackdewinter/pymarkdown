@@ -229,8 +229,10 @@ Legend:
 |J6i |inline image surrounded by emphasis| `abc\n*![link](/uri "title")*\ndef` | test_paragraph_extra_d8 |
 |J7  |inline link with emphasis in label| `abc\n[*link*](/uri "title")\ndef` | test_paragraph_extra_d9 |
 |J7i |inline image with emphasis in label| `abc\n![*link*](/uri "title")\ndef` | test_paragraph_extra_e0 |
-|J8 | inline link without title newline label| `a[fo\no](</my url>)a` | test_paragraph_extra_a2 |
-|J8i | inline image without title newline label| `a![fo\no](</my url>)a` | test_paragraph_extra_a2 |
+|J8  |inline link without title newline label| `a[fo\no](</my url>)a` | test_paragraph_extra_a2 |
+|J8i |inline image without title newline label| `a![fo\no](</my url>)a` | test_paragraph_extra_a2 |
+|J9  |inline link with split emphasis in label| `abc\n[a*li\nnk*a](/uri "title")\ndef` | test_paragraph_extra_e1 |
+|J9i |inline image with split emphasis in label| `abc\n![a*li\nnk*a](/uri "title")\ndef` | test_paragraph_extra_e2 |
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |

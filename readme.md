@@ -39,7 +39,6 @@
 - is HTML transformer using text_from_chars, instead of other field?
   - see https://github.com/jackdewinter/pymarkdown/commit/a506ddd3bda08a8ca1d97a7b0d68c114325b545e `extra_74`
 - inline patterns with image link within normal link
-- missing any combinations of inline tokens for images
 
 ## Bugs - General - Uncategorized
 
