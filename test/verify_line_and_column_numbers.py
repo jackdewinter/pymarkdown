@@ -1598,7 +1598,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
     print(">>title_data>>" + ParserHelper.make_value_visible(title_data))
     para_owner = None
     split_paragraph_lines = None
-    if last_token.token_name == MarkdownToken.token_paragraph:
+    if last_token and last_token.token_name == MarkdownToken.token_paragraph:
         print(">>last_token_index>>" + str(last_token.rehydrate_index))
         para_owner = last_token
         split_paragraph_lines = para_owner.extracted_whitespace.split("\n")
