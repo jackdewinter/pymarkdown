@@ -14,6 +14,7 @@ Legend:
 - Series H - Link/image with text/code span/raw html in label of various link types
 - Series J - Link/image with various combinations with other inline tokens
 - Series K - use of `&#xa;` instead of \n (all verified against babelmark)
+- Series L - link inside of link
 
 | t | s | x | y | z |
 | -- | --- | --- | --- | --- |
@@ -279,3 +280,35 @@ Legend:
 |K14 |URI autolink with newline| `a<http://www.&#xa;google.com>a` | test_paragraph_extra_45a |
 |K15 |email autolink with newline| `a<foo@bar&#xa;.com>a` | test_paragraph_extra_46a |
 
+| t | s | x | y | z |
+| --- | --- | --- | --- | --- |
+|L1  |inline link within inline link| `a[foo [bar](/uri)](/uri)a` | test_paragraph_extra_e3 |
+|L2  |Full link w/ matching label inside of inline link| `a[foo [bar][barx]](/uri)a` | test_paragraph_extra_e4 |
+|L2a |Full link w/ matching reference inside of inline link| `a[foo [barx][bar]](/uri)a` | test_paragraph_extra_e5 |
+|L3  |Collapsed link w/ matching reference inside of inline link| `a[foo [bar][]](/uri)a` | test_paragraph_extra_e6 |
+|L3a |Collapsed link w/o matching reference inside of inline link| `a[foo [barx][]](/uri)a` | test_paragraph_extra_e6a |
+|L4  |Shortcut link w/ matching reference inside of inline link| `a[foo [bar]](/uri)a` | test_paragraph_extra_e7 |
+|L4a |Shortcut link w/o matching reference inside of inline link| `a[foo [barx]](/uri)a` | test_paragraph_extra_e7a |
+|L5  |Inline link inside of full link| `a[foo [bar2](/url2)][bar]a` | test_paragraph_extra_e8 |
+|L6  |Full link w/ matching reference inside of full link| `a[foo [bar2][bar]][bar]a` | test_paragraph_extra_e9 |
+|L6a |Full link w/o matching reference inside of full link| `a[foo [bar][bar2]][bar]a` | test_paragraph_extra_e9a |
+|L7  |Collapsed link w/ matching reference inside of full link| `a[foo [bar2][]][bar]a` | test_paragraph_extra_f0 |
+|L7a |Collapsed link w/o matching reference inside of full link| `a[foo [bar][]][bar]a` | test_paragraph_extra_f0a |
+|L8  |Shortcut link w/ matching reference inside of full link| `a[foo [bar]][bar]a` | test_paragraph_extra_f1a |
+|L8a |Shortcut link w/o matching reference inside of full link| `a[foo [bar2]][bar]a` | test_paragraph_extra_f1 |
+|L9  |Inline link w/o matching label inside of collapsed link| `a[foo [bar2](/url2)][]a` | test_paragraph_extra_f2 |
+|L9a |Inline link w/ matching label inside of collapsed link| `a[foo [bar](/url2)][]a` | test_paragraph_extra_f2a |
+|L10  |Full link w/ matching reference inside of collapsed link| `a[foo [bar2][bar]][]a` | test_paragraph_extra_f3 |
+|L10a |Full link w/o matching reference inside of collapsed link| `a[foo [bar2][bar3]][]a` | test_paragraph_extra_f3a |
+|L11  |Collapsed link w/ matching reference inside of collapsed link| `a[foo [bar][]][]a` | test_paragraph_extra_f4a |
+|L11a |Collapsed link w/o matching reference inside of collapsed link| `a[foo [bar2][]][]a` | test_paragraph_extra_f4 |
+|L12  |Shortcut link w/ matching reference inside of collapsed link| `a[foo [bar]][]a` | test_paragraph_extra_f5a |
+|L12a |Shortcut link w/o matching reference inside of collapsed link| `a[foo [bar2]][]a` | test_paragraph_extra_f5 |
+|L13  |Inline link w/o matching label inside of shortcut link| `a[foo [bar2](/url2)]a` | test_paragraph_extra_f6 |
+|L13a |Inline link w/ matching label inside of shortcut link| `a[foo [bar](/url2)]a` | test_paragraph_extra_f6a |
+|L14  |Full link w/ matching reference inside of shortcut link| `a[foo [bar2][bar]]a` | test_paragraph_extra_f7 |
+|L14a |Full link w/o matching reference inside of shortcut link| `a[foo [bar][bar]]a` | test_paragraph_extra_f7a |
+|L15  |Collapsed link w/ matching reference inside of shortcut link| `a[foo [bar][]]a` | test_paragraph_extra_f8a |
+|L15a |Collapsed link w/o matching reference inside of shortcut link| `a[foo [bar2][]]a` | test_paragraph_extra_f8 |
+|L16  |Shortcut link w/ matching reference inside of shortcut link| `a[foo [bar]]a` | test_paragraph_extra_f9a |
+|L16a |Shortcut link w/o matching reference inside of shortcut link| `a[foo [bar2]]a` | test_paragraph_extra_f9 |
