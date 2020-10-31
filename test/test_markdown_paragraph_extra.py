@@ -7593,6 +7593,35 @@ def test_paragraph_extra_e3b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_e3c():
+    """
+    Test case extra e3c:  Inline image inside of inline link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar](/uri)](/uri)a"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/uri::foo bar::::foo [bar](/uri):False::::]",
+        "[text(1,26):a:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>a<img src="/uri" alt="foo bar" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_e4():
     """
     Test case extra e4:  Full link w/ label matching inside of inline link
@@ -7696,6 +7725,39 @@ def test_paragraph_extra_e4b():
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
     ]
     expected_gfm = """<p>a<img src="/uri" alt="foo ![bar][barx]" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_e4c():
+    """
+    Test case extra e4c:  Full link w/ label matching inside of inline link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar][barx]](/uri)a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/uri::foo [bar][barx]::::foo [bar][barx]:False::::]",
+        "[text(1,26):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/uri" alt="foo [bar][barx]" />a</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -7815,6 +7877,39 @@ def test_paragraph_extra_e5b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_e5c():
+    """
+    Test case extra e5c:  Full link w/ reference matching inside of inline link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [barx][bar]](/uri)a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/uri::foo barx::::foo [barx][bar]:False::::]",
+        "[text(1,26):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/uri" alt="foo barx" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_e6():
     """
     Test case extra e6:  Collapsed link inside of inline link
@@ -7907,6 +8002,39 @@ def test_paragraph_extra_e6b():
         "[text(1,1):a:]",
         "[image(1,2):inline:/uri::foo bar::::foo ![bar][]:False::::]",
         "[text(1,23):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/uri" alt="foo bar" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_e6c():
+    """
+    Test case extra e6c:  Collapsed link inside of inline link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar][]](/uri)a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/uri::foo bar::::foo [bar][]:False::::]",
+        "[text(1,22):a:]",
         "[end-para:::True]",
         "[BLANK(2,1):    ]",
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
@@ -8037,6 +8165,39 @@ def test_paragraph_extra_e7b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_e7c():
+    """
+    Test case extra e7c:  Collapsed link inside of inline link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [barx][]](/uri)a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/uri::foo [barx][]::::foo [barx][]:False::::]",
+        "[text(1,23):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/uri" alt="foo [barx][]" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_e8():
     """
     Test case extra e8:  Shortcut link inside of inline link
@@ -8129,6 +8290,39 @@ def test_paragraph_extra_e8b():
         "[text(1,1):a:]",
         "[image(1,2):inline:/uri::foo bar::::foo ![bar]:False::::]",
         "[text(1,21):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/uri" alt="foo bar" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_e8c():
+    """
+    Test case extra e8c:  Shortcut link inside of inline link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar]](/uri)a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/uri::foo bar::::foo [bar]:False::::]",
+        "[text(1,20):a:]",
         "[end-para:::True]",
         "[BLANK(2,1):    ]",
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
@@ -8255,6 +8449,39 @@ def test_paragraph_extra_e9b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_e9c():
+    """
+    Test case extra e9c:  Shortcut link inside of inline link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [barx]](/uri)a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):inline:/uri::foo [barx]::::foo [barx]:False::::]",
+        "[text(1,21):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/uri" alt="foo [barx]" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_f0():
     """
     Test case extra f0:  Inline link inside of full link
@@ -8365,6 +8592,39 @@ def test_paragraph_extra_f0b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_f0c():
+    """
+    Test case extra f0c:  Inline link inside of full link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2](/url2)][bar]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo bar2:::bar:foo [bar2](/url2):::::]",
+        "[text(1,27):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/url" alt="foo bar2" title="title" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_f1():
     """
     Test case extra f1:  Full link inside of full link
@@ -8458,6 +8718,39 @@ def test_paragraph_extra_f1b():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo bar2:::bar:foo ![bar2][bar]:::::]",
         "[text(1,26):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/url" alt="foo bar2" title="title" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_f1c():
+    """
+    Test case extra f1c:  Full link inside of full link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2][bar]][bar]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo bar2:::bar:foo [bar2][bar]:::::]",
+        "[text(1,25):a:]",
         "[end-para:::True]",
         "[BLANK(2,1):    ]",
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
@@ -8592,6 +8885,39 @@ def test_paragraph_extra_f2b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_f2c():
+    """
+    Test case extra f2c:  Full link inside of full link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar][bar2]][bar]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo [bar][bar2]:::bar:foo [bar][bar2]:::::]",
+        "[text(1,25):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/url" alt="foo [bar][bar2]" title="title" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_f3():
     """
     Test case extra f3:  Collapsed link inside of full link
@@ -8705,6 +9031,39 @@ def test_paragraph_extra_f3b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_f3c():
+    """
+    Test case extra f3c:  Collapsed link inside of full link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2][]][bar]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo [bar2][]:::bar:foo [bar2][]:::::]",
+        "[text(1,22):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/url" alt="foo [bar2][]" title="title" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_f4():
     """
     Test case extra f4:  Collapsed link inside of full link
@@ -8798,6 +9157,39 @@ def test_paragraph_extra_f4b():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo bar:::bar:foo ![bar][]:::::]",
         "[text(1,22):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/url" alt="foo bar" title="title" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_f4c():
+    """
+    Test case extra f4c:  Collapsed link inside of full link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar][]][bar]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo bar:::bar:foo [bar][]:::::]",
+        "[text(1,21):a:]",
         "[end-para:::True]",
         "[BLANK(2,1):    ]",
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
@@ -8924,6 +9316,39 @@ def test_paragraph_extra_f5b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_f5c():
+    """
+    Test case extra f5c:  Shortcut link inside of full link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2]][bar]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo [bar2]:::bar:foo [bar2]:::::]",
+        "[text(1,20):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/url" alt="foo [bar2]" title="title" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_f6():
     """
     Test case extra f6:  Shortcut link inside of full link
@@ -9017,6 +9442,39 @@ def test_paragraph_extra_f6b():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo bar:::bar:foo ![bar]:::::]",
         "[text(1,20):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a<img src="/url" alt="foo bar" title="title" />a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_f6c():
+    """
+    Test case extra f6c:  Shortcut link inside of full link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar]][bar]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[image(1,2):full:/url:title:foo bar:::bar:foo [bar]:::::]",
+        "[text(1,19):a:]",
         "[end-para:::True]",
         "[BLANK(2,1):    ]",
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
@@ -9150,6 +9608,46 @@ def test_paragraph_extra_f7b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_f7c():
+    """
+    Test case extra f7c:  Inline link inside of collapsed link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2](/url2)][]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[link(1,8):inline:/url2:::::bar2:False::::]",
+        "[text(1,9):bar2:]",
+        "[end-link:::False]",
+        "[text(1,21):]:]",
+        "[text(1,22):[:]",
+        "[text(1,23):]:]",
+        "[text(1,24):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo <a href="/url2">bar2</a>][]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_f8():
     """
     Test case extra f8:  Inline link inside of collapsed link
@@ -9266,6 +9764,46 @@ def test_paragraph_extra_f8b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_f8c():
+    """
+    Test case extra f8c:  Inline link inside of collapsed link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar](/url2)][]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[link(1,8):inline:/url2:::::bar:False::::]",
+        "[text(1,9):bar:]",
+        "[end-link:::False]",
+        "[text(1,20):]:]",
+        "[text(1,21):[:]",
+        "[text(1,22):]:]",
+        "[text(1,23):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo <a href="/url2">bar</a>][]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_f9():
     """
     Test case extra f9:  Full link inside of collapsed link
@@ -9370,6 +9908,46 @@ def test_paragraph_extra_f9b():
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
     ]
     expected_gfm = """<p>a![foo <img src="/url" alt="bar2" title="title" />][]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_f9c():
+    """
+    Test case extra f9c:  Full link inside of collapsed link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2][bar]][]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[link(1,8):full:/url:title:::bar:bar2:::::]",
+        "[text(1,9):bar2:]",
+        "[end-link:::False]",
+        "[text(1,19):]:]",
+        "[text(1,20):[:]",
+        "[text(1,21):]:]",
+        "[text(1,22):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo <a href="/url" title="title">bar2</a>][]a</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -9511,6 +10089,49 @@ def test_paragraph_extra_g0b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_g0c():
+    """
+    Test case extra g0c:  Full link inside of collapsed link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2][bar3]][]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[text(1,8):[:]",
+        "[text(1,9):bar2:]",
+        "[text(1,13):]:]",
+        "[text(1,14):[:]",
+        "[text(1,15):bar3:]",
+        "[text(1,19):]:]",
+        "[text(1,20):]:]",
+        "[text(1,21):[:]",
+        "[text(1,22):]:]",
+        "[text(1,23):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo [bar2][bar3]][]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_g1():
     """
     Test case extra g1:  Collapsed link inside of collapsed link
@@ -9637,6 +10258,48 @@ def test_paragraph_extra_g1b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_g1c():
+    """
+    Test case extra g1c:  Collapsed link inside of collapsed link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2][]][]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[text(1,8):[:]",
+        "[text(1,9):bar2:]",
+        "[text(1,13):]:]",
+        "[text(1,14):[:]",
+        "[text(1,15):]:]",
+        "[text(1,16):]:]",
+        "[text(1,17):[:]",
+        "[text(1,18):]:]",
+        "[text(1,19):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo [bar2][]][]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_g2():
     """
     Test case extra g2:  Collapsed link inside of collapsed link
@@ -9741,6 +10404,46 @@ def test_paragraph_extra_g2b():
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
     ]
     expected_gfm = """<p>a![foo <img src="/url" alt="bar" title="title" />][]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_g2c():
+    """
+    Test case extra g2c:  Collapsed link inside of collapsed link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar][]][]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[link(1,8):collapsed:/url:title::::bar:::::]",
+        "[text(1,9):bar:]",
+        "[end-link:::False]",
+        "[text(1,15):]:]",
+        "[text(1,16):[:]",
+        "[text(1,17):]:]",
+        "[text(1,18):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo <a href="/url" title="title">bar</a>][]a</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -9873,6 +10576,46 @@ def test_paragraph_extra_g3b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_g3c():
+    """
+    Test case extra g3c:  Shortcut link inside of collapsed link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2]][]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[text(1,8):[:]",
+        "[text(1,9):bar2:]",
+        "[text(1,13):]:]",
+        "[text(1,14):]:]",
+        "[text(1,15):[:]",
+        "[text(1,16):]:]",
+        "[text(1,17):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo [bar2]][]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_g4():
     """
     Test case extra g4:  Shortcut link inside of collapsed link
@@ -9977,6 +10720,46 @@ def test_paragraph_extra_g4b():
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
     ]
     expected_gfm = """<p>a![foo <img src="/url" alt="bar" title="title" />][]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_g4c():
+    """
+    Test case extra g4c:  Shortcut link inside of collapsed link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar]][]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[link(1,8):shortcut:/url:title::::bar:::::]",
+        "[text(1,9):bar:]",
+        "[end-link:::False]",
+        "[text(1,13):]:]",
+        "[text(1,14):[:]",
+        "[text(1,15):]:]",
+        "[text(1,16):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo <a href="/url" title="title">bar</a>][]a</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -10099,6 +10882,44 @@ def test_paragraph_extra_g5b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_g5c():
+    """
+    Test case extra g5c:  Inline link inside of shortcut link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2](/url2)]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[link(1,8):inline:/url2:::::bar2:False::::]",
+        "[text(1,9):bar2:]",
+        "[end-link:::False]",
+        "[text(1,21):]:]",
+        "[text(1,22):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo <a href="/url2">bar2</a>]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_g6():
     """
     Test case extra g6:  Inline link inside of shortcut link
@@ -10197,6 +11018,44 @@ def test_paragraph_extra_g6b():
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
     ]
     expected_gfm = """<p>a![foo <img src="/url2" alt="bar" />]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_g6c():
+    """
+    Test case extra g6c:  Inline link inside of shortcut link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar](/url2)]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[link(1,8):inline:/url2:::::bar:False::::]",
+        "[text(1,9):bar:]",
+        "[end-link:::False]",
+        "[text(1,20):]:]",
+        "[text(1,21):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo <a href="/url2">bar</a>]a</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -10319,6 +11178,44 @@ def test_paragraph_extra_g7b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_g7c():
+    """
+    Test case extra g7c:  Full link inside of shortcut link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2][bar]]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[link(1,8):full:/url:title:::bar:bar2:::::]",
+        "[text(1,9):bar2:]",
+        "[end-link:::False]",
+        "[text(1,19):]:]",
+        "[text(1,20):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo <a href="/url" title="title">bar2</a>]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_g8():
     """
     Test case extra g8:  Full link inside of shortcut link
@@ -10417,6 +11314,44 @@ def test_paragraph_extra_g8b():
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
     ]
     expected_gfm = """<p>a![foo <img src="/url" alt="bar" title="title" />]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_g8c():
+    """
+    Test case extra g8c:  Full link inside of shortcut link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar][bar]]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[link(1,8):full:/url:title:::bar:bar:::::]",
+        "[text(1,9):bar:]",
+        "[end-link:::False]",
+        "[text(1,18):]:]",
+        "[text(1,19):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo <a href="/url" title="title">bar</a>]a</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -10549,6 +11484,46 @@ def test_paragraph_extra_g9b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_g9c():
+    """
+    Test case extra g9c:  Collapsed link inside of shortcut link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2][]]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[text(1,8):[:]",
+        "[text(1,9):bar2:]",
+        "[text(1,13):]:]",
+        "[text(1,14):[:]",
+        "[text(1,15):]:]",
+        "[text(1,16):]:]",
+        "[text(1,17):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo [bar2][]]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_h0():
     """
     Test case extra h0:  Collapsed link inside of shortcut link
@@ -10647,6 +11622,44 @@ def test_paragraph_extra_h0b():
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
     ]
     expected_gfm = """<p>a![foo <img src="/url" alt="bar" title="title" />]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_h0c():
+    """
+    Test case extra h0c:  Collapsed link inside of shortcut link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar][]]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[link(1,8):collapsed:/url:title::::bar:::::]",
+        "[text(1,9):bar:]",
+        "[end-link:::False]",
+        "[text(1,15):]:]",
+        "[text(1,16):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo <a href="/url" title="title">bar</a>]a</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -10773,6 +11786,44 @@ def test_paragraph_extra_h1b():
 
 
 @pytest.mark.gfm
+def test_paragraph_extra_h1c():
+    """
+    Test case extra h1c:  Shortcut link inside of shortcut link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar2]]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[text(1,8):[:]",
+        "[text(1,9):bar2:]",
+        "[text(1,13):]:]",
+        "[text(1,14):]:]",
+        "[text(1,15):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo [bar2]]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_extra_h2():
     """
     Test case extra h2:  Shortcut link inside of shortcut link
@@ -10871,6 +11922,44 @@ def test_paragraph_extra_h2b():
         "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
     ]
     expected_gfm = """<p>a![foo <img src="/url" alt="bar" title="title" />]a</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_h2c():
+    """
+    Test case extra h2c:  Shortcut link inside of shortcut link
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """a![foo [bar]]a
+    
+[bar]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):a:]",
+        "[text(1,2):![:]",
+        "[text(1,4):foo :]",
+        "[link(1,8):shortcut:/url:title::::bar:::::]",
+        "[text(1,9):bar:]",
+        "[end-link:::False]",
+        "[text(1,13):]:]",
+        "[text(1,14):a:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):    ]",
+        "[link-ref-def(3,1):True::bar:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p>a![foo <a href="/url" title="title">bar</a>]a</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
