@@ -13,6 +13,7 @@
 - why does fcb with only newlines and newlines with ws not fold down to text?
   - coalesce with blank lines in fenced code block?
 - HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
+- Link_helper.py#86 - if link already registered, should warn?
 
 - cases like 183 where first non-ws character is an inline specifier
   - can this be fixed in a way that does not require the other fix to add
@@ -38,7 +39,6 @@
   - look for places where common access patterns can be used i.e. link_title
 - is HTML transformer using text_from_chars, instead of other field?
   - see https://github.com/jackdewinter/pymarkdown/commit/a506ddd3bda08a8ca1d97a7b0d68c114325b545e `extra_74`
-- inline patterns with image link within normal link
 
 ## Bugs - General - Uncategorized
 
@@ -87,7 +87,6 @@
 ## Bugs - Links
 
 - test_link_reference_definitions_183 is a partial lrd followed by bq, add cont+leaf blocks
-- Link_helper.py#86 - if link already registered, should warn?
 - 296 and 297 - added in case for LRD, but need to test:
   - other types of blocks
   - block, blank, then multiple blocks
@@ -95,8 +94,6 @@
 - inline link ( without any extra info
 - why does GFM not specify that between [ and ] for a LRD, no blanks are allowed?
   - maybe expound on 166 a bit?
-- what if bad link followed by good link?
-- specific types of links for the 3 types?
 - more testing to determine what in-lines are stripped within image links i.e. code spans?
 - link ref def with empty link label, like 560?
 - full reference link with empty link label, like 560?
