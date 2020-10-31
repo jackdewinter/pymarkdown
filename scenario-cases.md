@@ -282,63 +282,93 @@ Legend:
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
-|L1  |inline link within inline link| `a[foo [bar](/uri)](/uri)a` | test_paragraph_extra_e3 |
+|L1   |inline link within inline link| `a[foo [bar](/uri)](/uri)a` | test_paragraph_extra_e3 |
 |L1i  |inline image within inline link| `a[foo ![bar](/uri)](/uri)a` | test_paragraph_extra_e3a |
-|L2  |Full link w/ matching label inside of inline link| `a[foo [bar][barx]](/uri)a` | test_paragraph_extra_e4 |
-|L2i |Full image w/ matching label inside of inline link| `a[foo ![bar][barx]](/uri)a` | test_paragraph_extra_e4a |
-|L2a |Full link w/ matching reference inside of inline link| `a[foo [barx][bar]](/uri)a` | test_paragraph_extra_e5 |
-|L2ai|Full image w/ matching reference inside of inline link| `a[foo ![barx][bar]](/uri)a` | test_paragraph_extra_e5a |
-|L3  |Collapsed link w/ matching reference inside of inline link| `a[foo [bar][]](/uri)a` | test_paragraph_extra_e6 |
-|L3i |Collapsed image w/ matching reference inside of inline link| `a[foo ![bar][]](/uri)a` | test_paragraph_extra_e6a |
-|L3a |Collapsed link w/o matching reference inside of inline link| `a[foo [barx][]](/uri)a` | test_paragraph_extra_e7 |
-|L3ai|Collapsed image w/o matching reference inside of inline link| `a[foo [barx][]](/uri)a` | test_paragraph_extra_e7a |
-|L4  |Shortcut link w/ matching reference inside of inline link| `a[foo [bar]](/uri)a` | test_paragraph_extra_e8 |
-|L4i |Shortcut image w/ matching reference inside of inline link| `a[foo ![bar]](/uri)a` | test_paragraph_extra_e8a |
-|L4a |Shortcut link w/o matching reference inside of inline link| `a[foo [barx]](/uri)a` | test_paragraph_extra_e9 |
-|L4ai|Shortcut image w/o matching reference inside of inline link| `a[foo ![barx]](/uri)a` | test_paragraph_extra_e9a |
-|L5  |Inline link inside of full link| `a[foo [bar2](/url2)][bar]a` | test_paragraph_extra_f0 |
-|L5i |Inline image inside of full link| `a[foo ![bar2](/url2)][bar]a` | test_paragraph_extra_f0a |
-|L6  |Full link w/ matching reference inside of full link| `a[foo [bar2][bar]][bar]a` | test_paragraph_extra_f1 |
-|L6i |Full image w/ matching reference inside of full link| `a[foo ![bar2][bar]][bar]a` | test_paragraph_extra_f1a |
-|L6a |Full link w/o matching reference inside of full link| `a[foo [bar][bar2]][bar]a` | test_paragraph_extra_f2 |
-|L6ai|Full image w/o matching reference inside of full link| `a[foo ![bar][bar2]][bar]a` | test_paragraph_extra_f2a |
-|L7  |Collapsed link w/ matching reference inside of full link| `a[foo [bar2][]][bar]a` | test_paragraph_extra_f3 |
-|L7i |Collapsed image w/ matching reference inside of full link| `a[foo ![bar2][]][bar]a` | test_paragraph_extra_f3a |
-|L7a |Collapsed link w/o matching reference inside of full link| `a[foo [bar][]][bar]a` | test_paragraph_extra_f4 |
+|L1ii |inline image within inline image| `a![foo ![bar](/uri)](/uri)a` | test_paragraph_extra_e3b |
+|L2   |Full link w/ matching label inside of inline link| `a[foo [bar][barx]](/uri)a` | test_paragraph_extra_e4 |
+|L2i  |Full image w/ matching label inside of inline link| `a[foo ![bar][barx]](/uri)a` | test_paragraph_extra_e4a |
+|L2ii |Full image w/ matching label inside of inline image| `a![foo ![bar][barx]](/uri)a` | test_paragraph_extra_e4b |
+|L2a  |Full link w/ matching reference inside of inline link| `a[foo [barx][bar]](/uri)a` | test_paragraph_extra_e5 |
+|L2ai |Full image w/ matching reference inside of inline link| `a[foo ![barx][bar]](/uri)a` | test_paragraph_extra_e5a |
+|L2aii|Full image w/ matching reference inside of inline image| `a![foo ![barx][bar]](/uri)a` | test_paragraph_extra_e5b |
+|L3   |Collapsed link w/ matching reference inside of inline link| `a[foo [bar][]](/uri)a` | test_paragraph_extra_e6 |
+|L3i  |Collapsed image w/ matching reference inside of inline link| `a[foo ![bar][]](/uri)a` | test_paragraph_extra_e6a |
+|L3ii |Collapsed image w/ matching reference inside of inline image| `a![foo ![bar][]](/uri)a` | test_paragraph_extra_e6b |
+|L3a  |Collapsed link w/o matching reference inside of inline link| `a[foo [barx][]](/uri)a` | test_paragraph_extra_e7 |
+|L3ai |Collapsed image w/o matching reference inside of inline link| `a[foo ![barx][]](/uri)a` | test_paragraph_extra_e7a |
+|L3aii|Collapsed image w/o matching reference inside of inline image| `a![foo ![barx][]](/uri)a` | test_paragraph_extra_e7b |
+|L4   |Shortcut link w/ matching reference inside of inline link| `a[foo [bar]](/uri)a` | test_paragraph_extra_e8 |
+|L4i  |Shortcut image w/ matching reference inside of inline link| `a[foo ![bar]](/uri)a` | test_paragraph_extra_e8a |
+|L4ii |Shortcut image w/ matching reference inside of inline image| `a![foo ![bar]](/uri)a` | test_paragraph_extra_e8b |
+|L4a  |Shortcut link w/o matching reference inside of inline link| `a[foo [barx]](/uri)a` | test_paragraph_extra_e9 |
+|L4ai |Shortcut image w/o matching reference inside of inline link| `a[foo ![barx]](/uri)a` | test_paragraph_extra_e9a |
+|L4aii|Shortcut image w/o matching reference inside of inline image| `a![foo ![barx]](/uri)a` | test_paragraph_extra_e9b |
+|L5   |Inline link inside of full link| `a[foo [bar2](/url2)][bar]a` | test_paragraph_extra_f0 |
+|L5i  |Inline image inside of full link| `a[foo ![bar2](/url2)][bar]a` | test_paragraph_extra_f0a |
+|L5ii |Inline image inside of full image| `a![foo ![bar2](/url2)][bar]a` | test_paragraph_extra_f0b |
+|L6   |Full link w/ matching reference inside of full link| `a[foo [bar2][bar]][bar]a` | test_paragraph_extra_f1 |
+|L6i  |Full image w/ matching reference inside of full link| `a[foo ![bar2][bar]][bar]a` | test_paragraph_extra_f1a |
+|L6ii |Full image w/ matching reference inside of full image| `a![foo ![bar2][bar]][bar]a` | test_paragraph_extra_f1b |
+|L6a  |Full link w/o matching reference inside of full link| `a[foo [bar][bar2]][bar]a` | test_paragraph_extra_f2 |
+|L6ai |Full image w/o matching reference inside of full link| `a[foo ![bar][bar2]][bar]a` | test_paragraph_extra_f2a |
+|L6aii|Full image w/o matching reference inside of full image| `a![foo ![bar][bar2]][bar]a` | test_paragraph_extra_f2b |
+|L7   |Collapsed link w/ matching reference inside of full link| `a[foo [bar2][]][bar]a` | test_paragraph_extra_f3 |
+|L7i  |Collapsed image w/ matching reference inside of full link| `a[foo ![bar2][]][bar]a` | test_paragraph_extra_f3a |
+|L7ii |Collapsed image w/ matching reference inside of full image| `a![foo ![bar2][]][bar]a` | test_paragraph_extra_f3b |
+|L7a  |Collapsed link w/o matching reference inside of full link| `a[foo [bar][]][bar]a` | test_paragraph_extra_f4 |
 |L7ai |Collapsed image w/o matching reference inside of full link| `a[foo ![bar][]][bar]a` | test_paragraph_extra_f4a |
-|L8  |Shortcut link w/ matching reference inside of full link| `a[foo [bar]][bar]a` | test_paragraph_extra_f6 |
-|L8i |Shortcut link w/ matching reference inside of full link| `a[foo [bar]][bar]a` | test_paragraph_extra_f6a |
-|L8a |Shortcut link w/o matching reference inside of full link| `a[foo [bar2]][bar]a` | test_paragraph_extra_f5 |
-|L8ai|Shortcut image w/o matching reference inside of full link| `a[foo ![bar2]][bar]a` | test_paragraph_extra_f5a |
-|L9  |Inline link w/o matching label inside of collapsed link| `a[foo [bar2](/url2)][]a` | test_paragraph_extra_f7 |
-|L9i |Inline image w/o matching label inside of collapsed link| `a[foo ![bar2](/url2)][]a` | test_paragraph_extra_f7a |
-|L9a |Inline link w/ matching label inside of collapsed link| `a[foo [bar](/url2)][]a` | test_paragraph_extra_f8 |
-|L9ai|Inline image w/ matching label inside of collapsed link| `a[foo ![bar](/url2)][]a` | test_paragraph_extra_f8a |
+|L7aii|Collapsed image w/o matching reference inside of full image| `a![foo ![bar][]][bar]a` | test_paragraph_extra_f4b |
+|L8   |Shortcut link w/ matching reference inside of full link| `a[foo [bar]][bar]a` | test_paragraph_extra_f6 |
+|L8i  |Shortcut link w/ matching reference inside of full link| `a[foo ![bar]][bar]a` | test_paragraph_extra_f6a |
+|L8ii |Shortcut link w/ matching reference inside of full image| `a![foo ![bar]][bar]a` | test_paragraph_extra_f6b |
+|L8a  |Shortcut link w/o matching reference inside of full link| `a[foo [bar2]][bar]a` | test_paragraph_extra_f5 |
+|L8ai |Shortcut image w/o matching reference inside of full link| `a[foo ![bar2]][bar]a` | test_paragraph_extra_f5a |
+|L8aii|Shortcut image w/o matching reference inside of full image| `a![foo ![bar2]][bar]a` | test_paragraph_extra_f5b |
+|L9   |Inline link w/o matching label inside of collapsed link| `a[foo [bar2](/url2)][]a` | test_paragraph_extra_f7 |
+|L9i  |Inline image w/o matching label inside of collapsed link| `a[foo ![bar2](/url2)][]a` | test_paragraph_extra_f7a |
+|L9ii |Inline image w/o matching label inside of collapsed image| `a![foo ![bar2](/url2)][]a` | test_paragraph_extra_f7b |
+|L9a  |Inline link w/ matching label inside of collapsed link| `a[foo [bar](/url2)][]a` | test_paragraph_extra_f8 |
+|L9ai |Inline image w/ matching label inside of collapsed link| `a[foo ![bar](/url2)][]a` | test_paragraph_extra_f8a |
+|L9aii|Inline image w/ matching label inside of collapsed image| `a![foo ![bar](/url2)][]a` | test_paragraph_extra_f8b |
 |L10  |Full link w/ matching reference inside of collapsed link| `a[foo [bar2][bar]][]a` | test_paragraph_extra_f9 |
 |L10i |Full image w/ matching reference inside of collapsed link| `a[foo ![bar2][bar]][]a` | test_paragraph_extra_f9a |
-|L10a |Full link w/o matching reference inside of collapsed link| `a[foo [bar2][bar3]][]a` | test_paragraph_extra_g0 |
-|L10ai|Full image w/o matching reference inside of collapsed link| `a[foo ![bar2][bar3]][]a` | test_paragraph_extra_g0a |
-|L11  |Collapsed link w/ matching reference inside of collapsed link| `a[foo [bar][]][]a` | test_paragraph_extra_g2 |
-|L11i |Collapsed image w/ matching reference inside of collapsed link| `a[foo ![bar][]][]a` | test_paragraph_extra_g2a |
-|L11a |Collapsed link w/o matching reference inside of collapsed link| `a[foo [bar2][]][]a` | test_paragraph_extra_g1 |
-|L11ai|Collapsed image w/o matching reference inside of collapsed link| `a[foo ![bar2][]][]a` | test_paragraph_extra_g1a |
-|L12  |Shortcut link w/ matching reference inside of collapsed link| `a[foo [bar]][]a` | test_paragraph_extra_g4 |
-|L12i |Shortcut image w/ matching reference inside of collapsed link| `a[foo ![bar]][]a` | test_paragraph_extra_g4a |
-|L12a |Shortcut link w/o matching reference inside of collapsed link| `a[foo [bar2]][]a` | test_paragraph_extra_g3 |
-|L12ai|Shortcut image w/o matching reference inside of collapsed link| `a[foo ![bar2]][]a` | test_paragraph_extra_g3a |
-|L13  |Inline link w/o matching label inside of shortcut link| `a[foo [bar2](/url2)]a` | test_paragraph_extra_g5 |
-|L13  |Inline image w/o matching label inside of shortcut link| `a[foo ![bar2](/url2)]a` | test_paragraph_extra_g5a |
-|L13a |Inline link w/ matching label inside of shortcut link| `a[foo [bar](/url2)]a` | test_paragraph_extra_g6 |
-|L13ai|Inline image w/ matching label inside of shortcut link| `a[foo ![bar](/url2)]a` | test_paragraph_extra_g6a |
+|L10ii|Full image w/ matching reference inside of collapsed image| `a![foo ![bar2][bar]][]a` | test_paragraph_extra_f9b |
+|L10a  |Full link w/o matching reference inside of collapsed link| `a[foo [bar2][bar3]][]a` | test_paragraph_extra_g0 |
+|L10ai |Full image w/o matching reference inside of collapsed link| `a[foo ![bar2][bar3]][]a` | test_paragraph_extra_g0a |
+|L10aii|Full image w/o matching reference inside of collapsed image| `a![foo ![bar2][bar3]][]a` | test_paragraph_extra_g0b |
+|L11   |Collapsed link w/ matching reference inside of collapsed link| `a[foo [bar][]][]a` | test_paragraph_extra_g2 |
+|L11i  |Collapsed image w/ matching reference inside of collapsed link| `a[foo ![bar][]][]a` | test_paragraph_extra_g2a |
+|L11ii |Collapsed image w/ matching reference inside of collapsed image| `a![foo ![bar][]][]a` | test_paragraph_extra_g2b |
+|L11a  |Collapsed link w/o matching reference inside of collapsed link| `a[foo [bar2][]][]a` | test_paragraph_extra_g1 |
+|L11ai |Collapsed image w/o matching reference inside of collapsed link| `a[foo ![bar2][]][]a` | test_paragraph_extra_g1a |
+|L11aii|Collapsed image w/o matching reference inside of collapsed image| `a![foo ![bar2][]][]a` | test_paragraph_extra_g1b |
+|L12   |Shortcut link w/ matching reference inside of collapsed link| `a[foo [bar]][]a` | test_paragraph_extra_g4 |
+|L12i  |Shortcut image w/ matching reference inside of collapsed link| `a[foo ![bar]][]a` | test_paragraph_extra_g4a |
+|L12ii |Shortcut image w/ matching reference inside of collapsed image| `a![foo ![bar]][]a` | test_paragraph_extra_g4b |
+|L12a  |Shortcut link w/o matching reference inside of collapsed link| `a[foo [bar2]][]a` | test_paragraph_extra_g3 |
+|L12ai |Shortcut image w/o matching reference inside of collapsed link| `a[foo ![bar2]][]a` | test_paragraph_extra_g3a |
+|L12aii|Shortcut image w/o matching reference inside of collapsed image| `a![foo ![bar2]][]a` | test_paragraph_extra_g3b |
+|L13   |Inline link w/o matching label inside of shortcut link| `a[foo [bar2](/url2)]a` | test_paragraph_extra_g5 |
+|L13i  |Inline image w/o matching label inside of shortcut link| `a[foo ![bar2](/url2)]a` | test_paragraph_extra_g5a |
+|L13ii |Inline image w/o matching label inside of shortcut link| `a![foo ![bar2](/url2)]a` | test_paragraph_extra_g5b |
+|L13a  |Inline link w/ matching label inside of shortcut link| `a[foo [bar](/url2)]a` | test_paragraph_extra_g6 |
+|L13ai |Inline image w/ matching label inside of shortcut link| `a[foo ![bar](/url2)]a` | test_paragraph_extra_g6a |
+|L13aii|Inline image w/ matching label inside of shortcut image| `a![foo ![bar](/url2)]a` | test_paragraph_extra_g6b |
 |L14  |Full link w/ matching reference inside of shortcut link| `a[foo [bar2][bar]]a` | test_paragraph_extra_g7 |
 |L14i |Full image w/ matching reference inside of shortcut link| `a[foo ![bar2][bar]]a` | test_paragraph_extra_g7a |
-|L14a |Full link w/o matching reference inside of shortcut link| `a[foo [bar][bar]]a` | test_paragraph_extra_g8 |
-|L14ai|Full image w/o matching reference inside of shortcut link| `a[foo ![bar][bar]]a` | test_paragraph_extra_g8a |
-|L15  |Collapsed link w/ matching reference inside of shortcut link| `a[foo [bar][]]a` | test_paragraph_extra_h0 |
-|L15i |Collapsed image w/ matching reference inside of shortcut link| `a[foo ![bar][]]a` | test_paragraph_extra_h0a |
-|L15a |Collapsed link w/o matching reference inside of shortcut link| `a[foo [bar2][]]a` | test_paragraph_extra_g9 |
-|L15ai|Collapsed image w/o matching reference inside of shortcut link| `a[foo ![bar2][]]a` | test_paragraph_extra_g9a |
-|L16  |Shortcut link w/ matching reference inside of shortcut link| `a[foo [bar]]a` | test_paragraph_extra_h2 |
-|L16i |Shortcut image w/ matching reference inside of shortcut link| `a[foo ![bar]]a` | test_paragraph_extra_h2a |
-|L16a |Shortcut link w/o matching reference inside of shortcut link| `a[foo [bar2]]a` | test_paragraph_extra_h1 |
-|L16ai|Shortcut image w/o matching reference inside of shortcut link| `a[foo ![bar2]]a` | test_paragraph_extra_h1a |
+|L14ii|Full image w/ matching reference inside of shortcut image| `a[foo ![bar2][bar]]a` | test_paragraph_extra_g7b |
+|L14a  |Full link w/o matching reference inside of shortcut link| `a[foo [bar][bar]]a` | test_paragraph_extra_g8 |
+|L14ai |Full image w/o matching reference inside of shortcut link| `a[foo ![bar][bar]]a` | test_paragraph_extra_g8a |
+|L14aii|Full image w/o matching reference inside of shortcut image| `a![foo ![bar][bar]]a` | test_paragraph_extra_g8b |
+|L15   |Collapsed link w/ matching reference inside of shortcut link| `a[foo [bar][]]a` | test_paragraph_extra_h0 |
+|L15i  |Collapsed image w/ matching reference inside of shortcut link| `a[foo ![bar][]]a` | test_paragraph_extra_h0a |
+|L15ii |Collapsed image w/ matching reference inside of shortcut image| `a![foo ![bar][]]a` | test_paragraph_extra_h0b |
+|L15a  |Collapsed link w/o matching reference inside of shortcut link| `a[foo [bar2][]]a` | test_paragraph_extra_g9 |
+|L15ai |Collapsed image w/o matching reference inside of shortcut link| `a[foo ![bar2][]]a` | test_paragraph_extra_g9a |
+|L15aii|Collapsed image w/o matching reference inside of shortcut image| `a![foo ![bar2][]]a` | test_paragraph_extra_g9b |
+|L16   |Shortcut link w/ matching reference inside of shortcut link| `a[foo [bar]]a` | test_paragraph_extra_h2 |
+|L16i  |Shortcut image w/ matching reference inside of shortcut link| `a[foo ![bar]]a` | test_paragraph_extra_h2a |
+|L16ii |Shortcut image w/ matching reference inside of shortcut image| `a[foo ![bar]]a` | test_paragraph_extra_h2b |
+|L16a  |Shortcut link w/o matching reference inside of shortcut link| `a[foo [bar2]]a` | test_paragraph_extra_h1 |
+|L16ai |Shortcut image w/o matching reference inside of shortcut link| `a[foo ![bar2]]a` | test_paragraph_extra_h1a |
+|L16aii|Shortcut image w/o matching reference inside of shortcut image| `a[foo ![bar2]]a` | test_paragraph_extra_h1b |
