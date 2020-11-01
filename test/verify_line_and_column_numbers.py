@@ -1309,6 +1309,7 @@ def __process_previous_token(
             current_inline_token,
             estimated_line_number,
             estimated_column_number,
+            link_stack,
         )
     elif previous_inline_token.token_name == MarkdownToken.token_inline_code_span:
         estimated_line_number, estimated_column_number = __verify_next_inline_code_span(
@@ -1763,19 +1764,21 @@ def __verify_next_inline_raw_html(
     return estimated_line_number, estimated_column_number
 
 
-# pylint: disable=unused-argument
+# pylint: disable=unused-argument,too-many-arguments
 def __verify_next_inline_hard_break(
     last_token,
     previous_inline_token,
     current_inline_token,
     estimated_line_number,
     estimated_column_number,
+    link_stack,
 ):
     new_column_number = 1
     if last_token.token_name == MarkdownToken.token_paragraph:
         split_whitespace = last_token.extracted_whitespace.split("\n")
         ws_for_new_line = split_whitespace[last_token.rehydrate_index]
-        last_token.rehydrate_index += 1
+        if not link_stack:
+            last_token.rehydrate_index += 1
         print(
             "rehydrate_index(__verify_next_inline_hard_break)>"
             + str(last_token.rehydrate_index)
@@ -1799,7 +1802,7 @@ def __verify_next_inline_hard_break(
     return estimated_line_number + 1, new_column_number
 
 
-# pylint: enable=unused-argument
+# pylint: enable=unused-argument,too-many-arguments
 
 
 def __verify_next_inline_code_span(
@@ -2119,7 +2122,7 @@ def __handle_last_token_text(
                 + str(last_block_token.rehydrate_index)
                 + ") != num_newlines("
                 + str(num_newlines)
-                + ")"
+                + " + 1)"
             )
 
     elif (

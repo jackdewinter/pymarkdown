@@ -94,7 +94,6 @@
 - inline link ( without any extra info
 - why does GFM not specify that between [ and ] for a LRD, no blanks are allowed?
   - maybe expound on 166 a bit?
-- more testing to determine what in-lines are stripped within image links i.e. code spans?
 - link ref def with empty link label, like 560?
 - full reference link with empty link label, like 560?
 - 553 with other in-lines?

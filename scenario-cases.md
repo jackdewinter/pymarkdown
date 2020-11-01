@@ -14,7 +14,7 @@ Legend:
 - Series H - Link/image with text/code span/raw html in label of various link types
 - Series J - Link/image with various combinations with other inline tokens
 - Series K - use of `&#xa;` instead of \n (all verified against babelmark)
-- Series L - link inside of link
+- Series L - link/image inside of link/image
 
 | t | s | x | y | z |
 | -- | --- | --- | --- | --- |
@@ -219,7 +219,9 @@ Legend:
 |J1  |inline link label split before text split| `a[li<de\nfg>nk](/url)a\nb` | test_paragraph_extra_c7 |
 |J1i |inline link label split before text split| `a![li<de\nfg>nk](/url)a\nb` | test_paragraph_extra_c8 |
 |J2  |inline link label split before span split| `` a[li<de\nfg>nk](/url)`a\nb` `` | test_paragraph_extra_c9 |
+|J2a  |inline link label before span split| `` a[li<de fg>nk](/url)`a\nb` `` | test_paragraph_extra_c9a |
 |J2i |inline image label split before span split| `` a![li<de\nfg>nk](/url)`a\nb` `` | test_paragraph_extra_d0 |
+|J2ai |inline image label before span split| `` a![li<de fg>nk](/url)`a\nb` `` | test_paragraph_extra_d0a |
 |J3  |inline link label split before html split| `a[li<de\nfg>nk](/url)<a\nb>` | test_paragraph_extra_d1 |
 |J3i |inline image label split before html split| `a![li<de\nfg>nk](/url)<a\nb>` | test_paragraph_extra_d2 |
 |J4  |inline link label split before emphasis split| `a[li<de\nfg>nk](/url)*a\nb*` | test_paragraph_extra_d3 |
@@ -234,6 +236,20 @@ Legend:
 |J8i |inline image without title newline label| `a![fo\no](</my url>)a` | test_paragraph_extra_a2 |
 |J9  |inline link with split emphasis in label| `abc\n[a*li\nnk*a](/uri "title")\ndef` | test_paragraph_extra_e1 |
 |J9i |inline image with split emphasis in label| `abc\n![a*li\nnk*a](/uri "title")\ndef` | test_paragraph_extra_e2 |
+|J10  |inline link with emphasis in label| `abc\n[a*li nk*a](/uri "title")\ndef` | test_paragraph_extra_h3 |
+|J10i |inline image with emphasis in label| `abc\n![a*li nk*a](/uri "title")\ndef` | test_paragraph_extra_h3a |
+|J11  |inline link with code span in label| ``abc\n[a`li nk`a](/uri "title")\ndef`` | test_paragraph_extra_h4 |
+|J11i |inline image with code span in label| ``abc\n![a`li nk`a](/uri "title")\ndef`` | test_paragraph_extra_h4a |
+|J12  |inline link with raw html in label| ``abc\n[a<li nk>a](/uri "title")\ndef`` | test_paragraph_extra_h5 |
+|J12i |inline image with raw html in label| ``abc\n![a<li nk>a](/uri "title")\ndef`` | test_paragraph_extra_h5a |
+|J13  |inline link with URI autolink in label| ``abc\n[a<http://google.com>a](/uri "title")\ndef`` | test_paragraph_extra_h6 |
+|J13i |inline image with URI autolink in label| ``abc\n![a<http://google.com>a](/uri "title")\ndef`` | test_paragraph_extra_h6a |
+|J14  |inline link with email autolink in label| ``abc\n[a<li nk>a](/uri "title")\ndef`` | test_paragraph_extra_h7 |
+|J14i |inline image with email autolink in label| ``abc\n![a<li nk>a](/uri "title")\ndef`` | test_paragraph_extra_h7a |
+|J15  |inline link with hard break in label| ``abc\n[foo\\\ncom](/uri "title")\ndef`` | test_paragraph_extra_h8 |
+|J15i |inline image with hard break in label| ``abc\n![foo\\\ncom](/uri "title")\ndef`` | test_paragraph_extra_h8a |
+|J15a |inline link with hard break in label| ``abc\n[foo  \ncom](/uri "title")\ndef`` | test_paragraph_extra_h8b |
+|J15ai|inline image with hard break in label| ``abc\n![foo  \ncom](/uri "title")\ndef`` | test_paragraph_extra_h8c |
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |

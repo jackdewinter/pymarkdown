@@ -377,6 +377,7 @@ class LinkHelper:
                 display_string += "," + str(deactivate_token)
         LOGGER.debug(display_string[1:])
 
+    # pylint: disable=too-many-branches
     @staticmethod
     def __consume_text_for_image_alt_text(
         inline_blocks, ind, remaining_line, text_from_blocks_raw, xx_fn
@@ -409,9 +410,28 @@ class LinkHelper:
                         inline_blocks[ind + 1].span_text
                     )
                 elif (
+                    inline_blocks[ind + 1].token_name
+                    == MarkdownToken.token_inline_uri_autolink
+                ):
+                    image_alt_text += ParserHelper.resolve_references_from_text(
+                        inline_blocks[ind + 1].autolink_text
+                    )
+                elif (
+                    inline_blocks[ind + 1].token_name
+                    == MarkdownToken.token_inline_email_autolink
+                ):
+                    image_alt_text += ParserHelper.resolve_references_from_text(
+                        inline_blocks[ind + 1].autolink_text
+                    )
+                elif (
                     inline_blocks[ind + 1].token_name == MarkdownToken.token_inline_link
                 ):
                     pass
+                elif (
+                    inline_blocks[ind + 1].token_name
+                    == MarkdownToken.token_inline_hard_break
+                ):
+                    image_alt_text += "\n"
                 elif (
                     inline_blocks[ind + 1].token_name
                     == EndMarkdownToken.type_name_prefix
@@ -441,6 +461,9 @@ class LinkHelper:
             image_alt_text = ParserHelper.resolve_backspaces_from_text(image_alt_text)
         return image_alt_text, text_from_blocks_raw
 
+    # pylint: disable=too-many-branches
+
+    # pylint: disable=too-many-statements
     @staticmethod
     def __collect_text_from_blocks(inline_blocks, ind, suffix_text):
         """
@@ -500,6 +523,27 @@ class LinkHelper:
                 converted_text = "<" + inline_blocks[collect_index].raw_tag + ">"
                 collected_text += converted_text
                 collected_text_raw += converted_text
+            elif (
+                inline_blocks[collect_index].token_name
+                == MarkdownToken.token_inline_uri_autolink
+            ):
+                converted_text = "<" + inline_blocks[collect_index].autolink_text + ">"
+                collected_text += converted_text
+                collected_text_raw += converted_text
+            elif (
+                inline_blocks[collect_index].token_name
+                == MarkdownToken.token_inline_email_autolink
+            ):
+                converted_text = "<" + inline_blocks[collect_index].autolink_text + ">"
+                collected_text += converted_text
+                collected_text_raw += converted_text
+            elif (
+                inline_blocks[collect_index].token_name
+                == MarkdownToken.token_inline_hard_break
+            ):
+                converted_text = inline_blocks[collect_index].line_end
+                collected_text += converted_text
+                collected_text_raw += converted_text
             elif not is_inside_of_link:
                 collected_text += inline_blocks[collect_index].token_text
                 collected_text_raw += inline_blocks[collect_index].token_text
@@ -523,6 +567,8 @@ class LinkHelper:
         LOGGER.debug(">>collect_text_from_blocks>>%s<<", collected_text)
         LOGGER.debug(">>collected_text_raw>>%s<<", collected_text_raw)
         return collected_text, collected_text_raw
+
+    # pylint: enable=too-many-statements
 
     @staticmethod
     def __parse_angle_link_destination(source_text, new_index):
