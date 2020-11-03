@@ -104,6 +104,10 @@ Legend:
 |F4ci|F4i with whitespace before & after newline | `a![Foo](/uri\a\a\n   "testing")a` | test_paragraph_extra_64c |
 |F5  |inline link with newline in title| `a[Foo](/uri "test\ning")a` | test_paragraph_extra_51 |
 |F5i |inline image with newline in title| `a![Foo](/uri "test\ning")a` | test_paragraph_extra_66 |
+|F5a  |inline link with newline in title| `a[Foo](</uri> "test\ning")a` | test_paragraph_extra_51c |
+|F5ai |inline image with newline in title| `a![Foo](</uri> "test\ning")a` | test_paragraph_extra_66c |
+|F5b  |inline link with newline in title| `a[Foo](</uri> "te\\\\st\ning")a` | test_paragraph_extra_51d |
+|F5bi |inline image with newline in title| `a![Foo](</uri> "te\\\\st\ning")a` | test_paragraph_extra_66d |
 |F6  |inline link with newline in post-title| `a[Foo](/uri "testing"\n)a` | test_paragraph_extra_52x |
 |F6i |inline image with newline in post-title| `a![Foo](/uri "testing"\n)a` | test_paragraph_extra_67 |
 |F6a |F6 with whitespace before newline| `a[Foo](/uri "testing"\a\a\n)a` | test_paragraph_extra_52a |
@@ -129,6 +133,13 @@ Legend:
 |F30i|collapsed image with newline in link label| `a![ba\nr][]a` | test_paragraph_extra_56a |
 |F31 |collapsed link with newline starting link label| `a[\nbar][]a` | test_paragraph_extra_57 |
 |F31i|collapsed image with newline starting link label  | `a![\nbar][]a` | test_paragraph_extra_57a |
+|F40 |inline link with newlines around elements| `abc\n[link](\n/uri\n"title"\n)\ndef` | test_paragraph_extra_h9 |
+|F40i|inline image with newline around elements| `abc\n![link](\n/uri\n"title"\n)\ndef` | test_paragraph_extra_h9a |
+|F41 |inline link with newlines and ws around elements| `abc\n[link](  \n  /uri  \n   "title"   \n )\ndef` | test_paragraph_extra_j0 |
+|F41i|inline image with newline and ws around elements| `abc\n![link](  \n  /uri  \n   "title"   \n )\ndef` | test_paragraph_extra_j0a |
+|F41a |inline link with newlines and ws around elements| `abc\n[link](  \n  /uri  \n   "title"   \n ) \ndef` | test_paragraph_extra_j0b |
+|F41ai|inline image with newline and ws around elements| `abc\n![link](  \n  /uri  \n   "title"   \n ) \ndef` | test_paragraph_extra_j0c |
+
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |

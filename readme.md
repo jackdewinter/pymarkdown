@@ -14,6 +14,9 @@
   - coalesce with blank lines in fenced code block?
 - HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
 - Link_helper.py#86 - if link already registered, should warn?
+- check for common code in consistency checks, i.e. link and image handling
+- start making token fields private with setters
+  - look for places where common access patterns can be used i.e. link_title
 
 - cases like 183 where first non-ws character is an inline specifier
   - can this be fixed in a way that does not require the other fix to add
@@ -35,8 +38,6 @@
 
 ## Bugs - General - Solve
 
-- start making token fields private with setters
-  - look for places where common access patterns can be used i.e. link_title
 - is HTML transformer using text_from_chars, instead of other field?
   - see https://github.com/jackdewinter/pymarkdown/commit/a506ddd3bda08a8ca1d97a7b0d68c114325b545e `extra_74`
 
@@ -99,7 +100,6 @@
 - 553 with other in-lines?
 - what if bad link definition discovered multiple lines down, how to back track?
 - split up link definition within a block quote or list?
-- 518, but in a setext
 
 ## Bugs - Rounding Out Rules
 
