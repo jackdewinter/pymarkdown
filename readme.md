@@ -97,7 +97,6 @@
   - maybe expound on 166 a bit?
 - link ref def with empty link label, like 560?
 - full reference link with empty link label, like 560?
-- 553 with other in-lines?
 - what if bad link definition discovered multiple lines down, how to back track?
 - split up link definition within a block quote or list?
 
