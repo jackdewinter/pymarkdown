@@ -93,8 +93,6 @@
   - block, blank, then multiple blocks
 
 - inline link ( without any extra info
-- why does GFM not specify that between [ and ] for a LRD, no blanks are allowed?
-  - maybe expound on 166 a bit?
 - what if bad link definition discovered multiple lines down, how to back track?
 - split up link definition within a block quote or list?
 

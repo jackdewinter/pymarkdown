@@ -2164,6 +2164,9 @@ def __handle_last_token_end_link(
     use_line_number_from_start_token = True
 
     inline_height = (
+        len(last_inline_token.start_markdown_token.text_from_blocks.split("\n")) - 1
+    )
+    inline_height += (
         len(last_inline_token.start_markdown_token.before_link_whitespace.split("\n"))
         - 1
     )
@@ -2171,6 +2174,17 @@ def __handle_last_token_end_link(
         len(last_inline_token.start_markdown_token.before_title_whitespace.split("\n"))
         - 1
     )
+
+    if last_inline_token.start_markdown_token.label_type != "shortcut":
+        link_title = last_inline_token.start_markdown_token.link_title
+        if last_inline_token.start_markdown_token.pre_link_title:
+            link_title = last_inline_token.start_markdown_token.pre_link_title
+        inline_height += len(link_title.split("\n")) - 1
+
+    inline_height += (
+        len(last_inline_token.start_markdown_token.ex_label.split("\n")) - 1
+    )
+
     inline_height += (
         len(last_inline_token.start_markdown_token.after_title_whitespace.split("\n"))
         - 1

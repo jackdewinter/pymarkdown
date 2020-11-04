@@ -198,6 +198,57 @@ line2
 
 
 @pytest.mark.gfm
+def test_link_reference_definitions_165a():
+    """
+    Test case 165a:  The title may extend over multiple lines:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo
+
+bar]: /url 'title'
+
+[foo\n\nbar]"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[text(3,1):bar:]",
+        "[text(3,4):]:]",
+        "[text(3,5):: /url 'title':]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[para(5,1):]",
+        "[text(5,1):[:]",
+        "[text(5,2):foo:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[para(7,1):]",
+        "[text(7,1):bar:]",
+        "[text(7,4):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[foo</p>
+<p>bar]: /url 'title'</p>
+<p>[foo</p>
+<p>bar]</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_link_reference_definitions_166():
     """
     Test case 166:  However, it may not contain a blank line:
