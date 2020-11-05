@@ -85,71 +85,102 @@ Legend:
 |F1  |inline link with newline in link label| `a[Fo\no](/uri "testing")a` | test_paragraph_extra_47 |
 |F1a |inline link with newline in link label| `a[Fo\no](/uri "testing")` | test_paragraph_extra_47a |
 |F1i |inline image with newline in link label| `a![Fo\no](/uri "title")a` | test_paragraph_extra_61 |
+|F1i |inline image with newline in link label| `a![Fo\no](/uri "title")` | test_paragraph_extra_61j |
 |F2  |inline link with newline in pre-url| `a[Foo](\n/uri "testing")a` | test_paragraph_extra_48x |
+|F2a |F2 with whitespace before newline| `a[Foo](\a\a\n/uri "testing")` | test_paragraph_extra_48d |
 |F2i |inline image with newline in pre-url| `a![Foo](\n/uri "testing")a` | test_paragraph_extra_62 |
-|F2a |F2 with whitespace before newline| `a[Foo](\a\a\n/uri "testing")a` | test_paragraph_extra_48a |
-|F2ai|F2i with whitespace before newline| `a![Foo](\a\a\n/uri "testing")a` | test_paragraph_extra_62a |
+|F2ia |inline image with newline in pre-url| `a![Foo](\n/uri "testing")` | test_paragraph_extra_62f |
 |F2b |F2 with whitespace after newline| `a[Foo](\n   /uri "testing")a` | test_paragraph_extra_48b |
+|F2ba|F2 with whitespace after newline| `a[Foo](\n   /uri "testing")` | test_paragraph_extra_48ba |
 |F2bi|F2i with whitespace after newline| `a![Foo](\n   /uri "testing")a` | test_paragraph_extra_62b |
+|F2bia|F2i with whitespace after newline| `a![Foo](\n   /uri "testing")` | test_paragraph_extra_62ba |
 |F2c |F2 with whitespace before & after newline| `a[Foo](  \n   /uri "testing")a` | test_paragraph_extra_48c |
+|F2ca |F2 with whitespace before & after newline| `a[Foo](  \n   /uri "testing")` | test_paragraph_extra_48ca |
 |F2ci|F2i with whitespace before & after newline| `a![Foo](  \n   /uri "testing")a` | test_paragraph_extra_62c |
-|F2d  |inline link with newline in pre-url| `a[Foo](\n/uri "testing")` | test_paragraph_extra_48d |
+|F2cia|F2i with whitespace before & after newline| `a![Foo](  \n   /uri "testing")` | test_paragraph_extra_62ca |
 |F3  |inline link with newline in url (invalid) | `a[Foo](/ur\ni "testing")a` | test_paragraph_extra_49 |
 |F3a |inline link with newline in url (invalid) | `a[Foo](/ur\ni "testing")` | test_paragraph_extra_49a |
 |F3i |inline image with newline in url (invalid) | `a![Foo](/ur\ni "title")a` | test_paragraph_extra_63 |
+|F3ia |inline image with newline in url (invalid) | `a![Foo](/ur\ni "title")` | test_paragraph_extra_63e |
 |F4  |inline link with newline in post-url | `a[Foo](/uri\a\n"testing")a` | test_paragraph_extra_50x |
-|F4i |inline image with newline in post-url | `a![Foo](/uri\a\n"testing")a` | test_paragraph_extra_64x |
-|F4a |F4 with whitespace before newline | `a[Foo](/uri\a\a\n"testing")a` | test_paragraph_extra_50a |
-|F4ai|F4i with whitespace before newline | `a![Foo](/uri\a\a\n"testing")a` | test_paragraph_extra_64a |
+|F4a |F4 with whitespace before newline | `a[Foo](/uri\a\a\n"testing")` | test_paragraph_extra_50d |
+|F4i |inline image with newline in post-url | `a![Foo](/uri\n"testing")a` | test_paragraph_extra_64x |
+|F4ai|F4i with whitespace before newline | `a![Foo](/uri\n"testing")` | test_paragraph_extra_64xa |
 |F4b |F4 with whitespace after newline | `a[Foo](/uri\n   "testing")a` | test_paragraph_extra_50b |
+|F4ba |F4 with whitespace after newline | `a[Foo](/uri\n   "testing")` | test_paragraph_extra_50ba |
 |F4bi|F4i with whitespace after newline | `a![Foo](/uri\n   "testing")a` | test_paragraph_extra_64b |
+|F4bia|F4i with whitespace after newline | `a![Foo](/uri\n   "testing")` | test_paragraph_extra_64ba |
 |F4c |F4 with whitespace before & after newline | `a[Foo](/uri\a\a\n   "testing")a` | test_paragraph_extra_50c |
+|F4ca |F4 with whitespace before & after newline | `a[Foo](/uri\a\a\n   "testing")` | test_paragraph_extra_50ca |
 |F4ci|F4i with whitespace before & after newline | `a![Foo](/uri\a\a\n   "testing")a` | test_paragraph_extra_64c |
-|F4d |inline link with newline in post-url | `a[Foo](/uri\a\n"testing")` | test_paragraph_extra_50d |
-|F5  |inline link with newline in title| `a[Foo](/uri "test\ning")a` | test_paragraph_extra_51 |
-|F5i |inline image with newline in title| `a![Foo](/uri "test\ning")a` | test_paragraph_extra_66 |
+|F4cia|F4i with whitespace before & after newline | `a![Foo](/uri\a\a\n   "testing")` | test_paragraph_extra_64ca |
+|F5x  |inline link with newline in title| `a[Foo](/uri "test\ning")a` | test_paragraph_extra_51 |
+|F5xa  |inline link with newline in title| `a[Foo](/uri "test\ning")` | test_paragraph_extra_51c |
+|F5i |inline image with newline in title| `a![Foo](/uri "test\ning")a` | test_paragraph_extra_66x |
+|F5ia |inline image with newline in title| `a![Foo](/uri "test\ning")` | test_paragraph_extra_66xa |
 |F5a  |inline link with newline in title| `a[Foo](</uri> "test\ning")a` | test_paragraph_extra_51a |
+|F5aa |inline link with newline in title| `a[Foo](</uri> "test\ning")` | test_paragraph_extra_51aa |
 |F5ai |inline image with newline in title| `a![Foo](</uri> "test\ning")a` | test_paragraph_extra_66c |
+|F5aia |inline image with newline in title| `a![Foo](</uri> "test\ning")` | test_paragraph_extra_66ca |
 |F5b  |inline link with newline in title| `a[Foo](</uri> "te\\\\st\ning")a` | test_paragraph_extra_51b |
+|F5ba  |inline link with newline in title| `a[Foo](</uri> "te\\\\st\ning")` | test_paragraph_extra_51ba |
 |F5bi |inline image with newline in title| `a![Foo](</uri> "te\\\\st\ning")a` | test_paragraph_extra_66d |
-|F5c  |inline link with newline in title| `a[Foo](/uri "test\ning")` | test_paragraph_extra_51c |
-|F6  |inline link with newline in post-title| `a[Foo](/uri "testing"\n)a` | test_paragraph_extra_52x |
-|F6i |inline image with newline in post-title| `a![Foo](/uri "testing"\n)a` | test_paragraph_extra_67 |
+|F5bia|inline image with newline in title| `a![Foo](</uri> "te\\\\st\ning")` | test_paragraph_extra_66da |
+|F6x |inline link with newline in post-title| `a[Foo](/uri "testing"\n)a` | test_paragraph_extra_52x |
+|F6xa|inline link with newline in post-title| `a[Foo](/uri "testing"\n)` | test_paragraph_extra_52d |
+|F6i |inline image with newline in post-title| `a![Foo](/uri "testing"\n)a` | test_paragraph_extra_67x |
+|F6ix |inline image with newline in post-title| `a![Foo](/uri "testing"\n)` | test_paragraph_extra_67xa |
 |F6a |F6 with whitespace before newline| `a[Foo](/uri "testing"\a\a\n)a` | test_paragraph_extra_52a |
+|F6aa |F6 with whitespace before newline| `a[Foo](/uri "testing"\a\a\n)` | test_paragraph_extra_52aa |
 |F6ai|F6i with whitespace before newline| `a![Foo](/uri "testing"\a\a\n)a` | test_paragraph_extra_67a |
+|F6aia|F6i with whitespace before newline| `a![Foo](/uri "testing"\a\a\n)` | test_paragraph_extra_67aa |
 |F6b |F6 with whitespace after newline| `a[Foo](/uri "testing"\n  )a` | test_paragraph_extra_52b |
+|F6ba |F6 with whitespace after newline| `a[Foo](/uri "testing"\n  )` | test_paragraph_extra_52ba |
 |F6bi|F6i with whitespace after newline| `a![Foo](/uri "testing"\n  )a` | test_paragraph_extra_67b |
+|F6bia|F6i with whitespace after newline| `a![Foo](/uri "testing"\n  )` | test_paragraph_extra_67ba |
 |F6c |F6 with whitespace before & after newline| `a[Foo](/uri "testing"\a\a\n  )a` | test_paragraph_extra_52c |
+|F6ca |F6 with whitespace before & after newline| `a[Foo](/uri "testing"\a\a\n  )` | test_paragraph_extra_52ca |
 |F6ci|F6i with whitespace before & after newline| `a![Foo](/uri "testing"\a\a\n  )a` | test_paragraph_extra_67c |
-|F6d  |inline link with newline in post-title| `a[Foo](/uri "testing"\n)` | test_paragraph_extra_52d |
+|F6cia|F6i with whitespace before & after newline| `a![Foo](/uri "testing"\a\a\n  )` | test_paragraph_extra_67ca |
 |F7  |inline link with newline in label no title| `a[Fo\no](/uri)a` | test_paragraph_extra_60 |
 |F7a  |inline link with newline in label no title| `a[Fo\no](/uri)` | test_paragraph_extra_60b |
 |F7i |inline image with newline in label no title| `a![Fo\no](/uri)a` | test_paragraph_extra_60a |
+|F7ia |inline image with newline in label no title| `a![Fo\no](/uri)` | test_paragraph_extra_60aa |
 |F8  |inline link with newline in post-url no title| `a[Foo](/uri\n)a` | test_paragraph_extra_65a |
-|F8a |inline link with newline in post-url no title| `a[Foo](/uri\n)a` | test_paragraph_extra_65b |
-|F8i |inline image with newline in post-url no title| `a![Foo](/uri\n)a` | test_paragraph_extra_65 |
+|F8a |inline link with newline in post-url no title| `a[Foo](/uri\n)` | test_paragraph_extra_65b |
+|F8i |inline image with newline in post-url no title| `a![Foo](/uri\n)a` | test_paragraph_extra_65x |
+|F8ia |inline image with newline in post-url no title| `a![Foo](/uri\n)` | test_paragraph_extra_65xa |
 |F9i |inline image with newline in preface (link)| `a!\n[Foo](/uri "testing")a` | test_paragraph_extra_59 |
+|F9ia |inline image with newline in preface (link)| `a!\n[Foo](/uri "testing")` | test_paragraph_extra_59a |
 |F10 |full link with newline in link label| `a[foo\nbar][bar]a` | test_paragraph_extra_53 |
 |F10a |full link with newline in link label| `a[foo\nbar][bar]` | test_paragraph_extra_53d |
 |F10i|full image with newline in link label| `a![foo\nbar][bar]a` | test_paragraph_extra_53a |
+|F10ia|full image with newline in link label| `a![foo\nbar][bar]` | test_paragraph_extra_53aa |
 |F11 |full link with newline in link reference| `a[foo][ba\nr]a` | test_paragraph_extra_54 |
 |F11a |full link with newline in link reference| `a[foo][ba\nr]` | test_paragraph_extra_54d |
 |F11i|full image with newline in link reference| `a![foo][ba\nr]a` | test_paragraph_extra_54a |
+|F11ia|full image with newline in link reference| `a![foo][ba\nr]a` | test_paragraph_extra_54aa |
 |F12 |full link with newline starting link reference| `a[foo][\nbar]a` | test_paragraph_extra_58 |
 |F12a |full link with newline starting link reference| `a[foo][\nbar]` | test_paragraph_extra_58b |
 |F12i|full image with newline starting link reference| `a![foo][\nbar]a` | test_paragraph_extra_58a |
 |F20 |shortcut link with newline in link label| `a[ba\nr]a` | test_paragraph_extra_55 |
-|F20i|shortcut image with newline in link label| `a![ba\nr]a` | test_paragraph_extra_55a |
 |F20a |shortcut link with newline in link label| `a[ba\nr]` | test_paragraph_extra_55d |
+|F20i|shortcut image with newline in link label| `a![ba\nr]a` | test_paragraph_extra_55a |
+|F20ia|shortcut image with newline in link label| `a![ba\nr]a` | test_paragraph_extra_55aa |
 |F30 |collapsed link with newline in link label| `a[ba\nr][]a` | test_paragraph_extra_56 |
 |F30a |collapsed link with newline in link label| `a[ba\nr][]` | test_paragraph_extra_56d |
 |F30i|collapsed image with newline in link label| `a![ba\nr][]a` | test_paragraph_extra_56a |
+|F30ia|collapsed image with newline in link label| `a![ba\nr][]` | test_paragraph_extra_56aa |
 |F31 |collapsed link with newline starting link label| `a[\nbar][]a` | test_paragraph_extra_57 |
 |F31a |collapsed link with newline starting link label| `a[\nbar][]` | test_paragraph_extra_57b |
 |F31i|collapsed image with newline starting link label  | `a![\nbar][]a` | test_paragraph_extra_57a |
+|F31ia|collapsed image with newline starting link label  | `a![\nbar][]` | test_paragraph_extra_57aa |
+
 |F40 |inline link with newlines around elements| `abc\n[link](\n/uri\n"title"\n)\ndef` | test_paragraph_extra_h9 |
 |F40a |inline link with newlines around elements| `abc\n[link](\n/uri\n"title"\n)` | test_paragraph_extra_h9b |
 |F40i|inline image with newline around elements| `abc\n![link](\n/uri\n"title"\n)\ndef` | test_paragraph_extra_h9a |
+|F40ia|inline image with newline around elements| `abc\n![link](\n/uri\n"title"\n)\ndef` | test_paragraph_extra_h9aa |
+
 |F41 |inline link with newlines and ws around elements| `abc\n[link](  \n  /uri  \n   "title"   \n )\ndef` | test_paragraph_extra_j0 |
 |F41i|inline image with newline and ws around elements| `abc\n![link](  \n  /uri  \n   "title"   \n )\ndef` | test_paragraph_extra_j0a |
 |F41a |inline link with newlines and ws around elements| `abc\n[link](  \n  /uri  \n   "title"   \n ) \ndef` | test_paragraph_extra_j0b |

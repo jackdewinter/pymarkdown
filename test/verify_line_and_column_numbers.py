@@ -2201,6 +2201,7 @@ def __handle_last_token_end_link(
 def __handle_last_token_image(
     last_block_token, second_last_inline_token, current_token, last_inline_token,
 ):
+
     label_data = last_inline_token.image_alt_text
     if last_inline_token.ex_label:
         label_data = last_inline_token.ex_label
@@ -2221,6 +2222,9 @@ def __handle_last_token_image(
     inline_height += len(last_inline_token.after_title_whitespace.split("\n")) - 1
     if last_block_token.token_name == MarkdownToken.token_setext_heading:
         inline_height += 1
+    if last_inline_token.label_type == "full":
+        inline_height += len(last_inline_token.text_from_blocks.split("\n")) - 1
+
     return inline_height
 
 
