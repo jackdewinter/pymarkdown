@@ -1,3 +1,5 @@
+# Scenarios
+
 Legend:
 
 - `\a` space character
@@ -16,69 +18,81 @@ Legend:
 - Series K - use of `&#xa;` instead of \n (all verified against babelmark)
 - Series L - link/image inside of link/image
 
+## Series A
+
 | t | s | x | y | z |
 | -- | --- | --- | --- | --- |
-| Ab | starts with a backslash escape | `\\\\this is a fun day` | test_paragraph_extra_01 |
-| Abh | starts with a backslash hard line break | `\\\n` | test_paragraph_extra_02 |
-| Ash | starts with spaces hard line break | `\a\a\a\n---` | test_paragraph_extra_03 |
-| Acs | starts with a code span | `` `this` is a fun day `` | test_paragraph_extra_04 |
-| Acr | starts with a character reference | `&amp; the band played on` | test_paragraph_extra_05 |
-| Arh | starts with a raw html | `<there it='is'>, really` | test_paragraph_extra_06 |
-| Aua | starts with an URI autolink | `<http://google.com> to look` | test_paragraph_extra_07 |
-| Aea | starts with an email autolink | `<foo@r.com> for info` | test_paragraph_extra_08 |
-| Ae | starts with an emphasis | `*it's* me!` | test_paragraph_extra_09 |
-| Al | starts with a link | `[Foo](/uri "t") is a link` | test_paragraph_extra_10 |
-| Ai | starts with an image | `![foo](/url "t") is an image` | test_paragraph_extra_11 |
+| Ab | starts with a backslash escape | `\\\\this is a fun day` | test_paragraph_series_a_b |
+| Abh| starts with a backslash hard line break | `\\\n` | test_paragraph_series_a_bh |
+| Ash| starts with spaces hard line break | `\a\a\a\n---` | test_paragraph_series_a_sh |
+| Acs| starts with a code span | `` `this` is a fun day `` | test_paragraph_series_a_cs |
+| Acr| starts with a character reference | `&amp; the band played on` | test_paragraph_series_a_cr |
+| Arh| starts with a raw html | `<there it='is'>, really` | test_paragraph_series_a_rh |
+| Aua| starts with an URI autolink | `<http://google.com> to look` | test_paragraph_series_a_ua |
+| Aea| starts with an email autolink | `<foo@r.com> for info` | test_paragraph_series_a_ea |
+| Ae | starts with an emphasis | `*it's* me!` | test_paragraph_series_a_e |
+| Al | starts with a link | `[Foo](/uri "t") is a link` | test_paragraph_series_a_l |
+| Ai | starts with an image | `![foo](/url "t") is an image` | test_paragraph_series_a_i |
+
+## Series B
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
-| Bb | contains a backslash | `a \\\\fun\\\\ day` | test_paragraph_extra_12 |
-| Bcs | contains a code span | `a ``fun`` day` | test_paragraph_extra_13 |
-| Bcr | contains a character reference | `fun &amp; joy` | test_paragraph_extra_14 |
-| Brh | contains a raw html | `where <there it='is'> it` | test_paragraph_extra_15 |
-| Bua | contains an URI autolink | `look <http://www.com> for` | test_paragraph_extra_16 |
-| Bea | contains an email autolink | `email <foo@bar.com> for` | test_paragraph_extra_17 |
-| Be | contains emphasis | `really! *it's me!* here!` | test_paragraph_extra_18 |
-| Bl | contains a link | `at [Foo](/uri "t") more` | test_paragraph_extra_19 |
-| Bi | contains an image | `my ![foo](/url "t") image` | test_paragraph_extra_20 |
+| Bb | contains a backslash | `a \\\\fun\\\\ day` | test_paragraph_series_b_b |
+| Bcs| contains a code span | `a ``fun`` day` | test_paragraph_series_b_cs |
+| Bcr| contains a character reference | `fun &amp; joy` | test_paragraph_series_b_cr |
+| Brh| contains a raw html | `where <there it='is'> it` | test_paragraph_series_b_rh |
+| Bua| contains an URI autolink | `look <http://www.com> for` | test_paragraph_series_b_ua |
+| Bea| contains an email autolink | `email <foo@bar.com> for` | test_paragraph_series_b_ea |
+| Be | contains emphasis | `really! *it's me!* here!` | test_paragraph_series_b_e |
+| Bl | contains a link | `at [Foo](/uri "t") more` | test_paragraph_series_b_l |
+| Bi | contains an image | `my ![foo](/url "t") image` | test_paragraph_series_b_i |
+
+## Series C
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
-|Cb |ends with a backslash | `a fun day\\\\` | test_paragraph_extra_21 |
-|Cbh|ends with a backslash hard line break | `this was \\\n` | test_paragraph_extra_22 |
-|Csh|ends with spaces hard line break | `no line break?\a\a\a\n` | test_paragraph_extra_23 |
-|Ccs|ends with a code span | ` a fun ``day`` ` | test_paragraph_extra_24 |
-|Ccr|ends with a character reference | `played on &amp;` | test_paragraph_extra_25 |
-|Crh|ends with a raw html | `really, <there it='is'>` | test_paragraph_extra_26 |
-|Cua |ends with an URI autolink | `at <http://www.google.com>` | test_paragraph_extra_27 |
-|Cea |ends with an email autolink | `contact <foo@bar.com>` | test_paragraph_extra_28 |
-|Ce  |ends with an emphasis | `it's *me*` | test_paragraph_extra_29 |
-|Cl  |ends with a link | `like [Foo](/uri)` | test_paragraph_extra_30 |
-|Ci  |ends with an image | `an ![foo](/url "t")` | test_paragraph_extra_31 |
+|Cb |ends with a backslash | `a fun day\\\\` | test_paragraph_series_c_b |
+|Cbh|ends with a backslash hard line break | `this was \\\n` | test_paragraph_series_c_bh |
+|Csh|ends with spaces hard line break | `no line break?\a\a\a\n` | test_paragraph_series_c_sh |
+|Ccs|ends with a code span | ` a fun ``day`` ` | test_paragraph_series_c_cs |
+|Ccr|ends with a character reference | `played on &amp;` | test_paragraph_series_c_cr |
+|Crh|ends with a raw html | `really, <there it='is'>` | test_paragraph_series_c_rh |
+|Cua |ends with an URI autolink | `at <http://www.google.com>` | test_paragraph_series_c_ua |
+|Cea |ends with an email autolink | `contact <foo@bar.com>` | test_paragraph_series_c_ea |
+|Ce  |ends with an emphasis | `it's *me*` | test_paragraph_series_c_e |
+|Cl  |ends with a link | `like [Foo](/uri "t")` | test_paragraph_series_c_l |
+|Ci  |ends with an image | `an ![foo](/url "t")` | test_paragraph_series_c_i |
+
+## Series D
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
-|Db  |only a backslash| `\\\\` | test_paragraph_extra_32 |
-|Dbh |only backslash hard line break| ` \\\n` | test_paragraph_extra_33 |
-|Dsh |only spaces hard line break| `\a\a\a\a\n` | test_paragraph_extra_34 |
-|Dcs |only code span| ` ``day`` ` | test_paragraph_extra_35 |
-|Dcr |only character reference| `&amp;` | test_paragraph_extra_36 |
-|Drh |only raw html (html block)| `<there it='is'>` | test_paragraph_extra_37 |
-|Dua |only an URI autolink| `<http://www.google.com>` | test_paragraph_extra_38 |
-|Dea |only an email autolink| `<foo@bar.com>` | test_paragraph_extra_39 |
-|De  |only an emphasis| `*me*` | test_paragraph_extra_40 |
-|Dl  |only a link no title| `[Foo](/uri)` | test_paragraph_extra_41 |
-|Di  |only an image no title| `![foo](/url)` | test_paragraph_extra_41a |
-|Dlt |only a link & title| `[Foo](/uri "title")` | test_paragraph_extra_42a |
-|Dit |only an image & title| `![foo](/url "title")` | test_paragraph_extra_42 |
+|Db  |only a backslash| `\\\\` | test_paragraph_series_d_b |
+|Dbh |only backslash hard line break| ` \\\n` | test_paragraph_series_d_bh |
+|Dsh |only spaces hard line break| `\a\a\a\a\n` | test_paragraph_series_d_sh |
+|Dcs |only code span| ` ``day`` ` | test_paragraph_series_d_cs |
+|Dcr |only character reference| `&amp;` | test_paragraph_series_d_cr |
+|Drh |only raw html (html block)| `<there it='is'>` | test_paragraph_series_d_rh |
+|Dua |only an URI autolink| `<http://www.google.com>` | test_paragraph_series_d_ua |
+|Dea |only an email autolink| `<foo@bar.com>` | test_paragraph_series_d_ea |
+|De  |only an emphasis| `*me*` | test_paragraph_series_d_e |
+|Dlt |only a link & title| `[Foo](/uri "title")` | test_paragraph_series_d_l_t |
+|Dlnt|only a link no title| `[Foo](/uri)` | test_paragraph_series_d_l_nt |
+|Dit |only an image & title| `![foo](/url "title")` | test_paragraph_series_d_i_t |
+|Dint|only an image no title| `![foo](/url)` | test_paragraph_series_d_i_nt |
+
+## Series E
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
-|Ecs |code span with newline| ` a``code\nspan``a ` | test_paragraph_extra_43 |
-|Erh |raw html with newline| `a<raw\nhtml='cool'>a` | test_paragraph_extra_44 |
-|Eua |URI autolink with newline| `a<http://www.\ngoogle.com>a` | test_paragraph_extra_45 |
-|Eea |email autolink with newline| `a<foo@bar\n.com>a` | test_paragraph_extra_46 |
-|Eem |emphasis with newline| `a*foo\nbar*a` | test_paragraph_extra_46b |
+|Ecs |code span with newline| ` a``code\nspan``a ` | test_paragraph_series_e_cs |
+|Erh |raw html with newline| `a<raw\nhtml='cool'>a` | test_paragraph_series_e_rh |
+|Eua |URI autolink with newline| `a<http://www.\ngoogle.com>a` | test_paragraph_series_e_ua |
+|Eea |email autolink with newline| `a<foo@bar\n.com>a` | test_paragraph_series_e_ea |
+|Eem |emphasis with newline| `a*foo\nbar*a` | test_paragraph_series_e_em |
+
+## Unverified F
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
@@ -187,6 +201,7 @@ Legend:
 |F41ai|inline image with newline and ws around elements| `abc\n![link](  \n  /uri  \n   "title"   \n ) \ndef` | test_paragraph_extra_j0c |
 |F41b |inline link with newlines and ws around elements| `abc\n[link](  \n  /uri  \n   "title"   \n )` | test_paragraph_extra_j0d |
 
+## Unverified G
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
@@ -245,6 +260,8 @@ Legend:
 |G20a |G20 with newline before replacement| `a[ba\n\\]r][]a` | test_paragraph_extra_85a |
 |G20ai|G20 with newline before replacement| `a![ba\n\\]r][]a` | test_paragraph_extra_97a |
 
+## Unverified H
+
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
 |H1  |inline link label split text token| `abc\n[li\nnk](/uri "title" )\n  def` | test_paragraph_extra_a3 |
@@ -271,6 +288,8 @@ Legend:
 |H4ai|shortcut image label split span token| ``a![li`de\nfg`nk]a`` | test_paragraph_extra_c5 |
 |H4b |shortcut link label split html token| ``a[li<de\nfg>nk]a`` | test_paragraph_extra_b4 |
 |H4bi|shortcut image label split html token| ``a![li<de\nfg>nk]a`` | test_paragraph_extra_c6 |
+
+## Unverified J
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
@@ -308,6 +327,8 @@ Legend:
 |J15i |inline image with hard break in label| ``abc\n![foo\\\ncom](/uri "title")\ndef`` | test_paragraph_extra_h8a |
 |J15a |inline link with hard break in label| ``abc\n[foo  \ncom](/uri "title")\ndef`` | test_paragraph_extra_h8b |
 |J15ai|inline image with hard break in label| ``abc\n![foo  \ncom](/uri "title")\ndef`` | test_paragraph_extra_h8c |
+
+## Unverified K
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
@@ -353,6 +374,8 @@ Legend:
 |K13b|raw html with char entity newline 2| `a<raw html='cool &#xa; man'>a` | test_paragraph_extra_44c |
 |K14 |URI autolink with newline| `a<http://www.&#xa;google.com>a` | test_paragraph_extra_45a |
 |K15 |email autolink with newline| `a<foo@bar&#xa;.com>a` | test_paragraph_extra_46a |
+
+## Unverified L
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
