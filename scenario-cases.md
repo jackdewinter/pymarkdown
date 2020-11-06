@@ -260,34 +260,34 @@ Legend:
 |G20a |G20 with newline before replacement| `a[ba\n\\]r][]a` | test_paragraph_extra_85a |
 |G20ai|G20 with newline before replacement| `a![ba\n\\]r][]a` | test_paragraph_extra_97a |
 
-## Unverified H
+## Series H
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
-|H1  |inline link label split text token| `abc\n[li\nnk](/uri "title" )\n  def` | test_paragraph_extra_a3 |
-|H1i |inline image label split text token| `abc\n![li\nnk](/uri "title" )\n def` | test_paragraph_extra_b5 |
-|H1a |inline link label split span token| ``abc\n[li`de\nfg`nk](/uri "title" )\n def`` | test_paragraph_extra_a4 |
-|H1ai|inline image label split span token| ``abc\n![li`de\nfg`nk](/uri "title" )\n def`` | test_paragraph_extra_b6 |
-|H1b |inline link label split html token| ``abc\n[li<de\nfg>nk](/uri "title" )\n def`` | test_paragraph_extra_a5 |
-|H1bi|inline image label split html token| ``abc\n![li<de\nfg>nk](/uri "title" )\n def`` | test_paragraph_extra_b7 |
-|H2  |full link label split text token| `a[li\nnk][bar]a` | test_paragraph_extra_a6 |
-|H2i |full image label split text token| `a![li\nnk][bar]a` | test_paragraph_extra_b8 |
-|H2a |full link label split span token| ``a[li`de\nfg`nk][bar]a`` | test_paragraph_extra_a7 |
-|H2ai|full image label split span token| ``a![li`de\nfg`nk][bar]a`` | test_paragraph_extra_b9 |
-|H2b |full link label split html token| ``a[li<de\nfg>nk][bar]a`` | test_paragraph_extra_a8 |
-|H2bi|full image label split html token| ``a![li<de\nfg>nk][bar]a`` | test_paragraph_extra_c0 |
-|H3  |collapsed link label split text token| `a[li\nnk][]a` | test_paragraph_extra_a9 |
-|H3i |collapsed image label split text token| `a![li\nnk][]a` | test_paragraph_extra_c1 |
-|H3a |collapsed link label split span token| ``a[li`de\nfg`nk][]a`` | test_paragraph_extra_b0 |
-|H3ai|collapsed image label split span token| ``a![li`de\nfg`nk][]a`` | test_paragraph_extra_c2 |
-|H3b |collapsed link label split html token| ``a[li<de\nfg>nk][bar]a`` | test_paragraph_extra_b1 |
-|H3bi|collapsed image label split html token| ``a![li<de\nfg>nk][]a`` | test_paragraph_extra_c3 |
-|H4  |shortcut link label split text token| `a[li\nnk]a` | test_paragraph_extra_b2 |
-|H4i |shortcut image label split text token| `a![li\nnk]a` | test_paragraph_extra_c4 |
-|H4a |shortcut link label split span token| ``a[li`de\nfg`nk]a`` | test_paragraph_extra_b3 |
-|H4ai|shortcut image label split span token| ``a![li`de\nfg`nk]a`` | test_paragraph_extra_c5 |
-|H4b |shortcut link label split html token| ``a[li<de\nfg>nk]a`` | test_paragraph_extra_b4 |
-|H4bi|shortcut image label split html token| ``a![li<de\nfg>nk]a`` | test_paragraph_extra_c6 |
+|HILT|inline link label split text token| `a[li\nnk](/uri "title" )a` | test_paragraph_series_h_i_l_t |
+|HIIT|inline image label split text token| `a![li\nnk](/uri "title" )a` | test_paragraph_series_h_i_i_t |
+|HILC|inline link label split span token| ``a[li`de\nfg`nk](/uri "title" )a`` | test_paragraph_series_h_i_l_cs |
+|HIIC|inline image label split span token| ``a![li`de\nfg`nk](/uri "title" )a`` | test_paragraph_series_h_i_i_cs |
+|HILR|inline link label split html token| ``a[li<de\nfg>nk](/uri "title" )a`` | test_paragraph_series_h_i_l_rh |
+|HIIR|inline image label split html token| ``a![li<de\nfg>nk](/uri "title" )a`` | test_paragraph_series_h_i_i_rh |
+|HFLT|full link label split text token| `a[li\nnk][bar]a` | test_paragraph_series_h_f_l_t |
+|HFIT|full image label split text token| `a![li\nnk][bar]a` | test_paragraph_series_h_f_i_t |
+|HFLC|full link label split span token| ``a[li`de\nfg`nk][bar]a`` | test_paragraph_series_h_f_l_cs |
+|HFIC|full image label split span token| ``a![li`de\nfg`nk][bar]a`` | test_paragraph_series_h_f_i_cs |
+|HFLR|full link label split html token| ``a[li<de\nfg>nk][bar]a`` | test_paragraph_series_h_f_l_rh |
+|HFIR|full image label split html token| ``a![li<de\nfg>nk][bar]a`` | test_paragraph_series_h_f_i_rh |
+|HCLT|collapsed link label split text token| `a[li\nnk][]a` | test_paragraph_series_h_c_l_t |
+|HCIT|collapsed image label split text token| `a![li\nnk][]a` | test_paragraph_series_h_c_i_t |
+|HCLC|collapsed link label split span token| ``a[li`de\nfg`nk][]a`` | test_paragraph_series_h_c_l_cs |
+|HCIC|collapsed image label split span token| ``a![li`de\nfg`nk][]a`` | test_paragraph_series_h_c_i_cs |
+|HCLR|collapsed link label split html token| ``a[li<de\nfg>nk][bar]a`` | test_paragraph_series_h_c_l_rh |
+|HCIR|collapsed image label split html token| ``a![li<de\nfg>nk][]a`` | test_paragraph_series_h_c_i_rh |
+|HSLT|shortcut link label split text token| `a[li\nnk]a` | test_paragraph_series_h_s_l_t |
+|HSIT|shortcut image label split text token| `a![li\nnk]a` | test_paragraph_series_h_s_i_t |
+|HSLC|shortcut link label split span token| ``a[li`de\nfg`nk]a`` | test_paragraph_series_h_s_l_cs |
+|HSIC|shortcut image label split span token| ``a![li`de\nfg`nk]a`` | test_paragraph_series_h_s_i_cs |
+|HSLR|shortcut link label split html token| ``a[li<de\nfg>nk]a`` | test_paragraph_series_h_s_l_rh |
+|HSIR|shortcut image label split html token| ``a![li<de\nfg>nk]a`` | test_paragraph_series_h_s_i_rh |
 
 ## Unverified J
 
