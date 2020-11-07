@@ -6,6 +6,20 @@ Legend:
 - `\\` backslash character
 - `\n` newline character
 
+L Link
+I Image
+nt No title in link/image
+S Previous element contains newline
+T Text
+Cs code span
+Rh raw html
+Em emphasis
+Ua url auto
+Ea email auto
+Bh backslash hard break
+Sh space hard break
+
+
 - Series A - Starts with inline
 - Series B - Contains inline
 - Series C - Ends with inline
@@ -289,44 +303,62 @@ Legend:
 |HSLR|shortcut link label split html token| ``a[li<de\nfg>nk]a`` | test_paragraph_series_h_s_l_rh |
 |HSIR|shortcut image label split html token| ``a![li<de\nfg>nk]a`` | test_paragraph_series_h_s_i_rh |
 
-## Unverified J
+## Series J
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
-|J1  |inline link label split before text split| `a[li<de\nfg>nk](/url)a\nb` | test_paragraph_extra_c7 |
-|J1i |inline link label split before text split| `a![li<de\nfg>nk](/url)a\nb` | test_paragraph_extra_c8 |
-|J2  |inline link label split before span split| `` a[li<de\nfg>nk](/url)`a\nb` `` | test_paragraph_extra_c9 |
-|J2a  |inline link label before span split| `` a[li<de fg>nk](/url)`a\nb` `` | test_paragraph_extra_c9a |
-|J2i |inline image label split before span split| `` a![li<de\nfg>nk](/url)`a\nb` `` | test_paragraph_extra_d0 |
-|J2ai |inline image label before span split| `` a![li<de fg>nk](/url)`a\nb` `` | test_paragraph_extra_d0a |
-|J3  |inline link label split before html split| `a[li<de\nfg>nk](/url)<a\nb>` | test_paragraph_extra_d1 |
-|J3i |inline image label split before html split| `a![li<de\nfg>nk](/url)<a\nb>` | test_paragraph_extra_d2 |
-|J4  |inline link label split before emphasis split| `a[li<de\nfg>nk](/url)*a\nb*` | test_paragraph_extra_d3 |
-|J4i |inline image label split before emphasis split| `a![li<de\nfg>nk](/url)*a\nb*` | test_paragraph_extra_d4 |
-|J5  |inline link label split at whitespace| `abc\n[link](\n /uri\n  "title"\n   )\n  def` | test_paragraph_extra_d5 |
-|J5i  |inline image label split at whitespace| `abc\n![link](\n /uri\n  "title"\n   )\n  def` | test_paragraph_extra_d6 |
-|J6  |inline link surrounded by emphasis| `abc\n*[link](/uri "title")*\ndef` | test_paragraph_extra_d7 |
-|J6i |inline image surrounded by emphasis| `abc\n*![link](/uri "title")*\ndef` | test_paragraph_extra_d8 |
-|J7  |inline link with emphasis in label| `abc\n[*link*](/uri "title")\ndef` | test_paragraph_extra_d9 |
-|J7i |inline image with emphasis in label| `abc\n![*link*](/uri "title")\ndef` | test_paragraph_extra_e0 |
-|J8  |inline link without title newline label| `a[fo\no](</my url>)a` | test_paragraph_extra_a2 |
-|J8i |inline image without title newline label| `a![fo\no](</my url>)a` | test_paragraph_extra_a2 |
-|J9  |inline link with split emphasis in label| `abc\n[a*li\nnk*a](/uri "title")\ndef` | test_paragraph_extra_e1 |
-|J9i |inline image with split emphasis in label| `abc\n![a*li\nnk*a](/uri "title")\ndef` | test_paragraph_extra_e2 |
-|J10  |inline link with emphasis in label| `abc\n[a*li nk*a](/uri "title")\ndef` | test_paragraph_extra_h3 |
-|J10i |inline image with emphasis in label| `abc\n![a*li nk*a](/uri "title")\ndef` | test_paragraph_extra_h3a |
-|J11  |inline link with code span in label| ``abc\n[a`li nk`a](/uri "title")\ndef`` | test_paragraph_extra_h4 |
-|J11i |inline image with code span in label| ``abc\n![a`li nk`a](/uri "title")\ndef`` | test_paragraph_extra_h4a |
-|J12  |inline link with raw html in label| ``abc\n[a<li nk>a](/uri "title")\ndef`` | test_paragraph_extra_h5 |
-|J12i |inline image with raw html in label| ``abc\n![a<li nk>a](/uri "title")\ndef`` | test_paragraph_extra_h5a |
-|J13  |inline link with URI autolink in label| ``abc\n[a<http://google.com>a](/uri "title")\ndef`` | test_paragraph_extra_h6 |
-|J13i |inline image with URI autolink in label| ``abc\n![a<http://google.com>a](/uri "title")\ndef`` | test_paragraph_extra_h6a |
-|J14  |inline link with email autolink in label| ``abc\n[a<li nk>a](/uri "title")\ndef`` | test_paragraph_extra_h7 |
-|J14i |inline image with email autolink in label| ``abc\n![a<li nk>a](/uri "title")\ndef`` | test_paragraph_extra_h7a |
-|J15  |inline link with hard break in label| ``abc\n[foo\\\ncom](/uri "title")\ndef`` | test_paragraph_extra_h8 |
-|J15i |inline image with hard break in label| ``abc\n![foo\\\ncom](/uri "title")\ndef`` | test_paragraph_extra_h8a |
-|J15a |inline link with hard break in label| ``abc\n[foo  \ncom](/uri "title")\ndef`` | test_paragraph_extra_h8b |
-|J15ai|inline image with hard break in label| ``abc\n![foo  \ncom](/uri "title")\ndef`` | test_paragraph_extra_h8c |
+|JLTT|inline link text in label| `a[foo](</my url> "title")a` | test_paragraph_series_j_l_t_t |
+|JITT|inline image text in label| `a![foo](</my url>"title")a` | test_paragraph_series_j_i_t_t |
+|JLntTT|inline link without title text in label| `a[foo](</my url>)a` | test_paragraph_series_j_l_nt_t_t |
+|JIntTT|inline image without title text in label| `a![foo](</my url>)a` | test_paragraph_series_j_i_nt_t_t |
+|JLCsT|inline link with code span in label| ``a[a`li nk`a](/uri "title")a`` | test_paragraph_series_j_l_cs_t |
+|JICsT|inline image with code span in label| ``a![a`li nk`a](/uri "title")a`` | test_paragraph_series_j_i_cs_t |
+|JLRhT|inline link with raw html in label| ``a[a<li nk>a](/uri "title")a`` | test_paragraph_series_j_l_rh_t |
+|JIRhT|inline image with raw html in label| ``a![a<li nk>a](/uri "title")a`` | test_paragraph_series_j_i_rh_t |
+|JLEmT|inline link with emphasis in label| `a[*link*](/uri "title")a` | test_paragraph_series_j_l_em_t |
+|JIEmT|inline image with emphasis in label| `a![*link*](/uri "title")a` | test_paragraph_series_j_i_em_t |
+|JLUaT|inline link with URI autolink in label| ``a[a<http://google.com>a](/uri "title")a`` | test_paragraph_series_j_l_ua_t |
+|JIUaT|inline image with URI autolink in label| ``a![a<http://google.com>a](/uri "title")a`` | test_paragraph_series_j_i_ua_t |
+|JLEaT|inline link with email autolink in label| ``a[a<foo@r.com>a](/uri "title")a`` | test_paragraph_series_j_l_ea_t |
+|JIEaT|inline image with email autolink in label| ``a![a<foo@r.com>a](/uri "title")a`` | test_paragraph_series_j_i_ea_t |
+|JLTST|inline link text split label| `a[fo\no](</my url> "title")a` | test_paragraph_series_j_l_t_s_t |
+|JITST|inline image text split label| `a![fo\no](</my url> "title")a` | test_paragraph_series_j_i_t_s_t |
+|JLntTST|inline link without title text split label| `a[fo\no](</my url>)a` | test_paragraph_series_j_l_nt_t_s_t |
+|JIntTST|inline image without title text split label| `a![fo\no](</my url>)a` | test_paragraph_series_j_i_nt_t_s_t |
+|JLBhST|inline link with hard break (split) in label| ``a[foo\\\ncom](/uri "title")a`` | test_paragraph_series_j_l_bh_s_t |
+|JIBhST|inline image with hard break (split) in label| ``a![foo\\\ncom](/uri "title")a`` | test_paragraph_series_j_i_bh_s_t |
+|JLShST|inline link with hard break (split) in label| ``a[foo  \ncom](/uri "title")a`` | test_paragraph_series_j_l_sh_t |
+|JIShST|inline image with hard break (split) in label| ``a![foo  \ncom](/uri "title")a`` | test_paragraph_series_j_i_sh_t |
+|JLRhST|inline link with split raw html in label| `a[li<de\nfg>nk](/url)a` | test_paragraph_series_j_l_rh_s_t |
+|JIRhST|inline image with split raw html in label| `a![li<de\nfg>nk](/url)a` | test_paragraph_series_j_i_rh_s_t |
+|JLEmST|inline link with split emphasis in label| `a[a*li\nnk*a](/uri "title")a` | test_paragraph_series_j_l_em_s_t |
+|JIEmST|inline image with split emphasis in label| `a![a*li\nnk*a](/uri "title")a` | test_paragraph_series_j_i_em_s_t |
+|JLCsST|inline link with split code span in label| ``a[a`li\nnk`a](/uri "title")a`` | test_paragraph_series_j_l_cs_s_t |
+|JICsST|inline image with split code span in label| ``a![a`li\nnk`a](/uri "title")a`` | test_paragraph_series_j_i_cs_s_t |
+|JLTTS|inline link text in label| `a[foo](</my url> "title")a\nb` | test_paragraph_series_j_l_t_t_s |
+|JITTS|inline image text in label| `a![foo](</my url>"title")a\nb` | test_paragraph_series_j_i_t_t_s |
+|JLTCs|inline link label split before span split| `` a[link](/url "title")`ab` `` | test_paragraph_series_j_l_t_cs |
+|JITCs|inline link label before span split| `` a![link](/url "title")`ab` `` | test_paragraph_series_j_i_t_cs |
+|JLTCsS|inline link label split before span split| `` a[link](/url "title")`a\nb` `` | test_paragraph_series_j_l_t_cs_s |
+|JITCsS|inline link label before span split| `` a![link](/url "title")`a\nb` `` | test_paragraph_series_j_i_t_cs_s |
+|JLTRh|inline link label split before html | `a[link](/url "title")<a\nb>` | test_paragraph_series_j_l_t_rh |
+|JITRh|inline image label split before html | `a![link](/url "title")<a\nb>` | test_paragraph_series_j_i_t_rh |
+|JLTRhS|inline link label split before html split| `a[link](/url "title")<a\nb>` | test_paragraph_series_j_l_t_rh_s |
+|JITRhS|inline image label split before html split| `a![link](/url "title")<a\nb>` | test_paragraph_series_j_i_t_rh_s |
+|JLTEm|inline link label split before emphasis| `a[link](/url "title")*a b*` | test_paragraph_series_j_l_t_em |
+|JITEm|inline image label split before emphasis| `a![link](/url "title")*a b*` | test_paragraph_series_j_i_t_em |
+|JLTEmS|inline link label split before emphasis split| `a[link](/url "title")*a\nb*` | test_paragraph_series_j_l_t_em_s |
+|JITEmS|inline image label split before emphasis split| `a![link](/url "title")*a\nb*` | test_paragraph_series_j_i_t_em_s |
+|JLTUa|inline link label split before uri autolink| `a[link](/url "title")<http://google.com>a` | test_paragraph_series_j_l_t_ua |
+|JITUa|inline image label split before uri autolink| `a![link](/url "title")<http://google.com>a` | test_paragraph_series_j_i_t_ua |
+|JLTEa|inline link label split before email autolink| `a[link](/url "title")<foo@r.com>a` | test_paragraph_series_j_l_t_ea |
+|JITEa|inline image label split before email autolink| `a![link](/url "title")<foo@r.com>a` | test_paragraph_series_j_i_t_ea |
+|JLTBh|inline link label split before backslash hardbreak| `a[link](/url "title")\\\na` | test_paragraph_series_j_l_t_bh |
+|JITBh|inline image label split before backslash hardbreak| `a![link](/url "title")\\\na` | test_paragraph_series_j_i_t_bh |
+|JLTSh|inline link label split before spaces hardbreak| `a[link](/url "title")   \na` | test_paragraph_series_j_l_t_sh |
+|JITSh|inline image label split before spaces hardbreak| `a![link](/url "title")   \na` | test_paragraph_series_j_i_t_sh |
+|JEmLTT|inline link surrounded by emphasis| `a*[link](/uri "title")*a` | test_paragraph_series_j_em_l_t_t |
+|JEmITT|inline image surrounded by emphasis| `a*![link](/uri "title")*a` | test_paragraph_series_j_em_i_t_t |
 
 ## Unverified K
 
@@ -499,3 +531,9 @@ Legend:
 |L16ai |Shortcut image w/o matching reference inside of shortcut link| `a[foo ![bar2]]a` | test_paragraph_extra_h1a |
 |L16aii|Shortcut image w/o matching reference inside of shortcut image| `a![foo ![bar2]]a` | test_paragraph_extra_h1b |
 |L16ali|Shortcut link w/o matching reference inside of shortcut image| `a![foo [bar2]]a` | test_paragraph_extra_h1c |
+
+
+Orphan?
+|J5  |inline link label split at whitespace| `abc\n[link](\n /uri\n  "title"\n   )\n  def` | test_paragraph_extra_d5 |
+|J5i  |inline image label split at whitespace| `abc\n![link](\n /uri\n  "title"\n   )\n  def` | test_paragraph_extra_d6 |
+
