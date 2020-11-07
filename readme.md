@@ -92,9 +92,7 @@
   - other types of blocks
   - block, blank, then multiple blocks
 
-- inline link ( without any extra info
 - what if bad link definition discovered multiple lines down, how to back track?
-- split up link definition within a block quote or list?
 
 ## Bugs - Rounding Out Rules
 
@@ -158,6 +156,7 @@
 - check to make sure indents work properly for a list containing a block quote where the
   block quote ends and there is more data for that item within the list
 - same as before, just a bq with a list
+- split up link definition within a block quote or list?
 
 ## Features - Extensions
 

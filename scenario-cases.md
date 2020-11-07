@@ -25,11 +25,12 @@ Sh space hard break
 - Series C - Ends with inline
 - Series D - Only inline
 - Series E - Newline in the middle of newline
-- Series F - Link/image with newline (and whitespace) in various parts of link
-- Series G - Link/image with backslash and character entity in various parts of link
 - Series H - Link/image with text/code span/raw html in label of various link types
 - Series J - Link/image with various combinations with other inline tokens
-- Series K - use of `&#xa;` instead of \n (all verified against babelmark)
+
+- Series F - Link/image with newline (and whitespace) in various parts of link
+- Series G - Link/image with backslash and character entity in various parts of link
+- Series K - use of `&#xa;` instead of \n
 - Series L - link/image inside of link/image
 
 ## Series A

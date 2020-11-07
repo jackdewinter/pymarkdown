@@ -220,6 +220,40 @@ def test_inline_links_497():
 
 
 @pytest.mark.gfm
+def test_inline_links_497a():
+    """
+    Test case 497a:  (part 1) The destination can only contain spaces if it is enclosed in pointy brackets
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[link](
+        
+[link]: /url 'title'"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[link(1,1):shortcut:/url:title::::link:None::::]",
+        "[text(1,2):link:]",
+        "[end-link:::False]",
+        "[text(1,7):(:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):        ]",
+        "[link-ref-def(3,1):True::link:: :/url:: :title:'title':]",
+    ]
+    expected_gfm = """<p><a href="/url" title="title">link</a>(</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_inline_links_498():
     """
     Test case 498:  (part 2) The destination can only contain spaces if it is enclosed in pointy brackets
