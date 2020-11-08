@@ -55,10 +55,6 @@
   - 518b inside of list and/or block quote
   - links with & and \ with inner link to mine
 
-## Bugs - Character Entities
-
-- test_markdown_entity* various extra tests
-
 ## Bugs - Tabs
 
 - check is_length_less_than_or_equal_to to see if any issues with tabs

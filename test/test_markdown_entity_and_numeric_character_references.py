@@ -48,6 +48,33 @@ def test_character_references_321():
 
 
 @pytest.mark.gfm
+def test_character_references_321a():
+    """
+    Test case 321a:  must be case sensitive
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """&ouml; &OUML;"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):\a&ouml;\aö\a \a&\a&amp;\aOUML;:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>ö &amp;OUML;</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_character_references_322():
     """
     Test case 322:  Decimal numeric character references consist of &# + a string of 1–7 arabic digits + ;. A numeric character reference is parsed as the corresponding Unicode character. Invalid Unicode code points will be replaced by the REPLACEMENT CHARACTER (U+FFFD). For security reasons, the code point U+0000 will also be replaced by U+FFFD.
@@ -90,6 +117,33 @@ def test_character_references_323():
         "[end-para:::True]",
     ]
     expected_gfm = """<p>&quot; ആ ಫ</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_character_references_323a():
+    """
+    Test case 323a:  code point 0
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """&#X0; &#x000000;"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):\a&#X0;\a�\a \a&#x000000;\a�\a:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>� �</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -547,6 +601,150 @@ def test_character_references_336():
 
 
 @pytest.mark.gfm
+def test_character_references_336a():
+    """
+    Test case 336a:  variations
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """# F&ouml;o"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3):F\a&ouml;\aö\ao: ]",
+        "[end-atx:::False]",
+    ]
+    expected_gfm = """<h1>Föo</h1>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_character_references_336b():
+    """
+    Test case 336b:  variations
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """F&ouml;o
+---"""
+    expected_tokens = [
+        "[setext(2,1):-:3::(1,1)]",
+        "[text(1,1):F\a&ouml;\aö\ao:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>Föo</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_character_references_336c():
+    """
+    Test case 336c:  variations
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """    F&ouml;o"""
+    expected_tokens = [
+        "[icode-block(1,5):    :]",
+        "[text(1,5):F\a&\a&amp;\aouml;o:]",
+        "[end-icode-block:::True]",
+    ]
+    expected_gfm = """<pre><code>F&amp;ouml;o
+</code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_character_references_336d():
+    """
+    Test case 336d:  variations
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """```text
+F&ouml;o
+```"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3:text:::::]",
+        "[text(2,1):F\a&\a&amp;\aouml;o:]",
+        "[end-fcode-block::3:False]",
+    ]
+    expected_gfm = """<pre><code class="language-text">F&amp;ouml;o
+</code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_character_references_336e():
+    """
+    Test case 336e:  variations
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """<script>
+F&ouml;o
+</script>"""
+    expected_tokens = [
+        "[html-block(1,1)]",
+        "[text(1,1):<script>\nF&ouml;o\n</script>:]",
+        "[end-html-block:::False]",
+    ]
+    expected_gfm = """<script>
+F&ouml;o
+</script>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_character_references_337():
     """
     Test case 337:  (part 5) Entity and numeric character references cannot be used in place of symbols indicating structure in CommonMark documents.
@@ -565,6 +763,87 @@ def test_character_references_337():
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[a](url &quot;tit&quot;)</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_character_references_extra_01():
+    """
+    Test case extra 1:  various
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """&quot;this is cool!&quot;)"""
+    expected_tokens = [
+        "[para(1,1):]",
+        '[text(1,1):\a&quot;\a\a"\a&quot;\a\athis is cool!\a&quot;\a\a"\a&quot;\a\a):]',
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>&quot;this is cool!&quot;)</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_character_references_extra_02():
+    """
+    Test case extra 2:  various
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """&#34;this is cool!&#34;)"""
+    expected_tokens = [
+        "[para(1,1):]",
+        '[text(1,1):\a&#34;\a\a"\a&quot;\a\athis is cool!\a&#34;\a\a"\a&quot;\a\a):]',
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>&quot;this is cool!&quot;)</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_character_references_extra_03():
+    """
+    Test case extra 3:  various
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """&#x22;this is cool!&#x22;)"""
+    expected_tokens = [
+        "[para(1,1):]",
+        '[text(1,1):\a&#x22;\a\a"\a&quot;\a\athis is cool!\a&#x22;\a\a"\a&quot;\a\a):]',
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>&quot;this is cool!&quot;)</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -614,15 +893,3 @@ def test_bad_entities_json_file():
             + full_alternate_resource_path
             + "\\entities.json' is not a valid JSON file (Expecting value: line 1 column 1 (char 0))."
         )
-
-
-# TODO
-#
-# & and various forms at end of line
-#
-# 327 special parsing for html blocks?
-# <a href="&ouml;&ouml;.html" x="&ouml;">
-# <x-me foo="&ouml;">
-
-# <script>
-# &ouml; bar="&ouml;" bbb
