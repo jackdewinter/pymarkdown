@@ -43,11 +43,6 @@
 - all types of end-inlines and inlines at end i.e. 50
 - possible to merge link token and image token more closely?
 
-## Bugs - General - Solve
-
-- is HTML transformer using text_from_chars, instead of other field?
-  - see https://github.com/jackdewinter/pymarkdown/commit/a506ddd3bda08a8ca1d97a7b0d68c114325b545e `extra_74`
-
 ## Bugs - General - Uncategorized
 
 - 634a in bq and in list
