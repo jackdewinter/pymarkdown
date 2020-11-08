@@ -83,7 +83,6 @@
 ## Bugs - AutoLinks
 
 - 620 - more bad cases, like <
-- 603 - href? doesn't look right
 
 ## Bugs - Links
 
