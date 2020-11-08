@@ -30,6 +30,13 @@
   - leaf parse_paragraph
   - len(parser_state
 
+- why does hard break not have \n? (fix before release)
+  - hard break followed by 3 spaces, then emphasis
+  - variations of 52e with extra spaces after, etc.
+    - variation with start of 52e, then hard break, then something like start of 52e again i.e. make /x02 splitter come into affect
+  - hard break followed by each inline type
+  - hard break at start of text?
+
 - image token handling confusing and non-standard
 - fenced code block handling of line/col could be better
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
@@ -43,12 +50,6 @@
 
 ## Bugs - General - Uncategorized
 
-- why does hard break not have \n?
-  - hard break followed by 3 spaces, then emphasis
-  - variations of 52e with extra spaces after, etc.
-    - variation with start of 52e, then hard break, then something like start of 52e again i.e. make /x02 splitter come into affect
-  - hard break followed by each inline type
-  - hard break at start of text?
 - 634a in bq and in list
 - links, 518b
   - 518b inside of list and/or block quote
@@ -57,15 +58,6 @@
 ## Bugs - Character Entities
 
 - test_markdown_entity* various extra tests
-
-## Bugs - SetExt
-
-- MD041 requires metadata
-  - implemented MD043 at the same time
-  - implement MD025 at the same time
-- MD023 with inline that includes leading spaces?
-- MD024 with whitespace, and inline differences
-- MD024 level 2 (me), level 3 (my), level 2 (me) -  should fire? is considered siblings?
 
 ## Bugs - Tabs
 
@@ -79,27 +71,6 @@
 - 235, 236, 252, 255
   - need to account for the fact that indent may not be all spaces all the time
   - for indented code blocks, starts at the start of the icb, else at the first non-ws
-
-## Bugs - Links
-
-- test_link_reference_definitions_183 is a partial lrd followed by bq, add cont+leaf blocks
-- 296 and 297 - added in case for LRD, but need to test:
-  - other types of blocks
-  - block, blank, then multiple blocks
-
-## Bugs - Rounding Out Rules
-
-- MD018
-  - for multiple occurrences inside of a single paragraph, reporting line/col of starting token
-  - whitespace starts, etc.
-  - lists and block quotes
-- MD020
-  - for multiple occurrences inside of a single paragraph, reporting line/col of starting token
-  - whitespace starts, etc.
-  - lists and block quotes
-- MD022 - lists and block quotes and LRDs
-- MD022 - should line 96-104 with all of the leaf node names be added to Markdown token?
-- MD022 - what if the document had a paragraph before the first heading?
 
 ## Bugs - Block Quote
 
@@ -130,14 +101,10 @@
 - 292x with sublists, does start sooner?
 - 292x with ordered lists?
 - 2-3 levels of lists with lazy continuation lines
-
-## Bugs - Tokenization
-
-- should be able to have tabs and not trigger bad tokens, should be excluded?
-- all leaf in all container
-- blank lines as part of bquote
-  - compare test_block_quotes_218 vs test_blank_lines_197a
-  - already fixed test_list_blocks_260, 257
+- 296 and 297 - added in case for LRD, but need to test:
+  - other types of blocks
+  - block, blank, then multiple blocks
+- test_link_reference_definitions_185f & test_link_reference_definitions_183f
 
 ## Bugs - Block Quote/List Interaction
 
@@ -150,6 +117,37 @@
   block quote ends and there is more data for that item within the list
 - same as before, just a bq with a list
 - split up link definition within a block quote or list?
+
+## Bugs - Tokenization
+
+- should be able to have tabs and not trigger bad tokens, should be excluded?
+- all leaf in all container
+- blank lines as part of bquote
+  - compare test_block_quotes_218 vs test_blank_lines_197a
+  - already fixed test_list_blocks_260, 257
+
+## Bugs - Rules - Rounding Out Rules
+
+- MD018
+  - for multiple occurrences inside of a single paragraph, reporting line/col of starting token
+  - whitespace starts, etc.
+  - lists and block quotes
+- MD020
+  - for multiple occurrences inside of a single paragraph, reporting line/col of starting token
+  - whitespace starts, etc.
+  - lists and block quotes
+- MD022 - lists and block quotes and LRDs
+- MD022 - should line 96-104 with all of the leaf node names be added to Markdown token?
+- MD022 - what if the document had a paragraph before the first heading?
+
+## Bugs - Rules - SetExt
+
+- MD041 requires metadata
+  - implemented MD043 at the same time
+  - implement MD025 at the same time
+- MD023 with inline that includes leading spaces?
+- MD024 with whitespace, and inline differences
+- MD024 level 2 (me), level 3 (my), level 2 (me) -  should fire? is considered siblings?
 
 ## Features - Extensions
 
