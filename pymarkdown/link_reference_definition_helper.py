@@ -114,6 +114,7 @@ class LinkReferenceDefinitionHelper:
             and end_lrd_index == len(line_to_parse)
             and not is_blank_line
         ):
+            LOGGER.debug(">>parse_link_reference_definition>>continuation")
             LinkReferenceDefinitionHelper.__add_line_for_lrd_continuation(
                 parser_state,
                 position_marker,
@@ -123,6 +124,7 @@ class LinkReferenceDefinitionHelper:
             )
             did_pause_lrd = True
         elif was_started:
+            LOGGER.debug(">>parse_link_reference_definition>>was_started")
             (
                 force_ignore_first_as_lrd,
                 new_tokens,
@@ -133,6 +135,7 @@ class LinkReferenceDefinitionHelper:
                 end_lrd_index,
                 original_line_to_parse,
                 is_blank_line,
+                lines_to_requeue,
             )
         else:
             LOGGER.debug(">>parse_link_reference_definition>>other")
@@ -305,6 +308,7 @@ class LinkReferenceDefinitionHelper:
         end_lrd_index,
         original_line_to_parse,
         is_blank_line,
+        lines_to_requeue,
     ):
         """
         As part of processing a link reference definition, stop a continuation.
@@ -329,6 +333,7 @@ class LinkReferenceDefinitionHelper:
                     position_marker=parser_state.token_stack[-1].start_position_marker,
                 )
             ]
+            force_ignore_first_as_lrd = len(lines_to_requeue) > 1
         else:
             assert is_blank_line
             force_ignore_first_as_lrd = True

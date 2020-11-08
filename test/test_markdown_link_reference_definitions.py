@@ -295,6 +295,83 @@ with blank line'
 
 
 @pytest.mark.gfm
+def test_link_reference_definitions_166a():
+    """
+    Test case 166a:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo]: /url 'title
+with blank line
+
+[foo]"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo:]",
+        "[text(1,5):]:]",
+        "[text(1,6):: /url 'title\nwith blank line::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[para(4,1):]",
+        "[text(4,1):[:]",
+        "[text(4,2):foo:]",
+        "[text(4,5):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[foo]: /url 'title\nwith blank line</p>\n<p>[foo]</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_166b():
+    """
+    Test case 166b:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo]: /url
+'title
+with blank line
+
+[foo]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo:: :/url:::::]",
+        "[para(2,1):\n]",
+        "[text(2,1):'title\nwith blank line::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[para(5,1):]",
+        "[link(5,1):shortcut:/url:::::foo:::::]",
+        "[text(5,2):foo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>'title\nwith blank line</p>\n<p><a href="/url">foo</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_link_reference_definitions_167():
     """
     Test case 167:  The title may be omitted:

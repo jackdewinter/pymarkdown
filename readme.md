@@ -92,8 +92,6 @@
   - other types of blocks
   - block, blank, then multiple blocks
 
-- what if bad link definition discovered multiple lines down, how to back track?
-
 ## Bugs - Rounding Out Rules
 
 - MD018
