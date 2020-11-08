@@ -97,6 +97,60 @@ def test_autolinks_604():
 
 
 @pytest.mark.gfm
+def test_autolinks_604a():
+    """
+    Test case 604a:  variations
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """<irc:foo.bar>"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[uri-autolink(1,1):irc:foo.bar]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="irc:foo.bar">irc:foo.bar</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_autolinks_604b():
+    """
+    Test case 604b:  variations
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """<my+weird-custom.scheme1:foo.bar>"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[uri-autolink(1,1):my+weird-custom.scheme1:foo.bar]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="my+weird-custom.scheme1:foo.bar">my+weird-custom.scheme1:foo.bar</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_autolinks_605():
     """
     Test case 605:  Uppercase is also fine
@@ -400,6 +454,29 @@ def test_autolinks_613():
 
 
 @pytest.mark.gfm
+def test_autolinks_613a():
+    """
+    Test case 613a:  variations
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """<l@f>"""
+    expected_tokens = ["[para(1,1):]", "[email-autolink(1,1):l@f]", "[end-para:::True]"]
+    expected_gfm = """<p><a href="mailto:l@f">l@f</a></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_autolinks_614():
     """
     Test case 614:  Backslash-escapes do not work inside email autolinks:
@@ -577,6 +654,145 @@ def test_autolinks_620():
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo@bar.example.com</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_autolinks_620a():
+    """
+    Test case 620a:  variation (not enough in scheme)
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """<f:foo.bar>"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):\a<\a&lt;\af:foo.bar\a>\a&gt;\a:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>&lt;f:foo.bar&gt;</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_autolinks_620b():
+    """
+    Test case 620b:  variation (too much in scheme)
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """<f012345678901234567890123456789f0:foo.bar>"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):\a<\a&lt;\af012345678901234567890123456789f0:foo.bar\a>\a&gt;\a:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>&lt;f012345678901234567890123456789f0:foo.bar&gt;</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_autolinks_620c():
+    """
+    Test case 620c:  variation (illegal char in scheme)
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """<my_scheme:foo.bar>"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):\a<\a&lt;\amy:]",
+        "[text(1,4):_:]",
+        "[text(1,5):scheme:foo.bar\a>\a&gt;\a:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>&lt;my_scheme:foo.bar&gt;</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_autolinks_620d():
+    """
+    Test case 620d:  variation (no domain part)
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """<no_domain@>"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):\a<\a&lt;\ano:]",
+        "[text(1,4):_:]",
+        "[text(1,5):domain@\a>\a&gt;\a:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>&lt;no_domain@&gt;</p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_autolinks_620e():
+    """
+    Test case 620e:  variation (no mailbox part)
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """<@no.mailbox>"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):\a<\a&lt;\a@no.mailbox\a>\a&gt;\a:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>&lt;@no.mailbox&gt;</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

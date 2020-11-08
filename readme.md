@@ -80,10 +80,6 @@
   - need to account for the fact that indent may not be all spaces all the time
   - for indented code blocks, starts at the start of the icb, else at the first non-ws
 
-## Bugs - AutoLinks
-
-- 620 - more bad cases, like <
-
 ## Bugs - Links
 
 - test_link_reference_definitions_183 is a partial lrd followed by bq, add cont+leaf blocks
