@@ -24,7 +24,7 @@ Sh space hard break
 - Series B - Contains inline
 - Series C - Ends with inline
 - Series D - Only inline
-- Series E - Newline in the middle of newline
+- Series E - Newline in the middle of inline
 - Series H - Link/image with text/code span/raw html in label of various link types
 - Series J - Link/image with various combinations with other inline tokens
 

@@ -50,19 +50,6 @@
   - 518b inside of list and/or block quote
   - links with & and \ with inner link to mine
 
-## Bugs - Tabs
-
-- check is_length_less_than_or_equal_to to see if any issues with tabs
-  - most likely in conjunction with starting another type of block
-- 004
-  - tab is consumed as part of list prefix, not recorded anywhere, assumed to be spaces
-- variations on 005, mostly wired up for scenario
-  - what about tabs with plain icode? different depths?
-- effect of lists and blocks with 1 tab and differing amounts of whitespace on followed text i.e. `- \tfoo' should produced a list item with foo, no icb as it would equate to 2 spaces
-- 235, 236, 252, 255
-  - need to account for the fact that indent may not be all spaces all the time
-  - for indented code blocks, starts at the start of the icb, else at the first non-ws
-
 ## Bugs - Block Quote
 
 - leaf block prc#624 - why 2 separate?
@@ -90,7 +77,6 @@
 - 256 with extra spaces on blanks
 - 256 with other list types for last instead of just li
 - 292x with sublists, does start sooner?
-- 292x with ordered lists?
 - 2-3 levels of lists with lazy continuation lines
 - 296 and 297 - added in case for LRD, but need to test:
   - other types of blocks
@@ -116,6 +102,19 @@
 - blank lines as part of bquote
   - compare test_block_quotes_218 vs test_blank_lines_197a
   - already fixed test_list_blocks_260, 257
+
+## Bugs - Tabs
+
+- check is_length_less_than_or_equal_to to see if any issues with tabs
+  - most likely in conjunction with starting another type of block
+- 004
+  - tab is consumed as part of list prefix, not recorded anywhere, assumed to be spaces
+- variations on 005, mostly wired up for scenario
+  - what about tabs with plain icode? different depths?
+- effect of lists and blocks with 1 tab and differing amounts of whitespace on followed text i.e. `- \tfoo' should produced a list item with foo, no icb as it would equate to 2 spaces
+- 235, 236, 252, 255
+  - need to account for the fact that indent may not be all spaces all the time
+  - for indented code blocks, starts at the start of the icb, else at the first non-ws
 
 ## Bugs - Rules - Rounding Out Rules
 
