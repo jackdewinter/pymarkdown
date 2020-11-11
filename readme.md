@@ -30,6 +30,7 @@
   - leaf parse_paragraph
   - len(parser_state
 
+- does post processing for Markdown transformer need to be complicated
 - why does hard break not have \n? (fix before release)
   - hard break followed by 3 spaces, then emphasis
   - variations of 52e with extra spaces after, etc.
@@ -65,11 +66,7 @@
   - >>stack_count>>0>>#9:[end-ulist]
   - should be end and then blank, as the blank is outside of the list
   - 233 and 235, should blank and end-list tokens be reversed?
-- does post processing for Markdown transformer need to be complicated
 - CommonMark and how handles non-initial cases for list starts
-- 269 and 305, and variations
-  - whitespace is not 100% correct
-  - weird cases in list_in_process
 - code span inside of a list
 - multi-line link inside of a list
 - 242 with variations on where the blank lines are
