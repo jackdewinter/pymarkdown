@@ -2404,3 +2404,131 @@ baz</li>
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_1():
+    """
+    Test case 01:  A list item can contain a heading:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. one
+   1. one-A
+1. two
+   1. two-A
+1. three"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):one:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[text(2,7):one-A:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(3,1):3::1]",
+        "[para(3,4):]",
+        "[text(3,4):two:]",
+        "[end-para:::True]",
+        "[olist(4,4):.:1:6:   ]",
+        "[para(4,7):]",
+        "[text(4,7):two-A:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(5,1):3::1]",
+        "[para(5,4):]",
+        "[text(5,4):three:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>one
+<ol>
+<li>one-A</li>
+</ol>
+</li>
+<li>
+<p>two</p>
+<ol>
+<li>two-A</li>
+</ol>
+</li>
+<li>three</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_2():
+    """
+    Test case 02:  A list item can contain a heading:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. one
+   1. one-A
+1. two
+   2. two-A
+1. three"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):one:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[text(2,7):one-A:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(3,1):3::1]",
+        "[para(3,4):]",
+        "[text(3,4):two:]",
+        "[end-para:::True]",
+        "[olist(4,4):.:2:6:   ]",
+        "[para(4,7):]",
+        "[text(4,7):two-A:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(5,1):3::1]",
+        "[para(5,4):]",
+        "[text(5,4):three:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>one
+<ol>
+<li>one-A</li>
+</ol>
+</li>
+<li>
+<p>two</p>
+<ol start="2">
+<li>two-A</li>
+</ol>
+</li>
+<li>three</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)

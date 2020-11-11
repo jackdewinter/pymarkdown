@@ -66,7 +66,6 @@
   - >>stack_count>>0>>#9:[end-ulist]
   - should be end and then blank, as the blank is outside of the list
   - 233 and 235, should blank and end-list tokens be reversed?
-- CommonMark and how handles non-initial cases for list starts
 - code span inside of a list
 - multi-line link inside of a list
 - 242 with variations on where the blank lines are
