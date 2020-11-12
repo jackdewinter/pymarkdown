@@ -318,6 +318,7 @@ class ContainerBlockProcessor:
             container_level_tokens,
         )
         LOGGER.debug("text>>%s>>", line_to_parse.replace(" ", "\\s"))
+        LOGGER.debug("container_level_tokens>>%s>>", str(container_level_tokens))
 
         # TODO refactor to make indent unnecessary?
         calculated_indent = len(original_line_to_parse) - len(line_to_parse)
@@ -329,6 +330,7 @@ class ContainerBlockProcessor:
             line_to_parse,
             index_indent=calculated_indent,
         )
+        parser_state.same_line_container_tokens = container_level_tokens
         leaf_tokens, requeue_line_info = ContainerBlockProcessor.__process_leaf_tokens(
             parser_state,
             leaf_tokens,
@@ -342,6 +344,7 @@ class ContainerBlockProcessor:
             last_list_start_index,
             text_removed_by_container,
         )
+        parser_state.same_line_container_tokens = None
 
         container_level_tokens.extend(leaf_tokens)
         LOGGER.debug(

@@ -746,6 +746,7 @@ class ParserState:
         self.token_document = token_document
         self.close_open_blocks_fn = close_open_blocks_fn
         self.handle_blank_line_fn = handle_blank_line_fn
+        self.same_line_container_tokens = None
 
 
 # pylint: enable=too-few-public-methods

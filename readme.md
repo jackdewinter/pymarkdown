@@ -69,8 +69,6 @@
 - code span inside of a list
 - multi-line link inside of a list
 - 242 with variations on where the blank lines are
-- 256 with extra spaces on blanks
-- 256 with other list types for last instead of just li
 - 292x with sublists, does start sooner?
 - 2-3 levels of lists with lazy continuation lines
 - 296 and 297 - added in case for LRD, but need to test:

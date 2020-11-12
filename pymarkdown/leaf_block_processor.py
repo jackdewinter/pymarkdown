@@ -27,6 +27,8 @@ from pymarkdown.stack_token import (
 
 LOGGER = logging.getLogger(__name__)
 
+# pylint: disable=too-many-lines
+
 
 class LeafBlockProcessor:
     """
@@ -878,10 +880,18 @@ class LeafBlockProcessor:
                 top_list_token, extracted_whitespace
             )
 
+        # In cases where the list ended on the same line as we are processing, the
+        # container tokens will not yet be added to the token_document.  As such,
+        # make sure to construct a "proper" list that takes those into account
+        # before checking to see if this is an issue.
+        adjusted_document = parser_state.token_document[:]
+        if parser_state.same_line_container_tokens:
+            adjusted_document.extend(parser_state.same_line_container_tokens)
+
         if (
-            len(parser_state.token_document) >= 2
-            and parser_state.token_document[-1].is_blank_line
-            and parser_state.token_document[-2].is_any_list_token
+            len(adjusted_document) >= 2
+            and adjusted_document[-1].is_blank_line
+            and adjusted_document[-2].is_any_list_token
         ):
 
             did_find, last_list_index = LeafBlockProcessor.check_for_list_in_process(
@@ -986,6 +996,8 @@ class LeafBlockProcessor:
         """
 
         stack_index = len(parser_state.token_stack) - 1
+
         while stack_index >= 0 and not parser_state.token_stack[stack_index].is_list:
             stack_index -= 1
+
         return stack_index >= 0, stack_index
