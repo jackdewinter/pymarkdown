@@ -69,7 +69,6 @@
 - code span inside of a list
 - multi-line link inside of a list
 - 242 with variations on where the blank lines are
-- 276 with extra level of depth, with olist/olist, ulist/olist, and olist/ulist
 - 256 with extra spaces on blanks
 - 256 with other list types for last instead of just li
 - 292x with sublists, does start sooner?
