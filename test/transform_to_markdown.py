@@ -655,7 +655,7 @@ class TransformToMarkdown:
         Rehydrate the html block from the token.
         """
         self.block_stack.append(current_token)
-        return ""
+        return "".ljust(current_token.fill_count, " ")
 
     # pylint: enable=unused-argument
 

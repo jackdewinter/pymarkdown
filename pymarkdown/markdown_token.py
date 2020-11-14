@@ -1018,6 +1018,7 @@ class HtmlBlockMarkdownToken(MarkdownToken):
 
     def __init__(self, position_marker, extracted_whitespace):
         extra_indent = len(extracted_whitespace)
+        self.fill_count = 0
 
         if position_marker:
             line_number = position_marker.line_number
@@ -1039,6 +1040,15 @@ class HtmlBlockMarkdownToken(MarkdownToken):
             line_number=line_number,
             column_number=column_number,
         )
+
+    def add_fill(self, fill_count):
+        """
+        Add extra fill to the token, in rare cases where we just need to
+        adjust the column number back a bit as a post-mortem step.
+        """
+        self.fill_count = fill_count
+        self.column_number -= fill_count
+        self.extra_data = str(fill_count)
 
 
 class ThematicBreakMarkdownToken(MarkdownToken):

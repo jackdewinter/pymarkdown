@@ -1407,6 +1407,844 @@ def test_list_blocks_256e():
 
 
 @pytest.mark.gfm
+def test_list_blocks_256f():
+    """
+    Test case 256f:  variation with (almost) ordered list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.
+---
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[BLANK(1,3):]",
+        "[end-olist:::True]",
+        "[tbreak(2,1):-::---]",
+        "[BLANK(3,1):]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+<hr />"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256fa():
+    """
+    Test case 256fa:  variation with (almost) ordered list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+---
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[tbreak(2,1):-::---]",
+        "[BLANK(3,1):]",
+    ]
+    expected_gfm = """<ol>
+<li>abc</li>
+</ol>
+<hr />"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256g():
+    """
+    Test case 256g:  variation with (almost) ordered list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.
+# foo
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[BLANK(1,3):]",
+        "[end-olist:::True]",
+        "[atx(2,1):1:0:]",
+        "[text(2,3):foo: ]",
+        "[end-atx:::False]",
+        "[BLANK(3,1):]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+<h1>foo</h1>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256ga():
+    """
+    Test case 256ga:  variation with (almost) ordered list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+# foo
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[atx(2,1):1:0:]",
+        "[text(2,3):foo: ]",
+        "[end-atx:::False]",
+        "[BLANK(3,1):]",
+    ]
+    expected_gfm = """<ol>
+<li>abc</li>
+</ol>
+<h1>foo</h1>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256h():
+    """
+    Test case 256h:  variation with (almost) ordered list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.
+foo
+---
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[BLANK(1,3):]",
+        "[end-olist:::True]",
+        "[setext(3,1):-:3::(2,1)]",
+        "[text(2,1):foo:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+<h2>foo</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256ha():
+    """
+    Test case 256ha:  variation with (almost) ordered list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+foo
+---
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\nfoo::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[tbreak(3,1):-::---]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+foo</li>
+</ol>
+<hr />"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_list_blocks_256i():
+    """
+    Test case 256i:  variation with (almost) ordered list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """   1.
+    foo
+"""
+    expected_tokens = [
+        "[olist(1,3):.:1:3:  :   ]",
+        "[BLANK(1,5):]",
+        "[para(2,5): ]",
+        "[text(2,5):foo:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+<pre><code>foo
+</code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256ia():
+    """
+    Test case 256ia:  variation with (almost) ordered list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """  1. abc
+     foo
+"""
+    expected_tokens = [
+        "[olist(1,3):.:1:5:  :     ]",
+        "[para(1,6):\n]",
+        "[text(1,6):abc\nfoo::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+foo</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256j():
+    """
+    Test case 256j:  variation with (almost) ordered list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.
+```
+foo
+```
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[BLANK(1,3):]",
+        "[end-olist:::True]",
+        "[fcode-block(2,1):`:3::::::]",
+        "[text(3,1):foo:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+<pre><code>foo
+</code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256ja():
+    """
+    Test case 256ja:  variation with (almost) ordered list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.  abc
+```
+foo
+```
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:4::]",
+        "[para(1,5):]",
+        "[text(1,5):abc:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[fcode-block(2,1):`:3::::::]",
+        "[text(3,1):foo:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ol>
+<li>abc</li>
+</ol>
+<pre><code>foo
+</code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256kx():
+    """
+    Test case 256k:  variation of 256e with empty list item followed by html block
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.
+<script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[BLANK(1,3):]",
+        "[end-olist:::True]",
+        "[html-block(2,1)]",
+        "[text(2,1):<script>\nfoo\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+<script>
+foo
+</script>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256kxa():
+    """
+    Test case 256k:  variation of 256e with empty list item followed by html block
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.
+  <script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[BLANK(1,3):]",
+        "[end-olist:::True]",
+        "[html-block(2,1)]",
+        "[text(2,3):<script>\nfoo\n</script>:  ]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ol>
+<li></li>
+</ol>
+  <script>
+foo
+</script>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256kxb():
+    """
+    Test case 256k:  variation of 256e with empty list item followed by html block
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.
+   <script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[BLANK(1,3):]",
+        "[html-block(2,4)]",
+        "[text(2,4):<script>:]",
+        "[end-html-block:::True]",
+        "[end-olist:::True]",
+        "[para(3,1):\n]",
+        "[text(3,1):foo\n::\n]",
+        "[raw-html(4,1):/script]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<script>
+</li>
+</ol>
+<p>foo
+</script></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256ka():
+    """
+    Test case 256ka:  variation of 265k with non-empty list item
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.  abc
+<script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:4::]",
+        "[para(1,5):]",
+        "[text(1,5):abc:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[html-block(2,1)]",
+        "[text(2,1):<script>\nfoo\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ol>
+<li>abc</li>
+</ol>
+<script>
+foo
+</script>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256kaa():
+    """
+    Test case 256ka:  variation of 265k with non-empty list item
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.  abc
+   <script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:4::   ]",
+        "[para(1,5):]",
+        "[text(1,5):abc:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[html-block(2,1):3]",
+        "[text(2,4):<script>\nfoo\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ol>
+<li>abc</li>
+</ol>
+   <script>
+foo
+</script>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256kab():
+    """
+    Test case 256ka:  variation of 265k with non-empty list item
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.  abc
+    <script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:4::    ]",
+        "[para(1,5):]",
+        "[text(1,5):abc:]",
+        "[end-para:::False]",
+        "[html-block(2,5)]",
+        "[text(2,5):<script>:]",
+        "[end-html-block:::True]",
+        "[end-olist:::True]",
+        "[para(3,1):\n]",
+        "[text(3,1):foo\n::\n]",
+        "[raw-html(4,1):/script]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<script>
+</li>
+</ol>
+<p>foo
+</script></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256kb():
+    """
+    Test case 256kb:  variation of 265k with non-empty sub-list item
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. 1. abc
+<script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[olist(1,4):.:1:6:   :]",
+        "[para(1,7):]",
+        "[text(1,7):abc:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[html-block(2,1)]",
+        "[text(2,1):<script>\nfoo\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<ol>
+<li>abc</li>
+</ol>
+</li>
+</ol>
+<script>
+foo
+</script>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256kc():
+    """
+    Test case 256kc:  variation of 265k with non-empty sub-list item on separate line
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+   1. def
+<script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[html-block(3,1)]",
+        "[text(3,1):<script>\nfoo\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def</li>
+</ol>
+</li>
+</ol>
+<script>
+foo
+</script>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256kd():
+    """
+    Test case 256kd:  variation of 265k with non-empty sub-list item on separate line
+                      with html block indented enough to remove sublist and list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+   1. def
+  <script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :  ]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[html-block(3,1):2]",
+        "[text(3,3):<script>\nfoo\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def</li>
+</ol>
+</li>
+</ol>
+  <script>
+foo
+</script>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_256ke():
+    """
+    Test case 256ke:  variation of 265k with non-empty sub-list item on separate line
+                      with html block indented enough to remove sublist but not list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+   1. def
+   <script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :   ]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[html-block(3,4)]",
+        "[text(3,4):<script>:]",
+        "[end-html-block:::True]",
+        "[end-olist:::True]",
+        "[para(4,1):\n]",
+        "[text(4,1):foo\n::\n]",
+        "[raw-html(5,1):/script]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def</li>
+</ol>
+<script>
+</li>
+</ol>
+<p>foo
+</script></p>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_list_blocks_257():
     """
     Test case 257:  When the list item starts with a blank line, the number of spaces following the list marker doesn’t change the required indentation:

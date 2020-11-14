@@ -835,11 +835,24 @@ class ContainerBlockProcessor:
         LOGGER.debug(">>position_marker>>in>>%s>>", str(position_marker.index_number))
         LOGGER.debug(">>position_marker>>ln>>%s>>", str(position_marker.line_number))
         if not outer_processed and not parser_state.token_stack[-1].is_html_block:
+            LOGGER.debug(">>html started?>>")
+            old_top_of_stack = parser_state.token_stack[-1]
             html_tokens = HtmlHelper.parse_html_block(
                 parser_state, position_marker, extracted_whitespace,
             )
+            if html_tokens:
+                LOGGER.debug(">>html started>>")
+                LeafBlockProcessor.correct_for_leaf_block_start_in_list(
+                    parser_state,
+                    position_marker.index_indent,
+                    old_top_of_stack,
+                    html_tokens,
+                )
+            else:
+                LOGGER.debug(">>html not started>>")
             new_tokens.extend(html_tokens)
         if parser_state.token_stack[-1].is_html_block:
+            LOGGER.debug(">>html continued>>")
             html_tokens = HtmlHelper.check_normal_html_block_end(
                 parser_state,
                 position_marker.text_to_parse,

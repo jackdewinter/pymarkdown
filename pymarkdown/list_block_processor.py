@@ -1016,7 +1016,6 @@ class ListBlockProcessor:
             str(remaining_indent),
         )
         removed_whitespace = ""
-        assert leading_space
         if ParserHelper.tab_character in leading_space:
             removed_whitespace = ParserHelper.tab_character
         else:

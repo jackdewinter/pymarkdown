@@ -147,6 +147,7 @@ class LeafBlockProcessor:
                         after_extracted_text_index:
                     ]
 
+                    old_top_of_stack = parser_state.token_stack[-1]
                     new_tokens, _, _ = parser_state.close_open_blocks_fn(
                         parser_state, only_these_blocks=[ParagraphStackToken],
                     )
@@ -195,6 +196,11 @@ class LeafBlockProcessor:
                         "StackToken>start_markdown_token-->%s<<",
                         str(parser_state.token_stack[-1].start_markdown_token),
                     )
+
+                    LeafBlockProcessor.correct_for_leaf_block_start_in_list(
+                        parser_state, 0, old_top_of_stack, new_tokens
+                    )
+
         elif (
             parser_state.token_stack[-1].is_fenced_code_block
             and parser_state.token_stack[-1].whitespace_start_count
@@ -687,6 +693,9 @@ class LeafBlockProcessor:
                 extracted_whitespace_at_start
                 or non_whitespace_index == len(position_marker.text_to_parse)
             ):
+                LOGGER.debug("parse_atx_headings>>start",)
+
+                old_top_of_stack = parser_state.token_stack[-1]
 
                 new_tokens, _, _ = parser_state.close_open_blocks_fn(
                     parser_state, new_tokens
@@ -731,6 +740,15 @@ class LeafBlockProcessor:
                     position_marker,
                 )
                 new_tokens.append(start_token)
+
+                LeafBlockProcessor.correct_for_leaf_block_start_in_list(
+                    parser_state,
+                    0,
+                    old_top_of_stack,
+                    new_tokens,
+                    was_token_already_added_to_stack=False,
+                )
+
                 new_tokens.append(
                     TextMarkdownToken(
                         remaining_line,
@@ -1001,3 +1019,73 @@ class LeafBlockProcessor:
             stack_index -= 1
 
         return stack_index >= 0, stack_index
+
+    @staticmethod
+    def correct_for_leaf_block_start_in_list(
+        parser_state,
+        removed_chars_at_start,
+        old_top_of_stack,
+        html_tokens,
+        was_token_already_added_to_stack=True,
+    ):
+        """
+        Check to see that if a paragraph has been closed within a list and
+        there is a leaf block token immediately following, that the right
+        actions are taken.
+        """
+
+        LOGGER.debug(">>__xx>>removed_chars_at_start>%s>>", str(removed_chars_at_start))
+        if not old_top_of_stack.is_paragraph:
+            LOGGER.debug("1")
+            return html_tokens
+
+        statck_index = -1
+        if was_token_already_added_to_stack:
+            statck_index = -2
+        if not parser_state.token_stack[statck_index].is_list:
+            LOGGER.debug("2")
+            return html_tokens
+
+        LOGGER.debug(">>__xx>>stack>>%s>>", str(parser_state.token_stack))
+        LOGGER.debug(">>__xx>>tokens>>%s>>", str(parser_state.token_document))
+        LOGGER.debug(">>__xx>>tokens_to_add>>%s>>", str(html_tokens))
+
+        if was_token_already_added_to_stack:
+            top_of_stack = parser_state.token_stack[-1]
+            del parser_state.token_stack[-1]
+        end_of_list = html_tokens[-1]
+        del html_tokens[-1]
+
+        LOGGER.debug(">>__xx>>stack>>%s>>", str(parser_state.token_stack))
+        LOGGER.debug(">>__xx>>tokens_to_add>>%s>>", str(html_tokens))
+
+        while parser_state.token_stack[-1].is_list:
+
+            LOGGER.debug(">>removed_chars_at_start>>%s>>", str(removed_chars_at_start))
+            LOGGER.debug(
+                ">>stack indent>>%s>>", str(parser_state.token_stack[-1].indent_level)
+            )
+            if removed_chars_at_start >= parser_state.token_stack[-1].indent_level:
+                break
+            tokens_from_close, _, _ = parser_state.close_open_blocks_fn(
+                parser_state,
+                until_this_index=(len(parser_state.token_stack) - 1),
+                include_lists=True,
+            )
+            LOGGER.debug(">>__xx>>tokens_from_close>>%s>>", str(tokens_from_close))
+            html_tokens.extend(tokens_from_close)
+
+        last_indent = 0
+        if parser_state.token_stack[-1].is_list:
+            last_indent = parser_state.token_stack[-1].indent_level
+        delta_indent = removed_chars_at_start - last_indent
+        LOGGER.debug(">>__xx>>delta_indent>>%s>>", str(delta_indent))
+        if delta_indent:
+            if end_of_list.token_name == MarkdownToken.token_html_block:
+                end_of_list.add_fill(delta_indent)
+
+        if was_token_already_added_to_stack:
+            parser_state.token_stack.append(top_of_stack)
+            LOGGER.debug(">>__xx>>stack>>%s>>", str(parser_state.token_stack))
+        html_tokens.append(end_of_list)
+        LOGGER.debug(">>__xx>>tokens_to_add>>%s>>", str(html_tokens))
