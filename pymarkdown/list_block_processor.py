@@ -463,10 +463,20 @@ class ListBlockProcessor:
                 str(requested_list_indent),
                 str(parser_state.token_stack[-1].is_paragraph),
             )
+
+            is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
+                line_to_parse,
+                start_index,
+                extracted_whitespace,
+                skip_whitespace_check=True,
+            )
+            LOGGER.debug("is_theme_break>>%s", str(is_theme_break))
+
             if (
                 parser_state.token_stack[-1].is_paragraph
                 and leading_space_length >= requested_list_indent
                 and allow_list_continue
+                and not is_theme_break
             ):
                 assert True
                 LOGGER.debug(
@@ -497,7 +507,12 @@ class ListBlockProcessor:
                     ParserHelper.make_value_visible(line_to_parse),
                 )
                 container_level_tokens = ListBlockProcessor.__check_for_list_closures(
-                    parser_state, line_to_parse, start_index, extracted_whitespace, ind,
+                    parser_state,
+                    line_to_parse,
+                    start_index,
+                    extracted_whitespace,
+                    ind,
+                    leading_space_length,
                 )
 
                 LOGGER.debug(
@@ -1026,9 +1041,15 @@ class ListBlockProcessor:
         )
         return line_to_parse, removed_whitespace
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __check_for_list_closures(
-        parser_state, line_to_parse, start_index, extracted_whitespace, ind,
+        parser_state,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+        ind,
+        leading_space_length,
     ):
         """
         Check to see if the list in progress and the level of lists shown require
@@ -1050,9 +1071,35 @@ class ListBlockProcessor:
         if not parser_state.token_stack[-1].is_paragraph or is_theme_break:
             LOGGER.debug("ws (normal and adjusted) not enough to continue")
 
+            if is_theme_break:
+                LOGGER.debug("lsl %s", str(leading_space_length))
+                LOGGER.debug("lsl %s", str(parser_state.token_stack[ind]))
+                search_index = ind
+                LOGGER.debug(
+                    "lsl %s>%s",
+                    search_index,
+                    str(parser_state.token_stack[search_index - 1]),
+                )
+                while (
+                    parser_state.token_stack[search_index - 1].is_list
+                    and parser_state.token_stack[search_index - 1].indent_level
+                    > leading_space_length
+                ):
+                    search_index -= 1
+                    LOGGER.debug(
+                        "lsl %s>%s",
+                        search_index,
+                        str(parser_state.token_stack[search_index]),
+                    )
+
+                LOGGER.debug("lsl %s", str(parser_state.token_stack[search_index]))
+                ind = search_index
             container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
                 parser_state, until_this_index=ind, include_lists=True
             )
+            LOGGER.debug("container_level_tokens>%s>", str(container_level_tokens))
         else:
             LOGGER.debug("ws (normal and adjusted) continue")
         return container_level_tokens
+
+    # pylint: enable=too-many-arguments

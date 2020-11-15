@@ -3623,7 +3623,7 @@ def test_setext_headings_extra_79():
     expected_gfm = """<h2>a<a href="/url" title="title">fooβbar</a>a</h2>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -4432,7 +4432,7 @@ def test_setext_headings_extra_90x():
     expected_gfm = """<h2>a<img src="/url" alt="foo#bar" title="title" />a</h2>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -4501,7 +4501,7 @@ def test_setext_headings_extra_91x():
     expected_gfm = """<h2>a<img src="/url" alt="fooβbar" title="title" />a</h2>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

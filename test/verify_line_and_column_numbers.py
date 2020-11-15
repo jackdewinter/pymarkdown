@@ -2302,12 +2302,29 @@ def __handle_last_token_blank_line(
     current_block_token,
 ):
     inline_height = 1
+    print(">>>last_block_token>" + str(last_block_token))
+    print(">>>current_block_token>" + str(current_block_token))
+    print(">>>last_inline_token>" + str(last_inline_token))
+    print(">>>current_token>" + str(current_token))
+
     if (
         last_block_token.token_name == MarkdownToken.token_fenced_code_block
         and current_block_token
         and current_block_token.token_name == MarkdownToken.token_blank_line
     ):
         inline_height -= 1
+    elif (
+        last_block_token.token_name == MarkdownToken.token_fenced_code_block
+        and not current_block_token
+        and last_inline_token
+        and last_inline_token.token_name == MarkdownToken.token_blank_line
+    ):
+        assert (
+            current_token.token_name
+            == EndMarkdownToken.type_name_prefix + MarkdownToken.token_fenced_code_block
+        )
+        if current_token.was_forced:
+            inline_height -= 1
     return inline_height
 
 

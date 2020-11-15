@@ -198,7 +198,10 @@ class LeafBlockProcessor:
                     )
 
                     LeafBlockProcessor.correct_for_leaf_block_start_in_list(
-                        parser_state, 0, old_top_of_stack, new_tokens
+                        parser_state,
+                        position_marker.index_indent,
+                        old_top_of_stack,
+                        new_tokens,
                     )
 
         elif (
@@ -743,7 +746,7 @@ class LeafBlockProcessor:
 
                 LeafBlockProcessor.correct_for_leaf_block_start_in_list(
                     parser_state,
-                    0,
+                    position_marker.index_indent,
                     old_top_of_stack,
                     new_tokens,
                     was_token_already_added_to_stack=False,
@@ -1082,6 +1085,10 @@ class LeafBlockProcessor:
         LOGGER.debug(">>__xx>>delta_indent>>%s>>", str(delta_indent))
         if delta_indent:
             if end_of_list.token_name == MarkdownToken.token_html_block:
+                end_of_list.add_fill(delta_indent)
+            elif end_of_list.token_name == MarkdownToken.token_atx_heading:
+                end_of_list.add_fill(delta_indent)
+            elif end_of_list.token_name == MarkdownToken.token_fenced_code_block:
                 end_of_list.add_fill(delta_indent)
 
         if was_token_already_added_to_stack:

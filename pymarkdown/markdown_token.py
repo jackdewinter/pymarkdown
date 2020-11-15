@@ -417,25 +417,42 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
             self,
             MarkdownToken.token_fenced_code_block,
             MarkdownTokenClass.LEAF_BLOCK,
-            fence_character
-            + ":"
-            + str(fence_count)
-            + ":"
-            + extracted_text
-            + ":"
-            + pre_extracted_text
-            + ":"
-            + text_after_extracted_text
-            + ":"
-            + pre_text_after_extracted_text
-            + ":"
-            + extracted_whitespace
-            + ":"
-            + extracted_whitespace_before_info_string,
+            "",
             position_marker=position_marker,
         )
+        self.compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
+    def compose_extra_data_field(self):
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        self.extra_data = (
+            self.fence_character
+            + ":"
+            + str(self.fence_count)
+            + ":"
+            + self.extracted_text
+            + ":"
+            + self.pre_extracted_text
+            + ":"
+            + self.text_after_extracted_text
+            + ":"
+            + self.pre_text_after_extracted_text
+            + ":"
+            + self.extracted_whitespace
+            + ":"
+            + self.extracted_whitespace_before_info_string
+        )
+
+    def add_fill(self, fill_count):
+        """
+        Add extra fill to the token, in rare cases where we just need to
+        adjust the column number back a bit as a post-mortem step.
+        """
+        new_whitespace = "".ljust(fill_count, " ")
+        self.extracted_whitespace += new_whitespace
+        self.compose_extra_data_field()
 
 
 # pylint: enable=too-many-instance-attributes
@@ -458,15 +475,33 @@ class AtxHeadingMarkdownToken(MarkdownToken):
             self,
             MarkdownToken.token_atx_heading,
             MarkdownTokenClass.LEAF_BLOCK,
-            str(hash_count)
-            + ":"
-            + str(remove_trailing_count)
-            + ":"
-            + extracted_whitespace,
+            "",
             position_marker=position_marker,
         )
+        self.compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
+
+    def compose_extra_data_field(self):
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        self.extra_data = (
+            str(self.hash_count)
+            + ":"
+            + str(self.remove_trailing_count)
+            + ":"
+            + self.extracted_whitespace
+        )
+
+    def add_fill(self, fill_count):
+        """
+        Add extra fill to the token, in rare cases where we just need to
+        adjust the column number back a bit as a post-mortem step.
+        """
+        new_whitespace = "".ljust(fill_count, " ")
+        self.extracted_whitespace += new_whitespace
+        self.compose_extra_data_field()
 
 
 class EndMarkdownToken(MarkdownToken):

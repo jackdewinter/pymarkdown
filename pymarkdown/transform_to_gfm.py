@@ -658,7 +658,8 @@ class TransformToGfm:
         ):
             output_html += ParserHelper.newline_character
         elif transform_state.last_token.token_name == MarkdownToken.token_blank_line:
-            output_html += ParserHelper.newline_character
+            if not next_token.was_forced:
+                output_html += ParserHelper.newline_character
         output_html += "</code></pre>" + ParserHelper.newline_character
         transform_state.is_in_code_block = False
         transform_state.is_in_fenced_code_block = False
@@ -692,10 +693,18 @@ class TransformToGfm:
         """
         Handle the start atx heading token.
         """
-        assert transform_state
+        previous_token = transform_state.actual_tokens[
+            transform_state.actual_token_index - 1
+        ]
 
         if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
             output_html += "\n"
+        elif (
+            previous_token.token_name
+            == EndMarkdownToken.type_name_prefix + MarkdownToken.token_paragraph
+        ):
+            if not transform_state.is_in_loose_list:
+                output_html += ParserHelper.newline_character
 
         output_html += "<h" + str(next_token.hash_count) + ">"
         return output_html
