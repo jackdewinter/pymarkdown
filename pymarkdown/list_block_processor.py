@@ -212,6 +212,7 @@ class ListBlockProcessor:
                     0,
                     stack_bq_count,
                     this_bq_count,
+                    adj_ws=adj_ws,
                 )
 
                 LOGGER.debug(
@@ -324,6 +325,7 @@ class ListBlockProcessor:
                     my_count,
                     stack_bq_count,
                     this_bq_count,
+                    adj_ws=adj_ws,
                 )
 
                 LOGGER.debug(
@@ -605,10 +607,14 @@ class ListBlockProcessor:
         marker_width_minus_one,
         stack_bq_count,
         this_bq_count,
+        adj_ws=None,
     ):
         """
         Handle the processing of the first part of the list.
         """
+
+        if adj_ws is None:
+            adj_ws = extracted_whitespace
 
         (
             after_marker_ws_index,
@@ -640,7 +646,7 @@ class ListBlockProcessor:
         )
         if after_marker_ws_index == len(line_to_parse):
             LOGGER.debug("BOOOOOOOM")
-            indent_level = 2 + marker_width_minus_one
+            indent_level = 2 + marker_width_minus_one + len(adj_ws)
             remaining_whitespace = ws_after_marker
             ws_after_marker = 0
         else:
