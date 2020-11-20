@@ -9,6 +9,10 @@ Legend:
 L Link
 I Image
 nt No title in link/image
+Ha Atx Heading
+Hs SetExt Heading
+
+Nl newline
 S Previous element contains newline
 T Text
 Cs code span
@@ -32,6 +36,7 @@ Sh space hard break
 - Series G - Link/image with backslash and character entity in various parts of link
 - Series K - use of `&#xa;` instead of \n
 - Series L - link/image inside of link/image
+- Series M - lists with various leaf tokens following
 
 ## Series A
 
@@ -532,6 +537,75 @@ Sh space hard break
 |L16ai |Shortcut image w/o matching reference inside of shortcut link| `a[foo ![bar2]]a` | test_paragraph_extra_h1a |
 |L16aii|Shortcut image w/o matching reference inside of shortcut image| `a![foo ![bar2]]a` | test_paragraph_extra_h1b |
 |L16ali|Shortcut link w/o matching reference inside of shortcut image| `a![foo [bar2]]a` | test_paragraph_extra_h1c |
+
+
+## Series M
+
+| t | s | x | y | z |
+| --- | --- | --- | --- | --- |
+|MOlNlTb        |Ordered list newline thematic break| `1.\n---\n` | test_paragraph_series_m_ol_nl_tb |
+|MOlNlI2Tb      |Ordered list new line indent of 2 thematic break| `1.\n  ---\n` | test_paragraph_series_m_ol_nl_i2_tb |
+|MOlNlI3Tb      |Ordered list new line indent of 3 thematic break| `1.\n   ---\n` | test_paragraph_series_m_ol_nl_i3_tb |
+|MOlTNlTb       |Ordered list text new line thematic break| `1. abc\n---\n` | test_paragraph_series_m_ol_t_nl_tb |
+|MOlTNlI2Tb     |Ordered list text newline indent of 2 thematic break| `1. abc\n  ---\n` | test_paragraph_series_m_ol_t_nl_i2_tb |
+|MOlTNlI3Tb     |Ordered list text newline indent of 3 thematic break| `1. abc\n   ---\n` | test_paragraph_series_m_ol_t_nl_i3_tb |
+|MOlOLTNlTb     |Ordered list x2 text new line thematic break| `1. 1. abc\n---\n` | test_paragraph_series_m_ol_ol_t_tb |
+|MOlNlOLTNlTb   |Ordered list newline ordered list test new line thematic break| `1.\n   1. abc\n---\n` | test_paragraph_series_m_ol_nl_ol_t_nl_tb |
+|MOlNlOLTNlI2Tb |Ordered list newline ordered list text new line indent of 2 thematic break| `1.\n   1. abc\n  ---\n` | test_paragraph_series_m_ol_nl_ol_t_nl_i2_tb |
+|MOlNlOLTNlI3Tb |Ordered list newline ordered list text new line indent of 3 thematic break| `1.\n   1. abc\n   ---\n` | test_paragraph_series_m_ol_nl_ol_t_nl_i3_tb |
+|MOlNlHaT       |Ordered list newline atx heading text| `1.\n# foo\n` | test_paragraph_series_m_ol_nl_ha_t |
+|MOlNlI2HaT     |Ordered list newline indent of 2 atx heading text| `1.\n  # foo\n` | test_paragraph_series_m_ol_nl_i2_ha_t |
+|MOlNlI3HaT     |Ordered list newline indent of 3 atx heading text| `1.\n   # foo\n` | test_paragraph_series_m_ol_nl_i3_ha_t |
+|MOlTNlHaT      |Ordered list text newline atx heading text| `1. abc\n# foo\n` | test_paragraph_series_m_ol_t_nl_ha_t |
+|MOlTNlI2HaT    |Ordered list text newline indent of 2 atx heading text| `1. abc\n  # foo\n` | test_paragraph_series_m_ol_t_nl_i2_ha_t |
+|MOlTNlI3HaT    |Ordered list text newline indent of 3 atx heading text| `1. abc\n   # foo\n` | test_paragraph_series_m_ol_t_nl_i3_ha_t |
+|MOlOLTNlHaT    |Ordered list x2 text newline atx heading text| `1. 1. abc\n# foo\n` | test_paragraph_series_m_ol_ol_t_nl_ha_t |
+|MOlNlOLTNlHaT  |Ordered list newline ordered list text new line atx heading text| `1.\n   1. abc\n# foo\n` | test_paragraph_series_m_ol_nl_ol_t_nl_ha_t |
+|MOlNlOLTNlI2HaT|Ordered list newline ordered list text new line indent of 2 atx heading text| `1.\n   1. abc\n  # foo\n` | test_paragraph_series_m_ol_nl_ol_t_nl_i2_ha_t |
+|MOlNlOLTNlI3HaT|Ordered list newline ordered list text new line indent of 3 atx heading text| `1.\n   1. abc\n   # foo\n` | test_paragraph_series_m_ol_nl_ol_t_nl_i3_ha_t |
+|MOlNlTNlHs     |Ordered list newline text new line setext heading| `1.\nfoo\n---\n` | test_paragraph_series_m_ol_nl_t_nl_hs |
+|MOlNlI2THs     |Ordered list newline indent of 2 text new line setext heading| `1.\n  foo\n---\n` | test_paragraph_series_m_ol_nl_i2_t_nl_hs |
+|MOlNlI3THs     |Ordered list newline indent of 3 text new line setext heading| `1.\n   foo\n---\n` | test_paragraph_series_m_ol_nl_i3_t_nl_hs |
+|MOlNlI3TI3Hs   |Ordered list newline indent of 3 text new line indent of 3 setext heading| `1.\n   foo\n   ---` | test_paragraph_series_m_ol_nl_i3_t_nl_i3_hs |
+|MOlTNlTNLHs    |Ordered list text newline text new line setext heading| `1. abc\nfoo\n---` | test_paragraph_series_m_ol_t_nl_t_nl_hs |
+|MOlTNlI2TNlHs  |Ordered list text newline indent of 2 text new line setext heading| `1. abc\n  foo\n---` | test_paragraph_series_m_ol_t_nl_i2_t_nl_hs|
+|MOlTNlI3TNlHs  |Ordered list text newline indent of 3 text new line setext heading| `1. abc\n   foo\n---` | test_paragraph_series_m_ol_t_nl_i3_t_nl_hs|
+|MOlTNlI3TNlI3Hs|Ordered list text newline indent of 3 text new line indent of 3 setext heading| `1. abc\n   foo\n   ---` | test_paragraph_series_m_ol_t_nl_i3_t_nl_i3_hs|
+|MOlOLTNlTNLHs  |Ordered list x2 text newline text new line setext heading| `1. 1. abc\nfoo\n---` | test_paragraph_series_m_ol_ol_t_nl_t_nl_hs |
+|MOlTNlI3OLTNlTNlHs|Ordered list text newline indent of 3 ordered list text new line text newline setext heading| `1. abc\n   1. def\nfoo\n---` | test_paragraph_series_m_ol_t_nl_i3_ol_t_nl_t_nl_hs |
+|MOlTNlI3OLTNlI2TNlI2Hs|Ordered list text newline indent of 3 ordered list text new line indent of 2 text newline indent of 2 setext heading| `1. abc\n   1. def\n  foo\n  ---` | test_paragraph_series_m_ol_t_nl_i3_ol_t_nl_i2_t_nl_i2_hs |
+|MOlTNlI3OLTNlI3TNlI3Hs|Ordered list text newline indent of 3 ordered list text new line indent of 3 text newline indent of 3 setext heading| `1. abc\n   1. def\n   foo\n   ---` | test_paragraph_series_m_ol_t_nl_i3_ol_t_nl_i3_t_nl_i3_hs |
+|MOlNlFb        |Ordered list newline fenced block| ` 1.\n```\nfoo\n``` ` | test_paragraph_series_m_ol_nl_fb |
+|MOlNlI2Fb      |Ordered list newline indent of 2 fenced block| ` 1.\n  ```\nfoo\n``` ` | test_paragraph_series_m_ol_nl_i2_fb |
+|MOlNlI3Fb      |Ordered list newline indent of 3 fenced block| ` 1.\n   ```\nfoo\n``` ` | test_paragraph_series_m_ol_nl_i3_fb |
+|MOlTNlFb       |Ordered list text newline fenced block| ` 1.  abc\n```\nfoo\n``` ` | test_paragraph_series_m_ol_t_nl_fb |
+|MOlTNlI2Fb     |Ordered list text newline indent of 2 fenced block| ` 1.  abc\n  ```\nfoo\n``` ` | test_paragraph_series_m_ol_t_nl_i2_fb |
+|MOlTNlI3Fb     |Ordered list text newline indent of 3 fenced block| ` 1.  abc\n   ```\nfoo\n``` ` | test_paragraph_series_m_ol_t_nl_i3_fb |
+|MOlOLTNlFb     |Ordered list x2 text newline fenced block| ` 1. 1. abc\n```\nfoo\n``` ` | test_paragraph_series_m_ol_ol_t_nl_fb |
+|MOlNlI3OLTNlFb |Ordered list newline indent of 3 ordered list text newline fenced block| ` 1.\n   1. abc\n```\nfoo\n``` ` | test_paragraph_series_m_ol_nl_i3_ol_t_nl_fb |
+|MOlNlI3OLTNlI2Fb|Ordered list newline indent of 3 ordered list text newline indent of 2 fenced block | ` 1.\n   1. abc\n  ```\nfoo\n``` ` | test_paragraph_series_m_ol_nl_i3_ol_t_nl_i2_fb |
+|MOlNlI3OLTNlI3Fb|Ordered list newline indent of 3 ordered list text newline indent of 3 fenced block| ` 1.\n   1. abc\n   ```\nfoo\n``` ` | test_paragraph_series_m_ol_nl_i3_ol_t_nl_i3_fb |
+|MI3OlNlI4TIb   |Indent of 3 ordered list newline indent of 4 text (indented block)| `   1.\n    foo` | test_paragraph_series_m_i3_ol_nl_i4_t_ib |
+|MI3OlNlI5TIb   |Indent of 3 ordered list newline indent of 5 text (indented block)| `   1.\n     foo` | test_paragraph_series_m_i3_ol_nl_i5_t_ib |
+|MI3OlNlI6TIb   |Indent of 3 ordered list newline indent of 6 text (indented block)| `   1.\n      foo` | test_paragraph_series_m_i3_ol_nl_i6_t_fb |
+|MI3OlTNlI4TIb  |Indent of 3 ordered list text newline indent of 4 text (indented block)| `   1. abc\n    foo` | test_paragraph_series_m_i3_ol_t_nl_i4_t_ib |
+|MI3OlTNlI5TIb  |Indent of 3 ordered list text newline indent of 5 text (indented block)| `   1. abc\n     foo` | test_paragraph_series_m_i3_ol_t_nl_i5_t_ib |
+|MI3OlTNlI6TIb  |Indent of 3 ordered list text newline indent of 6 text (indented block)| `   1. abc\n      foo` | test_paragraph_series_m_i3_ol_t_nl_i6_t_ib |
+|MOlOLTNlI4TIb  |Ordered list x2 text newline indent of 4 text (indented block)| `1. 1. abc\n    foo` | test_paragraph_series_m_ol_ol_t_nl_i4_t_ib |
+|MOlNlI3OLTNlI4tIb|Ordered list newline indent of 3 ordered list text newline indent of 4 text (indented block)| `1.\n   1. abc\n    foo` | test_paragraph_series_m_ol_nl_i3_ol_t_nl_i4_t_ib |
+|MI3OlNlI5OLTNlI4TIb |Indent of 3 ordered list newline indent of 5 ordered list text newline indent of 4 text (indented block)| `   1.\n      1. abc\n    foo` | test_paragraph_series_m_i3_ol_nl_i5_ol_t_nl_i4__t_ib |
+|MI1OlNlI4OLTNlI4TIb |Indent of 1 ordered list newline indent of 4 ordered list text newline indent of 4 text (indented block)| ` 1. abc\n    1. def\n    foo` | test_paragraph_series_m_i1_ol_nl_i4_ol_t_nl_i4_t_ib |
+|MOlNlHB        |Ordered list newline html block| `1.\n<s>\nfoo\n</s>` | test_paragraph_series_m_ol_nl_hb |
+|MOlNlI2HB      |Ordered list newline indent of 2 html block| `1.\n  <s>\nfoo\n</s>` | test_paragraph_series_m_ol_nl_i2_hb |
+|MOlNlI3HB      |Ordered list newline indent of 3 html block| `1.\n   <s>\nfoo\n</s>` | test_paragraph_series_m_ol_nl_i3_hb |
+|MOlTNlHB       |Ordered list text newline html block| `1.  abc\n<s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_hb |
+|MOlTNlI3HB     |Ordered list text newline indent of 3 html block| `1.  abc\n   <s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_i3_hb |
+|MOlTNlI4HB     |Ordered list text newline indent of 4 html block| `1.  abc\n    <s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_i4_hb |
+|MOlOLTNlHB     |Ordered list x2 text newline html block| `1. 1. abc\n<s>\nfoo\n</s>` | test_paragraph_series_m_ol_ol_t_nl_hb |
+|MOlTNlI3OLTNlHB|Ordered list text newline indent of 3 ordered list text newline html block| `1. abc\n   1. def\n<s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_i3_ol_t_nl_hb |
+|MOlTNlI3OLTNlI2HB|Ordered list text newline indent of 3 ordered list text newline indent of 2 html block| `1. abc\n   1. def\n  <s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_i3_ol_t_nl_i2_hb |
+|MOlTNlI3OLTNlI3HB|Ordered list text newline indent of 3 ordered list text newline indent of 3 html block| `1. abc\n   1. def\n   <s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_i3_ol_t_nl_i3_hb |
+
 
 
 Orphan?
