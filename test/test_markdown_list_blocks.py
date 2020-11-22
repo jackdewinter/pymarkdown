@@ -542,6 +542,155 @@ baz
 
 
 @pytest.mark.gfm
+def test_list_blocks_242a():
+    """
+    Test case 242a:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- Foo
+      bar
+
+
+      baz"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[para(1,3):\n    ]",
+        "[text(1,3):Foo\nbar::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[BLANK(4,1):]",
+        "[icode-block(5,7):    :]",
+        "[text(5,7):baz:]",
+        "[end-icode-block:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>Foo
+bar</p>
+<pre><code>baz
+</code></pre>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_242b():
+    """
+    Test case 242b:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- Foo
+
+      bar
+
+
+      baz
+
+
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):Foo:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[icode-block(3,7):    :\n\n\n    ]",
+        "[text(3,7):bar\n\x03\n\x03\nbaz:]",
+        "[end-icode-block:::True]",
+        "[BLANK(7,1):]",
+        "[BLANK(8,1):]",
+        "[BLANK(9,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>Foo</p>
+<pre><code>bar
+
+
+baz
+</code></pre>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_242c():
+    """
+    Test case 242c:  A list item that contains an indented code block will preserve empty lines within the code block verbatim.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- Foo
+
+      bar
+
+
+
+
+      baz"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):Foo:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[icode-block(3,7):    :\n\n\n\n\n    ]",
+        "[text(3,7):bar\n\x03\n\x03\n\x03\n\x03\nbaz:]",
+        "[end-icode-block:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>Foo</p>
+<pre><code>bar
+
+
+
+
+baz
+</code></pre>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_list_blocks_243():
     """
     Test case 243:  (part 1) Note that ordered list start numbers must be nine digits or less:

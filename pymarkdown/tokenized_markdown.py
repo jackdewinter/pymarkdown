@@ -280,6 +280,7 @@ class TokenizedMarkdown:
             new_tokens = destination_array
 
         LOGGER.debug("cob-start>>%s", str(parser_state.token_stack))
+        LOGGER.debug("cob-start>>%s", str(parser_state.token_document))
         while not parser_state.token_stack[-1].is_document:
 
             was_close_forced = was_forced
@@ -352,13 +353,17 @@ class TokenizedMarkdown:
                 )
                 assert not did_pause_lrd
             else:
+                LOGGER.debug("cob-rem>>%s", str(parser_state.token_document))
                 adjusted_tokens = TokenizedMarkdown.__remove_top_element_from_stack(
                     parser_state, was_close_forced
                 )
+                LOGGER.debug("cob-rem<<%s", str(parser_state.token_document))
+                LOGGER.debug("cob-adj<<%s", str(adjusted_tokens))
 
             new_tokens.extend(adjusted_tokens)
 
         LOGGER.debug("cob-end>>%s", str(parser_state.token_stack))
+        LOGGER.debug("cob-end>>%s", str(parser_state.token_document))
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
 
     # pylint: enable=too-many-arguments,too-many-locals
@@ -377,7 +382,7 @@ class TokenizedMarkdown:
         if parser_state.token_stack[-1].is_indented_code_block:
             extra_elements.extend(
                 ContainerBlockProcessor.extract_markdown_tokens_back_to_blank_line(
-                    parser_state
+                    parser_state, was_forced
                 )
             )
 

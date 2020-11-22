@@ -50,7 +50,7 @@ class ContainerBlockProcessor:
     """
 
     @staticmethod
-    def extract_markdown_tokens_back_to_blank_line(parser_state):
+    def extract_markdown_tokens_back_to_blank_line(parser_state, was_forced):
         """
         Extract tokens going back to the last blank line token.
         """
@@ -58,7 +58,10 @@ class ContainerBlockProcessor:
         pre_tokens = []
         while parser_state.token_document[-1].is_blank_line:
             last_element = parser_state.token_document[-1]
-            pre_tokens.append(last_element)
+            if was_forced:
+                pre_tokens.insert(0, last_element)
+            else:
+                pre_tokens.append(last_element)
             del parser_state.token_document[-1]
         return pre_tokens
 
@@ -778,7 +781,7 @@ class ContainerBlockProcessor:
             del parser_state.token_stack[-1]
 
             extracted_blank_line_tokens = ContainerBlockProcessor.extract_markdown_tokens_back_to_blank_line(
-                parser_state
+                parser_state, False
             )
             extracted_blank_line_tokens.reverse()
             pre_tokens.extend(extracted_blank_line_tokens)
