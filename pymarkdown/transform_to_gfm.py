@@ -223,17 +223,28 @@ class TransformToGfm:
 
         LOGGER.debug("!!!!!!!!!!!!!!!%s", str(actual_token_index))
         search_index = actual_token_index + 1
+        stack_count = 0
         while search_index < len(actual_tokens):
             LOGGER.debug(
-                "!!%s::%s", str(search_index), str(actual_tokens[search_index])
+                "!!%s::%s::%s",
+                str(stack_count),
+                str(search_index),
+                str(actual_tokens[search_index]),
             )
-            if isinstance(actual_tokens[search_index], EndMarkdownToken) and (
+            if isinstance(
+                actual_tokens[search_index],
+                (UnorderedListStartMarkdownToken, OrderedListStartMarkdownToken),
+            ):
+                stack_count += 1
+            elif isinstance(actual_tokens[search_index], EndMarkdownToken) and (
                 actual_tokens[search_index].type_name
                 == MarkdownToken.token_unordered_list_start
                 or actual_tokens[search_index].type_name
                 == MarkdownToken.token_ordered_list_start
             ):
-                break
+                if not stack_count:
+                    break
+                stack_count -= 1
             search_index += 1
         LOGGER.debug(
             "!!!!!!!!!!!!!!!%s-of-%s", str(search_index), str(len(actual_tokens))

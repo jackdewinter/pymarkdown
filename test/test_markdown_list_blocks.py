@@ -3233,8 +3233,7 @@ def test_list_blocks_extra_1():
 <li>one-A</li>
 </ol>
 </li>
-<li>
-<p>two</p>
+<li>two
 <ol>
 <li>two-A</li>
 </ol>
@@ -3297,10 +3296,281 @@ def test_list_blocks_extra_2():
 <li>one-A</li>
 </ol>
 </li>
-<li>
-<p>two</p>
+<li>two
 <ol start="2">
 <li>two-A</li>
+</ol>
+</li>
+<li>three</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_2a():
+    """
+    Test case 02a:  A list item can contain a heading:
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+def
+   1. ghi
+jkl
+1. three"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\ndef::\n]",
+        "[end-para:::True]",
+        "[olist(3,4):.:1:6:   :]",
+        "[para(3,7):\n]",
+        "[text(3,7):ghi\njkl::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(5,1):3::1]",
+        "[para(5,4):]",
+        "[text(5,4):three:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+def
+<ol>
+<li>ghi
+jkl</li>
+</ol>
+</li>
+<li>three</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_3():
+    """
+    Test case 03:  Code span in a list.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. `one`
+   1. ``one-A``
+1. `two`
+   1. ``two-A``
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[icode-span(1,4):one:`::]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[icode-span(2,7):one-A:``::]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(3,1):3::1]",
+        "[para(3,4):]",
+        "[icode-span(3,4):two:`::]",
+        "[end-para:::True]",
+        "[olist(4,4):.:1:6:   ]",
+        "[para(4,7):]",
+        "[icode-span(4,7):two-A:``::]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li><code>one</code>
+<ol>
+<li><code>one-A</code></li>
+</ol>
+</li>
+<li><code>two</code>
+<ol>
+<li><code>two-A</code></li>
+</ol>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_4():
+    """
+    Test case 04:  A list item can a link split over lines, regardless of any
+                   spacing, as a paragraph has already been started.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. [test](/me
+"out")
+   1. [really test](/me
+"out")
+1. three"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):\n]",
+        '[link(1,4):inline:/me:out::::test:False:"::\n:]',
+        "[text(1,5):test:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[olist(3,4):.:1:6:   :]",
+        "[para(3,7):\n]",
+        '[link(3,7):inline:/me:out::::really test:False:"::\n:]',
+        "[text(3,8):really test:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(5,1):3::1]",
+        "[para(5,4):]",
+        "[text(5,4):three:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li><a href="/me" title="out">test</a>
+<ol>
+<li><a href="/me" title="out">really test</a></li>
+</ol>
+</li>
+<li>three</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_4a():
+    """
+    Test case 04a:  A list item can a link split over lines, regardless of any
+                    spacing, as a paragraph has already been started.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. [test](/me
+   "out")
+   1. [really test](/me
+   "out")
+1. three"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):\n]",
+        '[link(1,4):inline:/me:out::::test:False:"::\n:]',
+        "[text(1,5):test:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[olist(3,4):.:1:6:   :   ]",
+        "[para(3,7):\n]",
+        '[link(3,7):inline:/me:out::::really test:False:"::\n:]',
+        "[text(3,8):really test:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(5,1):3::1]",
+        "[para(5,4):]",
+        "[text(5,4):three:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li><a href="/me" title="out">test</a>
+<ol>
+<li><a href="/me" title="out">really test</a></li>
+</ol>
+</li>
+<li>three</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_4b():
+    """
+    Test case 04b:  A list item can a link split over lines, regardless of any
+                    spacing, as a paragraph has already been started.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. [test](/me
+      "out")
+   1. [really test](/me
+      "out")
+1. three"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):\n   ]",
+        '[link(1,4):inline:/me:out::::test:False:"::\n:]',
+        "[text(1,5):test:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[olist(3,4):.:1:6:   :      ]",
+        "[para(3,7):\n]",
+        '[link(3,7):inline:/me:out::::really test:False:"::\n:]',
+        "[text(3,8):really test:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(5,1):3::1]",
+        "[para(5,4):]",
+        "[text(5,4):three:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li><a href="/me" title="out">test</a>
+<ol>
+<li><a href="/me" title="out">really test</a></li>
 </ol>
 </li>
 <li>three</li>
