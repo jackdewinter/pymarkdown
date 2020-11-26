@@ -269,6 +269,7 @@ class TransformToMarkdown:
                 delayed_continue,
                 continue_sequence,
                 next_token,
+                previous_token,
             )
             print(
                 "post-p>new_data>"
@@ -320,16 +321,24 @@ class TransformToMarkdown:
         continue_sequence,
         next_token,
         top_of_list_token_stack,
+        previous_token,
     ):
         if skip_merge:
             delayed_continue = ""
 
         # TODO handle this better?
         block_should_end_with_newline = False
+        force_newline_processing = False
         if current_token.token_name == "end-fcode-block":
             block_should_end_with_newline = True
         elif current_token.token_name == "end-setext":
             block_should_end_with_newline = True
+        elif previous_token and previous_token.token_name == "html-block":
+            print("bleck")
+            block_should_end_with_newline = True
+            force_newline_processing = True
+
+        print(">>previous_token>>" + ParserHelper.make_value_visible(previous_token))
 
         print(
             "?>"
@@ -369,6 +378,7 @@ class TransformToMarkdown:
                 delayed_continue,
                 block_should_end_with_newline,
                 top_of_list_token_stack,
+                force_newline_processing,
             )
 
         print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
@@ -388,6 +398,7 @@ class TransformToMarkdown:
         delayed_continue,
         continue_sequence,
         next_token,
+        previous_token,
     ):
         """
         Perform any post processing required by the containers.  This is intentionally
@@ -431,6 +442,7 @@ class TransformToMarkdown:
                 continue_sequence,
                 next_token,
                 top_of_list_token_stack,
+                previous_token,
             )
         assert top_of_list_token_stack.token_name == MarkdownToken.token_block_quote
         print("bq")
@@ -528,6 +540,7 @@ class TransformToMarkdown:
         delayed_continue,
         block_should_end_with_newline,
         top_of_list_token_stack,
+        force_newline_processing,
     ):
         """
         Merge the leaf data with the container data.
@@ -553,9 +566,9 @@ class TransformToMarkdown:
             )
             print("3>>block_ends_with_newline>>" + str(block_ends_with_newline))
             remove_trailing_newline = False
-            if (
-                block_ends_with_newline
-                and next_token.token_name == MarkdownToken.token_blank_line
+            if block_ends_with_newline and (
+                next_token.token_name == MarkdownToken.token_blank_line
+                or force_newline_processing
             ):
                 print("3remove_trailing_newline>>")
                 remove_trailing_newline = True

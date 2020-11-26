@@ -68,9 +68,6 @@
   - 233 and 235, should blank and end-list tokens be reversed?
 - 292x with sublists, does start sooner?
 - 2-3 levels of lists with lazy continuation lines
-- 296 and 297 - added in case for LRD, but need to test:
-  - other types of blocks
-  - block, blank, then multiple blocks
 - test_link_reference_definitions_185f & test_link_reference_definitions_183f
 
 - 256f+ tests, add versions of sublists that start with empty sublist

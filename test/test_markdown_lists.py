@@ -1730,6 +1730,363 @@ def test_list_items_297():
 
 
 @pytest.mark.gfm
+def test_list_items_297a():
+    """
+    Test case 297a:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- a
+- b
+
+  # Heading
+- d"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[text(2,3):b:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[atx(4,3):1:0:]",
+        "[text(4,5):Heading: ]",
+        "[end-atx:::False]",
+        "[li(5,1):2::]",
+        "[para(5,3):]",
+        "[text(5,3):d:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>a</p>
+</li>
+<li>
+<p>b</p>
+<h1>Heading</h1>
+</li>
+<li>
+<p>d</p>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_297b():
+    """
+    Test case 297b:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- a
+- b
+
+  Heading
+  -------
+- d"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[text(2,3):b:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[setext(5,3):-:7::(4,3)]",
+        "[text(4,3):Heading:]",
+        "[end-setext:::False]",
+        "[li(6,1):2::]",
+        "[para(6,3):]",
+        "[text(6,3):d:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>a</p>
+</li>
+<li>
+<p>b</p>
+<h2>Heading</h2>
+</li>
+<li>
+<p>d</p>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_297c():
+    """
+    Test case 297c:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- a
+- b
+
+  <!-- script
+  line
+  -->
+- d"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[text(2,3):b:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[html-block(4,3)]",
+        "[text(4,3):<!-- script\nline\n-->:]",
+        "[end-html-block:::False]",
+        "[li(7,1):2::]",
+        "[para(7,3):]",
+        "[text(7,3):d:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>a</p>
+</li>
+<li>
+<p>b</p>
+<!-- script
+line
+-->
+</li>
+<li>
+<p>d</p>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_297d():
+    """
+    Test case 297d:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- a
+- b
+
+      script
+- d"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[text(2,3):b:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[icode-block(4,7):    :]",
+        "[text(4,7):script:]",
+        "[end-icode-block:::True]",
+        "[li(5,1):2::]",
+        "[para(5,3):]",
+        "[text(5,3):d:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>a</p>
+</li>
+<li>
+<p>b</p>
+<pre><code>script
+</code></pre>
+</li>
+<li>
+<p>d</p>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_297e():
+    """
+    Test case 297e:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- a
+- b
+
+   ```script
+   my script
+   ```
+- d"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[text(2,3):b:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[fcode-block(4,4):`:3:script:::: :]",
+        "[text(5,3):my script:\a \a\x03\a]",
+        "[end-fcode-block: :3:False]",
+        "[li(7,1):2::]",
+        "[para(7,3):]",
+        "[text(7,3):d:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>a</p>
+</li>
+<li>
+<p>b</p>
+<pre><code class="language-script">my script
+</code></pre>
+</li>
+<li>
+<p>d</p>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_297f():
+    """
+    Test case 297f:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- a
+- b
+
+   ```script
+   my script
+   ```
+  <!-- script
+  line
+  -->
+- d"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n  \n  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[text(2,3):b:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[fcode-block(4,4):`:3:script:::: :]",
+        "[text(5,3):my script:\a \a\x03\a]",
+        "[end-fcode-block: :3:False]",
+        "[html-block(7,3)]",
+        "[text(7,3):<!-- script\nline\n-->:]",
+        "[end-html-block:::False]",
+        "[li(10,1):2::]",
+        "[para(10,3):]",
+        "[text(10,3):d:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>a</p>
+</li>
+<li>
+<p>b</p>
+<pre><code class="language-script">my script
+</code></pre>
+<!-- script
+line
+-->
+</li>
+<li>
+<p>d</p>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_list_items_298():
     """
     Test case 298:  This is a tight list, because the blank lines are in a code block:
