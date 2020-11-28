@@ -850,9 +850,9 @@ def test_list_items_291():
 
 
 @pytest.mark.gfm
-def test_list_items_292():
+def test_list_items_292x():
     """
-    Test case 292:  Note, however, that list items may not be indented more than three spaces. Here - e is treated as a paragraph continuation line, because it is indented more than three spaces:
+    Test case 292x:  Note, however, that list items may not be indented more than three spaces. Here - e is treated as a paragraph continuation line, because it is indented more than three spaces:
     """
 
     # Arrange
@@ -888,6 +888,77 @@ def test_list_items_292():
 <li>c</li>
 <li>d
 - e</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_292xa():
+    """
+    Test case 292xa:  variation, indent by 2 instead of 1
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- a
+  - b
+    - c
+      - d
+        - e"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):a:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):b:]",
+        "[end-para:::True]",
+        "[ulist(3,5):-::6:    ]",
+        "[para(3,7):]",
+        "[text(3,7):c:]",
+        "[end-para:::True]",
+        "[ulist(4,7):-::8:      ]",
+        "[para(4,9):]",
+        "[text(4,9):d:]",
+        "[end-para:::True]",
+        "[ulist(5,9):-::10:        ]",
+        "[para(5,11):]",
+        "[text(5,11):e:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>a
+<ul>
+<li>b
+<ul>
+<li>c
+<ul>
+<li>d
+<ul>
+<li>e</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
 </ul>"""
 
     # Act

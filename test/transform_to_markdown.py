@@ -270,6 +270,8 @@ class TransformToMarkdown:
                 continue_sequence,
                 next_token,
                 previous_token,
+                actual_tokens,
+                transformed_data,
             )
             print(
                 "post-p>new_data>"
@@ -322,6 +324,8 @@ class TransformToMarkdown:
         next_token,
         top_of_list_token_stack,
         previous_token,
+        actual_tokens,
+        transformed_data,
     ):
         if skip_merge:
             delayed_continue = ""
@@ -333,13 +337,49 @@ class TransformToMarkdown:
             block_should_end_with_newline = True
         elif current_token.token_name == "end-setext":
             block_should_end_with_newline = True
-        elif previous_token and previous_token.token_name == "html-block":
-            print("bleck")
+        elif (
+            previous_token
+            and previous_token.token_name == MarkdownToken.token_html_block
+        ):
             block_should_end_with_newline = True
             force_newline_processing = True
 
-        print(">>previous_token>>" + ParserHelper.make_value_visible(previous_token))
+        special_text_in_list_exception = False
 
+        print(">>previous_token>>" + ParserHelper.make_value_visible(previous_token))
+        print(">>current_token>>" + ParserHelper.make_value_visible(current_token))
+        if not block_should_end_with_newline:
+            ind = actual_tokens.index(current_token)
+            print(
+                ">>actual_tokens["
+                + str(ind)
+                + "]>>"
+                + ParserHelper.make_value_visible(actual_tokens[ind])
+            )
+            while actual_tokens[ind].token_class == MarkdownTokenClass.INLINE_BLOCK:
+                print(
+                    ">>actual_tokens["
+                    + str(ind)
+                    + "]>>"
+                    + ParserHelper.make_value_visible(actual_tokens[ind])
+                )
+                ind -= 1
+            print(
+                "<<actual_tokens["
+                + str(ind)
+                + "]>>"
+                + ParserHelper.make_value_visible(actual_tokens[ind])
+            )
+            if actual_tokens[ind].token_name == MarkdownToken.token_paragraph:
+                if transformed_data.endswith("\n") and (
+                    current_token.token_name == MarkdownToken.token_text
+                    or current_token.token_name == MarkdownToken.token_inline_emphasis
+                    or current_token.token_name == MarkdownToken.token_inline_link
+                    or current_token.token_name == MarkdownToken.token_inline_image
+                ):
+                    special_text_in_list_exception = True
+
+        print("?>special_text_in_list_exception>" + str(special_text_in_list_exception))
         print(
             "?>"
             + ParserHelper.make_value_visible(delayed_continue)
@@ -353,7 +393,8 @@ class TransformToMarkdown:
             and current_token.token_name != MarkdownToken.token_blank_line
         ):
             print("nd>")
-            new_data = delayed_continue + new_data
+            if not special_text_in_list_exception:
+                new_data = delayed_continue + new_data
             delayed_continue = ""
 
         print(
@@ -363,6 +404,7 @@ class TransformToMarkdown:
             + ParserHelper.make_value_visible(continue_sequence)
             + ">>"
         )
+        print("__merge_with_container_data>new_data>" + str(new_data))
         print("__merge_with_container_data>skip_merge>" + str(skip_merge))
         print(
             "__merge_with_container_data>continue_sequence>"
@@ -379,6 +421,7 @@ class TransformToMarkdown:
                 block_should_end_with_newline,
                 top_of_list_token_stack,
                 force_newline_processing,
+                special_text_in_list_exception,
             )
 
         print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
@@ -399,6 +442,8 @@ class TransformToMarkdown:
         continue_sequence,
         next_token,
         previous_token,
+        actual_tokens,
+        transformed_data,
     ):
         """
         Perform any post processing required by the containers.  This is intentionally
@@ -443,6 +488,8 @@ class TransformToMarkdown:
                 next_token,
                 top_of_list_token_stack,
                 previous_token,
+                actual_tokens,
+                transformed_data,
             )
         assert top_of_list_token_stack.token_name == MarkdownToken.token_block_quote
         print("bq")
@@ -541,12 +588,26 @@ class TransformToMarkdown:
         block_should_end_with_newline,
         top_of_list_token_stack,
         force_newline_processing,
+        special_text_in_list_exception,
     ):
         """
         Merge the leaf data with the container data.
         """
 
         # TODO can this be simplified like block quote?
+
+        if special_text_in_list_exception:
+            print(
+                "special_text_in_list_exception>>"
+                + ParserHelper.make_value_visible(new_data)
+                + ">>"
+            )
+            new_data = "\n" + new_data
+            print(
+                "special_text_in_list_exception<<"
+                + ParserHelper.make_value_visible(new_data)
+                + "<<"
+            )
 
         if ParserHelper.replace_noop_character in new_data:
             print("1>>")
@@ -592,6 +653,21 @@ class TransformToMarkdown:
             ):
                 print("4>>")
                 new_data = new_data[0 : -len(continue_sequence)]
+
+        if special_text_in_list_exception:
+            print(
+                "special_text_in_list_exception>>"
+                + ParserHelper.make_value_visible(new_data)
+                + ">>"
+            )
+            assert new_data.startswith("\n")
+            new_data = new_data[1:]
+            print(
+                "special_text_in_list_exception<<"
+                + ParserHelper.make_value_visible(new_data)
+                + "<<"
+            )
+
         return new_data, delayed_continue
 
     # pylint: enable=too-many-arguments

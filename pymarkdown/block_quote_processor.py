@@ -436,6 +436,23 @@ class BlockQuoteProcessor:
                 only_these_blocks=[ParagraphStackToken, IndentedCodeBlockStackToken],
                 was_forced=True,
             )
+            while parser_state.token_stack[-1].is_list:
+                LOGGER.debug(
+                    "stack>>%s", str(parser_state.token_stack[-1].indent_level)
+                )
+                LOGGER.debug("original_start_index>>%s", str(original_start_index))
+
+                if original_start_index < parser_state.token_stack[-1].indent_level:
+                    close_tokens, _, _ = parser_state.close_open_blocks_fn(
+                        parser_state,
+                        include_lists=True,
+                        was_forced=True,
+                        until_this_index=len(parser_state.token_stack) - 1,
+                    )
+                    container_level_tokens.extend(close_tokens)
+                else:
+                    break
+
             while this_bq_count > stack_bq_count:
                 stack_bq_count += 1
 

@@ -66,9 +66,7 @@
   - >>stack_count>>0>>#9:[end-ulist]
   - should be end and then blank, as the blank is outside of the list
   - 233 and 235, should blank and end-list tokens be reversed?
-- 292x with sublists, does start sooner?
 - 2-3 levels of lists with lazy continuation lines
-- test_link_reference_definitions_185f & test_link_reference_definitions_183f
 
 - 256f+ tests, add versions of sublists that start with empty sublist
 

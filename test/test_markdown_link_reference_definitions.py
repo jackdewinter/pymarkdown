@@ -1208,11 +1208,10 @@ def test_link_reference_definitions_183f():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_link_reference_definitions_183g():
     """
-    Test case 183f:  variation
+    Test case 183gx:  variation
     """
 
     # Arrange
@@ -1222,23 +1221,361 @@ def test_link_reference_definitions_183g():
 [foo]: /url
 > [Foo]"""
     expected_tokens = [
-        "[atx(1,1):1:0:]",
-        "[text(1,3)::\a \a\x03\a]",
-        "[link(1,3):shortcut:/url:::::Foo:::::]",
-        "[text(1,4):Foo:]",
-        "[end-link:::False]",
-        "[end-atx:::False]",
-        "[link-ref-def(2,1):True::foo:: :/url:::::]",
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n]",
+        "[text(1,3):A simple list\n::\n]",
+        "[text(2,1):[:]",
+        "[text(2,2):foo:]",
+        "[text(2,5):]:]",
+        "[text(2,6):: /url:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
         "[block-quote(3,1)::> ]",
         "[para(3,3):]",
-        "[text(3,3):bar:]",
+        "[text(3,3):[:]",
+        "[text(3,4):Foo:]",
+        "[text(3,7):]:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
-    expected_gfm = """<h1><a href="/url">Foo</a></h1>
+    expected_gfm = """<ul>
+<li>A simple list
+[foo]: /url</li>
+</ul>
 <blockquote>
-<p>bar</p>
+<p>[Foo]</p>
 </blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183ga():
+    """
+    Test case 183gx:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- A simple list
+foo]: /url
+> [Foo]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n]",
+        "[text(1,3):A simple list\nfoo::\n]",
+        "[text(2,4):]:]",
+        "[text(2,5):: /url:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[text(3,3):[:]",
+        "[text(3,4):Foo:]",
+        "[text(3,7):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>A simple list
+foo]: /url</li>
+</ul>
+<blockquote>
+<p>[Foo]</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183gb():
+    """
+    Test case 183gx:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- A simple list
+ [foo]: /url
+> [Foo]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:: ]",
+        "[para(1,3):\n]",
+        "[text(1,3):A simple list\n::\n]",
+        "[text(2,1):[:]",
+        "[text(2,2):foo:]",
+        "[text(2,5):]:]",
+        "[text(2,6):: /url:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[text(3,3):[:]",
+        "[text(3,4):Foo:]",
+        "[text(3,7):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>A simple list
+[foo]: /url</li>
+</ul>
+<blockquote>
+<p>[Foo]</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183gc():
+    """
+    Test case 183gx:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. A simple list
+ [foo]: /url
+> [Foo]"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:: ]",
+        "[para(1,4):\n]",
+        "[text(1,4):A simple list\n::\n]",
+        "[text(2,1):[:]",
+        "[text(2,2):foo:]",
+        "[text(2,5):]:]",
+        "[text(2,6):: /url:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[text(3,3):[:]",
+        "[text(3,4):Foo:]",
+        "[text(3,7):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>A simple list
+[foo]: /url</li>
+</ol>
+<blockquote>
+<p>[Foo]</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183gd():
+    """
+    Test case 183gx:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- A simple list
+    [foo]: /url
+> [Foo]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):\n  ]",
+        "[text(1,3):A simple list\n::\n]",
+        "[text(2,3):[:]",
+        "[text(2,4):foo:]",
+        "[text(2,7):]:]",
+        "[text(2,8):: /url:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[text(3,3):[:]",
+        "[text(3,4):Foo:]",
+        "[text(3,7):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>A simple list
+[foo]: /url</li>
+</ul>
+<blockquote>
+<p>[Foo]</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183ge():
+    """
+    Test case 183gx:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- A simple list
+*foo*: /url
+> [Foo]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n]",
+        "[text(1,3):A simple list\n::\n]",
+        "[emphasis(2,1):1:*]",
+        "[text(2,2):foo:]",
+        "[end-emphasis(2,5)::1:*:False]",
+        "[text(2,6):: /url:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[text(3,3):[:]",
+        "[text(3,4):Foo:]",
+        "[text(3,7):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>A simple list
+<em>foo</em>: /url</li>
+</ul>
+<blockquote>
+<p>[Foo]</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183gf():
+    """
+    Test case 183gx:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- A simple list
+items
+> [Foo]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n]",
+        "[text(1,3):A simple list\nitems::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[text(3,3):[:]",
+        "[text(3,4):Foo:]",
+        "[text(3,7):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>A simple list
+items</li>
+</ul>
+<blockquote>
+<p>[Foo]</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_183gg():
+    """
+    Test case 183ga:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- A simple list
+[foo]: /url
+  > [Foo]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n]",
+        "[text(1,3):A simple list\n::\n]",
+        "[text(2,1):[:]",
+        "[text(2,2):foo:]",
+        "[text(2,5):]:]",
+        "[text(2,6):: /url:]",
+        "[end-para:::True]",
+        "[block-quote(3,3):  :  > ]",
+        "[para(3,5):]",
+        "[text(3,5):[:]",
+        "[text(3,6):Foo:]",
+        "[text(3,9):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>A simple list
+[foo]: /url
+<blockquote>
+<p>[Foo]</p>
+</blockquote>
+</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -1511,7 +1848,6 @@ def test_link_reference_definitions_185e():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_link_reference_definitions_185f():
     """
@@ -1526,15 +1862,55 @@ def test_link_reference_definitions_185f():
 [foo]"""
     expected_tokens = [
         "[link-ref-def(1,1):True::foo:: :/url:::::]",
-        "[para(2,1):\n]",
-        "[text(2,1):===\n::\n]",
+        "[ulist(2,1):-::2::]",
+        "[para(2,3):\n]",
+        "[text(2,3):This is a simple list\n::\n]",
         "[link(3,1):shortcut:/url:::::foo:::::]",
         "[text(3,2):foo:]",
         "[end-link:::False]",
         "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
-    expected_gfm = """<p>===
-<a href="/url">foo</a></p>"""
+    expected_gfm = """<ul>
+<li>This is a simple list
+<a href="/url">foo</a></li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_185fa():
+    """
+    Test case 185f:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """[foo]: /url
+- This is a simple list
+![foo]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo:: :/url:::::]",
+        "[ulist(2,1):-::2::]",
+        "[para(2,3):\n]",
+        "[text(2,3):This is a simple list\n::\n]",
+        "[image(3,1):shortcut:/url::foo::::foo:::::]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>This is a simple list
+<img src="/url" alt="foo" /></li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
