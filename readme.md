@@ -67,8 +67,10 @@
   - should be end and then blank, as the blank is outside of the list
   - 233 and 235, should blank and end-list tokens be reversed?
 - 2-3 levels of lists with lazy continuation lines
-
-- 256f+ tests, add versions of sublists that start with empty sublist
+- variations of list+indent block with proper indent for actual block
+- variations of list+fenced block with proper indent for actual block
+- variations of list+html block with proper indent for actual block
+- variations of list+set ext with proper indent for actual block
 
 ## Bugs - Block Quote/List Interaction
 

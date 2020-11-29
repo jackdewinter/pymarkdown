@@ -644,12 +644,18 @@ class ListBlockProcessor:
         LOGGER.debug(
             ">>>>>XX>>%s>>%s<<", str(after_marker_ws_index), str(len(line_to_parse))
         )
-        if after_marker_ws_index == len(line_to_parse):
+        if after_marker_ws_index == len(line_to_parse) and ws_after_marker:
             LOGGER.debug("BOOOOOOOM")
+            LOGGER.debug(
+                ">>parser_state.token_stack>>%s", str(parser_state.token_stack)
+            )
             indent_level = 2 + marker_width_minus_one + len(adj_ws)
             remaining_whitespace = ws_after_marker
             ws_after_marker = 0
         else:
+            if after_marker_ws_index == len(line_to_parse) and ws_after_marker == 0:
+                ws_after_marker += 1
+
             indent_level = (
                 ws_before_marker + 1 + ws_after_marker + marker_width_minus_one
             )
@@ -664,6 +670,12 @@ class ListBlockProcessor:
                 indent_level = indent_level - ws_after_marker + 1
                 remaining_whitespace = ws_after_marker - 1
                 ws_after_marker = 1
+                LOGGER.debug(
+                    "ws_after_marker>>%s<<indent_level<<%s<<rem<<%s<<",
+                    str(ws_after_marker),
+                    str(indent_level),
+                    str(remaining_whitespace),
+                )
         LOGGER.debug(
             "ws_after_marker>>%s<<indent_level<<%s<<rem<<%s<<",
             str(ws_after_marker),
@@ -727,6 +739,7 @@ class ListBlockProcessor:
         """
 
         LOGGER.debug("new_stack>>%s", str(new_stack))
+        LOGGER.debug("indent_level>>%s", str(indent_level))
 
         emit_item = True
         emit_li = True

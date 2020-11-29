@@ -450,6 +450,7 @@ def __validate_same_line(
         )
         print(">>current_token>>" + str(current_token))
         print(">>current_position.index_number>>" + str(current_position.index_number))
+        print(">>last_token>>" + str(last_token))
         print(">>last_token.indent_level>>" + str(last_token.indent_level))
         if current_token.token_name == MarkdownToken.token_blank_line:
             assert current_position.index_number == last_token.indent_level

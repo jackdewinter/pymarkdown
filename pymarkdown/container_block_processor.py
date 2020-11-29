@@ -226,7 +226,10 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             current_container_blocks,
         )
+        LOGGER.debug("olist->resultant_tokens->%s", str(resultant_tokens))
+        LOGGER.debug("olist->container_level_tokens->%s", str(container_level_tokens))
         container_level_tokens.extend(resultant_tokens)
+        LOGGER.debug("olist->container_level_tokens->%s", str(container_level_tokens))
         LOGGER.debug(
             "post-olist>>#%s#%s#%s#",
             str(position_marker.index_number),
@@ -285,6 +288,7 @@ class ContainerBlockProcessor:
             )
             LOGGER.debug("text>>%s>>", line_to_parse.replace(" ", "\\s"))
 
+        LOGGER.debug("olist->container_level_tokens->%s", str(container_level_tokens))
         LOGGER.debug("removed_chars_at_start>>>%s", str(removed_chars_at_start))
 
         if container_depth:
@@ -617,7 +621,7 @@ class ContainerBlockProcessor:
             position_marker.line_number, -1, adj_line_to_parse
         )
         (
-            _,
+            produced_inner_tokens,
             line_to_parse,
             requeue_line_info,
         ) = ContainerBlockProcessor.parse_line_for_container_blocks(
@@ -640,6 +644,8 @@ class ContainerBlockProcessor:
             str(parser_state.token_document),
         )
         LOGGER.debug("check next container_start>line_parse>>%s", str(line_to_parse))
+
+        parser_state.token_document.extend(produced_inner_tokens)
         return line_to_parse
 
     # pylint: enable=too-many-arguments
