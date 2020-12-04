@@ -4634,10 +4634,10 @@ foo
 </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:4::]",
+        "[olist(1,1):.:1:4:]",
         "[para(1,5):]",
         "[text(1,5):abc:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[html-block(2,1)]",
         "[text(2,1):<script>\nfoo\n</script>:]",
@@ -4677,13 +4677,13 @@ foo
 </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:4::   ]",
+        "[olist(1,1):.:1:4:]",
         "[para(1,5):]",
         "[text(1,5):abc:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
-        "[html-block(2,1):3]",
-        "[text(2,4):<script>\nfoo\n</script>:]",
+        "[html-block(2,1)]",
+        "[text(2,4):<script>\nfoo\n</script>:   ]",
         "[end-html-block:::False]",
         "[BLANK(5,1):]",
     ]
@@ -4752,7 +4752,6 @@ foo
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_ol_nl_hb():
     """
@@ -4768,18 +4767,14 @@ foo
 </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::]",
+        "[olist(1,1):.:1:3:]",
         "[olist(1,4):.:1:6:   ]",
         "[BLANK(1,6):]",
         "[end-olist:::True]",
-        "[html-block(2,1)]",
-        "[text(2,1):<script>:]",
-        "[end-html-block:::True]",
         "[end-olist:::True]",
-        "[para(3,1):\n]",
-        "[text(3,1):foo\n::\n]",
-        "[raw-html(4,1):/script]",
-        "[end-para:::True]",
+        "[html-block(2,1)]",
+        "[text(2,1):<script>\nfoo\n</script>:]",
+        "[end-html-block:::False]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ol>
@@ -4820,10 +4815,10 @@ foo
 """
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :]",
+        "[olist(1,4):.:1:6:   ]",
         "[para(1,7):]",
         "[text(1,7):abc:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[end-olist:::True]",
         "[html-block(2,1)]",
@@ -4852,7 +4847,6 @@ foo
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_nl_i3_ol_nl_hb():
     """
@@ -4869,19 +4863,15 @@ foo
 </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::]",
+        "[olist(1,1):.:1:3:]",
         "[BLANK(1,3):]",
         "[olist(2,4):.:1:6:   ]",
         "[BLANK(2,6):]",
         "[end-olist:::True]",
-        "[html-block(3,1)]",
-        "[text(3,1):<script>:]",
-        "[end-html-block:::True]",
         "[end-olist:::True]",
-        "[para(4,1):\n]",
-        "[text(4,1):foo\n::\n]",
-        "[raw-html(5,1):/script]",
-        "[end-para:::True]",
+        "[html-block(3,1)]",
+        "[text(3,1):<script>\nfoo\n</script>:]",
+        "[end-html-block:::False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ol>
@@ -4922,21 +4912,17 @@ foo
 </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::]",
+        "[olist(1,1):.:1:3:]",
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
         "[olist(2,4):.:1:6:   ]",
         "[BLANK(2,6):]",
         "[end-olist:::True]",
-        "[html-block(3,1)]",
-        "[text(3,1):<script>:]",
-        "[end-html-block:::True]",
         "[end-olist:::True]",
-        "[para(4,1):\n]",
-        "[text(4,1):foo\n::\n]",
-        "[raw-html(5,1):/script]",
-        "[end-para:::True]",
+        "[html-block(3,1)]",
+        "[text(3,1):<script>\nfoo\n</script>:]",
+        "[end-html-block:::False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ol>
@@ -4957,7 +4943,6 @@ foo
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_nl_i3_ol_t_nl_hb():
     """
@@ -4976,10 +4961,10 @@ foo
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
         "[BLANK(1,3):]",
-        "[olist(2,4):.:1:6:   :]",
+        "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
         "[text(2,7):def:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[end-olist:::True]",
         "[html-block(3,1)]",
@@ -4987,8 +4972,7 @@ foo
         "[end-html-block:::False]",
         "[BLANK(6,1):]",
     ]
-    expected_gfm = """
-<ol>
+    expected_gfm = """<ol>
 <li>
 <ol>
 <li>def</li>
@@ -5030,10 +5014,10 @@ foo
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :]",
+        "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
         "[text(2,7):def:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[end-olist:::True]",
         "[html-block(3,1)]",
@@ -5062,7 +5046,6 @@ foo
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_nl_i3_ol_nl_i2_hb():
     """
@@ -5079,19 +5062,15 @@ foo
 </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::  ]",
+        "[olist(1,1):.:1:3:]",
         "[BLANK(1,3):]",
         "[olist(2,4):.:1:6:   ]",
         "[BLANK(2,6):]",
         "[end-olist:::True]",
-        "[html-block(3,3)]",
-        "[text(3,3):<script>:]",
-        "[end-html-block:::True]",
         "[end-olist:::True]",
-        "[para(4,1):\n]",
-        "[text(4,1):foo\n::\n]",
-        "[raw-html(5,1):/script]",
-        "[end-para:::True]",
+        "[html-block(3,1)]",
+        "[text(3,3):<script>\nfoo\n</script>:  ]",
+        "[end-html-block:::False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ol>
@@ -5185,14 +5164,14 @@ foo
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
         "[BLANK(1,3):]",
-        "[olist(2,4):.:1:6:   :  ]",
+        "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
         "[text(2,7):def:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[end-olist:::True]",
-        "[html-block(3,1):2]",
-        "[text(3,3):<script>\nfoo\n</script>:]",
+        "[html-block(3,1)]",
+        "[text(3,3):<script>\nfoo\n</script>:  ]",
         "[end-html-block:::False]",
         "[BLANK(6,1):]",
     ]
@@ -5238,14 +5217,14 @@ foo
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :  ]",
+        "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
         "[text(2,7):def:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[end-olist:::True]",
-        "[html-block(3,1):2]",
-        "[text(3,3):<script>\nfoo\n</script>:]",
+        "[html-block(3,1)]",
+        "[text(3,3):<script>\nfoo\n</script>:  ]",
         "[end-html-block:::False]",
         "[BLANK(6,1):]",
     ]

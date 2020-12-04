@@ -257,7 +257,7 @@ class TokenizedMarkdown:
 
         return token_to_use, did_start_close, did_started_close
 
-    # pylint: disable=too-many-arguments,too-many-locals
+    # pylint: disable=too-many-arguments,too-many-locals,too-many-statements
     @staticmethod
     def __close_open_blocks(
         parser_state,
@@ -364,9 +364,10 @@ class TokenizedMarkdown:
 
         LOGGER.debug("cob-end>>%s", str(parser_state.token_stack))
         LOGGER.debug("cob-end>>%s", str(parser_state.token_document))
+        LOGGER.debug("cob-end>>new_tokens>>%s", str(new_tokens))
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
 
-    # pylint: enable=too-many-arguments,too-many-locals
+    # pylint: enable=too-many-arguments,too-many-locals,too-many-statements
 
     @staticmethod
     def __remove_top_element_from_stack(parser_state, was_forced):

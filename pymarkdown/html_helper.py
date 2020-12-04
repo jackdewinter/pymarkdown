@@ -684,7 +684,7 @@ class HtmlHelper:
         return html_block_type
 
     @staticmethod
-    def __determine_html_block_type(parser_state, line_to_parse, start_index):
+    def __determine_html_block_type(token_stack, line_to_parse, start_index):
         """
         Determine the type of the html block that we are starting.
         """
@@ -710,8 +710,29 @@ class HtmlHelper:
         if not html_block_type:
             return None, None
         if html_block_type == HtmlHelper.html_block_7:
-            if parser_state.token_stack[-1].is_paragraph:
+            if token_stack[-1].is_paragraph:
                 return None, None
+        return html_block_type, remaining_html_tag
+
+    @staticmethod
+    def is_html_block(line_to_parse, start_index, extracted_whitespace, token_stack):
+        """
+        Determine if the current sequence of characters would start a html block element.
+        """
+
+        html_block_type = None
+        remaining_html_tag = None
+        if (
+            ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
+        ) and ParserHelper.is_character_at_index(
+            line_to_parse, start_index, HtmlHelper.__html_block_start_character,
+        ):
+            (
+                html_block_type,
+                remaining_html_tag,
+            ) = HtmlHelper.__determine_html_block_type(
+                token_stack, line_to_parse, start_index,
+            )
         return html_block_type, remaining_html_tag
 
     @staticmethod
@@ -721,31 +742,22 @@ class HtmlHelper:
         """
 
         new_tokens = []
-        if (
-            ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
-        ) and ParserHelper.is_character_at_index(
+        html_block_type, remaining_html_tag = HtmlHelper.is_html_block(
             position_marker.text_to_parse,
             position_marker.index_number,
-            HtmlHelper.__html_block_start_character,
-        ):
-            (
-                html_block_type,
-                remaining_html_tag,
-            ) = HtmlHelper.__determine_html_block_type(
-                parser_state,
-                position_marker.text_to_parse,
-                position_marker.index_number,
+            extracted_whitespace,
+            parser_state.token_stack,
+        )
+        if html_block_type:
+            new_tokens, _, _ = parser_state.close_open_blocks_fn(
+                parser_state, only_these_blocks=[ParagraphStackToken],
             )
-            if html_block_type:
-                new_tokens, _, _ = parser_state.close_open_blocks_fn(
-                    parser_state, only_these_blocks=[ParagraphStackToken],
-                )
-                parser_state.token_stack.append(
-                    HtmlBlockStackToken(html_block_type, remaining_html_tag)
-                )
-                new_tokens.append(
-                    HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
-                )
+            parser_state.token_stack.append(
+                HtmlBlockStackToken(html_block_type, remaining_html_tag)
+            )
+            new_tokens.append(
+                HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
+            )
         return new_tokens
 
     @staticmethod

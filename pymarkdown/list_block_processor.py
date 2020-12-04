@@ -5,6 +5,7 @@ Module to provide processing for the list blocks.
 import logging
 import string
 
+from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.markdown_token import (
     NewListItemMarkdownToken,
@@ -1086,11 +1087,17 @@ class ListBlockProcessor:
             skip_whitespace_check=True,
         )
         LOGGER.debug("ws(naa)>>is_theme_break>>%s", str(is_theme_break))
+        is_html_block, _ = HtmlHelper.is_html_block(
+            line_to_parse, start_index, extracted_whitespace, parser_state.token_stack
+        )
+        LOGGER.debug("ws(naa)>>is_html_block>>%s", str(is_html_block))
 
-        if not parser_state.token_stack[-1].is_paragraph or is_theme_break:
+        if not parser_state.token_stack[-1].is_paragraph or (
+            is_theme_break or is_html_block
+        ):
             LOGGER.debug("ws (normal and adjusted) not enough to continue")
 
-            if is_theme_break:
+            if is_theme_break or is_html_block:
                 LOGGER.debug("lsl %s", str(leading_space_length))
                 LOGGER.debug("lsl %s", str(parser_state.token_stack[ind]))
                 search_index = ind
