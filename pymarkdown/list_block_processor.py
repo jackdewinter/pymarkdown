@@ -1091,13 +1091,17 @@ class ListBlockProcessor:
             line_to_parse, start_index, extracted_whitespace, parser_state.token_stack
         )
         LOGGER.debug("ws(naa)>>is_html_block>>%s", str(is_html_block))
+        is_fenced_block, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
+            line_to_parse, start_index, extracted_whitespace
+        )
+        LOGGER.debug("ws(naa)>>is_html_block>>%s", str(is_fenced_block))
 
         if not parser_state.token_stack[-1].is_paragraph or (
-            is_theme_break or is_html_block
+            is_theme_break or is_html_block or is_fenced_block
         ):
             LOGGER.debug("ws (normal and adjusted) not enough to continue")
 
-            if is_theme_break or is_html_block:
+            if is_theme_break or is_html_block or is_fenced_block:
                 LOGGER.debug("lsl %s", str(leading_space_length))
                 LOGGER.debug("lsl %s", str(parser_state.token_stack[ind]))
                 search_index = ind

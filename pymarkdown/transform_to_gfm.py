@@ -540,12 +540,20 @@ class TransformToGfm:
         Handle the black line token.
         """
         if transform_state.is_in_fenced_code_block:
-            if (
+            primary_condition = (
                 transform_state.last_token.token_name
                 != MarkdownToken.token_fenced_code_block
                 or transform_state.next_token.token_name
                 != MarkdownToken.token_blank_line
-            ):
+            )
+            exclusion_condition = (
+                transform_state.last_token.token_name
+                == MarkdownToken.token_fenced_code_block
+                and transform_state.next_token.token_name
+                == EndMarkdownToken.type_name_prefix
+                + MarkdownToken.token_fenced_code_block
+            )
+            if primary_condition and not exclusion_condition:
                 output_html += (
                     ParserHelper.newline_character + next_token.extracted_whitespace
                 )

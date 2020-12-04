@@ -259,6 +259,64 @@ def test_fenced_code_blocks_096():
 
 
 @pytest.mark.gfm
+def test_fenced_code_blocks_096a():
+    """
+    Test case 096a:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """```
+"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[BLANK(2,1):]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<pre><code></code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_096b():
+    """
+    Test case 096b:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """```
+
+"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[BLANK(2,1):]",
+        "[BLANK(3,1):]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<pre><code>\n</code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_fenced_code_blocks_097():
     """
     Test case 097:  (part b) Unclosed code blocks are closed by the end of the document (or the enclosing block quote or list item):
