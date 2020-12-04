@@ -664,6 +664,37 @@ class LeafBlockProcessor:
             )
         return new_tokens
 
+    @staticmethod
+    def is_atx_heading(line_to_parse, start_index, extracted_whitespace):
+        """
+        Determine whether or not an ATX Heading is about to start.
+        """
+
+        if ParserHelper.is_length_less_than_or_equal_to(
+            extracted_whitespace, 3
+        ) and ParserHelper.is_character_at_index(
+            line_to_parse, start_index, LeafBlockProcessor.__atx_character,
+        ):
+            hash_count, new_index = ParserHelper.collect_while_character(
+                line_to_parse, start_index, LeafBlockProcessor.__atx_character,
+            )
+            (
+                non_whitespace_index,
+                extracted_whitespace_at_start,
+            ) = ParserHelper.extract_whitespace(line_to_parse, new_index)
+
+            if hash_count <= 6 and (
+                extracted_whitespace_at_start
+                or non_whitespace_index == len(line_to_parse)
+            ):
+                return (
+                    True,
+                    non_whitespace_index,
+                    hash_count,
+                    extracted_whitespace_at_start,
+                )
+        return False, None, None, None
+
     # pylint: disable=too-many-locals
     @staticmethod
     def parse_atx_headings(parser_state, position_marker, extracted_whitespace):
@@ -673,101 +704,88 @@ class LeafBlockProcessor:
 
         new_tokens = []
 
-        if ParserHelper.is_length_less_than_or_equal_to(
-            extracted_whitespace, 3
-        ) and ParserHelper.is_character_at_index(
+        (
+            heading_found,
+            non_whitespace_index,
+            hash_count,
+            extracted_whitespace_at_start,
+        ) = LeafBlockProcessor.is_atx_heading(
             position_marker.text_to_parse,
             position_marker.index_number,
-            LeafBlockProcessor.__atx_character,
-        ):
-            hash_count, new_index = ParserHelper.collect_while_character(
-                position_marker.text_to_parse,
-                position_marker.index_number,
-                LeafBlockProcessor.__atx_character,
+            extracted_whitespace,
+        )
+        if heading_found:
+            LOGGER.debug("parse_atx_headings>>start",)
+
+            old_top_of_stack = parser_state.token_stack[-1]
+
+            new_tokens, _, _ = parser_state.close_open_blocks_fn(
+                parser_state, new_tokens
             )
+            remaining_line = position_marker.text_to_parse[non_whitespace_index:]
             (
-                non_whitespace_index,
-                extracted_whitespace_at_start,
-            ) = ParserHelper.extract_whitespace(
-                position_marker.text_to_parse, new_index
+                end_index,
+                extracted_whitespace_at_end,
+            ) = ParserHelper.extract_whitespace_from_end(remaining_line)
+            remove_trailing_count = 0
+            while (
+                end_index > 0
+                and remaining_line[end_index - 1] == LeafBlockProcessor.__atx_character
+            ):
+                end_index -= 1
+                remove_trailing_count += 1
+            extracted_whitespace_before_end = ""
+            if remove_trailing_count:
+                if end_index > 0:
+                    if ParserHelper.is_character_at_index_whitespace(
+                        remaining_line, end_index - 1
+                    ):
+                        remaining_line = remaining_line[:end_index]
+                        (
+                            end_index,
+                            extracted_whitespace_before_end,
+                        ) = ParserHelper.extract_whitespace_from_end(remaining_line)
+                        remaining_line = remaining_line[:end_index]
+                    else:
+                        extracted_whitespace_at_end = ""
+                        remove_trailing_count = 0
+                else:
+                    remaining_line = ""
+            else:
+                extracted_whitespace_at_end = remaining_line[end_index:]
+                remaining_line = remaining_line[0:end_index]
+            start_token = AtxHeadingMarkdownToken(
+                hash_count,
+                remove_trailing_count,
+                extracted_whitespace,
+                position_marker,
+            )
+            new_tokens.append(start_token)
+
+            LeafBlockProcessor.correct_for_leaf_block_start_in_list(
+                parser_state,
+                position_marker.index_indent,
+                old_top_of_stack,
+                new_tokens,
+                was_token_already_added_to_stack=False,
             )
 
-            if hash_count <= 6 and (
-                extracted_whitespace_at_start
-                or non_whitespace_index == len(position_marker.text_to_parse)
-            ):
-                LOGGER.debug("parse_atx_headings>>start",)
-
-                old_top_of_stack = parser_state.token_stack[-1]
-
-                new_tokens, _, _ = parser_state.close_open_blocks_fn(
-                    parser_state, new_tokens
+            new_tokens.append(
+                TextMarkdownToken(
+                    remaining_line,
+                    extracted_whitespace_at_start,
+                    position_marker=position_marker,
                 )
-                remaining_line = position_marker.text_to_parse[non_whitespace_index:]
-                (
-                    end_index,
-                    extracted_whitespace_at_end,
-                ) = ParserHelper.extract_whitespace_from_end(remaining_line)
-                remove_trailing_count = 0
-                while (
-                    end_index > 0
-                    and remaining_line[end_index - 1]
-                    == LeafBlockProcessor.__atx_character
-                ):
-                    end_index -= 1
-                    remove_trailing_count += 1
-                extracted_whitespace_before_end = ""
-                if remove_trailing_count:
-                    if end_index > 0:
-                        if ParserHelper.is_character_at_index_whitespace(
-                            remaining_line, end_index - 1
-                        ):
-                            remaining_line = remaining_line[:end_index]
-                            (
-                                end_index,
-                                extracted_whitespace_before_end,
-                            ) = ParserHelper.extract_whitespace_from_end(remaining_line)
-                            remaining_line = remaining_line[:end_index]
-                        else:
-                            extracted_whitespace_at_end = ""
-                            remove_trailing_count = 0
-                    else:
-                        remaining_line = ""
-                else:
-                    extracted_whitespace_at_end = remaining_line[end_index:]
-                    remaining_line = remaining_line[0:end_index]
-                start_token = AtxHeadingMarkdownToken(
-                    hash_count,
-                    remove_trailing_count,
-                    extracted_whitespace,
-                    position_marker,
-                )
-                new_tokens.append(start_token)
-
-                LeafBlockProcessor.correct_for_leaf_block_start_in_list(
-                    parser_state,
-                    position_marker.index_indent,
-                    old_top_of_stack,
-                    new_tokens,
-                    was_token_already_added_to_stack=False,
-                )
-
-                new_tokens.append(
-                    TextMarkdownToken(
-                        remaining_line,
-                        extracted_whitespace_at_start,
-                        position_marker=position_marker,
-                    )
-                )
-                end_token = EndMarkdownToken(
-                    "atx",
-                    extracted_whitespace_at_end,
-                    extracted_whitespace_before_end,
-                    None,
-                    False,
-                )
-                end_token.start_markdown_token = start_token
-                new_tokens.append(end_token)
+            )
+            end_token = EndMarkdownToken(
+                "atx",
+                extracted_whitespace_at_end,
+                extracted_whitespace_before_end,
+                None,
+                False,
+            )
+            end_token.start_markdown_token = start_token
+            new_tokens.append(end_token)
         return new_tokens
 
     # pylint: enable=too-many-locals

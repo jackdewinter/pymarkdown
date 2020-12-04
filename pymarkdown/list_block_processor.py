@@ -1094,14 +1094,18 @@ class ListBlockProcessor:
         is_fenced_block, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
             line_to_parse, start_index, extracted_whitespace
         )
-        LOGGER.debug("ws(naa)>>is_html_block>>%s", str(is_fenced_block))
+        LOGGER.debug("ws(naa)>>is_fenced_block>>%s", str(is_fenced_block))
+        is_atx_heading, _, _, _ = LeafBlockProcessor.is_atx_heading(
+            line_to_parse, start_index, extracted_whitespace
+        )
+        LOGGER.debug("ws(naa)>>is_atx_heading>>%s", str(is_atx_heading))
 
         if not parser_state.token_stack[-1].is_paragraph or (
-            is_theme_break or is_html_block or is_fenced_block
+            is_theme_break or is_html_block or is_fenced_block or is_atx_heading
         ):
             LOGGER.debug("ws (normal and adjusted) not enough to continue")
 
-            if is_theme_break or is_html_block or is_fenced_block:
+            if is_theme_break or is_html_block or is_fenced_block or is_atx_heading:
                 LOGGER.debug("lsl %s", str(leading_space_length))
                 LOGGER.debug("lsl %s", str(parser_state.token_stack[ind]))
                 search_index = ind
