@@ -2485,7 +2485,7 @@ def test_list_items_304():
 
 
 @pytest.mark.gfm
-def test_list_items_305():
+def test_list_items_305x():
     """
     Test case 305:  (part 1) Here the outer list is loose, the inner list tight:
     """

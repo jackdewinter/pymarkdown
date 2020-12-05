@@ -631,18 +631,18 @@ class ParserHelper:
     def __find_with_escape(adjusted_text_token, find_char, start_index):
         repeat_me = True
         found_index = -1
-        LOGGER.debug(
-            "token>%s>%s",
-            str(len(adjusted_text_token)),
-            ParserHelper.make_value_visible(adjusted_text_token),
-        )
-        LOGGER.debug("find_char>%s", ParserHelper.make_value_visible(find_char))
-        LOGGER.debug("start_index>%s", str(start_index))
+        # LOGGER.debug(
+        #    "token>%s>%s",
+        #    str(len(adjusted_text_token)),
+        #    ParserHelper.make_value_visible(adjusted_text_token),
+        # )
+        # LOGGER.debug("find_char>%s", ParserHelper.make_value_visible(find_char))
+        # LOGGER.debug("start_index>%s", str(start_index))
         while repeat_me and start_index < len(adjusted_text_token):
             repeat_me = False
-            LOGGER.debug("start>%s", str(start_index))
+            # LOGGER.debug("start>%s", str(start_index))
             start_replacement_index = adjusted_text_token.find(find_char, start_index)
-            LOGGER.debug("start_replacement_index>%s", str(start_replacement_index))
+            # LOGGER.debug("start_replacement_index>%s", str(start_replacement_index))
             if (
                 start_replacement_index != -1
                 and start_replacement_index > 0
@@ -651,10 +651,10 @@ class ParserHelper:
             ):
                 repeat_me = True
                 start_index = start_replacement_index + 1
-                LOGGER.debug("look>%s", str(start_index))
+                # LOGGER.debug("look>%s", str(start_index))
             else:
                 found_index = start_replacement_index
-                LOGGER.debug("found>%s", str(found_index))
+                # LOGGER.debug("found>%s", str(found_index))
         return found_index
 
     @staticmethod
@@ -664,14 +664,14 @@ class ParserHelper:
         we take the right text from the replacement.
         """
         start_index = 0
-        LOGGER.debug(
-            "adjusted_text_token>%s",
-            ParserHelper.make_value_visible(adjusted_text_token),
-        )
+        # LOGGER.debug(
+        #    "adjusted_text_token>%s",
+        #    ParserHelper.make_value_visible(adjusted_text_token),
+        # )
         start_replacement_index = ParserHelper.__find_with_escape(
             adjusted_text_token, ParserHelper.__alert_character, start_index
         )
-        LOGGER.debug("start_replacement_index>%s", str(start_replacement_index))
+        # LOGGER.debug("start_replacement_index>%s", str(start_replacement_index))
         while start_replacement_index != -1:
             middle_replacement_index = adjusted_text_token.index(
                 ParserHelper.__alert_character, start_replacement_index + 1
@@ -715,11 +715,11 @@ class ParserHelper:
             start_index = (
                 end_replacement_index + 1 + (length_after_mod - length_before_mod)
             )
-            LOGGER.debug("start_index>%s", str(start_index))
+            # LOGGER.debug("start_index>%s", str(start_index))
             start_replacement_index = ParserHelper.__find_with_escape(
                 adjusted_text_token, ParserHelper.__alert_character, start_index
             )
-            LOGGER.debug("start_replacement_index>%s", str(start_replacement_index))
+            # LOGGER.debug("start_replacement_index>%s", str(start_replacement_index))
         return adjusted_text_token
 
     @staticmethod

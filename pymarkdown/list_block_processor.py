@@ -571,7 +571,7 @@ class ListBlockProcessor:
                         line_to_parse,
                         start_index,
                         extracted_whitespace,
-                        before_ws_length,
+                        leading_space_length,
                         requested_list_indent,
                     )
                     LOGGER.debug(">>line_to_parse>>%s", str(line_to_parse))

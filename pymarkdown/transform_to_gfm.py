@@ -96,6 +96,7 @@ class TransformToGfm:
         Based on the first token in a list, compute the "looseness" of the list.
         """
 
+        LOGGER.debug("\n\n__calculate_list_looseness>>%s", str(actual_token_index))
         is_loose = False
         current_token_index = actual_token_index + 1
         stack_count = 0
@@ -110,11 +111,14 @@ class TransformToGfm:
             ):
                 check_me = stack_count == 0
                 stack_count += 1
+                LOGGER.debug(">>list--new>>%s", str(stack_count))
             elif (
                 isinstance(current_token, NewListItemMarkdownToken)
                 or current_token.is_block
             ):
                 check_me = stack_count == 0
+                if not current_token.is_block:
+                    LOGGER.debug(">>list--item>>%s", str(stack_count))
             elif isinstance(current_token, EndMarkdownToken) and (
                 current_token.type_name == MarkdownToken.token_unordered_list_start
                 or current_token.type_name == MarkdownToken.token_ordered_list_start
@@ -123,26 +127,72 @@ class TransformToGfm:
                     stop_me = True
                 else:
                     stack_count -= 1
+                    if self.__correct_for_me(actual_tokens, current_token_index):
+                        is_loose = True
+                        stop_me = True
+                        LOGGER.debug("!!!latent-LOOSE!!!")
+                LOGGER.debug(">>list--end>>%s", str(stack_count))
 
             LOGGER.debug(
-                ">>stack_count>>%s>>#%s:%s",
+                ">>stack_count>>%s>>#%s:%s>>check=%s",
                 str(stack_count),
                 str(current_token_index),
                 str(actual_tokens[current_token_index]),
+                str(check_me),
             )
             if check_me:
-                LOGGER.debug("check")
+                LOGGER.debug("check-->?")
                 if self.__is_token_loose(actual_tokens, current_token_index):
                     is_loose = True
                     stop_me = True
-                    LOGGER.debug("!!!LOOSE!!!")
+                    LOGGER.debug("check-->Loose")
+                else:
+                    LOGGER.debug("check-->Normal")
             if stop_me:
                 break
             current_token_index += 1
 
         assert current_token_index != len(actual_tokens)
         next_token.is_loose = is_loose
+        LOGGER.debug(
+            "__calculate_list_looseness<<%s<<%s\n\n",
+            str(actual_token_index),
+            str(is_loose),
+        )
         return is_loose
+
+    def __correct_for_me(self, actual_tokens, current_token_index):
+        correct_closure = False
+        is_valid = False
+        if current_token_index > 0:
+            is_valid = True
+            LOGGER.debug(">>prev>>%s", str(actual_tokens[current_token_index - 1]))
+            if (
+                actual_tokens[current_token_index - 1].token_name
+                == MarkdownToken.token_blank_line
+            ):
+                search_index = current_token_index + 1
+                while (
+                    search_index < len(actual_tokens)
+                    and isinstance(actual_tokens[search_index], EndMarkdownToken)
+                    and (
+                        actual_tokens[search_index].type_name
+                        == MarkdownToken.token_unordered_list_start
+                        or actual_tokens[search_index].type_name
+                        == MarkdownToken.token_ordered_list_start
+                    )
+                ):
+                    search_index += 1
+                LOGGER.debug(
+                    ">>ss>>%s>>len>>%s", str(search_index), str(len(actual_tokens))
+                )
+                is_valid = search_index != len(actual_tokens)
+        if is_valid:
+            LOGGER.debug(">>current>>%s", str(actual_tokens[current_token_index]))
+            LOGGER.debug(">>current-1>>%s", str(actual_tokens[current_token_index - 1]))
+            correct_closure = self.__is_token_loose(actual_tokens, current_token_index)
+            LOGGER.debug(">>correct_closure>>%s", str(correct_closure))
+        return correct_closure
 
     @classmethod
     def __is_token_loose(cls, actual_tokens, current_token_index):
@@ -157,8 +207,9 @@ class TransformToGfm:
             or token_to_check.type_name == MarkdownToken.token_ordered_list_start
         ):
             if actual_tokens[current_token_index - 2].is_blank_line:
-                token_to_check = actual_tokens[current_token_index - 2]
-        LOGGER.debug("token_to_check-->%s", str(token_to_check))
+                # token_to_check = actual_tokens[current_token_index - 2]
+                LOGGER.debug("token_to_check(mod)-->%s", str(token_to_check))
+
         if token_to_check.is_blank_line:
             LOGGER.debug(
                 "before_blank-->%s", str(actual_tokens[current_token_index - 2])
@@ -518,9 +569,9 @@ class TransformToGfm:
         Handle the start paragraph token.
         """
         assert next_token
+        if output_html and output_html[-1] != ParserHelper.newline_character:
+            output_html += ParserHelper.newline_character
         if transform_state.is_in_loose_list:
-            if output_html and output_html[-1] != ParserHelper.newline_character:
-                output_html += ParserHelper.newline_character
             output_html += "<p>"
         return output_html
 
