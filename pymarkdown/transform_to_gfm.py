@@ -164,29 +164,30 @@ class TransformToGfm:
     def __correct_for_me(self, actual_tokens, current_token_index):
         correct_closure = False
         is_valid = False
-        if current_token_index > 0:
-            is_valid = True
-            LOGGER.debug(">>prev>>%s", str(actual_tokens[current_token_index - 1]))
-            if (
-                actual_tokens[current_token_index - 1].token_name
-                == MarkdownToken.token_blank_line
-            ):
-                search_index = current_token_index + 1
-                while (
-                    search_index < len(actual_tokens)
-                    and isinstance(actual_tokens[search_index], EndMarkdownToken)
-                    and (
-                        actual_tokens[search_index].type_name
-                        == MarkdownToken.token_unordered_list_start
-                        or actual_tokens[search_index].type_name
-                        == MarkdownToken.token_ordered_list_start
-                    )
-                ):
-                    search_index += 1
-                LOGGER.debug(
-                    ">>ss>>%s>>len>>%s", str(search_index), str(len(actual_tokens))
+        assert current_token_index > 0
+
+        is_valid = True
+        LOGGER.debug(">>prev>>%s", str(actual_tokens[current_token_index - 1]))
+        if (
+            actual_tokens[current_token_index - 1].token_name
+            == MarkdownToken.token_blank_line
+        ):
+            search_index = current_token_index + 1
+            while (
+                search_index < len(actual_tokens)
+                and isinstance(actual_tokens[search_index], EndMarkdownToken)
+                and (
+                    actual_tokens[search_index].type_name
+                    == MarkdownToken.token_unordered_list_start
+                    or actual_tokens[search_index].type_name
+                    == MarkdownToken.token_ordered_list_start
                 )
-                is_valid = search_index != len(actual_tokens)
+            ):
+                search_index += 1
+            LOGGER.debug(
+                ">>ss>>%s>>len>>%s", str(search_index), str(len(actual_tokens))
+            )
+            is_valid = search_index != len(actual_tokens)
         if is_valid:
             LOGGER.debug(">>current>>%s", str(actual_tokens[current_token_index]))
             LOGGER.debug(">>current-1>>%s", str(actual_tokens[current_token_index - 1]))
@@ -990,6 +991,7 @@ class TransformToGfm:
         """
         Handle the start html block token.
         """
+        assert next_token
         transform_state.is_in_html_block = True
         if (
             not output_html
@@ -1013,8 +1015,6 @@ class TransformToGfm:
             ):
                 if not transform_state.is_in_loose_list:
                     output_html += ParserHelper.newline_character
-        if next_token.fill_count:
-            output_html += "".ljust(next_token.fill_count, " ")
         return output_html
 
     @classmethod

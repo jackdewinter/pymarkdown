@@ -1080,34 +1080,31 @@ class LeafBlockProcessor:
         LOGGER.debug(">>__xx>>stack>>%s>>", str(parser_state.token_stack))
         LOGGER.debug(">>__xx>>tokens_to_add>>%s>>", str(html_tokens))
 
-        while parser_state.token_stack[-1].is_list:
+        repeat_loop = True
+        while repeat_loop:
+            assert parser_state.token_stack[-1].is_list
 
             LOGGER.debug(">>removed_chars_at_start>>%s>>", str(removed_chars_at_start))
             LOGGER.debug(
                 ">>stack indent>>%s>>", str(parser_state.token_stack[-1].indent_level)
             )
             if removed_chars_at_start >= parser_state.token_stack[-1].indent_level:
-                break
-            tokens_from_close, _, _ = parser_state.close_open_blocks_fn(
-                parser_state,
-                until_this_index=(len(parser_state.token_stack) - 1),
-                include_lists=True,
-            )
-            LOGGER.debug(">>__xx>>tokens_from_close>>%s>>", str(tokens_from_close))
-            html_tokens.extend(tokens_from_close)
+                repeat_loop = False
+            else:
+                tokens_from_close, _, _ = parser_state.close_open_blocks_fn(
+                    parser_state,
+                    until_this_index=(len(parser_state.token_stack) - 1),
+                    include_lists=True,
+                )
+                LOGGER.debug(">>__xx>>tokens_from_close>>%s>>", str(tokens_from_close))
+                html_tokens.extend(tokens_from_close)
 
         last_indent = 0
-        if parser_state.token_stack[-1].is_list:
-            last_indent = parser_state.token_stack[-1].indent_level
+        assert parser_state.token_stack[-1].is_list
+        last_indent = parser_state.token_stack[-1].indent_level
         delta_indent = removed_chars_at_start - last_indent
         LOGGER.debug(">>__xx>>delta_indent>>%s>>", str(delta_indent))
-        if delta_indent:
-            if end_of_list.token_name == MarkdownToken.token_html_block:
-                end_of_list.add_fill(delta_indent)
-            elif end_of_list.token_name == MarkdownToken.token_atx_heading:
-                end_of_list.add_fill(delta_indent)
-            elif end_of_list.token_name == MarkdownToken.token_fenced_code_block:
-                end_of_list.add_fill(delta_indent)
+        assert not delta_indent
 
         if was_token_already_added_to_stack:
             parser_state.token_stack.append(top_of_stack)

@@ -445,15 +445,6 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
             + self.extracted_whitespace_before_info_string
         )
 
-    def add_fill(self, fill_count):
-        """
-        Add extra fill to the token, in rare cases where we just need to
-        adjust the column number back a bit as a post-mortem step.
-        """
-        new_whitespace = "".ljust(fill_count, " ")
-        self.extracted_whitespace += new_whitespace
-        self.compose_extra_data_field()
-
 
 # pylint: enable=too-many-instance-attributes
 
@@ -493,15 +484,6 @@ class AtxHeadingMarkdownToken(MarkdownToken):
             + ":"
             + self.extracted_whitespace
         )
-
-    def add_fill(self, fill_count):
-        """
-        Add extra fill to the token, in rare cases where we just need to
-        adjust the column number back a bit as a post-mortem step.
-        """
-        new_whitespace = "".ljust(fill_count, " ")
-        self.extracted_whitespace += new_whitespace
-        self.compose_extra_data_field()
 
 
 class EndMarkdownToken(MarkdownToken):
@@ -1075,15 +1057,6 @@ class HtmlBlockMarkdownToken(MarkdownToken):
             line_number=line_number,
             column_number=column_number,
         )
-
-    def add_fill(self, fill_count):
-        """
-        Add extra fill to the token, in rare cases where we just need to
-        adjust the column number back a bit as a post-mortem step.
-        """
-        self.fill_count = fill_count
-        self.column_number -= fill_count
-        self.extra_data = str(fill_count)
 
 
 class ThematicBreakMarkdownToken(MarkdownToken):

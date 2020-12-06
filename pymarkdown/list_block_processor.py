@@ -726,14 +726,11 @@ class ListBlockProcessor:
         marker_width_minus_one,
         stack_bq_count,
         this_bq_count,
-        adj_ws=None,
+        adj_ws,
     ):
         """
         Handle the processing of the first part of the list.
         """
-
-        if adj_ws is None:
-            adj_ws = extracted_whitespace
 
         (
             after_marker_ws_index,
