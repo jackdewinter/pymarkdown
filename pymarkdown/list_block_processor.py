@@ -1086,11 +1086,11 @@ class ListBlockProcessor:
             extracted_whitespace,
             skip_whitespace_check=True,
         )
-        LOGGER.debug("ws(naa)>>is_theme_break>>%s", str(is_theme_break))
+        LOGGER.debug("ws(naa)>>is_theme_break>>%s", str(bool(is_theme_break)))
         is_html_block, _ = HtmlHelper.is_html_block(
             line_to_parse, start_index, extracted_whitespace, parser_state.token_stack
         )
-        LOGGER.debug("ws(naa)>>is_html_block>>%s", str(is_html_block))
+        LOGGER.debug("ws(naa)>>is_html_block>>%s", str(bool(is_html_block)))
         is_fenced_block, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
             line_to_parse, start_index, extracted_whitespace
         )
@@ -1105,7 +1105,7 @@ class ListBlockProcessor:
         ):
             LOGGER.debug("ws (normal and adjusted) not enough to continue")
 
-            if is_theme_break or is_html_block or is_fenced_block or is_atx_heading:
+            if is_theme_break or is_html_block or is_fenced_block or is_atx_heading or True:
                 LOGGER.debug("lsl %s", str(leading_space_length))
                 LOGGER.debug("lsl %s", str(parser_state.token_stack[ind]))
                 search_index = ind
