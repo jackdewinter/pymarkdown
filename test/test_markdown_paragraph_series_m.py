@@ -357,7 +357,6 @@ def test_paragraph_series_m_ol_nl_ol_nl_tb():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_ol_nl_tb():
     """
@@ -372,13 +371,10 @@ def test_paragraph_series_m_ol_t_nl_ol_nl_tb():
 ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\n1.::\n]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
-        "[end-olist:::True]",
         "[end-olist:::True]",
         "[tbreak(3,1):-::---]",
         "[BLANK(4,1):]",
@@ -532,7 +528,6 @@ def test_paragraph_series_m_ol_nl_ol_nl_i2_tb():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_ol_nl_i2_tb():
     """
@@ -547,13 +542,10 @@ def test_paragraph_series_m_ol_t_nl_ol_nl_i2_tb():
   ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\n1.::\n]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
-        "[end-olist:::True]",
         "[end-olist:::True]",
         "[tbreak(3,3):-:  :---]",
         "[BLANK(4,1):]",
@@ -798,7 +790,6 @@ def test_paragraph_series_m_ol_nl_ol_nl_i3_tb():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_ol_nl_i3_tb():
     """
@@ -813,14 +804,10 @@ def test_paragraph_series_m_ol_t_nl_ol_nl_i3_tb():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
-        "[end-olist:::True]",
-        "[tbreak(3,4):-::---]",
+        "[olist(1,1):.:1:3::   \n   ]",
+        "[setext(3,4):-:3::(1,4)]",
+        "[text(1,4):abc\n1.::\n]",
+        "[end-setext:::False]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
     ]
@@ -1202,7 +1189,6 @@ def test_paragraph_series_m_ol_nl_ol_nl_ha_t():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_ol_nl_ha_t():
     """
@@ -1217,18 +1203,15 @@ def test_paragraph_series_m_ol_t_nl_ol_nl_ha_t():
 # foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\n1.::\n]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
         "[end-olist:::True]",
         "[atx(3,1):1:0:]",
         "[text(3,3):foo: ]",
         "[end-atx:::False]",
         "[BLANK(4,1):]",
-        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>abc
@@ -1385,7 +1368,6 @@ def test_paragraph_series_m_ol_nl_ol_nl_i2_ha_t():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_ol_nl_i2_ha_t():
     """
@@ -1400,21 +1382,17 @@ def test_paragraph_series_m_ol_t_nl_ol_nl_i2_ha_t():
   # foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::  ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\n1.::\n]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
         "[end-olist:::True]",
-        "[atx(3,3):1:0:]",
+        "[atx(3,3):1:0:  ]",
         "[text(3,5):foo: ]",
         "[end-atx:::False]",
         "[BLANK(4,1):]",
-        "[end-olist:::True]",
     ]
-    expected_gfm = """
-<ol>
+    expected_gfm = """<ol>
 <li>abc
 1.</li>
 </ol>
@@ -1569,7 +1547,6 @@ def test_paragraph_series_m_ol_nl_ol_nl_i3_ha_t():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_ol_nl_i3_ha_t():
     """
@@ -1584,13 +1561,10 @@ def test_paragraph_series_m_ol_t_nl_ol_nl_i3_ha_t():
    # foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
-        "[end-olist:::True]",
+        "[olist(1,1):.:1:3::   \n   ]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\n1.::\n]",
+        "[end-para:::False]",
         "[atx(3,4):1:0:]",
         "[text(3,6):foo: ]",
         "[end-atx:::False]",
@@ -2153,7 +2127,6 @@ foo
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_i3_ol_nl_t_nl_hs():
     """
@@ -2169,15 +2142,9 @@ foo
 ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
-        "[end-olist:::True]",
-        "[para(3,1):]",
-        "[text(3,1):foo:]",
+        "[olist(1,1):.:1:3::   \n]",
+        "[para(1,4):\n\n]",
+        "[text(1,4):abc\n1.\nfoo::\n\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
         "[tbreak(4,1):-::---]",
@@ -2340,7 +2307,6 @@ def test_paragraph_series_m_ol_nl_i3_ol_nl_i2_t_nl_i2_hs():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_i3_ol_nl_i2_t_nl_i2_hs():
     """
@@ -2356,15 +2322,9 @@ def test_paragraph_series_m_ol_t_nl_i3_ol_nl_i2_t_nl_i2_hs():
   ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::  ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
-        "[end-olist:::True]",
-        "[para(3,3):]",
-        "[text(3,3):foo:]",
+        "[olist(1,1):.:1:3::   \n  ]",
+        "[para(1,4):\n\n]",
+        "[text(1,4):abc\n1.\nfoo::\n\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
         "[tbreak(4,3):-:  :---]",
@@ -2527,7 +2487,6 @@ def test_paragraph_series_m_ol_nl_i3_ol_nl_i3_t_nl_i3_hs():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_i3_ol_nl_i3_t_nl_i3_hs():
     """
@@ -2543,15 +2502,9 @@ def test_paragraph_series_m_ol_t_nl_i3_ol_nl_i3_t_nl_i3_hs():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n   ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
-        "[end-olist:::True]",
-        "[setext(4,4):-:3::(3,4)]",
-        "[text(3,4):foo:]",
+        "[olist(1,1):.:1:3::   \n   \n   ]",
+        "[setext(4,4):-:3::(1,4)]",
+        "[text(1,4):abc\n1.\nfoo::\n\n]",
         "[end-setext:::False]",
         "[BLANK(5,1):]",
         "[end-olist:::True]",
@@ -3061,7 +3014,6 @@ foo
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_i3_ol_nl_fb():
     """
@@ -3078,22 +3030,15 @@ foo
 ```
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\n1.::\n]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
         "[end-olist:::True]",
         "[fcode-block(3,1):`:3::::::]",
-        "[end-fcode-block:::True]",
-        "[end-olist:::True]",
-        "[para(4,1):]",
         "[text(4,1):foo:]",
-        "[end-para:::False]",
-        "[fcode-block(5,1):`:3::::::]",
+        "[end-fcode-block::3:False]",
         "[BLANK(6,1):]",
-        "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ol>
 <li>abc
@@ -3260,7 +3205,6 @@ foo
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_i3_ol_nl_i2_fb():
     """
@@ -3277,22 +3221,15 @@ foo
 ```
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::  ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\n1.::\n]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
         "[end-olist:::True]",
-        "[fcode-block(3,3):`:3::::::]",
-        "[end-fcode-block:::True]",
-        "[end-olist:::True]",
-        "[para(4,1):]",
+        "[fcode-block(3,3):`:3:::::  :]",
         "[text(4,1):foo:]",
-        "[end-para:::False]",
-        "[fcode-block(5,1):`:3::::::]",
+        "[end-fcode-block::3:False]",
         "[BLANK(6,1):]",
-        "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ol>
 <li>abc
@@ -3455,7 +3392,7 @@ foo
 <pre><code></code></pre>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -3464,7 +3401,6 @@ foo
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_i3_ol_nl_i3_fb():
     """
@@ -3481,13 +3417,10 @@ foo
 ```
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
-        "[end-olist:::True]",
+        "[olist(1,1):.:1:3::   \n   ]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\n1.::\n]",
+        "[end-para:::False]",
         "[fcode-block(3,4):`:3::::::]",
         "[end-fcode-block:::True]",
         "[end-olist:::True]",
@@ -3974,7 +3907,6 @@ foo</li>
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_i3_ol_nl_i4_t_ib():
     """
@@ -3989,15 +3921,9 @@ def test_paragraph_series_m_ol_t_nl_i3_ol_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
-        "[end-olist:::True]",
-        "[para(3,5):]",
-        "[text(3,5):foo:]",
+        "[olist(1,1):.:1:3::   \n   ]",
+        "[para(1,4):\n\n ]",
+        "[text(1,4):abc\n1.\nfoo::\n\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
@@ -4284,7 +4210,6 @@ foo</li>
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_i1_ol_nl_i4_ol_nl_i4_t_ib():
     """
@@ -4299,15 +4224,9 @@ def test_paragraph_series_m_i1_ol_nl_i4_ol_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[olist(1,2):.:1:4: :    ]",
-        "[para(1,5):]",
-        "[text(1,5):abc:]",
-        "[end-para:::True]",
-        "[olist(2,5):.:1:7:    ]",
-        "[BLANK(2,7):]",
-        "[end-olist:::True]",
-        "[para(3,5):]",
-        "[text(3,5):foo:]",
+        "[olist(1,2):.:1:4: :    \n    ]",
+        "[para(1,5):\n\n]",
+        "[text(1,5):abc\n1.\nfoo::\n\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
@@ -4328,7 +4247,6 @@ foo</li>
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_i1_ol_t_nl_i4_ol_nl_i4_t_ib():
     """
@@ -4343,15 +4261,9 @@ def test_paragraph_series_m_i1_ol_t_nl_i4_ol_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[olist(1,2):.:1:4: :    ]",
-        "[para(1,5):]",
-        "[text(1,5):abc:]",
-        "[end-para:::True]",
-        "[olist(2,5):.:1:7:    ]",
-        "[BLANK(2,7):]",
-        "[end-olist:::True]",
-        "[para(3,5):]",
-        "[text(3,5):foo:]",
+        "[olist(1,2):.:1:4: :    \n    ]",
+        "[para(1,5):\n\n]",
+        "[text(1,5):abc\n1.\nfoo::\n\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
@@ -4866,7 +4778,6 @@ foo
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_i3_ol_nl_hb():
     """
@@ -4883,13 +4794,10 @@ foo
 </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\n1.::\n]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
-        "[end-olist:::True]",
         "[end-olist:::True]",
         "[html-block(3,1)]",
         "[text(3,1):<script>\nfoo\n</script>:]",
@@ -5065,7 +4973,6 @@ foo
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_i3_ol_nl_i2_hb():
     """
@@ -5082,21 +4989,14 @@ foo
 </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::  ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\n1.::\n]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
         "[end-olist:::True]",
-        "[html-block(3,3)]",
-        "[text(3,3):<script>:]",
-        "[end-html-block:::True]",
-        "[end-olist:::True]",
-        "[para(4,1):\n]",
-        "[text(4,1):foo\n::\n]",
-        "[raw-html(5,1):/script]",
-        "[end-para:::True]",
+        "[html-block(3,1)]",
+        "[text(3,3):<script>\nfoo\n</script>:  ]",
+        "[end-html-block:::False]",
         "[BLANK(6,1):]",
     ]
     expected_gfm = """<ol>
@@ -5272,7 +5172,6 @@ foo
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_i3_ol_nl_i3_hb():
     """
@@ -5289,13 +5188,10 @@ foo
 </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
-        "[para(1,4):]",
-        "[text(1,4):abc:]",
-        "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[BLANK(2,6):]",
-        "[end-olist:::True]",
+        "[olist(1,1):.:1:3::   \n   ]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\n1.::\n]",
+        "[end-para:::False]",
         "[html-block(3,4)]",
         "[text(3,4):<script>:]",
         "[end-html-block:::True]",

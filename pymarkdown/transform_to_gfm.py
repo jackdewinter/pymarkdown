@@ -689,6 +689,8 @@ class TransformToGfm:
 
         if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
             output_html += "\n"
+        elif output_html and output_html[-1] != ParserHelper.newline_character:
+            output_html += ParserHelper.newline_character
         output_html += "<pre><code" + inner_tag + ">"
         transform_state.is_in_code_block = True
         transform_state.is_in_fenced_code_block = True

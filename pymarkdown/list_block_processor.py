@@ -87,10 +87,58 @@ class ListBlockProcessor:
                 is_start = True
 
         LOGGER.debug("is_ulist_start>>result>>%s", str(is_start))
+        if is_start:
+            is_in_paragraph = parser_state.token_stack[-1].is_paragraph
+            LOGGER.debug("is_in_paragraph>>%s", str(is_in_paragraph))
+            at_end_of_line = after_all_whitespace_index == len(line_to_parse)
+            LOGGER.debug("at_end_of_line>>%s", str(at_end_of_line))
+
+            is_first_item_in_list = False
+            if is_in_paragraph:
+                if not parser_state.token_stack[-2].is_list:
+                    LOGGER.debug(
+                        "top of stack is not list>>%s",
+                        str(parser_state.token_stack[-2]),
+                    )
+                    is_first_item_in_list = True
+                elif (
+                    parser_state.token_stack[-2].type_name
+                    == StackToken.stack_ordered_list
+                ):
+                    LOGGER.debug(
+                        "top of stack is ordered list>>%s",
+                        str(parser_state.token_stack[-2]),
+                    )
+                    is_first_item_in_list = True
+                elif (
+                    line_to_parse[start_index]
+                    != parser_state.token_stack[-2].list_character
+                ):
+                    LOGGER.debug(
+                        "xx>>%s!=%s",
+                        str(line_to_parse[start_index]),
+                        str(parser_state.token_stack[-2].list_character),
+                    )
+                    is_first_item_in_list = True
+                else:
+                    is_first_item_in_list = (
+                        start_index >= parser_state.token_stack[-2].indent_level
+                    )
+                    LOGGER.debug(
+                        "start_index>>%s>=%s",
+                        str(start_index),
+                        str(parser_state.token_stack[-2].indent_level),
+                    )
+                LOGGER.debug("is_first_item_in_list>>%s", str(is_first_item_in_list))
+
+            if is_in_paragraph and at_end_of_line and is_first_item_in_list:
+                is_start = False
+
+        LOGGER.debug("is_ulist_start>>result>>%s", str(is_start))
         return is_start, after_all_whitespace_index
         # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
     @staticmethod
     def is_olist_start(
         parser_state,
@@ -138,18 +186,29 @@ class ListBlockProcessor:
                 olist_index_number,
             )
 
+            LOGGER.debug("my_count>>%s", str(my_count))
+            xx_index = index
+            is_olist_start = ParserHelper.is_character_at_index_one_of(
+                line_to_parse, index, ListBlockProcessor.__olist_start_characters
+            )
+            LOGGER.debug("is_olist_start>>%s", str(is_olist_start))
+            xx_seq = line_to_parse[xx_index]
+            LOGGER.debug("is_olist_start>>%s", str(xx_seq))
+            if is_olist_start:
+                is_in_paragraph = parser_state.token_stack[-1].is_paragraph
+                LOGGER.debug("is_in_paragraph>>%s", str(is_in_paragraph))
+                if is_in_paragraph:
+                    is_paragraph_in_list = parser_state.token_stack[-2].is_list
+                    LOGGER.debug("is_paragraph_in_list>>%s", str(is_paragraph_in_list))
+                at_end_of_line = end_whitespace_index == len(line_to_parse)
+                LOGGER.debug("at_end_of_line>>%s", str(at_end_of_line))
             if (
                 my_count <= 9
-                and ParserHelper.is_character_at_index_one_of(
-                    line_to_parse, index, ListBlockProcessor.__olist_start_characters
-                )
+                and is_olist_start
                 and not (
-                    parser_state.token_stack[-1].is_paragraph
-                    and not parser_state.token_stack[-2].is_list
-                    and (
-                        (end_whitespace_index == len(line_to_parse))
-                        or olist_index_number != "1"
-                    )
+                    is_in_paragraph
+                    and not is_paragraph_in_list
+                    and (at_end_of_line or olist_index_number != "1")
                 )
                 and (
                     ParserHelper.is_character_at_index_whitespace(
@@ -161,8 +220,67 @@ class ListBlockProcessor:
                 is_start = True
 
         LOGGER.debug("is_olist_start>>result>>%s", str(is_start))
+        if is_start:
+            is_in_paragraph = parser_state.token_stack[-1].is_paragraph
+            LOGGER.debug("is_in_paragraph>>%s", str(is_in_paragraph))
+            at_end_of_line = end_whitespace_index == len(line_to_parse)
+            LOGGER.debug("at_end_of_line>>%s", str(at_end_of_line))
+
+            is_first_item_in_list = False
+            if is_in_paragraph:
+                if not parser_state.token_stack[-2].is_list:
+                    LOGGER.debug(
+                        "top of stack is not list>>%s",
+                        str(parser_state.token_stack[-2]),
+                    )
+                    is_first_item_in_list = True
+                elif (
+                    parser_state.token_stack[-2].type_name
+                    == StackToken.stack_unordered_list
+                ):
+                    LOGGER.debug(
+                        "top of stack is unordered list>>%s",
+                        str(parser_state.token_stack[-2]),
+                    )
+                    is_first_item_in_list = True
+                elif xx_seq != parser_state.token_stack[-2].list_character[-1]:
+                    LOGGER.debug(
+                        "xx>>%s!=%s",
+                        str(xx_seq),
+                        str(parser_state.token_stack[-2].list_character[-1]),
+                    )
+                    is_first_item_in_list = True
+                else:
+                    is_first_item_in_list = (
+                        start_index >= parser_state.token_stack[-2].indent_level
+                    )
+                    LOGGER.debug(
+                        "start_index>>%s>=%s",
+                        str(start_index),
+                        str(parser_state.token_stack[-2].indent_level),
+                    )
+                LOGGER.debug("is_first_item_in_list>>%s", str(is_first_item_in_list))
+
+            LOGGER.debug("olist_index_number>>%s", str(olist_index_number))
+            is_not_one = olist_index_number != "1"
+            LOGGER.debug(
+                "is_in_para>>%s>>EOL>%s>is_first>%s",
+                str(is_in_paragraph),
+                str(at_end_of_line),
+                str(is_first_item_in_list),
+            )
+            if (
+                is_in_paragraph
+                and (at_end_of_line or is_not_one)
+                and is_first_item_in_list
+            ):
+                is_start = False
+                LOGGER.debug("is_start>>%s", str(is_start))
+
+        LOGGER.debug("is_olist_start>>result>>%s", str(is_start))
         return is_start, index, my_count, end_whitespace_index
-        # pylint: enable=too-many-arguments
+
+    # pylint: enable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
 
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
@@ -1105,29 +1223,29 @@ class ListBlockProcessor:
         ):
             LOGGER.debug("ws (normal and adjusted) not enough to continue")
 
-            if is_theme_break or is_html_block or is_fenced_block or is_atx_heading or True:
-                LOGGER.debug("lsl %s", str(leading_space_length))
-                LOGGER.debug("lsl %s", str(parser_state.token_stack[ind]))
-                search_index = ind
+            LOGGER.debug("lsl %s", str(leading_space_length))
+            LOGGER.debug("lsl %s", str(parser_state.token_stack[ind]))
+            search_index = ind
+            LOGGER.debug(
+                "lsl %s>%s",
+                search_index,
+                str(parser_state.token_stack[search_index - 1]),
+            )
+            while (
+                parser_state.token_stack[search_index - 1].is_list
+                and parser_state.token_stack[search_index - 1].indent_level
+                > leading_space_length
+            ):
+                search_index -= 1
                 LOGGER.debug(
                     "lsl %s>%s",
                     search_index,
-                    str(parser_state.token_stack[search_index - 1]),
+                    str(parser_state.token_stack[search_index]),
                 )
-                while (
-                    parser_state.token_stack[search_index - 1].is_list
-                    and parser_state.token_stack[search_index - 1].indent_level
-                    > leading_space_length
-                ):
-                    search_index -= 1
-                    LOGGER.debug(
-                        "lsl %s>%s",
-                        search_index,
-                        str(parser_state.token_stack[search_index]),
-                    )
 
-                LOGGER.debug("lsl %s", str(parser_state.token_stack[search_index]))
-                ind = search_index
+            LOGGER.debug("lsl %s", str(parser_state.token_stack[search_index]))
+            ind = search_index
+
             container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
                 parser_state, until_this_index=ind, include_lists=True
             )

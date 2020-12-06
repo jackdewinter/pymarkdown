@@ -1907,6 +1907,84 @@ foo
 
 
 @pytest.mark.gfm
+def test_list_blocks_263a():
+    """
+    Test case 263a:  variations
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+   1. abc
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[text(2,7):abc:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>abc</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_263b():
+    """
+    Test case 263b:  variations
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+   2. abc
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\n2. abc::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+2. abc</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_list_blocks_264():
     """
     Test case 264:  Indented one space:
@@ -3415,7 +3493,7 @@ def test_list_blocks_extra_2():
    2. two-A
 1. three"""
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::   ]",
         "[para(1,4):]",
         "[text(1,4):one:]",
         "[end-para:::True]",
@@ -3425,14 +3503,9 @@ def test_list_blocks_extra_2():
         "[end-para:::True]",
         "[end-olist:::True]",
         "[li(3,1):3::1]",
-        "[para(3,4):]",
-        "[text(3,4):two:]",
+        "[para(3,4):\n]",
+        "[text(3,4):two\n2. two-A::\n]",
         "[end-para:::True]",
-        "[olist(4,4):.:2:6:   ]",
-        "[para(4,7):]",
-        "[text(4,7):two-A:]",
-        "[end-para:::True]",
-        "[end-olist:::True]",
         "[li(5,1):3::1]",
         "[para(5,4):]",
         "[text(5,4):three:]",
@@ -3446,10 +3519,7 @@ def test_list_blocks_extra_2():
 </ol>
 </li>
 <li>two
-<ol start="2">
-<li>two-A</li>
-</ol>
-</li>
+2. two-A</li>
 <li>three</li>
 </ol>"""
 

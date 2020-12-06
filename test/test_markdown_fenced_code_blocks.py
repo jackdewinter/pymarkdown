@@ -277,7 +277,7 @@ def test_fenced_code_blocks_096a():
     expected_gfm = """<pre><code></code></pre>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
