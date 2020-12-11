@@ -622,7 +622,7 @@ Sh space hard break
 |MOlTNlI2Fb     |Ordered list text newline indent of 2 fenced block| ` 1.  abc\n  ```\nfoo\n``` ` | test_paragraph_series_m_ol_t_nl_i2_fb |
 |MOlTNlI3Fb     |Ordered list text newline indent of 3 fenced block| ` 1.  abc\n   ```\nfoo\n``` ` | test_paragraph_series_m_ol_t_nl_i3_fb |
 |MOlOLNlFb      |Ordered list x2 newline fenced block| ` 1. 1.\n```\nfoo\n``` ` | test_paragraph_series_m_ol_ol_nl_fb |
-|MOlOLNlAllFb   |Ordered list x2 newline (all indented) fenced block| ```` 1. 1. \n     ```\n      foo\n      ``` ```` | test_paragraph_series_m_ol_ol_nl_al_i6_fb |
+|MOlOLNlAllFb   |Ordered list x2 newline (all indented) fenced block| ```` 1. 1. \n     ```\n      foo\n      ``` ```` | test_paragraph_series_m_ol_ol_nl_all_i6_fb |
 |MOlOLTNlFb     |Ordered list x2 text newline fenced block| ` 1. 1. abc\n```\nfoo\n``` ` | test_paragraph_series_m_ol_ol_t_nl_fb |
 |MOlOLTNlAllFb     |Ordered list x2 text newline (all indented) fenced block| ```` 1. 1. abc\n      ```\n      foo\n      ``` ```` | test_paragraph_series_m_ol_ol_t_nl_all_i6_fb |
 |MOlNlI3OLNlFb  |Ordered list newline indent of 3 ordered list newline fenced block| ` 1.\n   1.\n```\nfoo\n``` ` | test_paragraph_series_m_ol_nl_i3_ol_nl_fb |
@@ -664,13 +664,17 @@ Sh space hard break
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
 |MOlNlHB        |Ordered list newline html block| `1.\n<s>\nfoo\n</s>` | test_paragraph_series_m_ol_nl_hb |
+|MOlNlAllHB     |Ordered list newline (all indented) html block| `1.\n   <s>\n   foo\n   </s>` | test_paragraph_series_m_ol_nl_all_i3_hb |
 |MOlNlI2HB      |Ordered list newline indent of 2 html block| `1.\n  <s>\nfoo\n</s>` | test_paragraph_series_m_ol_nl_i2_hb |
 |MOlNlI3HB      |Ordered list newline indent of 3 html block| `1.\n   <s>\nfoo\n</s>` | test_paragraph_series_m_ol_nl_i3_hb |
 |MOlTNlHB       |Ordered list text newline html block| `1.  abc\n<s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_hb |
+|MOlTNlAllHB    |Ordered list text newline (all indented) html block| `1.  abc\n    <s>\n    foo\n    </s>` | test_paragraph_series_m_ol_t_nl_all_i4_hb |
 |MOlTNlI3HB     |Ordered list text newline indent of 3 html block| `1.  abc\n   <s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_i3_hb |
 |MOlTNlI4HB     |Ordered list text newline indent of 4 html block| `1.  abc\n    <s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_i4_hb |
 |MOlOLNlHB      |Ordered list x2 newline html block| `1. 1.\n<s>\nfoo\n</s>` | test_paragraph_series_m_ol_ol_nl_hb |
+|MOlOLNlAllHB      |Ordered list x2 newline (all indented) html block| `1. 1. \n      <s>\n      foo\n      </s>` | test_paragraph_series_m_ol_ol_nl_all_i6_hb |
 |MOlOLTNlHB     |Ordered list x2 text newline html block| `1. 1. abc\n<s>\nfoo\n</s>` | test_paragraph_series_m_ol_ol_t_nl_hb |
+|MOlOLTNlAllHB  |Ordered list x2 text newline (all indented) html block| `1. 1. abc\n      <s>\n      foo\n      </s>` | test_paragraph_series_m_ol_ol_t_nl_all_i6_hb |
 |MOlNlI3OLNlHB |Ordered list newline indent of 3 ordered list newline html block| `1.\n   1.\n<s>\nfoo\n</s>` | test_paragraph_series_m_ol_nl_i3_ol_nl_hb |
 |MOlNlI3OLTNlHB|Ordered list newline indent of 3 ordered list text newline html block| `1.\n   1. def\n<s>\nfoo\n</s>` | test_paragraph_series_m_ol_nl_i3_ol_t_nl_hb |
 |MOlTNlI3OLNlHB |Ordered list text newline indent of 3 ordered list newline html block| `1. abc\n   1.\n<s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_i3_ol_nl_hb |
