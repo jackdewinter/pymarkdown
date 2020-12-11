@@ -586,7 +586,6 @@ Sh space hard break
 |MOlTNlOLNlI3HaT |Ordered list text newline ordered list new line indent of 3 atx heading text| `1. abc\n   1.\n   # foo\n` | test_paragraph_series_m_ol_t_nl_ol_nl_i3_ha_t |
 |MOlTNlOLTNlI3HaT|Ordered list text newline ordered list text new line indent of 3 atx heading text| `1. abc\n   1. abc\n   # foo\n` | test_paragraph_series_m_ol_t_nl_ol_t_nl_i3_ha_t |
 
-
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
 |MOlNlTNlHs     |Ordered list newline text new line setext heading| `1.\nfoo\n---\n` | test_paragraph_series_m_ol_nl_t_nl_hs |
@@ -615,13 +614,17 @@ Sh space hard break
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
 |MOlNlFb        |Ordered list newline fenced block| ` 1.\n```\nfoo\n``` ` | test_paragraph_series_m_ol_nl_fb |
+|MOlNlAllFb        |Ordered list newline (all indented) fenced block| ````` 1.\n   ```\n   foo\n   ``` ````` | test_paragraph_series_m_ol_nl_all_i3_fb |
 |MOlNlI2Fb      |Ordered list newline indent of 2 fenced block| ` 1.\n  ```\nfoo\n``` ` | test_paragraph_series_m_ol_nl_i2_fb |
 |MOlNlI3Fb      |Ordered list newline indent of 3 fenced block| ` 1.\n   ```\nfoo\n``` ` | test_paragraph_series_m_ol_nl_i3_fb |
 |MOlTNlFb       |Ordered list text newline fenced block| ` 1.  abc\n```\nfoo\n``` ` | test_paragraph_series_m_ol_t_nl_fb |
+|MOlTNlAllFb       |Ordered list text newline (all indented) fenced block| ````` 1.\n  abc\n    ```\n    foo\n    ``` ````` | test_paragraph_series_m_ol_t_nl_all_i4_fb |
 |MOlTNlI2Fb     |Ordered list text newline indent of 2 fenced block| ` 1.  abc\n  ```\nfoo\n``` ` | test_paragraph_series_m_ol_t_nl_i2_fb |
 |MOlTNlI3Fb     |Ordered list text newline indent of 3 fenced block| ` 1.  abc\n   ```\nfoo\n``` ` | test_paragraph_series_m_ol_t_nl_i3_fb |
 |MOlOLNlFb      |Ordered list x2 newline fenced block| ` 1. 1.\n```\nfoo\n``` ` | test_paragraph_series_m_ol_ol_nl_fb |
+|MOlOLNlAllFb   |Ordered list x2 newline (all indented) fenced block| ```` 1. 1. \n     ```\n      foo\n      ``` ```` | test_paragraph_series_m_ol_ol_nl_al_i6_fb |
 |MOlOLTNlFb     |Ordered list x2 text newline fenced block| ` 1. 1. abc\n```\nfoo\n``` ` | test_paragraph_series_m_ol_ol_t_nl_fb |
+|MOlOLTNlAllFb     |Ordered list x2 text newline (all indented) fenced block| ```` 1. 1. abc\n      ```\n      foo\n      ``` ```` | test_paragraph_series_m_ol_ol_t_nl_all_i6_fb |
 |MOlNlI3OLNlFb  |Ordered list newline indent of 3 ordered list newline fenced block| ` 1.\n   1.\n```\nfoo\n``` ` | test_paragraph_series_m_ol_nl_i3_ol_nl_fb |
 |MOlNlI3OLTNlFb |Ordered list newline indent of 3 ordered list text newline fenced block| ` 1.\n   1. abc\n```\nfoo\n``` ` | test_paragraph_series_m_ol_nl_i3_ol_t_nl_fb |
 |MOlNlI3OLNlFb  |Ordered list text newline indent of 3 ordered list newline fenced block| ` 1. abc\n   1.\n```\nfoo\n``` ` | test_paragraph_series_m_ol_t_nl_i3_ol_nl_fb |

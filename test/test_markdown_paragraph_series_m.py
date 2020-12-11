@@ -2663,6 +2663,46 @@ foo
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_ol_nl_all_i3_fb():
+    """
+    Test case:  Ordered list newline (all indented) fenced block
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.
+   ```
+   foo
+   ```
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   \n   ]",
+        "[BLANK(1,3):]",
+        "[fcode-block(2,4):`:3::::::]",
+        "[text(3,4):foo:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<pre><code>foo
+</code></pre>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_ol_nl_i2_fb():
     """
     Test case:  Ordered list newline indent of 2 fenced block
@@ -2779,6 +2819,48 @@ foo
 </ol>
 <pre><code>foo
 </code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ol_t_nl_all_i4_fb():
+    """
+    Test case:  Ordered list text newline (all indented) fenced block
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.  abc
+    ```
+    foo
+    ```
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:4::    \n    \n    ]",
+        "[para(1,5):]",
+        "[text(1,5):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(2,5):`:3::::::]",
+        "[text(3,5):foo:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<pre><code>foo
+</code></pre>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -2920,6 +3002,52 @@ foo
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_ol_ol_nl_al_i6_fb():
+    """
+    Test case:  Ordered list x2 newline fenced block
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. 1.
+      ```
+      foo
+      ```
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[olist(1,4):.:1:6:   :      \n      \n      ]",
+        "[BLANK(1,6):]",
+        "[fcode-block(2,7):`:3::::::]",
+        "[text(3,7):foo:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<ol>
+<li>
+<pre><code>foo
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_ol_ol_t_nl_fb():
     """
     Test case:  Ordered list x2 text newline fenced block
@@ -2956,6 +3084,54 @@ foo
 </ol>
 <pre><code>foo
 </code></pre>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ol_ol_t_nl_all_i6_fb():
+    """
+    Test case:  Ordered list x2 text newline fenced block
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. 1. abc
+      ```
+      foo
+      ```
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[olist(1,4):.:1:6:   :      \n      \n      ]",
+        "[para(1,7):]",
+        "[text(1,7):abc:]",
+        "[end-para:::False]",
+        "[fcode-block(2,7):`:3::::::]",
+        "[text(3,7):foo:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<ol>
+<li>abc
+<pre><code>foo
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

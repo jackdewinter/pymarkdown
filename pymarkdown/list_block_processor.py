@@ -263,6 +263,7 @@ class ListBlockProcessor:
 
             LOGGER.debug("olist_index_number>>%s", str(olist_index_number))
             is_not_one = olist_index_number != "1"
+            LOGGER.debug("is_not_one>>%s", str(is_not_one))
             LOGGER.debug(
                 "is_in_para>>%s>>EOL>%s>is_first>%s",
                 str(is_in_paragraph),
