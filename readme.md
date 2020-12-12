@@ -54,7 +54,6 @@
 
 ## Bugs - Block Quote
 
-- block quotes that start and stop i.e. > then >> then > then >>>, etc.
 - tests like cov2 with blank before, after, and both for html blocks and other blocks
 - tests like cov2 with multiple lines for block items, like html
 

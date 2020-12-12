@@ -1480,6 +1480,154 @@ baz</p>
 
 
 @pytest.mark.gfm
+def test_block_quotes_229a():
+    """
+    Test case 229a:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> 1
+>> 2
+> 1
+>> > 3
+> > 2
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):1:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::>> \n> ]",
+        "[para(2,4):\n]",
+        "[text(2,4):2\n1::\n]",
+        "[end-para:::True]",
+        "[block-quote(4,1)::>> > \n> > \n]",
+        "[para(4,6):\n]",
+        "[text(4,6):3\n2::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>1</p>
+<blockquote>
+<p>2
+1</p>
+<blockquote>
+<p>3
+2</p>
+</blockquote>
+</blockquote>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_229b():
+    """
+    Test case 229b:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> 1
+
+>> 2
+
+> 1
+
+>> > 3
+
+> > 2
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n]",
+        "[para(1,3):]",
+        "[text(1,3):1:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(2,1):]",
+        "[block-quote(3,1)::]",
+        "[block-quote(3,2)::>> \n]",
+        "[para(3,4):]",
+        "[text(3,4):2:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
+        "[block-quote(5,1)::> \n]",
+        "[para(5,3):]",
+        "[text(5,3):1:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(6,1):]",
+        "[block-quote(7,1)::]",
+        "[block-quote(7,2)::]",
+        "[block-quote(7,4)::>> > \n]",
+        "[para(7,6):]",
+        "[text(7,6):3:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
+        "[block-quote(9,1)::]",
+        "[block-quote(9,3)::> > \n]",
+        "[para(9,5):]",
+        "[text(9,5):2:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(10,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>1</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>2</p>
+</blockquote>
+</blockquote>
+<blockquote>
+<p>1</p>
+</blockquote>
+<blockquote>
+<blockquote>
+<blockquote>
+<p>3</p>
+</blockquote>
+</blockquote>
+</blockquote>
+<blockquote>
+<blockquote>
+<p>2</p>
+</blockquote>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_block_quotes_230():
     """
     Test case 230:  When including an indented code block in a block quote, remember that the block quote marker includes both the > and a following space. So five spaces are needed after the >:

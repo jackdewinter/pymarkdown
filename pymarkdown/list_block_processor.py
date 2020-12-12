@@ -168,7 +168,10 @@ class ListBlockProcessor:
             my_count = index - start_index
             olist_index_number = line_to_parse[start_index:index]
             LOGGER.debug("olist?%s<<count>>%s<<", olist_index_number, str(my_count))
-            LOGGER.debug("olist>>%s", str(line_to_parse[index]))
+            if index < len(line_to_parse):
+                LOGGER.debug("olist>>%s", str(line_to_parse[index]))
+            else:
+                LOGGER.debug("olist>>EOL")
             LOGGER.debug(
                 "index+1>>%s>>len>>%s", str(index + 1), str(len(line_to_parse))
             )
@@ -182,6 +185,8 @@ class ListBlockProcessor:
                 str(len(line_to_parse)),
                 olist_index_number,
             )
+            at_end_of_line = end_whitespace_index == len(line_to_parse)
+            LOGGER.debug("at_end_of_line>>%s", str(at_end_of_line))
 
             LOGGER.debug("my_count>>%s", str(my_count))
             xx_index = index
@@ -189,16 +194,18 @@ class ListBlockProcessor:
                 line_to_parse, index, ListBlockProcessor.__olist_start_characters
             )
             LOGGER.debug("is_olist_start>>%s", str(is_olist_start))
-            xx_seq = line_to_parse[xx_index]
-            LOGGER.debug("is_olist_start>>%s", str(xx_seq))
+            xx_seq = None
+            is_in_paragraph = False
+            is_paragraph_in_list = False
+            if is_olist_start:
+                xx_seq = line_to_parse[xx_index]
+                LOGGER.debug("is_olist_start>>%s", str(xx_seq))
             if is_olist_start:
                 is_in_paragraph = parser_state.token_stack[-1].is_paragraph
                 LOGGER.debug("is_in_paragraph>>%s", str(is_in_paragraph))
                 if is_in_paragraph:
                     is_paragraph_in_list = parser_state.token_stack[-2].is_list
                     LOGGER.debug("is_paragraph_in_list>>%s", str(is_paragraph_in_list))
-                at_end_of_line = end_whitespace_index == len(line_to_parse)
-                LOGGER.debug("at_end_of_line>>%s", str(at_end_of_line))
             if (
                 my_count <= 9
                 and is_olist_start
