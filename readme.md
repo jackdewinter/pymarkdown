@@ -55,7 +55,6 @@
 
 - leaf block prc#624 - why 2 separate?
 - block quotes that start and stop i.e. > then >> then > then >>>, etc.
-- "# TODO add case with >" for tests
 - 228 and 229 - what is the proper line/col for ">>>"?
 - tests like cov2 with blank before, after, and both for html blocks and other blocks
 - tests like cov2 with multiple lines for block items, like html
