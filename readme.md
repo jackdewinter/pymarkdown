@@ -37,6 +37,7 @@
     - variation with start of 52e, then hard break, then something like start of 52e again i.e. make /x02 splitter come into affect
   - hard break followed by each inline type
   - hard break at start of text?
+- unify 2 separate calculations in `__pre_list` function
 
 - image token handling confusing and non-standard
 - fenced code block handling of line/col could be better
@@ -53,7 +54,6 @@
 
 ## Bugs - Block Quote
 
-- leaf block prc#624 - why 2 separate?
 - block quotes that start and stop i.e. > then >> then > then >>>, etc.
 - 228 and 229 - what is the proper line/col for ">>>"?
 - tests like cov2 with blank before, after, and both for html blocks and other blocks
