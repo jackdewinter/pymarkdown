@@ -403,15 +403,6 @@ class TokenizedMarkdown:
         Handle the processing of a blank line.
         """
 
-        if (
-            parser_state.token_stack[-1].is_paragraph
-            and len(parser_state.token_stack) >= 2
-            and parser_state.token_stack[-2].is_list
-        ):
-            from_main_transform = False
-        elif parser_state.token_stack[-1].is_list:
-            from_main_transform = False
-
         close_only_these_blocks = None
         do_include_block_quotes = True
         if not from_main_transform:
