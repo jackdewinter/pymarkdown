@@ -3776,6 +3776,44 @@ def test_paragraph_series_m_i3_ol_nl_i4_t_ib():
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_i3_ol_nl_i7_t_all_ib():
+    """
+    Test case:  Indent of 3 ordered list newline indent of 7 text (indented block)
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.
+       foo
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[BLANK(1,3):]",
+        "[icode-block(2,8):    :]",
+        "[text(2,8):foo:]",
+        "[end-icode-block:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<pre><code>foo
+</code></pre>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_i3_ol_nl_i5_t_ib():
     """
     Test case:  Indent of 3 ordered list newline indent of 5 text (indented block)
@@ -3873,6 +3911,84 @@ def test_paragraph_series_m_i3_ol_t_nl_i4_t_ib():
     expected_gfm = """<ol>
 <li>abc
 foo</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_i3_ol_t_nl_i10_t_all_ib():
+    """
+    Test case:  Indent of 3 ordered list text newline indent of 4 text (indented block)
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """   1. abc
+          foo
+"""
+    expected_tokens = [
+        "[olist(1,4):.:1:6:   :      ]",
+        "[para(1,7):\n    ]",
+        "[text(1,7):abc\nfoo::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+foo</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_i3_ol_t_nl_nl_i10_t_all_ib():
+    """
+    Test case:  Indent of 3 ordered list text newline indent of 4 text (indented block)
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """   1. abc
+
+          foo
+"""
+    expected_tokens = [
+        "[olist(1,4):.:1:6:   :      ]",
+        "[para(1,7):]",
+        "[text(1,7):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[icode-block(3,11):    :]",
+        "[text(3,11):foo:]",
+        "[end-icode-block:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<p>abc</p>
+<pre><code>foo
+</code></pre>
+</li>
 </ol>"""
 
     # Act
@@ -3999,6 +4115,50 @@ foo</li>
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_ol_ol_nl_i10_t_all_ib():
+    """
+    Test case:  Ordered list x2 newline indent of 4 text (indented block)
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. 1.
+          foo
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[olist(1,4):.:1:6:   :      ]",
+        "[BLANK(1,6):]",
+        "[icode-block(2,11):    :]",
+        "[text(2,11):foo:]",
+        "[end-icode-block:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<ol>
+<li>
+<pre><code>foo
+</code></pre>
+</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_ol_ol_t_nl_i4_t_ib():
     """
     Test case:  Ordered list x2 text newline indent of 4 text (indented block)
@@ -4026,6 +4186,96 @@ def test_paragraph_series_m_ol_ol_t_nl_i4_t_ib():
 <ol>
 <li>abc
 foo</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ol_ol_t_nl_i4_t_all_ib():
+    """
+    Test case:  Ordered list x2 text newline indent of 4 text (indented block)
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. 1. abc
+          foo
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[olist(1,4):.:1:6:   :      ]",
+        "[para(1,7):\n    ]",
+        "[text(1,7):abc\nfoo::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<ol>
+<li>abc
+foo</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ol_ol_t_nl_nl_i4_t_all_ib():
+    """
+    Test case:  Ordered list x2 text newline newline indent of 4 text (indented block)
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. 1. abc
+
+          foo
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[olist(1,4):.:1:6:   :      ]",
+        "[para(1,7):]",
+        "[text(1,7):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[icode-block(3,11):    :]",
+        "[text(3,11):foo:]",
+        "[end-icode-block:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<ol>
+<li>
+<p>abc</p>
+<pre><code>foo
+</code></pre>
+</li>
 </ol>
 </li>
 </ol>"""

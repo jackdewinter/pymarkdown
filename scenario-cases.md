@@ -641,13 +641,20 @@ Sh space hard break
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
 |MI3OlNlI4TIb   |Indent of 3 ordered list newline indent of 4 text (indented block)| `   1.\n    foo` | test_paragraph_series_m_i3_ol_nl_i4_t_ib |
+|MI3OlNlI7TAllIb |Indent of 3 ordered list newline indent of 7 text (indented block)| `1.\n       foo` | test_paragraph_series_m_i3_ol_nl_i7_t_all_ib |
 |MI3OlNlI5TIb   |Indent of 3 ordered list newline indent of 5 text (indented block)| `   1.\n     foo` | test_paragraph_series_m_i3_ol_nl_i5_t_ib |
 |MI3OlNlI6TIb   |Indent of 3 ordered list newline indent of 6 text (indented block)| `   1.\n      foo` | test_paragraph_series_m_i3_ol_nl_i6_t_fb |
 |MI3OlTNlI4TIb  |Indent of 3 ordered list text newline indent of 4 text (indented block)| `   1. abc\n    foo` | test_paragraph_series_m_i3_ol_t_nl_i4_t_ib |
+|MI3OlTNlNlI4TAllIb  |Indent of 3 ordered list text newline indent of 4 text (indented block)| `   1. abc\n    foo` | test_paragraph_series_m_i3_ol_t_nl_i4_t_all_ib |
+|MI3OlTNlNlNlI4TAllIb  |Indent of 3 ordered list text newline newline indent of 4 text (indented block)| `   1. abc\n\n          foo` | test_paragraph_series_m_i3_ol_t_nl_nl_i10_t_all_ib |
+|MI3OlTNlI10TAllIb  |Indent of 3 ordered list text newline indent of 10 text (indented block)| `   1. abc\n          foo` | test_paragraph_series_m_i3_ol_t_nl_i10_t_all_ib |
 |MI3OlTNlI5TIb  |Indent of 3 ordered list text newline indent of 5 text (indented block)| `   1. abc\n     foo` | test_paragraph_series_m_i3_ol_t_nl_i5_t_ib |
 |MI3OlTNlI6TIb  |Indent of 3 ordered list text newline indent of 6 text (indented block)| `   1. abc\n      foo` | test_paragraph_series_m_i3_ol_t_nl_i6_t_ib |
 |MOlOLNlI4TIb   |Ordered list x2 newline indent of 4 text (indented block)| `1. 1.\n    foo` | test_paragraph_series_m_ol_ol_nl_i4_t_ib |
+|MOlOLNlI4TAllIb   |Ordered list x2 newline indent of 10 text (indented block)| `1. 1.\n    foo` | test_paragraph_series_m_ol_ol_nl_i10_t_all_ib |
 |MOlOLTNlI4TIb  |Ordered list x2 text newline indent of 4 text (indented block)| `1. 1. abc\n    foo` | test_paragraph_series_m_ol_ol_t_nl_i4_t_ib |
+|MOlOLTNlI4TAllIb  |Ordered list x2 text newline indent of 4 text (indented block)| `1. 1. abc\n          foo` | test_paragraph_series_m_ol_ol_t_nl_i4_t_all_ib |
+|MOlOLTNlNlI4TAllIb  |Ordered list x2 text newline newline indent of 4 text (indented block)| `1. 1. abc\n\n          foo` | test_paragraph_series_m_ol_ol_t_nl_nl_i4_t_all_ib |
 |MOlNlI3OLNlI4tIb|Ordered list newline indent of 3 ordered list newline indent of 4 text (indented block)| `1.\n   1.\n    foo` | test_paragraph_series_m_ol_nl_i3_ol_nl_i4_t_ib |
 |MOlNlI3OLTNlI4tIb|Ordered list newline indent of 3 ordered list text newline indent of 4 text (indented block)| `1.\n   1. abc\n    foo` | test_paragraph_series_m_ol_nl_i3_ol_t_nl_i4_t_ib |
 |MOlTNlI3OLNlI4tIb|Ordered list text newline indent of 3 ordered list newline indent of 4 text (indented block)| `1. abc\n   1.\n    foo` | test_paragraph_series_m_ol_t_nl_i3_ol_nl_i4_t_ib |
