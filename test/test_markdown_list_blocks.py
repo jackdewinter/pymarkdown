@@ -3803,3 +3803,195 @@ def test_list_blocks_extra_4b():
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_5a():
+    """
+    Test case 05a:  A list item with one level and lazy continuation lines
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+def"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):\n]",
+        "[text(1,4):abc\ndef::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+def</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_5b():
+    """
+    Test case 05a:  A list item with two levels and lazy continuation lines
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+   1. abc
+def"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :]",
+        "[para(2,7):\n]",
+        "[text(2,7):abc\ndef::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>abc
+def</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_5c():
+    """
+    Test case 05c:  A list item with three levels and lazy continuation lines
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+   1. abc
+      1. abc
+def"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[text(2,7):abc:]",
+        "[end-para:::True]",
+        "[olist(3,7):.:1:9:      :]",
+        "[para(3,10):\n]",
+        "[text(3,10):abc\ndef::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>abc
+<ol>
+<li>abc
+def</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_5d():
+    """
+    Test case 05c:  A list item with four levels and lazy continuation lines
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+   1. abc
+      1. abc
+         1. abc
+def"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[text(2,7):abc:]",
+        "[end-para:::True]",
+        "[olist(3,7):.:1:9:      ]",
+        "[para(3,10):]",
+        "[text(3,10):abc:]",
+        "[end-para:::True]",
+        "[olist(4,10):.:1:12:         :]",
+        "[para(4,13):\n]",
+        "[text(4,13):abc\ndef::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>abc
+<ol>
+<li>abc
+<ol>
+<li>abc
+def</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
