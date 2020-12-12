@@ -60,13 +60,6 @@
 - tests like cov2 with blank before, after, and both for html blocks and other blocks
 - tests like cov2 with multiple lines for block items, like html
 
-## Bugs - List
-
-- blank line ending a list is parsed wrong into tokens
-  - >>stack_count>>0>>#9:[end-ulist]
-  - should be end and then blank, as the blank is outside of the list
-  - 233 and 235, should blank and end-list tokens be reversed?
-
 ## Bugs - Block Quote/List Interaction
 
 - 300 with different list following

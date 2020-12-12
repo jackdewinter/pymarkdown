@@ -281,6 +281,20 @@ class TokenizedMarkdown:
 
         LOGGER.debug("cob-start>>%s", str(parser_state.token_stack))
         LOGGER.debug("cob-start>>%s", str(parser_state.token_document))
+        if destination_array:
+            LOGGER.debug("cob-destination_array>>%s", str(destination_array))
+        if only_these_blocks:
+            LOGGER.debug("cob-only_these_blocks>>%s", str(only_these_blocks))
+        if include_block_quotes:
+            LOGGER.debug("cob-include_block_quotes>>%s", str(include_block_quotes))
+        if include_lists:
+            LOGGER.debug("cob-include_lists>>%s", str(include_lists))
+        if until_this_index != -1:
+            LOGGER.debug("cob-until_this_index>>%s", str(until_this_index))
+        if caller_can_handle_requeue:
+            LOGGER.debug("cob-caller_can_handle_requeue>>%s", str(caller_can_handle_requeue))
+        if was_forced:
+            LOGGER.debug("cob-was_forced>>%s", str(was_forced))
         while not parser_state.token_stack[-1].is_document:
 
             was_close_forced = was_forced
@@ -468,6 +482,7 @@ class TokenizedMarkdown:
             TokenizedMarkdown.__handle_blank_line_in_block_quote(parser_state)
 
         if new_tokens is None:
+            LOGGER.debug("default blank handling-->cob")
             new_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state,
                 only_these_blocks=close_only_these_blocks,

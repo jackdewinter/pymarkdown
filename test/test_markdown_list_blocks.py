@@ -120,6 +120,13 @@ with two lines.</p>
 def test_list_blocks_233():
     """
     Test case 233:  (part 1) Here are some examples showing how far content must be indented to be put under the list item:
+
+    Note: The tokens are correct.  The blank line on line 2 forces the paragraph closed.
+          As it is still allowed inside of the list, only affecting the looseness of
+          the list , the list remains open.  With the paragraph closed, the `two` on
+          line 3 is not paragraph continuation, and due to the indent, it is not
+          part of the list.  At that point, the list is closed and the new paragraph
+          is started.
     """
 
     # Arrange
@@ -198,6 +205,8 @@ def test_list_blocks_234():
 def test_list_blocks_235():
     """
     Test case 235:  (part 3) Here are some examples showing how far content must be indented to be put under the list item:
+
+    Note: See comments for 233.  Same thought process, except more indents.
     """
 
     # Arrange
