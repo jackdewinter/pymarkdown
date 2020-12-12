@@ -1722,6 +1722,44 @@ foo
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_ol_nl_t_nl_all_hs():
+    """
+    Test case:  Ordered list newline text new line setext heading
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1.
+   foo
+   ---
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   ]",
+        "[BLANK(1,3):]",
+        "[setext(3,4):-:3::(2,4)]",
+        "[text(2,4):foo:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<h2>foo</h2>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_ol_nl_i2_t_nl_hs():
     """
     Test case:  Ordered list newline indent of 2 text new line setext heading
@@ -1877,6 +1915,44 @@ foo</li>
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_ol_t_nl_t_nl_all_hs():
+    """
+    Test case:  Ordered list text newline text new line setext heading
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. abc
+   foo
+   ---
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   \n   ]",
+        "[setext(3,4):-:3::(1,4)]",
+        "[text(1,4):abc\nfoo::\n]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<h2>abc
+foo</h2>
+</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_ol_t_nl_i2_t_nl_hs():
     """
     Test case:  Ordered list text newline indent of 2 text new line setext heading
@@ -2002,30 +2078,73 @@ def test_paragraph_series_m_ol_ol_nl_t_nl_hs():
     # Arrange
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
-    source_markdown = """1. 1. abc
+    source_markdown = """1. 1.
 foo
 ---
 """
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :]",
-        "[para(1,7):\n]",
-        "[text(1,7):abc\nfoo::\n]",
-        "[end-para:::True]",
+        "[olist(1,4):.:1:6:   ]",
+        "[BLANK(1,6):]",
         "[end-olist:::True]",
         "[end-olist:::True]",
-        "[tbreak(3,1):-::---]",
+        "[setext(3,1):-:3::(2,1)]",
+        "[text(2,1):foo:]",
+        "[end-setext:::False]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ol>
 <li>
 <ol>
-<li>abc
-foo</li>
+<li></li>
 </ol>
 </li>
 </ol>
-<hr />"""
+<h2>foo</h2>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ol_ol_nl_t_nl_all_hs():
+    """
+    Test case:  Ordered list x2 text newline new line setext heading
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. 1.
+      foo
+      ---
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[olist(1,4):.:1:6:   :      \n      ]",
+        "[BLANK(1,6):]",
+        "[setext(3,7):-:3::(2,7)]",
+        "[text(2,7):foo:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<ol>
+<li>
+<h2>foo</h2>
+</li>
+</ol>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -2071,6 +2190,50 @@ foo</li>
 </li>
 </ol>
 <hr />"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ol_ol_t_nl_t_nl_all_hs():
+    """
+    Test case:  Ordered list x2 text newline text new line setext heading
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. 1. abc
+      foo
+      ---
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[olist(1,4):.:1:6:   :      \n      ]",
+        "[setext(3,7):-:3::(1,7)]",
+        "[text(1,7):abc\nfoo::\n]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<ol>
+<li>
+<h2>abc
+foo</h2>
+</li>
+</ol>
+</li>
+</ol>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

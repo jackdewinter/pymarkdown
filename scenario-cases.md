@@ -589,15 +589,19 @@ Sh space hard break
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
 |MOlNlTNlHs     |Ordered list newline text new line setext heading| `1.\nfoo\n---\n` | test_paragraph_series_m_ol_nl_t_nl_hs |
+|MOlNlTNlAllHs     |Ordered list newline text new line (all indented) setext heading| `1.\n   foo\n   ---` | test_paragraph_series_m_ol_nl_t_nl_all_hs |
 |MOlNlI2THs     |Ordered list newline indent of 2 text new line setext heading| `1.\n  foo\n---\n` | test_paragraph_series_m_ol_nl_i2_t_nl_hs |
 |MOlNlI3THs     |Ordered list newline indent of 3 text new line setext heading| `1.\n   foo\n---\n` | test_paragraph_series_m_ol_nl_i3_t_nl_hs |
 |MOlNlI3TI3Hs   |Ordered list newline indent of 3 text new line indent of 3 setext heading| `1.\n   foo\n   ---` | test_paragraph_series_m_ol_nl_i3_t_nl_i3_hs |
 |MOlTNlTNLHs    |Ordered list text newline text new line setext heading| `1. abc\nfoo\n---` | test_paragraph_series_m_ol_t_nl_t_nl_hs |
+|MOlTNlTNLAllHs    |Ordered list text newline text new line (all indented) setext heading| `1. abc\n   foo\n   ---` | test_paragraph_series_m_ol_t_nl_t_nl_all_hs |
 |MOlTNlI2TNlHs  |Ordered list text newline indent of 2 text new line setext heading| `1. abc\n  foo\n---` | test_paragraph_series_m_ol_t_nl_i2_t_nl_hs|
 |MOlTNlI3TNlHs  |Ordered list text newline indent of 3 text new line setext heading| `1. abc\n   foo\n---` | test_paragraph_series_m_ol_t_nl_i3_t_nl_hs|
 |MOlTNlI3TNlI3Hs|Ordered list text newline indent of 3 text new line indent of 3 setext heading| `1. abc\n   foo\n   ---` | test_paragraph_series_m_ol_t_nl_i3_t_nl_i3_hs|
 |MOlOLNlTNLHs   |Ordered list x2 text newline new line setext heading| `1. 1.\nfoo\n---` | test_paragraph_series_m_ol_ol_nl_t_nl_hs |
+|MOlOLNlTNLAllHs   |Ordered list x2 text newline new line (all indented) setext heading| `1. 1.\n      foo\n      ---` | test_paragraph_series_m_ol_ol_nl_t_nl_all_hs |
 |MOlOLTNlTNLHs  |Ordered list x2 text newline text new line setext heading| `1. 1. abc\nfoo\n---` | test_paragraph_series_m_ol_ol_t_nl_t_nl_hs |
+|MOlOLTNlTNLAllHs  |Ordered list x2 text newline text new line (all indented) setext heading| `1. 1. abc\n      foo\n      ---` | test_paragraph_series_m_ol_ol_t_nl_t_nl_all_hs |
 |MOlNlI3OLNlTNlHs|Ordered list newline indent of 3 ordered list new line text newline setext heading| `1.\n   1.\nfoo\n---` | test_paragraph_series_m_ol_nl_i3_ol_nl_t_nl_hs |
 |MOlNlI3OLTNlTNlHs|Ordered list newline indent of 3 ordered list text new line text newline setext heading| `1.\n   1. def\nfoo\n---` | test_paragraph_series_m_ol_nl_i3_ol_t_nl_t_nl_hs |
 |MOlTNlI3OLNlTNlHs|Ordered list text newline indent of 3 ordered list new line text newline setext heading| `1. abc\n   1.\nfoo\n---` | test_paragraph_series_m_ol_t_nl_i3_ol_nl_t_nl_hs |
