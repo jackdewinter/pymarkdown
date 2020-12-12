@@ -131,9 +131,6 @@ class ListBlockProcessor:
                     )
                 LOGGER.debug("is_first_item_in_list>>%s", str(is_first_item_in_list))
 
-            if is_in_paragraph and at_end_of_line and is_first_item_in_list:
-                is_start = False
-
         LOGGER.debug("is_ulist_start>>result>>%s", str(is_start))
         return is_start, after_all_whitespace_index
         # pylint: enable=too-many-arguments
