@@ -404,7 +404,10 @@ class TransformToMarkdown:
             + ParserHelper.make_value_visible(continue_sequence)
             + ">>"
         )
-        print("__merge_with_container_data>new_data>" + str(new_data))
+        print(
+            "__merge_with_container_data>new_data>"
+            + ParserHelper.make_value_visible(new_data)
+        )
         print("__merge_with_container_data>skip_merge>" + str(skip_merge))
         print(
             "__merge_with_container_data>continue_sequence>"
@@ -947,6 +950,7 @@ class TransformToMarkdown:
             )
             new_data = composed_data
 
+        new_data = ParserHelper.resolve_noops_from_text(new_data)
         return new_data, delayed_continue, continue_sequence
 
     # pylint: enable=unused-argument
@@ -1317,6 +1321,7 @@ class TransformToMarkdown:
                 main_text = self.__reconstitute_paragraph_text(main_text, current_token)
             elif self.block_stack[-1].token_name == MarkdownToken.token_setext_heading:
                 main_text = self.__reconstitute_setext_text(main_text, current_token)
+
         print(
             "<<prefix_text>>"
             + ParserHelper.make_value_visible(prefix_text)

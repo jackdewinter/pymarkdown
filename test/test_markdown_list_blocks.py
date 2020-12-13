@@ -700,6 +700,49 @@ baz
 
 
 @pytest.mark.gfm
+def test_list_blocks_242d():
+    """
+    Test case 242d:  variation, if in a paragraph, the text's indents are split
+                     between the paragraph and the enclosing list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- Foo
+
+     bar
+     baz"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[para(1,3):]",
+        "[text(1,3):Foo:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[para(3,6):   \n   ]",
+        "[text(3,6):bar\nbaz::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<p>Foo</p>
+<p>bar
+baz</p>
+</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
 def test_list_blocks_243():
     """
     Test case 243:  (part 1) Note that ordered list start numbers must be nine digits or less:

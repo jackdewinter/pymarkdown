@@ -52,11 +52,6 @@
   - 518b inside of list and/or block quote
   - links with & and \ with inner link to mine
 
-## Bugs - Block Quote
-
-- tests like cov2 with blank before, after, and both for html blocks and other blocks
-- tests like cov2 with multiple lines for block items, like html
-
 ## Bugs - Block Quote/List Interaction
 
 - 300 with different list following
@@ -72,7 +67,6 @@
 ## Bugs - Tokenization
 
 - should be able to have tabs and not trigger bad tokens, should be excluded?
-- all leaf in all container
 - blank lines as part of bquote
   - compare test_block_quotes_218 vs test_blank_lines_197a
   - already fixed test_list_blocks_260, 257
