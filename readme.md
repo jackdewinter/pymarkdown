@@ -67,9 +67,6 @@
 ## Bugs - Tokenization
 
 - should be able to have tabs and not trigger bad tokens, should be excluded?
-- blank lines as part of bquote
-  - compare test_block_quotes_218 vs test_blank_lines_197a
-  - already fixed test_list_blocks_260, 257
 
 ## Bugs - Tabs
 

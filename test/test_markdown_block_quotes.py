@@ -1293,12 +1293,14 @@ def test_block_quotes_218():
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
     source_markdown = """>
->  
-> """
+>\a\a
+> """.replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[block-quote(1,1)::>\n> \n> ]",
         "[BLANK(1,2):]",
-        "[BLANK(2,4): ]",
+        "[BLANK(2,3): ]",
         "[BLANK(3,3):]",
         "[end-block-quote:::True]",
     ]
@@ -1306,7 +1308,7 @@ def test_block_quotes_218():
 </blockquote>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1333,7 +1335,7 @@ def test_block_quotes_219():
         "[para(2,3):]",
         "[text(2,3):foo:]",
         "[end-para:::True]",
-        "[BLANK(3,4): ]",
+        "[BLANK(3,3): ]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -1522,7 +1524,7 @@ def test_block_quotes_222b():
         "[para(1,3):]",
         "[text(1,3):foo:]",
         "[end-para:::True]",
-        "[BLANK(2,4): ]",
+        "[BLANK(2,3): ]",
         "[para(3,3):]",
         "[text(3,3):bar:]",
         "[end-para:::True]",

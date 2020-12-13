@@ -518,7 +518,6 @@ def __validate_new_line(container_block_stack, current_token, current_position):
         and current_token.token_name == MarkdownToken.token_blank_line
     ):
         if container_block_stack[-1].token_name == MarkdownToken.token_block_quote:
-            init_ws += len(current_token.extracted_whitespace)
             split_leading_spaces = container_block_stack[-1].leading_spaces.split("\n")
             print(">>blank_line>>split>" + str(split_leading_spaces))
             print(

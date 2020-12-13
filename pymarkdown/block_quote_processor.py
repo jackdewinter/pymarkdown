@@ -363,7 +363,7 @@ class BlockQuoteProcessor:
                 LOGGER.debug("call __handle_block_quote_section>>handle_blank_line")
                 adjusted_position_marker = PositionMarker(
                     position_marker.line_number,
-                    len(position_marker.text_to_parse),
+                    len(text_removed_by_container),
                     position_marker.text_to_parse,
                 )
                 did_blank = True
