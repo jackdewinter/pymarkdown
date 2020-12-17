@@ -333,7 +333,6 @@ def test_list_items_281e():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_list_items_282():
     """
@@ -368,6 +367,189 @@ def test_list_items_282():
 </ol>
 <ol start="3">
 <li>baz</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_282a():
+    """
+    Test case 282a:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. foo
+2. bar
+ 3) baz"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):foo:]",
+        "[end-para:::True]",
+        "[li(2,1):3::2]",
+        "[para(2,4):]",
+        "[text(2,4):bar:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[olist(3,2):):3:4: ]",
+        "[para(3,5):]",
+        "[text(3,5):baz:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>foo</li>
+<li>bar</li>
+</ol>
+<ol start="3">
+<li>baz</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_282b():
+    """
+    Test case 282b:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. foo
+2. bar
+  3) baz"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):foo:]",
+        "[end-para:::True]",
+        "[li(2,1):3::2]",
+        "[para(2,4):]",
+        "[text(2,4):bar:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[olist(3,3):):3:5:  ]",
+        "[para(3,6):]",
+        "[text(3,6):baz:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>foo</li>
+<li>bar</li>
+</ol>
+<ol start="3">
+<li>baz</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_282c():
+    """
+    Test case 282c:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. foo
+2. bar
+   3) baz"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3::   ]",
+        "[para(1,4):]",
+        "[text(1,4):foo:]",
+        "[end-para:::True]",
+        "[li(2,1):3::2]",
+        "[para(2,4):\n]",
+        "[text(2,4):bar\n3) baz::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>foo</li>
+<li>bar
+3) baz</li>
+</ol>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_282d():
+    """
+    Test case 282d:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """1. foo
+2. bar
+
+   3) baz"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):foo:]",
+        "[end-para:::True]",
+        "[li(2,1):3::2]",
+        "[para(2,4):]",
+        "[text(2,4):bar:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[olist(4,4):):3:6:   ]",
+        "[para(4,7):]",
+        "[text(4,7):baz:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<p>foo</p>
+</li>
+<li>
+<p>bar</p>
+<ol start="3">
+<li>baz</li>
+</ol>
+</li>
 </ol>"""
 
     # Act

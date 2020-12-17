@@ -44,6 +44,7 @@
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
 - all types of end-inlines and inlines at end i.e. 50
 - possible to merge link token and image token more closely?
+- refactor `is_olist_start` and `is_ulist_start`
 
 ## Bugs - General - Uncategorized
 

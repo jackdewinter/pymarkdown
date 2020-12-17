@@ -148,10 +148,13 @@ class ListBlockProcessor:
         """
         Determine if we have the start of an numbered or ordered list.
         """
+
+        # TODO commonalities
         is_start = False
         end_whitespace_index = -1
         index = None
         my_count = None
+        olist_index_number = None
         if adj_ws is None:
             adj_ws = extracted_whitespace
         if (
@@ -231,6 +234,7 @@ class ListBlockProcessor:
             LOGGER.debug("at_end_of_line>>%s", str(at_end_of_line))
 
             is_first_item_in_list = False
+            is_sub_list = False
             if is_in_paragraph:
                 if not parser_state.token_stack[-2].is_list:
                     LOGGER.debug(
@@ -265,6 +269,15 @@ class ListBlockProcessor:
                     )
                 LOGGER.debug("is_first_item_in_list>>%s", str(is_first_item_in_list))
 
+                if parser_state.token_stack[-2].is_list:
+                    LOGGER.debug(
+                        "old_indent=%s", str(parser_state.token_stack[-2].indent_level)
+                    )
+                    LOGGER.debug("new_indent=%s", str(start_index))
+                    is_sub_list = (
+                        start_index >= parser_state.token_stack[-2].indent_level
+                    )
+
             LOGGER.debug("olist_index_number>>%s", str(olist_index_number))
             is_not_one = olist_index_number != "1"
             LOGGER.debug("is_not_one>>%s", str(is_not_one))
@@ -278,6 +291,7 @@ class ListBlockProcessor:
                 is_in_paragraph
                 and (at_end_of_line or is_not_one)
                 and is_first_item_in_list
+                and is_sub_list
             ):
                 is_start = False
                 LOGGER.debug("is_start>>%s", str(is_start))
