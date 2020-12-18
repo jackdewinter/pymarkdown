@@ -137,23 +137,62 @@ data="foo" ></p>"""
 @pytest.mark.gfm
 def test_raw_html_634a():
     """
-    Test case 634:  Whitespace is allowed:
+    Test case 634a:  variation
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
     transformer = TransformToGfm()
-    source_markdown = """<a  /><b2
+    source_markdown = """- <a  /><b2
 data="foo" ><c>"""
     expected_tokens = [
-        "[para(1,1):\n]",
-        "[raw-html(1,1):a  /]",
-        '[raw-html(1,7):b2\ndata="foo" ]',
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n]",
+        "[raw-html(1,3):a  /]",
+        '[raw-html(1,9):b2\ndata="foo" ]',
         "[raw-html(2,13):c]",
         "[end-para:::True]",
+        "[end-ulist:::True]",
     ]
-    expected_gfm = """<p><a  /><b2
-data="foo" ><c></p>"""
+    expected_gfm = """<ul>
+<li><a  /><b2
+data="foo" ><c></li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_raw_html_634b():
+    """
+    Test case 634b:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> <a  /><b2
+data="foo" ><c>"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n]",
+        "[para(1,3):\n]",
+        "[raw-html(1,3):a  /]",
+        '[raw-html(1,9):b2\ndata="foo" ]',
+        "[raw-html(2,13):c]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p><a  /><b2
+data="foo" ><c></p>
+</blockquote>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

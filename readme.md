@@ -48,7 +48,6 @@
 
 ## Bugs - General - Uncategorized
 
-- 634a in bq and in list
 - links, 518b
   - 518b inside of list and/or block quote
   - links with & and \ with inner link to mine
