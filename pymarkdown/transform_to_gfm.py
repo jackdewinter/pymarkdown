@@ -91,6 +91,7 @@ class TransformToGfm:
     }
     raw_html_percent_escape_ascii_chars = '"%[\\]^`{}|'
 
+    # pylint: disable=too-many-branches
     def __calculate_list_looseness(self, actual_tokens, actual_token_index, next_token):
         """
         Based on the first token in a list, compute the "looseness" of the list.
@@ -119,6 +120,15 @@ class TransformToGfm:
                 check_me = stack_count == 0
                 if not current_token.is_block:
                     LOGGER.debug(">>list--item>>%s", str(stack_count))
+            elif current_token.token_name == MarkdownToken.token_block_quote:
+                stack_count += 1
+                LOGGER.debug(">>block--new>>%s", str(stack_count))
+            elif (
+                current_token.token_name
+                == EndMarkdownToken.type_name_prefix + MarkdownToken.token_block_quote
+            ):
+                stack_count -= 1
+                LOGGER.debug(">>block--end>>%s", str(stack_count))
             elif isinstance(current_token, EndMarkdownToken) and (
                 current_token.type_name == MarkdownToken.token_unordered_list_start
                 or current_token.type_name == MarkdownToken.token_ordered_list_start
@@ -160,6 +170,8 @@ class TransformToGfm:
             str(is_loose),
         )
         return is_loose
+
+    # pylint: enable=too-many-branches
 
     def __correct_for_me(self, actual_tokens, current_token_index):
         correct_closure = False

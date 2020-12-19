@@ -976,8 +976,28 @@ class TransformToMarkdown:
                 assert len(current_token.extracted_whitespace) == previous_indent
                 extracted_whitespace = ""
             elif previous_token.token_name == MarkdownToken.token_block_quote:
-                assert "\n" not in previous_token.leading_spaces
-                previous_indent = len(previous_token.leading_spaces)
+                if "\n" in previous_token.leading_spaces:
+                    print(
+                        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+                        + str(previous_token.leading_text_index)
+                        + "<<"
+                    )
+                    print(
+                        ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+                        + str(previous_token.leading_spaces)
+                        + "<<"
+                    )
+                    split_leading_spaces = previous_token.leading_spaces.split("\n")
+                    previous_indent = len(
+                        split_leading_spaces[previous_token.leading_text_index]
+                    )
+                else:
+                    previous_indent = len(previous_token.leading_spaces)
+                print(
+                    ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
+                    + str(len(extracted_whitespace))
+                    + "<<"
+                )
                 extracted_whitespace = ""
 
         start_sequence = extracted_whitespace + current_token.list_start_sequence
@@ -1044,6 +1064,7 @@ class TransformToMarkdown:
             or self.container_token_stack[-1].token_name
             == MarkdownToken.token_ordered_list_start
         ):
+            print("__rehydrate_next_list_item")
             self.container_token_stack[-1].indent_level = current_token.indent_level
             self.container_token_stack[
                 -1

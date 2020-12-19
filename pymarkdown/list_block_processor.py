@@ -151,6 +151,7 @@ class ListBlockProcessor:
 
         # TODO commonalities
         is_start = False
+        xx_seq = None
         end_whitespace_index = -1
         index = None
         my_count = None
@@ -197,7 +198,6 @@ class ListBlockProcessor:
                 line_to_parse, index, ListBlockProcessor.__olist_start_characters
             )
             LOGGER.debug("is_olist_start>>%s", str(is_olist_start))
-            xx_seq = None
             is_in_paragraph = False
             is_paragraph_in_list = False
             if is_olist_start:

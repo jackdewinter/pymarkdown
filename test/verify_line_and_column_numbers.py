@@ -57,11 +57,15 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
                         current_token.token_text
                     )
                     print(">>newlines_in_text_token>" + str(newlines_in_text_token))
+                    print(
+                        ">>mainline-html>>leading_text_index>"
+                        + str(container_block_stack[-1].leading_text_index)
+                    )
                     container_block_stack[
                         -1
                     ].leading_text_index += newlines_in_text_token
                     print(
-                        ">>implicit newline>>index>"
+                        ">>mainline-html>>leading_text_index>"
                         + str(container_block_stack[-1].leading_text_index)
                     )
             continue
@@ -89,19 +93,24 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
                     == EndMarkdownToken.type_name_prefix
                     + MarkdownToken.token_html_block
                 ):
+                    print(
+                        ">>mainline-ends>>leading_text_index>"
+                        + str(container_block_stack[-1].leading_text_index)
+                    )
                     container_block_stack[-1].leading_text_index += 1
                     print(
-                        ">>implicit newline>>index>"
+                        ">>mainline-ends>>leading_text_index>"
                         + str(container_block_stack[-1].leading_text_index)
                     )
             continue
 
         if current_token.token_name == MarkdownToken.token_block_quote:
             print("block token index reset")
-            print(
-                ">>start bq>>index>" + str(container_block_stack[-1].leading_text_index)
-            )
             current_token.leading_text_index = 0
+            print(
+                ">>start bq>>leading_text_index>"
+                + str(container_block_stack[-1].leading_text_index)
+            )
 
         print("--")
         print(
@@ -144,6 +153,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
                 "top_block_token>>" + ParserHelper.make_value_visible(top_block_token)
             )
 
+            did_x = False
             if last_position.line_number == current_position.line_number:
                 __validate_same_line(
                     container_block_stack,
@@ -156,7 +166,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
                     token_stack, current_token
                 )
             else:
-                __validate_new_line(
+                did_x = __validate_new_line(
                     container_block_stack, current_token, current_position
                 )
                 remember_token_as_last_token = __verify_token_height(
@@ -175,14 +185,20 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
                 print(
                     "current_token<<" + ParserHelper.make_value_visible(current_token)
                 )
-                if top_block_token != current_token and (
-                    current_token.token_name == MarkdownToken.token_blank_line
+                if (
+                    top_block_token != current_token
+                    and (current_token.token_name == MarkdownToken.token_blank_line)
+                    and not did_x
                 ):
                     print(
-                        ">>saw bl>>index>"
+                        ">>mainline-top_block_token>>leading_text_index>"
                         + str(container_block_stack[-1].leading_text_index)
                     )
                     top_block_token.leading_text_index += 1
+                    print(
+                        ">>mainline-top_block_token>>leading_text_index>"
+                        + str(container_block_stack[-1].leading_text_index)
+                    )
         else:
             __validate_first_token(current_token, current_position)
             remember_token_as_last_token = __push_to_stack_if_required(
@@ -468,7 +484,9 @@ def __validate_new_line(container_block_stack, current_token, current_position):
     init_ws, had_tab = __calc_initial_whitespace(current_token)
     print(">>init_ws(" + str(init_ws) + ")>>w/ tab=" + str(had_tab))
     if had_tab:
-        return
+        return False
+
+    did_x = False
 
     if (
         container_block_stack
@@ -482,7 +500,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
         print(">>top_block>>=" + ParserHelper.make_value_visible(top_block))
         print(">>top_block>>w/ tab=" + str(had_tab))
         if had_tab:
-            return
+            return False
 
         if (
             top_block.token_name == MarkdownToken.token_unordered_list_start
@@ -499,7 +517,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
 
             split_leading_spaces = top_block.leading_spaces.split("\n")
             print(">>in bq>>split>" + str(split_leading_spaces))
-            print(">>in bq>>index>" + str(top_block.leading_text_index))
+            print("vnl>>in bq>>leading_text_index>" + str(top_block.leading_text_index))
             init_ws += len(split_leading_spaces[top_block.leading_text_index])
     elif (
         container_block_stack
@@ -521,11 +539,17 @@ def __validate_new_line(container_block_stack, current_token, current_position):
             split_leading_spaces = container_block_stack[-1].leading_spaces.split("\n")
             print(">>blank_line>>split>" + str(split_leading_spaces))
             print(
-                ">>blank_line>>index>"
+                "vnl>>blank_line w/ bq>>leading_text_index>"
                 + str(container_block_stack[-1].leading_text_index)
             )
             init_ws += len(
                 split_leading_spaces[container_block_stack[-1].leading_text_index]
+            )
+            container_block_stack[-1].leading_text_index += 1
+            did_x = True
+            print(
+                "vnl>>blank_line w/ bq>>leading_text_index>"
+                + str(container_block_stack[-1].leading_text_index)
             )
 
     print(">>current_position.index_number>>" + str(current_position.index_number))
@@ -535,6 +559,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
         assert current_position.index_number == 1 + init_ws, (
             "Line:" + str(current_position.line_number) + ":" + str(current_token)
         )
+    return did_x
 
 
 def __validate_first_token(current_token, current_position):
