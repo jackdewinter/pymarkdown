@@ -320,7 +320,6 @@ class ContainerBlockProcessor:
             this_bq_count,
             stack_bq_count,
             line_to_parse,
-            extracted_whitespace,
             did_process,
             container_level_tokens,
         )
@@ -693,7 +692,6 @@ class ContainerBlockProcessor:
         this_bq_count,
         stack_bq_count,
         line_to_parse,
-        extracted_whitespace,
         did_process,
         container_level_tokens,
     ):
@@ -701,12 +699,17 @@ class ContainerBlockProcessor:
         LOGGER.debug("LINE-lazy>%s", line_to_parse)
         assert not leaf_tokens
         LOGGER.debug("clt>>lazy-check")
+
+        LOGGER.debug("__process_lazy_lines>>ltp>%s", str(line_to_parse))
+        after_ws_index, ex_whitespace = ParserHelper.extract_whitespace(
+            line_to_parse, 0
+        )
+        remaining_line = line_to_parse[after_ws_index:]
+        LOGGER.debug("__process_lazy_lines>>mod->ltp>%s<", str(remaining_line))
+        LOGGER.debug("__process_lazy_lines>>mod->ews>%s<", str(ex_whitespace))
+
         lazy_tokens = BlockQuoteProcessor.check_for_lazy_handling(
-            parser_state,
-            this_bq_count,
-            stack_bq_count,
-            line_to_parse,
-            extracted_whitespace,
+            parser_state, this_bq_count, stack_bq_count, remaining_line, ex_whitespace,
         )
         if lazy_tokens:
             LOGGER.debug("clt>>lazy-found")

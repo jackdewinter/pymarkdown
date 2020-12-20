@@ -77,7 +77,7 @@ class BlockQuoteProcessor:
             )
 
             is_fenced_start, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
-                line_to_parse, 0, extracted_whitespace, skip_whitespace_check=True
+                line_to_parse, 0, extracted_whitespace
             )
             LOGGER.debug("fenced_start?%s", str(is_fenced_start))
 

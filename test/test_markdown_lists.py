@@ -2715,7 +2715,6 @@ def test_list_items_301a():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_list_items_301b():
     """
@@ -2739,15 +2738,11 @@ def test_list_items_301b():
         "[block-quote(2,3):  :  > ]",
         "[para(2,5):]",
         "[text(2,5):b:]",
-        "[end-para:::False]",
-        "[fcode-block(3,4):`:3::::: :]",
-        "[end-fcode-block:::True]",
+        "[end-para:::True]",
         "[end-block-quote:::True]",
-        "[para(4,4): ]",
-        "[text(4,4):c:]",
-        "[end-para:::False]",
-        "[fcode-block(5,4):`:3::::: :]",
-        "[end-fcode-block:::True]",
+        "[fcode-block(3,4):`:3::::: :]",
+        "[text(4,3):c:\a \a\x03\a]",
+        "[end-fcode-block: :3:False]",
         "[li(6,1):2::]",
         "[para(6,3):]",
         "[text(6,3):d:]",

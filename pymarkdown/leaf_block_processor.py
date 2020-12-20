@@ -45,16 +45,13 @@ class LeafBlockProcessor:
     __setext_characters = "-="
 
     @staticmethod
-    def is_fenced_code_block(
-        line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=False,
-    ):
+    def is_fenced_code_block(line_to_parse, start_index, extracted_whitespace):
         """
         Determine if we have the start of a fenced code block.
         """
 
         if (
             ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
-            or skip_whitespace_check
         ) and ParserHelper.is_character_at_index_one_of(
             line_to_parse,
             start_index,
