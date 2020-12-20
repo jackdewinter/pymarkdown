@@ -863,6 +863,7 @@ class LeafBlockProcessor:
         no_para_start_if_empty,
         stack_bq_count,
         text_removed_by_container,
+        force_it,
     ):
         """
         Handle the parsing of a paragraph.
@@ -908,7 +909,10 @@ class LeafBlockProcessor:
         LOGGER.debug(">>block-owners>>%s", str(top_block_token))
         if top_block_token:
             LeafBlockProcessor.__adjust_paragraph_for_block_quotes(
-                top_block_token, extracted_whitespace, text_removed_by_container
+                top_block_token,
+                extracted_whitespace,
+                text_removed_by_container,
+                force_it,
             )
 
         if top_list_token:
@@ -1005,7 +1009,7 @@ class LeafBlockProcessor:
 
     @staticmethod
     def __adjust_paragraph_for_block_quotes(
-        top_block_token, extracted_whitespace, text_removed_by_container
+        top_block_token, extracted_whitespace, text_removed_by_container, force_it
     ):
         LOGGER.debug(
             ">>top_block_token.md>>%s",
@@ -1022,8 +1026,15 @@ class LeafBlockProcessor:
             ">>text_removed_by_container>>[%s]>>",
             ParserHelper.make_value_visible(text_removed_by_container),
         )
+        LOGGER.debug(
+            ">>force_it>>[%s]>>", str(force_it),
+        )
         if text_removed_by_container is None:
             top_block_token.matching_markdown_token.add_leading_spaces("")
+        elif force_it:
+            top_block_token.matching_markdown_token.add_leading_spaces(
+                text_removed_by_container
+            )
 
     @staticmethod
     def check_for_list_in_process(parser_state):

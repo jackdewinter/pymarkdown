@@ -303,6 +303,7 @@ class ContainerBlockProcessor:
             did_process,
             line_to_parse,
             container_level_tokens,
+            used_indent,
         ) = ContainerBlockProcessor.__process_list_in_progress(
             parser_state,
             did_process,
@@ -330,6 +331,18 @@ class ContainerBlockProcessor:
         calculated_indent = len(original_line_to_parse) - len(line_to_parse)
         LOGGER.debug(">>indent>>%s", str(calculated_indent))
 
+        force_it = False
+        if (
+            used_indent
+            and parser_state.token_stack[-1].is_paragraph
+            and parser_state.token_stack[-2].is_block_quote
+        ):
+            if text_removed_by_container is None:
+                text_removed_by_container = used_indent
+            else:
+                text_removed_by_container += used_indent
+            force_it = True
+
         newer_position_marker = PositionMarker(
             position_marker.line_number,
             start_index,
@@ -349,6 +362,7 @@ class ContainerBlockProcessor:
             last_block_quote_index,
             last_list_start_index,
             text_removed_by_container,
+            force_it,
         )
         parser_state.same_line_container_tokens = None
 
@@ -534,7 +548,7 @@ class ContainerBlockProcessor:
             )
             LOGGER.debug(
                 "check next container_start>tokenized_document>>%s",
-                str(parser_state.token_document),
+                ParserHelper.make_value_visible(parser_state.token_document),
             )
 
             if (
@@ -659,6 +673,7 @@ class ContainerBlockProcessor:
         container_level_tokens,
         extracted_whitespace,
     ):
+        used_indent = None
         if not did_process:
             is_list_in_process, ind = LeafBlockProcessor.check_for_list_in_process(
                 parser_state
@@ -666,12 +681,16 @@ class ContainerBlockProcessor:
             if is_list_in_process:
                 assert not container_level_tokens
                 LOGGER.debug("clt>>list-in-progress")
+                LOGGER.debug("clt>>line_to_parse>>:%s:>>", str(line_to_parse))
                 (
                     container_level_tokens,
                     line_to_parse,
+                    used_indent,
                 ) = ListBlockProcessor.list_in_process(
                     parser_state, line_to_parse, start_index, extracted_whitespace, ind,
                 )
+                LOGGER.debug("clt>>line_to_parse>>:%s:>>", str(line_to_parse))
+                LOGGER.debug("clt>>used_indent>>:%s:>>", str(used_indent))
                 did_process = True
 
         if did_process:
@@ -680,7 +699,7 @@ class ContainerBlockProcessor:
                 str(len(container_level_tokens)),
                 str(container_level_tokens),
             )
-        return did_process, line_to_parse, container_level_tokens
+        return did_process, line_to_parse, container_level_tokens, used_indent
 
     # pylint: enable=too-many-arguments
 
@@ -739,6 +758,7 @@ class ContainerBlockProcessor:
         last_block_quote_index,
         last_list_start_index,
         text_removed_by_container,
+        force_it,
     ):
         assert not leaf_tokens
         LOGGER.debug("parsing leaf>>")
@@ -762,6 +782,7 @@ class ContainerBlockProcessor:
             last_block_quote_index,
             last_list_start_index,
             text_removed_by_container,
+            force_it,
         )
         LOGGER.debug("parsed leaf>>%s", str(leaf_tokens))
         LOGGER.debug("parsed leaf>>%s", str(len(leaf_tokens)))
@@ -958,6 +979,7 @@ class ContainerBlockProcessor:
         last_block_quote_index,
         last_list_start_index,
         text_removed_by_container,
+        force_it,
     ):
         """
         Parse the contents of a line for a leaf block.
@@ -1068,6 +1090,7 @@ class ContainerBlockProcessor:
                     no_para_start_if_empty,
                     stack_bq_count,
                     text_removed_by_container,
+                    force_it,
                 )
 
         # assert new_tokens or did_complete_lrd or did_pause_lrd or lines_to_requeue

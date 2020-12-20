@@ -731,7 +731,7 @@ class ListBlockProcessor:
                     parser_state.token_stack[ind].matching_markdown_token
                 ),
             )
-        return container_level_tokens, line_to_parse
+        return container_level_tokens, line_to_parse, used_indent
 
     # pylint: enable=too-many-statements
 

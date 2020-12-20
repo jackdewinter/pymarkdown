@@ -189,16 +189,25 @@ class TokenizedMarkdown:
                         requeue_line_info.force_ignore_first_as_lrd
                     )
 
-                LOGGER.debug("<<<<%s", str(self.tokenized_document))
+                LOGGER.debug(
+                    "<<<<%s", ParserHelper.make_value_visible(self.tokenized_document)
+                )
             line_number, ignore_link_definition_start = TokenizedMarkdown.__xx(
                 line_number, lines_to_requeue, requeue, force_ignore_first_as_lrd
             )
 
-            LOGGER.debug("---\nbefore>>%s", str(self.tokenized_document))
-            LOGGER.debug("before>>%s", str(tokens_from_line))
+            LOGGER.debug(
+                "---\nbefore>>%s",
+                ParserHelper.make_value_visible(self.tokenized_document),
+            )
+            LOGGER.debug(
+                "before>>%s", ParserHelper.make_value_visible(tokens_from_line)
+            )
             if tokens_from_line:
                 self.tokenized_document.extend(tokens_from_line)
-            LOGGER.debug("after>>%s", str(self.tokenized_document))
+            LOGGER.debug(
+                "after>>%s", ParserHelper.make_value_visible(self.tokenized_document)
+            )
             if requeue:
                 LOGGER.debug("requeue>>%s", str(requeue))
             LOGGER.debug("---")
@@ -280,7 +289,10 @@ class TokenizedMarkdown:
             new_tokens = destination_array
 
         LOGGER.debug("cob-start>>%s", str(parser_state.token_stack))
-        LOGGER.debug("cob-start>>%s", str(parser_state.token_document))
+        LOGGER.debug(
+            "cob-start>>%s",
+            ParserHelper.make_value_visible(parser_state.token_document),
+        )
         if destination_array:
             LOGGER.debug("cob-destination_array>>%s", str(destination_array))
         if only_these_blocks:
@@ -369,18 +381,28 @@ class TokenizedMarkdown:
                 )
                 assert not did_pause_lrd
             else:
-                LOGGER.debug("cob-rem>>%s", str(parser_state.token_document))
+                LOGGER.debug(
+                    "cob-rem>>%s",
+                    ParserHelper.make_value_visible(parser_state.token_document),
+                )
                 adjusted_tokens = TokenizedMarkdown.__remove_top_element_from_stack(
                     parser_state, was_close_forced
                 )
-                LOGGER.debug("cob-rem<<%s", str(parser_state.token_document))
+                LOGGER.debug(
+                    "cob-rem<<%s",
+                    ParserHelper.make_value_visible(parser_state.token_document),
+                )
                 LOGGER.debug("cob-adj<<%s", str(adjusted_tokens))
 
             new_tokens.extend(adjusted_tokens)
 
         LOGGER.debug("cob-end>>%s", str(parser_state.token_stack))
-        LOGGER.debug("cob-end>>%s", str(parser_state.token_document))
-        LOGGER.debug("cob-end>>new_tokens>>%s", str(new_tokens))
+        LOGGER.debug(
+            "cob-end>>%s", ParserHelper.make_value_visible(parser_state.token_document)
+        )
+        LOGGER.debug(
+            "cob-end>>new_tokens>>%s", ParserHelper.make_value_visible(new_tokens)
+        )
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
 
     # pylint: enable=too-many-arguments,too-many-locals,too-many-statements, too-many-branches
