@@ -662,7 +662,7 @@ def test_block_quotes_213():
 
 @pytest.mark.skip
 @pytest.mark.gfm
-def test_block_quotes_213a():
+def test_block_quotes_213ax():
     """
     Test case 213a:  variation
     """
@@ -691,6 +691,100 @@ def test_block_quotes_213a():
 <li>bar</li>
 </ul>
 </blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_block_quotes_213aa():
+    """
+    Test case 213aa:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> - foo
+>   - boo
+> - bar"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[ulist(1,3):-::4:  ]",
+        "[para(1,5):\n  ]",
+        "[text(1,5):foo\n- boo::\n]",
+        "[end-para:::True]",
+        "[li(3,3):4:  :]",
+        "[para(3,5):]",
+        "[text(3,5):bar:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>foo
+<ul>
+<li>boo</li>
+</ul>
+</li>
+<li>bar</li>
+</ul>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_213ab():
+    """
+    Test case 213ab:  variation
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- foo
+  - boo
+- bar"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):foo:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):boo:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):]",
+        "[text(3,3):bar:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>foo
+<ul>
+<li>boo</li>
+</ul>
+</li>
+<li>bar</li>
+</ul>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

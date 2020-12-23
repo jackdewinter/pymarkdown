@@ -1900,17 +1900,17 @@ def test_html_blocks_cov2x():
         "[para(1,1):]",
         "[text(1,1):\a<\a&lt;\a/hrx:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::>\n]",
+        "[block-quote(2,1)::>]",
         "[BLANK(2,2):]",
+        "[end-block-quote:::True]",
         "[html-block(3,1)]",
         "[text(3,1):</x-table>:]",
         "[end-html-block:::True]",
-        "[end-block-quote:::True]",
     ]
     expected_gfm = """<p>&lt;/hrx</p>
 <blockquote>
-</x-table>
-</blockquote>"""
+</blockquote>
+</x-table>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
@@ -1976,17 +1976,17 @@ def test_html_blocks_cov2b():
         "[para(1,1):]",
         "[text(1,1):\a<\a&lt;\a/hrx:]",
         "[end-para:::True]",
-        "[block-quote(2,1)::>\n]",
+        "[block-quote(2,1)::>]",
         "[BLANK(2,2):]",
+        "[end-block-quote:::True]",
         "[html-block(3,1)]",
         "[text(3,2):</x-table>: ]",
         "[end-html-block:::True]",
-        "[end-block-quote:::True]",
     ]
     expected_gfm = """<p>&lt;/hrx</p>
 <blockquote>
- </x-table>
-</blockquote>"""
+</blockquote>
+ </x-table>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

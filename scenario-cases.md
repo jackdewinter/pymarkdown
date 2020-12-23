@@ -23,7 +23,6 @@ Ea email auto
 Bh backslash hard break
 Sh space hard break
 
-
 - Series A - Starts with inline
 - Series B - Contains inline
 - Series C - Ends with inline
@@ -37,6 +36,7 @@ Sh space hard break
 - Series K - use of `&#xa;` instead of \n
 - Series L - link/image inside of link/image
 - Series M - lists with various leaf tokens following
+- Series N - block quotes with various leaf tokens following
 
 ## Series A
 
@@ -698,6 +698,55 @@ Sh space hard break
 |MOlNlI3OLTNlI3HB|Ordered list newline indent of 3 ordered list text newline indent of 3 html block| `1.\n   1. def\n   <s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_i3_ol_t_nl_i3_hb |
 |MOlTNlI3OLNlI3HB|Ordered list text newline indent of 3 ordered list newline indent of 3 html block| `1. abc\n   1.\n   <s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_i3_ol_nl_i3_hb |
 |MOlTNlI3OLTNlI3HB|Ordered list text newline indent of 3 ordered list text newline indent of 3 html block| `1. abc\n   1. def\n   <s>\nfoo\n</s>` | test_paragraph_series_m_ol_t_nl_i3_ol_t_nl_i3_hb |
+
+## Series N
+
+| t | s | x | y | z |
+| --- | --- | --- | --- | --- |
+|NBqTNlBqT          |block quote text newline block quote text| `> u\n> x` | test_paragraph_series_n_bq_t_nl_bq_t |
+|NBqTNlI2T          |block quote text newline indent of 2 text| `> u\n  x` | test_paragraph_series_n_bq_t_nl_i2_t |
+|NUlTNlI2BqTNlI2BqT |unordered list text newline indent of 2 block quote text newline indent of 2 block quote text| `* a\n  > u\n  > x\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_t |
+|NUlTNlI2BqTNlI4T   |unordered list text newline indent of 2 block quote text newline indent of 4 text| `* a\n  > u\n    x\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_t |
+
+| t | s | x | y | z |
+| --- | --- | --- | --- | --- |
+|NBqTNlBqHa         |block quote text newline block quote atx heading| `> u\n> # h` | test_paragraph_series_n_bq_t_nl_bq_ha |
+|NBqTNlI2Ha         |block quote text newline indent of 2 atx heading| `> u\n  # h` | test_paragraph_series_n_bq_t_nl_i2_ha |
+|NUlTNlI2BqTNlI2BqHa|unordered list text newline indent of 2 block quote text newline indent of 2 block quote atx heading| `* a\n  > u\n  > # h\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_ha |
+|NUlTNlI2BqTNlI4Ha   |unordered list text newline indent of 2 block quote text newline indent of 4 atx heading| `* a\n  > u\n    # h\n* d` | test_paragraph_series_n_ul_t_i2_bq_t_nl_i4_ha |
+
+| t | s | x | y | z |
+| --- | --- | --- | --- | --- |
+|NBqTNlBqTb         |block quote text newline block quote thematic break| `> u\n> ---` | test_paragraph_series_n_bq_t_nl_bq_tb |
+|NBqTNlI2Tb         |block quote text newline indent of 2 thematic break| `> u\n  ---` | test_paragraph_series_n_bq_t_nl_i2_tb |
+|NUlTNlI2BqTNlI2BqTb|unordered list text newline indent of 2 block quote text newline indent of 2 block quote thematic break| `* a\n  > u\n  > ---\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_tb |
+|NUlTNlI2BqTNlI4Tb  |unordered list text newline indent of 2 block quote text newline indent of 4 thematic break| `* a\n  > u\n    ---\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_tb |
+
+| t | s | x | y | z |
+| --- | --- | --- | --- | --- |
+|NBqTNlBqHb         |block quote text newline block quote html block| `> u\n> <!-- c -->` | test_paragraph_series_n_bq_t_nl_bq_hb |
+|NBqTNlI2Hb         |block quote text newline indent of 2 html block| `> u\n  <!-- c -->` | test_paragraph_series_n_bq_t_nl_i2_hb |
+|NUlTNlI2BqTNlI2BqHb|unordered list text newline indent of 2 block quote text newline indent of 2 block quote html break| `* a\n  > u\n  > <!-- c -->\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_hb |
+|NUlTNlI2BqTNlI4Hb  |unordered list text newline indent of 2 block quote text newline indent of 4 html block| `* a\n  > u\n    <!-- c -->\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_hb |
+
+| t | s | x | y | z |
+| --- | --- | --- | --- | --- |
+|NBqTNlBqFb         |block quote text newline block quote fenced code block| ```` > u\n> ```> d\n> ``` ```` | test_paragraph_series_n_bq_t_nl_bq_fb |
+|NBqTNlI2Fb         |block quote text newline indent of 2 fenced code block| ```` > u\n  ```\n  d\n  ``` ```` |
+|NUlTNlI2BqTNlI2BqFb|unordered list text newline indent of 2 block quote text newline indent of 2 block quote fenced code block| ```` * a\n  > u\n  > ```\n  > d\n  > \n```\n* d ```` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_fb |
+|NUlTNlI2BqTNlI4Fb  |unordered list text newline indent of 2 block quote text newline indent of 4 fenced code block| ```` * a\n  > u\n    ```\n    d\n    ```\n* d ```` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_fb |
+
+| t | s | x | y | z |
+| --- | --- | --- | --- | --- |
+|NBqTNlBqIb         |block quote text newline block quote indented block| ` > u\n>     d ` | test_paragraph_series_n_bq_t_nl_bq_ib |
+|NBqTNlBqNlBqIb     |block quote text newline block quote newline block quote indented block| `> u\n>\n>     d` | test_paragraph_series_n_bq_t_nl_bq_nl_bq_ib |
+|NBqTNlI6Ib         |block quote text newline indent of 6 indented block| ` > u\n      d` | test_paragraph_series_n_bq_t_nl_i6_ib |
+|NBqTNlNlI6Ib         |block quote text newline newline indent of 6 indented block| `> u\n\n      d` | test_paragraph_series_n_bq_t_nl_nl_nl_i6_ib |
+|NUlTNlI2BqTNlI2BqIb|unordered list text newline indent of 2 block quote text newline indent of 2 block quote indented block| `* a\n  > u\n  >     d\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_ib |
+|NUlTNlI2BqTNlI2BqIb|unordered list text newline indent of 2 block quote text newline indent of 2 block quote indented block| `* a\n  > u\n  >\n  >     d\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_bq_nl_i2_bq_ib |
+|NUlTNlI2BqTNlI6Ib  |unordered list text newline indent of 2 block quote text newline indent of 4 indented block| `* a\n  > u\n      d\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i6_ib |
+|NUlTNlI2BqTNlNlI4Ib  |unordered list text newline indent of 2 block quote text newline newline indent of 4 indented block| `* a\n  > u\n\n      d\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_nl_i6_ib |
+
 
 
 
