@@ -732,9 +732,12 @@ Sh space hard break
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
 |NBqTNlBqFb         |block quote text newline block quote fenced code block| ```` > u\n> ```> d\n> ``` ```` | test_paragraph_series_n_bq_t_nl_bq_fb |
-|NBqTNlI2Fb         |block quote text newline indent of 2 fenced code block| ```` > u\n  ```\n  d\n  ``` ```` |
+|NBqTNlI2Fb         |block quote text newline indent of 2 fenced code block| ```` > u\n  ```\n  d\n  ``` ```` |test_paragraph_series_n_bq_t_nl_i2_fb |
 |NUlTNlI2BqTNlI2BqFb|unordered list text newline indent of 2 block quote text newline indent of 2 block quote fenced code block| ```` * a\n  > u\n  > ```\n  > d\n  > \n```\n* d ```` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_fb |
 |NUlTNlI2BqTNlI4Fb  |unordered list text newline indent of 2 block quote text newline indent of 4 fenced code block| ```` * a\n  > u\n    ```\n    d\n    ```\n* d ```` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_fb |
+|NBqTNlBqFbBqOnly1  |block quote text newline block quote fenced code block with block quote only on first| ```` > ```\nfoo\n``` ```` | test_block_quotes_215 |
+|NBqTNlBqFbWBq      |block quote text newline block quote fenced code block newlines with block quote| ```` > u\n> ```\n>\n> d\n>\n> ``` ```` | test_paragraph_series_n_bq_t_nl_bq_fb_nl_with_bq |
+|NBqTNlBqFbWoBq      |block quote text newline block quote fenced code block newlines without block quote| ```` > u\n> ```\n\n> d\n\n> ``` ```` | test_paragraph_series_n_bq_t_nl_bq_fb_nl_without_bq |
 
 | t | s | x | y | z |
 | --- | --- | --- | --- | --- |
@@ -746,9 +749,11 @@ Sh space hard break
 |NUlTNlI2BqTNlI2BqIb|unordered list text newline indent of 2 block quote text newline indent of 2 block quote indented block| `* a\n  > u\n  >\n  >     d\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_bq_nl_i2_bq_ib |
 |NUlTNlI2BqTNlI6Ib  |unordered list text newline indent of 2 block quote text newline indent of 4 indented block| `* a\n  > u\n      d\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i6_ib |
 |NUlTNlI2BqTNlNlI4Ib  |unordered list text newline indent of 2 block quote text newline newline indent of 4 indented block| `* a\n  > u\n\n      d\n* d` | test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_nl_i6_ib |
-
-
-
+|NBqTNlBqIbBqOnly1  |block quote text newline block quote indented code block with block quote only on first| `>     foo\n    bar` | test_block_quotes_214 |
+|NBqI4TNlBqI4NlT    |block quote indent of 4 text newline block quote indent of 4 text| `>     foo\n>     bar` | test_paragraph_series_n_bq_i4_t_nl_bq_i4_t |
+|NBqI4TNlBqI3NlT    |block quote indent of 4 text newline block quote indent of 3 text| `>     foo\n>    bar` | test_paragraph_series_n_bq_i4_t_nl_bq_i3_t |
+|NBqI4TNlNlBqI4NlT    |block quote indent of 4 text newline newline block quote indent of 4 text| `>     foo\n\n>     bar` | test_paragraph_series_n_bq_i4_t_nl_nl_bq_i4_t |
+|NBqI4TNlBqNlBqI4NlT    |block quote indent of 4 text newline block quote newline block quote indent of 4 text| `>     foo\n>\n>     bar` | test_paragraph_series_n_bq_i4_t_nl_bq_nl_bq_i4_t |
 
 Orphan?
 |J5  |inline link label split at whitespace| `abc\n[link](\n /uri\n  "title"\n   )\n  def` | test_paragraph_extra_d5 |

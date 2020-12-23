@@ -936,6 +936,14 @@ brr</li>
 def test_block_quotes_214():
     """
     Test case 214:  (part 1) For the same reason, we can’t omit the > in front of subsequent lines of an indented or fenced code block:
+    Variation: - test_paragraph_series_n_bq_i4_t_nl_bq_i4_t
+                 - proper indent and block quotes on both
+               - test_paragraph_series_n_bq_i4_t_nl_bq_i3_t
+                 - same as above, but second line with 1 less ws
+               - test_paragraph_series_n_bq_i4_t_nl_bq_nl_bq_i4_t
+                 - over multiple lines, each starting with block quote
+               - test_paragraph_series_n_bq_i4_t_nl_nl_bq_i4_t
+                 - over multiple lines, blank lines without block quote
     """
 
     # Arrange
@@ -971,160 +979,18 @@ def test_block_quotes_214():
 
 
 @pytest.mark.gfm
-def test_block_quotes_214a():
-    """
-    Test case 214a:  variation
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
-    source_markdown = """>     foo
->     bar"""
-    expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
-        "[icode-block(1,7):    :\n    ]",
-        "[text(1,7):foo\nbar:]",
-        "[end-icode-block:::True]",
-        "[end-block-quote:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<pre><code>foo
-bar
-</code></pre>
-</blockquote>"""
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
-
-
-@pytest.mark.gfm
-def test_block_quotes_214b():
-    """
-    Test case 214b:  variation
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
-    source_markdown = """>     foo
->    bar"""
-    expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
-        "[icode-block(1,7):    :]",
-        "[text(1,7):foo:]",
-        "[end-icode-block:::False]",
-        "[para(2,6):   ]",
-        "[text(2,6):bar:]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<pre><code>foo
-</code></pre>
-<p>bar</p>
-</blockquote>"""
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
-
-
-@pytest.mark.gfm
-def test_block_quotes_214c():
-    """
-    Test case 214c:  variation
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
-    source_markdown = """>     foo
-
->     bar"""
-    expected_tokens = [
-        "[block-quote(1,1)::> \n]",
-        "[icode-block(1,7):    :]",
-        "[text(1,7):foo:]",
-        "[end-icode-block:::True]",
-        "[end-block-quote:::True]",
-        "[BLANK(2,1):]",
-        "[block-quote(3,1)::> ]",
-        "[icode-block(3,7):    :]",
-        "[text(3,7):bar:]",
-        "[end-icode-block:::True]",
-        "[end-block-quote:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<pre><code>foo
-</code></pre>
-</blockquote>
-<blockquote>
-<pre><code>bar
-</code></pre>
-</blockquote>"""
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
-
-
-@pytest.mark.gfm
-def test_block_quotes_214d():
-    """
-    Test case 214d:  variation
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
-    source_markdown = """>     foo
->
->     bar"""
-    expected_tokens = [
-        "[block-quote(1,1)::> \n>\n> ]",
-        "[icode-block(1,7):    :\n\n    ]",
-        "[text(1,7):foo\n\x03\nbar:]",
-        "[end-icode-block:::True]",
-        "[end-block-quote:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<pre><code>foo
-
-bar
-</code></pre>
-</blockquote>"""
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
-
-
-@pytest.mark.gfm
 def test_block_quotes_215():
     """
     Test case 215:  (part 2) For the same reason, we can’t omit the > in front of subsequent lines of an indented or fenced code block:
+
+    Variation: - test_paragraph_series_n_bq_t_nl_bq_fb
+                 - for the entire block to be considered a fcb, all must be prefaced
+                   with ">"
+               - test_paragraph_series_n_bq_t_nl_bq_fb_nl_with_bq
+                 - for any blank lines within block to not abort block quotes, must
+                   prefix ">"
+               - test_paragraph_series_n_bq_t_nl_bq_fb_nl_without_bq
+                 - same as above, but lack of ">" causes block to be split up
     """
 
     # Arrange
@@ -1149,129 +1015,6 @@ foo
 </blockquote>
 <p>foo</p>
 <pre><code></code></pre>"""
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
-
-
-@pytest.mark.gfm
-def test_block_quotes_215a():
-    """
-    Test case 215a:  variation
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
-    source_markdown = """> ```
-> foo
-> ```"""
-    expected_tokens = [
-        "[block-quote(1,1)::> \n> \n> ]",
-        "[fcode-block(1,3):`:3::::::]",
-        "[text(2,3):foo:]",
-        "[end-fcode-block::3:False]",
-        "[end-block-quote:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<pre><code>foo
-</code></pre>
-</blockquote>"""
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
-
-
-@pytest.mark.gfm
-def test_block_quotes_215b():
-    """
-    Test case 215b:  variation
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
-    source_markdown = """> ```
-
-> foo
-
-> ```"""
-    expected_tokens = [
-        "[block-quote(1,1)::> \n]",
-        "[fcode-block(1,3):`:3::::::]",
-        "[end-fcode-block:::True]",
-        "[end-block-quote:::True]",
-        "[BLANK(2,1):]",
-        "[block-quote(3,1)::> \n]",
-        "[para(3,3):]",
-        "[text(3,3):foo:]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-        "[BLANK(4,1):]",
-        "[block-quote(5,1)::> ]",
-        "[fcode-block(5,3):`:3::::::]",
-        "[end-fcode-block:::True]",
-        "[end-block-quote:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<pre><code></code></pre>
-</blockquote>
-<blockquote>
-<p>foo</p>
-</blockquote>
-<blockquote>
-<pre><code></code></pre>
-</blockquote>"""
-
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
-
-
-@pytest.mark.gfm
-def test_block_quotes_215c():
-    """
-    Test case 215c:  variation
-    """
-
-    # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
-    source_markdown = """> ```
->
-> foo
->
-> ```"""
-    expected_tokens = [
-        "[block-quote(1,1)::> \n>\n> \n>\n> ]",
-        "[fcode-block(1,3):`:3::::::]",
-        "[text(2,2):\nfoo\n:]",
-        "[end-fcode-block::3:False]",
-        "[end-block-quote:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<pre><code>
-foo
-
-</code></pre>
-</blockquote>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)
