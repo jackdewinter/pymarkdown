@@ -319,6 +319,7 @@ class ListBlockProcessor:
         """
         Handle the processing of a ulist block.
         """
+        LOGGER.debug("handle_ulist_block>>start>>did_process>>%s", str(did_process))
         end_of_ulist_start_index = -1
         container_level_tokens = []
         adjusted_text_to_parse = position_marker.text_to_parse
@@ -397,6 +398,7 @@ class ListBlockProcessor:
                 was_container_start = True
                 LOGGER.debug("__post_list>>post>>%s>>", adjusted_text_to_parse)
 
+        LOGGER.debug("handle_ulist_block>>end>>did_process>>%s", str(did_process))
         return (
             did_process,
             was_container_start,

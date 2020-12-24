@@ -1111,7 +1111,10 @@ class TransformToMarkdown:
             + "<<"
         )
 
-        adjustment_since_newline, extracted_whitespace = self.__adjust_whitespace_for_block_quote(
+        (
+            adjustment_since_newline,
+            extracted_whitespace,
+        ) = self.__adjust_whitespace_for_block_quote(
             transformed_data, extracted_whitespace
         )
 
@@ -1128,7 +1131,9 @@ class TransformToMarkdown:
         return start_sequence, continue_sequence
 
     @classmethod
-    def __adjust_whitespace_for_block_quote(cls, transformed_data, extracted_whitespace):
+    def __adjust_whitespace_for_block_quote(
+        cls, transformed_data, extracted_whitespace
+    ):
         transformed_data_since_newline = transformed_data
         if "\n" in transformed_data_since_newline:
             last_newline_index = transformed_data_since_newline.rindex("\n")
@@ -1216,7 +1221,10 @@ class TransformToMarkdown:
             self.container_token_stack[-1].compose_extra_data_field()
 
             extracted_whitespace = current_token.extracted_whitespace
-            adjustment_since_newline, extracted_whitespace = self.__adjust_whitespace_for_block_quote(
+            (
+                adjustment_since_newline,
+                extracted_whitespace,
+            ) = self.__adjust_whitespace_for_block_quote(
                 transformed_data, extracted_whitespace
             )
 

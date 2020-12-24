@@ -564,7 +564,10 @@ def __validate_new_line(container_block_stack, current_token, current_position):
         print(">>__vnl->huh-ish")
         block_search_index = len(container_block_stack) - 1
         while block_search_index >= 0:
-            if container_block_stack[block_search_index].token_name == MarkdownToken.token_block_quote:
+            if (
+                container_block_stack[block_search_index].token_name
+                == MarkdownToken.token_block_quote
+            ):
                 break
             block_search_index -= 1
         if block_search_index >= 0:

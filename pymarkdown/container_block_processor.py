@@ -26,6 +26,17 @@ class ContainerIndices:
         self.olist_index = olist_index
         self.block_index = block_index
 
+    def __str__(self):
+        return (
+            "{ContainerIndices:ulist_index:"
+            + str(self.ulist_index)
+            + ";olist_index:"
+            + str(self.olist_index)
+            + ";block_index:"
+            + str(self.block_index)
+            + "}"
+        )
+
 
 # pylint: enable=too-few-public-methods
 
@@ -129,7 +140,7 @@ class ContainerBlockProcessor:
             this_bq_count,
             stack_bq_count,
         )
-        LOGGER.debug("text>>%s>>", line_to_parse)
+        LOGGER.debug("text>>:%s:>>", line_to_parse)
         LOGGER.debug(">>container_level_tokens>>%s", str(container_level_tokens))
         LOGGER.debug(">>did_blank>>%s", did_blank)
         if did_blank:
@@ -483,8 +494,24 @@ class ContainerBlockProcessor:
         adjusted_text_to_parse = position_marker.text_to_parse
         if was_container_start and position_marker.text_to_parse:
             assert container_depth < 10
+            LOGGER.debug(
+                "__handle_nested_container_blocks>stack>>:%s:<<",
+                str(position_marker.text_to_parse),
+            )
+            LOGGER.debug(
+                "__handle_nested_container_blocks>end_container_indices>>:%s:<<",
+                str(end_container_indices),
+            )
             nested_container_starts = ContainerBlockProcessor.__get_nested_container_starts(
                 parser_state, position_marker.text_to_parse, end_container_indices,
+            )
+            LOGGER.debug(
+                "__handle_nested_container_blocks>nested_container_starts>>:%s:<<",
+                str(nested_container_starts),
+            )
+            LOGGER.debug(
+                "__handle_nested_container_blocks>end_container_indices>>:%s:<<",
+                str(end_container_indices),
             )
 
             LOGGER.debug(
@@ -580,14 +607,19 @@ class ContainerBlockProcessor:
     ):
 
         LOGGER.debug("check next container_start>")
+
+        after_ws_index, ex_whitespace = ParserHelper.extract_whitespace(
+            line_to_parse, 0
+        )
+
         nested_ulist_start, _ = ListBlockProcessor.is_ulist_start(
-            parser_state, line_to_parse, 0, ""
+            parser_state, line_to_parse, after_ws_index, ex_whitespace
         )
         nested_olist_start, _, _, _ = ListBlockProcessor.is_olist_start(
-            parser_state, line_to_parse, 0, ""
+            parser_state, line_to_parse, after_ws_index, ex_whitespace
         )
         nested_block_start = BlockQuoteProcessor.is_block_quote_start(
-            line_to_parse, 0, ""
+            line_to_parse, after_ws_index, ex_whitespace
         )
         LOGGER.debug(
             "check next container_start>ulist>%s>index>%s",
@@ -927,9 +959,6 @@ class ContainerBlockProcessor:
         """
         Take care of the processing for link reference definitions.
         """
-        # did_complete_lrd = False
-        # did_pause_lrd = False
-
         lines_to_requeue = []
         new_tokens = []
         force_ignore_first_as_lrd = None

@@ -701,7 +701,6 @@ def test_block_quotes_213ax():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_213aa():
     """
@@ -717,9 +716,14 @@ def test_block_quotes_213aa():
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
         "[ulist(1,3):-::4:  ]",
-        "[para(1,5):\n  ]",
-        "[text(1,5):foo\n- boo::\n]",
+        "[para(1,5):]",
+        "[text(1,5):foo:]",
         "[end-para:::True]",
+        "[ulist(2,5):-::6:    ]",
+        "[para(2,7):]",
+        "[text(2,7):boo:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
         "[li(3,3):4:  :]",
         "[para(3,5):]",
         "[text(3,5):bar:]",
@@ -739,7 +743,7 @@ def test_block_quotes_213aa():
 </blockquote>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -1068,14 +1072,21 @@ def test_block_quotes_216a():
 >    - bar"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[para(1,3):\n   ]",
-        "[text(1,3):foo\n- bar::\n]",
+        "[para(1,3):]",
+        "[text(1,3):foo:]",
         "[end-para:::True]",
+        "[ulist(2,6):-::7:     ]",
+        "[para(2,8):]",
+        "[text(2,8):bar:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
-<p>foo
-- bar</p>
+<p>foo</p>
+<ul>
+<li>bar</li>
+</ul>
 </blockquote>"""
 
     # Act

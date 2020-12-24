@@ -126,6 +126,8 @@ class BlockQuoteProcessor:
         """
         Handle the processing of a block quote block.
         """
+        LOGGER.debug("handle_block_quote_block>>start")
+
         did_process = False
         was_container_start = False
         did_blank = False
@@ -177,6 +179,7 @@ class BlockQuoteProcessor:
             was_container_start = True
             end_of_bquote_start_index = adjusted_index_number
 
+        LOGGER.debug("handle_block_quote_block>>end>>did_process>>%s", str(did_process))
         return (
             did_process,
             was_container_start,
