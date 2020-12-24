@@ -8,6 +8,27 @@ from test.transform_to_markdown import TransformToMarkdown
 from test.verify_line_and_column_numbers import verify_line_and_column_numbers
 
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.tokenized_markdown import TokenizedMarkdown
+from pymarkdown.transform_to_gfm import TransformToGfm
+
+
+def act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False):
+    """
+    Act and assert on the expected behavior of parsing the source_markdown.
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=show_debug)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
 
 
 def write_temporary_configuration(supplied_configuration):
