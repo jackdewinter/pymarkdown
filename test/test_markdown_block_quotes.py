@@ -660,7 +660,6 @@ def test_block_quotes_213():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_213ax():
     """
@@ -740,7 +739,7 @@ def test_block_quotes_213aa():
 </blockquote>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -796,7 +795,6 @@ def test_block_quotes_213ab():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_213b():
     """
@@ -844,7 +842,6 @@ def test_block_quotes_213b():
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_213c():
     """
@@ -888,7 +885,6 @@ brr</li>
     assert_token_consistency(source_markdown, actual_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_213d():
     """
@@ -1876,6 +1872,258 @@ def test_block_quotes_230():
 <blockquote>
 <p>not code</p>
 </blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_extra_01():
+    """
+    Test case Bq01:  Indents should work properly for a list block containing a
+                     block quote where the block quote ends and there is
+                     more data for that item within the list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """* start
+  > quote
+* end"""
+    expected_tokens = [
+        "[ulist(1,1):*::2:]",
+        "[para(1,3):]",
+        "[text(1,3):start:]",
+        "[end-para:::True]",
+        "[block-quote(2,3):  :  > ]",
+        "[para(2,5):]",
+        "[text(2,5):quote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):]",
+        "[text(3,3):end:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>start
+<blockquote>
+<p>quote</p>
+</blockquote>
+</li>
+<li>end</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_extra_01a():
+    """
+    Test case Bq01a:  same as 01, just more levels of list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """* start
+  > quote
+  * middle
+    > middle
+      quote
+  * more middle
+* end"""
+    expected_tokens = [
+        "[ulist(1,1):*::2:]",
+        "[para(1,3):]",
+        "[text(1,3):start:]",
+        "[end-para:::True]",
+        "[block-quote(2,3):  :  > ]",
+        "[para(2,5):]",
+        "[text(2,5):quote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[ulist(3,3):*::4:  :    ]",
+        "[para(3,5):]",
+        "[text(3,5):middle:]",
+        "[end-para:::True]",
+        "[block-quote(4,5):    :    > \n    ]",
+        "[para(4,7):\n  ]",
+        "[text(4,7):middle\nquote::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[li(6,3):4:  :]",
+        "[para(6,5):]",
+        "[text(6,5):more middle:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(7,1):2::]",
+        "[para(7,3):]",
+        "[text(7,3):end:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>start
+<blockquote>
+<p>quote</p>
+</blockquote>
+<ul>
+<li>middle
+<blockquote>
+<p>middle
+quote</p>
+</blockquote>
+</li>
+<li>more middle</li>
+</ul>
+</li>
+<li>end</li>
+</ul>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_extra_02x():
+    """
+    Test case Bq02:  Indents should work properly for a block quote containing a
+                     list block where the list block ends and there is
+                     more data for that block quote within the list
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> start
+> - quote
+> end"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):start:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):\n]",
+        "[text(2,5):quote\nend::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>start</p>
+<ul>
+<li>quote
+end</li>
+</ul>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_extra_02a():
+    """
+    Test case Bq02a:  variant
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """> start
+> - quote
+>
+> end"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n>\n> ]",
+        "[para(1,3):]",
+        "[text(1,3):start:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):quote:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[BLANK(3,2):]",
+        "[para(4,3):]",
+        "[text(4,3):end:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>start</p>
+<ul>
+<li>quote</li>
+</ul>
+<p>end</p>
+</blockquote>"""
+
+    # Act
+    actual_tokens = tokenizer.transform(source_markdown)
+    actual_gfm = transformer.transform(actual_tokens)
+
+    # Assert
+    assert_if_lists_different(expected_tokens, actual_tokens)
+    assert_if_strings_different(expected_gfm, actual_gfm)
+    assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_extra_02aa():
+    """
+    Test case Bq02aa:  variant
+    """
+
+    # Arrange
+    tokenizer = TokenizedMarkdown()
+    transformer = TransformToGfm()
+    source_markdown = """- quote
+
+end"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):quote:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[end-ulist:::True]",
+        "[para(3,1):]",
+        "[text(3,1):end:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>quote</li>
+</ul>
+<p>end</p>"""
 
     # Act
     actual_tokens = tokenizer.transform(source_markdown)

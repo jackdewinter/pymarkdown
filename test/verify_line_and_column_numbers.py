@@ -437,6 +437,7 @@ def __verify_token_height(
 # pylint: enable=too-many-arguments
 
 
+# pylint: disable=too-many-branches, too-many-statements
 def __validate_same_line(
     container_block_stack, current_token, current_position, last_token, last_position
 ):
@@ -479,6 +480,10 @@ def __validate_same_line(
             assert current_position.index_number == last_token.indent_level + 1
 
 
+# pylint: enable=too-many-branches, too-many-statements
+
+
+# pylint: disable=too-many-branches, too-many-statements
 def __validate_new_line(container_block_stack, current_token, current_position):
     print(">>__validate_new_line")
     init_ws, had_tab = __calc_initial_whitespace(current_token)
@@ -495,6 +500,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
         and current_token.token_name != MarkdownToken.token_ordered_list_start
         and current_token.token_name != MarkdownToken.token_new_list_item
     ):
+        print(">>__vnl->list-ish")
         top_block = container_block_stack[-1]
         _, had_tab = __calc_initial_whitespace(top_block)
         print(">>top_block>>=" + ParserHelper.make_value_visible(top_block))
@@ -507,6 +513,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
             or top_block.token_name == MarkdownToken.token_ordered_list_start
             or top_block.token_name == MarkdownToken.token_new_list_item
         ):
+            print(">>__vnl->list")
             init_ws += top_block.indent_level
         elif (
             container_block_stack
@@ -514,7 +521,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
             and current_token.token_name != MarkdownToken.token_blank_line
             and top_block.token_name == MarkdownToken.token_block_quote
         ):
-
+            print(">>__vnl->not block")
             split_leading_spaces = top_block.leading_spaces.split("\n")
             print(">>in bq>>split>" + str(split_leading_spaces))
             print("vnl>>in bq>>leading_text_index>" + str(top_block.leading_text_index))
@@ -523,6 +530,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
         container_block_stack
         and current_token.token_name == MarkdownToken.token_new_list_item
     ):
+        print(">>__vnl->li-ish")
         assert container_block_stack[-1] == current_token
         if len(container_block_stack) > 1:
             top_block = container_block_stack[-2]
@@ -535,6 +543,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
         container_block_stack
         and current_token.token_name == MarkdownToken.token_blank_line
     ):
+        print(">>__vnl->blank-ish")
         if container_block_stack[-1].token_name == MarkdownToken.token_block_quote:
             split_leading_spaces = container_block_stack[-1].leading_spaces.split("\n")
             print(">>blank_line>>split>" + str(split_leading_spaces))
@@ -551,6 +560,23 @@ def __validate_new_line(container_block_stack, current_token, current_position):
                 "vnl>>blank_line w/ bq>>leading_text_index>"
                 + str(container_block_stack[-1].leading_text_index)
             )
+    elif container_block_stack:
+        print(">>__vnl->huh-ish")
+        block_search_index = len(container_block_stack) - 1
+        while block_search_index >= 0:
+            if container_block_stack[block_search_index].token_name == MarkdownToken.token_block_quote:
+                break
+            block_search_index -= 1
+        if block_search_index >= 0:
+            print(
+                "vnl>>blank_line w/ huh>>leading_text_index>"
+                + str(container_block_stack[block_search_index].leading_text_index)
+            )
+            container_block_stack[block_search_index].leading_text_index += 1
+            print(
+                "vnl>>blank_line w/ huh>>leading_text_index>"
+                + str(container_block_stack[block_search_index].leading_text_index)
+            )
 
     print(">>current_position.index_number>>" + str(current_position.index_number))
     print(">>current_position.index_indent>>" + str(current_position.index_indent))
@@ -560,6 +586,9 @@ def __validate_new_line(container_block_stack, current_token, current_position):
             "Line:" + str(current_position.line_number) + ":" + str(current_token)
         )
     return did_x
+
+
+# pylint: enable=too-many-branches, too-many-statements
 
 
 def __validate_first_token(current_token, current_position):
@@ -641,7 +670,9 @@ def __maintain_block_stack(container_block_stack, current_token):
 
     if current_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK:
         print("--")
-        print(">>CON>>before>>" + str(container_block_stack))
+        print(
+            ">>CON>>before>>" + ParserHelper.make_value_visible(container_block_stack)
+        )
         if (
             current_token.is_new_list_item
             and container_block_stack[-1].is_new_list_item
@@ -649,7 +680,7 @@ def __maintain_block_stack(container_block_stack, current_token):
             del container_block_stack[-1]
 
         container_block_stack.append(current_token)
-        print(">>CON>>after>>" + str(container_block_stack))
+        print(">>CON>>after>>" + ParserHelper.make_value_visible(container_block_stack))
 
     # TODO Do this better.
     elif isinstance(current_token, EndMarkdownToken):
@@ -664,7 +695,10 @@ def __maintain_block_stack(container_block_stack, current_token):
             MarkdownToken.token_new_list_item,
         ):
             print("--")
-            print("<<CON<<before<<" + str(container_block_stack))
+            print(
+                "<<CON<<before<<"
+                + ParserHelper.make_value_visible(container_block_stack)
+            )
 
             if (
                 container_block_stack[-1].token_name
@@ -674,7 +708,10 @@ def __maintain_block_stack(container_block_stack, current_token):
 
             assert container_block_stack[-1].token_name == token_name_without_prefix
             del container_block_stack[-1]
-            print("<<CON<<after<<" + str(container_block_stack))
+            print(
+                "<<CON<<after<<"
+                + ParserHelper.make_value_visible(container_block_stack)
+            )
 
 
 def __verify_first_inline(last_non_inline_token, first_inline_token, last_token_stack):

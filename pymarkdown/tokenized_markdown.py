@@ -435,7 +435,11 @@ class TokenizedMarkdown:
     # pylint: disable=too-many-locals
     @staticmethod
     def __handle_blank_line(
-        parser_state, input_line, from_main_transform, position_marker=None
+        parser_state,
+        input_line,
+        from_main_transform,
+        position_marker=None,
+        forced_close_until_index=None,
     ):
         """
         Handle the processing of a blank line.
@@ -446,9 +450,9 @@ class TokenizedMarkdown:
         if not from_main_transform:
             close_only_these_blocks = [ParagraphStackToken]
             do_include_block_quotes = False
-        LOGGER.debug("from_main_transform>>%s", str(from_main_transform))
-        LOGGER.debug("close_only_these_blocks>>%s", str(close_only_these_blocks))
-        LOGGER.debug("do_include_block_quotes>>%s", str(do_include_block_quotes))
+        LOGGER.debug("hbl>>from_main_transform>>%s", str(from_main_transform))
+        LOGGER.debug("hbl>>close_only_these_blocks>>%s", str(close_only_these_blocks))
+        LOGGER.debug("hbl>>do_include_block_quotes>>%s", str(do_include_block_quotes))
 
         non_whitespace_index, extracted_whitespace = ParserHelper.extract_whitespace(
             input_line, 0
@@ -458,7 +462,7 @@ class TokenizedMarkdown:
             parser_state
         )
         LOGGER.debug(
-            "is_processing_list>>%s>>in_index>>%s>>last_stack>>%s",
+            "hbl>>is_processing_list>>%s>>in_index>>%s>>last_stack>>%s",
             str(is_processing_list),
             str(in_index),
             str(parser_state.token_stack[-1]),
@@ -468,7 +472,9 @@ class TokenizedMarkdown:
         force_ignore_first_as_lrd = None
         new_tokens = None
         if parser_state.token_stack[-1].was_link_definition_started:
-            LOGGER.debug("process_link_reference_definition>>stopping link definition")
+            LOGGER.debug(
+                "hbl>>process_link_reference_definition>>stopping link definition"
+            )
             empty_position_marker = PositionMarker(-1, 0, "")
             (
                 _,
@@ -491,22 +497,32 @@ class TokenizedMarkdown:
                 LOGGER.debug("hbl>>code block")
                 new_tokens = []
         elif parser_state.token_stack[-1].is_html_block:
+            LOGGER.debug("hbl>>check_blank_html_block_end")
             new_tokens = HtmlHelper.check_blank_html_block_end(parser_state)
         elif (
             is_processing_list
             and parser_state.token_document[-1].is_blank_line
             and parser_state.token_document[-2].is_list_start
         ):
-            LOGGER.debug("double blank in list")
+            LOGGER.debug("hbl>>double blank in list")
             new_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state, until_this_index=in_index, include_lists=True
             )
+        elif forced_close_until_index:
+            LOGGER.debug("hbl>>fgg")
+            new_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
+                parser_state,
+                until_this_index=forced_close_until_index,
+                include_lists=True,
+                include_block_quotes=True,
+            )
 
         if from_main_transform:
+            LOGGER.debug("hbl>>__handle_blank_line_in_block_quote")
             TokenizedMarkdown.__handle_blank_line_in_block_quote(parser_state)
 
         if new_tokens is None:
-            LOGGER.debug("default blank handling-->cob")
+            LOGGER.debug("hbl>>default blank handling-->cob")
             new_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state,
                 only_these_blocks=close_only_these_blocks,
@@ -514,13 +530,13 @@ class TokenizedMarkdown:
                 was_forced=True,
             )
 
-        LOGGER.debug("new_tokens>>%s", str(new_tokens))
+        LOGGER.debug("hbl>>new_tokens>>%s", str(new_tokens))
         assert non_whitespace_index == len(input_line)
         if not force_ignore_first_as_lrd:
             new_tokens.append(
                 BlankLineMarkdownToken(extracted_whitespace, position_marker)
             )
-        LOGGER.debug("new_tokens>>%s", str(new_tokens))
+        LOGGER.debug("hbl>>new_tokens>>%s", str(new_tokens))
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
 
     # pylint: enable=too-many-locals

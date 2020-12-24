@@ -55,10 +55,9 @@
 ## Bugs - Block Quote/List Interaction
 
 - 270 and check for indent levels after
-- check to make sure indents work properly for a list containing a block quote where the
-  block quote ends and there is more data for that item within the list
-- same as before, just a bq with a list
 - split up link definition within a block quote or list?
+- make sure __rehydrate_unordered_list_start and __rehydrate_ordered_list_start similar,
+  refactor is possible
 
 ## Bugs - Tokenization
 
@@ -134,5 +133,4 @@
 ## document current restrictions
 
 - nested block quotes and nested lists are okay, but not together
-- multi-line link reference definitions within a list of block quote not adequately tested
 - no install/setup support currently

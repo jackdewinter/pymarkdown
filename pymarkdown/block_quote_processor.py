@@ -372,6 +372,24 @@ class BlockQuoteProcessor:
 
             if not line_to_parse.strip():
                 LOGGER.debug("call __handle_block_quote_section>>handle_blank_line")
+
+                LOGGER.debug("__hbqs>>this_bq_count>>%s", str(this_bq_count))
+                LOGGER.debug("__hbqs>>stack_bq_count>>%s", str(stack_bq_count))
+
+                LOGGER.debug("__hbqs>>token_stack>>%s", str(parser_state.token_stack))
+                possible_list_start_index = this_bq_count + 1
+                forced_close_until_index = None
+                if (
+                    possible_list_start_index < len(parser_state.token_stack)
+                    and parser_state.token_stack[possible_list_start_index].is_list
+                ):
+                    forced_close_until_index = possible_list_start_index
+                    LOGGER.debug(
+                        "__hbqs>>fgg>>%s<<",
+                        str(parser_state.token_stack[possible_list_start_index]),
+                    )
+                LOGGER.debug("__hbqs>>fgg>>%s", str(forced_close_until_index))
+
                 adjusted_position_marker = PositionMarker(
                     position_marker.line_number,
                     len(text_removed_by_container),
@@ -382,9 +400,9 @@ class BlockQuoteProcessor:
                     parser_state,
                     line_to_parse,
                     from_main_transform=False,
+                    forced_close_until_index=forced_close_until_index,
                     position_marker=adjusted_position_marker,
                 )
-                # TODO will need to deal with force_ignore_first_as_lrd
                 assert not lines_to_requeue
         else:
             LOGGER.debug("handle_block_quote_section>>fenced")
