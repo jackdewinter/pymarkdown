@@ -393,11 +393,7 @@ class TransformToMarkdown:
             + ParserHelper.make_value_visible(new_data)
             + ">>"
         )
-        if (
-            delayed_continue
-            and new_data
-            and current_token.token_name != MarkdownToken.token_blank_line
-        ):
+        if delayed_continue and new_data and not current_token.is_blank_line:
             print("nd>")
             if not special_text_in_list_exception:
                 new_data = delayed_continue + new_data
@@ -732,8 +728,7 @@ class TransformToMarkdown:
             print("3>>block_ends_with_newline>>" + str(block_ends_with_newline))
             remove_trailing_newline = False
             if block_ends_with_newline and (
-                next_token.token_name == MarkdownToken.token_blank_line
-                or force_newline_processing
+                next_token.is_blank_line or force_newline_processing
             ):
                 print("3remove_trailing_newline>>")
                 remove_trailing_newline = True
@@ -960,7 +955,7 @@ class TransformToMarkdown:
             + current_token.list_start_content
             + current_token.list_start_sequence
         )
-        if next_token.token_name != MarkdownToken.token_blank_line:
+        if not next_token.is_blank_line:
             start_sequence = start_sequence.ljust(
                 current_token.indent_level - previous_indent, " "
             )
@@ -1145,7 +1140,7 @@ class TransformToMarkdown:
 
         start_sequence = extracted_whitespace + current_token.list_start_sequence
         print(">>start_sequence>>:" + str(start_sequence) + ":<<")
-        if next_token.token_name != MarkdownToken.token_blank_line:
+        if not next_token.is_blank_line:
             start_sequence = start_sequence.ljust(
                 current_token.indent_level - previous_indent - adjustment_since_newline,
                 " ",
@@ -1258,7 +1253,7 @@ class TransformToMarkdown:
                 + current_token.list_start_content
                 + self.container_token_stack[-1].list_start_sequence
             )
-            if next_token.token_name != MarkdownToken.token_blank_line:
+            if not next_token.is_blank_line:
                 start_sequence = start_sequence.ljust(
                     self.container_token_stack[-1].indent_level
                     - adjustment_since_newline,

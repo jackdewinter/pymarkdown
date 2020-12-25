@@ -144,15 +144,12 @@ class TransformToGfm:
                         stop_me = True
                         LOGGER.debug("!!!latent-LOOSE!!!")
                 LOGGER.debug(">>list--end>>%s", str(stack_count))
-            elif (
-                actual_tokens[current_token_index - 1].token_name
-                == MarkdownToken.token_blank_line
-            ):
+            elif actual_tokens[current_token_index - 1].is_blank_line:
                 search_back_index = current_token_index - 2
                 pre_prev_token = actual_tokens[search_back_index]
                 LOGGER.debug(">>pre_prev_token>>%s", str(pre_prev_token))
 
-                while pre_prev_token.token_name == MarkdownToken.token_blank_line:
+                while pre_prev_token.is_blank_line:
                     search_back_index -= 1
                     pre_prev_token = actual_tokens[search_back_index]
 
@@ -236,10 +233,7 @@ class TransformToGfm:
 
         is_valid = True
         LOGGER.debug(">>prev>>%s", str(actual_tokens[current_token_index - 1]))
-        if (
-            actual_tokens[current_token_index - 1].token_name
-            == MarkdownToken.token_blank_line
-        ):
+        if actual_tokens[current_token_index - 1].is_blank_line:
             search_index = current_token_index + 1
             while (
                 search_index < len(actual_tokens)
@@ -599,16 +593,10 @@ class TransformToGfm:
 
         if transform_state.is_in_code_block:
             if transform_state.is_in_fenced_code_block:
-                if (
-                    transform_state.last_token.token_name
-                    == MarkdownToken.token_blank_line
-                ):
-                    if (
-                        transform_state.actual_tokens[
-                            transform_state.actual_token_index - 2
-                        ].token_name
-                        == MarkdownToken.token_blank_line
-                    ):
+                if transform_state.last_token.is_blank_line:
+                    if transform_state.actual_tokens[
+                        transform_state.actual_token_index - 2
+                    ].is_blank_line:
                         output_html += "\n"
 
             extracted_whitespace = ParserHelper.resolve_references_from_text(
@@ -660,8 +648,7 @@ class TransformToGfm:
             primary_condition = (
                 transform_state.last_token.token_name
                 != MarkdownToken.token_fenced_code_block
-                or transform_state.next_token.token_name
-                != MarkdownToken.token_blank_line
+                or not transform_state.next_token.is_blank_line
             )
             exclusion_condition = (
                 transform_state.last_token.token_name
@@ -795,7 +782,7 @@ class TransformToGfm:
             ].is_text
         ):
             output_html += ParserHelper.newline_character
-        elif transform_state.last_token.token_name == MarkdownToken.token_blank_line:
+        elif transform_state.last_token.is_blank_line:
             if not next_token.was_forced:
                 output_html += ParserHelper.newline_character
         output_html += "</code></pre>" + ParserHelper.newline_character

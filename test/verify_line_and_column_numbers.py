@@ -192,7 +192,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                 )
                 if (
                     top_block_token != current_token
-                    and (current_token.token_name == MarkdownToken.token_blank_line)
+                    and (current_token.is_blank_line)
                     and not did_x
                 ):
                     print(
@@ -253,7 +253,7 @@ def __push_to_stack_if_required(token_stack, current_token):
 
     # TODO replace with attribute from token?
     if (
-        current_token.token_name != MarkdownToken.token_blank_line
+        not current_token.is_blank_line
         and current_token.token_name != MarkdownToken.token_new_list_item
         and current_token.token_name != MarkdownToken.token_link_reference_definition
         and current_token.token_name != MarkdownToken.token_thematic_break
@@ -309,7 +309,7 @@ def __validate_block_token_height(
     print("last_line_number:" + ParserHelper.make_value_visible(last_line_number))
 
     skip_check = False
-    if current_token and current_token.token_name == MarkdownToken.token_blank_line:
+    if current_token and current_token.is_blank_line:
         print("blank:" + ParserHelper.make_value_visible(token_stack))
         if token_stack and (
             token_stack[-1].token_name == MarkdownToken.token_html_block
@@ -344,16 +344,13 @@ def __validate_block_token_height(
                     actual_tokens[current_token_index].token_text
                 )
             else:
-                assert (
-                    actual_tokens[current_token_index].token_name
-                    == MarkdownToken.token_blank_line
-                )
+                assert actual_tokens[current_token_index].is_blank_line
                 token_height += 1
             current_token_index += 1
         if last_token.token_name == MarkdownToken.token_fenced_code_block:
             if not actual_tokens[current_token_index].was_forced:
                 token_height += 1
-    elif last_token.token_name == MarkdownToken.token_blank_line:
+    elif last_token.is_blank_line:
         token_height = 1
     elif last_token.token_name == MarkdownToken.token_link_reference_definition:
         token_height = (
@@ -488,7 +485,7 @@ def __validate_same_line(
         print(">>current_position.index_number>>" + str(current_position.index_number))
         print(">>last_token>>" + str(last_token))
         print(">>last_token.indent_level>>" + str(last_token.indent_level))
-        if current_token.token_name == MarkdownToken.token_blank_line:
+        if current_token.is_blank_line:
             assert current_position.index_number == last_token.indent_level
         elif current_token.token_name == MarkdownToken.token_indented_code_block:
             assert (
@@ -514,7 +511,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
 
     if (
         container_block_stack
-        and current_token.token_name != MarkdownToken.token_blank_line
+        and not current_token.is_blank_line
         and current_token.token_name != MarkdownToken.token_unordered_list_start
         and current_token.token_name != MarkdownToken.token_ordered_list_start
         and current_token.token_name != MarkdownToken.token_new_list_item
@@ -537,7 +534,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
         elif (
             container_block_stack
             and container_block_stack[-1] != current_token
-            and current_token.token_name != MarkdownToken.token_blank_line
+            and not current_token.is_blank_line
             and top_block.token_name == MarkdownToken.token_block_quote
         ):
             print(">>__vnl->not block")
@@ -558,10 +555,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
                 - 1
                 + (current_token.indent_level - top_block.indent_level)
             )
-    elif (
-        container_block_stack
-        and current_token.token_name == MarkdownToken.token_blank_line
-    ):
+    elif container_block_stack and current_token.is_blank_line:
         print(">>__vnl->blank-ish")
         if container_block_stack[-1].token_name == MarkdownToken.token_block_quote:
             split_leading_spaces = container_block_stack[-1].leading_spaces.split("\n")
@@ -650,7 +644,7 @@ def __calc_initial_whitespace(calc_token):
         )
     elif (
         calc_token.token_name == MarkdownToken.token_html_block
-        or calc_token.token_name == MarkdownToken.token_blank_line
+        or calc_token.is_blank_line
     ):
         indent_level = 0
     else:
@@ -771,7 +765,7 @@ def __verify_first_inline_fenced_code_block(
 
     assert (
         first_inline_token.token_name == MarkdownToken.token_text
-        or first_inline_token.token_name == MarkdownToken.token_blank_line
+        or first_inline_token.is_blank_line
     )
 
     print(">last_token_stack>" + ParserHelper.make_value_visible(last_token_stack))
@@ -779,7 +773,7 @@ def __verify_first_inline_fenced_code_block(
         split_leading_spaces = last_token_stack[-2].leading_spaces.split("\n")
         col_pos = len(split_leading_spaces[1])
     else:
-        if first_inline_token.token_name == MarkdownToken.token_blank_line:
+        if first_inline_token.is_blank_line:
             col_pos = 0
         else:
             resolved_extracted_whitespace = ParserHelper.resolve_replacement_markers_from_text(
@@ -879,9 +873,7 @@ def __verify_first_inline_paragraph(last_non_inline_token, first_inline_token):
         assert first_inline_token.column_number == 0
 
     else:
-        assert (
-            first_inline_token.token_name != MarkdownToken.token_blank_line
-        ), first_inline_token.token_name
+        assert not first_inline_token.is_blank_line, first_inline_token.token_name
 
 
 def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
@@ -960,7 +952,7 @@ def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
         == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
     ):
         assert False
-    elif first_inline_token.token_name == EndMarkdownToken.token_blank_line:
+    elif first_inline_token.is_blank_line:
         assert False
 
     else:
@@ -1375,7 +1367,7 @@ def __process_previous_token(
         ) = __verify_next_inline_emphasis_end(
             previous_inline_token, estimated_line_number, estimated_column_number,
         )
-    elif previous_inline_token.token_name == MarkdownToken.token_blank_line:
+    elif previous_inline_token.is_blank_line:
         (
             estimated_line_number,
             estimated_column_number,
@@ -1440,8 +1432,8 @@ def __process_previous_token(
         + ","
         + str(estimated_column_number)
     )
-    if current_inline_token.token_name == MarkdownToken.token_blank_line:
-        if previous_inline_token.token_name != MarkdownToken.token_blank_line:
+    if current_inline_token.is_blank_line:
+        if not previous_inline_token.is_blank_line:
             estimated_line_number += 1
         estimated_column_number = 1
     print(">>after>>" + str(estimated_line_number) + "," + str(estimated_column_number))
@@ -2391,14 +2383,14 @@ def __handle_last_token_blank_line(
     if (
         last_block_token.token_name == MarkdownToken.token_fenced_code_block
         and current_block_token
-        and current_block_token.token_name == MarkdownToken.token_blank_line
+        and current_block_token.is_blank_line
     ):
         inline_height -= 1
     elif (
         last_block_token.token_name == MarkdownToken.token_fenced_code_block
         and not current_block_token
         and last_inline_token
-        and last_inline_token.token_name == MarkdownToken.token_blank_line
+        and last_inline_token.is_blank_line
     ):
         assert (
             current_token.token_name
@@ -2504,9 +2496,9 @@ def __verify_last_inline(
             last_inline_token,
         )
     else:
-        assert (
-            last_inline_token.token_name == MarkdownToken.token_blank_line
-        ), "bad inline token: " + str(last_inline_token)
+        assert last_inline_token.is_blank_line, "bad inline token: " + str(
+            last_inline_token
+        )
         inline_height = __handle_last_token_blank_line(
             last_block_token,
             second_last_inline_token,

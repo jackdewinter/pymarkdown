@@ -27,9 +27,9 @@ class MarkdownToken:
     Class to provide for a base encapsulation of the markdown tokens.
     """
 
-    __token_paragraph = "para"
+    _token_paragraph = "para"
+    _token_blank_line = "BLANK"
 
-    token_blank_line = "BLANK"
     token_text = "text"
     token_indented_code_block = "icode-block"
     token_fenced_code_block = "fcode-block"
@@ -86,7 +86,7 @@ class MarkdownToken:
         if (
             self.extra_data
             or self.is_paragraph
-            or self.token_name == MarkdownToken.token_blank_line
+            or self.is_blank_line
             or self.token_name == MarkdownToken.token_block_quote
         ):
             add_extra = ":" + self.extra_data
@@ -122,7 +122,7 @@ class MarkdownToken:
         """
         Returns whether or not the current token is the blank line element.
         """
-        return self.token_name == MarkdownToken.token_blank_line
+        return self.token_name == MarkdownToken._token_blank_line
 
     @property
     def is_block_quote_start(self):
@@ -155,19 +155,12 @@ class MarkdownToken:
         """
         return self.is_new_list_item or self.is_list_start
 
-    @staticmethod
-    def get_token_name_paragraph():
-        """
-        Returns whether or not the current token is a paragraph element.
-        """
-        return MarkdownToken.__token_paragraph
-
     @property
     def is_paragraph(self):
         """
         Returns whether or not the current token is a paragraph element.
         """
-        return self.token_name == MarkdownToken.__token_paragraph
+        return self.token_name == MarkdownToken._token_paragraph
 
     @property
     def is_paragraph_end(self):
@@ -176,7 +169,7 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == EndMarkdownToken.type_name_prefix + MarkdownToken.__token_paragraph
+            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_paragraph
         )
 
     @property
@@ -247,7 +240,7 @@ class BlankLineMarkdownToken(MarkdownToken):
 
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_blank_line,
+            MarkdownToken._token_blank_line,
             MarkdownTokenClass.LEAF_BLOCK,
             extracted_whitespace,
             line_number=line_number,
@@ -266,7 +259,7 @@ class ParagraphMarkdownToken(MarkdownToken):
         self.rehydrate_index = 0
         MarkdownToken.__init__(
             self,
-            MarkdownToken.get_token_name_paragraph(),
+            MarkdownToken._token_paragraph,
             MarkdownTokenClass.LEAF_BLOCK,
             "",
             position_marker=position_marker,
