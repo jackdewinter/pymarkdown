@@ -88,9 +88,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
             ):
                 print("block quotes: looking for implicit newlines")
                 if (
-                    current_token.token_name
-                    == EndMarkdownToken.type_name_prefix
-                    + MarkdownToken.token_atx_heading
+                    current_token.is_atx_heading_end
                     or current_token.is_paragraph_end
                     or current_token.token_name
                     == EndMarkdownToken.type_name_prefix
@@ -365,7 +363,7 @@ def __validate_block_token_height(
         )
     elif (
         last_token.token_name == MarkdownToken.token_thematic_break
-        or last_token.token_name == MarkdownToken.token_atx_heading
+        or last_token.is_atx_heading
     ):
         token_height = 1
     else:
@@ -618,15 +616,18 @@ def __validate_first_token(current_token, current_position):
 
 def __calc_initial_whitespace(calc_token):
     had_tab = False
-    if calc_token.token_name in (
-        MarkdownToken.token_indented_code_block,
-        MarkdownToken.token_atx_heading,
-        MarkdownToken.token_new_list_item,
-        MarkdownToken.token_thematic_break,
-        MarkdownToken.token_fenced_code_block,
-        MarkdownToken.token_block_quote,
-        MarkdownToken.token_link_reference_definition,
-        MarkdownToken.token_setext_heading,
+    if (
+        calc_token.token_name
+        in (
+            MarkdownToken.token_indented_code_block,
+            MarkdownToken.token_new_list_item,
+            MarkdownToken.token_thematic_break,
+            MarkdownToken.token_fenced_code_block,
+            MarkdownToken.token_block_quote,
+            MarkdownToken.token_link_reference_definition,
+            MarkdownToken.token_setext_heading,
+        )
+        or calc_token.is_atx_heading
     ):
         indent_level = len(calc_token.extracted_whitespace)
         had_tab = bool(ParserHelper.tab_character in calc_token.extracted_whitespace)
@@ -735,7 +736,7 @@ def __verify_first_inline(last_non_inline_token, first_inline_token, last_token_
     Verify the first inline token in a sequence.  This means that the previous token
     is guaranteed to be a leaf block token.
     """
-    if last_non_inline_token.token_name == MarkdownToken.token_atx_heading:
+    if last_non_inline_token.is_atx_heading:
         __verify_first_inline_atx(last_non_inline_token, first_inline_token)
     elif last_non_inline_token.token_name == MarkdownToken.token_setext_heading:
         __verify_first_inline_setext(last_non_inline_token, first_inline_token)
@@ -2016,10 +2017,7 @@ def __verify_next_inline_text(
         assert current_line.startswith("\n")
         current_line = current_line[1:]
     else:
-        if (
-            not pre_previous_inline_token
-            and last_token.token_name == MarkdownToken.token_atx_heading
-        ):
+        if not pre_previous_inline_token and last_token.is_atx_heading:
             pass
         else:
             current_line = previous_inline_token.extracted_whitespace + current_line
@@ -2203,7 +2201,7 @@ def __handle_last_token_text(
     elif (
         last_block_token.token_name == MarkdownToken.token_html_block
         or last_block_token.token_name == MarkdownToken.token_indented_code_block
-        or last_block_token.token_name == MarkdownToken.token_atx_heading
+        or last_block_token.is_atx_heading
     ):
         inline_height = len(resolved_text.split("\n")) - 1
     elif last_block_token.token_name == MarkdownToken.token_fenced_code_block:

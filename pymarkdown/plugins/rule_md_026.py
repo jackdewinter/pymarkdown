@@ -58,9 +58,9 @@ class RuleMd026(Plugin):
             self.__heading_text = ""
             self.__start_token = token
         elif isinstance(token, EndMarkdownToken):
-            if token.type_name in (
-                MarkdownToken.token_atx_heading,
-                MarkdownToken.token_setext_heading,
+            if (
+                token.type_name in (MarkdownToken.token_setext_heading,)
+                or token.is_atx_heading_end
             ):
 
                 if self.__heading_text:

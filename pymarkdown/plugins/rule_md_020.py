@@ -8,7 +8,6 @@ import re
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
     EndMarkdownToken,
-    MarkdownToken,
     ParagraphMarkdownToken,
     TextMarkdownToken,
 )
@@ -52,13 +51,7 @@ class RuleMd020(Plugin):
         """
         Event that a new token is being processed.
         """
-        if (
-            not (
-                isinstance(token, EndMarkdownToken)
-                and token.type_name == MarkdownToken.token_atx_heading
-            )
-            and self.__is_in_normal_atx
-        ):
+        if not (token.is_atx_heading_end) and self.__is_in_normal_atx:
             self.__last_atx_token = token
 
         if isinstance(token, ParagraphMarkdownToken):
@@ -68,7 +61,7 @@ class RuleMd020(Plugin):
         elif isinstance(token, EndMarkdownToken):
             if token.is_paragraph_end:
                 self.__last_paragraph_token = None
-            elif token.type_name == MarkdownToken.token_atx_heading:
+            elif token.is_atx_heading_end:
                 if self.__is_in_normal_atx and isinstance(
                     self.__last_atx_token, TextMarkdownToken
                 ):

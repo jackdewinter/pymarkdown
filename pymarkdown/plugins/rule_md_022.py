@@ -93,17 +93,16 @@ class RuleMd022(Plugin):
             else:
                 self.__blank_line_count = None
             if (
-                token.type_name == MarkdownToken.token_atx_heading
+                token.is_atx_heading_end
                 or token.type_name == MarkdownToken.token_setext_heading
             ):
                 self.__did_heading_end = True
 
     @classmethod
     def __is_leaf_end_token(cls, token):
-        if token.is_paragraph_end:
+        if token.is_paragraph_end or token.is_atx_heading_end:
             return True
         if token.type_name in (
-            MarkdownToken.token_atx_heading,
             MarkdownToken.token_html_block,
             MarkdownToken.token_fenced_code_block,
             MarkdownToken.token_indented_code_block,

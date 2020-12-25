@@ -29,6 +29,7 @@ class MarkdownToken:
 
     _token_paragraph = "para"
     _token_blank_line = "BLANK"
+    _token_atx_heading = "atx"
 
     token_text = "text"
     token_indented_code_block = "icode-block"
@@ -36,7 +37,6 @@ class MarkdownToken:
     token_thematic_break = "tbreak"
     token_block_quote = "block-quote"
     token_link_reference_definition = "link-ref-def"
-    token_atx_heading = "atx"
     token_setext_heading = "setext"
     token_unordered_list_start = "ulist"
     token_ordered_list_start = "olist"
@@ -191,7 +191,17 @@ class MarkdownToken:
         """
         Returns whether or not the current token is an atx element.
         """
-        return self.token_name == MarkdownToken.token_atx_heading
+        return self.token_name == MarkdownToken._token_atx_heading
+
+    @property
+    def is_atx_heading_end(self):
+        """
+        Returns whether or not the current token is an atx heading end element.
+        """
+        return (
+            self.token_name
+            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_atx_heading
+        )
 
     @property
     def is_code_block(self):
@@ -481,7 +491,7 @@ class AtxHeadingMarkdownToken(MarkdownToken):
 
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_atx_heading,
+            MarkdownToken._token_atx_heading,
             MarkdownTokenClass.LEAF_BLOCK,
             "",
             position_marker=position_marker,

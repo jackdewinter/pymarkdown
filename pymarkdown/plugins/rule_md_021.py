@@ -5,7 +5,6 @@ opening or closing hashes of an atx heading.
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
     EndMarkdownToken,
-    MarkdownToken,
     TextMarkdownToken,
 )
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -51,7 +50,7 @@ class RuleMd021(Plugin):
         elif isinstance(token, EndMarkdownToken):
             if token.is_paragraph_end:
                 self.__in_atx_heading = False
-            elif token.type_name == MarkdownToken.token_atx_heading:
+            elif token.is_atx_heading_end:
                 if self.__is_left_in_error or len(token.extra_end_data) > 1:
                     self.report_next_token_error(token)
         elif isinstance(token, TextMarkdownToken):

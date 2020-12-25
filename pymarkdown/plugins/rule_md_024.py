@@ -71,9 +71,9 @@ class RuleMd024(Plugin):
             self.handle_heading_start(token)
             skip_this_token = True
         elif isinstance(token, EndMarkdownToken):
-            if token.type_name in (
-                MarkdownToken.token_atx_heading,
-                MarkdownToken.token_setext_heading,
+            if (
+                token.type_name in (MarkdownToken.token_setext_heading,)
+                or token.is_atx_heading_end
             ):
                 self.handler_heading_end()
 
