@@ -104,9 +104,9 @@ class MarkdownToken:
         """
         Returns whether or not the current token is one of the block tokens.
         """
-        # block quotes?
         return (
-            self.is_list_start
+            self.is_block_quote_start
+            or self.is_list_start
             or self.token_name == MarkdownToken.token_thematic_break
             or self.is_atx_heading
             or self.is_setext
@@ -114,7 +114,6 @@ class MarkdownToken:
             or self.token_name == MarkdownToken.token_html_block
             or self.is_paragraph
         )
-        # lrd or \
         # or tables
 
     @property
@@ -123,6 +122,13 @@ class MarkdownToken:
         Returns whether or not the current token is the blank line element.
         """
         return self.token_name == MarkdownToken.token_blank_line
+
+    @property
+    def is_block_quote_start(self):
+        """
+        Returns whether or not the current token is a block quote.
+        """
+        return self.token_name == MarkdownToken.token_block_quote
 
     @property
     def is_list_start(self):

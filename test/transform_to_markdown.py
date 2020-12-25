@@ -429,6 +429,7 @@ class TransformToMarkdown:
             new_data, delayed_continue = self.__merge_with_container_data(
                 new_data,
                 next_token,
+                current_token,
                 continue_sequence,
                 delayed_continue,
                 block_should_end_with_newline,
@@ -646,6 +647,7 @@ class TransformToMarkdown:
         self,
         new_data,
         next_token,
+        current_token,
         continue_sequence,
         delayed_continue,
         block_should_end_with_newline,
@@ -680,6 +682,7 @@ class TransformToMarkdown:
             delayed_continue = continue_sequence
             last_block_quote_block = self.__find_last_block_quote_on_stack()
             if last_block_quote_block:
+                print("2>>in block quote")
                 print(
                     "2?>>top_stack>>"
                     + ParserHelper.make_value_visible(last_block_quote_block)
@@ -693,6 +696,28 @@ class TransformToMarkdown:
                     + "<<"
                 )
                 new_data = self.__merge_xx(new_data, last_block_quote_block)
+            elif top_of_list_token_stack and top_of_list_token_stack.leading_spaces:
+                print("2>>not in block quote")
+                print("2>>" + ParserHelper.make_value_visible(top_of_list_token_stack))
+
+                print(
+                    "2>>current_token>>"
+                    + ParserHelper.make_value_visible(current_token)
+                )
+                print("2>>next_token>>" + ParserHelper.make_value_visible(next_token))
+                if (
+                    current_token.token_name
+                    == MarkdownToken.token_link_reference_definition
+                ):
+                    did_remove_trailing_newline = False
+                    if new_data.endswith("\n"):
+                        new_data = new_data[0:-1]
+                        did_remove_trailing_newline = True
+                    new_data = self.__merge_with_leading_spaces_in_data(
+                        new_data, top_of_list_token_stack
+                    )
+                    if did_remove_trailing_newline:
+                        new_data += "\n"
             print("2<<")
         elif "\n" in new_data:
             print(

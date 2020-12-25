@@ -348,10 +348,8 @@ class ContainerBlockProcessor:
             and parser_state.token_stack[-1].is_paragraph
             and parser_state.token_stack[-2].is_block_quote
         ):
-            if text_removed_by_container is None:
-                text_removed_by_container = used_indent
-            else:
-                text_removed_by_container += used_indent
+            assert text_removed_by_container is None
+            text_removed_by_container = used_indent
             force_it = True
 
         newer_position_marker = PositionMarker(
@@ -890,7 +888,6 @@ class ContainerBlockProcessor:
         position_marker,
         extracted_whitespace,
         new_tokens,
-        removed_chars_at_start,
     ):
         """
         Take care of the processing for html blocks.
@@ -927,18 +924,6 @@ class ContainerBlockProcessor:
             )
             assert html_tokens
             new_tokens.extend(html_tokens)
-
-            LOGGER.debug("YYYYYYYYYYYY")
-            LOGGER.debug("YYYYYYYYYYYY:%s:", str(removed_chars_at_start))
-            if (
-                len(parser_state.token_stack) > 1
-                and parser_state.token_stack[-2].is_block_quote
-                and not removed_chars_at_start
-            ):
-                LOGGER.debug("YYYYYYYYYYYY:%s:", str(extracted_whitespace))
-                parser_state.token_stack[-2].matching_markdown_token.add_leading_spaces(
-                    ""
-                )
             outer_processed = True
 
         return outer_processed
@@ -1067,7 +1052,6 @@ class ContainerBlockProcessor:
             position_marker,
             extracted_whitespace,
             new_tokens,
-            removed_chars_at_start,
         )
 
         if not outer_processed:

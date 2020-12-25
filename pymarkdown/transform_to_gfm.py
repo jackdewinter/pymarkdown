@@ -91,7 +91,7 @@ class TransformToGfm:
     }
     raw_html_percent_escape_ascii_chars = '"%[\\]^`{}|'
 
-    # pylint: disable=too-many-branches
+    # pylint: disable=too-many-branches, too-many-locals, too-many-statements
     def __calculate_list_looseness(self, actual_tokens, actual_token_index, next_token):
         """
         Based on the first token in a list, compute the "looseness" of the list.
@@ -110,29 +110,31 @@ class TransformToGfm:
                 current_token,
                 (UnorderedListStartMarkdownToken, OrderedListStartMarkdownToken),
             ):
+                LOGGER.debug("cll>>start list>>%s", str(current_token))
                 check_me = stack_count == 0
                 stack_count += 1
                 LOGGER.debug(">>list--new>>%s", str(stack_count))
-            elif (
-                isinstance(current_token, NewListItemMarkdownToken)
-                or current_token.is_block
-            ):
+            elif isinstance(current_token, NewListItemMarkdownToken):
+                LOGGER.debug("cll>>new list item>>%s", str(current_token))
                 check_me = stack_count == 0
                 if not current_token.is_block:
                     LOGGER.debug(">>list--item>>%s", str(stack_count))
             elif current_token.token_name == MarkdownToken.token_block_quote:
+                LOGGER.debug("cll>>start block quote>>%s", str(current_token))
                 stack_count += 1
                 LOGGER.debug(">>block--new>>%s", str(stack_count))
             elif (
                 current_token.token_name
                 == EndMarkdownToken.type_name_prefix + MarkdownToken.token_block_quote
             ):
+                LOGGER.debug("cll>>end block quote>>%s", str(current_token))
                 stack_count -= 1
                 LOGGER.debug(">>block--end>>%s", str(stack_count))
             elif isinstance(current_token, EndMarkdownToken) and (
                 current_token.type_name == MarkdownToken.token_unordered_list_start
                 or current_token.type_name == MarkdownToken.token_ordered_list_start
             ):
+                LOGGER.debug("cll>>end list>>%s", str(current_token))
                 if stack_count == 0:
                     stop_me = True
                 else:
@@ -142,6 +144,60 @@ class TransformToGfm:
                         stop_me = True
                         LOGGER.debug("!!!latent-LOOSE!!!")
                 LOGGER.debug(">>list--end>>%s", str(stack_count))
+            elif (
+                actual_tokens[current_token_index - 1].token_name
+                == MarkdownToken.token_blank_line
+            ):
+                search_back_index = current_token_index - 2
+                pre_prev_token = actual_tokens[search_back_index]
+                LOGGER.debug(">>pre_prev_token>>%s", str(pre_prev_token))
+
+                while pre_prev_token.token_name == MarkdownToken.token_blank_line:
+                    search_back_index -= 1
+                    pre_prev_token = actual_tokens[search_back_index]
+
+                if pre_prev_token.token_name.startswith(
+                    EndMarkdownToken.type_name_prefix
+                ):
+                    # assert pre_prev_token.start_markdown_token
+                    if pre_prev_token.start_markdown_token:
+                        pre_prev_token = pre_prev_token.start_markdown_token
+                        LOGGER.debug(">>end_>using_start>>%s", str(pre_prev_token))
+                    else:
+                        end_token_suffix = pre_prev_token.token_name[
+                            len(EndMarkdownToken.type_name_prefix) :
+                        ]
+                        search_back_index -= 1
+                        x_token = actual_tokens[search_back_index]
+                        while x_token.token_name != end_token_suffix:
+                            search_back_index -= 1
+                            x_token = actual_tokens[search_back_index]
+                        pre_prev_token = x_token
+                        LOGGER.debug(">>end_>calc>>%s", str(pre_prev_token))
+
+                current_check = (
+                    current_token.is_block
+                    and current_token.token_name
+                    != MarkdownToken.token_link_reference_definition
+                )
+                pre_prev_check = (
+                    pre_prev_token.is_block
+                    and pre_prev_token.token_name
+                    != MarkdownToken.token_link_reference_definition
+                )
+
+                LOGGER.debug(">>other--stack_count>>%s", str(stack_count))
+                LOGGER.debug(
+                    ">>other--current_token>>%s>>%s",
+                    str(current_token),
+                    str(current_check),
+                )
+                LOGGER.debug(
+                    ">>other--current_token-2>>%s>>%s",
+                    str(pre_prev_token),
+                    str(pre_prev_check),
+                )
+                check_me = stack_count == 0 and current_check and pre_prev_check
 
             LOGGER.debug(
                 ">>stack_count>>%s>>#%s:%s>>check=%s",
@@ -171,7 +227,7 @@ class TransformToGfm:
         )
         return is_loose
 
-    # pylint: enable=too-many-branches
+    # pylint: enable=too-many-branches, too-many-locals, too-many-statements
 
     def __correct_for_me(self, actual_tokens, current_token_index):
         correct_closure = False
@@ -213,22 +269,21 @@ class TransformToGfm:
         Check to see if this token inspires looseness.
         """
 
-        token_to_check = actual_tokens[current_token_index - 1]
+        check_index = current_token_index - 1
+        token_to_check = actual_tokens[check_index]
         LOGGER.debug("token_to_check-->%s", str(token_to_check))
-        if isinstance(token_to_check, EndMarkdownToken) and (
-            token_to_check.type_name == MarkdownToken.token_unordered_list_start
-            or token_to_check.type_name == MarkdownToken.token_ordered_list_start
-        ):
-            if actual_tokens[current_token_index - 2].is_blank_line:
-                # token_to_check = actual_tokens[current_token_index - 2]
-                LOGGER.debug("token_to_check(mod)-->%s", str(token_to_check))
 
+        while (
+            token_to_check.token_name == MarkdownToken.token_link_reference_definition
+        ):
+            check_index -= 1
+            token_to_check = actual_tokens[check_index]
+
+        LOGGER.debug("token_to_check-->%s", str(token_to_check))
         if token_to_check.is_blank_line:
-            LOGGER.debug(
-                "before_blank-->%s", str(actual_tokens[current_token_index - 2])
-            )
+            LOGGER.debug("before_blank-->%s", str(actual_tokens[check_index - 1]))
             if isinstance(
-                actual_tokens[current_token_index - 2],
+                actual_tokens[check_index - 1],
                 (
                     NewListItemMarkdownToken,
                     UnorderedListStartMarkdownToken,
@@ -239,8 +294,6 @@ class TransformToGfm:
             else:
                 LOGGER.debug("!!!LOOSE!!!")
                 return True
-        elif isinstance(token_to_check, LinkReferenceDefinitionMarkdownToken):
-            return True
         return False
 
     @classmethod

@@ -1112,9 +1112,7 @@ def test_block_quotes_222c():
     source_markdown = """> foo
 >
 >
-> bar""".replace(
-        "\a", " "
-    )
+> bar"""
     expected_tokens = [
         "[block-quote(1,1)::> \n>\n>\n> ]",
         "[para(1,3):]",
@@ -1726,6 +1724,115 @@ end"""
 <li>quote</li>
 </ul>
 <p>end</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_block_quotes_extra_03x():
+    """
+    Test case Bq03:  link definition within a block quote
+                     copy of test_link_reference_definitions_161 but within single block
+    """
+
+    # Arrange
+    source_markdown = """> [foo]: /url "title"
+>
+> [foo]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n>\n> ]",
+        '[link-ref-def(1,3):True::foo:: :/url:: :title:"title":]',
+        "[BLANK(2,2):]",
+        "[para(3,3):]",
+        "[link(3,3):shortcut:/url:title::::foo:::::]",
+        "[text(3,4):foo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p><a href="/url" title="title">foo</a></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_block_quotes_extra_03a():
+    """
+    Test case Bq03a:  link definition within a block quote
+                      copy of test_link_reference_definitions_161 but within
+                      two distinct blocks
+    """
+
+    # Arrange
+    source_markdown = """> [foo]: /url "title"
+
+> [foo]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n\n> ]",
+        '[link-ref-def(1,3):True::foo:: :/url:: :title:"title":]',
+        "[BLANK(2,1):]",
+        "[para(3,3):]",
+        "[link(3,3):shortcut:/url:title::::foo:::::]",
+        "[text(3,4):foo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+</blockquote>
+<blockquote>
+<p><a href="/url" title="title">foo</a></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_block_quotes_extra_03b():
+    """
+    Test case Bq03a:  link definition within a block quote
+                      copy of test_link_reference_definitions_164 but within
+                      a single block
+    """
+
+    # Arrange
+    source_markdown = """> [Foo bar]:
+> <my url>
+> 'title'
+>
+> [Foo bar]"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n]",
+        "[end-block-quote:::False]",
+        "[para(1,1):]",
+        "[text(1,1):[:]",
+        "[text(1,2):Foo bar:]",
+        "[text(1,9):]:]",
+        "[text(1,10):::]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> \n> \n>\n> ]",
+        "[html-block(2,3)]",
+        "[text(2,3):<my url>\n'title':]",
+        "[end-html-block:::False]",
+        "[BLANK(4,2):]",
+        "[para(5,3):]",
+        "[text(5,3):[:]",
+        "[text(5,4):Foo bar:]",
+        "[text(5,11):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p><a href="my%20url" title="title">Foo bar</a></p>
+</blockquote>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

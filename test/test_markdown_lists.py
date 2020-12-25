@@ -7,6 +7,7 @@ from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.transform_to_gfm import TransformToGfm
 
 from .utils import (
+    act_and_assert,
     assert_if_lists_different,
     assert_if_strings_different,
     assert_token_consistency,
@@ -2956,7 +2957,7 @@ def test_list_items_301d():
 </ul>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=False)
+    actual_tokens = tokenizer.transform(source_markdown)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert
@@ -3314,3 +3315,97 @@ def test_list_items_306():
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
     assert_token_consistency(source_markdown, actual_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_extra_01x():
+    """
+    Test case List01:  link definition within a list item
+                       copy of test_link_reference_definitions_161 but within list item
+    """
+
+    # Arrange
+    source_markdown = """- [foo]: /url "title"
+
+  [foo]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        '[link-ref-def(1,3):True::foo:: :/url:: :title:"title":]',
+        "[BLANK(2,1):]",
+        "[para(3,3):]",
+        "[link(3,3):shortcut:/url:title::::foo:::::]",
+        "[text(3,4):foo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li><a href="/url" title="title">foo</a></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_extra_01a():
+    """
+    Test case Bq03a:  link definition within a list item
+                      copy of test_link_reference_definitions_161 but within
+                      two distinct list items
+    """
+
+    # Arrange
+    source_markdown = """- [foo]: /url "title"
+- [foo]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        '[link-ref-def(1,3):True::foo:: :/url:: :title:"title":]',
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[link(2,3):shortcut:/url:title::::foo:::::]",
+        "[text(2,4):foo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li></li>
+<li><a href="/url" title="title">foo</a></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_items_extra_01b():
+    """
+    Test case Bq03a:  link definition within a list item
+                      copy of test_link_reference_definitions_164 but within
+                      a single list item
+    """
+
+    # Arrange
+    source_markdown = """- [Foo bar]:
+  <my url>
+  'title'
+
+  [Foo bar]"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[link-ref-def(1,3):True::foo bar:Foo bar:\n:my%20url:<my url>:\n:title:'title':]",
+        "[BLANK(4,1):]",
+        "[para(5,3):]",
+        "[link(5,3):shortcut:my%20url:title::::Foo bar:::::]",
+        "[text(5,4):Foo bar:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li><a href="my%20url" title="title">Foo bar</a></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
