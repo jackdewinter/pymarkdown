@@ -432,7 +432,7 @@ class TokenizedMarkdown:
         del parser_state.token_stack[-1]
         return new_tokens
 
-    # pylint: disable=too-many-locals
+    # pylint: disable=too-many-locals, too-many-branches, too-many-statements
     @staticmethod
     def __handle_blank_line(
         parser_state,
@@ -453,6 +453,7 @@ class TokenizedMarkdown:
         LOGGER.debug("hbl>>from_main_transform>>%s", str(from_main_transform))
         LOGGER.debug("hbl>>close_only_these_blocks>>%s", str(close_only_these_blocks))
         LOGGER.debug("hbl>>do_include_block_quotes>>%s", str(do_include_block_quotes))
+        LOGGER.debug("hbl>>forced_close_until_index>>%s", str(forced_close_until_index))
 
         non_whitespace_index, extracted_whitespace = ParserHelper.extract_whitespace(
             input_line, 0
@@ -471,6 +472,7 @@ class TokenizedMarkdown:
         lines_to_requeue = []
         force_ignore_first_as_lrd = None
         new_tokens = None
+        force_default_handling = False
         if parser_state.token_stack[-1].was_link_definition_started:
             LOGGER.debug(
                 "hbl>>process_link_reference_definition>>stopping link definition"
@@ -487,6 +489,7 @@ class TokenizedMarkdown:
                 parser_state, empty_position_marker, "", ""
             )
             assert not did_pause_lrd
+            force_default_handling = True
         elif parser_state.token_stack[-1].is_code_block:
             stack_bq_count = BlockQuoteProcessor.count_of_block_quotes_on_stack(
                 parser_state
@@ -509,7 +512,7 @@ class TokenizedMarkdown:
                 parser_state, until_this_index=in_index, include_lists=True
             )
         elif forced_close_until_index:
-            LOGGER.debug("hbl>>fgg")
+            LOGGER.debug("hbl>>forced_close_until_index")
             new_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state,
                 until_this_index=forced_close_until_index,
@@ -521,14 +524,18 @@ class TokenizedMarkdown:
             LOGGER.debug("hbl>>__handle_blank_line_in_block_quote")
             TokenizedMarkdown.__handle_blank_line_in_block_quote(parser_state)
 
-        if new_tokens is None:
+        if force_default_handling or new_tokens is None:
             LOGGER.debug("hbl>>default blank handling-->cob")
-            new_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
+            n_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state,
                 only_these_blocks=close_only_these_blocks,
                 include_block_quotes=do_include_block_quotes,
                 was_forced=True,
             )
+            if new_tokens:
+                new_tokens.extend(n_tokens)
+            else:
+                new_tokens = n_tokens
 
         LOGGER.debug("hbl>>new_tokens>>%s", str(new_tokens))
         assert non_whitespace_index == len(input_line)
@@ -539,7 +546,7 @@ class TokenizedMarkdown:
         LOGGER.debug("hbl>>new_tokens>>%s", str(new_tokens))
         return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
 
-    # pylint: enable=too-many-locals
+    # pylint: enable=too-many-locals, too-many-branches, too-many-statements
 
     @staticmethod
     def __handle_blank_line_in_block_quote(parser_state):

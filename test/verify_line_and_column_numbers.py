@@ -178,6 +178,8 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
                     last_token_stack,
                 )
 
+            __xx(current_token, token_stack)
+
             print(
                 "top_block_token<<" + ParserHelper.make_value_visible(top_block_token)
             )
@@ -431,10 +433,24 @@ def __verify_token_height(
         actual_tokens,
         token_stack,
     )
+
     return remember_token_as_last_token
 
 
 # pylint: enable=too-many-arguments
+
+
+def __xx(current_block_token, token_stack):
+    if current_block_token.token_name == MarkdownToken.token_link_reference_definition:
+        print(
+            "vth>>current_token>>"
+            + ParserHelper.make_value_visible(current_block_token)
+        )
+        print("vth>>token_stack>>" + ParserHelper.make_value_visible(token_stack))
+        if token_stack:
+            i = len(token_stack) - 1
+            if token_stack[i].token_name == MarkdownToken.token_block_quote:
+                token_stack[i].leading_text_index += 1
 
 
 # pylint: disable=too-many-branches, too-many-statements

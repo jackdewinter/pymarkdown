@@ -141,6 +141,18 @@ class BlockQuoteProcessor:
         adjusted_text_to_parse = position_marker.text_to_parse
         adjusted_index_number = position_marker.index_number
 
+        LOGGER.debug(
+            "handle_block_quote_block>>text>:%s:<", str(position_marker.text_to_parse)
+        )
+        LOGGER.debug(
+            "handle_block_quote_block>>extracted_whitespace>:%s:<",
+            str(extracted_whitespace),
+        )
+        LOGGER.debug("handle_block_quote_block>>adj_ws>:%s:<", str(adj_ws))
+        LOGGER.debug(
+            "handle_block_quote_block>>was_link_definition_started>:%s:<",
+            str(parser_state.token_stack[-1].was_link_definition_started),
+        )
         if (
             BlockQuoteProcessor.is_block_quote_start(
                 position_marker.text_to_parse,
@@ -150,7 +162,7 @@ class BlockQuoteProcessor:
             )
             and not parser_state.token_stack[-1].was_link_definition_started
         ):
-            LOGGER.debug("clt>>block-start")
+            LOGGER.debug("handle_block_quote_block>>block-start")
             (
                 adjusted_text_to_parse,
                 adjusted_index_number,

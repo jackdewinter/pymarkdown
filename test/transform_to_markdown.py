@@ -1296,6 +1296,7 @@ class TransformToMarkdown:
             print("text>after>" + ParserHelper.make_value_visible(text_to_modify))
 
             split_text_to_modify = text_to_modify.split(ParserHelper.newline_character)
+            split_parent_whitespace = None
             if owning_paragraph_token:
                 split_parent_whitespace = owning_paragraph_token.extracted_whitespace.split(
                     ParserHelper.newline_character
