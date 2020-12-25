@@ -956,10 +956,11 @@ class LeafBlockProcessor:
             )
 
         if not parser_state.token_stack[-1].is_paragraph:
-            parser_state.token_stack.append(ParagraphStackToken())
-            new_tokens.append(
-                ParagraphMarkdownToken(extracted_whitespace, position_marker)
+            new_paragraph_token = ParagraphMarkdownToken(
+                extracted_whitespace, position_marker
             )
+            parser_state.token_stack.append(ParagraphStackToken(new_paragraph_token))
+            new_tokens.append(new_paragraph_token)
             extracted_whitespace = ""
 
         new_tokens.append(
@@ -1079,6 +1080,7 @@ class LeafBlockProcessor:
         LOGGER.debug(">>__xx>>tokens>>%s>>", str(parser_state.token_document))
         LOGGER.debug(">>__xx>>tokens_to_add>>%s>>", str(html_tokens))
 
+        top_of_stack = None
         if was_token_already_added_to_stack:
             top_of_stack = parser_state.token_stack[-1]
             del parser_state.token_stack[-1]

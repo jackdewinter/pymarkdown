@@ -27,8 +27,9 @@ class MarkdownToken:
     Class to provide for a base encapsulation of the markdown tokens.
     """
 
+    __token_paragraph = "para"
+
     token_blank_line = "BLANK"
-    token_paragraph = "para"
     token_text = "text"
     token_indented_code_block = "icode-block"
     token_fenced_code_block = "fcode-block"
@@ -84,7 +85,7 @@ class MarkdownToken:
         add_extra = ""
         if (
             self.extra_data
-            or self.token_name == MarkdownToken.token_paragraph
+            or self.is_paragraph
             or self.token_name == MarkdownToken.token_blank_line
             or self.token_name == MarkdownToken.token_block_quote
         ):
@@ -154,12 +155,29 @@ class MarkdownToken:
         """
         return self.is_new_list_item or self.is_list_start
 
+    @staticmethod
+    def get_token_name_paragraph():
+        """
+        Returns whether or not the current token is a paragraph element.
+        """
+        return MarkdownToken.__token_paragraph
+
     @property
     def is_paragraph(self):
         """
         Returns whether or not the current token is a paragraph element.
         """
-        return self.token_name == MarkdownToken.token_paragraph
+        return self.token_name == MarkdownToken.__token_paragraph
+
+    @property
+    def is_paragraph_end(self):
+        """
+        Returns whether or not the current token is a paragraph end element.
+        """
+        return (
+            self.token_name
+            == EndMarkdownToken.type_name_prefix + MarkdownToken.__token_paragraph
+        )
 
     @property
     def is_text(self):
@@ -248,7 +266,7 @@ class ParagraphMarkdownToken(MarkdownToken):
         self.rehydrate_index = 0
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_paragraph,
+            MarkdownToken.get_token_name_paragraph(),
             MarkdownTokenClass.LEAF_BLOCK,
             "",
             position_marker=position_marker,

@@ -7,7 +7,6 @@ import re
 
 from pymarkdown.markdown_token import (
     EndMarkdownToken,
-    MarkdownToken,
     ParagraphMarkdownToken,
     TextMarkdownToken,
 )
@@ -50,7 +49,7 @@ class RuleMd018(Plugin):
         if isinstance(token, ParagraphMarkdownToken):
             self.__last_paragraph_token = token
         elif isinstance(token, EndMarkdownToken):
-            if token.type_name == MarkdownToken.token_paragraph:
+            if token.is_paragraph_end:
                 self.__last_paragraph_token = None
         elif isinstance(token, TextMarkdownToken) and self.__last_paragraph_token:
             split_whitespace = self.__last_paragraph_token.extracted_whitespace.split(

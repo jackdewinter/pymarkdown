@@ -837,10 +837,7 @@ class TransformToGfm:
 
         if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
             output_html += "\n"
-        elif (
-            previous_token.token_name
-            == EndMarkdownToken.type_name_prefix + MarkdownToken.token_paragraph
-        ):
+        elif previous_token.is_paragraph_end:
             if not transform_state.is_in_loose_list:
                 output_html += ParserHelper.newline_character
 
@@ -1074,10 +1071,7 @@ class TransformToGfm:
                 or previous_token.type_name == MarkdownToken.token_ordered_list_start
             ):
                 output_html += ParserHelper.newline_character
-            elif (
-                previous_token.token_name
-                == EndMarkdownToken.type_name_prefix + MarkdownToken.token_paragraph
-            ):
+            elif previous_token.is_paragraph_end:
                 if not transform_state.is_in_loose_list:
                     output_html += ParserHelper.newline_character
         return output_html

@@ -23,6 +23,7 @@ class StackToken:
     def __init__(self, type_name, extra_data=None):
         self.type_name = type_name
         self.extra_data = extra_data
+        self.matching_markdown_token = None
 
     def __str__(self):
         add_extra = ""
@@ -52,7 +53,11 @@ class StackToken:
         assert self.stack_link_definition != self.type_name
 
         return EndMarkdownToken(
-            self.type_name, extracted_whitespace, None, None, was_forced
+            self.type_name,
+            extracted_whitespace,
+            None,
+            self.matching_markdown_token,
+            was_forced,
         )
 
     @property
@@ -140,8 +145,9 @@ class ParagraphStackToken(StackToken):
     Class to provide for a stack token for a paragraph.
     """
 
-    def __init__(self):
+    def __init__(self, matching_markdown_token):
         StackToken.__init__(self, StackToken.stack_paragraph)
+        self.matching_markdown_token = matching_markdown_token
 
 
 class BlockQuoteStackToken(StackToken):
@@ -150,8 +156,8 @@ class BlockQuoteStackToken(StackToken):
     """
 
     def __init__(self, matching_markdown_token):
-        self.matching_markdown_token = matching_markdown_token
         StackToken.__init__(self, StackToken.stack_block_quote)
+        self.matching_markdown_token = matching_markdown_token
 
 
 class IndentedCodeBlockStackToken(StackToken):
@@ -175,10 +181,6 @@ class FencedCodeBlockStackToken(StackToken):
         whitespace_start_count,
         start_markdown_token,
     ):
-        self.code_fence_character = code_fence_character
-        self.fence_character_count = fence_character_count
-        self.whitespace_start_count = whitespace_start_count
-        self.start_markdown_token = start_markdown_token
         extra_data = (
             code_fence_character
             + ":"
@@ -187,6 +189,11 @@ class FencedCodeBlockStackToken(StackToken):
             + str(whitespace_start_count)
         )
         StackToken.__init__(self, StackToken.stack_fenced_code, extra_data)
+
+        self.code_fence_character = code_fence_character
+        self.fence_character_count = fence_character_count
+        self.whitespace_start_count = whitespace_start_count
+        self.start_markdown_token = start_markdown_token
 
 
 class ListStackToken(StackToken):
@@ -205,12 +212,6 @@ class ListStackToken(StackToken):
         start_index,
         matching_markdown_token,
     ):
-        self.indent_level = indent_level
-        self.list_character = list_character
-        self.ws_before_marker = ws_before_marker
-        self.ws_after_marker = ws_after_marker
-        self.start_index = start_index
-        self.matching_markdown_token = matching_markdown_token
         extra_data = (
             str(indent_level)
             + ":"
@@ -223,6 +224,13 @@ class ListStackToken(StackToken):
             + str(start_index)
         )
         StackToken.__init__(self, type_name, extra_data)
+
+        self.indent_level = indent_level
+        self.list_character = list_character
+        self.ws_before_marker = ws_before_marker
+        self.ws_after_marker = ws_after_marker
+        self.start_index = start_index
+        self.matching_markdown_token = matching_markdown_token
 
     # pylint: enable=too-many-arguments
 

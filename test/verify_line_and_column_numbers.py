@@ -12,7 +12,7 @@ from pymarkdown.parser_helper import ParserHelper, PositionMarker
 
 
 # pylint: disable=too-many-branches,too-many-statements,too-many-locals
-def verify_line_and_column_numbers(source_markdown, actual_tokens):
+def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C901
     """
     Verify that the line numbers and column numbers in tokens are as expected,
     based on the data in the tokens.
@@ -34,6 +34,10 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
         remember_token_as_last_token = True
 
         print("\n\n-->" + ParserHelper.make_value_visible(current_token))
+
+        if current_token.is_paragraph_end:
+            assert current_token.start_markdown_token
+
         if (
             current_token.token_class == MarkdownTokenClass.INLINE_BLOCK
             and not isinstance(current_token, EndMarkdownToken)
@@ -87,8 +91,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):
                     current_token.token_name
                     == EndMarkdownToken.type_name_prefix
                     + MarkdownToken.token_atx_heading
-                    or current_token.token_name
-                    == EndMarkdownToken.type_name_prefix + MarkdownToken.token_paragraph
+                    or current_token.is_paragraph_end
                     or current_token.token_name
                     == EndMarkdownToken.type_name_prefix
                     + MarkdownToken.token_html_block
@@ -315,7 +318,7 @@ def __validate_block_token_height(
             skip_check = True
 
     delta = last_token.line_number
-    if last_token.token_name == MarkdownToken.token_paragraph:
+    if last_token.is_paragraph:
         token_height = 1 + ParserHelper.count_newlines_in_text(
             last_token.extracted_whitespace
         )
@@ -651,7 +654,7 @@ def __calc_initial_whitespace(calc_token):
     ):
         indent_level = 0
     else:
-        assert calc_token.token_name == MarkdownToken.token_paragraph, (
+        assert calc_token.is_paragraph, (
             "Token " + calc_token.token_name + " not handled."
         )
 
@@ -742,7 +745,7 @@ def __verify_first_inline(last_non_inline_token, first_inline_token, last_token_
         __verify_first_inline_atx(last_non_inline_token, first_inline_token)
     elif last_non_inline_token.token_name == MarkdownToken.token_setext_heading:
         __verify_first_inline_setext(last_non_inline_token, first_inline_token)
-    elif last_non_inline_token.token_name == MarkdownToken.token_paragraph:
+    elif last_non_inline_token.is_paragraph:
         __verify_first_inline_paragraph(last_non_inline_token, first_inline_token)
     elif last_non_inline_token.token_name == MarkdownToken.token_fenced_code_block:
         __verify_first_inline_fenced_code_block(
@@ -1108,7 +1111,7 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
         )
         print("newlines=" + str(new_lines))
 
-        if new_lines and last_token.token_name == MarkdownToken.token_paragraph:
+        if new_lines and last_token.is_paragraph:
             split_para_extracted_whitespace = last_token.extracted_whitespace.split(
                 "\n"
             )
@@ -1149,10 +1152,7 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
     print("previous_line_number_delta=" + str(previous_line_number_delta))
 
     previous_rehydrate_index = None
-    if (
-        last_token.token_name == MarkdownToken.token_paragraph
-        and previous_line_number_delta
-    ):
+    if last_token.is_paragraph and previous_line_number_delta:
         previous_rehydrate_index = last_token.rehydrate_index
         last_token.rehydrate_index -= previous_line_number_delta
         print("rehydrate_index(saved)=" + str(previous_rehydrate_index))
@@ -1228,7 +1228,7 @@ def __verify_next_inline_handle_current_end(last_token, current_inline_token):
     if (
         current_inline_token.token_name
         == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
-        and last_token.token_name == MarkdownToken.token_paragraph
+        and last_token.is_paragraph
     ):
         pre_link_title = current_inline_token.start_markdown_token.link_title
         if current_inline_token.start_markdown_token.pre_link_title:
@@ -1682,7 +1682,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
     print(">>title_data>>" + ParserHelper.make_value_visible(title_data))
     para_owner = None
     split_paragraph_lines = None
-    if last_token and last_token.token_name == MarkdownToken.token_paragraph:
+    if last_token and last_token.is_paragraph:
         print(">>last_token_index>>" + str(last_token.rehydrate_index))
         para_owner = last_token
         split_paragraph_lines = para_owner.extracted_whitespace.split("\n")
@@ -1857,7 +1857,7 @@ def __verify_next_inline_hard_break(
     link_stack,
 ):
     new_column_number = 1
-    if last_token.token_name == MarkdownToken.token_paragraph:
+    if last_token.is_paragraph:
         split_whitespace = last_token.extracted_whitespace.split("\n")
         ws_for_new_line = split_whitespace[last_token.rehydrate_index]
         if not link_stack:
@@ -1925,7 +1925,7 @@ def __verify_next_inline_code_span(
         )
 
         print(">>link_stack=" + ParserHelper.make_value_visible(link_stack))
-        if last_token.token_name == MarkdownToken.token_paragraph and not link_stack:
+        if last_token.is_paragraph and not link_stack:
             last_token.rehydrate_index += num_columns
             print(
                 "rehydrate_index(__verify_next_inline_code_span)>"
@@ -2036,7 +2036,7 @@ def __verify_next_inline_text(
     split_extracted_whitespace = None
     split_end_whitespace = None
     if last_token:
-        if last_token.token_name == MarkdownToken.token_paragraph:
+        if last_token.is_paragraph:
             print(
                 "last_token.rehydrate_index>"
                 + ParserHelper.make_value_visible(last_token.rehydrate_index)
@@ -2174,7 +2174,7 @@ def __handle_last_token_text(
         last_inline_token.token_text
     )
 
-    if last_block_token.token_name == MarkdownToken.token_paragraph:
+    if last_block_token.is_paragraph:
         inline_height = len(resolved_text.split("\n")) - 1
         if (
             second_last_inline_token
@@ -2605,7 +2605,7 @@ def __verify_inline(  # noqa: C901
         print("removed_end_token>" + str(removed_end_token))
         del inline_tokens[-1]
 
-    if last_block_token.token_name == MarkdownToken.token_paragraph:
+    if last_block_token.is_paragraph:
         last_block_token.rehydrate_index = 1
         print("rehydrate_index(start#1)>>" + str(last_block_token.rehydrate_index))
 
@@ -2646,10 +2646,7 @@ def __verify_inline(  # noqa: C901
                 == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
             ):
                 del link_stack[-1]
-            elif (
-                link_stack
-                and last_block_token.token_name == MarkdownToken.token_paragraph
-            ):
+            elif link_stack and last_block_token.is_paragraph:
                 print(
                     "inside link: "
                     + ParserHelper.make_value_visible(current_inline_token)

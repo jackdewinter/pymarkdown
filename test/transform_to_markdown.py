@@ -376,7 +376,7 @@ class TransformToMarkdown:
                 + "]>>"
                 + ParserHelper.make_value_visible(actual_tokens[ind])
             )
-            if actual_tokens[ind].token_name == MarkdownToken.token_paragraph:
+            if actual_tokens[ind].is_paragraph:
                 if transformed_data.endswith("\n") and (
                     current_token.token_name == MarkdownToken.token_text
                     or current_token.token_name == MarkdownToken.token_inline_emphasis
@@ -1281,10 +1281,7 @@ class TransformToMarkdown:
         if ParserHelper.newline_character in text_to_modify:
             owning_paragraph_token = None
             for search_index in range(len(self.block_stack) - 1, -1, -1):
-                if (
-                    self.block_stack[search_index].token_name
-                    == MarkdownToken.token_paragraph
-                ):
+                if self.block_stack[search_index].is_paragraph:
                     owning_paragraph_token = self.block_stack[search_index]
                     break
 
@@ -1523,7 +1520,7 @@ class TransformToMarkdown:
                 )
             elif self.block_stack[-1].token_name == MarkdownToken.token_html_block:
                 main_text += ParserHelper.newline_character
-            elif self.block_stack[-1].token_name == MarkdownToken.token_paragraph:
+            elif self.block_stack[-1].is_paragraph:
                 main_text = self.__reconstitute_paragraph_text(main_text, current_token)
             elif self.block_stack[-1].token_name == MarkdownToken.token_setext_heading:
                 main_text = self.__reconstitute_setext_text(main_text, current_token)

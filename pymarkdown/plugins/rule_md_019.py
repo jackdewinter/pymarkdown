@@ -5,7 +5,6 @@ mark on a atx heading.
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
     EndMarkdownToken,
-    MarkdownToken,
     TextMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
@@ -47,7 +46,7 @@ class RuleMd019(Plugin):
         if isinstance(token, AtxHeadingMarkdownToken):
             self.__in_atx_heading = not token.remove_trailing_count
         elif isinstance(token, EndMarkdownToken):
-            if token.type_name == MarkdownToken.token_paragraph:
+            if token.is_paragraph_end:
                 self.__in_atx_heading = False
         elif isinstance(token, TextMarkdownToken):
             resolved_extracted_whitespace = ParserHelper.resolve_replacement_markers_from_text(

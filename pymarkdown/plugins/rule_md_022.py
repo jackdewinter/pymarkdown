@@ -88,15 +88,7 @@ class RuleMd022(Plugin):
         elif isinstance(token, ThematicBreakMarkdownToken):
             self.__blank_line_count = 0
         elif isinstance(token, EndMarkdownToken):
-            if token.type_name in (
-                MarkdownToken.token_paragraph,
-                MarkdownToken.token_atx_heading,
-                MarkdownToken.token_html_block,
-                MarkdownToken.token_fenced_code_block,
-                MarkdownToken.token_indented_code_block,
-                MarkdownToken.token_thematic_break,
-                MarkdownToken.token_setext_heading,
-            ):
+            if self.__is_leaf_end_token(token):
                 self.__blank_line_count = 0
             else:
                 self.__blank_line_count = None
@@ -105,6 +97,21 @@ class RuleMd022(Plugin):
                 or token.type_name == MarkdownToken.token_setext_heading
             ):
                 self.__did_heading_end = True
+
+    @classmethod
+    def __is_leaf_end_token(cls, token):
+        if token.is_paragraph_end:
+            return True
+        if token.type_name in (
+            MarkdownToken.token_atx_heading,
+            MarkdownToken.token_html_block,
+            MarkdownToken.token_fenced_code_block,
+            MarkdownToken.token_indented_code_block,
+            MarkdownToken.token_thematic_break,
+            MarkdownToken.token_setext_heading,
+        ):
+            return True
+        return False
 
     def perform_close_check(self, token):
         """

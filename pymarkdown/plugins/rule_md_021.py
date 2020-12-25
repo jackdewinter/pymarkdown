@@ -49,7 +49,7 @@ class RuleMd021(Plugin):
             self.__in_atx_heading = token.remove_trailing_count
             self.__is_left_in_error = False
         elif isinstance(token, EndMarkdownToken):
-            if token.type_name == MarkdownToken.token_paragraph:
+            if token.is_paragraph_end:
                 self.__in_atx_heading = False
             elif token.type_name == MarkdownToken.token_atx_heading:
                 if self.__is_left_in_error or len(token.extra_end_data) > 1:

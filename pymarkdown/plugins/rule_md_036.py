@@ -94,10 +94,7 @@ class RuleMd036(Plugin):
                 new_state = RuleMd036States.LOOK_FOR_PARAGRAPH_END
         else:
             assert self.__current_state == RuleMd036States.LOOK_FOR_PARAGRAPH_END
-            if (
-                isinstance(token, EndMarkdownToken)
-                and token.type_name == MarkdownToken.token_paragraph
-            ):
+            if token.is_paragraph_end:
                 self.report_next_token_error(self.__start_token)
 
         self.__current_state = new_state

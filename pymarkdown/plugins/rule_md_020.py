@@ -66,7 +66,7 @@ class RuleMd020(Plugin):
         elif isinstance(token, AtxHeadingMarkdownToken):
             self.__is_in_normal_atx = True
         elif isinstance(token, EndMarkdownToken):
-            if token.type_name == MarkdownToken.token_paragraph:
+            if token.is_paragraph_end:
                 self.__last_paragraph_token = None
             elif token.type_name == MarkdownToken.token_atx_heading:
                 if self.__is_in_normal_atx and isinstance(
