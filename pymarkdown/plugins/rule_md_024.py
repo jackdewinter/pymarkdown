@@ -5,7 +5,6 @@ content.
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
     EndMarkdownToken,
-    MarkdownToken,
     SetextHeadingMarkdownToken,
 )
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -71,10 +70,7 @@ class RuleMd024(Plugin):
             self.handle_heading_start(token)
             skip_this_token = True
         elif isinstance(token, EndMarkdownToken):
-            if (
-                token.type_name in (MarkdownToken.token_setext_heading,)
-                or token.is_atx_heading_end
-            ):
+            if token.is_setext_heading_end or token.is_atx_heading_end:
                 self.handler_heading_end()
 
         if not skip_this_token and self.__heading_text is not None:

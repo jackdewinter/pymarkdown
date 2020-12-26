@@ -4,7 +4,6 @@ Module to implement a plugin that looks for trailing punctuation in headings.
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
     EndMarkdownToken,
-    MarkdownToken,
     SetextHeadingMarkdownToken,
     TextMarkdownToken,
 )
@@ -58,10 +57,7 @@ class RuleMd026(Plugin):
             self.__heading_text = ""
             self.__start_token = token
         elif isinstance(token, EndMarkdownToken):
-            if (
-                token.type_name in (MarkdownToken.token_setext_heading,)
-                or token.is_atx_heading_end
-            ):
+            if token.is_setext_heading_end or token.is_atx_heading_end:
 
                 if self.__heading_text:
                     if self.__heading_text[-1] in self.__punctuation:

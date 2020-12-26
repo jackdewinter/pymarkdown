@@ -10,7 +10,6 @@ from pymarkdown.markdown_token import (
     EndMarkdownToken,
     FencedCodeBlockMarkdownToken,
     IndentedCodeBlockMarkdownToken,
-    MarkdownToken,
     ParagraphMarkdownToken,
     SetextHeadingMarkdownToken,
     TextMarkdownToken,
@@ -775,10 +774,10 @@ class LeafBlockProcessor:
                 )
             )
             end_token = EndMarkdownToken(
-                "atx",
+                start_token.token_name,
                 extracted_whitespace_at_end,
                 extracted_whitespace_before_end,
-                None,
+                start_token,
                 False,
             )
             end_token.start_markdown_token = start_token
@@ -823,20 +822,6 @@ class LeafBlockProcessor:
             )
             if after_whitespace_index == len(position_marker.text_to_parse):
 
-                # This is unusual.  Normally, close_open_blocks is used to close off
-                # blocks based on the stack token.  However, since the setext takes
-                # the last paragraph of text (see case 61) and translates it
-                # into a heading, this has to be done separately, as there is no
-                # stack token to close.
-                new_tokens.append(
-                    EndMarkdownToken(
-                        MarkdownToken.token_setext_heading,
-                        extracted_whitespace,
-                        extra_whitespace_after_setext,
-                        None,
-                        False,
-                    )
-                )
                 token_index = len(parser_state.token_document) - 1
                 while not parser_state.token_document[token_index].is_paragraph:
                     token_index -= 1
@@ -848,6 +833,22 @@ class LeafBlockProcessor:
                     position_marker,
                     parser_state.token_document[token_index],
                 )
+
+                # This is unusual.  Normally, close_open_blocks is used to close off
+                # blocks based on the stack token.  However, since the setext takes
+                # the last paragraph of text (see case 61) and translates it
+                # into a heading, this has to be done separately, as there is no
+                # stack token to close.
+                new_tokens.append(
+                    EndMarkdownToken(
+                        replacement_token.token_name,
+                        extracted_whitespace,
+                        extra_whitespace_after_setext,
+                        replacement_token,
+                        False,
+                    )
+                )
+
                 parser_state.token_document[token_index] = replacement_token
                 del parser_state.token_stack[-1]
         return new_tokens

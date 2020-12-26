@@ -141,7 +141,7 @@ class InlineProcessor:
         for coalesce_index in range(1, len(coalesced_results)):
             if coalesced_results[coalesce_index].is_text and (
                 coalesced_list[-1].is_paragraph
-                or coalesced_list[-1].is_setext
+                or coalesced_list[-1].is_setext_heading
                 or coalesced_list[-1].is_atx_heading
                 or coalesced_list[-1].is_code_block
             ):
@@ -216,7 +216,7 @@ class InlineProcessor:
                         "new Text>>%s>>",
                         ParserHelper.make_value_visible(processed_tokens),
                     )
-                elif coalesced_list[-1].is_setext:
+                elif coalesced_list[-1].is_setext_heading:
                     combined_text = coalesced_results[coalesce_index].token_text
                     combined_whitespace_text = coalesced_results[
                         coalesce_index

@@ -5,7 +5,6 @@ beginning of the line.
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
     EndMarkdownToken,
-    MarkdownToken,
     SetextHeadingMarkdownToken,
     TextMarkdownToken,
 )
@@ -57,7 +56,7 @@ class RuleMd023(Plugin):
                 if token.end_whitespace and " " in token.end_whitespace:
                     self.__any_leading_whitespace_detected = True
         elif isinstance(token, EndMarkdownToken):
-            if token.type_name in (MarkdownToken.token_setext_heading,):
+            if token.is_setext_heading_end:
                 if token.extracted_whitespace:
                     self.__any_leading_whitespace_detected = True
 

@@ -367,7 +367,7 @@ def __validate_block_token_height(
     ):
         token_height = 1
     else:
-        assert last_token.token_name == MarkdownToken.token_setext_heading, (
+        assert last_token.is_setext_heading, (
             "Token " + last_token.token_name + " not supported."
         )
         token_height = last_token.line_number - last_token.original_line_number + 1
@@ -421,7 +421,7 @@ def __verify_token_height(
     )
 
     token_line_number = current_block_token.line_number
-    if current_block_token.token_name == MarkdownToken.token_setext_heading:
+    if current_block_token.is_setext_heading:
         token_line_number = current_block_token.original_line_number
     __validate_block_token_height(
         last_block_token,
@@ -625,9 +625,9 @@ def __calc_initial_whitespace(calc_token):
             MarkdownToken.token_fenced_code_block,
             MarkdownToken.token_block_quote,
             MarkdownToken.token_link_reference_definition,
-            MarkdownToken.token_setext_heading,
         )
         or calc_token.is_atx_heading
+        or calc_token.is_setext_heading
     ):
         indent_level = len(calc_token.extracted_whitespace)
         had_tab = bool(ParserHelper.tab_character in calc_token.extracted_whitespace)
@@ -670,7 +670,7 @@ def __calc_initial_whitespace(calc_token):
 
 
 def __calc_adjusted_position(markdown_token):
-    if markdown_token.token_name == MarkdownToken.token_setext_heading:
+    if markdown_token.is_setext_heading:
         line_number = markdown_token.original_line_number
         index_number = markdown_token.original_column_number
     else:
@@ -738,7 +738,7 @@ def __verify_first_inline(last_non_inline_token, first_inline_token, last_token_
     """
     if last_non_inline_token.is_atx_heading:
         __verify_first_inline_atx(last_non_inline_token, first_inline_token)
-    elif last_non_inline_token.token_name == MarkdownToken.token_setext_heading:
+    elif last_non_inline_token.is_setext_heading:
         __verify_first_inline_setext(last_non_inline_token, first_inline_token)
     elif last_non_inline_token.is_paragraph:
         __verify_first_inline_paragraph(last_non_inline_token, first_inline_token)
@@ -1860,7 +1860,7 @@ def __verify_next_inline_hard_break(
             + str(last_token.rehydrate_index)
         )
         new_column_number += len(ws_for_new_line)
-    elif last_token.token_name == MarkdownToken.token_setext_heading:
+    elif last_token.is_setext_heading:
         assert current_inline_token.token_name == MarkdownToken.token_text
         assert current_inline_token.token_text.startswith("\n")
         assert current_inline_token.end_whitespace.startswith("\n")
@@ -2038,10 +2038,7 @@ def __verify_next_inline_text(
                 + ParserHelper.make_value_visible(split_extracted_whitespace)
                 + "<"
             )
-        elif (
-            last_token.token_name == MarkdownToken.token_setext_heading
-            and previous_inline_token.end_whitespace
-        ):
+        elif last_token.is_setext_heading and previous_inline_token.end_whitespace:
             split_end_whitespace = previous_inline_token.end_whitespace.split("\n")
             print(
                 "split_end_whitespace>"
@@ -2215,9 +2212,9 @@ def __handle_last_token_text(
             if not current_token.was_forced:
                 inline_height += 1
     else:
-        assert (
-            last_block_token.token_name == MarkdownToken.token_setext_heading
-        ), "bad block token: " + str(last_block_token)
+        assert last_block_token.is_setext_heading, "bad block token: " + str(
+            last_block_token
+        )
         inline_height = len(resolved_text.split("\n")) - 1
         if (
             second_last_inline_token
@@ -2262,7 +2259,7 @@ def __handle_last_token_end_link(
         len(last_inline_token.start_markdown_token.after_title_whitespace.split("\n"))
         - 1
     )
-    if last_block_token.token_name == MarkdownToken.token_setext_heading:
+    if last_block_token.is_setext_heading:
         inline_height += 1
     return inline_height, use_line_number_from_start_token
 
@@ -2293,7 +2290,7 @@ def __handle_last_token_image(
     inline_height += len(last_inline_token.before_link_whitespace.split("\n")) - 1
     inline_height += len(last_inline_token.before_title_whitespace.split("\n")) - 1
     inline_height += len(last_inline_token.after_title_whitespace.split("\n")) - 1
-    if last_block_token.token_name == MarkdownToken.token_setext_heading:
+    if last_block_token.is_setext_heading:
         inline_height += 1
     if last_inline_token.label_type == "full":
         inline_height += len(last_inline_token.text_from_blocks.split("\n")) - 1
@@ -2312,7 +2309,7 @@ def __handle_last_token_code_span(
     inline_height += len(last_inline_token.leading_whitespace.split("\n")) - 1
     inline_height += len(last_inline_token.trailing_whitespace.split("\n")) - 1
 
-    if last_block_token.token_name == MarkdownToken.token_setext_heading:
+    if last_block_token.is_setext_heading:
         inline_height += 1
     return inline_height
 
@@ -2325,7 +2322,7 @@ def __handle_last_token_autolink(
     last_block_token, second_last_inline_token, current_token, last_inline_token,
 ):
     inline_height = 0
-    if last_block_token.token_name == MarkdownToken.token_setext_heading:
+    if last_block_token.is_setext_heading:
         inline_height += 1
     return inline_height
 
@@ -2338,7 +2335,7 @@ def __handle_last_token_raw_html(
     last_block_token, second_last_inline_token, current_token, last_inline_token,
 ):
     inline_height = len(last_inline_token.raw_tag.split("\n")) - 1
-    if last_block_token.token_name == MarkdownToken.token_setext_heading:
+    if last_block_token.is_setext_heading:
         inline_height += 1
     return inline_height
 
@@ -2352,11 +2349,7 @@ def __handle_last_token_end_emphasis(
 ):
 
     inline_height = 0
-    if (
-        current_token
-        and current_token.token_name
-        == EndMarkdownToken.type_name_prefix + MarkdownToken.token_setext_heading
-    ):
+    if current_token and current_token.is_setext_heading_end:
         inline_height += 1
     return inline_height
 
@@ -2706,7 +2699,7 @@ def __verify_inline(  # noqa: C901
 
         if number_of_lines is None:
             assert current_block_token
-            if current_block_token.token_name == MarkdownToken.token_setext_heading:
+            if current_block_token.is_setext_heading:
                 number_of_lines = current_block_token.original_line_number - 1
                 print("number_of_lines from setext>" + str(number_of_lines))
             else:

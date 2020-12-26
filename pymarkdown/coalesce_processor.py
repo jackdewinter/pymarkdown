@@ -40,7 +40,8 @@ class CoalesceProcessor:
                             coalesced_list[-2].extracted_whitespace
                         )
                     elif (
-                        coalesced_list[-2].is_paragraph or coalesced_list[-2].is_setext
+                        coalesced_list[-2].is_paragraph
+                        or coalesced_list[-2].is_setext_heading
                     ):
                         remove_leading_spaces = -1
 
@@ -77,7 +78,7 @@ class CoalesceProcessor:
         for coalesce_index in range(1, len(coalesced_list)):
             if coalesced_list[coalesce_index].is_text and (
                 coalesced_list[coalesce_index - 1].is_paragraph
-                or coalesced_list[coalesce_index - 1].is_setext
+                or coalesced_list[coalesce_index - 1].is_setext_heading
             ):
                 LOGGER.debug(
                     "full_paragraph_text>%s<", str(coalesced_list[coalesce_index])

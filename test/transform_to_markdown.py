@@ -1517,7 +1517,7 @@ class TransformToMarkdown:
                 main_text += ParserHelper.newline_character
             elif self.block_stack[-1].is_paragraph:
                 main_text = self.__reconstitute_paragraph_text(main_text, current_token)
-            elif self.block_stack[-1].token_name == MarkdownToken.token_setext_heading:
+            elif self.block_stack[-1].is_setext_heading:
                 main_text = self.__reconstitute_setext_text(main_text, current_token)
 
         print(

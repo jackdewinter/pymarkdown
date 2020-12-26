@@ -30,6 +30,7 @@ class MarkdownToken:
     _token_paragraph = "para"
     _token_blank_line = "BLANK"
     _token_atx_heading = "atx"
+    _token_setext_heading = "setext"
 
     token_text = "text"
     token_indented_code_block = "icode-block"
@@ -37,7 +38,6 @@ class MarkdownToken:
     token_thematic_break = "tbreak"
     token_block_quote = "block-quote"
     token_link_reference_definition = "link-ref-def"
-    token_setext_heading = "setext"
     token_unordered_list_start = "ulist"
     token_ordered_list_start = "olist"
     token_new_list_item = "li"
@@ -110,7 +110,7 @@ class MarkdownToken:
             or self.is_list_start
             or self.token_name == MarkdownToken.token_thematic_break
             or self.is_atx_heading
-            or self.is_setext
+            or self.is_setext_heading
             or self.is_code_block
             or self.token_name == MarkdownToken.token_html_block
             or self.is_paragraph
@@ -180,11 +180,21 @@ class MarkdownToken:
         return self.token_name == MarkdownToken.token_text
 
     @property
-    def is_setext(self):
+    def is_setext_heading(self):
         """
-        Returns whether or not the current token is a setext element.
+        Returns whether or not the current token is a setext heading element.
         """
-        return self.token_name == MarkdownToken.token_setext_heading
+        return self.token_name == MarkdownToken._token_setext_heading
+
+    @property
+    def is_setext_heading_end(self):
+        """
+        Returns whether or not the current token is a setext heading end element.
+        """
+        return (
+            self.token_name
+            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_setext_heading
+        )
 
     @property
     def is_atx_heading(self):
@@ -337,7 +347,7 @@ class SetextHeadingMarkdownToken(MarkdownToken):
             self.original_column_number = -1
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_setext_heading,
+            MarkdownToken._token_setext_heading,
             MarkdownTokenClass.LEAF_BLOCK,
             "",
             position_marker=position_marker,

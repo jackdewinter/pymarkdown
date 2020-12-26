@@ -876,7 +876,7 @@ class TransformToGfm:
         """
         assert next_token
         fenced_token = transform_state.actual_token_index - 1
-        while not transform_state.actual_tokens[fenced_token].is_setext:
+        while not transform_state.actual_tokens[fenced_token].is_setext_heading:
             fenced_token -= 1
         if transform_state.actual_tokens[fenced_token].heading_character == "=":
             inner_tag = "1"
