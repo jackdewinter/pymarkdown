@@ -49,11 +49,10 @@ class MarkdownToken:
     _token_inline_hard_break = "hard-break"
     _token_inline_uri_autolink = "uri-autolink"
     _token_inline_email_autolink = "email-autolink"
-
-    token_inline_raw_html = "raw-html"
-    token_inline_emphasis = "emphasis"
-    token_inline_link = "link"
-    token_inline_image = "image"
+    _token_inline_raw_html = "raw-html"
+    _token_inline_emphasis = "emphasis"
+    _token_inline_link = "link"
+    _token_inline_image = "image"
 
     # pylint: disable=too-many-arguments
     def __init__(
@@ -367,6 +366,54 @@ class MarkdownToken:
         Returns whether or not the current token is an email autolink element.
         """
         return self.token_name == MarkdownToken._token_inline_email_autolink
+
+    @property
+    def is_inline_raw_html(self):
+        """
+        Returns whether or not the current token is an email autolink element.
+        """
+        return self.token_name == MarkdownToken._token_inline_raw_html
+
+    @property
+    def is_inline_emphasis(self):
+        """
+        Returns whether or not the current token is an emphasis element.
+        """
+        return self.token_name == MarkdownToken._token_inline_emphasis
+
+    @property
+    def is_inline_emphasis_end(self):
+        """
+        Returns whether or not the current token is an emphasis end element.
+        """
+        return (
+            self.token_name
+            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_inline_emphasis
+        )
+
+    @property
+    def is_inline_link(self):
+        """
+        Returns whether or not the current token is a link element.
+        """
+        return self.token_name == MarkdownToken._token_inline_link
+
+    @property
+    def is_inline_link_end(self):
+        """
+        Returns whether or not the current token is a link end element.
+        """
+        return (
+            self.token_name
+            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_inline_link
+        )
+
+    @property
+    def is_inline_image(self):
+        """
+        Returns whether or not the current token is an image element.
+        """
+        return self.token_name == MarkdownToken._token_inline_image
 
 
 # pylint: enable=too-many-public-methods
@@ -1358,7 +1405,7 @@ class LinkStartMarkdownToken(MarkdownToken):
         self.after_title_whitespace = after_title_whitespace
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_inline_link,
+            MarkdownToken._token_inline_link,
             MarkdownTokenClass.INLINE_BLOCK,
             label_type
             + ":"
@@ -1433,7 +1480,7 @@ class ImageStartMarkdownToken(MarkdownToken):
         self.after_title_whitespace = after_title_whitespace
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_inline_image,
+            MarkdownToken._token_inline_image,
             MarkdownTokenClass.INLINE_BLOCK,
             label_type
             + ":"
@@ -1496,7 +1543,7 @@ class RawHtmlMarkdownToken(MarkdownToken):
         self.raw_tag = raw_tag
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_inline_raw_html,
+            MarkdownToken._token_inline_raw_html,
             MarkdownTokenClass.INLINE_BLOCK,
             raw_tag,
             line_number=line_number,
@@ -1516,7 +1563,7 @@ class EmphasisMarkdownToken(MarkdownToken):
         self.emphasis_character = emphasis_character
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_inline_emphasis,
+            MarkdownToken._token_inline_emphasis,
             MarkdownTokenClass.INLINE_BLOCK,
             str(emphasis_length) + ":" + emphasis_character,
             line_number=line_number,

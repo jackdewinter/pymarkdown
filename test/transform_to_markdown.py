@@ -376,9 +376,9 @@ class TransformToMarkdown:
             if actual_tokens[ind].is_paragraph:
                 if transformed_data.endswith("\n") and (
                     current_token.is_text
-                    or current_token.token_name == MarkdownToken.token_inline_emphasis
-                    or current_token.token_name == MarkdownToken.token_inline_link
-                    or current_token.token_name == MarkdownToken.token_inline_image
+                    or current_token.is_inline_emphasis
+                    or current_token.is_inline_link
+                    or current_token.is_inline_image
                 ):
                     special_text_in_list_exception = True
 
@@ -1289,7 +1289,7 @@ class TransformToMarkdown:
         Rehydrate the image text from the token.
         """
 
-        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+        if self.block_stack[-1].is_inline_link:
             return ""
         rehydrated_text = LinkHelper.rehydrate_inline_image_text_from_token(
             current_token
@@ -1427,10 +1427,7 @@ class TransformToMarkdown:
         Rehydrate the text from the token.
         """
 
-        if (
-            self.block_stack[-1].token_name == MarkdownToken.token_inline_link
-            or self.block_stack[-1].token_name == MarkdownToken.token_inline_image
-        ):
+        if self.block_stack[-1].is_inline_link or self.block_stack[-1].is_inline_image:
             return ""
 
         prefix_text = ""
@@ -1494,7 +1491,7 @@ class TransformToMarkdown:
         """
         Rehydrate the hard break text from the token.
         """
-        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+        if self.block_stack[-1].is_inline_link:
             return ""
 
         return current_token.line_end
@@ -1506,7 +1503,7 @@ class TransformToMarkdown:
         """
         Rehydrate the emphasis text from the token.
         """
-        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+        if self.block_stack[-1].is_inline_link:
             return ""
 
         return ParserHelper.repeat_string(
@@ -1522,7 +1519,7 @@ class TransformToMarkdown:
         """
         Rehydrate the emphasis end text from the token.
         """
-        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+        if self.block_stack[-1].is_inline_link:
             return ""
 
         print(".extra_end_data>>" + str(current_token.extra_end_data))
@@ -1538,7 +1535,7 @@ class TransformToMarkdown:
         """
         Rehydrate the uri autolink from the token.
         """
-        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+        if self.block_stack[-1].is_inline_link:
             return ""
         return "<" + current_token.autolink_text + ">"
 
@@ -1549,7 +1546,7 @@ class TransformToMarkdown:
         """
         Rehydrate the email autolink from the token.
         """
-        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+        if self.block_stack[-1].is_inline_link:
             return ""
         return "<" + current_token.autolink_text + ">"
 
@@ -1560,7 +1557,7 @@ class TransformToMarkdown:
         """
         Rehydrate the email raw html from the token.
         """
-        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+        if self.block_stack[-1].is_inline_link:
             return ""
         return "<" + current_token.raw_tag + ">"
 
@@ -1571,7 +1568,7 @@ class TransformToMarkdown:
         """
         Rehydrate the code span data from the token.
         """
-        if self.block_stack[-1].token_name == MarkdownToken.token_inline_link:
+        if self.block_stack[-1].is_inline_link:
             return ""
 
         span_text = ParserHelper.resolve_replacement_markers_from_text(

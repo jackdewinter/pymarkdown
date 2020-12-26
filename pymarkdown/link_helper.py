@@ -11,7 +11,6 @@ from pymarkdown.markdown_token import (
     EndMarkdownToken,
     ImageStartMarkdownToken,
     LinkStartMarkdownToken,
-    MarkdownToken,
     SpecialTextMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
@@ -397,10 +396,7 @@ class LinkHelper:
                         image_alt_text += inline_blocks[ind + 1].token_text
                 elif inline_blocks[ind + 1].is_text:
                     image_alt_text += inline_blocks[ind + 1].token_text
-                elif (
-                    inline_blocks[ind + 1].token_name
-                    == MarkdownToken.token_inline_raw_html
-                ):
+                elif inline_blocks[ind + 1].is_inline_raw_html:
                     image_alt_text += "<" + inline_blocks[ind + 1].raw_tag + ">"
                 elif inline_blocks[ind + 1].is_inline_code_span:
                     image_alt_text += ParserHelper.resolve_references_from_text(
@@ -411,22 +407,14 @@ class LinkHelper:
                         inline_blocks[ind + 1].autolink_text
                     )
                 elif (
-                    inline_blocks[ind + 1].token_name == MarkdownToken.token_inline_link
+                    inline_blocks[ind + 1].is_inline_link
+                    or inline_blocks[ind + 1].is_inline_link_end
                 ):
                     pass
                 elif inline_blocks[ind + 1].is_inline_hard_break:
                     image_alt_text += "\n"
-                elif (
-                    inline_blocks[ind + 1].token_name
-                    == EndMarkdownToken.type_name_prefix
-                    + MarkdownToken.token_inline_link
-                ):
-                    pass
                 else:
-                    assert (
-                        inline_blocks[ind + 1].token_name
-                        == MarkdownToken.token_inline_image
-                    ), (
+                    assert inline_blocks[ind + 1].is_inline_image, (
                         "Not handled: "
                         + ParserHelper.make_value_visible(inline_blocks[ind + 1])
                     )
@@ -460,10 +448,6 @@ class LinkHelper:
         collected_text_raw = ""
         collect_index = ind + 1
 
-        inline_link_end_name = (
-            EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
-        )
-
         is_inside_of_link = False
         while collect_index < len(inline_blocks):
 
@@ -473,21 +457,15 @@ class LinkHelper:
                 str(inline_blocks[collect_index]),
             )
 
-            if inline_blocks[collect_index].token_name == inline_link_end_name:
+            if inline_blocks[collect_index].is_inline_link_end:
                 is_inside_of_link = False
-            elif (
-                inline_blocks[collect_index].token_name
-                == MarkdownToken.token_inline_link
-            ):
+            elif inline_blocks[collect_index].is_inline_link:
                 is_inside_of_link = True
                 raw_text = LinkHelper.rehydrate_inline_link_text_from_token(
                     inline_blocks[collect_index]
                 )
                 collected_text_raw += raw_text
-            elif (
-                inline_blocks[collect_index].token_name
-                == MarkdownToken.token_inline_image
-            ):
+            elif inline_blocks[collect_index].is_inline_image:
                 raw_text = LinkHelper.rehydrate_inline_image_text_from_token(
                     inline_blocks[collect_index]
                 )
@@ -497,10 +475,7 @@ class LinkHelper:
                 converted_text = "`" + inline_blocks[collect_index].span_text + "`"
                 collected_text += converted_text
                 collected_text_raw += converted_text
-            elif (
-                inline_blocks[collect_index].token_name
-                == MarkdownToken.token_inline_raw_html
-            ):
+            elif inline_blocks[collect_index].is_inline_raw_html:
                 converted_text = "<" + inline_blocks[collect_index].raw_tag + ">"
                 collected_text += converted_text
                 collected_text_raw += converted_text
@@ -1074,7 +1049,7 @@ class LinkHelper:
                 column_number,
             )
             token_to_append = EndMarkdownToken(
-                MarkdownToken.token_inline_link, "", "", inline_blocks[ind], False
+                inline_blocks[ind].token_name, "", "", inline_blocks[ind], False
             )
         else:
             assert start_text == LinkHelper.image_start_sequence

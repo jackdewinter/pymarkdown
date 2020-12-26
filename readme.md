@@ -8,7 +8,6 @@
 
 - verifying vs validating?
 
-- use built in `is_x` functions instead of `token_name`
 - end tokens should all have start tokens that caused them?
   - transfor_gfm `assert pre_prev_token.start_markdown_token` should always be true
 
@@ -53,6 +52,7 @@
 - links, 518b
   - 518b inside of list and/or block quote
   - links with & and \ with inner link to mine
+    - see __collect_text_from_blocks
 
 ## Bugs - Block Quote/List Interaction
 

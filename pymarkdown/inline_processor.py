@@ -8,7 +8,6 @@ from pymarkdown.inline_helper import InlineHelper, InlineRequest, InlineResponse
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.markdown_token import (
     EndMarkdownToken,
-    MarkdownToken,
     MarkdownTokenClass,
     SpecialTextMarkdownToken,
     TextMarkdownToken,
@@ -496,7 +495,7 @@ class InlineProcessor:
                         and old_inline_blocks_last_token != inline_blocks[-1]
                     )
                 ):
-                    if inline_blocks[-1].token_name == MarkdownToken.token_inline_image:
+                    if inline_blocks[-1].is_inline_image:
                         repeat_count = (new_index - next_index) + len(remaining_line)
                         (
                             delta_line,
@@ -506,12 +505,7 @@ class InlineProcessor:
                         )
                         LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
                         LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
-                    elif (
-                        new_token
-                        and new_token.token_name
-                        == EndMarkdownToken.type_name_prefix
-                        + MarkdownToken.token_inline_link
-                    ):
+                    elif new_token and new_token.is_inline_link_end:
                         LOGGER.debug(
                             ">>new_token.start_markdown_token>>%s<<",
                             ParserHelper.make_value_visible(
@@ -772,7 +766,7 @@ class InlineProcessor:
     ):
         LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
         LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
-        if current_token.token_name == MarkdownToken.token_inline_image:
+        if current_token.is_inline_image:
             active_link_uri = current_token.image_uri
             if current_token.pre_image_uri:
                 active_link_uri = current_token.pre_image_uri

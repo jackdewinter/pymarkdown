@@ -6,8 +6,6 @@ from enum import Enum
 
 from pymarkdown.markdown_token import (
     EmphasisMarkdownToken,
-    EndMarkdownToken,
-    MarkdownToken,
     ParagraphMarkdownToken,
     TextMarkdownToken,
 )
@@ -87,10 +85,7 @@ class RuleMd036(Plugin):
                 ):
                     new_state = RuleMd036States.LOOK_FOR_EMPHASIS_END
         elif self.__current_state == RuleMd036States.LOOK_FOR_EMPHASIS_END:
-            if (
-                isinstance(token, EndMarkdownToken)
-                and token.type_name == MarkdownToken.token_inline_emphasis
-            ):
+            if token.is_inline_emphasis_end:
                 new_state = RuleMd036States.LOOK_FOR_PARAGRAPH_END
         else:
             assert self.__current_state == RuleMd036States.LOOK_FOR_PARAGRAPH_END

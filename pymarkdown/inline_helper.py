@@ -13,7 +13,6 @@ from pymarkdown.markdown_token import (
     EmailAutolinkMarkdownToken,
     HardBreakMarkdownToken,
     InlineCodeSpanMarkdownToken,
-    MarkdownToken,
     UriAutolinkMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
@@ -891,11 +890,7 @@ class InlineHelper:
             inline_response.new_index = inline_request.next_index + 1
 
         inline_response.delta_line_number = 0
-        if (
-            new_token
-            and new_token.token_name == MarkdownToken.token_inline_raw_html
-            and "\n" in new_token.raw_tag
-        ):
+        if new_token and new_token.is_inline_raw_html and "\n" in new_token.raw_tag:
             split_raw_tag = new_token.raw_tag.split("\n")
             LOGGER.debug(
                 ">>split_raw_tag>>%s<<", ParserHelper.make_value_visible(split_raw_tag)

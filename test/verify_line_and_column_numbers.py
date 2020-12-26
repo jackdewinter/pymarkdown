@@ -1,11 +1,7 @@
 """
 Module to provide for verification of the line numbers and column numbers in tokens.
 """
-from pymarkdown.markdown_token import (
-    EndMarkdownToken,
-    MarkdownToken,
-    MarkdownTokenClass,
-)
+from pymarkdown.markdown_token import EndMarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper, PositionMarker
 
 # pylint: disable=too-many-lines
@@ -785,33 +781,23 @@ def __verify_first_inline_atx(last_non_inline_token, first_inline_token):
     assert first_inline_token.column_number == col_pos
 
 
+# pylint: disable=too-many-boolean-expressions
 def __verify_first_inline_paragraph(last_non_inline_token, first_inline_token):
     """
     Handle the case where the last non-inline token is a Paragraph token.
     """
 
-    if first_inline_token.is_text:
+    if (
+        first_inline_token.is_text
+        or first_inline_token.is_inline_emphasis
+        or first_inline_token.is_inline_raw_html
+        or first_inline_token.is_inline_link
+        or first_inline_token.is_inline_autolink
+        or first_inline_token.is_inline_code_span
+        or first_inline_token.is_inline_image
+    ):
         assert first_inline_token.line_number == last_non_inline_token.line_number
         assert first_inline_token.column_number == last_non_inline_token.column_number
-    elif first_inline_token.token_name == MarkdownToken.token_inline_emphasis:
-        assert first_inline_token.line_number == last_non_inline_token.line_number
-        assert first_inline_token.column_number == last_non_inline_token.column_number
-    elif first_inline_token.token_name == MarkdownToken.token_inline_raw_html:
-        assert first_inline_token.line_number == last_non_inline_token.line_number
-        assert first_inline_token.column_number == last_non_inline_token.column_number
-    elif first_inline_token.token_name == MarkdownToken.token_inline_link:
-        assert first_inline_token.line_number == last_non_inline_token.line_number
-        assert first_inline_token.column_number == last_non_inline_token.column_number
-    elif first_inline_token.is_inline_autolink:
-        assert first_inline_token.line_number == last_non_inline_token.line_number
-        assert first_inline_token.column_number == last_non_inline_token.column_number
-    elif first_inline_token.is_inline_code_span:
-        assert first_inline_token.line_number == last_non_inline_token.line_number
-        assert first_inline_token.column_number == last_non_inline_token.column_number
-    elif first_inline_token.token_name == MarkdownToken.token_inline_image:
-        assert first_inline_token.line_number == last_non_inline_token.line_number
-        assert first_inline_token.column_number == last_non_inline_token.column_number
-
     elif first_inline_token.is_inline_hard_break:
         assert first_inline_token.line_number == 0
         assert first_inline_token.column_number == 0
@@ -820,62 +806,24 @@ def __verify_first_inline_paragraph(last_non_inline_token, first_inline_token):
         assert not first_inline_token.is_blank_line, first_inline_token.token_name
 
 
+# pylint: enable=too-many-boolean-expressions
+
+
+# pylint: disable=too-many-boolean-expressions
 def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
     """
     Handle the case where the last non-inline token is a SetExt Heading token.
     """
 
-    if first_inline_token.is_text:
-        assert (
-            last_non_inline_token.original_line_number == first_inline_token.line_number
-        )
-        assert (
-            last_non_inline_token.original_column_number
-            == first_inline_token.column_number
-        )
-    elif first_inline_token.token_name == MarkdownToken.token_inline_emphasis:
-        assert (
-            last_non_inline_token.original_line_number == first_inline_token.line_number
-        )
-        assert (
-            last_non_inline_token.original_column_number
-            == first_inline_token.column_number
-        )
-    elif first_inline_token.is_inline_hard_break:
-        assert False
-    elif first_inline_token.is_inline_code_span:
-        assert (
-            last_non_inline_token.original_line_number == first_inline_token.line_number
-        )
-        assert (
-            last_non_inline_token.original_column_number
-            == first_inline_token.column_number
-        )
-    elif first_inline_token.token_name == MarkdownToken.token_inline_raw_html:
-        assert (
-            last_non_inline_token.original_line_number == first_inline_token.line_number
-        )
-        assert (
-            last_non_inline_token.original_column_number
-            == first_inline_token.column_number
-        )
-    elif first_inline_token.is_inline_autolink:
-        assert (
-            last_non_inline_token.original_line_number == first_inline_token.line_number
-        )
-        assert (
-            last_non_inline_token.original_column_number
-            == first_inline_token.column_number
-        )
-    elif first_inline_token.token_name == MarkdownToken.token_inline_image:
-        assert (
-            last_non_inline_token.original_line_number == first_inline_token.line_number
-        )
-        assert (
-            last_non_inline_token.original_column_number
-            == first_inline_token.column_number
-        )
-    elif first_inline_token.token_name == MarkdownToken.token_inline_link:
+    if (
+        first_inline_token.is_text
+        or first_inline_token.is_inline_emphasis
+        or first_inline_token.is_inline_code_span
+        or first_inline_token.is_inline_raw_html
+        or first_inline_token.is_inline_autolink
+        or first_inline_token.is_inline_image
+        or first_inline_token.is_inline_link
+    ):
         assert (
             last_non_inline_token.original_line_number == first_inline_token.line_number
         )
@@ -884,15 +832,16 @@ def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
             == first_inline_token.column_number
         )
     elif (
-        first_inline_token.token_name
-        == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
+        first_inline_token.is_inline_hard_break
+        or first_inline_token.is_inline_link_end
+        or first_inline_token.is_blank_line
     ):
         assert False
-    elif first_inline_token.is_blank_line:
-        assert False
-
     else:
         assert False, first_inline_token.token_name
+
+
+# pylint: enable=too-many-boolean-expressions
 
 
 # pylint: disable=too-many-branches,too-many-locals,too-many-statements
@@ -937,10 +886,7 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
     pre_pre_token = inline_tokens[search_token_index - 1]
     pre_token = inline_tokens[search_token_index]
     cur_token = inline_tokens[search_token_index + 1]
-    assert (
-        cur_token.token_name
-        == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
-    )
+    assert cur_token.is_inline_link_end
     parent_cur_token = cur_token.start_markdown_token
 
     new_lines = 0
@@ -1153,11 +1099,7 @@ def __verify_next_inline_handle_current_end(last_token, current_inline_token):
     )
     print("  last_token: " + ParserHelper.make_value_visible(last_token))
 
-    if (
-        current_inline_token.token_name
-        == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
-        and last_token.is_paragraph
-    ):
+    if current_inline_token.is_inline_link_end and last_token.is_paragraph:
         pre_link_title = current_inline_token.start_markdown_token.link_title
         if current_inline_token.start_markdown_token.pre_link_title:
             pre_link_title = current_inline_token.start_markdown_token.pre_link_title
@@ -1286,17 +1228,14 @@ def __process_previous_token(
             estimated_column_number,
             link_stack,
         )
-    elif previous_inline_token.token_name == MarkdownToken.token_inline_emphasis:
+    elif previous_inline_token.is_inline_emphasis:
         (
             estimated_line_number,
             estimated_column_number,
         ) = __verify_next_inline_emphasis_start(
             previous_inline_token, estimated_line_number, estimated_column_number,
         )
-    elif (
-        previous_inline_token.token_name
-        == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_emphasis
-    ):
+    elif previous_inline_token.is_inline_emphasis_end:
         (
             estimated_line_number,
             estimated_column_number,
@@ -1330,7 +1269,7 @@ def __process_previous_token(
             estimated_column_number,
             link_stack,
         )
-    elif previous_inline_token.token_name == MarkdownToken.token_inline_raw_html:
+    elif previous_inline_token.is_inline_raw_html:
         estimated_line_number, estimated_column_number = __verify_next_inline_raw_html(
             previous_inline_token, estimated_line_number, estimated_column_number,
         )
@@ -1338,14 +1277,14 @@ def __process_previous_token(
         estimated_line_number, estimated_column_number = __verify_next_inline_autolink(
             previous_inline_token, estimated_line_number, estimated_column_number,
         )
-    elif previous_inline_token.token_name == MarkdownToken.token_inline_link:
+    elif previous_inline_token.is_inline_link:
         (
             estimated_line_number,
             estimated_column_number,
         ) = __verify_next_inline_inline_link(
             estimated_line_number, estimated_column_number,
         )
-    elif previous_inline_token.token_name == MarkdownToken.token_inline_image:
+    elif previous_inline_token.is_inline_image:
         (
             estimated_line_number,
             estimated_column_number,
@@ -2345,10 +2284,7 @@ def __verify_last_inline(
             removed_end_token,
             last_inline_token,
         )
-    elif (
-        last_inline_token.token_name
-        == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
-    ):
+    elif last_inline_token.is_inline_link_end:
         inline_height, use_line_number_from_start_token = __handle_last_token_end_link(
             last_block_token,
             second_last_inline_token,
@@ -2356,7 +2292,7 @@ def __verify_last_inline(
             last_inline_token,
         )
 
-    elif last_inline_token.token_name == MarkdownToken.token_inline_image:
+    elif last_inline_token.is_inline_image:
         inline_height = __handle_last_token_image(
             last_block_token,
             second_last_inline_token,
@@ -2371,7 +2307,7 @@ def __verify_last_inline(
             removed_end_token,
             last_inline_token,
         )
-    elif last_inline_token.token_name == MarkdownToken.token_inline_raw_html:
+    elif last_inline_token.is_inline_raw_html:
         inline_height = __handle_last_token_raw_html(
             last_block_token,
             second_last_inline_token,
@@ -2385,10 +2321,7 @@ def __verify_last_inline(
             removed_end_token,
             last_inline_token,
         )
-    elif (
-        last_inline_token.token_name
-        == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_emphasis
-    ):
+    elif last_inline_token.is_inline_emphasis_end:
         inline_height = __handle_last_token_end_emphasis(
             last_block_token,
             second_last_inline_token,
@@ -2519,12 +2452,9 @@ def __verify_inline(  # noqa: C901
                 )
 
             print("<<<<<<")
-            if current_inline_token.token_name == MarkdownToken.token_inline_link:
+            if current_inline_token.is_inline_link:
                 link_stack.append(current_inline_token)
-            elif (
-                current_inline_token.token_name
-                == EndMarkdownToken.type_name_prefix + MarkdownToken.token_inline_link
-            ):
+            elif current_inline_token.is_inline_link_end:
                 del link_stack[-1]
             elif link_stack and last_block_token.is_paragraph:
                 print(
@@ -2543,10 +2473,7 @@ def __verify_inline(  # noqa: C901
                             "rehydrate_index(start#2)>>"
                             + str(last_block_token.rehydrate_index)
                         )
-                    elif (
-                        current_inline_token.token_name
-                        == MarkdownToken.token_inline_raw_html
-                    ):
+                    elif current_inline_token.is_inline_raw_html:
                         # Don't need to resolve replacement characters as the & in
                         # the replacement and following characters are not interpretted.
                         newlines_in_text_token = ParserHelper.count_newlines_in_text(

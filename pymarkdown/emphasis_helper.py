@@ -7,7 +7,6 @@ from pymarkdown.constants import Constants
 from pymarkdown.markdown_token import (
     EmphasisMarkdownToken,
     EndMarkdownToken,
-    MarkdownToken,
     SpecialTextMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
@@ -153,23 +152,23 @@ class EmphasisHelper:
         LOGGER.debug("open_column_number_delta>>%s", str(open_column_number_delta))
 
         start_index_in_blocks = inline_blocks.index(open_token)
+        new_token = EmphasisMarkdownToken(
+            emphasis_length,
+            emphasis_character,
+            line_number=open_token.line_number,
+            column_number=open_token.column_number + open_column_number_delta,
+        )
         inline_blocks.insert(
-            start_index_in_blocks + 1,
-            EmphasisMarkdownToken(
-                emphasis_length,
-                emphasis_character,
-                line_number=open_token.line_number,
-                column_number=open_token.column_number + open_column_number_delta,
-            ),
+            start_index_in_blocks + 1, new_token,
         )
         end_index_in_blocks = inline_blocks.index(close_token)
         inline_blocks.insert(
             end_index_in_blocks,
             EndMarkdownToken(
-                MarkdownToken.token_inline_emphasis,
+                new_token.token_name,
                 "",
                 str(emphasis_length) + ":" + emphasis_character,
-                None,
+                new_token,
                 False,
                 line_number=close_token.line_number,
                 column_number=close_token.column_number,
