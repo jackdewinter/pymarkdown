@@ -6,7 +6,6 @@ from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
     EndMarkdownToken,
-    MarkdownToken,
     SetextHeadingMarkdownToken,
     ThematicBreakMarkdownToken,
 )
@@ -95,6 +94,7 @@ class RuleMd022(Plugin):
             if token.is_atx_heading_end or token.is_setext_heading_end:
                 self.__did_heading_end = True
 
+    # pylint: disable=too-many-boolean-expressions
     @classmethod
     def __is_leaf_end_token(cls, token):
         if (
@@ -103,14 +103,13 @@ class RuleMd022(Plugin):
             or token.is_setext_heading_end
             or token.is_thematic_break
             or token.is_html_block_end
-        ):
-            return True
-        if token.type_name in (
-            MarkdownToken.token_fenced_code_block,
-            MarkdownToken.token_indented_code_block,
+            or token.is_fenced_code_block_end
+            or token.is_indented_code_block_end
         ):
             return True
         return False
+
+    # pylint: enable=too-many-boolean-expressions
 
     def perform_close_check(self, token):
         """

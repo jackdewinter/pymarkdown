@@ -257,8 +257,7 @@ def __push_to_stack_if_required(token_stack, current_token):
         token_stack.append(current_token)
     else:
         if token_stack and (
-            token_stack[-1].is_html_block
-            or token_stack[-1].token_name == MarkdownToken.token_fenced_code_block
+            token_stack[-1].is_html_block or token_stack[-1].is_fenced_code_block
         ):
             remember_token_as_last_token = False
     print(
@@ -308,8 +307,7 @@ def __validate_block_token_height(
     if current_token and current_token.is_blank_line:
         print("blank:" + ParserHelper.make_value_visible(token_stack))
         if token_stack and (
-            token_stack[-1].is_html_block
-            or token_stack[-1].token_name == MarkdownToken.token_fenced_code_block
+            token_stack[-1].is_html_block or token_stack[-1].is_fenced_code_block
         ):
             skip_check = True
 
@@ -318,18 +316,15 @@ def __validate_block_token_height(
         token_height = 1 + ParserHelper.count_newlines_in_text(
             last_token.extracted_whitespace
         )
-    elif last_token.token_name == MarkdownToken.token_indented_code_block:
+    elif last_token.is_indented_code_block:
         token_height = 1 + ParserHelper.count_newlines_in_text(
             last_token.indented_whitespace
         )
-    elif (
-        last_token.is_html_block
-        or last_token.token_name == MarkdownToken.token_fenced_code_block
-    ):
+    elif last_token.is_html_block or last_token.is_fenced_code_block:
         current_token_index = last_token_index + 1
         end_name = EndMarkdownToken.type_name_prefix + last_token.token_name
         token_height = 0
-        if last_token.token_name == MarkdownToken.token_fenced_code_block:
+        if last_token.is_fenced_code_block:
             token_height += 1
         while actual_tokens[current_token_index].token_name != end_name:
             if (
@@ -343,7 +338,7 @@ def __validate_block_token_height(
                 assert actual_tokens[current_token_index].is_blank_line
                 token_height += 1
             current_token_index += 1
-        if last_token.token_name == MarkdownToken.token_fenced_code_block:
+        if last_token.is_fenced_code_block:
             if not actual_tokens[current_token_index].was_forced:
                 token_height += 1
     elif last_token.is_blank_line:
@@ -480,7 +475,7 @@ def __validate_same_line(
         print(">>last_token.indent_level>>" + str(last_token.indent_level))
         if current_token.is_blank_line:
             assert current_position.index_number == last_token.indent_level
-        elif current_token.token_name == MarkdownToken.token_indented_code_block:
+        elif current_token.is_indented_code_block:
             assert (
                 current_position.index_number - len(current_token.extracted_whitespace)
                 == last_token.indent_level + 1
@@ -609,20 +604,18 @@ def __validate_first_token(current_token, current_position):
         assert current_position.index_number == 1 + init_ws
 
 
+# pylint: disable=too-many-boolean-expressions
 def __calc_initial_whitespace(calc_token):
     had_tab = False
     if (
         calc_token.token_name
-        in (
-            MarkdownToken.token_indented_code_block,
-            MarkdownToken.token_new_list_item,
-            MarkdownToken.token_fenced_code_block,
-            MarkdownToken.token_block_quote,
-        )
+        in (MarkdownToken.token_new_list_item, MarkdownToken.token_block_quote,)
         or calc_token.is_atx_heading
         or calc_token.is_setext_heading
         or calc_token.is_thematic_break
         or calc_token.is_link_reference_definition
+        or calc_token.is_fenced_code_block
+        or calc_token.is_indented_code_block
     ):
         indent_level = len(calc_token.extracted_whitespace)
         had_tab = bool(ParserHelper.tab_character in calc_token.extracted_whitespace)
@@ -659,6 +652,9 @@ def __calc_initial_whitespace(calc_token):
         had_tab = bool(ParserHelper.tab_character in first_para_ws)
         print(">>indent_level>>" + str(indent_level) + ">>had_tab>>" + str(had_tab))
     return indent_level, had_tab
+
+
+# pylint: enable=too-many-boolean-expressions
 
 
 def __calc_adjusted_position(markdown_token):
@@ -734,11 +730,11 @@ def __verify_first_inline(last_non_inline_token, first_inline_token, last_token_
         __verify_first_inline_setext(last_non_inline_token, first_inline_token)
     elif last_non_inline_token.is_paragraph:
         __verify_first_inline_paragraph(last_non_inline_token, first_inline_token)
-    elif last_non_inline_token.token_name == MarkdownToken.token_fenced_code_block:
+    elif last_non_inline_token.is_fenced_code_block:
         __verify_first_inline_fenced_code_block(
             last_non_inline_token, first_inline_token, last_token_stack
         )
-    elif last_non_inline_token.token_name == MarkdownToken.token_indented_code_block:
+    elif last_non_inline_token.is_indented_code_block:
         __verify_first_inline_indented_code_block(
             last_non_inline_token, first_inline_token
         )
@@ -2187,18 +2183,14 @@ def __handle_last_token_text(
 
     elif (
         last_block_token.is_html_block
-        or last_block_token.token_name == MarkdownToken.token_indented_code_block
+        or last_block_token.is_indented_code_block
         or last_block_token.is_atx_heading
     ):
         inline_height = len(resolved_text.split("\n")) - 1
-    elif last_block_token.token_name == MarkdownToken.token_fenced_code_block:
+    elif last_block_token.is_fenced_code_block:
         inline_height = len(resolved_text.split("\n")) - 1
         if current_token:
-            assert (
-                current_token.token_name
-                == EndMarkdownToken.type_name_prefix
-                + MarkdownToken.token_fenced_code_block
-            )
+            assert current_token.is_fenced_code_block_end
             if not current_token.was_forced:
                 inline_height += 1
     else:
@@ -2362,21 +2354,18 @@ def __handle_last_token_blank_line(
     print(">>>current_token>" + str(current_token))
 
     if (
-        last_block_token.token_name == MarkdownToken.token_fenced_code_block
+        last_block_token.is_fenced_code_block
         and current_block_token
         and current_block_token.is_blank_line
     ):
         inline_height -= 1
     elif (
-        last_block_token.token_name == MarkdownToken.token_fenced_code_block
+        last_block_token.is_fenced_code_block
         and not current_block_token
         and last_inline_token
         and last_inline_token.is_blank_line
     ):
-        assert (
-            current_token.token_name
-            == EndMarkdownToken.type_name_prefix + MarkdownToken.token_fenced_code_block
-        )
+        assert current_token.is_fenced_code_block_end
         if current_token.was_forced:
             inline_height -= 1
     return inline_height

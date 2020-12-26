@@ -152,10 +152,7 @@ class InlineProcessor:
                     )
                     line_number_delta = 0
                     new_column_number = coalesced_list[-1].column_number
-                    if (
-                        coalesced_list[-1].token_name
-                        == MarkdownToken.token_fenced_code_block
-                    ):
+                    if coalesced_list[-1].is_fenced_code_block:
                         line_number_delta = 1
                         new_column_number = 1
 

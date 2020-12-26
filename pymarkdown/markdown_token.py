@@ -35,10 +35,10 @@ class MarkdownToken:
     _token_thematic_break = "tbreak"
     _token_link_reference_definition = "link-ref-def"
     _token_html_block = "html-block"
+    _token_fenced_code_block = "fcode-block"
+    _token_indented_code_block = "icode-block"
 
     token_text = "text"
-    token_indented_code_block = "icode-block"
-    token_fenced_code_block = "fcode-block"
     token_block_quote = "block-quote"
     token_unordered_list_start = "ulist"
     token_ordered_list_start = "olist"
@@ -227,24 +227,43 @@ class MarkdownToken:
         """
         Returns whether or not the current token is a code block element.
         """
-        return (
-            self.token_name == MarkdownToken.token_fenced_code_block
-            or self.token_name == MarkdownToken.token_indented_code_block
-        )
+        return self.is_indented_code_block or self.is_fenced_code_block
 
     @property
     def is_indented_code_block(self):
         """
         Returns whether or not the current token is an indented code block element.
         """
-        return self.token_name == MarkdownToken.token_indented_code_block
+        return self.token_name == MarkdownToken._token_indented_code_block
+
+    @property
+    def is_indented_code_block_end(self):
+        """
+        Returns whether or not the current token is an indented code block end element.
+        """
+        return (
+            self.token_name
+            == EndMarkdownToken.type_name_prefix
+            + MarkdownToken._token_indented_code_block
+        )
 
     @property
     def is_fenced_code_block(self):
         """
         Returns whether or not the current token is a fenced code block element.
         """
-        return self.token_name == MarkdownToken.token_fenced_code_block
+        return self.token_name == MarkdownToken._token_fenced_code_block
+
+    @property
+    def is_fenced_code_block_end(self):
+        """
+        Returns whether or not the current token is a fenced code block element.
+        """
+        return (
+            self.token_name
+            == EndMarkdownToken.type_name_prefix
+            + MarkdownToken._token_fenced_code_block
+        )
 
     @property
     def is_link_reference_definition(self):
@@ -435,7 +454,7 @@ class IndentedCodeBlockMarkdownToken(MarkdownToken):
         self.indented_whitespace = ""
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_indented_code_block,
+            MarkdownToken._token_indented_code_block,
             MarkdownTokenClass.LEAF_BLOCK,
             extracted_whitespace,
             line_number=line_number,
@@ -488,7 +507,7 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
         self.fence_count = fence_count
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_fenced_code_block,
+            MarkdownToken._token_fenced_code_block,
             MarkdownTokenClass.LEAF_BLOCK,
             "",
             position_marker=position_marker,

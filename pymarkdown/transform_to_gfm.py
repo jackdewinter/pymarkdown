@@ -642,16 +642,12 @@ class TransformToGfm:
         """
         if transform_state.is_in_fenced_code_block:
             primary_condition = (
-                transform_state.last_token.token_name
-                != MarkdownToken.token_fenced_code_block
+                not transform_state.last_token.is_fenced_code_block
                 or not transform_state.next_token.is_blank_line
             )
             exclusion_condition = (
-                transform_state.last_token.token_name
-                == MarkdownToken.token_fenced_code_block
-                and transform_state.next_token.token_name
-                == EndMarkdownToken.type_name_prefix
-                + MarkdownToken.token_fenced_code_block
+                transform_state.last_token.is_fenced_code_block
+                and transform_state.next_token.is_fenced_code_block_end
             )
             if primary_condition and not exclusion_condition:
                 output_html += (

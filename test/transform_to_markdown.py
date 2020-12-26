@@ -465,11 +465,7 @@ class TransformToMarkdown:
         if not top_of_list_token_stack:
             print("nada")
 
-            if self.block_stack and (
-                self.block_stack[-1].token_name == MarkdownToken.token_fenced_code_block
-                or self.block_stack[-1].token_name
-                == MarkdownToken.token_indented_code_block
-            ):
+            if self.block_stack and (self.block_stack[-1].is_code_block):
                 data_to_emit = ParserHelper.resolve_noops_from_text(new_data)
             else:
                 data_to_emit = new_data
@@ -807,10 +803,7 @@ class TransformToMarkdown:
         Rehydrate the blank line from the token.
         """
         extra_newline_after_text_token = ""
-        if (
-            self.block_stack
-            and self.block_stack[-1].token_name == MarkdownToken.token_fenced_code_block
-        ):
+        if self.block_stack and self.block_stack[-1].is_fenced_code_block:
             if previous_token.token_name == MarkdownToken.token_text:
                 extra_newline_after_text_token = ParserHelper.newline_character
 
@@ -916,10 +909,7 @@ class TransformToMarkdown:
             )
 
         code_end_sequence = ""
-        if (
-            next_token is not None
-            and previous_token.token_name != MarkdownToken.token_fenced_code_block
-        ):
+        if next_token is not None and not previous_token.is_fenced_code_block:
             code_end_sequence = "\n"
         del self.block_stack[-1]
         return code_end_sequence
@@ -1493,10 +1483,7 @@ class TransformToMarkdown:
             + ParserHelper.make_value_visible(leading_whitespace)
         )
         if self.block_stack:
-            if (
-                self.block_stack[-1].token_name
-                == MarkdownToken.token_indented_code_block
-            ):
+            if self.block_stack[-1].is_indented_code_block:
                 (
                     main_text,
                     prefix_text,
