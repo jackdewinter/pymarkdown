@@ -41,9 +41,9 @@ class MarkdownToken:
 
     _token_text = "text"
 
-    token_unordered_list_start = "ulist"
-    token_ordered_list_start = "olist"
-    token_new_list_item = "li"
+    _token_unordered_list_start = "ulist"
+    _token_ordered_list_start = "olist"
+    _token_new_list_item = "li"
 
     token_inline_code_span = "icode-span"
     token_inline_hard_break = "hard-break"
@@ -150,8 +150,40 @@ class MarkdownToken:
         Returns whether or not the current token is a list element.
         """
         return (
-            self.token_name == MarkdownToken.token_unordered_list_start
-            or self.token_name == MarkdownToken.token_ordered_list_start
+            self.token_name == MarkdownToken._token_unordered_list_start
+            or self.token_name == MarkdownToken._token_ordered_list_start
+        )
+
+    @property
+    def is_list_end(self):
+        """
+        Returns whether or not the current token is a list end element.
+        """
+        return (
+            self.token_name
+            == EndMarkdownToken.type_name_prefix
+            + MarkdownToken._token_unordered_list_start
+            or self.token_name
+            == EndMarkdownToken.type_name_prefix
+            + MarkdownToken._token_ordered_list_start
+        )
+
+    @property
+    def is_unordered_list_start(self):
+        """
+        Returns whether or not the current token is a unordered list element.
+        """
+        return self.token_name == MarkdownToken._token_unordered_list_start
+
+    @property
+    def is_unordered_list_end(self):
+        """
+        Returns whether or not the current token is a unordered list end element.
+        """
+        return (
+            self.token_name
+            == EndMarkdownToken.type_name_prefix
+            + MarkdownToken._token_unordered_list_start
         )
 
     @property
@@ -159,7 +191,7 @@ class MarkdownToken:
         """
         Returns whether or not the current token is a list item element.
         """
-        return self.token_name == MarkdownToken.token_new_list_item
+        return self.token_name == MarkdownToken._token_new_list_item
 
     @property
     def is_any_list_token(self):
@@ -977,7 +1009,7 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
         self.leading_spaces_index = 0
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_unordered_list_start,
+            MarkdownToken._token_unordered_list_start,
             MarkdownTokenClass.CONTAINER_BLOCK,
             "",
             position_marker=position_marker,
@@ -1052,7 +1084,7 @@ class OrderedListStartMarkdownToken(MarkdownToken):
         self.leading_spaces_index = 0
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_ordered_list_start,
+            MarkdownToken._token_ordered_list_start,
             MarkdownTokenClass.CONTAINER_BLOCK,
             "",
             position_marker=position_marker,
@@ -1124,7 +1156,7 @@ class NewListItemMarkdownToken(MarkdownToken):
         self.list_start_content = list_start_content
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_new_list_item,
+            MarkdownToken._token_new_list_item,
             MarkdownTokenClass.CONTAINER_BLOCK,
             str(indent_level) + ":" + extracted_whitespace + ":" + list_start_content,
             position_marker=position_marker,

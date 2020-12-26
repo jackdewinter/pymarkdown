@@ -136,12 +136,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
             for next_container_block in container_block_stack:
                 if next_container_block.is_block_quote_start:
                     top_block_token = next_container_block
-                elif (
-                    next_container_block.token_name
-                    == MarkdownToken.token_unordered_list_start
-                    or next_container_block.token_name
-                    == MarkdownToken.token_ordered_list_start
-                ):
+                elif next_container_block.is_list_start:
                     break
             print(
                 "top_block_token>>" + ParserHelper.make_value_visible(top_block_token)
@@ -245,7 +240,7 @@ def __push_to_stack_if_required(token_stack, current_token):
     # TODO replace with attribute from token?
     if (
         not current_token.is_blank_line
-        and current_token.token_name != MarkdownToken.token_new_list_item
+        and not current_token.is_new_list_item
         and not current_token.is_link_reference_definition
         and not current_token.is_thematic_break
     ):
@@ -456,11 +451,7 @@ def __validate_same_line(
     # TODO replace > with computation for block quote cases
     assert current_position.index_number > last_position.index_number
     if not last_token.is_block_quote_start:
-        assert last_token.token_name in (
-            MarkdownToken.token_unordered_list_start,
-            MarkdownToken.token_ordered_list_start,
-            MarkdownToken.token_new_list_item,
-        )
+        assert last_token.is_list_start or last_token.is_new_list_item
         print(">>current_token>>" + str(current_token))
         print(">>current_position.index_number>>" + str(current_position.index_number))
         print(">>last_token>>" + str(last_token))
@@ -492,9 +483,8 @@ def __validate_new_line(container_block_stack, current_token, current_position):
     if (
         container_block_stack
         and not current_token.is_blank_line
-        and current_token.token_name != MarkdownToken.token_unordered_list_start
-        and current_token.token_name != MarkdownToken.token_ordered_list_start
-        and current_token.token_name != MarkdownToken.token_new_list_item
+        and not current_token.is_list_start
+        and not current_token.is_new_list_item
     ):
         print(">>__vnl->list-ish")
         top_block = container_block_stack[-1]
@@ -504,11 +494,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
         if had_tab:
             return False
 
-        if (
-            top_block.token_name == MarkdownToken.token_unordered_list_start
-            or top_block.token_name == MarkdownToken.token_ordered_list_start
-            or top_block.token_name == MarkdownToken.token_new_list_item
-        ):
+        if top_block.is_list_start or top_block.is_new_list_item:
             print(">>__vnl->list")
             init_ws += top_block.indent_level
         elif (
@@ -522,10 +508,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
             print(">>in bq>>split>" + str(split_leading_spaces))
             print("vnl>>in bq>>leading_text_index>" + str(top_block.leading_text_index))
             init_ws += len(split_leading_spaces[top_block.leading_text_index])
-    elif (
-        container_block_stack
-        and current_token.token_name == MarkdownToken.token_new_list_item
-    ):
+    elif container_block_stack and current_token.is_new_list_item:
         print(">>__vnl->li-ish")
         assert container_block_stack[-1] == current_token
         if len(container_block_stack) > 1:
@@ -597,7 +580,7 @@ def __validate_first_token(current_token, current_position):
 def __calc_initial_whitespace(calc_token):
     had_tab = False
     if (
-        calc_token.token_name in (MarkdownToken.token_new_list_item,)
+        calc_token.is_new_list_item
         or calc_token.is_block_quote_start
         or calc_token.is_atx_heading
         or calc_token.is_setext_heading
@@ -608,10 +591,7 @@ def __calc_initial_whitespace(calc_token):
     ):
         indent_level = len(calc_token.extracted_whitespace)
         had_tab = bool(ParserHelper.tab_character in calc_token.extracted_whitespace)
-    elif (
-        calc_token.token_name == MarkdownToken.token_ordered_list_start
-        or calc_token.token_name == MarkdownToken.token_unordered_list_start
-    ):
+    elif calc_token.is_list_start:
         indent_level = len(calc_token.extracted_whitespace)
         had_tab = bool(
             ParserHelper.tab_character in calc_token.extracted_whitespace
@@ -683,13 +663,9 @@ def __maintain_block_stack(container_block_stack, current_token):
             len(EndMarkdownToken.type_name_prefix) :
         ]
         if (
-            token_name_without_prefix
-            in (
-                MarkdownToken.token_unordered_list_start,
-                MarkdownToken.token_ordered_list_start,
-                MarkdownToken.token_new_list_item,
-            )
-            or current_token.is_block_quote_end
+            current_token.is_block_quote_end
+            or current_token.is_list_end
+            or current_token.is_new_list_item
         ):
             print("--")
             print(
@@ -697,10 +673,7 @@ def __maintain_block_stack(container_block_stack, current_token):
                 + ParserHelper.make_value_visible(container_block_stack)
             )
 
-            if (
-                container_block_stack[-1].token_name
-                == MarkdownToken.token_new_list_item
-            ):
+            if container_block_stack[-1].is_new_list_item:
                 del container_block_stack[-1]
 
             assert container_block_stack[-1].token_name == token_name_without_prefix
@@ -2522,25 +2495,13 @@ def __verify_inline(  # noqa: C901
         next_token_index += 1
 
     # TODO does this need repeating for deeper nesting?
-    while (
-        len(inline_tokens) >= 2
-        and isinstance(inline_tokens[-1], EndMarkdownToken)
-        and (
-            inline_tokens[-1].type_name == MarkdownToken.token_unordered_list_start
-            or inline_tokens[-1].type_name == MarkdownToken.token_ordered_list_start
-            or inline_tokens[-1].is_block_quote_end
-        )
+    while len(inline_tokens) >= 2 and (
+        inline_tokens[-1].is_list_end or inline_tokens[-1].is_block_quote_end
     ):
         del inline_tokens[-1]
 
-    if (
-        inline_tokens
-        and isinstance(inline_tokens[-1], EndMarkdownToken)
-        and (
-            inline_tokens[-1].type_name == MarkdownToken.token_unordered_list_start
-            or inline_tokens[-1].type_name == MarkdownToken.token_ordered_list_start
-            or inline_tokens[-1].is_block_quote_end
-        )
+    if inline_tokens and (
+        inline_tokens[-1].is_list_end or inline_tokens[-1].is_block_quote_end
     ):
         del inline_tokens[-1]
 

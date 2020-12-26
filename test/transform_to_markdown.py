@@ -475,12 +475,7 @@ class TransformToMarkdown:
                 continue_sequence,
             )
 
-        if (
-            top_of_list_token_stack.token_name
-            == MarkdownToken.token_unordered_list_start
-            or top_of_list_token_stack.token_name
-            == MarkdownToken.token_ordered_list_start
-        ):
+        if top_of_list_token_stack.is_list_start:
             print("lists")
             return self.__perform_container_post_processing_lists(
                 current_token,
@@ -746,11 +741,7 @@ class TransformToMarkdown:
             if remove_trailing_newline:
                 print("3z>>")
                 new_data += "\n"
-            if (
-                block_ends_with_newline
-                and next_token
-                and next_token.token_name == MarkdownToken.token_new_list_item
-            ):
+            if block_ends_with_newline and next_token and next_token.is_new_list_item:
                 print("4>>")
                 new_data = new_data[0 : -len(continue_sequence)]
 
@@ -926,10 +917,7 @@ class TransformToMarkdown:
 
         previous_indent = 0
         extracted_whitespace = current_token.extracted_whitespace
-        if previous_token and (
-            previous_token.token_name == MarkdownToken.token_unordered_list_start
-            or previous_token.token_name == MarkdownToken.token_ordered_list_start
-        ):
+        if previous_token and (previous_token.is_list_start):
             previous_indent = previous_token.indent_level
             assert len(current_token.extracted_whitespace) == previous_indent
             extracted_whitespace = ""
@@ -1076,10 +1064,7 @@ class TransformToMarkdown:
         previous_indent = 0
         extracted_whitespace = current_token.extracted_whitespace
         if previous_token:
-            if (
-                previous_token.token_name == MarkdownToken.token_unordered_list_start
-                or previous_token.token_name == MarkdownToken.token_ordered_list_start
-            ):
+            if previous_token.is_list_start:
                 previous_indent = previous_token.indent_level
                 assert len(current_token.extracted_whitespace) == previous_indent
                 extracted_whitespace = ""
@@ -1163,12 +1148,7 @@ class TransformToMarkdown:
         continue_sequence = ""
         if self.container_token_stack:
             # TODO what about bq?
-            if (
-                self.container_token_stack[-1].token_name
-                == MarkdownToken.token_unordered_list_start
-                or self.container_token_stack[-1].token_name
-                == MarkdownToken.token_ordered_list_start
-            ):
+            if self.container_token_stack[-1].is_list_start:
                 continue_sequence = ParserHelper.repeat_string(
                     " ", self.container_token_stack[-1].indent_level
                 )
@@ -1211,12 +1191,7 @@ class TransformToMarkdown:
         """
         Rehydrate the next list item token.
         """
-        if (
-            self.container_token_stack[-1].token_name
-            == MarkdownToken.token_unordered_list_start
-            or self.container_token_stack[-1].token_name
-            == MarkdownToken.token_ordered_list_start
-        ):
+        if self.container_token_stack[-1].is_list_start:
             print("__rehydrate_next_list_item")
             self.container_token_stack[-1].indent_level = current_token.indent_level
             self.container_token_stack[

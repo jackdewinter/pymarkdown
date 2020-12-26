@@ -311,7 +311,7 @@ class InlineProcessor:
             LOGGER.debug("STACK?:%s", ParserHelper.make_value_visible(current_token))
             if (
                 current_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK
-                and current_token.token_name != MarkdownToken.token_new_list_item
+                and not current_token.is_new_list_item
             ):
                 LOGGER.debug(
                     "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
@@ -329,11 +329,7 @@ class InlineProcessor:
                 LOGGER.debug(
                     "END:%s", ParserHelper.make_value_visible(current_token.type_name)
                 )
-                if (
-                    current_token.type_name == MarkdownToken.token_unordered_list_start
-                    or current_token.type_name == MarkdownToken.token_ordered_list_start
-                    or current_token.is_block_quote_end
-                ):
+                if current_token.is_list_end or current_token.is_block_quote_end:
                     LOGGER.debug(
                         "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
                     )

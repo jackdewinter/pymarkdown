@@ -127,10 +127,7 @@ class TransformToGfm:
                 LOGGER.debug("cll>>end block quote>>%s", str(current_token))
                 stack_count -= 1
                 LOGGER.debug(">>block--end>>%s", str(stack_count))
-            elif isinstance(current_token, EndMarkdownToken) and (
-                current_token.type_name == MarkdownToken.token_unordered_list_start
-                or current_token.type_name == MarkdownToken.token_ordered_list_start
-            ):
+            elif current_token.is_list_end:
                 LOGGER.debug("cll>>end list>>%s", str(current_token))
                 if stack_count == 0:
                     stop_me = True
@@ -232,13 +229,7 @@ class TransformToGfm:
             search_index = current_token_index + 1
             while (
                 search_index < len(actual_tokens)
-                and isinstance(actual_tokens[search_index], EndMarkdownToken)
-                and (
-                    actual_tokens[search_index].type_name
-                    == MarkdownToken.token_unordered_list_start
-                    or actual_tokens[search_index].type_name
-                    == MarkdownToken.token_ordered_list_start
-                )
+                and actual_tokens[search_index].is_list_end
             ):
                 search_index += 1
             LOGGER.debug(
@@ -308,12 +299,7 @@ class TransformToGfm:
                     keep_going = False
                 else:
                     stack_count -= 1
-            elif isinstance(actual_tokens[current_index], EndMarkdownToken) and (
-                actual_tokens[current_index].type_name
-                == MarkdownToken.token_unordered_list_start
-                or actual_tokens[current_index].type_name
-                == MarkdownToken.token_ordered_list_start
-            ):
+            elif actual_tokens[current_index].is_list_end:
                 stack_count += 1
             if keep_going:
                 current_index -= 1
@@ -340,12 +326,7 @@ class TransformToGfm:
                 (UnorderedListStartMarkdownToken, OrderedListStartMarkdownToken),
             ):
                 stack_count += 1
-            elif isinstance(actual_tokens[search_index], EndMarkdownToken) and (
-                actual_tokens[search_index].type_name
-                == MarkdownToken.token_unordered_list_start
-                or actual_tokens[search_index].type_name
-                == MarkdownToken.token_ordered_list_start
-            ):
+            elif actual_tokens[search_index].is_list_end:
                 if not stack_count:
                     break
                 stack_count -= 1
@@ -358,7 +339,7 @@ class TransformToGfm:
         if search_index == len(actual_tokens):
             is_in_loose_list = True
         else:
-            LOGGER.debug(">>reset_list_looseness-token_unordered_list_start>>")
+            LOGGER.debug(">>reset_list_looseness-token_list_start>>")
             new_index = self.__find_owning_list_start(actual_tokens, search_index)
             LOGGER.debug(">>reset_list_looseness>>%s", str(new_index))
             is_in_loose_list = actual_tokens[new_index].is_loose
@@ -984,7 +965,7 @@ class TransformToGfm:
         transform_state.is_in_loose_list = self.__reset_list_looseness(
             transform_state.actual_tokens, transform_state.actual_token_index,
         )
-        if next_token.type_name == MarkdownToken.token_unordered_list_start:
+        if next_token.is_unordered_list_end:
             transform_state.add_trailing_text = (
                 "</li>" + ParserHelper.newline_character + "</ul>"
             )
@@ -1042,10 +1023,7 @@ class TransformToGfm:
                 transform_state.actual_token_index - 1
             ]
             LOGGER.debug(">previous_token>%s>", str(previous_token))
-            if isinstance(previous_token, EndMarkdownToken) and (
-                previous_token.type_name == MarkdownToken.token_unordered_list_start
-                or previous_token.type_name == MarkdownToken.token_ordered_list_start
-            ):
+            if previous_token.is_list_end:
                 output_html += ParserHelper.newline_character
             elif previous_token.is_paragraph_end:
                 if not transform_state.is_in_loose_list:
