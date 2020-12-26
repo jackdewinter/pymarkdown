@@ -494,7 +494,7 @@ class TransformToMarkdown:
                 actual_tokens,
                 transformed_data,
             )
-        assert top_of_list_token_stack.token_name == MarkdownToken.token_block_quote
+        assert top_of_list_token_stack.is_block_quote_start
         print("bq")
         return self.__perform_container_post_processing_block_quote(
             current_token,
@@ -1083,7 +1083,7 @@ class TransformToMarkdown:
                 previous_indent = previous_token.indent_level
                 assert len(current_token.extracted_whitespace) == previous_indent
                 extracted_whitespace = ""
-            elif previous_token.token_name == MarkdownToken.token_block_quote:
+            elif previous_token.is_block_quote_start:
                 if "\n" in previous_token.leading_spaces:
                     print(
                         ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
@@ -1798,10 +1798,7 @@ class TransformToMarkdown:
             )
             search_index = len(self.container_token_stack) - 1
             while search_index >= 0:
-                if (
-                    self.container_token_stack[search_index].token_name
-                    == MarkdownToken.token_block_quote
-                ):
+                if self.container_token_stack[search_index].is_block_quote_start:
                     last_block_quote_block = self.container_token_stack[search_index]
                     break
                 search_index -= 1

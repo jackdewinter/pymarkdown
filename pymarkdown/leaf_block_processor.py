@@ -458,8 +458,6 @@ class LeafBlockProcessor:
             and not parser_state.token_stack[-1].is_paragraph
         ):
             if not parser_state.token_stack[-1].is_indented_code_block:
-                parser_state.token_stack.append(IndentedCodeBlockStackToken())
-
                 LOGGER.debug(">>__adjust_for_list_start")
                 (
                     did_process,
@@ -475,10 +473,10 @@ class LeafBlockProcessor:
                 force_me = False
                 kludge_adjust = 0
                 if not did_process:
-                    LOGGER.debug(">>>>%s", str(parser_state.token_stack[-2]))
-                    if parser_state.token_stack[-2].is_list:
+                    LOGGER.debug(">>>>%s", str(parser_state.token_stack[-1]))
+                    if parser_state.token_stack[-1].is_list:
                         LOGGER.debug(
-                            ">>indent>>%s", parser_state.token_stack[-2].indent_level,
+                            ">>indent>>%s", parser_state.token_stack[-1].indent_level,
                         )
                         last_block_quote_index = 0
                         kludge_adjust = 1
@@ -555,9 +553,12 @@ class LeafBlockProcessor:
                 else:
                     column_number += actual_whitespace_index
                 LOGGER.debug("column_number>>%s", str(column_number))
-                new_tokens.append(
-                    IndentedCodeBlockMarkdownToken(adj_ws, line_number, column_number)
+
+                new_token = IndentedCodeBlockMarkdownToken(
+                    adj_ws, line_number, column_number
                 )
+                parser_state.token_stack.append(IndentedCodeBlockStackToken(new_token))
+                new_tokens.append(new_token)
                 extracted_whitespace = left_ws
                 LOGGER.debug(
                     "left_ws>>%s<<",

@@ -37,10 +37,10 @@ class MarkdownToken:
     _token_html_block = "html-block"
     _token_fenced_code_block = "fcode-block"
     _token_indented_code_block = "icode-block"
+    _token_block_quote = "block-quote"
 
     _token_text = "text"
 
-    token_block_quote = "block-quote"
     token_unordered_list_start = "ulist"
     token_ordered_list_start = "olist"
     token_new_list_item = "li"
@@ -90,7 +90,7 @@ class MarkdownToken:
             self.extra_data
             or self.is_paragraph
             or self.is_blank_line
-            or self.token_name == MarkdownToken.token_block_quote
+            or self.is_block_quote_start
         ):
             add_extra = ":" + self.extra_data
         column_row_info = ""
@@ -132,7 +132,17 @@ class MarkdownToken:
         """
         Returns whether or not the current token is a block quote.
         """
-        return self.token_name == MarkdownToken.token_block_quote
+        return self.token_name == MarkdownToken._token_block_quote
+
+    @property
+    def is_block_quote_end(self):
+        """
+        Returns whether or not the current token is a block quote.
+        """
+        return (
+            self.token_name
+            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_block_quote
+        )
 
     @property
     def is_list_start(self):
@@ -913,7 +923,7 @@ class BlockQuoteMarkdownToken(MarkdownToken):
         self.leading_text_index = 0
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_block_quote,
+            MarkdownToken._token_block_quote,
             MarkdownTokenClass.CONTAINER_BLOCK,
             extracted_whitespace + ":" + self.leading_spaces,
             position_marker=position_marker,

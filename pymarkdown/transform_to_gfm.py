@@ -119,14 +119,11 @@ class TransformToGfm:
                 check_me = stack_count == 0
                 if not current_token.is_block:
                     LOGGER.debug(">>list--item>>%s", str(stack_count))
-            elif current_token.token_name == MarkdownToken.token_block_quote:
+            elif current_token.is_block_quote_start:
                 LOGGER.debug("cll>>start block quote>>%s", str(current_token))
                 stack_count += 1
                 LOGGER.debug(">>block--new>>%s", str(stack_count))
-            elif (
-                current_token.token_name
-                == EndMarkdownToken.type_name_prefix + MarkdownToken.token_block_quote
-            ):
+            elif current_token.is_block_quote_end:
                 LOGGER.debug("cll>>end block quote>>%s", str(current_token))
                 stack_count -= 1
                 LOGGER.debug(">>block--end>>%s", str(stack_count))

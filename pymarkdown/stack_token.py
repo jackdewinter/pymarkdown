@@ -165,8 +165,9 @@ class IndentedCodeBlockStackToken(StackToken):
     Class to provide for a stack token for an indented code block.
     """
 
-    def __init__(self):
+    def __init__(self, start_markdown_token):
         StackToken.__init__(self, StackToken.stack_indented_code)
+        self.start_markdown_token = start_markdown_token
 
 
 class FencedCodeBlockStackToken(StackToken):

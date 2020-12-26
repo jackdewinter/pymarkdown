@@ -332,7 +332,7 @@ class InlineProcessor:
                 if (
                     current_token.type_name == MarkdownToken.token_unordered_list_start
                     or current_token.type_name == MarkdownToken.token_ordered_list_start
-                    or current_token.type_name == MarkdownToken.token_block_quote
+                    or current_token.is_block_quote_end
                 ):
                     LOGGER.debug(
                         "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
