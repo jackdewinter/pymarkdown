@@ -38,7 +38,8 @@ class MarkdownToken:
     _token_fenced_code_block = "fcode-block"
     _token_indented_code_block = "icode-block"
 
-    token_text = "text"
+    _token_text = "text"
+
     token_block_quote = "block-quote"
     token_unordered_list_start = "ulist"
     token_ordered_list_start = "olist"
@@ -186,7 +187,7 @@ class MarkdownToken:
         """
         Returns whether or not the current token is a paragraph element.
         """
-        return self.token_name == MarkdownToken.token_text
+        return self.token_name == MarkdownToken._token_text
 
     @property
     def is_setext_heading(self):
@@ -649,7 +650,7 @@ class TextMarkdownToken(MarkdownToken):
         self.end_whitespace = end_whitespace
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_text,
+            MarkdownToken._token_text,
             MarkdownTokenClass.INLINE_BLOCK,
             "",
             position_marker=position_marker,

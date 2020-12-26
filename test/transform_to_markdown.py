@@ -375,7 +375,7 @@ class TransformToMarkdown:
             )
             if actual_tokens[ind].is_paragraph:
                 if transformed_data.endswith("\n") and (
-                    current_token.token_name == MarkdownToken.token_text
+                    current_token.is_text
                     or current_token.token_name == MarkdownToken.token_inline_emphasis
                     or current_token.token_name == MarkdownToken.token_inline_link
                     or current_token.token_name == MarkdownToken.token_inline_image
@@ -804,7 +804,7 @@ class TransformToMarkdown:
         """
         extra_newline_after_text_token = ""
         if self.block_stack and self.block_stack[-1].is_fenced_code_block:
-            if previous_token.token_name == MarkdownToken.token_text:
+            if previous_token.is_text:
                 extra_newline_after_text_token = ParserHelper.newline_character
 
         return (

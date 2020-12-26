@@ -395,7 +395,7 @@ class LinkHelper:
                 if isinstance(inline_blocks[ind + 1], SpecialTextMarkdownToken):
                     if inline_blocks[ind + 1].token_text == "]":
                         image_alt_text += inline_blocks[ind + 1].token_text
-                elif inline_blocks[ind + 1].token_name == MarkdownToken.token_text:
+                elif inline_blocks[ind + 1].is_text:
                     image_alt_text += inline_blocks[ind + 1].token_text
                 elif (
                     inline_blocks[ind + 1].token_name
@@ -548,10 +548,9 @@ class LinkHelper:
                 collected_text += inline_blocks[collect_index].token_text
                 collected_text_raw += inline_blocks[collect_index].token_text
             LOGGER.debug(
-                ">>collect_text>>%s<<%s<<%s<<",
+                ">>collect_text>>%s<<%s<<",
                 collected_text,
                 str(inline_blocks[collect_index]),
-                inline_blocks[collect_index].token_text,
             )
             LOGGER.debug(
                 ">>collected_text_raw>>%s<<", collected_text_raw,

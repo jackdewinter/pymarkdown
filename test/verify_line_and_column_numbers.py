@@ -50,7 +50,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                 container_block_stack
                 and container_block_stack[-1].token_name
                 == MarkdownToken.token_block_quote
-                and current_token.token_name == MarkdownToken.token_text
+                and current_token.is_text
             ):
                 print(
                     "number_of_lines:"
@@ -327,10 +327,7 @@ def __validate_block_token_height(
         if last_token.is_fenced_code_block:
             token_height += 1
         while actual_tokens[current_token_index].token_name != end_name:
-            if (
-                actual_tokens[current_token_index].token_name
-                == MarkdownToken.token_text
-            ):
+            if actual_tokens[current_token_index].is_text:
                 token_height += 1 + ParserHelper.count_newlines_in_text(
                     actual_tokens[current_token_index].token_text
                 )
@@ -750,10 +747,7 @@ def __verify_first_inline_fenced_code_block(
     Handle the case where the last non-inline token is an Fenced Code Block token.
     """
 
-    assert (
-        first_inline_token.token_name == MarkdownToken.token_text
-        or first_inline_token.is_blank_line
-    )
+    assert first_inline_token.is_text or first_inline_token.is_blank_line
 
     print(">last_token_stack>" + ParserHelper.make_value_visible(last_token_stack))
     if len(last_token_stack) > 1:
@@ -786,7 +780,7 @@ def __verify_first_inline_indented_code_block(
     Handle the case where the last non-inline token is an Indented Code Block token.
     """
 
-    assert first_inline_token.token_name == MarkdownToken.token_text
+    assert first_inline_token.is_text
     assert last_non_inline_token.line_number == first_inline_token.line_number
     assert last_non_inline_token.column_number == first_inline_token.column_number
 
@@ -796,7 +790,7 @@ def __verify_first_inline_html_block(last_non_inline_token, first_inline_token):
     Handle the case where the last non-inline token is a HTML Block token.
     """
 
-    assert first_inline_token.token_name == MarkdownToken.token_text
+    assert first_inline_token.is_text
     leading_whitespace_count = len(first_inline_token.extracted_whitespace)
     assert last_non_inline_token.line_number == first_inline_token.line_number
     assert (
@@ -812,9 +806,7 @@ def __verify_first_inline_atx(last_non_inline_token, first_inline_token):
     Handle the case where the last non-inline token is an Atx Heading token.
     """
 
-    assert (
-        first_inline_token.token_name == MarkdownToken.token_text
-    ), first_inline_token.token_name
+    assert first_inline_token.is_text, first_inline_token.token_name
 
     replaced_extracted_whitespace = ParserHelper.resolve_replacement_markers_from_text(
         first_inline_token.extracted_whitespace
@@ -830,7 +822,7 @@ def __verify_first_inline_paragraph(last_non_inline_token, first_inline_token):
     Handle the case where the last non-inline token is a Paragraph token.
     """
 
-    if first_inline_token.token_name == MarkdownToken.token_text:
+    if first_inline_token.is_text:
         assert first_inline_token.line_number == last_non_inline_token.line_number
         assert first_inline_token.column_number == last_non_inline_token.column_number
     elif first_inline_token.token_name == MarkdownToken.token_inline_emphasis:
@@ -868,7 +860,7 @@ def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
     Handle the case where the last non-inline token is a SetExt Heading token.
     """
 
-    if first_inline_token.token_name == MarkdownToken.token_text:
+    if first_inline_token.is_text:
         assert (
             last_non_inline_token.original_line_number == first_inline_token.line_number
         )
@@ -1328,7 +1320,7 @@ def __process_previous_token(
     estimated_column_number,
 ):
 
-    if previous_inline_token.token_name == MarkdownToken.token_text:
+    if previous_inline_token.is_text:
         estimated_line_number, estimated_column_number = __verify_next_inline_text(
             last_token,
             pre_previous_inline_token,
@@ -1435,7 +1427,7 @@ def __verify_next_inline_blank_line(
 ):
     estimated_line_number += 1
     estimated_column_number = 1
-    if current_inline_token.token_name == MarkdownToken.token_text:
+    if current_inline_token.is_text:
         estimated_column_number += len(current_inline_token.extracted_whitespace)
     return estimated_line_number, estimated_column_number
 
@@ -1847,7 +1839,7 @@ def __verify_next_inline_hard_break(
         )
         new_column_number += len(ws_for_new_line)
     elif last_token.is_setext_heading:
-        assert current_inline_token.token_name == MarkdownToken.token_text
+        assert current_inline_token.is_text
         assert current_inline_token.token_text.startswith("\n")
         assert current_inline_token.end_whitespace.startswith("\n")
         split_whitespace = current_inline_token.end_whitespace.split("\n")
@@ -2405,7 +2397,7 @@ def __verify_last_inline(
 
     inline_height = 0
     use_line_number_from_start_token = False
-    if last_inline_token.token_name == MarkdownToken.token_text:
+    if last_inline_token.is_text:
         inline_height = __handle_last_token_text(
             last_block_token,
             second_last_inline_token,
@@ -2643,9 +2635,7 @@ def __verify_inline(  # noqa: C901
                             + str(last_block_token.rehydrate_index)
                         )
                     else:
-                        assert (
-                            current_inline_token.token_name == MarkdownToken.token_text
-                        )
+                        assert current_inline_token.is_text
                         print(
                             "current_inline_token.token_text>>"
                             + ParserHelper.make_value_visible(
