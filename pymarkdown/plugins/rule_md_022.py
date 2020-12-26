@@ -101,13 +101,13 @@ class RuleMd022(Plugin):
             token.is_paragraph_end
             or token.is_atx_heading_end
             or token.is_setext_heading_end
+            or token.is_thematic_break
         ):
             return True
         if token.type_name in (
             MarkdownToken.token_html_block,
             MarkdownToken.token_fenced_code_block,
             MarkdownToken.token_indented_code_block,
-            MarkdownToken.token_thematic_break,
         ):
             return True
         return False

@@ -174,13 +174,11 @@ class TransformToGfm:
 
                 current_check = (
                     current_token.is_block
-                    and current_token.token_name
-                    != MarkdownToken.token_link_reference_definition
+                    and not current_token.is_link_reference_definition
                 )
                 pre_prev_check = (
                     pre_prev_token.is_block
-                    and pre_prev_token.token_name
-                    != MarkdownToken.token_link_reference_definition
+                    and not pre_prev_token.is_link_reference_definition
                 )
 
                 LOGGER.debug(">>other--stack_count>>%s", str(stack_count))
@@ -267,9 +265,7 @@ class TransformToGfm:
         token_to_check = actual_tokens[check_index]
         LOGGER.debug("token_to_check-->%s", str(token_to_check))
 
-        while (
-            token_to_check.token_name == MarkdownToken.token_link_reference_definition
-        ):
+        while token_to_check.is_link_reference_definition:
             check_index -= 1
             token_to_check = actual_tokens[check_index]
 
@@ -795,7 +791,7 @@ class TransformToGfm:
         """
         Handle the thematic break token.
         """
-        assert next_token.token_name == MarkdownToken.token_thematic_break
+        assert next_token.is_thematic_break
         assert transform_state
 
         if output_html and output_html[-1] != ParserHelper.newline_character:

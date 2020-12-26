@@ -701,10 +701,7 @@ class TransformToMarkdown:
                     + ParserHelper.make_value_visible(current_token)
                 )
                 print("2>>next_token>>" + ParserHelper.make_value_visible(next_token))
-                if (
-                    current_token.token_name
-                    == MarkdownToken.token_link_reference_definition
-                ):
+                if current_token.is_link_reference_definition:
                     did_remove_trailing_newline = False
                     if new_data.endswith("\n"):
                         new_data = new_data[0:-1]

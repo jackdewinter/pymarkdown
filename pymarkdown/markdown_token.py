@@ -31,13 +31,13 @@ class MarkdownToken:
     _token_blank_line = "BLANK"
     _token_atx_heading = "atx"
     _token_setext_heading = "setext"
+    _token_thematic_break = "tbreak"
+    _token_link_reference_definition = "link-ref-def"
 
     token_text = "text"
     token_indented_code_block = "icode-block"
     token_fenced_code_block = "fcode-block"
-    token_thematic_break = "tbreak"
     token_block_quote = "block-quote"
-    token_link_reference_definition = "link-ref-def"
     token_unordered_list_start = "ulist"
     token_ordered_list_start = "olist"
     token_new_list_item = "li"
@@ -108,7 +108,7 @@ class MarkdownToken:
         return (
             self.is_block_quote_start
             or self.is_list_start
-            or self.token_name == MarkdownToken.token_thematic_break
+            or self.is_thematic_break
             or self.is_atx_heading
             or self.is_setext_heading
             or self.is_code_block
@@ -171,6 +171,13 @@ class MarkdownToken:
             self.token_name
             == EndMarkdownToken.type_name_prefix + MarkdownToken._token_paragraph
         )
+
+    @property
+    def is_thematic_break(self):
+        """
+        Returns whether or not the current token is a thematic break element.
+        """
+        return self.token_name == MarkdownToken._token_thematic_break
 
     @property
     def is_text(self):
@@ -236,6 +243,13 @@ class MarkdownToken:
         Returns whether or not the current token is a fenced code block element.
         """
         return self.token_name == MarkdownToken.token_fenced_code_block
+
+    @property
+    def is_link_reference_definition(self):
+        """
+        Returns whether or not the current token is a link reference definition element.
+        """
+        return self.token_name == MarkdownToken._token_link_reference_definition
 
 
 # pylint: disable=too-few-public-methods
@@ -834,7 +848,7 @@ class LinkReferenceDefinitionMarkdownToken(MarkdownToken):
         )
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_link_reference_definition,
+            MarkdownToken._token_link_reference_definition,
             MarkdownTokenClass.LEAF_BLOCK,
             extra_data,
             position_marker=position_marker,
@@ -1108,7 +1122,7 @@ class ThematicBreakMarkdownToken(MarkdownToken):
         self.rest_of_line = rest_of_line
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_thematic_break,
+            MarkdownToken._token_thematic_break,
             MarkdownTokenClass.LEAF_BLOCK,
             start_character + ":" + extracted_whitespace + ":" + rest_of_line,
             position_marker=position_marker,

@@ -253,8 +253,8 @@ def __push_to_stack_if_required(token_stack, current_token):
     if (
         not current_token.is_blank_line
         and current_token.token_name != MarkdownToken.token_new_list_item
-        and current_token.token_name != MarkdownToken.token_link_reference_definition
-        and current_token.token_name != MarkdownToken.token_thematic_break
+        and not current_token.is_link_reference_definition
+        and not current_token.is_thematic_break
     ):
         token_stack.append(current_token)
     else:
@@ -350,7 +350,7 @@ def __validate_block_token_height(
                 token_height += 1
     elif last_token.is_blank_line:
         token_height = 1
-    elif last_token.token_name == MarkdownToken.token_link_reference_definition:
+    elif last_token.is_link_reference_definition:
         token_height = (
             1
             + ParserHelper.count_newlines_in_text(last_token.extracted_whitespace)
@@ -361,10 +361,7 @@ def __validate_block_token_height(
             + ParserHelper.count_newlines_in_text(last_token.link_title_raw)
             + ParserHelper.count_newlines_in_text(last_token.link_title_whitespace)
         )
-    elif (
-        last_token.token_name == MarkdownToken.token_thematic_break
-        or last_token.is_atx_heading
-    ):
+    elif last_token.is_thematic_break or last_token.is_atx_heading:
         token_height = 1
     else:
         assert last_token.is_setext_heading, (
@@ -439,7 +436,7 @@ def __verify_token_height(
 
 
 def __xx(current_block_token, token_stack):
-    if current_block_token.token_name == MarkdownToken.token_link_reference_definition:
+    if current_block_token.is_link_reference_definition:
         print(
             "vth>>current_token>>"
             + ParserHelper.make_value_visible(current_block_token)
@@ -621,13 +618,13 @@ def __calc_initial_whitespace(calc_token):
         in (
             MarkdownToken.token_indented_code_block,
             MarkdownToken.token_new_list_item,
-            MarkdownToken.token_thematic_break,
             MarkdownToken.token_fenced_code_block,
             MarkdownToken.token_block_quote,
-            MarkdownToken.token_link_reference_definition,
         )
         or calc_token.is_atx_heading
         or calc_token.is_setext_heading
+        or calc_token.is_thematic_break
+        or calc_token.is_link_reference_definition
     ):
         indent_level = len(calc_token.extracted_whitespace)
         had_tab = bool(ParserHelper.tab_character in calc_token.extracted_whitespace)
