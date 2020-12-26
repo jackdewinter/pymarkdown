@@ -102,10 +102,10 @@ class RuleMd022(Plugin):
             or token.is_atx_heading_end
             or token.is_setext_heading_end
             or token.is_thematic_break
+            or token.is_html_block_end
         ):
             return True
         if token.type_name in (
-            MarkdownToken.token_html_block,
             MarkdownToken.token_fenced_code_block,
             MarkdownToken.token_indented_code_block,
         ):

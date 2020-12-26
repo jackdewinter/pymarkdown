@@ -56,7 +56,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                     "number_of_lines:"
                     + ParserHelper.make_value_visible(actual_tokens[ind - 1])
                 )
-                if actual_tokens[ind - 1].token_name == MarkdownToken.token_html_block:
+                if actual_tokens[ind - 1].is_html_block:
                     newlines_in_text_token = ParserHelper.count_newlines_in_text(
                         current_token.token_text
                     )
@@ -90,9 +90,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                 if (
                     current_token.is_atx_heading_end
                     or current_token.is_paragraph_end
-                    or current_token.token_name
-                    == EndMarkdownToken.type_name_prefix
-                    + MarkdownToken.token_html_block
+                    or current_token.is_html_block_end
                 ):
                     print(
                         ">>mainline-ends>>leading_text_index>"
@@ -259,7 +257,7 @@ def __push_to_stack_if_required(token_stack, current_token):
         token_stack.append(current_token)
     else:
         if token_stack and (
-            token_stack[-1].token_name == MarkdownToken.token_html_block
+            token_stack[-1].is_html_block
             or token_stack[-1].token_name == MarkdownToken.token_fenced_code_block
         ):
             remember_token_as_last_token = False
@@ -310,7 +308,7 @@ def __validate_block_token_height(
     if current_token and current_token.is_blank_line:
         print("blank:" + ParserHelper.make_value_visible(token_stack))
         if token_stack and (
-            token_stack[-1].token_name == MarkdownToken.token_html_block
+            token_stack[-1].is_html_block
             or token_stack[-1].token_name == MarkdownToken.token_fenced_code_block
         ):
             skip_check = True
@@ -325,7 +323,7 @@ def __validate_block_token_height(
             last_token.indented_whitespace
         )
     elif (
-        last_token.token_name == MarkdownToken.token_html_block
+        last_token.is_html_block
         or last_token.token_name == MarkdownToken.token_fenced_code_block
     ):
         current_token_index = last_token_index + 1
@@ -640,10 +638,7 @@ def __calc_initial_whitespace(calc_token):
                 and ParserHelper.tab_character in calc_token.leading_spaces
             )
         )
-    elif (
-        calc_token.token_name == MarkdownToken.token_html_block
-        or calc_token.is_blank_line
-    ):
+    elif calc_token.is_html_block or calc_token.is_blank_line:
         indent_level = 0
     else:
         assert calc_token.is_paragraph, (
@@ -748,9 +743,7 @@ def __verify_first_inline(last_non_inline_token, first_inline_token, last_token_
             last_non_inline_token, first_inline_token
         )
     else:
-        assert (
-            last_non_inline_token.token_name == MarkdownToken.token_html_block
-        ), last_non_inline_token.token_name
+        assert last_non_inline_token.is_html_block, last_non_inline_token.token_name
         __verify_first_inline_html_block(last_non_inline_token, first_inline_token)
 
 
@@ -2193,7 +2186,7 @@ def __handle_last_token_text(
             )
 
     elif (
-        last_block_token.token_name == MarkdownToken.token_html_block
+        last_block_token.is_html_block
         or last_block_token.token_name == MarkdownToken.token_indented_code_block
         or last_block_token.is_atx_heading
     ):

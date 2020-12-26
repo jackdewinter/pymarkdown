@@ -22,6 +22,7 @@ class MarkdownTokenClass(Enum):
     INLINE_BLOCK = 2
 
 
+# pylint: disable=too-many-public-methods
 class MarkdownToken:
     """
     Class to provide for a base encapsulation of the markdown tokens.
@@ -33,6 +34,7 @@ class MarkdownToken:
     _token_setext_heading = "setext"
     _token_thematic_break = "tbreak"
     _token_link_reference_definition = "link-ref-def"
+    _token_html_block = "html-block"
 
     token_text = "text"
     token_indented_code_block = "icode-block"
@@ -41,7 +43,7 @@ class MarkdownToken:
     token_unordered_list_start = "ulist"
     token_ordered_list_start = "olist"
     token_new_list_item = "li"
-    token_html_block = "html-block"
+
     token_inline_code_span = "icode-span"
     token_inline_hard_break = "hard-break"
     token_inline_uri_autolink = "uri-autolink"
@@ -112,7 +114,7 @@ class MarkdownToken:
             or self.is_atx_heading
             or self.is_setext_heading
             or self.is_code_block
-            or self.token_name == MarkdownToken.token_html_block
+            or self.is_html_block
             or self.is_paragraph
         )
         # or tables
@@ -250,6 +252,26 @@ class MarkdownToken:
         Returns whether or not the current token is a link reference definition element.
         """
         return self.token_name == MarkdownToken._token_link_reference_definition
+
+    @property
+    def is_html_block(self):
+        """
+        Returns whether or not the current token is a html block element.
+        """
+        return self.token_name == MarkdownToken._token_html_block
+
+    @property
+    def is_html_block_end(self):
+        """
+        Returns whether or not the current token is a html block element.
+        """
+        return (
+            self.token_name
+            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_html_block
+        )
+
+
+# pylint: enable=too-many-public-methods
 
 
 # pylint: disable=too-few-public-methods
@@ -1102,7 +1124,7 @@ class HtmlBlockMarkdownToken(MarkdownToken):
 
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_html_block,
+            MarkdownToken._token_html_block,
             MarkdownTokenClass.LEAF_BLOCK,
             "",
             line_number=line_number,

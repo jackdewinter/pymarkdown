@@ -752,11 +752,10 @@ class HtmlHelper:
             new_tokens, _, _ = parser_state.close_open_blocks_fn(
                 parser_state, only_these_blocks=[ParagraphStackToken],
             )
+            new_token = HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
+            new_tokens.append(new_token)
             parser_state.token_stack.append(
-                HtmlBlockStackToken(html_block_type, remaining_html_tag)
-            )
-            new_tokens.append(
-                HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
+                HtmlBlockStackToken(html_block_type, remaining_html_tag, new_token)
             )
         return new_tokens
 

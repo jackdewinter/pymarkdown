@@ -303,11 +303,12 @@ class HtmlBlockStackToken(StackToken):
     Class to provide for a stack token for a html block.
     """
 
-    def __init__(self, html_block_type, remaining_html_tag):
+    def __init__(self, html_block_type, remaining_html_tag, matching_markdown_token):
         self.html_block_type = html_block_type
         self.remaining_html_tag = remaining_html_tag
         extra_data = str(html_block_type) + ":" + str(remaining_html_tag)
         StackToken.__init__(self, StackToken.stack_html_block, extra_data)
+        self.matching_markdown_token = matching_markdown_token
 
 
 class LinkDefinitionStackToken(StackToken):

@@ -343,10 +343,7 @@ class TransformToMarkdown:
             block_should_end_with_newline = True
         elif current_token.token_name == "end-setext":
             block_should_end_with_newline = True
-        elif (
-            previous_token
-            and previous_token.token_name == MarkdownToken.token_html_block
-        ):
+        elif previous_token and previous_token.is_html_block:
             block_should_end_with_newline = True
             force_newline_processing = True
 
@@ -1510,7 +1507,7 @@ class TransformToMarkdown:
                     self.block_stack[-1].indented_whitespace,
                     leading_whitespace,
                 )
-            elif self.block_stack[-1].token_name == MarkdownToken.token_html_block:
+            elif self.block_stack[-1].is_html_block:
                 main_text += ParserHelper.newline_character
             elif self.block_stack[-1].is_paragraph:
                 main_text = self.__reconstitute_paragraph_text(main_text, current_token)
