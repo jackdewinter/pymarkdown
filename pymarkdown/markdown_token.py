@@ -45,10 +45,11 @@ class MarkdownToken:
     _token_ordered_list_start = "olist"
     _token_new_list_item = "li"
 
-    token_inline_code_span = "icode-span"
-    token_inline_hard_break = "hard-break"
-    token_inline_uri_autolink = "uri-autolink"
-    token_inline_email_autolink = "email-autolink"
+    _token_inline_code_span = "icode-span"
+    _token_inline_hard_break = "hard-break"
+    _token_inline_uri_autolink = "uri-autolink"
+    _token_inline_email_autolink = "email-autolink"
+
     token_inline_raw_html = "raw-html"
     token_inline_emphasis = "emphasis"
     token_inline_link = "link"
@@ -331,6 +332,41 @@ class MarkdownToken:
             self.token_name
             == EndMarkdownToken.type_name_prefix + MarkdownToken._token_html_block
         )
+
+    @property
+    def is_inline_code_span(self):
+        """
+        Returns whether or not the current token is a code span element.
+        """
+        return self.token_name == MarkdownToken._token_inline_code_span
+
+    @property
+    def is_inline_hard_break(self):
+        """
+        Returns whether or not the current token is a hard break element.
+        """
+        return self.token_name == MarkdownToken._token_inline_hard_break
+
+    @property
+    def is_inline_autolink(self):
+        """
+        Returns whether or not the current token is an uri autolink or an email autolink element.
+        """
+        return self.is_inline_uri_autolink or self.is_inline_email_autolink
+
+    @property
+    def is_inline_uri_autolink(self):
+        """
+        Returns whether or not the current token is an uri autolink element.
+        """
+        return self.token_name == MarkdownToken._token_inline_uri_autolink
+
+    @property
+    def is_inline_email_autolink(self):
+        """
+        Returns whether or not the current token is an email autolink element.
+        """
+        return self.token_name == MarkdownToken._token_inline_email_autolink
 
 
 # pylint: enable=too-many-public-methods
@@ -1234,7 +1270,7 @@ class InlineCodeSpanMarkdownToken(MarkdownToken):
         self.trailing_whitespace = trailing_whitespace
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_inline_code_span,
+            MarkdownToken._token_inline_code_span,
             MarkdownTokenClass.INLINE_BLOCK,
             span_text
             + ":"
@@ -1259,7 +1295,7 @@ class HardBreakMarkdownToken(MarkdownToken):
         self.line_end = line_end
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_inline_hard_break,
+            MarkdownToken._token_inline_hard_break,
             MarkdownTokenClass.INLINE_BLOCK,
             line_end,
             line_number=line_number,
@@ -1276,7 +1312,7 @@ class UriAutolinkMarkdownToken(MarkdownToken):
         self.autolink_text = autolink_text
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_inline_uri_autolink,
+            MarkdownToken._token_inline_uri_autolink,
             MarkdownTokenClass.INLINE_BLOCK,
             autolink_text,
             line_number=line_number,
@@ -1443,7 +1479,7 @@ class EmailAutolinkMarkdownToken(MarkdownToken):
         self.autolink_text = autolink_text
         MarkdownToken.__init__(
             self,
-            MarkdownToken.token_inline_email_autolink,
+            MarkdownToken._token_inline_email_autolink,
             MarkdownTokenClass.INLINE_BLOCK,
             autolink_text,
             line_number=line_number,

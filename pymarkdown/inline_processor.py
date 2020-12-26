@@ -1493,10 +1493,7 @@ class InlineProcessor:
             "__cibp>column_number>%s<", ParserHelper.make_value_visible(column_number)
         )
 
-        if (
-            inline_blocks
-            and inline_blocks[-1].token_name == MarkdownToken.token_inline_hard_break
-        ):
+        if inline_blocks and inline_blocks[-1].is_inline_hard_break:
             start_index, extracted_whitespace = ParserHelper.extract_whitespace(
                 source_text, start_index
             )

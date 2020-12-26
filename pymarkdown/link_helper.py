@@ -402,24 +402,11 @@ class LinkHelper:
                     == MarkdownToken.token_inline_raw_html
                 ):
                     image_alt_text += "<" + inline_blocks[ind + 1].raw_tag + ">"
-                elif (
-                    inline_blocks[ind + 1].token_name
-                    == MarkdownToken.token_inline_code_span
-                ):
+                elif inline_blocks[ind + 1].is_inline_code_span:
                     image_alt_text += ParserHelper.resolve_references_from_text(
                         inline_blocks[ind + 1].span_text
                     )
-                elif (
-                    inline_blocks[ind + 1].token_name
-                    == MarkdownToken.token_inline_uri_autolink
-                ):
-                    image_alt_text += ParserHelper.resolve_references_from_text(
-                        inline_blocks[ind + 1].autolink_text
-                    )
-                elif (
-                    inline_blocks[ind + 1].token_name
-                    == MarkdownToken.token_inline_email_autolink
-                ):
+                elif inline_blocks[ind + 1].is_inline_autolink:
                     image_alt_text += ParserHelper.resolve_references_from_text(
                         inline_blocks[ind + 1].autolink_text
                     )
@@ -427,10 +414,7 @@ class LinkHelper:
                     inline_blocks[ind + 1].token_name == MarkdownToken.token_inline_link
                 ):
                     pass
-                elif (
-                    inline_blocks[ind + 1].token_name
-                    == MarkdownToken.token_inline_hard_break
-                ):
+                elif inline_blocks[ind + 1].is_inline_hard_break:
                     image_alt_text += "\n"
                 elif (
                     inline_blocks[ind + 1].token_name
@@ -509,10 +493,7 @@ class LinkHelper:
                 )
                 collected_text_raw += raw_text
                 collected_text += inline_blocks[collect_index].image_alt_text
-            elif (
-                inline_blocks[collect_index].token_name
-                == MarkdownToken.token_inline_code_span
-            ):
+            elif inline_blocks[collect_index].is_inline_code_span:
                 converted_text = "`" + inline_blocks[collect_index].span_text + "`"
                 collected_text += converted_text
                 collected_text_raw += converted_text
@@ -523,24 +504,11 @@ class LinkHelper:
                 converted_text = "<" + inline_blocks[collect_index].raw_tag + ">"
                 collected_text += converted_text
                 collected_text_raw += converted_text
-            elif (
-                inline_blocks[collect_index].token_name
-                == MarkdownToken.token_inline_uri_autolink
-            ):
+            elif inline_blocks[collect_index].is_inline_autolink:
                 converted_text = "<" + inline_blocks[collect_index].autolink_text + ">"
                 collected_text += converted_text
                 collected_text_raw += converted_text
-            elif (
-                inline_blocks[collect_index].token_name
-                == MarkdownToken.token_inline_email_autolink
-            ):
-                converted_text = "<" + inline_blocks[collect_index].autolink_text + ">"
-                collected_text += converted_text
-                collected_text_raw += converted_text
-            elif (
-                inline_blocks[collect_index].token_name
-                == MarkdownToken.token_inline_hard_break
-            ):
+            elif inline_blocks[collect_index].is_inline_hard_break:
                 converted_text = inline_blocks[collect_index].line_end
                 collected_text += converted_text
                 collected_text_raw += converted_text

@@ -802,20 +802,17 @@ def __verify_first_inline_paragraph(last_non_inline_token, first_inline_token):
     elif first_inline_token.token_name == MarkdownToken.token_inline_link:
         assert first_inline_token.line_number == last_non_inline_token.line_number
         assert first_inline_token.column_number == last_non_inline_token.column_number
-    elif first_inline_token.token_name == MarkdownToken.token_inline_uri_autolink:
+    elif first_inline_token.is_inline_autolink:
         assert first_inline_token.line_number == last_non_inline_token.line_number
         assert first_inline_token.column_number == last_non_inline_token.column_number
-    elif first_inline_token.token_name == MarkdownToken.token_inline_email_autolink:
-        assert first_inline_token.line_number == last_non_inline_token.line_number
-        assert first_inline_token.column_number == last_non_inline_token.column_number
-    elif first_inline_token.token_name == MarkdownToken.token_inline_code_span:
+    elif first_inline_token.is_inline_code_span:
         assert first_inline_token.line_number == last_non_inline_token.line_number
         assert first_inline_token.column_number == last_non_inline_token.column_number
     elif first_inline_token.token_name == MarkdownToken.token_inline_image:
         assert first_inline_token.line_number == last_non_inline_token.line_number
         assert first_inline_token.column_number == last_non_inline_token.column_number
 
-    elif first_inline_token.token_name == MarkdownToken.token_inline_hard_break:
+    elif first_inline_token.is_inline_hard_break:
         assert first_inline_token.line_number == 0
         assert first_inline_token.column_number == 0
 
@@ -844,9 +841,9 @@ def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
             last_non_inline_token.original_column_number
             == first_inline_token.column_number
         )
-    elif first_inline_token.token_name == MarkdownToken.token_inline_hard_break:
+    elif first_inline_token.is_inline_hard_break:
         assert False
-    elif first_inline_token.token_name == MarkdownToken.token_inline_code_span:
+    elif first_inline_token.is_inline_code_span:
         assert (
             last_non_inline_token.original_line_number == first_inline_token.line_number
         )
@@ -862,15 +859,7 @@ def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
             last_non_inline_token.original_column_number
             == first_inline_token.column_number
         )
-    elif first_inline_token.token_name == MarkdownToken.token_inline_uri_autolink:
-        assert (
-            last_non_inline_token.original_line_number == first_inline_token.line_number
-        )
-        assert (
-            last_non_inline_token.original_column_number
-            == first_inline_token.column_number
-        )
-    elif first_inline_token.token_name == MarkdownToken.token_inline_email_autolink:
+    elif first_inline_token.is_inline_autolink:
         assert (
             last_non_inline_token.original_line_number == first_inline_token.line_number
         )
@@ -1321,7 +1310,7 @@ def __process_previous_token(
         ) = __verify_next_inline_blank_line(
             current_inline_token, estimated_line_number, estimated_column_number,
         )
-    elif previous_inline_token.token_name == MarkdownToken.token_inline_hard_break:
+    elif previous_inline_token.is_inline_hard_break:
         (
             estimated_line_number,
             estimated_column_number,
@@ -1333,7 +1322,7 @@ def __process_previous_token(
             estimated_column_number,
             link_stack,
         )
-    elif previous_inline_token.token_name == MarkdownToken.token_inline_code_span:
+    elif previous_inline_token.is_inline_code_span:
         estimated_line_number, estimated_column_number = __verify_next_inline_code_span(
             last_token,
             previous_inline_token,
@@ -1345,11 +1334,7 @@ def __process_previous_token(
         estimated_line_number, estimated_column_number = __verify_next_inline_raw_html(
             previous_inline_token, estimated_line_number, estimated_column_number,
         )
-    elif previous_inline_token.token_name == MarkdownToken.token_inline_uri_autolink:
-        estimated_line_number, estimated_column_number = __verify_next_inline_autolink(
-            previous_inline_token, estimated_line_number, estimated_column_number,
-        )
-    elif previous_inline_token.token_name == MarkdownToken.token_inline_email_autolink:
+    elif previous_inline_token.is_inline_autolink:
         estimated_line_number, estimated_column_number = __verify_next_inline_autolink(
             previous_inline_token, estimated_line_number, estimated_column_number,
         )
@@ -1955,11 +1940,7 @@ def __verify_next_inline_text(
     link_stack,
 ):
     current_line = previous_inline_token.token_text
-    if (
-        pre_previous_inline_token
-        and pre_previous_inline_token.token_name
-        == MarkdownToken.token_inline_hard_break
-    ):
+    if pre_previous_inline_token and pre_previous_inline_token.is_inline_hard_break:
         assert current_line.startswith("\n")
         current_line = current_line[1:]
     else:
@@ -2109,11 +2090,7 @@ def __handle_last_token_text(
 
     if last_block_token.is_paragraph:
         inline_height = len(resolved_text.split("\n")) - 1
-        if (
-            second_last_inline_token
-            and second_last_inline_token.token_name
-            == MarkdownToken.token_inline_hard_break
-        ):
+        if second_last_inline_token and second_last_inline_token.is_inline_hard_break:
             inline_height -= 1
 
         print(
@@ -2158,11 +2135,7 @@ def __handle_last_token_text(
             last_block_token
         )
         inline_height = len(resolved_text.split("\n")) - 1
-        if (
-            second_last_inline_token
-            and second_last_inline_token.token_name
-            == MarkdownToken.token_inline_hard_break
-        ):
+        if second_last_inline_token and second_last_inline_token.is_inline_hard_break:
             inline_height -= 1
         inline_height += 1
     return inline_height
@@ -2391,7 +2364,7 @@ def __verify_last_inline(
             last_inline_token,
         )
 
-    elif last_inline_token.token_name == MarkdownToken.token_inline_code_span:
+    elif last_inline_token.is_inline_code_span:
         inline_height = __handle_last_token_code_span(
             last_block_token,
             second_last_inline_token,
@@ -2405,10 +2378,7 @@ def __verify_last_inline(
             removed_end_token,
             last_inline_token,
         )
-    elif (
-        last_inline_token.token_name == MarkdownToken.token_inline_uri_autolink
-        or last_inline_token.token_name == MarkdownToken.token_inline_email_autolink
-    ):
+    elif last_inline_token.is_inline_autolink:
         inline_height = __handle_last_token_autolink(
             last_block_token,
             second_last_inline_token,
@@ -2562,10 +2532,7 @@ def __verify_inline(  # noqa: C901
                     + ParserHelper.make_value_visible(current_inline_token)
                 )
                 if "\n" in str(current_inline_token):
-                    if (
-                        current_inline_token.token_name
-                        == MarkdownToken.token_inline_code_span
-                    ):
+                    if current_inline_token.is_inline_code_span:
                         # Don't need to resolve replacement characters as the & in
                         # the replacement is changed to an &amp; + the rest.
                         newlines_in_text_token = ParserHelper.count_newlines_in_text(

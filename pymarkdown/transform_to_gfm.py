@@ -778,7 +778,7 @@ class TransformToGfm:
         """
         Handle the hard line break token.
         """
-        assert next_token.token_name == MarkdownToken.token_inline_hard_break
+        assert next_token.is_inline_hard_break
         assert transform_state
         output_html += "<br />"
         return output_html
