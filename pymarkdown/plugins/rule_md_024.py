@@ -2,10 +2,6 @@
 Module to implement a plugin that looks for multiple heading lines with the same
 content.
 """
-from pymarkdown.markdown_token import (
-    AtxHeadingMarkdownToken,
-    SetextHeadingMarkdownToken,
-)
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -65,7 +61,7 @@ class RuleMd024(Plugin):
         Event that a new token is being processed.
         """
         skip_this_token = False
-        if isinstance(token, (AtxHeadingMarkdownToken, SetextHeadingMarkdownToken)):
+        if token.is_setext_heading or token.is_atx_heading:
             self.handle_heading_start(token)
             skip_this_token = True
         elif token.is_setext_heading_end or token.is_atx_heading_end:

@@ -2,10 +2,6 @@
 Module to implement a plugin that looks for heading styles that are inconsistent
 throughout the document.
 """
-from pymarkdown.markdown_token import (
-    AtxHeadingMarkdownToken,
-    SetextHeadingMarkdownToken,
-)
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -128,13 +124,13 @@ class RuleMd003(Plugin):
 
         heading_style_type = None
         is_heading_level_1_or_2 = None
-        if isinstance(token, AtxHeadingMarkdownToken):
+        if token.is_atx_heading:
             if token.remove_trailing_count:
                 heading_style_type = RuleMd003.__atx_closed_style
             else:
                 heading_style_type = RuleMd003.__atx_style
             is_heading_level_1_or_2 = bool(token.hash_count < 3)
-        elif isinstance(token, SetextHeadingMarkdownToken):
+        elif token.is_setext_heading:
             heading_style_type = RuleMd003.__setext_style
             is_heading_level_1_or_2 = True
         return heading_style_type, is_heading_level_1_or_2

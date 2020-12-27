@@ -2,7 +2,6 @@
 Module to implement a plugin that looks for more than one space between either the
 opening or closing hashes of an atx heading.
 """
-from pymarkdown.markdown_token import AtxHeadingMarkdownToken, TextMarkdownToken
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -40,7 +39,7 @@ class RuleMd021(Plugin):
         """
         Event that a new token is being processed.
         """
-        if isinstance(token, AtxHeadingMarkdownToken):
+        if token.is_atx_heading:
             self.__in_atx_heading = token.remove_trailing_count
             self.__is_left_in_error = False
         elif token.is_paragraph_end:
@@ -48,6 +47,6 @@ class RuleMd021(Plugin):
         elif token.is_atx_heading_end:
             if self.__is_left_in_error or len(token.extra_end_data) > 1:
                 self.report_next_token_error(token)
-        elif isinstance(token, TextMarkdownToken):
+        elif token.is_text:
             if self.__in_atx_heading and len(token.extracted_whitespace) > 1:
                 self.__is_left_in_error = True

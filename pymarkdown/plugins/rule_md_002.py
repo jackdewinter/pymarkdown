@@ -2,10 +2,6 @@
 Module to implement a plugin that looks to see if the first heading in a file is
 a top level heading.
 """
-from pymarkdown.markdown_token import (
-    AtxHeadingMarkdownToken,
-    SetextHeadingMarkdownToken,
-)
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -50,9 +46,9 @@ class RuleMd002(Plugin):
         Event that a new token is being processed.
         """
         hash_count = None
-        if isinstance(token, AtxHeadingMarkdownToken):
+        if token.is_atx_heading:
             hash_count = token.hash_count
-        elif isinstance(token, SetextHeadingMarkdownToken):
+        elif token.is_setext_heading:
             hash_count = token.hash_count
         if not self.__have_seen_first_heading and hash_count:
             self.__have_seen_first_heading = True

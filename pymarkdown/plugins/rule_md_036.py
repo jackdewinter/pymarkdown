@@ -4,11 +4,6 @@ like it is being used instead of a heading.
 """
 from enum import Enum
 
-from pymarkdown.markdown_token import (
-    EmphasisMarkdownToken,
-    ParagraphMarkdownToken,
-    TextMarkdownToken,
-)
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -71,14 +66,14 @@ class RuleMd036(Plugin):
         new_state = RuleMd036States.LOOK_FOR_PARAGRAPH
 
         if self.__current_state == RuleMd036States.LOOK_FOR_PARAGRAPH:
-            if isinstance(token, ParagraphMarkdownToken):
+            if token.is_paragraph:
                 new_state = RuleMd036States.LOOK_FOR_EMPHASIS_START
                 self.__start_token = token
         elif self.__current_state == RuleMd036States.LOOK_FOR_EMPHASIS_START:
-            if isinstance(token, EmphasisMarkdownToken):
+            if token.is_inline_emphasis:
                 new_state = RuleMd036States.LOOK_FOR_ELIGIBLE_TEXT
         elif self.__current_state == RuleMd036States.LOOK_FOR_ELIGIBLE_TEXT:
-            if isinstance(token, TextMarkdownToken):
+            if token.is_text:
                 if (
                     "\n" not in token.token_text
                     and token.token_text[-1] not in self.__punctuation

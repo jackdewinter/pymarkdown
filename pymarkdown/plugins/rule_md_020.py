@@ -5,11 +5,6 @@ and the text of the heading, either at the start, end, or both.
 """
 import re
 
-from pymarkdown.markdown_token import (
-    AtxHeadingMarkdownToken,
-    ParagraphMarkdownToken,
-    TextMarkdownToken,
-)
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -53,20 +48,18 @@ class RuleMd020(Plugin):
         if not (token.is_atx_heading_end) and self.__is_in_normal_atx:
             self.__last_atx_token = token
 
-        if isinstance(token, ParagraphMarkdownToken):
+        if token.is_paragraph:
             self.__last_paragraph_token = token
-        elif isinstance(token, AtxHeadingMarkdownToken):
+        elif token.is_atx_heading:
             self.__is_in_normal_atx = True
         elif token.is_paragraph_end:
             self.__last_paragraph_token = None
         elif token.is_atx_heading_end:
-            if self.__is_in_normal_atx and isinstance(
-                self.__last_atx_token, TextMarkdownToken
-            ):
+            if self.__is_in_normal_atx and self.__last_atx_token.is_text:
                 if self.__last_atx_token.token_text.endswith("#"):
                     self.report_next_token_error(token)
             self.__is_in_normal_atx = False
-        elif isinstance(token, TextMarkdownToken) and self.__last_paragraph_token:
+        elif token.is_text and self.__last_paragraph_token:
             split_whitespace = self.__last_paragraph_token.extracted_whitespace.split(
                 "\n"
             )

@@ -5,7 +5,6 @@ the text of the heading.
 """
 import re
 
-from pymarkdown.markdown_token import ParagraphMarkdownToken, TextMarkdownToken
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -42,11 +41,11 @@ class RuleMd018(Plugin):
         """
         Event that a new token is being processed.
         """
-        if isinstance(token, ParagraphMarkdownToken):
+        if token.is_paragraph:
             self.__last_paragraph_token = token
         elif token.is_paragraph_end:
             self.__last_paragraph_token = None
-        elif isinstance(token, TextMarkdownToken) and self.__last_paragraph_token:
+        elif token.is_text and self.__last_paragraph_token:
             split_whitespace = self.__last_paragraph_token.extracted_whitespace.split(
                 "\n"
             )

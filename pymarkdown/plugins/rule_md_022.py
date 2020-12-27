@@ -2,12 +2,6 @@
 Module to implement a plugin that looks for headings that are not surrounded by
 blank lines.
 """
-from pymarkdown.markdown_token import (
-    AtxHeadingMarkdownToken,
-    BlankLineMarkdownToken,
-    SetextHeadingMarkdownToken,
-    ThematicBreakMarkdownToken,
-)
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -72,10 +66,10 @@ class RuleMd022(Plugin):
         """
         self.perform_close_check(token)
 
-        if isinstance(token, BlankLineMarkdownToken):
+        if token.is_blank_line:
             if (self.__blank_line_count is not None) and self.__blank_line_count >= 0:
                 self.__blank_line_count += 1
-        if isinstance(token, (AtxHeadingMarkdownToken, SetextHeadingMarkdownToken)):
+        if token.is_setext_heading or token.is_atx_heading:
             self.__did_above_line_count_match = bool(
                 self.__blank_line_count == -1
                 or self.__blank_line_count == self.__lines_above
@@ -83,7 +77,7 @@ class RuleMd022(Plugin):
             self.__start_heading_token = token
             self.__start_heading_blank_line_count = self.__blank_line_count
             self.__did_heading_end = False
-        elif isinstance(token, ThematicBreakMarkdownToken):
+        elif token.is_thematic_break:
             self.__blank_line_count = 0
         elif token.is_end_token:
             if self.__is_leaf_end_token(token):
@@ -120,7 +114,7 @@ class RuleMd022(Plugin):
         if (
             (self.__start_heading_token and self.__did_heading_end)
         ) and self.__blank_line_count >= 0:
-            if not isinstance(token, BlankLineMarkdownToken):
+            if not token or not token.is_blank_line:
                 did_end_match = bool(self.__blank_line_count == self.__lines_below)
                 self.report_any_match_failures(did_end_match)
                 self.__start_heading_token = None
