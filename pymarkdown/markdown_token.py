@@ -289,9 +289,16 @@ class MarkdownToken:
     @property
     def is_text(self):
         """
-        Returns whether or not the current token is a paragraph element.
+        Returns whether or not the current token is a text element.
         """
         return self.token_name == MarkdownToken._token_text
+
+    @property
+    def is_special_text(self):
+        """
+        Returns whether or not the current token is a special text element.
+        """
+        return isinstance(self, SpecialTextMarkdownToken)
 
     @property
     def is_setext_heading(self):

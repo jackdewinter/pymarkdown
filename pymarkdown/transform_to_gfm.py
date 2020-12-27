@@ -105,15 +105,12 @@ class TransformToGfm:
             current_token = actual_tokens[current_token_index]
             check_me = False
             stop_me = False
-            if isinstance(
-                current_token,
-                (UnorderedListStartMarkdownToken, OrderedListStartMarkdownToken),
-            ):
+            if current_token.is_list_start:
                 LOGGER.debug("cll>>start list>>%s", str(current_token))
                 check_me = stack_count == 0
                 stack_count += 1
                 LOGGER.debug(">>list--new>>%s", str(stack_count))
-            elif isinstance(current_token, NewListItemMarkdownToken):
+            elif current_token.is_new_list_item:
                 LOGGER.debug("cll>>new list item>>%s", str(current_token))
                 check_me = stack_count == 0
                 assert not current_token.is_block
@@ -245,13 +242,9 @@ class TransformToGfm:
         LOGGER.debug("token_to_check-->%s", str(token_to_check))
         if token_to_check.is_blank_line:
             LOGGER.debug("before_blank-->%s", str(actual_tokens[check_index - 1]))
-            if isinstance(
-                actual_tokens[check_index - 1],
-                (
-                    NewListItemMarkdownToken,
-                    UnorderedListStartMarkdownToken,
-                    OrderedListStartMarkdownToken,
-                ),
+            if (
+                actual_tokens[check_index - 1].is_new_list_item
+                or actual_tokens[check_index - 1].is_list_start
             ):
                 LOGGER.debug("!!!Starting Blank!!!")
             else:
@@ -266,20 +259,13 @@ class TransformToGfm:
         """
 
         current_index = actual_token_index
-        assert not isinstance(
-            actual_tokens[current_index], UnorderedListStartMarkdownToken
-        ) and not isinstance(
-            actual_tokens[current_index], OrderedListStartMarkdownToken
-        )
+        assert not actual_tokens[current_index].is_list_start
 
         current_index -= 1
         keep_going = True
         stack_count = 0
         while keep_going and current_index >= 0:
-            if isinstance(
-                actual_tokens[current_index],
-                (UnorderedListStartMarkdownToken, OrderedListStartMarkdownToken),
-            ):
+            if actual_tokens[current_index].is_list_start:
                 if stack_count == 0:
                     keep_going = False
                 else:
@@ -306,10 +292,7 @@ class TransformToGfm:
                 str(search_index),
                 str(actual_tokens[search_index]),
             )
-            if isinstance(
-                actual_tokens[search_index],
-                (UnorderedListStartMarkdownToken, OrderedListStartMarkdownToken),
-            ):
+            if actual_tokens[search_index].is_list_start:
                 stack_count += 1
             elif actual_tokens[search_index].is_list_end:
                 if not stack_count:

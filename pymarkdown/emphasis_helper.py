@@ -4,7 +4,7 @@ Emphasis helper
 import logging
 
 from pymarkdown.constants import Constants
-from pymarkdown.markdown_token import EmphasisMarkdownToken, SpecialTextMarkdownToken
+from pymarkdown.markdown_token import EmphasisMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
@@ -34,7 +34,7 @@ class EmphasisHelper:
                 ParserHelper.make_value_visible(next_block),
             )
             special_count += 1
-            if not isinstance(next_block, SpecialTextMarkdownToken):
+            if not next_block.is_special_text:
                 continue
             LOGGER.debug(
                 "i>>%s>>%s",
@@ -208,7 +208,7 @@ class EmphasisHelper:
                 str(end_index_in_blocks),
                 str(len(inline_blocks)),
             )
-            if isinstance(inline_blocks[inline_index], SpecialTextMarkdownToken):
+            if inline_blocks[inline_index].is_special_text:
                 inline_blocks[inline_index].active = False
             inline_index += 1
 
@@ -225,9 +225,7 @@ class EmphasisHelper:
             wall_index_in_inlines = inline_blocks.index(wall_token)
             LOGGER.debug(">>wall_index_in_inlines>>%s", str(wall_index_in_inlines))
             while wall_index_in_inlines >= 0:
-                if isinstance(
-                    inline_blocks[wall_index_in_inlines], SpecialTextMarkdownToken
-                ):
+                if inline_blocks[wall_index_in_inlines].is_special_text:
                     wall_index_in_inlines = delimiter_stack.index(
                         inline_blocks[wall_index_in_inlines]
                     )
@@ -247,7 +245,7 @@ class EmphasisHelper:
         """
 
         for next_block in inline_blocks:
-            if isinstance(next_block, SpecialTextMarkdownToken):
+            if next_block.is_special_text:
                 next_block.token_text = next_block.token_text[
                     0 : next_block.repeat_count
                 ]

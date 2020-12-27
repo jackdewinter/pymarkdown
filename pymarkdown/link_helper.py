@@ -7,11 +7,7 @@ import urllib
 from pymarkdown.constants import Constants
 from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline_helper import InlineHelper, InlineRequest
-from pymarkdown.markdown_token import (
-    ImageStartMarkdownToken,
-    LinkStartMarkdownToken,
-    SpecialTextMarkdownToken,
-)
+from pymarkdown.markdown_token import ImageStartMarkdownToken, LinkStartMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
@@ -259,7 +255,7 @@ class LinkHelper:
         valid_special_start_text = None
         search_index = len(inline_blocks) - 1
         while search_index >= 0:
-            if isinstance(inline_blocks[search_index], SpecialTextMarkdownToken):
+            if inline_blocks[search_index].is_special_text:
                 LOGGER.debug(
                     "search_index>>%s>>%s",
                     str(search_index),
@@ -310,9 +306,9 @@ class LinkHelper:
             LOGGER.debug("SET TO INACTIVE-->%s", str(valid_special_start_text))
             LOGGER.debug("ind-->%s", str(search_index))
 
-            assert isinstance(
-                inline_blocks[search_index],
-                (LinkStartMarkdownToken, ImageStartMarkdownToken),
+            assert (
+                inline_blocks[search_index].is_inline_link
+                or inline_blocks[search_index].is_inline_image
             )
 
             LOGGER.debug("\nresolve_inline_emphasis>>%s", str(inline_blocks))
@@ -325,7 +321,7 @@ class LinkHelper:
                 LOGGER.debug("DEACTIVATING")
                 LinkHelper.__display_specials_in_tokens(inline_blocks)
                 for deactivate_token in inline_blocks:
-                    if isinstance(deactivate_token, SpecialTextMarkdownToken):
+                    if deactivate_token.is_special_text:
                         LOGGER.debug(
                             "inline_blocks>>>>>>>>>>>>>>>>>>%s", str(deactivate_token)
                         )
@@ -363,7 +359,7 @@ class LinkHelper:
     def __display_specials_in_tokens(inline_blocks):
         display_string = ""
         for deactivate_token in inline_blocks:
-            if isinstance(deactivate_token, SpecialTextMarkdownToken):
+            if deactivate_token.is_special_text:
                 display_string += (
                     ",>>Spec:"
                     + str(deactivate_token.active)
@@ -390,7 +386,7 @@ class LinkHelper:
         LOGGER.debug(">>%s<<", str(inline_blocks[ind + 1 :]))
         if len(inline_blocks) > (ind + 1):
             while len(inline_blocks) > (ind + 1):
-                if isinstance(inline_blocks[ind + 1], SpecialTextMarkdownToken):
+                if inline_blocks[ind + 1].is_special_text:
                     if inline_blocks[ind + 1].token_text == "]":
                         image_alt_text += inline_blocks[ind + 1].token_text
                 elif inline_blocks[ind + 1].is_text:
