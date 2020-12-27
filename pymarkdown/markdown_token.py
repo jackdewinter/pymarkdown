@@ -65,17 +65,17 @@ class MarkdownToken:
         column_number=0,
         position_marker=None,
     ):
-        self.token_name = token_name
-        self.token_class = token_class
-        self.extra_data = extra_data
+        self.__token_name = token_name
+        self.__token_class = token_class
+        self.__extra_data = extra_data
 
         if position_marker:
             line_number = position_marker.line_number
             column_number = (
                 position_marker.index_number + position_marker.index_indent + 1
             )
-        self.line_number = line_number
-        self.column_number = column_number
+        self.__line_number = line_number
+        self.__column_number = column_number
 
     # pylint: enable=too-many-arguments
 
@@ -103,6 +103,61 @@ class MarkdownToken:
 
     def __repr__(self):
         return "'" + self.__str__() + "'"
+
+    @property
+    def token_name(self):
+        """
+        Returns the name associated with the token.
+        """
+        return self.__token_name
+
+    @property
+    def line_number(self):
+        """
+        Returns the line number associated with the token.
+        """
+        return self.__line_number
+
+    @property
+    def column_number(self):
+        """
+        Returns the column number associated with the token.
+        """
+        return self.__column_number
+
+    def _set_column_number(self, column_number):
+        self.__column_number = column_number
+
+    @property
+    def extra_data(self):
+        """
+        Returns the extra data associated with the token.
+        """
+        return self.__extra_data
+
+    def _set_extra_data(self, extra_data):
+        self.__extra_data = extra_data
+
+    @property
+    def is_container(self):
+        """
+        Returns whether the current token is a container block element.
+        """
+        return self.__token_class == MarkdownTokenClass.CONTAINER_BLOCK
+
+    @property
+    def is_leaf(self):
+        """
+        Returns whether the current token is a leaf block element.
+        """
+        return self.__token_class == MarkdownTokenClass.LEAF_BLOCK
+
+    @property
+    def is_inline(self):
+        """
+        Returns whether the current token is an inline block element.
+        """
+        return self.__token_class == MarkdownTokenClass.INLINE_BLOCK
 
     @property
     def is_end_token(self):
@@ -506,7 +561,7 @@ class EndMarkdownToken(MarkdownToken):
         if self.extra_end_data is not None:
             display_data += self.extra_end_data
         display_data += ":" + str(self.was_forced)
-        self.extra_data = display_data
+        self._set_extra_data(display_data)
 
 
 # pylint: disable=too-few-public-methods
@@ -562,9 +617,10 @@ class ParagraphMarkdownToken(MarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        self.extra_data = self.extracted_whitespace
+        new_extra_data = self.extracted_whitespace
         if self.final_whitespace:
-            self.extra_data = self.extra_data + ":" + self.final_whitespace
+            new_extra_data += ":" + self.final_whitespace
+        self._set_extra_data(new_extra_data)
 
     def add_whitespace(self, whitespace_to_add):
         """
@@ -641,7 +697,7 @@ class SetextHeadingMarkdownToken(MarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        self.extra_data = (
+        new_extra_data = (
             self.heading_character
             + ":"
             + str(self.heading_character_count)
@@ -654,7 +710,8 @@ class SetextHeadingMarkdownToken(MarkdownToken):
             + ")"
         )
         if self.final_whitespace:
-            self.extra_data = self.extra_data + ":" + self.final_whitespace
+            new_extra_data += ":" + self.final_whitespace
+        self._set_extra_data(new_extra_data)
 
 
 # pylint: enable=too-many-instance-attributes
@@ -682,7 +739,7 @@ class IndentedCodeBlockMarkdownToken(MarkdownToken):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        self.extra_data = self.extracted_whitespace + ":" + self.indented_whitespace
+        self._set_extra_data(self.extracted_whitespace + ":" + self.indented_whitespace)
 
     def add_indented_whitespace(self, indented_whitespace):
         """
@@ -735,7 +792,7 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        self.extra_data = (
+        new_extra_data = (
             self.fence_character
             + ":"
             + str(self.fence_count)
@@ -752,6 +809,7 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
             + ":"
             + self.extracted_whitespace_before_info_string
         )
+        self._set_extra_data(new_extra_data)
 
 
 # pylint: enable=too-many-instance-attributes
@@ -785,13 +843,14 @@ class AtxHeadingMarkdownToken(MarkdownToken):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        self.extra_data = (
+        new_extra_data = (
             str(self.hash_count)
             + ":"
             + str(self.remove_trailing_count)
             + ":"
             + self.extracted_whitespace
         )
+        self._set_extra_data(new_extra_data)
 
 
 class TextMarkdownToken(MarkdownToken):
@@ -843,9 +902,10 @@ class TextMarkdownToken(MarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        self.extra_data = self.token_text + ":" + self.extracted_whitespace
+        new_extra_data = self.token_text + ":" + self.extracted_whitespace
         if self.end_whitespace:
-            self.extra_data = self.extra_data + ":" + self.end_whitespace
+            new_extra_data += ":" + self.end_whitespace
+        self._set_extra_data(new_extra_data)
 
     def remove_final_whitespace(self):
         """
@@ -962,7 +1022,7 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         """
         self.repeat_count = self.repeat_count - emphasis_length
         if adjust_column_number:
-            self.column_number += emphasis_length
+            self._set_column_number(self.column_number + emphasis_length)
 
     def show_process_emphasis(self):
         """
@@ -1111,8 +1171,7 @@ class BlockQuoteMarkdownToken(MarkdownToken):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-
-        self.extra_data = self.extracted_whitespace + ":" + self.leading_spaces
+        self._set_extra_data(self.extracted_whitespace + ":" + self.leading_spaces)
 
 
 class UnorderedListStartMarkdownToken(MarkdownToken):
@@ -1161,7 +1220,7 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        self.extra_data = (
+        new_extra_data = (
             self.list_start_sequence
             + "::"
             + str(self.indent_level)
@@ -1169,7 +1228,8 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
             + self.extracted_whitespace
         )
         if self.leading_spaces is not None:
-            self.extra_data += ":" + self.leading_spaces
+            new_extra_data += ":" + self.leading_spaces
+        self._set_extra_data(new_extra_data)
 
     def add_leading_spaces(self, ws_add):
         """
@@ -1239,7 +1299,7 @@ class OrderedListStartMarkdownToken(MarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        self.extra_data = (
+        new_extra_data = (
             self.list_start_sequence
             + ":"
             + self.list_start_content
@@ -1249,7 +1309,8 @@ class OrderedListStartMarkdownToken(MarkdownToken):
             + self.extracted_whitespace
         )
         if self.leading_spaces is not None:
-            self.extra_data += ":" + self.leading_spaces
+            new_extra_data += ":" + self.leading_spaces
+        self._set_extra_data(new_extra_data)
 
     def add_leading_spaces(self, ws_add):
         """

@@ -19,7 +19,6 @@ from pymarkdown.markdown_token import (
     LinkReferenceDefinitionMarkdownToken,
     LinkStartMarkdownToken,
     MarkdownToken,
-    MarkdownTokenClass,
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
     ParagraphMarkdownToken,
@@ -158,10 +157,7 @@ class TransformToMarkdown:
         Register the handlers necessary to deal with token's start and end.
         """
         handler_instance = self.__create_type_instance(type_name)
-        assert (
-            handler_instance.token_class == MarkdownTokenClass.LEAF_BLOCK
-            or handler_instance.token_class == MarkdownTokenClass.INLINE_BLOCK
-        )
+        assert handler_instance.is_leaf or handler_instance.is_inline
 
         self.start_token_handlers[handler_instance.token_name] = start_token_handler
         if end_token_handler:
@@ -174,7 +170,7 @@ class TransformToMarkdown:
         Register the handlers necessary to deal with token's start and end.
         """
         handler_instance = self.__create_type_instance(type_name)
-        assert handler_instance.token_class == MarkdownTokenClass.CONTAINER_BLOCK
+        assert handler_instance.is_container
 
         self.start_container_token_handlers[
             handler_instance.token_name
@@ -338,9 +334,9 @@ class TransformToMarkdown:
         # TODO handle this better?
         block_should_end_with_newline = False
         force_newline_processing = False
-        if current_token.token_name == "end-fcode-block":
+        if current_token.is_fenced_code_block_end:
             block_should_end_with_newline = True
-        elif current_token.token_name == "end-setext":
+        elif current_token.is_setext_heading_end:
             block_should_end_with_newline = True
         elif previous_token and previous_token.is_html_block:
             block_should_end_with_newline = True
@@ -358,7 +354,7 @@ class TransformToMarkdown:
                 + "]>>"
                 + ParserHelper.make_value_visible(actual_tokens[ind])
             )
-            while actual_tokens[ind].token_class == MarkdownTokenClass.INLINE_BLOCK:
+            while actual_tokens[ind].is_inline:
                 print(
                     ">>actual_tokens["
                     + str(ind)
@@ -882,6 +878,7 @@ class TransformToMarkdown:
         start_token = current_token.start_markdown_token
 
         if not current_token.was_forced:
+            # We need to do this as the ending fence may be longer than the opening fence.
             split_extra_data = current_token.extra_data.split(":")
             assert len(split_extra_data) >= 2
             fence_count = int(split_extra_data[1])

@@ -8,9 +8,6 @@
 
 - verifying vs validating?
 
-- end tokens should all have start tokens that caused them?
-  - transfor_gfm `assert pre_prev_token.start_markdown_token` should always be true
-
 - why does fcb with only newlines and newlines with ws not fold down to text?
   - coalesce with blank lines in fenced code block?
 - HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height

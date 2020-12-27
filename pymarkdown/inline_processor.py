@@ -6,11 +6,7 @@ import logging
 from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline_helper import InlineHelper, InlineRequest, InlineResponse
 from pymarkdown.link_helper import LinkHelper
-from pymarkdown.markdown_token import (
-    MarkdownTokenClass,
-    SpecialTextMarkdownToken,
-    TextMarkdownToken,
-)
+from pymarkdown.markdown_token import SpecialTextMarkdownToken, TextMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
@@ -130,7 +126,7 @@ class InlineProcessor:
 
         current_token = coalesced_results[0]
         LOGGER.debug("STACK?:%s", ParserHelper.make_value_visible(current_token))
-        if current_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK:
+        if current_token.is_container:
             LOGGER.debug("STACK:%s", ParserHelper.make_value_visible(coalesced_stack))
             coalesced_stack.append(current_token)
             LOGGER.debug("STACK-ADD:%s", ParserHelper.make_value_visible(current_token))
@@ -307,10 +303,7 @@ class InlineProcessor:
 
             current_token = coalesced_results[coalesce_index]
             LOGGER.debug("STACK?:%s", ParserHelper.make_value_visible(current_token))
-            if (
-                current_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK
-                and not current_token.is_new_list_item
-            ):
+            if current_token.is_container and not current_token.is_new_list_item:
                 LOGGER.debug(
                     "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
                 )

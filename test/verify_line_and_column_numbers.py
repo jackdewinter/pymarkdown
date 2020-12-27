@@ -1,7 +1,6 @@
 """
 Module to provide for verification of the line numbers and column numbers in tokens.
 """
-from pymarkdown.markdown_token import MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper, PositionMarker
 
 # pylint: disable=too-many-lines
@@ -34,10 +33,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
         if current_token.is_paragraph_end:
             assert current_token.start_markdown_token
 
-        if (
-            current_token.token_class == MarkdownTokenClass.INLINE_BLOCK
-            and not current_token.is_end_token
-        ):
+        if current_token.is_inline and not current_token.is_end_token:
             print("Inline, skipping" + ParserHelper.make_value_visible(token_stack))
             if token_stack:
                 print(">>" + ParserHelper.make_value_visible(token_stack[-1]))
@@ -106,8 +102,6 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
         print(
             "this>>"
             + str(current_token.token_name)
-            + ">>"
-            + str(current_token.token_class)
             + ">>("
             + str(current_position.line_number)
             + ","
@@ -120,8 +114,6 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                 "last>>"
                 + str(last_token.token_name)
                 + ">>"
-                + str(last_token.token_class)
-                + ">>("
                 + str(last_position.line_number)
                 + ","
                 + str(last_position.index_number)
@@ -445,7 +437,7 @@ def __validate_same_line(
     if had_tab:
         return
 
-    assert last_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK
+    assert last_token.is_container
 
     # TODO replace > with computation for block quote cases
     assert current_position.index_number > last_position.index_number
@@ -641,7 +633,7 @@ def __maintain_block_stack(container_block_stack, current_token):
     what container a given token is kept within.
     """
 
-    if current_token.token_class == MarkdownTokenClass.CONTAINER_BLOCK:
+    if current_token.is_container:
         print("--")
         print(
             ">>CON>>before>>" + ParserHelper.make_value_visible(container_block_stack)

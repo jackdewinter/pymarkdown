@@ -451,9 +451,7 @@ class LinkHelper:
         while collect_index < len(inline_blocks):
 
             LOGGER.debug(
-                ">>collect_text>>%s<<%s<<",
-                inline_blocks[collect_index].token_name,
-                str(inline_blocks[collect_index]),
+                ">>collect_text>>%s<<", str(inline_blocks[collect_index]),
             )
 
             if inline_blocks[collect_index].is_inline_link_end:
