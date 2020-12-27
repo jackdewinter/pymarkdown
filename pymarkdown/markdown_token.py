@@ -28,6 +28,8 @@ class MarkdownToken:
     Class to provide for a base encapsulation of the markdown tokens.
     """
 
+    _end_token_prefix = "end-"
+
     _token_paragraph = "para"
     _token_blank_line = "BLANK"
     _token_atx_heading = "atx"
@@ -38,7 +40,6 @@ class MarkdownToken:
     _token_fenced_code_block = "fcode-block"
     _token_indented_code_block = "icode-block"
     _token_block_quote = "block-quote"
-
     _token_text = "text"
 
     _token_unordered_list_start = "ulist"
@@ -104,9 +105,16 @@ class MarkdownToken:
         return "'" + self.__str__() + "'"
 
     @property
+    def is_end_token(self):
+        """
+        Returns whether the current token is an end element.
+        """
+        return self.token_name.startswith(MarkdownToken._end_token_prefix)
+
+    @property
     def is_block(self):
         """
-        Returns whether or not the current token is one of the block tokens.
+        Returns whether the current token is one of the block tokens.
         """
         return (
             self.is_block_quote_start
@@ -123,7 +131,7 @@ class MarkdownToken:
     @property
     def is_blank_line(self):
         """
-        Returns whether or not the current token is the blank line element.
+        Returns whether the current token is the blank line element.
         """
         return self.token_name == MarkdownToken._token_blank_line
 
@@ -141,7 +149,7 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_block_quote
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_block_quote
         )
 
     @property
@@ -161,11 +169,10 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == EndMarkdownToken.type_name_prefix
+            == MarkdownToken._end_token_prefix
             + MarkdownToken._token_unordered_list_start
             or self.token_name
-            == EndMarkdownToken.type_name_prefix
-            + MarkdownToken._token_ordered_list_start
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_ordered_list_start
         )
 
     @property
@@ -182,7 +189,7 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == EndMarkdownToken.type_name_prefix
+            == MarkdownToken._end_token_prefix
             + MarkdownToken._token_unordered_list_start
         )
 
@@ -214,7 +221,7 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_paragraph
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_paragraph
         )
 
     @property
@@ -245,7 +252,7 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_setext_heading
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_setext_heading
         )
 
     @property
@@ -262,7 +269,7 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_atx_heading
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_atx_heading
         )
 
     @property
@@ -286,7 +293,7 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == EndMarkdownToken.type_name_prefix
+            == MarkdownToken._end_token_prefix
             + MarkdownToken._token_indented_code_block
         )
 
@@ -304,8 +311,7 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == EndMarkdownToken.type_name_prefix
-            + MarkdownToken._token_fenced_code_block
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_fenced_code_block
         )
 
     @property
@@ -329,7 +335,7 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_html_block
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_html_block
         )
 
     @property
@@ -388,7 +394,7 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_inline_emphasis
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_inline_emphasis
         )
 
     @property
@@ -405,7 +411,7 @@ class MarkdownToken:
         """
         return (
             self.token_name
-            == EndMarkdownToken.type_name_prefix + MarkdownToken._token_inline_link
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_inline_link
         )
 
     @property
@@ -415,8 +421,92 @@ class MarkdownToken:
         """
         return self.token_name == MarkdownToken._token_inline_image
 
+    # pylint: disable=too-many-arguments
+    def generate_close_markdown_token_from_markdown_token(
+        self,
+        extracted_whitespace,
+        extra_end_data,
+        was_forced,
+        line_number=0,
+        column_number=0,
+    ):
+        """
+        Generate the token emitted to close off the current stack token
+        """
+        return EndMarkdownToken(
+            self.token_name,
+            extracted_whitespace,
+            extra_end_data,
+            self,
+            was_forced,
+            line_number=line_number,
+            column_number=column_number,
+        )
+
+    # pylint: enable=too-many-arguments
+
 
 # pylint: enable=too-many-public-methods
+
+
+class EndMarkdownToken(MarkdownToken):
+    """
+    Class to provide for an encapsulation of the end element to a matching start.
+    """
+
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        type_name,
+        extracted_whitespace,
+        extra_end_data,
+        start_markdown_token,
+        was_forced,
+        line_number=0,
+        column_number=0,
+    ):
+        assert start_markdown_token
+
+        self.type_name = type_name
+        self.extracted_whitespace = extracted_whitespace
+        self.extra_end_data = extra_end_data
+        self.start_markdown_token = start_markdown_token
+        self.was_forced = was_forced
+
+        MarkdownToken.__init__(
+            self,
+            MarkdownToken._end_token_prefix + type_name,
+            MarkdownTokenClass.INLINE_BLOCK,
+            "",
+            line_number=line_number,
+            column_number=column_number,
+        )
+        self.compose_data_field()
+
+    @property
+    def token_name_without_prefix(self):
+        """
+        Determine what the name of the token is without the end token prefix.
+        """
+        token_name_without_prefix = self.token_name[
+            len(MarkdownToken._end_token_prefix) :
+        ]
+        return token_name_without_prefix
+
+    # pylint: enable=too-many-arguments
+
+    def compose_data_field(self):
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        display_data = ""
+        if self.extra_end_data is not None:
+            display_data += self.extracted_whitespace
+        display_data += ":"
+        if self.extra_end_data is not None:
+            display_data += self.extra_end_data
+        display_data += ":" + str(self.was_forced)
+        self.extra_data = display_data
 
 
 # pylint: disable=too-few-public-methods
@@ -702,57 +792,6 @@ class AtxHeadingMarkdownToken(MarkdownToken):
             + ":"
             + self.extracted_whitespace
         )
-
-
-class EndMarkdownToken(MarkdownToken):
-    """
-    Class to provide for an encapsulation of the end element to a matching start.
-    """
-
-    type_name_prefix = "end-"
-
-    # pylint: disable=too-many-arguments
-    def __init__(
-        self,
-        type_name,
-        extracted_whitespace,
-        extra_end_data,
-        start_markdown_token,
-        was_forced,
-        line_number=0,
-        column_number=0,
-    ):
-
-        self.type_name = type_name
-        self.extracted_whitespace = extracted_whitespace
-        self.extra_end_data = extra_end_data
-        self.start_markdown_token = start_markdown_token
-        self.was_forced = was_forced
-
-        MarkdownToken.__init__(
-            self,
-            EndMarkdownToken.type_name_prefix + type_name,
-            MarkdownTokenClass.INLINE_BLOCK,
-            "",
-            line_number=line_number,
-            column_number=column_number,
-        )
-        self.compose_data_field()
-
-    # pylint: enable=too-many-arguments
-
-    def compose_data_field(self):
-        """
-        Compose the object's self.extra_data field from the local object's variables.
-        """
-        display_data = ""
-        if self.extra_end_data is not None:
-            display_data += self.extracted_whitespace
-        display_data += ":"
-        if self.extra_end_data is not None:
-            display_data += self.extra_end_data
-        display_data += ":" + str(self.was_forced)
-        self.extra_data = display_data
 
 
 class TextMarkdownToken(MarkdownToken):

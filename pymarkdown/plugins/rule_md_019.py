@@ -2,11 +2,7 @@
 Module to implement a plugin that looks for multiple spaces after the hash
 mark on a atx heading.
 """
-from pymarkdown.markdown_token import (
-    AtxHeadingMarkdownToken,
-    EndMarkdownToken,
-    TextMarkdownToken,
-)
+from pymarkdown.markdown_token import AtxHeadingMarkdownToken, TextMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
@@ -45,9 +41,8 @@ class RuleMd019(Plugin):
         """
         if isinstance(token, AtxHeadingMarkdownToken):
             self.__in_atx_heading = not token.remove_trailing_count
-        elif isinstance(token, EndMarkdownToken):
-            if token.is_paragraph_end:
-                self.__in_atx_heading = False
+        elif token.is_paragraph_end:
+            self.__in_atx_heading = False
         elif isinstance(token, TextMarkdownToken):
             resolved_extracted_whitespace = ParserHelper.resolve_replacement_markers_from_text(
                 token.extracted_whitespace

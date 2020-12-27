@@ -426,7 +426,9 @@ class TokenizedMarkdown:
             )
 
         new_tokens.append(
-            parser_state.token_stack[-1].generate_close_token(was_forced=was_forced)
+            parser_state.token_stack[-1].generate_close_markdown_token_from_stack_token(
+                was_forced=was_forced
+            )
         )
         new_tokens.extend(extra_elements)
         del parser_state.token_stack[-1]

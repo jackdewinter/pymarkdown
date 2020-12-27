@@ -8,7 +8,6 @@ from pymarkdown.constants import Constants
 from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline_helper import InlineHelper, InlineRequest
 from pymarkdown.markdown_token import (
-    EndMarkdownToken,
     ImageStartMarkdownToken,
     LinkStartMarkdownToken,
     SpecialTextMarkdownToken,
@@ -1048,9 +1047,9 @@ class LinkHelper:
                 line_number,
                 column_number,
             )
-            token_to_append = EndMarkdownToken(
-                inline_blocks[ind].token_name, "", "", inline_blocks[ind], False
-            )
+            token_to_append = inline_blocks[
+                ind
+            ].generate_close_markdown_token_from_markdown_token("", "", False)
         else:
             assert start_text == LinkHelper.image_start_sequence
             consume_rest_of_line = True

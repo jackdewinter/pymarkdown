@@ -4,11 +4,7 @@ Emphasis helper
 import logging
 
 from pymarkdown.constants import Constants
-from pymarkdown.markdown_token import (
-    EmphasisMarkdownToken,
-    EndMarkdownToken,
-    SpecialTextMarkdownToken,
-)
+from pymarkdown.markdown_token import EmphasisMarkdownToken, SpecialTextMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
@@ -164,11 +160,9 @@ class EmphasisHelper:
         end_index_in_blocks = inline_blocks.index(close_token)
         inline_blocks.insert(
             end_index_in_blocks,
-            EndMarkdownToken(
-                new_token.token_name,
+            new_token.generate_close_markdown_token_from_markdown_token(
                 "",
                 str(emphasis_length) + ":" + emphasis_character,
-                new_token,
                 False,
                 line_number=close_token.line_number,
                 column_number=close_token.column_number,

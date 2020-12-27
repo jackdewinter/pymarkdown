@@ -862,7 +862,7 @@ def test_atx_headings_extra_30():
     expected_gfm = """<h2>a link looks like <a href="/uri">Foo</a></h2>"""
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
     actual_gfm = transformer.transform(actual_tokens)
 
     # Assert

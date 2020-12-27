@@ -7,7 +7,6 @@ from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
-    EndMarkdownToken,
     FencedCodeBlockMarkdownToken,
     IndentedCodeBlockMarkdownToken,
     ParagraphMarkdownToken,
@@ -114,13 +113,15 @@ class LeafBlockProcessor:
                     >= parser_state.token_stack[-1].fence_character_count
                     and non_whitespace_index >= len(position_marker.text_to_parse)
                 ):
-                    new_end_token = parser_state.token_stack[-1].generate_close_token(
+                    new_end_token = parser_state.token_stack[
+                        -1
+                    ].generate_close_markdown_token_from_stack_token(
                         extracted_whitespace
                     )
                     new_tokens.append(new_end_token)
                     new_end_token.start_markdown_token = parser_state.token_stack[
                         -1
-                    ].start_markdown_token
+                    ].matching_markdown_token
                     new_end_token.extra_end_data = str(collected_count)
                     new_end_token.compose_data_field()
                     del parser_state.token_stack[-1]
@@ -184,13 +185,13 @@ class LeafBlockProcessor:
                             whitespace_start_count=ParserHelper.calculate_length(
                                 extracted_whitespace
                             ),
-                            start_markdown_token=new_token,
+                            matching_markdown_token=new_token,
                         )
                     )
                     LOGGER.debug("StackToken-->%s<<", str(parser_state.token_stack[-1]))
                     LOGGER.debug(
                         "StackToken>start_markdown_token-->%s<<",
-                        str(parser_state.token_stack[-1].start_markdown_token),
+                        str(parser_state.token_stack[-1].matching_markdown_token),
                     )
 
                     LeafBlockProcessor.correct_for_leaf_block_start_in_list(
@@ -636,7 +637,9 @@ class LeafBlockProcessor:
                 force_paragraph_close_if_present = True
             if parser_state.token_stack[-1].is_paragraph:
                 new_tokens.append(
-                    parser_state.token_stack[-1].generate_close_token(
+                    parser_state.token_stack[
+                        -1
+                    ].generate_close_markdown_token_from_stack_token(
                         was_forced=force_paragraph_close_if_present
                     )
                 )
@@ -774,12 +777,8 @@ class LeafBlockProcessor:
                     position_marker=position_marker,
                 )
             )
-            end_token = EndMarkdownToken(
-                start_token.token_name,
-                extracted_whitespace_at_end,
-                extracted_whitespace_before_end,
-                start_token,
-                False,
+            end_token = start_token.generate_close_markdown_token_from_markdown_token(
+                extracted_whitespace_at_end, extracted_whitespace_before_end, False
             )
             end_token.start_markdown_token = start_token
             new_tokens.append(end_token)
@@ -841,12 +840,8 @@ class LeafBlockProcessor:
                 # into a heading, this has to be done separately, as there is no
                 # stack token to close.
                 new_tokens.append(
-                    EndMarkdownToken(
-                        replacement_token.token_name,
-                        extracted_whitespace,
-                        extra_whitespace_after_setext,
-                        replacement_token,
-                        False,
+                    replacement_token.generate_close_markdown_token_from_markdown_token(
+                        extracted_whitespace, extra_whitespace_after_setext, False
                     )
                 )
 

@@ -7,7 +7,6 @@ from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline_helper import InlineHelper, InlineRequest, InlineResponse
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.markdown_token import (
-    EndMarkdownToken,
     MarkdownTokenClass,
     SpecialTextMarkdownToken,
     TextMarkdownToken,
@@ -323,23 +322,17 @@ class InlineProcessor:
                     "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
                 )
 
-            elif isinstance(current_token, EndMarkdownToken):
-                LOGGER.debug("END:%s", ParserHelper.make_value_visible(current_token))
+            elif current_token.is_list_end or current_token.is_block_quote_end:
                 LOGGER.debug(
-                    "END:%s", ParserHelper.make_value_visible(current_token.type_name)
+                    "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
                 )
-                if current_token.is_list_end or current_token.is_block_quote_end:
-                    LOGGER.debug(
-                        "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
-                    )
-                    del coalesced_stack[-1]
-                    LOGGER.debug(
-                        "STACK-REMOVE:%s",
-                        ParserHelper.make_value_visible(current_token),
-                    )
-                    LOGGER.debug(
-                        "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
-                    )
+                del coalesced_stack[-1]
+                LOGGER.debug(
+                    "STACK-REMOVE:%s", ParserHelper.make_value_visible(current_token),
+                )
+                LOGGER.debug(
+                    "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
+                )
         return coalesced_list
 
     # pylint: enable=too-many-branches, too-many-statements, too-many-nested-blocks

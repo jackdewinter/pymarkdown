@@ -4,7 +4,6 @@ beginning of the line.
 """
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
-    EndMarkdownToken,
     SetextHeadingMarkdownToken,
     TextMarkdownToken,
 )
@@ -55,11 +54,10 @@ class RuleMd023(Plugin):
             if self.__setext_start_token and not self.__any_leading_whitespace_detected:
                 if token.end_whitespace and " " in token.end_whitespace:
                     self.__any_leading_whitespace_detected = True
-        elif isinstance(token, EndMarkdownToken):
-            if token.is_setext_heading_end:
-                if token.extracted_whitespace:
-                    self.__any_leading_whitespace_detected = True
+        elif token.is_setext_heading_end:
+            if token.extracted_whitespace:
+                self.__any_leading_whitespace_detected = True
 
-                if self.__any_leading_whitespace_detected:
-                    self.report_next_token_error(self.__setext_start_token)
-                self.__setext_start_token = None
+            if self.__any_leading_whitespace_detected:
+                self.report_next_token_error(self.__setext_start_token)
+            self.__setext_start_token = None

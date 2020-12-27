@@ -7,7 +7,6 @@ import re
 
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
-    EndMarkdownToken,
     ParagraphMarkdownToken,
     TextMarkdownToken,
 )
@@ -58,16 +57,15 @@ class RuleMd020(Plugin):
             self.__last_paragraph_token = token
         elif isinstance(token, AtxHeadingMarkdownToken):
             self.__is_in_normal_atx = True
-        elif isinstance(token, EndMarkdownToken):
-            if token.is_paragraph_end:
-                self.__last_paragraph_token = None
-            elif token.is_atx_heading_end:
-                if self.__is_in_normal_atx and isinstance(
-                    self.__last_atx_token, TextMarkdownToken
-                ):
-                    if self.__last_atx_token.token_text.endswith("#"):
-                        self.report_next_token_error(token)
-                self.__is_in_normal_atx = False
+        elif token.is_paragraph_end:
+            self.__last_paragraph_token = None
+        elif token.is_atx_heading_end:
+            if self.__is_in_normal_atx and isinstance(
+                self.__last_atx_token, TextMarkdownToken
+            ):
+                if self.__last_atx_token.token_text.endswith("#"):
+                    self.report_next_token_error(token)
+            self.__is_in_normal_atx = False
         elif isinstance(token, TextMarkdownToken) and self.__last_paragraph_token:
             split_whitespace = self.__last_paragraph_token.extracted_whitespace.split(
                 "\n"

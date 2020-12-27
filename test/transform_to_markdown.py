@@ -10,7 +10,6 @@ from pymarkdown.markdown_token import (
     BlockQuoteMarkdownToken,
     EmailAutolinkMarkdownToken,
     EmphasisMarkdownToken,
-    EndMarkdownToken,
     FencedCodeBlockMarkdownToken,
     HardBreakMarkdownToken,
     HtmlBlockMarkdownToken,
@@ -232,7 +231,7 @@ class TransformToMarkdown:
                 start_handler_fn = self.start_token_handlers[current_token.token_name]
                 new_data = start_handler_fn(current_token, previous_token)
 
-            elif isinstance(current_token, EndMarkdownToken):
+            elif current_token.is_end_token:
 
                 if current_token.type_name in self.end_token_handlers:
                     end_handler_fn = self.end_token_handlers[current_token.type_name]

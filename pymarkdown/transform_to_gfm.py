@@ -11,7 +11,6 @@ from pymarkdown.markdown_token import (
     BlockQuoteMarkdownToken,
     EmailAutolinkMarkdownToken,
     EmphasisMarkdownToken,
-    EndMarkdownToken,
     FencedCodeBlockMarkdownToken,
     HardBreakMarkdownToken,
     HtmlBlockMarkdownToken,
@@ -117,8 +116,8 @@ class TransformToGfm:
             elif isinstance(current_token, NewListItemMarkdownToken):
                 LOGGER.debug("cll>>new list item>>%s", str(current_token))
                 check_me = stack_count == 0
-                if not current_token.is_block:
-                    LOGGER.debug(">>list--item>>%s", str(stack_count))
+                assert not current_token.is_block
+                LOGGER.debug(">>list--item>>%s", str(stack_count))
             elif current_token.is_block_quote_start:
                 LOGGER.debug("cll>>start block quote>>%s", str(current_token))
                 stack_count += 1
@@ -147,24 +146,10 @@ class TransformToGfm:
                     search_back_index -= 1
                     pre_prev_token = actual_tokens[search_back_index]
 
-                if pre_prev_token.token_name.startswith(
-                    EndMarkdownToken.type_name_prefix
-                ):
-                    # assert pre_prev_token.start_markdown_token
-                    if pre_prev_token.start_markdown_token:
-                        pre_prev_token = pre_prev_token.start_markdown_token
-                        LOGGER.debug(">>end_>using_start>>%s", str(pre_prev_token))
-                    else:
-                        end_token_suffix = pre_prev_token.token_name[
-                            len(EndMarkdownToken.type_name_prefix) :
-                        ]
-                        search_back_index -= 1
-                        x_token = actual_tokens[search_back_index]
-                        while x_token.token_name != end_token_suffix:
-                            search_back_index -= 1
-                            x_token = actual_tokens[search_back_index]
-                        pre_prev_token = x_token
-                        LOGGER.debug(">>end_>calc>>%s", str(pre_prev_token))
+                if pre_prev_token.is_end_token:
+                    assert pre_prev_token.start_markdown_token, str(pre_prev_token)
+                    pre_prev_token = pre_prev_token.start_markdown_token
+                    LOGGER.debug(">>end_>using_start>>%s", str(pre_prev_token))
 
                 current_check = (
                     current_token.is_block
@@ -468,7 +453,7 @@ class TransformToGfm:
                 start_handler_fn = self.start_token_handlers[next_token.token_name]
                 output_html = start_handler_fn(output_html, next_token, transform_state)
 
-            elif isinstance(next_token, EndMarkdownToken):
+            elif next_token.is_end_token:
                 if next_token.type_name in self.end_token_handlers:
                     end_handler_fn = self.end_token_handlers[next_token.type_name]
                     output_html = end_handler_fn(

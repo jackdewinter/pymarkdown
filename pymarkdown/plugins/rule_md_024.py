@@ -4,7 +4,6 @@ content.
 """
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
-    EndMarkdownToken,
     SetextHeadingMarkdownToken,
 )
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -69,9 +68,8 @@ class RuleMd024(Plugin):
         if isinstance(token, (AtxHeadingMarkdownToken, SetextHeadingMarkdownToken)):
             self.handle_heading_start(token)
             skip_this_token = True
-        elif isinstance(token, EndMarkdownToken):
-            if token.is_setext_heading_end or token.is_atx_heading_end:
-                self.handler_heading_end()
+        elif token.is_setext_heading_end or token.is_atx_heading_end:
+            self.handler_heading_end()
 
         if not skip_this_token and self.__heading_text is not None:
             self.__heading_text += token.debug_string(include_column_row_info=False)

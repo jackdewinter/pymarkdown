@@ -5,7 +5,6 @@ blank lines.
 from pymarkdown.markdown_token import (
     AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
-    EndMarkdownToken,
     SetextHeadingMarkdownToken,
     ThematicBreakMarkdownToken,
 )
@@ -86,7 +85,7 @@ class RuleMd022(Plugin):
             self.__did_heading_end = False
         elif isinstance(token, ThematicBreakMarkdownToken):
             self.__blank_line_count = 0
-        elif isinstance(token, EndMarkdownToken):
+        elif token.is_end_token:
             if self.__is_leaf_end_token(token):
                 self.__blank_line_count = 0
             else:

@@ -45,12 +45,15 @@ class StackToken:
             )
         return NotImplemented
 
-    def generate_close_token(self, extracted_whitespace=None, was_forced=False):
+    def generate_close_markdown_token_from_stack_token(
+        self, extracted_whitespace=None, was_forced=False
+    ):
         """
         Generate the token emitted to close off the current stack token
         """
 
         assert self.stack_link_definition != self.type_name
+        assert self.matching_markdown_token, str(self)
 
         return EndMarkdownToken(
             self.type_name,
@@ -165,9 +168,9 @@ class IndentedCodeBlockStackToken(StackToken):
     Class to provide for a stack token for an indented code block.
     """
 
-    def __init__(self, start_markdown_token):
+    def __init__(self, matching_markdown_token):
         StackToken.__init__(self, StackToken.stack_indented_code)
-        self.start_markdown_token = start_markdown_token
+        self.matching_markdown_token = matching_markdown_token
 
 
 class FencedCodeBlockStackToken(StackToken):
@@ -180,7 +183,7 @@ class FencedCodeBlockStackToken(StackToken):
         code_fence_character,
         fence_character_count,
         whitespace_start_count,
-        start_markdown_token,
+        matching_markdown_token,
     ):
         extra_data = (
             code_fence_character
@@ -194,7 +197,7 @@ class FencedCodeBlockStackToken(StackToken):
         self.code_fence_character = code_fence_character
         self.fence_character_count = fence_character_count
         self.whitespace_start_count = whitespace_start_count
-        self.start_markdown_token = start_markdown_token
+        self.matching_markdown_token = matching_markdown_token
 
 
 class ListStackToken(StackToken):

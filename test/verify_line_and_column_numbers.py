@@ -1,7 +1,7 @@
 """
 Module to provide for verification of the line numbers and column numbers in tokens.
 """
-from pymarkdown.markdown_token import EndMarkdownToken, MarkdownTokenClass
+from pymarkdown.markdown_token import MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper, PositionMarker
 
 # pylint: disable=too-many-lines
@@ -36,7 +36,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
 
         if (
             current_token.token_class == MarkdownTokenClass.INLINE_BLOCK
-            and not isinstance(current_token, EndMarkdownToken)
+            and not current_token.is_end_token
         ):
             print("Inline, skipping" + ParserHelper.make_value_visible(token_stack))
             if token_stack:
@@ -73,7 +73,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
 
         __maintain_block_stack(container_block_stack, current_token)
 
-        if isinstance(current_token, EndMarkdownToken):
+        if current_token.is_end_token:
             print("end token, skipping")
             __pop_from_stack_if_required(token_stack, current_token)
             if container_block_stack and container_block_stack[-1].is_block_quote_start:
@@ -266,8 +266,8 @@ def __pop_from_stack_if_required(token_stack, current_token):
     )
     assert token_stack
     if (
-        EndMarkdownToken.type_name_prefix + token_stack[-1].token_name
-        == current_token.token_name
+        current_token.is_end_token
+        and current_token.token_name_without_prefix == token_stack[-1].token_name
     ):
         del token_stack[-1]
     print(
@@ -308,11 +308,14 @@ def __validate_block_token_height(
         )
     elif last_token.is_html_block or last_token.is_fenced_code_block:
         current_token_index = last_token_index + 1
-        end_name = EndMarkdownToken.type_name_prefix + last_token.token_name
         token_height = 0
         if last_token.is_fenced_code_block:
             token_height += 1
-        while actual_tokens[current_token_index].token_name != end_name:
+        while not (
+            actual_tokens[current_token_index].is_end_token
+            and actual_tokens[current_token_index].token_name_without_prefix
+            == last_token.token_name
+        ):
             if actual_tokens[current_token_index].is_text:
                 token_height += 1 + ParserHelper.count_newlines_in_text(
                     actual_tokens[current_token_index].token_text
@@ -652,12 +655,8 @@ def __maintain_block_stack(container_block_stack, current_token):
         container_block_stack.append(current_token)
         print(">>CON>>after>>" + ParserHelper.make_value_visible(container_block_stack))
 
-    # TODO Do this better.
-    elif isinstance(current_token, EndMarkdownToken):
+    elif current_token.is_end_token:
 
-        token_name_without_prefix = current_token.token_name[
-            len(EndMarkdownToken.type_name_prefix) :
-        ]
         if (
             current_token.is_block_quote_end
             or current_token.is_list_end
@@ -672,7 +671,10 @@ def __maintain_block_stack(container_block_stack, current_token):
             if container_block_stack[-1].is_new_list_item:
                 del container_block_stack[-1]
 
-            assert container_block_stack[-1].token_name == token_name_without_prefix
+            assert (
+                container_block_stack[-1].token_name
+                == current_token.token_name_without_prefix
+            )
             del container_block_stack[-1]
             print(
                 "<<CON<<after<<"
@@ -866,9 +868,7 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
     )
     while (
         search_token_index >= 0
-        and inline_tokens[search_token_index].token_name.startswith(
-            EndMarkdownToken.type_name_prefix
-        )
+        and inline_tokens[search_token_index].is_end_token
         and inline_tokens[search_token_index].line_number == 0
     ):
         print(">>" + ParserHelper.make_value_visible(inline_tokens[search_token_index]))
@@ -2411,8 +2411,8 @@ def __verify_inline(  # noqa: C901
     removed_end_token = None
     if (
         inline_tokens
-        and isinstance(inline_tokens[-1], EndMarkdownToken)
-        and inline_tokens[-1].type_name == last_block_token.token_name
+        and inline_tokens[-1].is_end_token
+        and inline_tokens[-1].token_name_without_prefix == last_block_token.token_name
     ):
         removed_end_token = inline_tokens[-1]
         print("removed_end_token>" + str(removed_end_token))

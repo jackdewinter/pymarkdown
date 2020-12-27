@@ -837,7 +837,11 @@ class ContainerBlockProcessor:
         ].is_indented_code_block and ParserHelper.is_length_less_than_or_equal_to(
             extracted_whitespace, 3
         ):
-            pre_tokens.append(parser_state.token_stack[-1].generate_close_token())
+            pre_tokens.append(
+                parser_state.token_stack[
+                    -1
+                ].generate_close_markdown_token_from_stack_token()
+            )
             del parser_state.token_stack[-1]
 
             extracted_blank_line_tokens = ContainerBlockProcessor.extract_markdown_tokens_back_to_blank_line(
