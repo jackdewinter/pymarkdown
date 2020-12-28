@@ -259,7 +259,7 @@ def __pop_from_stack_if_required(token_stack, current_token):
     assert token_stack
     if (
         current_token.is_end_token
-        and current_token.token_name_without_prefix == token_stack[-1].token_name
+        and current_token.type_name == token_stack[-1].token_name
     ):
         del token_stack[-1]
     print(
@@ -305,8 +305,7 @@ def __validate_block_token_height(
             token_height += 1
         while not (
             actual_tokens[current_token_index].is_end_token
-            and actual_tokens[current_token_index].token_name_without_prefix
-            == last_token.token_name
+            and actual_tokens[current_token_index].type_name == last_token.token_name
         ):
             if actual_tokens[current_token_index].is_text:
                 token_height += 1 + ParserHelper.count_newlines_in_text(
@@ -663,10 +662,7 @@ def __maintain_block_stack(container_block_stack, current_token):
             if container_block_stack[-1].is_new_list_item:
                 del container_block_stack[-1]
 
-            assert (
-                container_block_stack[-1].token_name
-                == current_token.token_name_without_prefix
-            )
+            assert container_block_stack[-1].token_name == current_token.type_name
             del container_block_stack[-1]
             print(
                 "<<CON<<after<<"
@@ -2404,7 +2400,7 @@ def __verify_inline(  # noqa: C901
     if (
         inline_tokens
         and inline_tokens[-1].is_end_token
-        and inline_tokens[-1].token_name_without_prefix == last_block_token.token_name
+        and inline_tokens[-1].type_name == last_block_token.token_name
     ):
         removed_end_token = inline_tokens[-1]
         print("removed_end_token>" + str(removed_end_token))

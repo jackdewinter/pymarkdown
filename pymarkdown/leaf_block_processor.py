@@ -116,14 +116,9 @@ class LeafBlockProcessor:
                     new_end_token = parser_state.token_stack[
                         -1
                     ].generate_close_markdown_token_from_stack_token(
-                        extracted_whitespace
+                        extracted_whitespace, extra_end_data=str(collected_count)
                     )
                     new_tokens.append(new_end_token)
-                    new_end_token.start_markdown_token = parser_state.token_stack[
-                        -1
-                    ].matching_markdown_token
-                    new_end_token.extra_end_data = str(collected_count)
-                    new_end_token.compose_data_field()
                     del parser_state.token_stack[-1]
             else:
                 LOGGER.debug("pfcb->check")
@@ -780,7 +775,6 @@ class LeafBlockProcessor:
             end_token = start_token.generate_close_markdown_token_from_markdown_token(
                 extracted_whitespace_at_end, extracted_whitespace_before_end, False
             )
-            end_token.start_markdown_token = start_token
             new_tokens.append(end_token)
         return new_tokens
 

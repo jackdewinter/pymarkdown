@@ -46,7 +46,7 @@ class StackToken:
         return NotImplemented
 
     def generate_close_markdown_token_from_stack_token(
-        self, extracted_whitespace=None, was_forced=False
+        self, extracted_whitespace=None, extra_end_data=None, was_forced=False
     ):
         """
         Generate the token emitted to close off the current stack token
@@ -58,7 +58,7 @@ class StackToken:
         return EndMarkdownToken(
             self.type_name,
             extracted_whitespace,
-            None,
+            extra_end_data,
             self.matching_markdown_token,
             was_forced,
         )

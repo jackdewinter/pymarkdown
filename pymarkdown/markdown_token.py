@@ -193,14 +193,14 @@ class MarkdownToken:
     @property
     def is_block_quote_start(self):
         """
-        Returns whether or not the current token is a block quote.
+        Returns whether the current token is a block quote.
         """
         return self.token_name == MarkdownToken._token_block_quote
 
     @property
     def is_block_quote_end(self):
         """
-        Returns whether or not the current token is a block quote.
+        Returns whether the current token is a block quote.
         """
         return (
             self.token_name
@@ -210,7 +210,7 @@ class MarkdownToken:
     @property
     def is_list_start(self):
         """
-        Returns whether or not the current token is a list element.
+        Returns whether the current token is a list element.
         """
         return (
             self.token_name == MarkdownToken._token_unordered_list_start
@@ -220,7 +220,7 @@ class MarkdownToken:
     @property
     def is_list_end(self):
         """
-        Returns whether or not the current token is a list end element.
+        Returns whether the current token is a list end element.
         """
         return (
             self.token_name
@@ -233,14 +233,14 @@ class MarkdownToken:
     @property
     def is_unordered_list_start(self):
         """
-        Returns whether or not the current token is a unordered list element.
+        Returns whether the current token is a unordered list element.
         """
         return self.token_name == MarkdownToken._token_unordered_list_start
 
     @property
     def is_unordered_list_end(self):
         """
-        Returns whether or not the current token is a unordered list end element.
+        Returns whether the current token is a unordered list end element.
         """
         return (
             self.token_name
@@ -251,28 +251,28 @@ class MarkdownToken:
     @property
     def is_new_list_item(self):
         """
-        Returns whether or not the current token is a list item element.
+        Returns whether the current token is a list item element.
         """
         return self.token_name == MarkdownToken._token_new_list_item
 
     @property
     def is_any_list_token(self):
         """
-        Returns whether or not the current token is a list item element or a list element.
+        Returns whether the current token is a list item element or a list element.
         """
         return self.is_new_list_item or self.is_list_start
 
     @property
     def is_paragraph(self):
         """
-        Returns whether or not the current token is a paragraph element.
+        Returns whether the current token is a paragraph element.
         """
         return self.token_name == MarkdownToken._token_paragraph
 
     @property
     def is_paragraph_end(self):
         """
-        Returns whether or not the current token is a paragraph end element.
+        Returns whether the current token is a paragraph end element.
         """
         return (
             self.token_name
@@ -282,35 +282,35 @@ class MarkdownToken:
     @property
     def is_thematic_break(self):
         """
-        Returns whether or not the current token is a thematic break element.
+        Returns whether the current token is a thematic break element.
         """
         return self.token_name == MarkdownToken._token_thematic_break
 
     @property
     def is_text(self):
         """
-        Returns whether or not the current token is a text element.
+        Returns whether the current token is a text element.
         """
         return self.token_name == MarkdownToken._token_text
 
     @property
     def is_special_text(self):
         """
-        Returns whether or not the current token is a special text element.
+        Returns whether the current token is a special text element.
         """
         return isinstance(self, SpecialTextMarkdownToken)
 
     @property
     def is_setext_heading(self):
         """
-        Returns whether or not the current token is a setext heading element.
+        Returns whether the current token is a setext heading element.
         """
         return self.token_name == MarkdownToken._token_setext_heading
 
     @property
     def is_setext_heading_end(self):
         """
-        Returns whether or not the current token is a setext heading end element.
+        Returns whether the current token is a setext heading end element.
         """
         return (
             self.token_name
@@ -320,14 +320,14 @@ class MarkdownToken:
     @property
     def is_atx_heading(self):
         """
-        Returns whether or not the current token is an atx element.
+        Returns whether the current token is an atx element.
         """
         return self.token_name == MarkdownToken._token_atx_heading
 
     @property
     def is_atx_heading_end(self):
         """
-        Returns whether or not the current token is an atx heading end element.
+        Returns whether the current token is an atx heading end element.
         """
         return (
             self.token_name
@@ -337,21 +337,21 @@ class MarkdownToken:
     @property
     def is_code_block(self):
         """
-        Returns whether or not the current token is a code block element.
+        Returns whether the current token is a code block element.
         """
         return self.is_indented_code_block or self.is_fenced_code_block
 
     @property
     def is_indented_code_block(self):
         """
-        Returns whether or not the current token is an indented code block element.
+        Returns whether the current token is an indented code block element.
         """
         return self.token_name == MarkdownToken._token_indented_code_block
 
     @property
     def is_indented_code_block_end(self):
         """
-        Returns whether or not the current token is an indented code block end element.
+        Returns whether the current token is an indented code block end element.
         """
         return (
             self.token_name
@@ -362,14 +362,14 @@ class MarkdownToken:
     @property
     def is_fenced_code_block(self):
         """
-        Returns whether or not the current token is a fenced code block element.
+        Returns whether the current token is a fenced code block element.
         """
         return self.token_name == MarkdownToken._token_fenced_code_block
 
     @property
     def is_fenced_code_block_end(self):
         """
-        Returns whether or not the current token is a fenced code block element.
+        Returns whether the current token is a fenced code block element.
         """
         return (
             self.token_name
@@ -379,21 +379,21 @@ class MarkdownToken:
     @property
     def is_link_reference_definition(self):
         """
-        Returns whether or not the current token is a link reference definition element.
+        Returns whether the current token is a link reference definition element.
         """
         return self.token_name == MarkdownToken._token_link_reference_definition
 
     @property
     def is_html_block(self):
         """
-        Returns whether or not the current token is a html block element.
+        Returns whether the current token is a html block element.
         """
         return self.token_name == MarkdownToken._token_html_block
 
     @property
     def is_html_block_end(self):
         """
-        Returns whether or not the current token is a html block element.
+        Returns whether the current token is a html block element.
         """
         return (
             self.token_name
@@ -403,56 +403,56 @@ class MarkdownToken:
     @property
     def is_inline_code_span(self):
         """
-        Returns whether or not the current token is a code span element.
+        Returns whether the current token is a code span element.
         """
         return self.token_name == MarkdownToken._token_inline_code_span
 
     @property
     def is_inline_hard_break(self):
         """
-        Returns whether or not the current token is a hard break element.
+        Returns whether the current token is a hard break element.
         """
         return self.token_name == MarkdownToken._token_inline_hard_break
 
     @property
     def is_inline_autolink(self):
         """
-        Returns whether or not the current token is an uri autolink or an email autolink element.
+        Returns whether the current token is an uri autolink or an email autolink element.
         """
         return self.is_inline_uri_autolink or self.is_inline_email_autolink
 
     @property
     def is_inline_uri_autolink(self):
         """
-        Returns whether or not the current token is an uri autolink element.
+        Returns whether the current token is an uri autolink element.
         """
         return self.token_name == MarkdownToken._token_inline_uri_autolink
 
     @property
     def is_inline_email_autolink(self):
         """
-        Returns whether or not the current token is an email autolink element.
+        Returns whether the current token is an email autolink element.
         """
         return self.token_name == MarkdownToken._token_inline_email_autolink
 
     @property
     def is_inline_raw_html(self):
         """
-        Returns whether or not the current token is an email autolink element.
+        Returns whether the current token is an email autolink element.
         """
         return self.token_name == MarkdownToken._token_inline_raw_html
 
     @property
     def is_inline_emphasis(self):
         """
-        Returns whether or not the current token is an emphasis element.
+        Returns whether the current token is an emphasis element.
         """
         return self.token_name == MarkdownToken._token_inline_emphasis
 
     @property
     def is_inline_emphasis_end(self):
         """
-        Returns whether or not the current token is an emphasis end element.
+        Returns whether the current token is an emphasis end element.
         """
         return (
             self.token_name
@@ -462,14 +462,14 @@ class MarkdownToken:
     @property
     def is_inline_link(self):
         """
-        Returns whether or not the current token is a link element.
+        Returns whether the current token is a link element.
         """
         return self.token_name == MarkdownToken._token_inline_link
 
     @property
     def is_inline_link_end(self):
         """
-        Returns whether or not the current token is a link end element.
+        Returns whether the current token is a link end element.
         """
         return (
             self.token_name
@@ -479,7 +479,7 @@ class MarkdownToken:
     @property
     def is_inline_image(self):
         """
-        Returns whether or not the current token is an image element.
+        Returns whether the current token is an image element.
         """
         return self.token_name == MarkdownToken._token_inline_image
 
@@ -528,12 +528,11 @@ class EndMarkdownToken(MarkdownToken):
         column_number=0,
     ):
         assert start_markdown_token
-
-        self.type_name = type_name
-        self.extracted_whitespace = extracted_whitespace
-        self.extra_end_data = extra_end_data
-        self.start_markdown_token = start_markdown_token
-        self.was_forced = was_forced
+        self.__type_name = type_name
+        self.__extracted_whitespace = extracted_whitespace
+        self.__extra_end_data = extra_end_data
+        self.__start_markdown_token = start_markdown_token
+        self.__was_forced = was_forced
 
         MarkdownToken.__init__(
             self,
@@ -543,21 +542,46 @@ class EndMarkdownToken(MarkdownToken):
             line_number=line_number,
             column_number=column_number,
         )
-        self.compose_data_field()
-
-    @property
-    def token_name_without_prefix(self):
-        """
-        Determine what the name of the token is without the end token prefix.
-        """
-        token_name_without_prefix = self.token_name[
-            len(MarkdownToken._end_token_prefix) :
-        ]
-        return token_name_without_prefix
+        self.__compose_data_field()
 
     # pylint: enable=too-many-arguments
 
-    def compose_data_field(self):
+    @property
+    def type_name(self):
+        """
+        Returns the type of markdown element related to this end element.
+        """
+        return self.__type_name
+
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
+    @property
+    def extra_end_data(self):
+        """
+        Returns any extra data specificially tied to the end element.
+        """
+        return self.__extra_end_data
+
+    @property
+    def start_markdown_token(self):
+        """
+        Returns the start markdown token that this end token is the end for.
+        """
+        return self.__start_markdown_token
+
+    @property
+    def was_forced(self):
+        """
+        Returns a value indicating whether the end element was forced.
+        """
+        return self.__was_forced
+
+    def __compose_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
@@ -578,7 +602,7 @@ class BlankLineMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, extracted_whitespace, position_marker, column_delta=0):
-        self.extracted_whitespace = extracted_whitespace
+        self.__extracted_whitespace = extracted_whitespace
 
         line_number = 0
         column_number = 0
@@ -600,6 +624,13 @@ class BlankLineMarkdownToken(MarkdownToken):
             column_number=column_number,
         )
 
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
 
 class ParagraphMarkdownToken(MarkdownToken):
     """
@@ -607,8 +638,8 @@ class ParagraphMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, extracted_whitespace, position_marker):
-        self.extracted_whitespace = extracted_whitespace
-        self.final_whitespace = ""
+        self.__extracted_whitespace = extracted_whitespace
+        self.__final_whitespace = ""
         self.rehydrate_index = 0
         MarkdownToken.__init__(
             self,
@@ -617,16 +648,30 @@ class ParagraphMarkdownToken(MarkdownToken):
             "",
             position_marker=position_marker,
         )
-        self.compose_extra_data_field()
+        self.__compose_extra_data_field()
 
-    def compose_extra_data_field(self):
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
+    @property
+    def final_whitespace(self):
+        """
+        Returns any final whitespace at the end of the paragraph that was removed.
+        """
+        return self.__final_whitespace
+
+    def __compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        new_extra_data = self.extracted_whitespace
+        new_extra_data = self.__extracted_whitespace
         if self.final_whitespace:
-            new_extra_data += ":" + self.final_whitespace
+            new_extra_data += ":" + self.__final_whitespace
         self._set_extra_data(new_extra_data)
 
     def add_whitespace(self, whitespace_to_add):
@@ -635,8 +680,8 @@ class ParagraphMarkdownToken(MarkdownToken):
         used when combining text blocks in a paragraph.
         """
 
-        self.extracted_whitespace = self.extracted_whitespace + whitespace_to_add
-        self.compose_extra_data_field()
+        self.__extracted_whitespace += whitespace_to_add
+        self.__compose_extra_data_field()
 
     def set_final_whitespace(self, whitespace_to_set):
         """
@@ -644,8 +689,8 @@ class ParagraphMarkdownToken(MarkdownToken):
         end of the paragraph, removed to prevent hard lines at the end.
         """
 
-        self.final_whitespace = whitespace_to_set
-        self.compose_extra_data_field()
+        self.__final_whitespace = whitespace_to_set
+        self.__compose_extra_data_field()
 
 
 # pylint: disable=too-many-instance-attributes
@@ -663,22 +708,22 @@ class SetextHeadingMarkdownToken(MarkdownToken):
         position_marker,
         para_token,
     ):
-        self.heading_character = heading_character
-        self.heading_character_count = heading_character_count
-        self.extracted_whitespace = extracted_whitespace
-        self.final_whitespace = ""
-        if self.heading_character == "=":
-            self.hash_count = 1
-        elif self.heading_character == "-":
-            self.hash_count = 2
+        self.__heading_character = heading_character
+        self.__heading_character_count = heading_character_count
+        self.__extracted_whitespace = extracted_whitespace
+        self.__final_whitespace = ""
+        if self.__heading_character == "=":
+            self.__hash_count = 1
+        elif self.__heading_character == "-":
+            self.__hash_count = 2
         else:
-            self.hash_count = -1
+            self.__hash_count = -1
         if para_token:
-            self.original_line_number = para_token.line_number
-            self.original_column_number = para_token.column_number
+            self.__original_line_number = para_token.line_number
+            self.__original_column_number = para_token.column_number
         else:
-            self.original_line_number = -1
-            self.original_column_number = -1
+            self.__original_line_number = -1
+            self.__original_column_number = -1
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_setext_heading,
@@ -686,9 +731,58 @@ class SetextHeadingMarkdownToken(MarkdownToken):
             "",
             position_marker=position_marker,
         )
-        self.compose_extra_data_field()
+        self.__compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
+
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
+    @property
+    def final_whitespace(self):
+        """
+        Returns any final whitespace at the end of the heading that was removed.
+        """
+        return self.__final_whitespace
+
+    @property
+    def heading_character(self):
+        """
+        Returns the character associated with the heading start.
+        """
+        return self.__heading_character
+
+    @property
+    def hash_count(self):
+        """
+        Returns the count in equivalence of "Atx Hash" counts.
+        """
+        return self.__hash_count
+
+    @property
+    def heading_character_count(self):
+        """
+        Returns the count of characters associated with the heading start.
+        """
+        return self.__heading_character_count
+
+    @property
+    def original_line_number(self):
+        """
+        Returns the line number where this element actually started.
+        """
+        return self.__original_line_number
+
+    @property
+    def original_column_number(self):
+        """
+        Returns the column number where this element actually started.
+        """
+        return self.__original_column_number
 
     def set_final_whitespace(self, whitespace_to_set):
         """
@@ -696,18 +790,18 @@ class SetextHeadingMarkdownToken(MarkdownToken):
         end of the paragraph, removed to prevent hard lines at the end.
         """
 
-        self.final_whitespace = whitespace_to_set
-        self.compose_extra_data_field()
+        self.__final_whitespace = whitespace_to_set
+        self.__compose_extra_data_field()
 
-    def compose_extra_data_field(self):
+    def __compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
 
         new_extra_data = (
-            self.heading_character
+            self.__heading_character
             + ":"
-            + str(self.heading_character_count)
+            + str(self.__heading_character_count)
             + ":"
             + self.extracted_whitespace
             + ":("
@@ -831,9 +925,9 @@ class AtxHeadingMarkdownToken(MarkdownToken):
     def __init__(
         self, hash_count, remove_trailing_count, extracted_whitespace, position_marker,
     ):
-        self.hash_count = hash_count
-        self.remove_trailing_count = remove_trailing_count
-        self.extracted_whitespace = extracted_whitespace
+        self.__hash_count = hash_count
+        self.__remove_trailing_count = remove_trailing_count
+        self.__extracted_whitespace = extracted_whitespace
 
         MarkdownToken.__init__(
             self,
@@ -842,20 +936,41 @@ class AtxHeadingMarkdownToken(MarkdownToken):
             "",
             position_marker=position_marker,
         )
-        self.compose_extra_data_field()
+        self.__compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
 
-    def compose_extra_data_field(self):
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
+    @property
+    def hash_count(self):
+        """
+        Returns the number of hash marks specified at the start of the line.
+        """
+        return self.__hash_count
+
+    @property
+    def remove_trailing_count(self):
+        """
+        Returns the number of hash marks specified at the end of the line.
+        """
+        return self.__remove_trailing_count
+
+    def __compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
         new_extra_data = (
-            str(self.hash_count)
+            str(self.__hash_count)
             + ":"
-            + str(self.remove_trailing_count)
+            + str(self.__remove_trailing_count)
             + ":"
-            + self.extracted_whitespace
+            + self.__extracted_whitespace
         )
         self._set_extra_data(new_extra_data)
 
