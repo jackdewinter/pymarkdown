@@ -748,9 +748,7 @@ def __verify_first_inline_html_block(last_non_inline_token, first_inline_token):
     leading_whitespace_count = len(first_inline_token.extracted_whitespace)
     assert last_non_inline_token.line_number == first_inline_token.line_number
     assert (
-        last_non_inline_token.column_number
-        + leading_whitespace_count
-        + last_non_inline_token.fill_count
+        last_non_inline_token.column_number + leading_whitespace_count
         == first_inline_token.column_number
     )
 

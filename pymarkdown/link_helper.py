@@ -266,7 +266,7 @@ class LinkHelper:
                     in LinkHelper.__valid_link_starts
                 ):
                     valid_special_start_text = inline_blocks[search_index].token_text
-                    if inline_blocks[search_index].active:
+                    if inline_blocks[search_index].is_active:
                         LOGGER.debug(">>>>>>%s", str(inline_blocks))
                         (
                             updated_index,
@@ -329,7 +329,7 @@ class LinkHelper:
                             deactivate_token.token_text
                             == LinkHelper.__link_start_sequence
                         ):
-                            deactivate_token.active = False
+                            deactivate_token.deactivate()
                 LOGGER.debug("DEACTIVATED")
                 LinkHelper.__display_specials_in_tokens(inline_blocks)
             return updated_index, True, token_to_append, consume_rest_of_line
@@ -349,6 +349,7 @@ class LinkHelper:
 
         text_token_to_replace = inline_blocks[search_index]
         replacement_token = text_token_to_replace.create_copy()
+        # replacement_token = copy.deepcopy(text_token_to_replace)
         inline_blocks.insert(search_index, replacement_token)
         del inline_blocks[search_index + 1]
 
@@ -362,7 +363,7 @@ class LinkHelper:
             if deactivate_token.is_special_text:
                 display_string += (
                     ",>>Spec:"
-                    + str(deactivate_token.active)
+                    + str(deactivate_token.is_active)
                     + ":"
                     + str(deactivate_token)
                     + "<<"

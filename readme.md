@@ -13,6 +13,7 @@
 - HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
 - Link_helper.py#86 - if link already registered, should warn?
 - check for common code in consistency checks, i.e. link and image handling
+
 - start making token fields private with setters
   - look for places where common access patterns can be used i.e. link_title
 
@@ -40,9 +41,15 @@
 - image token handling confusing and non-standard
 - fenced code block handling of line/col could be better
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
+  - rehydrate_index
+  - leading_text_index
+  - leading_spaces_index + is_loose
+- better base classes for MarkdownToken, LeafMarkdownToken with ex_ws and ContainerMarkdownToken with ex_ws + ?
+  - move to own files?
 - all types of end-inlines and inlines at end i.e. 50
 - possible to merge link token and image token more closely?
 - refactor `is_olist_start` and `is_ulist_start`
+- why does `__revert_token_to_normal_text_token` require TextMarkdown.copy instead of `replacement_token = text_token_to_replace.create_copy()`?
 
 ## Bugs - General - Uncategorized
 

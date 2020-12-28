@@ -65,7 +65,7 @@ class EmphasisHelper:
                     str(current_position),
                     delimiter_stack[current_position].show_process_emphasis(),
                 )
-                if not delimiter_stack[current_position].active:
+                if not delimiter_stack[current_position].is_active:
                     LOGGER.debug("not active")
                     continue
                 if (
@@ -181,7 +181,7 @@ class EmphasisHelper:
             inline_blocks.remove(close_token)
             LOGGER.debug("close_token>>removed")
             end_index_in_blocks -= 1
-            close_token.active = False
+            close_token.deactivate()
         else:
             current_position -= 1
         LOGGER.debug("close_token>>%s<<", close_token.show_process_emphasis())
@@ -196,7 +196,7 @@ class EmphasisHelper:
             inline_blocks.remove(open_token)
             LOGGER.debug("open_token>>removed")
             end_index_in_blocks -= 1
-            open_token.active = False
+            open_token.deactivate()
         LOGGER.debug("open_token>>%s<<", open_token.show_process_emphasis())
 
         # "remove" between start and end from delimiter_stack
@@ -209,7 +209,7 @@ class EmphasisHelper:
                 str(len(inline_blocks)),
             )
             if inline_blocks[inline_index].is_special_text:
-                inline_blocks[inline_index].active = False
+                inline_blocks[inline_index].deactivate()
             inline_index += 1
 
         return current_position
@@ -246,10 +246,7 @@ class EmphasisHelper:
 
         for next_block in inline_blocks:
             if next_block.is_special_text:
-                next_block.token_text = next_block.token_text[
-                    0 : next_block.repeat_count
-                ]
-                next_block.compose_extra_data_field()
+                next_block.adjust_token_text_by_repeat_count()
 
     @staticmethod
     def __clear_remaining_emphasis(delimiter_stack, stack_bottom):
@@ -260,7 +257,7 @@ class EmphasisHelper:
 
         clear_index = stack_bottom + 1
         while clear_index < len(delimiter_stack):
-            delimiter_stack[clear_index].active = False
+            delimiter_stack[clear_index].deactivate()
             clear_index += 1
 
     @staticmethod
@@ -368,9 +365,9 @@ class EmphasisHelper:
             open_token.token_text and open_token.token_text[0] == matching_delimiter
         ):
             LOGGER.debug("  delimiter mismatch")
-        elif not open_token.active:
+        elif not open_token.is_active:
             LOGGER.debug("  not active")
-        elif open_token.active and EmphasisHelper.__is_potential_opener(open_token):
+        elif open_token.is_active and EmphasisHelper.__is_potential_opener(open_token):
             is_valid_opener = True
             is_closer_both = EmphasisHelper.__is_potential_closer(
                 close_token

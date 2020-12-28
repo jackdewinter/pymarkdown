@@ -1,6 +1,7 @@
 """
 Module to provide for a transformation from tokens to a markdown document.
 """
+import copy
 import inspect
 
 from pymarkdown.link_helper import LinkHelper
@@ -827,7 +828,7 @@ class TransformToMarkdown:
         Rehydrate the html block from the token.
         """
         self.block_stack.append(current_token)
-        return "".ljust(current_token.fill_count, " ")
+        return ""
 
     # pylint: enable=unused-argument
 
@@ -908,7 +909,7 @@ class TransformToMarkdown:
         """
         Rehydrate the unordered list start token.
         """
-        new_instance = current_token.create_copy()
+        new_instance = copy.deepcopy(current_token)
         self.container_token_stack.append(new_instance)
 
         previous_indent = 0
@@ -936,7 +937,7 @@ class TransformToMarkdown:
     def __rehydrate_block_quote(
         self, current_token, previous_token, next_token, transformed_data
     ):
-        new_instance = current_token.create_copy()
+        new_instance = copy.deepcopy(current_token)
         self.container_token_stack.append(new_instance)
 
         print(">bquote>" + ParserHelper.make_value_visible(new_instance))
@@ -1054,7 +1055,7 @@ class TransformToMarkdown:
         """
         Rehydrate the unordered list start token.
         """
-        new_instance = current_token.create_copy()
+        new_instance = copy.deepcopy(current_token)
         self.container_token_stack.append(new_instance)
 
         previous_indent = 0
@@ -1189,11 +1190,7 @@ class TransformToMarkdown:
         """
         if self.container_token_stack[-1].is_list_start:
             print("__rehydrate_next_list_item")
-            self.container_token_stack[-1].indent_level = current_token.indent_level
-            self.container_token_stack[
-                -1
-            ].extracted_whitespace = current_token.extracted_whitespace
-            self.container_token_stack[-1].compose_extra_data_field()
+            self.container_token_stack[-1].adjust_for_new_list_item(current_token)
 
             extracted_whitespace = current_token.extracted_whitespace
             (

@@ -5,7 +5,7 @@ import logging
 from enum import Enum
 
 from pymarkdown.constants import Constants
-from pymarkdown.parser_helper import ParserHelper, PositionMarker
+from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
 
@@ -212,23 +212,14 @@ class MarkdownToken:
         """
         Returns whether the current token is a list element.
         """
-        return (
-            self.token_name == MarkdownToken._token_unordered_list_start
-            or self.token_name == MarkdownToken._token_ordered_list_start
-        )
+        return self.is_unordered_list_start or self.is_ordered_list_start
 
     @property
     def is_list_end(self):
         """
         Returns whether the current token is a list end element.
         """
-        return (
-            self.token_name
-            == MarkdownToken._end_token_prefix
-            + MarkdownToken._token_unordered_list_start
-            or self.token_name
-            == MarkdownToken._end_token_prefix + MarkdownToken._token_ordered_list_start
-        )
+        return self.is_unordered_list_end or self.is_ordered_list_end
 
     @property
     def is_unordered_list_start(self):
@@ -236,6 +227,13 @@ class MarkdownToken:
         Returns whether the current token is a unordered list element.
         """
         return self.token_name == MarkdownToken._token_unordered_list_start
+
+    @property
+    def is_ordered_list_start(self):
+        """
+        Returns whether the current token is a ordered list element.
+        """
+        return self.token_name == MarkdownToken._token_ordered_list_start
 
     @property
     def is_unordered_list_end(self):
@@ -246,6 +244,16 @@ class MarkdownToken:
             self.token_name
             == MarkdownToken._end_token_prefix
             + MarkdownToken._token_unordered_list_start
+        )
+
+    @property
+    def is_ordered_list_end(self):
+        """
+        Returns whether the current token is a ordered list end element.
+        """
+        return (
+            self.token_name
+            == MarkdownToken._end_token_prefix + MarkdownToken._token_ordered_list_start
         )
 
     @property
@@ -824,8 +832,8 @@ class IndentedCodeBlockMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, extracted_whitespace, line_number, column_number):
-        self.extracted_whitespace = extracted_whitespace
-        self.indented_whitespace = ""
+        self.__extracted_whitespace = extracted_whitespace
+        self.__indented_whitespace = ""
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_indented_code_block,
@@ -834,20 +842,38 @@ class IndentedCodeBlockMarkdownToken(MarkdownToken):
             line_number=line_number,
             column_number=column_number,
         )
-        self.compose_extra_data_field()
+        self.__compose_extra_data_field()
 
-    def compose_extra_data_field(self):
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
+    @property
+    def indented_whitespace(self):
+        """
+        Returns any indented whitespace that comes before the text.
+        """
+        return self.__indented_whitespace
+
+    def __compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        self._set_extra_data(self.extracted_whitespace + ":" + self.indented_whitespace)
+        self._set_extra_data(
+            self.__extracted_whitespace + ":" + self.indented_whitespace
+        )
 
     def add_indented_whitespace(self, indented_whitespace):
         """
         Add the indented whitespace that comes before the text.
         """
-        self.indented_whitespace += ParserHelper.newline_character + indented_whitespace
-        self.compose_extra_data_field()
+        self.__indented_whitespace += (
+            ParserHelper.newline_character + indented_whitespace
+        )
+        self.__compose_extra_data_field()
 
 
 # pylint: disable=too-many-instance-attributes
@@ -869,16 +895,16 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
         extracted_whitespace_before_info_string,
         position_marker,
     ):
-        self.extracted_whitespace = extracted_whitespace
-        self.extracted_text = extracted_text
-        self.pre_extracted_text = pre_extracted_text
-        self.extracted_whitespace_before_info_string = (
+        self.__extracted_whitespace = extracted_whitespace
+        self.__extracted_text = extracted_text
+        self.__pre_extracted_text = pre_extracted_text
+        self.__extracted_whitespace_before_info_string = (
             extracted_whitespace_before_info_string
         )
-        self.text_after_extracted_text = text_after_extracted_text
-        self.pre_text_after_extracted_text = pre_text_after_extracted_text
-        self.fence_character = fence_character
-        self.fence_count = fence_count
+        self.__text_after_extracted_text = text_after_extracted_text
+        self.__pre_text_after_extracted_text = pre_text_after_extracted_text
+        self.__fence_character = fence_character
+        self.__fence_count = fence_count
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_fenced_code_block,
@@ -886,29 +912,86 @@ class FencedCodeBlockMarkdownToken(MarkdownToken):
             "",
             position_marker=position_marker,
         )
-        self.compose_extra_data_field()
+        self.__compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
-    def compose_extra_data_field(self):
+
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
+    @property
+    def fence_character(self):
+        """
+        Returns the character used for the fence.
+        """
+        return self.__fence_character
+
+    @property
+    def fence_count(self):
+        """
+        Returns the number of fence characters used for the fence.
+        """
+        return self.__fence_count
+
+    @property
+    def extracted_text(self):
+        """
+        Returns the text extracted from the info string.
+        """
+        return self.__extracted_text
+
+    @property
+    def pre_extracted_text(self):
+        """
+        Returns the text extracted from the info string.
+        """
+        return self.__pre_extracted_text
+
+    @property
+    def text_after_extracted_text(self):
+        """
+        Returns the text extracted after the info string.
+        """
+        return self.__text_after_extracted_text
+
+    @property
+    def pre_text_after_extracted_text(self):
+        """
+        Returns the text extracted after after the info string.
+        """
+        return self.__pre_text_after_extracted_text
+
+    @property
+    def extracted_whitespace_before_info_string(self):
+        """
+        Returns any whitespace that was extracted before the info string was processed.
+        """
+        return self.__extracted_whitespace_before_info_string
+
+    def __compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
         new_extra_data = (
-            self.fence_character
+            self.__fence_character
             + ":"
-            + str(self.fence_count)
+            + str(self.__fence_count)
             + ":"
-            + self.extracted_text
+            + self.__extracted_text
             + ":"
-            + self.pre_extracted_text
+            + self.__pre_extracted_text
             + ":"
-            + self.text_after_extracted_text
+            + self.__text_after_extracted_text
             + ":"
-            + self.pre_text_after_extracted_text
+            + self.__pre_text_after_extracted_text
             + ":"
-            + self.extracted_whitespace
+            + self.__extracted_whitespace
             + ":"
-            + self.extracted_whitespace_before_info_string
+            + self.__extracted_whitespace_before_info_string
         )
         self._set_extra_data(new_extra_data)
 
@@ -990,9 +1073,9 @@ class TextMarkdownToken(MarkdownToken):
         line_number=0,
         column_number=0,
     ):
-        self.token_text = token_text
-        self.extracted_whitespace = extracted_whitespace
-        self.end_whitespace = end_whitespace
+        self.__token_text = token_text
+        self.__extracted_whitespace = extracted_whitespace
+        self.__end_whitespace = end_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_text,
@@ -1002,31 +1085,56 @@ class TextMarkdownToken(MarkdownToken):
             line_number=line_number,
             column_number=column_number,
         )
-        self.compose_extra_data_field()
+        self.__compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
+
+    def _set_token_text(self, new_text):
+        self.__token_text = new_text
+        self.__compose_extra_data_field()
+
+    @property
+    def token_text(self):
+        """
+        Returns the text associated with the token.
+        """
+        return self.__token_text
+
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
+    @property
+    def end_whitespace(self):
+        """
+        Returns any whitespace that was extracted after the processing of this element occurred.
+        """
+        return self.__end_whitespace
 
     def create_copy(self):
         """
         Create a copy of this token.
         """
         new_token = TextMarkdownToken(
-            self.token_text,
-            self.extracted_whitespace,
-            self.end_whitespace,
+            self.__token_text,
+            self.__extracted_whitespace,
+            self.__end_whitespace,
             line_number=self.line_number,
             column_number=self.column_number,
         )
         return new_token
 
-    def compose_extra_data_field(self):
+    def __compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        new_extra_data = self.token_text + ":" + self.extracted_whitespace
+        new_extra_data = self.__token_text + ":" + self.__extracted_whitespace
         if self.end_whitespace:
-            new_extra_data += ":" + self.end_whitespace
+            new_extra_data += ":" + self.__end_whitespace
         self._set_extra_data(new_extra_data)
 
     def remove_final_whitespace(self):
@@ -1040,14 +1148,14 @@ class TextMarkdownToken(MarkdownToken):
             collected_whitespace_length,
             first_non_whitespace_index,
         ) = ParserHelper.collect_backwards_while_one_of_characters(
-            self.token_text, -1, Constants.whitespace
+            self.__token_text, -1, Constants.whitespace
         )
         if collected_whitespace_length:
-            removed_whitespace = self.token_text[
+            removed_whitespace = self.__token_text[
                 first_non_whitespace_index : first_non_whitespace_index
                 + collected_whitespace_length
             ]
-            self.token_text = self.token_text[0:first_non_whitespace_index]
+            self.__token_text = self.__token_text[0:first_non_whitespace_index]
         return removed_whitespace
 
     def combine(self, other_text_token, remove_leading_spaces):
@@ -1091,19 +1199,16 @@ class TextMarkdownToken(MarkdownToken):
                 prefix_whitespace = whitespace_present[remove_leading_spaces:]
 
         if whitespace_to_append is not None:
-            self.extracted_whitespace = (
-                self.extracted_whitespace
-                + ParserHelper.newline_character
-                + whitespace_to_append
+            self.__extracted_whitespace += (
+                ParserHelper.newline_character + whitespace_to_append
             )
-        self.token_text = (
-            self.token_text
-            + ParserHelper.newline_character
+        self.__token_text += (
+            ParserHelper.newline_character
             + blank_line_sequence
             + prefix_whitespace
             + text_to_combine
         )
-        self.compose_extra_data_field()
+        self.__compose_extra_data_field()
         return removed_whitespace
 
 
@@ -1123,10 +1228,10 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         line_number=0,
         column_number=0,
     ):
-        self.repeat_count = repeat_count
-        self.active = is_active
-        self.preceding_two = preceding_two
-        self.following_two = following_two
+        self.__repeat_count = repeat_count
+        self.__is_active = is_active
+        self.__preceding_two = preceding_two
+        self.__following_two = following_two
         TextMarkdownToken.__init__(
             self,
             token_text,
@@ -1138,11 +1243,51 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
 
     # pylint: enable=too-many-arguments
 
+    @property
+    def is_active(self):
+        """
+        Returns a value indicating whether this special text is still active.
+        """
+        return self.__is_active
+
+    @property
+    def repeat_count(self):
+        """
+        Returns the repeat count for the special text element.
+        """
+        return self.__repeat_count
+
+    @property
+    def preceding_two(self):
+        """
+        Returns the preceeding two characters before this token.
+        """
+        return self.__preceding_two
+
+    @property
+    def following_two(self):
+        """
+        Returns the following two characters before this token.
+        """
+        return self.__following_two
+
+    def deactivate(self):
+        """
+        Mark this special token as deactivated.
+        """
+        self.__is_active = False
+
+    def adjust_token_text_by_repeat_count(self):
+        """
+        Adjust the token's text by the repeat count.
+        """
+        self._set_token_text(self.token_text[0 : self.repeat_count])
+
     def reduce_repeat_count(self, emphasis_length, adjust_column_number=False):
         """
         Reduce the repeat count by the specified amount.
         """
-        self.repeat_count = self.repeat_count - emphasis_length
+        self.__repeat_count -= emphasis_length
         if adjust_column_number:
             self._set_column_number(self.column_number + emphasis_length)
 
@@ -1152,13 +1297,13 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         """
         return (
             ">>active="
-            + str(self.active)
+            + str(self.__is_active)
             + ",repeat="
-            + str(self.repeat_count)
+            + str(self.__repeat_count)
             + ",preceding='"
-            + str(self.preceding_two)
+            + str(self.__preceding_two)
             + "',following='"
-            + str(self.following_two)
+            + str(self.__following_two)
             + "':"
             + str(self)
         )
@@ -1180,59 +1325,59 @@ class LinkReferenceDefinitionMarkdownToken(MarkdownToken):
         link_debug,
         position_marker,
     ):
-        self.did_add_definition = did_add_definition
-        self.extracted_whitespace = extracted_whitespace
-        self.link_name = link_name
+        self.__did_add_definition = did_add_definition
+        self.__extracted_whitespace = extracted_whitespace
+        self.__link_name = link_name
 
         if link_value:
-            self.link_destination = link_value[0]
-            self.link_title = link_value[1]
+            self.__link_destination = link_value[0]
+            self.__link_title = link_value[1]
         else:
-            self.link_destination = ""
-            self.link_title = ""
+            self.__link_destination = ""
+            self.__link_title = ""
 
         if link_debug:
-            self.link_name_debug = link_debug[0]
-            if self.link_name_debug == self.link_name:
-                self.link_name_debug = ""
-            self.link_destination_whitespace = link_debug[1]
-            self.link_destination_raw = link_debug[2]
-            if self.link_destination_raw == self.link_destination:
-                self.link_destination_raw = ""
-            self.link_title_whitespace = link_debug[3]
-            self.link_title_raw = link_debug[4]
-            if self.link_title_raw == self.link_title:
-                self.link_title_raw = ""
-            self.end_whitespace = link_debug[5]
+            self.__link_name_debug = link_debug[0]
+            if self.__link_name_debug == self.__link_name:
+                self.__link_name_debug = ""
+            self.__link_destination_whitespace = link_debug[1]
+            self.__link_destination_raw = link_debug[2]
+            if self.__link_destination_raw == self.__link_destination:
+                self.__link_destination_raw = ""
+            self.__link_title_whitespace = link_debug[3]
+            self.__link_title_raw = link_debug[4]
+            if self.__link_title_raw == self.__link_title:
+                self.__link_title_raw = ""
+            self.__end_whitespace = link_debug[5]
         else:
-            self.link_name_debug = ""
-            self.link_destination_whitespace = ""
-            self.link_destination_raw = ""
-            self.link_title_whitespace = ""
-            self.link_title_raw = ""
-            self.end_whitespace = ""
+            self.__link_name_debug = ""
+            self.__link_destination_whitespace = ""
+            self.__link_destination_raw = ""
+            self.__link_title_whitespace = ""
+            self.__link_title_raw = ""
+            self.__end_whitespace = ""
         extra_data = (
-            str(did_add_definition)
+            str(self.did_add_definition)
             + ":"
-            + extracted_whitespace
+            + self.__extracted_whitespace
             + ":"
-            + link_name
+            + self.__link_name
             + ":"
-            + self.link_name_debug
+            + self.__link_name_debug
             + ":"
-            + self.link_destination_whitespace
+            + self.__link_destination_whitespace
             + ":"
-            + self.link_destination
+            + self.__link_destination
             + ":"
-            + self.link_destination_raw
+            + self.__link_destination_raw
             + ":"
-            + self.link_title_whitespace
+            + self.__link_title_whitespace
             + ":"
-            + self.link_title
+            + self.__link_title
             + ":"
-            + self.link_title_raw
+            + self.__link_title_raw
             + ":"
-            + self.end_whitespace
+            + self.__end_whitespace
         )
         MarkdownToken.__init__(
             self,
@@ -1243,6 +1388,82 @@ class LinkReferenceDefinitionMarkdownToken(MarkdownToken):
         )
 
     # pylint: enable=too-many-arguments
+    @property
+    def did_add_definition(self):
+        """
+        Returns an indication of whether the definition was actually added.
+        """
+        return self.__did_add_definition
+
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
+    @property
+    def end_whitespace(self):
+        """
+        Returns any whitespace that was extracted after the processing of this element occurred.
+        """
+        return self.__end_whitespace
+
+    @property
+    def link_name(self):
+        """
+        Returns the name of the link that was defined.
+        """
+        return self.__link_name
+
+    @property
+    def link_name_debug(self):
+        """
+        Returns the name of the link that was defined, in debug form.
+        """
+        return self.__link_name_debug
+
+    @property
+    def link_destination_whitespace(self):
+        """
+        Returns the whitespace that occurs before the link destination.
+        """
+        return self.__link_destination_whitespace
+
+    @property
+    def link_destination(self):
+        """
+        Returns the destination (URI) of the link that was defined.
+        """
+        return self.__link_destination
+
+    @property
+    def link_destination_raw(self):
+        """
+        Returns the destination (URI) of the link that was defined, in raw form.
+        """
+        return self.__link_destination_raw
+
+    @property
+    def link_title(self):
+        """
+        Returns the title of the link that was defined.
+        """
+        return self.__link_title
+
+    @property
+    def link_title_raw(self):
+        """
+        Returns the title of the link that was defined, in raw form.
+        """
+        return self.__link_title_raw
+
+    @property
+    def link_title_whitespace(self):
+        """
+        Returns the whitespace that occurs after the link title.
+        """
+        return self.__link_title_whitespace
 
 
 # pylint: enable=too-many-instance-attributes
@@ -1254,46 +1475,46 @@ class BlockQuoteMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, extracted_whitespace, position_marker):
-        self.extracted_whitespace = extracted_whitespace
-        self.leading_spaces = ""
+        self.__extracted_whitespace = extracted_whitespace
+        self.__leading_spaces = ""
         self.leading_text_index = 0
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_block_quote,
             MarkdownTokenClass.CONTAINER_BLOCK,
-            extracted_whitespace + ":" + self.leading_spaces,
+            "",
             position_marker=position_marker,
         )
-        self.compose_extra_data_field()
+        self.__compose_extra_data_field()
+
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
+    @property
+    def leading_spaces(self):
+        """
+        Returns any leading spaces that preface the block quote.
+        """
+        return self.__leading_spaces
 
     def add_leading_spaces(self, leading_spaces_to_add):
         """
         Add any leading spaces to the token, separating them with line feeds.
         """
-        if self.leading_spaces:
-            self.leading_spaces += "\n"
-        self.leading_spaces += leading_spaces_to_add
-        self.compose_extra_data_field()
+        if self.__leading_spaces:
+            self.__leading_spaces += "\n"
+        self.__leading_spaces += leading_spaces_to_add
+        self.__compose_extra_data_field()
 
-    def create_copy(self):
-        """
-        Create a copy of this token.
-        """
-        new_position_marker = PositionMarker(
-            self.line_number, self.column_number - 1, ""
-        )
-        new_token = BlockQuoteMarkdownToken(
-            self.extracted_whitespace, new_position_marker,
-        )
-        new_token.leading_spaces = self.leading_spaces
-        new_token.compose_extra_data_field()
-        return new_token
-
-    def compose_extra_data_field(self):
+    def __compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        self._set_extra_data(self.extracted_whitespace + ":" + self.leading_spaces)
+        self._set_extra_data(self.__extracted_whitespace + ":" + self.__leading_spaces)
 
 
 class UnorderedListStartMarkdownToken(MarkdownToken):
@@ -1304,11 +1525,11 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
     def __init__(
         self, list_start_sequence, indent_level, extracted_whitespace, position_marker
     ):
-        self.list_start_sequence = list_start_sequence
-        self.indent_level = indent_level
+        self.__list_start_sequence = list_start_sequence
+        self.__indent_level = indent_level
+        self.__extracted_whitespace = extracted_whitespace
+        self.__leading_spaces = None
         self.is_loose = True
-        self.extracted_whitespace = extracted_whitespace
-        self.leading_spaces = None
         self.leading_spaces_index = 0
         MarkdownToken.__init__(
             self,
@@ -1317,51 +1538,71 @@ class UnorderedListStartMarkdownToken(MarkdownToken):
             "",
             position_marker=position_marker,
         )
-        self.compose_extra_data_field()
+        self.__compose_extra_data_field()
 
-    def create_copy(self):
+    @property
+    def extracted_whitespace(self):
         """
-        Create a copy of this token.
+        Returns any whitespace that was extracted before the processing of this element occurred.
         """
-        new_position_marker = PositionMarker(
-            self.line_number, self.column_number - 1, ""
-        )
-        new_token = UnorderedListStartMarkdownToken(
-            self.list_start_sequence,
-            self.indent_level,
-            self.extracted_whitespace,
-            new_position_marker,
-        )
-        new_token.is_loose = self.is_loose
-        new_token.leading_spaces = self.leading_spaces
-        new_token.compose_extra_data_field()
-        return new_token
+        return self.__extracted_whitespace
 
-    def compose_extra_data_field(self):
+    @property
+    def indent_level(self):
+        """
+        Returns the indent level to apply for the list element.
+        """
+        return self.__indent_level
+
+    @property
+    def list_start_sequence(self):
+        """
+        Returns the sequence used to start this list element.
+        """
+        return self.__list_start_sequence
+
+    @property
+    def leading_spaces(self):
+        """
+        Returns the leading spaces that occur before the list element.
+        """
+        return self.__leading_spaces
+
+    def adjust_for_new_list_item(self, new_list_item_token):
+        """
+        Adjust this token for a new list item (uses copy to keep track).
+        """
+        assert new_list_item_token and new_list_item_token.is_new_list_item
+
+        self.__indent_level = new_list_item_token.indent_level
+        self.__extracted_whitespace = new_list_item_token.extracted_whitespace
+        self.__compose_extra_data_field()
+
+    def __compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
 
         new_extra_data = (
-            self.list_start_sequence
+            self.__list_start_sequence
             + "::"
-            + str(self.indent_level)
+            + str(self.__indent_level)
             + ":"
-            + self.extracted_whitespace
+            + self.__extracted_whitespace
         )
-        if self.leading_spaces is not None:
-            new_extra_data += ":" + self.leading_spaces
+        if self.__leading_spaces is not None:
+            new_extra_data += ":" + self.__leading_spaces
         self._set_extra_data(new_extra_data)
 
     def add_leading_spaces(self, ws_add):
         """
         Add any leading spaces to the token, separating them with line feeds.
         """
-        if self.leading_spaces is None:
-            self.leading_spaces = ws_add
+        if self.__leading_spaces is None:
+            self.__leading_spaces = ws_add
         else:
-            self.leading_spaces += ParserHelper.newline_character + ws_add
-        self.compose_extra_data_field()
+            self.__leading_spaces += ParserHelper.newline_character + ws_add
+        self.__compose_extra_data_field()
 
 
 # pylint: disable=too-many-instance-attributes
@@ -1379,12 +1620,12 @@ class OrderedListStartMarkdownToken(MarkdownToken):
         extracted_whitespace,
         position_marker,
     ):
-        self.list_start_sequence = list_start_sequence
-        self.list_start_content = list_start_content
-        self.indent_level = indent_level
+        self.__list_start_sequence = list_start_sequence
+        self.__list_start_content = list_start_content
+        self.__indent_level = indent_level
+        self.__extracted_whitespace = extracted_whitespace
+        self.__leading_spaces = None
         self.is_loose = True
-        self.extracted_whitespace = extracted_whitespace
-        self.leading_spaces = None
         self.leading_spaces_index = 0
         MarkdownToken.__init__(
             self,
@@ -1393,56 +1634,82 @@ class OrderedListStartMarkdownToken(MarkdownToken):
             "",
             position_marker=position_marker,
         )
-        self.compose_extra_data_field()
+        self.__compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
 
-    def create_copy(self):
+    @property
+    def extracted_whitespace(self):
         """
-        Create a copy of this token.
+        Returns any whitespace that was extracted before the processing of this element occurred.
         """
-        new_position_marker = PositionMarker(
-            self.line_number, self.column_number - 1, ""
-        )
-        new_token = OrderedListStartMarkdownToken(
-            self.list_start_sequence,
-            self.list_start_content,
-            self.indent_level,
-            self.extracted_whitespace,
-            new_position_marker,
-        )
-        new_token.is_loose = self.is_loose
-        new_token.leading_spaces = self.leading_spaces
-        new_token.compose_extra_data_field()
-        return new_token
+        return self.__extracted_whitespace
 
-    def compose_extra_data_field(self):
+    @property
+    def indent_level(self):
+        """
+        Returns the indent level to apply for the list element.
+        """
+        return self.__indent_level
+
+    @property
+    def list_start_sequence(self):
+        """
+        Returns the sequence used to start this list element.
+        """
+        return self.__list_start_sequence
+
+    @property
+    def list_start_content(self):
+        """
+        Returns the content used to start this list element.
+        """
+        return self.__list_start_content
+
+    @property
+    def leading_spaces(self):
+        """
+        Returns the leading spaces that occur before the list element.
+        """
+        return self.__leading_spaces
+
+    def adjust_for_new_list_item(self, new_list_item_token):
+        """
+        Adjust this token for a new list item (uses copy to keep track).
+        """
+        assert new_list_item_token and new_list_item_token.is_new_list_item
+
+        self.__indent_level = new_list_item_token.indent_level
+        self.__extracted_whitespace = new_list_item_token.extracted_whitespace
+        self.__compose_extra_data_field()
+
+    def __compose_extra_data_field(self):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
 
         new_extra_data = (
-            self.list_start_sequence
+            self.__list_start_sequence
             + ":"
-            + self.list_start_content
+            + self.__list_start_content
             + ":"
-            + str(self.indent_level)
+            + str(self.__indent_level)
             + ":"
-            + self.extracted_whitespace
+            + self.__extracted_whitespace
         )
-        if self.leading_spaces is not None:
-            new_extra_data += ":" + self.leading_spaces
+        if self.__leading_spaces is not None:
+            new_extra_data += ":" + self.__leading_spaces
         self._set_extra_data(new_extra_data)
 
     def add_leading_spaces(self, ws_add):
         """
         Add any leading spaces to the token, separating them with line feeds.
         """
-        if self.leading_spaces is None:
-            self.leading_spaces = ws_add
+        if self.__leading_spaces is None:
+            self.__leading_spaces = ws_add
         else:
-            self.leading_spaces += ParserHelper.newline_character + ws_add
-        self.compose_extra_data_field()
+            self.__leading_spaces += ParserHelper.newline_character + ws_add
+        self.__compose_extra_data_field()
 
 
 # pylint: enable=too-many-instance-attributes
@@ -1456,9 +1723,9 @@ class NewListItemMarkdownToken(MarkdownToken):
     def __init__(
         self, indent_level, position_marker, extracted_whitespace, list_start_content
     ):
-        self.indent_level = indent_level
-        self.extracted_whitespace = extracted_whitespace
-        self.list_start_content = list_start_content
+        self.__indent_level = indent_level
+        self.__extracted_whitespace = extracted_whitespace
+        self.__list_start_content = list_start_content
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_new_list_item,
@@ -1467,6 +1734,27 @@ class NewListItemMarkdownToken(MarkdownToken):
             position_marker=position_marker,
         )
 
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
+    @property
+    def indent_level(self):
+        """
+        Returns the indent level to apply for the list element.
+        """
+        return self.__indent_level
+
+    @property
+    def list_start_content(self):
+        """
+        Returns the content used to start this list element.
+        """
+        return self.__list_start_content
+
 
 class HtmlBlockMarkdownToken(MarkdownToken):
     """
@@ -1474,8 +1762,7 @@ class HtmlBlockMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, position_marker, extracted_whitespace):
-        extra_indent = len(extracted_whitespace)
-        self.fill_count = 0
+        self.__extracted_whitespace = extracted_whitespace
 
         if position_marker:
             line_number = position_marker.line_number
@@ -1483,7 +1770,7 @@ class HtmlBlockMarkdownToken(MarkdownToken):
                 position_marker.index_number
                 + position_marker.index_indent
                 + 1
-                - extra_indent
+                - len(extracted_whitespace)
             )
         else:
             line_number = -1
@@ -1498,6 +1785,13 @@ class HtmlBlockMarkdownToken(MarkdownToken):
             column_number=column_number,
         )
 
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
 
 class ThematicBreakMarkdownToken(MarkdownToken):
     """
@@ -1507,15 +1801,33 @@ class ThematicBreakMarkdownToken(MarkdownToken):
     def __init__(
         self, start_character, extracted_whitespace, rest_of_line, position_marker
     ):
-        self.extracted_whitespace = extracted_whitespace
-        self.rest_of_line = rest_of_line
+        self.__extracted_whitespace = extracted_whitespace
+        self.__rest_of_line = rest_of_line
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_thematic_break,
             MarkdownTokenClass.LEAF_BLOCK,
-            start_character + ":" + extracted_whitespace + ":" + rest_of_line,
+            start_character
+            + ":"
+            + self.__extracted_whitespace
+            + ":"
+            + self.__rest_of_line,
             position_marker=position_marker,
         )
+
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
+
+    @property
+    def rest_of_line(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__rest_of_line
 
 
 class InlineCodeSpanMarkdownToken(MarkdownToken):
