@@ -1006,7 +1006,11 @@ class AtxHeadingMarkdownToken(MarkdownToken):
 
     # pylint: disable=too-many-arguments
     def __init__(
-        self, hash_count, remove_trailing_count, extracted_whitespace, position_marker,
+        self,
+        hash_count,
+        remove_trailing_count,
+        extracted_whitespace,
+        position_marker,
     ):
         self.__hash_count = hash_count
         self.__remove_trailing_count = remove_trailing_count
@@ -1845,26 +1849,53 @@ class InlineCodeSpanMarkdownToken(MarkdownToken):
         line_number,
         column_number,
     ):
-        self.span_text = span_text
-        self.extracted_start_backticks = extracted_start_backticks
-        self.leading_whitespace = leading_whitespace
-        self.trailing_whitespace = trailing_whitespace
+        self.__span_text = span_text
+        self.__extracted_start_backticks = extracted_start_backticks
+        self.__leading_whitespace = leading_whitespace
+        self.__trailing_whitespace = trailing_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_code_span,
             MarkdownTokenClass.INLINE_BLOCK,
-            span_text
+            self.__span_text
             + ":"
-            + extracted_start_backticks
+            + self.__extracted_start_backticks
             + ":"
-            + leading_whitespace
+            + self.__leading_whitespace
             + ":"
-            + trailing_whitespace,
+            + self.__trailing_whitespace,
             line_number=line_number,
             column_number=column_number,
         )
 
     # pylint: enable=too-many-arguments
+    @property
+    def span_text(self):
+        """
+        Returns the text that is within the span.
+        """
+        return self.__span_text
+
+    @property
+    def extracted_start_backticks(self):
+        """
+        Returns the backticks that started the code span.
+        """
+        return self.__extracted_start_backticks
+
+    @property
+    def leading_whitespace(self):
+        """
+        Returns the whitespace at the start of the code span.
+        """
+        return self.__leading_whitespace
+
+    @property
+    def trailing_whitespace(self):
+        """
+        Returns the whitespace at the end of the code span.
+        """
+        return self.__trailing_whitespace
 
 
 class HardBreakMarkdownToken(MarkdownToken):
@@ -1873,15 +1904,22 @@ class HardBreakMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, line_end, line_number, column_number):
-        self.line_end = line_end
+        self.__line_end = line_end
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_hard_break,
             MarkdownTokenClass.INLINE_BLOCK,
-            line_end,
+            self.__line_end,
             line_number=line_number,
             column_number=column_number,
         )
+
+    @property
+    def line_end(self):
+        """
+        Returns the text at the end of the line.
+        """
+        return self.__line_end
 
 
 class UriAutolinkMarkdownToken(MarkdownToken):
@@ -1890,15 +1928,22 @@ class UriAutolinkMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, autolink_text, line_number, column_number):
-        self.autolink_text = autolink_text
+        self.__autolink_text = autolink_text
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_uri_autolink,
             MarkdownTokenClass.INLINE_BLOCK,
-            autolink_text,
+            self.__autolink_text,
             line_number=line_number,
             column_number=column_number,
         )
+
+    @property
+    def autolink_text(self):
+        """
+        Returns the text that is the autolink.
+        """
+        return self.__autolink_text
 
 
 # pylint: disable=too-many-instance-attributes
@@ -1925,50 +1970,133 @@ class LinkStartMarkdownToken(MarkdownToken):
         line_number,
         column_number,
     ):
-        self.link_uri = link_uri
-        self.link_title = link_title
-        self.pre_link_uri = pre_link_uri
-        self.pre_link_title = pre_link_title
-        self.ex_label = ex_label
-        self.label_type = label_type
-        self.text_from_blocks = text_from_blocks
-        self.did_use_angle_start = did_use_angle_start
-        self.inline_title_bounding_character = inline_title_bounding_character
-        self.before_link_whitespace = before_link_whitespace
-        self.before_title_whitespace = before_title_whitespace
-        self.after_title_whitespace = after_title_whitespace
+        self.__link_uri = link_uri
+        self.__link_title = link_title
+        self.__pre_link_uri = pre_link_uri
+        self.__pre_link_title = pre_link_title
+        self.__ex_label = ex_label
+        self.__label_type = label_type
+        self.__text_from_blocks = text_from_blocks
+        self.__did_use_angle_start = did_use_angle_start
+        self.__inline_title_bounding_character = inline_title_bounding_character
+        self.__before_link_whitespace = before_link_whitespace
+        self.__before_title_whitespace = before_title_whitespace
+        self.__after_title_whitespace = after_title_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_link,
             MarkdownTokenClass.INLINE_BLOCK,
-            label_type
+            self.__label_type
             + ":"
-            + link_uri
+            + self.__link_uri
             + ":"
-            + link_title
+            + self.__link_title
             + ":"
-            + pre_link_uri
+            + self.__pre_link_uri
             + ":"
-            + pre_link_title
+            + self.__pre_link_title
             + ":"
-            + ex_label
+            + self.__ex_label
             + ":"
-            + text_from_blocks
+            + self.__text_from_blocks
             + ":"
-            + str(did_use_angle_start)
+            + str(self.__did_use_angle_start)
             + ":"
-            + inline_title_bounding_character
+            + self.__inline_title_bounding_character
             + ":"
-            + before_link_whitespace
+            + self.__before_link_whitespace
             + ":"
-            + before_title_whitespace
+            + self.__before_title_whitespace
             + ":"
-            + after_title_whitespace,
+            + self.__after_title_whitespace,
             line_number=line_number,
             column_number=column_number,
         )
 
     # pylint: enable=too-many-arguments
+    @property
+    def label_type(self):
+        """
+        Returns the type of label that was used.
+        """
+        return self.__label_type
+
+    @property
+    def link_uri(self):
+        """
+        Returns the URI for the link itself.
+        """
+        return self.__link_uri
+
+    @property
+    def pre_link_uri(self):
+        """
+        Returns the URI for the link itself, before any mods.
+        """
+        return self.__pre_link_uri
+
+    @property
+    def link_title(self):
+        """
+        Returns the text associated with the link's title.
+        """
+        return self.__link_title
+
+    @property
+    def pre_link_title(self):
+        """
+        Returns the text associated with the link's title, before any mods.
+        """
+        return self.__pre_link_title
+
+    @property
+    def text_from_blocks(self):
+        """
+        Returns the text extracted from the blocks of the link, before processing.
+        """
+        return self.__text_from_blocks
+
+    @property
+    def ex_label(self):
+        """
+        Returns the text extracted from the blocks of the link, after processing.
+        """
+        return self.__ex_label
+
+    @property
+    def after_title_whitespace(self):
+        """
+        Returns the whitespace extracted after the title.
+        """
+        return self.__after_title_whitespace
+
+    @property
+    def before_title_whitespace(self):
+        """
+        Returns the whitespace extracted before the title.
+        """
+        return self.__before_title_whitespace
+
+    @property
+    def before_link_whitespace(self):
+        """
+        Returns the whitespace extracted before the link.
+        """
+        return self.__before_link_whitespace
+
+    @property
+    def inline_title_bounding_character(self):
+        """
+        Returns the bounding character used for the title.
+        """
+        return self.__inline_title_bounding_character
+
+    @property
+    def did_use_angle_start(self):
+        """
+        Returns a value indicating whether an angle start was used around the URI.
+        """
+        return self.__did_use_angle_start
 
 
 # pylint: enable=too-many-instance-attributes
@@ -1999,53 +2127,144 @@ class ImageStartMarkdownToken(MarkdownToken):
         line_number,
         column_number,
     ):
-        self.image_uri = image_uri
-        self.image_title = image_title
-        self.image_alt_text = image_alt_text
-        self.pre_image_uri = pre_image_uri
-        self.pre_image_title = pre_image_title
-        self.ex_label = ex_label
-        self.label_type = label_type
-        self.text_from_blocks = text_from_blocks
-        self.did_use_angle_start = did_use_angle_start
-        self.inline_title_bounding_character = inline_title_bounding_character
-        self.before_link_whitespace = before_link_whitespace
-        self.before_title_whitespace = before_title_whitespace
-        self.after_title_whitespace = after_title_whitespace
+        self.__image_uri = image_uri
+        self.__image_title = image_title
+        self.__image_alt_text = image_alt_text
+        self.__pre_image_uri = pre_image_uri
+        self.__pre_image_title = pre_image_title
+        self.__ex_label = ex_label
+        self.__label_type = label_type
+        self.__text_from_blocks = text_from_blocks
+        self.__did_use_angle_start = did_use_angle_start
+        self.__inline_title_bounding_character = inline_title_bounding_character
+        self.__before_link_whitespace = before_link_whitespace
+        self.__before_title_whitespace = before_title_whitespace
+        self.__after_title_whitespace = after_title_whitespace
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_image,
             MarkdownTokenClass.INLINE_BLOCK,
-            label_type
+            self.__label_type
             + ":"
-            + image_uri
+            + self.__image_uri
             + ":"
-            + image_title
+            + self.__image_title
             + ":"
-            + image_alt_text
+            + self.__image_alt_text
             + ":"
-            + pre_image_uri
+            + self.__pre_image_uri
             + ":"
-            + pre_image_title
+            + self.__pre_image_title
             + ":"
-            + ex_label
+            + self.__ex_label
             + ":"
-            + text_from_blocks
+            + self.__text_from_blocks
             + ":"
-            + str(did_use_angle_start)
+            + str(self.__did_use_angle_start)
             + ":"
-            + inline_title_bounding_character
+            + self.__inline_title_bounding_character
             + ":"
-            + before_link_whitespace
+            + self.__before_link_whitespace
             + ":"
-            + before_title_whitespace
+            + self.__before_title_whitespace
             + ":"
-            + after_title_whitespace,
+            + self.__after_title_whitespace,
             line_number=line_number,
             column_number=column_number,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
+
+    @property
+    def label_type(self):
+        """
+        Returns the type of label that was used.
+        """
+        return self.__label_type
+
+    @property
+    def image_uri(self):
+        """
+        Returns the URI for the image itself.
+        """
+        return self.__image_uri
+
+    @property
+    def pre_image_uri(self):
+        """
+        Returns the URI for the image itself, before any mods.
+        """
+        return self.__pre_image_uri
+
+    @property
+    def image_title(self):
+        """
+        Returns the text associated with the image's title.
+        """
+        return self.__image_title
+
+    @property
+    def pre_image_title(self):
+        """
+        Returns the text associated with the image's title, before any mods.
+        """
+        return self.__pre_image_title
+
+    @property
+    def text_from_blocks(self):
+        """
+        Returns the text extracted from the blocks of the link, before processing.
+        """
+        return self.__text_from_blocks
+
+    @property
+    def ex_label(self):
+        """
+        Returns the text extracted from the blocks of the link, after processing.
+        """
+        return self.__ex_label
+
+    @property
+    def image_alt_text(self):
+        """
+        Returns the text extracted from the blocks of the link, after processing.
+        """
+        return self.__image_alt_text
+
+    @property
+    def after_title_whitespace(self):
+        """
+        Returns the whitespace extracted after the title.
+        """
+        return self.__after_title_whitespace
+
+    @property
+    def before_title_whitespace(self):
+        """
+        Returns the whitespace extracted before the title.
+        """
+        return self.__before_title_whitespace
+
+    @property
+    def before_link_whitespace(self):
+        """
+        Returns the whitespace extracted before the link.
+        """
+        return self.__before_link_whitespace
+
+    @property
+    def inline_title_bounding_character(self):
+        """
+        Returns the bounding character used for the title.
+        """
+        return self.__inline_title_bounding_character
+
+    @property
+    def did_use_angle_start(self):
+        """
+        Returns a value indicating whether an angle start was used around the URI.
+        """
+        return self.__did_use_angle_start
 
 
 # pylint: enable=too-many-instance-attributes
@@ -2057,15 +2276,22 @@ class EmailAutolinkMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, autolink_text, line_number, column_number):
-        self.autolink_text = autolink_text
+        self.__autolink_text = autolink_text
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_email_autolink,
             MarkdownTokenClass.INLINE_BLOCK,
-            autolink_text,
+            self.__autolink_text,
             line_number=line_number,
             column_number=column_number,
         )
+
+    @property
+    def autolink_text(self):
+        """
+        Returns the text that is the autolink.
+        """
+        return self.__autolink_text
 
 
 class RawHtmlMarkdownToken(MarkdownToken):
@@ -2074,15 +2300,22 @@ class RawHtmlMarkdownToken(MarkdownToken):
     """
 
     def __init__(self, raw_tag, line_number, column_number):
-        self.raw_tag = raw_tag
+        self.__raw_tag = raw_tag
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_raw_html,
             MarkdownTokenClass.INLINE_BLOCK,
-            raw_tag,
+            self.__raw_tag,
             line_number=line_number,
             column_number=column_number,
         )
+
+    @property
+    def raw_tag(self):
+        """
+        Returns the text that is the raw html tag.
+        """
+        return self.__raw_tag
 
 
 class EmphasisMarkdownToken(MarkdownToken):
@@ -2093,8 +2326,8 @@ class EmphasisMarkdownToken(MarkdownToken):
     def __init__(
         self, emphasis_length, emphasis_character, line_number=0, column_number=0
     ):
-        self.emphasis_length = emphasis_length
-        self.emphasis_character = emphasis_character
+        self.__emphasis_length = emphasis_length
+        self.__emphasis_character = emphasis_character
         MarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_emphasis,
@@ -2104,5 +2337,17 @@ class EmphasisMarkdownToken(MarkdownToken):
             column_number=column_number,
         )
 
+    # pylint: enable=too-few-public-methods
+    @property
+    def emphasis_length(self):
+        """
+        Returns the length of the current emphasis text.
+        """
+        return self.__emphasis_length
 
-# pylint: enable=too-few-public-methods
+    @property
+    def emphasis_character(self):
+        """
+        Returns the character used for the current emphasis text.
+        """
+        return self.__emphasis_character

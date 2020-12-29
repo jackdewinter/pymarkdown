@@ -49,7 +49,11 @@
 - all types of end-inlines and inlines at end i.e. 50
 - possible to merge link token and image token more closely?
 - refactor `is_olist_start` and `is_ulist_start`
+  - looks like some logic missing from one of them
+- __rehydrate_ordered_list_start and __rehydrate_unordered_list_start
+  - make sure to generated ordered/unordered tests to make sure both covered
 - why does `__revert_token_to_normal_text_token` require TextMarkdown.copy instead of `replacement_token = text_token_to_replace.create_copy()`?
+- __check_for_list_closures can be refactored for "new block start"
 
 ## Bugs - General - Uncategorized
 
@@ -57,6 +61,7 @@
   - 518b inside of list and/or block quote
   - links with & and \ with inner link to mine
     - see __collect_text_from_blocks
+- 634, but forcing an html block
 
 ## Bugs - Block Quote/List Interaction
 
