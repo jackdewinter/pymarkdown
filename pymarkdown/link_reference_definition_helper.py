@@ -21,7 +21,10 @@ class LinkReferenceDefinitionHelper:
 
     @staticmethod
     def process_link_reference_definition(
-        parser_state, position_marker, original_line_to_parse, extracted_whitespace,
+        parser_state,
+        position_marker,
+        original_line_to_parse,
+        extracted_whitespace,
     ):
         """
         Process a link deference definition.  Note, this requires a lot of work to
@@ -187,7 +190,11 @@ class LinkReferenceDefinitionHelper:
     # pylint: disable=too-many-locals
     @staticmethod
     def __parse_link_reference_definition(
-        parser_state, line_to_parse, start_index, extracted_whitespace, is_blank_line,
+        parser_state,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+        is_blank_line,
     ):
         """
         Handle the parsing of what appears to be a link reference definition.

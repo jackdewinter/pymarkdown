@@ -80,7 +80,9 @@ class LeafBlockProcessor:
     # pylint: disable=too-many-locals
     @staticmethod
     def parse_fenced_code_block(
-        parser_state, position_marker, extracted_whitespace,
+        parser_state,
+        position_marker,
+        extracted_whitespace,
     ):
         """
         Handle the parsing of a fenced code block
@@ -141,7 +143,8 @@ class LeafBlockProcessor:
 
                     old_top_of_stack = parser_state.token_stack[-1]
                     new_tokens, _, _ = parser_state.close_open_blocks_fn(
-                        parser_state, only_these_blocks=[ParagraphStackToken],
+                        parser_state,
+                        only_these_blocks=[ParagraphStackToken],
                     )
 
                     pre_extracted_text = extracted_text
@@ -226,7 +229,9 @@ class LeafBlockProcessor:
 
     @staticmethod
     def __adjust_for_list_start(
-        original_line_to_parse, last_list_start_index, last_block_quote_index,
+        original_line_to_parse,
+        last_list_start_index,
+        last_block_quote_index,
     ):
         did_process = False
         LOGGER.debug("last_list_start_index>>%s>>", str(last_list_start_index))
@@ -472,7 +477,8 @@ class LeafBlockProcessor:
                     LOGGER.debug(">>>>%s", str(parser_state.token_stack[-1]))
                     if parser_state.token_stack[-1].is_list:
                         LOGGER.debug(
-                            ">>indent>>%s", parser_state.token_stack[-1].indent_level,
+                            ">>indent>>%s",
+                            parser_state.token_stack[-1].indent_level,
                         )
                         last_block_quote_index = 0
                         kludge_adjust = 1
@@ -573,7 +579,10 @@ class LeafBlockProcessor:
 
     @staticmethod
     def is_thematic_break(
-        line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=False,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+        skip_whitespace_check=False,
     ):
         """
         Determine whether or not we have a thematic break.
@@ -668,10 +677,14 @@ class LeafBlockProcessor:
         if ParserHelper.is_length_less_than_or_equal_to(
             extracted_whitespace, 3
         ) and ParserHelper.is_character_at_index(
-            line_to_parse, start_index, LeafBlockProcessor.__atx_character,
+            line_to_parse,
+            start_index,
+            LeafBlockProcessor.__atx_character,
         ):
             hash_count, new_index = ParserHelper.collect_while_character(
-                line_to_parse, start_index, LeafBlockProcessor.__atx_character,
+                line_to_parse,
+                start_index,
+                LeafBlockProcessor.__atx_character,
             )
             (
                 non_whitespace_index,
@@ -710,7 +723,9 @@ class LeafBlockProcessor:
             extracted_whitespace,
         )
         if heading_found:
-            LOGGER.debug("parse_atx_headings>>start",)
+            LOGGER.debug(
+                "parse_atx_headings>>start",
+            )
 
             old_top_of_stack = parser_state.token_stack[-1]
 
@@ -1019,7 +1034,8 @@ class LeafBlockProcessor:
             ParserHelper.make_value_visible(text_removed_by_container),
         )
         LOGGER.debug(
-            ">>force_it>>[%s]>>", str(force_it),
+            ">>force_it>>[%s]>>",
+            str(force_it),
         )
         if text_removed_by_container is None:
             top_block_token.matching_markdown_token.add_leading_spaces("")

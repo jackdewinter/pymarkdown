@@ -5,6 +5,8 @@ pushd %~dp0
 rem Set needed environment variables.
 set CLEAN_TEMPFILE=temp_clean.txt
 set PYTHON_MODULE_NAME=pymarkdown
+set "PROJECT_DIRECTORY=%cd%"
+set PYTHONPATH=%PROJECT_DIRECTORY%
 
 rem Look for options on the command line.
 
@@ -46,7 +48,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing import sorter on Python code.}
-pipenv run isort %MY_VERBOSE% --apply
+pipenv run isort %MY_VERBOSE% .
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing import sorter on Python code failed.}

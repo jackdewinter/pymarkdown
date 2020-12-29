@@ -43,8 +43,10 @@ class RuleMd019(Plugin):
         elif token.is_paragraph_end:
             self.__in_atx_heading = False
         elif token.is_text:
-            resolved_extracted_whitespace = ParserHelper.resolve_replacement_markers_from_text(
-                token.extracted_whitespace
+            resolved_extracted_whitespace = (
+                ParserHelper.resolve_replacement_markers_from_text(
+                    token.extracted_whitespace
+                )
             )
             if self.__in_atx_heading and len(resolved_extracted_whitespace) > 1:
                 self.report_next_token_error(token)

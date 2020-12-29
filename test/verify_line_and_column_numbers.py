@@ -711,8 +711,10 @@ def __verify_first_inline_fenced_code_block(
         if first_inline_token.is_blank_line:
             col_pos = 0
         else:
-            resolved_extracted_whitespace = ParserHelper.resolve_replacement_markers_from_text(
-                first_inline_token.extracted_whitespace
+            resolved_extracted_whitespace = (
+                ParserHelper.resolve_replacement_markers_from_text(
+                    first_inline_token.extracted_whitespace
+                )
             )
             print(
                 ">resolved_extracted_whitespace>"
@@ -908,8 +910,8 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
         if newline_count:
             new_lines += newline_count
             part_1 = 0
-            split_before_link_whitespace = parent_cur_token.before_link_whitespace.split(
-                "\n"
+            split_before_link_whitespace = (
+                parent_cur_token.before_link_whitespace.split("\n")
             )
             part_2 = len(split_before_link_whitespace[-1]) + 1
 
@@ -921,8 +923,8 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
             part_1 = 0
             part_2 = 0
             part_3 = 0
-            split_before_title_whitespace = parent_cur_token.before_title_whitespace.split(
-                "\n"
+            split_before_title_whitespace = (
+                parent_cur_token.before_title_whitespace.split("\n")
             )
             part_4 = len(split_before_title_whitespace[-1]) + 1
         if parent_cur_token.inline_title_bounding_character:
@@ -945,8 +947,8 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
                 part_3 = 0
                 part_4 = 0
                 part_5 = 0
-                split_after_title_whitespace = parent_cur_token.after_title_whitespace.split(
-                    "\n"
+                split_after_title_whitespace = (
+                    parent_cur_token.after_title_whitespace.split("\n")
                 )
                 part_6 = len(split_after_title_whitespace[-1]) + 1
         adjust_column_by = part_1 + part_2 + part_3 + part_4 + part_5 + part_6 + part_7
@@ -1219,21 +1221,27 @@ def __process_previous_token(
             estimated_line_number,
             estimated_column_number,
         ) = __verify_next_inline_emphasis_start(
-            previous_inline_token, estimated_line_number, estimated_column_number,
+            previous_inline_token,
+            estimated_line_number,
+            estimated_column_number,
         )
     elif previous_inline_token.is_inline_emphasis_end:
         (
             estimated_line_number,
             estimated_column_number,
         ) = __verify_next_inline_emphasis_end(
-            previous_inline_token, estimated_line_number, estimated_column_number,
+            previous_inline_token,
+            estimated_line_number,
+            estimated_column_number,
         )
     elif previous_inline_token.is_blank_line:
         (
             estimated_line_number,
             estimated_column_number,
         ) = __verify_next_inline_blank_line(
-            current_inline_token, estimated_line_number, estimated_column_number,
+            current_inline_token,
+            estimated_line_number,
+            estimated_column_number,
         )
     elif previous_inline_token.is_inline_hard_break:
         (
@@ -1257,18 +1265,23 @@ def __process_previous_token(
         )
     elif previous_inline_token.is_inline_raw_html:
         estimated_line_number, estimated_column_number = __verify_next_inline_raw_html(
-            previous_inline_token, estimated_line_number, estimated_column_number,
+            previous_inline_token,
+            estimated_line_number,
+            estimated_column_number,
         )
     elif previous_inline_token.is_inline_autolink:
         estimated_line_number, estimated_column_number = __verify_next_inline_autolink(
-            previous_inline_token, estimated_line_number, estimated_column_number,
+            previous_inline_token,
+            estimated_line_number,
+            estimated_column_number,
         )
     elif previous_inline_token.is_inline_link:
         (
             estimated_line_number,
             estimated_column_number,
         ) = __verify_next_inline_inline_link(
-            estimated_line_number, estimated_column_number,
+            estimated_line_number,
+            estimated_column_number,
         )
     elif previous_inline_token.is_inline_image:
         (
@@ -1301,7 +1314,9 @@ def __process_previous_token(
 
 
 def __verify_next_inline_blank_line(
-    current_inline_token, estimated_line_number, estimated_column_number,
+    current_inline_token,
+    estimated_line_number,
+    estimated_column_number,
 ):
     estimated_line_number += 1
     estimated_column_number = 1
@@ -1311,7 +1326,8 @@ def __verify_next_inline_blank_line(
 
 
 def __verify_next_inline_inline_link(
-    estimated_line_number, estimated_column_number,
+    estimated_line_number,
+    estimated_column_number,
 ):
     estimated_column_number += 1
     return estimated_line_number, estimated_column_number
@@ -1684,7 +1700,9 @@ def __verify_next_inline_autolink(
 
 
 def __verify_next_inline_raw_html(
-    previous_inline_token, estimated_line_number, estimated_column_number,
+    previous_inline_token,
+    estimated_line_number,
+    estimated_column_number,
 ):
 
     if "\n" in previous_inline_token.raw_tag:
@@ -1791,14 +1809,18 @@ def __verify_next_inline_code_span(
 
 
 def __verify_next_inline_emphasis_start(
-    previous_inline_token, estimated_line_number, estimated_column_number,
+    previous_inline_token,
+    estimated_line_number,
+    estimated_column_number,
 ):
     estimated_column_number += previous_inline_token.emphasis_length
     return estimated_line_number, estimated_column_number
 
 
 def __verify_next_inline_emphasis_end(
-    previous_inline_token, estimated_line_number, estimated_column_number,
+    previous_inline_token,
+    estimated_line_number,
+    estimated_column_number,
 ):
     print(">>" + str(previous_inline_token.extra_end_data) + "<<")
     split_extra_end_data = previous_inline_token.extra_end_data.split(":")
@@ -2005,7 +2027,10 @@ def __verify_next_inline_text(
 
 
 def __handle_last_token_text(
-    last_block_token, second_last_inline_token, current_token, last_inline_token,
+    last_block_token,
+    second_last_inline_token,
+    current_token,
+    last_inline_token,
 ):
 
     inline_height = 0
@@ -2068,7 +2093,10 @@ def __handle_last_token_text(
 
 # pylint: disable=unused-argument
 def __handle_last_token_end_link(
-    last_block_token, second_last_inline_token, current_token, last_inline_token,
+    last_block_token,
+    second_last_inline_token,
+    current_token,
+    last_inline_token,
 ):
     assert last_inline_token.start_markdown_token
     use_line_number_from_start_token = True
@@ -2109,7 +2137,10 @@ def __handle_last_token_end_link(
 
 # pylint: disable=unused-argument
 def __handle_last_token_image(
-    last_block_token, second_last_inline_token, current_token, last_inline_token,
+    last_block_token,
+    second_last_inline_token,
+    current_token,
+    last_inline_token,
 ):
 
     label_data = last_inline_token.image_alt_text
@@ -2143,7 +2174,10 @@ def __handle_last_token_image(
 
 # pylint: disable=unused-argument
 def __handle_last_token_code_span(
-    last_block_token, second_last_inline_token, current_token, last_inline_token,
+    last_block_token,
+    second_last_inline_token,
+    current_token,
+    last_inline_token,
 ):
     inline_height = len(last_inline_token.span_text.split("\n")) - 1
     inline_height += len(last_inline_token.leading_whitespace.split("\n")) - 1
@@ -2159,7 +2193,10 @@ def __handle_last_token_code_span(
 
 # pylint: disable=unused-argument
 def __handle_last_token_autolink(
-    last_block_token, second_last_inline_token, current_token, last_inline_token,
+    last_block_token,
+    second_last_inline_token,
+    current_token,
+    last_inline_token,
 ):
     inline_height = 0
     if last_block_token.is_setext_heading:
@@ -2172,7 +2209,10 @@ def __handle_last_token_autolink(
 
 # pylint: disable=unused-argument
 def __handle_last_token_raw_html(
-    last_block_token, second_last_inline_token, current_token, last_inline_token,
+    last_block_token,
+    second_last_inline_token,
+    current_token,
+    last_inline_token,
 ):
     inline_height = len(last_inline_token.raw_tag.split("\n")) - 1
     if last_block_token.is_setext_heading:
@@ -2185,7 +2225,10 @@ def __handle_last_token_raw_html(
 
 # pylint: disable=unused-argument
 def __handle_last_token_end_emphasis(
-    last_block_token, second_last_inline_token, current_token, last_inline_token,
+    last_block_token,
+    second_last_inline_token,
+    current_token,
+    last_inline_token,
 ):
 
     inline_height = 0

@@ -517,7 +517,10 @@ class HtmlHelper:
 
     @staticmethod
     def __process_raw_special(
-        remaining_line, special_start, special_end, do_extra_check=False,
+        remaining_line,
+        special_start,
+        special_end,
+        do_extra_check=False,
     ):
         """
         Parse a possible raw html special sequence, and return if it is valid.
@@ -725,13 +728,17 @@ class HtmlHelper:
         if (
             ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
         ) and ParserHelper.is_character_at_index(
-            line_to_parse, start_index, HtmlHelper.__html_block_start_character,
+            line_to_parse,
+            start_index,
+            HtmlHelper.__html_block_start_character,
         ):
             (
                 html_block_type,
                 remaining_html_tag,
             ) = HtmlHelper.__determine_html_block_type(
-                token_stack, line_to_parse, start_index,
+                token_stack,
+                line_to_parse,
+                start_index,
             )
         return html_block_type, remaining_html_tag
 
@@ -750,7 +757,8 @@ class HtmlHelper:
         )
         if html_block_type:
             new_tokens, _, _ = parser_state.close_open_blocks_fn(
-                parser_state, only_these_blocks=[ParagraphStackToken],
+                parser_state,
+                only_these_blocks=[ParagraphStackToken],
             )
             new_token = HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
             new_tokens.append(new_token)
@@ -772,7 +780,8 @@ class HtmlHelper:
             or parser_state.token_stack[-1].html_block_type == HtmlHelper.html_block_7
         ):
             new_tokens, _, _ = parser_state.close_open_blocks_fn(
-                parser_state, only_these_blocks=[type(parser_state.token_stack[-1])],
+                parser_state,
+                only_these_blocks=[type(parser_state.token_stack[-1])],
             )
 
         return new_tokens
@@ -811,7 +820,8 @@ class HtmlHelper:
 
         if is_block_terminated:
             terminated_block_tokens, _, _ = parser_state.close_open_blocks_fn(
-                parser_state, only_these_blocks=[type(parser_state.token_stack[-1])],
+                parser_state,
+                only_these_blocks=[type(parser_state.token_stack[-1])],
             )
             assert terminated_block_tokens
             new_tokens.extend(terminated_block_tokens)

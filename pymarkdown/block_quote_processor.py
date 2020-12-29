@@ -175,7 +175,10 @@ class BlockQuoteProcessor:
                 last_block_quote_index,
                 text_removed_by_container,
             ) = BlockQuoteProcessor.__handle_block_quote_section(
-                parser_state, position_marker, stack_bq_count, extracted_whitespace,
+                parser_state,
+                position_marker,
+                stack_bq_count,
+                extracted_whitespace,
             )
 
             # TODO for nesting, may need to augment with this_bq_count already set.
@@ -213,7 +216,10 @@ class BlockQuoteProcessor:
 
     @staticmethod
     def __count_block_quote_starts(
-        line_to_parse, start_index, stack_bq_count, is_top_of_stack_fenced_code_block,
+        line_to_parse,
+        start_index,
+        stack_bq_count,
+        is_top_of_stack_fenced_code_block,
     ):
         """
         Having detected a block quote character (">") on a line, continue to consume
@@ -284,7 +290,10 @@ class BlockQuoteProcessor:
     # pylint: disable=too-many-locals, too-many-statements
     @staticmethod
     def __handle_block_quote_section(
-        parser_state, position_marker, stack_bq_count, extracted_whitespace,
+        parser_state,
+        position_marker,
+        stack_bq_count,
+        extracted_whitespace,
     ):
         """
         Handle the processing of a section clearly identified as having block quotes.

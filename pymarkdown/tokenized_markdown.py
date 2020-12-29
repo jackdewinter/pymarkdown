@@ -182,7 +182,9 @@ class TokenizedMarkdown:
                         _,
                         requeue_line_info,
                     ) = ContainerBlockProcessor.parse_line_for_container_blocks(
-                        parser_state, position_marker, ignore_link_definition_start,
+                        parser_state,
+                        position_marker,
+                        ignore_link_definition_start,
                     )
                     lines_to_requeue = requeue_line_info.lines_to_requeue
                     force_ignore_first_as_lrd = (

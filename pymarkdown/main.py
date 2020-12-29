@@ -311,7 +311,7 @@ class PyMarkdownLint:
     def __handle_error(self, formatted_error):
 
         LOGGER.warning(formatted_error, exc_info=True)
-        print(formatted_error, file=sys.stderr)
+        print("\n\n" + formatted_error, file=sys.stderr)
         if self.__show_stack_trace:
             traceback.print_exc(file=sys.stderr)
         sys.exit(1)

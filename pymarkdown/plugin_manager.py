@@ -97,7 +97,7 @@ class BadPluginError(Exception):
                     + str(plugin_action)
                     + "' action."
                 )
-        super(BadPluginError, self).__init__(formatted_message)
+        super().__init__(formatted_message)
 
     # pylint: enable=too-many-arguments
 
@@ -337,23 +337,23 @@ class PluginManager:
         """
         try:
             mod = __import__(next_plugin_module)
-        except Exception:
-            raise BadPluginError(file_name=next_plugin_file)
+        except Exception as this_exception:
+            raise BadPluginError(file_name=next_plugin_file) from this_exception
 
         if not hasattr(mod, plugin_class_name):
             raise BadPluginError(
                 file_name=next_plugin_file, class_name=plugin_class_name
-            )
+            ) from None
         my_class = getattr(mod, plugin_class_name)
 
         try:
             plugin_class_instance = my_class()
-        except Exception:
+        except Exception as this_exception:
             raise BadPluginError(
                 file_name=next_plugin_file,
                 class_name=plugin_class_name,
                 is_constructor=True,
-            )
+            ) from this_exception
         self.__loaded_classes.append(plugin_class_instance)
 
     def __load_plugins(self, directory_to_search, plugin_files):
@@ -436,8 +436,10 @@ class PluginManager:
             plugin_name = instance_details.plugin_name
             plugin_description = instance_details.plugin_description
             plugin_enabled_by_default = instance_details.plugin_enabled_by_default
-        except Exception:
-            raise BadPluginError(class_name=type(plugin_instance).__name__,)
+        except Exception as this_exception:
+            raise BadPluginError(
+                class_name=type(plugin_instance).__name__,
+            ) from this_exception
 
         self.__verify_string_field(plugin_instance, "plugin_id", plugin_id)
         self.__verify_string_field(plugin_instance, "plugin_name", plugin_name)

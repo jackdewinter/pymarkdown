@@ -527,7 +527,11 @@ class ListBlockProcessor:
     # pylint: disable=too-many-statements
     @staticmethod
     def list_in_process(
-        parser_state, line_to_parse, start_index, extracted_whitespace, ind,
+        parser_state,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+        ind,
     ):
         """
         Handle the processing of a line where there is a list in process.
@@ -591,11 +595,14 @@ class ListBlockProcessor:
                 requested_list_indent,
             )
             LOGGER.debug(
-                "after>>%s>>%s>>", line_to_parse, used_indent,
+                "after>>%s>>%s>>",
+                line_to_parse,
+                used_indent,
             )
         else:
             LOGGER.debug(
-                "requested_list_indent>>%s<<", str(requested_list_indent),
+                "requested_list_indent>>%s<<",
+                str(requested_list_indent),
             )
             original_requested_list_indent = requested_list_indent
             requested_list_indent = requested_list_indent - before_ws_length
@@ -666,7 +673,8 @@ class ListBlockProcessor:
                     ParserHelper.make_value_visible(parser_state.token_stack),
                 )
                 LOGGER.debug(
-                    "2>>ind>>%s>>", ParserHelper.make_value_visible(ind),
+                    "2>>ind>>%s>>",
+                    ParserHelper.make_value_visible(ind),
                 )
 
                 found_owning_list = None
@@ -888,7 +896,10 @@ class ListBlockProcessor:
                 container_level_tokens,
                 emit_li,
             ) = ListBlockProcessor.__close_required_lists_after_start(
-                parser_state, last_list_index, new_stack, current_container_blocks,
+                parser_state,
+                last_list_index,
+                new_stack,
+                current_container_blocks,
             )
             emit_item = False
         else:
@@ -960,7 +971,10 @@ class ListBlockProcessor:
 
     @staticmethod
     def __close_required_lists_after_start(
-        parser_state, last_list_index, new_stack, current_container_blocks,
+        parser_state,
+        last_list_index,
+        new_stack,
+        current_container_blocks,
     ):
         """
         After a list start, check to see if any others need closing.
@@ -984,7 +998,10 @@ class ListBlockProcessor:
                 extra_tokens,
                 last_list_index,
             ) = ListBlockProcessor.__are_list_starts_equal(
-                parser_state, last_list_index, new_stack, current_container_blocks,
+                parser_state,
+                last_list_index,
+                new_stack,
+                current_container_blocks,
             )
             LOGGER.debug("extra_tokens>>%s", str(extra_tokens))
             container_level_tokens.extend(extra_tokens)
@@ -1046,7 +1063,10 @@ class ListBlockProcessor:
 
     @staticmethod
     def __are_list_starts_equal(
-        parser_state, last_list_index, new_stack, current_container_blocks,
+        parser_state,
+        last_list_index,
+        new_stack,
+        current_container_blocks,
     ):
         """
         Check to see if the list starts are equal, and hence a continuation of

@@ -34,7 +34,7 @@ class InProcessResult:
         """
 
         if additional_text:
-            assert actual_stream.getvalue().startswith(expected_text), (
+            assert actual_stream.getvalue().strip().startswith(expected_text.strip()), (
                 "Block\n---\n"
                 + expected_text
                 + "\n---\nwas not found at the start of\n---\n"
@@ -42,9 +42,10 @@ class InProcessResult:
             )
 
             for next_text_block in additional_text:
-                was_found = next_text_block in actual_stream.getvalue()
+                was_found = next_text_block.strip() in actual_stream.getvalue().strip()
                 diff = difflib.ndiff(
-                    next_text_block.splitlines(), actual_stream.getvalue().splitlines()
+                    next_text_block.strip().splitlines(),
+                    actual_stream.getvalue().strip().splitlines(),
                 )
 
                 diff_values = "\n".join(list(diff))
@@ -57,7 +58,7 @@ class InProcessResult:
                         + actual_stream.getvalue()
                     )
         else:
-            if actual_stream.getvalue() != expected_text:
+            if actual_stream.getvalue().strip() != expected_text.strip():
                 diff = difflib.ndiff(
                     expected_text.splitlines(), actual_stream.getvalue().splitlines()
                 )
@@ -68,9 +69,14 @@ class InProcessResult:
                     "actual>>%s",
                     ParserHelper.make_value_visible(actual_stream.getvalue()),
                 )
+                print(
+                    "WARN>actual>>"
+                    + ParserHelper.make_value_visible(actual_stream.getvalue())
+                )
                 LOGGER.warning(
                     "expect>>%s", ParserHelper.make_value_visible(expected_text)
                 )
+                print("WARN>expect>>" + ParserHelper.make_value_visible(expected_text))
                 assert False, stream_name + " not as expected:\n" + diff_values
 
     def assert_results(

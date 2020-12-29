@@ -3,6 +3,7 @@ Link helper
 """
 import logging
 import urllib
+import urllib.parse
 
 from pymarkdown.constants import Constants
 from pymarkdown.emphasis_helper import EmphasisHelper
@@ -410,9 +411,10 @@ class LinkHelper:
                 elif inline_blocks[ind + 1].is_inline_hard_break:
                     image_alt_text += "\n"
                 else:
-                    assert inline_blocks[ind + 1].is_inline_image, (
-                        "Not handled: "
-                        + ParserHelper.make_value_visible(inline_blocks[ind + 1])
+                    assert inline_blocks[
+                        ind + 1
+                    ].is_inline_image, "Not handled: " + ParserHelper.make_value_visible(
+                        inline_blocks[ind + 1]
                     )
                     image_alt_text += inline_blocks[ind + 1].image_alt_text
 
@@ -448,7 +450,8 @@ class LinkHelper:
         while collect_index < len(inline_blocks):
 
             LOGGER.debug(
-                ">>collect_text>>%s<<", str(inline_blocks[collect_index]),
+                ">>collect_text>>%s<<",
+                str(inline_blocks[collect_index]),
             )
 
             if inline_blocks[collect_index].is_inline_link_end:
@@ -490,7 +493,8 @@ class LinkHelper:
                 str(inline_blocks[collect_index]),
             )
             LOGGER.debug(
-                ">>collected_text_raw>>%s<<", collected_text_raw,
+                ">>collected_text_raw>>%s<<",
+                collected_text_raw,
             )
             collect_index += 1
 
@@ -929,10 +933,12 @@ class LinkHelper:
             ex_label = ""
             LOGGER.debug("shortcut?")
             LOGGER.debug(
-                ">>%s<<", ParserHelper.make_value_visible(inline_blocks),
+                ">>%s<<",
+                ParserHelper.make_value_visible(inline_blocks),
             )
             LOGGER.debug(
-                ">>%s<<", ParserHelper.make_value_visible(text_from_blocks),
+                ">>%s<<",
+                ParserHelper.make_value_visible(text_from_blocks),
             )
 
             update_index, inline_link, inline_title = LinkHelper.__look_up_link(
@@ -1141,7 +1147,9 @@ class LinkHelper:
                     ">>%s>>", ParserHelper.make_value_visible(text_from_blocks)
                 )
                 update_index, inline_link, inline_title = LinkHelper.__look_up_link(
-                    text_from_blocks, after_open_index + 1, "collapsed reference",
+                    text_from_blocks,
+                    after_open_index + 1,
+                    "collapsed reference",
                 )
                 LOGGER.debug("collapsed reference>update_index>%s", str(update_index))
                 tried_full_reference_form = True

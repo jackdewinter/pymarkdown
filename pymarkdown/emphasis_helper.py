@@ -108,7 +108,10 @@ class EmphasisHelper:
                 if found_opener:
                     LOGGER.debug("FOUND OPEN")
                     current_position = EmphasisHelper.__process_emphasis_pair(
-                        inline_blocks, found_opener, close_token, current_position,
+                        inline_blocks,
+                        found_opener,
+                        close_token,
+                        current_position,
                     )
                 else:
                     # openers_bottom = current_position - 1
@@ -155,7 +158,8 @@ class EmphasisHelper:
             column_number=open_token.column_number + open_column_number_delta,
         )
         inline_blocks.insert(
-            start_index_in_blocks + 1, new_token,
+            start_index_in_blocks + 1,
+            new_token,
         )
         end_index_in_blocks = inline_blocks.index(close_token)
         inline_blocks.insert(

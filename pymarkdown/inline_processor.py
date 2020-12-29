@@ -186,8 +186,10 @@ class InlineProcessor:
                                 "leading_whitespace:%s<",
                                 ParserHelper.make_value_visible(leading_whitespace),
                             )
-                            leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
-                                leading_whitespace
+                            leading_whitespace = (
+                                ParserHelper.resolve_replacement_markers_from_text(
+                                    leading_whitespace
+                                )
                             )
                             LOGGER.info(
                                 "leading_whitespace:%s<",
@@ -321,7 +323,8 @@ class InlineProcessor:
                 )
                 del coalesced_stack[-1]
                 LOGGER.debug(
-                    "STACK-REMOVE:%s", ParserHelper.make_value_visible(current_token),
+                    "STACK-REMOVE:%s",
+                    ParserHelper.make_value_visible(current_token),
                 )
                 LOGGER.debug(
                     "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
@@ -569,7 +572,14 @@ class InlineProcessor:
         while next_index != -1:
             processed_line += source_text[start_index:next_index]
             inline_request = InlineRequest(
-                source_text, next_index, None, None, None, None, None, None,
+                source_text,
+                next_index,
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
             )
             if source_text[next_index] in InlineProcessor.__inline_character_handlers:
                 LOGGER.debug(
@@ -770,7 +780,8 @@ class InlineProcessor:
 
         if "\n" in str(current_token):
             LOGGER.debug(
-                ">>para_owner>>%s<<", ParserHelper.make_value_visible(para_owner),
+                ">>para_owner>>%s<<",
+                ParserHelper.make_value_visible(para_owner),
             )
             split_paragraph_lines = None
             if para_owner:
@@ -887,7 +898,9 @@ class InlineProcessor:
         last_line_number = line_number
         last_column_number = column_number
         LOGGER.debug(
-            ">>Token_start>>%s,%s<<", str(last_line_number), str(last_column_number),
+            ">>Token_start>>%s,%s<<",
+            str(last_line_number),
+            str(last_column_number),
         )
 
         current_string = ""
@@ -945,7 +958,8 @@ class InlineProcessor:
                 ParserHelper.make_value_visible(current_string_unresolved),
             )
             LOGGER.debug(
-                ">>end_string>>%s<<", ParserHelper.make_value_visible(end_string),
+                ">>end_string>>%s<<",
+                ParserHelper.make_value_visible(end_string),
             )
             LOGGER.debug(
                 ">>source_text[]>>%s<<%s<<",
@@ -1107,7 +1121,8 @@ class InlineProcessor:
                 remaining_line = ""
                 end_string = None
                 LOGGER.debug(
-                    "9<<end_string<<%s<<", ParserHelper.make_value_visible(end_string),
+                    "9<<end_string<<%s<<",
+                    ParserHelper.make_value_visible(end_string),
                 )
             else:
                 LOGGER.debug("append_rest_of_line>>%s<", str(remaining_line))
@@ -1119,14 +1134,16 @@ class InlineProcessor:
                 )
 
             LOGGER.debug(
-                "current_string>>%s<<", ParserHelper.make_value_visible(current_string),
+                "current_string>>%s<<",
+                ParserHelper.make_value_visible(current_string),
             )
             LOGGER.debug(
                 "current_string_unresolved>>%s<<",
                 ParserHelper.make_value_visible(current_string_unresolved),
             )
             LOGGER.debug(
-                "inline_blocks>>%s<<", ParserHelper.make_value_visible(inline_blocks),
+                "inline_blocks>>%s<<",
+                ParserHelper.make_value_visible(inline_blocks),
             )
             LOGGER.debug(
                 "inline_response.new_tokens>>%s<<",
@@ -1213,7 +1230,8 @@ class InlineProcessor:
                 ParserHelper.make_value_visible(starting_whitespace),
             )
             LOGGER.debug(
-                "inline_blocks>>%s<<", ParserHelper.make_value_visible(inline_blocks),
+                "inline_blocks>>%s<<",
+                ParserHelper.make_value_visible(inline_blocks),
             )
             LOGGER.debug(
                 "reset_current_string>>%s<<",
@@ -1307,7 +1325,8 @@ class InlineProcessor:
 
         LOGGER.debug("__arw>>did_recombine>>%s>>", str(did_recombine))
         LOGGER.debug(
-            "__arw>>end_string>>%s>>", ParserHelper.make_value_visible(end_string),
+            "__arw>>end_string>>%s>>",
+            ParserHelper.make_value_visible(end_string),
         )
         if did_recombine:
             LOGGER.debug(

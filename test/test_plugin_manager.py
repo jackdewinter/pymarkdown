@@ -376,11 +376,11 @@ Traceback (most recent call last):
             """    raise Exception("bad details")
 Exception: bad details
 
-During handling of the above exception, another exception occurred:
+The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
 """,
-            """    raise BadPluginError(class_name=type(plugin_instance).__name__,)
+            """    ) from this_exception
 pymarkdown.plugin_manager.BadPluginError: Plugin class 'BadDetails' had a critical failure loading the plugin details.""",
         ],
     )

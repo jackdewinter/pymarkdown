@@ -110,7 +110,11 @@ class ContainerBlockProcessor:
             stack_bq_count,
             this_bq_count,
         ) = ContainerBlockProcessor.__calculate_for_container_blocks(
-            parser_state, line_to_parse, extracted_whitespace, foobar, init_bq,
+            parser_state,
+            line_to_parse,
+            extracted_whitespace,
+            foobar,
+            init_bq,
         )
 
         new_position_marker = PositionMarker(
@@ -388,7 +392,11 @@ class ContainerBlockProcessor:
 
     @staticmethod
     def __calculate_for_container_blocks(
-        parser_state, line_to_parse, extracted_whitespace, foobar, init_bq,
+        parser_state,
+        line_to_parse,
+        extracted_whitespace,
+        foobar,
+        init_bq,
     ):
         """
         Perform some calculations that will be needed for parsing the container blocks.
@@ -500,8 +508,12 @@ class ContainerBlockProcessor:
                 "__handle_nested_container_blocks>end_container_indices>>:%s:<<",
                 str(end_container_indices),
             )
-            nested_container_starts = ContainerBlockProcessor.__get_nested_container_starts(
-                parser_state, position_marker.text_to_parse, end_container_indices,
+            nested_container_starts = (
+                ContainerBlockProcessor.__get_nested_container_starts(
+                    parser_state,
+                    position_marker.text_to_parse,
+                    end_container_indices,
+                )
             )
             LOGGER.debug(
                 "__handle_nested_container_blocks>nested_container_starts>>:%s:<<",
@@ -581,13 +593,15 @@ class ContainerBlockProcessor:
                 or nested_container_starts.olist_index
                 or nested_container_starts.block_index
             ):
-                adjusted_text_to_parse = ContainerBlockProcessor.__look_for_container_blocks(
-                    parser_state,
-                    adj_line_to_parse,
-                    end_container_indices.block_index,
-                    container_depth,
-                    this_bq_count,
-                    position_marker,
+                adjusted_text_to_parse = (
+                    ContainerBlockProcessor.__look_for_container_blocks(
+                        parser_state,
+                        adj_line_to_parse,
+                        end_container_indices.block_index,
+                        container_depth,
+                        this_bq_count,
+                        position_marker,
+                    )
                 )
             no_para_start_if_empty = True
         return (
@@ -601,7 +615,9 @@ class ContainerBlockProcessor:
 
     @staticmethod
     def __get_nested_container_starts(
-        parser_state, line_to_parse, end_container_indices,
+        parser_state,
+        line_to_parse,
+        end_container_indices,
     ):
 
         LOGGER.debug("check next container_start>")
@@ -717,7 +733,11 @@ class ContainerBlockProcessor:
                     line_to_parse,
                     used_indent,
                 ) = ListBlockProcessor.list_in_process(
-                    parser_state, line_to_parse, start_index, extracted_whitespace, ind,
+                    parser_state,
+                    line_to_parse,
+                    start_index,
+                    extracted_whitespace,
+                    ind,
                 )
                 LOGGER.debug("clt>>line_to_parse>>:%s:>>", str(line_to_parse))
                 LOGGER.debug("clt>>used_indent>>:%s:>>", str(used_indent))
@@ -758,7 +778,11 @@ class ContainerBlockProcessor:
         LOGGER.debug("__process_lazy_lines>>mod->ews>%s<", str(ex_whitespace))
 
         lazy_tokens = BlockQuoteProcessor.check_for_lazy_handling(
-            parser_state, this_bq_count, stack_bq_count, remaining_line, ex_whitespace,
+            parser_state,
+            this_bq_count,
+            stack_bq_count,
+            remaining_line,
+            ex_whitespace,
         )
         if lazy_tokens:
             LOGGER.debug("clt>>lazy-found")
@@ -844,8 +868,10 @@ class ContainerBlockProcessor:
             )
             del parser_state.token_stack[-1]
 
-            extracted_blank_line_tokens = ContainerBlockProcessor.extract_markdown_tokens_back_to_blank_line(
-                parser_state, False
+            extracted_blank_line_tokens = (
+                ContainerBlockProcessor.extract_markdown_tokens_back_to_blank_line(
+                    parser_state, False
+                )
             )
             extracted_blank_line_tokens.reverse()
             pre_tokens.extend(extracted_blank_line_tokens)
@@ -867,7 +893,9 @@ class ContainerBlockProcessor:
                 fenced_tokens,
                 extracted_whitespace,
             ) = LeafBlockProcessor.parse_fenced_code_block(
-                parser_state, position_marker, extracted_whitespace,
+                parser_state,
+                position_marker,
+                extracted_whitespace,
             )
             outer_processed = False
             if fenced_tokens:
@@ -904,7 +932,9 @@ class ContainerBlockProcessor:
             LOGGER.debug(">>html started?>>")
             old_top_of_stack = parser_state.token_stack[-1]
             html_tokens = HtmlHelper.parse_html_block(
-                parser_state, position_marker, extracted_whitespace,
+                parser_state,
+                position_marker,
+                extracted_whitespace,
             )
             if html_tokens:
                 LOGGER.debug(">>html started>>")

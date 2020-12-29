@@ -14,4 +14,4 @@ class BadTokenizationError(Exception):
             formatted_message = (
                 "File was not translated from Markdown text to Markdown tokens."
             )
-        super(BadTokenizationError, self).__init__(formatted_message)
+        super().__init__(formatted_message)

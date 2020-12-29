@@ -626,7 +626,8 @@ class TransformToGfm:
             output_html += ParserHelper.newline_character
         output_html += "</blockquote>" + ParserHelper.newline_character
         transform_state.is_in_loose_list = self.__reset_list_looseness(
-            transform_state.actual_tokens, transform_state.actual_token_index,
+            transform_state.actual_tokens,
+            transform_state.actual_token_index,
         )
         return output_html
 
@@ -889,7 +890,10 @@ class TransformToGfm:
         return output_html
 
     def __handle_start_ordered_list_token(
-        self, output_html, next_token, transform_state,
+        self,
+        output_html,
+        next_token,
+        transform_state,
     ):
         """
         Handle the start ordered list token.
@@ -909,7 +913,10 @@ class TransformToGfm:
         return output_html
 
     def __handle_start_unordered_list_token(
-        self, output_html, next_token, transform_state,
+        self,
+        output_html,
+        next_token,
+        transform_state,
     ):
         """
         Handle the start unordered list token.
@@ -925,13 +932,17 @@ class TransformToGfm:
         return output_html
 
     def __handle_end_list_token(
-        self, output_html, next_token, transform_state,
+        self,
+        output_html,
+        next_token,
+        transform_state,
     ):
         """
         Handle the end list token for either an ordered or unordered list.
         """
         transform_state.is_in_loose_list = self.__reset_list_looseness(
-            transform_state.actual_tokens, transform_state.actual_token_index,
+            transform_state.actual_tokens,
+            transform_state.actual_token_index,
         )
         if next_token.is_unordered_list_end:
             transform_state.add_trailing_text = (
