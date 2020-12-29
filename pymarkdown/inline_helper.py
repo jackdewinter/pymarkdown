@@ -9,7 +9,7 @@ import string
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.html_helper import HtmlHelper
-from pymarkdown.markdown_token import (
+from pymarkdown.inline_markdown_token import (
     EmailAutolinkMarkdownToken,
     HardBreakMarkdownToken,
     InlineCodeSpanMarkdownToken,

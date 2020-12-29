@@ -3,8 +3,8 @@ Link reference definition helper
 """
 import logging
 
+from pymarkdown.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
 from pymarkdown.link_helper import LinkHelper
-from pymarkdown.markdown_token import LinkReferenceDefinitionMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.stack_token import LinkDefinitionStackToken
 

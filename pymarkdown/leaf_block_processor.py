@@ -4,14 +4,14 @@ Module to provide processing for the leaf blocks.
 import logging
 
 from pymarkdown.inline_helper import InlineHelper
-from pymarkdown.markdown_token import (
+from pymarkdown.inline_markdown_token import TextMarkdownToken
+from pymarkdown.leaf_markdown_token import (
     AtxHeadingMarkdownToken,
     BlankLineMarkdownToken,
     FencedCodeBlockMarkdownToken,
     IndentedCodeBlockMarkdownToken,
     ParagraphMarkdownToken,
     SetextHeadingMarkdownToken,
-    TextMarkdownToken,
     ThematicBreakMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper

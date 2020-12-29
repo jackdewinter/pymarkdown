@@ -4,7 +4,7 @@ Emphasis helper
 import logging
 
 from pymarkdown.constants import Constants
-from pymarkdown.markdown_token import EmphasisMarkdownToken
+from pymarkdown.inline_markdown_token import EmphasisMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)

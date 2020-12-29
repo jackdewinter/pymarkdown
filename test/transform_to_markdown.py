@@ -4,32 +4,36 @@ Module to provide for a transformation from tokens to a markdown document.
 import copy
 import inspect
 
-from pymarkdown.link_helper import LinkHelper
-from pymarkdown.markdown_token import (
-    AtxHeadingMarkdownToken,
-    BlankLineMarkdownToken,
+from pymarkdown.container_markdown_token import (
     BlockQuoteMarkdownToken,
-    EmailAutolinkMarkdownToken,
-    EmphasisMarkdownToken,
-    FencedCodeBlockMarkdownToken,
-    HardBreakMarkdownToken,
-    HtmlBlockMarkdownToken,
-    ImageStartMarkdownToken,
-    IndentedCodeBlockMarkdownToken,
-    InlineCodeSpanMarkdownToken,
-    LinkReferenceDefinitionMarkdownToken,
-    LinkStartMarkdownToken,
-    MarkdownToken,
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
-    ParagraphMarkdownToken,
-    RawHtmlMarkdownToken,
-    SetextHeadingMarkdownToken,
-    TextMarkdownToken,
-    ThematicBreakMarkdownToken,
     UnorderedListStartMarkdownToken,
+)
+from pymarkdown.inline_markdown_token import (
+    EmailAutolinkMarkdownToken,
+    EmphasisMarkdownToken,
+    HardBreakMarkdownToken,
+    ImageStartMarkdownToken,
+    InlineCodeSpanMarkdownToken,
+    LinkStartMarkdownToken,
+    RawHtmlMarkdownToken,
+    TextMarkdownToken,
     UriAutolinkMarkdownToken,
 )
+from pymarkdown.leaf_markdown_token import (
+    AtxHeadingMarkdownToken,
+    BlankLineMarkdownToken,
+    FencedCodeBlockMarkdownToken,
+    HtmlBlockMarkdownToken,
+    IndentedCodeBlockMarkdownToken,
+    LinkReferenceDefinitionMarkdownToken,
+    ParagraphMarkdownToken,
+    SetextHeadingMarkdownToken,
+    ThematicBreakMarkdownToken,
+)
+from pymarkdown.link_helper import LinkHelper
+from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 
 

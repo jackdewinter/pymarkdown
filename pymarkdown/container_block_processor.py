@@ -5,10 +5,10 @@ import logging
 
 from pymarkdown.block_quote_processor import BlockQuoteProcessor
 from pymarkdown.html_helper import HtmlHelper
+from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.list_block_processor import ListBlockProcessor
-from pymarkdown.markdown_token import TextMarkdownToken
 from pymarkdown.parser_helper import ParserHelper, PositionMarker
 
 LOGGER = logging.getLogger(__name__)

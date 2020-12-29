@@ -5,8 +5,8 @@ import logging
 
 from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline_helper import InlineHelper, InlineRequest, InlineResponse
+from pymarkdown.inline_markdown_token import SpecialTextMarkdownToken, TextMarkdownToken
 from pymarkdown.link_helper import LinkHelper
-from pymarkdown.markdown_token import SpecialTextMarkdownToken, TextMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)

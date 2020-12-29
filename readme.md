@@ -44,8 +44,6 @@
   - rehydrate_index
   - leading_text_index
   - leading_spaces_index + is_loose
-- better base classes for MarkdownToken, LeafMarkdownToken with ex_ws and ContainerMarkdownToken with ex_ws + ?
-  - move to own files?
 - all types of end-inlines and inlines at end i.e. 50
 - possible to merge link token and image token more closely?
 - refactor `is_olist_start` and `is_ulist_start`

@@ -3,9 +3,9 @@ Module to provide processing for the block quotes.
 """
 import logging
 
+from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
-from pymarkdown.markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.parser_helper import ParserHelper, PositionMarker
 from pymarkdown.stack_token import (
     BlockQuoteStackToken,

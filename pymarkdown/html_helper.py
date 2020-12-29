@@ -5,11 +5,8 @@ import logging
 import string
 
 from pymarkdown.constants import Constants
-from pymarkdown.markdown_token import (
-    HtmlBlockMarkdownToken,
-    RawHtmlMarkdownToken,
-    TextMarkdownToken,
-)
+from pymarkdown.inline_markdown_token import RawHtmlMarkdownToken, TextMarkdownToken
+from pymarkdown.leaf_markdown_token import HtmlBlockMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.stack_token import HtmlBlockStackToken, ParagraphStackToken
 

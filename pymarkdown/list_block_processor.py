@@ -5,13 +5,13 @@ Module to provide processing for the list blocks.
 import logging
 import string
 
-from pymarkdown.html_helper import HtmlHelper
-from pymarkdown.leaf_block_processor import LeafBlockProcessor
-from pymarkdown.markdown_token import (
+from pymarkdown.container_markdown_token import (
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
+from pymarkdown.html_helper import HtmlHelper
+from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.stack_token import (
     OrderedListStackToken,

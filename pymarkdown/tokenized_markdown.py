@@ -12,9 +12,9 @@ from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.inline_processor import InlineProcessor
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
+from pymarkdown.leaf_markdown_token import BlankLineMarkdownToken
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
-from pymarkdown.markdown_token import BlankLineMarkdownToken
 from pymarkdown.parser_helper import ParserHelper, ParserState, PositionMarker
 from pymarkdown.source_providers import InMemorySourceProvider
 from pymarkdown.stack_token import DocumentStackToken, ParagraphStackToken

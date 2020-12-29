@@ -8,7 +8,10 @@ import urllib.parse
 from pymarkdown.constants import Constants
 from pymarkdown.emphasis_helper import EmphasisHelper
 from pymarkdown.inline_helper import InlineHelper, InlineRequest
-from pymarkdown.markdown_token import ImageStartMarkdownToken, LinkStartMarkdownToken
+from pymarkdown.inline_markdown_token import (
+    ImageStartMarkdownToken,
+    LinkStartMarkdownToken,
+)
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
