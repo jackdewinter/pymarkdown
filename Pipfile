@@ -15,6 +15,7 @@ pytest-console-scripts = "*"
 pytest-timeout = "*"
 tabulate = "*"
 pytest-html = "*"
+snakeviz = "*"
 
 [requires]
 python_version = "3.7"
