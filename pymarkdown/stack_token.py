@@ -10,15 +10,15 @@ class StackToken:
     Class to provide for an element to place on the stack.
     """
 
-    stack_base_document = "document"
-    stack_unordered_list = "ulist"
-    stack_ordered_list = "olist"
-    stack_html_block = "html-block"
-    stack_block_quote = "block-quote"
-    stack_fenced_code = "fcode-block"
-    stack_indented_code = "icode-block"
-    stack_paragraph = "para"
-    stack_link_definition = "linkdef"
+    _stack_base_document = "document"
+    _stack_unordered_list = "ulist"
+    _stack_ordered_list = "olist"
+    _stack_html_block = "html-block"
+    _stack_block_quote = "block-quote"
+    _stack_fenced_code = "fcode-block"
+    _stack_indented_code = "icode-block"
+    _stack_paragraph = "para"
+    _stack_link_definition = "linkdef"
 
     def __init__(self, type_name, matching_markdown_token=None, extra_data=None):
         self.__type_name = type_name
@@ -73,7 +73,7 @@ class StackToken:
         Generate the token emitted to close off the current stack token
         """
 
-        assert self.stack_link_definition != self.type_name
+        assert self._stack_link_definition != self.type_name
         assert self.matching_markdown_token, str(self)
 
         return EndMarkdownToken(
@@ -89,24 +89,35 @@ class StackToken:
         """
         Is this stack token a document token?
         """
-        return self.type_name == self.stack_base_document
+        return self.type_name == self._stack_base_document
+
+    @property
+    def is_unordered_list(self):
+        """
+        Is this stack token the unordered list token?
+        """
+        return self.type_name == self._stack_unordered_list
+
+    @property
+    def is_ordered_list(self):
+        """
+        Is this stack token the ordered list token?
+        """
+        return self.type_name == self._stack_ordered_list
 
     @property
     def is_list(self):
         """
         Is this stack token one of the list tokens?
         """
-        return (
-            self.type_name == self.stack_ordered_list
-            or self.type_name == self.stack_unordered_list
-        )
+        return self.is_ordered_list or self.is_unordered_list
 
     @property
     def is_html_block(self):
         """
         Is this stack token a html block token?
         """
-        return self.type_name == self.stack_html_block
+        return self.type_name == self._stack_html_block
 
     @property
     def is_code_block(self):
@@ -120,35 +131,35 @@ class StackToken:
         """
         Is this stack token a fenced code block token?
         """
-        return self.type_name == self.stack_fenced_code
+        return self.type_name == self._stack_fenced_code
 
     @property
     def is_indented_code_block(self):
         """
         Is this stack token an indented code block token?
         """
-        return self.type_name == self.stack_indented_code
+        return self.type_name == self._stack_indented_code
 
     @property
     def is_block_quote(self):
         """
         Is this stack token a block quote token?
         """
-        return self.type_name == self.stack_block_quote
+        return self.type_name == self._stack_block_quote
 
     @property
     def is_paragraph(self):
         """
         Is this stack token a paragraph token?
         """
-        return self.type_name == self.stack_paragraph
+        return self.type_name == self._stack_paragraph
 
     @property
     def was_link_definition_started(self):
         """
         Is this stack token a link definition started token?
         """
-        return self.type_name == self.stack_link_definition
+        return self.type_name == self._stack_link_definition
 
 
 # pylint: disable=too-few-public-methods
@@ -158,7 +169,7 @@ class DocumentStackToken(StackToken):
     """
 
     def __init__(self):
-        StackToken.__init__(self, StackToken.stack_base_document)
+        StackToken.__init__(self, StackToken._stack_base_document)
 
 
 # pylint: enable=too-few-public-methods
@@ -172,7 +183,7 @@ class ParagraphStackToken(StackToken):
     def __init__(self, matching_markdown_token):
         StackToken.__init__(
             self,
-            StackToken.stack_paragraph,
+            StackToken._stack_paragraph,
             matching_markdown_token=matching_markdown_token,
         )
 
@@ -185,7 +196,7 @@ class BlockQuoteStackToken(StackToken):
     def __init__(self, matching_markdown_token):
         StackToken.__init__(
             self,
-            StackToken.stack_block_quote,
+            StackToken._stack_block_quote,
             matching_markdown_token=matching_markdown_token,
         )
 
@@ -198,7 +209,7 @@ class IndentedCodeBlockStackToken(StackToken):
     def __init__(self, matching_markdown_token):
         StackToken.__init__(
             self,
-            StackToken.stack_indented_code,
+            StackToken._stack_indented_code,
             matching_markdown_token=matching_markdown_token,
         )
 
@@ -227,7 +238,7 @@ class FencedCodeBlockStackToken(StackToken):
         )
         StackToken.__init__(
             self,
-            StackToken.stack_fenced_code,
+            StackToken._stack_fenced_code,
             matching_markdown_token=matching_markdown_token,
             extra_data=extra_data,
         )
@@ -362,7 +373,7 @@ class OrderedListStackToken(ListStackToken):
     ):
         ListStackToken.__init__(
             self,
-            StackToken.stack_ordered_list,
+            StackToken._stack_ordered_list,
             indent_level,
             list_character,
             ws_before_marker,
@@ -391,7 +402,7 @@ class UnorderedListStackToken(ListStackToken):
     ):
         ListStackToken.__init__(
             self,
-            StackToken.stack_unordered_list,
+            StackToken._stack_unordered_list,
             indent_level,
             list_character,
             ws_before_marker,
@@ -414,7 +425,7 @@ class HtmlBlockStackToken(StackToken):
         extra_data = str(html_block_type) + ":" + str(remaining_html_tag)
         StackToken.__init__(
             self,
-            StackToken.stack_html_block,
+            StackToken._stack_html_block,
             matching_markdown_token=matching_markdown_token,
             extra_data=extra_data,
         )
@@ -443,7 +454,7 @@ class LinkDefinitionStackToken(StackToken):
         self.__extracted_whitespace = extracted_whitespace
         self.__continuation_lines = []
         self.__start_position_marker = position_marker
-        StackToken.__init__(self, StackToken.stack_link_definition)
+        StackToken.__init__(self, StackToken._stack_link_definition)
 
     @property
     def extracted_whitespace(self):

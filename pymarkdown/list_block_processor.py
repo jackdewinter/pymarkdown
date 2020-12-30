@@ -13,11 +13,7 @@ from pymarkdown.container_markdown_token import (
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.stack_token import (
-    OrderedListStackToken,
-    StackToken,
-    UnorderedListStackToken,
-)
+from pymarkdown.stack_token import OrderedListStackToken, UnorderedListStackToken
 
 LOGGER = logging.getLogger(__name__)
 
@@ -101,10 +97,7 @@ class ListBlockProcessor:
                         str(parser_state.token_stack[-2]),
                     )
                     is_first_item_in_list = True
-                elif (
-                    parser_state.token_stack[-2].type_name
-                    == StackToken.stack_ordered_list
-                ):
+                elif parser_state.token_stack[-2].is_ordered_list:
                     LOGGER.debug(
                         "top of stack is ordered list>>%s",
                         str(parser_state.token_stack[-2]),
@@ -242,10 +235,7 @@ class ListBlockProcessor:
                         str(parser_state.token_stack[-2]),
                     )
                     is_first_item_in_list = True
-                elif (
-                    parser_state.token_stack[-2].type_name
-                    == StackToken.stack_unordered_list
-                ):
+                elif parser_state.token_stack[-2].is_unordered_list:
                     LOGGER.debug(
                         "top of stack is unordered list>>%s",
                         str(parser_state.token_stack[-2]),
@@ -948,13 +938,10 @@ class ListBlockProcessor:
         LOGGER.debug("instead of-->%s", str(new_token))
 
         top_stack_item = parser_state.token_stack[-1]
-        assert (
-            top_stack_item.type_name == StackToken.stack_unordered_list
-            or top_stack_item.type_name == StackToken.stack_ordered_list
-        )
+        assert top_stack_item.is_list
 
         list_start_content = ""
-        if top_stack_item.type_name == StackToken.stack_ordered_list:
+        if top_stack_item.is_ordered_list:
             list_start_content = new_token.list_start_content
             LOGGER.debug("ordered->start-->%s", str(new_token.list_start_content))
         else:

@@ -20,7 +20,6 @@ from pymarkdown.stack_token import (
     FencedCodeBlockStackToken,
     IndentedCodeBlockStackToken,
     ParagraphStackToken,
-    StackToken,
 )
 
 LOGGER = logging.getLogger(__name__)
@@ -895,18 +894,10 @@ class LeafBlockProcessor:
         top_list_token = None
         top_block_token = None
         for stack_index in range(len(parser_state.token_stack) - 1, 0, -1):
-            if (
-                parser_state.token_stack[stack_index].type_name
-                == StackToken.stack_unordered_list
-                or parser_state.token_stack[stack_index].type_name
-                == StackToken.stack_ordered_list
-            ):
+            if parser_state.token_stack[stack_index].is_list:
                 top_list_token = parser_state.token_stack[stack_index]
                 break
-            if (
-                parser_state.token_stack[stack_index].type_name
-                == StackToken.stack_block_quote
-            ):
+            if parser_state.token_stack[stack_index].is_block_quote:
                 top_block_token = parser_state.token_stack[stack_index]
                 break
 
