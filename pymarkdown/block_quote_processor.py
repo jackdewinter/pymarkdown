@@ -377,7 +377,6 @@ class BlockQuoteProcessor:
             removed_chars_at_start = start_index
             LOGGER.debug("==REM[%s],LTP[%s]", str(removed_text), str(line_to_parse))
 
-            found_bq_stack_token = None
             stack_index = len(parser_state.token_stack) - 1
             while True:
                 LOGGER.debug(

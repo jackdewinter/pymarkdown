@@ -89,7 +89,6 @@ class ListBlockProcessor:
             at_end_of_line = after_all_whitespace_index == len(line_to_parse)
             LOGGER.debug("at_end_of_line>>%s", str(at_end_of_line))
 
-            is_first_item_in_list = False
             if is_in_paragraph:
                 if not parser_state.token_stack[-2].is_list:
                     LOGGER.debug(
@@ -1193,7 +1192,6 @@ class ListBlockProcessor:
             str(requested_list_indent),
             str(remaining_indent),
         )
-        removed_whitespace = ""
         if ParserHelper.tab_character in leading_space:
             removed_whitespace = ParserHelper.tab_character
         else:

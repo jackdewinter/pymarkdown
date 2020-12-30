@@ -26,8 +26,6 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
 
     for ind, current_token in enumerate(actual_tokens):
 
-        remember_token_as_last_token = True
-
         print("\n\n-->" + ParserHelper.make_value_visible(current_token))
 
         if current_token.is_paragraph_end:
@@ -166,7 +164,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                 )
                 if (
                     top_block_token != current_token
-                    and (current_token.is_blank_line)
+                    and current_token.is_blank_line
                     and not did_x
                 ):
                     print(
@@ -878,7 +876,6 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
     parent_cur_token = cur_token.start_markdown_token
 
     new_lines = 0
-    adjust_column_by = 0
 
     if parent_cur_token.label_type == "inline":
         print(">>inline")
@@ -1831,12 +1828,7 @@ def __verify_next_inline_emphasis_end(
 
 def __create_newline_tuple():
 
-    newline_pattern_list = []
-    newline_pattern_list.append("\a&NewLine;\a")
-    newline_pattern_list.append("\a&#xa;\a")
-    newline_pattern_list.append("\a&#xA;\a")
-    newline_pattern_list.append("\a&#Xa;\a")
-    newline_pattern_list.append("\a&#XA;\a")
+    newline_pattern_list = ["\a&NewLine;\a", "\a&#xa;\a", "\a&#xA;\a", "\a&#Xa;\a", "\a&#XA;\a"]
 
     prefix = ""
     while (1 + len(prefix)) <= 6:
@@ -2033,7 +2025,6 @@ def __handle_last_token_text(
     last_inline_token,
 ):
 
-    inline_height = 0
     resolved_text = ParserHelper.resolve_replacement_markers_from_text(
         last_inline_token.token_text
     )
@@ -2304,7 +2295,6 @@ def __verify_last_inline(
         + ParserHelper.make_value_visible(expected_end_line_number)
     )
 
-    inline_height = 0
     use_line_number_from_start_token = False
     if last_inline_token.is_text:
         inline_height = __handle_last_token_text(

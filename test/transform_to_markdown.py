@@ -209,7 +209,6 @@ class TransformToMarkdown:
             next_token = None
             if token_index < len(actual_tokens) - 1:
                 next_token = actual_tokens[token_index + 1]
-            new_data = ""
             skip_merge = False
 
             print(
@@ -465,7 +464,7 @@ class TransformToMarkdown:
         if not top_of_list_token_stack:
             print("nada")
 
-            if self.block_stack and (self.block_stack[-1].is_code_block):
+            if self.block_stack and self.block_stack[-1].is_code_block:
                 data_to_emit = ParserHelper.resolve_noops_from_text(new_data)
             else:
                 data_to_emit = new_data
@@ -918,7 +917,7 @@ class TransformToMarkdown:
 
         previous_indent = 0
         extracted_whitespace = current_token.extracted_whitespace
-        if previous_token and (previous_token.is_list_start):
+        if previous_token and previous_token.is_list_start:
             previous_indent = previous_token.indent_level
             assert len(current_token.extracted_whitespace) == previous_indent
             extracted_whitespace = ""
@@ -1624,7 +1623,7 @@ class TransformToMarkdown:
 
             parent_rehydrate_index = self.block_stack[-1].rehydrate_index
             rejoined_token_text = []
-            for iterator in enumerate(split_token_text, start=0):
+            for iterator in enumerate(split_token_text):
                 print(">>" + str(iterator))
                 if iterator[0] == 0:
                     joined_text = iterator[1]
@@ -1732,9 +1731,8 @@ class TransformToMarkdown:
             )
 
             rejoined_token_text = []
-            for iterator in enumerate(split_token_text, start=0):
+            for iterator in enumerate(split_token_text):
                 print(">>iterator=" + str(iterator))
-                split_setext_text = []
                 ws_prefix_text = ""
                 ws_suffix_text = ""
                 if split_parent_whitespace_text[iterator[0]]:

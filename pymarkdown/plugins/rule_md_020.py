@@ -45,7 +45,7 @@ class RuleMd020(Plugin):
         """
         Event that a new token is being processed.
         """
-        if not (token.is_atx_heading_end) and self.__is_in_normal_atx:
+        if not token.is_atx_heading_end and self.__is_in_normal_atx:
             self.__last_atx_token = token
 
         if token.is_paragraph:

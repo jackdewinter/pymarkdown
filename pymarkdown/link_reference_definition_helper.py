@@ -321,7 +321,6 @@ class LinkReferenceDefinitionHelper:
         As part of processing a link reference definition, stop a continuation.
         """
 
-        force_ignore_first_as_lrd = False
         new_tokens = []
         LOGGER.debug(">>parse_link_reference_definition>>no longer need start")
         if did_complete_lrd:

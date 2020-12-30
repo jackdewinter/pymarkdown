@@ -206,7 +206,6 @@ class TransformToGfm:
 
     def __correct_for_me(self, actual_tokens, current_token_index):
         correct_closure = False
-        is_valid = False
         assert current_token_index > 0
 
         is_valid = True

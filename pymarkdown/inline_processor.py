@@ -573,13 +573,7 @@ class InlineProcessor:
             processed_line += source_text[start_index:next_index]
             inline_request = InlineRequest(
                 source_text,
-                next_index,
-                None,
-                None,
-                None,
-                None,
-                None,
-                None,
+                next_index
             )
             if source_text[next_index] in InlineProcessor.__inline_character_handlers:
                 LOGGER.debug(
@@ -1023,7 +1017,7 @@ class InlineProcessor:
 
                 line_number += inline_response.delta_line_number
                 if inline_response.delta_column_number < 0:
-                    column_number = -(inline_response.delta_column_number)
+                    column_number = -inline_response.delta_column_number
                     was_column_number_reset = True
                 else:
                     column_number += inline_response.delta_column_number

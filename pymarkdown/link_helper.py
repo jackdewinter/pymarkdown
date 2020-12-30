@@ -687,7 +687,6 @@ class LinkHelper:
 
         LOGGER.debug("parse_link_title>>new_index>>%s>>", source_text[new_index:])
         ex_title = ""
-        pre_ex_title = ""
         bounding_character = ""
         if ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_title_single
@@ -1251,7 +1250,6 @@ class LinkHelper:
         else:
             image_title = image_token.image_title
 
-        image_text = ""
         if image_token.label_type == "inline":
             if image_token.did_use_angle_start:
                 image_uri = "<" + image_uri + ">"
@@ -1306,7 +1304,6 @@ class LinkHelper:
         Given a link token, rehydrate it's original text from the token.
         """
 
-        link_text = ""
         if link_token.label_type == "shortcut":
             link_label = ParserHelper.remove_backspaces_from_text(
                 link_token.text_from_blocks

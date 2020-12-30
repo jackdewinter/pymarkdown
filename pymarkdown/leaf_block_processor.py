@@ -1107,7 +1107,6 @@ class LeafBlockProcessor:
                 LOGGER.debug(">>__xx>>tokens_from_close>>%s>>", str(tokens_from_close))
                 html_tokens.extend(tokens_from_close)
 
-        last_indent = 0
         assert parser_state.token_stack[-1].is_list
         last_indent = parser_state.token_stack[-1].indent_level
         delta_indent = removed_chars_at_start - last_indent
