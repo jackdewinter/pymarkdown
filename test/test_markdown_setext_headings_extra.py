@@ -3,13 +3,8 @@ https://github.github.com/gfm/#setext-headings
 """
 import pytest
 
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
-from pymarkdown.transform_to_gfm import TransformToGfm
-
 from .utils import (
-    assert_if_lists_different,
-    assert_if_strings_different,
-    assert_token_consistency,
+    act_and_assert
 )
 
 # pylint: disable=too-many-lines
@@ -22,8 +17,6 @@ def test_setext_headings_extra_01():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\\\this is a fun day
 ---"""
     expected_tokens = [
@@ -33,14 +26,8 @@ def test_setext_headings_extra_01():
     ]
     expected_gfm = """<h2>\\this is a fun day</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -50,8 +37,6 @@ def test_setext_headings_extra_02():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\
 ---"""
     expected_tokens = [
@@ -61,14 +46,8 @@ def test_setext_headings_extra_02():
     ]
     expected_gfm = """<h2>\\</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -78,8 +57,6 @@ def test_setext_headings_extra_03():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\a\a\a
 ---""".replace(
         "\a", " "
@@ -87,14 +64,8 @@ def test_setext_headings_extra_03():
     expected_tokens = ["[BLANK(1,1):   ]", "[tbreak(2,1):-::---]"]
     expected_gfm = """<hr />"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -104,8 +75,6 @@ def test_setext_headings_extra_04():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """``this`` is a fun day
 ---"""
     expected_tokens = [
@@ -116,14 +85,8 @@ def test_setext_headings_extra_04():
     ]
     expected_gfm = """<h2><code>this</code> is a fun day</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -133,8 +96,6 @@ def test_setext_headings_extra_05():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """&amp; the band played on
 ---"""
     expected_tokens = [
@@ -144,14 +105,8 @@ def test_setext_headings_extra_05():
     ]
     expected_gfm = """<h2>&amp; the band played on</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -161,8 +116,6 @@ def test_setext_headings_extra_06():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """<there it='is'>, really
 ---"""
     expected_tokens = [
@@ -173,14 +126,8 @@ def test_setext_headings_extra_06():
     ]
     expected_gfm = """<h2><there it='is'>, really</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -190,8 +137,6 @@ def test_setext_headings_extra_07():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """<http://www.google.com> is where to look
 ---"""
     expected_tokens = [
@@ -202,14 +147,8 @@ def test_setext_headings_extra_07():
     ]
     expected_gfm = """<h2><a href="http://www.google.com">http://www.google.com</a> is where to look</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -219,8 +158,6 @@ def test_setext_headings_extra_08():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """<foo@bar.com> for more information
 ---"""
     expected_tokens = [
@@ -233,14 +170,8 @@ def test_setext_headings_extra_08():
         """<h2><a href="mailto:foo@bar.com">foo@bar.com</a> for more information</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -250,8 +181,6 @@ def test_setext_headings_extra_09():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """*it's* me!
 ---"""
     expected_tokens = [
@@ -264,14 +193,8 @@ def test_setext_headings_extra_09():
     ]
     expected_gfm = """<h2><em>it's</em> me!</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -281,8 +204,6 @@ def test_setext_headings_extra_10():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """[Foo](/uri) is a link
 ---"""
     expected_tokens = [
@@ -295,14 +216,8 @@ def test_setext_headings_extra_10():
     ]
     expected_gfm = """<h2><a href="/uri">Foo</a> is a link</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -312,8 +227,6 @@ def test_setext_headings_extra_11():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """![foo](/url "title") is an image
 ---"""
     expected_tokens = [
@@ -324,14 +237,8 @@ def test_setext_headings_extra_11():
     ]
     expected_gfm = """<h2><img src="/url" alt="foo" title="title" /> is an image</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -341,8 +248,6 @@ def test_setext_headings_extra_12():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """this is a \\\\fun\\\\ day
 ---"""
     expected_tokens = [
@@ -352,14 +257,8 @@ def test_setext_headings_extra_12():
     ]
     expected_gfm = """<h2>this is a \\fun\\ day</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -369,8 +268,6 @@ def test_setext_headings_extra_13():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """this is a ``fun`` day
 ---"""
     expected_tokens = [
@@ -382,14 +279,8 @@ def test_setext_headings_extra_13():
     ]
     expected_gfm = """<h2>this is a <code>fun</code> day</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -399,8 +290,6 @@ def test_setext_headings_extra_14():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """fun &amp; joy
 ---"""
     expected_tokens = [
@@ -410,14 +299,8 @@ def test_setext_headings_extra_14():
     ]
     expected_gfm = """<h2>fun &amp; joy</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -427,8 +310,6 @@ def test_setext_headings_extra_15():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """where <there it='is'> it
 ---"""
     expected_tokens = [
@@ -440,14 +321,8 @@ def test_setext_headings_extra_15():
     ]
     expected_gfm = """<h2>where <there it='is'> it</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -457,8 +332,6 @@ def test_setext_headings_extra_16():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """look at <http://www.google.com> for answers
 ---"""
     expected_tokens = [
@@ -470,14 +343,8 @@ def test_setext_headings_extra_16():
     ]
     expected_gfm = """<h2>look at <a href="http://www.google.com">http://www.google.com</a> for answers</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -487,8 +354,6 @@ def test_setext_headings_extra_17():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """email <foo@bar.com> for answers
 ---"""
     expected_tokens = [
@@ -502,14 +367,8 @@ def test_setext_headings_extra_17():
         """<h2>email <a href="mailto:foo@bar.com">foo@bar.com</a> for answers</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -519,8 +378,6 @@ def test_setext_headings_extra_18():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """really! *it's me!* here!
 ---"""
     expected_tokens = [
@@ -534,14 +391,8 @@ def test_setext_headings_extra_18():
     ]
     expected_gfm = """<h2>really! <em>it's me!</em> here!</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -551,8 +402,6 @@ def test_setext_headings_extra_19():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """look at [Foo](/uri) for more
 ---"""
     expected_tokens = [
@@ -566,14 +415,8 @@ def test_setext_headings_extra_19():
     ]
     expected_gfm = """<h2>look at <a href="/uri">Foo</a> for more</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -583,8 +426,6 @@ def test_setext_headings_extra_20():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """special ![foo](/url "title") headings
 ---"""
     expected_tokens = [
@@ -598,14 +439,8 @@ def test_setext_headings_extra_20():
         """<h2>special <img src="/url" alt="foo" title="title" /> headings</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -615,8 +450,6 @@ def test_setext_headings_extra_21():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """this is a fun day\\\\
 ---"""
     expected_tokens = [
@@ -626,14 +459,8 @@ def test_setext_headings_extra_21():
     ]
     expected_gfm = """<h2>this is a fun day\\</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -643,8 +470,6 @@ def test_setext_headings_extra_22():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """this was \\
 ---"""
     expected_tokens = [
@@ -654,14 +479,8 @@ def test_setext_headings_extra_22():
     ]
     expected_gfm = """<h2>this was \\</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -671,8 +490,6 @@ def test_setext_headings_extra_22a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """this was \\
 another line
 ---"""
@@ -685,14 +502,8 @@ another line
     ]
     expected_gfm = """<h2>this was <br />\nanother line</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -702,8 +513,6 @@ def test_setext_headings_extra_22b():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """this was
 another line
 ---"""
@@ -714,14 +523,8 @@ another line
     ]
     expected_gfm = """<h2>this was\nanother line</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -731,8 +534,6 @@ def test_setext_headings_extra_22c():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """this was\a\a\a
 another line
 ---""".replace(
@@ -747,14 +548,8 @@ another line
     ]
     expected_gfm = """<h2>this was<br />\nanother line</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -764,8 +559,6 @@ def test_setext_headings_extra_22d():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """this was\a\a\a
  another line
 ---""".replace(
@@ -780,14 +573,8 @@ def test_setext_headings_extra_22d():
     ]
     expected_gfm = """<h2>this was<br />\nanother line</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -797,8 +584,6 @@ def test_setext_headings_extra_23():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """what? no line break?\a\a\a
 ---""".replace(
         "\a", " "
@@ -810,14 +595,8 @@ def test_setext_headings_extra_23():
     ]
     expected_gfm = """<h2>what? no line break?</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -827,8 +606,6 @@ def test_setext_headings_extra_23a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """what? no line break?\a\a\a
 woe is me
 ---""".replace(
@@ -843,14 +620,8 @@ woe is me
     ]
     expected_gfm = """<h2>what? no line break?<br />\nwoe is me</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -860,8 +631,6 @@ def test_setext_headings_extra_24():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """this is a fun ``day``
 ---"""
     expected_tokens = [
@@ -872,14 +641,8 @@ def test_setext_headings_extra_24():
     ]
     expected_gfm = """<h2>this is a fun <code>day</code></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -889,8 +652,6 @@ def test_setext_headings_extra_25():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """the band played on &amp;
 ---"""
     expected_tokens = [
@@ -900,14 +661,8 @@ def test_setext_headings_extra_25():
     ]
     expected_gfm = """<h2>the band played on &amp;</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -917,8 +672,6 @@ def test_setext_headings_extra_26():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """really, <there it='is'>
 ---"""
     expected_tokens = [
@@ -929,14 +682,8 @@ def test_setext_headings_extra_26():
     ]
     expected_gfm = """<h2>really, <there it='is'></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -946,8 +693,6 @@ def test_setext_headings_extra_27():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """look at <http://www.google.com>
 ---"""
     expected_tokens = [
@@ -960,14 +705,8 @@ def test_setext_headings_extra_27():
         """<h2>look at <a href="http://www.google.com">http://www.google.com</a></h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -977,8 +716,6 @@ def test_setext_headings_extra_28():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """for more information, contact <foo@bar.com>
 ---"""
     expected_tokens = [
@@ -989,14 +726,8 @@ def test_setext_headings_extra_28():
     ]
     expected_gfm = """<h2>for more information, contact <a href="mailto:foo@bar.com">foo@bar.com</a></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1006,8 +737,6 @@ def test_setext_headings_extra_29():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """it's *me*
 ---"""
     expected_tokens = [
@@ -1020,14 +749,8 @@ def test_setext_headings_extra_29():
     ]
     expected_gfm = """<h2>it's <em>me</em></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1037,8 +760,6 @@ def test_setext_headings_extra_30():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a link looks like [Foo](/uri)
 ---"""
     expected_tokens = [
@@ -1051,14 +772,8 @@ def test_setext_headings_extra_30():
     ]
     expected_gfm = """<h2>a link looks like <a href="/uri">Foo</a></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1068,8 +783,6 @@ def test_setext_headings_extra_31():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """an image is ![foo](/url "title")
 ---"""
     expected_tokens = [
@@ -1080,14 +793,8 @@ def test_setext_headings_extra_31():
     ]
     expected_gfm = """<h2>an image is <img src="/url" alt="foo" title="title" /></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1097,8 +804,6 @@ def test_setext_headings_extra_32():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\\\
 ---"""
     expected_tokens = [
@@ -1108,14 +813,8 @@ def test_setext_headings_extra_32():
     ]
     expected_gfm = """<h2>\\</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1125,8 +824,6 @@ def test_setext_headings_extra_33():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """ \\
 ---"""
     expected_tokens = [
@@ -1136,14 +833,8 @@ def test_setext_headings_extra_33():
     ]
     expected_gfm = """<h2>\\</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1153,8 +844,6 @@ def test_setext_headings_extra_34():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\a\a\a\a
 ---""".replace(
         "\a", " "
@@ -1162,14 +851,8 @@ def test_setext_headings_extra_34():
     expected_tokens = ["[BLANK(1,1):    ]", "[tbreak(2,1):-::---]"]
     expected_gfm = """<hr />"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1179,8 +862,6 @@ def test_setext_headings_extra_35():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """``day``
 ---"""
     expected_tokens = [
@@ -1190,14 +871,8 @@ def test_setext_headings_extra_35():
     ]
     expected_gfm = """<h2><code>day</code></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1207,8 +882,6 @@ def test_setext_headings_extra_36():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """&amp;
 ---"""
     expected_tokens = [
@@ -1218,14 +891,8 @@ def test_setext_headings_extra_36():
     ]
     expected_gfm = """<h2>&amp;</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1235,8 +902,6 @@ def test_setext_headings_extra_37():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """<there it='is'>
 ---"""
     expected_tokens = [
@@ -1246,14 +911,8 @@ def test_setext_headings_extra_37():
     ]
     expected_gfm = """<there it='is'>\n---"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1263,8 +922,6 @@ def test_setext_headings_extra_38():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """<http://www.google.com>
 ---"""
     expected_tokens = [
@@ -1276,14 +933,8 @@ def test_setext_headings_extra_38():
         """<h2><a href="http://www.google.com">http://www.google.com</a></h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1293,8 +944,6 @@ def test_setext_headings_extra_39():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """<foo@bar.com>
 ---"""
     expected_tokens = [
@@ -1304,14 +953,8 @@ def test_setext_headings_extra_39():
     ]
     expected_gfm = """<h2><a href="mailto:foo@bar.com">foo@bar.com</a></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1321,8 +964,6 @@ def test_setext_headings_extra_40():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """*me*
 ---"""
     expected_tokens = [
@@ -1334,15 +975,8 @@ def test_setext_headings_extra_40():
     ]
     expected_gfm = """<h2><em>me</em></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
-
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
 def test_setext_headings_extra_41():
@@ -1351,8 +985,6 @@ def test_setext_headings_extra_41():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """[Foo](/uri)
 ---"""
     expected_tokens = [
@@ -1364,14 +996,8 @@ def test_setext_headings_extra_41():
     ]
     expected_gfm = """<h2><a href="/uri">Foo</a></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1381,8 +1007,6 @@ def test_setext_headings_extra_42():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """![foo](/url "title")
 ---"""
     expected_tokens = [
@@ -1392,14 +1016,8 @@ def test_setext_headings_extra_42():
     ]
     expected_gfm = """<h2><img src="/url" alt="foo" title="title" /></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1409,8 +1027,6 @@ def test_setext_headings_extra_43():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a`code
 span`a
 ---"""
@@ -1423,14 +1039,8 @@ span`a
     ]
     expected_gfm = """<h2>a<code>code span</code>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1440,8 +1050,6 @@ def test_setext_headings_extra_44():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a<raw
 html='cool'>a
 ---"""
@@ -1454,14 +1062,8 @@ html='cool'>a
     ]
     expected_gfm = """<h2>a<raw\nhtml='cool'>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1471,8 +1073,6 @@ def test_setext_headings_extra_45():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a<http://www.
 google.com>a
 ---"""
@@ -1483,14 +1083,8 @@ google.com>a
     ]
     expected_gfm = """<h2>a&lt;http://www.\ngoogle.com&gt;a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1500,8 +1094,6 @@ def test_setext_headings_extra_46():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a<foo@bar
 .com>a
 ---"""
@@ -1512,14 +1104,8 @@ def test_setext_headings_extra_46():
     ]
     expected_gfm = """<h2>a&lt;foo@bar\n.com&gt;a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1530,8 +1116,6 @@ def test_setext_headings_extra_47():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Fo
 o](/uri "testing")a
 ---"""
@@ -1546,14 +1130,8 @@ o](/uri "testing")a
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Fo\no</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1563,8 +1141,6 @@ def test_setext_headings_extra_48():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](
 /uri "testing")a
 ---"""
@@ -1579,14 +1155,8 @@ def test_setext_headings_extra_48():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1596,8 +1166,6 @@ def test_setext_headings_extra_48a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](\a\a
 /uri "testing")a
 ---""".replace(
@@ -1614,14 +1182,8 @@ def test_setext_headings_extra_48a():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1631,8 +1193,6 @@ def test_setext_headings_extra_48b():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](
    /uri "testing")a
 ---"""
@@ -1647,14 +1207,8 @@ def test_setext_headings_extra_48b():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1664,8 +1218,6 @@ def test_setext_headings_extra_48c():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](\a\a
    /uri "testing")a
 ---""".replace(
@@ -1682,14 +1234,8 @@ def test_setext_headings_extra_48c():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1699,8 +1245,6 @@ def test_setext_headings_extra_49():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/ur
 i "testing")a
 ---"""
@@ -1715,14 +1259,8 @@ i "testing")a
     ]
     expected_gfm = """<h2>a[Foo](/ur\ni &quot;testing&quot;)a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1732,8 +1270,6 @@ def test_setext_headings_extra_50x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri\a
 "testing")a
 ---""".replace(
@@ -1750,14 +1286,8 @@ def test_setext_headings_extra_50x():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1767,8 +1297,6 @@ def test_setext_headings_extra_50a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri\a\a
 "testing")a
 ---""".replace(
@@ -1785,14 +1313,8 @@ def test_setext_headings_extra_50a():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1802,8 +1324,6 @@ def test_setext_headings_extra_50b():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri
    "testing")a
 ---"""
@@ -1818,14 +1338,8 @@ def test_setext_headings_extra_50b():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1835,8 +1349,6 @@ def test_setext_headings_extra_50c():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri\a\a
    "testing")a
 ---""".replace(
@@ -1853,15 +1365,8 @@ def test_setext_headings_extra_50c():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
-
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
 def test_setext_headings_extra_51():
@@ -1870,8 +1375,6 @@ def test_setext_headings_extra_51():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri "test
 ing")a
 ---"""
@@ -1886,14 +1389,8 @@ ing")a
     ]
     expected_gfm = """<h2>a<a href="/uri" title="test\ning">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1903,8 +1400,6 @@ def test_setext_headings_extra_52x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri "testing"
 )a
 ---"""
@@ -1919,14 +1414,8 @@ def test_setext_headings_extra_52x():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1936,8 +1425,6 @@ def test_setext_headings_extra_52a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri "testing"\a\a
 )a
 ---""".replace(
@@ -1954,14 +1441,8 @@ def test_setext_headings_extra_52a():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1971,8 +1452,6 @@ def test_setext_headings_extra_52b():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri "testing"
   )a
 ---"""
@@ -1987,14 +1466,8 @@ def test_setext_headings_extra_52b():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2004,8 +1477,6 @@ def test_setext_headings_extra_52c():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri "testing"\a\a
   )a
 ---""".replace(
@@ -2022,14 +1493,8 @@ def test_setext_headings_extra_52c():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2039,8 +1504,6 @@ def test_setext_headings_extra_53():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo
 bar][bar]a
 ---
@@ -2059,14 +1522,8 @@ bar][bar]a
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo\nbar</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2076,8 +1533,6 @@ def test_setext_headings_extra_54():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo][ba
 r]a
 ---
@@ -2096,14 +1551,8 @@ r]a
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2113,8 +1562,6 @@ def test_setext_headings_extra_55():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[ba
 r]a
 ---
@@ -2133,14 +1580,8 @@ r]a
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">ba\nr</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2150,8 +1591,6 @@ def test_setext_headings_extra_56():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[ba
 r][]a
 ---
@@ -2170,14 +1609,8 @@ r][]a
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">ba\nr</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2187,8 +1620,6 @@ def test_setext_headings_extra_57():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[
 bar][]a
 ---
@@ -2207,14 +1638,8 @@ bar][]a
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">\nbar</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2224,8 +1649,6 @@ def test_setext_headings_extra_58():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo][
 bar]a
 ---
@@ -2244,14 +1667,8 @@ bar]a
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2261,8 +1678,6 @@ def test_setext_headings_extra_59():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a!
 [Foo](/uri "testing")a
 ---"""
@@ -2277,14 +1692,8 @@ def test_setext_headings_extra_59():
     ]
     expected_gfm = """<h2>a!\n<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2294,8 +1703,6 @@ def test_setext_headings_extra_60():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Fo
 o](/uri)a
 ---"""
@@ -2310,14 +1717,8 @@ o](/uri)a
     ]
     expected_gfm = """<h2>a<a href="/uri">Fo\no</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2327,8 +1728,6 @@ def test_setext_headings_extra_61():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![fo
 o](/url "title")a
 ---"""
@@ -2341,14 +1740,8 @@ o](/url "title")a
     ]
     expected_gfm = """<h2>a<img src="/url" alt="fo\no" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2358,8 +1751,6 @@ def test_setext_headings_extra_62():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](
 /uri "testing")a
 ---"""
@@ -2372,14 +1763,8 @@ def test_setext_headings_extra_62():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2389,8 +1774,6 @@ def test_setext_headings_extra_62a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](\a\a
 /uri "testing")a
 ---""".replace(
@@ -2405,14 +1788,8 @@ def test_setext_headings_extra_62a():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2422,8 +1799,6 @@ def test_setext_headings_extra_62b():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](
    /uri "testing")a
 ---"""
@@ -2436,14 +1811,8 @@ def test_setext_headings_extra_62b():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2453,8 +1822,6 @@ def test_setext_headings_extra_62c():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](\a\a
    /uri "testing")a
 ---""".replace(
@@ -2469,14 +1836,8 @@ def test_setext_headings_extra_62c():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2486,8 +1847,6 @@ def test_setext_headings_extra_63():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/ur
 i "testing")a
 ---"""
@@ -2502,14 +1861,8 @@ i "testing")a
     ]
     expected_gfm = """<h2>a![Foo](/ur\ni &quot;testing&quot;)a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2519,8 +1872,6 @@ def test_setext_headings_extra_64x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri
 "testing")a
 ---"""
@@ -2533,14 +1884,8 @@ def test_setext_headings_extra_64x():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2550,8 +1895,6 @@ def test_setext_headings_extra_64a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri\a\a
 "testing")a
 ---""".replace(
@@ -2566,14 +1909,8 @@ def test_setext_headings_extra_64a():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2583,8 +1920,6 @@ def test_setext_headings_extra_64b():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri
  "testing")a
 ---"""
@@ -2597,14 +1932,8 @@ def test_setext_headings_extra_64b():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2614,8 +1943,6 @@ def test_setext_headings_extra_64c():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri\a\a
  "testing")a
 ---""".replace(
@@ -2630,14 +1957,8 @@ def test_setext_headings_extra_64c():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2647,8 +1968,6 @@ def test_setext_headings_extra_65():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri
 )a
 ---"""
@@ -2661,14 +1980,8 @@ def test_setext_headings_extra_65():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2678,8 +1991,6 @@ def test_setext_headings_extra_66():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri "test
 ing")a
 ---"""
@@ -2692,14 +2003,8 @@ ing")a
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test\ning" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2709,8 +2014,6 @@ def test_setext_headings_extra_67():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri "testing"
 )a
 ---"""
@@ -2723,14 +2026,8 @@ def test_setext_headings_extra_67():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2740,8 +2037,6 @@ def test_setext_headings_extra_67a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri "testing"\a\a
 )a
 ---""".replace(
@@ -2756,14 +2051,8 @@ def test_setext_headings_extra_67a():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2773,8 +2062,6 @@ def test_setext_headings_extra_67b():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri "testing"
    )a
 ---"""
@@ -2787,14 +2074,8 @@ def test_setext_headings_extra_67b():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2804,8 +2085,6 @@ def test_setext_headings_extra_67c():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri "testing"\a\a
    )a
 ---""".replace(
@@ -2820,14 +2099,8 @@ def test_setext_headings_extra_67c():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2837,8 +2110,6 @@ def test_setext_headings_extra_68x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Fo&beta;o](/uri "testing")a
 ---"""
     expected_tokens = [
@@ -2852,14 +2123,8 @@ def test_setext_headings_extra_68x():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foβo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2869,8 +2134,6 @@ def test_setext_headings_extra_68a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri "testing")a
 ---"""
     expected_tokens = [
@@ -2884,14 +2147,8 @@ def test_setext_headings_extra_68a():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2901,8 +2158,6 @@ def test_setext_headings_extra_68b():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Fo
 &beta;o](/uri "testing")a
 ---"""
@@ -2917,14 +2172,8 @@ def test_setext_headings_extra_68b():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Fo\nβo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2934,8 +2183,6 @@ def test_setext_headings_extra_69():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Fo\\]o](/uri "testing")a
 ---"""
     expected_tokens = [
@@ -2949,14 +2196,8 @@ def test_setext_headings_extra_69():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Fo]o</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2966,8 +2207,6 @@ def test_setext_headings_extra_69a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Fo
 \\]o](/uri "testing")a
 ---"""
@@ -2982,14 +2221,8 @@ def test_setext_headings_extra_69a():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Fo\n]o</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2999,8 +2232,6 @@ def test_setext_headings_extra_70():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](</my uri> "testing")a
 ---"""
     expected_tokens = [
@@ -3014,14 +2245,8 @@ def test_setext_headings_extra_70():
     ]
     expected_gfm = """<h2>a<a href="/my%20uri" title="testing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3031,8 +2256,6 @@ def test_setext_headings_extra_70a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](</my
  uri> "testing")a
 ---"""
@@ -3047,14 +2270,8 @@ def test_setext_headings_extra_70a():
     ]
     expected_gfm = """<h2>a[Foo](&lt;/my\nuri&gt; &quot;testing&quot;)a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3064,8 +2281,6 @@ def test_setext_headings_extra_71():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri "test&beta;ing")a
 ---"""
     expected_tokens = [
@@ -3079,14 +2294,8 @@ def test_setext_headings_extra_71():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testβing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3096,8 +2305,6 @@ def test_setext_headings_extra_71a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri "test
 &beta;ing")a
 ---"""
@@ -3112,14 +2319,8 @@ def test_setext_headings_extra_71a():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="test\nβing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3129,8 +2330,6 @@ def test_setext_headings_extra_72():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri "test\\#ing")a
 ---"""
     expected_tokens = [
@@ -3144,14 +2343,8 @@ def test_setext_headings_extra_72():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="test#ing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3161,8 +2354,6 @@ def test_setext_headings_extra_72a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[Foo](/uri "test
 \\#ing")a
 ---"""
@@ -3177,14 +2368,8 @@ def test_setext_headings_extra_72a():
     ]
     expected_gfm = """<h2>a<a href="/uri" title="test\n#ing">Foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3194,8 +2379,6 @@ def test_setext_headings_extra_73():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Fo&beta;o](/uri "testing")a
 ---"""
     expected_tokens = [
@@ -3207,14 +2390,8 @@ def test_setext_headings_extra_73():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foβo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3224,8 +2401,6 @@ def test_setext_headings_extra_73a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri "testing")a
 ---"""
     expected_tokens = [
@@ -3237,14 +2412,8 @@ def test_setext_headings_extra_73a():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3254,8 +2423,6 @@ def test_setext_headings_extra_73b():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Fo
 &beta;o](/uri "testing")a
 ---"""
@@ -3268,14 +2435,8 @@ def test_setext_headings_extra_73b():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Fo\nβo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3285,8 +2446,6 @@ def test_setext_headings_extra_74():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Fo\\]o](/uri "testing")a
 ---"""
     expected_tokens = [
@@ -3298,14 +2457,8 @@ def test_setext_headings_extra_74():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Fo]o" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3315,8 +2468,6 @@ def test_setext_headings_extra_74a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Fo
 \\]o](/uri "testing")a
 ---"""
@@ -3329,14 +2480,8 @@ def test_setext_headings_extra_74a():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Fo\n]o" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3346,8 +2491,6 @@ def test_setext_headings_extra_75():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](</my uri> "testing")a
 ---"""
     expected_tokens = [
@@ -3359,14 +2502,8 @@ def test_setext_headings_extra_75():
     ]
     expected_gfm = """<h2>a<img src="/my%20uri" alt="Foo" title="testing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3376,8 +2513,6 @@ def test_setext_headings_extra_75a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](</my
  uri> "testing")a
 ---"""
@@ -3392,14 +2527,8 @@ def test_setext_headings_extra_75a():
     ]
     expected_gfm = """<h2>a![Foo](&lt;/my\nuri&gt; &quot;testing&quot;)a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3409,8 +2538,6 @@ def test_setext_headings_extra_76():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri "test&beta;ing")a
 ---"""
     expected_tokens = [
@@ -3422,14 +2549,8 @@ def test_setext_headings_extra_76():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testβing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3439,8 +2560,6 @@ def test_setext_headings_extra_76a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri "test
 &beta;ing")a
 ---"""
@@ -3453,14 +2572,8 @@ def test_setext_headings_extra_76a():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test\nβing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3470,8 +2583,6 @@ def test_setext_headings_extra_77():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri "test\\#ing")a
 ---"""
     expected_tokens = [
@@ -3483,14 +2594,8 @@ def test_setext_headings_extra_77():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test#ing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3500,8 +2605,6 @@ def test_setext_headings_extra_77a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![Foo](/uri "test\\#ing")a
 ---"""
     expected_tokens = [
@@ -3513,14 +2616,8 @@ def test_setext_headings_extra_77a():
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test#ing" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3530,8 +2627,6 @@ def test_setext_headings_extra_78():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo\\#bar][bar]a
 ---
 
@@ -3549,14 +2644,8 @@ def test_setext_headings_extra_78():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo#bar</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3566,8 +2655,6 @@ def test_setext_headings_extra_78a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo
 \\#bar][bar]a
 ---
@@ -3586,14 +2673,8 @@ def test_setext_headings_extra_78a():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo\n#bar</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3603,8 +2684,6 @@ def test_setext_headings_extra_79():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo&beta;bar][bar]a
 ---
 
@@ -3622,14 +2701,8 @@ def test_setext_headings_extra_79():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">fooβbar</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3639,8 +2712,6 @@ def test_setext_headings_extra_79a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo
 &beta;bar][bar]a
 ---
@@ -3659,14 +2730,8 @@ def test_setext_headings_extra_79a():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo\nβbar</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3676,8 +2741,6 @@ def test_setext_headings_extra_80():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo][ba&beta;r]a
 ---
 
@@ -3695,14 +2758,8 @@ def test_setext_headings_extra_80():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3712,8 +2769,6 @@ def test_setext_headings_extra_80a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo][ba
 &beta;r]a
 ---
@@ -3733,14 +2788,8 @@ def test_setext_headings_extra_80a():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3750,8 +2799,6 @@ def test_setext_headings_extra_81():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo][ba\\]r]a
 ---
 
@@ -3769,14 +2816,8 @@ def test_setext_headings_extra_81():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3786,8 +2827,6 @@ def test_setext_headings_extra_81a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo][ba
 \\]r]a
 ---
@@ -3807,14 +2846,8 @@ def test_setext_headings_extra_81a():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3824,8 +2857,6 @@ def test_setext_headings_extra_82():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[ba&beta;r]a
 ---
 
@@ -3843,14 +2874,8 @@ def test_setext_headings_extra_82():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">baβr</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3860,8 +2885,6 @@ def test_setext_headings_extra_82a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[ba
 &beta;r]a
 ---
@@ -3881,14 +2904,8 @@ def test_setext_headings_extra_82a():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">ba\nβr</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3898,8 +2915,6 @@ def test_setext_headings_extra_83():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[ba\\]r]a
 ---
 
@@ -3917,14 +2932,8 @@ def test_setext_headings_extra_83():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">ba]r</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3934,8 +2943,6 @@ def test_setext_headings_extra_83a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[ba
 \\]r]a
 ---
@@ -3955,14 +2962,8 @@ def test_setext_headings_extra_83a():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">ba\n]r</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3972,8 +2973,6 @@ def test_setext_headings_extra_84x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[ba&beta;r][]a
 ---
 
@@ -3991,14 +2990,8 @@ def test_setext_headings_extra_84x():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">baβr</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4008,8 +3001,6 @@ def test_setext_headings_extra_84a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[ba
 &beta;r][]a
 ---
@@ -4029,14 +3020,8 @@ def test_setext_headings_extra_84a():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">ba\nβr</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4046,8 +3031,6 @@ def test_setext_headings_extra_85():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[ba\\]r][]a
 ---
 
@@ -4065,14 +3048,8 @@ def test_setext_headings_extra_85():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">ba]r</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4082,8 +3059,6 @@ def test_setext_headings_extra_85a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[ba
 \\]r][]a
 ---
@@ -4103,14 +3078,8 @@ def test_setext_headings_extra_85a():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">ba\n]r</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4120,8 +3089,6 @@ def test_setext_headings_extra_86x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[fo&beta;o][bar]a
 ---
 
@@ -4139,14 +3106,8 @@ def test_setext_headings_extra_86x():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foβo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4156,8 +3117,6 @@ def test_setext_headings_extra_86a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[fo
 &beta;o][bar]a
 ---
@@ -4176,14 +3135,8 @@ def test_setext_headings_extra_86a():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">fo\nβo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4193,8 +3146,6 @@ def test_setext_headings_extra_87():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[fo\\]o][bar]a
 ---
 
@@ -4212,14 +3163,8 @@ def test_setext_headings_extra_87():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">fo]o</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4229,8 +3174,6 @@ def test_setext_headings_extra_87a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[fo
 \\]o][bar]a
 ---
@@ -4249,14 +3192,8 @@ def test_setext_headings_extra_87a():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">fo\n]o</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4266,8 +3203,6 @@ def test_setext_headings_extra_88x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo][ba\\]r]a
 ---
 
@@ -4285,14 +3220,8 @@ def test_setext_headings_extra_88x():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4302,8 +3231,6 @@ def test_setext_headings_extra_88a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo][ba
 \\]r]a
 ---
@@ -4323,14 +3250,8 @@ def test_setext_headings_extra_88a():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4340,8 +3261,6 @@ def test_setext_headings_extra_89x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo][ba&beta;r]a
 ---
 
@@ -4359,14 +3278,8 @@ def test_setext_headings_extra_89x():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4376,8 +3289,6 @@ def test_setext_headings_extra_89a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo][ba
 &beta;r]a
 ---
@@ -4397,14 +3308,8 @@ def test_setext_headings_extra_89a():
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">foo</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4414,8 +3319,6 @@ def test_setext_headings_extra_90x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo\\#bar][bar]a
 ---
 
@@ -4431,14 +3334,8 @@ def test_setext_headings_extra_90x():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="foo#bar" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4448,8 +3345,6 @@ def test_setext_headings_extra_90a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo
 \\#bar][bar]a
 ---
@@ -4466,14 +3361,8 @@ def test_setext_headings_extra_90a():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="foo\n#bar" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4483,8 +3372,6 @@ def test_setext_headings_extra_91x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo&beta;bar][bar]a
 ---
 
@@ -4500,14 +3387,8 @@ def test_setext_headings_extra_91x():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="fooβbar" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4517,8 +3398,6 @@ def test_setext_headings_extra_91a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo
 &beta;bar][bar]a
 ---
@@ -4535,14 +3414,8 @@ def test_setext_headings_extra_91a():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="foo\nβbar" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4552,8 +3425,6 @@ def test_setext_headings_extra_92x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo][ba&beta;r]a
 ---
 
@@ -4569,14 +3440,8 @@ def test_setext_headings_extra_92x():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4586,8 +3451,6 @@ def test_setext_headings_extra_92a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo][ba
 &beta;r]a
 ---
@@ -4605,14 +3468,8 @@ def test_setext_headings_extra_92a():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4622,8 +3479,6 @@ def test_setext_headings_extra_93x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo][ba\\]r]a
 ---
 
@@ -4639,14 +3494,8 @@ def test_setext_headings_extra_93x():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4656,8 +3505,6 @@ def test_setext_headings_extra_93a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo][ba
 \\]r]a
 ---
@@ -4675,14 +3522,8 @@ def test_setext_headings_extra_93a():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4692,8 +3533,6 @@ def test_setext_headings_extra_94x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![ba&beta;r]a
 ---
 
@@ -4709,14 +3548,8 @@ def test_setext_headings_extra_94x():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="baβr" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4726,8 +3559,6 @@ def test_setext_headings_extra_94a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![ba
 &beta;r]a
 ---
@@ -4745,14 +3576,8 @@ def test_setext_headings_extra_94a():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="ba\nβr" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4762,8 +3587,6 @@ def test_setext_headings_extra_95x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![ba\\]r]a
 ---
 
@@ -4779,14 +3602,8 @@ def test_setext_headings_extra_95x():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="ba]r" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4796,8 +3613,6 @@ def test_setext_headings_extra_95a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![ba
 \\]r]a
 ---
@@ -4815,14 +3630,8 @@ def test_setext_headings_extra_95a():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="ba\n]r" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4832,8 +3641,6 @@ def test_setext_headings_extra_96x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![ba&beta;r][]a
 ---
 
@@ -4849,14 +3656,8 @@ def test_setext_headings_extra_96x():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="baβr" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4866,8 +3667,6 @@ def test_setext_headings_extra_96a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![ba
 &beta;r][]a
 ---
@@ -4885,14 +3684,8 @@ def test_setext_headings_extra_96a():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="ba\nβr" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4902,8 +3695,6 @@ def test_setext_headings_extra_97x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![ba\\]r][]a
 ---
 
@@ -4919,14 +3710,8 @@ def test_setext_headings_extra_97x():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="ba]r" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4936,8 +3721,6 @@ def test_setext_headings_extra_97a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![ba
 \\]r][]a
 ---
@@ -4955,14 +3738,8 @@ def test_setext_headings_extra_97a():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="ba\n]r" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4972,8 +3749,6 @@ def test_setext_headings_extra_98x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![fo&beta;o][bar]a
 ---
 
@@ -4989,14 +3764,8 @@ def test_setext_headings_extra_98x():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="foβo" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5006,8 +3775,6 @@ def test_setext_headings_extra_98a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![fo
 &beta;o][bar]a
 ---
@@ -5024,14 +3791,8 @@ def test_setext_headings_extra_98a():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="fo\nβo" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5041,8 +3802,6 @@ def test_setext_headings_extra_99x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![fo\\]o][bar]a
 ---
 
@@ -5058,14 +3817,8 @@ def test_setext_headings_extra_99x():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="fo]o" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5075,8 +3828,6 @@ def test_setext_headings_extra_99a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![fo
 \\]o][bar]a
 ---
@@ -5093,14 +3844,8 @@ def test_setext_headings_extra_99a():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="fo\n]o" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5110,8 +3855,6 @@ def test_setext_headings_extra_a0x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo][ba\\]r]a
 ---
 
@@ -5127,14 +3870,8 @@ def test_setext_headings_extra_a0x():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5144,8 +3881,6 @@ def test_setext_headings_extra_a0a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo][ba
 \\]r]a
 ---
@@ -5163,14 +3898,8 @@ def test_setext_headings_extra_a0a():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5180,8 +3909,6 @@ def test_setext_headings_extra_a1x():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo][ba&beta;r]a
 ---
 
@@ -5197,14 +3924,8 @@ def test_setext_headings_extra_a1x():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5214,8 +3935,6 @@ def test_setext_headings_extra_a1a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo][ba
 &beta;r]a
 ---
@@ -5233,14 +3952,8 @@ def test_setext_headings_extra_a1a():
     ]
     expected_gfm = """<h2>a<img src="/url" alt="foo" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5250,8 +3963,6 @@ def test_setext_headings_extra_a2():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![fo
 o](</my url>)a
 ---"""
@@ -5264,14 +3975,8 @@ o](</my url>)a
     ]
     expected_gfm = """<h2>a<img src="/my%20url" alt="fo\no" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5281,8 +3986,6 @@ def test_setext_headings_extra_a3():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """abc
 [li
 nk](/uri "title" )
@@ -5299,14 +4002,8 @@ nk](/uri "title" )
     ]
     expected_gfm = """<h2>abc\n<a href="/uri" title="title">li\nnk</a>\ndef</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5316,8 +4013,6 @@ def test_setext_headings_extra_a4():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """abc
 [li`de
 fg`nk](/uri "title" )
@@ -5338,14 +4033,8 @@ fg`nk](/uri "title" )
         """<h2>abc\n<a href="/uri" title="title">li<code>de fg</code>nk</a>\ndef</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5355,8 +4044,6 @@ def test_setext_headings_extra_a5():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """abc
 [li<de
 fg>nk](/uri "title" )
@@ -5377,14 +4064,8 @@ fg>nk](/uri "title" )
         """<h2>abc\n<a href="/uri" title="title">li<de\nfg>nk</a>\ndef</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5394,8 +4075,6 @@ def test_setext_headings_extra_a6():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li
 nk][bar]a
 ---
@@ -5414,14 +4093,8 @@ nk][bar]a
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">li\nnk</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5431,8 +4104,6 @@ def test_setext_headings_extra_a7():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li`de
 fg`nk][bar]a
 ---
@@ -5455,14 +4126,8 @@ fg`nk][bar]a
         """<h2>a<a href="/url" title="title">li<code>de fg</code>nk</a>a</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5472,8 +4137,6 @@ def test_setext_headings_extra_a8():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li<de
 fg>nk][bar]a
 ---
@@ -5494,14 +4157,8 @@ fg>nk][bar]a
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">li<de\nfg>nk</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5511,8 +4168,6 @@ def test_setext_headings_extra_a9():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li
 nk][]a
 ---
@@ -5531,14 +4186,8 @@ nk][]a
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">li\nnk</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5548,8 +4197,6 @@ def test_setext_headings_extra_b0():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li`de
 fg`nk][]a
 ---
@@ -5572,14 +4219,8 @@ fg`nk][]a
         """<h2>a<a href="/url" title="title">li<code>de fg</code>nk</a>a</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5589,8 +4230,6 @@ def test_setext_headings_extra_b1():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li<de
 fg>nk][]a
 ---
@@ -5611,14 +4250,8 @@ fg>nk][]a
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">li<de\nfg>nk</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5628,8 +4261,6 @@ def test_setext_headings_extra_b2():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li
 nk]a
 ---
@@ -5648,14 +4279,8 @@ nk]a
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">li\nnk</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5665,8 +4290,6 @@ def test_setext_headings_extra_b3():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li`de
 fg`nk]a
 ---
@@ -5689,14 +4312,8 @@ fg`nk]a
         """<h2>a<a href="/url" title="title">li<code>de fg</code>nk</a>a</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5706,8 +4323,6 @@ def test_setext_headings_extra_b4():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li<de
 fg>nk]a
 ---
@@ -5728,14 +4343,8 @@ fg>nk]a
     ]
     expected_gfm = """<h2>a<a href="/url" title="title">li<de\nfg>nk</a>a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5745,8 +4354,6 @@ def test_setext_headings_extra_b5():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """abc
 ![li
 nk](/uri "title" )
@@ -5763,14 +4370,8 @@ nk](/uri "title" )
         """<h2>abc\n<img src="/uri" alt="li\nnk" title="title" />\ndef</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5780,8 +4381,6 @@ def test_setext_headings_extra_b6():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """abc
 ![li`de
 fg`nk](/uri "title" )
@@ -5798,14 +4397,8 @@ fg`nk](/uri "title" )
         """<h2>abc\n<img src="/uri" alt="lide fgnk" title="title" />\ndef</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5815,8 +4408,6 @@ def test_setext_headings_extra_b7():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """abc
 ![li<de
 fg>nk](/uri "title" )
@@ -5833,14 +4424,8 @@ fg>nk](/uri "title" )
         """<h2>abc\n<img src="/uri" alt="li<de\nfg>nk" title="title" />\ndef</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5850,8 +4435,6 @@ def test_setext_headings_extra_b8():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li
 nk][bar]a
 ---
@@ -5868,14 +4451,8 @@ nk][bar]a
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li\nnk" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5885,8 +4462,6 @@ def test_setext_headings_extra_b9():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li`de
 fg`nk][bar]a
 ---
@@ -5903,14 +4478,8 @@ fg`nk][bar]a
     ]
     expected_gfm = """<h2>a<img src="/url" alt="lide fgnk" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5920,8 +4489,6 @@ def test_setext_headings_extra_c0():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li<de
 fg>nk][bar]a
 ---
@@ -5938,14 +4505,8 @@ fg>nk][bar]a
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5955,8 +4516,6 @@ def test_setext_headings_extra_c1():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li
 nk][]a
 ---
@@ -5973,14 +4532,8 @@ nk][]a
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li\nnk" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -5990,8 +4543,6 @@ def test_setext_headings_extra_c2():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li`de
 fg`nk][]a
 ---
@@ -6008,14 +4559,8 @@ fg`nk][]a
     ]
     expected_gfm = """<h2>a<img src="/url" alt="lide fgnk" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6025,8 +4570,6 @@ def test_setext_headings_extra_c3():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li<de
 fg>nk][]a
 ---
@@ -6043,14 +4586,8 @@ fg>nk][]a
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6060,8 +4597,6 @@ def test_setext_headings_extra_c4():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li
 nk]a
 ---
@@ -6078,14 +4613,8 @@ nk]a
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li\nnk" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6095,8 +4624,6 @@ def test_setext_headings_extra_c5():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li`de
 fg`nk]a
 ---
@@ -6113,14 +4640,8 @@ fg`nk]a
     ]
     expected_gfm = """<h2>a<img src="/url" alt="lide fgnk" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6130,8 +4651,6 @@ def test_setext_headings_extra_c6():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li<de
 fg>nk]a
 ---
@@ -6148,14 +4667,8 @@ fg>nk]a
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" title="title" />a</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6165,8 +4678,6 @@ def test_setext_headings_extra_c7():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li<de
 fg>nk](/url)a
 b
@@ -6186,14 +4697,8 @@ b
     ]
     expected_gfm = """<h2>a<a href="/url">li<de\nfg>nk</a>a\nb</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6203,8 +4708,6 @@ def test_setext_headings_extra_c8():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li<de
 fg>nk](/url)a
 b
@@ -6220,14 +4723,8 @@ b
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" />a\nb</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6237,8 +4734,6 @@ def test_setext_headings_extra_c9():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li<de
 fg>nk](/url)`a
 b`
@@ -6258,14 +4753,8 @@ b`
     ]
     expected_gfm = """<h2>a<a href="/url">li<de\nfg>nk</a><code>a b</code></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6275,8 +4764,6 @@ def test_setext_headings_extra_d0():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li<de
 fg>nk](/url)`a
 b`
@@ -6292,14 +4779,8 @@ b`
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" /><code>a b</code></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6309,8 +4790,6 @@ def test_setext_headings_extra_d1():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li<de
 fg>nk](/url)<a
 b>
@@ -6330,14 +4809,8 @@ b>
     ]
     expected_gfm = """<h2>a<a href="/url">li<de\nfg>nk</a><a\nb></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6347,8 +4820,6 @@ def test_setext_headings_extra_d2():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li<de
 fg>nk](/url)<a
 b>
@@ -6364,14 +4835,8 @@ b>
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" /><a\nb></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6381,8 +4846,6 @@ def test_setext_headings_extra_d3():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li<de
 fg>nk](/url)*a
 b*
@@ -6404,14 +4867,8 @@ b*
     ]
     expected_gfm = """<h2>a<a href="/url">li<de\nfg>nk</a><em>a\nb</em></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6421,8 +4878,6 @@ def test_setext_headings_extra_d4():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li<de
 fg>nk](/url)*a
 b*
@@ -6440,14 +4895,8 @@ b*
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" /><em>a\nb</em></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6457,8 +4906,6 @@ def test_setext_headings_extra_d5():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """abc
 [link](
  /uri
@@ -6477,14 +4924,8 @@ def test_setext_headings_extra_d5():
     ]
     expected_gfm = """<h2>abc\n<a href="/uri" title="title">link</a>\ndef</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6494,8 +4935,6 @@ def test_setext_headings_extra_d6():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """abc
 ![link](
  /uri
@@ -6512,14 +4951,8 @@ def test_setext_headings_extra_d6():
     ]
     expected_gfm = """<h2>abc\n<img src="/uri" alt="link" title="title" />\ndef</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6529,8 +4962,6 @@ def test_setext_headings_extra_d7():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """abc
 *[link](/uri "title")*
 def
@@ -6550,14 +4981,8 @@ def
         """<h2>abc\n<em><a href="/uri" title="title">link</a></em>\ndef</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6567,8 +4992,6 @@ def test_setext_headings_extra_d8():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """abc
 *![link](/uri "title")*
 def
@@ -6586,14 +5009,8 @@ def
         """<h2>abc\n<em><img src="/uri" alt="link" title="title" /></em>\ndef</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6603,8 +5020,6 @@ def test_setext_headings_extra_d9():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """abc
 [*link*](/uri "title")
 def
@@ -6624,14 +5039,8 @@ def
         """<h2>abc\n<a href="/uri" title="title"><em>link</em></a>\ndef</h2>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -6641,8 +5050,6 @@ def test_setext_headings_extra_e0():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """abc
 ![*link*](/uri "title")
 def
@@ -6656,11 +5063,5 @@ def
     ]
     expected_gfm = """<h2>abc\n<img src="/uri" alt="link" title="title" />\ndef</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

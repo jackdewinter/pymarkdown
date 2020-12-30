@@ -3,13 +3,8 @@ https://github.github.com/gfm/#emphasis-and-strong-emphasis
 """
 import pytest
 
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
-from pymarkdown.transform_to_gfm import TransformToGfm
-
 from .utils import (
-    assert_if_lists_different,
-    assert_if_strings_different,
-    assert_token_consistency,
+    act_and_assert
 )
 
 
@@ -20,8 +15,6 @@ def test_emphasis_391():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """__foo bar__"""
     expected_tokens = [
         "[para(1,1):]",
@@ -32,14 +25,8 @@ def test_emphasis_391():
     ]
     expected_gfm = """<p><strong>foo bar</strong></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -49,8 +36,6 @@ def test_emphasis_392():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """__ foo bar__"""
     expected_tokens = [
         "[para(1,1):]",
@@ -61,14 +46,8 @@ def test_emphasis_392():
     ]
     expected_gfm = """<p>__ foo bar__</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -78,8 +57,6 @@ def test_emphasis_393():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """__
 foo bar__"""
     expected_tokens = [
@@ -92,14 +69,8 @@ foo bar__"""
     expected_gfm = """<p>__
 foo bar__</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -109,8 +80,6 @@ def test_emphasis_394():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a__"foo"__"""
     expected_tokens = [
         "[para(1,1):]",
@@ -122,14 +91,8 @@ def test_emphasis_394():
     ]
     expected_gfm = """<p>a__&quot;foo&quot;__</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -139,8 +102,6 @@ def test_emphasis_395():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """foo__bar__"""
     expected_tokens = [
         "[para(1,1):]",
@@ -152,14 +113,8 @@ def test_emphasis_395():
     ]
     expected_gfm = """<p>foo__bar__</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -169,8 +124,6 @@ def test_emphasis_396():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """5__6__78"""
     expected_tokens = [
         "[para(1,1):]",
@@ -183,14 +136,8 @@ def test_emphasis_396():
     ]
     expected_gfm = """<p>5__6__78</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -200,8 +147,6 @@ def test_emphasis_397():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """пристаням__стремятся__"""
     expected_tokens = [
         "[para(1,1):]",
@@ -213,14 +158,8 @@ def test_emphasis_397():
     ]
     expected_gfm = """<p>пристаням__стремятся__</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -230,8 +169,6 @@ def test_emphasis_398():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """__foo, __bar__, baz__"""
     expected_tokens = [
         "[para(1,1):]",
@@ -246,14 +183,8 @@ def test_emphasis_398():
     ]
     expected_gfm = """<p><strong>foo, <strong>bar</strong>, baz</strong></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -263,8 +194,6 @@ def test_emphasis_399():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """foo-__(bar)__"""
     expected_tokens = [
         "[para(1,1):]",
@@ -276,11 +205,5 @@ def test_emphasis_399():
     ]
     expected_gfm = """<p>foo-<strong>(bar)</strong></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

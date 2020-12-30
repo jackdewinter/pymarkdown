@@ -7,7 +7,6 @@ from .utils import act_and_assert
 
 # pylint: disable=too-many-lines
 
-
 @pytest.mark.gfm
 def test_block_quotes_206():
     """
@@ -1971,4 +1970,4 @@ def test_block_quotes_extra_03b():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

@@ -3,13 +3,8 @@ https://github.github.com/gfm/#paragraph
 """
 import pytest
 
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
-from pymarkdown.transform_to_gfm import TransformToGfm
-
 from .utils import (
-    assert_if_lists_different,
-    assert_if_strings_different,
-    assert_token_consistency,
+    act_and_assert
 )
 
 
@@ -22,8 +17,6 @@ def test_paragraph_series_j_l_bh_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo\\\ncom](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -39,14 +32,8 @@ def test_paragraph_series_j_l_bh_s_t():
     expected_gfm = """<p>a<a href="/uri" title="title">foo<br />
 com</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -57,8 +44,6 @@ def test_paragraph_series_j_i_bh_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo\\\ncom](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -70,14 +55,8 @@ def test_paragraph_series_j_i_bh_s_t():
     expected_gfm = """<p>a<img src="/uri" alt="foo
 com" title="title" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -88,8 +67,6 @@ def test_paragraph_series_j_l_sh_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo  \ncom](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -105,14 +82,8 @@ def test_paragraph_series_j_l_sh_s_t():
     expected_gfm = """<p>a<a href="/uri" title="title">foo<br />
 com</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -123,8 +94,6 @@ def test_paragraph_series_j_i_sh_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo  \ncom](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -136,14 +105,8 @@ def test_paragraph_series_j_i_sh_s_t():
     expected_gfm = """<p>a<img src="/uri" alt="foo
 com" title="title" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -154,8 +117,6 @@ def test_paragraph_series_j_l_rh_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[li<de\nfg>nk](/url)a"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -171,14 +132,8 @@ def test_paragraph_series_j_l_rh_s_t():
     expected_gfm = """<p>a<a href="/url">li<de
 fg>nk</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -189,8 +144,6 @@ def test_paragraph_series_j_i_rh_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![li<de\nfg>nk](/url)a"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -202,14 +155,8 @@ def test_paragraph_series_j_i_rh_s_t():
     expected_gfm = """<p>a<img src="/url" alt="li<de
 fg>nk" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -220,8 +167,6 @@ def test_paragraph_series_j_l_em_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[a*li\nnk*a](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -238,14 +183,8 @@ def test_paragraph_series_j_l_em_s_t():
     ]
     expected_gfm = """<p>a<a href="/uri" title="title">a<em>li\nnk</em>a</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -256,8 +195,6 @@ def test_paragraph_series_j_i_em_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![a*li\nnk*a](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -268,14 +205,8 @@ def test_paragraph_series_j_i_em_s_t():
     ]
     expected_gfm = """<p>a<img src="/uri" alt="ali\nnka" title="title" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -286,8 +217,6 @@ def test_paragraph_series_j_l_em_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[*link*](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -302,14 +231,8 @@ def test_paragraph_series_j_l_em_t():
     ]
     expected_gfm = """<p>a<a href="/uri" title="title"><em>link</em></a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -320,8 +243,6 @@ def test_paragraph_series_j_i_em_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![*link*](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -332,14 +253,8 @@ def test_paragraph_series_j_i_em_t():
     ]
     expected_gfm = """<p>a<img src="/uri" alt="link" title="title" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -350,8 +265,6 @@ def test_paragraph_series_j_l_ua_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[a<http://google.com>a](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -366,14 +279,8 @@ def test_paragraph_series_j_l_ua_t():
     ]
     expected_gfm = """<p>a<a href="/uri" title="title">a<a href="http://google.com">http://google.com</a>a</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -384,8 +291,6 @@ def test_paragraph_series_j_i_ua_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![a<http://google.com>a](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -398,14 +303,8 @@ def test_paragraph_series_j_i_ua_t():
         """<p>a<img src="/uri" alt="ahttp://google.coma" title="title" />a</p>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -416,8 +315,6 @@ def test_paragraph_series_j_l_ea_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[a<foo@r.com>a](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -432,14 +329,8 @@ def test_paragraph_series_j_l_ea_t():
     ]
     expected_gfm = """<p>a<a href="/uri" title="title">a<a href="mailto:foo@r.com">foo@r.com</a>a</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -450,8 +341,6 @@ def test_paragraph_series_j_i_ea_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![a<foo@r.com>a](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -462,15 +351,8 @@ def test_paragraph_series_j_i_ea_t():
     ]
     expected_gfm = """<p>a<img src="/uri" alt="afoo@r.coma" title="title" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
-
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
 def test_paragraph_series_j_l_cs_t():
@@ -480,8 +362,6 @@ def test_paragraph_series_j_l_cs_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[a`li nk`a](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -496,14 +376,8 @@ def test_paragraph_series_j_l_cs_t():
     ]
     expected_gfm = """<p>a<a href="/uri" title="title">a<code>li nk</code>a</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -514,8 +388,6 @@ def test_paragraph_series_j_i_cs_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![a`li nk`a](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -526,14 +398,8 @@ def test_paragraph_series_j_i_cs_t():
     ]
     expected_gfm = """<p>a<img src="/uri" alt="ali nka" title="title" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -544,8 +410,6 @@ def test_paragraph_series_j_l_rh_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[a<li nk>a](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -560,14 +424,8 @@ def test_paragraph_series_j_l_rh_t():
     ]
     expected_gfm = """<p>a<a href="/uri" title="title">a<li nk>a</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -578,8 +436,6 @@ def test_paragraph_series_j_i_rh_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![a<li nk>a](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -590,14 +446,8 @@ def test_paragraph_series_j_i_rh_t():
     ]
     expected_gfm = """<p>a<img src="/uri" alt="a<li nk>a" title="title" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -607,8 +457,6 @@ def test_paragraph_series_j_l_cs_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[a`li\nnk`a](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -623,14 +471,8 @@ def test_paragraph_series_j_l_cs_s_t():
     ]
     expected_gfm = """<p>a<a href="/uri" title="title">a<code>li nk</code>a</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -640,8 +482,6 @@ def test_paragraph_series_j_i_cs_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![a`li\nnk`a](/uri "title")a"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -652,14 +492,8 @@ def test_paragraph_series_j_i_cs_s_t():
     ]
     expected_gfm = """<p>a<img src="/uri" alt="ali nka" title="title" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -670,8 +504,6 @@ def test_paragraph_series_j_l_nt_t_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![fo
 o](</my url>)a"""
     expected_tokens = [
@@ -684,14 +516,8 @@ o](</my url>)a"""
     expected_gfm = """<p>a<img src="/my%20url" alt="fo
 o" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -702,8 +528,6 @@ def test_paragraph_series_j_i_nt_t_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[fo
 o](</my url>)a"""
     expected_tokens = [
@@ -718,14 +542,8 @@ o](</my url>)a"""
     expected_gfm = """<p>a<a href="/my%20url">fo
 o</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -735,8 +553,6 @@ def test_paragraph_series_j_l_t_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![fo
 o](</my url> "title")a"""
     expected_tokens = [
@@ -749,14 +565,8 @@ o](</my url> "title")a"""
     expected_gfm = """<p>a<img src="/my%20url" alt="fo
 o" title="title" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -766,8 +576,6 @@ def test_paragraph_series_j_i_t_s_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[fo
 o](</my url> "title")a"""
     expected_tokens = [
@@ -782,14 +590,8 @@ o](</my url> "title")a"""
     expected_gfm = """<p>a<a href="/my%20url" title="title">fo
 o</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -799,8 +601,6 @@ def test_paragraph_series_j_i_nt_t_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo](</my url>)a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -811,14 +611,8 @@ def test_paragraph_series_j_i_nt_t_t():
     ]
     expected_gfm = """<p>a<img src="/my%20url" alt="foo" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -828,8 +622,6 @@ def test_paragraph_series_j_l_nt_t_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo](</my url>)a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -842,14 +634,8 @@ def test_paragraph_series_j_l_nt_t_t():
     ]
     expected_gfm = """<p>a<a href="/my%20url">foo</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -859,8 +645,6 @@ def test_paragraph_series_j_l_t_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo](</my url> "title")a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -871,14 +655,8 @@ def test_paragraph_series_j_l_t_t():
     ]
     expected_gfm = """<p>a<img src="/my%20url" alt="foo" title="title" />a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -888,8 +666,6 @@ def test_paragraph_series_j_i_t_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo](</my url> "title")a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -902,14 +678,8 @@ def test_paragraph_series_j_i_t_t():
     ]
     expected_gfm = """<p>a<a href="/my%20url" title="title">foo</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -919,8 +689,6 @@ def test_paragraph_series_j_l_t_t_s():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[foo](/url "title")a\nb"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -934,14 +702,8 @@ def test_paragraph_series_j_l_t_t_s():
     expected_gfm = """<p>a<a href="/url" title="title">foo</a>a
 b</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -951,8 +713,6 @@ def test_paragraph_series_j_i_t_t_s():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![foo](/url "title")a\nb"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -964,14 +724,8 @@ def test_paragraph_series_j_i_t_t_s():
     expected_gfm = """<p>a<img src="/url" alt="foo" title="title" />a
 b</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -982,8 +736,6 @@ def test_paragraph_series_j_l_t_cs_s():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[link](/url "title")`a\nb`"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -996,14 +748,8 @@ def test_paragraph_series_j_l_t_cs_s():
     ]
     expected_gfm = """<p>a<a href="/url" title="title">link</a><code>a b</code></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1014,8 +760,6 @@ def test_paragraph_series_j_i_t_cs_s():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![link](/url "title")`a\nb`"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -1028,14 +772,8 @@ def test_paragraph_series_j_i_t_cs_s():
         """<p>a<img src="/url" alt="link" title="title" /><code>a b</code></p>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1045,8 +783,6 @@ def test_paragraph_series_j_l_t_cs():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[link](/url "title")`ab`"""
     expected_tokens = [
         "[para(1,1):]",
@@ -1059,14 +795,8 @@ def test_paragraph_series_j_l_t_cs():
     ]
     expected_gfm = """<p>a<a href="/url" title="title">link</a><code>ab</code></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1076,8 +806,6 @@ def test_paragraph_series_j_i_t_cs():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![link](/url "title")`ab`"""
     expected_tokens = [
         "[para(1,1):]",
@@ -1090,14 +818,8 @@ def test_paragraph_series_j_i_t_cs():
         """<p>a<img src="/url" alt="link" title="title" /><code>ab</code></p>"""
     )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1108,8 +830,6 @@ def test_paragraph_series_j_l_t_rh_s():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[link](/url "title")<a\nb>"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -1123,14 +843,8 @@ def test_paragraph_series_j_l_t_rh_s():
     expected_gfm = """<p>a<a href="/url" title="title">link</a><a
 b></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1141,8 +855,6 @@ def test_paragraph_series_j_i_t_rh_s():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![link](/url "title")<a\nb>"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -1154,14 +866,8 @@ def test_paragraph_series_j_i_t_rh_s():
     expected_gfm = """<p>a<img src="/url" alt="link" title="title" /><a
 b></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1172,8 +878,6 @@ def test_paragraph_series_j_l_t_rh():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[link](/url "title")<a b>"""
     expected_tokens = [
         "[para(1,1):]",
@@ -1186,14 +890,8 @@ def test_paragraph_series_j_l_t_rh():
     ]
     expected_gfm = """<p>a<a href="/url" title="title">link</a><a b></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1204,8 +902,6 @@ def test_paragraph_series_j_i_t_rh():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![link](/url "title")<a b>"""
     expected_tokens = [
         "[para(1,1):]",
@@ -1216,14 +912,8 @@ def test_paragraph_series_j_i_t_rh():
     ]
     expected_gfm = """<p>a<img src="/url" alt="link" title="title" /><a b></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1234,8 +924,6 @@ def test_paragraph_series_j_l_t_em_s():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[link](/url)*a\nb*"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -1251,14 +939,8 @@ def test_paragraph_series_j_l_t_em_s():
     expected_gfm = """<p>a<a href="/url">link</a><em>a
 b</em></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1269,8 +951,6 @@ def test_paragraph_series_j_i_t_em_s():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![link](/url)*a\nb*"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -1284,14 +964,8 @@ def test_paragraph_series_j_i_t_em_s():
     expected_gfm = """<p>a<img src="/url" alt="link" /><em>a
 b</em></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1301,8 +975,6 @@ def test_paragraph_series_j_l_t_em():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[link](/url)*a b*"""
     expected_tokens = [
         "[para(1,1):]",
@@ -1317,14 +989,8 @@ def test_paragraph_series_j_l_t_em():
     ]
     expected_gfm = """<p>a<a href="/url">link</a><em>a b</em></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1335,8 +1001,6 @@ def test_paragraph_series_j_i_t_em():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![link](/url)*a b*"""
     expected_tokens = [
         "[para(1,1):]",
@@ -1349,14 +1013,8 @@ def test_paragraph_series_j_i_t_em():
     ]
     expected_gfm = """<p>a<img src="/url" alt="link" /><em>a b</em></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1367,8 +1025,6 @@ def test_paragraph_series_j_em_l_t_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a*[link](/uri "title")*a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -1383,14 +1039,8 @@ def test_paragraph_series_j_em_l_t_t():
     ]
     expected_gfm = """<p>a*<a href="/uri" title="title">link</a>*a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1401,8 +1051,6 @@ def test_paragraph_series_j_em_i_t_t():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a*![link](/uri "title")*a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -1415,14 +1063,8 @@ def test_paragraph_series_j_em_i_t_t():
     ]
     expected_gfm = """<p>a*<img src="/uri" alt="link" title="title" />*a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1432,8 +1074,6 @@ def test_paragraph_series_j_l_t_ua():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[link](/url "title")<http://google.com>a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -1447,14 +1087,8 @@ def test_paragraph_series_j_l_t_ua():
     ]
     expected_gfm = """<p>a<a href="/url" title="title">link</a><a href="http://google.com">http://google.com</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1464,8 +1098,6 @@ def test_paragraph_series_j_i_t_ua():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![link](/url "title")<http://google.com>a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -1477,14 +1109,8 @@ def test_paragraph_series_j_i_t_ua():
     ]
     expected_gfm = """<p>a<img src="/url" alt="link" title="title" /><a href="http://google.com">http://google.com</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1494,8 +1120,6 @@ def test_paragraph_series_j_l_t_ea():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[link](/url "title")<foo@r.com>a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -1509,14 +1133,8 @@ def test_paragraph_series_j_l_t_ea():
     ]
     expected_gfm = """<p>a<a href="/url" title="title">link</a><a href="mailto:foo@r.com">foo@r.com</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1526,8 +1144,6 @@ def test_paragraph_series_j_i_t_ea():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![link](/url "title")<foo@r.com>a"""
     expected_tokens = [
         "[para(1,1):]",
@@ -1539,14 +1155,8 @@ def test_paragraph_series_j_i_t_ea():
     ]
     expected_gfm = """<p>a<img src="/url" alt="link" title="title" /><a href="mailto:foo@r.com">foo@r.com</a>a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1556,8 +1166,6 @@ def test_paragraph_series_j_l_t_bh():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[link](/url "title")\\\na"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -1572,14 +1180,8 @@ def test_paragraph_series_j_l_t_bh():
     expected_gfm = """<p>a<a href="/url" title="title">link</a><br />
 a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1589,8 +1191,6 @@ def test_paragraph_series_j_i_t_bh():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![link](/url "title")\\\na"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -1603,14 +1203,8 @@ def test_paragraph_series_j_i_t_bh():
     expected_gfm = """<p>a<img src="/url" alt="link" title="title" /><br />
 a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1620,8 +1214,6 @@ def test_paragraph_series_j_l_t_sh():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a[link](/url "title")   \na"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -1636,14 +1228,8 @@ def test_paragraph_series_j_l_t_sh():
     expected_gfm = """<p>a<a href="/url" title="title">link</a><br />
 a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1653,8 +1239,6 @@ def test_paragraph_series_j_i_t_sh():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """a![link](/url "title")   \na"""
     expected_tokens = [
         "[para(1,1):\n]",
@@ -1667,11 +1251,5 @@ def test_paragraph_series_j_i_t_sh():
     expected_gfm = """<p>a<img src="/url" alt="link" title="title" /><br />
 a</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

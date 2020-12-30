@@ -29,7 +29,7 @@ def test_transform_with_debug_on():
     ]
 
     # Act
-    actual_tokens = tokenizer.transform(source_markdown)
+    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
 
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)

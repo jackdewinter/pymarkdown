@@ -3,17 +3,9 @@ https://github.github.com/gfm/#backslash-escapes
 """
 import pytest
 
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
-from pymarkdown.transform_to_gfm import TransformToGfm
-
 from .utils import (
-    assert_if_lists_different,
-    assert_if_strings_different,
-    assert_token_consistency,
+    act_and_assert
 )
-
-# pylint: disable=too-many-lines
-
 
 @pytest.mark.gfm
 def test_backslash_escapes_extra_1():
@@ -22,8 +14,6 @@ def test_backslash_escapes_extra_1():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\`code span`"""
     expected_tokens = [
         "[para(1,1):]",
@@ -32,14 +22,8 @@ def test_backslash_escapes_extra_1():
     ]
     expected_gfm = """<p>`code span`</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -49,8 +33,6 @@ def test_backslash_escapes_extra_1a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """`code span\\`"""
     expected_tokens = [
         "[para(1,1):]",
@@ -59,14 +41,8 @@ def test_backslash_escapes_extra_1a():
     ]
     expected_gfm = """<p><code>code span\\</code></p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -76,8 +52,6 @@ def test_backslash_escapes_extra_2():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\&amp; the band played on"""
     expected_tokens = [
         "[para(1,1):]",
@@ -86,14 +60,8 @@ def test_backslash_escapes_extra_2():
     ]
     expected_gfm = """<p>&amp;amp; the band played on</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -103,8 +71,6 @@ def test_backslash_escapes_extra_3():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\<there it='is'>, really"""
     expected_tokens = [
         "[para(1,1):]",
@@ -113,14 +79,8 @@ def test_backslash_escapes_extra_3():
     ]
     expected_gfm = """<p>&lt;there it='is'&gt;, really</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -130,8 +90,6 @@ def test_backslash_escapes_extra_4():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """<there it='is'\\>, really"""
     expected_tokens = [
         "[para(1,1):]",
@@ -140,14 +98,8 @@ def test_backslash_escapes_extra_4():
     ]
     expected_gfm = """<p>&lt;there it='is'&gt;, really</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -157,8 +109,6 @@ def test_backslash_escapes_extra_5():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\<http://www.google.com> is where to look"""
     expected_tokens = [
         "[para(1,1):]",
@@ -167,14 +117,8 @@ def test_backslash_escapes_extra_5():
     ]
     expected_gfm = """<p>&lt;http://www.google.com&gt; is where to look</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -184,8 +128,6 @@ def test_backslash_escapes_extra_6():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """<http://www.google.com\\> is where to look"""
     expected_tokens = [
         "[para(1,1):]",
@@ -195,14 +137,8 @@ def test_backslash_escapes_extra_6():
     ]
     expected_gfm = """<p><a href="http://www.google.com%5C">http://www.google.com\\</a> is where to look</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -212,8 +148,6 @@ def test_backslash_escapes_extra_7():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\*it's* me!"""
     expected_tokens = [
         "[para(1,1):]",
@@ -224,14 +158,8 @@ def test_backslash_escapes_extra_7():
     ]
     expected_gfm = """<p>*it's* me!</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -241,8 +169,6 @@ def test_backslash_escapes_extra_8():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """*it's\\* me!"""
     expected_tokens = [
         "[para(1,1):]",
@@ -252,14 +178,8 @@ def test_backslash_escapes_extra_8():
     ]
     expected_gfm = """<p>*it's* me!</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -269,8 +189,6 @@ def test_backslash_escapes_extra_9():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """*\\*it's** me!"""
     expected_tokens = [
         "[para(1,1):]",
@@ -283,14 +201,8 @@ def test_backslash_escapes_extra_9():
     ]
     expected_gfm = """<p><em>*it's</em>* me!</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -300,8 +212,6 @@ def test_backslash_escapes_extra_10():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """**it's\\** me!"""
     expected_tokens = [
         "[para(1,1):]",
@@ -314,14 +224,8 @@ def test_backslash_escapes_extra_10():
     ]
     expected_gfm = """<p>*<em>it's*</em> me!</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -331,8 +235,6 @@ def test_backslash_escapes_extra_11():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\[Foo](/uri) is a link"""
     expected_tokens = [
         "[para(1,1):]",
@@ -343,14 +245,8 @@ def test_backslash_escapes_extra_11():
     ]
     expected_gfm = """<p>[Foo](/uri) is a link</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -360,8 +256,6 @@ def test_backslash_escapes_extra_12():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\![foo](/url "title") is an image"""
     expected_tokens = [
         "[para(1,1):]",
@@ -374,14 +268,8 @@ def test_backslash_escapes_extra_12():
     ]
     expected_gfm = """<p>!<a href="/url" title="title">foo</a> is an image</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -392,8 +280,6 @@ def test_backslash_escapes_extra_13():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """!\\[foo](/url "title") is an image"""
     expected_tokens = [
         "[para(1,1):]",
@@ -404,14 +290,8 @@ def test_backslash_escapes_extra_13():
     ]
     expected_gfm = """<p>![foo](/url &quot;title&quot;) is an image</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -421,8 +301,6 @@ def test_backslash_escapes_extra_14():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\`code span`
 ---"""
     expected_tokens = [
@@ -432,14 +310,8 @@ def test_backslash_escapes_extra_14():
     ]
     expected_gfm = """<h2>`code span`</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -449,8 +321,6 @@ def test_backslash_escapes_extra_14a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """`code span\\`
 ---"""
     expected_tokens = [
@@ -460,14 +330,8 @@ def test_backslash_escapes_extra_14a():
     ]
     expected_gfm = """<h2><code>code span\\</code></h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -477,8 +341,6 @@ def test_backslash_escapes_extra_15():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\&amp; the band played on
 ---"""
     expected_tokens = [
@@ -488,14 +350,8 @@ def test_backslash_escapes_extra_15():
     ]
     expected_gfm = """<h2>&amp;amp; the band played on</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -505,8 +361,6 @@ def test_backslash_escapes_extra_16():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\<there it='is'>, really
 ---"""
     expected_tokens = [
@@ -516,14 +370,8 @@ def test_backslash_escapes_extra_16():
     ]
     expected_gfm = """<h2>&lt;there it='is'&gt;, really</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -533,8 +381,6 @@ def test_backslash_escapes_extra_17():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """<there it='is'\\>, really
 ---"""
     expected_tokens = [
@@ -544,14 +390,8 @@ def test_backslash_escapes_extra_17():
     ]
     expected_gfm = """<h2>&lt;there it='is'&gt;, really</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -561,8 +401,6 @@ def test_backslash_escapes_extra_18():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\<http://www.google.com> is where to look
 ---"""
     expected_tokens = [
@@ -572,14 +410,8 @@ def test_backslash_escapes_extra_18():
     ]
     expected_gfm = """<h2>&lt;http://www.google.com&gt; is where to look</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -589,8 +421,6 @@ def test_backslash_escapes_extra_19():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """<http://www.google.com\\> is where to look
 ---"""
     expected_tokens = [
@@ -601,14 +431,8 @@ def test_backslash_escapes_extra_19():
     ]
     expected_gfm = """<h2><a href="http://www.google.com%5C">http://www.google.com\\</a> is where to look</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -618,8 +442,6 @@ def test_backslash_escapes_extra_20():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\*it's* me!
 ---"""
     expected_tokens = [
@@ -631,14 +453,8 @@ def test_backslash_escapes_extra_20():
     ]
     expected_gfm = """<h2>*it's* me!</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -648,8 +464,6 @@ def test_backslash_escapes_extra_21():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """*it's\\* me!
 ---"""
     expected_tokens = [
@@ -660,14 +474,8 @@ def test_backslash_escapes_extra_21():
     ]
     expected_gfm = """<h2>*it's* me!</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -677,8 +485,6 @@ def test_backslash_escapes_extra_22():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """*\\*it's** me!
 ---"""
     expected_tokens = [
@@ -692,14 +498,8 @@ def test_backslash_escapes_extra_22():
     ]
     expected_gfm = """<h2><em>*it's</em>* me!</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -709,8 +509,6 @@ def test_backslash_escapes_extra_23():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """**it's\\** me!
 ---"""
     expected_tokens = [
@@ -724,14 +522,8 @@ def test_backslash_escapes_extra_23():
     ]
     expected_gfm = """<h2>*<em>it's*</em> me!</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -741,8 +533,6 @@ def test_backslash_escapes_extra_24():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\[Foo](/uri) is a link
 ---"""
     expected_tokens = [
@@ -754,14 +544,8 @@ def test_backslash_escapes_extra_24():
     ]
     expected_gfm = """<h2>[Foo](/uri) is a link</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -771,8 +555,6 @@ def test_backslash_escapes_extra_25():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """\\![foo](/url "title") is an image
 ---"""
     expected_tokens = [
@@ -786,14 +568,8 @@ def test_backslash_escapes_extra_25():
     ]
     expected_gfm = """<h2>!<a href="/url" title="title">foo</a> is an image</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -803,8 +579,6 @@ def test_backslash_escapes_extra_26():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """!\\[foo](/url "title") is an image
 ---"""
     expected_tokens = [
@@ -816,14 +590,8 @@ def test_backslash_escapes_extra_26():
     ]
     expected_gfm = """<h2>![foo](/url &quot;title&quot;) is an image</h2>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -833,8 +601,6 @@ def test_backslash_escapes_extra_27():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# \\`code span`"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -843,14 +609,8 @@ def test_backslash_escapes_extra_27():
     ]
     expected_gfm = """<h1>`code span`</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -860,8 +620,6 @@ def test_backslash_escapes_extra_27a():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# `code span\\`"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -871,14 +629,8 @@ def test_backslash_escapes_extra_27a():
     ]
     expected_gfm = """<h1><code>code span\\</code></h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -888,8 +640,6 @@ def test_backslash_escapes_extra_28():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# \\&amp; the band played on"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -898,14 +648,8 @@ def test_backslash_escapes_extra_28():
     ]
     expected_gfm = """<h1>&amp;amp; the band played on</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -915,8 +659,6 @@ def test_backslash_escapes_extra_29():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# \\<there it='is'>, really"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -925,14 +667,8 @@ def test_backslash_escapes_extra_29():
     ]
     expected_gfm = """<h1>&lt;there it='is'&gt;, really</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -942,8 +678,6 @@ def test_backslash_escapes_extra_30():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# <there it='is'\\>, really"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -952,14 +686,8 @@ def test_backslash_escapes_extra_30():
     ]
     expected_gfm = """<h1>&lt;there it='is'&gt;, really</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -969,8 +697,6 @@ def test_backslash_escapes_extra_31():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# \\<http://www.google.com> is where to look"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -979,14 +705,8 @@ def test_backslash_escapes_extra_31():
     ]
     expected_gfm = """<h1>&lt;http://www.google.com&gt; is where to look</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -996,8 +716,6 @@ def test_backslash_escapes_extra_32():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# <http://www.google.com\\> is where to look"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -1008,14 +726,8 @@ def test_backslash_escapes_extra_32():
     ]
     expected_gfm = """<h1><a href="http://www.google.com%5C">http://www.google.com\\</a> is where to look</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1025,8 +737,6 @@ def test_backslash_escapes_extra_33():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# \\*it's* me!"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -1037,14 +747,8 @@ def test_backslash_escapes_extra_33():
     ]
     expected_gfm = """<h1>*it's* me!</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1054,8 +758,6 @@ def test_backslash_escapes_extra_34():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# *it's\\* me!"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -1066,14 +768,8 @@ def test_backslash_escapes_extra_34():
     ]
     expected_gfm = """<h1>*it's* me!</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1083,8 +779,6 @@ def test_backslash_escapes_extra_35():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# *\\*it's** me!"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -1098,14 +792,8 @@ def test_backslash_escapes_extra_35():
     ]
     expected_gfm = """<h1><em>*it's</em>* me!</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1115,8 +803,6 @@ def test_backslash_escapes_extra_36():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# **it's\\** me!"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -1130,14 +816,8 @@ def test_backslash_escapes_extra_36():
     ]
     expected_gfm = """<h1>*<em>it's*</em> me!</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1147,8 +827,6 @@ def test_backslash_escapes_extra_37():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# \\[Foo](/uri) is a link"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -1159,14 +837,8 @@ def test_backslash_escapes_extra_37():
     ]
     expected_gfm = """<h1>[Foo](/uri) is a link</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1176,8 +848,6 @@ def test_backslash_escapes_extra_38():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# \\![foo](/url "title") is an image"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -1190,14 +860,8 @@ def test_backslash_escapes_extra_38():
     ]
     expected_gfm = """<h1>!<a href="/url" title="title">foo</a> is an image</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1207,8 +871,6 @@ def test_backslash_escapes_extra_39():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
-    transformer = TransformToGfm()
     source_markdown = """# !\\[foo](/url "title") is an image"""
     expected_tokens = [
         "[atx(1,1):1:0:]",
@@ -1219,11 +881,5 @@ def test_backslash_escapes_extra_39():
     ]
     expected_gfm = """<h1>![foo](/url &quot;title&quot;) is an image</h1>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-    actual_gfm = transformer.transform(actual_tokens)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

@@ -571,10 +571,7 @@ class InlineProcessor:
         LOGGER.debug(">>next_index>>%s", str(next_index))
         while next_index != -1:
             processed_line += source_text[start_index:next_index]
-            inline_request = InlineRequest(
-                source_text,
-                next_index
-            )
+            inline_request = InlineRequest(source_text, next_index)
             if source_text[next_index] in InlineProcessor.__inline_character_handlers:
                 LOGGER.debug(
                     "handler(before)>>%s<<",

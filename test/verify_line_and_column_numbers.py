@@ -1828,7 +1828,13 @@ def __verify_next_inline_emphasis_end(
 
 def __create_newline_tuple():
 
-    newline_pattern_list = ["\a&NewLine;\a", "\a&#xa;\a", "\a&#xA;\a", "\a&#Xa;\a", "\a&#XA;\a"]
+    newline_pattern_list = [
+        "\a&NewLine;\a",
+        "\a&#xa;\a",
+        "\a&#xA;\a",
+        "\a&#Xa;\a",
+        "\a&#XA;\a",
+    ]
 
     prefix = ""
     while (1 + len(prefix)) <= 6:
