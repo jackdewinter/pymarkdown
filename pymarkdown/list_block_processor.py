@@ -966,7 +966,7 @@ class ListBlockProcessor:
             new_token.extracted_whitespace,
             list_start_content,
         )
-        top_stack_item.last_new_list_token = new_token
+        top_stack_item.set_last_new_list_token(new_token)
         container_level_tokens.append(new_token)
 
     @staticmethod

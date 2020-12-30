@@ -10,8 +10,8 @@ def test_stack_token_equal():
     """
 
     # Arrange
-    token1 = StackToken("type1", "extra1")
-    token2 = StackToken("type1", "extra1")
+    token1 = StackToken("type1", extra_data="extra1")
+    token2 = StackToken("type1", extra_data="extra1")
 
     # Act
     are_equal = token1 == token2
@@ -26,8 +26,8 @@ def test_stack_token_not_equal_type():
     """
 
     # Arrange
-    token1 = StackToken("type1", "extra1")
-    token2 = StackToken("type2", "extra1")
+    token1 = StackToken("type1", extra_data="extra1")
+    token2 = StackToken("type2", extra_data="extra1")
 
     # Act
     are_equal = token1 == token2
@@ -42,8 +42,8 @@ def test_stack_token_not_equal_extra():
     """
 
     # Arrange
-    token1 = StackToken("type1", "extra1")
-    token2 = StackToken("type1", "extra2")
+    token1 = StackToken("type1", extra_data="extra1")
+    token2 = StackToken("type1", extra_data="extra2")
 
     # Act
     are_equal = token1 == token2
@@ -58,7 +58,7 @@ def test_stack_token_not_equal_not_same_type():
     """
 
     # Arrange
-    token1 = StackToken("type1", "extra1")
+    token1 = StackToken("type1", extra_data="extra1")
 
     # Act
     are_equal = token1 == 1
