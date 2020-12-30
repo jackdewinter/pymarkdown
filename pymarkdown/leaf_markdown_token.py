@@ -5,12 +5,12 @@ from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
 
 
-# pylint: disable=too-many-arguments
 class LeafMarkdownToken(MarkdownToken):
     """
     Class to provide for a leaf element that can be added to markdown parsing stream.
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         token_name,
@@ -18,7 +18,9 @@ class LeafMarkdownToken(MarkdownToken):
         line_number=0,
         column_number=0,
         position_marker=None,
+        extracted_whitespace=None,
     ):
+        self.__extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
             self,
             token_name,
@@ -29,8 +31,14 @@ class LeafMarkdownToken(MarkdownToken):
             position_marker=position_marker,
         )
 
+    # pylint: enable=too-many-arguments
 
-# pylint: enable=too-many-arguments
+    @property
+    def extracted_whitespace(self):
+        """
+        Returns any whitespace that was extracted before the processing of this element occurred.
+        """
+        return self.__extracted_whitespace
 
 
 # pylint: disable=too-few-public-methods
@@ -40,7 +48,6 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
     """
 
     def __init__(self, extracted_whitespace, position_marker, column_delta=0):
-        self.__extracted_whitespace = extracted_whitespace
 
         line_number = 0
         column_number = 0
@@ -59,14 +66,8 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
             extracted_whitespace,
             line_number=line_number,
             column_number=column_number,
+            extracted_whitespace=extracted_whitespace,
         )
-
-    @property
-    def extracted_whitespace(self):
-        """
-        Returns any whitespace that was extracted before the processing of this element occurred.
-        """
-        return self.__extracted_whitespace
 
 
 class ParagraphMarkdownToken(LeafMarkdownToken):
@@ -137,25 +138,14 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
     def __init__(
         self, start_character, extracted_whitespace, rest_of_line, position_marker
     ):
-        self.__extracted_whitespace = extracted_whitespace
         self.__rest_of_line = rest_of_line
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_thematic_break,
-            start_character
-            + ":"
-            + self.__extracted_whitespace
-            + ":"
-            + self.__rest_of_line,
+            start_character + ":" + extracted_whitespace + ":" + self.__rest_of_line,
             position_marker=position_marker,
+            extracted_whitespace=extracted_whitespace,
         )
-
-    @property
-    def extracted_whitespace(self):
-        """
-        Returns any whitespace that was extracted before the processing of this element occurred.
-        """
-        return self.__extracted_whitespace
 
     @property
     def rest_of_line(self):
@@ -171,8 +161,6 @@ class HtmlBlockMarkdownToken(LeafMarkdownToken):
     """
 
     def __init__(self, position_marker, extracted_whitespace):
-        self.__extracted_whitespace = extracted_whitespace
-
         if position_marker:
             line_number = position_marker.line_number
             column_number = (
@@ -191,14 +179,8 @@ class HtmlBlockMarkdownToken(LeafMarkdownToken):
             "",
             line_number=line_number,
             column_number=column_number,
+            extracted_whitespace=extracted_whitespace,
         )
-
-    @property
-    def extracted_whitespace(self):
-        """
-        Returns any whitespace that was extracted before the processing of this element occurred.
-        """
-        return self.__extracted_whitespace
 
 
 # pylint: disable=too-many-instance-attributes
@@ -218,7 +200,6 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         position_marker,
     ):
         self.__did_add_definition = did_add_definition
-        self.__extracted_whitespace = extracted_whitespace
         self.__link_name = link_name
 
         if link_value:
@@ -251,7 +232,7 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         extra_data = (
             str(self.did_add_definition)
             + ":"
-            + self.__extracted_whitespace
+            + extracted_whitespace
             + ":"
             + self.__link_name
             + ":"
@@ -276,6 +257,7 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
             MarkdownToken._token_link_reference_definition,
             extra_data,
             position_marker=position_marker,
+            extracted_whitespace=extracted_whitespace,
         )
 
     # pylint: enable=too-many-arguments
@@ -285,13 +267,6 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         Returns an indication of whether the definition was actually added.
         """
         return self.__did_add_definition
-
-    @property
-    def extracted_whitespace(self):
-        """
-        Returns any whitespace that was extracted before the processing of this element occurred.
-        """
-        return self.__extracted_whitespace
 
     @property
     def end_whitespace(self):
@@ -375,24 +350,17 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
     ):
         self.__hash_count = hash_count
         self.__remove_trailing_count = remove_trailing_count
-        self.__extracted_whitespace = extracted_whitespace
 
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_atx_heading,
             "",
             position_marker=position_marker,
+            extracted_whitespace=extracted_whitespace,
         )
         self.__compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
-
-    @property
-    def extracted_whitespace(self):
-        """
-        Returns any whitespace that was extracted before the processing of this element occurred.
-        """
-        return self.__extracted_whitespace
 
     @property
     def hash_count(self):
@@ -417,7 +385,7 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
             + ":"
             + str(self.__remove_trailing_count)
             + ":"
-            + self.__extracted_whitespace
+            + self.extracted_whitespace
         )
         self._set_extra_data(new_extra_data)
 
@@ -439,7 +407,6 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
     ):
         self.__heading_character = heading_character
         self.__heading_character_count = heading_character_count
-        self.__extracted_whitespace = extracted_whitespace
         self.__final_whitespace = ""
         if self.__heading_character == "=":
             self.__hash_count = 1
@@ -458,17 +425,11 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
             MarkdownToken._token_setext_heading,
             "",
             position_marker=position_marker,
+            extracted_whitespace=extracted_whitespace,
         )
         self.__compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
-
-    @property
-    def extracted_whitespace(self):
-        """
-        Returns any whitespace that was extracted before the processing of this element occurred.
-        """
-        return self.__extracted_whitespace
 
     @property
     def final_whitespace(self):
@@ -552,7 +513,6 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
     """
 
     def __init__(self, extracted_whitespace, line_number, column_number):
-        self.__extracted_whitespace = extracted_whitespace
         self.__indented_whitespace = ""
         LeafMarkdownToken.__init__(
             self,
@@ -560,15 +520,9 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
             extracted_whitespace,
             line_number=line_number,
             column_number=column_number,
+            extracted_whitespace=extracted_whitespace,
         )
         self.__compose_extra_data_field()
-
-    @property
-    def extracted_whitespace(self):
-        """
-        Returns any whitespace that was extracted before the processing of this element occurred.
-        """
-        return self.__extracted_whitespace
 
     @property
     def indented_whitespace(self):
@@ -581,9 +535,7 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        self._set_extra_data(
-            self.__extracted_whitespace + ":" + self.indented_whitespace
-        )
+        self._set_extra_data(self.extracted_whitespace + ":" + self.indented_whitespace)
 
     def add_indented_whitespace(self, indented_whitespace):
         """
@@ -614,7 +566,6 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
         extracted_whitespace_before_info_string,
         position_marker,
     ):
-        self.__extracted_whitespace = extracted_whitespace
         self.__extracted_text = extracted_text
         self.__pre_extracted_text = pre_extracted_text
         self.__extracted_whitespace_before_info_string = (
@@ -629,17 +580,11 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
             MarkdownToken._token_fenced_code_block,
             "",
             position_marker=position_marker,
+            extracted_whitespace=extracted_whitespace,
         )
         self.__compose_extra_data_field()
 
     # pylint: enable=too-many-arguments
-
-    @property
-    def extracted_whitespace(self):
-        """
-        Returns any whitespace that was extracted before the processing of this element occurred.
-        """
-        return self.__extracted_whitespace
 
     @property
     def fence_character(self):
@@ -707,7 +652,7 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
             + ":"
             + self.__pre_text_after_extracted_text
             + ":"
-            + self.__extracted_whitespace
+            + self.extracted_whitespace
             + ":"
             + self.__extracted_whitespace_before_info_string
         )

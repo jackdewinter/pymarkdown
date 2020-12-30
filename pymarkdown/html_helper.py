@@ -746,7 +746,7 @@ class HtmlHelper:
         """
 
         new_tokens = []
-        html_block_type, remaining_html_tag = HtmlHelper.is_html_block(
+        html_block_type, _ = HtmlHelper.is_html_block(
             position_marker.text_to_parse,
             position_marker.index_number,
             extracted_whitespace,
@@ -760,7 +760,7 @@ class HtmlHelper:
             new_token = HtmlBlockMarkdownToken(position_marker, extracted_whitespace)
             new_tokens.append(new_token)
             parser_state.token_stack.append(
-                HtmlBlockStackToken(html_block_type, remaining_html_tag, new_token)
+                HtmlBlockStackToken(html_block_type, new_token)
             )
         return new_tokens
 

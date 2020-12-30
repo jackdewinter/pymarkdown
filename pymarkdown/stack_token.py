@@ -419,10 +419,9 @@ class HtmlBlockStackToken(StackToken):
     Class to provide for a stack token for a html block.
     """
 
-    def __init__(self, html_block_type, remaining_html_tag, matching_markdown_token):
+    def __init__(self, html_block_type, matching_markdown_token):
         self.__html_block_type = html_block_type
-        self.__remaining_html_tag = remaining_html_tag
-        extra_data = str(html_block_type) + ":" + str(remaining_html_tag)
+        extra_data = str(html_block_type)
         StackToken.__init__(
             self,
             StackToken._stack_html_block,
@@ -436,13 +435,6 @@ class HtmlBlockStackToken(StackToken):
         Returns the html block type associated with this stack token.
         """
         return self.__html_block_type
-
-    @property
-    def remaining_html_tag(self):
-        """
-        Returns the remaining information in the html block associated with this stack token.
-        """
-        return self.__remaining_html_tag
 
 
 class LinkDefinitionStackToken(StackToken):
