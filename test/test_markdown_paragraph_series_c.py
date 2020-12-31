@@ -192,7 +192,7 @@ def test_paragraph_series_c_e():
         "[text(1,1):it's :]",
         "[emphasis(1,6):1:*]",
         "[text(1,7):me:]",
-        "[end-emphasis(1,9)::1:*:False]",
+        "[end-emphasis(1,9):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>it's <em>me</em></p>"""

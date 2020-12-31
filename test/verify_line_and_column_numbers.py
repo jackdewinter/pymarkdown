@@ -1818,10 +1818,9 @@ def __verify_next_inline_emphasis_end(
     estimated_line_number,
     estimated_column_number,
 ):
-    print(">>" + str(previous_inline_token.extra_end_data) + "<<")
-    split_extra_end_data = previous_inline_token.extra_end_data.split(":")
-    print(">>" + str(split_extra_end_data) + "<<")
-    estimated_column_number += int(split_extra_end_data[0])
+    estimated_column_number += (
+        previous_inline_token.start_markdown_token.emphasis_length
+    )
     return estimated_line_number, estimated_column_number
 
 

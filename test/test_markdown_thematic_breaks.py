@@ -277,7 +277,7 @@ def test_thematic_breaks_026():
         "[para(1,2): ]",
         "[emphasis(1,2):1:*]",
         "[text(1,3):-:]",
-        "[end-emphasis(1,4)::1:*:False]",
+        "[end-emphasis(1,4):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>-</em></p>"""

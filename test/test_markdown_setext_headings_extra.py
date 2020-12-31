@@ -185,7 +185,7 @@ def test_setext_headings_extra_09():
         "[setext(2,1):-:3::(1,1)]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):it's:]",
-        "[end-emphasis(1,6)::1:*:False]",
+        "[end-emphasis(1,6):::False]",
         "[text(1,7): me!:]",
         "[end-setext:::False]",
     ]
@@ -383,7 +383,7 @@ def test_setext_headings_extra_18():
         "[text(1,1):really! :]",
         "[emphasis(1,9):1:*]",
         "[text(1,10):it's me!:]",
-        "[end-emphasis(1,18)::1:*:False]",
+        "[end-emphasis(1,18):::False]",
         "[text(1,19): here!:]",
         "[end-setext:::False]",
     ]
@@ -742,7 +742,7 @@ def test_setext_headings_extra_29():
         "[text(1,1):it's :]",
         "[emphasis(1,6):1:*]",
         "[text(1,7):me:]",
-        "[end-emphasis(1,9)::1:*:False]",
+        "[end-emphasis(1,9):::False]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h2>it's <em>me</em></h2>"""
@@ -968,7 +968,7 @@ def test_setext_headings_extra_40():
         "[setext(2,1):-:3::(1,1)]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):me:]",
-        "[end-emphasis(1,4)::1:*:False]",
+        "[end-emphasis(1,4):::False]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h2><em>me</em></h2>"""
@@ -4861,7 +4861,7 @@ b*
         "[end-link:::False]",
         "[emphasis(2,13):1:*]",
         "[text(2,14):a\nb::\n]",
-        "[end-emphasis(3,2)::1:*:False]",
+        "[end-emphasis(3,2):::False]",
         "[end-setext:::False]",
         "[BLANK(5,1):]",
     ]
@@ -4889,7 +4889,7 @@ b*
         "[image(1,2):inline:/url::li<de\nfg>nk::::li<de\nfg>nk:False::::]",
         "[emphasis(2,13):1:*]",
         "[text(2,14):a\nb::\n]",
-        "[end-emphasis(3,2)::1:*:False]",
+        "[end-emphasis(3,2):::False]",
         "[end-setext:::False]",
         "[BLANK(5,1):]",
     ]
@@ -4973,7 +4973,7 @@ def
         '[link(2,2):inline:/uri:title::::link:False:":: :]',
         "[text(2,3):link:]",
         "[end-link:::False]",
-        "[end-emphasis(2,22)::1:*:False]",
+        "[end-emphasis(2,22):::False]",
         "[text(2,23):\ndef::\n]",
         "[end-setext:::False]",
     ]
@@ -5001,7 +5001,7 @@ def
         "[text(1,1):abc\n::\n]",
         "[emphasis(2,1):1:*]",
         '[image(2,2):inline:/uri:title:link::::link:False:":: :]',
-        "[end-emphasis(2,23)::1:*:False]",
+        "[end-emphasis(2,23):::False]",
         "[text(2,24):\ndef::\n]",
         "[end-setext:::False]",
     ]
@@ -5030,7 +5030,7 @@ def
         '[link(2,1):inline:/uri:title::::*link*:False:":: :]',
         "[emphasis(2,2):1:*]",
         "[text(2,3):link:]",
-        "[end-emphasis(2,7)::1:*:False]",
+        "[end-emphasis(2,7):::False]",
         "[end-link:::False]",
         "[text(2,23):\ndef::\n]",
         "[end-setext:::False]",

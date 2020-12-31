@@ -119,7 +119,7 @@ def test_atx_headings_036():
         "[text(1,3):foo : ]",
         "[emphasis(1,7):1:*]",
         "[text(1,8):bar:]",
-        "[end-emphasis(1,11)::1:*:False]",
+        "[end-emphasis(1,11):::False]",
         "[text(1,12): \\\b*baz\\\b*:]",
         "[end-atx:::False]",
     ]

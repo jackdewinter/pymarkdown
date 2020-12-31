@@ -23,14 +23,14 @@ Foo *bar*
         "[text(1,1):Foo :]",
         "[emphasis(1,5):1:*]",
         "[text(1,6):bar:]",
-        "[end-emphasis(1,9)::1:*:False]",
+        "[end-emphasis(1,9):::False]",
         "[end-setext:::False]",
         "[BLANK(3,1):]",
         "[setext(5,1):-:9::(4,1)]",
         "[text(4,1):Foo :]",
         "[emphasis(4,5):1:*]",
         "[text(4,6):bar:]",
-        "[end-emphasis(4,9)::1:*:False]",
+        "[end-emphasis(4,9):::False]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h1>Foo <em>bar</em></h1>
@@ -55,7 +55,7 @@ baz*
         "[text(1,1):Foo :]",
         "[emphasis(1,5):1:*]",
         "[text(1,6):bar\nbaz::\n]",
-        "[end-emphasis(2,4)::1:*:False]",
+        "[end-emphasis(2,4):::False]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h1>Foo <em>bar
@@ -80,7 +80,7 @@ baz*\t
         "[text(1,3):Foo :]",
         "[emphasis(1,7):1:*]",
         "[text(1,8):bar\nbaz::\n]",
-        "[end-emphasis(2,4)::1:*:False]",
+        "[end-emphasis(2,4):::False]",
         "[end-setext:::False]",
     ]
     expected_gfm = """<h1>Foo <em>bar
@@ -186,7 +186,7 @@ def test_setext_headings_052d():
         "[text(1,3):a\n:: \n  \x02]",
         "[emphasis(2,3):1:*]",
         "[text(2,4):b:]",
-        "[end-emphasis(2,5)::1:*:False]",
+        "[end-emphasis(2,5):::False]",
         "[text(2,6):\nc:: \n  \x02]",
         "[end-setext:::False]",
     ]
@@ -216,7 +216,7 @@ def test_setext_headings_052e():
         "[text(1,3):a\n:: \n  \x02]",
         "[emphasis(2,3):1:*]",
         "[text(2,4):b:]",
-        "[end-emphasis(2,5)::1:*:False]",
+        "[end-emphasis(2,5):::False]",
         "[hard-break(2,6):  ]",
         "[text(3,3):\nc::\n  ]",
         "[end-setext:::False]",
@@ -247,7 +247,7 @@ def test_setext_headings_052f():
         "[text(1,3):a\n:: \n   \x02]",
         "[emphasis(2,4):1:*]",
         "[text(2,5):b:]",
-        "[end-emphasis(2,6)::1:*:False]",
+        "[end-emphasis(2,6):::False]",
         "[hard-break(2,7):  ]",
         "[text(3,2):\nc::\n ]",
         "[end-setext:::False]",

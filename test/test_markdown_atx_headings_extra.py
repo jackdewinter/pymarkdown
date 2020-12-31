@@ -173,7 +173,7 @@ def test_atx_headings_extra_9():
         "[text(1,4)::\a \a\x03\a]",
         "[emphasis(1,4):1:*]",
         "[text(1,5):it's:]",
-        "[end-emphasis(1,9)::1:*:False]",
+        "[end-emphasis(1,9):::False]",
         "[text(1,10): me!:]",
         "[end-atx:::False]",
     ]
@@ -364,7 +364,7 @@ def test_atx_headings_extra_18():
         "[text(1,4):really! : ]",
         "[emphasis(1,12):1:*]",
         "[text(1,13):it's me!:]",
-        "[end-emphasis(1,21)::1:*:False]",
+        "[end-emphasis(1,21):::False]",
         "[text(1,22): here!:]",
         "[end-atx:::False]",
     ]
@@ -591,7 +591,7 @@ def test_atx_headings_extra_29():
         "[text(1,4):it's : ]",
         "[emphasis(1,9):1:*]",
         "[text(1,10):me:]",
-        "[end-emphasis(1,12)::1:*:False]",
+        "[end-emphasis(1,12):::False]",
         "[end-atx:::False]",
     ]
     expected_gfm = """<h2>it's <em>me</em></h2>"""
@@ -805,7 +805,7 @@ def test_atx_headings_extra_40():
         "[text(1,4)::\a \a\x03\a]",
         "[emphasis(1,4):1:*]",
         "[text(1,5):me:]",
-        "[end-emphasis(1,7)::1:*:False]",
+        "[end-emphasis(1,7):::False]",
         "[end-atx:::False]",
     ]
     expected_gfm = """<h2><em>me</em></h2>"""

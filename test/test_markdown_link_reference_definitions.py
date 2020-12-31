@@ -1159,7 +1159,7 @@ def test_link_reference_definitions_183ge():
         "[text(1,3):A simple list\n::\n]",
         "[emphasis(2,1):1:*]",
         "[text(2,2):foo:]",
-        "[end-emphasis(2,5)::1:*:False]",
+        "[end-emphasis(2,5):::False]",
         "[text(2,6):: /url:]",
         "[end-para:::True]",
         "[end-ulist:::True]",

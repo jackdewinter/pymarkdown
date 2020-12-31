@@ -785,9 +785,7 @@ class TransformToGfm:
         Handle the end emphasis token.
         """
         _ = transform_state
-        split_end_data = next_token.extra_end_data.split(":")
-        assert split_end_data[0] == str(next_token.start_markdown_token.emphasis_length)
-        if split_end_data[0] == "1":
+        if next_token.start_markdown_token.emphasis_length == 1:
             output_html += "</em>"
         else:
             output_html += "</strong>"

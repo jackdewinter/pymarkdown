@@ -1515,12 +1515,10 @@ class TransformToMarkdown:
         """
         if self.block_stack[-1].is_inline_link:
             return ""
-
-        print(".extra_end_data>>" + str(current_token.extra_end_data))
-        split_end_data = current_token.extra_end_data.split(":")
-        emphasis_length = int(split_end_data[0])
-        emphasis_character = split_end_data[1]
-        return ParserHelper.repeat_string(emphasis_character, emphasis_length)
+        return ParserHelper.repeat_string(
+            current_token.start_markdown_token.emphasis_character,
+            current_token.start_markdown_token.emphasis_length,
+        )
 
     # pylint: enable=unused-argument
 

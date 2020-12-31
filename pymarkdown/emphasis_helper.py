@@ -166,7 +166,7 @@ class EmphasisHelper:
             end_index_in_blocks,
             new_token.generate_close_markdown_token_from_markdown_token(
                 "",
-                str(emphasis_length) + ":" + emphasis_character,
+                "",
                 False,
                 line_number=close_token.line_number,
                 column_number=close_token.column_number,

@@ -54,7 +54,8 @@
 - make sure to generated ordered/unordered tests to make sure both covered
   - every unordered tests should have an ordered counterpart
   - every ordered tests should have an unordered counterpart
-  
+- link and emphasis (inline) tokens cannot be forced close, rewrite end to not expost :::False?
+
 ## Bugs - General - Uncategorized
 
 - links, 518b

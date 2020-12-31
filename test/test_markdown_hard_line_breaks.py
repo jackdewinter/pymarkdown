@@ -145,7 +145,7 @@ bar*""".replace(
         "[text(1,2):foo:]",
         "[hard-break(1,5):  ]",
         "[text(2,1):\nbar::\n]",
-        "[end-emphasis(2,4)::1:*:False]",
+        "[end-emphasis(2,4):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>foo<br />
@@ -172,7 +172,7 @@ bar*""".replace(
         "[text(1,2):foo:]",
         "[hard-break(1,5):\\]",
         "[text(2,1):\nbar::\n]",
-        "[end-emphasis(2,4)::1:*:False]",
+        "[end-emphasis(2,4):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>foo<br />

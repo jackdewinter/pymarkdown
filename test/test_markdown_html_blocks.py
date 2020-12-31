@@ -30,7 +30,7 @@ _world_.
         "[para(5,1):\n]",
         "[emphasis(5,1):1:_]",
         "[text(5,2):world:]",
-        "[end-emphasis(5,7)::1:_:False]",
+        "[end-emphasis(5,7):::False]",
         "[text(5,8):.\n::\n]",
         "[raw-html(6,1):/pre]",
         "[end-para:::False]",
@@ -151,7 +151,7 @@ def test_html_blocks_122():
         "[para(3,1):]",
         "[emphasis(3,1):1:*]",
         "[text(3,2):Markdown:]",
-        "[end-emphasis(3,10)::1:*:False]",
+        "[end-emphasis(3,10):::False]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[html-block(5,1)]",
@@ -231,7 +231,7 @@ def test_html_blocks_125():
         "[para(4,1):]",
         "[emphasis(4,1):1:*]",
         "[text(4,2):bar:]",
-        "[end-emphasis(4,5)::1:*:False]",
+        "[end-emphasis(4,5):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<div>
@@ -505,7 +505,7 @@ def test_html_blocks_137():
         "[para(3,1):]",
         "[emphasis(3,1):1:*]",
         "[text(3,2):foo:]",
-        "[end-emphasis(3,5)::1:*:False]",
+        "[end-emphasis(3,5):::False]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[html-block(5,1)]",
@@ -533,7 +533,7 @@ def test_html_blocks_138():
         "[raw-html(1,1):del]",
         "[emphasis(1,6):1:*]",
         "[text(1,7):foo:]",
-        "[end-emphasis(1,10)::1:*:False]",
+        "[end-emphasis(1,10):::False]",
         "[raw-html(1,11):/del]",
         "[end-para:::True]",
     ]
@@ -928,7 +928,7 @@ def test_html_blocks_145():
         "[para(2,1):]",
         "[emphasis(2,1):1:*]",
         "[text(2,2):foo:]",
-        "[end-emphasis(2,5)::1:*:False]",
+        "[end-emphasis(2,5):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<style>p{color:red;}</style>
@@ -954,7 +954,7 @@ def test_html_blocks_146():
         "[para(2,1):]",
         "[emphasis(2,1):1:*]",
         "[text(2,2):baz:]",
-        "[end-emphasis(2,5)::1:*:False]",
+        "[end-emphasis(2,5):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<!-- foo -->*bar*
@@ -1276,7 +1276,7 @@ def test_html_blocks_157():
         "[para(3,1):]",
         "[emphasis(3,1):1:*]",
         "[text(3,2):Emphasized:]",
-        "[end-emphasis(3,12)::1:*:False]",
+        "[end-emphasis(3,12):::False]",
         "[text(3,13): text.:]",
         "[end-para:::True]",
         "[BLANK(4,1):]",

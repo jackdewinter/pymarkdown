@@ -150,7 +150,7 @@ def test_paragraph_series_b_e():
         "[text(1,1):really! :]",
         "[emphasis(1,9):1:*]",
         "[text(1,10):it's me!:]",
-        "[end-emphasis(1,18)::1:*:False]",
+        "[end-emphasis(1,18):::False]",
         "[text(1,19): here!:]",
         "[end-para:::True]",
     ]

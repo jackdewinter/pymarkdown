@@ -173,7 +173,7 @@ def test_paragraph_series_j_l_em_s_t():
         "[text(1,3):a:]",
         "[emphasis(1,4):1:*]",
         "[text(1,5):li\nnk::\n]",
-        "[end-emphasis(2,3)::1:*:False]",
+        "[end-emphasis(2,3):::False]",
         "[text(2,4):a:]",
         "[end-link:::False]",
         "[text(2,20):a:]",
@@ -222,7 +222,7 @@ def test_paragraph_series_j_l_em_t():
         '[link(1,2):inline:/uri:title::::*link*:False:":: :]',
         "[emphasis(1,3):1:*]",
         "[text(1,4):link:]",
-        "[end-emphasis(1,8)::1:*:False]",
+        "[end-emphasis(1,8):::False]",
         "[end-link:::False]",
         "[text(1,24):a:]",
         "[end-para:::True]",
@@ -932,7 +932,7 @@ def test_paragraph_series_j_l_t_em_s():
         "[end-link:::False]",
         "[emphasis(1,14):1:*]",
         "[text(1,15):a\nb::\n]",
-        "[end-emphasis(2,2)::1:*:False]",
+        "[end-emphasis(2,2):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<a href="/url">link</a><em>a
@@ -957,7 +957,7 @@ def test_paragraph_series_j_i_t_em_s():
         "[image(1,2):inline:/url::link::::link:False::::]",
         "[emphasis(1,15):1:*]",
         "[text(1,16):a\nb::\n]",
-        "[end-emphasis(2,2)::1:*:False]",
+        "[end-emphasis(2,2):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<img src="/url" alt="link" /><em>a
@@ -983,7 +983,7 @@ def test_paragraph_series_j_l_t_em():
         "[end-link:::False]",
         "[emphasis(1,14):1:*]",
         "[text(1,15):a b:]",
-        "[end-emphasis(1,18)::1:*:False]",
+        "[end-emphasis(1,18):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<a href="/url">link</a><em>a b</em></p>"""
@@ -1007,7 +1007,7 @@ def test_paragraph_series_j_i_t_em():
         "[image(1,2):inline:/url::link::::link:False::::]",
         "[emphasis(1,15):1:*]",
         "[text(1,16):a b:]",
-        "[end-emphasis(1,19)::1:*:False]",
+        "[end-emphasis(1,19):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<img src="/url" alt="link" /><em>a b</em></p>"""

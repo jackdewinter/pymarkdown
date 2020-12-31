@@ -62,7 +62,7 @@ def test_tables_extension_200():
         "[text(3,9): az |\n| b ::\n]",
         "[emphasis(4,5):2:*]",
         "[text(4,7):\\\b|:]",
-        "[end-emphasis(4,9)::2:*:False]",
+        "[end-emphasis(4,9):::False]",
         "[text(4,11): im |:]",
         "[end-para:::True]",
     ]

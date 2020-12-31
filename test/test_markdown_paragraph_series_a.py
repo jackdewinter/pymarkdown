@@ -186,7 +186,7 @@ def test_paragraph_series_a_e():
         "[para(1,1):]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):it's:]",
-        "[end-emphasis(1,6)::1:*:False]",
+        "[end-emphasis(1,6):::False]",
         "[text(1,7): me!:]",
         "[end-para:::True]",
     ]

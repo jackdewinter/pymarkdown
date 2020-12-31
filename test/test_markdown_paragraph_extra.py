@@ -162,7 +162,7 @@ def test_paragraph_extra_46c():
         "[text(1,1):a:]",
         "[emphasis(1,2):1:*]",
         "[text(1,3):foo\a&#xa;\a\n\abar:]",
-        "[end-emphasis(1,14)::1:*:False]",
+        "[end-emphasis(1,14):::False]",
         "[text(1,15):a:]",
         "[end-para:::True]",
     ]

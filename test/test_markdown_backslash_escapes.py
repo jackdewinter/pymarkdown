@@ -104,7 +104,7 @@ def test_backslash_escapes_311():
         "[text(1,1):\\\b\\:]",
         "[emphasis(1,3):1:*]",
         "[text(1,4):emphasis:]",
-        "[end-emphasis(1,12)::1:*:False]",
+        "[end-emphasis(1,12):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>\\<em>emphasis</em></p>"""

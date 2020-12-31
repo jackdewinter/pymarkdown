@@ -355,7 +355,7 @@ def test_character_references_333():
         "[text(1,1):\a&#42;\a*\afoo\a&#42;\a*\a\n::\n]",
         "[emphasis(2,1):1:*]",
         "[text(2,2):foo:]",
-        "[end-emphasis(2,5)::1:*:False]",
+        "[end-emphasis(2,5):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>*foo*

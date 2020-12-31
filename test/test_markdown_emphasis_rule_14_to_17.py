@@ -19,8 +19,8 @@ def test_emphasis_476():
         "[emphasis(1,1):1:*]",
         "[emphasis(1,2):2:*]",
         "[text(1,4):foo:]",
-        "[end-emphasis(1,7)::2:*:False]",
-        "[end-emphasis(1,9)::1:*:False]",
+        "[end-emphasis(1,7):::False]",
+        "[end-emphasis(1,9):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em><strong>foo</strong></em></p>"""
@@ -43,9 +43,9 @@ def test_emphasis_477():
         "[emphasis(1,2):2:_]",
         "[emphasis(1,4):2:_]",
         "[text(1,6):foo:]",
-        "[end-emphasis(1,9)::2:_:False]",
-        "[end-emphasis(1,11)::2:_:False]",
-        "[end-emphasis(1,13)::1:_:False]",
+        "[end-emphasis(1,9):::False]",
+        "[end-emphasis(1,11):::False]",
+        "[end-emphasis(1,13):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em><strong><strong>foo</strong></strong></em></p>"""
@@ -68,7 +68,7 @@ def test_emphasis_478():
         "[text(1,2):foo :]",
         "[text(1,6):_:]",
         "[text(1,7):bar:]",
-        "[end-emphasis(1,10)::1:*:False]",
+        "[end-emphasis(1,10):::False]",
         "[text(1,11): baz:]",
         "[text(1,15):_:]",
         "[end-para:::True]",
@@ -95,9 +95,9 @@ def test_emphasis_479():
         "[text(1,8):bar :]",
         "[text(1,12):*:]",
         "[text(1,13):baz bim:]",
-        "[end-emphasis(1,20)::2:_:False]",
+        "[end-emphasis(1,20):::False]",
         "[text(1,22): bam:]",
-        "[end-emphasis(1,26)::1:*:False]",
+        "[end-emphasis(1,26):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>foo <strong>bar *baz bim</strong> bam</em></p>"""
@@ -120,7 +120,7 @@ def test_emphasis_480():
         "[text(1,3):foo :]",
         "[emphasis(1,7):2:*]",
         "[text(1,9):bar baz:]",
-        "[end-emphasis(1,16)::2:*:False]",
+        "[end-emphasis(1,16):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>**foo <strong>bar baz</strong></p>"""
@@ -143,7 +143,7 @@ def test_emphasis_481():
         "[text(1,2):foo :]",
         "[emphasis(1,6):1:*]",
         "[text(1,7):bar baz:]",
-        "[end-emphasis(1,14)::1:*:False]",
+        "[end-emphasis(1,14):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>*foo <em>bar baz</em></p>"""
@@ -272,7 +272,7 @@ def test_emphasis_487():
         "[emphasis(1,1):1:*]",
         "[text(1,2):a :]",
         "[icode-span(1,4):*:`::]",
-        "[end-emphasis(1,7)::1:*:False]",
+        "[end-emphasis(1,7):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>a <code>*</code></em></p>"""
@@ -294,7 +294,7 @@ def test_emphasis_488():
         "[emphasis(1,1):1:_]",
         "[text(1,2):a :]",
         "[icode-span(1,4):_:`::]",
-        "[end-emphasis(1,7)::1:_:False]",
+        "[end-emphasis(1,7):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>a <code>_</code></em></p>"""

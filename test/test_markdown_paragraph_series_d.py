@@ -182,7 +182,7 @@ def test_paragraph_series_d_e():
         "[para(1,1):]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):me:]",
-        "[end-emphasis(1,4)::1:*:False]",
+        "[end-emphasis(1,4):::False]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>me</em></p>"""
