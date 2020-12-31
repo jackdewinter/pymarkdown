@@ -4,31 +4,18 @@
 
 - determine which errors to print and which to log
 
-## Bugs - General - Nice To Have
+## Bugs - General
 
-- verifying vs validating?
+### Priority 1 - Must Solve Before Initial
 
-- why does fcb with only newlines and newlines with ws not fold down to text?
-  - coalesce with blank lines in fenced code block?
-- HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
+- refactor `is_olist_start` and `is_ulist_start`
+  - looks like some logic missing from one of them
+- possible to merge link token and image token more closely?
+- __check_for_list_closures can be refactored for "new block start"
+
 - Link_helper.py#86 - if link already registered, should warn?
-- check for common code in consistency checks, i.e. link and image handling
-
-- start making token fields private with setters
-  - look for places where common access patterns can be used i.e. link_title
-
-- cases like 183 where first non-ws character is an inline specifier
-  - can this be fixed in a way that does not require the other fix to add
-   starting_whitespace after the fact?
 - where is `elif starting_whitespace:` used? why? better way to do it?
-
-- make better use of `index_indent`
 - merge leading_spaces code from both container tokens
-- refactor `for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):`
-  from different areas into one helper function
-  - leaf parse_paragraph
-  - len(parser_state
-
 - does post processing for Markdown transformer need to be complicated
 - why does hard break not have \n? (fix before release)
   - hard break followed by 3 spaces, then emphasis
@@ -36,25 +23,43 @@
     - variation with start of 52e, then hard break, then something like start of 52e again i.e. make /x02 splitter come into affect
   - hard break followed by each inline type
   - hard break at start of text?
-- unify 2 separate calculations in `__pre_list` function
-
-- image token handling confusing and non-standard
-- fenced code block handling of line/col could be better
+- all types of end-inlines and inlines at end i.e. 50
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - rehydrate_index
   - leading_text_index
   - leading_spaces_index + is_loose
-- all types of end-inlines and inlines at end i.e. 50
-- possible to merge link token and image token more closely?
-- refactor `is_olist_start` and `is_ulist_start`
-  - looks like some logic missing from one of them
-- why does `__revert_token_to_normal_text_token` require TextMarkdown.copy instead of `replacement_token = text_token_to_replace.create_copy()`?
-- __check_for_list_closures can be refactored for "new block start"
 
+### Priority 2 - Like To Solve Before Initial
+
+- refactor `for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):`
+  from different areas into one helper function
+  - leaf parse_paragraph
+  - len(parser_state
+- why does fcb with only newlines and newlines with ws not fold down to text?
+  - coalesce with blank lines in fenced code block?
+- check for common code in consistency checks, i.e. link and image handling
 - make sure to generated ordered/unordered tests to make sure both covered
   - every unordered tests should have an ordered counterpart
   - every ordered tests should have an unordered counterpart
 - link and emphasis (inline) tokens cannot be forced close, rewrite end to not expost :::False?
+
+- unify 2 separate calculations in `__pre_list` function
+
+### Priority 3 - Like To Solve in next 3 m
+
+- look for places where common access patterns can be used i.e. link_title
+- HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
+- cases like 183 where first non-ws character is an inline specifier
+  - can this be fixed in a way that does not require the other fix to add
+   starting_whitespace after the fact?
+- make better use of `index_indent`
+- why does `__revert_token_to_normal_text_token` require TextMarkdown.copy instead of `replacement_token = text_token_to_replace.create_copy()`?
+- image token handling confusing and non-standard
+- fenced code block handling of line/col could be better
+
+### Priority 4 - Like To Solve in next 6 m
+
+- verifying vs validating?
 
 ## Bugs - General - Uncategorized
 
@@ -67,8 +72,6 @@
 ## Bugs - Block Quote/List Interaction
 
 - 270 and check for indent levels after
-- make sure __rehydrate_unordered_list_start and __rehydrate_ordered_list_start similar,
-  refactor is possible
 - verify that rehydrate, leading_text_index and list's version match up with expected at end of verify
 - verify that rehydrate, leading_text_index and list's version match up with expected at end of markdown gen
 
