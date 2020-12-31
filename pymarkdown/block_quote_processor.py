@@ -4,7 +4,6 @@ Module to provide processing for the block quotes.
 import logging
 
 from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
-from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.parser_helper import ParserHelper, PositionMarker
 from pymarkdown.stack_token import (
@@ -77,22 +76,17 @@ class BlockQuoteProcessor:
                 str(stack_bq_count),
             )
 
-            is_fenced_start, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
-                line_to_parse, 0, extracted_whitespace
+            is_leaf_block_start = (
+                LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
+                    parser_state,
+                    line_to_parse,
+                    0,
+                    extracted_whitespace,
+                    exclude_thematic_break=True,
+                )
             )
-            LOGGER.debug("is_fenced_start?%s", str(is_fenced_start))
-            is_atx_heading, _, _, _ = LeafBlockProcessor.is_atx_heading(
-                line_to_parse, 0, extracted_whitespace
-            )
-            LOGGER.debug("is_atx_heading?%s", str(is_atx_heading))
-            is_html_start, _ = HtmlHelper.is_html_block(
-                line_to_parse, 0, extracted_whitespace, parser_state.token_stack
-            )
-            LOGGER.debug("is_html_start?%s", str(is_html_start))
 
-            if parser_state.token_stack[-1].is_code_block or (
-                is_fenced_start or is_atx_heading or is_html_start
-            ):
+            if parser_state.token_stack[-1].is_code_block or (is_leaf_block_start):
                 LOGGER.debug("__check_for_lazy_handling>>code block")
                 assert not container_level_tokens
                 container_level_tokens, _, _ = parser_state.close_open_blocks_fn(

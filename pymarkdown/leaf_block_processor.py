@@ -3,6 +3,7 @@ Module to provide processing for the leaf blocks.
 """
 import logging
 
+from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_markdown_token import (
@@ -1118,3 +1119,60 @@ class LeafBlockProcessor:
             LOGGER.debug(">>__xx>>stack>>%s>>", str(parser_state.token_stack))
         html_tokens.append(end_of_list)
         LOGGER.debug(">>__xx>>tokens_to_add>>%s>>", str(html_tokens))
+
+    @staticmethod
+    def is_paragraph_ending_leaf_block_start(
+        parser_state,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+        exclude_thematic_break=False,
+    ):
+        """
+        Determine whether we have a valid leaf block start.
+        """
+
+        is_leaf_block_start = False
+        if not exclude_thematic_break:
+            is_leaf_block_start, _ = LeafBlockProcessor.is_thematic_break(
+                line_to_parse,
+                start_index,
+                extracted_whitespace,
+                skip_whitespace_check=True,
+            )
+            is_leaf_block_start = bool(is_leaf_block_start)
+            LOGGER.debug(
+                "is_paragraph_ending_leaf_block_start>>is_theme_break>>%s",
+                str(is_leaf_block_start),
+            )
+        if not is_leaf_block_start:
+            is_leaf_block_start, _ = HtmlHelper.is_html_block(
+                line_to_parse,
+                start_index,
+                extracted_whitespace,
+                parser_state.token_stack,
+            )
+            is_leaf_block_start = bool(is_leaf_block_start)
+            LOGGER.debug(
+                "is_paragraph_ending_leaf_block_start>>is_html_block>>%s",
+                str(is_leaf_block_start),
+            )
+        if not is_leaf_block_start:
+            is_leaf_block_start, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
+                line_to_parse, start_index, extracted_whitespace
+            )
+            is_leaf_block_start = bool(is_leaf_block_start)
+            LOGGER.debug(
+                "is_paragraph_ending_leaf_block_start>>is_fenced_code_block>>%s",
+                str(is_leaf_block_start),
+            )
+        if not is_leaf_block_start:
+            is_leaf_block_start, _, _, _ = LeafBlockProcessor.is_atx_heading(
+                line_to_parse, start_index, extracted_whitespace
+            )
+            is_leaf_block_start = bool(is_leaf_block_start)
+            LOGGER.debug(
+                "is_paragraph_ending_leaf_block_start>>is_atx_heading>>%s",
+                str(is_leaf_block_start),
+            )
+        return is_leaf_block_start

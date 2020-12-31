@@ -11,7 +11,6 @@
 - refactor `is_olist_start` and `is_ulist_start`
   - looks like some logic missing from one of them
 - possible to merge link token and image token more closely?
-- __check_for_list_closures can be refactored for "new block start"
 
 - Link_helper.py#86 - if link already registered, should warn?
 - where is `elif starting_whitespace:` used? why? better way to do it?
@@ -60,6 +59,7 @@
 ### Priority 4 - Like To Solve in next 6 m
 
 - verifying vs validating?
+- bqp:check_for_lazy_handling, why exclude tb?
 
 ## Bugs - General - Uncategorized
 

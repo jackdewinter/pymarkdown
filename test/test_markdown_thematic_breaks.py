@@ -437,3 +437,34 @@ def test_thematic_breaks_031():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_thematic_breaks_031o():
+    """
+    Test case 031:  If you want a thematic break in a list item, use a different bullet:
+    """
+
+    # Arrange
+    source_markdown = """
+1) Foo
+1) * * *"""
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[olist(2,1):):1:3:]",
+        "[para(2,4):]",
+        "[text(2,4):Foo:]",
+        "[end-para:::True]",
+        "[li(3,1):3::1]",
+        "[tbreak(3,4):*::* * *]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Foo</li>
+<li>
+<hr />
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

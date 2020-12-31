@@ -10,7 +10,6 @@ from pymarkdown.container_markdown_token import (
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
-from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.stack_token import OrderedListStackToken, UnorderedListStackToken
@@ -72,6 +71,7 @@ class ListBlockProcessor:
                 str(len(line_to_parse)),
             )
 
+            # Thematic breaks have precedence, so stop a list start if we find one.
             is_break, _ = LeafBlockProcessor.is_thematic_break(
                 line_to_parse, start_index, extracted_whitespace
             )
@@ -602,6 +602,8 @@ class ListBlockProcessor:
                 str(parser_state.token_stack[-1].is_paragraph),
             )
 
+            # This needs to be in place to prevent a thematic break after a paragraph
+            # within a list from being misinterpretted as a SetExt Heading.
             is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
                 line_to_parse,
                 start_index,
@@ -1221,29 +1223,10 @@ class ListBlockProcessor:
         LOGGER.debug("ws(naa)>>stack>>%s", str(parser_state.token_stack))
         LOGGER.debug("ws(naa)>>tokens>>%s", str(parser_state.token_document))
 
-        is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
-            line_to_parse,
-            start_index,
-            extracted_whitespace,
-            skip_whitespace_check=True,
+        is_leaf_block_start = LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
+            parser_state, line_to_parse, start_index, extracted_whitespace
         )
-        LOGGER.debug("ws(naa)>>is_theme_break>>%s", str(bool(is_theme_break)))
-        is_html_block, _ = HtmlHelper.is_html_block(
-            line_to_parse, start_index, extracted_whitespace, parser_state.token_stack
-        )
-        LOGGER.debug("ws(naa)>>is_html_block>>%s", str(bool(is_html_block)))
-        is_fenced_block, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
-            line_to_parse, start_index, extracted_whitespace
-        )
-        LOGGER.debug("ws(naa)>>is_fenced_block>>%s", str(is_fenced_block))
-        is_atx_heading, _, _, _ = LeafBlockProcessor.is_atx_heading(
-            line_to_parse, start_index, extracted_whitespace
-        )
-        LOGGER.debug("ws(naa)>>is_atx_heading>>%s", str(is_atx_heading))
-
-        if not parser_state.token_stack[-1].is_paragraph or (
-            is_theme_break or is_html_block or is_fenced_block or is_atx_heading
-        ):
+        if not parser_state.token_stack[-1].is_paragraph or (is_leaf_block_start):
             LOGGER.debug("ws (normal and adjusted) not enough to continue")
 
             LOGGER.debug("lsl %s", str(leading_space_length))
@@ -1267,10 +1250,9 @@ class ListBlockProcessor:
                 )
 
             LOGGER.debug("lsl %s", str(parser_state.token_stack[search_index]))
-            ind = search_index
 
             container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
-                parser_state, until_this_index=ind, include_lists=True
+                parser_state, until_this_index=search_index, include_lists=True
             )
             LOGGER.debug("container_level_tokens>%s>", str(container_level_tokens))
         else:
