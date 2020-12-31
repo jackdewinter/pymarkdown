@@ -3,9 +3,7 @@ https://github.github.com/gfm/#setext-headings
 """
 import pytest
 
-from .utils import (
-    act_and_assert
-)
+from .utils import act_and_assert
 
 # pylint: disable=too-many-lines
 
@@ -978,6 +976,7 @@ def test_setext_headings_extra_40():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_setext_headings_extra_41():
     """
@@ -1367,6 +1366,7 @@ def test_setext_headings_extra_50c():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_setext_headings_extra_51():

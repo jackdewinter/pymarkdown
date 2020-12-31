@@ -1,9 +1,8 @@
 """
 https://github.github.com/gfm/#task-list-items-extension-
 """
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
-from .utils import assert_if_lists_different, assert_token_consistency
+from .utils import act_and_assert
 
 
 def test_task_list_items_279():
@@ -12,7 +11,6 @@ def test_task_list_items_279():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """- [ ] foo
 - [x] bar"""
     expected_tokens = [
@@ -32,14 +30,10 @@ def test_task_list_items_279():
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
+    expected_gfm = """<ul>\n<li>[ ] foo</li>\n<li>[x] bar</li>\n</ul>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    # TODO revisit at end, not in back CommonMark spec
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 def test_task_list_items_280():
@@ -48,7 +42,6 @@ def test_task_list_items_280():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """- [x] foo
   - [ ] bar
   - [x] baz
@@ -85,11 +78,7 @@ def test_task_list_items_280():
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
+    expected_gfm = """<ul>\n<li>[x] foo\n<ul>\n<li>[ ] bar</li>\n<li>[x] baz</li>\n</ul>\n</li>\n<li>[ ] bim</li>\n</ul>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    # TODO revisit at end, not in back CommonMark spec
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

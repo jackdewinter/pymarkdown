@@ -7,6 +7,7 @@ from .utils import act_and_assert
 
 # pylint: disable=too-many-lines
 
+
 @pytest.mark.gfm
 def test_block_quotes_206():
     """

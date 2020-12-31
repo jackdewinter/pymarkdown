@@ -3,12 +3,8 @@ https://github.github.com/gfm/#atx-headings
 """
 import pytest
 
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
-from pymarkdown.transform_to_gfm import TransformToGfm
+from .utils import act_and_assert
 
-from .utils import (
-    act_and_assert
-)
 
 @pytest.mark.gfm
 def test_atx_headings_extra_1():

@@ -8,9 +8,7 @@ import pytest
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
-from .utils import (
-    act_and_assert
-)
+from .utils import act_and_assert
 
 
 @pytest.mark.gfm

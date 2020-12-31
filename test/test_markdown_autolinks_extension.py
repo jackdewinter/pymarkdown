@@ -3,9 +3,7 @@ https://github.github.com/gfm/#autolinks-extension-
 """
 import pytest
 
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
-
-from .utils import assert_if_lists_different, assert_token_consistency
+from .utils import act_and_assert
 
 
 @pytest.mark.skip
@@ -15,16 +13,13 @@ def test_autolinks_621():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """www.commonmark.org"""
     expected_tokens = ["[para:]", "[uri-autolink:http://foo.bar.baz]", "[end-para]"]
+    expected_gfm = """
+"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.skip
@@ -34,16 +29,13 @@ def test_autolinks_622():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """Visit www.commonmark.org/help for more information."""
     expected_tokens = ["[para:]", "[uri-autolink:http://foo.bar.baz]", "[end-para]"]
+    expected_gfm = """
+"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.skip
@@ -53,18 +45,15 @@ def test_autolinks_623():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """Visit www.commonmark.org.
 
 Visit www.commonmark.org/a.b."""
     expected_tokens = ["[para:]", "[uri-autolink:http://foo.bar.baz]", "[end-para]"]
+    expected_gfm = """
+"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.skip
@@ -74,7 +63,6 @@ def test_autolinks_624():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """www.google.com/search?q=Markup+(business)
 
 www.google.com/search?q=Markup+(business)))
@@ -83,13 +71,11 @@ www.google.com/search?q=Markup+(business)))
 
 (www.google.com/search?q=Markup+(business)"""
     expected_tokens = ["[para:]", "[uri-autolink:http://foo.bar.baz]", "[end-para]"]
+    expected_gfm = """
+"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.skip
@@ -99,16 +85,13 @@ def test_autolinks_625():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """www.google.com/search?q=(business))+ok"""
     expected_tokens = ["[para:]", "[uri-autolink:http://foo.bar.baz]", "[end-para]"]
+    expected_gfm = """
+"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.skip
@@ -118,18 +101,15 @@ def test_autolinks_626():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """www.google.com/search?q=commonmark&hl=en
 
 www.google.com/search?q=commonmark&hl;"""
     expected_tokens = ["[para:]", "[uri-autolink:http://foo.bar.baz]", "[end-para]"]
+    expected_gfm = """
+"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.skip
@@ -139,16 +119,13 @@ def test_autolinks_627():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """www.commonmark.org/he<lp"""
     expected_tokens = ["[para:]", "[uri-autolink:http://foo.bar.baz]", "[end-para]"]
+    expected_gfm = """
+"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.skip
@@ -158,18 +135,15 @@ def test_autolinks_628():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """http://commonmark.org
 
 (Visit https://encrypted.google.com/search?q=Markup+(business))"""
     expected_tokens = ["[para:]", "[uri-autolink:http://foo.bar.baz]", "[end-para]"]
+    expected_gfm = """
+"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.skip
@@ -179,16 +153,13 @@ def test_autolinks_629():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """foo@bar.baz"""
     expected_tokens = ["[para:]", "[uri-autolink:http://foo.bar.baz]", "[end-para]"]
+    expected_gfm = """
+"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.skip
@@ -198,18 +169,15 @@ def test_autolinks_630():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = (
         """hello@mail+xyz.example isn't valid, but hello+xyz@mail.example is."""
     )
     expected_tokens = ["[para:]", "[uri-autolink:http://foo.bar.baz]", "[end-para]"]
+    expected_gfm = """
+"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.skip
@@ -219,7 +187,6 @@ def test_autolinks_631():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """a.b-c_d@a.b
 
 a.b-c_d@a.b.
@@ -228,10 +195,8 @@ a.b-c_d@a.b-
 
 a.b-c_d@a.b_"""
     expected_tokens = ["[para:]", "[uri-autolink:http://foo.bar.baz]", "[end-para]"]
+    expected_gfm = """
+"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

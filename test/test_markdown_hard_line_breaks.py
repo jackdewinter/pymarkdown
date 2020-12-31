@@ -4,9 +4,7 @@ https://github.github.com/gfm/#hard-line-breaks
 
 import pytest
 
-from .utils import (
-    act_and_assert
-)
+from .utils import act_and_assert
 
 
 @pytest.mark.gfm

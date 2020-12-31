@@ -3,9 +3,7 @@ https://github.github.com/gfm/#paragraph
 """
 import pytest
 
-from .utils import (
-    act_and_assert
-)
+from .utils import act_and_assert
 
 
 # pylint: disable=too-many-lines

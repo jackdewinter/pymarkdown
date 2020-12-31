@@ -1,32 +1,26 @@
 """
 https://github.github.com/gfm/#emphasis-and-strong-emphasis
 """
-import pytest
 
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
-
-from .utils import assert_if_lists_different, assert_token_consistency
+from .utils import act_and_assert
 
 
-@pytest.mark.skip
 def test_strikethrough_491():
     """
     Test case 491:  Strikethrough text is any text wrapped in two tildes (~).
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """~~Hi~~ Hello, world!"""
     expected_tokens = [
-        "[ulist:-::2:]",
+        "[para(1,1):]",
+        "[text(1,1):~~Hi~~ Hello, world!:]",
+        "[end-para:::True]",
     ]
+    expected_gfm = """<p>~~Hi~~ Hello, world!</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 def test_strikethrough_492():
@@ -35,7 +29,6 @@ def test_strikethrough_492():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """This ~~has a
 
 new paragraph~~."""
@@ -48,10 +41,7 @@ new paragraph~~."""
         "[text(3,1):new paragraph~~.:]",
         "[end-para:::True]",
     ]
+    expected_gfm = """<p>This ~~has a</p>\n<p>new paragraph~~.</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

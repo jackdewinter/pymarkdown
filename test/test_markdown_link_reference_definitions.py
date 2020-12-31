@@ -4,9 +4,7 @@ https://github.github.com/gfm/#link-reference-definitions
 """
 import pytest
 
-from .utils import (
-    act_and_assert
-)
+from .utils import act_and_assert
 
 
 @pytest.mark.gfm

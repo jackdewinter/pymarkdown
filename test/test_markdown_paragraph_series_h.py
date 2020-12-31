@@ -3,9 +3,7 @@ https://github.github.com/gfm/#paragraph
 """
 import pytest
 
-from .utils import (
-    act_and_assert
-)
+from .utils import act_and_assert
 
 
 @pytest.mark.gfm
@@ -553,6 +551,7 @@ nk](/uri "title" )a"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_paragraph_series_h_i_i_t():

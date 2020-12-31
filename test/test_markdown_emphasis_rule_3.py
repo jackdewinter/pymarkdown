@@ -3,9 +3,7 @@ https://github.github.com/gfm/#emphasis-and-strong-emphasis
 """
 import pytest
 
-from .utils import (
-    act_and_assert,
-)
+from .utils import act_and_assert
 
 
 @pytest.mark.gfm

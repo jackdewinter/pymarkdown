@@ -1,9 +1,8 @@
 """
 https://github.github.com/gfm/#tables-extension-
 """
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
-from .utils import assert_if_lists_different, assert_token_consistency
+from .utils import act_and_assert
 
 
 def test_tables_extension_198():
@@ -12,7 +11,6 @@ def test_tables_extension_198():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """| foo | bar |
 | --- | --- |
 | baz | bim |"""
@@ -21,14 +19,10 @@ def test_tables_extension_198():
         "[text(1,1):| foo | bar |\n| --- | --- |\n| baz | bim |::\n\n]",
         "[end-para:::True]",
     ]
+    expected_gfm = """<p>| foo | bar |\n| --- | --- |\n| baz | bim |</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    # TODO Expect this to fail when tables are implemented
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 def test_tables_extension_199():
@@ -37,7 +31,6 @@ def test_tables_extension_199():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """| abc | defghi |
 :-: | -----------:
 bar | baz"""
@@ -46,14 +39,10 @@ bar | baz"""
         "[text(1,1):| abc | defghi |\n:-: | -----------:\nbar | baz::\n\n]",
         "[end-para:::True]",
     ]
+    expected_gfm = """<p>| abc | defghi |\n:-: | -----------:\nbar | baz</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    # TODO Expect this to fail when tables are implemented
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 def test_tables_extension_200():
@@ -62,7 +51,6 @@ def test_tables_extension_200():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """| f\\|oo  |
 | ------ |
 | b `\\|` az |
@@ -78,14 +66,10 @@ def test_tables_extension_200():
         "[text(4,11): im |:]",
         "[end-para:::True]",
     ]
+    expected_gfm = """<p>| f|oo  |\n| ------ |\n| b <code>\\|</code> az |\n| b <strong>|</strong> im |</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    # TODO Expect this to fail when tables are implemented
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 def test_tables_extension_201():
@@ -94,7 +78,6 @@ def test_tables_extension_201():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """| abc | def |
 | --- | --- |
 | bar | baz |
@@ -109,14 +92,10 @@ def test_tables_extension_201():
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
+    expected_gfm = """<p>| abc | def |\n| --- | --- |\n| bar | baz |</p>\n<blockquote>\n<p>bar</p>\n</blockquote>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    # TODO Expect this to fail when tables are implemented
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 def test_tables_extension_202():
@@ -125,7 +104,6 @@ def test_tables_extension_202():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """| abc | def |
 | --- | --- |
 | bar | baz |
@@ -141,14 +119,12 @@ bar"""
         "[text(6,1):bar:]",
         "[end-para:::True]",
     ]
+    expected_gfm = (
+        """<p>| abc | def |\n| --- | --- |\n| bar | baz |\nbar</p>\n<p>bar</p>"""
+    )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    # TODO Expect this to fail when tables are implemented
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 def test_tables_extension_203():
@@ -157,7 +133,6 @@ def test_tables_extension_203():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """| abc | def |
 | --- |
 | bar |"""
@@ -166,14 +141,10 @@ def test_tables_extension_203():
         "[text(1,1):| abc | def |\n| --- |\n| bar |::\n\n]",
         "[end-para:::True]",
     ]
+    expected_gfm = """<p>| abc | def |\n| --- |\n| bar |</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    # TODO Expect this to fail when tables are implemented
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 def test_tables_extension_204():
@@ -182,7 +153,6 @@ def test_tables_extension_204():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """| abc | def |
 | --- | --- |
 | bar |
@@ -192,14 +162,12 @@ def test_tables_extension_204():
         "[text(1,1):| abc | def |\n| --- | --- |\n| bar |\n| bar | baz | boo |::\n\n\n]",
         "[end-para:::True]",
     ]
+    expected_gfm = (
+        """<p>| abc | def |\n| --- | --- |\n| bar |\n| bar | baz | boo |</p>"""
+    )
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    # TODO Expect this to fail when tables are implemented
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 def test_tables_extension_205():
@@ -208,7 +176,6 @@ def test_tables_extension_205():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """| abc | def |
 | --- | --- |"""
     expected_tokens = [
@@ -216,11 +183,7 @@ def test_tables_extension_205():
         "[text(1,1):| abc | def |\n| --- | --- |::\n]",
         "[end-para:::True]",
     ]
+    expected_gfm = """<p>| abc | def |\n| --- | --- |</p>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    # TODO Expect this to fail when tables are implemented
-    assert_if_lists_different(expected_tokens, actual_tokens)
-    assert_token_consistency(source_markdown, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

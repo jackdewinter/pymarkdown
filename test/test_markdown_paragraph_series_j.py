@@ -3,9 +3,7 @@ https://github.github.com/gfm/#paragraph
 """
 import pytest
 
-from .utils import (
-    act_and_assert
-)
+from .utils import act_and_assert
 
 
 # pylint: disable=too-many-lines
@@ -353,6 +351,7 @@ def test_paragraph_series_j_i_ea_t():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_paragraph_series_j_l_cs_t():

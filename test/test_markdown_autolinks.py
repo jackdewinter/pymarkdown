@@ -3,12 +3,7 @@ https://github.github.com/gfm/#autolinks
 """
 import pytest
 
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
-from pymarkdown.transform_to_gfm import TransformToGfm
-
-from .utils import (
-    act_and_assert
-)
+from .utils import act_and_assert
 
 
 @pytest.mark.gfm

@@ -1,10 +1,9 @@
 """
 Test the top level transform functions.
 """
-from pymarkdown.tokenized_markdown import TokenizedMarkdown
 
 # pylint: disable=relative-beyond-top-level
-from .utils import assert_if_lists_different
+from .utils import act_and_assert
 
 
 def test_transform_with_debug_on():
@@ -13,7 +12,6 @@ def test_transform_with_debug_on():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """- `one
 - two`"""
     expected_tokens = [
@@ -27,12 +25,10 @@ def test_transform_with_debug_on():
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
+    expected_gfm = """<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown, show_debug=True)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 def test_transform_with_debug_off():
@@ -41,7 +37,6 @@ def test_transform_with_debug_off():
     """
 
     # Arrange
-    tokenizer = TokenizedMarkdown()
     source_markdown = """- `one
 - two`"""
     expected_tokens = [
@@ -55,12 +50,10 @@ def test_transform_with_debug_off():
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
+    expected_gfm = """<ul>\n<li>`one</li>\n<li>two`</li>\n</ul>"""
 
-    # Act
-    actual_tokens = tokenizer.transform(source_markdown)
-
-    # Assert
-    assert_if_lists_different(expected_tokens, actual_tokens)
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 # pylint: enable=relative-beyond-top-level
