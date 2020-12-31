@@ -48,11 +48,13 @@
 - possible to merge link token and image token more closely?
 - refactor `is_olist_start` and `is_ulist_start`
   - looks like some logic missing from one of them
-- __rehydrate_ordered_list_start and __rehydrate_unordered_list_start
-  - make sure to generated ordered/unordered tests to make sure both covered
 - why does `__revert_token_to_normal_text_token` require TextMarkdown.copy instead of `replacement_token = text_token_to_replace.create_copy()`?
 - __check_for_list_closures can be refactored for "new block start"
 
+- make sure to generated ordered/unordered tests to make sure both covered
+  - every unordered tests should have an ordered counterpart
+  - every ordered tests should have an unordered counterpart
+  
 ## Bugs - General - Uncategorized
 
 - links, 518b

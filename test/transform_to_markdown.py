@@ -55,13 +55,13 @@ class TransformToMarkdown:
 
         self.register_container_handlers(
             OrderedListStartMarkdownToken,
-            self.__rehydrate_ordered_list_start,
-            self.__rehydrate_ordered_list_start_end,
+            self.__rehydrate_list_start,
+            self.__rehydrate_list_start_end,
         )
         self.register_container_handlers(
             UnorderedListStartMarkdownToken,
-            self.__rehydrate_unordered_list_start,
-            self.__rehydrate_unordered_list_start_end,
+            self.__rehydrate_list_start,
+            self.__rehydrate_list_start_end,
         )
         self.register_container_handlers(
             NewListItemMarkdownToken, self.__rehydrate_next_list_item
@@ -1052,7 +1052,7 @@ class TransformToMarkdown:
     # pylint: enable=unused-argument
     # pylint: enable=too-many-arguments
 
-    def __rehydrate_unordered_list_start(
+    def __rehydrate_list_start(
         self, current_token, previous_token, next_token, transformed_data
     ):
         """
@@ -1107,7 +1107,14 @@ class TransformToMarkdown:
             transformed_data, extracted_whitespace
         )
 
-        start_sequence = extracted_whitespace + current_token.list_start_sequence
+        if current_token.is_unordered_list_start:
+            start_sequence = extracted_whitespace + current_token.list_start_sequence
+        else:
+            start_sequence = (
+                extracted_whitespace
+                + current_token.list_start_content
+                + current_token.list_start_sequence
+            )
         print(">>start_sequence>>:" + str(start_sequence) + ":<<")
         if not next_token.is_blank_line:
             start_sequence = start_sequence.ljust(
@@ -1163,18 +1170,7 @@ class TransformToMarkdown:
     # pylint: enable=unused-argument
 
     # pylint: disable=unused-argument
-    def __rehydrate_unordered_list_start_end(self, current_token):
-        """
-        Rehydrate the unordered list end token.
-        """
-        del self.container_token_stack[-1]
-        continue_sequence = self.__reset_container_continue_sequence()
-        return "", continue_sequence, continue_sequence
-
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
-    def __rehydrate_ordered_list_start_end(self, current_token):
+    def __rehydrate_list_start_end(self, current_token):
         """
         Rehydrate the ordered list end token.
         """

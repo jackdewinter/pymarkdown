@@ -223,7 +223,6 @@ def __push_to_stack_if_required(token_stack, current_token):
     )
     remember_token_as_last_token = True
 
-    # TODO replace with attribute from token?
     if (
         not current_token.is_blank_line
         and not current_token.is_new_list_item

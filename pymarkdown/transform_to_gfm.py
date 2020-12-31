@@ -35,14 +35,12 @@ from pymarkdown.leaf_markdown_token import (
 )
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.transform_to_gfm_list_looseness import TransformToGfmListLooseness
 
 LOGGER = logging.getLogger(__name__)
 
-# pylint: disable=too-many-lines
 
-
-# pylint: disable=too-few-public-methods
-# pylint: disable=too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes, too-few-public-methods
 class TransformState:
     """
     Class that contains the state of transformation of TransformToGfm.
@@ -65,7 +63,7 @@ class TransformState:
         self.last_token = None
 
 
-# pylint: enable=too-many-instance-attributes
+# pylint: enable=too-many-instance-attributes, too-few-public-methods
 
 
 class TransformToGfm:
@@ -93,229 +91,6 @@ class TransformToGfm:
         "&": "&amp;",
     }
     raw_html_percent_escape_ascii_chars = '"%[\\]^`{}|'
-
-    # pylint: disable=too-many-branches, too-many-locals, too-many-statements
-    def __calculate_list_looseness(self, actual_tokens, actual_token_index, next_token):
-        """
-        Based on the first token in a list, compute the "looseness" of the list.
-        """
-
-        LOGGER.debug("\n\n__calculate_list_looseness>>%s", str(actual_token_index))
-        is_loose = False
-        current_token_index = actual_token_index + 1
-        stack_count = 0
-        while True:
-
-            current_token = actual_tokens[current_token_index]
-            check_me = False
-            stop_me = False
-            if current_token.is_list_start:
-                LOGGER.debug("cll>>start list>>%s", str(current_token))
-                check_me = stack_count == 0
-                stack_count += 1
-                LOGGER.debug(">>list--new>>%s", str(stack_count))
-            elif current_token.is_new_list_item:
-                LOGGER.debug("cll>>new list item>>%s", str(current_token))
-                check_me = stack_count == 0
-                assert not current_token.is_block
-                LOGGER.debug(">>list--item>>%s", str(stack_count))
-            elif current_token.is_block_quote_start:
-                LOGGER.debug("cll>>start block quote>>%s", str(current_token))
-                stack_count += 1
-                LOGGER.debug(">>block--new>>%s", str(stack_count))
-            elif current_token.is_block_quote_end:
-                LOGGER.debug("cll>>end block quote>>%s", str(current_token))
-                stack_count -= 1
-                LOGGER.debug(">>block--end>>%s", str(stack_count))
-            elif current_token.is_list_end:
-                LOGGER.debug("cll>>end list>>%s", str(current_token))
-                if stack_count == 0:
-                    stop_me = True
-                else:
-                    stack_count -= 1
-                    if self.__correct_for_me(actual_tokens, current_token_index):
-                        is_loose = True
-                        stop_me = True
-                        LOGGER.debug("!!!latent-LOOSE!!!")
-                LOGGER.debug(">>list--end>>%s", str(stack_count))
-            elif actual_tokens[current_token_index - 1].is_blank_line:
-                search_back_index = current_token_index - 2
-                pre_prev_token = actual_tokens[search_back_index]
-                LOGGER.debug(">>pre_prev_token>>%s", str(pre_prev_token))
-
-                while pre_prev_token.is_blank_line:
-                    search_back_index -= 1
-                    pre_prev_token = actual_tokens[search_back_index]
-
-                if pre_prev_token.is_end_token:
-                    assert pre_prev_token.start_markdown_token, str(pre_prev_token)
-                    pre_prev_token = pre_prev_token.start_markdown_token
-                    LOGGER.debug(">>end_>using_start>>%s", str(pre_prev_token))
-
-                current_check = (
-                    current_token.is_block
-                    and not current_token.is_link_reference_definition
-                )
-                pre_prev_check = (
-                    pre_prev_token.is_block
-                    and not pre_prev_token.is_link_reference_definition
-                )
-
-                LOGGER.debug(">>other--stack_count>>%s", str(stack_count))
-                LOGGER.debug(
-                    ">>other--current_token>>%s>>%s",
-                    str(current_token),
-                    str(current_check),
-                )
-                LOGGER.debug(
-                    ">>other--current_token-2>>%s>>%s",
-                    str(pre_prev_token),
-                    str(pre_prev_check),
-                )
-                check_me = stack_count == 0 and current_check and pre_prev_check
-
-            LOGGER.debug(
-                ">>stack_count>>%s>>#%s:%s>>check=%s",
-                str(stack_count),
-                str(current_token_index),
-                str(actual_tokens[current_token_index]),
-                str(check_me),
-            )
-            if check_me:
-                LOGGER.debug("check-->?")
-                if self.__is_token_loose(actual_tokens, current_token_index):
-                    is_loose = True
-                    stop_me = True
-                    LOGGER.debug("check-->Loose")
-                else:
-                    LOGGER.debug("check-->Normal")
-            if stop_me:
-                break
-            current_token_index += 1
-
-        assert current_token_index != len(actual_tokens)
-        next_token.is_loose = is_loose
-        LOGGER.debug(
-            "__calculate_list_looseness<<%s<<%s\n\n",
-            str(actual_token_index),
-            str(is_loose),
-        )
-        return is_loose
-
-    # pylint: enable=too-many-branches, too-many-locals, too-many-statements
-
-    def __correct_for_me(self, actual_tokens, current_token_index):
-        correct_closure = False
-        assert current_token_index > 0
-
-        is_valid = True
-        LOGGER.debug(">>prev>>%s", str(actual_tokens[current_token_index - 1]))
-        if actual_tokens[current_token_index - 1].is_blank_line:
-            search_index = current_token_index + 1
-            while (
-                search_index < len(actual_tokens)
-                and actual_tokens[search_index].is_list_end
-            ):
-                search_index += 1
-            LOGGER.debug(
-                ">>ss>>%s>>len>>%s", str(search_index), str(len(actual_tokens))
-            )
-            is_valid = search_index != len(actual_tokens)
-        if is_valid:
-            LOGGER.debug(">>current>>%s", str(actual_tokens[current_token_index]))
-            LOGGER.debug(">>current-1>>%s", str(actual_tokens[current_token_index - 1]))
-            correct_closure = self.__is_token_loose(actual_tokens, current_token_index)
-            LOGGER.debug(">>correct_closure>>%s", str(correct_closure))
-        return correct_closure
-
-    @classmethod
-    def __is_token_loose(cls, actual_tokens, current_token_index):
-        """
-        Check to see if this token inspires looseness.
-        """
-
-        check_index = current_token_index - 1
-        token_to_check = actual_tokens[check_index]
-        LOGGER.debug("token_to_check-->%s", str(token_to_check))
-
-        while token_to_check.is_link_reference_definition:
-            check_index -= 1
-            token_to_check = actual_tokens[check_index]
-
-        LOGGER.debug("token_to_check-->%s", str(token_to_check))
-        if token_to_check.is_blank_line:
-            LOGGER.debug("before_blank-->%s", str(actual_tokens[check_index - 1]))
-            if (
-                actual_tokens[check_index - 1].is_new_list_item
-                or actual_tokens[check_index - 1].is_list_start
-            ):
-                LOGGER.debug("!!!Starting Blank!!!")
-            else:
-                LOGGER.debug("!!!LOOSE!!!")
-                return True
-        return False
-
-    @classmethod
-    def __find_owning_list_start(cls, actual_tokens, actual_token_index):
-        """
-        Figure out what the list start for the current token is.
-        """
-
-        current_index = actual_token_index
-        assert not actual_tokens[current_index].is_list_start
-
-        current_index -= 1
-        keep_going = True
-        stack_count = 0
-        while keep_going and current_index >= 0:
-            if actual_tokens[current_index].is_list_start:
-                if stack_count == 0:
-                    keep_going = False
-                else:
-                    stack_count -= 1
-            elif actual_tokens[current_index].is_list_end:
-                stack_count += 1
-            if keep_going:
-                current_index -= 1
-        return current_index
-
-    def __reset_list_looseness(self, actual_tokens, actual_token_index):
-        """
-        Based on where we are within the actual tokens being emitted, figure
-        out the correct list looseness to use.
-        """
-
-        LOGGER.debug("!!!!!!!!!!!!!!!%s", str(actual_token_index))
-        search_index = actual_token_index + 1
-        stack_count = 0
-        while search_index < len(actual_tokens):
-            LOGGER.debug(
-                "!!%s::%s::%s",
-                str(stack_count),
-                str(search_index),
-                str(actual_tokens[search_index]),
-            )
-            if actual_tokens[search_index].is_list_start:
-                stack_count += 1
-            elif actual_tokens[search_index].is_list_end:
-                if not stack_count:
-                    break
-                stack_count -= 1
-            search_index += 1
-        LOGGER.debug(
-            "!!!!!!!!!!!!!!!%s-of-%s", str(search_index), str(len(actual_tokens))
-        )
-        # check to see where we are, then grab the matching start to find
-        # the loose
-        if search_index == len(actual_tokens):
-            is_in_loose_list = True
-        else:
-            LOGGER.debug(">>reset_list_looseness-token_list_start>>")
-            new_index = self.__find_owning_list_start(actual_tokens, search_index)
-            LOGGER.debug(">>reset_list_looseness>>%s", str(new_index))
-            is_in_loose_list = actual_tokens[new_index].is_loose
-        LOGGER.debug("           is_in_loose_list=%s", str(is_in_loose_list))
-        return is_in_loose_list
 
     def __init__(self):
         self.start_token_handlers = {}
@@ -381,12 +156,12 @@ class TransformToGfm:
         )
         self.register_handlers(
             OrderedListStartMarkdownToken,
-            self.__handle_start_ordered_list_token,
+            self.__handle_start_list_token,
             self.__handle_end_list_token,
         )
         self.register_handlers(
             UnorderedListStartMarkdownToken,
-            self.__handle_start_unordered_list_token,
+            self.__handle_start_list_token,
             self.__handle_end_list_token,
         )
         self.register_handlers(
@@ -504,8 +279,7 @@ class TransformToGfm:
 
         if output_html.endswith("</ul>") or output_html.endswith("</ol>"):
             output_html += ParserHelper.newline_character
-        output_html = stack_text + output_html + transform_state.add_trailing_text
-        return output_html
+        return stack_text + output_html + transform_state.add_trailing_text
 
     @classmethod
     def __apply_leading_text(cls, output_html, transform_state):
@@ -516,8 +290,7 @@ class TransformToGfm:
             output_html += ParserHelper.newline_character
         output_html += transform_state.add_leading_text
         transform_state.transform_stack.append(output_html)
-        output_html = ""
-        return output_html
+        return ""
 
     @classmethod
     def __handle_text_token(cls, output_html, next_token, transform_state):
@@ -567,7 +340,7 @@ class TransformToGfm:
         """
         Handle the start paragraph token.
         """
-        assert next_token
+        _ = next_token
         if output_html and output_html[-1] != ParserHelper.newline_character:
             output_html += ParserHelper.newline_character
         if transform_state.is_in_loose_list:
@@ -579,7 +352,7 @@ class TransformToGfm:
         """
         Handle the end paragraph token.
         """
-        assert next_token
+        _ = next_token
         if transform_state.is_in_loose_list:
             output_html += "</p>" + ParserHelper.newline_character
         return output_html
@@ -613,26 +386,27 @@ class TransformToGfm:
         """
         Handle the start block quote token.
         """
-        assert next_token
+        _ = next_token
         if output_html and not output_html.endswith(ParserHelper.newline_character):
             output_html += ParserHelper.newline_character
-        output_html += "<blockquote>" + ParserHelper.newline_character
         transform_state.is_in_loose_list = True
-        return output_html
+        return output_html + "<blockquote>" + ParserHelper.newline_character
 
-    def __handle_end_block_quote_token(self, output_html, next_token, transform_state):
+    @classmethod
+    def __handle_end_block_quote_token(cls, output_html, next_token, transform_state):
         """
         Handle the end block quote token.
         """
-        assert next_token
+        _ = next_token
         if output_html[-1] != ParserHelper.newline_character:
             output_html += ParserHelper.newline_character
-        output_html += "</blockquote>" + ParserHelper.newline_character
-        transform_state.is_in_loose_list = self.__reset_list_looseness(
-            transform_state.actual_tokens,
-            transform_state.actual_token_index,
+        transform_state.is_in_loose_list = (
+            TransformToGfmListLooseness.reset_list_looseness(
+                transform_state.actual_tokens,
+                transform_state.actual_token_index,
+            )
         )
-        return output_html
+        return output_html + "</blockquote>" + ParserHelper.newline_character
 
     @classmethod
     def __handle_start_indented_code_block_token(
@@ -641,7 +415,7 @@ class TransformToGfm:
         """
         Handle the start indented code block token.
         """
-        assert next_token
+        _ = next_token
         if (
             not output_html
             and transform_state.transform_stack
@@ -650,10 +424,9 @@ class TransformToGfm:
             output_html = ParserHelper.newline_character
         elif output_html and output_html[-1] != ParserHelper.newline_character:
             output_html += ParserHelper.newline_character
-        output_html += "<pre><code>"
         transform_state.is_in_code_block = True
         transform_state.is_in_fenced_code_block = False
-        return output_html
+        return output_html + "<pre><code>"
 
     @classmethod
     def __handle_end_indented_code_block_token(
@@ -662,14 +435,13 @@ class TransformToGfm:
         """
         Handle the end indented code block token.
         """
-        assert next_token
+        _ = next_token
         transform_state.is_in_code_block = False
-        output_html += (
+        return output_html + (
             ParserHelper.newline_character
             + "</code></pre>"
             + ParserHelper.newline_character
         )
-        return output_html
 
     @classmethod
     def __handle_start_fenced_code_block_token(
@@ -686,10 +458,9 @@ class TransformToGfm:
             output_html += "\n"
         elif output_html and output_html[-1] != ParserHelper.newline_character:
             output_html += ParserHelper.newline_character
-        output_html += "<pre><code" + inner_tag + ">"
         transform_state.is_in_code_block = True
         transform_state.is_in_fenced_code_block = True
-        return output_html
+        return output_html + "<pre><code" + inner_tag + ">"
 
     @classmethod
     def __handle_end_fenced_code_block_token(
@@ -698,7 +469,6 @@ class TransformToGfm:
         """
         Handle the end fenced code block token.
         """
-        assert next_token
         fenced_token = transform_state.actual_token_index - 1
         while not transform_state.actual_tokens[fenced_token].is_fenced_code_block:
             fenced_token -= 1
@@ -727,33 +497,27 @@ class TransformToGfm:
         elif transform_state.last_token.is_blank_line:
             if not next_token.was_forced:
                 output_html += ParserHelper.newline_character
-        output_html += "</code></pre>" + ParserHelper.newline_character
         transform_state.is_in_code_block = False
         transform_state.is_in_fenced_code_block = False
-        return output_html
+        return output_html + "</code></pre>" + ParserHelper.newline_character
 
     @classmethod
     def __handle_thematic_break_token(cls, output_html, next_token, transform_state):
         """
         Handle the thematic break token.
         """
-        assert next_token.is_thematic_break
-        assert transform_state
-
+        _ = (next_token, transform_state)
         if output_html and output_html[-1] != ParserHelper.newline_character:
             output_html += ParserHelper.newline_character
-        output_html += "<hr />" + ParserHelper.newline_character
-        return output_html
+        return output_html + "<hr />" + ParserHelper.newline_character
 
     @classmethod
     def __handle_hard_break_token(cls, output_html, next_token, transform_state):
         """
         Handle the hard line break token.
         """
-        assert next_token.is_inline_hard_break
-        assert transform_state
-        output_html += "<br />"
-        return output_html
+        _ = (next_token, transform_state)
+        return output_html + "<br />"
 
     @classmethod
     def __handle_start_atx_heading_token(cls, output_html, next_token, transform_state):
@@ -769,27 +533,24 @@ class TransformToGfm:
         elif previous_token.is_paragraph_end:
             if not transform_state.is_in_loose_list:
                 output_html += ParserHelper.newline_character
-
-        output_html += "<h" + str(next_token.hash_count) + ">"
-        return output_html
+        return output_html + "<h" + str(next_token.hash_count) + ">"
 
     @classmethod
     def __handle_end_atx_heading_token(cls, output_html, next_token, transform_state):
         """
         Handle the end atx heading token.
         """
-        assert next_token
+        _ = next_token
         fenced_token = transform_state.actual_token_index - 1
         while not transform_state.actual_tokens[fenced_token].is_atx_heading:
             fenced_token -= 1
 
-        output_html += (
+        return output_html + (
             "</h"
             + str(transform_state.actual_tokens[fenced_token].hash_count)
             + ">"
             + ParserHelper.newline_character
         )
-        return output_html
 
     @classmethod
     def __handle_start_setext_heading_token(
@@ -798,7 +559,7 @@ class TransformToGfm:
         """
         Handle the start setext heading token.
         """
-        assert transform_state
+        _ = transform_state
         if next_token.heading_character == "=":
             inner_tag = "1"
         else:
@@ -806,8 +567,7 @@ class TransformToGfm:
 
         if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
             output_html += "\n"
-        output_html += "<h" + inner_tag + ">"
-        return output_html
+        return output_html + "<h" + inner_tag + ">"
 
     @classmethod
     def __handle_end_setext_heading_token(
@@ -816,7 +576,7 @@ class TransformToGfm:
         """
         Handle the end setext heading token.
         """
-        assert next_token
+        _ = next_token
         fenced_token = transform_state.actual_token_index - 1
         while not transform_state.actual_tokens[fenced_token].is_setext_heading:
             fenced_token -= 1
@@ -825,15 +585,14 @@ class TransformToGfm:
         else:
             inner_tag = "2"
 
-        output_html += "</h" + inner_tag + ">" + ParserHelper.newline_character
-        return output_html
+        return output_html + "</h" + inner_tag + ">" + ParserHelper.newline_character
 
     @classmethod
     def __handle_new_list_item_token(cls, output_html, next_token, transform_state):
         """
         Handle the new list item token.
         """
-        assert next_token
+        _ = next_token
         if output_html.endswith(">"):
             output_html += ParserHelper.newline_character
         transform_state.add_trailing_text = "</li>"
@@ -845,7 +604,7 @@ class TransformToGfm:
         """
         Handle the code span token.
         """
-        assert transform_state
+        _ = transform_state
         adjusted_text_token = ParserHelper.resolve_references_from_text(
             next_token.span_text
         )
@@ -853,17 +612,15 @@ class TransformToGfm:
             adjusted_text_token
         )
 
-        output_html += "<code>" + adjusted_text_token + "</code>"
-        return output_html
+        return output_html + "<code>" + adjusted_text_token + "</code>"
 
     @classmethod
     def __handle_raw_html_token(cls, output_html, next_token, transform_state):
         """
         Handle the raw html token.
         """
-        assert transform_state
-        output_html += "<" + next_token.raw_tag + ">"
-        return output_html
+        _ = transform_state
+        return output_html + "<" + next_token.raw_tag + ">"
 
     @classmethod
     def __handle_link_reference_definition_token(
@@ -872,8 +629,7 @@ class TransformToGfm:
         """
         Handle the link reference definition token.
         """
-        assert next_token
-        assert transform_state
+        _ = (transform_state, next_token)
         return output_html
 
     @classmethod
@@ -881,8 +637,8 @@ class TransformToGfm:
         """
         Handle the email autolink token.
         """
-        assert transform_state
-        output_html = (
+        _ = transform_state
+        return (
             output_html
             + '<a href="mailto:'
             + next_token.autolink_text
@@ -890,33 +646,10 @@ class TransformToGfm:
             + next_token.autolink_text
             + "</a>"
         )
-        return output_html
 
-    def __handle_start_ordered_list_token(
-        self,
-        output_html,
-        next_token,
-        transform_state,
-    ):
-        """
-        Handle the start ordered list token.
-        """
-        transform_state.is_in_loose_list = self.__calculate_list_looseness(
-            transform_state.actual_tokens,
-            transform_state.actual_token_index,
-            next_token,
-        )
-        ostart_attribute = ""
-        if next_token.list_start_content != "1":
-            list_start = int(next_token.list_start_content)
-            ostart_attribute = ' start="' + str(list_start) + '"'
-        transform_state.add_leading_text = (
-            "<ol" + ostart_attribute + ">" + ParserHelper.newline_character + "<li>"
-        )
-        return output_html
-
-    def __handle_start_unordered_list_token(
-        self,
+    @classmethod
+    def __handle_start_list_token(
+        cls,
         output_html,
         next_token,
         transform_state,
@@ -924,18 +657,30 @@ class TransformToGfm:
         """
         Handle the start unordered list token.
         """
-        transform_state.is_in_loose_list = self.__calculate_list_looseness(
-            transform_state.actual_tokens,
-            transform_state.actual_token_index,
-            next_token,
+        transform_state.is_in_loose_list = (
+            TransformToGfmListLooseness.calculate_list_looseness(
+                transform_state.actual_tokens,
+                transform_state.actual_token_index,
+                next_token,
+            )
         )
-        transform_state.add_leading_text = (
-            "<ul>" + ParserHelper.newline_character + "<li>"
-        )
+        if next_token.is_ordered_list_start:
+            ostart_attribute = ""
+            if next_token.list_start_content != "1":
+                list_start = int(next_token.list_start_content)
+                ostart_attribute = ' start="' + str(list_start) + '"'
+            transform_state.add_leading_text = (
+                "<ol" + ostart_attribute + ">" + ParserHelper.newline_character + "<li>"
+            )
+        else:
+            transform_state.add_leading_text = (
+                "<ul>" + ParserHelper.newline_character + "<li>"
+            )
         return output_html
 
+    @classmethod
     def __handle_end_list_token(
-        self,
+        cls,
         output_html,
         next_token,
         transform_state,
@@ -943,9 +688,11 @@ class TransformToGfm:
         """
         Handle the end list token for either an ordered or unordered list.
         """
-        transform_state.is_in_loose_list = self.__reset_list_looseness(
-            transform_state.actual_tokens,
-            transform_state.actual_token_index,
+        transform_state.is_in_loose_list = (
+            TransformToGfmListLooseness.reset_list_looseness(
+                transform_state.actual_tokens,
+                transform_state.actual_token_index,
+            )
         )
         if next_token.is_unordered_list_end:
             transform_state.add_trailing_text = (
@@ -962,7 +709,7 @@ class TransformToGfm:
         """
         Handle the uri autolink token.
         """
-        assert transform_state
+        _ = transform_state
         in_tag_pretext = InlineHelper.append_text(
             "",
             next_token.autolink_text,
@@ -984,15 +731,14 @@ class TransformToGfm:
             "", next_token.autolink_text, add_text_signature=False
         )
 
-        output_html += '<a href="' + in_tag_text + '">' + in_anchor_text + "</a>"
-        return output_html
+        return output_html + '<a href="' + in_tag_text + '">' + in_anchor_text + "</a>"
 
     @classmethod
     def __handle_start_html_block_token(cls, output_html, next_token, transform_state):
         """
         Handle the start html block token.
         """
-        assert next_token
+        _ = next_token
         transform_state.is_in_html_block = True
         if (
             not output_html
@@ -1017,7 +763,7 @@ class TransformToGfm:
         """
         Handle the end html block token.
         """
-        assert next_token
+        _ = next_token
         transform_state.is_in_html_block = False
         return output_html
 
@@ -1026,7 +772,7 @@ class TransformToGfm:
         """
         Handle the start emphasis token.
         """
-        assert transform_state
+        _ = transform_state
         if next_token.emphasis_length == 1:
             output_html += "<em>"
         else:
@@ -1038,8 +784,9 @@ class TransformToGfm:
         """
         Handle the end emphasis token.
         """
-        assert transform_state
+        _ = transform_state
         split_end_data = next_token.extra_end_data.split(":")
+        assert split_end_data[0] == str(next_token.start_markdown_token.emphasis_length)
         if split_end_data[0] == "1":
             output_html += "</em>"
         else:
@@ -1051,34 +798,30 @@ class TransformToGfm:
         """
         Handle the start link token.
         """
-        assert transform_state
+        _ = transform_state
         anchor_tag = '<a href="' + next_token.link_uri
         if next_token.link_title:
             anchor_tag = anchor_tag + '" title="' + next_token.link_title
         anchor_tag += '">'
-        output_html += anchor_tag
-        return output_html
+        return output_html + anchor_tag
 
     @classmethod
     def __handle_end_link_token(cls, output_html, next_token, transform_state):
         """
         Handle the end link token.
         """
-        assert next_token
-        assert transform_state
-        output_html += "</a>"
-        return output_html
+        _ = (transform_state, next_token)
+        return output_html + "</a>"
 
     @classmethod
     def __handle_image_token(cls, output_html, next_token, transform_state):
         """
         Handle the image token.
         """
-        assert transform_state
+        _ = transform_state
         output_html += "<img "
         output_html += 'src="' + next_token.image_uri + '" '
         output_html += 'alt="' + next_token.image_alt_text + '" '
         if next_token.image_title:
             output_html += 'title="' + next_token.image_title + '" '
-        output_html += "/>"
-        return output_html
+        return output_html + "/>"
