@@ -309,6 +309,68 @@ def test_paragraph_series_m_ol_t_nl_ol_nl_tb():
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_ul_nl_tb():
+    """
+    Test case:  Unordered list text newline unordered list new line thematic break
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(3,1):-::---]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+</li>
+</ul>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_ulb_nl_tb():
+    """
+    Test case:  Unordered list text newline unordered list (b) new line thematic break
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(3,1):-::---]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*</li>
+</ul>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_ol_nl_ol_t_nl_tb():
     """
     Test case:  Ordered list newline ordered list text new line thematic break
@@ -441,6 +503,68 @@ def test_paragraph_series_m_ol_t_nl_ol_nl_i2_tb():
 <li>abc
 1.</li>
 </ol>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_ul_nl_i1_tb():
+    """
+    Test case:  Unordered list text newline unordered list new line indent of 1 thematic break
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+ ---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[end-ulist:::True]",
+        "[tbreak(3,2):-: :---]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+</li>
+</ul>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_ulb_nl_i1_tb():
+    """
+    Test case:  Unordered list text newline unordered list (b) new line indent of 1 thematic break
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+ ---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(3,2):-: :---]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*</li>
+</ul>
 <hr />"""
 
     # Act & Assert
@@ -656,6 +780,68 @@ def test_paragraph_series_m_ol_t_nl_ol_nl_i3_tb():
 1.</h2>
 </li>
 </ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_ul_nl_i2_tb():
+    """
+    Test case:  Unordered list text newline unordered list new line indent of 3 thematic break
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+  ---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[tbreak(3,3):-::---]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+<hr />
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_ulb_nl_i2_tb():
+    """
+    Test case:  Unordered list text newline unordered list (b) new line indent of 3 thematic break
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+  ---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[setext(3,3):-:3::(1,3)]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[end-setext:::False]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc
+*</h2>
+</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -983,6 +1169,72 @@ def test_paragraph_series_m_ol_t_nl_ol_nl_ha_t():
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_ul_nl_ha_t():
+    """
+    Test case:  Unordered list text newline unordered list new line atx heading text
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+# foo
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[end-ulist:::True]",
+        "[atx(3,1):1:0:]",
+        "[text(3,3):foo: ]",
+        "[end-atx:::False]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+</li>
+</ul>
+<h1>foo</h1>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_ulb_nl_ha_t():
+    """
+    Test case:  Unordered list text newline unordered list (b) new line atx heading text
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+# foo
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[atx(3,1):1:0:]",
+        "[text(3,3):foo: ]",
+        "[end-atx:::False]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*</li>
+</ul>
+<h1>foo</h1>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_ol_nl_ol_t_nl_ha_t():
     """
     Test case:  Ordered list newline ordered list text new line atx heading text
@@ -1123,6 +1375,72 @@ def test_paragraph_series_m_ol_t_nl_ol_nl_i2_ha_t():
 <li>abc
 1.</li>
 </ol>
+<h1>foo</h1>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_ul_nl_i1_ha_t():
+    """
+    Test case:  Unordered list text newline unordered list new line indent of 2 atx heading text
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+ # foo
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[end-ulist:::True]",
+        "[atx(3,2):1:0: ]",
+        "[text(3,4):foo: ]",
+        "[end-atx:::False]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+</li>
+</ul>
+<h1>foo</h1>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_ulb_nl_i1_ha_t():
+    """
+    Test case:  Unordered list text newline unordered list (b) new line indent of 2 atx heading text
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+ # foo
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[atx(3,2):1:0: ]",
+        "[text(3,4):foo: ]",
+        "[end-atx:::False]",
+        "[BLANK(4,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*</li>
+</ul>
 <h1>foo</h1>"""
 
     # Act & Assert
@@ -1272,6 +1590,73 @@ def test_paragraph_series_m_ol_t_nl_ol_nl_i3_ha_t():
 <h1>foo</h1>
 </li>
 </ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_ul_nl_i2_ha_t():
+    """
+    Test case:  Unordered list text newline unordered list new line indent of 2 atx heading text
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+  # foo
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[atx(3,3):1:0:]",
+        "[text(3,5):foo: ]",
+        "[end-atx:::False]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+<h1>foo</h1>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_ulb_nl_i2_ha_t():
+    """
+    Test case:  Unordered list text newline unordered list (b) new line indent of 2 atx heading text
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+  # foo
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[end-para:::False]",
+        "[atx(3,3):1:0:]",
+        "[text(3,5):foo: ]",
+        "[end-atx:::False]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*
+<h1>foo</h1>
+</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1876,6 +2261,74 @@ foo</li>
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ul_nl_t_nl_hs():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list new line text newline setext heading
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+foo
+---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[end-ulist:::True]",
+        "[setext(4,1):-:3::(3,1)]",
+        "[text(3,1):foo:]",
+        "[end-setext:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+</li>
+</ul>
+<h2>foo</h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ulb_nl_t_nl_hs():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list (b) new line text newline setext heading
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+foo
+---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n]",
+        "[para(1,3):\n\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[text(2,2):\nfoo::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(4,1):-::---]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*
+foo</li>
+</ul>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_ol_nl_i3_ol_t_nl_t_nl_hs():
     """
     Test case:  Ordered list newline indent of 3 ordered list text new line text newline setext heading
@@ -2017,6 +2470,74 @@ def test_paragraph_series_m_ol_t_nl_i3_ol_nl_i2_t_nl_i2_hs():
 1.
 foo</li>
 </ol>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ul_nl_i1_t_nl_i1_hs():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list new line indent of 1 text newline indent of 1 setext heading
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+ foo
+ ---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[end-ulist:::True]",
+        "[setext(4,2):-:3: :(3,2)]",
+        "[text(3,2):foo:]",
+        "[end-setext: ::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+</li>
+</ul>
+<h2>foo</h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ulb_nl_i1_t_nl_i1_hs():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list (b) new line indent of 1 text newline indent of 1 setext heading
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+ foo
+ ---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n ]",
+        "[para(1,3):\n\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[text(2,2):\nfoo::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(4,2):-: :---]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*
+foo</li>
+</ul>
 <hr />"""
 
     # Act & Assert
@@ -2166,6 +2687,74 @@ def test_paragraph_series_m_ol_t_nl_i3_ol_nl_i3_t_nl_i3_hs():
 foo</h2>
 </li>
 </ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ul_nl_i2_t_nl_i2_hs():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list new line indent of 2 text newline indent of 2 setext heading
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+  foo
+  ---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[setext(4,3):-:3::(3,3)]",
+        "[text(3,3):foo:]",
+        "[end-setext:::False]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+<h2>foo</h2>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ulb_nl_i2_t_nl_i2_hs():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list (b) new line indent of 2 text newline indent of 2 setext heading
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+  foo
+  ---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[setext(4,3):-:3::(1,3)]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[text(2,2):\nfoo::\n]",
+        "[end-setext:::False]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc
+*
+foo</h2>
+</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -2750,6 +3339,78 @@ foo
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ul_nl_fb():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list newline fenced block
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+```
+foo
+```
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(3,1):`:3::::::]",
+        "[text(4,1):foo:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+</li>
+</ul>
+<pre><code>foo
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ulb_nl_fb():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list (b) newline fenced block
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+```
+foo
+```
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[fcode-block(3,1):`:3::::::]",
+        "[text(4,1):foo:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*</li>
+</ul>
+<pre><code>foo
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_ol_nl_i3_ol_t_nl_fb():
     """
     Test case:  Ordered list newline indent of 3 ordered list text newline fenced block
@@ -2901,6 +3562,78 @@ foo
 <li>abc
 1.</li>
 </ol>
+<pre><code>foo
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ul_nl_i1_fb():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list newline indent of 1 fenced block
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+ ```
+foo
+```
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(3,2):`:3::::: :]",
+        "[text(4,1):foo:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+</li>
+</ul>
+<pre><code>foo
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ulb_nl_i1_fb():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list newline indent of 1 fenced block
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+ ```
+foo
+```
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[fcode-block(3,2):`:3::::: :]",
+        "[text(4,1):foo:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*</li>
+</ul>
 <pre><code>foo
 </code></pre>"""
 
@@ -3071,6 +3804,89 @@ foo
 <pre><code></code></pre>
 </li>
 </ol>
+<p>foo</p>
+<pre><code></code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ul_nl_i2_fb():
+    """
+    Test case:  Unordered list text newline indent of 3 unordered list newline indent of 3 fenced block
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+  ```
+foo
+```
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[fcode-block(3,3):`:3::::::]",
+        "[end-fcode-block:::True]",
+        "[end-ulist:::True]",
+        "[para(4,1):]",
+        "[text(4,1):foo:]",
+        "[end-para:::False]",
+        "[fcode-block(5,1):`:3::::::]",
+        "[BLANK(6,1):]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+<pre><code></code></pre>
+</li>
+</ul>
+<p>foo</p>
+<pre><code></code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ulb_nl_i2_fb():
+    """
+    Test case:  Unordered list text newline indent of 3 unordered list (b) newline indent of 3 fenced block
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+  ```
+foo
+```
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[end-para:::False]",
+        "[fcode-block(3,3):`:3::::::]",
+        "[end-fcode-block:::True]",
+        "[end-ulist:::True]",
+        "[para(4,1):]",
+        "[text(4,1):foo:]",
+        "[end-para:::False]",
+        "[fcode-block(5,1):`:3::::::]",
+        "[BLANK(6,1):]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*
+<pre><code></code></pre>
+</li>
+</ul>
 <p>foo</p>
 <pre><code></code></pre>"""
 
@@ -3679,6 +4495,69 @@ foo</li>
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ul_nl_i4_t_ib():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list newline indent of 4 text (indented block)
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+    foo
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[para(3,5):  ]",
+        "[text(3,5):foo:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+foo</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ulb_nl_i4_t_ib():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list (b) newline indent of 4 text (indented block)
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+    foo
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[para(1,3):\n\n  ]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[text(2,2):\nfoo::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*
+foo</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_ol_nl_i3_ol_t_nl_i4_t_ib():
     """
     Test case:  Ordered list newline indent of 3 ordered list text newline indent of 4 text (indented block)
@@ -3926,6 +4805,69 @@ foo</li>
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_i2_ul_nl_i4_ul_nl_i4_t_ib():
+    """
+    Test case:  Indent of 2 unordered list newline indent of 4 unordered list newline indent of 4 text (indented block)
+    """
+
+    # Arrange
+    source_markdown = """  - abc
+    -
+    foo
+"""
+    expected_tokens = [
+        "[ulist(1,3):-::4:  :    \n    ]",
+        "[setext(2,5):-:1::(1,5)]",
+        "[text(1,5):abc:]",
+        "[end-setext:::False]",
+        "[para(3,5):]",
+        "[text(3,5):foo:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+foo</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_i2_ul_nl_i4_ulb_nl_i4_t_ib():
+    """
+    Test case:  Indent of 2 unordered list newline indent of 4 unordered list (b) newline indent of 4 text (indented block)
+    """
+
+    # Arrange
+    source_markdown = """  - abc
+    *
+    foo
+"""
+    expected_tokens = [
+        "[ulist(1,3):-::4:  :    \n    ]",
+        "[para(1,5):\n\n]",
+        "[text(1,5):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[text(2,2):\nfoo::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*
+foo</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_i1_ol_t_nl_i4_ol_nl_i4_t_ib():
     """
     Test case:  Indent of 1 ordered list text newline indent of 4 ordered list newline indent of 4 text (indented block)
@@ -3949,6 +4891,69 @@ def test_paragraph_series_m_i1_ol_t_nl_i4_ol_nl_i4_t_ib():
 1.
 foo</li>
 </ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_i2_ul_t_nl_i4_ul_nl_i4_t_ib():
+    """
+    Test case:  Indent of 2 unordered list text newline indent of 4 unordered list newline indent of 4 text (indented block)
+    """
+
+    # Arrange
+    source_markdown = """  - abc
+    -
+    foo
+"""
+    expected_tokens = [
+        "[ulist(1,3):-::4:  :    \n    ]",
+        "[setext(2,5):-:1::(1,5)]",
+        "[text(1,5):abc:]",
+        "[end-setext:::False]",
+        "[para(3,5):]",
+        "[text(3,5):foo:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+foo</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_i2_ul_t_nl_i4_ulb_nl_i4_t_ib():
+    """
+    Test case:  Indent of 2 unordered list text newline indent of 4 unordered list (b) newline indent of 4 text (indented block)
+    """
+
+    # Arrange
+    source_markdown = """  - abc
+    *
+    foo
+"""
+    expected_tokens = [
+        "[ulist(1,3):-::4:  :    \n    ]",
+        "[para(1,5):\n\n]",
+        "[text(1,5):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[text(2,2):\nfoo::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*
+foo</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -4545,6 +5550,80 @@ foo
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ul_nl_hb():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list newline html block
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+<script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[end-ulist:::True]",
+        "[html-block(3,1)]",
+        "[text(3,1):<script>\nfoo\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+</li>
+</ul>
+<script>
+foo
+</script>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ulb_nl_hb():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list (b) newline html block
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+<script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[html-block(3,1)]",
+        "[text(3,1):<script>\nfoo\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*</li>
+</ul>
+<script>
+foo
+</script>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_ol_nl_i3_ol_t_nl_hb():
     """
     Test case:  Ordered list newline indent of 3 ordered list text newline html block
@@ -4700,6 +5779,80 @@ foo
 1.</li>
 </ol>
   <script>
+foo
+</script>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ul_nl_i1_hb():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list newline indent of 1 html block
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+ <script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[end-ulist:::True]",
+        "[html-block(3,1)]",
+        "[text(3,2):<script>\nfoo\n</script>: ]",
+        "[end-html-block:::False]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+</li>
+</ul>
+ <script>
+foo
+</script>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ulb_nl_i1_hb():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list (b) newline indent of 1 html block
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+ <script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[html-block(3,1)]",
+        "[text(3,2):<script>\nfoo\n</script>: ]",
+        "[end-html-block:::False]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*</li>
+</ul>
+ <script>
 foo
 </script>"""
 
@@ -4872,6 +6025,89 @@ foo
 <script>
 </li>
 </ol>
+<p>foo
+</script></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ul_nl_i2_hb():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list newline indent of 2 html block
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  -
+  <script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[setext(2,3):-:1::(1,3)]",
+        "[text(1,3):abc:]",
+        "[end-setext:::False]",
+        "[html-block(3,3)]",
+        "[text(3,3):<script>:]",
+        "[end-html-block:::True]",
+        "[end-ulist:::True]",
+        "[para(4,1):\n]",
+        "[text(4,1):foo\n::\n]",
+        "[raw-html(5,1):/script]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h2>abc</h2>
+<script>
+</li>
+</ul>
+<p>foo
+</script></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_ul_t_nl_i2_ulb_nl_i2_hb():
+    """
+    Test case:  Unordered list text newline indent of 2 unordered list (b) newline indent of 2 html block
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  *
+  <script>
+foo
+</script>
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[para(1,3):\n]",
+        "[text(1,3):abc\n::\n]",
+        "[text(2,1):*:]",
+        "[end-para:::False]",
+        "[html-block(3,3)]",
+        "[text(3,3):<script>:]",
+        "[end-html-block:::True]",
+        "[end-ulist:::True]",
+        "[para(4,1):\n]",
+        "[text(4,1):foo\n::\n]",
+        "[raw-html(5,1):/script]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+*
+<script>
+</li>
+</ul>
 <p>foo
 </script></p>"""
 

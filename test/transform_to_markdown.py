@@ -311,8 +311,7 @@ class TransformToMarkdown:
 
     # pylint: enable=too-many-locals, too-many-branches
 
-    # pylint: disable=too-many-arguments
-    # pylint: disable=unused-argument
+    # pylint: disable=too-many-arguments, too-many-branches, unused-argument
     def __perform_container_post_processing_lists(
         self,
         current_token,
@@ -350,6 +349,7 @@ class TransformToMarkdown:
 
         print(">>previous_token>>" + ParserHelper.make_value_visible(previous_token))
         print(">>current_token>>" + ParserHelper.make_value_visible(current_token))
+        print(">>next_token>>" + ParserHelper.make_value_visible(next_token))
         if not block_should_end_with_newline:
             ind = actual_tokens.index(current_token)
             print(
@@ -418,6 +418,9 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(new_data)
                 + ":<"
             )
+            if current_token.is_setext_heading_end and next_token.is_list_end:
+                assert new_data.endswith("\n")
+                new_data = new_data[:-1]
             new_data, delayed_continue = self.__merge_with_container_data(
                 new_data,
                 next_token,
@@ -429,14 +432,15 @@ class TransformToMarkdown:
                 force_newline_processing,
                 special_text_in_list_exception,
             )
+            if current_token.is_setext_heading_end and next_token.is_list_end:
+                new_data += "\n"
 
         print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
         new_data = ParserHelper.resolve_noops_from_text(new_data)
         print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
         return new_data, delayed_continue, continue_sequence
 
-    # pylint: enable=unused-argument
-    # pylint: enable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-branches, unused-argument
 
     # pylint: disable=too-many-arguments
     def __perform_container_post_processing(
@@ -561,12 +565,19 @@ class TransformToMarkdown:
             "top_of_list_token_stack>>"
             + str(top_of_list_token_stack.leading_spaces_index)
             + "<"
-            + ParserHelper.make_value_visible(top_of_list_token_stack.leading_spaces)
+            + ParserHelper.make_value_visible(split_leading_spaces)
             + "<"
         )
         new_data = split_new_data[0]
         for i in range(1, len(split_new_data)):
-            print("::" + str(i) + "::" + split_new_data[i] + "::")
+            print("1:" + str(i) + "::" + split_new_data[i] + "::")
+            print(
+                "2:"
+                + str(top_of_list_token_stack.leading_spaces_index)
+                + "::"
+                + split_leading_spaces[top_of_list_token_stack.leading_spaces_index]
+                + "::"
+            )
             new_data += (
                 "\n"
                 + split_leading_spaces[top_of_list_token_stack.leading_spaces_index]
@@ -719,10 +730,16 @@ class TransformToMarkdown:
                 new_data = new_data[0:-1]
 
             last_block_quote_block = self.__find_last_block_quote_on_stack()
-            print("3?>>top_stack>>" + str(top_of_list_token_stack) + "<<")
+            print(
+                "3?>>top_stack>>"
+                + ParserHelper.make_value_visible(top_of_list_token_stack)
+                + "<<"
+            )
             print(
                 "3?>>leading_spaces>>"
-                + str(top_of_list_token_stack.leading_spaces)
+                + ParserHelper.make_value_visible(
+                    top_of_list_token_stack.leading_spaces
+                )
                 + "<<"
             )
             if ParserHelper.blech_character in new_data:

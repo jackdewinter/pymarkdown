@@ -424,6 +424,45 @@ def test_list_items_282c():
 
 
 @pytest.mark.gfm
+def test_list_items_282cu():
+    """
+    Test case 282c:  variation
+    """
+
+    # Arrange
+    source_markdown = """- foo
+- bar
+  * baz"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):foo:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[text(2,3):bar:]",
+        "[end-para:::True]",
+        "[ulist(3,3):*::4:  ]",
+        "[para(3,5):]",
+        "[text(3,5):baz:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>foo</li>
+<li>bar
+<ul>
+<li>baz</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_list_items_282d():
     """
     Test case 282d:  variation

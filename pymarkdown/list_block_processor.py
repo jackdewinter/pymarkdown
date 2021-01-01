@@ -89,6 +89,8 @@ class ListBlockProcessor:
             at_end_of_line = after_all_whitespace_index == len(line_to_parse)
             LOGGER.debug("at_end_of_line>>%s", str(at_end_of_line))
 
+            is_first_item_in_list = False
+            is_sub_list = False
             if is_in_paragraph:
                 if not parser_state.token_stack[-2].is_list:
                     LOGGER.debug(
@@ -123,6 +125,31 @@ class ListBlockProcessor:
                     )
                 LOGGER.debug("is_first_item_in_list>>%s", str(is_first_item_in_list))
 
+                if parser_state.token_stack[-2].is_list:
+                    LOGGER.debug(
+                        "old_indent=%s", str(parser_state.token_stack[-2].indent_level)
+                    )
+                    LOGGER.debug("new_indent=%s", str(start_index))
+                    is_sub_list = (
+                        start_index >= parser_state.token_stack[-2].indent_level
+                    )
+
+            is_not_one = False
+            LOGGER.debug("is_not_one>>%s", str(is_not_one))
+            LOGGER.debug(
+                "is_in_para>>%s>>EOL>%s>is_first>%s",
+                str(is_in_paragraph),
+                str(at_end_of_line),
+                str(is_first_item_in_list),
+            )
+            if (
+                is_in_paragraph
+                and (at_end_of_line or is_not_one)
+                and is_first_item_in_list
+                and is_sub_list
+            ):
+                is_start = False
+                LOGGER.debug("is_start>>%s", str(is_start))
         LOGGER.debug("is_ulist_start>>result>>%s", str(is_start))
         return is_start, after_all_whitespace_index
         # pylint: enable=too-many-arguments

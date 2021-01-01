@@ -1646,6 +1646,41 @@ def test_list_blocks_263b():
 
 
 @pytest.mark.gfm
+def test_list_blocks_263bu():
+    """
+    Test case 263b:  variations
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  - abc
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):abc:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<ul>
+<li>abc</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_list_blocks_264():
     """
     Test case 264:  Indented one space:
@@ -2909,6 +2944,61 @@ def test_list_blocks_extra_2():
 2. two-A</li>
 <li>three</li>
 </ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_2u():
+    """
+    Test case 02:  A list item can contain a heading:
+    """
+
+    # Arrange
+    source_markdown = """- one
+  - one-A
+- two
+  - two-A
+- three"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):one:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):one-A:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(3,1):2::]",
+        "[para(3,3):]",
+        "[text(3,3):two:]",
+        "[end-para:::True]",
+        "[ulist(4,3):-::4:  ]",
+        "[para(4,5):]",
+        "[text(4,5):two-A:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(5,1):2::]",
+        "[para(5,3):]",
+        "[text(5,3):three:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>one
+<ul>
+<li>one-A</li>
+</ul>
+</li>
+<li>two
+<ul>
+<li>two-A</li>
+</ul>
+</li>
+<li>three</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
