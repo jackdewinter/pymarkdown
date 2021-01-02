@@ -8,11 +8,7 @@
 
 ### Priority 1 - Must Solve Before Initial
 
-- refactor `is_olist_start` and `is_ulist_start`
-  - looks like some logic missing from one of them
-
-test_paragraph_series_m_ul_t_nl_ulb_nl_tb - with abc/def/*
-
+- test_paragraph_series_m_ul_t_nl_ulb_nl_tb - with abc/def/*
 
 - possible to merge link token and image token more closely?
 

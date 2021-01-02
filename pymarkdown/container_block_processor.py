@@ -627,10 +627,10 @@ class ContainerBlockProcessor:
         )
 
         nested_ulist_start, _ = ListBlockProcessor.is_ulist_start(
-            parser_state, line_to_parse, after_ws_index, ex_whitespace
+            parser_state, line_to_parse, after_ws_index, ex_whitespace, False
         )
         nested_olist_start, _, _, _ = ListBlockProcessor.is_olist_start(
-            parser_state, line_to_parse, after_ws_index, ex_whitespace
+            parser_state, line_to_parse, after_ws_index, ex_whitespace, False
         )
         nested_block_start = BlockQuoteProcessor.is_block_quote_start(
             line_to_parse, after_ws_index, ex_whitespace

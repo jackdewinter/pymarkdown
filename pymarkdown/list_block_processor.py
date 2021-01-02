@@ -33,7 +33,7 @@ class ListBlockProcessor:
         line_to_parse,
         start_index,
         extracted_whitespace,
-        skip_whitespace_check=False,
+        skip_whitespace_check,
         adj_ws=None,
     ):
         """
@@ -46,60 +46,30 @@ class ListBlockProcessor:
             adj_ws = extracted_whitespace
 
         if (
-            (
-                ParserHelper.is_length_less_than_or_equal_to(adj_ws, 3)
-                or skip_whitespace_check
-            )
-            and ParserHelper.is_character_at_index_one_of(
-                line_to_parse, start_index, ListBlockProcessor.__ulist_start_characters
-            )
-            and (
-                ParserHelper.is_character_at_index_whitespace(
-                    line_to_parse, start_index + 1
-                )
-                or ((start_index + 1) == len(line_to_parse))
-            )
+            ParserHelper.is_length_less_than_or_equal_to(adj_ws, 3)
+            or skip_whitespace_check
         ):
-
-            LOGGER.debug("is_ulist_start>>mid>>")
-            after_all_whitespace_index, _ = ParserHelper.extract_whitespace(
-                line_to_parse, start_index + 1
-            )
-            LOGGER.debug(
-                "after_all_whitespace_index>>%s>>len>>%s",
-                str(after_all_whitespace_index),
-                str(len(line_to_parse)),
-            )
-
-            # Thematic breaks have precedence, so stop a list start if we find one.
-            is_break, _ = LeafBlockProcessor.is_thematic_break(
+            is_start = ListBlockProcessor.__is_start_ulist(
                 line_to_parse, start_index, extracted_whitespace
             )
-            if not is_break and not (
-                parser_state.token_stack[-1].is_paragraph
-                and not parser_state.token_stack[-2].is_list
-                and (after_all_whitespace_index == len(line_to_parse))
-            ):
-                is_start = True
-
-        LOGGER.debug("is_ulist_start>>result>>%s", str(is_start))
         if is_start:
-            xx_seq = line_to_parse[start_index]
-            is_unordered_list = True
-            is_not_one = False
-            LOGGER.debug("is_not_one>>%s", str(is_not_one))
-
-            is_start = ListBlockProcessor.__xxx(
+            (
+                is_start,
+                after_all_whitespace_index,
+            ) = ListBlockProcessor.__is_start_phase_one(
+                parser_state, line_to_parse, start_index, False
+            )
+        if is_start:
+            is_start = ListBlockProcessor.__is_start_phase_two(
                 parser_state,
-                xx_seq,
-                is_unordered_list,
-                is_not_one,
+                line_to_parse[start_index],
+                True,
+                False,
                 after_all_whitespace_index,
                 line_to_parse,
                 start_index,
             )
 
-        LOGGER.debug("is_ulist_start>>result>>%s", str(is_start))
         return is_start, after_all_whitespace_index
         # pylint: enable=too-many-arguments
 
@@ -110,111 +80,135 @@ class ListBlockProcessor:
         line_to_parse,
         start_index,
         extracted_whitespace,
-        skip_whitespace_check=False,
+        skip_whitespace_check,
         adj_ws=None,
     ):
         """
         Determine if we have the start of an numbered or ordered list.
         """
 
-        # TODO commonalities
         is_start = False
-        xx_seq = None
-        end_whitespace_index = -1
+        after_all_whitespace_index = -1
         index = None
-        my_count = None
-        olist_index_number = None
+        number_of_digits = None
+
         if adj_ws is None:
             adj_ws = extracted_whitespace
+
         if (
             ParserHelper.is_length_less_than_or_equal_to(adj_ws, 3)
             or skip_whitespace_check
-        ) and ParserHelper.is_character_at_index_one_of(
-            line_to_parse, start_index, string.digits
         ):
+            (
+                is_start,
+                index,
+                number_of_digits,
+                is_not_one,
+                xx_index,
+            ) = ListBlockProcessor.__is_start_olist(line_to_parse, start_index)
+        if is_start:
+            (
+                is_start,
+                after_all_whitespace_index,
+            ) = ListBlockProcessor.__is_start_phase_one(
+                parser_state, line_to_parse, index, is_not_one
+            )
+        if is_start:
+            is_start = ListBlockProcessor.__is_start_phase_two(
+                parser_state,
+                line_to_parse[xx_index],
+                False,
+                is_not_one,
+                after_all_whitespace_index,
+                line_to_parse,
+                start_index,
+            )
+
+        return is_start, index, number_of_digits, after_all_whitespace_index
+
+    # pylint: enable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
+
+    @staticmethod
+    def __is_start_ulist(line_to_parse, start_index, extracted_whitespace):
+        is_start = ParserHelper.is_character_at_index_one_of(
+            line_to_parse, start_index, ListBlockProcessor.__ulist_start_characters
+        )
+
+        # Thematic breaks have precedence, so stop a list start if we find one.
+        is_break, _ = LeafBlockProcessor.is_thematic_break(
+            line_to_parse, start_index, extracted_whitespace
+        )
+        is_start = is_start and not is_break
+        return is_start
+
+    @staticmethod
+    def __is_start_olist(line_to_parse, start_index):
+        index = None
+        number_of_digits = None
+        is_not_one = None
+        xx_index = None
+        is_start = ParserHelper.is_character_at_index_one_of(
+            line_to_parse, start_index, string.digits
+        )
+        if is_start:
             index = start_index
             while ParserHelper.is_character_at_index_one_of(
                 line_to_parse, index, string.digits
             ):
                 index += 1
-            my_count = index - start_index
+            number_of_digits = index - start_index
             olist_index_number = line_to_parse[start_index:index]
-            LOGGER.debug("olist?%s<<count>>%s<<", olist_index_number, str(my_count))
-            if index < len(line_to_parse):
-                LOGGER.debug("olist>>%s", str(line_to_parse[index]))
-            else:
-                LOGGER.debug("olist>>EOL")
             LOGGER.debug(
-                "index+1>>%s>>len>>%s", str(index + 1), str(len(line_to_parse))
+                "olist?%s<<count>>%s<<", olist_index_number, str(number_of_digits)
             )
-
-            end_whitespace_index, _ = ParserHelper.extract_whitespace(
-                line_to_parse, index + 1
-            )
-            LOGGER.debug(
-                "end_whitespace_index>>%s>>len>>%s>>%s",
-                str(end_whitespace_index),
-                str(len(line_to_parse)),
-                olist_index_number,
-            )
-            at_end_of_line = end_whitespace_index == len(line_to_parse)
-            LOGGER.debug("at_end_of_line>>%s", str(at_end_of_line))
-
-            LOGGER.debug("my_count>>%s", str(my_count))
-            xx_index = index
-            is_olist_start = ParserHelper.is_character_at_index_one_of(
-                line_to_parse, index, ListBlockProcessor.__olist_start_characters
-            )
-            LOGGER.debug("is_olist_start>>%s", str(is_olist_start))
-            is_in_paragraph = False
-            is_paragraph_in_list = False
-            if is_olist_start:
-                xx_seq = line_to_parse[xx_index]
-                is_in_paragraph = parser_state.token_stack[-1].is_paragraph
-                LOGGER.debug("is_in_paragraph>>%s", str(is_in_paragraph))
-                if is_in_paragraph:
-                    is_paragraph_in_list = parser_state.token_stack[-2].is_list
-                    LOGGER.debug("is_paragraph_in_list>>%s", str(is_paragraph_in_list))
-            if (
-                my_count <= 9
-                and is_olist_start
-                and not (
-                    is_in_paragraph
-                    and not is_paragraph_in_list
-                    and (at_end_of_line or olist_index_number != "1")
-                )
-                and (
-                    ParserHelper.is_character_at_index_whitespace(
-                        line_to_parse, index + 1
-                    )
-                    or ((index + 1) == len(line_to_parse))
-                )
-            ):
-                is_start = True
-
-        LOGGER.debug("is_olist_start>>result>>%s", str(is_start))
-        if is_start:
-            is_unordered_list = False
-            LOGGER.debug("olist_index_number>>%s", str(olist_index_number))
             is_not_one = olist_index_number != "1"
 
-            is_start = ListBlockProcessor.__xxx(
-                parser_state,
-                xx_seq,
-                is_unordered_list,
-                is_not_one,
-                end_whitespace_index,
-                line_to_parse,
-                start_index,
+            xx_index = index
+            is_olist_start = ParserHelper.is_character_at_index_one_of(
+                line_to_parse, xx_index, ListBlockProcessor.__olist_start_characters
             )
+            LOGGER.debug("is_olist_start>>%s", str(is_olist_start))
+            is_start = is_olist_start and number_of_digits <= 9
 
-        LOGGER.debug("is_olist_start>>result>>%s", str(is_start))
-        return is_start, index, my_count, end_whitespace_index
-
-    # pylint: enable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
+        return is_start, index, number_of_digits, is_not_one, xx_index
 
     @staticmethod
-    def __xxx(
+    def __is_start_phase_one(parser_state, line_to_parse, start_index, is_not_one):
+        is_start = False
+
+        after_all_whitespace_index, _ = ParserHelper.extract_whitespace(
+            line_to_parse, start_index + 1
+        )
+        LOGGER.debug(
+            "after_all_whitespace_index>>%s>>len>>%s",
+            str(after_all_whitespace_index),
+            str(len(line_to_parse)),
+        )
+        at_end_of_line = after_all_whitespace_index == len(line_to_parse)
+        LOGGER.debug("at_end_of_line>>%s", str(at_end_of_line))
+
+        is_in_paragraph = False
+        is_paragraph_in_list = False
+        is_in_paragraph = parser_state.token_stack[-1].is_paragraph
+        if is_in_paragraph:
+            is_paragraph_in_list = parser_state.token_stack[-2].is_list
+
+        if not (
+            is_in_paragraph
+            and not is_paragraph_in_list
+            and (at_end_of_line or is_not_one)
+        ) and (
+            ParserHelper.is_character_at_index_whitespace(
+                line_to_parse, start_index + 1
+            )
+            or ((start_index + 1) == len(line_to_parse))
+        ):
+            is_start = True
+        return is_start, after_all_whitespace_index
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __is_start_phase_two(
         parser_state,
         xx_seq,
         is_unordered_list,
@@ -286,6 +280,8 @@ class ListBlockProcessor:
             LOGGER.debug("is_start>>%s", str(is_start))
         return is_start
 
+    # pylint: enable=too-many-arguments
+
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def handle_ulist_block(
@@ -314,6 +310,7 @@ class ListBlockProcessor:
                 position_marker.text_to_parse,
                 position_marker.index_number,
                 extracted_whitespace,
+                False,
                 adj_ws=adj_ws,
             )
             if started_ulist:
@@ -427,6 +424,7 @@ class ListBlockProcessor:
                 position_marker.text_to_parse,
                 position_marker.index_number,
                 extracted_whitespace,
+                False,
                 adj_ws=adj_ws,
             )
             if started_olist:
@@ -543,14 +541,14 @@ class ListBlockProcessor:
             line_to_parse,
             start_index,
             extracted_whitespace,
-            skip_whitespace_check=True,
+            True,
         )
         started_olist, _, _, _ = ListBlockProcessor.is_olist_start(
             parser_state,
             line_to_parse,
             start_index,
             extracted_whitespace,
-            skip_whitespace_check=True,
+            True,
         )
 
         allow_list_continue = True
