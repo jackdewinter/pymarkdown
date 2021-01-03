@@ -15,7 +15,6 @@
 - Link_helper.py#86 - if link already registered, should warn?
 - where is `elif starting_whitespace:` used? why? better way to do it?
 - merge leading_spaces code from both container tokens
-- does post processing for Markdown transformer need to be complicated
 - why does hard break not have \n? (fix before release)
   - hard break followed by 3 spaces, then emphasis
   - variations of 52e with extra spaces after, etc.
