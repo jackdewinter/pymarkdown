@@ -543,7 +543,9 @@ class HtmlHelper:
         return valid_raw_html, parse_index
 
     @staticmethod
-    def parse_raw_html(only_between_angles, remaining_line, line_number, column_number):
+    def parse_raw_html(
+        only_between_angles, remaining_line, line_number, column_number, inline_request
+    ):
         """
         Given an open HTML tag character (<), try the various possibilities for
         types of tag, and determine if any of them parse validly.
@@ -588,6 +590,33 @@ class HtmlHelper:
             valid_raw_html = HtmlHelper.__parse_raw_declaration(only_between_angles)
 
         if valid_raw_html:
+
+            if "\n" in valid_raw_html and inline_request.para_owner:
+                split_raw = valid_raw_html.split("\n")
+                LOGGER.debug(
+                    ">>split_raw>>%s<<", ParserHelper.make_value_visible(split_raw)
+                )
+                LOGGER.debug(
+                    ">>para_owner>>%s<<",
+                    ParserHelper.make_value_visible(inline_request.para_owner),
+                )
+                split_ew = inline_request.para_owner.extracted_whitespace.split("\n")
+                LOGGER.debug(">>split>>%s<<", ParserHelper.make_value_visible(split_ew))
+                LOGGER.debug(
+                    ">>rehydrate_index>>%s<<",
+                    str(inline_request.para_owner.rehydrate_index),
+                )
+
+                # TODO look for this pattern
+                for i in range(1, len(split_raw)):
+                    inline_request.para_owner.rehydrate_index += 1
+                    ew_part = split_ew[inline_request.para_owner.rehydrate_index]
+                    if ew_part:
+                        ew_part = ParserHelper.create_replace_with_nothing_marker(
+                            ew_part
+                        )
+                    split_raw[i] = ew_part + split_raw[i]
+                valid_raw_html = "\n".join(split_raw)
             return (
                 RawHtmlMarkdownToken(valid_raw_html, line_number, column_number),
                 remaining_line_parse_index,

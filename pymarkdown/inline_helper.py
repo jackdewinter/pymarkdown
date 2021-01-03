@@ -875,6 +875,7 @@ class InlineHelper:
                     remaining_line,
                     inline_request.line_number,
                     new_column_number,
+                    inline_request,
                 )
                 LOGGER.debug(">>new_token>>%s", str(new_token))
                 if after_index != -1:
@@ -889,6 +890,7 @@ class InlineHelper:
             inline_response.new_string = InlineHelper.angle_bracket_start
             inline_response.new_index = inline_request.next_index + 1
 
+        # TODO is this common?
         inline_response.delta_line_number = 0
         if new_token and new_token.is_inline_raw_html and "\n" in new_token.raw_tag:
             split_raw_tag = new_token.raw_tag.split("\n")
@@ -896,10 +898,17 @@ class InlineHelper:
                 ">>split_raw_tag>>%s<<", ParserHelper.make_value_visible(split_raw_tag)
             )
             inline_response.delta_line_number += len(split_raw_tag) - 1
-            length_of_last_elements = len(split_raw_tag[-1])
+
+            last_element = split_raw_tag[-1]
+            last_element = ParserHelper.resolve_replacement_markers_from_text(
+                last_element
+            )
+            last_element = ParserHelper.remove_escapes_from_text(last_element)
+            length_of_last_elements = len(last_element)
             LOGGER.debug(
                 ">>xx>>%s<<", ParserHelper.make_value_visible(length_of_last_elements)
             )
+
             inline_response.delta_column_number = -(length_of_last_elements + 2)
             LOGGER.debug(
                 ">>delta_column_number>>%s<<",

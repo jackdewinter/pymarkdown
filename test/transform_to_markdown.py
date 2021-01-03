@@ -801,6 +801,18 @@ class TransformToMarkdown:
         """
         top_stack_token = self.block_stack[-1]
         del self.block_stack[-1]
+
+        rehydrate_index = current_token.start_markdown_token.rehydrate_index
+        expected_rehydrate_index = (
+            current_token.start_markdown_token.extracted_whitespace.split("\n")
+        )
+        assert rehydrate_index + 1 == len(expected_rehydrate_index), (
+            "rehydrate_index+1="
+            + str(rehydrate_index + 1)
+            + ";expected_rehydrate_index="
+            + str(len(expected_rehydrate_index))
+        )
+
         return top_stack_token.final_whitespace + ParserHelper.newline_character
 
     # pylint: enable=unused-argument
@@ -1568,9 +1580,32 @@ class TransformToMarkdown:
         """
         if self.block_stack[-1].is_inline_link:
             return ""
-        return "<" + current_token.raw_tag + ">"
+
+        raw_text = current_token.raw_tag
+        raw_text = ParserHelper.resolve_replacement_markers_from_text(raw_text)
+        raw_text = ParserHelper.remove_escapes_from_text(raw_text)
+
+        print("raw_html>>before>>" + ParserHelper.make_value_visible(raw_text))
+        raw_text = self.__handle_extracted_paragraph_whitespace(raw_text)
+        print("raw_html>>after>>" + ParserHelper.make_value_visible(raw_text))
+        return "<" + raw_text + ">"
 
     # pylint: enable=unused-argument
+
+    def __handle_extracted_paragraph_whitespace(self, raw_text, fix_me=False):
+        if "\n" in raw_text and self.block_stack[-1].is_paragraph:
+            split_raw = raw_text.split(ParserHelper.newline_character)
+            split_ew = self.block_stack[-1].extracted_whitespace.split(
+                ParserHelper.newline_character
+            )
+            for i in range(1, len(split_raw)):
+                self.block_stack[-1].rehydrate_index += 1
+                if fix_me:
+                    split_raw[i] = (
+                        split_ew[self.block_stack[-1].rehydrate_index] + split_raw[i]
+                    )
+            raw_text = "\n".join(split_raw)
+        return raw_text
 
     # pylint: disable=unused-argument
     def __rehydrate_inline_code_span(self, current_token, previous_token):
@@ -1584,12 +1619,47 @@ class TransformToMarkdown:
             current_token.span_text
         )
         span_text = ParserHelper.remove_escapes_from_text(span_text)
+
         leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
             current_token.leading_whitespace
         )
+
         trailing_whitespace = ParserHelper.resolve_replacement_markers_from_text(
             current_token.trailing_whitespace
         )
+
+        print(
+            "leading_whitespace>>before>>"
+            + ParserHelper.make_value_visible(leading_whitespace)
+            + "<<"
+        )
+        leading_whitespace = self.__handle_extracted_paragraph_whitespace(
+            leading_whitespace, fix_me=True
+        )
+        print(
+            "leading_whitespace>>after>>"
+            + ParserHelper.make_value_visible(leading_whitespace)
+            + "<<"
+        )
+
+        print("span_text>>before>>" + ParserHelper.make_value_visible(span_text) + "<<")
+        span_text = self.__handle_extracted_paragraph_whitespace(span_text, fix_me=True)
+        print("span_text>>after>>" + ParserHelper.make_value_visible(span_text) + "<<")
+
+        print(
+            "trailing_whitespace>>before>>"
+            + ParserHelper.make_value_visible(trailing_whitespace)
+            + "<<"
+        )
+        trailing_whitespace = self.__handle_extracted_paragraph_whitespace(
+            trailing_whitespace, fix_me=True
+        )
+        print(
+            "trailing_whitespace>>after>>"
+            + ParserHelper.make_value_visible(trailing_whitespace)
+            + "<<"
+        )
+
         return (
             current_token.extracted_start_backticks
             + leading_whitespace
@@ -1619,6 +1689,11 @@ class TransformToMarkdown:
         For a paragraph block, figure out the text that got us here.
         """
         if ParserHelper.newline_character in main_text:
+            print(">>para-before>>" + ParserHelper.make_value_visible(main_text))
+            print(
+                ">>para-rehydrate_index>>" + str(self.block_stack[-1].rehydrate_index)
+            )
+
             split_token_text = main_text.split(ParserHelper.newline_character)
             split_parent_whitespace_text = self.block_stack[
                 -1
@@ -1632,6 +1707,7 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(split_parent_whitespace_text)
             )
 
+            # TODO refactor?
             parent_rehydrate_index = self.block_stack[-1].rehydrate_index
             rejoined_token_text = []
             for iterator in enumerate(split_token_text):
@@ -1666,6 +1742,10 @@ class TransformToMarkdown:
                     joined_token_text.append(joined_text)
                 split_token_text = joined_token_text
             main_text = ParserHelper.newline_character.join(split_token_text)
+            print(">>para-after>>" + ParserHelper.make_value_visible(main_text))
+            print(
+                ">>para-rehydrate_index>>" + str(self.block_stack[-1].rehydrate_index)
+            )
         return main_text
 
     @classmethod

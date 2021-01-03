@@ -396,6 +396,103 @@ comment - with hyphen --></p>"""
 
 
 @pytest.mark.gfm
+def test_raw_html_644a():
+    """
+    Test case 644a:  variation with space
+    """
+
+    # Arrange
+    source_markdown = """foo <!-- this is a
+ comment - with hyphen -->"""
+    expected_tokens = [
+        "[para(1,1):\n ]",
+        "[text(1,1):foo :]",
+        "[raw-html(1,5):!-- this is a\n\a \a\x03\acomment - with hyphen --]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>foo <!-- this is a
+comment - with hyphen --></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_raw_html_644aa():
+    """
+    Test case 644aa:  variation with space
+    """
+
+    # Arrange
+    source_markdown = """foo <!-- this is a
+ comment - with hyphen -->bar"""
+    expected_tokens = [
+        "[para(1,1):\n ]",
+        "[text(1,1):foo :]",
+        "[raw-html(1,5):!-- this is a\n\a \a\x03\acomment - with hyphen --]",
+        "[text(2,27):bar:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>foo <!-- this is a
+comment - with hyphen -->bar</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_raw_html_644b():
+    """
+    Test case 644b:  variation with space
+    """
+
+    # Arrange
+    source_markdown = """foo <!-- this is a
+ comment - with hyphen -->  foo
+bar"""
+    expected_tokens = [
+        "[para(1,1):\n \n]",
+        "[text(1,1):foo :]",
+        "[raw-html(1,5):!-- this is a\n\a \a\x03\acomment - with hyphen --]",
+        "[text(2,27):  foo\nbar::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>foo <!-- this is a
+comment - with hyphen -->  foo
+bar</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_raw_html_644c():
+    """
+    Test case 644c:  variation with space
+    """
+
+    # Arrange
+    source_markdown = """foo <!--
+this is a
+comment - with hyphen
+-->bar"""
+    expected_tokens = [
+        "[para(1,1):\n\n\n]",
+        "[text(1,1):foo :]",
+        "[raw-html(1,5):!--\nthis is a\ncomment - with hyphen\n--]",
+        "[text(4,4):bar:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>foo <!--
+this is a
+comment - with hyphen
+-->bar</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_raw_html_645():
     """
     Test case 645:  (part 2) Comments:

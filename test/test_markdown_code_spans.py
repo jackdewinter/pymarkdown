@@ -187,6 +187,31 @@ baz
 
 
 @pytest.mark.gfm
+def test_code_spans_345a():
+    """
+    Test case 345a:  variations
+    """
+
+    # Arrange
+    source_markdown = """``
+ foo
+  bar\a\a
+baz
+``""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n \n  \n\n]",
+        "[icode-span(1,1):foo\a\n\a \abar  \a\n\a \abaz:``:\a\n\a \a:\a\n\a \a]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><code>foo bar   baz</code></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_code_spans_346():
     """
     Test case 346:  (part 2) Line endings are treated like spaces:

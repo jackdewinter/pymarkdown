@@ -1261,9 +1261,11 @@ def __process_previous_token(
         )
     elif previous_inline_token.is_inline_raw_html:
         estimated_line_number, estimated_column_number = __verify_next_inline_raw_html(
+            last_token,
             previous_inline_token,
             estimated_line_number,
             estimated_column_number,
+            link_stack,
         )
     elif previous_inline_token.is_inline_autolink:
         estimated_line_number, estimated_column_number = __verify_next_inline_autolink(
@@ -1696,15 +1698,26 @@ def __verify_next_inline_autolink(
 
 
 def __verify_next_inline_raw_html(
+    last_token,
     previous_inline_token,
     estimated_line_number,
     estimated_column_number,
+    link_stack,
 ):
 
+    # TODO is this common?
     if "\n" in previous_inline_token.raw_tag:
         split_raw_tag = previous_inline_token.raw_tag.split("\n")
         estimated_line_number += len(split_raw_tag) - 1
-        estimated_column_number = len(split_raw_tag[-1]) + 2
+
+        last_element = split_raw_tag[-1]
+        last_element = ParserHelper.resolve_replacement_markers_from_text(last_element)
+        last_element = ParserHelper.remove_escapes_from_text(last_element)
+        length_of_last_element = len(last_element)
+
+        estimated_column_number = length_of_last_element + 2
+        if last_token.is_paragraph and not link_stack:
+            last_token.rehydrate_index += len(split_raw_tag) - 1
     else:
         estimated_column_number += len(previous_inline_token.raw_tag) + 2
     return estimated_line_number, estimated_column_number

@@ -605,14 +605,10 @@ class TransformToGfm:
         Handle the code span token.
         """
         _ = transform_state
-        adjusted_text_token = ParserHelper.resolve_references_from_text(
-            next_token.span_text
-        )
-        adjusted_text_token = ParserHelper.resolve_escapes_from_text(
-            adjusted_text_token
-        )
+        adjusted_text = ParserHelper.resolve_references_from_text(next_token.span_text)
+        adjusted_text = ParserHelper.resolve_escapes_from_text(adjusted_text)
 
-        return output_html + "<code>" + adjusted_text_token + "</code>"
+        return output_html + "<code>" + adjusted_text + "</code>"
 
     @classmethod
     def __handle_raw_html_token(cls, output_html, next_token, transform_state):
@@ -620,7 +616,10 @@ class TransformToGfm:
         Handle the raw html token.
         """
         _ = transform_state
-        return output_html + "<" + next_token.raw_tag + ">"
+        adjusted_text = ParserHelper.resolve_references_from_text(next_token.raw_tag)
+        adjusted_text = ParserHelper.resolve_noops_from_text(adjusted_text)
+
+        return output_html + "<" + adjusted_text + ">"
 
     @classmethod
     def __handle_link_reference_definition_token(
