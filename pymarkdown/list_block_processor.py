@@ -70,7 +70,7 @@ class ListBlockProcessor:
                 start_index,
             )
 
-        return is_start, after_all_whitespace_index
+        return is_start, after_all_whitespace_index, start_index, 0
         # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
@@ -104,7 +104,6 @@ class ListBlockProcessor:
                 index,
                 number_of_digits,
                 is_not_one,
-                xx_index,
             ) = ListBlockProcessor.__is_start_olist(line_to_parse, start_index)
         if is_start:
             (
@@ -116,7 +115,7 @@ class ListBlockProcessor:
         if is_start:
             is_start = ListBlockProcessor.__is_start_phase_two(
                 parser_state,
-                line_to_parse[xx_index],
+                line_to_parse[index],
                 False,
                 is_not_one,
                 after_all_whitespace_index,
@@ -124,7 +123,7 @@ class ListBlockProcessor:
                 start_index,
             )
 
-        return is_start, index, number_of_digits, after_all_whitespace_index
+        return is_start, after_all_whitespace_index, index, number_of_digits
 
     # pylint: enable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
 
@@ -146,7 +145,6 @@ class ListBlockProcessor:
         index = None
         number_of_digits = None
         is_not_one = None
-        xx_index = None
         is_start = ParserHelper.is_character_at_index_one_of(
             line_to_parse, start_index, string.digits
         )
@@ -163,14 +161,13 @@ class ListBlockProcessor:
             )
             is_not_one = olist_index_number != "1"
 
-            xx_index = index
             is_olist_start = ParserHelper.is_character_at_index_one_of(
-                line_to_parse, xx_index, ListBlockProcessor.__olist_start_characters
+                line_to_parse, index, ListBlockProcessor.__olist_start_characters
             )
             LOGGER.debug("is_olist_start>>%s", str(is_olist_start))
             is_start = is_olist_start and number_of_digits <= 9
 
-        return is_start, index, number_of_digits, is_not_one, xx_index
+        return is_start, index, number_of_digits, is_not_one
 
     @staticmethod
     def __is_start_phase_one(parser_state, line_to_parse, start_index, is_not_one):
@@ -284,7 +281,8 @@ class ListBlockProcessor:
 
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
-    def handle_ulist_block(
+    def handle_list_block(
+        is_ulist,
         parser_state,
         did_process,
         was_container_start,
@@ -300,12 +298,24 @@ class ListBlockProcessor:
         """
         Handle the processing of a ulist block.
         """
-        LOGGER.debug("handle_ulist_block>>start>>did_process>>%s", str(did_process))
         end_of_ulist_start_index = -1
         container_level_tokens = []
         adjusted_text_to_parse = position_marker.text_to_parse
         if not did_process:
-            started_ulist, end_of_ulist_start_index = ListBlockProcessor.is_ulist_start(
+
+            if is_ulist:
+                is_start_fn = ListBlockProcessor.is_ulist_start
+                create_token_fn = ListBlockProcessor.__handle_list_block_unordered
+            else:
+                is_start_fn = ListBlockProcessor.is_olist_start
+                create_token_fn = ListBlockProcessor.__handle_list_block_ordered
+
+            (
+                started_ulist,
+                end_of_ulist_start_index,
+                index,
+                number_of_digits,
+            ) = is_start_fn(
                 parser_state,
                 position_marker.text_to_parse,
                 position_marker.index_number,
@@ -328,9 +338,9 @@ class ListBlockProcessor:
                 ) = ListBlockProcessor.__pre_list(
                     parser_state,
                     position_marker.text_to_parse,
-                    position_marker.index_number,
+                    index,
                     extracted_whitespace,
-                    0,
+                    number_of_digits,
                     stack_bq_count,
                     this_bq_count,
                     adj_ws=adj_ws,
@@ -343,22 +353,15 @@ class ListBlockProcessor:
                     str(ws_after_marker),
                     str(position_marker.index_number),
                 )
-                new_token = UnorderedListStartMarkdownToken(
-                    position_marker.text_to_parse[position_marker.index_number],
+                new_token, new_stack = create_token_fn(
+                    position_marker,
                     indent_level,
                     extracted_whitespace,
-                    position_marker,
-                )
-                new_stack = UnorderedListStackToken(
-                    indent_level,
-                    position_marker.text_to_parse[position_marker.index_number],
                     ws_before_marker,
                     ws_after_marker,
-                    position_marker.index_number,
-                    new_token,
+                    index,
                 )
 
-                LOGGER.debug("__post_list>>pre>>%s>>", position_marker.text_to_parse)
                 (
                     no_para_start_if_empty,
                     new_container_level_tokens,
@@ -378,9 +381,6 @@ class ListBlockProcessor:
                 container_level_tokens.extend(new_container_level_tokens)
                 did_process = True
                 was_container_start = True
-                LOGGER.debug("__post_list>>post>>%s>>", adjusted_text_to_parse)
-
-        LOGGER.debug("handle_ulist_block>>end>>did_process>>%s", str(did_process))
         return (
             did_process,
             was_container_start,
@@ -392,122 +392,65 @@ class ListBlockProcessor:
         )
         # pylint: enable=too-many-locals, too-many-arguments
 
-    # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
-    def handle_olist_block(
-        parser_state,
-        did_process,
-        was_container_start,
-        no_para_start_if_empty,
+    # pylint: disable=too-many-arguments
+    def __handle_list_block_unordered(
         position_marker,
+        indent_level,
         extracted_whitespace,
-        adj_ws,
-        stack_bq_count,
-        this_bq_count,
-        removed_chars_at_start,
-        current_container_blocks,
+        ws_before_marker,
+        ws_after_marker,
+        index,
     ):
-        """
-        Handle the processing of a olist block.
-        """
-        end_of_olist_start_index = -1
-        container_level_tokens = []
-        adjusted_text_to_parse = position_marker.text_to_parse
-        if not did_process:
-            (
-                started_olist,
-                index,
-                my_count,
-                end_of_olist_start_index,
-            ) = ListBlockProcessor.is_olist_start(
-                parser_state,
-                position_marker.text_to_parse,
-                position_marker.index_number,
-                extracted_whitespace,
-                False,
-                adj_ws=adj_ws,
-            )
-            if started_olist:
-                assert not container_level_tokens
-                LOGGER.debug("clt>>olist-start")
-                removed_chars_at_start = 0
-
-                (
-                    indent_level,
-                    remaining_whitespace,
-                    ws_after_marker,
-                    after_marker_ws_index,
-                    ws_before_marker,
-                    container_level_tokens,
-                    stack_bq_count,
-                ) = ListBlockProcessor.__pre_list(
-                    parser_state,
-                    position_marker.text_to_parse,
-                    index,
-                    extracted_whitespace,
-                    my_count,
-                    stack_bq_count,
-                    this_bq_count,
-                    adj_ws=adj_ws,
-                )
-
-                LOGGER.debug(
-                    "total=%s;ws-before=%s;ws_after=%s;start_index=%s",
-                    str(indent_level),
-                    str(ws_before_marker),
-                    str(ws_after_marker),
-                    str(position_marker.index_number),
-                )
-
-                new_token = OrderedListStartMarkdownToken(
-                    position_marker.text_to_parse[index],
-                    position_marker.text_to_parse[position_marker.index_number : index],
-                    indent_level,
-                    extracted_whitespace,
-                    position_marker,
-                )
-                new_stack = OrderedListStackToken(
-                    indent_level,
-                    position_marker.text_to_parse[
-                        position_marker.index_number : index + 1
-                    ],
-                    ws_before_marker,
-                    ws_after_marker,
-                    position_marker.index_number,
-                    new_token,
-                )
-
-                (
-                    no_para_start_if_empty,
-                    new_container_level_tokens,
-                    adjusted_text_to_parse,
-                ) = ListBlockProcessor.__post_list(
-                    parser_state,
-                    new_stack,
-                    new_token,
-                    position_marker.text_to_parse,
-                    remaining_whitespace,
-                    after_marker_ws_index,
-                    indent_level,
-                    current_container_blocks,
-                    position_marker,
-                )
-                assert new_container_level_tokens
-                container_level_tokens.extend(new_container_level_tokens)
-                did_process = True
-                was_container_start = True
-        return (
-            did_process,
-            was_container_start,
-            end_of_olist_start_index,
-            no_para_start_if_empty,
-            adjusted_text_to_parse,
-            container_level_tokens,
-            removed_chars_at_start,
+        _ = index
+        new_token = UnorderedListStartMarkdownToken(
+            position_marker.text_to_parse[position_marker.index_number],
+            indent_level,
+            extracted_whitespace,
+            position_marker,
         )
-        # pylint: enable=too-many-arguments
+        new_stack = UnorderedListStackToken(
+            indent_level,
+            position_marker.text_to_parse[position_marker.index_number],
+            ws_before_marker,
+            ws_after_marker,
+            position_marker.index_number,
+            new_token,
+        )
+        return new_token, new_stack
 
-    # pylint: disable=too-many-statements
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    # pylint: disable=too-many-arguments
+    def __handle_list_block_ordered(
+        position_marker,
+        indent_level,
+        extracted_whitespace,
+        ws_before_marker,
+        ws_after_marker,
+        index,
+    ):
+        new_token = OrderedListStartMarkdownToken(
+            position_marker.text_to_parse[index],
+            position_marker.text_to_parse[position_marker.index_number : index],
+            indent_level,
+            extracted_whitespace,
+            position_marker,
+        )
+        new_stack = OrderedListStackToken(
+            indent_level,
+            position_marker.text_to_parse[position_marker.index_number : index + 1],
+            ws_before_marker,
+            ws_after_marker,
+            position_marker.index_number,
+            new_token,
+        )
+        return new_token, new_stack
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-statements, too-many-locals
     @staticmethod
     def list_in_process(
         parser_state,
@@ -536,7 +479,7 @@ class ListBlockProcessor:
 
         leading_space_length = ParserHelper.calculate_length(extracted_whitespace)
 
-        started_ulist, _ = ListBlockProcessor.is_ulist_start(
+        started_ulist, _, _, _ = ListBlockProcessor.is_ulist_start(
             parser_state,
             line_to_parse,
             start_index,
@@ -728,7 +671,7 @@ class ListBlockProcessor:
             )
         return container_level_tokens, line_to_parse, used_indent
 
-    # pylint: enable=too-many-statements
+    # pylint: enable=too-many-statements, too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod

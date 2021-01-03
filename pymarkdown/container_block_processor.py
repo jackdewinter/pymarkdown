@@ -117,11 +117,8 @@ class ContainerBlockProcessor:
             init_bq,
         )
 
-        new_position_marker = PositionMarker(
-            position_marker.line_number, start_index, position_marker.text_to_parse
-        )
-
         end_container_indices = ContainerIndices(-1, -1, -1)
+
         (
             did_process,
             was_container_start,
@@ -136,128 +133,69 @@ class ContainerBlockProcessor:
             did_blank,
             last_block_quote_index,
             text_removed_by_container,
-        ) = BlockQuoteProcessor.handle_block_quote_block(
+        ) = ContainerBlockProcessor.__get_block_start_index(
+            position_marker,
             parser_state,
-            new_position_marker,
             extracted_whitespace,
             adj_ws,
             this_bq_count,
             stack_bq_count,
+            start_index,
         )
-        LOGGER.debug("text>>:%s:>>", line_to_parse)
-        LOGGER.debug(">>container_level_tokens>>%s", str(container_level_tokens))
         LOGGER.debug(">>did_blank>>%s", did_blank)
         if did_blank:
             container_level_tokens.extend(leaf_tokens)
             return container_level_tokens, line_to_parse, RequeueLineInfo()
 
-        # TODO refactor so it doesn't need this!
-        new_position_marker = PositionMarker(
-            position_marker.line_number, start_index, line_to_parse
-        )
-
-        LOGGER.debug(
-            "pre-ulist>>#%s#%s#%s#",
-            str(position_marker.index_number),
-            str(position_marker.index_indent),
-            ParserHelper.make_value_visible(position_marker.text_to_parse),
-        )
-        LOGGER.debug(
-            "pre-ulist>>#%s#%s#%s#",
-            str(new_position_marker.index_number),
-            str(new_position_marker.index_indent),
-            ParserHelper.make_value_visible(new_position_marker.text_to_parse),
-        )
         (
             did_process,
             was_container_start,
             end_container_indices.ulist_index,
             no_para_start_if_empty,
             line_to_parse,
-            resultant_tokens,
             removed_chars_at_start,
-        ) = ListBlockProcessor.handle_ulist_block(
+        ) = ContainerBlockProcessor.__get_list_start_index(
+            position_marker,
+            line_to_parse,
+            start_index,
+            True,
             parser_state,
             did_process,
             was_container_start,
             no_para_start_if_empty,
-            new_position_marker,
             extracted_whitespace,
             adj_ws,
             stack_bq_count,
             this_bq_count,
             removed_chars_at_start,
             current_container_blocks,
-        )
-        container_level_tokens.extend(resultant_tokens)
-        LOGGER.debug(
-            "post-ulist>>#%s#%s#%s#",
-            str(position_marker.index_number),
-            str(position_marker.index_indent),
-            ParserHelper.make_value_visible(position_marker.text_to_parse),
-        )
-        LOGGER.debug(
-            "post-ulist>>#%s#%s#%s#",
-            str(new_position_marker.index_number),
-            str(new_position_marker.index_indent),
-            ParserHelper.make_value_visible(new_position_marker.text_to_parse),
-        )
-        LOGGER.debug("text>>%s>>", line_to_parse)
-
-        new_position_marker = PositionMarker(
-            position_marker.line_number, start_index, line_to_parse
+            container_level_tokens,
         )
 
-        LOGGER.debug(
-            "pre-olist>>#%s#%s#%s#",
-            str(position_marker.index_number),
-            str(position_marker.index_indent),
-            ParserHelper.make_value_visible(position_marker.text_to_parse),
-        )
-        LOGGER.debug(
-            "pre-olist>>#%s#%s#%s#",
-            str(new_position_marker.index_number),
-            str(new_position_marker.index_indent),
-            ParserHelper.make_value_visible(new_position_marker.text_to_parse),
-        )
         (
             did_process,
             was_container_start,
             end_container_indices.olist_index,
             no_para_start_if_empty,
             line_to_parse,
-            resultant_tokens,
             removed_chars_at_start,
-        ) = ListBlockProcessor.handle_olist_block(
+        ) = ContainerBlockProcessor.__get_list_start_index(
+            position_marker,
+            line_to_parse,
+            start_index,
+            False,
             parser_state,
             did_process,
             was_container_start,
             no_para_start_if_empty,
-            new_position_marker,
             extracted_whitespace,
             adj_ws,
             stack_bq_count,
             this_bq_count,
             removed_chars_at_start,
             current_container_blocks,
+            container_level_tokens,
         )
-        LOGGER.debug("olist->resultant_tokens->%s", str(resultant_tokens))
-        LOGGER.debug("olist->container_level_tokens->%s", str(container_level_tokens))
-        container_level_tokens.extend(resultant_tokens)
-        LOGGER.debug("olist->container_level_tokens->%s", str(container_level_tokens))
-        LOGGER.debug(
-            "post-olist>>#%s#%s#%s#",
-            str(position_marker.index_number),
-            str(position_marker.index_indent),
-            ParserHelper.make_value_visible(position_marker.text_to_parse),
-        )
-        LOGGER.debug(
-            "post-olist>>#%s#%s#%s#",
-            str(new_position_marker.index_number),
-            str(new_position_marker.index_indent),
-            ParserHelper.make_value_visible(new_position_marker.text_to_parse),
-        )
-        LOGGER.debug("text>>%s>>", line_to_parse.replace(" ", "\\s"))
 
         LOGGER.debug("last_block_quote_index>>%s", str(last_block_quote_index))
 
@@ -389,6 +327,147 @@ class ContainerBlockProcessor:
         # pylint: enable=too-many-locals
         # pylint: enable=too-many-arguments
         # pylint: enable=too-many-statements
+
+    @staticmethod
+    # pylint: disable=too-many-locals, too-many-arguments
+    def __get_block_start_index(
+        position_marker,
+        parser_state,
+        extracted_whitespace,
+        adj_ws,
+        this_bq_count,
+        stack_bq_count,
+        start_index,
+    ):
+        new_position_marker = PositionMarker(
+            position_marker.line_number, start_index, position_marker.text_to_parse
+        )
+        (
+            did_process,
+            was_container_start,
+            block_index,
+            this_bq_count,
+            stack_bq_count,
+            line_to_parse,
+            start_index,
+            leaf_tokens,
+            container_level_tokens,
+            removed_chars_at_start,
+            did_blank,
+            last_block_quote_index,
+            text_removed_by_container,
+        ) = BlockQuoteProcessor.handle_block_quote_block(
+            parser_state,
+            new_position_marker,
+            extracted_whitespace,
+            adj_ws,
+            this_bq_count,
+            stack_bq_count,
+        )
+        LOGGER.debug("text>>:%s:>>", line_to_parse)
+        LOGGER.debug(">>container_level_tokens>>%s", str(container_level_tokens))
+        return (
+            did_process,
+            was_container_start,
+            block_index,
+            this_bq_count,
+            stack_bq_count,
+            line_to_parse,
+            start_index,
+            leaf_tokens,
+            container_level_tokens,
+            removed_chars_at_start,
+            did_blank,
+            last_block_quote_index,
+            text_removed_by_container,
+        )
+
+    # pylint: enable=too-many-locals, too-many-arguments
+
+    # pylint: disable=too-many-locals, too-many-arguments
+    @staticmethod
+    def __get_list_start_index(
+        position_marker,
+        line_to_parse,
+        start_index,
+        is_ulist,
+        parser_state,
+        did_process,
+        was_container_start,
+        no_para_start_if_empty,
+        extracted_whitespace,
+        adj_ws,
+        stack_bq_count,
+        this_bq_count,
+        removed_chars_at_start,
+        current_container_blocks,
+        container_level_tokens,
+    ):
+
+        # TODO refactor so it doesn't need this!
+        new_position_marker = PositionMarker(
+            position_marker.line_number, start_index, line_to_parse
+        )
+
+        LOGGER.debug(
+            "pre-list>>#%s#%s#%s#",
+            str(position_marker.index_number),
+            str(position_marker.index_indent),
+            ParserHelper.make_value_visible(position_marker.text_to_parse),
+        )
+        LOGGER.debug(
+            "pre-list>>#%s#%s#%s#",
+            str(new_position_marker.index_number),
+            str(new_position_marker.index_indent),
+            ParserHelper.make_value_visible(new_position_marker.text_to_parse),
+        )
+        (
+            did_process,
+            was_container_start,
+            new_list_index,
+            no_para_start_if_empty,
+            line_to_parse,
+            resultant_tokens,
+            removed_chars_at_start,
+        ) = ListBlockProcessor.handle_list_block(
+            is_ulist,
+            parser_state,
+            did_process,
+            was_container_start,
+            no_para_start_if_empty,
+            new_position_marker,
+            extracted_whitespace,
+            adj_ws,
+            stack_bq_count,
+            this_bq_count,
+            removed_chars_at_start,
+            current_container_blocks,
+        )
+        container_level_tokens.extend(resultant_tokens)
+        LOGGER.debug(
+            "post-ulist>>#%s#%s#%s#",
+            str(position_marker.index_number),
+            str(position_marker.index_indent),
+            ParserHelper.make_value_visible(position_marker.text_to_parse),
+        )
+        LOGGER.debug(
+            "post-ulist>>#%s#%s#%s#",
+            str(new_position_marker.index_number),
+            str(new_position_marker.index_indent),
+            ParserHelper.make_value_visible(new_position_marker.text_to_parse),
+        )
+        LOGGER.debug("text>>%s>>", line_to_parse)
+
+        return (
+            did_process,
+            was_container_start,
+            new_list_index,
+            no_para_start_if_empty,
+            line_to_parse,
+            removed_chars_at_start,
+        )
+
+    # pylint: enable=too-many-locals, too-many-arguments
 
     @staticmethod
     def __calculate_for_container_blocks(
@@ -626,7 +705,7 @@ class ContainerBlockProcessor:
             line_to_parse, 0
         )
 
-        nested_ulist_start, _ = ListBlockProcessor.is_ulist_start(
+        nested_ulist_start, _, _, _ = ListBlockProcessor.is_ulist_start(
             parser_state, line_to_parse, after_ws_index, ex_whitespace, False
         )
         nested_olist_start, _, _, _ = ListBlockProcessor.is_olist_start(
