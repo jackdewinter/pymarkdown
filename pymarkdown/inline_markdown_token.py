@@ -56,7 +56,6 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
             column_number=column_number,
         )
 
-    # pylint: enable=too-few-public-methods
     @property
     def emphasis_length(self):
         """

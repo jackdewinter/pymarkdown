@@ -50,7 +50,7 @@ class InlineRequest:
     # pylint: enable=too-many-arguments
 
 
-# pylint: enable=too-few-public-methods
+# pylint: enable=too-few-public-methods, too-many-instance-attributes
 
 
 # pylint: disable=too-few-public-methods,too-many-arguments,too-many-instance-attributes

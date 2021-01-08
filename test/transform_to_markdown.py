@@ -440,7 +440,7 @@ class TransformToMarkdown:
         print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
         return new_data, delayed_continue, continue_sequence
 
-    # pylint: disable=too-many-arguments, too-many-branches, unused-argument
+    # pylint: enable=too-many-arguments, too-many-branches, unused-argument
 
     # pylint: disable=too-many-arguments
     def __perform_container_post_processing(

@@ -10,6 +10,8 @@ sys.path.insert(0, os.path.abspath("pymarkdown"))  # isort:skip
 # pylint: disable=wrong-import-position
 from pymarkdown.main import PyMarkdownLint  # isort:skip
 
+# pylint: enable=wrong-import-position
+
 
 class MarkdownScanner(InProcessExecution):
     """

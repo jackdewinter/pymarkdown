@@ -70,6 +70,9 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
         )
 
 
+# pylint: enable=too-few-public-methods
+
+
 class ParagraphMarkdownToken(LeafMarkdownToken):
     """
     Class to provide for an encapsulation of the paragraph element.

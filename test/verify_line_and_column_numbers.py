@@ -1189,7 +1189,7 @@ def __verify_next_inline(
     )
 
 
-# pylint: disable=too-many-arguments
+# pylint: enable=too-many-arguments
 
 
 # pylint: disable=too-many-branches,too-many-arguments

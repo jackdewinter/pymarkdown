@@ -116,6 +116,9 @@ class InProcessResult:
             self.std_err.close()
 
 
+# pylint: enable=too-few-public-methods
+
+
 # pylint: disable=too-few-public-methods
 class SystemState:
     """
@@ -144,6 +147,9 @@ class SystemState:
         sys.argv = self.saved_argv
         sys.stdout = self.saved_stdout
         sys.stderr = self.saved_stderr
+
+
+# pylint: enable=too-few-public-methods
 
 
 class InProcessExecution(ABC):
@@ -225,3 +231,5 @@ class InProcessExecution(ABC):
             saved_state.restore()
 
         return InProcessResult(returncode, std_output, std_error)
+
+    # pylint: enable=broad-except

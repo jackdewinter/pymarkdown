@@ -434,7 +434,7 @@ class LinkHelper:
             image_alt_text = ParserHelper.resolve_backspaces_from_text(image_alt_text)
         return image_alt_text, text_from_blocks_raw
 
-    # pylint: disable=too-many-branches
+    # pylint: enable=too-many-branches
 
     # pylint: disable=too-many-statements
     @staticmethod
