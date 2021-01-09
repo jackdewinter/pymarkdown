@@ -312,7 +312,7 @@ def test_markdown_with_dash_dash_log_level_debug(caplog):
     )
 
     # Info messages
-    assert "Number of scanned files found: " in caplog.text
+    assert "Number of files found: " in caplog.text
     assert (
         "Determining files to scan for path "
         + "'test/resources/rules/md047/end_with_blank_line.md'."
@@ -322,7 +322,7 @@ def test_markdown_with_dash_dash_log_level_debug(caplog):
     # Debug messages
     assert (
         "Provided path 'test/resources/rules/md047/end_with_blank_line.md' "
-        + "is a valid Markdown file. Adding."
+        + "is a valid file. Adding."
         in caplog.text
     )
 
@@ -354,7 +354,7 @@ def test_markdown_with_dash_dash_log_level_info(caplog):
     )
 
     # Info messages
-    assert "Number of scanned files found: " in caplog.text
+    assert "Number of files found: " in caplog.text
     assert (
         "Determining files to scan for path "
         + "'test/resources/rules/md047/end_with_blank_line.md'."
@@ -364,7 +364,7 @@ def test_markdown_with_dash_dash_log_level_info(caplog):
     # Debug messages
     assert (
         "Provided path 'test/resources/rules/md047/end_with_blank_line.md' "
-        + "is a valid Markdown file. Adding."
+        + "is a valid file. Adding."
         not in caplog.text
     )
 
@@ -459,7 +459,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
             file_data = file.read().replace("\n", "")
 
         # Info messages
-        assert "Number of scanned files found: " in file_data
+        assert "Number of files found: " in file_data
         assert (
             "Determining files to scan for path "
             + "'test/resources/rules/md047/end_with_blank_line.md'."
@@ -469,7 +469,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
         # Debug messages
         assert (
             "Provided path 'test/resources/rules/md047/end_with_blank_line.md' "
-            + "is a valid Markdown file. Adding."
+            + "is a valid file. Adding."
             not in file_data
         )
     finally:

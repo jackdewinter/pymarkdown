@@ -2,6 +2,7 @@
 Module to provide for a simple implementation of a title case algorithm.
 """
 import argparse
+import glob
 import json
 import logging
 import os
@@ -138,7 +139,7 @@ class PyMarkdownLint:
         return parser.parse_args()
 
     @classmethod
-    def is_file_eligible_to_scan(cls, path_to_test):
+    def __is_file_eligible_to_scan(cls, path_to_test):
         """
         Determine if the presented path is one that we want to scan.
         """
@@ -172,51 +173,77 @@ class PyMarkdownLint:
 
     # pylint: enable=broad-except
 
-    def __determine_files_to_scan(self, eligible_paths):
+    def __process_next_path(self, next_path, files_to_parse):
 
-        files_to_parse = set()
-        for next_path in eligible_paths:
-
-            LOGGER.info("Determining files to scan for path '%s'.", next_path)
-            if not os.path.exists(next_path):
+        did_find_any = False
+        LOGGER.info("Determining files to scan for path '%s'.", next_path)
+        if not os.path.exists(next_path):
+            print(
+                "Provided path '" + next_path + "' does not exist.",
+                file=sys.stderr,
+            )
+            LOGGER.debug("Provided path '%s' does not exist.", next_path)
+        elif os.path.isdir(next_path):
+            LOGGER.debug(
+                "Provided path '%s' is a directory. Walking directory.", next_path
+            )
+            did_find_any = True
+            for root, _, files in os.walk(next_path):
+                root = root.replace("\\", "/")
+                for file in files:
+                    rooted_file_path = root + "/" + file
+                    if self.__is_file_eligible_to_scan(rooted_file_path):
+                        files_to_parse.add(rooted_file_path)
+        else:
+            if self.__is_file_eligible_to_scan(next_path):
+                LOGGER.debug(
+                    "Provided path '%s' is a valid file. Adding.",
+                    next_path,
+                )
+                files_to_parse.add(next_path)
+                did_find_any = True
+            else:
+                LOGGER.debug(
+                    "Provided path '%s' is not a valid file. Skipping.",
+                    next_path,
+                )
                 print(
-                    "Provided path '" + next_path + "' does not exist. Skipping.",
+                    "Provided file path '"
+                    + next_path
+                    + "' is not a valid file. Skipping.",
                     file=sys.stderr,
                 )
-                LOGGER.debug("Provided path '%s' does not exist. Skipping.", next_path)
-                continue
-            if os.path.isdir(next_path):
-                LOGGER.debug(
-                    "Provided path '%s' is a directory. Walking directory.", next_path
-                )
-                for root, _, files in os.walk(next_path):
-                    for file in files:
-                        rooted_file_path = root + "/" + file
-                        if self.is_file_eligible_to_scan(rooted_file_path):
-                            files_to_parse.add(rooted_file_path)
-            else:
-                if self.is_file_eligible_to_scan(next_path):
-                    LOGGER.debug(
-                        "Provided path '%s' is a valid Markdown file. Adding.",
-                        next_path,
-                    )
-                    files_to_parse.add(next_path)
-                else:
-                    LOGGER.debug(
-                        "Provided path '%s' is not a valid Markdown file. Skipping.",
-                        next_path,
-                    )
+        return did_find_any
+
+    def __determine_files_to_scan(self, eligible_paths):
+
+        did_error_scanning_files = False
+        files_to_parse = set()
+        for next_path in eligible_paths:
+            if "*" in next_path or "?" in next_path:
+                globbed_paths = glob.glob(next_path)
+                if not globbed_paths:
                     print(
-                        "Provided file path '"
+                        "Provided glob path '"
                         + next_path
-                        + "' is not a valid markdown file. Skipping.",
+                        + "' did not match any files.",
                         file=sys.stderr,
                     )
+                    did_error_scanning_files = True
+                    break
+                for next_globbed_path in globbed_paths:
+                    next_globbed_path = next_globbed_path.replace("\\", "/")
+                    self.__process_next_path(next_globbed_path, files_to_parse)
+            else:
+                if not self.__process_next_path(next_path, files_to_parse):
+                    did_error_scanning_files = True
+                    break
+
         files_to_parse = list(files_to_parse)
         files_to_parse.sort()
 
-        LOGGER.info("Number of scanned files found: %s", str(len(files_to_parse)))
-        return files_to_parse
+        LOGGER.info("Number of files found: %s", str(len(files_to_parse)))
+        return files_to_parse, did_error_scanning_files
 
     @classmethod
     def __handle_list_files(cls, files_to_scan):
@@ -224,7 +251,7 @@ class PyMarkdownLint:
         if files_to_scan:
             print("\n".join(files_to_scan))
             return 0
-        print("No Markdown files found.", file=sys.stderr)
+        print("No matching files found.", file=sys.stderr)
         return 1
 
     def load_json_configuration(self, configuration_file):
@@ -335,6 +362,7 @@ class PyMarkdownLint:
         self.__show_stack_trace = args.show_stack_trace
 
         new_handler = None
+        total_error_count = 0
         try:
             base_logger = logging.getLogger()
             if args.log_file:
@@ -345,30 +373,35 @@ class PyMarkdownLint:
                 base_logger.setLevel(PyMarkdownLint.available_log_maps[args.log_level])
 
             LOGGER.info("Determining files to scan.")
-            files_to_scan = self.__determine_files_to_scan(args.paths)
-            if args.list_files:
-                return_code = self.__handle_list_files(files_to_scan)
-                sys.exit(return_code)
+            files_to_scan, did_error_scanning_files = self.__determine_files_to_scan(
+                args.paths
+            )
+            if did_error_scanning_files:
+                total_error_count = 1
+            else:
+                if args.list_files:
+                    return_code = self.__handle_list_files(files_to_scan)
+                    sys.exit(return_code)
 
-            plugin_dir = os.path.dirname(os.path.realpath(__file__))
-            plugin_dir = os.path.join(plugin_dir, "plugins")
-            self.__initialize_plugins(args, plugin_dir)
+                plugin_dir = os.path.dirname(os.path.realpath(__file__))
+                plugin_dir = os.path.join(plugin_dir, "plugins")
+                self.__initialize_plugins(args, plugin_dir)
 
-            self.__initialize_parser(args)
+                self.__initialize_parser(args)
 
-            self.__load_configuration_and_apply_to_plugins(args)
+                self.__load_configuration_and_apply_to_plugins(args)
 
-            for next_file in files_to_scan:
-                try:
-                    self.__scan_file(args, next_file)
-                except BadPluginError as this_exception:
-                    self.__handle_scan_error(next_file, this_exception)
-                except BadTokenizationError as this_exception:
-                    self.__handle_scan_error(next_file, this_exception)
+                for next_file in files_to_scan:
+                    try:
+                        self.__scan_file(args, next_file)
+                    except BadPluginError as this_exception:
+                        self.__handle_scan_error(next_file, this_exception)
+                    except BadTokenizationError as this_exception:
+                        self.__handle_scan_error(next_file, this_exception)
         finally:
             if new_handler:
                 new_handler.close()
-        if self.__plugins.number_of_scan_failures:
+        if self.__plugins.number_of_scan_failures or total_error_count:
             sys.exit(1)
 
 
