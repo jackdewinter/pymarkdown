@@ -74,7 +74,8 @@
 ## Bugs - Block Quote/List Interaction
 
 - 270 and check for indent levels after
-- test_block_quotes_extra_02a with extra levels of lists?
+- test_block_quotes_extra_02ab - d - not verifying
+- test_block_quotes_extra_04f - wrong closing of block quote
 - multiline raw html in inline link label?
   - multi raw and multi icodespan to match other link label
 

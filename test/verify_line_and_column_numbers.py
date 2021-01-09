@@ -6,7 +6,7 @@ from pymarkdown.parser_helper import ParserHelper, PositionMarker
 # pylint: disable=too-many-lines
 
 
-# pylint: disable=too-many-branches,too-many-statements,too-many-locals
+# pylint: disable=too-many-branches,too-many-statements,too-many-locals, too-many-boolean-expressions
 def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C901
     """
     Verify that the line numbers and column numbers in tokens are as expected,
@@ -32,33 +32,82 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
             assert current_token.start_markdown_token
 
         if current_token.is_inline and not current_token.is_end_token:
-            print("Inline, skipping" + ParserHelper.make_value_visible(token_stack))
+            print("Inline, skipping:" + ParserHelper.make_value_visible(token_stack))
             if token_stack:
                 print(">>" + ParserHelper.make_value_visible(token_stack[-1]))
 
-            if (
-                container_block_stack
-                and container_block_stack[-1].is_block_quote_start
-                and current_token.is_text
-            ):
+            if container_block_stack and container_block_stack[-1].is_block_quote_start:
                 print(
                     "number_of_lines:"
                     + ParserHelper.make_value_visible(actual_tokens[ind - 1])
                 )
-                if actual_tokens[ind - 1].is_html_block:
-                    newlines_in_text_token = ParserHelper.count_newlines_in_text(
-                        current_token.token_text
-                    )
-                    print(">>newlines_in_text_token>" + str(newlines_in_text_token))
+                if current_token.is_text:
+                    if (
+                        actual_tokens[ind - 1].is_html_block
+                        or actual_tokens[ind - 1].is_indented_code_block
+                        or actual_tokens[ind - 1].is_fenced_code_block
+                        or actual_tokens[ind - 1].is_setext_heading
+                        or actual_tokens[ind - 1].is_paragraph
+                    ):
+                        newlines_in_text_token = ParserHelper.count_newlines_in_text(
+                            current_token.token_text
+                        )
+                        print(">>newlines_in_text_token>" + str(newlines_in_text_token))
+                        print(
+                            ">>mainline-html>>leading_text_index>"
+                            + str(container_block_stack[-1].leading_text_index)
+                        )
+                        container_block_stack[
+                            -1
+                        ].leading_text_index += newlines_in_text_token
+                        print(
+                            ">>mainline-html>>leading_text_index>"
+                            + str(container_block_stack[-1].leading_text_index)
+                        )
+                elif current_token.is_inline_image or current_token.is_inline_link:
+                    abc = current_token.text_from_blocks
+                    newlines_in_text_token = ParserHelper.count_newlines_in_text(abc)
                     print(
-                        ">>mainline-html>>leading_text_index>"
+                        ">>mainline-inline>>leading_text_index>"
                         + str(container_block_stack[-1].leading_text_index)
                     )
                     container_block_stack[
                         -1
                     ].leading_text_index += newlines_in_text_token
                     print(
-                        ">>mainline-html>>leading_text_index>"
+                        ">>mainline-inline>>leading_text_index>"
+                        + str(container_block_stack[-1].leading_text_index)
+                    )
+                elif current_token.is_inline_raw_html:
+                    abc = current_token.raw_tag
+                    newlines_in_text_token = ParserHelper.count_newlines_in_text(abc)
+                    print(
+                        ">>mainline-inline>>leading_text_index>"
+                        + str(container_block_stack[-1].leading_text_index)
+                    )
+                    container_block_stack[
+                        -1
+                    ].leading_text_index += newlines_in_text_token
+                    print(
+                        ">>mainline-inline>>leading_text_index>"
+                        + str(container_block_stack[-1].leading_text_index)
+                    )
+                elif current_token.is_inline_code_span:
+                    abc = (
+                        current_token.leading_whitespace
+                        + current_token.span_text
+                        + current_token.trailing_whitespace
+                    )
+                    newlines_in_text_token = ParserHelper.count_newlines_in_text(abc)
+                    print(
+                        ">>mainline-inline>>leading_text_index>"
+                        + str(container_block_stack[-1].leading_text_index)
+                    )
+                    container_block_stack[
+                        -1
+                    ].leading_text_index += newlines_in_text_token
+                    print(
+                        ">>mainline-inline>>leading_text_index>"
                         + str(container_block_stack[-1].leading_text_index)
                     )
             continue
@@ -76,12 +125,19 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                     current_token.is_atx_heading_end
                     or current_token.is_paragraph_end
                     or current_token.is_html_block_end
+                    or current_token.is_indented_code_block_end
+                    or current_token.is_fenced_code_block_end
+                    or current_token.is_setext_heading_end
                 ):
                     print(
                         ">>mainline-ends>>leading_text_index>"
                         + str(container_block_stack[-1].leading_text_index)
                     )
                     container_block_stack[-1].leading_text_index += 1
+                    if current_token.is_fenced_code_block_end:
+                        container_block_stack[-1].leading_text_index += 2
+                    elif current_token.is_setext_heading_end:
+                        container_block_stack[-1].leading_text_index += 1
                     print(
                         ">>mainline-ends>>leading_text_index>"
                         + str(container_block_stack[-1].leading_text_index)
@@ -213,7 +269,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
     assert not container_block_stack
 
 
-# pylint: enable=too-many-branches,too-many-statements,too-many-locals
+# pylint: enable=too-many-branches,too-many-statements,too-many-locals, too-many-boolean-expressions
 
 
 def __push_to_stack_if_required(token_stack, current_token):
@@ -514,9 +570,11 @@ def __validate_new_line(container_block_stack, current_token, current_position):
                 "vnl>>blank_line w/ bq>>leading_text_index>"
                 + str(container_block_stack[-1].leading_text_index)
             )
-            init_ws += len(
-                split_leading_spaces[container_block_stack[-1].leading_text_index]
-            )
+            leading_text = split_leading_spaces[
+                container_block_stack[-1].leading_text_index
+            ]
+            print("vnl>>blank_line w/ bq>>leading_text>:" + str(leading_text) + ":<<")
+            init_ws += len(leading_text)
             container_block_stack[-1].leading_text_index += 1
             did_x = True
             print(
