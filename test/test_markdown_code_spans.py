@@ -233,6 +233,192 @@ foo
 
 
 @pytest.mark.gfm
+def test_code_spans_346ax():
+    """
+    Test case 346a:  variation
+    """
+
+    # Arrange
+    source_markdown = """- ``
+foo\a
+``""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n]",
+        "[para(1,3):\n\n]",
+        "[icode-span(1,3):foo :``:\a\n\a \a:\a\n\a \a]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li><code>foo </code></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_code_spans_346aa():
+    """
+    Test case 346a:  variation
+    """
+
+    # Arrange
+    source_markdown = """- ``
+  foo\a
+  ``""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  ]",
+        "[para(1,3):\n\n]",
+        "[icode-span(1,3):foo :``:\a\n\a \a:\a\n\a \a]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li><code>foo </code></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_code_spans_346bx():
+    """
+    Test case 346a:  variation
+    """
+
+    # Arrange
+    source_markdown = """> ``
+foo 
+``"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n\n]",
+        "[para(1,3):\n\n]",
+        "[icode-span(1,3):foo :``:\a\n\a \a:\a\n\a \a]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p><code>foo </code></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_code_spans_346ba():
+    """
+    Test case 346a:  variation
+    """
+
+    # Arrange
+    source_markdown = """> ``
+> foo 
+> ``"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[para(1,3):\n\n]",
+        "[icode-span(1,3):foo :``:\a\n\a \a:\a\n\a \a]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p><code>foo </code></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_code_spans_346c():
+    """
+    Test case 346a:  variation
+    """
+
+    # Arrange
+    source_markdown = """a[a``
+foo\a
+``a](/uri)a""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):a:]",
+        "[link(1,2):inline:/uri:::::a``\nfoo \n``a:False::::]",
+        "[text(1,3):a:]",
+        "[icode-span(1,4):foo :``:\a\n\a \a:\a\n\a \a]",
+        "[text(3,3):a:]",
+        "[end-link:::False]",
+        "[text(3,11):a:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>a<a href="/uri">a<code>foo </code>a</a>a</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_code_spans_346ca():
+    """
+    Test case 346a:  variation
+    """
+
+    # Arrange
+    source_markdown = """a[a``
+ foo\a
+ ``a](/uri)a""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n \n ]",
+        "[text(1,1):a:]",
+        "[link(1,2):inline:/uri:::::a``\nfoo \n``a:False::::]",
+        "[text(1,3):a:]",
+        "[icode-span(1,4):foo :``:\a\n\a \a:\a\n\a \a]",
+        "[text(3,3):a:]",
+        "[end-link:::False]",
+        "[text(3,11):a:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>a<a href="/uri">a<code>foo </code>a</a>a</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_code_spans_346d():
+    """
+    Test case 346d:  variation
+    """
+
+    # Arrange
+    source_markdown = """a``
+foo 
+``a
+---"""
+    expected_tokens = [
+        "[setext(4,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        "[icode-span(1,2):foo :``:\a\n\a \a:\a\n\a \a]",
+        "[text(3,3):a:]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2>a<code>foo </code>a</h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_code_spans_347():
     """
     Test case 347:  Interior spaces are not collapsed:

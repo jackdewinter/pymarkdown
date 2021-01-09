@@ -240,12 +240,20 @@ class LinkHelper:
         there is actually enough other text to properly construct the link.
         """
 
-        LOGGER.debug(">>look_for_link_or_image>>%s<<", str(inline_blocks))
-        LOGGER.debug(">>source_text>>%s<<", str(source_text))
-        LOGGER.debug(">>next_index>>%s<<", str(next_index))
-        LOGGER.debug(">>remaining_line>>%s<<", str(remaining_line))
         LOGGER.debug(
-            ">>current_string_unresolved>>%s<<", str(current_string_unresolved)
+            ">>look_for_link_or_image>>%s<<",
+            ParserHelper.make_value_visible(inline_blocks),
+        )
+        LOGGER.debug(
+            ">>source_text>>%s<<", ParserHelper.make_value_visible(source_text)
+        )
+        LOGGER.debug(">>next_index>>%s<<", str(next_index))
+        LOGGER.debug(
+            ">>remaining_line>>%s<<", ParserHelper.make_value_visible(remaining_line)
+        )
+        LOGGER.debug(
+            ">>current_string_unresolved>>%s<<",
+            ParserHelper.make_value_visible(current_string_unresolved),
         )
         is_valid = False
         consume_rest_of_line = False
@@ -271,7 +279,9 @@ class LinkHelper:
                 ):
                     valid_special_start_text = inline_blocks[search_index].token_text
                     if inline_blocks[search_index].is_active:
-                        LOGGER.debug(">>>>>>%s", str(inline_blocks))
+                        LOGGER.debug(
+                            ">>>>>>%s", ParserHelper.make_value_visible(inline_blocks)
+                        )
                         (
                             updated_index,
                             token_to_append,
@@ -374,7 +384,7 @@ class LinkHelper:
                 )
             else:
                 display_string += "," + str(deactivate_token)
-        LOGGER.debug(display_string[1:])
+        LOGGER.debug(ParserHelper.make_value_visible(display_string[1:]))
 
     # pylint: disable=too-many-branches
     @staticmethod
@@ -443,8 +453,14 @@ class LinkHelper:
         Aggregate the text component of text blocks.
         """
 
-        LOGGER.debug(">>collect_text_from_blocks>>%s", str(inline_blocks))
-        LOGGER.debug(">>collect_text_from_blocks>>suffix_text>>%s", str(suffix_text))
+        LOGGER.debug(
+            ">>collect_text_from_blocks>>%s",
+            ParserHelper.make_value_visible(inline_blocks),
+        )
+        LOGGER.debug(
+            ">>collect_text_from_blocks>>suffix_text>>%s",
+            ParserHelper.make_value_visible(suffix_text),
+        )
         collected_text = ""
         collected_text_raw = ""
         collect_index = ind + 1
@@ -454,7 +470,7 @@ class LinkHelper:
 
             LOGGER.debug(
                 ">>collect_text>>%s<<",
-                str(inline_blocks[collect_index]),
+                ParserHelper.make_value_visible(inline_blocks[collect_index]),
             )
 
             if inline_blocks[collect_index].is_inline_link_end:
@@ -472,7 +488,30 @@ class LinkHelper:
                 collected_text_raw += raw_text
                 collected_text += inline_blocks[collect_index].image_alt_text
             elif inline_blocks[collect_index].is_inline_code_span:
-                converted_text = "`" + inline_blocks[collect_index].span_text + "`"
+                LOGGER.debug(
+                    "CODESPAN>>%s<<",
+                    ParserHelper.make_value_visible(inline_blocks[collect_index]),
+                )
+                resolved_leading_whitespace = (
+                    ParserHelper.resolve_replacement_markers_from_text(
+                        inline_blocks[collect_index].leading_whitespace
+                    )
+                )
+                resolved_span_text = ParserHelper.resolve_replacement_markers_from_text(
+                    inline_blocks[collect_index].span_text
+                )
+                resolved_trailing_whitespace = (
+                    ParserHelper.resolve_replacement_markers_from_text(
+                        inline_blocks[collect_index].trailing_whitespace
+                    )
+                )
+                converted_text = (
+                    inline_blocks[collect_index].extracted_start_backticks
+                    + resolved_leading_whitespace
+                    + resolved_span_text
+                    + resolved_trailing_whitespace
+                    + inline_blocks[collect_index].extracted_start_backticks
+                )
                 collected_text += converted_text
                 collected_text_raw += converted_text
             elif inline_blocks[collect_index].is_inline_raw_html:
@@ -492,8 +531,8 @@ class LinkHelper:
                 collected_text_raw += inline_blocks[collect_index].token_text
             LOGGER.debug(
                 ">>collect_text>>%s<<%s<<",
-                collected_text,
-                str(inline_blocks[collect_index]),
+                ParserHelper.make_value_visible(collected_text),
+                ParserHelper.make_value_visible(inline_blocks[collect_index]),
             )
             LOGGER.debug(
                 ">>collected_text_raw>>%s<<",
@@ -872,7 +911,7 @@ class LinkHelper:
 
         LOGGER.debug(
             "handle_link_types>>%s<<%s<<%s",
-            str(inline_blocks),
+            ParserHelper.make_value_visible(inline_blocks),
             str(ind),
             str(len(inline_blocks)),
         )

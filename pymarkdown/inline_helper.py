@@ -377,6 +377,7 @@ class InlineHelper:
             between_text = inline_request.source_text[
                 new_index:end_backtick_start_index
             ]
+            obt = between_text
             LOGGER.debug(
                 "after_collect>%s>>%s>>%s<<",
                 ParserHelper.make_value_visible(between_text),
@@ -412,6 +413,14 @@ class InlineHelper:
             LOGGER.debug(
                 "between_text>>%s<<", ParserHelper.make_value_visible(between_text)
             )
+            LOGGER.debug(
+                "leading_whitespace>>%s<<",
+                ParserHelper.make_value_visible(leading_whitespace),
+            )
+            LOGGER.debug(
+                "trailing_whitespace>>%s<<",
+                ParserHelper.make_value_visible(trailing_whitespace),
+            )
             between_text = between_text.replace(
                 ParserHelper.newline_character, replaced_newline
             )
@@ -428,6 +437,14 @@ class InlineHelper:
             between_text = InlineHelper.append_text("", between_text)
             LOGGER.debug(
                 "between_text>>%s<<", ParserHelper.make_value_visible(between_text)
+            )
+            LOGGER.debug(
+                "leading_whitespace>>%s<<",
+                ParserHelper.make_value_visible(leading_whitespace),
+            )
+            LOGGER.debug(
+                "trailing_whitespace>>%s<<",
+                ParserHelper.make_value_visible(trailing_whitespace),
             )
             end_backtick_start_index += len(extracted_start_backticks)
             inline_response.new_string = ""
@@ -449,28 +466,30 @@ class InlineHelper:
                 )
             ]
 
-            if "\n" in between_text:
-                split_between_text = between_text.split("\n")
-                assert split_between_text[-2].endswith("\a")
-                last_between_text = "\a" + split_between_text[-1]
-                last_between_text = ParserHelper.resolve_replacement_markers_from_text(
-                    last_between_text
+            if "\n" in obt:
+                split_between_text = obt.split("\n")
+                LOGGER.debug(
+                    ">>split_between_text>>%s<<",
+                    ParserHelper.make_value_visible(split_between_text),
                 )
+                last_between_text = split_between_text[-1]
                 inline_response.delta_line_number = len(split_between_text) - 1
-                length_of_last_elements = len(last_between_text)
                 inline_response.delta_column_number = -(
-                    length_of_last_elements
-                    + 1
-                    + len(trailing_whitespace)
-                    + len(extracted_start_backticks)
+                    len(last_between_text) + 1 + len(extracted_start_backticks)
                 )
                 LOGGER.debug(
                     ">>delta_column_number>>%s<<",
-                    ParserHelper.make_value_visible(
-                        inline_response.delta_column_number
-                    ),
+                    str(inline_response.delta_column_number),
                 )
 
+        LOGGER.debug(
+            ">>delta_line_number>>%s<<",
+            str(inline_response.delta_line_number),
+        )
+        LOGGER.debug(
+            ">>delta_column_number>>%s<<",
+            str(inline_response.delta_column_number),
+        )
         if inline_response.delta_line_number == -1:
             inline_response.delta_line_number = 0
             inline_response.delta_column_number = (

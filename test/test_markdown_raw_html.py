@@ -150,6 +150,111 @@ data="foo" ><c></p>
 
 
 @pytest.mark.gfm
+def test_raw_html_634ba():
+    """
+    Test case 634ba:  variation
+    """
+
+    # Arrange
+    source_markdown = """> <a  /><b2
+> data="foo" ><c>"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[para(1,3):\n]",
+        "[raw-html(1,3):a  /]",
+        '[raw-html(1,9):b2\ndata="foo" ]',
+        "[raw-html(2,13):c]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p><a  /><b2
+data="foo" ><c></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_raw_html_634bb():
+    """
+    Test case 634bb:  variation
+    """
+
+    # Arrange
+    source_markdown = """> <a  /><b2
+>   data="foo" ><c>"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[para(1,3):\n  ]",
+        "[raw-html(1,3):a  /]",
+        '[raw-html(1,9):b2\n\a  \a\x03\adata="foo" ]',
+        "[raw-html(2,15):c]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p><a  /><b2
+data="foo" ><c></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_raw_html_634c():
+    """
+    Test case 634c:  variation
+    """
+
+    # Arrange
+    source_markdown = """<a  /><b2
+data="foo" ><c>
+---"""
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[raw-html(1,1):a  /]",
+        '[raw-html(1,7):b2\ndata="foo" ]',
+        "[raw-html(2,13):c]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h2><a  /><b2
+data="foo" ><c></h2>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_raw_html_634d():
+    """
+    Test case 634c:  variation
+    """
+
+    # Arrange
+    source_markdown = """# <a  /><b2
+data="foo" ><c>"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        "[text(1,3)::\a \a\x03\a]",
+        "[raw-html(1,3):a  /]",
+        "[text(1,9):\a<\a&lt;\ab2:]",
+        "[end-atx:::False]",
+        "[para(2,1):]",
+        '[text(2,1):data=\a"\a&quot;\afoo\a"\a&quot;\a \a>\a&gt;\a:]',
+        "[raw-html(2,13):c]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<h1><a  />&lt;b2</h1>
+<p>data=&quot;foo&quot; &gt;<c></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_raw_html_635():
     """
     Test case 635:  With attributes:

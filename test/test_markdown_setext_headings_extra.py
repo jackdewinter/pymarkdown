@@ -4021,7 +4021,7 @@ fg`nk](/uri "title" )
     expected_tokens = [
         "[setext(5,1):-:3::(1,1)]",
         "[text(1,1):abc\n::\n]",
-        '[link(2,1):inline:/uri:title::::li`de\a\n\a \afg`nk:False:":: : ]',
+        '[link(2,1):inline:/uri:title::::li`de\nfg`nk:False:":: : ]',
         "[text(2,2):li:]",
         "[icode-span(2,4):de\a\n\a \afg:`::]",
         "[text(3,4):nk:]",
@@ -4112,7 +4112,7 @@ fg`nk][bar]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):full:/url:title:::bar:li`de\a\n\a \afg`nk:::::]",
+        "[link(1,2):full:/url:title:::bar:li`de\nfg`nk:::::]",
         "[text(1,3):li:]",
         "[icode-span(1,5):de\a\n\a \afg:`::]",
         "[text(2,4):nk:]",
@@ -4205,7 +4205,7 @@ fg`nk][]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):collapsed:/url:title::::li`de\a\n\a \afg`nk:::::]",
+        "[link(1,2):collapsed:/url:title::::li`de\nfg`nk:::::]",
         "[text(1,3):li:]",
         "[icode-span(1,5):de\a\n\a \afg:`::]",
         "[text(2,4):nk:]",
@@ -4298,7 +4298,7 @@ fg`nk]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[link(1,2):shortcut:/url:title::::li`de\a\n\a \afg`nk:::::]",
+        "[link(1,2):shortcut:/url:title::::li`de\nfg`nk:::::]",
         "[text(1,3):li:]",
         "[icode-span(1,5):de\a\n\a \afg:`::]",
         "[text(2,4):nk:]",
@@ -4389,7 +4389,7 @@ fg`nk](/uri "title" )
     expected_tokens = [
         "[setext(5,1):-:3::(1,1)]",
         "[text(1,1):abc\n::\n]",
-        '[image(2,1):inline:/uri:title:lide fgnk::::li`de\a\n\a \afg`nk:False:":: : ]',
+        '[image(2,1):inline:/uri:title:lide fgnk::::li`de\nfg`nk:False:":: : ]',
         "[text(3,22):\ndef::\n \x02]",
         "[end-setext:::False]",
     ]
@@ -4470,7 +4470,7 @@ fg`nk][bar]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):full:/url:title:lide fgnk:::bar:li`de\a\n\a \afg`nk:::::]",
+        "[image(1,2):full:/url:title:lide fgnk:::bar:li`de\nfg`nk:::::]",
         "[text(2,12):a:]",
         "[end-setext:::False]",
         "[BLANK(4,1):]",
@@ -4551,7 +4551,7 @@ fg`nk][]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):collapsed:/url:title:lide fgnk::::li`de\a\n\a \afg`nk:::::]",
+        "[image(1,2):collapsed:/url:title:lide fgnk::::li`de\nfg`nk:::::]",
         "[text(2,9):a:]",
         "[end-setext:::False]",
         "[BLANK(4,1):]",
@@ -4632,7 +4632,7 @@ fg`nk]a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        "[image(1,2):shortcut:/url:title:lide fgnk::::li`de\a\n\a \afg`nk:::::]",
+        "[image(1,2):shortcut:/url:title:lide fgnk::::li`de\nfg`nk:::::]",
         "[text(2,7):a:]",
         "[end-setext:::False]",
         "[BLANK(4,1):]",

@@ -1194,6 +1194,19 @@ class TransformToMarkdown:
     def __rehydrate_block_quote_end(self, current_token):
         del self.container_token_stack[-1]
         continue_sequence = self.__reset_container_continue_sequence()
+
+        leading_text_index = current_token.start_markdown_token.leading_text_index
+        expected_leading_text_index = (
+            current_token.start_markdown_token.extracted_whitespace.split("\n")
+        )
+
+        assert leading_text_index + 1 == len(expected_leading_text_index), (
+            "leading_text_index+1="
+            + str(leading_text_index + 1)
+            + ";expected_leading_text_index="
+            + str(len(expected_leading_text_index))
+        )
+
         return "", continue_sequence, continue_sequence
 
     # pylint: enable=unused-argument
@@ -1205,6 +1218,19 @@ class TransformToMarkdown:
         """
         del self.container_token_stack[-1]
         continue_sequence = self.__reset_container_continue_sequence()
+
+        leading_spaces_index = current_token.start_markdown_token.leading_spaces_index
+        expected_leading_spaces_index = (
+            current_token.start_markdown_token.extracted_whitespace.split("\n")
+        )
+
+        assert leading_spaces_index + 1 == len(expected_leading_spaces_index), (
+            "leading_spaces_index+1="
+            + str(leading_spaces_index + 1)
+            + ";expected_leading_spaces_index="
+            + str(len(expected_leading_spaces_index))
+        )
+
         return "", continue_sequence, continue_sequence
 
     # pylint: enable=unused-argument

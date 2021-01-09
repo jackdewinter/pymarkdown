@@ -29,6 +29,8 @@
 
 ### Priority 2 - Like To Solve Before Initial
 
+- check resolve/remove helpers for groupings per file type i.e. html, markdown, proc, verify
+- check `__verify_next_inline_raw_html` for refactor
 - look for `valid_raw_html = "\n".join(split_raw)` and see if can combine
 - refactor `for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):`
   from different areas into one helper function
@@ -72,13 +74,9 @@
 ## Bugs - Block Quote/List Interaction
 
 - 270 and check for indent levels after
-- verify that leading_text_index and list's version match up with expected at end of verify
-- verify that leading_text_index and list's version match up with expected at end of markdown gen
-- verify multi-line raw-html in different blocks, not only paragraph
-  - inside of link - test_paragraph_series_j_l_rh_s_t
-- verify multi-line code-spans in different blocks, not only paragraph
-- check resolve/remove helpers for groupings per file type i.e. html, markdown, proc, verify
-- check `__verify_next_inline_raw_html` for refactor
+- test_block_quotes_extra_02a with extra levels of lists?
+- multiline raw html in inline link label?
+  - multi raw and multi icodespan to match other link label
 
 ## Bugs - Tokenization
 

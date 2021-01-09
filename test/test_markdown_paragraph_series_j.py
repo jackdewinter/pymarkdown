@@ -460,7 +460,7 @@ def test_paragraph_series_j_l_cs_s_t():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        '[link(1,2):inline:/uri:title::::a`li\a\n\a \ank`a:False:":: :]',
+        '[link(1,2):inline:/uri:title::::a`li\nnk`a:False:":: :]',
         "[text(1,3):a:]",
         "[icode-span(1,4):li\a\n\a \ank:`::]",
         "[text(2,4):a:]",
@@ -485,7 +485,7 @@ def test_paragraph_series_j_i_cs_s_t():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):a:]",
-        '[image(1,2):inline:/uri:title:ali nka::::a`li\a\n\a \ank`a:False:":: :]',
+        '[image(1,2):inline:/uri:title:ali nka::::a`li\nnk`a:False:":: :]',
         "[text(2,20):a:]",
         "[end-para:::True]",
     ]

@@ -1772,27 +1772,50 @@ def __verify_next_inline_code_span(
     link_stack,
 ):
 
+    resolved_leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
+        previous_inline_token.leading_whitespace
+    )
     resolved_span_text = ParserHelper.resolve_replacement_markers_from_text(
         previous_inline_token.span_text
     )
+    resolved_trailing_whitespace = ParserHelper.resolve_replacement_markers_from_text(
+        previous_inline_token.trailing_whitespace
+    )
 
-    leading_ws_length = len(previous_inline_token.leading_whitespace)
-    trailing_ws_length = len(previous_inline_token.trailing_whitespace)
+    leading_ws_length = len(resolved_leading_whitespace)
+    trailing_ws_length = len(resolved_trailing_whitespace)
     backtick_length = len(previous_inline_token.extracted_start_backticks)
 
-    if "\n" in resolved_span_text:
+    print(
+        "here>>resolved_leading_whitespace>>"
+        + ParserHelper.make_value_visible(resolved_leading_whitespace)
+        + "<<"
+    )
+    print(
+        "here>>resolved_span_text>>"
+        + ParserHelper.make_value_visible(resolved_span_text)
+        + "<<"
+    )
+    print(
+        "here>>trailing_ws>>"
+        + ParserHelper.make_value_visible(resolved_trailing_whitespace)
+        + "<<"
+    )
+    combined_text = (
+        resolved_leading_whitespace + resolved_span_text + resolved_trailing_whitespace
+    )
+
+    if "\n" in combined_text:
         print(
             ">>estimated_line/column=("
             + str(estimated_line_number)
             + ","
             + str(estimated_column_number)
         )
-        split_span_text = resolved_span_text.split("\n")
+        split_span_text = combined_text.split("\n")
         num_columns = len(split_span_text) - 1
         estimated_line_number += num_columns
-        estimated_column_number = (
-            len(split_span_text[-1]) + 1 + trailing_ws_length + backtick_length
-        )
+        estimated_column_number = len(split_span_text[-1]) + 1 + backtick_length
         print(
             ">>estimated_line/column=("
             + str(estimated_line_number)
