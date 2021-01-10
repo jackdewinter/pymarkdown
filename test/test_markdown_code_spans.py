@@ -362,7 +362,7 @@ foo\a
     expected_gfm = """<p>a<a href="/uri">a<code>foo </code>a</a>a</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -391,7 +391,7 @@ def test_code_spans_346ca():
     expected_gfm = """<p>a<a href="/uri">a<code>foo </code>a</a>a</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

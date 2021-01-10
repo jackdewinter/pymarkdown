@@ -354,7 +354,7 @@ class TokenizedMarkdown:
                     force_ignore_first_as_lrd,
                     adjusted_tokens,
                 ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-                    parser_state, empty_position_marker, "", ""
+                    parser_state, empty_position_marker, "", "", "", 0, 0
                 )
                 LOGGER.debug("BOOOM")
                 if caller_can_handle_requeue and lines_to_requeue:
@@ -490,7 +490,7 @@ class TokenizedMarkdown:
                 force_ignore_first_as_lrd,
                 new_tokens,
             ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-                parser_state, empty_position_marker, "", ""
+                parser_state, empty_position_marker, "", "", "", 0, 0
             )
             assert not did_pause_lrd
             force_default_handling = True

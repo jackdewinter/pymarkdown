@@ -64,7 +64,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing pylint static analyzer on source Python code.}
-pipenv run pylint --rcfile=setup.cfg %PYTHON_MODULE_NAME% %MY_VERBOSE%
+pipenv run pylint -j 1 --rcfile=setup.cfg %PYTHON_MODULE_NAME% %MY_VERBOSE%
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing pylint static analyzer on source Python code failed.}
@@ -72,7 +72,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing pylint static analyzer on test Python code.}
-pipenv run pylint --rcfile=setup.cfg test %MY_VERBOSE%
+pipenv run pylint -j 1 --rcfile=setup.cfg test %MY_VERBOSE%
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing pylint static analyzer on test Python code failed.}

@@ -97,7 +97,11 @@ class ContainerBlockProcessor:
         line_to_parse = position_marker.text_to_parse
         original_line_to_parse = position_marker.text_to_parse + ""
 
+        original_stack_depth = len(parser_state.token_stack)
+        original_document_depth = len(parser_state.token_document)
         LOGGER.debug("Line:%s:", position_marker.text_to_parse)
+        LOGGER.debug("Stack Depth:%s:", str(original_stack_depth))
+        LOGGER.debug("Document Depth:%s:", str(original_document_depth))
         no_para_start_if_empty = False
 
         start_index, extracted_whitespace = ParserHelper.extract_whitespace(
@@ -314,6 +318,8 @@ class ContainerBlockProcessor:
             last_list_start_index,
             text_removed_by_container,
             force_it,
+            original_stack_depth,
+            original_document_depth,
         )
         parser_state.same_line_container_tokens = None
 
@@ -877,7 +883,7 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __process_leaf_tokens(
         parser_state,
@@ -892,6 +898,8 @@ class ContainerBlockProcessor:
         last_list_start_index,
         text_removed_by_container,
         force_it,
+        original_stack_depth,
+        original_document_depth,
     ):
         assert not leaf_tokens
         LOGGER.debug("parsing leaf>>")
@@ -916,6 +924,8 @@ class ContainerBlockProcessor:
             last_list_start_index,
             text_removed_by_container,
             force_it,
+            original_stack_depth,
+            original_document_depth,
         )
         LOGGER.debug("parsed leaf>>%s", str(leaf_tokens))
         LOGGER.debug("parsed leaf>>%s", str(len(leaf_tokens)))
@@ -929,11 +939,20 @@ class ContainerBlockProcessor:
             str(requeue_line_info.force_ignore_first_as_lrd),
         )
         return leaf_tokens, requeue_line_info
-        # pylint: enable=too-many-arguments
+
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __close_indented_block_if_indent_not_there(parser_state, extracted_whitespace):
 
+        LOGGER.debug(
+            "__close_indented_block_if_indent_not_there>>%s>",
+            str(parser_state.token_stack[-1]),
+        )
+        LOGGER.debug(
+            "__close_indented_block_if_indent_not_there>>%s>",
+            str(extracted_whitespace),
+        )
         pre_tokens = []
         if parser_state.token_stack[
             -1
@@ -954,6 +973,10 @@ class ContainerBlockProcessor:
             )
             extracted_blank_line_tokens.reverse()
             pre_tokens.extend(extracted_blank_line_tokens)
+        LOGGER.debug(
+            "__close_indented_block_if_indent_not_there>>pre_tokens>%s>",
+            str(pre_tokens),
+        )
         return pre_tokens
 
     @staticmethod
@@ -1053,6 +1076,9 @@ class ContainerBlockProcessor:
         original_line_to_parse,
         ignore_link_definition_start,
         pre_tokens,
+        unmodified_line_to_parse,
+        original_stack_depth,
+        original_document_depth,
     ):
         """
         Take care of the processing for link reference definitions.
@@ -1060,6 +1086,11 @@ class ContainerBlockProcessor:
         lines_to_requeue = []
         new_tokens = []
         force_ignore_first_as_lrd = None
+
+        LOGGER.debug(
+            "handle_link_reference_definition>>pre_tokens>>%s<<",
+            str(pre_tokens),
+        )
 
         if not outer_processed and not ignore_link_definition_start:
             LOGGER.debug(
@@ -1078,6 +1109,9 @@ class ContainerBlockProcessor:
                 position_marker,
                 original_line_to_parse,
                 extracted_whitespace,
+                unmodified_line_to_parse,
+                original_stack_depth,
+                original_document_depth,
             )
             if lines_to_requeue:
                 outer_processed = True
@@ -1088,7 +1122,15 @@ class ContainerBlockProcessor:
                 str(len(lines_to_requeue)),
             )
 
+        LOGGER.debug(
+            "handle_link_reference_definition>>pre_tokens>>%s<<",
+            str(pre_tokens),
+        )
         pre_tokens.extend(new_tokens)
+        LOGGER.debug(
+            "handle_link_reference_definition>>pre_tokens>>%s<<",
+            str(pre_tokens),
+        )
         return outer_processed, lines_to_requeue, force_ignore_first_as_lrd
 
     # pylint: enable=too-many-arguments
@@ -1107,6 +1149,8 @@ class ContainerBlockProcessor:
         last_list_start_index,
         text_removed_by_container,
         force_it,
+        original_stack_depth,
+        original_document_depth,
     ):
         """
         Parse the contents of a line for a leaf block.
@@ -1132,6 +1176,9 @@ class ContainerBlockProcessor:
             index_indent=xposition_marker.index_indent,
         )
 
+        LOGGER.debug(
+            "__close_indented_block_if_indent_not_there",
+        )
         pre_tokens = ContainerBlockProcessor.__close_indented_block_if_indent_not_there(
             parser_state, extracted_whitespace
         )
@@ -1157,6 +1204,9 @@ class ContainerBlockProcessor:
             original_line_to_parse,
             ignore_link_definition_start,
             pre_tokens,
+            original_line_to_parsex,
+            original_stack_depth,
+            original_document_depth,
         )
 
         outer_processed = ContainerBlockProcessor.__handle_html_block(
@@ -1222,6 +1272,7 @@ class ContainerBlockProcessor:
         # assert new_tokens or did_complete_lrd or did_pause_lrd or lines_to_requeue
         LOGGER.debug(">>leaf--adding>>%s", str(new_tokens))
         pre_tokens.extend(new_tokens)
+        LOGGER.debug(">>leaf--added>>%s", str(pre_tokens))
         return pre_tokens, requeue_line_info
 
     # pylint: enable=too-many-arguments, too-many-locals

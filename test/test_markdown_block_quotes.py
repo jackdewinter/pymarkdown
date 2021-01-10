@@ -2304,7 +2304,6 @@ script
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_extra_04f():
     """
@@ -2318,16 +2317,11 @@ def test_block_quotes_extra_04f():
 >
 > end"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n]",
-        "[end-block-quote:::False]",
-        "[para(1,1):]",
-        "[text(1,1):[:]",
-        "[end-para:::True]",
-        "[block-quote(2,1)::> \n> \n>\n> ]",
-        "[para(2,3):\n]",
-        "[text(2,3):abc\n::\n]",
-        "[text(3,1):]:]",
-        "[text(3,2):(/uri):]",
+        "[block-quote(1,1)::> \n> \n> \n>\n> ]",
+        "[para(1,3):\n\n]",
+        "[link(1,3):inline:/uri:::::\nabc\n:False::::]",
+        "[text(1,4):\nabc\n::\n\n]",
+        "[end-link:::False]",
         "[end-para:::True]",
         "[BLANK(4,2):]",
         "[para(5,3):]",

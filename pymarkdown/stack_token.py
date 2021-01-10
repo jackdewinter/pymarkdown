@@ -445,7 +445,10 @@ class LinkDefinitionStackToken(StackToken):
     def __init__(self, extracted_whitespace, position_marker):
         self.__extracted_whitespace = extracted_whitespace
         self.__continuation_lines = []
+        self.__unmodified_lines = []
         self.__start_position_marker = position_marker
+        self.original_stack_depth = None
+        self.original_document_depth = None
         StackToken.__init__(self, StackToken._stack_link_definition)
 
     @property
@@ -463,6 +466,13 @@ class LinkDefinitionStackToken(StackToken):
         return self.__continuation_lines
 
     @property
+    def unmodified_lines(self):
+        """
+        Returns the unmodified continuation lines associated with this stack token.
+        """
+        return self.__unmodified_lines
+
+    @property
     def start_position_marker(self):
         """
         Returns the start position associated with this stack token.
@@ -473,7 +483,15 @@ class LinkDefinitionStackToken(StackToken):
         """
         Add the line to the collection of lines to keep as "continuations".
         """
-        self.continuation_lines.append(new_line)
+        self.__continuation_lines.append(new_line)
+
+    def add_unmodified_line(self, new_line):
+        """
+        Add the line to the collection of lines to keep as "umodified line".
+        These are the same as the continuation_lines values, just with the exact
+        text that was presented to the parser.
+        """
+        self.__unmodified_lines.append(new_line)
 
     def get_joined_lines(self, join_suffix):
         """

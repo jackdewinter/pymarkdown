@@ -57,6 +57,7 @@
 - why does `__revert_token_to_normal_text_token` require TextMarkdown.copy instead of `replacement_token = text_token_to_replace.create_copy()`?
 - image token handling confusing and non-standard
 - fenced code block handling of line/col could be better
+- LRD and block quote interaction - process_link_reference_definition - search for XXXXX
 
 ### Priority 4 - Like To Solve in next 6 m
 
@@ -78,6 +79,7 @@
 - test_block_quotes_extra_04f - wrong closing of block quote
 - multiline raw html in inline link label?
   - multi raw and multi icodespan to match other link label
+- lrd over new list item or new block quote boundary
 
 ## Bugs - Tokenization
 

@@ -19,12 +19,16 @@ class LinkReferenceDefinitionHelper:
 
     __lrd_start_character = "["
 
+    # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def process_link_reference_definition(
         parser_state,
         position_marker,
         original_line_to_parse,
         extracted_whitespace,
+        unmodified_line_to_parse,
+        original_stack_depth,
+        original_document_depth,
     ):
         """
         Process a link deference definition.  Note, this requires a lot of work to
@@ -42,6 +46,10 @@ class LinkReferenceDefinitionHelper:
         is_blank_line = not line_to_parse and not start_index
         if parser_state.token_stack[-1].was_link_definition_started:
             was_started = True
+            original_stack_depth = parser_state.token_stack[-1].original_stack_depth
+            original_document_depth = parser_state.token_stack[
+                -1
+            ].original_document_depth
             LOGGER.debug(
                 ">>continuation_lines>>%s<<",
                 str(parser_state.token_stack[-1].continuation_lines),
@@ -92,7 +100,10 @@ class LinkReferenceDefinitionHelper:
                     end_lrd_index,
                     parsed_lrd_tuple,
                 ) = LinkReferenceDefinitionHelper.__process_lrd_hard_failure(
-                    parser_state, original_line_to_parse, lines_to_requeue
+                    parser_state,
+                    original_line_to_parse,
+                    lines_to_requeue,
+                    unmodified_line_to_parse,
                 )
         else:
             (
@@ -124,9 +135,12 @@ class LinkReferenceDefinitionHelper:
                 was_started,
                 original_line_to_parse,
                 extracted_whitespace,
+                unmodified_line_to_parse,
+                original_stack_depth,
+                original_document_depth,
             )
             did_pause_lrd = True
-        elif was_started:
+        if (not did_pause_lrd and was_started) or did_complete_lrd:
             LOGGER.debug(">>parse_link_reference_definition>>was_started")
             (
                 force_ignore_first_as_lrd,
@@ -143,6 +157,38 @@ class LinkReferenceDefinitionHelper:
         else:
             LOGGER.debug(">>parse_link_reference_definition>>other")
 
+        LOGGER.debug(">>XXXXXX>>requeue:%s:", str(lines_to_requeue))
+        LOGGER.debug(">>XXXXXX>>did_complete_lrd:%s:", str(did_complete_lrd))
+        if lines_to_requeue:
+
+            # This works because in most cases, we add things.  However, in cases like
+            # an indented code block, we process the "is it indented enough" and close
+            # that block before hitting this.  As such, we have a special case to take
+            # care of that.  In the future, will possibly want to do something instead of
+            # original_document_depth and stack, such as passing in a copy of the both
+            # elements so they can be reset on the rewind.
+            # i.e. icode would go back on stack, end-icode would not be in document.
+            LOGGER.debug(
+                ">>XXXXXX>>original_stack_depth:%s:", str(original_stack_depth)
+            )
+            LOGGER.debug(
+                ">>XXXXXX>>token_stack_depth:%s:", str(len(parser_state.token_stack))
+            )
+            while len(parser_state.token_stack) > original_stack_depth:
+                del parser_state.token_stack[-1]
+
+            LOGGER.debug(
+                ">>XXXXXX>>original_document_depth:%s:", str(original_document_depth)
+            )
+            LOGGER.debug(
+                ">>XXXXXX>>token_document_depth:%s:",
+                str(len(parser_state.token_document)),
+            )
+            while len(parser_state.token_document) > original_document_depth:
+                if parser_state.token_document[-1].is_indented_code_block_end:
+                    break
+                del parser_state.token_document[-1]
+
         return (
             did_complete_lrd or end_lrd_index != -1,
             did_complete_lrd,
@@ -151,6 +197,8 @@ class LinkReferenceDefinitionHelper:
             force_ignore_first_as_lrd,
             new_tokens,
         )
+
+    # pylint: enable=too-many-locals, too-many-arguments
 
     @staticmethod
     def __is_link_reference_definition(
@@ -199,10 +247,17 @@ class LinkReferenceDefinitionHelper:
         """
         Handle the parsing of what appears to be a link reference definition.
         """
+        LOGGER.debug(
+            "\nparse_link_reference_definition:%s:",
+            ParserHelper.make_value_visible(line_to_parse),
+        )
+        LOGGER.debug("start_index:%s:", str(start_index))
+        LOGGER.debug("start_index:%s:", str(extracted_whitespace))
         did_start = LinkReferenceDefinitionHelper.__is_link_reference_definition(
             parser_state, line_to_parse, start_index, extracted_whitespace
         )
         if not did_start:
+            LOGGER.debug("BAIL")
             return False, -1, None
 
         LOGGER.debug("\nparse_link_reference_definition")
@@ -261,8 +316,6 @@ class LinkReferenceDefinitionHelper:
             ParserHelper.newline_character
         ):
             line_title_whitespace = line_title_whitespace[0:-1]
-        if end_whitespace and end_whitespace.endswith(ParserHelper.newline_character):
-            end_whitespace = end_whitespace[0:-1]
 
         LOGGER.debug(
             ">>collected_destination(normalized)>>%s", str(normalized_destination)
@@ -285,6 +338,7 @@ class LinkReferenceDefinitionHelper:
 
     # pylint: enable=too-many-locals
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __add_line_for_lrd_continuation(
         parser_state,
@@ -292,11 +346,15 @@ class LinkReferenceDefinitionHelper:
         was_started,
         original_line_to_parse,
         extracted_whitespace,
+        unmodified_line_to_parse,
+        original_stack_depth,
+        original_document_depth,
     ):
         """
         As part of processing a link reference definition, add a line to the continuation.
         """
 
+        line_to_store = original_line_to_parse
         if was_started:
             LOGGER.debug(">>parse_link_reference_definition>>start already marked")
         else:
@@ -304,7 +362,15 @@ class LinkReferenceDefinitionHelper:
             parser_state.token_stack.append(
                 LinkDefinitionStackToken(extracted_whitespace, position_marker)
             )
-        parser_state.token_stack[-1].add_continuation_line(original_line_to_parse)
+            parser_state.token_stack[-1].original_stack_depth = original_stack_depth
+            parser_state.token_stack[
+                -1
+            ].original_document_depth = original_document_depth
+        LOGGER.debug(">>parse_link_reference_definition>>add>:%s<<", str(line_to_store))
+        parser_state.token_stack[-1].add_continuation_line(line_to_store)
+        parser_state.token_stack[-1].add_unmodified_line(unmodified_line_to_parse)
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -350,7 +416,7 @@ class LinkReferenceDefinitionHelper:
 
     @staticmethod
     def __process_lrd_hard_failure(
-        parser_state, original_line_to_parse, lines_to_requeue
+        parser_state, original_line_to_parse, lines_to_requeue, unmodified_line_to_parse
     ):
         """
         In cases of a hard failure, we have had continuations to the original line
@@ -365,18 +431,24 @@ class LinkReferenceDefinitionHelper:
 
         do_again = True
         parser_state.token_stack[-1].add_continuation_line(original_line_to_parse)
+        parser_state.token_stack[-1].add_unmodified_line(unmodified_line_to_parse)
         while do_again and parser_state.token_stack[-1].continuation_lines:
             LOGGER.debug(
                 "continuation_lines>>%s<<",
                 str(parser_state.token_stack[-1].continuation_lines),
             )
 
-            lines_to_requeue.append(parser_state.token_stack[-1].continuation_lines[-1])
+            lines_to_requeue.append(parser_state.token_stack[-1].unmodified_lines[-1])
             LOGGER.debug(
                 ">>continuation_line>>%s",
                 str(parser_state.token_stack[-1].continuation_lines[-1]),
             )
+            LOGGER.debug(
+                ">>unmodified_line>>%s",
+                str(parser_state.token_stack[-1].unmodified_lines[-1]),
+            )
             del parser_state.token_stack[-1].continuation_lines[-1]
+            del parser_state.token_stack[-1].unmodified_lines[-1]
             LOGGER.debug(
                 ">>lines_to_requeue>>%s>>%s",
                 str(lines_to_requeue),
