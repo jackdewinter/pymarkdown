@@ -373,7 +373,7 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(actual_tokens[ind])
             )
             if actual_tokens[ind].is_paragraph:
-                if transformed_data.endswith("\n") and (
+                if transformed_data.endswith(ParserHelper.newline_character) and (
                     current_token.is_text
                     or current_token.is_inline_emphasis
                     or current_token.is_inline_link
@@ -419,7 +419,7 @@ class TransformToMarkdown:
                 + ":<"
             )
             if current_token.is_setext_heading_end and next_token.is_list_end:
-                assert new_data.endswith("\n")
+                assert new_data.endswith(ParserHelper.newline_character)
                 new_data = new_data[:-1]
             new_data, delayed_continue = self.__merge_with_container_data(
                 new_data,
@@ -433,7 +433,7 @@ class TransformToMarkdown:
                 special_text_in_list_exception,
             )
             if current_token.is_setext_heading_end and next_token.is_list_end:
-                new_data += "\n"
+                new_data += ParserHelper.newline_character
 
         print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
         new_data = ParserHelper.resolve_noops_from_text(new_data)
@@ -512,9 +512,9 @@ class TransformToMarkdown:
         Take care of a merge for a new leaf line with a NOOP character in the
         sequence.
         """
-        split_new_data = new_data.split("\n")
+        split_new_data = new_data.split(ParserHelper.newline_character)
         split_new_data_length = len(split_new_data)
-        if new_data.endswith("\n"):
+        if new_data.endswith(ParserHelper.newline_character):
             split_new_data_length -= 1
         for split_index in range(1, split_new_data_length):
             if (
@@ -526,7 +526,7 @@ class TransformToMarkdown:
             else:
                 replacement_data = continue_sequence + split_new_data[split_index]
             split_new_data[split_index] = replacement_data
-        new_data = "\n".join(split_new_data)
+        new_data = ParserHelper.newline_character.join(split_new_data)
         return new_data
 
     @classmethod
@@ -535,7 +535,9 @@ class TransformToMarkdown:
         Take care of a merge for a new leaf line with a blech character in the
         sequence.
         """
-        split_new_data = new_data.split("\n")
+
+        # TODO common?
+        split_new_data = new_data.split(ParserHelper.newline_character)
         for next_split_item in range(1, len(split_new_data)):
             next_continue_separator = continue_sequence
             next_data_item = split_new_data[next_split_item]
@@ -544,7 +546,7 @@ class TransformToMarkdown:
                 next_data_item = next_data_item[1:]
             next_continue_separator += next_data_item
             split_new_data[next_split_item] = next_continue_separator
-        new_data = "\n".join(split_new_data)
+        new_data = ParserHelper.newline_character.join(split_new_data)
         return new_data
 
     @classmethod
@@ -553,14 +555,15 @@ class TransformToMarkdown:
         Take care of a merge for a new leaf line with leading spaces in the container
         block's whitespaces.
         """
-        split_new_data = new_data.split("\n")
+        # TODO common?
+        split_new_data = new_data.split(ParserHelper.newline_character)
         print("3b>>" + str(split_new_data) + "<")
         print(
             "top_of_list_token_stack>>"
             + ParserHelper.make_value_visible(top_of_list_token_stack)
             + "<"
         )
-        split_leading_spaces = top_of_list_token_stack.leading_spaces.split("\n")
+        split_leading_spaces = top_of_list_token_stack.leading_spaces.split(ParserHelper.newline_character)
         print(
             "top_of_list_token_stack>>"
             + str(top_of_list_token_stack.leading_spaces_index)
@@ -579,7 +582,7 @@ class TransformToMarkdown:
                 + "::"
             )
             new_data += (
-                "\n"
+                ParserHelper.newline_character
                 + split_leading_spaces[top_of_list_token_stack.leading_spaces_index]
                 + split_new_data[i]
             )
@@ -592,14 +595,14 @@ class TransformToMarkdown:
         Take care of a merge for a new leaf line with leading spaces in the container
         block's whitespaces.
         """
-        split_new_data = new_data.split("\n")
+        split_new_data = new_data.split(ParserHelper.newline_character)
         print("__merge_xx>>" + str(split_new_data) + "<")
         print(
             "top_block_stack_token>>"
             + ParserHelper.make_value_visible(top_block_stack_token)
             + "<"
         )
-        split_leading_spaces = top_block_stack_token.leading_spaces.split("\n")
+        split_leading_spaces = top_block_stack_token.leading_spaces.split(ParserHelper.newline_character)
         print(
             ">>leading_text_index>>top_block_stack_token>>"
             + str(top_block_stack_token.leading_text_index)
@@ -619,12 +622,12 @@ class TransformToMarkdown:
             )
             if top_block_stack_token.leading_text_index < len(split_leading_spaces):
                 new_data += (
-                    "\n"
+                    ParserHelper.newline_character
                     + split_leading_spaces[top_block_stack_token.leading_text_index]
                     + split_new_data[i]
                 )
             else:
-                new_data += "\n" + split_new_data[i]
+                new_data += ParserHelper.newline_character + split_new_data[i]
             top_block_stack_token.leading_text_index += 1
         print(
             ">>leading_text_index>>top_block_stack_token>>"
@@ -661,7 +664,7 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(new_data)
                 + ">>"
             )
-            new_data = "\n" + new_data
+            new_data = ParserHelper.newline_character + new_data
             print(
                 "special_text_in_list_exception<<"
                 + ParserHelper.make_value_visible(new_data)
@@ -671,7 +674,7 @@ class TransformToMarkdown:
         if ParserHelper.replace_noop_character in new_data:
             print("1>>")
             new_data = self.__merge_with_noop_in_data(new_data, continue_sequence)
-        elif not block_should_end_with_newline and new_data.endswith("\n"):
+        elif not block_should_end_with_newline and new_data.endswith(ParserHelper.newline_character):
             print("2>>")
             delayed_continue = continue_sequence
             last_block_quote_block = self.__find_last_block_quote_on_stack()
@@ -701,16 +704,16 @@ class TransformToMarkdown:
                 print("2>>next_token>>" + ParserHelper.make_value_visible(next_token))
                 if current_token.is_link_reference_definition:
                     did_remove_trailing_newline = False
-                    if new_data.endswith("\n"):
+                    if new_data.endswith(ParserHelper.newline_character):
                         new_data = new_data[0:-1]
                         did_remove_trailing_newline = True
                     new_data = self.__merge_with_leading_spaces_in_data(
                         new_data, top_of_list_token_stack
                     )
                     if did_remove_trailing_newline:
-                        new_data += "\n"
+                        new_data += ParserHelper.newline_character
             print("2<<")
-        elif "\n" in new_data:
+        elif ParserHelper.newline_character in new_data:
             print(
                 "3>>block_should_end_with_newline>>"
                 + str(block_should_end_with_newline)
@@ -718,7 +721,7 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(new_data)
             )
             block_ends_with_newline = (
-                block_should_end_with_newline and new_data.endswith("\n")
+                block_should_end_with_newline and new_data.endswith(ParserHelper.newline_character)
             )
             print("3>>block_ends_with_newline>>" + str(block_ends_with_newline))
             remove_trailing_newline = False
@@ -756,7 +759,7 @@ class TransformToMarkdown:
 
             if remove_trailing_newline:
                 print("3z>>")
-                new_data += "\n"
+                new_data += ParserHelper.newline_character
             if block_ends_with_newline and next_token and next_token.is_new_list_item:
                 print("4>>")
                 new_data = new_data[0 : -len(continue_sequence)]
@@ -767,7 +770,7 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(new_data)
                 + ">>"
             )
-            assert new_data.startswith("\n")
+            assert new_data.startswith(ParserHelper.newline_character)
             new_data = new_data[1:]
             print(
                 "special_text_in_list_exception<<"
@@ -804,7 +807,7 @@ class TransformToMarkdown:
 
         rehydrate_index = current_token.start_markdown_token.rehydrate_index
         expected_rehydrate_index = (
-            current_token.start_markdown_token.extracted_whitespace.split("\n")
+            current_token.start_markdown_token.extracted_whitespace.split(ParserHelper.newline_character)
         )
         assert rehydrate_index + 1 == len(expected_rehydrate_index), (
             "rehydrate_index+1="
@@ -930,7 +933,7 @@ class TransformToMarkdown:
 
         code_end_sequence = ""
         if next_token is not None and not previous_token.is_fenced_code_block:
-            code_end_sequence = "\n"
+            code_end_sequence = ParserHelper.newline_character
         del self.block_stack[-1]
         return code_end_sequence
 
@@ -973,7 +976,7 @@ class TransformToMarkdown:
         self.container_token_stack.append(new_instance)
 
         print(">bquote>" + ParserHelper.make_value_visible(new_instance))
-        split_leading_spaces = new_instance.leading_spaces.split("\n")
+        split_leading_spaces = new_instance.leading_spaces.split(ParserHelper.newline_character)
         print(
             ">split_leading_spaces>"
             + ParserHelper.make_value_visible(split_leading_spaces)
@@ -1008,7 +1011,7 @@ class TransformToMarkdown:
         top_of_list_token_stack,
     ):
 
-        if "\n" in new_data:
+        if ParserHelper.newline_character in new_data:
             composed_data = ""
             print(
                 "<<composed_data<<"
@@ -1017,10 +1020,12 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(new_data)
                 + "<<"
             )
-            while "\n" in new_data:
+            while ParserHelper.newline_character in new_data:
+
+                # TODO common?
                 print(">>[" + ParserHelper.make_value_visible(new_data) + "]<<")
                 split_leading_spaces = top_of_list_token_stack.leading_spaces.split(
-                    "\n"
+                    ParserHelper.newline_character
                 )
                 print(
                     ">split_leading_spaces>"
@@ -1033,8 +1038,8 @@ class TransformToMarkdown:
                     + str(top_of_list_token_stack.leading_text_index)
                 )
 
-                next_newline_index = new_data.index("\n")
-                composed_data += new_data[0:next_newline_index] + "\n"
+                next_newline_index = new_data.index(ParserHelper.newline_character)
+                composed_data += new_data[0:next_newline_index] + ParserHelper.newline_character
                 if top_of_list_token_stack.leading_text_index < len(
                     split_leading_spaces
                 ):
@@ -1098,7 +1103,9 @@ class TransformToMarkdown:
                 assert len(current_token.extracted_whitespace) == previous_indent
                 extracted_whitespace = ""
             elif previous_token.is_block_quote_start:
-                if "\n" in previous_token.leading_spaces:
+
+                # TODO common?
+                if ParserHelper.newline_character in previous_token.leading_spaces:
                     print(
                         ">>>>>>>>>>>>>>>>>>>>>>>>>>>>>>>"
                         + str(previous_token.leading_text_index)
@@ -1109,7 +1116,7 @@ class TransformToMarkdown:
                         + str(previous_token.leading_spaces)
                         + "<<"
                     )
-                    split_leading_spaces = previous_token.leading_spaces.split("\n")
+                    split_leading_spaces = previous_token.leading_spaces.split(ParserHelper.newline_character)
                     previous_indent = len(
                         split_leading_spaces[previous_token.leading_text_index]
                     )
@@ -1160,8 +1167,8 @@ class TransformToMarkdown:
         cls, transformed_data, extracted_whitespace
     ):
         transformed_data_since_newline = transformed_data
-        if "\n" in transformed_data_since_newline:
-            last_newline_index = transformed_data_since_newline.rindex("\n")
+        if ParserHelper.newline_character in transformed_data_since_newline:
+            last_newline_index = transformed_data_since_newline.rindex(ParserHelper.newline_character)
             transformed_data_since_newline = transformed_data_since_newline[
                 last_newline_index + 1 :
             ]
@@ -1197,7 +1204,7 @@ class TransformToMarkdown:
 
         leading_text_index = current_token.start_markdown_token.leading_text_index
         expected_leading_text_index = (
-            current_token.start_markdown_token.extracted_whitespace.split("\n")
+            current_token.start_markdown_token.extracted_whitespace.split(ParserHelper.newline_character)
         )
 
         assert leading_text_index + 1 == len(expected_leading_text_index), (
@@ -1221,7 +1228,7 @@ class TransformToMarkdown:
 
         leading_spaces_index = current_token.start_markdown_token.leading_spaces_index
         expected_leading_spaces_index = (
-            current_token.start_markdown_token.extracted_whitespace.split("\n")
+            current_token.start_markdown_token.extracted_whitespace.split(ParserHelper.newline_character)
         )
 
         assert leading_spaces_index + 1 == len(expected_leading_spaces_index), (
@@ -1619,7 +1626,9 @@ class TransformToMarkdown:
     # pylint: enable=unused-argument
 
     def __handle_extracted_paragraph_whitespace(self, raw_text, fix_me=False):
-        if "\n" in raw_text and self.block_stack[-1].is_paragraph:
+
+        # TODO common?
+        if ParserHelper.newline_character in raw_text and self.block_stack[-1].is_paragraph:
             split_raw = raw_text.split(ParserHelper.newline_character)
             split_ew = self.block_stack[-1].extracted_whitespace.split(
                 ParserHelper.newline_character
@@ -1630,7 +1639,7 @@ class TransformToMarkdown:
                     split_raw[i] = (
                         split_ew[self.block_stack[-1].rehydrate_index] + split_raw[i]
                     )
-            raw_text = "\n".join(split_raw)
+            raw_text = ParserHelper.newline_character.join(split_raw)
         return raw_text
 
     # pylint: disable=unused-argument

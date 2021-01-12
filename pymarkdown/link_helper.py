@@ -438,7 +438,7 @@ class LinkHelper:
                 ):
                     pass
                 elif inline_blocks[ind + 1].is_inline_hard_break:
-                    image_alt_text += "\n"
+                    image_alt_text += ParserHelper.newline_character
                 else:
                     assert inline_blocks[
                         ind + 1

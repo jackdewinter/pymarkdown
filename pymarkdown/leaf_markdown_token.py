@@ -111,7 +111,7 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
 
         new_extra_data = self.__extracted_whitespace
         if self.final_whitespace:
-            new_extra_data += ":" + self.__final_whitespace
+            new_extra_data += MarkdownToken.extra_data_separator + self.__final_whitespace
         self._set_extra_data(new_extra_data)
 
     def add_whitespace(self, whitespace_to_add):
@@ -145,7 +145,7 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_thematic_break,
-            start_character + ":" + extracted_whitespace + ":" + self.__rest_of_line,
+            start_character + MarkdownToken.extra_data_separator + extracted_whitespace + MarkdownToken.extra_data_separator + self.__rest_of_line,
             position_marker=position_marker,
             extracted_whitespace=extracted_whitespace,
         )
@@ -234,25 +234,25 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
             self.__end_whitespace = ""
         extra_data = (
             str(self.did_add_definition)
-            + ":"
+            + MarkdownToken.extra_data_separator
             + extracted_whitespace
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__link_name
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__link_name_debug
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__link_destination_whitespace
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__link_destination
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__link_destination_raw
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__link_title_whitespace
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__link_title
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__link_title_raw
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__end_whitespace
         )
         LeafMarkdownToken.__init__(
@@ -385,9 +385,9 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
         """
         new_extra_data = (
             str(self.__hash_count)
-            + ":"
+            + MarkdownToken.extra_data_separator
             + str(self.__remove_trailing_count)
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.extracted_whitespace
         )
         self._set_extra_data(new_extra_data)
@@ -492,9 +492,9 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
 
         new_extra_data = (
             self.__heading_character
-            + ":"
+            + MarkdownToken.extra_data_separator
             + str(self.__heading_character_count)
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.extracted_whitespace
             + ":("
             + str(self.original_line_number)
@@ -503,7 +503,7 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
             + ")"
         )
         if self.final_whitespace:
-            new_extra_data += ":" + self.final_whitespace
+            new_extra_data += MarkdownToken.extra_data_separator + self.final_whitespace
         self._set_extra_data(new_extra_data)
 
 
@@ -538,7 +538,7 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        self._set_extra_data(self.extracted_whitespace + ":" + self.indented_whitespace)
+        self._set_extra_data(self.extracted_whitespace + MarkdownToken.extra_data_separator + self.indented_whitespace)
 
     def add_indented_whitespace(self, indented_whitespace):
         """
@@ -644,19 +644,19 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
         """
         new_extra_data = (
             self.__fence_character
-            + ":"
+            + MarkdownToken.extra_data_separator
             + str(self.__fence_count)
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__extracted_text
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__pre_extracted_text
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__text_after_extracted_text
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__pre_text_after_extracted_text
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.extracted_whitespace
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__extracted_whitespace_before_info_string
         )
         self._set_extra_data(new_extra_data)

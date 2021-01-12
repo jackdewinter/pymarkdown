@@ -47,7 +47,7 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
         ContainerMarkdownToken.__init__(
             self,
             MarkdownToken._token_new_list_item,
-            str(indent_level) + ":" + extracted_whitespace + ":" + list_start_content,
+            str(indent_level) + MarkdownToken.extra_data_separator + extracted_whitespace + MarkdownToken.extra_data_separator + list_start_content,
             position_marker=position_marker,
         )
 
@@ -157,15 +157,15 @@ class OrderedListStartMarkdownToken(ContainerMarkdownToken):
 
         new_extra_data = (
             self.__list_start_sequence
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__list_start_content
-            + ":"
+            + MarkdownToken.extra_data_separator
             + str(self.__indent_level)
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__extracted_whitespace
         )
         if self.__leading_spaces is not None:
-            new_extra_data += ":" + self.__leading_spaces
+            new_extra_data += MarkdownToken.extra_data_separator + self.__leading_spaces
         self._set_extra_data(new_extra_data)
 
     def add_leading_spaces(self, ws_add):
@@ -251,11 +251,11 @@ class UnorderedListStartMarkdownToken(ContainerMarkdownToken):
             self.__list_start_sequence
             + "::"
             + str(self.__indent_level)
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__extracted_whitespace
         )
         if self.__leading_spaces is not None:
-            new_extra_data += ":" + self.__leading_spaces
+            new_extra_data += MarkdownToken.extra_data_separator + self.__leading_spaces
         self._set_extra_data(new_extra_data)
 
     def add_leading_spaces(self, ws_add):
@@ -305,7 +305,7 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         Add any leading spaces to the token, separating them with line feeds.
         """
         if self.__leading_spaces:
-            self.__leading_spaces += "\n"
+            self.__leading_spaces += ParserHelper.newline_character
         self.__leading_spaces += leading_spaces_to_add
         self.__compose_extra_data_field()
 
@@ -313,4 +313,4 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        self._set_extra_data(self.__extracted_whitespace + ":" + self.__leading_spaces)
+        self._set_extra_data(self.__extracted_whitespace + MarkdownToken.extra_data_separator + self.__leading_spaces)

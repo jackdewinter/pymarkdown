@@ -315,7 +315,7 @@ class TransformToGfm:
                     if transform_state.actual_tokens[
                         transform_state.actual_token_index - 2
                     ].is_blank_line:
-                        output_html += "\n"
+                        output_html += ParserHelper.newline_character
 
             extracted_whitespace = ParserHelper.resolve_references_from_text(
                 next_token.extracted_whitespace
@@ -455,7 +455,7 @@ class TransformToGfm:
             inner_tag = ' class="language-' + next_token.extracted_text + '"'
 
         if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
-            output_html += "\n"
+            output_html += ParserHelper.newline_character
         elif output_html and output_html[-1] != ParserHelper.newline_character:
             output_html += ParserHelper.newline_character
         transform_state.is_in_code_block = True
@@ -529,7 +529,7 @@ class TransformToGfm:
         ]
 
         if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
-            output_html += "\n"
+            output_html += ParserHelper.newline_character
         elif previous_token.is_paragraph_end:
             if not transform_state.is_in_loose_list:
                 output_html += ParserHelper.newline_character
@@ -566,7 +566,7 @@ class TransformToGfm:
             inner_tag = "2"
 
         if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
-            output_html += "\n"
+            output_html += ParserHelper.newline_character
         return output_html + "<h" + inner_tag + ">"
 
     @classmethod

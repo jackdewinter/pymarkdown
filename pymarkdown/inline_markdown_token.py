@@ -51,7 +51,7 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_emphasis,
-            str(emphasis_length) + ":" + emphasis_character,
+            str(emphasis_length) + MarkdownToken.extra_data_separator + emphasis_character,
             line_number=line_number,
             column_number=column_number,
         )
@@ -163,11 +163,11 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
             self,
             MarkdownToken._token_inline_code_span,
             self.__span_text
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__extracted_start_backticks
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__leading_whitespace
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__trailing_whitespace,
             line_number=line_number,
             column_number=column_number,
@@ -266,27 +266,27 @@ class LinkStartMarkdownToken(InlineMarkdownToken):
             self,
             MarkdownToken._token_inline_link,
             self.__label_type
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__link_uri
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__link_title
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__pre_link_uri
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__pre_link_title
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__ex_label
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__text_from_blocks
-            + ":"
+            + MarkdownToken.extra_data_separator
             + str(self.__did_use_angle_start)
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__inline_title_bounding_character
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__before_link_whitespace
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__before_title_whitespace
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__after_title_whitespace,
             line_number=line_number,
             column_number=column_number,
@@ -423,29 +423,29 @@ class ImageStartMarkdownToken(InlineMarkdownToken):
             self,
             MarkdownToken._token_inline_image,
             self.__label_type
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__image_uri
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__image_title
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__image_alt_text
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__pre_image_uri
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__pre_image_title
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__ex_label
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__text_from_blocks
-            + ":"
+            + MarkdownToken.extra_data_separator
             + str(self.__did_use_angle_start)
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__inline_title_bounding_character
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__before_link_whitespace
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__before_title_whitespace
-            + ":"
+            + MarkdownToken.extra_data_separator
             + self.__after_title_whitespace,
             line_number=line_number,
             column_number=column_number,
@@ -633,9 +633,9 @@ class TextMarkdownToken(InlineMarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        new_extra_data = self.__token_text + ":" + self.__extracted_whitespace
+        new_extra_data = self.__token_text + MarkdownToken.extra_data_separator + self.__extracted_whitespace
         if self.end_whitespace:
-            new_extra_data += ":" + self.__end_whitespace
+            new_extra_data += MarkdownToken.extra_data_separator + self.__end_whitespace
         self._set_extra_data(new_extra_data)
 
     def remove_final_whitespace(self):

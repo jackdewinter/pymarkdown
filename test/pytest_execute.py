@@ -48,7 +48,7 @@ class InProcessResult:
                     actual_stream.getvalue().strip().splitlines(),
                 )
 
-                diff_values = "\n".join(list(diff))
+                diff_values = ParserHelper.newline_character.join(list(diff))
                 print(diff_values, file=sys.stderr)
                 if not was_found:
                     assert False, (
@@ -63,7 +63,7 @@ class InProcessResult:
                     expected_text.splitlines(), actual_stream.getvalue().splitlines()
                 )
 
-                diff_values = "\n".join(list(diff)) + "\n---\n"
+                diff_values = ParserHelper.newline_character.join(list(diff)) + "\n---\n"
 
                 LOGGER.warning(
                     "actual>>%s",

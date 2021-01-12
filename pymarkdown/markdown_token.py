@@ -20,6 +20,8 @@ class MarkdownToken:
     Class to provide for a base encapsulation of the markdown tokens.
     """
 
+    extra_data_separator = ":"
+
     _end_token_prefix = "end-"
 
     _token_paragraph = "para"
@@ -591,8 +593,8 @@ class EndMarkdownToken(MarkdownToken):
         display_data = ""
         if self.extra_end_data is not None:
             display_data += self.extracted_whitespace
-        display_data += ":"
+        display_data += MarkdownToken.extra_data_separator
         if self.extra_end_data is not None:
             display_data += self.extra_end_data
-        display_data += ":" + str(self.was_forced)
+        display_data += MarkdownToken.extra_data_separator + str(self.was_forced)
         self._set_extra_data(display_data)

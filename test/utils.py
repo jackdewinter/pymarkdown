@@ -86,7 +86,7 @@ def assert_if_lists_different(expected_tokens, actual_tokens):
 
         diff = difflib.ndiff(expected_str, actual_str)
 
-        diff_values = "\n".join(list(diff)) + "\n---\n"
+        diff_values = ParserHelper.newline_character.join(list(diff)) + "\n---\n"
 
         assert expected_str == str(actual_tokens[element_index]), (
             "List items " + str(element_index) + " are not equal." + diff_values
@@ -109,7 +109,7 @@ def assert_if_strings_different(expected_string, actual_string):
 
     diff = difflib.ndiff(expected_string, actual_string)
 
-    diff_values = "\n".join(list(diff)) + "\n---\n"
+    diff_values = ParserHelper.newline_character.join(list(diff)) + "\n---\n"
 
     assert expected_string == actual_string, "Strings are not equal." + diff_values
 
@@ -148,7 +148,7 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
         diff = difflib.ndiff(source_markdown, original_markdown)
         diff_values = (
             "\n-=-=-n"
-            + "\n".join(list(diff))
+            + ParserHelper.newline_character.join(list(diff))
             + "\n-=-=-expected\n-->"
             + ParserHelper.make_value_visible(source_markdown)
             + "<--\n-=-=-actual\n-->"

@@ -381,7 +381,7 @@ class ParserHelper:
         """
         Count the number of new line characters in a given string.
         """
-        return ParserHelper.count_characters_in_text(text_to_examine, "\n")
+        return ParserHelper.count_characters_in_text(text_to_examine, ParserHelper.newline_character)
 
     @staticmethod
     def make_value_visible(value_to_modify):

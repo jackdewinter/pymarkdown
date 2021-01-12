@@ -185,14 +185,15 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
             )
             if top_block_token and last_token.is_link_reference_definition:
 
-                split_link_name_debug = last_token.link_name_debug.split("\n")
+                # TODO common? count newlines?
+                split_link_name_debug = last_token.link_name_debug.split(ParserHelper.newline_character)
                 split_link_destination_whitespace = (
-                    last_token.link_destination_whitespace.split("\n")
+                    last_token.link_destination_whitespace.split(ParserHelper.newline_character)
                 )
                 split_link_title_whitespace = last_token.link_title_whitespace.split(
-                    "\n"
+                    ParserHelper.newline_character
                 )
-                split_link_title = last_token.link_title.split("\n")
+                split_link_title = last_token.link_title.split(ParserHelper.newline_character)
 
                 print(
                     ">>mainline-top_block_token>>leading_text_index>"
@@ -576,7 +577,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
             and top_block.is_block_quote_start
         ):
             print(">>__vnl->not block")
-            split_leading_spaces = top_block.leading_spaces.split("\n")
+            split_leading_spaces = top_block.leading_spaces.split(ParserHelper.newline_character)
             print(">>in bq>>split>" + str(split_leading_spaces))
             print("vnl>>in bq>>leading_text_index>" + str(top_block.leading_text_index))
             init_ws += len(split_leading_spaces[top_block.leading_text_index])
@@ -593,7 +594,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
     elif container_block_stack and current_token.is_blank_line:
         print(">>__vnl->blank-ish")
         if container_block_stack[-1].is_block_quote_start:
-            split_leading_spaces = container_block_stack[-1].leading_spaces.split("\n")
+            split_leading_spaces = container_block_stack[-1].leading_spaces.split(ParserHelper.newline_character)
             print(">>blank_line>>split>" + str(split_leading_spaces))
             print(
                 "vnl>>blank_line w/ bq>>leading_text_index>"
@@ -789,7 +790,7 @@ def __verify_first_inline_fenced_code_block(
 
     print(">last_token_stack>" + ParserHelper.make_value_visible(last_token_stack))
     if len(last_token_stack) > 1:
-        split_leading_spaces = last_token_stack[-2].leading_spaces.split("\n")
+        split_leading_spaces = last_token_stack[-2].leading_spaces.split(ParserHelper.newline_character)
         col_pos = len(split_leading_spaces[1])
     else:
         if first_inline_token.is_blank_line:
@@ -994,7 +995,7 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
             new_lines += newline_count
             part_1 = 0
             split_before_link_whitespace = (
-                parent_cur_token.before_link_whitespace.split("\n")
+                parent_cur_token.before_link_whitespace.split(ParserHelper.newline_character)
             )
             part_2 = len(split_before_link_whitespace[-1]) + 1
 
@@ -1007,7 +1008,7 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
             part_2 = 0
             part_3 = 0
             split_before_title_whitespace = (
-                parent_cur_token.before_title_whitespace.split("\n")
+                parent_cur_token.before_title_whitespace.split(ParserHelper.newline_character)
             )
             part_4 = len(split_before_title_whitespace[-1]) + 1
         if parent_cur_token.inline_title_bounding_character:
@@ -1018,7 +1019,7 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
                 part_2 = 0
                 part_3 = 0
                 part_4 = 0
-                split_link_title = link_title.split("\n")
+                split_link_title = link_title.split(ParserHelper.newline_character)
                 part_5 = len(split_link_title[-1]) + 1 + 1
             newline_count = ParserHelper.count_newlines_in_text(
                 parent_cur_token.after_title_whitespace
@@ -1031,7 +1032,7 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
                 part_4 = 0
                 part_5 = 0
                 split_after_title_whitespace = (
-                    parent_cur_token.after_title_whitespace.split("\n")
+                    parent_cur_token.after_title_whitespace.split(ParserHelper.newline_character)
                 )
                 part_6 = len(split_after_title_whitespace[-1]) + 1
         adjust_column_by = part_1 + part_2 + part_3 + part_4 + part_5 + part_6 + part_7
@@ -1058,7 +1059,7 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
 
         if new_lines and last_token.is_paragraph:
             split_para_extracted_whitespace = last_token.extracted_whitespace.split(
-                "\n"
+                ParserHelper.newline_character
             )
             adjust_column_by += len(
                 split_para_extracted_whitespace[last_token.rehydrate_index - 1]
@@ -1070,7 +1071,7 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
         newline_count = ParserHelper.count_newlines_in_text(parent_cur_token.ex_label)
         if newline_count:
             new_lines += newline_count
-            split_ex_label = parent_cur_token.ex_label.split("\n")
+            split_ex_label = parent_cur_token.ex_label.split(ParserHelper.newline_character)
             adjust_column_by = len(split_ex_label[-1]) + 1 + 1
         else:
             adjust_column_by = len(parent_cur_token.ex_label) + 1 + 1 + 1
@@ -1457,7 +1458,7 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
         print("text_from_blocks>>estimated_line_number>>" + str(estimated_line_number))
 
         include_part_1 = False
-        split_text_from_blocks = label_data_raw.split("\n")
+        split_text_from_blocks = label_data_raw.split(ParserHelper.newline_character)
         label_data_raw = split_text_from_blocks[-1]
     newline_count = ParserHelper.count_newlines_in_text(before_link_whitespace)
     if newline_count:
@@ -1476,7 +1477,7 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
 
         include_part_1 = False
         include_part_2 = False
-        split_before_link_whitespace = before_link_whitespace.split("\n")
+        split_before_link_whitespace = before_link_whitespace.split(ParserHelper.newline_character)
         before_link_whitespace = split_before_link_whitespace[-1]
     newline_count = ParserHelper.count_newlines_in_text(before_title_whitespace)
     if newline_count:
@@ -1501,7 +1502,7 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
             + ParserHelper.make_value_visible(before_title_whitespace)
             + "<"
         )
-        split_before_title_whitespace = before_title_whitespace.split("\n")
+        split_before_title_whitespace = before_title_whitespace.split(ParserHelper.newline_character)
         before_title_whitespace = split_before_title_whitespace[-1]
     newline_count = ParserHelper.count_newlines_in_text(title_data)
     if newline_count:
@@ -1519,7 +1520,7 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
         include_part_2 = False
         include_part_3 = False
         include_part_4 = False
-        split_title_data = title_data.split("\n")
+        split_title_data = title_data.split(ParserHelper.newline_character)
         title_data = split_title_data[-1]
     newline_count = ParserHelper.count_newlines_in_text(after_title_whitespace)
     if newline_count:
@@ -1541,7 +1542,7 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
         include_part_3 = False
         include_part_4 = False
         include_part_5 = False
-        split_after_title_whitespace = after_title_whitespace.split("\n")
+        split_after_title_whitespace = after_title_whitespace.split(ParserHelper.newline_character)
         after_title_whitespace = split_after_title_whitespace[-1]
 
     print(">>estimated_column_number>>" + str(estimated_column_number))
@@ -1635,7 +1636,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
     if last_token and last_token.is_paragraph:
         print(">>last_token_index>>" + str(last_token.rehydrate_index))
         para_owner = last_token
-        split_paragraph_lines = para_owner.extracted_whitespace.split("\n")
+        split_paragraph_lines = para_owner.extracted_whitespace.split(ParserHelper.newline_character)
     print(">>before>>" + str(estimated_column_number))
     if previous_inline_token.label_type == "inline":
         print(">>>>>>>>>inline")
@@ -1669,7 +1670,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
                 print("rehydrate_index(shortcut)>" + str(para_owner.rehydrate_index))
             estimated_column_number = 0
 
-            split_label_text = label_text.split("\n")
+            split_label_text = label_text.split(ParserHelper.newline_character)
             label_text = split_label_text[-1]
             token_prefix = 0
         estimated_column_number += 2 + token_prefix + len(label_text)
@@ -1694,7 +1695,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
                 print("rehydrate_index(collapsed)>" + str(para_owner.rehydrate_index))
             estimated_column_number = 0
 
-            split_label_text = image_alt_text.split("\n")
+            split_label_text = image_alt_text.split(ParserHelper.newline_character)
             image_alt_text = split_label_text[-1]
             token_prefix = 0
 
@@ -1736,7 +1737,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
                 print("rehydrate_index(full#1)>" + str(para_owner.rehydrate_index))
             estimated_column_number = 0
 
-            split_label_text = image_alt_text.split("\n")
+            split_label_text = image_alt_text.split(ParserHelper.newline_character)
             image_alt_text = split_label_text[-1]
             token_prefix = 2
         newline_count = ParserHelper.count_newlines_in_text(
@@ -1749,7 +1750,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
                 print("rehydrate_index(full#2)>" + str(para_owner.rehydrate_index))
             estimated_column_number = 0
 
-            split_label_text = previous_inline_token.ex_label.split("\n")
+            split_label_text = previous_inline_token.ex_label.split(ParserHelper.newline_character)
             image_alt_text = split_label_text[-1]
             token_prefix = 0
 
@@ -1793,8 +1794,8 @@ def __verify_next_inline_raw_html(
 ):
 
     # TODO is this common?
-    if "\n" in previous_inline_token.raw_tag:
-        split_raw_tag = previous_inline_token.raw_tag.split("\n")
+    if ParserHelper.newline_character in previous_inline_token.raw_tag:
+        split_raw_tag = previous_inline_token.raw_tag.split(ParserHelper.newline_character)
         estimated_line_number += len(split_raw_tag) - 1
 
         last_element = split_raw_tag[-1]
@@ -1821,7 +1822,7 @@ def __verify_next_inline_hard_break(
 ):
     new_column_number = 1
     if last_token.is_paragraph:
-        split_whitespace = last_token.extracted_whitespace.split("\n")
+        split_whitespace = last_token.extracted_whitespace.split(ParserHelper.newline_character)
         ws_for_new_line = split_whitespace[last_token.rehydrate_index]
         if not link_stack:
             last_token.rehydrate_index += 1
@@ -1832,9 +1833,9 @@ def __verify_next_inline_hard_break(
         new_column_number += len(ws_for_new_line)
     elif last_token.is_setext_heading:
         assert current_inline_token.is_text
-        assert current_inline_token.token_text.startswith("\n")
-        assert current_inline_token.end_whitespace.startswith("\n")
-        split_whitespace = current_inline_token.end_whitespace.split("\n")
+        assert current_inline_token.token_text.startswith(ParserHelper.newline_character)
+        assert current_inline_token.end_whitespace.startswith(ParserHelper.newline_character)
+        split_whitespace = current_inline_token.end_whitespace.split(ParserHelper.newline_character)
         print(
             "split_whitespace>"
             + ParserHelper.make_value_visible(split_whitespace)
@@ -1892,14 +1893,14 @@ def __verify_next_inline_code_span(
         resolved_leading_whitespace + resolved_span_text + resolved_trailing_whitespace
     )
 
-    if "\n" in combined_text:
+    if ParserHelper.newline_character in combined_text:
         print(
             ">>estimated_line/column=("
             + str(estimated_line_number)
             + ","
             + str(estimated_column_number)
         )
-        split_span_text = combined_text.split("\n")
+        split_span_text = combined_text.split(ParserHelper.newline_character)
         num_columns = len(split_span_text) - 1
         estimated_line_number += num_columns
         estimated_column_number = len(split_span_text[-1]) + 1 + backtick_length
@@ -1986,7 +1987,7 @@ def __handle_newline_character_entity_split(split_current_line):
             ].endswith(__create_newline_tuple()):
                 combined_line = (
                     split_current_line[search_index - 1]
-                    + "\n"
+                    + ParserHelper.newline_character
                     + split_current_line[search_index]
                 )
                 split_current_line[search_index - 1] = combined_line
@@ -2007,7 +2008,7 @@ def __verify_next_inline_text(
 ):
     current_line = previous_inline_token.token_text
     if pre_previous_inline_token and pre_previous_inline_token.is_inline_hard_break:
-        assert current_line.startswith("\n")
+        assert current_line.startswith(ParserHelper.newline_character)
         current_line = current_line[1:]
     else:
         if not pre_previous_inline_token and last_token.is_atx_heading:
@@ -2025,14 +2026,14 @@ def __verify_next_inline_text(
                 + ParserHelper.make_value_visible(last_token.rehydrate_index)
                 + "<"
             )
-            split_extracted_whitespace = last_token.extracted_whitespace.split("\n")
+            split_extracted_whitespace = last_token.extracted_whitespace.split(ParserHelper.newline_character)
             print(
                 "split_extracted_whitespace>"
                 + ParserHelper.make_value_visible(split_extracted_whitespace)
                 + "<"
             )
         elif last_token.is_setext_heading and previous_inline_token.end_whitespace:
-            split_end_whitespace = previous_inline_token.end_whitespace.split("\n")
+            split_end_whitespace = previous_inline_token.end_whitespace.split(ParserHelper.newline_character)
             print(
                 "split_end_whitespace>"
                 + ParserHelper.make_value_visible(split_end_whitespace)
@@ -2059,7 +2060,7 @@ def __verify_next_inline_text(
                     + "<"
                 )
 
-    split_current_line = current_line.split("\n")
+    split_current_line = current_line.split(ParserHelper.newline_character)
     print(
         "split_current_line>"
         + ParserHelper.make_value_visible(split_current_line)
@@ -2157,7 +2158,7 @@ def __handle_last_token_text(
     )
 
     if last_block_token.is_paragraph:
-        inline_height = len(resolved_text.split("\n")) - 1
+        inline_height = len(resolved_text.split(ParserHelper.newline_character)) - 1
         if second_last_inline_token and second_last_inline_token.is_inline_hard_break:
             inline_height -= 1
 
@@ -2191,9 +2192,9 @@ def __handle_last_token_text(
         or last_block_token.is_indented_code_block
         or last_block_token.is_atx_heading
     ):
-        inline_height = len(resolved_text.split("\n")) - 1
+        inline_height = len(resolved_text.split(ParserHelper.newline_character)) - 1
     elif last_block_token.is_fenced_code_block:
-        inline_height = len(resolved_text.split("\n")) - 1
+        inline_height = len(resolved_text.split(ParserHelper.newline_character)) - 1
         if current_token:
             assert current_token.is_fenced_code_block_end
             if not current_token.was_forced:
@@ -2202,7 +2203,7 @@ def __handle_last_token_text(
         assert last_block_token.is_setext_heading, "bad block token: " + str(
             last_block_token
         )
-        inline_height = len(resolved_text.split("\n")) - 1
+        inline_height = len(resolved_text.split(ParserHelper.newline_character)) - 1
         if second_last_inline_token and second_last_inline_token.is_inline_hard_break:
             inline_height -= 1
         inline_height += 1
@@ -2220,14 +2221,14 @@ def __handle_last_token_end_link(
     use_line_number_from_start_token = True
 
     inline_height = (
-        len(last_inline_token.start_markdown_token.text_from_blocks.split("\n")) - 1
+        len(last_inline_token.start_markdown_token.text_from_blocks.split(ParserHelper.newline_character)) - 1
     )
     inline_height += (
-        len(last_inline_token.start_markdown_token.before_link_whitespace.split("\n"))
+        len(last_inline_token.start_markdown_token.before_link_whitespace.split(ParserHelper.newline_character))
         - 1
     )
     inline_height += (
-        len(last_inline_token.start_markdown_token.before_title_whitespace.split("\n"))
+        len(last_inline_token.start_markdown_token.before_title_whitespace.split(ParserHelper.newline_character))
         - 1
     )
 
@@ -2235,14 +2236,14 @@ def __handle_last_token_end_link(
         link_title = last_inline_token.start_markdown_token.link_title
         if last_inline_token.start_markdown_token.pre_link_title:
             link_title = last_inline_token.start_markdown_token.pre_link_title
-        inline_height += len(link_title.split("\n")) - 1
+        inline_height += len(link_title.split(ParserHelper.newline_character)) - 1
 
     inline_height += (
-        len(last_inline_token.start_markdown_token.ex_label.split("\n")) - 1
+        len(last_inline_token.start_markdown_token.ex_label.split(ParserHelper.newline_character)) - 1
     )
 
     inline_height += (
-        len(last_inline_token.start_markdown_token.after_title_whitespace.split("\n"))
+        len(last_inline_token.start_markdown_token.after_title_whitespace.split(ParserHelper.newline_character))
         - 1
     )
     if last_block_token.is_setext_heading:
@@ -2273,16 +2274,16 @@ def __handle_last_token_image(
     if last_inline_token.pre_image_title:
         title_data = last_inline_token.pre_image_title
 
-    inline_height = len(label_data.split("\n")) - 1
-    inline_height += len(url_data.split("\n")) - 1
-    inline_height += len(title_data.split("\n")) - 1
-    inline_height += len(last_inline_token.before_link_whitespace.split("\n")) - 1
-    inline_height += len(last_inline_token.before_title_whitespace.split("\n")) - 1
-    inline_height += len(last_inline_token.after_title_whitespace.split("\n")) - 1
+    inline_height = len(label_data.split(ParserHelper.newline_character)) - 1
+    inline_height += len(url_data.split(ParserHelper.newline_character)) - 1
+    inline_height += len(title_data.split(ParserHelper.newline_character)) - 1
+    inline_height += len(last_inline_token.before_link_whitespace.split(ParserHelper.newline_character)) - 1
+    inline_height += len(last_inline_token.before_title_whitespace.split(ParserHelper.newline_character)) - 1
+    inline_height += len(last_inline_token.after_title_whitespace.split(ParserHelper.newline_character)) - 1
     if last_block_token.is_setext_heading:
         inline_height += 1
     if last_inline_token.label_type == "full":
-        inline_height += len(last_inline_token.text_from_blocks.split("\n")) - 1
+        inline_height += len(last_inline_token.text_from_blocks.split(ParserHelper.newline_character)) - 1
 
     return inline_height
 
@@ -2297,9 +2298,9 @@ def __handle_last_token_code_span(
     current_token,
     last_inline_token,
 ):
-    inline_height = len(last_inline_token.span_text.split("\n")) - 1
-    inline_height += len(last_inline_token.leading_whitespace.split("\n")) - 1
-    inline_height += len(last_inline_token.trailing_whitespace.split("\n")) - 1
+    inline_height = len(last_inline_token.span_text.split(ParserHelper.newline_character)) - 1
+    inline_height += len(last_inline_token.leading_whitespace.split(ParserHelper.newline_character)) - 1
+    inline_height += len(last_inline_token.trailing_whitespace.split(ParserHelper.newline_character)) - 1
 
     if last_block_token.is_setext_heading:
         inline_height += 1
@@ -2332,7 +2333,7 @@ def __handle_last_token_raw_html(
     current_token,
     last_inline_token,
 ):
-    inline_height = len(last_inline_token.raw_tag.split("\n")) - 1
+    inline_height = len(last_inline_token.raw_tag.split(ParserHelper.newline_character)) - 1
     if last_block_token.is_setext_heading:
         inline_height += 1
     return inline_height
@@ -2607,7 +2608,7 @@ def __verify_inline(  # noqa: C901
                     "inside link: "
                     + ParserHelper.make_value_visible(current_inline_token)
                 )
-                if "\n" in str(current_inline_token):
+                if ParserHelper.newline_character in str(current_inline_token):
                     if current_inline_token.is_inline_code_span:
                         # Don't need to resolve replacement characters as the & in
                         # the replacement is changed to an &amp; + the rest.

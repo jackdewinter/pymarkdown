@@ -466,8 +466,9 @@ class InlineHelper:
                 )
             ]
 
-            if "\n" in obt:
-                split_between_text = obt.split("\n")
+            # TODO common for delta column?
+            if ParserHelper.newline_character in obt:
+                split_between_text = obt.split(ParserHelper.newline_character)
                 LOGGER.debug(
                     ">>split_between_text>>%s<<",
                     ParserHelper.make_value_visible(split_between_text),
@@ -923,8 +924,8 @@ class InlineHelper:
 
         # TODO is this common?
         inline_response.delta_line_number = 0
-        if new_token and new_token.is_inline_raw_html and "\n" in new_token.raw_tag:
-            split_raw_tag = new_token.raw_tag.split("\n")
+        if new_token and new_token.is_inline_raw_html and ParserHelper.newline_character in new_token.raw_tag:
+            split_raw_tag = new_token.raw_tag.split(ParserHelper.newline_character)
             LOGGER.debug(
                 ">>split_raw_tag>>%s<<", ParserHelper.make_value_visible(split_raw_tag)
             )

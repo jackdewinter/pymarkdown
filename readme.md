@@ -47,6 +47,9 @@
 - link and emphasis (inline) tokens cannot be forced close, rewrite end to not expost :::False?
 
 - unify 2 separate calculations in `__pre_list` function
+- split(ParserHelper.newline_character)
+   - count_newlines_in_text where feasible
+   - end of handle_inline_backtick for calculating column of last
 
 ### Priority 3 - Like To Solve in next 3 m
 

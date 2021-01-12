@@ -158,7 +158,7 @@ class InlineProcessor:
                             assert coalesced_stack[-1].leading_spaces
                             split_leading_spaces = coalesced_stack[
                                 -1
-                            ].leading_spaces.split("\n")
+                            ].leading_spaces.split(ParserHelper.newline_character)
                             LOGGER.debug(
                                 "COAL_STACK:%s",
                                 ParserHelper.make_value_visible(split_leading_spaces),
@@ -179,9 +179,7 @@ class InlineProcessor:
                                     coalesced_results[coalesce_index]
                                 ),
                             )
-                            assert "\n" not in leading_whitespace
-                            # newline_index = leading_whitespace.index("\n")
-                            # leading_whitespace = leading_whitespace[0:newline_index]
+                            assert ParserHelper.newline_character not in leading_whitespace
                             LOGGER.info(
                                 "leading_whitespace:%s<",
                                 ParserHelper.make_value_visible(leading_whitespace),
@@ -599,7 +597,7 @@ class InlineProcessor:
                 # assert False
                 start_index = inline_response.new_index
             else:
-                processed_line += "\n"
+                processed_line += ParserHelper.newline_character
                 start_index = next_index + 1
             next_index = ParserHelper.index_any_of(
                 source_text,
@@ -626,7 +624,7 @@ class InlineProcessor:
                 para_owner.rehydrate_index += newline_count
             LOGGER.debug("full>>ex_label>>newline_count>>%s", str(newline_count))
 
-            split_label = current_token.ex_label.split("\n")
+            split_label = current_token.ex_label.split(ParserHelper.newline_character)
             LOGGER.debug(
                 "full>>ex_label>>split_label>>%s",
                 ParserHelper.make_value_visible(split_label),
@@ -703,7 +701,7 @@ class InlineProcessor:
                 para_owner.rehydrate_index += newline_count
             last_spaces = ""
 
-            split_active_link_title = active_link_title.split("\n")
+            split_active_link_title = active_link_title.split(ParserHelper.newline_character)
             link_part_lengths[2] = len(split_active_link_title[-1]) + 1
             link_part_index = 2
         newline_count = ParserHelper.count_newlines_in_text(
@@ -728,7 +726,7 @@ class InlineProcessor:
                     split_paragraph_lines[para_owner.rehydrate_index]
                 )
             else:
-                split_last_spaces = last_spaces.split("\n")
+                split_last_spaces = last_spaces.split(ParserHelper.newline_character)
                 link_part_lengths[4] = len(split_last_spaces[-1])
             link_part_lengths[:link_part_index] = [0] * link_part_index
             repeat_count = -(2 + sum(link_part_lengths))
@@ -769,7 +767,7 @@ class InlineProcessor:
             if current_token.pre_link_title:
                 active_link_title = current_token.pre_link_title
 
-        if "\n" in str(current_token):
+        if ParserHelper.newline_character in str(current_token):
             LOGGER.debug(
                 ">>para_owner>>%s<<",
                 ParserHelper.make_value_visible(para_owner),
@@ -780,7 +778,7 @@ class InlineProcessor:
                     ">>para_owner.rehydrate_index>>%s<<",
                     ParserHelper.make_value_visible(para_owner.rehydrate_index),
                 )
-                split_paragraph_lines = para_owner.extracted_whitespace.split("\n")
+                split_paragraph_lines = para_owner.extracted_whitespace.split(ParserHelper.newline_character)
                 LOGGER.debug(
                     ">>split_paragraph_lines>>%s<<",
                     ParserHelper.make_value_visible(split_paragraph_lines),
@@ -903,7 +901,7 @@ class InlineProcessor:
         fold_space = None
         LOGGER.debug("__process_inline_text_block>>is_para>>%s", str(is_para))
         if is_para or is_setext:
-            fold_space = para_space.split("\n")
+            fold_space = para_space.split(ParserHelper.newline_character)
         LOGGER.debug("__process_inline_text_block>>fold_space>>%s", str(fold_space))
 
         LOGGER.debug(
