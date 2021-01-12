@@ -161,7 +161,9 @@ class TokenizedMarkdown:
                     ParserHelper.make_value_visible(lines_to_requeue),
                 )
             else:
-                LOGGER.debug(">>>>%s", str(self.tokenized_document))
+                LOGGER.debug(
+                    ">>>>%s", ParserHelper.make_value_visible(self.tokenized_document)
+                )
 
                 if not token_to_use or not token_to_use.strip():
                     LOGGER.debug("call __parse_blocks_pass>>handle_blank_line")
@@ -296,7 +298,10 @@ class TokenizedMarkdown:
             ParserHelper.make_value_visible(parser_state.token_document),
         )
         if destination_array:
-            LOGGER.debug("cob-destination_array>>%s", str(destination_array))
+            LOGGER.debug(
+                "cob-destination_array>>%s",
+                ParserHelper.make_value_visible(destination_array),
+            )
         if only_these_blocks:
             LOGGER.debug("cob-only_these_blocks>>%s", str(only_these_blocks))
         if include_block_quotes:

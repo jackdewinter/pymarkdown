@@ -66,6 +66,12 @@ class StackToken:
         """
         return self.__matching_markdown_token
 
+    def reset_matching_markdown_token(self, new_matching_markdown_token):
+        """
+        Reset the matching markdown token.  To be used only when rewinding.
+        """
+        self.__matching_markdown_token = new_matching_markdown_token
+
     def generate_close_markdown_token_from_stack_token(
         self, extracted_whitespace=None, extra_end_data=None, was_forced=False
     ):
@@ -437,6 +443,7 @@ class HtmlBlockStackToken(StackToken):
         return self.__html_block_type
 
 
+# pylint: disable=too-many-instance-attributes
 class LinkDefinitionStackToken(StackToken):
     """
     Class to provide for a stack token for a possible link definition.
@@ -449,6 +456,9 @@ class LinkDefinitionStackToken(StackToken):
         self.__start_position_marker = position_marker
         self.original_stack_depth = None
         self.original_document_depth = None
+        self.last_block_quote_stack_token = None
+        self.last_block_quote_markdown_token_index = None
+        self.copy_of_last_block_quote_markdown_token = None
         StackToken.__init__(self, StackToken._stack_link_definition)
 
     @property
@@ -502,3 +512,6 @@ class LinkDefinitionStackToken(StackToken):
         for next_line in self.continuation_lines:
             joined_lines = joined_lines + next_line + ParserHelper.newline_character
         return joined_lines + join_suffix
+
+
+# pylint: enable=too-many-instance-attributes

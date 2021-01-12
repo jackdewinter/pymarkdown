@@ -11,6 +11,7 @@
 - test_paragraph_series_m_ul_t_nl_ulb_nl_tb - with abc/def/*
 
 - possible to merge link token and image token more closely?
+- __handle_extracted_paragraph_whitespace ? more use?
 
 - Link_helper.py#86 - if link already registered, should warn?
 - where is `elif starting_whitespace:` used? why? better way to do it?
@@ -30,6 +31,7 @@
 ### Priority 2 - Like To Solve Before Initial
 
 - check resolve/remove helpers for groupings per file type i.e. html, markdown, proc, verify
+  - i.e. ParserHelper.resolve_
 - check `__verify_next_inline_raw_html` for refactor
 - look for `valid_raw_html = "\n".join(split_raw)` and see if can combine
 - refactor `for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):`
@@ -76,7 +78,6 @@
 
 - 270 and check for indent levels after
 - test_block_quotes_extra_02ab - d - not verifying
-- test_block_quotes_extra_04f - wrong closing of block quote
 - multiline raw html in inline link label?
   - multi raw and multi icodespan to match other link label
 - lrd over new list item or new block quote boundary

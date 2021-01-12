@@ -119,7 +119,10 @@ class LinkHelper:
                 LOGGER.debug(">> unescaped [, bailing")
                 return False, -1, None
 
-        LOGGER.debug("look for ]>>%s<<", line_to_parse[new_index:])
+        LOGGER.debug(
+            "look for ]>>%s<<",
+            ParserHelper.make_value_visible(line_to_parse[new_index:]),
+        )
         if not ParserHelper.is_character_at_index(
             line_to_parse, new_index, LinkHelper.link_label_end
         ):
@@ -128,7 +131,10 @@ class LinkHelper:
         new_index += 1
 
         if include_reference_colon:
-            LOGGER.debug("look for :>>%s<<", line_to_parse[new_index:])
+            LOGGER.debug(
+                "look for :>>%s<<",
+                ParserHelper.make_value_visible(line_to_parse[new_index:]),
+            )
             if not ParserHelper.is_character_at_index(
                 line_to_parse,
                 new_index,
@@ -147,11 +153,13 @@ class LinkHelper:
         """
         inline_title = ""
         pre_inline_title = ""
-        LOGGER.debug("before ws>>%s>", line_to_parse[new_index:])
+        LOGGER.debug(
+            "before ws>>%s>", ParserHelper.make_value_visible(line_to_parse[new_index:])
+        )
         new_index, ex_ws = ParserHelper.extract_any_whitespace(line_to_parse, new_index)
         LOGGER.debug(
             "after ws>>%s>ex_ws>%s",
-            line_to_parse[new_index:],
+            ParserHelper.make_value_visible(line_to_parse[new_index:]),
             ParserHelper.make_value_visible(ex_ws),
         )
         start_index = new_index
@@ -188,7 +196,9 @@ class LinkHelper:
         if new_index == len(line_to_parse) and not is_blank_line:
             return False, new_index, None, None, None, None
 
-        LOGGER.debug("LD>>%s<<", line_to_parse[new_index:])
+        LOGGER.debug(
+            "LD>>%s<<", ParserHelper.make_value_visible(line_to_parse[new_index:])
+        )
         (
             inline_link,
             pre_inline_link,
@@ -310,7 +320,7 @@ class LinkHelper:
 
         LOGGER.debug(
             ">>look_for_link_or_image>>%s<<is_valid<<%s<<%s<<",
-            str(inline_blocks),
+            ParserHelper.make_value_visible(inline_blocks),
             str(is_valid),
             str(consume_rest_of_line),
         )
@@ -325,11 +335,17 @@ class LinkHelper:
                 or inline_blocks[search_index].is_inline_image
             )
 
-            LOGGER.debug("\nresolve_inline_emphasis>>%s", str(inline_blocks))
+            LOGGER.debug(
+                "\nresolve_inline_emphasis>>%s",
+                ParserHelper.make_value_visible(inline_blocks),
+            )
             EmphasisHelper.resolve_inline_emphasis(
                 inline_blocks, inline_blocks[search_index]
             )
-            LOGGER.debug("resolve_inline_emphasis>>%s\n", str(inline_blocks))
+            LOGGER.debug(
+                "resolve_inline_emphasis>>%s\n",
+                ParserHelper.make_value_visible(inline_blocks),
+            )
 
             if valid_special_start_text == LinkHelper.__link_start_sequence:
                 LOGGER.debug("DEACTIVATING")
@@ -541,13 +557,25 @@ class LinkHelper:
             collect_index += 1
 
         LOGGER.debug(
-            ">>collect_text_from_blocks>>%s<<%s<<", collected_text, suffix_text
+            ">>collect_text_from_blocks>>%s<<%s<<",
+            ParserHelper.make_value_visible(collected_text),
+            ParserHelper.make_value_visible(suffix_text),
         )
-        LOGGER.debug(">>collected_text_raw>>%s<<%s<<", collected_text_raw, suffix_text)
+        LOGGER.debug(
+            ">>collected_text_raw>>%s<<%s<<",
+            ParserHelper.make_value_visible(collected_text_raw),
+            ParserHelper.make_value_visible(suffix_text),
+        )
         collected_text += suffix_text
         collected_text_raw += suffix_text
-        LOGGER.debug(">>collect_text_from_blocks>>%s<<", collected_text)
-        LOGGER.debug(">>collected_text_raw>>%s<<", collected_text_raw)
+        LOGGER.debug(
+            ">>collect_text_from_blocks>>%s<<",
+            ParserHelper.make_value_visible(collected_text),
+        )
+        LOGGER.debug(
+            ">>collected_text_raw>>%s<<",
+            ParserHelper.make_value_visible(collected_text_raw),
+        )
         return collected_text, collected_text_raw
 
     # pylint: enable=too-many-statements
@@ -651,7 +679,10 @@ class LinkHelper:
         Parse an inline link's link destination.
         """
 
-        LOGGER.debug("parse_link_destination>>new_index>>%s>>", source_text[new_index:])
+        LOGGER.debug(
+            "parse_link_destination>>new_index>>%s>>",
+            ParserHelper.make_value_visible(source_text[new_index:]),
+        )
         start_index = new_index
         did_use_angle_start = False
         if ParserHelper.is_character_at_index(
@@ -660,7 +691,7 @@ class LinkHelper:
             LOGGER.debug(
                 ">parse_angle_link_destination>new_index>%s>%s",
                 str(new_index),
-                str(source_text[new_index:]),
+                ParserHelper.make_value_visible(source_text[new_index:]),
             )
             did_use_angle_start = True
             new_index, ex_link = LinkHelper.__parse_angle_link_destination(
@@ -675,7 +706,7 @@ class LinkHelper:
             LOGGER.debug(
                 ">parse_non_angle_link_destination>new_index>%s>%s",
                 str(new_index),
-                str(source_text[new_index:]),
+                ParserHelper.make_value_visible(source_text[new_index:]),
             )
             new_index, ex_link = LinkHelper.__parse_non_angle_link_destination(
                 source_text, new_index
@@ -683,7 +714,7 @@ class LinkHelper:
             LOGGER.debug(
                 ">parse_non_angle_link_destination>new_index>%s>ex_link>%s>",
                 str(new_index),
-                str(ex_link),
+                ParserHelper.make_value_visible(ex_link),
             )
             if not ex_link:
                 return None, None, -1, None, None
@@ -724,7 +755,10 @@ class LinkHelper:
         Parse an inline link's link title.
         """
 
-        LOGGER.debug("parse_link_title>>new_index>>%s>>", source_text[new_index:])
+        LOGGER.debug(
+            "parse_link_title>>new_index>>%s>>",
+            ParserHelper.make_value_visible(source_text[new_index:]),
+        )
         ex_title = ""
         bounding_character = ""
         if ParserHelper.is_character_at_index(
@@ -756,7 +790,7 @@ class LinkHelper:
         LOGGER.debug(
             "parse_link_title>>new_index>>%s>>ex_link>>%s>>",
             str(new_index),
-            str(ex_title),
+            ParserHelper.make_value_visible(ex_title),
         )
         pre_ex_title = ex_title
         if ex_title is not None:
@@ -765,8 +799,12 @@ class LinkHelper:
                 InlineHelper.handle_backslashes(ex_title, add_text_signature=False),
                 add_text_signature=False,
             )
-        LOGGER.debug("parse_link_title>>pre>>%s>>", str(pre_ex_title))
-        LOGGER.debug("parse_link_title>>after>>%s>>", str(ex_title))
+        LOGGER.debug(
+            "parse_link_title>>pre>>%s>>", ParserHelper.make_value_visible(pre_ex_title)
+        )
+        LOGGER.debug(
+            "parse_link_title>>after>>%s>>", ParserHelper.make_value_visible(ex_title)
+        )
 
         return ex_title, pre_ex_title, new_index, bounding_character
 
@@ -1055,9 +1093,14 @@ class LinkHelper:
         LOGGER.debug("<<<<<<<start_text<<<<<<<%s<<", str(start_text))
         LOGGER.debug(">>inline_link>>%s>>", inline_link)
         LOGGER.debug(">>pre_inline_link>>%s>>", pre_inline_link)
-        LOGGER.debug(">>inline_title>>%s>>", inline_title)
+        LOGGER.debug(
+            ">>inline_title>>%s>>", ParserHelper.make_value_visible(inline_title)
+        )
         LOGGER.debug(">>pre_inline_title>>%s>>", pre_inline_title)
-        LOGGER.debug(">>text_from_blocks>>%s>>", text_from_blocks)
+        LOGGER.debug(
+            ">>text_from_blocks>>%s>>",
+            ParserHelper.make_value_visible(text_from_blocks),
+        )
         if pre_inline_link == inline_link:
             pre_inline_link = ""
         if pre_inline_title == inline_title:

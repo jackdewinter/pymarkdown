@@ -733,7 +733,7 @@ class ParserHelper:
 # pylint: enable=too-many-public-methods
 
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods, too-many-instance-attributes
 class ParserState:
     """
     Class to provide for an encapsulation of the high level state of the parser.
@@ -746,10 +746,14 @@ class ParserState:
         self.token_document = token_document
         self.close_open_blocks_fn = close_open_blocks_fn
         self.handle_blank_line_fn = handle_blank_line_fn
+
         self.same_line_container_tokens = None
+        self.last_block_quote_stack_token = None
+        self.last_block_quote_markdown_token_index = None
+        self.copy_of_last_block_quote_markdown_token = None
 
 
-# pylint: enable=too-few-public-methods
+# pylint: enable=too-few-public-methods, too-many-instance-attributes
 
 
 # pylint: disable=too-few-public-methods

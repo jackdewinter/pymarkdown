@@ -19,7 +19,7 @@ class LinkReferenceDefinitionHelper:
 
     __lrd_start_character = "["
 
-    # pylint: disable=too-many-locals, too-many-arguments
+    # pylint: disable=too-many-locals, too-many-arguments, too-many-statements
     @staticmethod
     def process_link_reference_definition(
         parser_state,
@@ -44,17 +44,17 @@ class LinkReferenceDefinitionHelper:
 
         was_started = False
         is_blank_line = not line_to_parse and not start_index
+        lrd_stack_token = None
         if parser_state.token_stack[-1].was_link_definition_started:
             was_started = True
-            original_stack_depth = parser_state.token_stack[-1].original_stack_depth
-            original_document_depth = parser_state.token_stack[
-                -1
-            ].original_document_depth
+            lrd_stack_token = parser_state.token_stack[-1]
+            original_stack_depth = lrd_stack_token.original_stack_depth
+            original_document_depth = lrd_stack_token.original_document_depth
             LOGGER.debug(
                 ">>continuation_lines>>%s<<",
-                str(parser_state.token_stack[-1].continuation_lines),
+                str(lrd_stack_token.continuation_lines),
             )
-            line_to_parse = parser_state.token_stack[-1].get_joined_lines(line_to_parse)
+            line_to_parse = lrd_stack_token.get_joined_lines(line_to_parse)
             start_index, extracted_whitespace = ParserHelper.extract_whitespace(
                 line_to_parse, 0
             )
@@ -169,6 +169,37 @@ class LinkReferenceDefinitionHelper:
             # elements so they can be reset on the rewind.
             # i.e. icode would go back on stack, end-icode would not be in document.
             LOGGER.debug(
+                ">>XXXXXX>>copy_of_last_block_quote_markdown_token:%s:",
+                ParserHelper.make_value_visible(
+                    lrd_stack_token.copy_of_last_block_quote_markdown_token
+                ),
+            )
+            if lrd_stack_token.copy_of_last_block_quote_markdown_token:
+                LOGGER.debug(
+                    ">>XXXXXX>>last_block_quote_markdown_token_index:%s:",
+                    str(lrd_stack_token.last_block_quote_markdown_token_index),
+                )
+                LOGGER.debug(
+                    ">>XXXXXX>>st-now:%s:",
+                    ParserHelper.make_value_visible(
+                        parser_state.token_document[
+                            lrd_stack_token.last_block_quote_markdown_token_index
+                        ]
+                    ),
+                )
+
+                del parser_state.token_document[
+                    lrd_stack_token.last_block_quote_markdown_token_index
+                ]
+                parser_state.token_document.insert(
+                    lrd_stack_token.last_block_quote_markdown_token_index,
+                    lrd_stack_token.copy_of_last_block_quote_markdown_token,
+                )
+                lrd_stack_token.last_block_quote_stack_token.reset_matching_markdown_token(
+                    lrd_stack_token.copy_of_last_block_quote_markdown_token
+                )
+
+            LOGGER.debug(
                 ">>XXXXXX>>original_stack_depth:%s:", str(original_stack_depth)
             )
             LOGGER.debug(
@@ -185,8 +216,8 @@ class LinkReferenceDefinitionHelper:
                 str(len(parser_state.token_document)),
             )
             while len(parser_state.token_document) > original_document_depth:
-                if parser_state.token_document[-1].is_indented_code_block_end:
-                    break
+                # if parser_state.token_document[-1].is_indented_code_block_end:
+                #    break
                 del parser_state.token_document[-1]
 
         return (
@@ -198,7 +229,7 @@ class LinkReferenceDefinitionHelper:
             new_tokens,
         )
 
-    # pylint: enable=too-many-locals, too-many-arguments
+    # pylint: enable=too-many-locals, too-many-arguments, too-many-statements
 
     @staticmethod
     def __is_link_reference_definition(
@@ -248,7 +279,7 @@ class LinkReferenceDefinitionHelper:
         Handle the parsing of what appears to be a link reference definition.
         """
         LOGGER.debug(
-            "\nparse_link_reference_definition:%s:",
+            "parse_link_reference_definition:%s:",
             ParserHelper.make_value_visible(line_to_parse),
         )
         LOGGER.debug("start_index:%s:", str(start_index))
@@ -260,7 +291,7 @@ class LinkReferenceDefinitionHelper:
             LOGGER.debug("BAIL")
             return False, -1, None
 
-        LOGGER.debug("\nparse_link_reference_definition")
+        LOGGER.debug("parse_link_reference_definition")
         inline_title = ""
         inline_link = None
         keep_going, new_index, collected_destination = LinkHelper.extract_link_label(
@@ -320,8 +351,12 @@ class LinkReferenceDefinitionHelper:
         LOGGER.debug(
             ">>collected_destination(normalized)>>%s", str(normalized_destination)
         )
-        LOGGER.debug(">>inline_link>>%s<<", str(inline_link))
-        LOGGER.debug(">>inline_title>>%s<<", str(inline_title))
+        LOGGER.debug(
+            ">>inline_link>>%s<<", ParserHelper.make_value_visible(inline_link)
+        )
+        LOGGER.debug(
+            ">>inline_title>>%s<<", ParserHelper.make_value_visible(inline_title)
+        )
         parsed_lrd_tuple = (
             normalized_destination,
             (inline_link, inline_title),
@@ -366,6 +401,19 @@ class LinkReferenceDefinitionHelper:
             parser_state.token_stack[
                 -1
             ].original_document_depth = original_document_depth
+            parser_state.token_stack[
+                -1
+            ].last_block_quote_stack_token = parser_state.last_block_quote_stack_token
+            parser_state.token_stack[
+                -1
+            ].last_block_quote_markdown_token_index = (
+                parser_state.last_block_quote_markdown_token_index
+            )
+            parser_state.token_stack[
+                -1
+            ].copy_of_last_block_quote_markdown_token = (
+                parser_state.copy_of_last_block_quote_markdown_token
+            )
         LOGGER.debug(">>parse_link_reference_definition>>add>:%s<<", str(line_to_store))
         parser_state.token_stack[-1].add_continuation_line(line_to_store)
         parser_state.token_stack[-1].add_unmodified_line(unmodified_line_to_parse)

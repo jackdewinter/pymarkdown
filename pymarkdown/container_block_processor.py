@@ -1,6 +1,7 @@
 """
 Module to provide processing for the container blocks.
 """
+import copy
 import logging
 
 from pymarkdown.block_quote_processor import BlockQuoteProcessor
@@ -104,6 +105,40 @@ class ContainerBlockProcessor:
         LOGGER.debug("Document Depth:%s:", str(original_document_depth))
         no_para_start_if_empty = False
 
+        last_stack_index = len(parser_state.token_stack) - 1
+        while not parser_state.token_stack[last_stack_index].is_document:
+            if parser_state.token_stack[last_stack_index].is_block_quote:
+                break
+            last_stack_index -= 1
+
+        last_block_quote_stack_token = None
+        last_block_quote_markdown_token_index = None
+        copy_of_last_block_quote_markdown_token = None
+        if not parser_state.token_stack[last_stack_index].is_document:
+            last_block_quote_stack_token = parser_state.token_stack[last_stack_index]
+            last_block_quote_markdown_token_index = parser_state.token_document.index(
+                parser_state.token_stack[last_stack_index].matching_markdown_token
+            )
+            copy_of_last_block_quote_markdown_token = copy.deepcopy(
+                parser_state.token_document[last_block_quote_markdown_token_index]
+            )
+        LOGGER.debug(
+            "Last Block Quote:%s:",
+            ParserHelper.make_value_visible(last_block_quote_stack_token),
+        )
+        LOGGER.debug("Last Block Quote:%s:", str(last_block_quote_markdown_token_index))
+        LOGGER.debug(
+            "Last Block Quote:%s:",
+            ParserHelper.make_value_visible(copy_of_last_block_quote_markdown_token),
+        )
+        parser_state.last_block_quote_stack_token = last_block_quote_stack_token
+        parser_state.last_block_quote_markdown_token_index = (
+            last_block_quote_markdown_token_index
+        )
+        parser_state.copy_of_last_block_quote_markdown_token = (
+            copy_of_last_block_quote_markdown_token
+        )
+
         start_index, extracted_whitespace = ParserHelper.extract_whitespace(
             line_to_parse, 0
         )
@@ -123,6 +158,9 @@ class ContainerBlockProcessor:
 
         end_container_indices = ContainerIndices(-1, -1, -1)
 
+        LOGGER.debug(
+            ">>__get_block_start_index>>%s>>", line_to_parse.replace(" ", "\\s")
+        )
         (
             did_process,
             was_container_start,
@@ -151,6 +189,9 @@ class ContainerBlockProcessor:
             container_level_tokens.extend(leaf_tokens)
             return container_level_tokens, line_to_parse, RequeueLineInfo()
 
+        LOGGER.debug(
+            ">>__get_list_start_index>>%s>>", line_to_parse.replace(" ", "\\s")
+        )
         (
             did_process,
             was_container_start,
@@ -176,6 +217,9 @@ class ContainerBlockProcessor:
             container_level_tokens,
         )
 
+        LOGGER.debug(
+            ">>__get_list_start_index>>%s>>", line_to_parse.replace(" ", "\\s")
+        )
         (
             did_process,
             was_container_start,
@@ -199,6 +243,9 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             current_container_blocks,
             container_level_tokens,
+        )
+        LOGGER.debug(
+            ">>__get_list_start_index>>%s>>", line_to_parse.replace(" ", "\\s")
         )
 
         LOGGER.debug("last_block_quote_index>>%s", str(last_block_quote_index))
@@ -327,7 +374,7 @@ class ContainerBlockProcessor:
         LOGGER.debug(
             "clt-end>>%s>>%s<<",
             str(len(container_level_tokens)),
-            str(container_level_tokens),
+            ParserHelper.make_value_visible(container_level_tokens),
         )
         return container_level_tokens, line_to_parse, requeue_line_info
         # pylint: enable=too-many-locals
@@ -927,7 +974,7 @@ class ContainerBlockProcessor:
             original_stack_depth,
             original_document_depth,
         )
-        LOGGER.debug("parsed leaf>>%s", str(leaf_tokens))
+        LOGGER.debug("parsed leaf>>%s", ParserHelper.make_value_visible(leaf_tokens))
         LOGGER.debug("parsed leaf>>%s", str(len(leaf_tokens)))
         LOGGER.debug(
             "parsed leaf>>lines_to_requeue>>%s>%s",
@@ -1124,12 +1171,12 @@ class ContainerBlockProcessor:
 
         LOGGER.debug(
             "handle_link_reference_definition>>pre_tokens>>%s<<",
-            str(pre_tokens),
+            ParserHelper.make_value_visible(pre_tokens),
         )
         pre_tokens.extend(new_tokens)
         LOGGER.debug(
             "handle_link_reference_definition>>pre_tokens>>%s<<",
-            str(pre_tokens),
+            ParserHelper.make_value_visible(pre_tokens),
         )
         return outer_processed, lines_to_requeue, force_ignore_first_as_lrd
 
@@ -1270,9 +1317,9 @@ class ContainerBlockProcessor:
                 )
 
         # assert new_tokens or did_complete_lrd or did_pause_lrd or lines_to_requeue
-        LOGGER.debug(">>leaf--adding>>%s", str(new_tokens))
+        LOGGER.debug(">>leaf--adding>>%s", ParserHelper.make_value_visible(new_tokens))
         pre_tokens.extend(new_tokens)
-        LOGGER.debug(">>leaf--added>>%s", str(pre_tokens))
+        LOGGER.debug(">>leaf--added>>%s", ParserHelper.make_value_visible(pre_tokens))
         return pre_tokens, requeue_line_info
 
     # pylint: enable=too-many-arguments, too-many-locals

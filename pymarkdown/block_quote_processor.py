@@ -9,6 +9,7 @@ from pymarkdown.parser_helper import ParserHelper, PositionMarker
 from pymarkdown.stack_token import (
     BlockQuoteStackToken,
     IndentedCodeBlockStackToken,
+    LinkDefinitionStackToken,
     ParagraphStackToken,
 )
 
@@ -154,7 +155,7 @@ class BlockQuoteProcessor:
                 extracted_whitespace,
                 adj_ws=adj_ws,
             )
-            and not parser_state.token_stack[-1].was_link_definition_started
+            # and not parser_state.token_stack[-1].was_link_definition_started
         ):
             LOGGER.debug("handle_block_quote_block>>block-start")
             (
@@ -479,7 +480,11 @@ class BlockQuoteProcessor:
         if this_bq_count > stack_bq_count:
             container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
                 parser_state,
-                only_these_blocks=[ParagraphStackToken, IndentedCodeBlockStackToken],
+                only_these_blocks=[
+                    ParagraphStackToken,
+                    IndentedCodeBlockStackToken,
+                    LinkDefinitionStackToken,
+                ],
                 was_forced=True,
             )
             while parser_state.token_stack[-1].is_list:

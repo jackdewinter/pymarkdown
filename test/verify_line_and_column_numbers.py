@@ -183,6 +183,35 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
             print(
                 "top_block_token>>" + ParserHelper.make_value_visible(top_block_token)
             )
+            if top_block_token and last_token.is_link_reference_definition:
+
+                split_link_name_debug = last_token.link_name_debug.split("\n")
+                split_link_destination_whitespace = (
+                    last_token.link_destination_whitespace.split("\n")
+                )
+                split_link_title_whitespace = last_token.link_title_whitespace.split(
+                    "\n"
+                )
+                split_link_title = last_token.link_title.split("\n")
+
+                print(
+                    ">>mainline-top_block_token>>leading_text_index>"
+                    + str(container_block_stack[-1].leading_text_index)
+                )
+                top_block_token.leading_text_index += (
+                    len(split_link_name_debug)
+                    - 1
+                    + len(split_link_destination_whitespace)
+                    - 1
+                    + len(split_link_title_whitespace)
+                    - 1
+                    + len(split_link_title)
+                    - 1
+                )
+                print(
+                    ">>mainline-top_block_token>>leading_text_index>"
+                    + str(container_block_stack[-1].leading_text_index)
+                )
 
             did_x = False
             if last_position.line_number == current_position.line_number:

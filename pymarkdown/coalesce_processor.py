@@ -24,10 +24,14 @@ class CoalesceProcessor:
         for coalesce_index in range(1, len(first_pass_results)):
             did_process = False
             LOGGER.debug(
-                "coalesce_text_blocks>>>>%s<<", str(first_pass_results[coalesce_index])
+                "coalesce_text_blocks>>>>%s<<",
+                ParserHelper.make_value_visible(first_pass_results[coalesce_index]),
             )
             if coalesced_list[-1].is_text:
-                LOGGER.debug(">>coalesce_text_blocks>>>>%s<<", str(coalesced_list[-1]))
+                LOGGER.debug(
+                    ">>coalesce_text_blocks>>>>%s<<",
+                    ParserHelper.make_value_visible(coalesced_list[-1]),
+                )
                 if first_pass_results[coalesce_index].is_text or (
                     first_pass_results[coalesce_index].is_blank_line
                     and coalesced_list[-2].is_code_block
@@ -81,18 +85,23 @@ class CoalesceProcessor:
                 or coalesced_list[coalesce_index - 1].is_setext_heading
             ):
                 LOGGER.debug(
-                    "full_paragraph_text>%s<", str(coalesced_list[coalesce_index])
+                    "full_paragraph_text>%s<",
+                    ParserHelper.make_value_visible(coalesced_list[coalesce_index]),
                 )
                 LOGGER.debug(
                     "full_paragraph_text>%s>%s<",
                     str(len(coalesced_list[coalesce_index].token_text)),
-                    coalesced_list[coalesce_index].token_text,
+                    ParserHelper.make_value_visible(
+                        coalesced_list[coalesce_index].token_text
+                    ),
                 )
                 removed_ws = coalesced_list[coalesce_index].remove_final_whitespace()
                 LOGGER.debug(
                     "full_paragraph_text>%s>%s<",
                     str(len(coalesced_list[coalesce_index].token_text)),
-                    coalesced_list[coalesce_index].token_text,
+                    ParserHelper.make_value_visible(
+                        coalesced_list[coalesce_index].token_text
+                    ),
                 )
                 LOGGER.debug(
                     "full_paragraph_text>%s>", str(coalesced_list[coalesce_index - 1])

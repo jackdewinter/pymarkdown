@@ -639,12 +639,16 @@ class InlineHelper:
         LOGGER.debug(
             "extract_bounded_string>>new_index>>%s>>data>>%s>>",
             str(new_index),
-            source_text[new_index:],
+            ParserHelper.make_value_visible(source_text[new_index:]),
         )
         next_index, data = ParserHelper.collect_until_one_of_characters(
             source_text, new_index, break_characters
         )
-        LOGGER.debug(">>next_index1>>%s>>data>>%s>>", str(next_index), data)
+        LOGGER.debug(
+            ">>next_index1>>%s>>data>>%s>>",
+            str(next_index),
+            ParserHelper.make_value_visible(data),
+        )
         while next_index < len(source_text) and not (
             source_text[next_index] == close_character and nesting_level == 0
         ):
@@ -676,9 +680,17 @@ class InlineHelper:
             next_index, new_data = ParserHelper.collect_until_one_of_characters(
                 source_text, next_index, break_characters
             )
-            LOGGER.debug("back>>next_index>>%s>>data>>%s>>", str(next_index), data)
+            LOGGER.debug(
+                "back>>next_index>>%s>>data>>%s>>",
+                str(next_index),
+                ParserHelper.make_value_visible(data),
+            )
             data = data + new_data
-        LOGGER.debug(">>next_index2>>%s>>data>>%s>>", str(next_index), data)
+        LOGGER.debug(
+            ">>next_index2>>%s>>data>>%s>>",
+            str(next_index),
+            ParserHelper.make_value_visible(data),
+        )
         if (
             ParserHelper.is_character_at_index(source_text, next_index, close_character)
             and nesting_level == 0
