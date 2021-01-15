@@ -596,7 +596,6 @@ class InlineProcessor:
                 LOGGER.debug(
                     "delta_column>>%s<<", str(inline_response.delta_column_number)
                 )
-                # assert False
                 start_index = inline_response.new_index
             else:
                 processed_line += ParserHelper.newline_character

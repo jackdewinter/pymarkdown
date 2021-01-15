@@ -555,7 +555,6 @@ class ListBlockProcessor:
                 and allow_list_continue
                 and not is_theme_break
             ):
-                assert True
                 LOGGER.debug(
                     "1>>line_to_parse>>%s>>",
                     ParserHelper.make_value_visible(line_to_parse),
@@ -578,7 +577,6 @@ class ListBlockProcessor:
                     ">>used_indent>>%s>>", ParserHelper.make_value_visible(used_indent)
                 )
             else:
-                assert True
                 LOGGER.debug(
                     "2>>line_to_parse>>%s>>",
                     ParserHelper.make_value_visible(line_to_parse),
@@ -1163,7 +1161,9 @@ class ListBlockProcessor:
         is_leaf_block_start = LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
             parser_state, line_to_parse, start_index, extracted_whitespace
         )
-        if not parser_state.token_stack[-1].is_paragraph or (is_leaf_block_start):
+        if (
+            not parser_state.token_stack[-1].is_paragraph or (is_leaf_block_start)
+        ) and not parser_state.token_stack[-1].was_link_definition_started:
             LOGGER.debug("ws (normal and adjusted) not enough to continue")
 
             LOGGER.debug("lsl %s", str(leading_space_length))
