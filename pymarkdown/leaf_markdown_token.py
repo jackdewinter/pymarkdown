@@ -111,7 +111,9 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
 
         new_extra_data = self.__extracted_whitespace
         if self.final_whitespace:
-            new_extra_data += MarkdownToken.extra_data_separator + self.__final_whitespace
+            new_extra_data += (
+                MarkdownToken.extra_data_separator + self.__final_whitespace
+            )
         self._set_extra_data(new_extra_data)
 
     def add_whitespace(self, whitespace_to_add):
@@ -145,7 +147,11 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_thematic_break,
-            start_character + MarkdownToken.extra_data_separator + extracted_whitespace + MarkdownToken.extra_data_separator + self.__rest_of_line,
+            start_character
+            + MarkdownToken.extra_data_separator
+            + extracted_whitespace
+            + MarkdownToken.extra_data_separator
+            + self.__rest_of_line,
             position_marker=position_marker,
             extracted_whitespace=extracted_whitespace,
         )
@@ -538,7 +544,11 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        self._set_extra_data(self.extracted_whitespace + MarkdownToken.extra_data_separator + self.indented_whitespace)
+        self._set_extra_data(
+            self.extracted_whitespace
+            + MarkdownToken.extra_data_separator
+            + self.indented_whitespace
+        )
 
     def add_indented_whitespace(self, indented_whitespace):
         """

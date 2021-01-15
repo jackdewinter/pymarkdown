@@ -148,14 +148,11 @@ class BlockQuoteProcessor:
             "handle_block_quote_block>>was_link_definition_started>:%s:<",
             str(parser_state.token_stack[-1].was_link_definition_started),
         )
-        if (
-            BlockQuoteProcessor.is_block_quote_start(
-                position_marker.text_to_parse,
-                position_marker.index_number,
-                extracted_whitespace,
-                adj_ws=adj_ws,
-            )
-            # and not parser_state.token_stack[-1].was_link_definition_started
+        if BlockQuoteProcessor.is_block_quote_start(
+            position_marker.text_to_parse,
+            position_marker.index_number,
+            extracted_whitespace,
+            adj_ws=adj_ws,
         ):
             LOGGER.debug("handle_block_quote_block>>block-start")
             (
@@ -188,6 +185,23 @@ class BlockQuoteProcessor:
             did_process = True
             was_container_start = True
             end_of_bquote_start_index = adjusted_index_number
+        elif parser_state.token_stack[-1].was_link_definition_started:
+            stack_index = len(parser_state.token_stack) - 1
+            last_block_token = None
+            while stack_index > 0:
+                if parser_state.token_stack[stack_index].is_block_quote:
+                    last_block_token = parser_state.token_stack[
+                        stack_index
+                    ].matching_markdown_token
+                stack_index -= 1
+            if last_block_token:
+                LOGGER.debug(
+                    "handle_block w/ no open>>found>>%s",
+                    ParserHelper.make_value_visible(last_block_token),
+                )
+                last_block_token.add_leading_spaces("")
+            else:
+                LOGGER.debug("handle_block w/ no open>>not found")
 
         LOGGER.debug("handle_block_quote_block>>end>>did_process>>%s", str(did_process))
         return (

@@ -63,7 +63,9 @@ class InProcessResult:
                     expected_text.splitlines(), actual_stream.getvalue().splitlines()
                 )
 
-                diff_values = ParserHelper.newline_character.join(list(diff)) + "\n---\n"
+                diff_values = (
+                    ParserHelper.newline_character.join(list(diff)) + "\n---\n"
+                )
 
                 LOGGER.warning(
                     "actual>>%s",

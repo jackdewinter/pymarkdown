@@ -51,7 +51,9 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_emphasis,
-            str(emphasis_length) + MarkdownToken.extra_data_separator + emphasis_character,
+            str(emphasis_length)
+            + MarkdownToken.extra_data_separator
+            + emphasis_character,
             line_number=line_number,
             column_number=column_number,
         )
@@ -633,7 +635,11 @@ class TextMarkdownToken(InlineMarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        new_extra_data = self.__token_text + MarkdownToken.extra_data_separator + self.__extracted_whitespace
+        new_extra_data = (
+            self.__token_text
+            + MarkdownToken.extra_data_separator
+            + self.__extracted_whitespace
+        )
         if self.end_whitespace:
             new_extra_data += MarkdownToken.extra_data_separator + self.__end_whitespace
         self._set_extra_data(new_extra_data)

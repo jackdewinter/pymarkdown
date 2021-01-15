@@ -54,6 +54,7 @@
 ### Priority 3 - Like To Solve in next 3 m
 
 - look for places where common access patterns can be used i.e. link_title
+  - `= len(parser_state.token_stack`
 - HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
 - cases like 183 where first non-ws character is an inline specifier
   - can this be fixed in a way that does not require the other fix to add
@@ -83,7 +84,6 @@
 - test_block_quotes_extra_02ab - d - not verifying
 - multiline raw html in inline link label?
   - multi raw and multi icodespan to match other link label
-- lrd over new list item or new block quote boundary
 
 ## Bugs - Tokenization
 

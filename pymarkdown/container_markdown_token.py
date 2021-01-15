@@ -47,7 +47,11 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
         ContainerMarkdownToken.__init__(
             self,
             MarkdownToken._token_new_list_item,
-            str(indent_level) + MarkdownToken.extra_data_separator + extracted_whitespace + MarkdownToken.extra_data_separator + list_start_content,
+            str(indent_level)
+            + MarkdownToken.extra_data_separator
+            + extracted_whitespace
+            + MarkdownToken.extra_data_separator
+            + list_start_content,
             position_marker=position_marker,
         )
 
@@ -313,4 +317,8 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        self._set_extra_data(self.__extracted_whitespace + MarkdownToken.extra_data_separator + self.__leading_spaces)
+        self._set_extra_data(
+            self.__extracted_whitespace
+            + MarkdownToken.extra_data_separator
+            + self.__leading_spaces
+        )

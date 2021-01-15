@@ -591,7 +591,10 @@ class HtmlHelper:
 
         if valid_raw_html:
 
-            if ParserHelper.newline_character in valid_raw_html and inline_request.para_owner:
+            if (
+                ParserHelper.newline_character in valid_raw_html
+                and inline_request.para_owner
+            ):
 
                 # TODO common?
                 split_raw = valid_raw_html.split(ParserHelper.newline_character)
@@ -602,7 +605,9 @@ class HtmlHelper:
                     ">>para_owner>>%s<<",
                     ParserHelper.make_value_visible(inline_request.para_owner),
                 )
-                split_ew = inline_request.para_owner.extracted_whitespace.split(ParserHelper.newline_character)
+                split_ew = inline_request.para_owner.extracted_whitespace.split(
+                    ParserHelper.newline_character
+                )
                 LOGGER.debug(">>split>>%s<<", ParserHelper.make_value_visible(split_ew))
                 LOGGER.debug(
                     ">>rehydrate_index>>%s<<",

@@ -80,20 +80,15 @@ class MarkdownToken:
         """
         More customizable version of __str__ that allows for options.
         """
-        add_extra = ""
-        if (
-            self.extra_data
-            or self.is_paragraph
-            or self.is_blank_line
-            or self.is_block_quote_start
-        ):
+        if self.extra_data or self.is_paragraph or self.is_blank_line:
             add_extra = ":" + self.extra_data
-        column_row_info = ""
+        else:
+            add_extra = ""
         if include_column_row_info and (self.line_number or self.column_number):
-            column_row_info = (
-                "(" + str(self.line_number) + "," + str(self.column_number) + ")"
-            )
-        return "[" + self.token_name + column_row_info + add_extra + "]"
+            column_row_info = "(%d,%d)" % (self.line_number, self.column_number)
+        else:
+            column_row_info = ""
+        return "[%s%s%s]" % (self.token_name, column_row_info, add_extra)
 
     def __repr__(self):
         return "'" + self.__str__() + "'"

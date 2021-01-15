@@ -1707,3 +1707,69 @@ def test_link_reference_definitions_188e():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_01():
+    """
+    Test case extra 01:  variation
+    """
+
+    # Arrange
+    source_markdown = """- [foo]:
+/url"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):[:]",
+        "[text(1,2):foo:]",
+        "[text(1,5):]:]",
+        "[text(1,6):: /url (:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[foo]: /url (</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_02x():
+    """
+    Test case extra 02:  variation
+    """
+
+    # Arrange
+    source_markdown = """> [foo]:
+/url"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n]",
+        "[link-ref-def(1,3):True::foo::\n:/url:::::]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_02a():
+    """
+    Test case extra 02a:  variation
+    """
+
+    # Arrange
+    source_markdown = """> [foo]:
+> /url"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[link-ref-def(1,3):True::foo::\n:/url:::::]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

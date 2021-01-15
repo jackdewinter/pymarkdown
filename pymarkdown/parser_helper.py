@@ -381,7 +381,9 @@ class ParserHelper:
         """
         Count the number of new line characters in a given string.
         """
-        return ParserHelper.count_characters_in_text(text_to_examine, ParserHelper.newline_character)
+        return ParserHelper.count_characters_in_text(
+            text_to_examine, ParserHelper.newline_character
+        )
 
     @staticmethod
     def make_value_visible(value_to_modify):
@@ -547,20 +549,20 @@ class ParserHelper:
             adjusted_text_token, ParserHelper.escape_character, start_index
         )
         while next_backspace_index != -1:
-            LOGGER.debug(
-                "before>%s>%s>",
-                str(len(adjusted_text_token)),
-                ParserHelper.make_value_visible(adjusted_text_token),
-            )
+            # LOGGER.debug(
+            #    "before>%s>%s>",
+            #    str(len(adjusted_text_token)),
+            #    ParserHelper.make_value_visible(adjusted_text_token),
+            # )
             adjusted_text_token = (
                 adjusted_text_token[0:next_backspace_index]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
-            LOGGER.debug(
-                "after>%s>%s",
-                str(len(adjusted_text_token)),
-                ParserHelper.make_value_visible(adjusted_text_token),
-            )
+            # LOGGER.debug(
+            #    "after>%s>%s",
+            #    str(len(adjusted_text_token)),
+            #    ParserHelper.make_value_visible(adjusted_text_token),
+            # )
             start_index = next_backspace_index + 1
             next_backspace_index = ParserHelper.__find_with_escape(
                 adjusted_text_token, ParserHelper.escape_character, start_index

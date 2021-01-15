@@ -179,7 +179,9 @@ class InlineProcessor:
                                     coalesced_results[coalesce_index]
                                 ),
                             )
-                            assert ParserHelper.newline_character not in leading_whitespace
+                            assert (
+                                ParserHelper.newline_character not in leading_whitespace
+                            )
                             LOGGER.info(
                                 "leading_whitespace:%s<",
                                 ParserHelper.make_value_visible(leading_whitespace),
@@ -701,7 +703,9 @@ class InlineProcessor:
                 para_owner.rehydrate_index += newline_count
             last_spaces = ""
 
-            split_active_link_title = active_link_title.split(ParserHelper.newline_character)
+            split_active_link_title = active_link_title.split(
+                ParserHelper.newline_character
+            )
             link_part_lengths[2] = len(split_active_link_title[-1]) + 1
             link_part_index = 2
         newline_count = ParserHelper.count_newlines_in_text(
@@ -778,7 +782,9 @@ class InlineProcessor:
                     ">>para_owner.rehydrate_index>>%s<<",
                     ParserHelper.make_value_visible(para_owner.rehydrate_index),
                 )
-                split_paragraph_lines = para_owner.extracted_whitespace.split(ParserHelper.newline_character)
+                split_paragraph_lines = para_owner.extracted_whitespace.split(
+                    ParserHelper.newline_character
+                )
                 LOGGER.debug(
                     ">>split_paragraph_lines>>%s<<",
                     ParserHelper.make_value_visible(split_paragraph_lines),
