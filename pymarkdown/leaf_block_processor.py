@@ -600,14 +600,15 @@ class LeafBlockProcessor:
             index = start_index
 
             char_count = 0
-            while index < len(line_to_parse):
+            repeat_loop = True
+            while repeat_loop and index < len(line_to_parse):
                 if ParserHelper.is_character_at_index_whitespace(line_to_parse, index):
                     index += 1
                 elif line_to_parse[index] == start_char:
                     index += 1
                     char_count += 1
                 else:
-                    break
+                    repeat_loop = False
 
             if char_count >= 3 and index == len(line_to_parse):
                 thematic_break_character = start_char

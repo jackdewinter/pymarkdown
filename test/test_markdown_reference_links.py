@@ -1440,3 +1440,70 @@ def test_reference_links_579():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_01():
+    """
+    Test case extra 01:  variation on 644
+    """
+
+    # Arrange
+    source_markdown = """[foo <!-- this is a
+comment - with hyphen --> bar]: /uri
+
+[foo <!-- this is a
+comment - with hyphen --> bar]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo <!-- this is a comment - with hyphen --> bar:foo <!-- this is a\ncomment - with hyphen --> bar: :/uri:::::]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[link(4,1):shortcut:/uri:::::foo <!-- this is a\ncomment - with hyphen --> bar:::::]",
+        "[text(4,2):foo :]",
+        "[raw-html(4,6):!-- this is a\ncomment - with hyphen --]",
+        "[text(5,26): bar:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri">foo <!-- this is a
+comment - with hyphen --> bar</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_02():
+    """
+    Test case extra 02:  variation on 345
+    """
+
+    # Arrange
+    source_markdown = """[foo ``
+foo
+bar\a\a
+baz
+`` bar]: /uri
+
+[foo ``
+foo
+bar\a\a
+baz
+`` bar]""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[link-ref-def(1,1):True::foo `` foo bar baz `` bar:foo ``\nfoo\nbar  \nbaz\n`` bar: :/uri:::::]",
+        "[BLANK(6,1):]",
+        "[para(7,1):\n\n\n\n]",
+        "[link(7,1):shortcut:/uri:::::foo ``\nfoo\nbar  \nbaz\n`` bar:::::]",
+        "[text(7,2):foo :]",
+        "[icode-span(7,6):foo\a\n\a \abar  \a\n\a \abaz:``:\a\n\a \a:\a\n\a \a]",
+        "[text(11,3): bar:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri">foo <code>foo bar   baz</code> bar</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

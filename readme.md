@@ -82,8 +82,6 @@
 
 - 270 and check for indent levels after
 - test_block_quotes_extra_02ab - d - not verifying
-- multiline raw html in inline link label?
-  - multi raw and multi icodespan to match other link label
 
 ## Bugs - Tokenization
 

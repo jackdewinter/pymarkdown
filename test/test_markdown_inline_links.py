@@ -1344,3 +1344,57 @@ def test_inline_links_534():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_inline_links_extra_01():
+    """
+    Test case extra 01:  variation on 644
+    """
+
+    # Arrange
+    source_markdown = """[foo <!-- this is a
+comment - with hyphen --> bar](uri)"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[link(1,1):inline:uri:::::foo <!-- this is a\ncomment - with hyphen --> bar:False::::]",
+        "[text(1,2):foo :]",
+        "[raw-html(1,6):!-- this is a\ncomment - with hyphen --]",
+        "[text(2,26): bar:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="uri">foo <!-- this is a
+comment - with hyphen --> bar</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_inline_links_extra_02():
+    """
+    Test case extra 02:  variation on 345
+    """
+
+    # Arrange
+    source_markdown = """[foo ``
+foo
+bar\a\a
+baz
+`` bar](uri)""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n\n\n\n]",
+        "[link(1,1):inline:uri:::::foo ``\nfoo\nbar  \nbaz\n`` bar:False::::]",
+        "[text(1,2):foo :]",
+        "[icode-span(1,6):foo\a\n\a \abar  \a\n\a \abaz:``:\a\n\a \a:\a\n\a \a]",
+        "[text(5,3): bar:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="uri">foo <code>foo bar   baz</code> bar</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

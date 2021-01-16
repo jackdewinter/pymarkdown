@@ -279,7 +279,7 @@ The above exception was the direct cause of the following exception:
 Traceback (most recent call last):
 """,
             """, in next_line
-    ) from this_exception
+    raise BadPluginError(
 pymarkdown.plugin_manager.BadPluginError: Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 """,
         ],
@@ -380,7 +380,7 @@ The above exception was the direct cause of the following exception:
 
 Traceback (most recent call last):
 """,
-            """    ) from this_exception
+            """    raise BadPluginError(
 pymarkdown.plugin_manager.BadPluginError: Plugin class 'BadDetails' had a critical failure loading the plugin details.""",
         ],
     )

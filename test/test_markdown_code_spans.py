@@ -172,9 +172,11 @@ def test_code_spans_345():
     # Arrange
     source_markdown = """``
 foo
-bar  
+bar\a\a
 baz
-``"""
+``""".replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[para(1,1):\n\n\n\n]",
         "[icode-span(1,1):foo\a\n\a \abar  \a\n\a \abaz:``:\a\n\a \a:\a\n\a \a]",
