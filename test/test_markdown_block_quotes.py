@@ -1661,7 +1661,7 @@ end</li>
 
 
 @pytest.mark.gfm
-def test_block_quotes_extra_02a():
+def test_block_quotes_extra_02ax():
     """
     Test case Bq02a:  variant
     """
@@ -1729,7 +1729,6 @@ end"""
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_extra_02ab():
     """
@@ -1766,7 +1765,6 @@ quote</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_extra_02ac():
     """
@@ -1807,7 +1805,6 @@ def test_block_quotes_extra_02ac():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_extra_02ad():
     """

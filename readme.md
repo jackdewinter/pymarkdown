@@ -81,7 +81,6 @@
 ## Bugs - Block Quote/List Interaction
 
 - 270 and check for indent levels after
-- test_block_quotes_extra_02ab - d - not verifying
 
 ## Bugs - Tokenization
 

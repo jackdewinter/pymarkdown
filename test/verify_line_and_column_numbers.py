@@ -6,6 +6,23 @@ from pymarkdown.parser_helper import ParserHelper, PositionMarker
 # pylint: disable=too-many-lines
 
 
+def find_last_block_quote_on_stack(container_block_stack):
+    """
+    Simple function to calculate if a block quote is in progress.
+    """
+    last_block_quote_token = None
+    if container_block_stack:
+        statck_index = len(container_block_stack) - 1
+        while (
+            statck_index >= 0
+            and not container_block_stack[statck_index].is_block_quote_start
+        ):
+            statck_index -= 1
+        if statck_index >= 0:
+            last_block_quote_token = container_block_stack[statck_index]
+    return last_block_quote_token
+
+
 # pylint: disable=too-many-branches,too-many-statements,too-many-locals, too-many-boolean-expressions
 def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C901
     """
@@ -33,10 +50,10 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
 
         if current_token.is_inline and not current_token.is_end_token:
             print("Inline, skipping:" + ParserHelper.make_value_visible(token_stack))
-            if token_stack:
-                print(">>" + ParserHelper.make_value_visible(token_stack[-1]))
-
-            if container_block_stack and container_block_stack[-1].is_block_quote_start:
+            last_block_quote_token = find_last_block_quote_on_stack(
+                container_block_stack
+            )
+            if last_block_quote_token:
                 print(
                     "number_of_lines:"
                     + ParserHelper.make_value_visible(actual_tokens[ind - 1])
@@ -55,42 +72,38 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                         print(">>newlines_in_text_token>" + str(newlines_in_text_token))
                         print(
                             ">>mainline-html>>leading_text_index>"
-                            + str(container_block_stack[-1].leading_text_index)
+                            + str(last_block_quote_token.leading_text_index)
                         )
-                        container_block_stack[
-                            -1
-                        ].leading_text_index += newlines_in_text_token
+                        last_block_quote_token.leading_text_index += (
+                            newlines_in_text_token
+                        )
                         print(
                             ">>mainline-html>>leading_text_index>"
-                            + str(container_block_stack[-1].leading_text_index)
+                            + str(last_block_quote_token.leading_text_index)
                         )
                 elif current_token.is_inline_image or current_token.is_inline_link:
                     abc = current_token.text_from_blocks
                     newlines_in_text_token = ParserHelper.count_newlines_in_text(abc)
                     print(
                         ">>mainline-inline>>leading_text_index>"
-                        + str(container_block_stack[-1].leading_text_index)
+                        + str(last_block_quote_token.leading_text_index)
                     )
-                    container_block_stack[
-                        -1
-                    ].leading_text_index += newlines_in_text_token
+                    last_block_quote_token.leading_text_index += newlines_in_text_token
                     print(
                         ">>mainline-inline>>leading_text_index>"
-                        + str(container_block_stack[-1].leading_text_index)
+                        + str(last_block_quote_token.leading_text_index)
                     )
                 elif current_token.is_inline_raw_html:
                     abc = current_token.raw_tag
                     newlines_in_text_token = ParserHelper.count_newlines_in_text(abc)
                     print(
                         ">>mainline-inline>>leading_text_index>"
-                        + str(container_block_stack[-1].leading_text_index)
+                        + str(last_block_quote_token.leading_text_index)
                     )
-                    container_block_stack[
-                        -1
-                    ].leading_text_index += newlines_in_text_token
+                    last_block_quote_token.leading_text_index += newlines_in_text_token
                     print(
                         ">>mainline-inline>>leading_text_index>"
-                        + str(container_block_stack[-1].leading_text_index)
+                        + str(last_block_quote_token.leading_text_index)
                     )
                 elif current_token.is_inline_code_span:
                     abc = (
@@ -101,14 +114,12 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                     newlines_in_text_token = ParserHelper.count_newlines_in_text(abc)
                     print(
                         ">>mainline-inline>>leading_text_index>"
-                        + str(container_block_stack[-1].leading_text_index)
+                        + str(last_block_quote_token.leading_text_index)
                     )
-                    container_block_stack[
-                        -1
-                    ].leading_text_index += newlines_in_text_token
+                    last_block_quote_token.leading_text_index += newlines_in_text_token
                     print(
                         ">>mainline-inline>>leading_text_index>"
-                        + str(container_block_stack[-1].leading_text_index)
+                        + str(last_block_quote_token.leading_text_index)
                     )
             continue
 
@@ -119,7 +130,10 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
         if current_token.is_end_token:
             print("end token, skipping")
             __pop_from_stack_if_required(token_stack, current_token)
-            if container_block_stack and container_block_stack[-1].is_block_quote_start:
+            last_block_quote_token = find_last_block_quote_on_stack(
+                container_block_stack
+            )
+            if last_block_quote_token:
                 print("block quotes: looking for implicit newlines")
                 if (
                     current_token.is_atx_heading_end
@@ -131,16 +145,16 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                 ):
                     print(
                         ">>mainline-ends>>leading_text_index>"
-                        + str(container_block_stack[-1].leading_text_index)
+                        + str(last_block_quote_token.leading_text_index)
                     )
-                    container_block_stack[-1].leading_text_index += 1
+                    last_block_quote_token.leading_text_index += 1
                     if current_token.is_fenced_code_block_end:
-                        container_block_stack[-1].leading_text_index += 2
+                        last_block_quote_token.leading_text_index += 2
                     elif current_token.is_setext_heading_end:
-                        container_block_stack[-1].leading_text_index += 1
+                        last_block_quote_token.leading_text_index += 1
                     print(
                         ">>mainline-ends>>leading_text_index>"
-                        + str(container_block_stack[-1].leading_text_index)
+                        + str(last_block_quote_token.leading_text_index)
                     )
             continue
 
@@ -620,23 +634,6 @@ def __validate_new_line(container_block_stack, current_token, current_position):
             print(
                 "vnl>>blank_line w/ bq>>leading_text_index>"
                 + str(container_block_stack[-1].leading_text_index)
-            )
-    elif container_block_stack:
-        print(">>__vnl->huh-ish")
-        block_search_index = len(container_block_stack) - 1
-        while block_search_index >= 0:
-            if container_block_stack[block_search_index].is_block_quote_start:
-                break
-            block_search_index -= 1
-        if block_search_index >= 0:
-            print(
-                "vnl>>blank_line w/ huh>>leading_text_index>"
-                + str(container_block_stack[block_search_index].leading_text_index)
-            )
-            container_block_stack[block_search_index].leading_text_index += 1
-            print(
-                "vnl>>blank_line w/ huh>>leading_text_index>"
-                + str(container_block_stack[block_search_index].leading_text_index)
             )
 
     print(">>current_position.index_number>>" + str(current_position.index_number))
