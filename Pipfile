@@ -16,6 +16,8 @@ pytest-timeout = "*"
 tabulate = "*"
 pytest-html = "*"
 snakeviz = "*"
+typing-extensions = "*"
+typed-ast = "==1.4.2"
 
 [requires]
 python_version = "3.8"
