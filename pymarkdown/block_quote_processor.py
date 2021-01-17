@@ -87,7 +87,11 @@ class BlockQuoteProcessor:
                 )
             )
 
-            if parser_state.token_stack[-1].is_code_block or (is_leaf_block_start):
+            if (
+                parser_state.token_stack[-1].is_code_block
+                or parser_state.token_stack[-1].is_html_block
+                or (is_leaf_block_start)
+            ):
                 LOGGER.debug("__check_for_lazy_handling>>code block")
                 assert not container_level_tokens
                 container_level_tokens, _, _ = parser_state.close_open_blocks_fn(

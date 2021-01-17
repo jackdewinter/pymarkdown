@@ -50,6 +50,9 @@
 - split(ParserHelper.newline_character)
    - count_newlines_in_text where feasible
    - end of handle_inline_backtick for calculating column of last
+- switch from bq to list and back again
+  - switch from list to bq and back again
+  - 270 and check for indent levels after
 
 ### Priority 3 - Like To Solve in next 3 m
 
@@ -76,11 +79,6 @@
   - 518b inside of list and/or block quote
   - links with & and \ with inner link to mine
     - see __collect_text_from_blocks
-- 634, but forcing an html block
-
-## Bugs - Block Quote/List Interaction
-
-- 270 and check for indent levels after
 
 ## Bugs - Tokenization
 

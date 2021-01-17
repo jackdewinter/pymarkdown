@@ -190,6 +190,175 @@ def test_html_blocks_123():
 
 
 @pytest.mark.gfm
+def test_html_blocks_123a():
+    """
+    Test case 123a:  variation
+    """
+
+    # Arrange
+    source_markdown = """- <div id="foo"
+class="bar">
+</div>"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[html-block(1,3)]",
+        '[text(1,3):<div id="foo":]',
+        "[end-html-block:::True]",
+        "[end-ulist:::True]",
+        "[para(2,1):]",
+        '[text(2,1):class=\a"\a&quot;\abar\a"\a&quot;\a\a>\a&gt;\a:]',
+        "[end-para:::False]",
+        "[html-block(3,1)]",
+        "[text(3,1):</div>:]",
+        "[end-html-block:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<div id="foo"
+</li>
+</ul>
+<p>class=&quot;bar&quot;&gt;</p>
+</div>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_123bx():
+    """
+    Test case 123b:  variation
+    """
+
+    # Arrange
+    source_markdown = """> <div id="foo"
+class="bar">
+</div>"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[html-block(1,3)]",
+        '[text(1,3):<div id="foo":]',
+        "[end-html-block:::True]",
+        "[end-block-quote:::True]",
+        "[para(2,1):]",
+        '[text(2,1):class=\a"\a&quot;\abar\a"\a&quot;\a\a>\a&gt;\a:]',
+        "[end-para:::False]",
+        "[html-block(3,1)]",
+        "[text(3,1):</div>:]",
+        "[end-html-block:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<div id="foo"
+</blockquote>
+<p>class=&quot;bar&quot;&gt;</p>
+</div>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_html_blocks_123ba():
+    """
+    Test case 123ba:  variation
+    """
+
+    # Arrange
+    source_markdown = """> <div id="foo"
+> class="bar">
+> </div>"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[html-block(1,3)]",
+        '[text(1,3):<div id="foo"\nclass="bar">\n</div>:]',
+        "[end-html-block:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<div id="foo"
+class="bar">
+</div>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_123bb():
+    """
+    Test case 123bb:  variation
+    """
+
+    # Arrange
+    source_markdown = """> <div id="foo"
+>   class="bar">
+> </div>"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[html-block(1,3)]",
+        '[text(1,3):<div id="foo"\n  class="bar">\n</div>:]',
+        "[end-html-block:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<div id="foo"
+  class="bar">
+</div>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_123c():
+    """
+    Test case 123c:  variation
+    """
+
+    # Arrange
+    source_markdown = """<div id="foo"
+class="bar">
+---"""
+    expected_tokens = [
+        "[html-block(1,1)]",
+        '[text(1,1):<div id="foo"\nclass="bar">\n---:]',
+        "[end-html-block:::True]",
+    ]
+    expected_gfm = """<div id="foo"
+class="bar">
+---"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_123d():
+    """
+    Test case 123d:  variation
+    """
+
+    # Arrange
+    source_markdown = """# <div id="foo"
+class="bar">"""
+    expected_tokens = [
+        "[atx(1,1):1:0:]",
+        '[text(1,3):\a<\a&lt;\adiv id=\a"\a&quot;\afoo\a"\a&quot;\a: ]',
+        "[end-atx:::False]",
+        "[para(2,1):]",
+        '[text(2,1):class=\a"\a&quot;\abar\a"\a&quot;\a\a>\a&gt;\a:]',
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<h1>&lt;div id=&quot;foo&quot;</h1>
+<p>class=&quot;bar&quot;&gt;</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_html_blocks_124():
     """
     Test case 124:  (part 2) The tag on the first line can be partial, as long as it is split where there would be whitespace:
