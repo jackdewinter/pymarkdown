@@ -1507,3 +1507,1156 @@ baz
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03x():
+    """
+    Test case extra 03x:  variation on 558
+    """
+
+    # Arrange
+    source_markdown = """[bar\\foo]: /uri
+
+[bar\\foo]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar\\foo:: :/uri:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link(3,1):shortcut:/uri:::::bar\\foo:::::]",
+        "[text(3,2):bar\\foo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri">bar\\foo</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03xa():
+    """
+    Test case extra 03xa:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx[bar\\foo]yy](/uri)
+
+[bar\\foo]: /uri1"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):[:]",
+        "[text(1,2):xx:]",
+        "[link(1,4):shortcut:/uri1:::::bar\\foo:::::]",
+        "[text(1,5):bar\\foo:]",
+        "[end-link:::False]",
+        "[text(1,13):yy:]",
+        "[text(1,15):]:]",
+        "[text(1,16):(/uri):]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar\\foo:: :/uri1:::::]",
+    ]
+    expected_gfm = """<p>[xx<a href="/uri1">bar\\foo</a>yy](/uri)</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03xb():
+    """
+    Test case extra 03xb:  variation
+    """
+
+    # Arrange
+    source_markdown = """![xx[bar\\foo]yy](/uri)
+
+[bar\\foo]: /uri1"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[image(1,1):inline:/uri::xxbar\\fooyy::::xx[bar\\foo]yy:False::::]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar\\foo:: :/uri1:::::]",
+    ]
+    expected_gfm = """<p><img src="/uri" alt="xxbar\\fooyy" /></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03xc():
+    """
+    Test case extra 03xc:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx![bar\\foo]yy](/uri)
+
+[bar\\foo]: /uri1"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[link(1,1):inline:/uri:::::xx![bar\\foo]yy:False::::]",
+        "[text(1,2):xx:]",
+        "[image(1,4):shortcut:/uri1::bar\\foo::::bar\\foo:::::]",
+        "[text(1,14):yy:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar\\foo:: :/uri1:::::]",
+    ]
+    expected_gfm = (
+        """<p><a href="/uri">xx<img src="/uri1" alt="bar\\foo" />yy</a></p>"""
+    )
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03a():
+    """
+    Test case extra 03a:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar&amp;foo]: /uri
+
+[bar&amp;foo]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar&amp;foo:: :/uri:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link(3,1):shortcut:/uri:::::bar&amp;foo:::::]",
+        "[text(3,2):bar\a&amp;\a\a&\a&amp;\a\afoo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri">bar&amp;foo</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03aa():
+    """
+    Test case extra 03a:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx[bar&amp;foo]yy](/uri1)
+
+[bar&amp;foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):[:]",
+        "[text(1,2):xx:]",
+        "[link(1,4):shortcut:/uri:::::bar&amp;foo:::::]",
+        "[text(1,5):bar\a&amp;\a\a&\a&amp;\a\afoo:]",
+        "[end-link:::False]",
+        "[text(1,17):yy:]",
+        "[text(1,19):]:]",
+        "[text(1,20):(/uri1):]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar&amp;foo:: :/uri:::::]",
+    ]
+    expected_gfm = """<p>[xx<a href="/uri">bar&amp;foo</a>yy](/uri1)</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03ab():
+    """
+    Test case extra 03a:  variation
+    """
+
+    # Arrange
+    source_markdown = """![xx[bar&amp;foo]yy](/uri1)
+
+[bar&amp;foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[image(1,1):inline:/uri1::xxbar&amp;fooyy::::xx[bar&amp;foo]yy:False::::]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar&amp;foo:: :/uri:::::]",
+    ]
+    expected_gfm = """<p><img src="/uri1" alt="xxbar&amp;fooyy" /></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03ac():
+    """
+    Test case extra 03a:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx![bar&lt;&amp;&gt;foo]yy](/uri1)
+
+[bar&lt;&amp;&gt;foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[link(1,1):inline:/uri1:::::xx![bar&lt;&amp;&gt;foo]yy:False::::]",
+        "[text(1,2):xx:]",
+        "[image(1,4):shortcut:/uri::bar&lt;&amp;&gt;foo::::bar&lt;&amp;&gt;foo:::::]",
+        "[text(1,26):yy:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar&lt;&amp;&gt;foo:: :/uri:::::]",
+    ]
+    expected_gfm = """<p><a href="/uri1">xx<img src="/uri" alt="bar&lt;&amp;&gt;foo" />yy</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03b():
+    """
+    Test case extra 03b:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar&copy;foo]: /uri
+
+[bar&copy;foo]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar&copy;foo:: :/uri:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link(3,1):shortcut:/uri:::::bar&copy;foo:::::]",
+        "[text(3,2):bar\a&copy;\a©\afoo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri">bar©foo</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03ba():
+    """
+    Test case extra 03b:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar&copy;foo]: /uri
+
+[xx[bar&copy;foo]yy](/uri1)"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar&copy;foo:: :/uri:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[text(3,1):[:]",
+        "[text(3,2):xx:]",
+        "[link(3,4):shortcut:/uri:::::bar&copy;foo:::::]",
+        "[text(3,5):bar\a&copy;\a©\afoo:]",
+        "[end-link:::False]",
+        "[text(3,18):yy:]",
+        "[text(3,20):]:]",
+        "[text(3,21):(/uri1):]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[xx<a href="/uri">bar©foo</a>yy](/uri1)</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03bb():
+    """
+    Test case extra 03b:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar&copy;foo]: /uri
+
+![xx[bar&copy;foo]yy](/uri1)"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar&copy;foo:: :/uri:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[image(3,1):inline:/uri1::xxbar©fooyy::::xx[bar&copy;foo]yy:False::::]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><img src="/uri1" alt="xxbar©fooyy" /></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03bc():
+    """
+    Test case extra 03b:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar&copy;foo]: /uri
+
+[xx![bar&copy;foo]yy](/uri1)"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar&copy;foo:: :/uri:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link(3,1):inline:/uri1:::::xx![bar&copy;foo]yy:False::::]",
+        "[text(3,2):xx:]",
+        "[image(3,4):shortcut:/uri::bar©foo::::bar&copy;foo:::::]",
+        "[text(3,19):yy:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri1">xx<img src="/uri" alt="bar©foo" />yy</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03c():
+    """
+    Test case extra 03c:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar` span `foo]: /uri
+
+[bar` span `foo]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar` span `foo:: :/uri:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link(3,1):shortcut:/uri:::::bar` span `foo:::::]",
+        "[text(3,2):bar:]",
+        "[icode-span(3,5):span:`: : ]",
+        "[text(3,13):foo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri">bar<code>span</code>foo</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03ca():
+    """
+    Test case extra 03ca:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx[bar` span `foo]yy](/uri1)
+
+[bar` span `foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):[:]",
+        "[text(1,2):xx:]",
+        "[link(1,4):shortcut:/uri:::::bar` span `foo:::::]",
+        "[text(1,5):bar:]",
+        "[icode-span(1,8):span:`: : ]",
+        "[text(1,16):foo:]",
+        "[end-link:::False]",
+        "[text(1,20):yy:]",
+        "[text(1,22):]:]",
+        "[text(1,23):(/uri1):]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar` span `foo:: :/uri:::::]",
+    ]
+    expected_gfm = """<p>[xx<a href="/uri">bar<code>span</code>foo</a>yy](/uri1)</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03cb():
+    """
+    Test case extra 03cb:  variation
+    """
+
+    # Arrange
+    source_markdown = """![xx[bar` span `foo]yy](/uri1)
+
+[bar` span `foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[image(1,1):inline:/uri1::xxbarspanfooyy::::xx[bar` span `foo]yy:False::::]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar` span `foo:: :/uri:::::]",
+    ]
+    expected_gfm = """<p><img src="/uri1" alt="xxbarspanfooyy" /></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03cc():
+    """
+    Test case extra 03cb:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx![bar` span `foo]yy](/uri1)
+
+[bar` span `foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[link(1,1):inline:/uri1:::::xx![bar` span `foo]yy:False::::]",
+        "[text(1,2):xx:]",
+        "[image(1,4):shortcut:/uri::barspanfoo::::bar` span `foo:::::]",
+        "[text(1,21):yy:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar` span `foo:: :/uri:::::]",
+    ]
+    expected_gfm = (
+        """<p><a href="/uri1">xx<img src="/uri" alt="barspanfoo" />yy</a></p>"""
+    )
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03d():
+    """
+    Test case extra 03c:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar*span*foo]: /uri
+
+[bar*span*foo]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar*span*foo:: :/uri:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link(3,1):shortcut:/uri:::::bar*span*foo:::::]",
+        "[text(3,2):bar:]",
+        "[emphasis(3,5):1:*]",
+        "[text(3,6):span:]",
+        "[end-emphasis(3,10):::False]",
+        "[text(3,11):foo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri">bar<em>span</em>foo</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03da():
+    """
+    Test case extra 03c:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx[bar*span*foo]yy](/uri1)
+
+[bar*span*foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):[:]",
+        "[text(1,2):xx:]",
+        "[link(1,4):shortcut:/uri:::::bar*span*foo:::::]",
+        "[text(1,5):bar:]",
+        "[emphasis(1,8):1:*]",
+        "[text(1,9):span:]",
+        "[end-emphasis(1,13):::False]",
+        "[text(1,14):foo:]",
+        "[end-link:::False]",
+        "[text(1,18):yy:]",
+        "[text(1,20):]:]",
+        "[text(1,21):(/uri1):]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar*span*foo:: :/uri:::::]",
+    ]
+    expected_gfm = """<p>[xx<a href="/uri">bar<em>span</em>foo</a>yy](/uri1)</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03db():
+    """
+    Test case extra 03c:  variation
+    """
+
+    # Arrange
+    source_markdown = """![xx[bar*span*foo]yy](/uri1)
+
+[bar*span*foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[image(1,1):inline:/uri1::xxbarspanfooyy::::xx[bar*span*foo]yy:False::::]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar*span*foo:: :/uri:::::]",
+    ]
+    expected_gfm = """<p><img src="/uri1" alt="xxbarspanfooyy" /></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03dc():
+    """
+    Test case extra 03c:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx![bar*span*foo]yy](/uri1)
+
+[bar*span*foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[link(1,1):inline:/uri1:::::xx![bar*span*foo]yy:False::::]",
+        "[text(1,2):xx:]",
+        "[image(1,4):shortcut:/uri::barspanfoo::::bar*span*foo:::::]",
+        "[text(1,19):yy:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar*span*foo:: :/uri:::::]",
+    ]
+    expected_gfm = (
+        """<p><a href="/uri1">xx<img src="/uri" alt="barspanfoo" />yy</a></p>"""
+    )
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03e():
+    """
+    Test case extra 03e:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar<http://autolink.com>foo]: /uri
+
+[bar<http://autolink.com>foo]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar<http://autolink.com>foo:: :/uri:::::]",
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        "[link(3,1):shortcut:/uri:::::bar<http://autolink.com>foo:::::]",
+        "[text(3,2):bar:]",
+        "[uri-autolink(3,5):http://autolink.com]",
+        "[text(3,26):foo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri">bar<a href="http://autolink.com">http://autolink.com</a>foo</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03ea():
+    """
+    Test case extra 03e:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx[bar<http://autolink.com>foo]yy](/uri1)
+
+[bar<http://autolink.com>foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):[:]",
+        "[text(1,2):xx:]",
+        "[link(1,4):shortcut:/uri:::::bar<http://autolink.com>foo:::::]",
+        "[text(1,5):bar:]",
+        "[uri-autolink(1,8):http://autolink.com]",
+        "[text(1,29):foo:]",
+        "[end-link:::False]",
+        "[text(1,33):yy:]",
+        "[text(1,35):]:]",
+        "[text(1,36):(/uri1):]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar<http://autolink.com>foo:: :/uri:::::]",
+    ]
+    expected_gfm = """<p>[xx<a href="/uri">bar<a href="http://autolink.com">http://autolink.com</a>foo</a>yy](/uri1)</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03eb():
+    """
+    Test case extra 03e:  variation
+    """
+
+    # Arrange
+    source_markdown = """![xx[bar<http://autolink.com>foo]yy](/uri1)
+
+[bar<http://autolink.com>foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[image(1,1):inline:/uri1::xxbarhttp://autolink.comfooyy::::xx[bar<http://autolink.com>foo]yy:False::::]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar<http://autolink.com>foo:: :/uri:::::]",
+    ]
+    expected_gfm = """<p><img src="/uri1" alt="xxbarhttp://autolink.comfooyy" /></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03ec():
+    """
+    Test case extra 03e:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx![bar<http://autolink.com>foo]yy](/uri1)
+
+[bar<http://autolink.com>foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[link(1,1):inline:/uri1:::::xx![bar<http://autolink.com>foo]yy:False::::]",
+        "[text(1,2):xx:]",
+        "[image(1,4):shortcut:/uri::barhttp://autolink.comfoo::::bar<http://autolink.com>foo:::::]",
+        "[text(1,34):yy:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[link-ref-def(3,1):True::bar<http://autolink.com>foo:: :/uri:::::]",
+    ]
+    expected_gfm = """<p><a href="/uri1">xx<img src="/uri" alt="barhttp://autolink.comfoo" />yy</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03f():
+    """
+    Test case extra 03f:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar<image src="xx">foo]: /uri
+
+[bar<image src="xx">foo]"""
+    expected_tokens = [
+        '[link-ref-def(1,1):True::bar<image src="xx">foo:: :/uri:::::]',
+        "[BLANK(2,1):]",
+        "[para(3,1):]",
+        '[link(3,1):shortcut:/uri:::::bar<image src="xx">foo:::::]',
+        "[text(3,2):bar:]",
+        '[raw-html(3,5):image src="xx"]',
+        "[text(3,21):foo:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri">bar<image src="xx">foo</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03fa():
+    """
+    Test case extra 03f:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx[bar<image src="xx">foo]yy](/uri1)
+
+[bar<image src="xx">foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):[:]",
+        "[text(1,2):xx:]",
+        '[link(1,4):shortcut:/uri:::::bar<image src="xx">foo:::::]',
+        "[text(1,5):bar:]",
+        '[raw-html(1,8):image src="xx"]',
+        "[text(1,24):foo:]",
+        "[end-link:::False]",
+        "[text(1,28):yy:]",
+        "[text(1,30):]:]",
+        "[text(1,31):(/uri1):]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        '[link-ref-def(3,1):True::bar<image src="xx">foo:: :/uri:::::]',
+    ]
+    expected_gfm = """<p>[xx<a href="/uri">bar<image src="xx">foo</a>yy](/uri1)</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03fb():
+    """
+    Test case extra 03f:  variation
+    """
+
+    # Arrange
+    source_markdown = """![xx[bar<image src="xx">foo]yy](/uri1)
+
+[bar<image src="xx">foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        '[image(1,1):inline:/uri1::xxbar<image src="xx">fooyy::::xx[bar<image src="xx">foo]yy:False::::]',
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        '[link-ref-def(3,1):True::bar<image src="xx">foo:: :/uri:::::]',
+    ]
+    expected_gfm = """<p><img src="/uri1" alt="xxbar<image src="xx">fooyy" /></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03fc():
+    """
+    Test case extra 03f:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx![bar<image src="xx">foo]yy](/uri1)
+
+[bar<image src="xx">foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):]",
+        '[link(1,1):inline:/uri1:::::xx![bar<image src="xx">foo]yy:False::::]',
+        "[text(1,2):xx:]",
+        '[image(1,4):shortcut:/uri::bar<image src="xx">foo::::bar<image src="xx">foo:::::]',
+        "[text(1,29):yy:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        '[link-ref-def(3,1):True::bar<image src="xx">foo:: :/uri:::::]',
+    ]
+    expected_gfm = """<p><a href="/uri1">xx<img src="/uri" alt="bar<image src="xx">foo" />yy</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03g():
+    """
+    Test case extra 03g:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar
+foo]: /uri
+
+[bar\nfoo]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar foo:bar\nfoo: :/uri:::::]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[link(4,1):shortcut:/uri:::::bar\nfoo:::::]",
+        "[text(4,2):bar\nfoo::\n]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri">bar
+foo</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03ga():
+    """
+    Test case extra 03g:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx[bar
+foo]yy](/uri1)
+
+[bar
+foo]: /uri
+"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):[:]",
+        "[text(1,2):xx:]",
+        "[link(1,4):shortcut:/uri:::::bar\nfoo:::::]",
+        "[text(1,5):bar\nfoo::\n]",
+        "[end-link:::False]",
+        "[text(2,5):yy:]",
+        "[text(2,7):]:]",
+        "[text(2,8):(/uri1):]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::bar foo:bar\nfoo: :/uri:::::]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<p>[xx<a href="/uri">bar
+foo</a>yy](/uri1)</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03gb():
+    """
+    Test case extra 03g:  variation
+    """
+
+    # Arrange
+    source_markdown = """![xx[bar
+foo]yy](/uri1)
+
+[bar
+foo]: /uri
+"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[image(1,1):inline:/uri1::xxbar\nfooyy::::xx[bar\nfoo]yy:False::::]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::bar foo:bar\nfoo: :/uri:::::]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<p><img src="/uri1" alt="xxbar
+fooyy" /></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03gc():
+    """
+    Test case extra 03g:  variation
+    """
+
+    # Arrange
+    source_markdown = """[xx![bar
+foo]yy](/uri1)
+
+[bar
+foo]: /uri"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[link(1,1):inline:/uri1:::::xx![bar\nfoo]yy:False::::]",
+        "[text(1,2):xx:]",
+        "[image(1,4):shortcut:/uri::bar\nfoo::::bar\nfoo:::::]",
+        "[text(2,5):yy:]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[link-ref-def(4,1):True::bar foo:bar\nfoo: :/uri:::::]",
+    ]
+    expected_gfm = """<p><a href="/uri1">xx<img src="/uri" alt="bar
+foo" />yy</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_reference_links_extra_03h():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar\\\\
+foo]: /uri
+
+[bar\\\\
+foo]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar\\\\ foo:bar\\\\\nfoo: :/uri:::::]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):bar\\\b:]",
+        "[hard-break(4,6):\\]",
+        "[text(5,1):\nfoo::\n]",
+        "[text(5,4):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri">bar\\\\
+foo</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_reference_links_extra_03ha():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar\\\\
+foo]: /uri
+
+[xx[bar\\\\
+foo]yy]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar\\\\ foo:bar\\\\\nfoo: :/uri:::::]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):xx:]",
+        "[text(4,4):[:]",
+        "[text(4,5):bar\\\b:]",
+        "[hard-break(4,9):\\]",
+        "[text(5,1):\nfoo::\n]",
+        "[text(5,4):]:]",
+        "[text(5,5):yy:]",
+        "[text(5,7):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[xx<a href="/uri">bar\\
+foo</a>yy]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_reference_links_extra_03hb():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar\\\\
+foo]: /uri
+
+![xx[bar\\\\
+foo]yy]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar\\\\ foo:bar\\\\\nfoo: :/uri:::::]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[text(4,1):![:]",
+        "[text(4,3):xx:]",
+        "[text(4,5):[:]",
+        "[text(4,6):bar\\\b:]",
+        "[hard-break(4,10):\\]",
+        "[text(5,1):\nfoo::\n]",
+        "[text(5,4):]:]",
+        "[text(5,5):yy:]",
+        "[text(5,7):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>![xx<a href="/uri">bar\\
+foo</a>yy]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_reference_links_extra_03hc():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar\\\\
+foo]: /uri
+
+[xx![bar\\\\
+foo]yy]"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar\\\\ foo:bar\\\\\nfoo: :/uri:::::]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):xx:]",
+        "[text(4,4):![:]",
+        "[text(4,6):bar\\\b:]",
+        "[hard-break(4,10):\\]",
+        "[text(5,1):\nfoo::\n]",
+        "[text(5,4):]:]",
+        "[text(5,5):yy:]",
+        "[text(5,7):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[xx<img src="/uri" alt="bar\\
+foo" />yy]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03i():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar\a\a
+foo]: /uri
+
+[bar\a\a
+foo]""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar foo:bar  \nfoo: :/uri:::::]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[link(4,1):shortcut:/uri:::::bar  \nfoo:::::]",
+        "[text(4,2):bar:]",
+        "[hard-break(4,5):  ]",
+        "[text(5,1):\nfoo::\n]",
+        "[end-link:::False]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><a href="/uri">bar<br />
+foo</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03ia():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar\a\a
+foo]: /uri
+
+[xx[bar\a\a
+foo]yy]""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar foo:bar  \nfoo: :/uri:::::]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):xx:]",
+        "[link(4,4):shortcut:/uri:::::bar  \nfoo:::::]",
+        "[text(4,5):bar:]",
+        "[hard-break(4,8):  ]",
+        "[text(5,1):\nfoo::\n]",
+        "[end-link:::False]",
+        "[text(5,5):yy:]",
+        "[text(5,7):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[xx<a href="/uri">bar<br />
+foo</a>yy]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03ib():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar\a\a
+foo]: /uri
+
+![xx[bar\a\a
+foo]yy]""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar foo:bar  \nfoo: :/uri:::::]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[text(4,1):![:]",
+        "[text(4,3):xx:]",
+        "[link(4,5):shortcut:/uri:::::bar  \nfoo:::::]",
+        "[text(4,6):bar:]",
+        "[hard-break(4,9):  ]",
+        "[text(5,1):\nfoo::\n]",
+        "[end-link:::False]",
+        "[text(5,5):yy:]",
+        "[text(5,7):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>![xx<a href="/uri">bar<br />
+foo</a>yy]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03ic():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar\a\a
+foo]: /uri
+
+[xx![bar\a\a
+foo]yy]""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar foo:bar  \nfoo: :/uri:::::]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):xx:]",
+        "[image(4,4):shortcut:/uri::bar\nfoo::::bar  \nfoo:::::]",
+        "[text(5,5):yy:]",
+        "[text(5,7):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[xx<img src="/uri" alt="bar
+foo" />yy]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

@@ -818,6 +818,7 @@ class TransformToGfm:
         _ = transform_state
         output_html += "<img "
         output_html += 'src="' + next_token.image_uri + '" '
+
         output_html += 'alt="' + next_token.image_alt_text + '" '
         if next_token.image_title:
             output_html += 'title="' + next_token.image_title + '" '

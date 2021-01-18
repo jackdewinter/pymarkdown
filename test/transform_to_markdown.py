@@ -1368,9 +1368,11 @@ class TransformToMarkdown:
 
         if self.block_stack[-1].is_inline_link:
             return ""
+        print(">>>>>>>>:" + ParserHelper.make_value_visible(current_token) + ":<<<<<")
         rehydrated_text = LinkHelper.rehydrate_inline_image_text_from_token(
             current_token
         )
+        print(">>>>>>>>:" + ParserHelper.make_value_visible(rehydrated_text) + ":<<<<<")
         return self.__insert_leading_whitespace_at_newlines(rehydrated_text)
 
     # pylint: enable=unused-argument

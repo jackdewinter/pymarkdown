@@ -75,10 +75,10 @@
 
 ## Bugs - General - Uncategorized
 
+- dedup `append_text(`
+- test_reference_links_extra_03h - 03hc
 - links, 518b
   - 518b inside of list and/or block quote
-  - links with & and \ with inner link to mine
-    - see __collect_text_from_blocks
 
 ## Bugs - Tokenization
 

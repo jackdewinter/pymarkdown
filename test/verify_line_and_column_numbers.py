@@ -2730,8 +2730,12 @@ def __verify_inline(  # noqa: C901
                             "rehydrate_index(start#3)>>"
                             + str(last_block_token.rehydrate_index)
                         )
+                    elif current_inline_token.is_inline_image:
+                        pass
                     else:
-                        assert current_inline_token.is_text
+                        assert (
+                            current_inline_token.is_text
+                        ), ParserHelper.make_value_visible(current_inline_token)
                         print(
                             "current_inline_token.token_text>>"
                             + ParserHelper.make_value_visible(

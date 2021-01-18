@@ -26,6 +26,13 @@ class LinkHelper:
     __link_definitions = {}
     __link_safe_characters = "/#:?=()*!$'+,;@"
 
+    __html_character_escape_map = {
+        "<": "&lt;",
+        ">": "&gt;",
+        "&": "&amp;",
+        '"': "&quot;",
+    }
+
     __special_link_destination_characters = "%&"
 
     __non_angle_link_nest = "("
@@ -421,7 +428,9 @@ class LinkHelper:
                     if inline_blocks[ind + 1].token_text == "]":
                         image_alt_text += inline_blocks[ind + 1].token_text
                 elif inline_blocks[ind + 1].is_text:
-                    image_alt_text += inline_blocks[ind + 1].token_text
+                    image_alt_text += ParserHelper.resolve_references_from_text(
+                        inline_blocks[ind + 1].token_text
+                    )
                 elif inline_blocks[ind + 1].is_inline_raw_html:
                     image_alt_text += "<" + inline_blocks[ind + 1].raw_tag + ">"
                 elif inline_blocks[ind + 1].is_inline_code_span:
@@ -439,6 +448,10 @@ class LinkHelper:
                     pass
                 elif inline_blocks[ind + 1].is_inline_hard_break:
                     image_alt_text += ParserHelper.newline_character
+                elif inline_blocks[ind + 1].is_inline_emphasis:
+                    pass
+                elif inline_blocks[ind + 1].is_inline_emphasis_end:
+                    pass
                 else:
                     assert inline_blocks[
                         ind + 1
@@ -453,11 +466,19 @@ class LinkHelper:
 
                 del inline_blocks[ind + 1]
             LOGGER.debug(">>before>>%s>>", image_alt_text)
-            image_alt_text = image_alt_text + remaining_line
+            image_alt_text += remaining_line
             LOGGER.debug(">>after>>%s>>", image_alt_text)
         else:
+            LOGGER.debug(">>composing>>%s>>", text_from_blocks_raw)
             image_alt_text = xx_fn(text_from_blocks_raw)
             image_alt_text = ParserHelper.resolve_backspaces_from_text(image_alt_text)
+            image_alt_text = LinkHelper.append_text(
+                "", image_alt_text, add_text_signature=False
+            )
+            LOGGER.debug(">>composed>>%s>>", image_alt_text)
+
+        LOGGER.debug(">>image_alt_text>>%s>>", image_alt_text)
+        LOGGER.debug(">>text_from_blocks_raw>>%s>>", text_from_blocks_raw)
         return image_alt_text, text_from_blocks_raw
 
     # pylint: enable=too-many-branches
@@ -504,40 +525,47 @@ class LinkHelper:
                 collected_text_raw += raw_text
                 collected_text += inline_blocks[collect_index].image_alt_text
             elif inline_blocks[collect_index].is_inline_code_span:
-                LOGGER.debug(
-                    "CODESPAN>>%s<<",
-                    ParserHelper.make_value_visible(inline_blocks[collect_index]),
-                )
-                resolved_leading_whitespace = (
-                    ParserHelper.resolve_replacement_markers_from_text(
-                        inline_blocks[collect_index].leading_whitespace
+                if not is_inside_of_link:
+                    LOGGER.debug(
+                        "CODESPAN>>%s<<",
+                        ParserHelper.make_value_visible(inline_blocks[collect_index]),
                     )
-                )
-                resolved_span_text = ParserHelper.resolve_replacement_markers_from_text(
-                    inline_blocks[collect_index].span_text
-                )
-                resolved_trailing_whitespace = (
-                    ParserHelper.resolve_replacement_markers_from_text(
-                        inline_blocks[collect_index].trailing_whitespace
+                    resolved_leading_whitespace = (
+                        ParserHelper.resolve_replacement_markers_from_text(
+                            inline_blocks[collect_index].leading_whitespace
+                        )
                     )
-                )
-                converted_text = (
-                    inline_blocks[collect_index].extracted_start_backticks
-                    + resolved_leading_whitespace
-                    + resolved_span_text
-                    + resolved_trailing_whitespace
-                    + inline_blocks[collect_index].extracted_start_backticks
-                )
-                collected_text += converted_text
-                collected_text_raw += converted_text
+                    resolved_span_text = (
+                        ParserHelper.resolve_replacement_markers_from_text(
+                            inline_blocks[collect_index].span_text
+                        )
+                    )
+                    resolved_trailing_whitespace = (
+                        ParserHelper.resolve_replacement_markers_from_text(
+                            inline_blocks[collect_index].trailing_whitespace
+                        )
+                    )
+                    converted_text = (
+                        inline_blocks[collect_index].extracted_start_backticks
+                        + resolved_leading_whitespace
+                        + resolved_span_text
+                        + resolved_trailing_whitespace
+                        + inline_blocks[collect_index].extracted_start_backticks
+                    )
+                    collected_text += converted_text
+                    collected_text_raw += converted_text
             elif inline_blocks[collect_index].is_inline_raw_html:
-                converted_text = "<" + inline_blocks[collect_index].raw_tag + ">"
-                collected_text += converted_text
-                collected_text_raw += converted_text
+                if not is_inside_of_link:
+                    converted_text = "<" + inline_blocks[collect_index].raw_tag + ">"
+                    collected_text += converted_text
+                    collected_text_raw += converted_text
             elif inline_blocks[collect_index].is_inline_autolink:
-                converted_text = "<" + inline_blocks[collect_index].autolink_text + ">"
-                collected_text += converted_text
-                collected_text_raw += converted_text
+                if not is_inside_of_link:
+                    converted_text = (
+                        "<" + inline_blocks[collect_index].autolink_text + ">"
+                    )
+                    collected_text += converted_text
+                    collected_text_raw += converted_text
             elif inline_blocks[collect_index].is_inline_hard_break:
                 converted_text = inline_blocks[collect_index].line_end
                 collected_text += converted_text
@@ -1029,6 +1057,9 @@ class LinkHelper:
         token_to_append = None
         LOGGER.debug("<<<<<<<new_index<<<<<<<%s<<", str(new_index))
         LOGGER.debug("<<<<<<<update_index<<<<<<<%s<<", str(update_index))
+        LOGGER.debug(
+            "<<<<<<<text_from_blocks_raw<<<<<<<%s<<", str(text_from_blocks_raw)
+        )
         if update_index != -1:
             consume_rest_of_line, token_to_append = LinkHelper.__create_link_token(
                 start_text,
@@ -1339,6 +1370,7 @@ class LinkHelper:
             link_text = ParserHelper.remove_backspaces_from_text(
                 image_token.text_from_blocks
             )
+
             image_text = (
                 "!["
                 + link_text
@@ -1446,3 +1478,44 @@ class LinkHelper:
         return link_text
 
     # pylint: enable=too-many-branches
+
+    @staticmethod
+    def append_text(
+        string_to_append_to,
+        text_to_append,
+        alternate_escape_map=None,
+        add_text_signature=True,
+    ):
+        """
+        Append the text to the given string, doing any needed encoding as we go.
+        """
+
+        if not alternate_escape_map:
+            alternate_escape_map = LinkHelper.__html_character_escape_map
+
+        start_index = 0
+        next_index = ParserHelper.index_any_of(
+            text_to_append, alternate_escape_map.keys(), start_index
+        )
+        while next_index != -1:
+
+            string_part = text_to_append[start_index:next_index]
+            escaped_part = alternate_escape_map[text_to_append[next_index]]
+            if add_text_signature:
+                string_part += ParserHelper.create_replacement_markers(
+                    text_to_append[next_index], escaped_part
+                )
+            else:
+                string_part += escaped_part
+
+            string_to_append_to += string_part
+
+            start_index = next_index + 1
+            next_index = ParserHelper.index_any_of(
+                text_to_append, alternate_escape_map.keys(), start_index
+            )
+
+        if start_index < len(text_to_append):
+            string_to_append_to = string_to_append_to + text_to_append[start_index:]
+
+        return string_to_append_to
