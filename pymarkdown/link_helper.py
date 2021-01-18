@@ -26,13 +26,6 @@ class LinkHelper:
     __link_definitions = {}
     __link_safe_characters = "/#:?=()*!$'+,;@"
 
-    __html_character_escape_map = {
-        "<": "&lt;",
-        ">": "&gt;",
-        "&": "&amp;",
-        '"': "&quot;",
-    }
-
     __special_link_destination_characters = "%&"
 
     __non_angle_link_nest = "("
@@ -472,7 +465,7 @@ class LinkHelper:
             LOGGER.debug(">>composing>>%s>>", text_from_blocks_raw)
             image_alt_text = xx_fn(text_from_blocks_raw)
             image_alt_text = ParserHelper.resolve_backspaces_from_text(image_alt_text)
-            image_alt_text = LinkHelper.append_text(
+            image_alt_text = InlineHelper.append_text(
                 "", image_alt_text, add_text_signature=False
             )
             LOGGER.debug(">>composed>>%s>>", image_alt_text)
@@ -1478,44 +1471,3 @@ class LinkHelper:
         return link_text
 
     # pylint: enable=too-many-branches
-
-    @staticmethod
-    def append_text(
-        string_to_append_to,
-        text_to_append,
-        alternate_escape_map=None,
-        add_text_signature=True,
-    ):
-        """
-        Append the text to the given string, doing any needed encoding as we go.
-        """
-
-        if not alternate_escape_map:
-            alternate_escape_map = LinkHelper.__html_character_escape_map
-
-        start_index = 0
-        next_index = ParserHelper.index_any_of(
-            text_to_append, alternate_escape_map.keys(), start_index
-        )
-        while next_index != -1:
-
-            string_part = text_to_append[start_index:next_index]
-            escaped_part = alternate_escape_map[text_to_append[next_index]]
-            if add_text_signature:
-                string_part += ParserHelper.create_replacement_markers(
-                    text_to_append[next_index], escaped_part
-                )
-            else:
-                string_part += escaped_part
-
-            string_to_append_to += string_part
-
-            start_index = next_index + 1
-            next_index = ParserHelper.index_any_of(
-                text_to_append, alternate_escape_map.keys(), start_index
-            )
-
-        if start_index < len(text_to_append):
-            string_to_append_to = string_to_append_to + text_to_append[start_index:]
-
-        return string_to_append_to

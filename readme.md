@@ -46,6 +46,7 @@
   - every ordered tests should have an unordered counterpart
 - link and emphasis (inline) tokens cannot be forced close, rewrite end to not expost :::False?
 
+- take `__consume_text_for_image_alt_text` and other functions like it and move as much as possible into token classes
 - unify 2 separate calculations in `__pre_list` function
 - split(ParserHelper.newline_character)
    - count_newlines_in_text where feasible
