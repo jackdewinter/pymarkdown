@@ -3,6 +3,7 @@ Link reference definition helper
 """
 import logging
 
+from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.parser_helper import ParserHelper
@@ -249,7 +250,29 @@ class LinkReferenceDefinitionHelper:
             start_index,
             LinkReferenceDefinitionHelper.__lrd_start_character,
         ):
-            return True
+            remaining_line = line_to_parse[start_index + 1 :]
+            continue_with_lrd = True
+            if (
+                InlineHelper.backslash_character in remaining_line
+                and remaining_line.endswith(InlineHelper.backslash_character)
+            ):
+                LOGGER.debug(">>%s<<%s", remaining_line, len(remaining_line))
+                start_index = 0
+                LOGGER.debug(">>%s<<%s", remaining_line, str(start_index))
+                found_index = remaining_line.find(
+                    InlineHelper.backslash_character, start_index
+                )
+                LOGGER.debug(">>%s<<", str(found_index))
+                while found_index != -1 and found_index < (len(remaining_line) - 1):
+                    start_index = found_index + 2
+                    LOGGER.debug(">>%s<<%s", remaining_line, str(start_index))
+                    found_index = remaining_line.find(
+                        InlineHelper.backslash_character, start_index
+                    )
+                    LOGGER.debug(">>%s<<", str(found_index))
+                LOGGER.debug(">>>>>>>%s<<", str(found_index))
+                continue_with_lrd = found_index != len(remaining_line) - 1
+            return continue_with_lrd
         return False
 
     @staticmethod
@@ -332,6 +355,10 @@ class LinkReferenceDefinitionHelper:
             )
         normalized_destination = ""
         if keep_going:
+            LOGGER.debug(
+                ">>collected_destination(not normalized)>>%s",
+                ParserHelper.make_value_visible(collected_destination),
+            )
             normalized_destination = LinkHelper.normalize_link_label(
                 collected_destination
             )
@@ -343,14 +370,16 @@ class LinkReferenceDefinitionHelper:
 
         assert new_index != -1
 
+        LOGGER.debug(
+            ">>collected_destination(normalized)>>%s",
+            ParserHelper.make_value_visible(normalized_destination),
+        )
+
         if not inline_title and line_title_whitespace.endswith(
             ParserHelper.newline_character
         ):
             line_title_whitespace = line_title_whitespace[0:-1]
 
-        LOGGER.debug(
-            ">>collected_destination(normalized)>>%s", str(normalized_destination)
-        )
         LOGGER.debug(
             ">>inline_link>>%s<<", ParserHelper.make_value_visible(inline_link)
         )

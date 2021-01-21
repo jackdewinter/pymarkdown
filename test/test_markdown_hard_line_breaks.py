@@ -33,7 +33,7 @@ baz</p>"""
 
 
 @pytest.mark.gfm
-def test_hard_line_breaks_655():
+def test_hard_line_breaks_655x():
     """
     Test case 655:  For a more visible alternative, a backslash before the line ending may be used instead of two spaces:
     """
@@ -49,6 +49,27 @@ baz"""
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
+baz</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_655a():
+    """
+    Test case 655a:  variation with two backslashes at end
+    """
+
+    # Arrange
+    source_markdown = """foo\\\\
+baz"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):foo\\\b\\\nbaz::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>foo\\
 baz</p>"""
 
     # Act & Assert

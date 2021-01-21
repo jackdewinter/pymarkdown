@@ -54,6 +54,7 @@ class TransformState:
         self.is_in_fenced_code_block = False
         self.is_in_html_block = False
         self.is_in_loose_list = True
+        self.is_in_link = False
         self.transform_stack = []
         self.add_trailing_text = None
         self.add_leading_text = None
@@ -795,7 +796,7 @@ class TransformToGfm:
         """
         Handle the start link token.
         """
-        _ = transform_state
+        transform_state.is_in_link = True
         anchor_tag = '<a href="' + next_token.link_uri
         if next_token.link_title:
             anchor_tag = anchor_tag + '" title="' + next_token.link_title
@@ -807,7 +808,8 @@ class TransformToGfm:
         """
         Handle the end link token.
         """
-        _ = (transform_state, next_token)
+        _ = next_token
+        transform_state.is_in_link = False
         return output_html + "</a>"
 
     @classmethod

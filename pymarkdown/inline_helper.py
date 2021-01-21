@@ -564,6 +564,9 @@ class InlineHelper:
             ">>remaining_line>>%s>>", ParserHelper.make_value_visible(remaining_line)
         )
 
+        LOGGER.debug(
+            ">>current_string>>%s>>", ParserHelper.make_value_visible(current_string)
+        )
         append_to_current_string = ParserHelper.newline_character
         whitespace_to_add = None
         LOGGER.debug(
@@ -574,12 +577,25 @@ class InlineHelper:
 
         adj_hard_column = column_number + len(remaining_line)
 
+        LOGGER.debug(
+            ">>current_string>>%s>>", ParserHelper.make_value_visible(current_string)
+        )
+
+        is_proper_hard_break = False
         if (
             len(removed_end_whitespace) == 0
             and len(current_string) >= 1
             and current_string[len(current_string) - 1]
             == InlineHelper.backslash_character
         ):
+            LOGGER.debug(">>%s<<", ParserHelper.make_value_visible(current_string))
+            modified_current_string = current_string[0:-1]
+            is_proper_hard_break = modified_current_string[-2:] != "\\\b"
+            LOGGER.debug(
+                ">>%s<<", ParserHelper.make_value_visible(is_proper_hard_break)
+            )
+
+        if is_proper_hard_break:
             new_tokens.append(
                 HardBreakMarkdownToken(
                     InlineHelper.backslash_character, line_number, adj_hard_column - 1

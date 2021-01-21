@@ -476,7 +476,7 @@ class LinkHelper:
 
     # pylint: enable=too-many-branches
 
-    # pylint: disable=too-many-statements
+    # pylint: disable=too-many-statements, too-many-branches
     @staticmethod
     def __collect_text_from_blocks(inline_blocks, ind, suffix_text):
         """
@@ -560,9 +560,19 @@ class LinkHelper:
                     collected_text += converted_text
                     collected_text_raw += converted_text
             elif inline_blocks[collect_index].is_inline_hard_break:
+                LOGGER.debug(
+                    "is_inline_hard_break>>collected_text_raw>>%s<<",
+                    collected_text_raw,
+                )
                 converted_text = inline_blocks[collect_index].line_end
                 collected_text += converted_text
+                if converted_text == "\\":
+                    collected_text += converted_text
                 collected_text_raw += converted_text
+                LOGGER.debug(
+                    "is_inline_hard_break>>collected_text_raw>>%s<<",
+                    collected_text_raw,
+                )
             elif not is_inside_of_link:
                 collected_text += inline_blocks[collect_index].token_text
                 collected_text_raw += inline_blocks[collect_index].token_text
@@ -599,7 +609,7 @@ class LinkHelper:
         )
         return collected_text, collected_text_raw
 
-    # pylint: enable=too-many-statements
+    # pylint: enable=too-many-statements, too-many-branches
 
     @staticmethod
     def __parse_angle_link_destination(source_text, new_index):
@@ -936,13 +946,22 @@ class LinkHelper:
         inline_link = ""
         inline_title = ""
 
+        LOGGER.debug("pre>>%s<<", ParserHelper.make_value_visible(link_to_lookup))
         link_to_lookup = ParserHelper.resolve_backspaces_from_text(link_to_lookup)
         link_to_lookup = ParserHelper.resolve_replacement_markers_from_text(
             link_to_lookup
         )
         link_to_lookup = ParserHelper.remove_escapes_from_text(link_to_lookup)
+        LOGGER.debug(
+            "mid(pre-norm)>>%s<<", ParserHelper.make_value_visible(link_to_lookup)
+        )
 
         link_label = LinkHelper.normalize_link_label(link_to_lookup)
+        LOGGER.debug("post>>%s<<", ParserHelper.make_value_visible(link_label))
+
+        LOGGER.debug(
+            "defs>>%s<<", ParserHelper.make_value_visible(LinkHelper.__link_definitions)
+        )
         if not link_label or link_label not in LinkHelper.__link_definitions:
             update_index = -1
         else:

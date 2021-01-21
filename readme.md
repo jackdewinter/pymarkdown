@@ -76,10 +76,10 @@
 
 ## Bugs - General - Uncategorized
 
-- dedup `append_text(`
-- test_reference_links_extra_03h - 03hc
 - links, 518b
   - 518b inside of list and/or block quote
+- test_link_reference_definitions_extra_01c
+- test_link_reference_definitions_extra_02b
 
 ## Bugs - Tokenization
 

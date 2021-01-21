@@ -2390,9 +2390,123 @@ foo" />yy</a></p>"""
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
-def test_reference_links_extra_03h():
+def test_reference_links_extra_03hx():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar\\
+foo]: /uri
+
+[bar\\
+foo]"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):[:]",
+        "[text(1,2):bar:]",
+        "[hard-break(1,5):\\]",
+        "[text(2,1):\nfoo::\n]",
+        "[text(2,4):]:]",
+        "[text(2,5):: /uri:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):bar:]",
+        "[hard-break(4,5):\\]",
+        "[text(5,1):\nfoo::\n]",
+        "[text(5,4):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[bar<br />
+foo]: /uri</p>
+<p>[bar<br />
+foo]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03hxa():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[\\
+foo]: /uri
+
+[\\
+foo]"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):[:]",
+        "[hard-break(1,2):\\]",
+        "[text(2,1):\nfoo::\n]",
+        "[text(2,4):]:]",
+        "[text(2,5):: /uri:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[text(4,1):[:]",
+        "[hard-break(4,2):\\]",
+        "[text(5,1):\nfoo::\n]",
+        "[text(5,4):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[<br />
+foo]: /uri</p>
+<p>[<br />
+foo]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03hy():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[b\\ar\\
+foo]: /uri
+
+[b\\ar\\
+foo]"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):[:]",
+        "[text(1,2):b\\ar:]",
+        "[hard-break(1,6):\\]",
+        "[text(2,1):\nfoo::\n]",
+        "[text(2,4):]:]",
+        "[text(2,5):: /uri:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n]",
+        "[text(4,1):[:]",
+        "[text(4,2):b\\ar:]",
+        "[hard-break(4,6):\\]",
+        "[text(5,1):\nfoo::\n]",
+        "[text(5,4):]:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>[b\\ar<br />
+foo]: /uri</p>
+<p>[b\\ar<br />
+foo]</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03hz():
     """
     Test case extra 03h:  variation
     """
@@ -2407,21 +2521,18 @@ foo]"""
         "[link-ref-def(1,1):True::bar\\\\ foo:bar\\\\\nfoo: :/uri:::::]",
         "[BLANK(3,1):]",
         "[para(4,1):\n]",
-        "[text(4,1):[:]",
-        "[text(4,2):bar\\\b:]",
-        "[hard-break(4,6):\\]",
-        "[text(5,1):\nfoo::\n]",
-        "[text(5,4):]:]",
+        "[link(4,1):shortcut:/uri:::::bar\\\\\nfoo:::::]",
+        "[text(4,2):bar\\\b\\\nfoo::\n]",
+        "[end-link:::False]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p><a href="/uri">bar\\\\
+    expected_gfm = """<p><a href="/uri">bar\\
 foo</a></p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_reference_links_extra_03ha():
     """
@@ -2429,34 +2540,42 @@ def test_reference_links_extra_03ha():
     """
 
     # Arrange
-    source_markdown = """[bar\\\\
+    source_markdown = """[bar\\
 foo]: /uri
 
-[xx[bar\\\\
+[xx[bar\\
 foo]yy]"""
     expected_tokens = [
-        "[link-ref-def(1,1):True::bar\\\\ foo:bar\\\\\nfoo: :/uri:::::]",
+        "[para(1,1):\n]",
+        "[text(1,1):[:]",
+        "[text(1,2):bar:]",
+        "[hard-break(1,5):\\]",
+        "[text(2,1):\nfoo::\n]",
+        "[text(2,4):]:]",
+        "[text(2,5):: /uri:]",
+        "[end-para:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):\n]",
         "[text(4,1):[:]",
         "[text(4,2):xx:]",
         "[text(4,4):[:]",
-        "[text(4,5):bar\\\b:]",
-        "[hard-break(4,9):\\]",
+        "[text(4,5):bar:]",
+        "[hard-break(4,8):\\]",
         "[text(5,1):\nfoo::\n]",
         "[text(5,4):]:]",
         "[text(5,5):yy:]",
         "[text(5,7):]:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>[xx<a href="/uri">bar\\
-foo</a>yy]</p>"""
+    expected_gfm = """<p>[bar<br />
+foo]: /uri</p>
+<p>[xx[bar<br />
+foo]yy]</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_reference_links_extra_03hb():
     """
@@ -2464,34 +2583,42 @@ def test_reference_links_extra_03hb():
     """
 
     # Arrange
-    source_markdown = """[bar\\\\
+    source_markdown = """[bar\\
 foo]: /uri
 
-![xx[bar\\\\
+![xx[bar\\
 foo]yy]"""
     expected_tokens = [
-        "[link-ref-def(1,1):True::bar\\\\ foo:bar\\\\\nfoo: :/uri:::::]",
+        "[para(1,1):\n]",
+        "[text(1,1):[:]",
+        "[text(1,2):bar:]",
+        "[hard-break(1,5):\\]",
+        "[text(2,1):\nfoo::\n]",
+        "[text(2,4):]:]",
+        "[text(2,5):: /uri:]",
+        "[end-para:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):\n]",
         "[text(4,1):![:]",
         "[text(4,3):xx:]",
         "[text(4,5):[:]",
-        "[text(4,6):bar\\\b:]",
-        "[hard-break(4,10):\\]",
+        "[text(4,6):bar:]",
+        "[hard-break(4,9):\\]",
         "[text(5,1):\nfoo::\n]",
         "[text(5,4):]:]",
         "[text(5,5):yy:]",
         "[text(5,7):]:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>![xx<a href="/uri">bar\\
-foo</a>yy]</p>"""
+    expected_gfm = """<p>[bar<br />
+foo]: /uri</p>
+<p>![xx[bar<br />
+foo]yy]</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_reference_links_extra_03hc():
     """
@@ -2499,31 +2626,40 @@ def test_reference_links_extra_03hc():
     """
 
     # Arrange
-    source_markdown = """[bar\\\\
+    source_markdown = """[bar\\
 foo]: /uri
 
-[xx![bar\\\\
+[xx![bar\\
 foo]yy]"""
     expected_tokens = [
-        "[link-ref-def(1,1):True::bar\\\\ foo:bar\\\\\nfoo: :/uri:::::]",
+        "[para(1,1):\n]",
+        "[text(1,1):[:]",
+        "[text(1,2):bar:]",
+        "[hard-break(1,5):\\]",
+        "[text(2,1):\nfoo::\n]",
+        "[text(2,4):]:]",
+        "[text(2,5):: /uri:]",
+        "[end-para:::True]",
         "[BLANK(3,1):]",
         "[para(4,1):\n]",
         "[text(4,1):[:]",
         "[text(4,2):xx:]",
         "[text(4,4):![:]",
-        "[text(4,6):bar\\\b:]",
-        "[hard-break(4,10):\\]",
+        "[text(4,6):bar:]",
+        "[hard-break(4,9):\\]",
         "[text(5,1):\nfoo::\n]",
         "[text(5,4):]:]",
         "[text(5,5):yy:]",
         "[text(5,7):]:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>[xx<img src="/uri" alt="bar\\
-foo" />yy]</p>"""
+    expected_gfm = """<p>[bar<br />
+foo]: /uri</p>
+<p>[xx![bar<br />
+foo]yy]</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
