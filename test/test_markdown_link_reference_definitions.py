@@ -1915,6 +1915,7 @@ def test_link_reference_definitions_extra_02b():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_02c():
     """
@@ -1924,7 +1925,13 @@ def test_link_reference_definitions_extra_02c():
     # Arrange
     source_markdown = """>> [foo]:
 > /url"""
-    expected_tokens = ['[block-quote(1,1)::]', '[block-quote(1,2)::>> \n> ]', '[link-ref-def(1,4):True::foo::\n:/url:::::]', '[end-block-quote:::True]', '[end-block-quote:::True]']
+    expected_tokens = [
+        "[block-quote(1,1)::]",
+        "[block-quote(1,2)::>> \n> ]",
+        "[link-ref-def(1,4):True::foo::\n:/url:::::]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
     expected_gfm = """<blockquote>
 <blockquote>
 </blockquote>

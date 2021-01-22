@@ -8349,7 +8349,7 @@ def test_paragraph_extra_j0():
 @pytest.mark.gfm
 def test_paragraph_extra_j0a():
     """
-    Test case extra j0a:  Inline image containing lin breaks
+    Test case extra j0a:  Inline image containing line breaks
     """
 
     # Arrange
@@ -8428,6 +8428,108 @@ def test_paragraph_extra_j0d():
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc\n<a href="/uri" title="title">link</a></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_j0e():
+    """
+    Test case extra j0e:  Inline link containing line breaks inside
+    """
+
+    # Arrange
+    source_markdown = """abc
+[link](\a\a\a\a
+  /uri\a\a
+   "title"\a\a\a
+ )
+ def""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n\n  \n   \n \n ]",
+        "[text(1,1):abc\n::\n]",
+        '[link(2,1):inline:/uri:title::::link:False:":    \n:  \n:   \n]',
+        "[text(2,2):link:]",
+        "[end-link:::False]",
+        "[text(5,3):\ndef::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc\n<a href="/uri" title="title">link</a>\ndef</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_j0ea():
+    """
+    Test case extra j0ea:  Inline link containing line breaks inside of block quote
+    """
+
+    # Arrange
+    source_markdown = """> abc
+> [link](\a\a\a\a
+>   /uri\a\a
+>    "title"\a\a\a
+>  )
+> def""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> ]",
+        "[para(1,3):\n\n  \n   \n \n]",
+        "[text(1,3):abc\n::\n]",
+        '[link(2,1):inline:/uri:title::::link:False:":    \n:  \n:   \n]',
+        "[text(2,2):link:]",
+        "[end-link:::False]",
+        "[text(5,3):\ndef::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>abc
+<a href="/uri" title="title">link</a>
+def</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_extra_j0eb():
+    """
+    Test case extra j0e:  Inline link containing line breaks inside of list
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  [link](\a\a\a\a
+    /uri\a\a
+     "title"\a\a\a
+   )
+   def""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n  \n  \n  \n  ]",
+        "[para(1,3):\n\n  \n   \n \n ]",
+        "[text(1,3):abc\n::\n]",
+        '[link(2,1):inline:/uri:title::::link:False:":    \n:  \n:   \n]',
+        "[text(2,2):link:]",
+        "[end-link:::False]",
+        "[text(5,3):\ndef::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<a href="/uri" title="title">link</a>
+def</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
