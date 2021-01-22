@@ -78,8 +78,8 @@
 
 - links, 518b
   - 518b inside of list and/or block quote
-- test_link_reference_definitions_extra_01c
 - test_link_reference_definitions_extra_02b
+- lines_to_requeue requeue_line_info
 
 ## Bugs - Tokenization
 

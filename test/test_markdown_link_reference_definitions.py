@@ -1775,7 +1775,6 @@ def test_link_reference_definitions_extra_01b():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_01c():
     """
@@ -1786,14 +1785,55 @@ def test_link_reference_definitions_extra_01c():
     source_markdown = """- [foo]:
 - /url"""
     expected_tokens = [
-        "[ulist(1,1):-::2:: ]",
-        "[link-ref-def(1,3):True::foo::\n:/url:::::]",
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):[:]",
+        "[text(1,4):foo:]",
+        "[text(1,7):]:]",
+        "[text(1,8):::]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):]",
+        "[text(2,3):/url:]",
+        "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>[foo]:</li>
 <li>/url</li>
 </ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_01d():
+    """
+    Test case extra 01:  variation
+    """
+
+    # Arrange
+    source_markdown = """1. [foo]:
+1. /url"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):[:]",
+        "[text(1,5):foo:]",
+        "[text(1,8):]:]",
+        "[text(1,9):::]",
+        "[end-para:::True]",
+        "[li(2,1):3::1]",
+        "[para(2,4):]",
+        "[text(2,4):/url:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>[foo]:</li>
+<li>/url</li>
+</ol>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

@@ -91,6 +91,7 @@ class ListBlockProcessor:
         after_all_whitespace_index = -1
         index = None
         number_of_digits = None
+        is_not_one = False
 
         if adj_ws is None:
             adj_ws = extracted_whitespace
@@ -294,10 +295,13 @@ class ListBlockProcessor:
         this_bq_count,
         removed_chars_at_start,
         current_container_blocks,
+        original_line_to_parse,
     ):
         """
         Handle the processing of a ulist block.
         """
+        lines_to_requeue = None
+        force_ignore_first_as_lrd = None
         end_of_ulist_start_index = -1
         container_level_tokens = []
         adjusted_text_to_parse = position_marker.text_to_parse
@@ -366,6 +370,8 @@ class ListBlockProcessor:
                     no_para_start_if_empty,
                     new_container_level_tokens,
                     adjusted_text_to_parse,
+                    lines_to_requeue,
+                    force_ignore_first_as_lrd,
                 ) = ListBlockProcessor.__post_list(
                     parser_state,
                     new_stack,
@@ -376,9 +382,10 @@ class ListBlockProcessor:
                     indent_level,
                     current_container_blocks,
                     position_marker,
+                    original_line_to_parse,
                 )
-                assert new_container_level_tokens
-                container_level_tokens.extend(new_container_level_tokens)
+                if new_container_level_tokens:
+                    container_level_tokens.extend(new_container_level_tokens)
                 did_process = True
                 was_container_start = True
         return (
@@ -389,6 +396,8 @@ class ListBlockProcessor:
             adjusted_text_to_parse,
             container_level_tokens,
             removed_chars_at_start,
+            lines_to_requeue,
+            force_ignore_first_as_lrd,
         )
         # pylint: enable=too-many-locals, too-many-arguments
 
@@ -792,7 +801,7 @@ class ListBlockProcessor:
             stack_bq_count -= 1
         return container_level_tokens, stack_bq_count
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __post_list(
         parser_state,
@@ -804,6 +813,7 @@ class ListBlockProcessor:
         indent_level,
         current_container_blocks,
         position_marker,
+        original_line_to_parse,
     ):
         """
         Handle the processing of the last part of the list.
@@ -821,12 +831,17 @@ class ListBlockProcessor:
             (
                 container_level_tokens,
                 emit_li,
+                lines_to_requeue,
+                force_ignore_first_as_lrd,
             ) = ListBlockProcessor.__close_required_lists_after_start(
                 parser_state,
                 last_list_index,
                 new_stack,
                 current_container_blocks,
+                original_line_to_parse,
             )
+            if lines_to_requeue:
+                return None, None, None, lines_to_requeue, force_ignore_first_as_lrd
             emit_item = False
         else:
             LOGGER.debug(
@@ -864,8 +879,8 @@ class ListBlockProcessor:
         )
         LOGGER.debug("__post_list>>after>>%s", str(container_level_tokens))
 
-        return True, container_level_tokens, line_to_parse
-        # pylint: enable=too-many-arguments
+        return True, container_level_tokens, line_to_parse, None, None
+        # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __post_list_use_new_list_item(
@@ -898,6 +913,7 @@ class ListBlockProcessor:
         last_list_index,
         new_stack,
         current_container_blocks,
+        original_line_to_parse,
     ):
         """
         After a list start, check to see if any others need closing.
@@ -905,11 +921,41 @@ class ListBlockProcessor:
         LOGGER.debug(
             "list-in-process>>%s", str(parser_state.token_stack[last_list_index])
         )
-        container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
-            parser_state, until_this_index=last_list_index + 1
+        (
+            container_level_tokens,
+            lines_to_requeue,
+            force_ignore_first_as_lrd,
+        ) = parser_state.close_open_blocks_fn(
+            parser_state,
+            until_this_index=last_list_index + 1,
+            caller_can_handle_requeue=True,
         )
-        LOGGER.debug("old-stack>>%s<<", str(container_level_tokens))
+        if lines_to_requeue:
+            LOGGER.debug(
+                "__close_required_lists_after_start>>lines_to_requeue>>%s",
+                ParserHelper.make_value_visible(lines_to_requeue),
+            )
+            LOGGER.debug(
+                "__close_required_lists_after_start>>original_line_to_parse>>%s",
+                ParserHelper.make_value_visible(original_line_to_parse),
+            )
+            LOGGER.debug(
+                "__close_required_lists_after_start>>token_stack>>%s",
+                ParserHelper.make_value_visible(parser_state.token_stack),
+            )
+            LOGGER.debug(
+                "__close_required_lists_after_start>>token_document>>%s",
+                ParserHelper.make_value_visible(parser_state.token_document),
+            )
+            assert not lines_to_requeue[0]
+            lines_to_requeue[0] = original_line_to_parse
+            LOGGER.debug(
+                "__close_required_lists_after_start>>lines_to_requeue>>%s",
+                ParserHelper.make_value_visible(lines_to_requeue),
+            )
+            return None, None, lines_to_requeue, force_ignore_first_as_lrd
 
+        LOGGER.debug("old-stack>>%s<<", str(container_level_tokens))
         repeat_check = True
         emit_li = False
         while repeat_check:
@@ -982,7 +1028,7 @@ class ListBlockProcessor:
                         <= parser_state.token_stack[last_list_index].indent_level
                     ):
                         repeat_check = True
-        return container_level_tokens, emit_li
+        return container_level_tokens, emit_li, None, None
 
     @staticmethod
     def __are_list_starts_equal(

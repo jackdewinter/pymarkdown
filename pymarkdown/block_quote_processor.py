@@ -480,7 +480,7 @@ class BlockQuoteProcessor:
 
     # pylint: enable=too-many-locals, too-many-statements
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-statements
     @staticmethod
     def __ensure_stack_at_level(
         parser_state,
@@ -552,4 +552,4 @@ class BlockQuoteProcessor:
 
         return container_level_tokens, stack_bq_count
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-statements

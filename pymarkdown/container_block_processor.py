@@ -199,6 +199,8 @@ class ContainerBlockProcessor:
             no_para_start_if_empty,
             line_to_parse,
             removed_chars_at_start,
+            lines_to_requeue,
+            force_ignore_first_as_lrd,
         ) = ContainerBlockProcessor.__get_list_start_index(
             position_marker,
             line_to_parse,
@@ -215,7 +217,13 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             current_container_blocks,
             container_level_tokens,
+            original_line_to_parse,
         )
+        if lines_to_requeue:
+            requeue_line_info = RequeueLineInfo()
+            requeue_line_info.lines_to_requeue = lines_to_requeue
+            requeue_line_info.force_ignore_first_as_lrd = force_ignore_first_as_lrd
+            return None, None, requeue_line_info
 
         LOGGER.debug(
             ">>__get_list_start_index>>%s>>", line_to_parse.replace(" ", "\\s")
@@ -227,6 +235,8 @@ class ContainerBlockProcessor:
             no_para_start_if_empty,
             line_to_parse,
             removed_chars_at_start,
+            lines_to_requeue,
+            force_ignore_first_as_lrd,
         ) = ContainerBlockProcessor.__get_list_start_index(
             position_marker,
             line_to_parse,
@@ -243,7 +253,13 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             current_container_blocks,
             container_level_tokens,
+            original_line_to_parse,
         )
+        if lines_to_requeue:
+            requeue_line_info = RequeueLineInfo()
+            requeue_line_info.lines_to_requeue = lines_to_requeue
+            requeue_line_info.force_ignore_first_as_lrd = force_ignore_first_as_lrd
+            return None, None, requeue_line_info
         LOGGER.debug(
             ">>__get_list_start_index>>%s>>", line_to_parse.replace(" ", "\\s")
         )
@@ -455,6 +471,7 @@ class ContainerBlockProcessor:
         removed_chars_at_start,
         current_container_blocks,
         container_level_tokens,
+        original_line_to_parse,
     ):
 
         # TODO refactor so it doesn't need this!
@@ -482,6 +499,8 @@ class ContainerBlockProcessor:
             line_to_parse,
             resultant_tokens,
             removed_chars_at_start,
+            lines_to_requeue,
+            force_ignore_first_as_lrd,
         ) = ListBlockProcessor.handle_list_block(
             is_ulist,
             parser_state,
@@ -495,7 +514,19 @@ class ContainerBlockProcessor:
             this_bq_count,
             removed_chars_at_start,
             current_container_blocks,
+            original_line_to_parse,
         )
+        if lines_to_requeue:
+            return (
+                None,
+                None,
+                None,
+                None,
+                None,
+                None,
+                lines_to_requeue,
+                force_ignore_first_as_lrd,
+            )
         container_level_tokens.extend(resultant_tokens)
         LOGGER.debug(
             "post-ulist>>#%s#%s#%s#",
@@ -518,6 +549,8 @@ class ContainerBlockProcessor:
             no_para_start_if_empty,
             line_to_parse,
             removed_chars_at_start,
+            None,
+            None,
         )
 
     # pylint: enable=too-many-locals, too-many-arguments
