@@ -80,6 +80,7 @@ class ContainerBlockProcessor:
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-arguments
     # pylint: disable=too-many-statements
+    # pylint: disable=too-many-branches
     @staticmethod
     def parse_line_for_container_blocks(
         parser_state,
@@ -175,6 +176,8 @@ class ContainerBlockProcessor:
             did_blank,
             last_block_quote_index,
             text_removed_by_container,
+            lines_to_requeue,
+            force_ignore_first_as_lrd,
         ) = ContainerBlockProcessor.__get_block_start_index(
             position_marker,
             parser_state,
@@ -183,7 +186,14 @@ class ContainerBlockProcessor:
             this_bq_count,
             stack_bq_count,
             start_index,
+            original_line_to_parse,
         )
+        if lines_to_requeue:
+            requeue_line_info = RequeueLineInfo()
+            requeue_line_info.lines_to_requeue = lines_to_requeue
+            requeue_line_info.force_ignore_first_as_lrd = force_ignore_first_as_lrd
+            return None, None, requeue_line_info
+
         LOGGER.debug(">>did_blank>>%s", did_blank)
         if did_blank:
             container_level_tokens.extend(leaf_tokens)
@@ -396,6 +406,7 @@ class ContainerBlockProcessor:
         # pylint: enable=too-many-locals
         # pylint: enable=too-many-arguments
         # pylint: enable=too-many-statements
+        # pylint: enable=too-many-branches
 
     @staticmethod
     # pylint: disable=too-many-locals, too-many-arguments
@@ -407,6 +418,7 @@ class ContainerBlockProcessor:
         this_bq_count,
         stack_bq_count,
         start_index,
+        original_line_to_parse,
     ):
         new_position_marker = PositionMarker(
             position_marker.line_number, start_index, position_marker.text_to_parse
@@ -425,6 +437,8 @@ class ContainerBlockProcessor:
             did_blank,
             last_block_quote_index,
             text_removed_by_container,
+            lines_to_requeue,
+            force_ignore_first_as_lrd,
         ) = BlockQuoteProcessor.handle_block_quote_block(
             parser_state,
             new_position_marker,
@@ -432,6 +446,7 @@ class ContainerBlockProcessor:
             adj_ws,
             this_bq_count,
             stack_bq_count,
+            original_line_to_parse,
         )
         LOGGER.debug("text>>:%s:>>", line_to_parse)
         LOGGER.debug(">>container_level_tokens>>%s", str(container_level_tokens))
@@ -449,6 +464,8 @@ class ContainerBlockProcessor:
             did_blank,
             last_block_quote_index,
             text_removed_by_container,
+            lines_to_requeue,
+            force_ignore_first_as_lrd,
         )
 
     # pylint: enable=too-many-locals, too-many-arguments

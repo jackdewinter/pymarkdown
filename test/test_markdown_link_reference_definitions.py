@@ -1881,7 +1881,6 @@ def test_link_reference_definitions_extra_02a():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_02b():
     """
@@ -1889,14 +1888,28 @@ def test_link_reference_definitions_extra_02b():
     """
 
     # Arrange
-    source_markdown = """>> [foo]:
-> /url"""
+    source_markdown = """> [foo]:
+>> /url"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
-        "[link-ref-def(1,3):True::foo::\n:/url:::::]",
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):[:]",
+        "[text(1,4):foo:]",
+        "[text(1,7):]:]",
+        "[text(1,8):::]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::>> ]",
+        "[para(2,4):]",
+        "[text(2,4):/url:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
+<p>[foo]:</p>
+<blockquote>
+<p>/url</p>
+</blockquote>
 </blockquote>"""
 
     # Act & Assert

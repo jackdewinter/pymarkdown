@@ -54,6 +54,8 @@
 - switch from bq to list and back again
   - switch from list to bq and back again
   - 270 and check for indent levels after
+- lines_to_requeue requeue_line_info
+- original_line_to_parse into parse_state?
 
 ### Priority 3 - Like To Solve in next 3 m
 
@@ -78,8 +80,8 @@
 
 - links, 518b
   - 518b inside of list and/or block quote
-- test_link_reference_definitions_extra_02b
-- lines_to_requeue requeue_line_info
+- verify that > to >> introduces a new level of block quotes
+- add new 2c that increases level of block quotes with LRD
 
 ## Bugs - Tokenization
 

@@ -121,6 +121,7 @@ class BlockQuoteProcessor:
         adj_ws,
         this_bq_count,
         stack_bq_count,
+        original_line_to_parse,
     ):
         """
         Handle the processing of a block quote block.
@@ -136,6 +137,9 @@ class BlockQuoteProcessor:
         container_level_tokens = []
         removed_chars_at_start = 0
         last_block_quote_index = 0
+
+        lines_to_requeue = None
+        force_ignore_first_as_lrd = None
 
         adjusted_text_to_parse = position_marker.text_to_parse
         adjusted_index_number = position_marker.index_number
@@ -170,11 +174,14 @@ class BlockQuoteProcessor:
                 did_blank,
                 last_block_quote_index,
                 text_removed_by_container,
+                lines_to_requeue,
+                force_ignore_first_as_lrd,
             ) = BlockQuoteProcessor.__handle_block_quote_section(
                 parser_state,
                 position_marker,
                 stack_bq_count,
                 extracted_whitespace,
+                original_line_to_parse,
             )
 
             # TODO for nesting, may need to augment with this_bq_count already set.
@@ -222,6 +229,8 @@ class BlockQuoteProcessor:
             did_blank,
             last_block_quote_index,
             text_removed_by_container,
+            lines_to_requeue,
+            force_ignore_first_as_lrd,
         )
 
     # pylint: enable=too-many-arguments
@@ -307,6 +316,7 @@ class BlockQuoteProcessor:
         position_marker,
         stack_bq_count,
         extracted_whitespace,
+        original_line_to_parse,
     ):
         """
         Handle the processing of a section clearly identified as having block quotes.
@@ -366,6 +376,8 @@ class BlockQuoteProcessor:
             (
                 container_level_tokens,
                 stack_bq_count,
+                lines_to_requeue,
+                force_ignore_first_as_lrd,
             ) = BlockQuoteProcessor.__ensure_stack_at_level(
                 parser_state,
                 this_bq_count,
@@ -373,7 +385,23 @@ class BlockQuoteProcessor:
                 extracted_whitespace,
                 position_marker,
                 original_start_index,
+                original_line_to_parse,
             )
+            if lines_to_requeue:
+                return (
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    None,
+                    lines_to_requeue,
+                    force_ignore_first_as_lrd,
+                )
 
             removed_text = (
                 extracted_whitespace
@@ -476,6 +504,8 @@ class BlockQuoteProcessor:
             did_blank,
             last_block_quote_index,
             text_removed_by_container,
+            None,
+            None,
         )
 
     # pylint: enable=too-many-locals, too-many-statements
@@ -489,6 +519,7 @@ class BlockQuoteProcessor:
         extracted_whitespace,
         position_marker,
         original_start_index,
+        original_line_to_parse,
     ):
         """
         Ensure that the block quote stack is at the proper level on the stack.
@@ -496,7 +527,19 @@ class BlockQuoteProcessor:
 
         container_level_tokens = []
         if this_bq_count > stack_bq_count:
-            container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
+            LOGGER.debug(
+                "token_stack>>%s",
+                ParserHelper.make_value_visible(parser_state.token_stack),
+            )
+            LOGGER.debug(
+                "token_document>>%s",
+                ParserHelper.make_value_visible(parser_state.token_document),
+            )
+            (
+                container_level_tokens,
+                lines_to_requeue,
+                force_ignore_first_as_lrd,
+            ) = parser_state.close_open_blocks_fn(
                 parser_state,
                 only_these_blocks=[
                     ParagraphStackToken,
@@ -504,6 +547,43 @@ class BlockQuoteProcessor:
                     LinkDefinitionStackToken,
                 ],
                 was_forced=True,
+                caller_can_handle_requeue=True,
+            )
+            if lines_to_requeue:
+                LOGGER.debug(
+                    "__ensure_stack_at_level>>lines_to_requeue>>%s",
+                    ParserHelper.make_value_visible(lines_to_requeue),
+                )
+                LOGGER.debug(
+                    "__close_required_lists_after_start>>original_line_to_parse>>%s",
+                    ParserHelper.make_value_visible(original_line_to_parse),
+                )
+                LOGGER.debug(
+                    "__ensure_stack_at_level>>token_stack>>%s",
+                    ParserHelper.make_value_visible(parser_state.token_stack),
+                )
+                LOGGER.debug(
+                    "__ensure_stack_at_level>>token_document>>%s",
+                    ParserHelper.make_value_visible(parser_state.token_document),
+                )
+                assert not lines_to_requeue[0]
+                lines_to_requeue[0] = original_line_to_parse
+                LOGGER.debug(
+                    "__close_required_lists_after_start>>lines_to_requeue>>%s",
+                    ParserHelper.make_value_visible(lines_to_requeue),
+                )
+                return None, None, lines_to_requeue, force_ignore_first_as_lrd
+            LOGGER.debug(
+                "token_stack>>%s",
+                ParserHelper.make_value_visible(parser_state.token_stack),
+            )
+            LOGGER.debug(
+                "token_document>>%s",
+                ParserHelper.make_value_visible(parser_state.token_document),
+            )
+            LOGGER.debug(
+                "container_level_tokens>>%s",
+                ParserHelper.make_value_visible(container_level_tokens),
             )
             while parser_state.token_stack[-1].is_list:
                 LOGGER.debug(
@@ -519,6 +599,10 @@ class BlockQuoteProcessor:
                         until_this_index=len(parser_state.token_stack) - 1,
                     )
                     container_level_tokens.extend(close_tokens)
+                    LOGGER.debug(
+                        "container_level_tokens>>%s",
+                        ParserHelper.make_value_visible(container_level_tokens),
+                    )
                 else:
                     break
 
@@ -550,6 +634,6 @@ class BlockQuoteProcessor:
                     BlockQuoteStackToken(new_markdown_token)
                 )
 
-        return container_level_tokens, stack_bq_count
+        return container_level_tokens, stack_bq_count, None, None
 
     # pylint: enable=too-many-arguments, too-many-statements
