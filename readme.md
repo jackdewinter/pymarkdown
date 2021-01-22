@@ -80,8 +80,13 @@
 
 - links, 518b
   - 518b inside of list and/or block quote
-- verify that > to >> introduces a new level of block quotes
-- add new 2c that increases level of block quotes with LRD
+- test_block_quotes_229i and test_block_quotes_229j - BQ+HTML
+- test_block_quotes_229g and test_block_quotes_229h - BQ+FCB
+- test_block_quotes_229d - BQ+ICB
+
+## Ask talk.commonmark.org
+
+- test_link_reference_definitions_extra_02b vs test_link_reference_definitions_extra_02c
 
 ## Bugs - Tokenization
 

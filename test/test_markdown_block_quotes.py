@@ -1481,6 +1481,189 @@ def test_block_quotes_229b():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+@pytest.mark.gfm
+def test_block_quotes_229c():
+    """
+    Test case 229b:  variation
+    """
+
+    # Arrange
+    source_markdown = """>     1
+>>     2
+"""
+    expected_tokens = ['[block-quote(1,1)::> ]', '[icode-block(1,7):    :]', '[text(1,7):1:]', '[end-icode-block:::True]', '[block-quote(2,1)::>> \n]', '[icode-block(2,8):    :]', '[text(2,8):2:]', '[end-icode-block:::True]', '[end-block-quote:::True]', '[end-block-quote:::True]', '[BLANK(3,1):]']
+    expected_gfm = """<blockquote>
+<pre><code>1
+</code></pre>
+<blockquote>
+<pre><code>2
+</code></pre>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_block_quotes_229d():
+    """
+    Test case 229d:  variation
+    """
+
+    # Arrange
+    source_markdown = """>>     1
+>     2
+"""
+    expected_tokens = ['[block-quote(1,1)::]', '[block-quote(1,2)::>> \n> \n]', '[icode-block(1,8):    :\n    ]', '[text(1,8):1\n2:]', '[end-icode-block:::True]', '[end-block-quote:::True]', '[end-block-quote:::True]', '[BLANK(3,1):]']
+    expected_gfm = """<blockquote>
+<blockquote>
+<pre><code>1
+</code></pre>
+</blockquote>
+<pre><code>2
+</code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
+def test_block_quotes_229e():
+    """
+    Test case 229d:  variation
+    """
+
+    # Arrange
+    source_markdown = """> ```
+>> 2
+>> ```
+"""
+    expected_tokens = ['[block-quote(1,1)::> \n>\n>\n]', '[fcode-block(1,3):`:3::::::]', '[text(2,2):\a>\a&gt;\a 2\n\a>\a&gt;\a ```:]',
+'[end-fcode-block:::True]', '[end-block-quote:::True]', '[BLANK(4,1):]']
+    expected_gfm = """<blockquote>
+<pre><code>&gt; 2
+&gt; ```
+</code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
+def test_block_quotes_229f():
+    """
+    Test case 229e:  variation
+    """
+
+    # Arrange
+    source_markdown = """> ```
+> 2
+>> ```
+"""
+    expected_tokens = ['[block-quote(1,1)::> \n> \n>\n]', '[fcode-block(1,3):`:3::::::]', '[text(2,3):2\n\a>\a&gt;\a ```:]', '[end-fcode-block:::True]', '[end-block-quote:::True]', '[BLANK(4,1):]']
+    expected_gfm = """<blockquote>
+<pre><code>2
+&gt; ```
+</code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_block_quotes_229g():
+    """
+    Test case 229f:  variation
+    """
+
+    # Arrange
+    source_markdown = """>> ```
+> 2
+> ```
+"""
+    expected_tokens = ['[block-quote(1,1)::]', '[block-quote(1,2)::>> \n> \n> \n]', '[fcode-block(1,4):`:3::::::]', '[text(2,3):2:]', '[end-fcode-block::3:False]', '[end-block-quote:::True]', '[end-block-quote:::True]', '[BLANK(4,1):]']
+    expected_gfm = """<blockquote>
+<blockquote>
+<pre><code></code></pre>
+</blockquote>
+<p>2</p>
+<pre><code></code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_block_quotes_229h():
+    """
+    Test case 229g:  variation
+    """
+
+    # Arrange
+    source_markdown = """>> ```
+>> 2
+> ```
+"""
+    expected_tokens = ['[block-quote(1,1)::]', '[block-quote(1,2)::>> \n>> \n> \n]', '[fcode-block(1,4):`:3::::::]', '[text(2,4):2:]', '[end-fcode-block::3:False]', '[end-block-quote:::True]', '[end-block-quote:::True]', '[BLANK(4,1):]']
+    expected_gfm = """<blockquote>
+<blockquote>
+<pre><code>2
+</code></pre>
+</blockquote>
+<pre><code></code></pre>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_block_quotes_229i():
+    """
+    Test case 229g:  variation
+    """
+
+    # Arrange
+    source_markdown = """> <script>
+> comments
+>> </script>
+"""
+    expected_tokens = ['[block-quote(1,1)::> \n> ]', '[html-block(1,3)]', '[text(1,3):<script>\ncomments:]', '[block-quote(3,1)::>> \n]', '[html-block(3,4)]', '[text(3,4):</script>:]', '[end-html-block:::False]', '[BLANK(4,1):]', '[end-block-quote:::True]', '[end-html-block:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<script>
+comments
+> </script>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_block_quotes_229j():
+    """
+    Test case 229g:  variation
+    """
+
+    # Arrange
+    source_markdown = """>> <script>
+>> comments
+> </script>
+"""
+    expected_tokens = ['[block-quote(1,1)::]', '[block-quote(1,2)::>> \n>> \n> \n]', '[html-block(1,4)]', '[text(1,4):<script>\ncomments\n</script>:]', '[end-html-block:::False]', '[end-block-quote:::True]', '[end-block-quote:::True]', '[BLANK(4,1):]']
+    expected_gfm = """<blockquote>
+<blockquote>
+<script>
+comments
+</blockquote>
+</script>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
 def test_block_quotes_230():
