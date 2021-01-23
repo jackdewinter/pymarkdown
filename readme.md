@@ -70,6 +70,7 @@
 - image token handling confusing and non-standard
 - fenced code block handling of line/col could be better
 - LRD and block quote interaction - process_link_reference_definition - search for XXXXX
+- `LOGGER.debug("handle_block_quote_section>>fenced")` and collapse?
 
 ### Priority 4 - Like To Solve in next 6 m
 
@@ -78,7 +79,6 @@
 
 ## Bugs - General - Uncategorized
 
-- test_block_quotes_229g and test_block_quotes_229h - BQ+FCB
 - single level up or down with list
 - multiple levels up and down over all block quote transitions
 

@@ -1,8 +1,12 @@
 """
 Module to provide for a container element that can be added to markdown parsing stream.
 """
+import logging
+
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
+
+LOGGER = logging.getLogger(__name__)
 
 
 # pylint: disable=too-many-arguments
@@ -308,9 +312,21 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
         """
         Add any leading spaces to the token, separating them with line feeds.
         """
+        LOGGER.debug(
+            "__leading_spaces>>:%s:<<",
+            ParserHelper.make_value_visible(self.__leading_spaces),
+        )
+        LOGGER.debug(
+            "add_leading_spaces>>:%s:<<",
+            ParserHelper.make_value_visible(leading_spaces_to_add),
+        )
         if self.__leading_spaces:
             self.__leading_spaces += ParserHelper.newline_character
         self.__leading_spaces += leading_spaces_to_add
+        LOGGER.debug(
+            "__leading_spaces>>:%s:<<",
+            ParserHelper.make_value_visible(self.__leading_spaces),
+        )
         self.__compose_extra_data_field()
 
     def __compose_extra_data_field(self):

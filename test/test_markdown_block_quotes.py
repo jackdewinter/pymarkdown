@@ -1612,7 +1612,6 @@ def test_block_quotes_229f():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_229g():
     """
@@ -1625,12 +1624,16 @@ def test_block_quotes_229g():
 > ```
 """
     expected_tokens = [
-        "[block-quote(1,1)::]",
-        "[block-quote(1,2)::>> \n> \n> \n]",
+        "[block-quote(1,1)::> \n> \n]",
+        "[block-quote(1,2)::>> ]",
         "[fcode-block(1,4):`:3::::::]",
-        "[text(2,3):2:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::True]",
         "[end-block-quote:::True]",
+        "[para(2,3):]",
+        "[text(2,3):2:]",
+        "[end-para:::False]",
+        "[fcode-block(3,3):`:3::::::]",
+        "[end-fcode-block:::True]",
         "[end-block-quote:::True]",
         "[BLANK(4,1):]",
     ]
@@ -1643,10 +1646,9 @@ def test_block_quotes_229g():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_229h():
     """
@@ -1659,12 +1661,14 @@ def test_block_quotes_229h():
 > ```
 """
     expected_tokens = [
-        "[block-quote(1,1)::]",
-        "[block-quote(1,2)::>> \n>> \n> \n]",
+        "[block-quote(1,1)::> \n]",
+        "[block-quote(1,2)::>> \n>> ]",
         "[fcode-block(1,4):`:3::::::]",
         "[text(2,4):2:]",
-        "[end-fcode-block::3:False]",
+        "[end-fcode-block:::True]",
         "[end-block-quote:::True]",
+        "[fcode-block(3,3):`:3::::::]",
+        "[end-fcode-block:::True]",
         "[end-block-quote:::True]",
         "[BLANK(4,1):]",
     ]

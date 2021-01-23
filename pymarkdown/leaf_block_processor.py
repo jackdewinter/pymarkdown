@@ -912,6 +912,7 @@ class LeafBlockProcessor:
                 extracted_whitespace,
                 text_removed_by_container,
                 force_it,
+                parser_state.token_document,
             )
 
         if top_list_token:
@@ -1009,33 +1010,48 @@ class LeafBlockProcessor:
 
     @staticmethod
     def __adjust_paragraph_for_block_quotes(
-        top_block_token, extracted_whitespace, text_removed_by_container, force_it
+        top_block_token,
+        extracted_whitespace,
+        text_removed_by_container,
+        force_it,
+        token_document,
     ):
         LOGGER.debug(
-            ">>top_block_token.md>>%s",
-            ParserHelper.make_value_visible(top_block_token.matching_markdown_token),
+            ">>list-owners>>%s", ParserHelper.make_value_visible(token_document)
         )
-        LOGGER.debug(
-            ">>top_block_token.lsi>>%s",
-            ParserHelper.make_value_visible(
-                top_block_token.matching_markdown_token.leading_text_index
-            ),
-        )
-        LOGGER.debug(">>extracted_whitespace>>%s>>", extracted_whitespace)
-        LOGGER.debug(
-            ">>text_removed_by_container>>[%s]>>",
-            ParserHelper.make_value_visible(text_removed_by_container),
-        )
-        LOGGER.debug(
-            ">>force_it>>[%s]>>",
-            str(force_it),
-        )
-        if text_removed_by_container is None:
-            top_block_token.matching_markdown_token.add_leading_spaces("")
-        elif force_it:
-            top_block_token.matching_markdown_token.add_leading_spaces(
-                text_removed_by_container
+        if (
+            token_document[-1].is_block_quote_end
+            and token_document[-2].is_fenced_code_block_end
+        ):
+            LOGGER.debug(">>block quote does not need adjusting")
+        else:
+            LOGGER.debug(
+                ">>top_block_token.md>>%s",
+                ParserHelper.make_value_visible(
+                    top_block_token.matching_markdown_token
+                ),
             )
+            LOGGER.debug(
+                ">>top_block_token.lsi>>%s",
+                ParserHelper.make_value_visible(
+                    top_block_token.matching_markdown_token.leading_text_index
+                ),
+            )
+            LOGGER.debug(">>extracted_whitespace>>%s>>", extracted_whitespace)
+            LOGGER.debug(
+                ">>text_removed_by_container>>[%s]>>",
+                ParserHelper.make_value_visible(text_removed_by_container),
+            )
+            LOGGER.debug(
+                ">>force_it>>[%s]>>",
+                str(force_it),
+            )
+            if text_removed_by_container is None:
+                top_block_token.matching_markdown_token.add_leading_spaces("")
+            elif force_it:
+                top_block_token.matching_markdown_token.add_leading_spaces(
+                    text_removed_by_container
+                )
 
     @staticmethod
     def check_for_list_in_process(parser_state):

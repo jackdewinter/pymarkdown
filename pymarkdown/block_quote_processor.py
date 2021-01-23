@@ -8,6 +8,7 @@ from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.parser_helper import ParserHelper, PositionMarker
 from pymarkdown.stack_token import (
     BlockQuoteStackToken,
+    FencedCodeBlockStackToken,
     HtmlBlockStackToken,
     IndentedCodeBlockStackToken,
     LinkDefinitionStackToken,
@@ -292,12 +293,12 @@ class BlockQuoteProcessor:
                         )
                     start_index += 1
 
+                LOGGER.debug(
+                    "this_bq_count--%s--stack_bq_count--%s",
+                    str(this_bq_count),
+                    str(stack_bq_count),
+                )
                 if is_top_of_stack_is_html_block:
-                    LOGGER.debug(
-                        "this_bq_count--%s--stack_bq_count--%s",
-                        str(this_bq_count),
-                        str(stack_bq_count),
-                    )
                     if this_bq_count == stack_bq_count:
                         LOGGER.debug(
                             "block quote levels don't increase during html block, ignoring"
@@ -507,6 +508,29 @@ class BlockQuoteProcessor:
             removed_text = line_to_parse[0:start_index]
             line_to_parse = line_to_parse[start_index:]
 
+            LOGGER.debug("__hbqs>>this_bq_count>>%s", str(this_bq_count))
+            LOGGER.debug("__hbqs>>stack_bq_count>>%s", str(stack_bq_count))
+
+            if this_bq_count < stack_bq_count:
+                (container_level_tokens, _, _,) = parser_state.close_open_blocks_fn(
+                    parser_state,
+                    only_these_blocks=[
+                        FencedCodeBlockStackToken,
+                    ],
+                    was_forced=True,
+                )
+                while this_bq_count < stack_bq_count:
+                    stack_bq_count -= 1
+                    ind = len(parser_state.token_stack) - 1
+                    (new_tokens, _, _,) = parser_state.close_open_blocks_fn(
+                        parser_state,
+                        include_block_quotes=True,
+                        until_this_index=ind,
+                        was_forced=True,
+                    )
+                    container_level_tokens.extend(new_tokens)
+
+            # TODO collapse?
             found_bq_stack_token = None
             for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):
                 LOGGER.debug(
@@ -648,7 +672,8 @@ class BlockQuoteProcessor:
                 "container_level_tokens>>%s",
                 ParserHelper.make_value_visible(container_level_tokens),
             )
-            while parser_state.token_stack[-1].is_list:
+            keep_going = True
+            while keep_going and parser_state.token_stack[-1].is_list:
                 LOGGER.debug(
                     "stack>>%s", str(parser_state.token_stack[-1].indent_level)
                 )
@@ -667,7 +692,7 @@ class BlockQuoteProcessor:
                         ParserHelper.make_value_visible(container_level_tokens),
                     )
                 else:
-                    break
+                    keep_going = False
 
             LOGGER.debug(
                 "container_level_tokens>>%s",
