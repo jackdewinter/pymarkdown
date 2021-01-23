@@ -80,7 +80,6 @@
 ## Bugs - General - Uncategorized
 
 - single level up or down with list
-- multiple levels up and down over all block quote transitions
 
 ## Ask talk.commonmark.org
 

@@ -1019,9 +1019,14 @@ class LeafBlockProcessor:
         LOGGER.debug(
             ">>list-owners>>%s", ParserHelper.make_value_visible(token_document)
         )
+        number_of_block_quotes = 0
+        end_index = len(token_document) - 1
+        while token_document[end_index].is_block_quote_end:
+            number_of_block_quotes += 1
+            end_index -= 1
         if (
-            token_document[-1].is_block_quote_end
-            and token_document[-2].is_fenced_code_block_end
+            number_of_block_quotes > 0
+            and token_document[end_index].is_fenced_code_block_end
         ):
             LOGGER.debug(">>block quote does not need adjusting")
         else:

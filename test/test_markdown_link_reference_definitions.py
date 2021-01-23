@@ -1882,9 +1882,9 @@ def test_link_reference_definitions_extra_02a():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_02b():
+def test_link_reference_definitions_extra_02bx():
     """
-    Test case extra 02a:  variation
+    Test case extra 02b:  variation
     """
 
     # Arrange
@@ -1917,7 +1917,46 @@ def test_link_reference_definitions_extra_02b():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_extra_02c():
+def test_link_reference_definitions_extra_02ba():
+    """
+    Test case extra 02b:  variation
+    """
+
+    # Arrange
+    source_markdown = """> [foo]:
+>>> /url"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[para(1,3):]",
+        "[text(1,3):[:]",
+        "[text(1,4):foo:]",
+        "[text(1,7):]:]",
+        "[text(1,8):::]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::]",
+        "[block-quote(2,2)::>>> ]",
+        "[para(2,5):]",
+        "[text(2,5):/url:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>[foo]:</p>
+<blockquote>
+<blockquote>
+<p>/url</p>
+</blockquote>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_02cx():
     """
     Test case extra 02c:  variation
     """
@@ -1934,6 +1973,35 @@ def test_link_reference_definitions_extra_02c():
     ]
     expected_gfm = """<blockquote>
 <blockquote>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_link_reference_definitions_extra_02ca():
+    """
+    Test case extra 02c:  variation
+    """
+
+    # Arrange
+    source_markdown = """>>> [foo]:
+> /url"""
+    expected_tokens = [
+        "[block-quote(1,1)::]",
+        "[block-quote(1,2)::]",
+        "[block-quote(1,3)::>>> \n> ]",
+        "[link-ref-def(1,5):True::foo::\n:/url:::::]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<blockquote>
+</blockquote>
 </blockquote>
 </blockquote>"""
 
