@@ -176,6 +176,7 @@ class ContainerBlockProcessor:
             did_blank,
             last_block_quote_index,
             text_removed_by_container,
+            avoid_block_starts,
             lines_to_requeue,
             force_ignore_first_as_lrd,
         ) = ContainerBlockProcessor.__get_block_start_index(
@@ -195,6 +196,7 @@ class ContainerBlockProcessor:
             return None, None, requeue_line_info
 
         LOGGER.debug(">>did_blank>>%s", did_blank)
+        LOGGER.debug(">>avoid_block_starts>>%s", str(avoid_block_starts))
         if did_blank:
             container_level_tokens.extend(leaf_tokens)
             return container_level_tokens, line_to_parse, RequeueLineInfo()
@@ -315,6 +317,7 @@ class ContainerBlockProcessor:
                 leaf_tokens,
                 container_level_tokens,
                 was_container_start,
+                avoid_block_starts,
             )
             LOGGER.debug("text>>%s>>", line_to_parse.replace(" ", "\\s"))
 
@@ -437,6 +440,7 @@ class ContainerBlockProcessor:
             did_blank,
             last_block_quote_index,
             text_removed_by_container,
+            avoid_block_starts,
             lines_to_requeue,
             force_ignore_first_as_lrd,
         ) = BlockQuoteProcessor.handle_block_quote_block(
@@ -464,6 +468,7 @@ class ContainerBlockProcessor:
             did_blank,
             last_block_quote_index,
             text_removed_by_container,
+            avoid_block_starts,
             lines_to_requeue,
             force_ignore_first_as_lrd,
         )
@@ -674,6 +679,7 @@ class ContainerBlockProcessor:
         leaf_tokens,
         container_level_tokens,
         was_container_start,
+        avoid_block_starts,
     ):
         """
         Handle the processing of nested container blocks, as they can contain
@@ -695,6 +701,7 @@ class ContainerBlockProcessor:
                     parser_state,
                     position_marker.text_to_parse,
                     end_container_indices,
+                    avoid_block_starts,
                 )
             )
             LOGGER.debug(
@@ -800,6 +807,7 @@ class ContainerBlockProcessor:
         parser_state,
         line_to_parse,
         end_container_indices,
+        avoid_block_starts,
     ):
 
         LOGGER.debug("check next container_start>")
@@ -814,9 +822,13 @@ class ContainerBlockProcessor:
         nested_olist_start, _, _, _ = ListBlockProcessor.is_olist_start(
             parser_state, line_to_parse, after_ws_index, ex_whitespace, False
         )
-        nested_block_start = BlockQuoteProcessor.is_block_quote_start(
-            line_to_parse, after_ws_index, ex_whitespace
-        )
+        if avoid_block_starts:
+            LOGGER.debug("avoiding next block container start")
+            nested_block_start = False
+        else:
+            nested_block_start = BlockQuoteProcessor.is_block_quote_start(
+                line_to_parse, after_ws_index, ex_whitespace
+            )
         LOGGER.debug(
             "check next container_start>ulist>%s>index>%s",
             str(nested_ulist_start),

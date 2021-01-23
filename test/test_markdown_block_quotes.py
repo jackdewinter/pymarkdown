@@ -1680,7 +1680,6 @@ def test_block_quotes_229h():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_229i():
     """
@@ -1693,17 +1692,12 @@ def test_block_quotes_229i():
 >> </script>
 """
     expected_tokens = [
-        "[block-quote(1,1)::> \n> ]",
+        "[block-quote(1,1)::> \n> \n>\n]",
         "[html-block(1,3)]",
-        "[text(1,3):<script>\ncomments:]",
-        "[block-quote(3,1)::>> \n]",
-        "[html-block(3,4)]",
-        "[text(3,4):</script>:]",
+        "[text(1,3):<script>\ncomments\n> </script>:]",
         "[end-html-block:::False]",
+        "[end-block-quote:::True]",
         "[BLANK(4,1):]",
-        "[end-block-quote:::True]",
-        "[end-html-block:::True]",
-        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <script>
@@ -1712,7 +1706,7 @@ comments
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.skip

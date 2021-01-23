@@ -130,6 +130,7 @@ class BlockQuoteProcessor:
 
         did_process = False
         was_container_start = False
+        avoid_block_starts = False
         did_blank = False
         text_removed_by_container = None
         end_of_bquote_start_index = -1
@@ -174,6 +175,7 @@ class BlockQuoteProcessor:
                 did_blank,
                 last_block_quote_index,
                 text_removed_by_container,
+                avoid_block_starts,
                 lines_to_requeue,
                 force_ignore_first_as_lrd,
             ) = BlockQuoteProcessor.__handle_block_quote_section(
@@ -183,6 +185,7 @@ class BlockQuoteProcessor:
                 extracted_whitespace,
                 original_line_to_parse,
             )
+            LOGGER.debug(">>avoid_block_starts>>%s", str(avoid_block_starts))
 
             # TODO for nesting, may need to augment with this_bq_count already set.
             if this_bq_count == 0:
@@ -229,6 +232,7 @@ class BlockQuoteProcessor:
             did_blank,
             last_block_quote_index,
             text_removed_by_container,
+            avoid_block_starts,
             lines_to_requeue,
             force_ignore_first_as_lrd,
         )
@@ -242,6 +246,7 @@ class BlockQuoteProcessor:
         start_index,
         stack_bq_count,
         is_top_of_stack_fenced_code_block,
+        is_top_of_stack_is_html_block,
     ):
         """
         Having detected a block quote character (">") on a line, continue to consume
@@ -250,6 +255,7 @@ class BlockQuoteProcessor:
 
         this_bq_count = 0
         last_block_quote_index = -1
+        avoid_block_starts = False
         adjusted_line = line_to_parse
         if stack_bq_count == 0 and is_top_of_stack_fenced_code_block:
             start_index -= 1
@@ -285,6 +291,23 @@ class BlockQuoteProcessor:
                         )
                     start_index += 1
 
+                if is_top_of_stack_is_html_block:
+                    LOGGER.debug(
+                        "this_bq_count--%s--stack_bq_count--%s",
+                        str(this_bq_count),
+                        str(stack_bq_count),
+                    )
+                    if this_bq_count == stack_bq_count:
+                        LOGGER.debug(
+                            "block quote levels don't increase during html block, ignoring"
+                        )
+                        avoid_block_starts = ParserHelper.is_character_at_index(
+                            adjusted_line,
+                            start_index,
+                            BlockQuoteProcessor.__block_quote_character,
+                        )
+                        break
+
                 if is_top_of_stack_fenced_code_block and (
                     this_bq_count >= stack_bq_count
                 ):
@@ -307,7 +330,13 @@ class BlockQuoteProcessor:
                 str(start_index),
                 ParserHelper.make_value_visible(adjusted_line),
             )
-        return this_bq_count, start_index, adjusted_line, last_block_quote_index
+        return (
+            this_bq_count,
+            start_index,
+            adjusted_line,
+            last_block_quote_index,
+            avoid_block_starts,
+        )
 
     # pylint: disable=too-many-locals, too-many-statements
     @staticmethod
@@ -351,12 +380,15 @@ class BlockQuoteProcessor:
             start_index,
             line_to_parse,
             last_block_quote_index,
+            avoid_block_starts,
         ) = BlockQuoteProcessor.__count_block_quote_starts(
             line_to_parse,
             start_index,
             stack_bq_count,
             parser_state.token_stack[-1].is_fenced_code_block,
+            parser_state.token_stack[-1].is_html_block,
         )
+        LOGGER.debug(">>avoid_block_starts>>%s", str(avoid_block_starts))
         LOGGER.debug(
             "__handle_block_quote_section---this_bq_count--%s--%s--%s--",
             str(this_bq_count),
@@ -389,6 +421,7 @@ class BlockQuoteProcessor:
             )
             if lines_to_requeue:
                 return (
+                    None,
                     None,
                     None,
                     None,
@@ -504,6 +537,7 @@ class BlockQuoteProcessor:
             did_blank,
             last_block_quote_index,
             text_removed_by_container,
+            avoid_block_starts,
             None,
             None,
         )
