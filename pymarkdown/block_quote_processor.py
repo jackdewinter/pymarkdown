@@ -69,13 +69,13 @@ class BlockQuoteProcessor:
         """
         LOGGER.debug("__check_for_lazy_handling")
         container_level_tokens = []
+        LOGGER.debug(
+            "this_bq_count>%s>>stack_bq_count>>%s<<",
+            str(this_bq_count),
+            str(stack_bq_count),
+        )
         if this_bq_count == 0 and stack_bq_count > 0:
             LOGGER.debug("haven't processed")
-            LOGGER.debug(
-                "this_bq_count>%s>>stack_bq_count>>%s<<",
-                str(this_bq_count),
-                str(stack_bq_count),
-            )
 
             is_leaf_block_start = (
                 LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
@@ -510,7 +510,7 @@ class BlockQuoteProcessor:
 
     # pylint: enable=too-many-locals, too-many-statements
 
-    # pylint: disable=too-many-arguments, too-many-statements
+    # pylint: disable=too-many-arguments, too-many-statements, too-many-locals
     @staticmethod
     def __ensure_stack_at_level(
         parser_state,
@@ -526,7 +526,31 @@ class BlockQuoteProcessor:
         """
 
         container_level_tokens = []
+        LOGGER.debug(
+            "__ensure_stack_at_level>>this_bq_count>>%s>>stack_bq_count>>%s",
+            str(this_bq_count),
+            str(stack_bq_count),
+        )
+        stack_increase_needed = False
+        stack_decrease_needed = False
         if this_bq_count > stack_bq_count:
+            LOGGER.debug(
+                "__ensure_stack_at_level>>increase to new level",
+            )
+            stack_increase_needed = True
+        elif this_bq_count < stack_bq_count:
+            LOGGER.debug(
+                "__ensure_stack_at_level>>possible decrease to new level",
+            )
+            top_token_on_stack = parser_state.token_stack[-1]
+            LOGGER.debug("__ensure_stack_at_level>>%s", str(top_token_on_stack))
+            stack_decrease_needed = top_token_on_stack.is_indented_code_block
+            LOGGER.debug(
+                "__ensure_stack_at_level>>decrease to new level=%s",
+                str(stack_decrease_needed),
+            )
+
+        if stack_increase_needed or stack_decrease_needed:
             LOGGER.debug(
                 "token_stack>>%s",
                 ParserHelper.make_value_visible(parser_state.token_stack),
@@ -606,7 +630,14 @@ class BlockQuoteProcessor:
                 else:
                     break
 
+            LOGGER.debug(
+                "container_level_tokens>>%s",
+                ParserHelper.make_value_visible(container_level_tokens),
+            )
             while this_bq_count > stack_bq_count:
+                LOGGER.debug(
+                    "increasing block quotes by one>>",
+                )
                 stack_bq_count += 1
 
                 adjusted_position_marker = PositionMarker(
@@ -633,7 +664,28 @@ class BlockQuoteProcessor:
                 parser_state.token_stack.append(
                     BlockQuoteStackToken(new_markdown_token)
                 )
+            LOGGER.debug(
+                "container_level_tokens>>%s",
+                ParserHelper.make_value_visible(container_level_tokens),
+            )
+            while this_bq_count < stack_bq_count:
+                LOGGER.debug(
+                    "decreasing block quotes by one>>",
+                )
+                stack_bq_count -= 1
+                ind = len(parser_state.token_stack) - 1
+                (new_tokens, _, _,) = parser_state.close_open_blocks_fn(
+                    parser_state,
+                    include_block_quotes=True,
+                    until_this_index=ind,
+                    was_forced=True,
+                )
+                container_level_tokens.extend(new_tokens)
+            LOGGER.debug(
+                "container_level_tokens>>%s",
+                ParserHelper.make_value_visible(container_level_tokens),
+            )
 
         return container_level_tokens, stack_bq_count, None, None
 
-    # pylint: enable=too-many-arguments, too-many-statements
+    # pylint: enable=too-many-arguments, too-many-statements, too-many-locals

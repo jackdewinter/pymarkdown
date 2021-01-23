@@ -1518,7 +1518,6 @@ def test_block_quotes_229c():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_229d():
     """
@@ -1530,12 +1529,15 @@ def test_block_quotes_229d():
 >     2
 """
     expected_tokens = [
-        "[block-quote(1,1)::]",
-        "[block-quote(1,2)::>> \n> \n]",
-        "[icode-block(1,8):    :\n    ]",
-        "[text(1,8):1\n2:]",
+        "[block-quote(1,1)::> \n]",
+        "[block-quote(1,2)::>> ]",
+        "[icode-block(1,8):    :]",
+        "[text(1,8):1:]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
+        "[icode-block(2,7):    :]",
+        "[text(2,7):2:]",
+        "[end-icode-block:::True]",
         "[end-block-quote:::True]",
         "[BLANK(3,1):]",
     ]

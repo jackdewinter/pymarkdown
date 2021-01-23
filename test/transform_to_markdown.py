@@ -983,27 +983,38 @@ class TransformToMarkdown:
     ):
         new_instance = copy.deepcopy(current_token)
         self.container_token_stack.append(new_instance)
-
         print(">bquote>" + ParserHelper.make_value_visible(new_instance))
-        split_leading_spaces = new_instance.leading_spaces.split(
-            ParserHelper.newline_character
-        )
-        print(
-            ">split_leading_spaces>"
-            + ParserHelper.make_value_visible(split_leading_spaces)
-        )
-        print(
-            ">leading_text_index>__rehydrate_block_quote>"
-            + str(new_instance.leading_text_index)
-        )
-        selected_leading_sequence = split_leading_spaces[
-            new_instance.leading_text_index
-        ]
-        new_instance.leading_text_index += 1
-        print(
-            ">leading_text_index>__rehydrate_block_quote>"
-            + str(new_instance.leading_text_index)
-        )
+
+        print(">bquote>current_token>" + ParserHelper.make_value_visible(current_token))
+        print(">bquote>next_token>" + ParserHelper.make_value_visible(next_token))
+
+        if (
+            next_token
+            and next_token.is_block_quote_start
+            and current_token.line_number == next_token.line_number
+        ):
+            print(">bquote> will be done by following bquote>")
+            selected_leading_sequence = ""
+        else:
+            split_leading_spaces = new_instance.leading_spaces.split(
+                ParserHelper.newline_character
+            )
+            print(
+                ">split_leading_spaces>"
+                + ParserHelper.make_value_visible(split_leading_spaces)
+            )
+            print(
+                ">leading_text_index>__rehydrate_block_quote>"
+                + str(new_instance.leading_text_index)
+            )
+            selected_leading_sequence = split_leading_spaces[
+                new_instance.leading_text_index
+            ]
+            new_instance.leading_text_index += 1
+            print(
+                ">leading_text_index>__rehydrate_block_quote>"
+                + str(new_instance.leading_text_index)
+            )
         return selected_leading_sequence, ""
 
     # pylint: enable=unused-argument
@@ -1216,8 +1227,30 @@ class TransformToMarkdown:
 
     # pylint: disable=unused-argument
     def __rehydrate_block_quote_end(self, current_token):
+
+        text_to_add = ""
+        old_line_number = self.container_token_stack[-1].line_number
         del self.container_token_stack[-1]
         continue_sequence = self.__reset_container_continue_sequence()
+        if (
+            self.container_token_stack
+            and self.container_token_stack[-1].is_block_quote_start
+            and self.container_token_stack[-1].line_number == old_line_number
+        ):
+            new_top_token = self.container_token_stack[-1]
+            print(
+                ">leading_text_index>__rehydrate_block_quote>"
+                + str(new_top_token.leading_text_index)
+            )
+            split_leading_spaces = new_top_token.leading_spaces.split(
+                ParserHelper.newline_character
+            )
+            text_to_add = split_leading_spaces[new_top_token.leading_text_index]
+            new_top_token.leading_text_index += 1
+            print(
+                ">leading_text_index>__rehydrate_block_quote>"
+                + str(new_top_token.leading_text_index)
+            )
 
         leading_text_index = current_token.start_markdown_token.leading_text_index
         expected_leading_text_index = (
@@ -1233,7 +1266,7 @@ class TransformToMarkdown:
             + str(len(expected_leading_text_index))
         )
 
-        return "", continue_sequence, continue_sequence
+        return text_to_add, continue_sequence, continue_sequence
 
     # pylint: enable=unused-argument
 
