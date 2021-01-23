@@ -78,7 +78,6 @@
 
 ## Bugs - General - Uncategorized
 
-- test_block_quotes_229j - BQ+HTML
 - test_block_quotes_229g and test_block_quotes_229h - BQ+FCB
 - single level up or down with list
 - multiple levels up and down over all block quote transitions

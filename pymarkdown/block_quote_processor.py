@@ -8,6 +8,7 @@ from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.parser_helper import ParserHelper, PositionMarker
 from pymarkdown.stack_token import (
     BlockQuoteStackToken,
+    HtmlBlockStackToken,
     IndentedCodeBlockStackToken,
     LinkDefinitionStackToken,
     ParagraphStackToken,
@@ -578,7 +579,10 @@ class BlockQuoteProcessor:
             )
             top_token_on_stack = parser_state.token_stack[-1]
             LOGGER.debug("__ensure_stack_at_level>>%s", str(top_token_on_stack))
-            stack_decrease_needed = top_token_on_stack.is_indented_code_block
+            stack_decrease_needed = (
+                top_token_on_stack.is_indented_code_block
+                or top_token_on_stack.is_html_block
+            )
             LOGGER.debug(
                 "__ensure_stack_at_level>>decrease to new level=%s",
                 str(stack_decrease_needed),
@@ -603,6 +607,7 @@ class BlockQuoteProcessor:
                     ParagraphStackToken,
                     IndentedCodeBlockStackToken,
                     LinkDefinitionStackToken,
+                    HtmlBlockStackToken,
                 ],
                 was_forced=True,
                 caller_can_handle_requeue=True,

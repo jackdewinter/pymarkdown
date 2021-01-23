@@ -1706,14 +1706,13 @@ comments
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_block_quotes_229j():
     """
-    Test case 229g:  variation
+    Test case 229j:  variation
     """
 
     # Arrange
@@ -1722,14 +1721,17 @@ def test_block_quotes_229j():
 > </script>
 """
     expected_tokens = [
-        "[block-quote(1,1)::]",
-        "[block-quote(1,2)::>> \n>> \n> \n]",
+        "[block-quote(1,1)::> \n]",
+        "[block-quote(1,2)::>> \n>> ]",
         "[html-block(1,4)]",
-        "[text(1,4):<script>\ncomments\n</script>:]",
+        "[text(1,4):<script>\ncomments:]",
+        "[end-html-block:::True]",
+        "[end-block-quote:::True]",
+        "[html-block(3,3)]",
+        "[text(3,3):</script>:]",
         "[end-html-block:::False]",
-        "[end-block-quote:::True]",
-        "[end-block-quote:::True]",
         "[BLANK(4,1):]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <blockquote>
