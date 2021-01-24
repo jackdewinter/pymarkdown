@@ -872,7 +872,6 @@ class LeafBlockProcessor:
         position_marker,
         extracted_whitespace,
         this_bq_count,
-        no_para_start_if_empty,
         stack_bq_count,
         text_removed_by_container,
         force_it,
@@ -882,7 +881,7 @@ class LeafBlockProcessor:
         """
         new_tokens = []
 
-        if no_para_start_if_empty and position_marker.index_number >= len(
+        if parser_state.no_para_start_if_empty and position_marker.index_number >= len(
             position_marker.text_to_parse
         ):
             LOGGER.debug("Escaping paragraph due to empty w/ blank")

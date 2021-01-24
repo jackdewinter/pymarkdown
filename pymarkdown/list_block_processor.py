@@ -286,7 +286,6 @@ class ListBlockProcessor:
         parser_state,
         did_process,
         was_container_start,
-        no_para_start_if_empty,
         position_marker,
         extracted_whitespace,
         adj_ws,
@@ -365,7 +364,6 @@ class ListBlockProcessor:
                 )
 
                 (
-                    no_para_start_if_empty,
                     new_container_level_tokens,
                     adjusted_text_to_parse,
                     lines_to_requeue,
@@ -389,7 +387,6 @@ class ListBlockProcessor:
             did_process,
             was_container_start,
             end_of_ulist_start_index,
-            no_para_start_if_empty,
             adjusted_text_to_parse,
             container_level_tokens,
             removed_chars_at_start,
@@ -837,7 +834,7 @@ class ListBlockProcessor:
                 current_container_blocks,
             )
             if lines_to_requeue:
-                return None, None, None, lines_to_requeue, force_ignore_first_as_lrd
+                return None, None, lines_to_requeue, force_ignore_first_as_lrd
             emit_item = False
         else:
             LOGGER.debug(
@@ -877,7 +874,8 @@ class ListBlockProcessor:
         )
         LOGGER.debug("__post_list>>after>>%s", str(container_level_tokens))
 
-        return True, container_level_tokens, line_to_parse, None, None
+        parser_state.set_no_para_start_if_empty()
+        return container_level_tokens, line_to_parse, None, None
         # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod

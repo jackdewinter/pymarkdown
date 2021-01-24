@@ -102,7 +102,6 @@ class ContainerBlockProcessor:
         LOGGER.debug("Line:%s:", position_marker.text_to_parse)
         LOGGER.debug("Stack Depth:%s:", str(parser_state.original_stack_depth))
         LOGGER.debug("Document Depth:%s:", str(parser_state.original_document_depth))
-        no_para_start_if_empty = False
 
         LOGGER.debug(
             "Last Block Quote:%s:",
@@ -188,7 +187,6 @@ class ContainerBlockProcessor:
             did_process,
             was_container_start,
             end_container_indices.ulist_index,
-            no_para_start_if_empty,
             line_to_parse,
             removed_chars_at_start,
             lines_to_requeue,
@@ -201,7 +199,6 @@ class ContainerBlockProcessor:
             parser_state,
             did_process,
             was_container_start,
-            no_para_start_if_empty,
             extracted_whitespace,
             adj_ws,
             stack_bq_count,
@@ -224,7 +221,6 @@ class ContainerBlockProcessor:
             did_process,
             was_container_start,
             end_container_indices.olist_index,
-            no_para_start_if_empty,
             line_to_parse,
             removed_chars_at_start,
             lines_to_requeue,
@@ -237,7 +233,6 @@ class ContainerBlockProcessor:
             parser_state,
             did_process,
             was_container_start,
-            no_para_start_if_empty,
             extracted_whitespace,
             adj_ws,
             stack_bq_count,
@@ -285,13 +280,11 @@ class ContainerBlockProcessor:
                 line_to_parse,
                 leaf_tokens,
                 container_level_tokens,
-                no_para_start_if_empty,
             ) = ContainerBlockProcessor.__handle_nested_container_blocks(
                 parser_state,
                 container_depth,
                 this_bq_count,
                 stack_bq_count,
-                no_para_start_if_empty,
                 new_position_marker,
                 end_container_indices,
                 leaf_tokens,
@@ -373,7 +366,6 @@ class ContainerBlockProcessor:
             newer_position_marker,
             this_bq_count,
             removed_chars_at_start,
-            no_para_start_if_empty,
             ignore_link_definition_start,
             last_block_quote_index,
             last_list_start_index,
@@ -466,7 +458,6 @@ class ContainerBlockProcessor:
         parser_state,
         did_process,
         was_container_start,
-        no_para_start_if_empty,
         extracted_whitespace,
         adj_ws,
         stack_bq_count,
@@ -497,7 +488,6 @@ class ContainerBlockProcessor:
             did_process,
             was_container_start,
             new_list_index,
-            no_para_start_if_empty,
             line_to_parse,
             resultant_tokens,
             removed_chars_at_start,
@@ -508,7 +498,6 @@ class ContainerBlockProcessor:
             parser_state,
             did_process,
             was_container_start,
-            no_para_start_if_empty,
             new_position_marker,
             extracted_whitespace,
             adj_ws,
@@ -519,7 +508,6 @@ class ContainerBlockProcessor:
         )
         if lines_to_requeue:
             return (
-                None,
                 None,
                 None,
                 None,
@@ -547,7 +535,6 @@ class ContainerBlockProcessor:
             did_process,
             was_container_start,
             new_list_index,
-            no_para_start_if_empty,
             line_to_parse,
             removed_chars_at_start,
             None,
@@ -652,7 +639,6 @@ class ContainerBlockProcessor:
         container_depth,
         this_bq_count,
         stack_bq_count,
-        no_para_start_if_empty,
         position_marker,
         end_container_indices,
         leaf_tokens,
@@ -773,12 +759,11 @@ class ContainerBlockProcessor:
                         position_marker,
                     )
                 )
-            no_para_start_if_empty = True
+            parser_state.set_no_para_start_if_empty()
         return (
             adjusted_text_to_parse,
             leaf_tokens,
             container_level_tokens,
-            no_para_start_if_empty,
         )
 
     # pylint: enable=too-many-arguments
@@ -981,7 +966,6 @@ class ContainerBlockProcessor:
         xposition_marker,
         this_bq_count,
         removed_chars_at_start,
-        no_para_start_if_empty,
         ignore_link_definition_start,
         last_block_quote_index,
         last_list_start_index,
@@ -1004,7 +988,6 @@ class ContainerBlockProcessor:
             position_marker,
             this_bq_count,
             removed_chars_at_start,
-            no_para_start_if_empty,
             ignore_link_definition_start,
             last_block_quote_index,
             last_list_start_index,
@@ -1223,7 +1206,6 @@ class ContainerBlockProcessor:
         xposition_marker,
         this_bq_count,
         removed_chars_at_start,
-        no_para_start_if_empty,
         ignore_link_definition_start,
         last_block_quote_index,
         last_list_start_index,
@@ -1337,7 +1319,6 @@ class ContainerBlockProcessor:
                     position_marker,
                     extracted_whitespace,
                     this_bq_count,
-                    no_para_start_if_empty,
                     stack_bq_count,
                     text_removed_by_container,
                     force_it,

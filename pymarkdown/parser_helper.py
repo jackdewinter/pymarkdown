@@ -773,6 +773,8 @@ class ParserState:
         self.__original_stack_depth = None
         self.__original_document_depth = None
 
+        self.__no_para_start_if_empty = False
+
     @property
     def token_stack(self):
         """
@@ -850,6 +852,13 @@ class ParserState:
         """
         return self.__original_document_depth
 
+    @property
+    def no_para_start_if_empty(self):
+        """
+        Whether to start a paragraph if the owning list item was empty.
+        """
+        return self.__no_para_start_if_empty
+
     def mark_start_information(self, position_marker):
         """
         Mark the start of processing this line of information.  A lot of
@@ -858,6 +867,8 @@ class ParserState:
         self.__original_line_to_parse = position_marker.text_to_parse[:]
         self.__original_stack_depth = len(self.token_stack)
         self.__original_document_depth = len(self.token_document)
+
+        self.__no_para_start_if_empty = False
 
         last_stack_index = len(self.token_stack) - 1
         while not self.token_stack[last_stack_index].is_document:
@@ -888,6 +899,12 @@ class ParserState:
         Reset things after leaf processing.
         """
         self.__same_line_container_tokens = None
+
+    def set_no_para_start_if_empty(self):
+        """
+        Set the member variable to true.
+        """
+        self.__no_para_start_if_empty = True
 
 
 # pylint: enable=too-few-public-methods, too-many-instance-attributes
