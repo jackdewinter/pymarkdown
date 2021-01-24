@@ -92,7 +92,7 @@ class BlockQuoteProcessor:
             if (
                 parser_state.token_stack[-1].is_code_block
                 or parser_state.token_stack[-1].is_html_block
-                or (is_leaf_block_start)
+                or is_leaf_block_start
             ):
                 LOGGER.debug("__check_for_lazy_handling>>code block")
                 assert not container_level_tokens
@@ -123,7 +123,6 @@ class BlockQuoteProcessor:
         adj_ws,
         this_bq_count,
         stack_bq_count,
-        original_line_to_parse,
     ):
         """
         Handle the processing of a block quote block.
@@ -185,7 +184,6 @@ class BlockQuoteProcessor:
                 position_marker,
                 stack_bq_count,
                 extracted_whitespace,
-                original_line_to_parse,
             )
             LOGGER.debug(">>avoid_block_starts>>%s", str(avoid_block_starts))
 
@@ -285,7 +283,9 @@ class BlockQuoteProcessor:
                         )
                         adjusted_line = (
                             adjusted_line[0:start_index]
-                            + ParserHelper.repeat_string(ParserHelper.space_character, adjusted_tab_length)
+                            + ParserHelper.repeat_string(
+                                ParserHelper.space_character, adjusted_tab_length
+                            )
                             + adjusted_line[start_index + 1 :]
                         )
                         LOGGER.debug(
@@ -347,7 +347,6 @@ class BlockQuoteProcessor:
         position_marker,
         stack_bq_count,
         extracted_whitespace,
-        original_line_to_parse,
     ):
         """
         Handle the processing of a section clearly identified as having block quotes.

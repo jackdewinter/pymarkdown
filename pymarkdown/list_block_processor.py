@@ -185,7 +185,6 @@ class ListBlockProcessor:
         at_end_of_line = after_all_whitespace_index == len(line_to_parse)
         LOGGER.debug("at_end_of_line>>%s", str(at_end_of_line))
 
-        is_in_paragraph = False
         is_paragraph_in_list = False
         is_in_paragraph = parser_state.token_stack[-1].is_paragraph
         if is_in_paragraph:
@@ -412,6 +411,7 @@ class ListBlockProcessor:
         index,
     ):
         _ = index
+
         new_token = UnorderedListStartMarkdownToken(
             position_marker.text_to_parse[position_marker.index_number],
             indent_level,
@@ -874,7 +874,9 @@ class ListBlockProcessor:
             str(after_marker_ws_index),
         )
         line_to_parse = (
-            ParserHelper.repeat_string(ParserHelper.space_character, remaining_whitespace)
+            ParserHelper.repeat_string(
+                ParserHelper.space_character, remaining_whitespace
+            )
             + line_to_parse[after_marker_ws_index:]
         )
         LOGGER.debug("__post_list>>after>>%s", str(container_level_tokens))
@@ -1208,7 +1210,7 @@ class ListBlockProcessor:
             parser_state, line_to_parse, start_index, extracted_whitespace
         )
         if (
-            not parser_state.token_stack[-1].is_paragraph or (is_leaf_block_start)
+            not parser_state.token_stack[-1].is_paragraph or is_leaf_block_start
         ) and not parser_state.token_stack[-1].was_link_definition_started:
             LOGGER.debug("ws (normal and adjusted) not enough to continue")
 

@@ -270,8 +270,12 @@ class EmphasisHelper:
         Is the current token a right flanking delimiter run?
         """
 
-        preceding_two = current_token.preceding_two.rjust(2, ParserHelper.space_character)
-        following_two = current_token.following_two.ljust(2, ParserHelper.space_character)
+        preceding_two = current_token.preceding_two.rjust(
+            2, ParserHelper.space_character
+        )
+        following_two = current_token.following_two.ljust(
+            2, ParserHelper.space_character
+        )
 
         return preceding_two[-1] not in Constants.unicode_whitespace and (
             not preceding_two[-1] in Constants.punctuation_characters
@@ -290,8 +294,12 @@ class EmphasisHelper:
         Is the current token a left flanking delimiter run?
         """
 
-        preceding_two = current_token.preceding_two.rjust(2, ParserHelper.space_character)
-        following_two = current_token.following_two.ljust(2, ParserHelper.space_character)
+        preceding_two = current_token.preceding_two.rjust(
+            2, ParserHelper.space_character
+        )
+        following_two = current_token.following_two.ljust(
+            2, ParserHelper.space_character
+        )
 
         return following_two[0] not in Constants.unicode_whitespace and (
             not following_two[0] in Constants.punctuation_characters
@@ -324,7 +332,9 @@ class EmphasisHelper:
                     current_token
                 )
 
-                following_two = current_token.following_two.ljust(2, ParserHelper.space_character)
+                following_two = current_token.following_two.ljust(
+                    2, ParserHelper.space_character
+                )
                 is_closer = not is_left_flanking or (
                     is_left_flanking
                     and following_two[0] in Constants.punctuation_characters
@@ -349,7 +359,9 @@ class EmphasisHelper:
                 is_right_flanking = EmphasisHelper.__is_right_flanking_delimiter_run(
                     current_token
                 )
-                preceding_two = current_token.preceding_two.ljust(2, ParserHelper.space_character)
+                preceding_two = current_token.preceding_two.ljust(
+                    2, ParserHelper.space_character
+                )
                 is_opener = not is_right_flanking or (
                     is_right_flanking
                     and preceding_two[-1] in Constants.punctuation_characters

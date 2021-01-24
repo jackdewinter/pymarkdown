@@ -217,7 +217,8 @@ class LeafBlockProcessor:
             LOGGER.debug("whitespace_left>>%s", str(whitespace_left))
             removed_whitespace = ParserHelper.create_replace_with_nothing_marker(
                 ParserHelper.repeat_string(
-                    ParserHelper.space_character, current_whitespace_length - whitespace_left
+                    ParserHelper.space_character,
+                    current_whitespace_length - whitespace_left,
                 )
             )
             extracted_whitespace = removed_whitespace + ParserHelper.repeat_string(
@@ -548,7 +549,12 @@ class LeafBlockProcessor:
                     )
                     if excess_whitespace_count:
                         excess_whitespace_count -= kludge_adjust
-                        left_ws = ParserHelper.repeat_string(ParserHelper.space_character, excess_whitespace_count) + left_ws
+                        left_ws = (
+                            ParserHelper.repeat_string(
+                                ParserHelper.space_character, excess_whitespace_count
+                            )
+                            + left_ws
+                        )
                     LOGGER.debug(
                         "after>>%s>>", ParserHelper.make_value_visible(left_ws)
                     )

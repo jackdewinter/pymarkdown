@@ -342,6 +342,7 @@ class TransformToGfm:
         Handle the start paragraph token.
         """
         _ = next_token
+
         if output_html and output_html[-1] != ParserHelper.newline_character:
             output_html += ParserHelper.newline_character
         if transform_state.is_in_loose_list:
@@ -354,6 +355,7 @@ class TransformToGfm:
         Handle the end paragraph token.
         """
         _ = next_token
+
         if transform_state.is_in_loose_list:
             output_html += "</p>" + ParserHelper.newline_character
         return output_html
@@ -388,6 +390,7 @@ class TransformToGfm:
         Handle the start block quote token.
         """
         _ = next_token
+
         if output_html and not output_html.endswith(ParserHelper.newline_character):
             output_html += ParserHelper.newline_character
         transform_state.is_in_loose_list = True
@@ -399,6 +402,7 @@ class TransformToGfm:
         Handle the end block quote token.
         """
         _ = next_token
+
         if output_html[-1] != ParserHelper.newline_character:
             output_html += ParserHelper.newline_character
         transform_state.is_in_loose_list = (
@@ -417,6 +421,7 @@ class TransformToGfm:
         Handle the start indented code block token.
         """
         _ = next_token
+
         if (
             not output_html
             and transform_state.transform_stack
@@ -437,6 +442,7 @@ class TransformToGfm:
         Handle the end indented code block token.
         """
         _ = next_token
+
         transform_state.is_in_code_block = False
         return output_html + (
             ParserHelper.newline_character
@@ -508,6 +514,7 @@ class TransformToGfm:
         Handle the thematic break token.
         """
         _ = (next_token, transform_state)
+
         if output_html and output_html[-1] != ParserHelper.newline_character:
             output_html += ParserHelper.newline_character
         return output_html + "<hr />" + ParserHelper.newline_character
@@ -518,6 +525,7 @@ class TransformToGfm:
         Handle the hard line break token.
         """
         _ = (next_token, transform_state)
+
         return output_html + "<br />"
 
     @classmethod
@@ -542,6 +550,7 @@ class TransformToGfm:
         Handle the end atx heading token.
         """
         _ = next_token
+
         fenced_token = transform_state.actual_token_index - 1
         while not transform_state.actual_tokens[fenced_token].is_atx_heading:
             fenced_token -= 1
@@ -561,6 +570,7 @@ class TransformToGfm:
         Handle the start setext heading token.
         """
         _ = transform_state
+
         if next_token.heading_character == "=":
             inner_tag = "1"
         else:
@@ -578,6 +588,7 @@ class TransformToGfm:
         Handle the end setext heading token.
         """
         _ = next_token
+
         fenced_token = transform_state.actual_token_index - 1
         while not transform_state.actual_tokens[fenced_token].is_setext_heading:
             fenced_token -= 1
@@ -594,6 +605,7 @@ class TransformToGfm:
         Handle the new list item token.
         """
         _ = next_token
+
         if output_html.endswith(">"):
             output_html += ParserHelper.newline_character
         transform_state.add_trailing_text = "</li>"
@@ -606,6 +618,7 @@ class TransformToGfm:
         Handle the code span token.
         """
         _ = transform_state
+
         adjusted_text = ParserHelper.resolve_references_from_text(next_token.span_text)
         adjusted_text = ParserHelper.resolve_escapes_from_text(adjusted_text)
 
@@ -617,6 +630,7 @@ class TransformToGfm:
         Handle the raw html token.
         """
         _ = transform_state
+
         adjusted_text = ParserHelper.resolve_references_from_text(next_token.raw_tag)
         adjusted_text = ParserHelper.resolve_noops_from_text(adjusted_text)
 
@@ -630,6 +644,7 @@ class TransformToGfm:
         Handle the link reference definition token.
         """
         _ = (transform_state, next_token)
+
         return output_html
 
     @classmethod
@@ -638,6 +653,7 @@ class TransformToGfm:
         Handle the email autolink token.
         """
         _ = transform_state
+
         return (
             output_html
             + '<a href="mailto:'
@@ -710,6 +726,7 @@ class TransformToGfm:
         Handle the uri autolink token.
         """
         _ = transform_state
+
         in_tag_pretext = InlineHelper.append_text(
             "",
             next_token.autolink_text,
@@ -739,6 +756,7 @@ class TransformToGfm:
         Handle the start html block token.
         """
         _ = next_token
+
         transform_state.is_in_html_block = True
         if (
             not output_html
@@ -764,6 +782,7 @@ class TransformToGfm:
         Handle the end html block token.
         """
         _ = next_token
+
         transform_state.is_in_html_block = False
         return output_html
 
@@ -773,6 +792,7 @@ class TransformToGfm:
         Handle the start emphasis token.
         """
         _ = transform_state
+
         if next_token.emphasis_length == 1:
             output_html += "<em>"
         else:
@@ -785,6 +805,7 @@ class TransformToGfm:
         Handle the end emphasis token.
         """
         _ = transform_state
+
         if next_token.start_markdown_token.emphasis_length == 1:
             output_html += "</em>"
         else:
@@ -809,6 +830,7 @@ class TransformToGfm:
         Handle the end link token.
         """
         _ = next_token
+
         transform_state.is_in_link = False
         return output_html + "</a>"
 
@@ -818,6 +840,7 @@ class TransformToGfm:
         Handle the image token.
         """
         _ = transform_state
+
         output_html += "<img "
         output_html += 'src="' + next_token.image_uri + '" '
 

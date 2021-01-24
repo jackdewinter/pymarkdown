@@ -408,6 +408,10 @@ class ParserHelper:
 
     @staticmethod
     def make_whitespace_visible(value_to_modify):
+        """
+        For the given value, turn it into a string if necessary, and then replace
+        any known whitespace characters with more visible strings.
+        """
         return (
             str(value_to_modify)
             .replace(ParserHelper.tab_character, "\\t")

@@ -1421,6 +1421,8 @@ def __verify_next_inline_blank_line(
     estimated_line_number,
     estimated_column_number,
 ):
+    _ = estimated_column_number
+
     estimated_line_number += 1
     estimated_column_number = 1
     if current_inline_token.is_text:
@@ -1849,6 +1851,8 @@ def __verify_next_inline_hard_break(
     estimated_column_number,
     link_stack,
 ):
+    _ = (previous_inline_token, estimated_column_number)
+
     new_column_number = 1
     if last_token.is_paragraph:
         split_whitespace = last_token.extracted_whitespace.split(
@@ -2258,6 +2262,8 @@ def __handle_last_token_end_link(
     current_token,
     last_inline_token,
 ):
+    _ = (second_last_inline_token, current_token)
+
     assert last_inline_token.start_markdown_token
     use_line_number_from_start_token = True
 
@@ -2324,6 +2330,7 @@ def __handle_last_token_image(
     current_token,
     last_inline_token,
 ):
+    _ = (second_last_inline_token, current_token)
 
     label_data = last_inline_token.image_alt_text
     if last_inline_token.ex_label:
@@ -2387,6 +2394,8 @@ def __handle_last_token_code_span(
     current_token,
     last_inline_token,
 ):
+    _ = (second_last_inline_token, current_token)
+
     inline_height = (
         len(last_inline_token.span_text.split(ParserHelper.newline_character)) - 1
     )
@@ -2414,6 +2423,8 @@ def __handle_last_token_autolink(
     current_token,
     last_inline_token,
 ):
+    _ = (second_last_inline_token, current_token, last_inline_token)
+
     inline_height = 0
     if last_block_token.is_setext_heading:
         inline_height += 1
@@ -2430,6 +2441,8 @@ def __handle_last_token_raw_html(
     current_token,
     last_inline_token,
 ):
+    _ = (second_last_inline_token, current_token)
+
     inline_height = (
         len(last_inline_token.raw_tag.split(ParserHelper.newline_character)) - 1
     )
@@ -2448,6 +2461,7 @@ def __handle_last_token_end_emphasis(
     current_token,
     last_inline_token,
 ):
+    _ = (last_block_token, second_last_inline_token, last_inline_token)
 
     inline_height = 0
     if current_token and current_token.is_setext_heading_end:
@@ -2466,6 +2480,8 @@ def __handle_last_token_blank_line(
     last_inline_token,
     current_block_token,
 ):
+    _ = second_last_inline_token
+
     inline_height = 1
     print(">>>last_block_token>" + str(last_block_token))
     print(">>>current_block_token>" + str(current_block_token))

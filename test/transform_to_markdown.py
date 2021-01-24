@@ -794,6 +794,8 @@ class TransformToMarkdown:
         """
         Rehydrate the paragraph block from the token.
         """
+        _ = previous_token
+
         self.block_stack.append(current_token)
         current_token.rehydrate_index = 0
         extracted_whitespace = current_token.extracted_whitespace
@@ -809,6 +811,8 @@ class TransformToMarkdown:
         """
         Rehydrate the end of the paragraph block from the token.
         """
+        _ = (previous_token, next_token)
+
         top_stack_token = self.block_stack[-1]
         del self.block_stack[-1]
 
@@ -849,6 +853,8 @@ class TransformToMarkdown:
         """
         Rehydrate the indented code block from the token.
         """
+        _ = previous_token
+
         self.block_stack.append(current_token)
         return ""
 
@@ -861,6 +867,8 @@ class TransformToMarkdown:
         """
         Rehydrate the end of the indented code block from the token.
         """
+        _ = (current_token, previous_token, next_token)
+
         del self.block_stack[-1]
         return ""
 
@@ -871,6 +879,8 @@ class TransformToMarkdown:
         """
         Rehydrate the html block from the token.
         """
+        _ = (current_token, previous_token)
+
         self.block_stack.append(current_token)
         return ""
 
@@ -881,6 +891,8 @@ class TransformToMarkdown:
         """
         Rehydrate the end of the html block from the token.
         """
+        _ = (current_token, previous_token, next_token)
+
         del self.block_stack[-1]
         return ""
 
@@ -891,6 +903,8 @@ class TransformToMarkdown:
         """
         Rehydrate the fenced code block from the token.
         """
+        _ = previous_token
+
         self.block_stack.append(current_token)
 
         info_text = current_token.extracted_whitespace_before_info_string
@@ -953,6 +967,8 @@ class TransformToMarkdown:
         """
         Rehydrate the unordered list start token.
         """
+        _ = transformed_data
+
         new_instance = copy.deepcopy(current_token)
         self.container_token_stack.append(new_instance)
 
@@ -981,6 +997,8 @@ class TransformToMarkdown:
     def __rehydrate_block_quote(
         self, current_token, previous_token, next_token, transformed_data
     ):
+        _ = (previous_token, transformed_data)
+
         new_instance = copy.deepcopy(current_token)
         self.container_token_stack.append(new_instance)
         print(">bquote>" + ParserHelper.make_value_visible(new_instance))
@@ -1032,6 +1050,7 @@ class TransformToMarkdown:
         next_token,
         top_of_list_token_stack,
     ):
+        _ = (current_token, skip_merge, next_token)
 
         if ParserHelper.newline_character in new_data:
             composed_data = ""
@@ -1303,6 +1322,8 @@ class TransformToMarkdown:
         """
         Rehydrate the next list item token.
         """
+        _ = previous_token
+
         if self.container_token_stack[-1].is_list_start:
             print("__rehydrate_next_list_item")
             self.container_token_stack[-1].adjust_for_new_list_item(current_token)
@@ -1398,6 +1419,7 @@ class TransformToMarkdown:
         """
         Rehydrate the image text from the token.
         """
+        _ = previous_token
 
         if self.block_stack[-1].is_inline_link:
             return ""
@@ -1415,6 +1437,7 @@ class TransformToMarkdown:
         """
         Rehydrate the start of the link from the token.
         """
+        _ = previous_token
 
         self.block_stack.append(current_token)
         rehydrated_text = LinkHelper.rehydrate_inline_link_text_from_token(
@@ -1429,6 +1452,7 @@ class TransformToMarkdown:
         """
         Rehydrate the end of the link from the token.
         """
+        _ = (current_token, previous_token, next_token)
         del self.block_stack[-1]
         return ""
 
@@ -1440,6 +1464,8 @@ class TransformToMarkdown:
         """
         Rehydrate the link reference definition from the token.
         """
+        _ = previous_token
+
         if current_token.link_name_debug:
             link_name = current_token.link_name_debug
         else:
@@ -1475,6 +1501,8 @@ class TransformToMarkdown:
         """
         Rehydrate the atx heading block from the token.
         """
+        _ = previous_token
+
         self.block_stack.append(current_token)
         return current_token.extracted_whitespace + ParserHelper.repeat_string(
             "#", current_token.hash_count
@@ -1487,6 +1515,8 @@ class TransformToMarkdown:
         """
         Rehydrate the end of the atx heading block from the token.
         """
+        _ = (previous_token, next_token)
+
         del self.block_stack[-1]
         trailing_hashes = ""
         if current_token.start_markdown_token.remove_trailing_count:
@@ -1508,6 +1538,8 @@ class TransformToMarkdown:
         """
         Rehydrate the setext heading from the token.
         """
+        _ = previous_token
+
         self.block_stack.append(current_token)
         return current_token.extracted_whitespace
 
@@ -1518,6 +1550,8 @@ class TransformToMarkdown:
         """
         Rehydrate the end of the setext heading block from the token.
         """
+        _ = (previous_token, next_token)
+
         heading_character = self.block_stack[-1].heading_character
         heading_character_count = self.block_stack[-1].heading_character_count
         final_whitespace = self.block_stack[-1].final_whitespace
@@ -1538,6 +1572,7 @@ class TransformToMarkdown:
         """
         Rehydrate the text from the token.
         """
+        _ = previous_token
 
         if self.block_stack[-1].is_inline_link or self.block_stack[-1].is_inline_image:
             return ""
@@ -1603,6 +1638,8 @@ class TransformToMarkdown:
         """
         Rehydrate the hard break text from the token.
         """
+        _ = previous_token
+
         if self.block_stack[-1].is_inline_link:
             return ""
 
@@ -1615,6 +1652,8 @@ class TransformToMarkdown:
         """
         Rehydrate the emphasis text from the token.
         """
+        _ = previous_token
+
         if self.block_stack[-1].is_inline_link:
             return ""
 
@@ -1631,6 +1670,8 @@ class TransformToMarkdown:
         """
         Rehydrate the emphasis end text from the token.
         """
+        _ = (previous_token, next_token)
+
         if self.block_stack[-1].is_inline_link:
             return ""
         return ParserHelper.repeat_string(
@@ -1645,6 +1686,8 @@ class TransformToMarkdown:
         """
         Rehydrate the uri autolink from the token.
         """
+        _ = previous_token
+
         if self.block_stack[-1].is_inline_link:
             return ""
         return "<" + current_token.autolink_text + ">"
@@ -1656,6 +1699,8 @@ class TransformToMarkdown:
         """
         Rehydrate the email autolink from the token.
         """
+        _ = previous_token
+
         if self.block_stack[-1].is_inline_link:
             return ""
         return "<" + current_token.autolink_text + ">"
@@ -1667,6 +1712,8 @@ class TransformToMarkdown:
         """
         Rehydrate the email raw html from the token.
         """
+        _ = previous_token
+
         if self.block_stack[-1].is_inline_link:
             return ""
 
@@ -1706,6 +1753,8 @@ class TransformToMarkdown:
         """
         Rehydrate the code span data from the token.
         """
+        _ = previous_token
+
         if self.block_stack[-1].is_inline_link:
             return ""
 
@@ -1770,6 +1819,8 @@ class TransformToMarkdown:
         """
         Rehydrate the thematic break text from the token.
         """
+        _ = previous_token
+
         return (
             current_token.extracted_whitespace
             + current_token.rest_of_line

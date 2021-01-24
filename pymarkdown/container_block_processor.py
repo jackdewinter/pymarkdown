@@ -97,7 +97,7 @@ class ContainerBlockProcessor:
         """
         # TODO work on removing this
         line_to_parse = position_marker.text_to_parse
-        original_line_to_parse = position_marker.text_to_parse + ""
+        original_line_to_parse = position_marker.text_to_parse[:]
 
         original_stack_depth = len(parser_state.token_stack)
         original_document_depth = len(parser_state.token_document)
@@ -160,7 +160,8 @@ class ContainerBlockProcessor:
         end_container_indices = ContainerIndices(-1, -1, -1)
 
         LOGGER.debug(
-            ">>__get_block_start_index>>%s>>", ParserHelper.make_whitespace_visible(line_to_parse)
+            ">>__get_block_start_index>>%s>>",
+            ParserHelper.make_whitespace_visible(line_to_parse),
         )
         (
             did_process,
@@ -187,7 +188,6 @@ class ContainerBlockProcessor:
             this_bq_count,
             stack_bq_count,
             start_index,
-            original_line_to_parse,
         )
         if lines_to_requeue:
             requeue_line_info = RequeueLineInfo()
@@ -202,7 +202,8 @@ class ContainerBlockProcessor:
             return container_level_tokens, line_to_parse, RequeueLineInfo()
 
         LOGGER.debug(
-            ">>__get_list_start_index>>%s>>", ParserHelper.make_whitespace_visible(line_to_parse.replace)
+            ">>__get_list_start_index>>%s>>",
+            ParserHelper.make_whitespace_visible(line_to_parse.replace),
         )
         (
             did_process,
@@ -238,7 +239,8 @@ class ContainerBlockProcessor:
             return None, None, requeue_line_info
 
         LOGGER.debug(
-            ">>__get_list_start_index>>%s>>", ParserHelper.make_whitespace_visible(line_to_parse)
+            ">>__get_list_start_index>>%s>>",
+            ParserHelper.make_whitespace_visible(line_to_parse),
         )
         (
             did_process,
@@ -273,7 +275,8 @@ class ContainerBlockProcessor:
             requeue_line_info.force_ignore_first_as_lrd = force_ignore_first_as_lrd
             return None, None, requeue_line_info
         LOGGER.debug(
-            ">>__get_list_start_index>>%s>>", ParserHelper.make_whitespace_visible(line_to_parse)
+            ">>__get_list_start_index>>%s>>",
+            ParserHelper.make_whitespace_visible(line_to_parse),
         )
 
         LOGGER.debug("last_block_quote_index>>%s", str(last_block_quote_index))
@@ -319,7 +322,9 @@ class ContainerBlockProcessor:
                 was_container_start,
                 avoid_block_starts,
             )
-            LOGGER.debug("text>>%s>>", ParserHelper.make_whitespace_visible(line_to_parse))
+            LOGGER.debug(
+                "text>>%s>>", ParserHelper.make_whitespace_visible(line_to_parse)
+            )
 
         LOGGER.debug("olist->container_level_tokens->%s", str(container_level_tokens))
         LOGGER.debug("removed_chars_at_start>>>%s", str(removed_chars_at_start))
@@ -330,7 +335,8 @@ class ContainerBlockProcessor:
             return container_level_tokens, line_to_parse, None
 
         LOGGER.debug(
-            ">>__process_list_in_progress>>%s>>", ParserHelper.make_whitespace_visible(line_to_parse)
+            ">>__process_list_in_progress>>%s>>",
+            ParserHelper.make_whitespace_visible(line_to_parse),
         )
         (
             did_process,
@@ -346,7 +352,8 @@ class ContainerBlockProcessor:
             extracted_whitespace,
         )
         LOGGER.debug(
-            ">>__process_list_in_progress>>%s>>", ParserHelper.make_whitespace_visible(line_to_parse)
+            ">>__process_list_in_progress>>%s>>",
+            ParserHelper.make_whitespace_visible(line_to_parse),
         )
         ContainerBlockProcessor.__process_lazy_lines(
             parser_state,
@@ -421,7 +428,6 @@ class ContainerBlockProcessor:
         this_bq_count,
         stack_bq_count,
         start_index,
-        original_line_to_parse,
     ):
         new_position_marker = PositionMarker(
             position_marker.line_number, start_index, position_marker.text_to_parse
@@ -450,7 +456,6 @@ class ContainerBlockProcessor:
             adj_ws,
             this_bq_count,
             stack_bq_count,
-            original_line_to_parse,
         )
         LOGGER.debug("text>>:%s:>>", line_to_parse)
         LOGGER.debug(">>container_level_tokens>>%s", str(container_level_tokens))
@@ -756,7 +761,9 @@ class ContainerBlockProcessor:
                 str(this_bq_count),
             )
             adj_line_to_parse = (
-                ParserHelper.repeat_string(ParserHelper.space_character, active_container_index)
+                ParserHelper.repeat_string(
+                    ParserHelper.space_character, active_container_index
+                )
                 + adj_line_to_parse
             )
             LOGGER.debug(
