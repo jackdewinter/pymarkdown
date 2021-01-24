@@ -475,7 +475,6 @@ class InlineProcessor:
                 )
                 LOGGER.debug(">>len(inline_blocks)>>%s<<", str(len(inline_blocks)))
 
-                # TODO why does image not return a new token?
                 if (
                     new_token
                     or old_inline_blocks_count != len(inline_blocks)
@@ -718,7 +717,6 @@ class InlineProcessor:
             last_spaces = current_token.after_title_whitespace[:]
 
             link_part_index = 4
-        # assert link_part_index > -2, "Newline in link token not accounted for."
 
         LOGGER.debug(">>link_part_index>>%s<<", str(link_part_index))
         LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
@@ -1149,7 +1147,6 @@ class InlineProcessor:
             )
             if inline_response.new_tokens:
                 if current_string:
-                    # assert end_string is None
                     LOGGER.debug(">>>text1")
                     inline_blocks.append(
                         TextMarkdownToken(
@@ -1171,7 +1168,7 @@ class InlineProcessor:
                         ParserHelper.make_value_visible(end_string),
                     )
                 elif starting_whitespace:
-                    LOGGER.debug(">>>text2")
+                    LOGGER.debug(">>>starting whitespace")
                     inline_blocks.append(
                         TextMarkdownToken(
                             "",
@@ -1186,8 +1183,6 @@ class InlineProcessor:
                         "new Text>>%s>>", ParserHelper.make_value_visible(inline_blocks)
                     )
                     starting_whitespace = ""
-                    # end_string = None
-                    # reset_current_string = True
 
                 inline_blocks.extend(inline_response.new_tokens)
 
