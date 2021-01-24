@@ -79,7 +79,7 @@
 
 ## Bugs - General - Uncategorized
 
-- single level up or down with list
+- None
 
 ## Ask talk.commonmark.org
 

@@ -3050,3 +3050,169 @@ def test_block_quotes_extra_04j():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_extra_05x():
+    """
+    Test case Bq04:  variant
+    """
+
+    # Arrange
+    source_markdown = """>> start
+>> - quote
+> end"""
+    expected_tokens = [
+        "[block-quote(1,1)::]",
+        "[block-quote(1,2)::>> \n>> \n> ]",
+        "[para(1,4):]",
+        "[text(1,4):start:]",
+        "[end-para:::True]",
+        "[ulist(2,4):-::5:   ]",
+        "[para(2,6):\n]",
+        "[text(2,6):quote\nend::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<p>start</p>
+<ul>
+<li>quote
+end</li>
+</ul>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_extra_05xa():
+    """
+    Test case Bq04:  variant
+    """
+
+    # Arrange
+    source_markdown = """>>> start
+>>> - quote
+> end"""
+    expected_tokens = [
+        "[block-quote(1,1)::]",
+        "[block-quote(1,2)::]",
+        "[block-quote(1,3)::>>> \n>>> \n> ]",
+        "[para(1,5):]",
+        "[text(1,5):start:]",
+        "[end-para:::True]",
+        "[ulist(2,5):-::6:    ]",
+        "[para(2,7):\n]",
+        "[text(2,7):quote\nend::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<blockquote>
+<p>start</p>
+<ul>
+<li>quote
+end</li>
+</ul>
+</blockquote>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_extra_05a():
+    """
+    Test case Bq04:  variant
+    """
+
+    # Arrange
+    source_markdown = """> start
+> - quote
+>> end"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):start:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):quote:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[block-quote(3,1)::>> ]",
+        "[para(3,4):]",
+        "[text(3,4):end:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>start</p>
+<ul>
+<li>quote</li>
+</ul>
+<blockquote>
+<p>end</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_extra_05aa():
+    """
+    Test case Bq04:  variant
+    """
+
+    # Arrange
+    source_markdown = """> start
+> - quote
+>>> end"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[para(1,3):]",
+        "[text(1,3):start:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):quote:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[block-quote(3,1)::]",
+        "[block-quote(3,2)::>>> ]",
+        "[para(3,5):]",
+        "[text(3,5):end:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>start</p>
+<ul>
+<li>quote</li>
+</ul>
+<blockquote>
+<blockquote>
+<p>end</p>
+</blockquote>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
