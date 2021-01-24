@@ -876,7 +876,7 @@ class InlineProcessor:
             "__process_inline_text_block>>column_number>>%s>",
             ParserHelper.make_value_visible(column_number),
         )
-        if whitespace_to_recombine and " " in whitespace_to_recombine:
+        if whitespace_to_recombine and ParserHelper.space_character in whitespace_to_recombine:
             source_text = InlineProcessor.__recombine_with_whitespace(
                 source_text, whitespace_to_recombine
             )

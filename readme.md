@@ -136,7 +136,6 @@
 
 - go through each use of extract_whitespace and validate whether it should be e_space or e_whitespace
 - scan GFM and ensure Unicode whitespace uses actual Unicode whitespace, not just whitespace
-- look for cases where " " is used, and convert to whitespace helper
 - complete list of Unicode punctuation characters
 - Atx headings only consider space, not whitespace?
   - impact to MD018 to MD021?

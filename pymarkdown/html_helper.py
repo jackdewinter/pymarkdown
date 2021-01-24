@@ -33,7 +33,7 @@ class HtmlHelper:
     __html_attribute_value_single = "'"
     __html_attribute_value_double = '"'
     __html_attribute_name_value_separator = "="
-    __html_attribute_separator = " "
+    __html_attribute_separator = ParserHelper.space_character
     __valid_tag_name_start = string.ascii_letters
     __valid_tag_name_characters = string.ascii_letters + string.digits + "-"
     __tag_attribute_name_characters = string.ascii_letters + string.digits + "_.:-"
@@ -53,7 +53,7 @@ class HtmlHelper:
     __html_block_5_end = "]]>"
 
     __raw_declaration_start_character = "!"
-    __raw_declaration_whitespace = " "
+    __raw_declaration_whitespace = ParserHelper.space_character
     __raw_html_exclusion_1 = ">"
     __raw_html_exclusion_2 = "->"
     __raw_html_exclusion_3 = "-"

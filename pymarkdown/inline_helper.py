@@ -115,7 +115,7 @@ class InlineHelper:
     __hex_character_reference_start_character = "xX"
     __character_reference_end_character = ";"
     __invalid_reference_character_substitute = "\ufffd"
-    __line_end_whitespace = " "
+    __line_end_whitespace = ParserHelper.space_character
     __valid_backslash_sequence_starts = (
         backslash_character + character_reference_start_character
     )
@@ -389,11 +389,11 @@ class InlineHelper:
             if (
                 len(between_text) > 2
                 and (
-                    between_text[0] == " "
+                    between_text[0] == ParserHelper.space_character
                     or between_text[0] == ParserHelper.newline_character
                 )
                 and (
-                    between_text[-1] == " "
+                    between_text[-1] == ParserHelper.space_character
                     or between_text[-1] == ParserHelper.newline_character
                 )
             ):
@@ -404,7 +404,7 @@ class InlineHelper:
                     between_text = stripped_between_attempt
 
             replaced_newline = ParserHelper.create_replacement_markers(
-                ParserHelper.newline_character, " "
+                ParserHelper.newline_character, ParserHelper.space_character
             )
             LOGGER.debug(
                 "between_text>>%s<<", ParserHelper.make_value_visible(between_text)

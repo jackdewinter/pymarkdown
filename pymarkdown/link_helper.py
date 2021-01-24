@@ -225,11 +225,11 @@ class LinkHelper:
 
         # Fold all whitespace characters (except for space) into a space character
         link_label = ParserHelper.replace_any_of(
-            link_label, Constants.non_space_whitespace, " "
+            link_label, Constants.non_space_whitespace, ParserHelper.space_character
         )
 
         # Fold multiple spaces into a single space character.
-        link_label = " ".join(link_label.split())
+        link_label = ParserHelper.space_character.join(link_label.split())
 
         # Fold the case of any characters to their lower equivalent.
         link_label = link_label.casefold().strip()

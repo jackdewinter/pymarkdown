@@ -22,6 +22,7 @@ class ParserHelper:
     backslash_character = "\\"
     newline_character = "\n"
     tab_character = "\t"
+    space_character = " "
 
     backslash_escape_sequence = backslash_character + __backspace_character
 
@@ -403,6 +404,15 @@ class ParserHelper:
             .replace(ParserHelper.escape_character, "\\x05")
             .replace("\\x07", "\\a")
             .replace("\\x08", "\\b")
+        )
+
+    @staticmethod
+    def make_whitespace_visible(value_to_modify):
+        return (
+            str(value_to_modify)
+            .replace(ParserHelper.tab_character, "\\t")
+            .replace(ParserHelper.newline_character, "\\n")
+            .replace(" ", "\\s")
         )
 
     @staticmethod
