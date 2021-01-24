@@ -1,7 +1,6 @@
 """
 Module to provide processing for the container blocks.
 """
-import copy
 import logging
 
 from pymarkdown.block_quote_processor import BlockQuoteProcessor
@@ -98,47 +97,26 @@ class ContainerBlockProcessor:
         # TODO work on removing this
         line_to_parse = position_marker.text_to_parse
         if container_depth == 0:
-            parser_state.original_line_to_parse = position_marker.text_to_parse[:]
+            parser_state.mark_start_information(position_marker)
 
-        original_stack_depth = len(parser_state.token_stack)
-        original_document_depth = len(parser_state.token_document)
         LOGGER.debug("Line:%s:", position_marker.text_to_parse)
-        LOGGER.debug("Stack Depth:%s:", str(original_stack_depth))
-        LOGGER.debug("Document Depth:%s:", str(original_document_depth))
+        LOGGER.debug("Stack Depth:%s:", str(parser_state.original_stack_depth))
+        LOGGER.debug("Document Depth:%s:", str(parser_state.original_document_depth))
         no_para_start_if_empty = False
 
-        last_stack_index = len(parser_state.token_stack) - 1
-        while not parser_state.token_stack[last_stack_index].is_document:
-            if parser_state.token_stack[last_stack_index].is_block_quote:
-                break
-            last_stack_index -= 1
-
-        last_block_quote_stack_token = None
-        last_block_quote_markdown_token_index = None
-        copy_of_last_block_quote_markdown_token = None
-        if not parser_state.token_stack[last_stack_index].is_document:
-            last_block_quote_stack_token = parser_state.token_stack[last_stack_index]
-            last_block_quote_markdown_token_index = parser_state.token_document.index(
-                parser_state.token_stack[last_stack_index].matching_markdown_token
-            )
-            copy_of_last_block_quote_markdown_token = copy.deepcopy(
-                parser_state.token_document[last_block_quote_markdown_token_index]
-            )
         LOGGER.debug(
             "Last Block Quote:%s:",
-            ParserHelper.make_value_visible(last_block_quote_stack_token),
+            ParserHelper.make_value_visible(parser_state.last_block_quote_stack_token),
         )
-        LOGGER.debug("Last Block Quote:%s:", str(last_block_quote_markdown_token_index))
         LOGGER.debug(
             "Last Block Quote:%s:",
-            ParserHelper.make_value_visible(copy_of_last_block_quote_markdown_token),
+            str(parser_state.last_block_quote_markdown_token_index),
         )
-        parser_state.last_block_quote_stack_token = last_block_quote_stack_token
-        parser_state.last_block_quote_markdown_token_index = (
-            last_block_quote_markdown_token_index
-        )
-        parser_state.copy_of_last_block_quote_markdown_token = (
-            copy_of_last_block_quote_markdown_token
+        LOGGER.debug(
+            "Last Block Quote:%s:",
+            ParserHelper.make_value_visible(
+                parser_state.copy_of_last_block_quote_markdown_token
+            ),
         )
 
         start_index, extracted_whitespace = ParserHelper.extract_whitespace(
@@ -388,7 +366,7 @@ class ContainerBlockProcessor:
             line_to_parse,
             index_indent=calculated_indent,
         )
-        parser_state.same_line_container_tokens = container_level_tokens
+        parser_state.mark_for_leaf_processing(container_level_tokens)
         leaf_tokens, requeue_line_info = ContainerBlockProcessor.__process_leaf_tokens(
             parser_state,
             leaf_tokens,
@@ -401,10 +379,8 @@ class ContainerBlockProcessor:
             last_list_start_index,
             text_removed_by_container,
             force_it,
-            original_stack_depth,
-            original_document_depth,
         )
-        parser_state.same_line_container_tokens = None
+        parser_state.clear_after_leaf_processing()
 
         container_level_tokens.extend(leaf_tokens)
         LOGGER.debug(
@@ -1011,8 +987,6 @@ class ContainerBlockProcessor:
         last_list_start_index,
         text_removed_by_container,
         force_it,
-        original_stack_depth,
-        original_document_depth,
     ):
         assert not leaf_tokens
         LOGGER.debug("parsing leaf>>")
@@ -1036,8 +1010,6 @@ class ContainerBlockProcessor:
             last_list_start_index,
             text_removed_by_container,
             force_it,
-            original_stack_depth,
-            original_document_depth,
         )
         LOGGER.debug("parsed leaf>>%s", ParserHelper.make_value_visible(leaf_tokens))
         LOGGER.debug("parsed leaf>>%s", str(len(leaf_tokens)))
@@ -1188,8 +1160,6 @@ class ContainerBlockProcessor:
         remaining_line_to_parse,
         ignore_link_definition_start,
         pre_tokens,
-        original_stack_depth,
-        original_document_depth,
     ):
         """
         Take care of the processing for link reference definitions.
@@ -1221,8 +1191,8 @@ class ContainerBlockProcessor:
                 remaining_line_to_parse,
                 extracted_whitespace,
                 parser_state.original_line_to_parse,
-                original_stack_depth,
-                original_document_depth,
+                parser_state.original_stack_depth,
+                parser_state.original_document_depth,
             )
             if lines_to_requeue:
                 outer_processed = True
@@ -1259,8 +1229,6 @@ class ContainerBlockProcessor:
         last_list_start_index,
         text_removed_by_container,
         force_it,
-        original_stack_depth,
-        original_document_depth,
     ):
         """
         Parse the contents of a line for a leaf block.
@@ -1314,8 +1282,6 @@ class ContainerBlockProcessor:
             remaining_line_to_parse,
             ignore_link_definition_start,
             pre_tokens,
-            original_stack_depth,
-            original_document_depth,
         )
 
         outer_processed = ContainerBlockProcessor.__handle_html_block(

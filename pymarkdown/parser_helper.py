@@ -1,6 +1,7 @@
 """
 Module to provide helper functions for parsing.
 """
+import copy
 import logging
 
 LOGGER = logging.getLogger(__name__)
@@ -758,16 +759,135 @@ class ParserState:
     def __init__(
         self, token_stack, token_document, close_open_blocks_fn, handle_blank_line_fn
     ):
-        self.token_stack = token_stack
-        self.token_document = token_document
-        self.close_open_blocks_fn = close_open_blocks_fn
-        self.handle_blank_line_fn = handle_blank_line_fn
+        self.__token_stack = token_stack
+        self.__token_document = token_document
+        self.__close_open_blocks_fn = close_open_blocks_fn
+        self.__handle_blank_line_fn = handle_blank_line_fn
 
-        self.same_line_container_tokens = None
-        self.last_block_quote_stack_token = None
-        self.last_block_quote_markdown_token_index = None
-        self.copy_of_last_block_quote_markdown_token = None
-        self.original_line_to_parse = None
+        self.__same_line_container_tokens = None
+        self.__last_block_quote_stack_token = None
+        self.__last_block_quote_markdown_token_index = None
+        self.__copy_of_last_block_quote_markdown_token = None
+
+        self.__original_line_to_parse = None
+        self.__original_stack_depth = None
+        self.__original_document_depth = None
+
+    @property
+    def token_stack(self):
+        """
+        Stack array containing the currently active stack tokens.
+        """
+        return self.__token_stack
+
+    @property
+    def token_document(self):
+        """
+        Document array containing any Markdown tokens.
+        """
+        return self.__token_document
+
+    @property
+    def close_open_blocks_fn(self):
+        """
+        Function to handle the closing of blocks.
+        """
+        return self.__close_open_blocks_fn
+
+    @property
+    def handle_blank_line_fn(self):
+        """
+        Function to handle blank lines.
+        """
+        return self.__handle_blank_line_fn
+
+    @property
+    def same_line_container_tokens(self):
+        """
+        State of the container tokens at the start of the leaf processing.
+        """
+        return self.__same_line_container_tokens
+
+    @property
+    def last_block_quote_stack_token(self):
+        """
+        Last block quote token.
+        """
+        return self.__last_block_quote_stack_token
+
+    @property
+    def last_block_quote_markdown_token_index(self):
+        """
+        Index of the last block quote token.
+        """
+        return self.__last_block_quote_markdown_token_index
+
+    @property
+    def copy_of_last_block_quote_markdown_token(self):
+        """
+        Copy of the last block quote markdown token, before any changes.
+        """
+        return self.__copy_of_last_block_quote_markdown_token
+
+    @property
+    def original_line_to_parse(self):
+        """
+        Line to parse, before any processing occurs.
+        """
+        return self.__original_line_to_parse
+
+    @property
+    def original_stack_depth(self):
+        """
+        Length of the token_stack array at the start of the line.
+        """
+        return self.__original_stack_depth
+
+    @property
+    def original_document_depth(self):
+        """
+        Length of the token_document array at the start of the line.
+        """
+        return self.__original_document_depth
+
+    def mark_start_information(self, position_marker):
+        """
+        Mark the start of processing this line of information.  A lot of
+        this information is to allow a requeue to occur, if needed.
+        """
+        self.__original_line_to_parse = position_marker.text_to_parse[:]
+        self.__original_stack_depth = len(self.token_stack)
+        self.__original_document_depth = len(self.token_document)
+
+        last_stack_index = len(self.token_stack) - 1
+        while not self.token_stack[last_stack_index].is_document:
+            if self.token_stack[last_stack_index].is_block_quote:
+                break
+            last_stack_index -= 1
+
+        self.__last_block_quote_stack_token = None
+        self.__last_block_quote_markdown_token_index = None
+        self.__copy_of_last_block_quote_markdown_token = None
+        if not self.token_stack[last_stack_index].is_document:
+            self.__last_block_quote_stack_token = self.token_stack[last_stack_index]
+            self.__last_block_quote_markdown_token_index = self.token_document.index(
+                self.token_stack[last_stack_index].matching_markdown_token
+            )
+            self.__copy_of_last_block_quote_markdown_token = copy.deepcopy(
+                self.token_document[self.__last_block_quote_markdown_token_index]
+            )
+
+    def mark_for_leaf_processing(self, container_level_tokens):
+        """
+        Set things up for leaf processing.
+        """
+        self.__same_line_container_tokens = container_level_tokens
+
+    def clear_after_leaf_processing(self):
+        """
+        Reset things after leaf processing.
+        """
+        self.__same_line_container_tokens = None
 
 
 # pylint: enable=too-few-public-methods, too-many-instance-attributes
