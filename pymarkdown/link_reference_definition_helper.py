@@ -25,7 +25,7 @@ class LinkReferenceDefinitionHelper:
     def process_link_reference_definition(
         parser_state,
         position_marker,
-        original_line_to_parse,
+        remaining_line_to_parse,
         extracted_whitespace,
         unmodified_line_to_parse,
         original_stack_depth,
@@ -102,7 +102,7 @@ class LinkReferenceDefinitionHelper:
                     parsed_lrd_tuple,
                 ) = LinkReferenceDefinitionHelper.__process_lrd_hard_failure(
                     parser_state,
-                    original_line_to_parse,
+                    remaining_line_to_parse,
                     lines_to_requeue,
                     unmodified_line_to_parse,
                 )
@@ -134,7 +134,7 @@ class LinkReferenceDefinitionHelper:
                 parser_state,
                 position_marker,
                 was_started,
-                original_line_to_parse,
+                remaining_line_to_parse,
                 extracted_whitespace,
                 unmodified_line_to_parse,
                 original_stack_depth,
@@ -151,7 +151,7 @@ class LinkReferenceDefinitionHelper:
                 did_complete_lrd,
                 parsed_lrd_tuple,
                 end_lrd_index,
-                original_line_to_parse,
+                remaining_line_to_parse,
                 is_blank_line,
                 lines_to_requeue,
             )
@@ -408,7 +408,7 @@ class LinkReferenceDefinitionHelper:
         parser_state,
         position_marker,
         was_started,
-        original_line_to_parse,
+        remaining_line_to_parse,
         extracted_whitespace,
         unmodified_line_to_parse,
         original_stack_depth,
@@ -418,7 +418,7 @@ class LinkReferenceDefinitionHelper:
         As part of processing a link reference definition, add a line to the continuation.
         """
 
-        line_to_store = original_line_to_parse
+        line_to_store = remaining_line_to_parse
         if was_started:
             LOGGER.debug(">>parse_link_reference_definition>>start already marked")
         else:
@@ -456,7 +456,7 @@ class LinkReferenceDefinitionHelper:
         did_complete_lrd,
         parsed_lrd_tuple,
         end_lrd_index,
-        original_line_to_parse,
+        remaining_line_to_parse,
         is_blank_line,
         lines_to_requeue,
     ):
@@ -471,7 +471,7 @@ class LinkReferenceDefinitionHelper:
             did_add_definition = LinkHelper.add_link_definition(
                 parsed_lrd_tuple[0], parsed_lrd_tuple[1]
             )
-            assert not (end_lrd_index < -1 and original_line_to_parse)
+            assert not (end_lrd_index < -1 and remaining_line_to_parse)
             new_tokens = [
                 LinkReferenceDefinitionMarkdownToken(
                     did_add_definition,
@@ -493,7 +493,10 @@ class LinkReferenceDefinitionHelper:
 
     @staticmethod
     def __process_lrd_hard_failure(
-        parser_state, original_line_to_parse, lines_to_requeue, unmodified_line_to_parse
+        parser_state,
+        remaining_line_to_parse,
+        lines_to_requeue,
+        unmodified_line_to_parse,
     ):
         """
         In cases of a hard failure, we have had continuations to the original line
@@ -507,7 +510,7 @@ class LinkReferenceDefinitionHelper:
         parsed_lrd_tuple = None
 
         do_again = True
-        parser_state.token_stack[-1].add_continuation_line(original_line_to_parse)
+        parser_state.token_stack[-1].add_continuation_line(remaining_line_to_parse)
         parser_state.token_stack[-1].add_unmodified_line(unmodified_line_to_parse)
         while do_again and parser_state.token_stack[-1].continuation_lines:
             LOGGER.debug(

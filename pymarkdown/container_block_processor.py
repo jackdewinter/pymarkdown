@@ -97,7 +97,8 @@ class ContainerBlockProcessor:
         """
         # TODO work on removing this
         line_to_parse = position_marker.text_to_parse
-        original_line_to_parse = position_marker.text_to_parse[:]
+        if container_depth == 0:
+            parser_state.original_line_to_parse = position_marker.text_to_parse[:]
 
         original_stack_depth = len(parser_state.token_stack)
         original_document_depth = len(parser_state.token_document)
@@ -230,7 +231,6 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             current_container_blocks,
             container_level_tokens,
-            original_line_to_parse,
         )
         if lines_to_requeue:
             requeue_line_info = RequeueLineInfo()
@@ -267,7 +267,6 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             current_container_blocks,
             container_level_tokens,
-            original_line_to_parse,
         )
         if lines_to_requeue:
             requeue_line_info = RequeueLineInfo()
@@ -368,7 +367,9 @@ class ContainerBlockProcessor:
         LOGGER.debug("container_level_tokens>>%s>>", str(container_level_tokens))
 
         # TODO refactor to make indent unnecessary?
-        calculated_indent = len(original_line_to_parse) - len(line_to_parse)
+        calculated_indent = len(parser_state.original_line_to_parse) - len(
+            line_to_parse
+        )
         LOGGER.debug(">>indent>>%s", str(calculated_indent))
 
         force_it = False
@@ -396,7 +397,6 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             no_para_start_if_empty,
             ignore_link_definition_start,
-            original_line_to_parse,
             last_block_quote_index,
             last_list_start_index,
             text_removed_by_container,
@@ -498,7 +498,6 @@ class ContainerBlockProcessor:
         removed_chars_at_start,
         current_container_blocks,
         container_level_tokens,
-        original_line_to_parse,
     ):
 
         # TODO refactor so it doesn't need this!
@@ -541,7 +540,6 @@ class ContainerBlockProcessor:
             this_bq_count,
             removed_chars_at_start,
             current_container_blocks,
-            original_line_to_parse,
         )
         if lines_to_requeue:
             return (
@@ -1009,7 +1007,6 @@ class ContainerBlockProcessor:
         removed_chars_at_start,
         no_para_start_if_empty,
         ignore_link_definition_start,
-        original_line_to_parse,
         last_block_quote_index,
         last_list_start_index,
         text_removed_by_container,
@@ -1035,7 +1032,6 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             no_para_start_if_empty,
             ignore_link_definition_start,
-            original_line_to_parse,
             last_block_quote_index,
             last_list_start_index,
             text_removed_by_container,
@@ -1189,10 +1185,9 @@ class ContainerBlockProcessor:
         outer_processed,
         position_marker,
         extracted_whitespace,
-        original_line_to_parse,
+        remaining_line_to_parse,
         ignore_link_definition_start,
         pre_tokens,
-        unmodified_line_to_parse,
         original_stack_depth,
         original_document_depth,
     ):
@@ -1223,9 +1218,9 @@ class ContainerBlockProcessor:
             ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
                 parser_state,
                 position_marker,
-                original_line_to_parse,
+                remaining_line_to_parse,
                 extracted_whitespace,
-                unmodified_line_to_parse,
+                parser_state.original_line_to_parse,
                 original_stack_depth,
                 original_document_depth,
             )
@@ -1260,7 +1255,6 @@ class ContainerBlockProcessor:
         removed_chars_at_start,
         no_para_start_if_empty,
         ignore_link_definition_start,
-        original_line_to_parsex,
         last_block_quote_index,
         last_list_start_index,
         text_removed_by_container,
@@ -1279,7 +1273,7 @@ class ContainerBlockProcessor:
 
         requeue_line_info = RequeueLineInfo()
         # TODO rename to avoid collision with parameter
-        original_line_to_parse = xposition_marker.text_to_parse[
+        remaining_line_to_parse = xposition_marker.text_to_parse[
             xposition_marker.index_number :
         ]
         (new_index_number, extracted_whitespace,) = ParserHelper.extract_whitespace(
@@ -1317,10 +1311,9 @@ class ContainerBlockProcessor:
             outer_processed,
             position_marker,
             extracted_whitespace,
-            original_line_to_parse,
+            remaining_line_to_parse,
             ignore_link_definition_start,
             pre_tokens,
-            original_line_to_parsex,
             original_stack_depth,
             original_document_depth,
         )
@@ -1344,7 +1337,6 @@ class ContainerBlockProcessor:
                     position_marker,
                     extracted_whitespace,
                     removed_chars_at_start,
-                    original_line_to_parsex,
                     last_block_quote_index,
                     last_list_start_index,
                 )

@@ -767,6 +767,7 @@ class ParserState:
         self.last_block_quote_stack_token = None
         self.last_block_quote_markdown_token_index = None
         self.copy_of_last_block_quote_markdown_token = None
+        self.original_line_to_parse = None
 
 
 # pylint: enable=too-few-public-methods, too-many-instance-attributes

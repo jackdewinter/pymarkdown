@@ -53,7 +53,6 @@
   - switch from list to bq and back again
   - 270 and check for indent levels after
 - lines_to_requeue requeue_line_info
-- original_line_to_parse into parse_state?
 
 ### Priority 3 - Like To Solve in next 3 m
 

@@ -230,20 +230,20 @@ class LeafBlockProcessor:
 
     @staticmethod
     def __adjust_for_list_start(
-        original_line_to_parse,
+        parser_state,
         last_list_start_index,
         last_block_quote_index,
     ):
         did_process = False
         LOGGER.debug("last_list_start_index>>%s>>", str(last_list_start_index))
         LOGGER.debug(
-            "original_line_to_parse>>%s>>",
-            ParserHelper.make_value_visible(original_line_to_parse),
+            "parser_state.original_line_to_parse>>%s>>",
+            ParserHelper.make_value_visible(parser_state.original_line_to_parse),
         )
         offset_index = 0
         if last_list_start_index:
             new_index, extracted_whitespace = ParserHelper.extract_whitespace_from_end(
-                original_line_to_parse, last_list_start_index
+                parser_state.original_line_to_parse, last_list_start_index
             )
             LOGGER.debug("new_index>>%s>>", str(new_index))
             LOGGER.debug(
@@ -260,7 +260,7 @@ class LeafBlockProcessor:
     @staticmethod
     def __adjust_for_block_quote_start(
         force_me,
-        original_line_to_parse,
+        parser_state,
         last_block_quote_index,
         position_marker,
         extracted_whitespace,
@@ -282,14 +282,14 @@ class LeafBlockProcessor:
         if last_block_quote_index or force_me:
             LOGGER.debug(
                 "original_line_to_parse>[%s]>>last_block_quote_index>>%s",
-                ParserHelper.make_value_visible(original_line_to_parse),
+                ParserHelper.make_value_visible(parser_state.original_line_to_parse),
                 str(last_block_quote_index),
             )
             (
                 block_quote_after_whitespace_index,
                 during_original_whitespace,
             ) = ParserHelper.extract_whitespace(
-                original_line_to_parse, last_block_quote_index
+                parser_state.original_line_to_parse, last_block_quote_index
             )
             LOGGER.debug(
                 "during_original_whitespace>[%s]",
@@ -307,7 +307,7 @@ class LeafBlockProcessor:
                 LOGGER.debug("last_block_quote_index>>%s", str(last_block_quote_index))
 
                 # Make sure everything after the whitespace remains the same.
-                text_after_original_whitespace = original_line_to_parse[
+                text_after_original_whitespace = parser_state.original_line_to_parse[
                     block_quote_after_whitespace_index:
                 ]
                 text_after_whitespace = position_marker.text_to_parse[
@@ -443,7 +443,6 @@ class LeafBlockProcessor:
         position_marker,
         extracted_whitespace,
         removed_chars_at_start,
-        original_line_to_parse,
         last_block_quote_index,
         last_list_start_index,
     ):
@@ -466,7 +465,7 @@ class LeafBlockProcessor:
                     offset_index,
                     last_block_quote_index,
                 ) = LeafBlockProcessor.__adjust_for_list_start(
-                    original_line_to_parse,
+                    parser_state,
                     last_list_start_index,
                     last_block_quote_index,
                 )
@@ -493,7 +492,7 @@ class LeafBlockProcessor:
                     block_quote_adjust_delta,
                 ) = LeafBlockProcessor.__adjust_for_block_quote_start(
                     force_me,
-                    original_line_to_parse,
+                    parser_state,
                     last_block_quote_index,
                     position_marker,
                     extracted_whitespace,

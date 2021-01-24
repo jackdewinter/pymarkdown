@@ -375,7 +375,6 @@ class BlockQuoteProcessor:
             ParserHelper.make_value_visible(line_to_parse),
         )
         original_start_index = start_index
-        original_line_to_parse = line_to_parse
         (
             this_bq_count,
             start_index,
@@ -400,7 +399,7 @@ class BlockQuoteProcessor:
             "ORIG-->WS[%s]--SI[%s]--[%s]",
             extracted_whitespace,
             str(original_start_index),
-            str(original_line_to_parse),
+            str(parser_state.original_line_to_parse),
         )
         LOGGER.debug("NOW -->SI[%s]--[%s]", str(start_index), str(line_to_parse))
 
@@ -418,7 +417,6 @@ class BlockQuoteProcessor:
                 extracted_whitespace,
                 position_marker,
                 original_start_index,
-                original_line_to_parse,
             )
             if lines_to_requeue:
                 return (
@@ -577,7 +575,6 @@ class BlockQuoteProcessor:
         extracted_whitespace,
         position_marker,
         original_start_index,
-        original_line_to_parse,
     ):
         """
         Ensure that the block quote stack is at the proper level on the stack.
@@ -636,13 +633,16 @@ class BlockQuoteProcessor:
                 caller_can_handle_requeue=True,
             )
             if lines_to_requeue:
+                # TODO is this common?
                 LOGGER.debug(
                     "__ensure_stack_at_level>>lines_to_requeue>>%s",
                     ParserHelper.make_value_visible(lines_to_requeue),
                 )
                 LOGGER.debug(
-                    "__close_required_lists_after_start>>original_line_to_parse>>%s",
-                    ParserHelper.make_value_visible(original_line_to_parse),
+                    "__close_required_lists_after_start>>parser_state.original_line_to_parse>>%s",
+                    ParserHelper.make_value_visible(
+                        parser_state.original_line_to_parse
+                    ),
                 )
                 LOGGER.debug(
                     "__ensure_stack_at_level>>token_stack>>%s",
@@ -653,7 +653,7 @@ class BlockQuoteProcessor:
                     ParserHelper.make_value_visible(parser_state.token_document),
                 )
                 assert not lines_to_requeue[0]
-                lines_to_requeue[0] = original_line_to_parse
+                lines_to_requeue[0] = parser_state.original_line_to_parse
                 LOGGER.debug(
                     "__close_required_lists_after_start>>lines_to_requeue>>%s",
                     ParserHelper.make_value_visible(lines_to_requeue),

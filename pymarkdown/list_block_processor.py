@@ -294,7 +294,6 @@ class ListBlockProcessor:
         this_bq_count,
         removed_chars_at_start,
         current_container_blocks,
-        original_line_to_parse,
     ):
         """
         Handle the processing of a ulist block.
@@ -381,7 +380,6 @@ class ListBlockProcessor:
                     indent_level,
                     current_container_blocks,
                     position_marker,
-                    original_line_to_parse,
                 )
                 if new_container_level_tokens:
                     container_level_tokens.extend(new_container_level_tokens)
@@ -813,7 +811,6 @@ class ListBlockProcessor:
         indent_level,
         current_container_blocks,
         position_marker,
-        original_line_to_parse,
     ):
         """
         Handle the processing of the last part of the list.
@@ -838,7 +835,6 @@ class ListBlockProcessor:
                 last_list_index,
                 new_stack,
                 current_container_blocks,
-                original_line_to_parse,
             )
             if lines_to_requeue:
                 return None, None, None, lines_to_requeue, force_ignore_first_as_lrd
@@ -915,7 +911,6 @@ class ListBlockProcessor:
         last_list_index,
         new_stack,
         current_container_blocks,
-        original_line_to_parse,
     ):
         """
         After a list start, check to see if any others need closing.
@@ -938,8 +933,8 @@ class ListBlockProcessor:
                 ParserHelper.make_value_visible(lines_to_requeue),
             )
             LOGGER.debug(
-                "__close_required_lists_after_start>>original_line_to_parse>>%s",
-                ParserHelper.make_value_visible(original_line_to_parse),
+                "__close_required_lists_after_start>>parser_state.original_line_to_parse>>%s",
+                ParserHelper.make_value_visible(parser_state.original_line_to_parse),
             )
             LOGGER.debug(
                 "__close_required_lists_after_start>>token_stack>>%s",
@@ -950,7 +945,7 @@ class ListBlockProcessor:
                 ParserHelper.make_value_visible(parser_state.token_document),
             )
             assert not lines_to_requeue[0]
-            lines_to_requeue[0] = original_line_to_parse
+            lines_to_requeue[0] = parser_state.original_line_to_parse
             LOGGER.debug(
                 "__close_required_lists_after_start>>lines_to_requeue>>%s",
                 ParserHelper.make_value_visible(lines_to_requeue),
