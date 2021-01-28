@@ -22,7 +22,6 @@
   - hard break at start of text?
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - leading_text_index
-  - leading_spaces_index + is_loose
 
 ### Priority 2 - Like To Solve Before Initial
 
