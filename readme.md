@@ -13,7 +13,6 @@
 - possible to merge link token and image token more closely?
 - __handle_extracted_paragraph_whitespace ? more use?
 
-- merge leading_spaces code from both container tokens
 - why does hard break not have \n? (fix before release)
   - hard break followed by 3 spaces, then emphasis
   - variations of 52e with extra spaces after, etc.
