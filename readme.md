@@ -22,7 +22,6 @@
   - hard break at start of text?
 - all types of end-inlines and inlines at end i.e. 50
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
-  - rehydrate_index
   - leading_text_index
   - leading_spaces_index + is_loose
 
@@ -52,7 +51,6 @@
 - switch from bq to list and back again
   - switch from list to bq and back again
   - 270 and check for indent levels after
-- lines_to_requeue requeue_line_info
 
 - is_block_quote and looking for a block quote on various stacks
 - same with lists

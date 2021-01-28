@@ -47,6 +47,19 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
 
         if current_token.is_paragraph_end:
             assert current_token.start_markdown_token
+            split_count = len(
+                current_token.start_markdown_token.extracted_whitespace.split(
+                    ParserHelper.newline_character
+                )
+            )
+            assert (
+                current_token.start_markdown_token.rehydrate_index + 1
+            ) == split_count, (
+                "index="
+                + str(current_token.start_markdown_token.rehydrate_index)
+                + ";split="
+                + str(split_count)
+            )
 
         if current_token.is_inline and not current_token.is_end_token:
             print("Inline, skipping:" + ParserHelper.make_value_visible(token_stack))
