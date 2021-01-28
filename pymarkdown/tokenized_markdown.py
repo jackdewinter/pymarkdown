@@ -108,7 +108,8 @@ class TokenizedMarkdown:
         LOGGER.debug("---%s---", str(token_to_use))
         LOGGER.debug("---")
         line_number = 1
-        while True:
+        keep_on_going = True
+        while keep_on_going:
             LOGGER.debug("next-line>>%s", str(token_to_use))
             LOGGER.debug("stack>>%s", str(self.stack))
             LOGGER.debug("current_block>>%s", str(self.stack[-1]))
@@ -132,8 +133,7 @@ class TokenizedMarkdown:
                 did_started_close = True
                 (
                     tokens_from_line,
-                    lines_to_requeue,
-                    force_ignore_first_as_lrd,
+                    requeue_line_info,
                 ) = TokenizedMarkdown.__close_open_blocks(
                     parser_state,
                     self.tokenized_document,
@@ -145,21 +145,17 @@ class TokenizedMarkdown:
                 if tokens_from_line and not self.tokenized_document:
                     self.tokenized_document.extend(tokens_from_line)
 
-                if not lines_to_requeue:
-                    break
+                if not (requeue_line_info and requeue_line_info.lines_to_requeue):
+                    keep_on_going = False
+                else:
+                    assert was_link_definition_started_before_close
+                    assert not requeue_line_info.lines_to_requeue[0]
 
-                assert was_link_definition_started_before_close
-                assert not lines_to_requeue[0]
+                    del requeue_line_info.lines_to_requeue[0]
+                    line_number -= 1
 
-                del lines_to_requeue[0]
-                line_number -= 1
-
-                did_start_close = False
-                tokens_from_line = None
-                LOGGER.debug(
-                    "\n\n>>lines_to_requeue>>%s",
-                    ParserHelper.make_value_visible(lines_to_requeue),
-                )
+                    did_start_close = False
+                    tokens_from_line = None
             else:
                 LOGGER.debug(
                     ">>>>%s", ParserHelper.make_value_visible(self.tokenized_document)
@@ -167,11 +163,7 @@ class TokenizedMarkdown:
 
                 if not token_to_use or not token_to_use.strip():
                     LOGGER.debug("call __parse_blocks_pass>>handle_blank_line")
-                    (
-                        tokens_from_line,
-                        lines_to_requeue,
-                        force_ignore_first_as_lrd,
-                    ) = self.__handle_blank_line(
+                    (tokens_from_line, requeue_line_info,) = self.__handle_blank_line(
                         parser_state,
                         token_to_use,
                         from_main_transform=True,
@@ -188,62 +180,60 @@ class TokenizedMarkdown:
                         position_marker,
                         ignore_link_definition_start,
                     )
-                    lines_to_requeue = requeue_line_info.lines_to_requeue
-                    force_ignore_first_as_lrd = (
-                        requeue_line_info.force_ignore_first_as_lrd
-                    )
 
                 LOGGER.debug(
                     "<<<<%s", ParserHelper.make_value_visible(self.tokenized_document)
                 )
-            line_number, ignore_link_definition_start = TokenizedMarkdown.__xx(
-                line_number, lines_to_requeue, requeue, force_ignore_first_as_lrd
-            )
 
-            LOGGER.debug(
-                "---\nbefore>>%s",
-                ParserHelper.make_value_visible(self.tokenized_document),
-            )
-            LOGGER.debug(
-                "before>>%s", ParserHelper.make_value_visible(tokens_from_line)
-            )
-            if tokens_from_line:
-                self.tokenized_document.extend(tokens_from_line)
-            LOGGER.debug(
-                "after>>%s", ParserHelper.make_value_visible(self.tokenized_document)
-            )
-            if requeue:
-                LOGGER.debug("requeue>>%s", str(requeue))
-            LOGGER.debug("---")
+            if keep_on_going:
+                line_number, ignore_link_definition_start = TokenizedMarkdown.__xx(
+                    line_number, requeue_line_info, requeue
+                )
 
-            (
-                token_to_use,
-                did_start_close,
-                did_started_close,
-            ) = self.__determine_next_token_process(
-                requeue, did_start_close, did_started_close
-            )
+                LOGGER.debug(
+                    "---\nbefore>>%s",
+                    ParserHelper.make_value_visible(self.tokenized_document),
+                )
+                LOGGER.debug(
+                    "before>>%s", ParserHelper.make_value_visible(tokens_from_line)
+                )
+                if tokens_from_line:
+                    self.tokenized_document.extend(tokens_from_line)
+                LOGGER.debug(
+                    "after>>%s",
+                    ParserHelper.make_value_visible(self.tokenized_document),
+                )
+                if requeue:
+                    LOGGER.debug("requeue>>%s", str(requeue))
+                LOGGER.debug("---")
+
+                (
+                    token_to_use,
+                    did_start_close,
+                    did_started_close,
+                ) = self.__determine_next_token_process(
+                    requeue, did_start_close, did_started_close
+                )
 
         return self.tokenized_document
 
     # pylint: enable=too-many-statements
 
     @staticmethod
-    def __xx(line_number, lines_to_requeue, requeue, force_ignore_first_as_lrd):
-        number_of_lines_to_requeue = len(lines_to_requeue)
-        LOGGER.debug("\n\n---lines_to_requeue>>%s", str(number_of_lines_to_requeue))
-        if number_of_lines_to_requeue:
-            line_number -= number_of_lines_to_requeue - 1
-        else:
-            line_number += 1
-        LOGGER.debug("line_number>>%s\n---", str(line_number))
+    def __xx(line_number, requeue_line_info, requeue):
 
-        if lines_to_requeue:
-            for i in lines_to_requeue:
+        if requeue_line_info and requeue_line_info.lines_to_requeue:
+            number_of_lines_to_requeue = len(requeue_line_info.lines_to_requeue)
+            LOGGER.debug("\n\n---lines_to_requeue>>%s", str(number_of_lines_to_requeue))
+            line_number -= number_of_lines_to_requeue - 1
+
+            for i in requeue_line_info.lines_to_requeue:
                 requeue.insert(0, i)
-            ignore_link_definition_start = force_ignore_first_as_lrd
+            ignore_link_definition_start = requeue_line_info.force_ignore_first_as_lrd
         else:
             ignore_link_definition_start = False
+            line_number += 1
+        LOGGER.debug("line_number>>%s\n---", str(line_number))
 
         return line_number, ignore_link_definition_start
 
@@ -272,7 +262,7 @@ class TokenizedMarkdown:
 
     # pylint: disable=too-many-arguments,too-many-locals,too-many-statements, too-many-branches
     @staticmethod
-    def __close_open_blocks(
+    def __close_open_blocks(  # noqa: C901
         parser_state,
         destination_array=None,
         only_these_blocks=None,
@@ -287,8 +277,7 @@ class TokenizedMarkdown:
         """
 
         new_tokens = []
-        lines_to_requeue = []
-        force_ignore_first_as_lrd = False
+        requeue_line_info = None
         if destination_array:
             new_tokens = destination_array
 
@@ -355,17 +344,20 @@ class TokenizedMarkdown:
                     outer_processed,
                     did_complete_lrd,
                     did_pause_lrd,
-                    lines_to_requeue,
-                    force_ignore_first_as_lrd,
+                    requeue_line_info,
                     adjusted_tokens,
                 ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
                     parser_state, empty_position_marker, "", "", "", 0, 0
                 )
                 LOGGER.debug("BOOOM")
-                if caller_can_handle_requeue and lines_to_requeue:
+                if (
+                    caller_can_handle_requeue
+                    and requeue_line_info
+                    and requeue_line_info.lines_to_requeue
+                ):
                     LOGGER.debug("BOOOM-->break")
                     break
-                assert not lines_to_requeue
+                assert not (requeue_line_info and requeue_line_info.lines_to_requeue)
                 LOGGER.debug(
                     "cob->process_link_reference_definition>>outer_processed>>%s",
                     str(outer_processed),
@@ -373,14 +365,6 @@ class TokenizedMarkdown:
                 LOGGER.debug(
                     "cob->process_link_reference_definition>>did_complete_lrd>>%s",
                     str(did_complete_lrd),
-                )
-                LOGGER.debug(
-                    "cob->process_link_reference_definition>>lines_to_requeue>>%s",
-                    str(lines_to_requeue),
-                )
-                LOGGER.debug(
-                    "cob->process_link_reference_definition>>force_ignore_first_as_lrd>>%s",
-                    str(force_ignore_first_as_lrd),
                 )
                 LOGGER.debug(
                     "cob->process_link_reference_definition>>adjusted_tokens>>%s",
@@ -410,7 +394,7 @@ class TokenizedMarkdown:
         LOGGER.debug(
             "cob-end>>new_tokens>>%s", ParserHelper.make_value_visible(new_tokens)
         )
-        return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
+        return new_tokens, requeue_line_info
 
     # pylint: enable=too-many-arguments,too-many-locals,too-many-statements, too-many-branches
 
@@ -478,8 +462,7 @@ class TokenizedMarkdown:
             str(parser_state.token_stack[-1]),
         )
 
-        lines_to_requeue = []
-        force_ignore_first_as_lrd = None
+        requeue_line_info = None
         new_tokens = None
         force_default_handling = False
         if parser_state.token_stack[-1].was_link_definition_started:
@@ -491,8 +474,7 @@ class TokenizedMarkdown:
                 _,
                 _,
                 did_pause_lrd,
-                lines_to_requeue,
-                force_ignore_first_as_lrd,
+                requeue_line_info,
                 new_tokens,
             ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
                 parser_state, empty_position_marker, "", "", "", 0, 0
@@ -517,12 +499,12 @@ class TokenizedMarkdown:
             and parser_state.token_document[-2].is_list_start
         ):
             LOGGER.debug("hbl>>double blank in list")
-            new_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
+            new_tokens, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state, until_this_index=in_index, include_lists=True
             )
         elif forced_close_until_index:
             LOGGER.debug("hbl>>forced_close_until_index")
-            new_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
+            new_tokens, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state,
                 until_this_index=forced_close_until_index,
                 include_lists=True,
@@ -535,7 +517,7 @@ class TokenizedMarkdown:
 
         if force_default_handling or new_tokens is None:
             LOGGER.debug("hbl>>default blank handling-->cob")
-            n_tokens, _, _ = TokenizedMarkdown.__close_open_blocks(
+            n_tokens, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state,
                 only_these_blocks=close_only_these_blocks,
                 include_block_quotes=do_include_block_quotes,
@@ -548,12 +530,13 @@ class TokenizedMarkdown:
 
         LOGGER.debug("hbl>>new_tokens>>%s", str(new_tokens))
         assert non_whitespace_index == len(input_line)
-        if not force_ignore_first_as_lrd:
+        if not (requeue_line_info and requeue_line_info.force_ignore_first_as_lrd):
             new_tokens.append(
                 BlankLineMarkdownToken(extracted_whitespace, position_marker)
             )
         LOGGER.debug("hbl>>new_tokens>>%s", str(new_tokens))
-        return new_tokens, lines_to_requeue, force_ignore_first_as_lrd
+
+        return new_tokens, requeue_line_info
 
     # pylint: enable=too-many-locals, too-many-branches, too-many-statements
 

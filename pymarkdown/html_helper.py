@@ -789,7 +789,7 @@ class HtmlHelper:
             parser_state.token_stack,
         )
         if html_block_type:
-            new_tokens, _, _ = parser_state.close_open_blocks_fn(
+            new_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 only_these_blocks=[ParagraphStackToken],
             )
@@ -812,7 +812,7 @@ class HtmlHelper:
             parser_state.token_stack[-1].html_block_type == HtmlHelper.html_block_6
             or parser_state.token_stack[-1].html_block_type == HtmlHelper.html_block_7
         ):
-            new_tokens, _, _ = parser_state.close_open_blocks_fn(
+            new_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 only_these_blocks=[type(parser_state.token_stack[-1])],
             )
@@ -852,7 +852,7 @@ class HtmlHelper:
             is_block_terminated = HtmlHelper.__html_block_5_end in adj_line
 
         if is_block_terminated:
-            terminated_block_tokens, _, _ = parser_state.close_open_blocks_fn(
+            terminated_block_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 only_these_blocks=[type(parser_state.token_stack[-1])],
             )

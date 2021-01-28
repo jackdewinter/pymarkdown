@@ -7,6 +7,7 @@ from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.leaf_markdown_token import LinkReferenceDefinitionMarkdownToken
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.stack_token import LinkDefinitionStackToken
 
 LOGGER = logging.getLogger(__name__)
@@ -20,7 +21,7 @@ class LinkReferenceDefinitionHelper:
 
     __lrd_start_character = "["
 
-    # pylint: disable=too-many-locals, too-many-arguments, too-many-statements
+    # pylint: disable=too-many-locals, too-many-arguments, too-many-statements, too-many-branches
     @staticmethod
     def process_link_reference_definition(
         parser_state,
@@ -39,8 +40,9 @@ class LinkReferenceDefinitionHelper:
         start_index = position_marker.index_number
 
         did_pause_lrd = False
-        lines_to_requeue = []
         new_tokens = []
+
+        lines_to_requeue = []
         force_ignore_first_as_lrd = False
 
         was_started = False
@@ -221,16 +223,21 @@ class LinkReferenceDefinitionHelper:
                 #    break
                 del parser_state.token_document[-1]
 
+        if lines_to_requeue:
+            requeue_line_info = RequeueLineInfo(
+                lines_to_requeue, force_ignore_first_as_lrd
+            )
+        else:
+            requeue_line_info = None
         return (
             did_complete_lrd or end_lrd_index != -1,
             did_complete_lrd,
             did_pause_lrd,
-            lines_to_requeue,
-            force_ignore_first_as_lrd,
+            requeue_line_info,
             new_tokens,
         )
 
-    # pylint: enable=too-many-locals, too-many-arguments, too-many-statements
+    # pylint: enable=too-many-locals, too-many-arguments, too-many-statements, too-many-branches
 
     @staticmethod
     def __is_link_reference_definition(

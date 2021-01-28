@@ -14,67 +14,10 @@ from pymarkdown.parser_helper import ParserHelper, PositionMarker
 LOGGER = logging.getLogger(__name__)
 
 
-# pylint: disable=too-few-public-methods
-# pylint: disable=too-many-lines
-class ContainerIndices:
-    """
-    Class to provide for encapsulation on a group of container indices.
-    """
-
-    def __init__(self, ulist_index, olist_index, block_index):
-        self.ulist_index = ulist_index
-        self.olist_index = olist_index
-        self.block_index = block_index
-
-    def __str__(self):
-        return (
-            "{ContainerIndices:ulist_index:"
-            + str(self.ulist_index)
-            + ";olist_index:"
-            + str(self.olist_index)
-            + ";block_index:"
-            + str(self.block_index)
-            + "}"
-        )
-
-
-# pylint: enable=too-few-public-methods
-
-
-# pylint: disable=too-few-public-methods
-class RequeueLineInfo:
-    """
-    Class to provide an container for lines that need to be requeued.
-    """
-
-    def __init__(self):
-        self.lines_to_requeue = []
-        self.force_ignore_first_as_lrd = None
-
-
-# pylint: enable=too-few-public-methods
-
-
 class ContainerBlockProcessor:
     """
     Class to provide processing for the container blocks.
     """
-
-    @staticmethod
-    def extract_markdown_tokens_back_to_blank_line(parser_state, was_forced):
-        """
-        Extract tokens going back to the last blank line token.
-        """
-
-        pre_tokens = []
-        while parser_state.token_document[-1].is_blank_line:
-            last_element = parser_state.token_document[-1]
-            if was_forced:
-                pre_tokens.insert(0, last_element)
-            else:
-                pre_tokens.append(last_element)
-            del parser_state.token_document[-1]
-        return pre_tokens
 
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-arguments
@@ -156,8 +99,7 @@ class ContainerBlockProcessor:
             last_block_quote_index,
             text_removed_by_container,
             avoid_block_starts,
-            lines_to_requeue,
-            force_ignore_first_as_lrd,
+            requeue_line_info,
         ) = ContainerBlockProcessor.__get_block_start_index(
             position_marker,
             parser_state,
@@ -167,17 +109,14 @@ class ContainerBlockProcessor:
             stack_bq_count,
             start_index,
         )
-        if lines_to_requeue:
-            requeue_line_info = RequeueLineInfo()
-            requeue_line_info.lines_to_requeue = lines_to_requeue
-            requeue_line_info.force_ignore_first_as_lrd = force_ignore_first_as_lrd
+        if requeue_line_info:
             return None, None, requeue_line_info
 
         LOGGER.debug(">>did_blank>>%s", did_blank)
         LOGGER.debug(">>avoid_block_starts>>%s", str(avoid_block_starts))
         if did_blank:
             container_level_tokens.extend(leaf_tokens)
-            return container_level_tokens, line_to_parse, RequeueLineInfo()
+            return container_level_tokens, line_to_parse, None
 
         LOGGER.debug(
             ">>__get_list_start_index>>%s>>",
@@ -189,8 +128,7 @@ class ContainerBlockProcessor:
             end_container_indices.ulist_index,
             line_to_parse,
             removed_chars_at_start,
-            lines_to_requeue,
-            force_ignore_first_as_lrd,
+            requeue_line_info,
         ) = ContainerBlockProcessor.__get_list_start_index(
             position_marker,
             line_to_parse,
@@ -207,10 +145,7 @@ class ContainerBlockProcessor:
             current_container_blocks,
             container_level_tokens,
         )
-        if lines_to_requeue:
-            requeue_line_info = RequeueLineInfo()
-            requeue_line_info.lines_to_requeue = lines_to_requeue
-            requeue_line_info.force_ignore_first_as_lrd = force_ignore_first_as_lrd
+        if requeue_line_info:
             return None, None, requeue_line_info
 
         LOGGER.debug(
@@ -223,8 +158,7 @@ class ContainerBlockProcessor:
             end_container_indices.olist_index,
             line_to_parse,
             removed_chars_at_start,
-            lines_to_requeue,
-            force_ignore_first_as_lrd,
+            requeue_line_info,
         ) = ContainerBlockProcessor.__get_list_start_index(
             position_marker,
             line_to_parse,
@@ -241,10 +175,7 @@ class ContainerBlockProcessor:
             current_container_blocks,
             container_level_tokens,
         )
-        if lines_to_requeue:
-            requeue_line_info = RequeueLineInfo()
-            requeue_line_info.lines_to_requeue = lines_to_requeue
-            requeue_line_info.force_ignore_first_as_lrd = force_ignore_first_as_lrd
+        if requeue_line_info:
             return None, None, requeue_line_info
         LOGGER.debug(
             ">>__get_list_start_index>>%s>>",
@@ -415,8 +346,7 @@ class ContainerBlockProcessor:
             last_block_quote_index,
             text_removed_by_container,
             avoid_block_starts,
-            lines_to_requeue,
-            force_ignore_first_as_lrd,
+            requeue_line_info,
         ) = BlockQuoteProcessor.handle_block_quote_block(
             parser_state,
             new_position_marker,
@@ -442,8 +372,7 @@ class ContainerBlockProcessor:
             last_block_quote_index,
             text_removed_by_container,
             avoid_block_starts,
-            lines_to_requeue,
-            force_ignore_first_as_lrd,
+            requeue_line_info,
         )
 
     # pylint: enable=too-many-locals, too-many-arguments
@@ -491,8 +420,7 @@ class ContainerBlockProcessor:
             line_to_parse,
             resultant_tokens,
             removed_chars_at_start,
-            lines_to_requeue,
-            force_ignore_first_as_lrd,
+            requeue_line_info,
         ) = ListBlockProcessor.handle_list_block(
             is_ulist,
             parser_state,
@@ -506,15 +434,14 @@ class ContainerBlockProcessor:
             removed_chars_at_start,
             current_container_blocks,
         )
-        if lines_to_requeue:
+        if requeue_line_info:
             return (
                 None,
                 None,
                 None,
                 None,
                 None,
-                lines_to_requeue,
-                force_ignore_first_as_lrd,
+                requeue_line_info,
             )
         container_level_tokens.extend(resultant_tokens)
         LOGGER.debug(
@@ -537,7 +464,6 @@ class ContainerBlockProcessor:
             new_list_index,
             line_to_parse,
             removed_chars_at_start,
-            None,
             None,
         )
 
@@ -996,15 +922,16 @@ class ContainerBlockProcessor:
         )
         LOGGER.debug("parsed leaf>>%s", ParserHelper.make_value_visible(leaf_tokens))
         LOGGER.debug("parsed leaf>>%s", str(len(leaf_tokens)))
-        LOGGER.debug(
-            "parsed leaf>>lines_to_requeue>>%s>%s",
-            str(requeue_line_info.lines_to_requeue),
-            str(len(requeue_line_info.lines_to_requeue)),
-        )
-        LOGGER.debug(
-            "parsed leaf>>requeue_line_info.force_ignore_first_as_lrd>>%s>",
-            str(requeue_line_info.force_ignore_first_as_lrd),
-        )
+        if requeue_line_info:
+            LOGGER.debug(
+                "parsed leaf>>lines_to_requeue>>%s>%s",
+                str(requeue_line_info.lines_to_requeue),
+                str(len(requeue_line_info.lines_to_requeue)),
+            )
+            LOGGER.debug(
+                "parsed leaf>>requeue_line_info.force_ignore_first_as_lrd>>%s>",
+                str(requeue_line_info.force_ignore_first_as_lrd),
+            )
         return leaf_tokens, requeue_line_info
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -1147,9 +1074,8 @@ class ContainerBlockProcessor:
         """
         Take care of the processing for link reference definitions.
         """
-        lines_to_requeue = []
+        requeue_line_info = None
         new_tokens = []
-        force_ignore_first_as_lrd = None
 
         LOGGER.debug(
             "handle_link_reference_definition>>pre_tokens>>%s<<",
@@ -1165,8 +1091,7 @@ class ContainerBlockProcessor:
                 outer_processed,
                 _,  # did_complete_lrd,
                 _,  # did_pause_lrd,
-                lines_to_requeue,
-                force_ignore_first_as_lrd,
+                requeue_line_info,
                 new_tokens,
             ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
                 parser_state,
@@ -1177,14 +1102,19 @@ class ContainerBlockProcessor:
                 parser_state.original_stack_depth,
                 parser_state.original_document_depth,
             )
-            if lines_to_requeue:
+            if requeue_line_info and requeue_line_info.lines_to_requeue:
                 outer_processed = True
-            LOGGER.debug(
-                "plflb-process_link_reference_definition>>outer_processed>>%s<lines_to_requeue<%s<%s",
-                str(outer_processed),
-                str(lines_to_requeue),
-                str(len(lines_to_requeue)),
-            )
+                LOGGER.debug(
+                    "plflb-process_link_reference_definition>>outer_processed>>%s<lines_to_requeue<%s<%s",
+                    str(outer_processed),
+                    str(requeue_line_info.lines_to_requeue),
+                    str(len(requeue_line_info.lines_to_requeue)),
+                )
+            else:
+                LOGGER.debug(
+                    "plflb-process_link_reference_definition>>outer_processed>>%s<lines_to_requeue<(None)",
+                    str(outer_processed),
+                )
 
         LOGGER.debug(
             "handle_link_reference_definition>>pre_tokens>>%s<<",
@@ -1195,7 +1125,7 @@ class ContainerBlockProcessor:
             "handle_link_reference_definition>>pre_tokens>>%s<<",
             ParserHelper.make_value_visible(pre_tokens),
         )
-        return outer_processed, lines_to_requeue, force_ignore_first_as_lrd
+        return outer_processed, requeue_line_info
 
     # pylint: enable=too-many-arguments
 
@@ -1221,7 +1151,7 @@ class ContainerBlockProcessor:
         )
         new_tokens = []
 
-        requeue_line_info = RequeueLineInfo()
+        requeue_line_info = None
         # TODO rename to avoid collision with parameter
         remaining_line_to_parse = xposition_marker.text_to_parse[
             xposition_marker.index_number :
@@ -1254,8 +1184,7 @@ class ContainerBlockProcessor:
 
         (
             outer_processed,
-            requeue_line_info.lines_to_requeue,
-            requeue_line_info.force_ignore_first_as_lrd,
+            requeue_line_info,
         ) = ContainerBlockProcessor.__handle_link_reference_definition(
             parser_state,
             outer_processed,
@@ -1324,10 +1253,52 @@ class ContainerBlockProcessor:
                     force_it,
                 )
 
-        # assert new_tokens or did_complete_lrd or did_pause_lrd or lines_to_requeue
         LOGGER.debug(">>leaf--adding>>%s", ParserHelper.make_value_visible(new_tokens))
         pre_tokens.extend(new_tokens)
         LOGGER.debug(">>leaf--added>>%s", ParserHelper.make_value_visible(pre_tokens))
         return pre_tokens, requeue_line_info
 
+    @staticmethod
+    def extract_markdown_tokens_back_to_blank_line(parser_state, was_forced):
+        """
+        Extract tokens going back to the last blank line token.
+        """
+
+        pre_tokens = []
+        while parser_state.token_document[-1].is_blank_line:
+            last_element = parser_state.token_document[-1]
+            if was_forced:
+                pre_tokens.insert(0, last_element)
+            else:
+                pre_tokens.append(last_element)
+            del parser_state.token_document[-1]
+        return pre_tokens
+
     # pylint: enable=too-many-arguments, too-many-locals
+
+
+# pylint: disable=too-few-public-methods
+# pylint: disable=too-many-lines
+class ContainerIndices:
+    """
+    Class to provide for encapsulation on a group of container indices.
+    """
+
+    def __init__(self, ulist_index, olist_index, block_index):
+        self.ulist_index = ulist_index
+        self.olist_index = olist_index
+        self.block_index = block_index
+
+    def __str__(self):
+        return (
+            "{ContainerIndices:ulist_index:"
+            + str(self.ulist_index)
+            + ";olist_index:"
+            + str(self.olist_index)
+            + ";block_index:"
+            + str(self.block_index)
+            + "}"
+        )
+
+
+# pylint: enable=too-few-public-methods

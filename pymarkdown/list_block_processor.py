@@ -297,8 +297,7 @@ class ListBlockProcessor:
         """
         Handle the processing of a ulist block.
         """
-        lines_to_requeue = None
-        force_ignore_first_as_lrd = None
+        requeue_line_info = None
         end_of_ulist_start_index = -1
         container_level_tokens = []
         adjusted_text_to_parse = position_marker.text_to_parse
@@ -366,8 +365,7 @@ class ListBlockProcessor:
                 (
                     new_container_level_tokens,
                     adjusted_text_to_parse,
-                    lines_to_requeue,
-                    force_ignore_first_as_lrd,
+                    requeue_line_info,
                 ) = ListBlockProcessor.__post_list(
                     parser_state,
                     new_stack,
@@ -390,8 +388,7 @@ class ListBlockProcessor:
             adjusted_text_to_parse,
             container_level_tokens,
             removed_chars_at_start,
-            lines_to_requeue,
-            force_ignore_first_as_lrd,
+            requeue_line_info,
         )
         # pylint: enable=too-many-locals, too-many-arguments
 
@@ -786,7 +783,7 @@ class ListBlockProcessor:
             while not parser_state.token_stack[inf].is_block_quote:
                 inf -= 1
 
-            container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
+            container_level_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 until_this_index=inf,
                 include_block_quotes=True,
@@ -825,23 +822,22 @@ class ListBlockProcessor:
             (
                 container_level_tokens,
                 emit_li,
-                lines_to_requeue,
-                force_ignore_first_as_lrd,
+                requeue_line_info,
             ) = ListBlockProcessor.__close_required_lists_after_start(
                 parser_state,
                 last_list_index,
                 new_stack,
                 current_container_blocks,
             )
-            if lines_to_requeue:
-                return None, None, lines_to_requeue, force_ignore_first_as_lrd
+            if requeue_line_info:
+                return None, None, requeue_line_info
             emit_item = False
         else:
             LOGGER.debug(
                 "NOT list-in-process>>%s",
                 str(parser_state.token_stack[last_list_index]),
             )
-            container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
+            container_level_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state, was_forced=True
             )
         LOGGER.debug("container_level_tokens>>%s", str(container_level_tokens))
@@ -875,7 +871,7 @@ class ListBlockProcessor:
         LOGGER.debug("__post_list>>after>>%s", str(container_level_tokens))
 
         parser_state.set_no_para_start_if_empty()
-        return container_level_tokens, line_to_parse, None, None
+        return container_level_tokens, line_to_parse, None
         # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
@@ -918,17 +914,16 @@ class ListBlockProcessor:
         )
         (
             container_level_tokens,
-            lines_to_requeue,
-            force_ignore_first_as_lrd,
+            requeue_line_info,
         ) = parser_state.close_open_blocks_fn(
             parser_state,
             until_this_index=last_list_index + 1,
             caller_can_handle_requeue=True,
         )
-        if lines_to_requeue:
+        if requeue_line_info and requeue_line_info.lines_to_requeue:
             LOGGER.debug(
                 "__close_required_lists_after_start>>lines_to_requeue>>%s",
-                ParserHelper.make_value_visible(lines_to_requeue),
+                ParserHelper.make_value_visible(requeue_line_info.lines_to_requeue),
             )
             LOGGER.debug(
                 "__close_required_lists_after_start>>parser_state.original_line_to_parse>>%s",
@@ -942,13 +937,13 @@ class ListBlockProcessor:
                 "__close_required_lists_after_start>>token_document>>%s",
                 ParserHelper.make_value_visible(parser_state.token_document),
             )
-            assert not lines_to_requeue[0]
-            lines_to_requeue[0] = parser_state.original_line_to_parse
+            assert not requeue_line_info.lines_to_requeue[0]
+            requeue_line_info.lines_to_requeue[0] = parser_state.original_line_to_parse
             LOGGER.debug(
                 "__close_required_lists_after_start>>lines_to_requeue>>%s",
-                ParserHelper.make_value_visible(lines_to_requeue),
+                ParserHelper.make_value_visible(requeue_line_info.lines_to_requeue),
             )
-            return None, None, lines_to_requeue, force_ignore_first_as_lrd
+            return None, None, requeue_line_info
 
         LOGGER.debug("old-stack>>%s<<", str(container_level_tokens))
         repeat_check = True
@@ -997,7 +992,7 @@ class ListBlockProcessor:
                     repeat_check = True
             else:
                 LOGGER.debug("post_list>>close open blocks and emit")
-                close_tokens, _, _ = parser_state.close_open_blocks_fn(
+                close_tokens, _ = parser_state.close_open_blocks_fn(
                     parser_state, until_this_index=last_list_index, include_lists=True
                 )
                 assert close_tokens
@@ -1023,7 +1018,7 @@ class ListBlockProcessor:
                         <= parser_state.token_stack[last_list_index].indent_level
                     ):
                         repeat_check = True
-        return container_level_tokens, emit_li, None, None
+        return container_level_tokens, emit_li, None
 
     @staticmethod
     def __are_list_starts_equal(
@@ -1045,7 +1040,7 @@ class ListBlockProcessor:
             str(new_stack),
         )
         if parser_state.token_stack[last_list_index] == new_stack:
-            balancing_tokens, _, _ = parser_state.close_open_blocks_fn(
+            balancing_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 until_this_index=last_list_index,
                 include_block_quotes=True,
@@ -1131,7 +1126,7 @@ class ListBlockProcessor:
                     last_stack_index = parser_state.token_stack.index(
                         parser_state.token_stack[-1]
                     )
-                    close_tokens, _, _ = parser_state.close_open_blocks_fn(
+                    close_tokens, _ = parser_state.close_open_blocks_fn(
                         parser_state,
                         until_this_index=last_stack_index,
                         include_lists=True,
@@ -1229,7 +1224,7 @@ class ListBlockProcessor:
 
             LOGGER.debug("lsl %s", str(parser_state.token_stack[search_index]))
 
-            container_level_tokens, _, _ = parser_state.close_open_blocks_fn(
+            container_level_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state, until_this_index=search_index, include_lists=True
             )
             LOGGER.debug("container_level_tokens>%s>", str(container_level_tokens))

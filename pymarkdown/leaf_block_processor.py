@@ -142,7 +142,7 @@ class LeafBlockProcessor:
                     ]
 
                     old_top_of_stack = parser_state.token_stack[-1]
-                    new_tokens, _, _ = parser_state.close_open_blocks_fn(
+                    new_tokens, _ = parser_state.close_open_blocks_fn(
                         parser_state,
                         only_these_blocks=[ParagraphStackToken],
                     )
@@ -655,7 +655,7 @@ class LeafBlockProcessor:
                 )
                 del parser_state.token_stack[-1]
             if this_bq_count == 0 and stack_bq_count > 0:
-                new_tokens, _, _ = parser_state.close_open_blocks_fn(
+                new_tokens, _ = parser_state.close_open_blocks_fn(
                     parser_state,
                     destination_array=new_tokens,
                     only_these_blocks=[BlockQuoteStackToken],
@@ -735,9 +735,7 @@ class LeafBlockProcessor:
 
             old_top_of_stack = parser_state.token_stack[-1]
 
-            new_tokens, _, _ = parser_state.close_open_blocks_fn(
-                parser_state, new_tokens
-            )
+            new_tokens, _ = parser_state.close_open_blocks_fn(parser_state, new_tokens)
             remaining_line = position_marker.text_to_parse[non_whitespace_index:]
             (
                 end_index,
@@ -942,12 +940,12 @@ class LeafBlockProcessor:
                 parser_state
             )
             assert did_find
-            new_tokens, _, _ = parser_state.close_open_blocks_fn(
+            new_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state, until_this_index=last_list_index
             )
 
         if stack_bq_count != 0 and this_bq_count == 0:
-            new_tokens, _, _ = parser_state.close_open_blocks_fn(
+            new_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 only_these_blocks=[BlockQuoteStackToken],
                 include_block_quotes=True,
@@ -1126,7 +1124,7 @@ class LeafBlockProcessor:
             if removed_chars_at_start >= parser_state.token_stack[-1].indent_level:
                 repeat_loop = False
             else:
-                tokens_from_close, _, _ = parser_state.close_open_blocks_fn(
+                tokens_from_close, _ = parser_state.close_open_blocks_fn(
                     parser_state,
                     until_this_index=(len(parser_state.token_stack) - 1),
                     include_lists=True,

@@ -437,14 +437,12 @@ class LinkHelper:
                 elif (
                     inline_blocks[ind + 1].is_inline_link
                     or inline_blocks[ind + 1].is_inline_link_end
+                    or inline_blocks[ind + 1].is_inline_emphasis
+                    or inline_blocks[ind + 1].is_inline_emphasis_end
                 ):
                     pass
                 elif inline_blocks[ind + 1].is_inline_hard_break:
                     image_alt_text += ParserHelper.newline_character
-                elif inline_blocks[ind + 1].is_inline_emphasis:
-                    pass
-                elif inline_blocks[ind + 1].is_inline_emphasis_end:
-                    pass
                 else:
                     assert inline_blocks[
                         ind + 1
