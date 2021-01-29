@@ -7,6 +7,7 @@ import logging
 LOGGER = logging.getLogger(__name__)
 
 
+# pylint: disable=too-many-lines
 # pylint: disable=too-many-public-methods
 class ParserHelper:
     """
@@ -867,6 +868,18 @@ class ParserState:
         last_stack_index = len(self.token_stack) - 1
         while not self.token_stack[last_stack_index].is_document:
             if self.token_stack[last_stack_index].is_block_quote:
+                break
+            last_stack_index -= 1
+        return last_stack_index
+
+    def find_last_list_block_on_stack(self):
+        """
+        Finds the index of the last list block on the stack (from the end).
+        If no block quotes are found, 0 is returned.
+        """
+        last_stack_index = len(self.token_stack) - 1
+        while not self.token_stack[last_stack_index].is_document:
+            if self.token_stack[last_stack_index].is_list:
                 break
             last_stack_index -= 1
         return last_stack_index

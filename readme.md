@@ -50,9 +50,6 @@
   - switch from list to bq and back again
   - 270 and check for indent levels after
 
-- is_list and looking for a list on various stacks
-- various leading_spaces.split( type functions
-
 ### Priority 3 - Like To Solve in next 3 m
 
 - look for places where common access patterns can be used i.e. link_title

@@ -514,10 +514,8 @@ class ContainerBlockProcessor:
         """
 
         adj_ws = extracted_whitespace
-        stack_index = len(parser_state.token_stack) - 1
-        while stack_index >= 0 and not parser_state.token_stack[stack_index].is_list:
-            stack_index -= 1
-        if stack_index < 0:
+        stack_index = parser_state.find_last_list_block_on_stack()
+        if stack_index <= 0:
             LOGGER.debug("PLFCB>>No Started lists")
             assert len(current_container_blocks) == 0
             if foobar is None:
