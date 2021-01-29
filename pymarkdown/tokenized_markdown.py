@@ -5,7 +5,6 @@ import logging
 import os
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
-from pymarkdown.block_quote_processor import BlockQuoteProcessor
 from pymarkdown.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_block_processor import ContainerBlockProcessor
 from pymarkdown.html_helper import HtmlHelper
@@ -482,9 +481,7 @@ class TokenizedMarkdown:
             assert not did_pause_lrd
             force_default_handling = True
         elif parser_state.token_stack[-1].is_code_block:
-            stack_bq_count = BlockQuoteProcessor.count_of_block_quotes_on_stack(
-                parser_state
-            )
+            stack_bq_count = parser_state.count_of_block_quotes_on_stack()
             if stack_bq_count:
                 LOGGER.debug("hbl>>code block within block quote")
             else:
@@ -542,23 +539,16 @@ class TokenizedMarkdown:
 
     @staticmethod
     def __handle_blank_line_in_block_quote(parser_state):
-        found_bq = None
-        LOGGER.debug("blank--look for bq")
-        for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):
-            LOGGER.debug(
-                "blank--%s--%s",
-                str(stack_index),
-                ParserHelper.make_value_visible(parser_state.token_stack[stack_index]),
-            )
-            if parser_state.token_stack[stack_index].is_block_quote:
-                found_bq = parser_state.token_stack[stack_index]
-                break
-            if parser_state.token_stack[stack_index].is_list:
-                break
 
-        LOGGER.debug("blank>>bq_start>>%s", ParserHelper.make_value_visible(found_bq))
-        if found_bq:
-            found_bq.matching_markdown_token.add_leading_spaces("")
+        stack_index = parser_state.find_last_container_on_stack()
+        LOGGER.debug(
+            "blank>>bq_start>>%s",
+            ParserHelper.make_value_visible(parser_state.token_stack[stack_index]),
+        )
+        if stack_index > 0 and parser_state.token_stack[stack_index].is_block_quote:
+            parser_state.token_stack[
+                stack_index
+            ].matching_markdown_token.add_leading_spaces("")
 
 
 # pylint: enable=too-few-public-methods

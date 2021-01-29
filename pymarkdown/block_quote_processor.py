@@ -45,19 +45,6 @@ class BlockQuoteProcessor:
         return False
 
     @staticmethod
-    def count_of_block_quotes_on_stack(parser_state):
-        """
-        Helper method to count the number of block quotes currently on the stack.
-        """
-
-        stack_bq_count = 0
-        for next_item_on_stack in parser_state.token_stack:
-            if next_item_on_stack.is_block_quote:
-                stack_bq_count += 1
-
-        return stack_bq_count
-
-    @staticmethod
     def check_for_lazy_handling(
         parser_state,
         this_bq_count,
@@ -198,15 +185,11 @@ class BlockQuoteProcessor:
             was_container_start = True
             end_of_bquote_start_index = adjusted_index_number
         elif parser_state.token_stack[-1].was_link_definition_started:
-            stack_index = len(parser_state.token_stack) - 1
-            last_block_token = None
-            while stack_index > 0:
-                if parser_state.token_stack[stack_index].is_block_quote:
-                    last_block_token = parser_state.token_stack[
-                        stack_index
-                    ].matching_markdown_token
-                stack_index -= 1
-            if last_block_token:
+            stack_index = parser_state.find_last_block_quote_on_stack()
+            if stack_index > 0:
+                last_block_token = parser_state.token_stack[
+                    stack_index
+                ].matching_markdown_token
                 LOGGER.debug(
                     "handle_block w/ no open>>found>>%s",
                     ParserHelper.make_value_visible(last_block_token),
@@ -445,17 +428,9 @@ class BlockQuoteProcessor:
             removed_chars_at_start = start_index
             LOGGER.debug("==REM[%s],LTP[%s]", str(removed_text), str(line_to_parse))
 
-            stack_index = len(parser_state.token_stack) - 1
-            while True:
-                LOGGER.debug(
-                    "--%s--%s",
-                    str(stack_index),
-                    str(parser_state.token_stack[stack_index]),
-                )
-                if parser_state.token_stack[stack_index].is_block_quote:
-                    found_bq_stack_token = parser_state.token_stack[stack_index]
-                    break
-                stack_index -= 1
+            stack_index = parser_state.find_last_block_quote_on_stack()
+            assert stack_index != -1
+            found_bq_stack_token = parser_state.token_stack[stack_index]
             found_bq_stack_token.matching_markdown_token.add_leading_spaces(
                 removed_text
             )
@@ -522,18 +497,13 @@ class BlockQuoteProcessor:
                     )
                     container_level_tokens.extend(new_tokens)
 
-            # TODO collapse?
-            found_bq_stack_token = None
-            for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):
+            stack_index = parser_state.find_last_block_quote_on_stack()
+            if stack_index:
+                found_bq_stack_token = parser_state.token_stack[stack_index]
                 LOGGER.debug(
-                    "--%s--%s",
-                    str(stack_index),
-                    str(parser_state.token_stack[stack_index]),
+                    "found_bq_stack_token---%s<<<",
+                    ParserHelper.make_value_visible(found_bq_stack_token),
                 )
-                if parser_state.token_stack[stack_index].is_block_quote:
-                    found_bq_stack_token = parser_state.token_stack[stack_index]
-                    break
-            if found_bq_stack_token:
                 found_bq_stack_token.matching_markdown_token.add_leading_spaces(
                     removed_text
                 )

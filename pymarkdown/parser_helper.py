@@ -859,6 +859,45 @@ class ParserState:
         """
         return self.__no_para_start_if_empty
 
+    def find_last_block_quote_on_stack(self):
+        """
+        Finds the index of the last block quote on the stack (from the end).
+        If no block quotes are found, 0 is returned.
+        """
+        last_stack_index = len(self.token_stack) - 1
+        while not self.token_stack[last_stack_index].is_document:
+            if self.token_stack[last_stack_index].is_block_quote:
+                break
+            last_stack_index -= 1
+        return last_stack_index
+
+    def find_last_container_on_stack(self):
+        """
+        Finds the index of the last container on the stack (from the end).
+        If no container tokens are found, 0 is returned.
+        """
+        last_stack_index = len(self.token_stack) - 1
+        while not self.token_stack[last_stack_index].is_document:
+            if (
+                self.token_stack[last_stack_index].is_block_quote
+                or self.token_stack[last_stack_index].is_list
+            ):
+                break
+            last_stack_index -= 1
+        return last_stack_index
+
+    def count_of_block_quotes_on_stack(self):
+        """
+        Helper method to count the number of block quotes currently on the stack.
+        """
+
+        stack_bq_count = 0
+        for next_item_on_stack in self.token_stack:
+            if next_item_on_stack.is_block_quote:
+                stack_bq_count += 1
+
+        return stack_bq_count
+
     def mark_start_information(self, position_marker):
         """
         Mark the start of processing this line of information.  A lot of
@@ -870,11 +909,7 @@ class ParserState:
 
         self.__no_para_start_if_empty = False
 
-        last_stack_index = len(self.token_stack) - 1
-        while not self.token_stack[last_stack_index].is_document:
-            if self.token_stack[last_stack_index].is_block_quote:
-                break
-            last_stack_index -= 1
+        last_stack_index = self.find_last_block_quote_on_stack()
 
         self.__last_block_quote_stack_token = None
         self.__last_block_quote_markdown_token_index = None

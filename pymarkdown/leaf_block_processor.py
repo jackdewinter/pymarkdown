@@ -895,32 +895,27 @@ class LeafBlockProcessor:
             str(this_bq_count),
         )
 
-        top_list_token = None
-        top_block_token = None
-        for stack_index in range(len(parser_state.token_stack) - 1, 0, -1):
-            if parser_state.token_stack[stack_index].is_list:
-                top_list_token = parser_state.token_stack[stack_index]
-                break
-            if parser_state.token_stack[stack_index].is_block_quote:
-                top_block_token = parser_state.token_stack[stack_index]
-                break
-
+        container_index = parser_state.find_last_container_on_stack()
         adjusted_whitespace_length = 0
-        LOGGER.debug(">>list-owners>>%s", str(top_list_token))
-        LOGGER.debug(">>block-owners>>%s", str(top_block_token))
-        if top_block_token:
-            LeafBlockProcessor.__adjust_paragraph_for_block_quotes(
-                top_block_token,
-                extracted_whitespace,
-                text_removed_by_container,
-                force_it,
-                parser_state.token_document,
-            )
-
-        if top_list_token:
-            adjusted_whitespace_length = LeafBlockProcessor.__adjust_paragraph_for_list(
-                top_list_token, extracted_whitespace
-            )
+        if container_index > 0:
+            if parser_state.token_stack[container_index].is_block_quote:
+                top_block_token = parser_state.token_stack[container_index]
+                LOGGER.debug(">>block-owners>>%s", str(top_block_token))
+                LeafBlockProcessor.__adjust_paragraph_for_block_quotes(
+                    top_block_token,
+                    extracted_whitespace,
+                    text_removed_by_container,
+                    force_it,
+                    parser_state.token_document,
+                )
+            else:
+                top_list_token = parser_state.token_stack[container_index]
+                LOGGER.debug(">>list-owners>>%s", str(top_list_token))
+                adjusted_whitespace_length = (
+                    LeafBlockProcessor.__adjust_paragraph_for_list(
+                        top_list_token, extracted_whitespace
+                    )
+                )
 
         # In cases where the list ended on the same line as we are processing, the
         # container tokens will not yet be added to the token_document.  As such,
@@ -1021,13 +1016,13 @@ class LeafBlockProcessor:
         LOGGER.debug(
             ">>list-owners>>%s", ParserHelper.make_value_visible(token_document)
         )
-        number_of_block_quotes = 0
+        number_of_block_quote_ends = 0
         end_index = len(token_document) - 1
         while token_document[end_index].is_block_quote_end:
-            number_of_block_quotes += 1
+            number_of_block_quote_ends += 1
             end_index -= 1
         if (
-            number_of_block_quotes > 0
+            number_of_block_quote_ends > 0
             and token_document[end_index].is_fenced_code_block_end
         ):
             LOGGER.debug(">>block quote does not need adjusting")

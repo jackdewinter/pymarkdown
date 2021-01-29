@@ -779,13 +779,10 @@ class ListBlockProcessor:
         while this_bq_count < stack_bq_count:
 
             assert not container_level_tokens
-            inf = len(parser_state.token_stack) - 1
-            while not parser_state.token_stack[inf].is_block_quote:
-                inf -= 1
-
+            last_block_index = parser_state.find_last_block_quote_on_stack()
             container_level_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
-                until_this_index=inf,
+                until_this_index=last_block_index,
                 include_block_quotes=True,
                 include_lists=True,
             )

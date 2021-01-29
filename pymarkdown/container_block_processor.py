@@ -497,9 +497,7 @@ class ContainerBlockProcessor:
             foobar=foobar,
         )
 
-        stack_bq_count = BlockQuoteProcessor.count_of_block_quotes_on_stack(
-            parser_state
-        )
+        stack_bq_count = parser_state.count_of_block_quotes_on_stack()
 
         return current_container_blocks, adj_ws, stack_bq_count, this_bq_count
 
@@ -1218,9 +1216,7 @@ class ContainerBlockProcessor:
                     last_list_start_index,
                 )
             if not new_tokens:
-                stack_bq_count = BlockQuoteProcessor.count_of_block_quotes_on_stack(
-                    parser_state
-                )
+                stack_bq_count = parser_state.count_of_block_quotes_on_stack()
                 new_tokens = LeafBlockProcessor.parse_setext_headings(
                     parser_state,
                     position_marker,
@@ -1229,9 +1225,7 @@ class ContainerBlockProcessor:
                     stack_bq_count,
                 )
             if not new_tokens:
-                stack_bq_count = BlockQuoteProcessor.count_of_block_quotes_on_stack(
-                    parser_state
-                )
+                stack_bq_count = parser_state.count_of_block_quotes_on_stack()
                 new_tokens = LeafBlockProcessor.parse_thematic_break(
                     parser_state,
                     position_marker,
@@ -1240,9 +1234,7 @@ class ContainerBlockProcessor:
                     stack_bq_count,
                 )
             if not new_tokens:
-                stack_bq_count = BlockQuoteProcessor.count_of_block_quotes_on_stack(
-                    parser_state
-                )
+                stack_bq_count = parser_state.count_of_block_quotes_on_stack()
                 new_tokens = LeafBlockProcessor.parse_paragraph(
                     parser_state,
                     position_marker,
