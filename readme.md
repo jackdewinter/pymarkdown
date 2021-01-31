@@ -26,12 +26,6 @@
 
 - check resolve/remove helpers for groupings per file type i.e. html, markdown, proc, verify
   - i.e. ParserHelper.resolve_
-- check `__verify_next_inline_raw_html` for refactor
-- look for `valid_raw_html = "\n".join(split_raw)` and see if can combine
-- refactor `for stack_index in range(len(parser_state.token_stack) - 1, -1, -1):`
-  from different areas into one helper function
-  - leaf parse_paragraph
-  - len(parser_state
 - why does fcb with only newlines and newlines with ws not fold down to text?
   - coalesce with blank lines in fenced code block?
 - check for common code in consistency checks, i.e. link and image handling

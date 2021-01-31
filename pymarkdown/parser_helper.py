@@ -389,6 +389,74 @@ class ParserHelper:
         )
 
     @staticmethod
+    def calculate_deltas(text_to_analyze):
+        """
+        Calculate the deltas associated with a given string.
+        """
+
+        delta_line_number = 0
+        delta_column_number = 0
+        if ParserHelper.newline_character in text_to_analyze:
+            split_raw_tag = text_to_analyze.split(ParserHelper.newline_character)
+            delta_line_number += len(split_raw_tag) - 1
+
+            last_element = split_raw_tag[-1]
+            last_element = ParserHelper.resolve_replacement_markers_from_text(
+                last_element
+            )
+            last_element = ParserHelper.remove_escapes_from_text(last_element)
+            length_of_last_elements = len(last_element)
+
+            delta_column_number = -(length_of_last_elements + 1)
+        else:
+            delta_column_number = len(text_to_analyze)
+        return delta_line_number, delta_column_number
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def recombine_string_with_whitespace(
+        text_string,
+        whitespace_string,
+        start_index=0,
+        add_replace_marker_if_empty=False,
+        post_increment_index=False,
+        start_text_index=1,
+        add_whitespace_after=False,
+    ):
+        """
+        Properly recombine a text-string with a matching whitespace-string.
+        """
+        split_text_string = text_string.split(ParserHelper.newline_character)
+        split_whitespace_string = whitespace_string.split(
+            ParserHelper.newline_character
+        )
+        for i in range(start_text_index, len(split_text_string)):
+            if not post_increment_index:
+                start_index += 1
+            ew_part = split_whitespace_string[start_index]
+            if ew_part and add_replace_marker_if_empty:
+                ew_part = ParserHelper.create_replace_with_nothing_marker(ew_part)
+            if add_whitespace_after:
+                split_text_string[i] = split_text_string[i] + ew_part
+            else:
+                split_text_string[i] = ew_part + split_text_string[i]
+            if post_increment_index:
+                start_index += 1
+        text_string = ParserHelper.newline_character.join(split_text_string)
+        return text_string, start_index
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def calculate_last_line(text_string):
+        """
+        Determine the last line of a multi-line string.
+        """
+        split_label = text_string.split(ParserHelper.newline_character)
+        split_label = split_label[-1]
+        return split_label
+
+    @staticmethod
     def make_value_visible(value_to_modify):
         """
         For the given value, turn it into a string if necessary, and then replace

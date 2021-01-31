@@ -338,3 +338,14 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
             + MarkdownToken.extra_data_separator
             + self.__leading_spaces
         )
+
+    def calculate_next_leading_space_part(self, increment_index=True):
+        """
+        Calculate the next leading space based on the leading_text_index,
+        optonally incrementing it as well.
+        """
+        split_leading_spaces = self.leading_spaces.split(ParserHelper.newline_character)
+        leading_text = split_leading_spaces[self.leading_text_index]
+        if increment_index:
+            self.leading_text_index += 1
+        return leading_text

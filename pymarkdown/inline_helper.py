@@ -377,7 +377,7 @@ class InlineHelper:
             between_text = inline_request.source_text[
                 new_index:end_backtick_start_index
             ]
-            obt = between_text
+            original_between_text = between_text
             LOGGER.debug(
                 "after_collect>%s>>%s>>%s<<",
                 ParserHelper.make_value_visible(between_text),
@@ -466,21 +466,12 @@ class InlineHelper:
                 )
             ]
 
-            # TODO common for delta column?
-            if ParserHelper.newline_character in obt:
-                split_between_text = obt.split(ParserHelper.newline_character)
-                LOGGER.debug(
-                    ">>split_between_text>>%s<<",
-                    ParserHelper.make_value_visible(split_between_text),
-                )
-                last_between_text = split_between_text[-1]
-                inline_response.delta_line_number = len(split_between_text) - 1
-                inline_response.delta_column_number = -(
-                    len(last_between_text) + 1 + len(extracted_start_backticks)
-                )
-                LOGGER.debug(
-                    ">>delta_column_number>>%s<<",
-                    str(inline_response.delta_column_number),
+            if ParserHelper.newline_character in original_between_text:
+                (
+                    inline_response.delta_line_number,
+                    inline_response.delta_column_number,
+                ) = ParserHelper.calculate_deltas(
+                    original_between_text + extracted_start_backticks
                 )
 
         LOGGER.debug(
@@ -895,6 +886,7 @@ class InlineHelper:
             InlineHelper.__angle_bracket_end, inline_request.next_index
         )
         new_token = None
+        between_brackets = None
         if closing_angle_index not in (-1, inline_request.next_index + 1):
 
             between_brackets = inline_request.source_text[
@@ -904,9 +896,7 @@ class InlineHelper:
             closing_angle_index += 1
 
             new_column_number = inline_request.column_number
-            LOGGER.debug(">>new_column_number>>%s", str(new_column_number))
             new_column_number += len(inline_request.remaining_line)
-            LOGGER.debug(">>new_column_number>>%s", str(new_column_number))
 
             new_token = InlineHelper.__parse_valid_uri_autolink(
                 between_brackets, inline_request.line_number, new_column_number
@@ -916,8 +906,6 @@ class InlineHelper:
                     between_brackets, inline_request.line_number, new_column_number
                 )
             if not new_token:
-
-                LOGGER.debug(">>between_brackets>>%s<<", str(between_brackets))
                 new_token, after_index = HtmlHelper.parse_raw_html(
                     between_brackets,
                     remaining_line,
@@ -925,49 +913,27 @@ class InlineHelper:
                     new_column_number,
                     inline_request,
                 )
-                LOGGER.debug(">>new_token>>%s", str(new_token))
                 if after_index != -1:
                     closing_angle_index = after_index + inline_request.next_index + 1
+                    between_brackets = new_token.raw_tag
 
         inline_response = InlineResponse()
         if new_token:
             inline_response.new_string = ""
             inline_response.new_index = closing_angle_index
             inline_response.new_tokens = [new_token]
+            between_brackets = (
+                InlineHelper.angle_bracket_start
+                + between_brackets
+                + InlineHelper.__angle_bracket_end
+            )
         else:
             inline_response.new_string = InlineHelper.angle_bracket_start
             inline_response.new_index = inline_request.next_index + 1
+            between_brackets = InlineHelper.angle_bracket_start
 
-        # TODO is this common?
-        inline_response.delta_line_number = 0
-        if (
-            new_token
-            and new_token.is_inline_raw_html
-            and ParserHelper.newline_character in new_token.raw_tag
-        ):
-            split_raw_tag = new_token.raw_tag.split(ParserHelper.newline_character)
-            LOGGER.debug(
-                ">>split_raw_tag>>%s<<", ParserHelper.make_value_visible(split_raw_tag)
-            )
-            inline_response.delta_line_number += len(split_raw_tag) - 1
-
-            last_element = split_raw_tag[-1]
-            last_element = ParserHelper.resolve_replacement_markers_from_text(
-                last_element
-            )
-            last_element = ParserHelper.remove_escapes_from_text(last_element)
-            length_of_last_elements = len(last_element)
-            LOGGER.debug(
-                ">>xx>>%s<<", ParserHelper.make_value_visible(length_of_last_elements)
-            )
-
-            inline_response.delta_column_number = -(length_of_last_elements + 2)
-            LOGGER.debug(
-                ">>delta_column_number>>%s<<",
-                ParserHelper.make_value_visible(inline_response.delta_column_number),
-            )
-        else:
-            inline_response.delta_column_number = (
-                inline_response.new_index - inline_request.next_index
-            )
+        (
+            inline_response.delta_line_number,
+            inline_response.delta_column_number,
+        ) = ParserHelper.calculate_deltas(between_brackets)
         return inline_response

@@ -151,23 +151,11 @@ class InlineProcessor:
                         new_column_number = 1
 
                         if coalesced_stack:
-                            LOGGER.debug(
-                                "COAL_STACK:%s",
-                                ParserHelper.make_value_visible(coalesced_stack[-1]),
-                            )
                             assert coalesced_stack[-1].leading_spaces
                             split_leading_spaces = coalesced_stack[
                                 -1
                             ].leading_spaces.split(ParserHelper.newline_character)
-                            LOGGER.debug(
-                                "COAL_STACK:%s",
-                                ParserHelper.make_value_visible(split_leading_spaces),
-                            )
                             assert len(split_leading_spaces) >= 2
-                            LOGGER.info(
-                                "coalesced_stack:%s<",
-                                ParserHelper.make_value_visible(split_leading_spaces),
-                            )
                             new_column_number += len(split_leading_spaces[1])
                         else:
                             leading_whitespace = coalesced_results[
@@ -624,18 +612,10 @@ class InlineProcessor:
                 para_owner.rehydrate_index += newline_count
             LOGGER.debug("full>>ex_label>>newline_count>>%s", str(newline_count))
 
-            split_label = current_token.ex_label.split(ParserHelper.newline_character)
-            LOGGER.debug(
-                "full>>ex_label>>split_label>>%s",
-                ParserHelper.make_value_visible(split_label),
+            last_line_of_label = ParserHelper.calculate_last_line(
+                current_token.ex_label
             )
-
-            split_label = split_label[-1]
-            LOGGER.debug(
-                "full>>ex_label>>split_label>>%s",
-                ParserHelper.make_value_visible(split_label),
-            )
-            repeat_count = -(len(split_label) + 1 + 1)
+            repeat_count = -(len(last_line_of_label) + 1 + 1)
         return delta_line, repeat_count
 
     # pylint: disable=too-many-arguments, too-many-branches, too-many-statements
@@ -696,15 +676,13 @@ class InlineProcessor:
         newline_count = ParserHelper.count_newlines_in_text(active_link_title)
         if newline_count:
             LOGGER.debug(">>active_link_title")
+            _, delta_column_number = ParserHelper.calculate_deltas(active_link_title)
             delta_line += newline_count
             if para_owner:
                 para_owner.rehydrate_index += newline_count
             last_spaces = ""
 
-            split_active_link_title = active_link_title.split(
-                ParserHelper.newline_character
-            )
-            link_part_lengths[2] = len(split_active_link_title[-1]) + 1
+            link_part_lengths[2] = -delta_column_number
             link_part_index = 2
         newline_count = ParserHelper.count_newlines_in_text(
             current_token.after_title_whitespace
@@ -727,8 +705,9 @@ class InlineProcessor:
                     split_paragraph_lines[para_owner.rehydrate_index]
                 )
             else:
-                split_last_spaces = last_spaces.split(ParserHelper.newline_character)
-                link_part_lengths[4] = len(split_last_spaces[-1])
+                link_part_lengths[4] = len(
+                    ParserHelper.calculate_last_line(last_spaces)
+                )
             link_part_lengths[:link_part_index] = [0] * link_part_index
             repeat_count = -(2 + sum(link_part_lengths))
             LOGGER.debug(">>link_part_lengths>>%s<<", str(link_part_lengths))
@@ -818,25 +797,6 @@ class InlineProcessor:
         )
         return delta_line, repeat_count
 
-    @staticmethod
-    def __recombine_with_whitespace(source_text, whitespace_to_recombine):
-        split_source_text = source_text.split(ParserHelper.newline_character)
-        split_whitespace_to_recombine = whitespace_to_recombine.split(
-            ParserHelper.newline_character
-        )
-        assert len(split_source_text) == len(split_whitespace_to_recombine)
-        recombined_text = None
-        for split_index, next_split_source in enumerate(split_source_text):
-            if recombined_text is None:
-                recombined_text = next_split_source
-            else:
-                recombined_text += (
-                    ParserHelper.newline_character
-                    + split_whitespace_to_recombine[split_index]
-                    + next_split_source
-                )
-        return recombined_text
-
     @staticmethod  # noqa: C901
     # pylint: disable=too-many-statements, too-many-locals, too-many-arguments, too-many-branches
     def __process_inline_text_block(
@@ -880,7 +840,7 @@ class InlineProcessor:
             whitespace_to_recombine
             and ParserHelper.space_character in whitespace_to_recombine
         ):
-            source_text = InlineProcessor.__recombine_with_whitespace(
+            source_text, _ = ParserHelper.recombine_string_with_whitespace(
                 source_text, whitespace_to_recombine
             )
         else:

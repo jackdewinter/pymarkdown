@@ -590,40 +590,19 @@ class HtmlHelper:
             valid_raw_html = HtmlHelper.__parse_raw_declaration(only_between_angles)
 
         if valid_raw_html:
-
             if (
                 ParserHelper.newline_character in valid_raw_html
                 and inline_request.para_owner
             ):
-
-                # TODO common?
-                split_raw = valid_raw_html.split(ParserHelper.newline_character)
-                LOGGER.debug(
-                    ">>split_raw>>%s<<", ParserHelper.make_value_visible(split_raw)
+                (
+                    valid_raw_html,
+                    inline_request.para_owner.rehydrate_index,
+                ) = ParserHelper.recombine_string_with_whitespace(
+                    valid_raw_html,
+                    inline_request.para_owner.extracted_whitespace,
+                    inline_request.para_owner.rehydrate_index,
+                    add_replace_marker_if_empty=True,
                 )
-                LOGGER.debug(
-                    ">>para_owner>>%s<<",
-                    ParserHelper.make_value_visible(inline_request.para_owner),
-                )
-                split_ew = inline_request.para_owner.extracted_whitespace.split(
-                    ParserHelper.newline_character
-                )
-                LOGGER.debug(">>split>>%s<<", ParserHelper.make_value_visible(split_ew))
-                LOGGER.debug(
-                    ">>rehydrate_index>>%s<<",
-                    str(inline_request.para_owner.rehydrate_index),
-                )
-
-                # TODO look for this pattern
-                for i in range(1, len(split_raw)):
-                    inline_request.para_owner.rehydrate_index += 1
-                    ew_part = split_ew[inline_request.para_owner.rehydrate_index]
-                    if ew_part:
-                        ew_part = ParserHelper.create_replace_with_nothing_marker(
-                            ew_part
-                        )
-                    split_raw[i] = ew_part + split_raw[i]
-                valid_raw_html = ParserHelper.newline_character.join(split_raw)
             return (
                 RawHtmlMarkdownToken(valid_raw_html, line_number, column_number),
                 remaining_line_parse_index,
