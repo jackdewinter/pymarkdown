@@ -87,7 +87,7 @@ class TokenizedMarkdown:
             LOGGER.debug("\n\n>>>>>>>final_pass_results>>>>>>")
             return final_pass_results
         except Exception as this_exception:
-            raise BadTokenizationError() from this_exception
+            raise BadTokenizationError("An unhandled error occurred processing the document.") from this_exception
 
     # pylint: disable=too-many-statements
     def __parse_blocks_pass(self):
@@ -107,112 +107,120 @@ class TokenizedMarkdown:
         LOGGER.debug("---%s---", str(token_to_use))
         LOGGER.debug("---")
         line_number = 1
-        keep_on_going = True
-        while keep_on_going:
-            LOGGER.debug("next-line>>%s", str(token_to_use))
-            LOGGER.debug("stack>>%s", str(self.stack))
-            LOGGER.debug("current_block>>%s", str(self.stack[-1]))
-            LOGGER.debug("line_number>>%s", str(line_number))
-            LOGGER.debug("---")
-
-            position_marker = PositionMarker(line_number, 0, token_to_use)
-            parser_state = ParserState(
-                self.stack,
-                self.tokenized_document,
-                TokenizedMarkdown.__close_open_blocks,
-                self.__handle_blank_line,
-            )
-            if did_start_close:
-                LOGGER.debug("\n\ncleanup")
-
-                was_link_definition_started_before_close = False
-                if self.stack[-1].was_link_definition_started:
-                    was_link_definition_started_before_close = True
-
-                did_started_close = True
-                (
-                    tokens_from_line,
-                    requeue_line_info,
-                ) = TokenizedMarkdown.__close_open_blocks(
-                    parser_state,
-                    self.tokenized_document,
-                    include_block_quotes=True,
-                    include_lists=True,
-                    caller_can_handle_requeue=True,
-                    was_forced=True,
-                )
-                if tokens_from_line and not self.tokenized_document:
-                    self.tokenized_document.extend(tokens_from_line)
-
-                if not (requeue_line_info and requeue_line_info.lines_to_requeue):
-                    keep_on_going = False
-                else:
-                    assert was_link_definition_started_before_close
-                    assert not requeue_line_info.lines_to_requeue[0]
-
-                    del requeue_line_info.lines_to_requeue[0]
-                    line_number -= 1
-
-                    did_start_close = False
-                    tokens_from_line = None
-            else:
-                LOGGER.debug(
-                    ">>>>%s", ParserHelper.make_value_visible(self.tokenized_document)
-                )
-
-                if not token_to_use or not token_to_use.strip():
-                    LOGGER.debug("call __parse_blocks_pass>>handle_blank_line")
-                    (tokens_from_line, requeue_line_info,) = self.__handle_blank_line(
-                        parser_state,
-                        token_to_use,
-                        from_main_transform=True,
-                        position_marker=position_marker,
-                    )
-                else:
-                    LOGGER.debug("\n\nnormal lines")
-                    (
-                        tokens_from_line,
-                        _,
-                        requeue_line_info,
-                    ) = ContainerBlockProcessor.parse_line_for_container_blocks(
-                        parser_state,
-                        position_marker,
-                        ignore_link_definition_start,
-                    )
-
-                LOGGER.debug(
-                    "<<<<%s", ParserHelper.make_value_visible(self.tokenized_document)
-                )
-
-            if keep_on_going:
-                line_number, ignore_link_definition_start = TokenizedMarkdown.__xx(
-                    line_number, requeue_line_info, requeue
-                )
-
-                LOGGER.debug(
-                    "---\nbefore>>%s",
-                    ParserHelper.make_value_visible(self.tokenized_document),
-                )
-                LOGGER.debug(
-                    "before>>%s", ParserHelper.make_value_visible(tokens_from_line)
-                )
-                if tokens_from_line:
-                    self.tokenized_document.extend(tokens_from_line)
-                LOGGER.debug(
-                    "after>>%s",
-                    ParserHelper.make_value_visible(self.tokenized_document),
-                )
-                if requeue:
-                    LOGGER.debug("requeue>>%s", str(requeue))
+        try:
+            keep_on_going = True
+            while keep_on_going:
+                LOGGER.debug("next-line>>%s", str(token_to_use))
+                LOGGER.debug("stack>>%s", str(self.stack))
+                LOGGER.debug("current_block>>%s", str(self.stack[-1]))
+                LOGGER.debug("line_number>>%s", str(line_number))
                 LOGGER.debug("---")
 
-                (
-                    token_to_use,
-                    did_start_close,
-                    did_started_close,
-                ) = self.__determine_next_token_process(
-                    requeue, did_start_close, did_started_close
+                position_marker = PositionMarker(line_number, 0, token_to_use)
+                parser_state = ParserState(
+                    self.stack,
+                    self.tokenized_document,
+                    TokenizedMarkdown.__close_open_blocks,
+                    self.__handle_blank_line,
                 )
+                if did_start_close:
+                    LOGGER.debug("\n\ncleanup")
+
+                    was_link_definition_started_before_close = False
+                    if self.stack[-1].was_link_definition_started:
+                        was_link_definition_started_before_close = True
+
+                    did_started_close = True
+                    (
+                        tokens_from_line,
+                        requeue_line_info,
+                    ) = TokenizedMarkdown.__close_open_blocks(
+                        parser_state,
+                        self.tokenized_document,
+                        include_block_quotes=True,
+                        include_lists=True,
+                        caller_can_handle_requeue=True,
+                        was_forced=True,
+                    )
+                    if tokens_from_line and not self.tokenized_document:
+                        self.tokenized_document.extend(tokens_from_line)
+
+                    if not (requeue_line_info and requeue_line_info.lines_to_requeue):
+                        keep_on_going = False
+                    else:
+                        assert was_link_definition_started_before_close
+                        assert not requeue_line_info.lines_to_requeue[0]
+
+                        del requeue_line_info.lines_to_requeue[0]
+                        line_number -= 1
+
+                        did_start_close = False
+                        tokens_from_line = None
+                else:
+                    LOGGER.debug(
+                        ">>>>%s", ParserHelper.make_value_visible(self.tokenized_document)
+                    )
+
+                    if not token_to_use or not token_to_use.strip():
+                        LOGGER.debug("call __parse_blocks_pass>>handle_blank_line")
+                        (tokens_from_line, requeue_line_info,) = self.__handle_blank_line(
+                            parser_state,
+                            token_to_use,
+                            from_main_transform=True,
+                            position_marker=position_marker,
+                        )
+                    else:
+                        LOGGER.debug("\n\nnormal lines")
+                        (
+                            tokens_from_line,
+                            _,
+                            requeue_line_info,
+                        ) = ContainerBlockProcessor.parse_line_for_container_blocks(
+                            parser_state,
+                            position_marker,
+                            ignore_link_definition_start,
+                        )
+
+                    LOGGER.debug(
+                        "<<<<%s", ParserHelper.make_value_visible(self.tokenized_document)
+                    )
+
+                if keep_on_going:
+                    line_number, ignore_link_definition_start = TokenizedMarkdown.__xx(
+                        line_number, requeue_line_info, requeue
+                    )
+
+                    LOGGER.debug(
+                        "---\nbefore>>%s",
+                        ParserHelper.make_value_visible(self.tokenized_document),
+                    )
+                    LOGGER.debug(
+                        "before>>%s", ParserHelper.make_value_visible(tokens_from_line)
+                    )
+                    if tokens_from_line:
+                        self.tokenized_document.extend(tokens_from_line)
+                    LOGGER.debug(
+                        "after>>%s",
+                        ParserHelper.make_value_visible(self.tokenized_document),
+                    )
+                    if requeue:
+                        LOGGER.debug("requeue>>%s", str(requeue))
+                    LOGGER.debug("---")
+
+                    (
+                        token_to_use,
+                        did_start_close,
+                        did_started_close,
+                    ) = self.__determine_next_token_process(
+                        requeue, did_start_close, did_started_close
+                    )
+        except AssertionError as this_exception:
+            error_message = (
+                "A project assertion failed on line "
+                + str(line_number)
+                + " of the current document."
+            )
+            raise BadTokenizationError(error_message) from this_exception
 
         return self.tokenized_document
 

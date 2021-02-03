@@ -10,6 +10,7 @@
 
 - test_paragraph_series_m_ul_t_nl_ulb_nl_tb - with abc/def/*
 
+- stop gap solution for handling Tabs until tab work can be done
 - possible to merge link token and image token more closely?
 
 - why does hard break not have \n? (fix before release)
@@ -71,12 +72,9 @@
 
 - test_link_reference_definitions_extra_02b vs test_link_reference_definitions_extra_02c
 
-## Bugs - Tokenization
-
-- should be able to have tabs and not trigger bad tokens, should be excluded?
-
 ## Bugs - Tabs
 
+- should be able to have tabs and not trigger bad tokens, should be excluded?
 - check is_length_less_than_or_equal_to to see if any issues with tabs
   - most likely in conjunction with starting another type of block
 - 004
