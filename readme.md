@@ -11,7 +11,6 @@
 - test_paragraph_series_m_ul_t_nl_ulb_nl_tb - with abc/def/*
 
 - possible to merge link token and image token more closely?
-- __handle_extracted_paragraph_whitespace ? more use?
 
 - why does hard break not have \n? (fix before release)
   - hard break followed by 3 spaces, then emphasis

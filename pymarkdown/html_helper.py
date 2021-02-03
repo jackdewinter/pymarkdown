@@ -590,10 +590,7 @@ class HtmlHelper:
             valid_raw_html = HtmlHelper.__parse_raw_declaration(only_between_angles)
 
         if valid_raw_html:
-            if (
-                ParserHelper.newline_character in valid_raw_html
-                and inline_request.para_owner
-            ):
+            if inline_request.para_owner:
                 (
                     valid_raw_html,
                     inline_request.para_owner.rehydrate_index,

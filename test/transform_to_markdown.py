@@ -1604,33 +1604,15 @@ class TransformToMarkdown:
         raw_text = ParserHelper.resolve_replacement_markers_from_text(raw_text)
         raw_text = ParserHelper.remove_escapes_from_text(raw_text)
 
-        print("raw_html>>before>>" + ParserHelper.make_value_visible(raw_text))
-        raw_text = self.__handle_extracted_paragraph_whitespace(raw_text)
-        print("raw_html>>after>>" + ParserHelper.make_value_visible(raw_text))
+        if self.block_stack[-1].is_paragraph:
+            print("raw_html>>before>>" + ParserHelper.make_value_visible(raw_text))
+            self.block_stack[-1].rehydrate_index += ParserHelper.count_newlines_in_text(
+                raw_text
+            )
+            print("raw_html>>after>>" + ParserHelper.make_value_visible(raw_text))
         return "<" + raw_text + ">"
 
     # pylint: enable=unused-argument
-
-    def __handle_extracted_paragraph_whitespace(self, raw_text, fix_me=False):
-
-        if (
-            ParserHelper.newline_character in raw_text
-            and self.block_stack[-1].is_paragraph
-        ):
-            if fix_me:
-                (
-                    raw_text,
-                    self.block_stack[-1].rehydrate_index,
-                ) = ParserHelper.recombine_string_with_whitespace(
-                    raw_text,
-                    self.block_stack[-1].extracted_whitespace,
-                    self.block_stack[-1].rehydrate_index,
-                )
-            else:
-                self.block_stack[
-                    -1
-                ].rehydrate_index += ParserHelper.count_newlines_in_text(raw_text)
-        return raw_text
 
     # pylint: disable=unused-argument
     def __rehydrate_inline_code_span(self, current_token, previous_token):
@@ -1655,37 +1637,31 @@ class TransformToMarkdown:
             current_token.trailing_whitespace
         )
 
-        print(
-            "leading_whitespace>>before>>"
-            + ParserHelper.make_value_visible(leading_whitespace)
-            + "<<"
-        )
-        leading_whitespace = self.__handle_extracted_paragraph_whitespace(
-            leading_whitespace, fix_me=True
-        )
-        print(
-            "leading_whitespace>>after>>"
-            + ParserHelper.make_value_visible(leading_whitespace)
-            + "<<"
-        )
-
-        print("span_text>>before>>" + ParserHelper.make_value_visible(span_text) + "<<")
-        span_text = self.__handle_extracted_paragraph_whitespace(span_text, fix_me=True)
-        print("span_text>>after>>" + ParserHelper.make_value_visible(span_text) + "<<")
-
-        print(
-            "trailing_whitespace>>before>>"
-            + ParserHelper.make_value_visible(trailing_whitespace)
-            + "<<"
-        )
-        trailing_whitespace = self.__handle_extracted_paragraph_whitespace(
-            trailing_whitespace, fix_me=True
-        )
-        print(
-            "trailing_whitespace>>after>>"
-            + ParserHelper.make_value_visible(trailing_whitespace)
-            + "<<"
-        )
+        if self.block_stack[-1].is_paragraph:
+            (
+                leading_whitespace,
+                self.block_stack[-1].rehydrate_index,
+            ) = ParserHelper.recombine_string_with_whitespace(
+                leading_whitespace,
+                self.block_stack[-1].extracted_whitespace,
+                self.block_stack[-1].rehydrate_index,
+            )
+            (
+                span_text,
+                self.block_stack[-1].rehydrate_index,
+            ) = ParserHelper.recombine_string_with_whitespace(
+                span_text,
+                self.block_stack[-1].extracted_whitespace,
+                self.block_stack[-1].rehydrate_index,
+            )
+            (
+                trailing_whitespace,
+                self.block_stack[-1].rehydrate_index,
+            ) = ParserHelper.recombine_string_with_whitespace(
+                trailing_whitespace,
+                self.block_stack[-1].extracted_whitespace,
+                self.block_stack[-1].rehydrate_index,
+            )
 
         return (
             current_token.extracted_start_backticks

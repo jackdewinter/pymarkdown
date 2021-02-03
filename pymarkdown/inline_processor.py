@@ -836,15 +836,10 @@ class InlineProcessor:
             "__process_inline_text_block>>column_number>>%s>",
             ParserHelper.make_value_visible(column_number),
         )
-        if (
-            whitespace_to_recombine
-            and ParserHelper.space_character in whitespace_to_recombine
-        ):
+        if whitespace_to_recombine:
             source_text, _ = ParserHelper.recombine_string_with_whitespace(
                 source_text, whitespace_to_recombine
             )
-        else:
-            whitespace_to_recombine = None
         LOGGER.debug(
             "__process_inline_text_block>>source_text>>%s",
             ParserHelper.make_value_visible(source_text),
