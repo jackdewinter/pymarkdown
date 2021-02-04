@@ -6,8 +6,9 @@ import logging
 from pymarkdown.constants import Constants
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
 
-LOGGER = logging.getLogger(__name__)
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 # pylint: disable=too-many-arguments
@@ -692,12 +693,12 @@ class TextMarkdownToken(InlineMarkdownToken):
             whitespace_to_append = whitespace_present
             prefix_whitespace = ""
         else:
-            LOGGER.debug(
-                "whitespace_present>>%s>>%s<<",
-                str(len(whitespace_present)),
-                str(whitespace_present),
+            POGGER.debug(
+                "whitespace_present>>$>>$<<",
+                len(whitespace_present),
+                whitespace_present,
             )
-            LOGGER.debug("remove_leading_spaces>>%s<<", str(remove_leading_spaces))
+            POGGER.debug("remove_leading_spaces>>$<<", remove_leading_spaces)
             if len(whitespace_present) < remove_leading_spaces:
                 removed_whitespace = whitespace_present
                 prefix_whitespace = ""

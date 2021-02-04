@@ -10,8 +10,5 @@ class BadTokenizationError(Exception):
     """
 
     def __init__(self, formatted_message=None):
-        if not formatted_message:
-            formatted_message = (
-                "File was not translated from Markdown text to Markdown tokens."
-            )
+        assert formatted_message
         super().__init__(formatted_message)

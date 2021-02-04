@@ -15,10 +15,11 @@ from pymarkdown.leaf_markdown_token import BlankLineMarkdownToken
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
 from pymarkdown.parser_helper import ParserHelper, ParserState, PositionMarker
+from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.source_providers import InMemorySourceProvider
 from pymarkdown.stack_token import DocumentStackToken, ParagraphStackToken
 
-LOGGER = logging.getLogger(__name__)
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 # pylint: disable=too-few-public-methods
@@ -73,23 +74,25 @@ class TokenizedMarkdown:
             InlineProcessor.initialize()
             LinkHelper.initialize()
 
-            LOGGER.debug("\n\n>>>>>>>parse_blocks_pass>>>>>>")
+            POGGER.debug("\n\n>>>>>>>parse_blocks_pass>>>>>>")
             first_pass_results = self.__parse_blocks_pass()
 
-            LOGGER.debug("\n\n>>>>>>>coalesce_text_blocks>>>>>>")
+            POGGER.debug("\n\n>>>>>>>coalesce_text_blocks>>>>>>")
             coalesced_results = CoalesceProcessor.coalesce_text_blocks(
                 first_pass_results
             )
 
-            LOGGER.debug("\n\n>>>>>>>parse_inline>>>>>>")
+            POGGER.debug("\n\n>>>>>>>parse_inline>>>>>>")
             final_pass_results = InlineProcessor.parse_inline(coalesced_results)
 
-            LOGGER.debug("\n\n>>>>>>>final_pass_results>>>>>>")
+            POGGER.debug("\n\n>>>>>>>final_pass_results>>>>>>")
             return final_pass_results
         except Exception as this_exception:
-            raise BadTokenizationError("An unhandled error occurred processing the document.") from this_exception
+            raise BadTokenizationError(
+                "An unhandled error occurred processing the document."
+            ) from this_exception
 
-    # pylint: disable=too-many-statements
+    # pylint: disable=too-many-statements,too-many-locals,too-many-branches
     def __parse_blocks_pass(self):
         """
         The first pass at the tokens is to deal with blocks.
@@ -104,17 +107,17 @@ class TokenizedMarkdown:
         did_started_close = False
         requeue = []
         ignore_link_definition_start = False
-        LOGGER.debug("---%s---", str(token_to_use))
-        LOGGER.debug("---")
+        POGGER.debug("---$---", token_to_use)
+        POGGER.debug("---")
         line_number = 1
         try:
             keep_on_going = True
             while keep_on_going:
-                LOGGER.debug("next-line>>%s", str(token_to_use))
-                LOGGER.debug("stack>>%s", str(self.stack))
-                LOGGER.debug("current_block>>%s", str(self.stack[-1]))
-                LOGGER.debug("line_number>>%s", str(line_number))
-                LOGGER.debug("---")
+                POGGER.debug("next-line>>$", token_to_use)
+                POGGER.debug("stack>>$", self.stack)
+                POGGER.debug("current_block>>$", self.stack[-1])
+                POGGER.debug("line_number>>$", line_number)
+                POGGER.debug("---")
 
                 position_marker = PositionMarker(line_number, 0, token_to_use)
                 parser_state = ParserState(
@@ -124,7 +127,7 @@ class TokenizedMarkdown:
                     self.__handle_blank_line,
                 )
                 if did_start_close:
-                    LOGGER.debug("\n\ncleanup")
+                    POGGER.debug("\n\ncleanup")
 
                     was_link_definition_started_before_close = False
                     if self.stack[-1].was_link_definition_started:
@@ -157,20 +160,21 @@ class TokenizedMarkdown:
                         did_start_close = False
                         tokens_from_line = None
                 else:
-                    LOGGER.debug(
-                        ">>>>%s", ParserHelper.make_value_visible(self.tokenized_document)
-                    )
+                    POGGER.debug(">>>>$", self.tokenized_document)
 
                     if not token_to_use or not token_to_use.strip():
-                        LOGGER.debug("call __parse_blocks_pass>>handle_blank_line")
-                        (tokens_from_line, requeue_line_info,) = self.__handle_blank_line(
+                        POGGER.debug("call __parse_blocks_pass>>handle_blank_line")
+                        (
+                            tokens_from_line,
+                            requeue_line_info,
+                        ) = self.__handle_blank_line(
                             parser_state,
                             token_to_use,
                             from_main_transform=True,
                             position_marker=position_marker,
                         )
                     else:
-                        LOGGER.debug("\n\nnormal lines")
+                        POGGER.debug("\n\nnormal lines")
                         (
                             tokens_from_line,
                             _,
@@ -181,31 +185,27 @@ class TokenizedMarkdown:
                             ignore_link_definition_start,
                         )
 
-                    LOGGER.debug(
-                        "<<<<%s", ParserHelper.make_value_visible(self.tokenized_document)
-                    )
+                    POGGER.debug("<<<<$", self.tokenized_document)
 
                 if keep_on_going:
                     line_number, ignore_link_definition_start = TokenizedMarkdown.__xx(
                         line_number, requeue_line_info, requeue
                     )
 
-                    LOGGER.debug(
-                        "---\nbefore>>%s",
-                        ParserHelper.make_value_visible(self.tokenized_document),
+                    POGGER.debug(
+                        "---\nbefore>>$",
+                        self.tokenized_document,
                     )
-                    LOGGER.debug(
-                        "before>>%s", ParserHelper.make_value_visible(tokens_from_line)
-                    )
+                    POGGER.debug("before>>$", tokens_from_line)
                     if tokens_from_line:
                         self.tokenized_document.extend(tokens_from_line)
-                    LOGGER.debug(
-                        "after>>%s",
-                        ParserHelper.make_value_visible(self.tokenized_document),
+                    POGGER.debug(
+                        "after>>$",
+                        self.tokenized_document,
                     )
                     if requeue:
-                        LOGGER.debug("requeue>>%s", str(requeue))
-                    LOGGER.debug("---")
+                        POGGER.debug("requeue>>$", requeue)
+                    POGGER.debug("---")
 
                     (
                         token_to_use,
@@ -224,14 +224,14 @@ class TokenizedMarkdown:
 
         return self.tokenized_document
 
-    # pylint: enable=too-many-statements
+    # pylint: enable=too-many-statements,too-many-locals,too-many-branches
 
     @staticmethod
     def __xx(line_number, requeue_line_info, requeue):
 
         if requeue_line_info and requeue_line_info.lines_to_requeue:
             number_of_lines_to_requeue = len(requeue_line_info.lines_to_requeue)
-            LOGGER.debug("\n\n---lines_to_requeue>>%s", str(number_of_lines_to_requeue))
+            POGGER.debug("\n\n---lines_to_requeue>>$", number_of_lines_to_requeue)
             line_number -= number_of_lines_to_requeue - 1
 
             for i in requeue_line_info.lines_to_requeue:
@@ -240,7 +240,7 @@ class TokenizedMarkdown:
         else:
             ignore_link_definition_start = False
             line_number += 1
-        LOGGER.debug("line_number>>%s\n---", str(line_number))
+        POGGER.debug("line_number>>$\n---", line_number)
 
         return line_number, ignore_link_definition_start
 
@@ -253,11 +253,11 @@ class TokenizedMarkdown:
 
         token_to_use = None
         if requeue:
-            LOGGER.debug(">>Requeues present")
+            POGGER.debug(">>Requeues present")
             token_to_use = requeue[0]
             del requeue[0]
-            LOGGER.debug(">>Requeue>>%s", str(token_to_use))
-            LOGGER.debug(">>Requeues left>>%s", str(requeue))
+            POGGER.debug(">>Requeue>>$", token_to_use)
+            POGGER.debug(">>Requeues left>>$", requeue)
         elif did_started_close:
             did_start_close = True
         else:
@@ -288,62 +288,58 @@ class TokenizedMarkdown:
         if destination_array:
             new_tokens = destination_array
 
-        LOGGER.debug("cob-start>>%s", str(parser_state.token_stack))
-        LOGGER.debug(
-            "cob-start>>%s",
-            ParserHelper.make_value_visible(parser_state.token_document),
+        POGGER.debug("cob-start>>$", parser_state.token_stack)
+        POGGER.debug(
+            "cob-start>>$",
+            parser_state.token_document,
         )
         if destination_array:
-            LOGGER.debug(
-                "cob-destination_array>>%s",
-                ParserHelper.make_value_visible(destination_array),
+            POGGER.debug(
+                "cob-destination_array>>$",
+                destination_array,
             )
         if only_these_blocks:
-            LOGGER.debug("cob-only_these_blocks>>%s", str(only_these_blocks))
+            POGGER.debug("cob-only_these_blocks>>$", only_these_blocks)
         if include_block_quotes:
-            LOGGER.debug("cob-include_block_quotes>>%s", str(include_block_quotes))
+            POGGER.debug("cob-include_block_quotes>>$", include_block_quotes)
         if include_lists:
-            LOGGER.debug("cob-include_lists>>%s", str(include_lists))
+            POGGER.debug("cob-include_lists>>$", include_lists)
         if until_this_index != -1:
-            LOGGER.debug("cob-until_this_index>>%s", str(until_this_index))
+            POGGER.debug("cob-until_this_index>>$", until_this_index)
         if caller_can_handle_requeue:
-            LOGGER.debug(
-                "cob-caller_can_handle_requeue>>%s", str(caller_can_handle_requeue)
-            )
+            POGGER.debug("cob-caller_can_handle_requeue>>$", caller_can_handle_requeue)
         if was_forced:
-            LOGGER.debug("cob-was_forced>>%s", str(was_forced))
+            POGGER.debug("cob-was_forced>>$", was_forced)
         while not parser_state.token_stack[-1].is_document:
 
             was_close_forced = was_forced
-            LOGGER.debug("cob>>%s", str(parser_state.token_stack))
+            POGGER.debug("cob>>$", parser_state.token_stack)
             if only_these_blocks:
-                LOGGER.debug("cob-only-type>>%s", str(only_these_blocks))
-                LOGGER.debug(
-                    "cob-only-type>>%s", str(type(parser_state.token_stack[-1]))
-                )
+                POGGER.debug("cob-only-type>>$", only_these_blocks)
+                POGGER.debug("cob-only-type>>$", type(parser_state.token_stack[-1]))
                 # pylint: disable=unidiomatic-typecheck
                 if type(parser_state.token_stack[-1]) not in only_these_blocks:
-                    LOGGER.debug("cob>>not in only")
+                    POGGER.debug("cob>>not in only")
                     break
                 # pylint: enable=unidiomatic-typecheck
             if not include_block_quotes and parser_state.token_stack[-1].is_block_quote:
-                LOGGER.debug("cob>>not block quotes")
+                POGGER.debug("cob>>not block quotes")
                 break
             if not include_lists and parser_state.token_stack[-1].is_list:
-                LOGGER.debug("cob>>not lists")
+                POGGER.debug("cob>>not lists")
                 break
             if until_this_index != -1:
-                LOGGER.debug(
-                    "NOT ME!!!!%s<<%s<<",
-                    str(until_this_index),
-                    str(len(parser_state.token_stack)),
+                POGGER.debug(
+                    "NOT ME!!!!$<<$<<",
+                    until_this_index,
+                    len(parser_state.token_stack),
                 )
                 if until_this_index >= len(parser_state.token_stack):
                     break
                 was_close_forced = True
 
             if parser_state.token_stack[-1].was_link_definition_started:
-                LOGGER.debug(
+                POGGER.debug(
                     "cob->process_link_reference_definition>>stopping link definition"
                 )
                 empty_position_marker = PositionMarker(-1, 0, "")
@@ -356,51 +352,47 @@ class TokenizedMarkdown:
                 ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
                     parser_state, empty_position_marker, "", "", "", 0, 0
                 )
-                LOGGER.debug("BOOOM")
+                POGGER.debug("BOOOM")
                 if (
                     caller_can_handle_requeue
                     and requeue_line_info
                     and requeue_line_info.lines_to_requeue
                 ):
-                    LOGGER.debug("BOOOM-->break")
+                    POGGER.debug("BOOOM-->break")
                     break
                 assert not (requeue_line_info and requeue_line_info.lines_to_requeue)
-                LOGGER.debug(
-                    "cob->process_link_reference_definition>>outer_processed>>%s",
-                    str(outer_processed),
+                POGGER.debug(
+                    "cob->process_link_reference_definition>>outer_processed>>$",
+                    outer_processed,
                 )
-                LOGGER.debug(
-                    "cob->process_link_reference_definition>>did_complete_lrd>>%s",
-                    str(did_complete_lrd),
+                POGGER.debug(
+                    "cob->process_link_reference_definition>>did_complete_lrd>>$",
+                    did_complete_lrd,
                 )
-                LOGGER.debug(
-                    "cob->process_link_reference_definition>>adjusted_tokens>>%s",
-                    str(adjusted_tokens),
+                POGGER.debug(
+                    "cob->process_link_reference_definition>>adjusted_tokens>>$",
+                    adjusted_tokens,
                 )
                 assert not did_pause_lrd
             else:
-                LOGGER.debug(
-                    "cob-rem>>%s",
-                    ParserHelper.make_value_visible(parser_state.token_document),
+                POGGER.debug(
+                    "cob-rem>>$",
+                    parser_state.token_document,
                 )
                 adjusted_tokens = TokenizedMarkdown.__remove_top_element_from_stack(
                     parser_state, was_close_forced
                 )
-                LOGGER.debug(
-                    "cob-rem<<%s",
-                    ParserHelper.make_value_visible(parser_state.token_document),
+                POGGER.debug(
+                    "cob-rem<<$",
+                    parser_state.token_document,
                 )
-                LOGGER.debug("cob-adj<<%s", str(adjusted_tokens))
+                POGGER.debug("cob-adj<<$", adjusted_tokens)
 
             new_tokens.extend(adjusted_tokens)
 
-        LOGGER.debug("cob-end>>%s", str(parser_state.token_stack))
-        LOGGER.debug(
-            "cob-end>>%s", ParserHelper.make_value_visible(parser_state.token_document)
-        )
-        LOGGER.debug(
-            "cob-end>>new_tokens>>%s", ParserHelper.make_value_visible(new_tokens)
-        )
+        POGGER.debug("cob-end>>$", parser_state.token_stack)
+        POGGER.debug("cob-end>>$", parser_state.token_document)
+        POGGER.debug("cob-end>>new_tokens>>$", new_tokens)
         return new_tokens, requeue_line_info
 
     # pylint: enable=too-many-arguments,too-many-locals,too-many-statements, too-many-branches
@@ -413,8 +405,8 @@ class TokenizedMarkdown:
         """
 
         new_tokens = []
-        LOGGER.debug("cob->top_element->%s", str(parser_state.token_stack[-1]))
-        LOGGER.debug("cob->was_forced->%s", str(was_forced))
+        POGGER.debug("cob->top_element->$", parser_state.token_stack[-1])
+        POGGER.debug("cob->was_forced->$", was_forced)
         extra_elements = []
         if parser_state.token_stack[-1].is_indented_code_block:
             extra_elements.extend(
@@ -450,10 +442,10 @@ class TokenizedMarkdown:
         if not from_main_transform:
             close_only_these_blocks = [ParagraphStackToken]
             do_include_block_quotes = False
-        LOGGER.debug("hbl>>from_main_transform>>%s", str(from_main_transform))
-        LOGGER.debug("hbl>>close_only_these_blocks>>%s", str(close_only_these_blocks))
-        LOGGER.debug("hbl>>do_include_block_quotes>>%s", str(do_include_block_quotes))
-        LOGGER.debug("hbl>>forced_close_until_index>>%s", str(forced_close_until_index))
+        POGGER.debug("hbl>>from_main_transform>>$", from_main_transform)
+        POGGER.debug("hbl>>close_only_these_blocks>>$", close_only_these_blocks)
+        POGGER.debug("hbl>>do_include_block_quotes>>$", do_include_block_quotes)
+        POGGER.debug("hbl>>forced_close_until_index>>$", forced_close_until_index)
 
         non_whitespace_index, extracted_whitespace = ParserHelper.extract_whitespace(
             input_line, 0
@@ -462,18 +454,18 @@ class TokenizedMarkdown:
         is_processing_list, in_index = LeafBlockProcessor.check_for_list_in_process(
             parser_state
         )
-        LOGGER.debug(
-            "hbl>>is_processing_list>>%s>>in_index>>%s>>last_stack>>%s",
-            str(is_processing_list),
-            str(in_index),
-            str(parser_state.token_stack[-1]),
+        POGGER.debug(
+            "hbl>>is_processing_list>>$>>in_index>>$>>last_stack>>$",
+            is_processing_list,
+            in_index,
+            parser_state.token_stack[-1],
         )
 
         requeue_line_info = None
         new_tokens = None
         force_default_handling = False
         if parser_state.token_stack[-1].was_link_definition_started:
-            LOGGER.debug(
+            POGGER.debug(
                 "hbl>>process_link_reference_definition>>stopping link definition"
             )
             empty_position_marker = PositionMarker(-1, 0, "")
@@ -491,24 +483,24 @@ class TokenizedMarkdown:
         elif parser_state.token_stack[-1].is_code_block:
             stack_bq_count = parser_state.count_of_block_quotes_on_stack()
             if stack_bq_count:
-                LOGGER.debug("hbl>>code block within block quote")
+                POGGER.debug("hbl>>code block within block quote")
             else:
-                LOGGER.debug("hbl>>code block")
+                POGGER.debug("hbl>>code block")
                 new_tokens = []
         elif parser_state.token_stack[-1].is_html_block:
-            LOGGER.debug("hbl>>check_blank_html_block_end")
+            POGGER.debug("hbl>>check_blank_html_block_end")
             new_tokens = HtmlHelper.check_blank_html_block_end(parser_state)
         elif (
             is_processing_list
             and parser_state.token_document[-1].is_blank_line
             and parser_state.token_document[-2].is_list_start
         ):
-            LOGGER.debug("hbl>>double blank in list")
+            POGGER.debug("hbl>>double blank in list")
             new_tokens, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state, until_this_index=in_index, include_lists=True
             )
         elif forced_close_until_index:
-            LOGGER.debug("hbl>>forced_close_until_index")
+            POGGER.debug("hbl>>forced_close_until_index")
             new_tokens, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state,
                 until_this_index=forced_close_until_index,
@@ -517,11 +509,11 @@ class TokenizedMarkdown:
             )
 
         if from_main_transform:
-            LOGGER.debug("hbl>>__handle_blank_line_in_block_quote")
+            POGGER.debug("hbl>>__handle_blank_line_in_block_quote")
             TokenizedMarkdown.__handle_blank_line_in_block_quote(parser_state)
 
         if force_default_handling or new_tokens is None:
-            LOGGER.debug("hbl>>default blank handling-->cob")
+            POGGER.debug("hbl>>default blank handling-->cob")
             n_tokens, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state,
                 only_these_blocks=close_only_these_blocks,
@@ -533,13 +525,13 @@ class TokenizedMarkdown:
             else:
                 new_tokens = n_tokens
 
-        LOGGER.debug("hbl>>new_tokens>>%s", str(new_tokens))
+        POGGER.debug("hbl>>new_tokens>>$", new_tokens)
         assert non_whitespace_index == len(input_line)
         if not (requeue_line_info and requeue_line_info.force_ignore_first_as_lrd):
             new_tokens.append(
                 BlankLineMarkdownToken(extracted_whitespace, position_marker)
             )
-        LOGGER.debug("hbl>>new_tokens>>%s", str(new_tokens))
+        POGGER.debug("hbl>>new_tokens>>$", new_tokens)
 
         return new_tokens, requeue_line_info
 
@@ -549,9 +541,9 @@ class TokenizedMarkdown:
     def __handle_blank_line_in_block_quote(parser_state):
 
         stack_index = parser_state.find_last_container_on_stack()
-        LOGGER.debug(
-            "blank>>bq_start>>%s",
-            ParserHelper.make_value_visible(parser_state.token_stack[stack_index]),
+        POGGER.debug(
+            "blank>>bq_start>>$",
+            parser_state.token_stack[stack_index],
         )
         if stack_index > 0 and parser_state.token_stack[stack_index].is_block_quote:
             parser_state.token_stack[

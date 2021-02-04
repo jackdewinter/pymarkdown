@@ -10,9 +10,12 @@ import sys
 import traceback
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
+from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager import BadPluginError, PluginManager
 from pymarkdown.source_providers import FileSourceProvider
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
+
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 LOGGER = logging.getLogger(__name__)
 
@@ -176,16 +179,16 @@ class PyMarkdownLint:
     def __process_next_path(self, next_path, files_to_parse):
 
         did_find_any = False
-        LOGGER.info("Determining files to scan for path '%s'.", next_path)
+        POGGER.info("Determining files to scan for path '$'.", next_path)
         if not os.path.exists(next_path):
             print(
                 "Provided path '" + next_path + "' does not exist.",
                 file=sys.stderr,
             )
-            LOGGER.debug("Provided path '%s' does not exist.", next_path)
+            POGGER.debug("Provided path '$' does not exist.", next_path)
         elif os.path.isdir(next_path):
-            LOGGER.debug(
-                "Provided path '%s' is a directory. Walking directory.", next_path
+            POGGER.debug(
+                "Provided path '$' is a directory. Walking directory.", next_path
             )
             did_find_any = True
             for root, _, files in os.walk(next_path):
@@ -196,15 +199,15 @@ class PyMarkdownLint:
                         files_to_parse.add(rooted_file_path)
         else:
             if self.__is_file_eligible_to_scan(next_path):
-                LOGGER.debug(
-                    "Provided path '%s' is a valid file. Adding.",
+                POGGER.debug(
+                    "Provided path '$' is a valid file. Adding.",
                     next_path,
                 )
                 files_to_parse.add(next_path)
                 did_find_any = True
             else:
-                LOGGER.debug(
-                    "Provided path '%s' is not a valid file. Skipping.",
+                POGGER.debug(
+                    "Provided path '$' is not a valid file. Skipping.",
                     next_path,
                 )
                 print(
@@ -242,7 +245,7 @@ class PyMarkdownLint:
         files_to_parse = list(files_to_parse)
         files_to_parse.sort()
 
-        LOGGER.info("Number of files found: %s", str(len(files_to_parse)))
+        POGGER.info("Number of files found: $", len(files_to_parse))
         return files_to_parse, did_error_scanning_files
 
     @classmethod
@@ -372,7 +375,7 @@ class PyMarkdownLint:
             else:
                 base_logger.setLevel(PyMarkdownLint.available_log_maps[args.log_level])
 
-            LOGGER.info("Determining files to scan.")
+            POGGER.info("Determining files to scan.")
             files_to_scan, did_error_scanning_files = self.__determine_files_to_scan(
                 args.paths
             )

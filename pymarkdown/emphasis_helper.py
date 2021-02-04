@@ -6,8 +6,9 @@ import logging
 from pymarkdown.constants import Constants
 from pymarkdown.inline_markdown_token import EmphasisMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
 
-LOGGER = logging.getLogger(__name__)
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 # pylint: disable=too-few-public-methods
@@ -28,17 +29,17 @@ class EmphasisHelper:
         delimiter_stack = []
         special_count = 0
         for next_block in inline_blocks:
-            LOGGER.debug(
-                "special_count>>%s>>%s",
-                str(special_count),
-                ParserHelper.make_value_visible(next_block),
+            POGGER.debug(
+                "special_count>>$>>$",
+                special_count,
+                next_block,
             )
             special_count += 1
             if not next_block.is_special_text:
                 continue
-            LOGGER.debug(
-                "i>>%s>>%s",
-                str(len(delimiter_stack)),
+            POGGER.debug(
+                "i>>$>>$",
+                len(delimiter_stack),
                 next_block.show_process_emphasis(),
             )
             delimiter_stack.append(next_block)
@@ -49,39 +50,37 @@ class EmphasisHelper:
         current_position = stack_bottom + 1
         openers_bottom = stack_bottom
         if current_position < len(delimiter_stack):
-            LOGGER.debug(
-                "BLOCK(%s) of (%s)", str(current_position), str(len(delimiter_stack))
-            )
-            LOGGER.debug(
-                "BLOCK(%s)-->%s",
-                str(current_position),
+            POGGER.debug("BLOCK($) of ($)", current_position, len(delimiter_stack))
+            POGGER.debug(
+                "BLOCK($)-->$",
+                current_position,
                 delimiter_stack[current_position].show_process_emphasis(),
             )
 
             while current_position < (len(delimiter_stack) - 1):
                 current_position += 1
-                LOGGER.debug(
-                    "Block(%s)-->%s",
-                    str(current_position),
+                POGGER.debug(
+                    "Block($)-->$",
+                    current_position,
                     delimiter_stack[current_position].show_process_emphasis(),
                 )
                 if not delimiter_stack[current_position].is_active:
-                    LOGGER.debug("not active")
+                    POGGER.debug("not active")
                     continue
                 if (
                     delimiter_stack[current_position].token_text[0]
                     not in EmphasisHelper.inline_emphasis
                 ):
-                    LOGGER.debug("not emphasis")
+                    POGGER.debug("not emphasis")
                     continue
                 if not EmphasisHelper.__is_potential_closer(
                     delimiter_stack[current_position]
                 ):
-                    LOGGER.debug("not closer")
+                    POGGER.debug("not closer")
                     continue
 
                 close_token = delimiter_stack[current_position]
-                LOGGER.debug("potential closer-->%s", str(current_position))
+                POGGER.debug("potential closer-->$", current_position)
                 scan_index = current_position - 1
                 found_opener = None
                 while (
@@ -89,7 +88,7 @@ class EmphasisHelper:
                     and scan_index > stack_bottom
                     and scan_index > openers_bottom
                 ):
-                    LOGGER.debug("potential opener:%s", str(scan_index))
+                    POGGER.debug("potential opener:$", scan_index)
                     open_token = delimiter_stack[scan_index]
                     is_valid_opener = EmphasisHelper.__is_open_close_emphasis_valid(
                         open_token, close_token
@@ -98,15 +97,15 @@ class EmphasisHelper:
                         found_opener = open_token
                         break
                     scan_index -= 1
-                    LOGGER.debug(
-                        "scan_index-->%s>stack_bottom>%s>openers_bottom>%s>",
-                        str(scan_index),
-                        str(stack_bottom),
-                        str(openers_bottom),
+                    POGGER.debug(
+                        "scan_index-->$>stack_bottom>$>openers_bottom>$>",
+                        scan_index,
+                        stack_bottom,
+                        openers_bottom,
                     )
 
                 if found_opener:
-                    LOGGER.debug("FOUND OPEN")
+                    POGGER.debug("FOUND OPEN")
                     current_position = EmphasisHelper.__process_emphasis_pair(
                         inline_blocks,
                         found_opener,
@@ -115,11 +114,9 @@ class EmphasisHelper:
                     )
                 else:
                     # openers_bottom = current_position - 1
-                    LOGGER.debug(
-                        "NOT FOUND OPEN, openers_bottom=%s", str(openers_bottom)
-                    )
+                    POGGER.debug("NOT FOUND OPEN, openers_bottom=$", openers_bottom)
 
-                LOGGER.debug("next->%s", str(current_position))
+                POGGER.debug("next->$", current_position)
 
         EmphasisHelper.__reset_token_text(inline_blocks)
         EmphasisHelper.__clear_remaining_emphasis(delimiter_stack, stack_bottom)
@@ -140,15 +137,15 @@ class EmphasisHelper:
         emphasis_character = open_token.token_text[0]
 
         # add emph node in main stream
-        LOGGER.debug("open_token>>%s", str(open_token))
-        LOGGER.debug("close_token>>%s", str(close_token))
+        POGGER.debug("open_token>>$", open_token)
+        POGGER.debug("close_token>>$", close_token)
 
-        LOGGER.debug("open_token.repeat_count>>%s", str(open_token.repeat_count))
-        LOGGER.debug("emphasis_length>>%s", str(emphasis_length))
+        POGGER.debug("open_token.repeat_count>>$", open_token.repeat_count)
+        POGGER.debug("emphasis_length>>$", emphasis_length)
         open_column_number_delta = 0
         if emphasis_length < open_token.repeat_count:
             open_column_number_delta = open_token.repeat_count - emphasis_length
-        LOGGER.debug("open_column_number_delta>>%s", str(open_column_number_delta))
+        POGGER.debug("open_column_number_delta>>$", open_column_number_delta)
 
         start_index_in_blocks = inline_blocks.index(open_token)
         new_token = EmphasisMarkdownToken(
@@ -175,42 +172,42 @@ class EmphasisHelper:
         end_index_in_blocks += 1
 
         # remove emphasis_length from open and close nodes
-        LOGGER.debug(
-            "%s>>close_token>>%s<<",
-            str(end_index_in_blocks),
+        POGGER.debug(
+            "$>>close_token>>$<<",
+            end_index_in_blocks,
             close_token.show_process_emphasis(),
         )
         close_token.reduce_repeat_count(emphasis_length, adjust_column_number=True)
         if not close_token.repeat_count:
             inline_blocks.remove(close_token)
-            LOGGER.debug("close_token>>removed")
+            POGGER.debug("close_token>>removed")
             end_index_in_blocks -= 1
             close_token.deactivate()
         else:
             current_position -= 1
-        LOGGER.debug("close_token>>%s<<", close_token.show_process_emphasis())
+        POGGER.debug("close_token>>$<<", close_token.show_process_emphasis())
 
-        LOGGER.debug(
-            "%s>>open_token>>%s<<",
-            str(start_index_in_blocks),
+        POGGER.debug(
+            "$>>open_token>>$<<",
+            start_index_in_blocks,
             open_token.show_process_emphasis(),
         )
         open_token.reduce_repeat_count(emphasis_length)
         if not open_token.repeat_count:
             inline_blocks.remove(open_token)
-            LOGGER.debug("open_token>>removed")
+            POGGER.debug("open_token>>removed")
             end_index_in_blocks -= 1
             open_token.deactivate()
-        LOGGER.debug("open_token>>%s<<", open_token.show_process_emphasis())
+        POGGER.debug("open_token>>$<<", open_token.show_process_emphasis())
 
         # "remove" between start and end from delimiter_stack
         inline_index = start_index_in_blocks + 1
         while inline_index < end_index_in_blocks:
-            LOGGER.debug(
-                "inline_index>>%s>>end>>%s>>%s",
-                str(inline_index),
-                str(end_index_in_blocks),
-                str(len(inline_blocks)),
+            POGGER.debug(
+                "inline_index>>$>>end>>$>>$",
+                inline_index,
+                end_index_in_blocks,
+                len(inline_blocks),
             )
             if inline_blocks[inline_index].is_special_text:
                 inline_blocks[inline_index].deactivate()
@@ -227,7 +224,7 @@ class EmphasisHelper:
 
         if wall_token:
             wall_index_in_inlines = inline_blocks.index(wall_token)
-            LOGGER.debug(">>wall_index_in_inlines>>%s", str(wall_index_in_inlines))
+            POGGER.debug(">>wall_index_in_inlines>>$", wall_index_in_inlines)
             while wall_index_in_inlines >= 0:
                 if inline_blocks[wall_index_in_inlines].is_special_text:
                     wall_index_in_inlines = delimiter_stack.index(
@@ -235,7 +232,7 @@ class EmphasisHelper:
                     )
                     break
                 wall_index_in_inlines -= 1
-            LOGGER.debug(">>wall_index_in_inlines(mod)>>%s", str(wall_index_in_inlines))
+            POGGER.debug(">>wall_index_in_inlines(mod)>>$", wall_index_in_inlines)
             stack_bottom = wall_index_in_inlines
         else:
             stack_bottom = -1
@@ -380,24 +377,24 @@ class EmphasisHelper:
         if not (
             open_token.token_text and open_token.token_text[0] == matching_delimiter
         ):
-            LOGGER.debug("  delimiter mismatch")
+            POGGER.debug("  delimiter mismatch")
         elif not open_token.is_active:
-            LOGGER.debug("  not active")
+            POGGER.debug("  not active")
         elif open_token.is_active and EmphasisHelper.__is_potential_opener(open_token):
             is_valid_opener = True
             is_closer_both = EmphasisHelper.__is_potential_closer(
                 close_token
             ) and EmphasisHelper.__is_potential_opener(close_token)
-            LOGGER.debug("is_closer_both>>%s", str(is_closer_both))
+            POGGER.debug("is_closer_both>>$", is_closer_both)
             is_opener_both = EmphasisHelper.__is_potential_closer(
                 open_token
             ) and EmphasisHelper.__is_potential_opener(open_token)
-            LOGGER.debug("is_opener_both>>%s", str(is_opener_both))
+            POGGER.debug("is_opener_both>>%s", is_opener_both)
             if is_closer_both or is_opener_both:
                 sum_repeat_count = close_token.repeat_count + open_token.repeat_count
-                LOGGER.debug("sum_delims>>%s", str(sum_repeat_count))
-                LOGGER.debug("closer_delims>>%s", str(close_token.repeat_count))
-                LOGGER.debug("opener_delims>>%s", str(open_token.repeat_count))
+                POGGER.debug("sum_delims>>$", sum_repeat_count)
+                POGGER.debug("closer_delims>>$", close_token.repeat_count)
+                POGGER.debug("opener_delims>>$", open_token.repeat_count)
 
                 if sum_repeat_count % 3 == 0:
                     is_valid_opener = (

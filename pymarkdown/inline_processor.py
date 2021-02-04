@@ -8,8 +8,9 @@ from pymarkdown.inline_helper import InlineHelper, InlineRequest, InlineResponse
 from pymarkdown.inline_markdown_token import SpecialTextMarkdownToken, TextMarkdownToken
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
 
-LOGGER = logging.getLogger(__name__)
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 # pylint: disable=too-many-lines
 
@@ -113,11 +114,11 @@ class InlineProcessor:
         """
         Parse and resolve any inline elements.
         """
-        LOGGER.info("coalesced_results")
-        LOGGER.info("-----")
+        POGGER.info("coalesced_results")
+        POGGER.info("-----")
         for next_token in coalesced_results:
-            LOGGER.info(">>%s<<", ParserHelper.make_value_visible(next_token))
-        LOGGER.info("-----")
+            POGGER.info(">>$<<", next_token)
+        POGGER.info("-----")
 
         coalesced_stack = []
 
@@ -125,12 +126,12 @@ class InlineProcessor:
         coalesced_list.extend(coalesced_results[0:1])
 
         current_token = coalesced_results[0]
-        LOGGER.debug("STACK?:%s", ParserHelper.make_value_visible(current_token))
+        POGGER.debug("STACK?:$", current_token)
         if current_token.is_container:
-            LOGGER.debug("STACK:%s", ParserHelper.make_value_visible(coalesced_stack))
+            POGGER.debug("STACK:$", coalesced_stack)
             coalesced_stack.append(current_token)
-            LOGGER.debug("STACK-ADD:%s", ParserHelper.make_value_visible(current_token))
-            LOGGER.debug("STACK:%s", ParserHelper.make_value_visible(coalesced_stack))
+            POGGER.debug("STACK-ADD:$", current_token)
+            POGGER.debug("STACK:$", coalesced_stack)
 
         for coalesce_index in range(1, len(coalesced_results)):
             if coalesced_results[coalesce_index].is_text and (
@@ -139,7 +140,7 @@ class InlineProcessor:
                 or coalesced_list[-1].is_atx_heading
                 or coalesced_list[-1].is_code_block
             ):
-                LOGGER.info("coalesced_results:%s<", str(coalesced_list[-1]))
+                POGGER.info("coalesced_results:$<", coalesced_list[-1])
                 if coalesced_list[-1].is_code_block:
                     encoded_text = InlineHelper.append_text(
                         "", coalesced_results[coalesce_index].token_text
@@ -161,28 +162,20 @@ class InlineProcessor:
                             leading_whitespace = coalesced_results[
                                 coalesce_index
                             ].extracted_whitespace
-                            LOGGER.debug(
-                                ">>%s<<",
-                                ParserHelper.make_value_visible(
-                                    coalesced_results[coalesce_index]
-                                ),
-                            )
+                            POGGER.debug(">>$<<", coalesced_results[coalesce_index])
                             assert (
                                 ParserHelper.newline_character not in leading_whitespace
                             )
-                            LOGGER.info(
-                                "leading_whitespace:%s<",
-                                ParserHelper.make_value_visible(leading_whitespace),
+                            POGGER.info(
+                                "leading_whitespace:$<",
+                                leading_whitespace,
                             )
                             leading_whitespace = (
                                 ParserHelper.resolve_replacement_markers_from_text(
                                     leading_whitespace
                                 )
                             )
-                            LOGGER.info(
-                                "leading_whitespace:%s<",
-                                ParserHelper.make_value_visible(leading_whitespace),
-                            )
+                            POGGER.info("leading_whitespace:$<", leading_whitespace)
                             new_column_number += len(leading_whitespace)
                     processed_tokens = [
                         TextMarkdownToken(
@@ -193,22 +186,22 @@ class InlineProcessor:
                             column_number=new_column_number,
                         )
                     ]
-                    LOGGER.debug(
-                        "new Text>>%s>>",
-                        ParserHelper.make_value_visible(processed_tokens),
+                    POGGER.debug(
+                        "new Text>>$>>",
+                        processed_tokens,
                     )
                 elif coalesced_list[-1].is_setext_heading:
                     combined_text = coalesced_results[coalesce_index].token_text
                     combined_whitespace_text = coalesced_results[
                         coalesce_index
                     ].extracted_whitespace.replace(ParserHelper.tab_character, "    ")
-                    LOGGER.debug(
-                        "combined_text>>%s",
-                        ParserHelper.make_value_visible(combined_text),
+                    POGGER.debug(
+                        "combined_text>>$",
+                        combined_text,
                     )
-                    LOGGER.debug(
-                        "combined_whitespace_text>>%s",
-                        ParserHelper.make_value_visible(combined_whitespace_text),
+                    POGGER.debug(
+                        "combined_whitespace_text>>$",
+                        combined_whitespace_text,
                     )
                     processed_tokens = InlineProcessor.__process_inline_text_block(
                         coalesced_results[coalesce_index].token_text.replace(
@@ -222,28 +215,19 @@ class InlineProcessor:
                         line_number=coalesced_results[coalesce_index].line_number,
                         column_number=coalesced_results[coalesce_index].column_number,
                     )
-                    LOGGER.debug(
-                        "processed_tokens>>%s",
-                        ParserHelper.make_value_visible(processed_tokens),
+                    POGGER.debug(
+                        "processed_tokens>>$",
+                        processed_tokens,
                     )
                 elif coalesced_list[-1].is_atx_heading:
-                    LOGGER.debug(
-                        "atx-block>>%s<<",
-                        ParserHelper.make_value_visible(
-                            coalesced_results[coalesce_index]
-                        ),
+                    POGGER.debug("atx-block>>$<<", coalesced_results[coalesce_index])
+                    POGGER.debug(
+                        "atx-block-text>>$<<",
+                        coalesced_results[coalesce_index].token_text,
                     )
-                    LOGGER.debug(
-                        "atx-block-text>>%s<<",
-                        ParserHelper.make_value_visible(
-                            coalesced_results[coalesce_index].token_text
-                        ),
-                    )
-                    LOGGER.debug(
-                        "atx-block-ws>>%s<<",
-                        ParserHelper.make_value_visible(
-                            coalesced_results[coalesce_index].extracted_whitespace
-                        ),
+                    POGGER.debug(
+                        "atx-block-ws>>$<<",
+                        coalesced_results[coalesce_index].extracted_whitespace,
                     )
                     processed_tokens = InlineProcessor.__process_inline_text_block(
                         coalesced_results[coalesce_index].token_text.replace(
@@ -259,22 +243,17 @@ class InlineProcessor:
                     )
                 else:
                     assert coalesced_list[-1].is_paragraph
-                    LOGGER.debug(
-                        ">>before_add_ws>>%s>>add>>%s>>",
-                        ParserHelper.make_value_visible(coalesced_list[-1]),
-                        ParserHelper.make_value_visible(
-                            coalesced_results[coalesce_index].extracted_whitespace
-                        ),
+                    POGGER.debug(
+                        ">>before_add_ws>>$>>add>>$>>",
+                        coalesced_list[-1],
+                        coalesced_results[coalesce_index].extracted_whitespace,
                     )
                     coalesced_list[-1].add_whitespace(
                         coalesced_results[coalesce_index].extracted_whitespace.replace(
                             ParserHelper.tab_character, "    "
                         )
                     )
-                    LOGGER.debug(
-                        ">>after_add_ws>>%s",
-                        ParserHelper.make_value_visible(coalesced_list[-1]),
-                    )
+                    POGGER.debug(">>after_add_ws>>$", coalesced_list[-1])
                     processed_tokens = InlineProcessor.__process_inline_text_block(
                         coalesced_results[coalesce_index].token_text.replace(
                             ParserHelper.tab_character, "    "
@@ -292,31 +271,21 @@ class InlineProcessor:
                 coalesced_list.append(coalesced_results[coalesce_index])
 
             current_token = coalesced_results[coalesce_index]
-            LOGGER.debug("STACK?:%s", ParserHelper.make_value_visible(current_token))
+            POGGER.debug("STACK?:$", current_token)
             if current_token.is_container and not current_token.is_new_list_item:
-                LOGGER.debug(
-                    "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
-                )
+                POGGER.debug("STACK:$", coalesced_stack)
                 coalesced_stack.append(current_token)
-                LOGGER.debug(
-                    "STACK-ADD:%s", ParserHelper.make_value_visible(current_token)
-                )
-                LOGGER.debug(
-                    "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
-                )
+                POGGER.debug("STACK-ADD:$", current_token)
+                POGGER.debug("STACK:$", coalesced_stack)
 
             elif current_token.is_list_end or current_token.is_block_quote_end:
-                LOGGER.debug(
-                    "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
-                )
+                POGGER.debug("STACK:$", coalesced_stack)
                 del coalesced_stack[-1]
-                LOGGER.debug(
-                    "STACK-REMOVE:%s",
-                    ParserHelper.make_value_visible(current_token),
+                POGGER.debug(
+                    "STACK-REMOVE:$",
+                    current_token,
                 )
-                LOGGER.debug(
-                    "STACK:%s", ParserHelper.make_value_visible(coalesced_stack)
-                )
+                POGGER.debug("STACK:$", coalesced_stack)
         return coalesced_list
 
     # pylint: enable=too-many-branches, too-many-statements, too-many-nested-blocks
@@ -386,12 +355,10 @@ class InlineProcessor:
         delta_line = 0
 
         consume_rest_of_line = False
-        LOGGER.debug(">>column_number>>%s<<", str(column_number))
-        LOGGER.debug(
-            ">>remaining_line>>%s<<", ParserHelper.make_value_visible(remaining_line)
-        )
+        POGGER.debug(">>column_number>>$<<", column_number)
+        POGGER.debug(">>remaining_line>>$<<", remaining_line)
         column_number += len(remaining_line)
-        LOGGER.debug(">>column_number>>%s<<", str(column_number))
+        POGGER.debug(">>column_number>>$<<", column_number)
         special_sequence = source_text[next_index : next_index + special_length]
         if special_length == 1 and special_sequence in EmphasisHelper.inline_emphasis:
             repeat_count, new_index = ParserHelper.collect_while_character(
@@ -405,28 +372,28 @@ class InlineProcessor:
             ]
         else:
             if special_sequence[0] == LinkHelper.link_label_end:
-                LOGGER.debug(
-                    "POSSIBLE LINK CLOSE_FOUND(%s)>>%s>>",
-                    str(special_length),
+                POGGER.debug(
+                    "POSSIBLE LINK CLOSE_FOUND($)>>$>>",
+                    special_length,
                     special_sequence,
                 )
-                LOGGER.debug(
-                    ">>inline_blocks>>%s<<",
-                    ParserHelper.make_value_visible(inline_blocks),
+                POGGER.debug(
+                    ">>inline_blocks>>$<<",
+                    inline_blocks,
                 )
-                LOGGER.debug(
-                    ">>remaining_line>>%s<<",
-                    ParserHelper.make_value_visible(remaining_line),
+                POGGER.debug(
+                    ">>remaining_line>>$<<",
+                    remaining_line,
                 )
-                LOGGER.debug(
-                    ">>current_string_unresolved>>%s<<",
-                    ParserHelper.make_value_visible(current_string_unresolved),
+                POGGER.debug(
+                    ">>current_string_unresolved>>$<<",
+                    current_string_unresolved,
                 )
-                LOGGER.debug(
-                    ">>source_text>>%s<<",
-                    ParserHelper.make_value_visible(source_text[next_index:]),
+                POGGER.debug(
+                    ">>source_text>>$<<",
+                    source_text[next_index:],
                 )
-                LOGGER.debug("")
+                POGGER.debug("")
                 old_inline_blocks_count = len(inline_blocks)
                 old_inline_blocks_last_token = None
                 if inline_blocks:
@@ -444,24 +411,14 @@ class InlineProcessor:
                     current_string_unresolved,
                     InlineProcessor.__process_simple_inline_fn,
                 )
-                LOGGER.debug(">>next_index>>%s<<", str(next_index))
-                LOGGER.debug(">>new_index>>%s<<", str(new_index))
-                LOGGER.debug(
-                    ">>inline_blocks>>%s<<",
-                    ParserHelper.make_value_visible(inline_blocks),
-                )
-                LOGGER.debug(
-                    ">>new_token>>%s<<", ParserHelper.make_value_visible(new_token)
-                )
-                LOGGER.debug(
-                    ">>source_text>>%s<<",
-                    ParserHelper.make_value_visible(source_text[new_index:]),
-                )
-                LOGGER.debug(">>consume_rest_of_line>>%s<<", str(consume_rest_of_line))
-                LOGGER.debug(
-                    ">>old_inline_blocks_count>>%s<<", str(old_inline_blocks_count)
-                )
-                LOGGER.debug(">>len(inline_blocks)>>%s<<", str(len(inline_blocks)))
+                POGGER.debug(">>next_index>>$<<", next_index)
+                POGGER.debug(">>new_index>>$<<", new_index)
+                POGGER.debug(">>inline_blocks>>$<<", inline_blocks)
+                POGGER.debug(">>new_token>>$<<", new_token)
+                POGGER.debug(">>source_text>>$<<", source_text[new_index:])
+                POGGER.debug(">>consume_rest_of_line>>$<<", consume_rest_of_line)
+                POGGER.debug(">>old_inline_blocks_count>>$<<", old_inline_blocks_count)
+                POGGER.debug(">>len(inline_blocks)>>$<<", len(inline_blocks))
 
                 if (
                     new_token
@@ -479,19 +436,17 @@ class InlineProcessor:
                         ) = InlineProcessor.__calculate_link_and_image_deltas(
                             para_owner, inline_blocks[-1], delta_line, repeat_count
                         )
-                        LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
-                        LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
+                        POGGER.debug(">>delta_line>>$<<", delta_line)
+                        POGGER.debug(">>repeat_count>>$<<", repeat_count)
                     elif new_token and new_token.is_inline_link_end:
-                        LOGGER.debug(
-                            ">>new_token.start_markdown_token>>%s<<",
-                            ParserHelper.make_value_visible(
-                                new_token.start_markdown_token
-                            ),
+                        POGGER.debug(
+                            ">>new_token.start_markdown_token>>$<<",
+                            new_token.start_markdown_token,
                         )
                         assert new_token.start_markdown_token
                         repeat_count = new_index - next_index
-                        LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
-                        LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
+                        POGGER.debug(">>delta_line>>$<<", delta_line)
+                        POGGER.debug(">>repeat_count>>$<<", repeat_count)
                         (
                             delta_line,
                             repeat_count,
@@ -501,17 +456,17 @@ class InlineProcessor:
                             delta_line,
                             repeat_count,
                         )
-                        LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
-                        LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
+                        POGGER.debug(">>delta_line>>$<<", delta_line)
+                        POGGER.debug(">>repeat_count>>$<<", repeat_count)
                     else:
                         repeat_count = new_index - next_index
-                        LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
+                        POGGER.debug(">>repeat_count>>$<<", repeat_count)
             else:
                 repeat_count = special_length
                 new_index = next_index + special_length
 
         if not new_token:
-            LOGGER.debug(">>create>>%s,%s<<", str(line_number), str(column_number))
+            POGGER.debug(">>create>>$,$<<", line_number, column_number)
             new_token = SpecialTextMarkdownToken(
                 special_sequence,
                 repeat_count,
@@ -522,8 +477,8 @@ class InlineProcessor:
                 column_number,
             )
 
-        LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
-        LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
+        POGGER.debug(">>delta_line>>$<<", delta_line)
+        POGGER.debug(">>repeat_count>>$<<", repeat_count)
         inline_response = InlineResponse()
         inline_response.new_string = ""
         inline_response.new_index = new_index
@@ -541,48 +496,38 @@ class InlineProcessor:
         Handle a simple processing of inline text for simple replacements.
         """
 
-        LOGGER.debug(">>source_text>>%s", ParserHelper.make_value_visible(source_text))
+        POGGER.debug(">>source_text>>$", source_text)
         start_index = 0
         processed_line = ""
-        LOGGER.debug(
-            ">>__valid_inline_simple_text_block_sequence_starts>>%s",
-            ParserHelper.make_value_visible(
-                InlineProcessor.__valid_inline_simple_text_block_sequence_starts
-            ),
+        POGGER.debug(
+            ">>__valid_inline_simple_text_block_sequence_starts>>$",
+            InlineProcessor.__valid_inline_simple_text_block_sequence_starts,
         )
         next_index = ParserHelper.index_any_of(
             source_text,
             InlineProcessor.__valid_inline_simple_text_block_sequence_starts,
             start_index,
         )
-        LOGGER.debug(">>next_index>>%s", str(next_index))
+        POGGER.debug(">>next_index>>$", next_index)
         while next_index != -1:
             processed_line += source_text[start_index:next_index]
             inline_request = InlineRequest(source_text, next_index)
             if source_text[next_index] in InlineProcessor.__inline_character_handlers:
-                LOGGER.debug(
-                    "handler(before)>>%s<<",
-                    ParserHelper.make_value_visible(source_text[next_index]),
+                POGGER.debug(
+                    "handler(before)>>$<<",
+                    source_text[next_index],
                 )
-                LOGGER.debug(
-                    "current_string_unresolved>>%s<<",
-                    ParserHelper.make_value_visible(processed_line),
-                )
+                POGGER.debug("current_string_unresolved>>$<<", processed_line)
                 proc_fn = InlineProcessor.__inline_character_handlers[
                     source_text[next_index]
                 ]
                 inline_response = proc_fn(inline_request)
                 processed_line += inline_response.new_string
-                LOGGER.debug(
-                    "handler(after)>>%s<<",
-                    ParserHelper.make_value_visible(source_text[next_index]),
+                POGGER.debug("handler(after)>>$<<", source_text[next_index])
+                POGGER.debug(
+                    "delta_line_number>>$<<", inline_response.delta_line_number
                 )
-                LOGGER.debug(
-                    "delta_line_number>>%s<<", str(inline_response.delta_line_number)
-                )
-                LOGGER.debug(
-                    "delta_column>>%s<<", str(inline_response.delta_column_number)
-                )
+                POGGER.debug("delta_column>>$<<", inline_response.delta_column_number)
                 start_index = inline_response.new_index
             else:
                 processed_line += ParserHelper.newline_character
@@ -594,7 +539,7 @@ class InlineProcessor:
             )
 
         processed_line += source_text[start_index:]
-        LOGGER.debug("processed_line>>%s<<", str(processed_line))
+        POGGER.debug("processed_line>>$<<", processed_line)
         return processed_line
 
     @staticmethod
@@ -603,14 +548,14 @@ class InlineProcessor:
             current_token.text_from_blocks
         )
         if newline_count:
-            LOGGER.debug(">>text_from_blocks")
+            POGGER.debug(">>text_from_blocks")
         newline_count = ParserHelper.count_newlines_in_text(current_token.ex_label)
         if newline_count:
-            LOGGER.debug(">>ex_label")
+            POGGER.debug(">>ex_label")
             delta_line += newline_count
             if para_owner:
                 para_owner.rehydrate_index += newline_count
-            LOGGER.debug("full>>ex_label>>newline_count>>%s", str(newline_count))
+            POGGER.debug("full>>ex_label>>newline_count>>$", newline_count)
 
             last_line_of_label = ParserHelper.calculate_last_line(
                 current_token.ex_label
@@ -641,7 +586,7 @@ class InlineProcessor:
             link_part_lengths[3] = len(current_token.after_title_whitespace)
         link_part_lengths[4] = 0
 
-        LOGGER.debug(">>link_part_lengths>>%s<<", str(link_part_lengths))
+        POGGER.debug(">>link_part_lengths>>$<<", link_part_lengths)
 
         link_part_index = -2
         newline_count = ParserHelper.count_newlines_in_text(
@@ -655,7 +600,7 @@ class InlineProcessor:
             current_token.before_link_whitespace
         )
         if newline_count:
-            LOGGER.debug(">>before_link_whitespace")
+            POGGER.debug(">>before_link_whitespace")
             delta_line += newline_count
             if para_owner:
                 para_owner.rehydrate_index += newline_count
@@ -666,7 +611,7 @@ class InlineProcessor:
             current_token.before_title_whitespace
         )
         if newline_count:
-            LOGGER.debug(">>before_title_whitespace")
+            POGGER.debug(">>before_title_whitespace")
             delta_line += newline_count
             if para_owner:
                 para_owner.rehydrate_index += newline_count
@@ -675,7 +620,7 @@ class InlineProcessor:
             link_part_index = 1
         newline_count = ParserHelper.count_newlines_in_text(active_link_title)
         if newline_count:
-            LOGGER.debug(">>active_link_title")
+            POGGER.debug(">>active_link_title")
             _, delta_column_number = ParserHelper.calculate_deltas(active_link_title)
             delta_line += newline_count
             if para_owner:
@@ -688,7 +633,7 @@ class InlineProcessor:
             current_token.after_title_whitespace
         )
         if newline_count:
-            LOGGER.debug(">>after_title_whitespace")
+            POGGER.debug(">>after_title_whitespace")
             delta_line += newline_count
             if para_owner:
                 para_owner.rehydrate_index += newline_count
@@ -696,8 +641,8 @@ class InlineProcessor:
 
             link_part_index = 4
 
-        LOGGER.debug(">>link_part_index>>%s<<", str(link_part_index))
-        LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
+        POGGER.debug(">>link_part_index>>$<<", link_part_index)
+        POGGER.debug(">>delta_line>>$<<", delta_line)
 
         if link_part_index >= 0:
             if split_paragraph_lines:
@@ -710,8 +655,8 @@ class InlineProcessor:
                 )
             link_part_lengths[:link_part_index] = [0] * link_part_index
             repeat_count = -(2 + sum(link_part_lengths))
-            LOGGER.debug(">>link_part_lengths>>%s<<", str(link_part_lengths))
-            LOGGER.debug(">>repeat_count>>%s<<", str(delta_line))
+            POGGER.debug(">>link_part_lengths>>$<<", link_part_lengths)
+            POGGER.debug(">>repeat_count>>$<<", delta_line)
         return delta_line, repeat_count
 
     # pylint: enable=too-many-arguments, too-many-branches, too-many-statements
@@ -722,15 +667,15 @@ class InlineProcessor:
             current_token.text_from_blocks
         )
         if newline_count:
-            LOGGER.debug(">>text_from_blocks")
+            POGGER.debug(">>text_from_blocks")
         return delta_line, repeat_count
 
     @staticmethod
     def __calculate_link_and_image_deltas(
         para_owner, current_token, delta_line, repeat_count
     ):
-        LOGGER.debug(">>delta_line>>%s<<", str(delta_line))
-        LOGGER.debug(">>repeat_count>>%s<<", str(repeat_count))
+        POGGER.debug(">>delta_line>>$<<", delta_line)
+        POGGER.debug(">>repeat_count>>$<<", repeat_count)
         if current_token.is_inline_image:
             active_link_uri = current_token.image_uri
             if current_token.pre_image_uri:
@@ -748,23 +693,16 @@ class InlineProcessor:
                 active_link_title = current_token.pre_link_title
 
         if ParserHelper.newline_character in str(current_token):
-            LOGGER.debug(
-                ">>para_owner>>%s<<",
-                ParserHelper.make_value_visible(para_owner),
-            )
+            POGGER.debug(">>para_owner>>$<<", para_owner)
             split_paragraph_lines = None
             if para_owner:
-                LOGGER.debug(
-                    ">>para_owner.rehydrate_index>>%s<<",
-                    ParserHelper.make_value_visible(para_owner.rehydrate_index),
+                POGGER.debug(
+                    ">>para_owner.rehydrate_index>>$<<", para_owner.rehydrate_index
                 )
                 split_paragraph_lines = para_owner.extracted_whitespace.split(
                     ParserHelper.newline_character
                 )
-                LOGGER.debug(
-                    ">>split_paragraph_lines>>%s<<",
-                    ParserHelper.make_value_visible(split_paragraph_lines),
-                )
+                POGGER.debug(">>split_paragraph_lines>>$<<", split_paragraph_lines)
 
             if current_token.label_type == "inline":
                 delta_line, repeat_count = InlineProcessor.__calculate_inline_deltas(
@@ -792,9 +730,7 @@ class InlineProcessor:
                     current_token, delta_line, repeat_count
                 )
 
-        LOGGER.debug(
-            ">>delta_line>>%s<<repeat_count>>%s<<", str(delta_line), str(repeat_count)
-        )
+        POGGER.debug(">>delta_line>>$<<repeat_count>>$<<", delta_line, repeat_count)
         return delta_line, repeat_count
 
     @staticmethod  # noqa: C901
@@ -816,105 +752,86 @@ class InlineProcessor:
 
         inline_blocks = []
         start_index = 0
-        LOGGER.debug(
-            "__process_inline_text_block>>source_text>>%s>",
-            ParserHelper.make_value_visible(source_text),
+        POGGER.debug(
+            "__process_inline_text_block>>source_text>>$>",
+            source_text,
         )
-        LOGGER.debug(
-            "__process_inline_text_block>>starting_whitespace>>%s>",
-            ParserHelper.make_value_visible(starting_whitespace),
+        POGGER.debug(
+            "__process_inline_text_block>>starting_whitespace>>$>",
+            starting_whitespace,
         )
-        LOGGER.debug(
-            "__process_inline_text_block>>whitespace_to_recombine>>%s>",
-            ParserHelper.make_value_visible(whitespace_to_recombine),
+        POGGER.debug(
+            "__process_inline_text_block>>whitespace_to_recombine>>$>",
+            whitespace_to_recombine,
         )
-        LOGGER.debug(
-            "__process_inline_text_block>>line_number>>%s>",
-            ParserHelper.make_value_visible(line_number),
+        POGGER.debug(
+            "__process_inline_text_block>>line_number>>$>",
+            line_number,
         )
-        LOGGER.debug(
-            "__process_inline_text_block>>column_number>>%s>",
-            ParserHelper.make_value_visible(column_number),
+        POGGER.debug(
+            "__process_inline_text_block>>column_number>>$>",
+            column_number,
         )
         if whitespace_to_recombine:
             source_text, _ = ParserHelper.recombine_string_with_whitespace(
                 source_text, whitespace_to_recombine
             )
-        LOGGER.debug(
-            "__process_inline_text_block>>source_text>>%s",
-            ParserHelper.make_value_visible(source_text),
+        POGGER.debug(
+            "__process_inline_text_block>>source_text>>$",
+            source_text,
         )
 
         last_line_number = line_number
         last_column_number = column_number
-        LOGGER.debug(
-            ">>Token_start>>%s,%s<<",
-            str(last_line_number),
-            str(last_column_number),
+        POGGER.debug(
+            ">>Token_start>>$,$<<",
+            last_line_number,
+            last_column_number,
         )
 
         current_string = ""
         current_string_unresolved = ""
         end_string = ""
-        LOGGER.debug("1<<end_string<<%s<<", ParserHelper.make_value_visible(end_string))
+        POGGER.debug("1<<end_string<<$<<", end_string)
 
         inline_response = InlineResponse()
         fold_space = None
-        LOGGER.debug("__process_inline_text_block>>is_para>>%s", str(is_para))
+        POGGER.debug("__process_inline_text_block>>is_para>>$", is_para)
         if is_para or is_setext:
             fold_space = para_space.split(ParserHelper.newline_character)
-        LOGGER.debug("__process_inline_text_block>>fold_space>>%s", str(fold_space))
+        POGGER.debug("__process_inline_text_block>>fold_space>>$", fold_space)
 
-        LOGGER.debug(
-            "starts>%s<",
-            ParserHelper.make_value_visible(
-                InlineProcessor.__valid_inline_text_block_sequence_starts
-            ),
+        POGGER.debug(
+            "starts>$<", InlineProcessor.__valid_inline_text_block_sequence_starts
         )
-        LOGGER.debug(
-            "look>%s<", ParserHelper.make_value_visible(source_text[start_index:])
-        )
+        POGGER.debug("look>$<", source_text[start_index:])
         next_index = ParserHelper.index_any_of(
             source_text,
             InlineProcessor.__valid_inline_text_block_sequence_starts,
             start_index,
         )
-        LOGGER.debug("__process_inline_text_block>>is_setext>>%s", str(is_setext))
-        LOGGER.debug(
-            "__process_inline_text_block>>%s>>%s",
-            ParserHelper.make_value_visible(source_text),
-            str(start_index),
+        POGGER.debug("__process_inline_text_block>>is_setext>>$", is_setext)
+        POGGER.debug(
+            "__process_inline_text_block>>$>>$",
+            source_text,
+            start_index,
         )
         while next_index != -1:
 
-            LOGGER.debug(
-                "\n\n>>Token_start>>%s,%s<<",
-                str(last_line_number),
-                str(last_column_number),
+            POGGER.debug(
+                "\n\n>>Token_start>>$,$<<",
+                last_line_number,
+                last_column_number,
             )
-            LOGGER.debug(
-                ">>inline_blocks>>%s<<", ParserHelper.make_value_visible(inline_blocks)
-            )
-            LOGGER.debug(
-                ">>current_string>>%s<<",
-                ParserHelper.make_value_visible(current_string),
-            )
-            LOGGER.debug(
-                ">>current_string_unresolved>>%s<<",
-                ParserHelper.make_value_visible(current_string_unresolved),
-            )
-            LOGGER.debug(
-                ">>current_string_unresolved>>%s<<",
-                ParserHelper.make_value_visible(current_string_unresolved),
-            )
-            LOGGER.debug(
-                ">>end_string>>%s<<",
-                ParserHelper.make_value_visible(end_string),
-            )
-            LOGGER.debug(
-                ">>source_text[]>>%s<<%s<<",
-                ParserHelper.make_value_visible(source_text[next_index]),
-                ParserHelper.make_value_visible(source_text[next_index:]),
+            POGGER.debug(">>inline_blocks>>$<<", inline_blocks)
+            POGGER.debug(">>current_string>>$<<", current_string)
+            POGGER.debug(">>current_string_unresolved>>$<<", current_string_unresolved)
+            POGGER.debug(">>current_string_unresolved>>$<<", current_string_unresolved)
+            POGGER.debug(">>end_string>>$<<", end_string)
+            POGGER.debug(
+                ">>source_text[]>>$<<$<<",
+                source_text[next_index],
+                source_text[next_index:],
             )
 
             inline_response.clear_fields()
@@ -924,9 +841,7 @@ class InlineProcessor:
             was_new_line = False
             was_column_number_reset = False
 
-            LOGGER.debug(
-                "__process_inline_text_block>>%s>>%s", str(start_index), str(next_index)
-            )
+            POGGER.debug("__process_inline_text_block>>$>>$", start_index, next_index)
             remaining_line = source_text[start_index:next_index]
 
             old_inline_blocks_count = len(inline_blocks)
@@ -945,31 +860,29 @@ class InlineProcessor:
                 para_owner,
             )
             if source_text[next_index] in InlineProcessor.__inline_character_handlers:
-                LOGGER.debug(
-                    "handler(before)>>%s<<",
-                    ParserHelper.make_value_visible(source_text[next_index]),
+                POGGER.debug(
+                    "handler(before)>>$<<",
+                    source_text[next_index],
                 )
-                LOGGER.debug(
-                    "current_string_unresolved>>%s<<",
-                    ParserHelper.make_value_visible(current_string_unresolved),
+                POGGER.debug(
+                    "current_string_unresolved>>$<<",
+                    current_string_unresolved,
                 )
-                LOGGER.debug("remaining_line>>%s<<", str(remaining_line))
-                LOGGER.debug("line_number>>%s<<", str(line_number))
-                LOGGER.debug("column_number>>%s<<", str(column_number))
+                POGGER.debug("remaining_line>>$<<", remaining_line)
+                POGGER.debug("line_number>>$<<", line_number)
+                POGGER.debug("column_number>>$<<", column_number)
                 proc_fn = InlineProcessor.__inline_character_handlers[
                     source_text[next_index]
                 ]
                 inline_response = proc_fn(inline_request)
-                LOGGER.debug(
-                    "handler(after)>>%s<<",
-                    ParserHelper.make_value_visible(source_text[next_index]),
+                POGGER.debug(
+                    "handler(after)>>$<<",
+                    source_text[next_index],
                 )
-                LOGGER.debug(
-                    "delta_line_number>>%s<<", str(inline_response.delta_line_number)
+                POGGER.debug(
+                    "delta_line_number>>$<<", inline_response.delta_line_number
                 )
-                LOGGER.debug(
-                    "delta_column>>%s<<", str(inline_response.delta_column_number)
-                )
+                POGGER.debug("delta_column>>$<<", inline_response.delta_column_number)
 
                 line_number += inline_response.delta_line_number
                 if inline_response.delta_column_number < 0:
@@ -977,18 +890,16 @@ class InlineProcessor:
                     was_column_number_reset = True
                 else:
                     column_number += inline_response.delta_column_number
-                LOGGER.debug(
-                    "handler(after)>>%s,%s<<", str(line_number), str(column_number)
-                )
-                LOGGER.debug(
-                    "handler(after)>>new_tokens>>%s<<",
-                    ParserHelper.make_value_visible(inline_response.new_tokens),
+                POGGER.debug("handler(after)>>$,$<<", line_number, column_number)
+                POGGER.debug(
+                    "handler(after)>>new_tokens>>$<<",
+                    inline_response.new_tokens,
                 )
             else:
                 assert source_text[next_index] == ParserHelper.newline_character
-                LOGGER.debug(
-                    "end_string(before)>>%s<<",
-                    ParserHelper.make_value_visible(end_string),
+                POGGER.debug(
+                    "end_string(before)>>$<<",
+                    end_string,
                 )
                 (
                     inline_response.new_string,
@@ -1006,15 +917,13 @@ class InlineProcessor:
                     line_number,
                     column_number,
                 )
-                LOGGER.debug(
-                    "2<<end_string<<%s<<", ParserHelper.make_value_visible(end_string)
-                )
-                LOGGER.debug(
-                    "handle_line_end>>new_tokens>>%s<<",
-                    ParserHelper.make_value_visible(inline_response.new_tokens),
+                POGGER.debug("2<<end_string<<$<<", end_string)
+                POGGER.debug(
+                    "handle_line_end>>new_tokens>>$<<",
+                    inline_response.new_tokens,
                 )
                 if not inline_response.new_tokens:
-                    LOGGER.debug("ws")
+                    POGGER.debug("ws")
                     end_string = InlineProcessor.__add_recombined_whitespace(
                         bool(whitespace_to_recombine),
                         source_text,
@@ -1022,60 +931,57 @@ class InlineProcessor:
                         end_string,
                         is_setext,
                     )
-                    LOGGER.debug(
-                        "3<<end_string<<%s<<",
-                        ParserHelper.make_value_visible(end_string),
+                    POGGER.debug(
+                        "3<<end_string<<$<<",
+                        end_string,
                     )
-                    LOGGER.debug("ws>%s<", ParserHelper.make_value_visible(end_string))
-                LOGGER.debug(
-                    "handle_line_end>>%s<<",
-                    ParserHelper.make_value_visible(
-                        source_text[inline_response.new_index :]
-                    ),
+                    POGGER.debug("ws>$<", end_string)
+                POGGER.debug(
+                    "handle_line_end>>$<<", source_text[inline_response.new_index :]
                 )
-                LOGGER.debug(
-                    "end_string(after)>>%s<<",
-                    ParserHelper.make_value_visible(end_string),
+                POGGER.debug(
+                    "end_string(after)>>$<<",
+                    end_string,
                 )
                 was_new_line = True
                 if para_owner:
                     para_owner.rehydrate_index += 1
 
-            LOGGER.debug(
-                "new_string-->%s<--",
-                ParserHelper.make_value_visible(inline_response.new_string),
+            POGGER.debug(
+                "new_string-->$<--",
+                inline_response.new_string,
             )
-            LOGGER.debug("new_index-->%s<--", str(inline_response.new_index))
-            LOGGER.debug(
-                "new_tokens-->%s<--",
-                ParserHelper.make_value_visible(inline_response.new_tokens),
+            POGGER.debug("new_index-->$<--", inline_response.new_index)
+            POGGER.debug(
+                "new_tokens-->$<--",
+                inline_response.new_tokens,
             )
-            LOGGER.debug(
-                "new_string_unresolved-->%s<--",
-                ParserHelper.make_value_visible(inline_response.new_string_unresolved),
+            POGGER.debug(
+                "new_string_unresolved-->$<--",
+                inline_response.new_string_unresolved,
             )
-            LOGGER.debug(
-                "consume_rest_of_line-->%s<--",
-                str(inline_response.consume_rest_of_line),
+            POGGER.debug(
+                "consume_rest_of_line-->$<--",
+                inline_response.consume_rest_of_line,
             )
-            LOGGER.debug(
-                "original_string-->%s<--",
-                ParserHelper.make_value_visible(inline_response.original_string),
+            POGGER.debug(
+                "original_string-->$<--",
+                inline_response.original_string,
             )
 
             if inline_response.consume_rest_of_line:
-                LOGGER.debug("consume_rest_of_line>>%s<", str(remaining_line))
+                POGGER.debug("consume_rest_of_line>>$<", remaining_line)
                 inline_response.new_string = ""
                 reset_current_string = True
                 inline_response.new_tokens = None
                 remaining_line = ""
                 end_string = None
-                LOGGER.debug(
-                    "9<<end_string<<%s<<",
-                    ParserHelper.make_value_visible(end_string),
+                POGGER.debug(
+                    "9<<end_string<<$<<",
+                    end_string,
                 )
             else:
-                LOGGER.debug("append_rest_of_line>>%s<", str(remaining_line))
+                POGGER.debug("append_rest_of_line>>$<", remaining_line)
                 current_string = InlineHelper.append_text(
                     current_string, remaining_line
                 )
@@ -1083,29 +989,29 @@ class InlineProcessor:
                     current_string_unresolved, remaining_line
                 )
 
-            LOGGER.debug(
-                "current_string>>%s<<",
-                ParserHelper.make_value_visible(current_string),
+            POGGER.debug(
+                "current_string>>$<<",
+                current_string,
             )
-            LOGGER.debug(
-                "current_string_unresolved>>%s<<",
-                ParserHelper.make_value_visible(current_string_unresolved),
+            POGGER.debug(
+                "current_string_unresolved>>$<<",
+                current_string_unresolved,
             )
-            LOGGER.debug(
-                "inline_blocks>>%s<<",
-                ParserHelper.make_value_visible(inline_blocks),
+            POGGER.debug(
+                "inline_blocks>>$<<",
+                inline_blocks,
             )
-            LOGGER.debug(
-                "inline_response.new_tokens>>%s<<",
-                ParserHelper.make_value_visible(inline_response.new_tokens),
+            POGGER.debug(
+                "inline_response.new_tokens>>$<<",
+                inline_response.new_tokens,
             )
-            LOGGER.debug(
-                "starting_whitespace>>%s<<",
-                ParserHelper.make_value_visible(starting_whitespace),
+            POGGER.debug(
+                "starting_whitespace>>$<<",
+                starting_whitespace,
             )
             if inline_response.new_tokens:
                 if current_string:
-                    LOGGER.debug(">>>text1")
+                    POGGER.debug(">>>text1")
                     inline_blocks.append(
                         TextMarkdownToken(
                             current_string,
@@ -1115,18 +1021,16 @@ class InlineProcessor:
                             column_number=last_column_number,
                         )
                     )
-                    LOGGER.debug(
-                        "new Text>>%s>>", ParserHelper.make_value_visible(inline_blocks)
-                    )
+                    POGGER.debug("new Text>>$>>", inline_blocks)
                     reset_current_string = True
                     starting_whitespace = ""
                     end_string = None
-                    LOGGER.debug(
-                        "4<<end_string<<%s<<",
-                        ParserHelper.make_value_visible(end_string),
+                    POGGER.debug(
+                        "4<<end_string<<$<<",
+                        end_string,
                     )
                 elif starting_whitespace:
-                    LOGGER.debug(">>>starting whitespace")
+                    POGGER.debug(">>>starting whitespace")
                     inline_blocks.append(
                         TextMarkdownToken(
                             "",
@@ -1137,65 +1041,58 @@ class InlineProcessor:
                             column_number=last_column_number,
                         )
                     )
-                    LOGGER.debug(
-                        "new Text>>%s>>", ParserHelper.make_value_visible(inline_blocks)
-                    )
+                    POGGER.debug("new Text>>$>>", inline_blocks)
                     starting_whitespace = ""
 
                 inline_blocks.extend(inline_response.new_tokens)
 
-            LOGGER.debug(
-                "l/c(before)>>%s,%s<<",
-                ParserHelper.make_value_visible(line_number),
-                ParserHelper.make_value_visible(column_number),
+            POGGER.debug(
+                "l/c(before)>>$,$<<",
+                line_number,
+                column_number,
             )
             if was_new_line:
-                LOGGER.debug("l/c(before)>>newline")
+                POGGER.debug("l/c(before)>>newline")
                 line_number += 1
                 column_number = 1
                 assert fold_space
-                LOGGER.debug("fold_space(before)>>%s<<", str(fold_space))
+                POGGER.debug("fold_space(before)>>$<<", fold_space)
                 fold_space = fold_space[1:]
-                LOGGER.debug("fold_space(after)>>%s<<", str(fold_space))
+                POGGER.debug("fold_space(after)>>$<<", fold_space)
                 column_number += len(fold_space[0])
 
             elif not was_column_number_reset:
-                LOGGER.debug(
-                    "l/c(remaining_line)>>%s,%s<<",
-                    str(len(remaining_line)),
-                    ParserHelper.make_value_visible(remaining_line),
+                POGGER.debug(
+                    "l/c(remaining_line)>>$,$<<",
+                    len(remaining_line),
+                    remaining_line,
                 )
                 column_number += len(remaining_line)
-            LOGGER.debug(
-                "l/c(after)>>%s,%s<<",
-                ParserHelper.make_value_visible(line_number),
-                ParserHelper.make_value_visible(column_number),
+            POGGER.debug(
+                "l/c(after)>>$,$<<",
+                line_number,
+                column_number,
             )
 
-            LOGGER.debug(
-                "starting_whitespace>>%s<<",
-                ParserHelper.make_value_visible(starting_whitespace),
+            POGGER.debug(
+                "starting_whitespace>>$<<",
+                starting_whitespace,
             )
-            LOGGER.debug(
-                "inline_blocks>>%s<<",
-                ParserHelper.make_value_visible(inline_blocks),
+            POGGER.debug(
+                "inline_blocks>>$<<",
+                inline_blocks,
             )
-            LOGGER.debug(
-                "reset_current_string>>%s<<",
-                ParserHelper.make_value_visible(reset_current_string),
-            )
+            POGGER.debug("reset_current_string>>$<<", reset_current_string)
 
             if reset_current_string:
                 current_string = ""
                 current_string_unresolved = ""
-            LOGGER.debug("pos>>%s,%s<<", str(line_number), str(column_number))
-            LOGGER.debug(
-                "last>>%s,%s<<", str(last_line_number), str(last_column_number)
-            )
-            LOGGER.debug(
-                "old>>%s>>now>>%s<<",
-                str(old_inline_blocks_count),
-                str(len(inline_blocks)),
+            POGGER.debug("pos>>$,$<<", line_number, column_number)
+            POGGER.debug("last>>$,$<<", last_line_number, last_column_number)
+            POGGER.debug(
+                "old>>$>>now>>$<<",
+                old_inline_blocks_count,
+                len(inline_blocks),
             )
             if old_inline_blocks_count != len(inline_blocks) or (
                 old_inline_blocks_last_token
@@ -1203,18 +1100,14 @@ class InlineProcessor:
             ):
                 last_line_number = line_number
                 last_column_number = column_number
-            LOGGER.debug(
-                "last>>%s,%s<<", str(last_line_number), str(last_column_number)
-            )
-            LOGGER.debug(
-                ">>Token_start>>%s,%s<<",
-                str(last_line_number),
-                str(last_column_number),
+            POGGER.debug("last>>$,$<<", last_line_number, last_column_number)
+            POGGER.debug(
+                ">>Token_start>>$,$<<",
+                last_line_number,
+                last_column_number,
             )
 
-            LOGGER.debug(
-                "5<<end_string<<%s<<", ParserHelper.make_value_visible(end_string)
-            )
+            POGGER.debug("5<<end_string<<$<<", end_string)
             (
                 start_index,
                 next_index,
@@ -1232,24 +1125,22 @@ class InlineProcessor:
                 inline_response.new_string,
                 inline_response.original_string,
             )
-            LOGGER.debug(
-                "6<<end_string<<%s<<", ParserHelper.make_value_visible(end_string)
+            POGGER.debug("6<<end_string<<$<<", end_string)
+            POGGER.debug(
+                "<<current_string<<$<<$<<",
+                len(current_string),
+                current_string,
             )
-            LOGGER.debug(
-                "<<current_string<<%s<<%s<<",
-                str(len(current_string)),
-                ParserHelper.make_value_visible(current_string),
-            )
-            LOGGER.debug(
-                "<<current_string_unresolved<<%s<<%s<<",
-                str(len(current_string_unresolved)),
-                ParserHelper.make_value_visible(current_string_unresolved),
+            POGGER.debug(
+                "<<current_string_unresolved<<$<<$<<",
+                len(current_string_unresolved),
+                current_string_unresolved,
             )
 
-        LOGGER.debug("<<__complete_inline_block_processing<<")
-        LOGGER.debug(
-            "<<__complete_inline_block_processing<<end_string<<%s<<",
-            ParserHelper.make_value_visible(end_string),
+        POGGER.debug("<<__complete_inline_block_processing<<")
+        POGGER.debug(
+            "<<__complete_inline_block_processing<<end_string<<$<<",
+            end_string,
         )
         return InlineProcessor.__complete_inline_block_processing(
             inline_blocks,
@@ -1270,34 +1161,24 @@ class InlineProcessor:
         did_recombine, source_text, inline_response, end_string, is_setext
     ):
 
-        LOGGER.debug("__arw>>did_recombine>>%s>>", str(did_recombine))
-        LOGGER.debug(
-            "__arw>>end_string>>%s>>",
-            ParserHelper.make_value_visible(end_string),
+        POGGER.debug("__arw>>did_recombine>>$>>", did_recombine)
+        POGGER.debug(
+            "__arw>>end_string>>$>>",
+            end_string,
         )
         if did_recombine:
-            LOGGER.debug(
-                "__arw>>source_text>>%s>>",
-                ParserHelper.make_value_visible(source_text),
+            POGGER.debug(
+                "__arw>>source_text>>$>>",
+                source_text,
             )
             new_index, extracted_whitespace = ParserHelper.extract_whitespace(
                 source_text, inline_response.new_index
             )
-            LOGGER.debug(
-                "__arw>>%s>>",
-                ParserHelper.make_value_visible(
-                    source_text[0 : inline_response.new_index]
-                ),
-            )
-            LOGGER.debug(
-                "__arw>>%s>>",
-                ParserHelper.make_value_visible(
-                    source_text[inline_response.new_index :]
-                ),
-            )
-            LOGGER.debug(
-                "__arw>>extracted_whitespace>>%s>>",
-                ParserHelper.make_value_visible(extracted_whitespace),
+            POGGER.debug("__arw>>$>>", source_text[0 : inline_response.new_index])
+            POGGER.debug("__arw>>$>>", source_text[inline_response.new_index :])
+            POGGER.debug(
+                "__arw>>extracted_whitespace>>$>>",
+                extracted_whitespace,
             )
             if extracted_whitespace:
                 inline_response.new_index = new_index
@@ -1305,9 +1186,9 @@ class InlineProcessor:
                 end_string += extracted_whitespace
                 assert is_setext
                 end_string += ParserHelper.whitespace_split_character
-                LOGGER.debug(
-                    "__arw>>end_string>>%s>>",
-                    ParserHelper.make_value_visible(end_string),
+                POGGER.debug(
+                    "__arw>>end_string>>$>>",
+                    end_string,
                 )
         return end_string
 
@@ -1324,26 +1205,26 @@ class InlineProcessor:
         new_string,
         original_string,
     ):
-        LOGGER.debug(
-            "__complete_inline_loop--current_string>>%s>>",
-            ParserHelper.make_value_visible(current_string),
+        POGGER.debug(
+            "__complete_inline_loop--current_string>>$>>",
+            current_string,
         )
-        LOGGER.debug(
-            "__complete_inline_loop--new_string>>%s>>",
-            ParserHelper.make_value_visible(new_string),
+        POGGER.debug(
+            "__complete_inline_loop--new_string>>$>>",
+            new_string,
         )
-        LOGGER.debug(
-            "__complete_inline_loop--new_string_unresolved>>%s>>",
-            ParserHelper.make_value_visible(new_string_unresolved),
+        POGGER.debug(
+            "__complete_inline_loop--new_string_unresolved>>$>>",
+            new_string_unresolved,
         )
-        LOGGER.debug(
-            "__complete_inline_loop--original_string>>%s>>",
-            ParserHelper.make_value_visible(original_string),
+        POGGER.debug(
+            "__complete_inline_loop--original_string>>$>>",
+            original_string,
         )
 
-        LOGGER.debug(
-            "__complete_inline_loop--current_string>>%s>>",
-            ParserHelper.make_value_visible(current_string),
+        POGGER.debug(
+            "__complete_inline_loop--current_string>>$>>",
+            current_string,
         )
         if original_string is not None:
             assert not new_string_unresolved or new_string_unresolved == original_string
@@ -1352,19 +1233,19 @@ class InlineProcessor:
             )
         else:
             current_string = InlineHelper.append_text(current_string, new_string)
-        LOGGER.debug(
-            "__complete_inline_loop--current_string>>%s>>",
-            ParserHelper.make_value_visible(current_string),
+        POGGER.debug(
+            "__complete_inline_loop--current_string>>$>>",
+            current_string,
         )
 
-        LOGGER.debug(
-            "__complete_inline_loop--current_string>>%s>>",
-            ParserHelper.make_value_visible(current_string),
+        POGGER.debug(
+            "__complete_inline_loop--current_string>>$>>",
+            current_string,
         )
 
-        LOGGER.debug(
-            "new_string_unresolved>>%s>>",
-            ParserHelper.make_value_visible(new_string_unresolved),
+        POGGER.debug(
+            "new_string_unresolved>>$>>",
+            new_string_unresolved,
         )
         if new_string_unresolved:
             current_string_unresolved += new_string_unresolved
@@ -1373,9 +1254,9 @@ class InlineProcessor:
                 current_string_unresolved, new_string
             )
 
-        LOGGER.debug(
-            "__complete_inline_loop--current_string_unresolved>>%s>>",
-            ParserHelper.make_value_visible(current_string_unresolved),
+        POGGER.debug(
+            "__complete_inline_loop--current_string_unresolved>>$>>",
+            current_string_unresolved,
         )
 
         if whitespace_to_add is not None:
@@ -1412,32 +1293,18 @@ class InlineProcessor:
     ):
         have_processed_once = len(inline_blocks) != 0 or start_index != 0
 
-        LOGGER.debug(
-            "__cibp>inline_blocks>%s<", ParserHelper.make_value_visible(inline_blocks)
+        POGGER.debug("__cibp>inline_blocks>$<", inline_blocks)
+        POGGER.debug("__cibp>source_text>$<", source_text)
+        POGGER.debug("__cibp>start_index>$<", start_index)
+        POGGER.debug("__cibp>current_string>$<", current_string)
+        POGGER.debug("__cibp>end_string>$<", end_string)
+        POGGER.debug(
+            "__cibp>starting_whitespace>$<",
+            starting_whitespace,
         )
-        LOGGER.debug(
-            "__cibp>source_text>%s<", ParserHelper.make_value_visible(source_text)
-        )
-        LOGGER.debug(
-            "__cibp>start_index>%s<", ParserHelper.make_value_visible(start_index)
-        )
-        LOGGER.debug(
-            "__cibp>current_string>%s<", ParserHelper.make_value_visible(current_string)
-        )
-        LOGGER.debug(
-            "__cibp>end_string>%s<", ParserHelper.make_value_visible(end_string)
-        )
-        LOGGER.debug(
-            "__cibp>starting_whitespace>%s<",
-            ParserHelper.make_value_visible(starting_whitespace),
-        )
-        LOGGER.debug("__cibp>is_setext>%s<", ParserHelper.make_value_visible(is_setext))
-        LOGGER.debug(
-            "__cibp>line_number>%s<", ParserHelper.make_value_visible(line_number)
-        )
-        LOGGER.debug(
-            "__cibp>column_number>%s<", ParserHelper.make_value_visible(column_number)
-        )
+        POGGER.debug("__cibp>is_setext>$<", is_setext)
+        POGGER.debug("__cibp>line_number>$<", line_number)
+        POGGER.debug("__cibp>column_number>$<", column_number)
 
         if inline_blocks and inline_blocks[-1].is_inline_hard_break:
             start_index, extracted_whitespace = ParserHelper.extract_whitespace(
@@ -1452,7 +1319,7 @@ class InlineProcessor:
             )
 
         if end_string is not None:
-            LOGGER.debug("xx-end-lf>%s<", ParserHelper.make_value_visible(end_string))
+            POGGER.debug("xx-end-lf>$<", end_string)
         if current_string or not have_processed_once:
             inline_blocks.append(
                 TextMarkdownToken(
@@ -1463,7 +1330,7 @@ class InlineProcessor:
                     column_number=column_number,
                 )
             )
-        LOGGER.debug(">>%s<<", ParserHelper.make_value_visible(inline_blocks))
+        POGGER.debug(">>$<<", inline_blocks)
 
         return EmphasisHelper.resolve_inline_emphasis(inline_blocks, None)
 

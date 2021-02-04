@@ -1,11 +1,7 @@
 """
 Module to provide for a simple bootstrap for the project.
 """
-import logging
-
 from pymarkdown.main import PyMarkdownLint
-
-LOGGER = logging.getLogger(__name__)
 
 
 class Main:

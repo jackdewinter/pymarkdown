@@ -35,9 +35,10 @@ from pymarkdown.leaf_markdown_token import (
 )
 from pymarkdown.markdown_token import MarkdownToken
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.transform_to_gfm_list_looseness import TransformToGfmListLooseness
 
-LOGGER = logging.getLogger(__name__)
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 # pylint: disable=too-many-instance-attributes, too-few-public-methods
@@ -199,7 +200,7 @@ class TransformToGfm:
         """
         Transform the tokens into html.
         """
-        LOGGER.debug("\n\n---\n")
+        POGGER.debug("\n\n---\n")
         output_html = ""
         transform_state = TransformState(actual_tokens)
         for next_token in transform_state.actual_tokens:
@@ -231,15 +232,12 @@ class TransformToGfm:
                     "Markdown token type " + str(type(next_token)) + " not supported."
                 )
 
-            LOGGER.debug("======")
-            LOGGER.debug(
-                "add_trailing_text-->%s<--",
-                ParserHelper.make_value_visible(transform_state.add_trailing_text),
+            POGGER.debug("======")
+            POGGER.debug(
+                "add_trailing_text-->$<--",
+                transform_state.add_trailing_text,
             )
-            LOGGER.debug(
-                "add_leading_text -->%s<--",
-                ParserHelper.make_value_visible(transform_state.add_leading_text),
-            )
+            POGGER.debug("add_leading_text -->$<--", transform_state.add_leading_text)
 
             if transform_state.add_trailing_text:
                 output_html = self.__apply_trailing_text(output_html, transform_state)
@@ -247,17 +245,10 @@ class TransformToGfm:
             if transform_state.add_leading_text:
                 output_html = self.__apply_leading_text(output_html, transform_state)
 
-            LOGGER.debug("------")
-            LOGGER.debug(
-                "next_token     -->%s<--", ParserHelper.make_value_visible(next_token)
-            )
-            LOGGER.debug(
-                "output_html    -->%s<--", ParserHelper.make_value_visible(output_html)
-            )
-            LOGGER.debug(
-                "transform_stack-->%s<--",
-                ParserHelper.make_value_visible(transform_state.transform_stack),
-            )
+            POGGER.debug("------")
+            POGGER.debug("next_token     -->$<--", next_token)
+            POGGER.debug("output_html    -->$<--", output_html)
+            POGGER.debug("transform_stack-->$<--", transform_state.transform_stack)
 
             transform_state.last_token = next_token
             transform_state.actual_token_index += 1
@@ -767,7 +758,7 @@ class TransformToGfm:
             previous_token = transform_state.actual_tokens[
                 transform_state.actual_token_index - 1
             ]
-            LOGGER.debug(">previous_token>%s>", str(previous_token))
+            POGGER.debug(">previous_token>$>", previous_token)
             if previous_token.is_list_end:
                 output_html += ParserHelper.newline_character
             elif previous_token.is_paragraph_end:

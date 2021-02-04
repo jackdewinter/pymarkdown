@@ -16,8 +16,9 @@ from pymarkdown.inline_markdown_token import (
     UriAutolinkMarkdownToken,
 )
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
 
-LOGGER = logging.getLogger(__name__)
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 # pylint: disable=too-few-public-methods, too-many-instance-attributes
@@ -190,7 +191,7 @@ class InlineHelper:
             == InlineHelper.__numeric_character_reference_start_character
         ):
             original_new_index = inline_response.new_index
-            LOGGER.debug("here")
+            POGGER.debug("here")
             (
                 inline_response.new_string,
                 inline_response.new_index,
@@ -204,10 +205,10 @@ class InlineHelper:
                     original_new_index : inline_response.new_index
                 ]
             )
-            LOGGER.debug("here-->%s<--", inline_response.new_string)
-            LOGGER.debug("here-->%s<--", inline_response.new_string_unresolved)
+            POGGER.debug("here-->$<--", inline_response.new_string)
+            POGGER.debug("here-->$<--", inline_response.new_string_unresolved)
         else:
-            LOGGER.debug("there")
+            POGGER.debug("there")
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
                 inline_request.source_text,
                 inline_response.new_index,
@@ -233,8 +234,8 @@ class InlineHelper:
                         )
                 inline_response.new_string = collected_string
                 inline_response.new_index = end_index
-                LOGGER.debug("there-->%s<--", inline_response.new_string)
-                LOGGER.debug("there-->%s<--", inline_response.new_string_unresolved)
+                POGGER.debug("there-->$<--", inline_response.new_string)
+                POGGER.debug("there-->$<--", inline_response.new_string_unresolved)
             else:
                 inline_response.new_string = (
                     InlineHelper.character_reference_start_character
@@ -262,7 +263,7 @@ class InlineHelper:
             current_char = source_text[next_index]
 
             inline_request = InlineRequest(source_text, next_index)
-            LOGGER.debug("handle_backslashes>>%s>>", current_char)
+            POGGER.debug("handle_backslashes>>$>>", current_char)
             if current_char == InlineHelper.backslash_character:
                 inline_response = InlineHelper.handle_inline_backslash(
                     inline_request, add_text_signature=add_text_signature
@@ -280,7 +281,7 @@ class InlineHelper:
                 new_string = inline_response.new_string
                 new_index = inline_response.new_index
 
-            LOGGER.debug("handle_backslashes<<%s<<%s", new_string, str(new_index))
+            POGGER.debug("handle_backslashes<<$<<$", new_string, new_index)
             current_string = current_string + new_string
             start_index = new_index
             next_index = ParserHelper.index_any_of(
@@ -338,7 +339,7 @@ class InlineHelper:
         """
         Handle the inline case of backticks for code spans.
         """
-        LOGGER.debug("before_collect>%s", str(inline_request.next_index))
+        POGGER.debug("before_collect>$", inline_request.next_index)
         (
             new_index,
             extracted_start_backticks,
@@ -347,7 +348,7 @@ class InlineHelper:
             inline_request.next_index,
             InlineHelper.code_span_bounds,
         )
-        LOGGER.debug("after_collect>%s>%s", str(new_index), extracted_start_backticks)
+        POGGER.debug("after_collect>$>$", new_index, extracted_start_backticks)
 
         end_backtick_start_index = inline_request.source_text.find(
             extracted_start_backticks, new_index
@@ -378,10 +379,10 @@ class InlineHelper:
                 new_index:end_backtick_start_index
             ]
             original_between_text = between_text
-            LOGGER.debug(
-                "after_collect>%s>>%s>>%s<<",
-                ParserHelper.make_value_visible(between_text),
-                str(end_backtick_start_index),
+            POGGER.debug(
+                "after_collect>$>>$>>$<<",
+                between_text,
+                end_backtick_start_index,
                 inline_request.source_text[end_backtick_start_index:],
             )
             leading_whitespace = ""
@@ -406,20 +407,16 @@ class InlineHelper:
             replaced_newline = ParserHelper.create_replacement_markers(
                 ParserHelper.newline_character, ParserHelper.space_character
             )
-            LOGGER.debug(
-                "between_text>>%s<<", ParserHelper.make_value_visible(between_text)
-            )
+            POGGER.debug("between_text>>$<<", between_text)
             between_text = ParserHelper.escape_special_characters(between_text)
-            LOGGER.debug(
-                "between_text>>%s<<", ParserHelper.make_value_visible(between_text)
+            POGGER.debug("between_text>>$<<", between_text)
+            POGGER.debug(
+                "leading_whitespace>>$<<",
+                leading_whitespace,
             )
-            LOGGER.debug(
-                "leading_whitespace>>%s<<",
-                ParserHelper.make_value_visible(leading_whitespace),
-            )
-            LOGGER.debug(
-                "trailing_whitespace>>%s<<",
-                ParserHelper.make_value_visible(trailing_whitespace),
+            POGGER.debug(
+                "trailing_whitespace>>$<<",
+                trailing_whitespace,
             )
             between_text = between_text.replace(
                 ParserHelper.newline_character, replaced_newline
@@ -431,29 +428,25 @@ class InlineHelper:
                 ParserHelper.newline_character, replaced_newline
             )
 
-            LOGGER.debug(
-                "between_text>>%s<<", ParserHelper.make_value_visible(between_text)
-            )
+            POGGER.debug("between_text>>$<<", between_text)
             between_text = InlineHelper.append_text("", between_text)
-            LOGGER.debug(
-                "between_text>>%s<<", ParserHelper.make_value_visible(between_text)
+            POGGER.debug("between_text>>$<<", between_text)
+            POGGER.debug(
+                "leading_whitespace>>$<<",
+                leading_whitespace,
             )
-            LOGGER.debug(
-                "leading_whitespace>>%s<<",
-                ParserHelper.make_value_visible(leading_whitespace),
-            )
-            LOGGER.debug(
-                "trailing_whitespace>>%s<<",
-                ParserHelper.make_value_visible(trailing_whitespace),
+            POGGER.debug(
+                "trailing_whitespace>>$<<",
+                trailing_whitespace,
             )
             end_backtick_start_index += len(extracted_start_backticks)
             inline_response.new_string = ""
             inline_response.new_index = end_backtick_start_index
 
             new_column_number = inline_request.column_number
-            LOGGER.debug(">>new_column_number>>%s", str(new_column_number))
+            POGGER.debug(">>new_column_number>>$", new_column_number)
             new_column_number += len(inline_request.remaining_line)
-            LOGGER.debug(">>new_column_number>>%s", str(new_column_number))
+            POGGER.debug(">>new_column_number>>$", new_column_number)
 
             inline_response.new_tokens = [
                 InlineCodeSpanMarkdownToken(
@@ -474,13 +467,13 @@ class InlineHelper:
                     original_between_text + extracted_start_backticks
                 )
 
-        LOGGER.debug(
-            ">>delta_line_number>>%s<<",
-            str(inline_response.delta_line_number),
+        POGGER.debug(
+            ">>delta_line_number>>$<<",
+            inline_response.delta_line_number,
         )
-        LOGGER.debug(
-            ">>delta_column_number>>%s<<",
-            str(inline_response.delta_column_number),
+        POGGER.debug(
+            ">>delta_column_number>>$<<",
+            inline_response.delta_column_number,
         )
         if inline_response.delta_line_number == -1:
             inline_response.delta_line_number = 0
@@ -496,19 +489,17 @@ class InlineHelper:
         """
         Modify the string at the end of the paragraph.
         """
-        LOGGER.debug(
-            ">>removed_end_whitespace>>%s>>%s>>",
-            str(type(removed_end_whitespace)),
+        POGGER.debug(
+            ">>removed_end_whitespace>>$>>$>>",
+            type(removed_end_whitespace),
             removed_end_whitespace,
         )
-        LOGGER.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>NewLine")
+        POGGER.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>NewLine")
         if end_string:
-            LOGGER.debug(
-                ">>end_string>>%s>>", ParserHelper.make_value_visible(end_string)
-            )
-        LOGGER.debug(
-            ">>removed_end_whitespace>>%s>>",
-            ParserHelper.make_value_visible(removed_end_whitespace),
+            POGGER.debug(">>end_string>>$>>", end_string)
+        POGGER.debug(
+            ">>removed_end_whitespace>>$>>",
+            removed_end_whitespace,
         )
         if end_string is None:
             end_string = removed_end_whitespace + ParserHelper.newline_character
@@ -516,7 +507,7 @@ class InlineHelper:
             end_string = (
                 end_string + removed_end_whitespace + ParserHelper.newline_character
             )
-        LOGGER.debug(">>end_string>>%s>>", ParserHelper.make_value_visible(end_string))
+        POGGER.debug(">>end_string>>$>>", end_string)
         return end_string
 
     # pylint: disable=too-many-arguments
@@ -534,43 +525,30 @@ class InlineHelper:
         """
         new_tokens = []
 
-        LOGGER.debug(
-            ">>current_string>>%s>>", ParserHelper.make_value_visible(current_string)
-        )
-        LOGGER.debug(">>end_string>>%s>>", ParserHelper.make_value_visible(end_string))
-        LOGGER.debug(
-            ">>remaining_line>>%s>>", ParserHelper.make_value_visible(remaining_line)
-        )
+        POGGER.debug(">>current_string>>$>>", current_string)
+        POGGER.debug(">>end_string>>$>>", end_string)
+        POGGER.debug(">>remaining_line>>$>>", remaining_line)
         _, last_non_whitespace_index = ParserHelper.collect_backwards_while_character(
             remaining_line, -1, InlineHelper.__line_end_whitespace
         )
-        LOGGER.debug(">>last_non_whitespace_index>>%s", str(last_non_whitespace_index))
+        POGGER.debug(">>last_non_whitespace_index>>$", last_non_whitespace_index)
         removed_end_whitespace = remaining_line[last_non_whitespace_index:]
         remaining_line = remaining_line[0:last_non_whitespace_index]
-        LOGGER.debug(
-            ">>removed_end_whitespace>>%s>>",
-            ParserHelper.make_value_visible(removed_end_whitespace),
-        )
-        LOGGER.debug(
-            ">>remaining_line>>%s>>", ParserHelper.make_value_visible(remaining_line)
-        )
+        POGGER.debug(">>removed_end_whitespace>>$>>", removed_end_whitespace)
+        POGGER.debug(">>remaining_line>>$>>", remaining_line)
 
-        LOGGER.debug(
-            ">>current_string>>%s>>", ParserHelper.make_value_visible(current_string)
-        )
+        POGGER.debug(">>current_string>>$>>", current_string)
         append_to_current_string = ParserHelper.newline_character
         whitespace_to_add = None
-        LOGGER.debug(
-            ">>len(r_e_w)>>%s>>rem>>%s>>",
-            str(len(removed_end_whitespace)),
+        POGGER.debug(
+            ">>len(r_e_w)>>$>>rem>>$>>",
+            len(removed_end_whitespace),
             remaining_line,
         )
 
         adj_hard_column = column_number + len(remaining_line)
 
-        LOGGER.debug(
-            ">>current_string>>%s>>", ParserHelper.make_value_visible(current_string)
-        )
+        POGGER.debug(">>current_string>>$>>", current_string)
 
         is_proper_hard_break = False
         if (
@@ -579,12 +557,10 @@ class InlineHelper:
             and current_string[len(current_string) - 1]
             == InlineHelper.backslash_character
         ):
-            LOGGER.debug(">>%s<<", ParserHelper.make_value_visible(current_string))
+            POGGER.debug(">>$<<", current_string)
             modified_current_string = current_string[0:-1]
             is_proper_hard_break = modified_current_string[-2:] != "\\\b"
-            LOGGER.debug(
-                ">>%s<<", ParserHelper.make_value_visible(is_proper_hard_break)
-            )
+            POGGER.debug(">>$<<", is_proper_hard_break)
 
         if is_proper_hard_break:
             new_tokens.append(
@@ -606,21 +582,17 @@ class InlineHelper:
                 end_string, removed_end_whitespace
             )
 
-        LOGGER.debug(
-            "<<append_to_current_string<<%s<<",
-            ParserHelper.make_value_visible(append_to_current_string),
+        POGGER.debug(
+            "<<append_to_current_string<<$<<",
+            append_to_current_string,
         )
-        LOGGER.debug(
-            "<<whitespace_to_add<<%s<<",
-            ParserHelper.make_value_visible(whitespace_to_add),
+        POGGER.debug(
+            "<<whitespace_to_add<<$<<",
+            whitespace_to_add,
         )
-        LOGGER.debug(
-            "<<remaining_line<<%s<<", ParserHelper.make_value_visible(remaining_line)
-        )
-        LOGGER.debug("<<end_string<<%s<<", ParserHelper.make_value_visible(end_string))
-        LOGGER.debug(
-            "<<current_string<<%s<<", ParserHelper.make_value_visible(current_string)
-        )
+        POGGER.debug("<<remaining_line<<$<<", remaining_line)
+        POGGER.debug("<<end_string<<$<<", end_string)
+        POGGER.debug("<<current_string<<$<<", current_string)
         return (
             append_to_current_string,
             whitespace_to_add,
@@ -644,18 +616,18 @@ class InlineHelper:
         if start_character:
             break_characters = break_characters + start_character
         nesting_level = 0
-        LOGGER.debug(
-            "extract_bounded_string>>new_index>>%s>>data>>%s>>",
-            str(new_index),
-            ParserHelper.make_value_visible(source_text[new_index:]),
+        POGGER.debug(
+            "extract_bounded_string>>new_index>>$>>data>>$>>",
+            new_index,
+            source_text[new_index:],
         )
         next_index, data = ParserHelper.collect_until_one_of_characters(
             source_text, new_index, break_characters
         )
-        LOGGER.debug(
-            ">>next_index1>>%s>>data>>%s>>",
-            str(next_index),
-            ParserHelper.make_value_visible(data),
+        POGGER.debug(
+            ">>next_index1>>$>>data>>$>>",
+            next_index,
+            data,
         )
         while next_index < len(source_text) and not (
             source_text[next_index] == close_character and nesting_level == 0
@@ -663,7 +635,7 @@ class InlineHelper:
             if ParserHelper.is_character_at_index(
                 source_text, next_index, InlineHelper.backslash_character
             ):
-                LOGGER.debug("pre-back>>next_index>>%s>>", str(next_index))
+                POGGER.debug("pre-back>>next_index>>$>>", next_index)
                 old_index = next_index
 
                 inline_request = InlineRequest(source_text, next_index)
@@ -673,7 +645,7 @@ class InlineHelper:
             elif start_character is not None and ParserHelper.is_character_at_index(
                 source_text, next_index, start_character
             ):
-                LOGGER.debug("pre-start>>next_index>>%s>>", str(next_index))
+                POGGER.debug("pre-start>>next_index>>$>>", next_index)
                 data = data + start_character
                 next_index += 1
                 nesting_level += 1
@@ -681,32 +653,32 @@ class InlineHelper:
                 assert ParserHelper.is_character_at_index(
                     source_text, next_index, close_character
                 )
-                LOGGER.debug("pre-close>>next_index>>%s>>", str(next_index))
+                POGGER.debug("pre-close>>next_index>>$>>", next_index)
                 data = data + close_character
                 next_index += 1
                 nesting_level -= 1
             next_index, new_data = ParserHelper.collect_until_one_of_characters(
                 source_text, next_index, break_characters
             )
-            LOGGER.debug(
-                "back>>next_index>>%s>>data>>%s>>",
-                str(next_index),
-                ParserHelper.make_value_visible(data),
+            POGGER.debug(
+                "back>>next_index>>$>>data>>$>>",
+                next_index,
+                data,
             )
             data = data + new_data
-        LOGGER.debug(
-            ">>next_index2>>%s>>data>>%s>>",
-            str(next_index),
-            ParserHelper.make_value_visible(data),
+        POGGER.debug(
+            ">>next_index2>>$>>data>>$>>",
+            next_index,
+            data,
         )
         if (
             ParserHelper.is_character_at_index(source_text, next_index, close_character)
             and nesting_level == 0
         ):
-            LOGGER.debug("extract_bounded_string>>found-close")
+            POGGER.debug("extract_bounded_string>>found-close")
             return next_index + 1, data
-        LOGGER.debug(
-            "extract_bounded_string>>ran out of string>>next_index>>%s", str(next_index)
+        POGGER.debug(
+            "extract_bounded_string>>ran out of string>>next_index>>$", next_index
         )
         return next_index, None
 
@@ -728,14 +700,14 @@ class InlineHelper:
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
                 source_text, new_index, string.hexdigits
             )
-            LOGGER.debug(
-                "&#x>>a>>%s>>b>>%s>>%s",
-                str(end_index),
-                str(collected_string),
-                str(len(source_text)),
+            POGGER.debug(
+                "&#x>>a>>$>>b>>$>>$",
+                end_index,
+                collected_string,
+                len(source_text),
             )
             delta = end_index - new_index
-            LOGGER.debug("delta>>%s>>", str(delta))
+            POGGER.debug("delta>>$>>", delta)
             if 1 <= delta <= 6:
                 translated_reference = int(collected_string, 16)
             new_string = (
@@ -749,14 +721,14 @@ class InlineHelper:
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
                 source_text, new_index, string.digits
             )
-            LOGGER.debug(
-                "&#>>a>>%s>>b>>%s>>%s",
-                str(end_index),
-                str(collected_string),
-                str(len(source_text)),
+            POGGER.debug(
+                "&#>>a>>$>>b>>$>>$",
+                end_index,
+                collected_string,
+                len(source_text),
             )
             delta = end_index - new_index
-            LOGGER.debug("delta>>%s>>", str(delta))
+            POGGER.debug("delta>>$>>", delta)
             if 1 <= delta <= 7:
                 translated_reference = int(collected_string)
             new_string = (

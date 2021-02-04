@@ -3,7 +3,9 @@ Module to handle the calculationof list looseness for the GRM transformer.
 """
 import logging
 
-LOGGER = logging.getLogger(__name__)
+from pymarkdown.parser_logger import ParserLogger
+
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 class TransformToGfmListLooseness:
@@ -17,7 +19,7 @@ class TransformToGfmListLooseness:
         Based on the first token in a list, compute the "looseness" of the list.
         """
 
-        LOGGER.debug("\n\n__calculate_list_looseness>>%s", str(actual_token_index))
+        POGGER.debug("\n\n__calculate_list_looseness>>$", actual_token_index)
         is_loose = False
         current_token_index = actual_token_index + 1
         stack_count = 0
@@ -27,27 +29,27 @@ class TransformToGfmListLooseness:
             check_me = False
             stop_me = False
             if current_token.is_list_start:
-                LOGGER.debug("cll>>start list>>%s", str(current_token))
+                POGGER.debug("cll>>start list>>$", current_token)
                 check_me, stack_count = TransformToGfmListLooseness.__handle_list_start(
                     stack_count
                 )
             elif current_token.is_new_list_item:
-                LOGGER.debug("cll>>new list item>>%s", str(current_token))
+                POGGER.debug("cll>>new list item>>$", current_token)
                 check_me = TransformToGfmListLooseness.__handle_new_list_item(
                     current_token, stack_count
                 )
             elif current_token.is_block_quote_start:
-                LOGGER.debug("cll>>start block quote>>%s", str(current_token))
+                POGGER.debug("cll>>start block quote>>$", current_token)
                 stack_count = TransformToGfmListLooseness.__handle_block_quote_start(
                     stack_count
                 )
             elif current_token.is_block_quote_end:
-                LOGGER.debug("cll>>end block quote>>%s", str(current_token))
+                POGGER.debug("cll>>end block quote>>$", current_token)
                 stack_count = TransformToGfmListLooseness.__handle_block_quote_end(
                     stack_count
                 )
             elif current_token.is_list_end:
-                LOGGER.debug("cll>>end list>>%s", str(current_token))
+                POGGER.debug("cll>>end list>>$", current_token)
                 (
                     stop_me,
                     is_loose,
@@ -64,33 +66,33 @@ class TransformToGfmListLooseness:
                     current_token, stack_count, actual_tokens, current_token_index
                 )
 
-            LOGGER.debug(
-                ">>stack_count>>%s>>#%s:%s>>check=%s",
-                str(stack_count),
-                str(current_token_index),
-                str(actual_tokens[current_token_index]),
-                str(check_me),
+            POGGER.debug(
+                ">>stack_count>>$>>#$:$>>check=$",
+                stack_count,
+                current_token_index,
+                actual_tokens[current_token_index],
+                check_me,
             )
             if check_me:
-                LOGGER.debug("check-->?")
+                POGGER.debug("check-->?")
                 if TransformToGfmListLooseness.__is_token_loose(
                     actual_tokens, current_token_index
                 ):
                     is_loose = True
                     stop_me = True
-                    LOGGER.debug("check-->Loose")
+                    POGGER.debug("check-->Loose")
                 else:
-                    LOGGER.debug("check-->Normal")
+                    POGGER.debug("check-->Normal")
             if stop_me:
                 break
             current_token_index += 1
 
         assert current_token_index != len(actual_tokens)
         next_token.is_loose = is_loose
-        LOGGER.debug(
-            "__calculate_list_looseness<<%s<<%s\n\n",
-            str(actual_token_index),
-            str(is_loose),
+        POGGER.debug(
+            "__calculate_list_looseness<<$<<$\n\n",
+            actual_token_index,
+            is_loose,
         )
         return is_loose
 
@@ -98,14 +100,14 @@ class TransformToGfmListLooseness:
     def __handle_list_start(stack_count):
         check_me = stack_count == 0
         stack_count += 1
-        LOGGER.debug(">>list--new>>%s", str(stack_count))
+        POGGER.debug(">>list--new>>$", stack_count)
         return check_me, stack_count
 
     @staticmethod
     def __handle_new_list_item(current_token, stack_count):
         check_me = stack_count == 0
         assert not current_token.is_block
-        LOGGER.debug(">>list--item>>%s", str(stack_count))
+        POGGER.debug(">>list--item>>$", stack_count)
         return check_me
 
     @staticmethod
@@ -125,20 +127,20 @@ class TransformToGfmListLooseness:
             ):
                 is_loose = True
                 stop_me = True
-                LOGGER.debug("!!!latent-LOOSE!!!")
-        LOGGER.debug(">>list--end>>%s", str(stack_count))
+                POGGER.debug("!!!latent-LOOSE!!!")
+        POGGER.debug(">>list--end>>$", stack_count)
         return stop_me, is_loose, stack_count
 
     @staticmethod
     def __handle_block_quote_start(stack_count):
         stack_count += 1
-        LOGGER.debug(">>block--new>>%s", str(stack_count))
+        POGGER.debug(">>block--new>>$", stack_count)
         return stack_count
 
     @staticmethod
     def __handle_block_quote_end(stack_count):
         stack_count -= 1
-        LOGGER.debug(">>block--end>>%s", str(stack_count))
+        POGGER.debug(">>block--end>>$", stack_count)
         return stack_count
 
     @staticmethod
@@ -147,7 +149,7 @@ class TransformToGfmListLooseness:
     ):
         search_back_index = current_token_index - 2
         pre_prev_token = actual_tokens[search_back_index]
-        LOGGER.debug(">>pre_prev_token>>%s", str(pre_prev_token))
+        POGGER.debug(">>pre_prev_token>>$", pre_prev_token)
 
         while pre_prev_token.is_blank_line:
             search_back_index -= 1
@@ -156,7 +158,7 @@ class TransformToGfmListLooseness:
         if pre_prev_token.is_end_token:
             assert pre_prev_token.start_markdown_token, str(pre_prev_token)
             pre_prev_token = pre_prev_token.start_markdown_token
-            LOGGER.debug(">>end_>using_start>>%s", str(pre_prev_token))
+            POGGER.debug(">>end_>using_start>>$", pre_prev_token)
 
         current_check = (
             current_token.is_block and not current_token.is_link_reference_definition
@@ -165,16 +167,16 @@ class TransformToGfmListLooseness:
             pre_prev_token.is_block and not pre_prev_token.is_link_reference_definition
         )
 
-        LOGGER.debug(">>other--stack_count>>%s", str(stack_count))
-        LOGGER.debug(
-            ">>other--current_token>>%s>>%s",
-            str(current_token),
-            str(current_check),
+        POGGER.debug(">>other--stack_count>>$", stack_count)
+        POGGER.debug(
+            ">>other--current_token>>$>>$",
+            current_token,
+            current_check,
         )
-        LOGGER.debug(
-            ">>other--current_token-2>>%s>>%s",
-            str(pre_prev_token),
-            str(pre_prev_check),
+        POGGER.debug(
+            ">>other--current_token-2>>$>>$",
+            pre_prev_token,
+            pre_prev_check,
         )
         check_me = stack_count == 0 and current_check and pre_prev_check
         return check_me
@@ -185,7 +187,7 @@ class TransformToGfmListLooseness:
         assert current_token_index > 0
 
         is_valid = True
-        LOGGER.debug(">>prev>>%s", str(actual_tokens[current_token_index - 1]))
+        POGGER.debug(">>prev>>$", actual_tokens[current_token_index - 1])
         if actual_tokens[current_token_index - 1].is_blank_line:
             search_index = current_token_index + 1
             while (
@@ -193,17 +195,15 @@ class TransformToGfmListLooseness:
                 and actual_tokens[search_index].is_list_end
             ):
                 search_index += 1
-            LOGGER.debug(
-                ">>ss>>%s>>len>>%s", str(search_index), str(len(actual_tokens))
-            )
+            POGGER.debug(">>ss>>$>>len>>$", search_index, len(actual_tokens))
             is_valid = search_index != len(actual_tokens)
         if is_valid:
-            LOGGER.debug(">>current>>%s", str(actual_tokens[current_token_index]))
-            LOGGER.debug(">>current-1>>%s", str(actual_tokens[current_token_index - 1]))
+            POGGER.debug(">>current>>$", actual_tokens[current_token_index])
+            POGGER.debug(">>current-1>>$", actual_tokens[current_token_index - 1])
             correct_closure = TransformToGfmListLooseness.__is_token_loose(
                 actual_tokens, current_token_index
             )
-            LOGGER.debug(">>correct_closure>>%s", str(correct_closure))
+            POGGER.debug(">>correct_closure>>$", correct_closure)
         return correct_closure
 
     @staticmethod
@@ -214,22 +214,22 @@ class TransformToGfmListLooseness:
 
         check_index = current_token_index - 1
         token_to_check = actual_tokens[check_index]
-        LOGGER.debug("token_to_check-->%s", str(token_to_check))
+        POGGER.debug("token_to_check-->$", token_to_check)
 
         while token_to_check.is_link_reference_definition:
             check_index -= 1
             token_to_check = actual_tokens[check_index]
 
-        LOGGER.debug("token_to_check-->%s", str(token_to_check))
+        POGGER.debug("token_to_check-->$", token_to_check)
         if token_to_check.is_blank_line:
-            LOGGER.debug("before_blank-->%s", str(actual_tokens[check_index - 1]))
+            POGGER.debug("before_blank-->$", actual_tokens[check_index - 1])
             if (
                 actual_tokens[check_index - 1].is_new_list_item
                 or actual_tokens[check_index - 1].is_list_start
             ):
-                LOGGER.debug("!!!Starting Blank!!!")
+                POGGER.debug("!!!Starting Blank!!!")
             else:
-                LOGGER.debug("!!!LOOSE!!!")
+                POGGER.debug("!!!LOOSE!!!")
                 return True
         return False
 
@@ -264,15 +264,15 @@ class TransformToGfmListLooseness:
         out the correct list looseness to use.
         """
 
-        LOGGER.debug("!!!!!!!!!!!!!!!%s", str(actual_token_index))
+        POGGER.debug("!!!!!!!!!!!!!!!$", actual_token_index)
         search_index = actual_token_index + 1
         stack_count = 0
         while search_index < len(actual_tokens):
-            LOGGER.debug(
-                "!!%s::%s::%s",
-                str(stack_count),
-                str(search_index),
-                str(actual_tokens[search_index]),
+            POGGER.debug(
+                "!!$::$::$",
+                stack_count,
+                search_index,
+                actual_tokens[search_index],
             )
             if actual_tokens[search_index].is_list_start:
                 stack_count += 1
@@ -281,19 +281,17 @@ class TransformToGfmListLooseness:
                     break
                 stack_count -= 1
             search_index += 1
-        LOGGER.debug(
-            "!!!!!!!!!!!!!!!%s-of-%s", str(search_index), str(len(actual_tokens))
-        )
+        POGGER.debug("!!!!!!!!!!!!!!!$-of-$", search_index, len(actual_tokens))
         # check to see where we are, then grab the matching start to find
         # the loose
         if search_index == len(actual_tokens):
             is_in_loose_list = True
         else:
-            LOGGER.debug(">>reset_list_looseness-token_list_start>>")
+            POGGER.debug(">>reset_list_looseness-token_list_start>>")
             new_index = TransformToGfmListLooseness.__find_owning_list_start(
                 actual_tokens, search_index
             )
-            LOGGER.debug(">>reset_list_looseness>>%s", str(new_index))
+            POGGER.debug(">>reset_list_looseness>>$", new_index)
             is_in_loose_list = actual_tokens[new_index].is_loose
-        LOGGER.debug("           is_in_loose_list=%s", str(is_in_loose_list))
+        POGGER.debug("           is_in_loose_list=$", is_in_loose_list)
         return is_in_loose_list

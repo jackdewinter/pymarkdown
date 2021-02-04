@@ -8,9 +8,10 @@ from pymarkdown.constants import Constants
 from pymarkdown.inline_markdown_token import RawHtmlMarkdownToken, TextMarkdownToken
 from pymarkdown.leaf_markdown_token import HtmlBlockMarkdownToken
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.stack_token import HtmlBlockStackToken, ParagraphStackToken
 
-LOGGER = logging.getLogger(__name__)
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 class HtmlHelper:

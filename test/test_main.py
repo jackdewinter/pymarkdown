@@ -1,11 +1,16 @@
 """
 Module to provide tests related to the basic parts of the scanner.
 """
+import logging
 import os
 import tempfile
 from test.markdown_scanner import MarkdownScanner
 
+from pymarkdown.parser_logger import ParserLogger
+
 from .utils import write_temporary_configuration
+
+POGGER = ParserLogger(logging.getLogger(__name__))
 
 
 def test_markdown_with_no_parameters():
@@ -273,7 +278,7 @@ def test_markdown_with_dash_x_scan():
     expected_return_code = 1
     expected_output = ""
     expected_error = """BadTokenizationError encountered while scanning 'test/resources/rules/md047/end_with_no_blank_line.md':
-File was not translated from Markdown text to Markdown tokens.
+An unhandled error occurred processing the document.
 """
 
     # Act
@@ -892,3 +897,28 @@ Plugin id 'MD999' had a critical failure during the 'next_token' action.
 
 
 # TODO add Markdown parsing of some binary file to cause the tokenizer to throw an exception?
+
+
+# pylint: disable=broad-except
+def test_markdown_logger_arg_list_out_of_sync():
+    """
+    Test to verify that if we don't have the same number of
+    $ characters in the string as arguments in the list, an
+    exception with be thrown.
+    """
+
+    # Arrange
+    try:
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.DEBUG)
+        assert POGGER.is_enabled_for(logging.DEBUG)
+        POGGER.debug("one sub $ but two in list", 1, 2)
+        assert False, "An exception should have been thrown by now."
+    except Exception as this_exception:
+        assert (
+            str(this_exception)
+            == "The number of $ substitution characters does not equal the number of arguments in the list."
+        )
+
+
+# pylint: enable=broad-except
