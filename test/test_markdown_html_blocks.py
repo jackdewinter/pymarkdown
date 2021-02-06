@@ -1780,3 +1780,436 @@ bad&gt;
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_01x():
+    """
+    Test case extra 01:  start a "list block" within a HTML code block
+    """
+
+    # Arrange
+    source_markdown = """<script>
+- some text
+some other text
+</script>
+"""
+    expected_tokens = [
+        "[html-block(1,1)]",
+        "[text(1,1):<script>\n- some text\nsome other text\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<script>
+- some text
+some other text
+</script>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_01a():
+    """
+    Test case extra 01:  start a "list block" within a HTML code block
+    """
+
+    # Arrange
+    source_markdown = """<script>
+- [foo]:
+/url
+</script>
+"""
+    expected_tokens = [
+        "[html-block(1,1)]",
+        "[text(1,1):<script>\n- [foo]:\n/url\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<script>
+- [foo]:
+/url
+</script>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_html_blocks_extra_02x():
+    """
+    Test case extra 02:  variation of 1 where list already opened
+    """
+
+    # Arrange
+    source_markdown = """- <script>
+- some text
+some other text
+</script>
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[end-html-block:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n\n]",
+        "[text(2,3):some text\nsome other text\n::\n\n]",
+        "[raw-html(4,1):/script]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<script>
+</li>
+<li>some text
+some other text</li>
+</ul>
+</script>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_html_blocks_extra_02a():
+    """
+    Test case extra 02:  variation of 1 where list already opened
+    """
+
+    # Arrange
+    source_markdown = """- <script>
+- [foo]:
+/url
+</script>
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[link-ref-def(2,3):True::foo::\n:/url:::::]",
+        "[end-ulist:::True]",
+        "[html-block(4,1)]",
+        "[text(4,1):</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<script>
+</li>
+<li></li>
+</ul>
+</script>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_03x():
+    """
+    Test case extra 03:  variation of 1 where list already opened but no new list item
+    """
+
+    # Arrange
+    source_markdown = """- <script>
+  some text
+some other text
+</script>
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>\nsome text:]",
+        "[end-html-block:::True]",
+        "[end-ulist:::True]",
+        "[para(3,1):\n]",
+        "[text(3,1):some other text\n::\n]",
+        "[raw-html(4,1):/script]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<script>
+some text
+</li>
+</ul>
+<p>some other text
+</script></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_html_blocks_extra_03a():
+    """
+    Test case extra 03:  variation of 1 where list already opened but no new list item
+    """
+
+    # Arrange
+    source_markdown = """- <script>
+  [foo]:
+/url
+</script>
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n\n]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[link-ref-def(2,3):True::foo::\n:/url:::::]",
+        "[text(4,1):</script>:]",
+        "[end-html-block:::False]",
+        "[end-ulist:::True]",
+        "[html-block(4,1)]",
+        "[text(4,1):</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<script>
+[foo]:
+</li>
+</ul>
+<p>/url
+</script></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_04x():
+    """
+    Test case extra 04:  variation of 3 where list already opened
+    """
+
+    # Arrange
+    source_markdown = """<script>
+> some text
+some other text
+</script>
+"""
+    expected_tokens = [
+        "[html-block(1,1)]",
+        "[text(1,1):<script>\n> some text\nsome other text\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<script>
+> some text
+some other text
+</script>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_html_blocks_extra_04a():
+    """
+    Test case extra 04:  variation of 3 where list already opened
+    """
+
+    # Arrange
+    source_markdown = """<script>
+> [foo]:
+/url
+</script>
+"""
+    expected_tokens = [
+        "[html-block(1,1)]",
+        "[text(1,1):<script>:]",
+        "[end-html-block:::True]",
+        "[block-quote(2,1)::> \n\n]",
+        "[link-ref-def(2,3):True::foo::\n:/url:::::]",
+        "[end-block-quote:::True]",
+        "[html-block(4,1)]",
+        "[text(4,1):</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<script>
+> [foo]:
+/url
+</script>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_05x():
+    """
+    Test case extra 04:  variation of 3 where list already opened
+    """
+
+    # Arrange
+    source_markdown = """> <script>
+> some text
+some other text
+</script>
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>\nsome text:]",
+        "[end-html-block:::True]",
+        "[end-block-quote:::True]",
+        "[para(3,1):\n]",
+        "[text(3,1):some other text\n::\n]",
+        "[raw-html(4,1):/script]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<script>
+some text
+</blockquote>
+<p>some other text
+</script></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_html_blocks_extra_05a():
+    """
+    Test case extra 04:  variation of 3 where list already opened
+    """
+
+    # Arrange
+    source_markdown = """> <script>
+> [foo]:
+/url
+</script>
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n\n\n]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[link-ref-def(2,3):True::foo::\n:/url:::::]",
+        "[text(4,1):</script>:]",
+        "[end-html-block:::False]",
+        "[end-block-quote:::True]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<script>
+[foo]:
+</blockquote>
+<p>/url
+</script></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_06x():
+    """
+    Test case extra 05:  variation of 4 where list already opened but no new list item
+    """
+
+    # Arrange
+    source_markdown = """> <script>
+  some text
+some other text
+</script>
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[end-html-block:::True]",
+        "[end-block-quote:::True]",
+        "[para(2,3):  \n\n]",
+        "[text(2,3):some text\nsome other text\n::\n\n]",
+        "[raw-html(4,1):/script]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<script>
+</blockquote>
+<p>some text
+some other text
+</script></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_html_blocks_extra_06a():
+    """
+    Test case extra 05:  variation of 4 where list already opened but no new list item
+    """
+
+    # Arrange
+    source_markdown = """> <script>
+  [foo]:
+/url
+</script>
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[link-ref-def(2,3):True:  :foo::\n:/url:::::]",
+        "[html-block(4,1)]",
+        "[text(4,1):</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<script>
+</blockquote>
+<p></script></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_07():
+    """
+    Test case extra 07:  mixed block quotes and list blocks
+    """
+
+    # Arrange
+    source_markdown = """<script>
+* a
+  > b
+  >
+* c
+</script>
+"""
+    expected_tokens = [
+        "[html-block(1,1)]",
+        "[text(1,1):<script>\n* a\n  > b\n  >\n* c\n</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(7,1):]",
+    ]
+    expected_gfm = """<script>
+* a
+  > b
+  >
+* c
+</script>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

@@ -720,10 +720,13 @@ class HtmlHelper:
             html_block_type = HtmlHelper.__check_for_normal_html_blocks(
                 remaining_html_tag, line_to_parse, character_index
             )
+
+        POGGER.debug("html_block_type=$", html_block_type)
         if not html_block_type:
             return None, None
         if html_block_type == HtmlHelper.html_block_7:
             if token_stack[-1].is_paragraph:
+                POGGER.debug("html_block_type 7 cannot interupt a paragraph")
                 return None, None
         return html_block_type, remaining_html_tag
 

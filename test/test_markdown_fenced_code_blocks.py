@@ -1270,3 +1270,423 @@ def test_fenced_code_blocks_117():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_01x():
+    """
+    Test case extra 01:  start a "list block" within a fenced code block
+    """
+
+    # Arrange
+    source_markdown = """```
+- some text
+some other text
+```
+"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):- some text\nsome other text:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<pre><code>- some text
+some other text
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_01a():
+    """
+    Test case extra 01:  start a "list block" within a fenced code block
+    """
+
+    # Arrange
+    source_markdown = """```
+- [foo]:
+/url
+```
+"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):- [foo]:\n/url:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<pre><code>- [foo]:
+/url
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_02x():
+    """
+    Test case extra 02:  variation of 1 where list already opened
+    """
+
+    # Arrange
+    source_markdown = """- ```
+- some text
+some other text
+```
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[fcode-block(1,3):`:3::::::]",
+        "[end-fcode-block:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n]",
+        "[text(2,3):some text\nsome other text::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[fcode-block(4,1):`:3::::::]",
+        "[BLANK(5,1):]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<pre><code></code></pre>
+</li>
+<li>some text
+some other text</li>
+</ul>
+<pre><code></code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_02a():
+    """
+    Test case extra 02:  variation of 1 where list already opened
+    """
+
+    # Arrange
+    source_markdown = """- ```
+- [foo]:
+/url
+```
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n]",
+        "[fcode-block(1,3):`:3::::::]",
+        "[link-ref-def(2,3):True::foo::\n:/url:::::]",
+        "[end-ulist:::True]",
+        "[fcode-block(4,1):`:3::::::]",
+        "[BLANK(5,1):]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<pre><code></code></pre>
+</li>
+<li></li>
+</ul>
+<pre><code></code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_03x():
+    """
+    Test case extra 03:  variation of 1 where list already opened but no new list item
+
+    NOTE: Small change to output to remove newline at pre/code at end.
+    """
+
+    # Arrange
+    source_markdown = """- ```
+  some text
+some other text
+```
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[fcode-block(1,3):`:3::::::]",
+        "[text(2,3):some text:]",
+        "[end-fcode-block:::True]",
+        "[end-ulist:::True]",
+        "[para(3,1):]",
+        "[text(3,1):some other text:]",
+        "[end-para:::False]",
+        "[fcode-block(4,1):`:3::::::]",
+        "[BLANK(5,1):]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<pre><code>some text
+</code></pre>
+</li>
+</ul>
+<p>some other text</p>
+<pre><code></code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_03a():
+    """
+    Test case extra 03:  variation of 1 where list already opened but no new list item
+    """
+
+    # Arrange
+    source_markdown = """- ```
+  [foo]:
+/url
+```
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  \n\n]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[link-ref-def(2,3):True::foo::\n:/url:::::]",
+        "[text(4,1):</script>:]",
+        "[end-html-block:::False]",
+        "[end-ulist:::True]",
+        "[html-block(4,1)]",
+        "[text(4,1):</script>:]",
+        "[end-html-block:::False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<pre><code>[foo]:
+</code></pre>
+</li>
+</ul>
+<p>/url</p>
+<pre><code></code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_04x():
+    """
+    Test case extra 04:  start a "block quote" within a fenced code block
+    """
+
+    # Arrange
+    source_markdown = """```
+> some text
+some other text
+```
+"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):\a>\a&gt;\a some text\nsome other text:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<pre><code>&gt; some text
+some other text
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_04a():
+    """
+    Test case extra 04:  start a "block quote" within a fenced code block
+    """
+
+    # Arrange
+    source_markdown = """```
+> [foo]:
+/url
+```
+"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):\a>\a&gt;\a [foo]:\n/url:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<pre><code>&gt; [foo]:
+/url
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_05x():
+    """
+    Test case extra 05:  variation of 4 where list already opened
+    """
+
+    # Arrange
+    source_markdown = """> ```
+> some text
+some other text
+```
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[fcode-block(1,3):`:3::::::]",
+        "[text(2,3):some text:]",
+        "[end-fcode-block:::True]",
+        "[end-block-quote:::True]",
+        "[para(3,1):]",
+        "[text(3,1):some other text:]",
+        "[end-para:::False]",
+        "[fcode-block(4,1):`:3::::::]",
+        "[BLANK(5,1):]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code>some text
+</code></pre>
+</blockquote>
+<p>some other text</p>
+<pre><code></code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_05a():
+    """
+    Test case extra 05:  variation of 4 where list already opened
+
+    NOTE: Small change to output to remove newline at pre/code at end.
+    """
+
+    # Arrange
+    source_markdown = """> ```
+> [foo]:
+/url
+```"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[fcode-block(1,3):`:3::::::]",
+        "[text(2,3):[foo]::]",
+        "[end-fcode-block:::True]",
+        "[end-block-quote:::True]",
+        "[para(3,1):]",
+        "[text(3,1):/url:]",
+        "[end-para:::False]",
+        "[fcode-block(4,1):`:3::::::]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code>[foo]:
+</code></pre>
+</blockquote>
+<p>/url</p>
+<pre><code></code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_06x():
+    """
+    Test case extra 05:  variation of 4 where block already opened but
+                         no block character
+    """
+
+    # Arrange
+    source_markdown = """> ```
+  some text
+some other text
+```
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[fcode-block(1,3):`:3::::::]",
+        "[end-fcode-block:::True]",
+        "[end-block-quote:::True]",
+        "[para(2,3):  \n]",
+        "[text(2,3):some text\nsome other text::\n]",
+        "[end-para:::False]",
+        "[fcode-block(4,1):`:3::::::]",
+        "[BLANK(5,1):]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code></code></pre>
+</blockquote>
+<p>some text
+some other text</p>
+<pre><code></code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_06a():
+    """
+    Test case extra 05:  variation of 4 where block already opened but
+                         no block character
+    """
+
+    # Arrange
+    source_markdown = """> ```
+  [foo]:
+/url
+```"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[fcode-block(1,3):`:3::::::]",
+        "[link-ref-def(2,3):True:  :foo::\n:/url:::::]",
+        "[fcode-block(4,1):`:3::::::]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code></code></pre>
+</blockquote>
+<pre><code></code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_07():
+    """
+    Test case extra 07:  mixed block quotes and list blocks
+    """
+
+    # Arrange
+    source_markdown = """```
+* a
+  > b
+  >
+* c
+```"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):* a\n  \a>\a&gt;\a b\n  \a>\a&gt;\a\n* c:]",
+        "[end-fcode-block::3:False]",
+    ]
+    expected_gfm = """<pre><code>* a
+  &gt; b
+  &gt;
+* c
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

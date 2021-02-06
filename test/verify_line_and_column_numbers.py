@@ -780,7 +780,10 @@ def __verify_first_inline_fenced_code_block(
         split_leading_spaces = last_token_stack[-2].leading_spaces.split(
             ParserHelper.newline_character
         )
-        col_pos = len(split_leading_spaces[1])
+        if len(split_leading_spaces) >= 2:
+            col_pos = len(split_leading_spaces[1])
+        else:
+            col_pos = len(split_leading_spaces[0])
     else:
         if first_inline_token.is_blank_line:
             col_pos = 0

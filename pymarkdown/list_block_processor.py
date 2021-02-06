@@ -296,6 +296,7 @@ class ListBlockProcessor:
         end_of_ulist_start_index = -1
         container_level_tokens = []
         adjusted_text_to_parse = position_marker.text_to_parse
+
         if not did_process:
 
             if is_ulist:
@@ -348,34 +349,35 @@ class ListBlockProcessor:
                     ws_after_marker,
                     position_marker.index_number,
                 )
-                new_token, new_stack = create_token_fn(
-                    position_marker,
-                    indent_level,
-                    extracted_whitespace,
-                    ws_before_marker,
-                    ws_after_marker,
-                    index,
-                )
+                if indent_level >= 0:
+                    new_token, new_stack = create_token_fn(
+                        position_marker,
+                        indent_level,
+                        extracted_whitespace,
+                        ws_before_marker,
+                        ws_after_marker,
+                        index,
+                    )
 
-                (
-                    new_container_level_tokens,
-                    adjusted_text_to_parse,
-                    requeue_line_info,
-                ) = ListBlockProcessor.__post_list(
-                    parser_state,
-                    new_stack,
-                    new_token,
-                    position_marker.text_to_parse,
-                    remaining_whitespace,
-                    after_marker_ws_index,
-                    indent_level,
-                    current_container_blocks,
-                    position_marker,
-                )
-                if new_container_level_tokens:
-                    container_level_tokens.extend(new_container_level_tokens)
-                did_process = True
-                was_container_start = True
+                    (
+                        new_container_level_tokens,
+                        adjusted_text_to_parse,
+                        requeue_line_info,
+                    ) = ListBlockProcessor.__post_list(
+                        parser_state,
+                        new_stack,
+                        new_token,
+                        position_marker.text_to_parse,
+                        remaining_whitespace,
+                        after_marker_ws_index,
+                        indent_level,
+                        current_container_blocks,
+                        position_marker,
+                    )
+                    if new_container_level_tokens:
+                        container_level_tokens.extend(new_container_level_tokens)
+                    did_process = True
+                    was_container_start = True
         return (
             did_process,
             was_container_start,
@@ -657,7 +659,7 @@ class ListBlockProcessor:
 
     # pylint: enable=too-many-statements, too-many-locals
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __pre_list(
         parser_state,
@@ -692,12 +694,6 @@ class ListBlockProcessor:
         )
         POGGER.debug("--$--$", start_index, start_index + 1)
 
-        (
-            container_level_tokens,
-            stack_bq_count,
-        ) = ListBlockProcessor.__handle_list_nesting(
-            parser_state, stack_bq_count, this_bq_count
-        )
         POGGER.debug(">>>>>XX>>$>>$<<", after_marker_ws_index, len(line_to_parse))
         if after_marker_ws_index == len(line_to_parse) and ws_after_marker:
             POGGER.debug("BOOOOOOOM")
@@ -729,6 +725,23 @@ class ListBlockProcessor:
                     indent_level,
                     remaining_whitespace,
                 )
+
+        if (
+            parser_state.token_stack[-1].is_html_block
+            or parser_state.token_stack[-1].is_fenced_code_block
+        ):
+            did_find, _ = LeafBlockProcessor.check_for_list_in_process(parser_state)
+            if not did_find:
+                indent_level = -1
+                after_marker_ws_index = -1
+                POGGER.debug("BAIL!")
+
+        (
+            container_level_tokens,
+            stack_bq_count,
+        ) = ListBlockProcessor.__handle_list_nesting(
+            parser_state, stack_bq_count, this_bq_count
+        )
         POGGER.debug(
             "ws_after_marker>>$<<indent_level<<$<<rem<<$<<",
             ws_after_marker,
@@ -744,7 +757,7 @@ class ListBlockProcessor:
             container_level_tokens,
             stack_bq_count,
         )
-        # pylint: enable=too-many-arguments
+        # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __handle_list_nesting(parser_state, stack_bq_count, this_bq_count):

@@ -151,13 +151,16 @@ class InlineProcessor:
                         line_number_delta = 1
                         new_column_number = 1
 
+                        POGGER.info("coalesced_stack:$<", coalesced_stack)
                         if coalesced_stack:
                             assert coalesced_stack[-1].leading_spaces
                             split_leading_spaces = coalesced_stack[
                                 -1
                             ].leading_spaces.split(ParserHelper.newline_character)
-                            assert len(split_leading_spaces) >= 2
-                            new_column_number += len(split_leading_spaces[1])
+                            if len(split_leading_spaces) >= 2:
+                                new_column_number += len(split_leading_spaces[1])
+                            else:
+                                new_column_number += len(split_leading_spaces[0])
                         else:
                             leading_whitespace = coalesced_results[
                                 coalesce_index

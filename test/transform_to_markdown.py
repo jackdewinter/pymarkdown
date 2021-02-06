@@ -325,9 +325,6 @@ class TransformToMarkdown:
         actual_tokens,
         transformed_data,
     ):
-        if skip_merge:
-            delayed_continue = ""
-
         print(
             ">>__perform_container_post_processing_lists>>:"
             + ParserHelper.make_value_visible(new_data)
@@ -339,11 +336,16 @@ class TransformToMarkdown:
         force_newline_processing = False
         if current_token.is_fenced_code_block_end:
             block_should_end_with_newline = True
+            if next_token.is_list_end:
+                skip_merge = True
         elif current_token.is_setext_heading_end:
             block_should_end_with_newline = True
         elif previous_token and previous_token.is_html_block:
             block_should_end_with_newline = True
             force_newline_processing = True
+
+        if skip_merge:
+            delayed_continue = ""
 
         special_text_in_list_exception = False
 

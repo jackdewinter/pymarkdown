@@ -479,20 +479,29 @@ class TransformToGfm:
             )
         inner_tag = "<code" + inner_tag + ">"
 
+        POGGER.debug("inner_tag>>:" + inner_tag + ":<<")
+        POGGER.debug("output_html>>:" + output_html + ":<<")
+        POGGER.debug(
+            "last_token>>:"
+            + str(transform_state.actual_tokens[transform_state.actual_token_index - 1])
+            + ":<<"
+        )
         if (
             not output_html.endswith(inner_tag)
             and output_html[-1] != ParserHelper.newline_character
         ):
             output_html += ParserHelper.newline_character
+            POGGER.debug("#1")
         elif (
             output_html[-1] == ParserHelper.newline_character
-            and transform_state.actual_tokens[
-                transform_state.actual_token_index - 1
-            ].is_text
+            and transform_state.last_token.is_text
         ):
+            POGGER.debug("#2")
             output_html += ParserHelper.newline_character
         elif transform_state.last_token.is_blank_line:
+            POGGER.debug("#3?")
             if not next_token.was_forced:
+                POGGER.debug("#3")
                 output_html += ParserHelper.newline_character
         transform_state.is_in_code_block = False
         transform_state.is_in_fenced_code_block = False
