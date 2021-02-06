@@ -696,8 +696,6 @@ class ListBlockProcessor:
 
         POGGER.debug(">>>>>XX>>$>>$<<", after_marker_ws_index, len(line_to_parse))
         if after_marker_ws_index == len(line_to_parse) and ws_after_marker:
-            POGGER.debug("BOOOOOOOM")
-            POGGER.debug(">>parser_state.token_stack>>$", parser_state.token_stack)
             indent_level = 2 + marker_width_minus_one + len(adj_ws)
             remaining_whitespace = ws_after_marker
             ws_after_marker = 0
@@ -709,22 +707,10 @@ class ListBlockProcessor:
                 ws_before_marker + 1 + ws_after_marker + marker_width_minus_one
             )
             remaining_whitespace = 0
-            POGGER.debug(
-                "ws_after_marker>>$<<indent_level<<$<<rem<<$<<",
-                ws_after_marker,
-                indent_level,
-                remaining_whitespace,
-            )
             if ws_after_marker > 4:
                 indent_level = indent_level - ws_after_marker + 1
                 remaining_whitespace = ws_after_marker - 1
                 ws_after_marker = 1
-                POGGER.debug(
-                    "ws_after_marker>>$<<indent_level<<$<<rem<<$<<",
-                    ws_after_marker,
-                    indent_level,
-                    remaining_whitespace,
-                )
 
         if (
             parser_state.token_stack[-1].is_html_block

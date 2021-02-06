@@ -36,7 +36,6 @@
 
 - take `__consume_text_for_image_alt_text` and other functions like it and move as much as possible into token classes
   - TransformToGfmListLooseness.__handle_block_quote_start
-- unify 2 separate calculations in `__pre_list` function
 - switch from bq to list and back again
   - switch from list to bq and back again
   - 270 and check for indent levels after
@@ -73,6 +72,7 @@
 
 - verifying vs validating?
 - bqp:check_for_lazy_handling, why exclude tb?
+- unify 2 separate calculations in `__pre_list` function
 
 ## Bugs - General - Uncategorized
 
