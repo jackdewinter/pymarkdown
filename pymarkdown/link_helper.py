@@ -1320,64 +1320,7 @@ class LinkHelper:
         """
         Given an image token, rehydrate it's original text from the token.
         """
-
-        if image_token.pre_image_uri:
-            image_uri = image_token.pre_image_uri
-        else:
-            image_uri = image_token.image_uri
-
-        if image_token.pre_image_title:
-            image_title = image_token.pre_image_title
-        else:
-            image_title = image_token.image_title
-
-        if image_token.label_type == "inline":
-            if image_token.did_use_angle_start:
-                image_uri = "<" + image_uri + ">"
-
-            link_text = ParserHelper.remove_backspaces_from_text(
-                image_token.text_from_blocks
-            )
-
-            image_text = (
-                "!["
-                + link_text
-                + "]("
-                + image_token.before_link_whitespace
-                + image_uri
-                + image_token.before_title_whitespace
-            )
-            if image_title:
-                title_prefix = '"'
-                title_suffix = '"'
-                if image_token.inline_title_bounding_character == "'":
-                    title_prefix = "'"
-                    title_suffix = "'"
-                elif image_token.inline_title_bounding_character == "(":
-                    title_prefix = "("
-                    title_suffix = ")"
-
-                image_text += (
-                    title_prefix
-                    + image_title
-                    + title_suffix
-                    + image_token.after_title_whitespace
-                )
-            image_text += ")"
-        elif image_token.label_type == "shortcut":
-            link_text = ParserHelper.remove_backspaces_from_text(
-                image_token.text_from_blocks
-            )
-            image_text = "![" + link_text + "]"
-        elif image_token.label_type == "full":
-            image_text = (
-                "![" + image_token.text_from_blocks + "][" + image_token.ex_label + "]"
-            )
-        else:
-            assert image_token.label_type == "collapsed"
-            image_text = "![" + image_token.text_from_blocks + "][]"
-
-        return image_text
+        return "!" + LinkHelper.rehydrate_inline_link_text_from_token(image_token)
 
     # pylint: disable=too-many-branches
     @staticmethod
@@ -1397,17 +1340,13 @@ class LinkHelper:
             link_text = (
                 "[" + link_token.text_from_blocks + "][" + link_token.ex_label + "]"
             )
-
         elif link_token.label_type == "collapsed":
-
             link_text = "[" + link_token.text_from_blocks + "][]"
         else:
             assert link_token.label_type == "inline"
 
-            if link_token.pre_link_uri:
-                link_uri = link_token.pre_link_uri
-            else:
-                link_uri = link_token.link_uri
+            link_uri = link_token.active_link_uri
+            link_title = link_token.active_link_title
             if link_token.did_use_angle_start:
                 link_uri = "<" + link_uri + ">"
 
@@ -1416,32 +1355,30 @@ class LinkHelper:
             )
             link_label = ParserHelper.remove_escapes_from_text(link_label)
             link_text = (
-                "[" + link_label + "](" + link_token.before_link_whitespace + link_uri
+                "["
+                + link_label
+                + "]("
+                + link_token.before_link_whitespace
+                + link_uri
+                + link_token.before_title_whitespace
             )
-            if link_token.link_title:
-                title_prefix = '"'
-                title_suffix = '"'
+            if link_title:
                 if link_token.inline_title_bounding_character == "'":
                     title_prefix = "'"
                     title_suffix = "'"
                 elif link_token.inline_title_bounding_character == "(":
                     title_prefix = "("
                     title_suffix = ")"
-
-                if link_token.pre_link_title:
-                    link_title = link_token.pre_link_title
                 else:
-                    link_title = link_token.link_title
+                    title_prefix = '"'
+                    title_suffix = '"'
 
                 link_text += (
-                    link_token.before_title_whitespace
-                    + title_prefix
+                    title_prefix
                     + link_title
                     + title_suffix
                     + link_token.after_title_whitespace
                 )
-            else:
-                link_text += link_token.before_title_whitespace
             link_text += ")"
         return link_text
 

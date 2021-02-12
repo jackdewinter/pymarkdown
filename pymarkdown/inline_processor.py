@@ -570,14 +570,14 @@ class InlineProcessor:
     @staticmethod
     def __calculate_inline_deltas(
         current_token,
-        active_link_uri,
-        active_link_title,
         para_owner,
         split_paragraph_lines,
         delta_line,
         repeat_count,
     ):
         last_spaces = ""
+        active_link_uri = current_token.active_link_uri
+        active_link_title = current_token.active_link_title
 
         link_part_lengths = [0] * 5
         link_part_lengths[0] = len(active_link_uri) + len(
@@ -679,21 +679,6 @@ class InlineProcessor:
     ):
         POGGER.debug(">>delta_line>>$<<", delta_line)
         POGGER.debug(">>repeat_count>>$<<", repeat_count)
-        if current_token.is_inline_image:
-            active_link_uri = current_token.image_uri
-            if current_token.pre_image_uri:
-                active_link_uri = current_token.pre_image_uri
-            active_link_title = current_token.image_title
-            if current_token.pre_image_title:
-                active_link_title = current_token.pre_image_title
-        else:
-            active_link_uri = current_token.link_uri
-            if current_token.pre_link_uri:
-                active_link_uri = current_token.pre_link_uri
-
-            active_link_title = current_token.link_title
-            if current_token.pre_link_title:
-                active_link_title = current_token.pre_link_title
 
         if ParserHelper.newline_character in str(current_token):
             POGGER.debug(">>para_owner>>$<<", para_owner)
@@ -710,8 +695,6 @@ class InlineProcessor:
             if current_token.label_type == "inline":
                 delta_line, repeat_count = InlineProcessor.__calculate_inline_deltas(
                     current_token,
-                    active_link_uri,
-                    active_link_title,
                     para_owner,
                     split_paragraph_lines,
                     delta_line,

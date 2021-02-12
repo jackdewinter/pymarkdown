@@ -11,7 +11,6 @@
 - test_paragraph_series_m_ul_t_nl_ulb_nl_tb - with abc/def/*
 
 - stop gap solution for handling Tabs until tab work can be done
-- possible to merge link token and image token more closely?
 
 - why does hard break not have \n? (fix before release)
   - hard break followed by 3 spaces, then emphasis
@@ -24,11 +23,12 @@
 
 ### Priority 2 - Like To Solve Before Initial
 
+- check for common code in consistency checks
+
 - check resolve/remove helpers for groupings per file type i.e. html, markdown, proc, verify
   - i.e. ParserHelper.resolve_
 - why does fcb with only newlines and newlines with ws not fold down to text?
   - coalesce with blank lines in fenced code block?
-- check for common code in consistency checks, i.e. link and image handling
 - make sure to generated ordered/unordered tests to make sure both covered
   - every unordered tests should have an ordered counterpart
   - every ordered tests should have an unordered counterpart

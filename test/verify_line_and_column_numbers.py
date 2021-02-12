@@ -217,14 +217,12 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                     + str(container_block_stack[-1].leading_text_index)
                 )
                 top_block_token.leading_text_index += (
-                    ParserHelper.count_newlines_in_text(last_token.link_name_debug)
-                    + ParserHelper.count_newlines_in_text(
-                        last_token.link_destination_whitespace
+                    ParserHelper.count_newlines_in_texts(
+                        last_token.link_name_debug,
+                        last_token.link_destination_whitespace,
+                        last_token.link_title_whitespace,
+                        last_token.link_title,
                     )
-                    + ParserHelper.count_newlines_in_text(
-                        last_token.link_title_whitespace
-                    )
-                    + ParserHelper.count_newlines_in_text(last_token.link_title)
                 )
                 print(
                     ">>mainline-top_block_token>>leading_text_index>"
@@ -421,15 +419,12 @@ def __validate_block_token_height(
     elif last_token.is_blank_line:
         token_height = 1
     elif last_token.is_link_reference_definition:
-        token_height = (
-            1
-            + ParserHelper.count_newlines_in_text(last_token.extracted_whitespace)
-            + ParserHelper.count_newlines_in_text(last_token.link_name_debug)
-            + ParserHelper.count_newlines_in_text(
-                last_token.link_destination_whitespace
-            )
-            + ParserHelper.count_newlines_in_text(last_token.link_title_raw)
-            + ParserHelper.count_newlines_in_text(last_token.link_title_whitespace)
+        token_height = 1 + ParserHelper.count_newlines_in_texts(
+            last_token.extracted_whitespace,
+            last_token.link_name_debug,
+            last_token.link_destination_whitespace,
+            last_token.link_title_raw,
+            last_token.link_title_whitespace,
         )
     elif last_token.is_thematic_break or last_token.is_atx_heading:
         token_height = 1
@@ -915,6 +910,12 @@ def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
 def __verify_next_inline_handle_previous_end(  # noqa: C901
     last_token, previous_inline_token, current_inline_token, inline_tokens, token_index
 ):
+    """
+    This function is intentionally longer than the matching function in
+    the source code.  To verify that the source code's function is working
+    properly, a second method of computing the values needed to be used.
+    Otherwise, it wouldn't really be testing anything!
+    """
     print(
         "  previous has no position: "
         + ParserHelper.make_value_visible(previous_inline_token)
@@ -959,13 +960,8 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
     if parent_cur_token.label_type == "inline":
         print(">>inline")
 
-        link_uri = parent_cur_token.link_uri
-        if parent_cur_token.pre_link_uri:
-            link_uri = parent_cur_token.pre_link_uri
-
-        link_title = parent_cur_token.link_title
-        if parent_cur_token.pre_link_title:
-            link_title = parent_cur_token.pre_link_title
+        link_uri = parent_cur_token.active_link_uri
+        link_title = parent_cur_token.active_link_title
 
         part_1 = 2
         part_2 = len(parent_cur_token.before_link_whitespace)
@@ -1166,32 +1162,12 @@ def __verify_next_inline_handle_current_end(last_token, current_inline_token):
     print("  last_token: " + ParserHelper.make_value_visible(last_token))
 
     if current_inline_token.is_inline_link_end and last_token.is_paragraph:
-        pre_link_title = current_inline_token.start_markdown_token.link_title
-        if current_inline_token.start_markdown_token.pre_link_title:
-            pre_link_title = current_inline_token.start_markdown_token.pre_link_title
-
-        pre_link_uri = current_inline_token.start_markdown_token.link_uri
-        if current_inline_token.start_markdown_token.pre_link_uri:
-            pre_link_uri = current_inline_token.start_markdown_token.pre_link_uri
-
-        newline_count1 = ParserHelper.count_newlines_in_text(
-            current_inline_token.start_markdown_token.before_link_whitespace
-        )
-        newline_count2 = ParserHelper.count_newlines_in_text(pre_link_uri)
-        newline_count3 = ParserHelper.count_newlines_in_text(
-            current_inline_token.start_markdown_token.before_title_whitespace
-        )
-        newline_count4 = ParserHelper.count_newlines_in_text(pre_link_title)
-        newline_count5 = ParserHelper.count_newlines_in_text(
-            current_inline_token.start_markdown_token.after_title_whitespace
-        )
-
-        newline_count = (
-            newline_count1
-            + newline_count2
-            + newline_count3
-            + newline_count4
-            + newline_count5
+        newline_count = ParserHelper.count_newlines_in_texts(
+            current_inline_token.start_markdown_token.before_link_whitespace,
+            current_inline_token.start_markdown_token.active_link_uri,
+            current_inline_token.start_markdown_token.before_title_whitespace,
+            current_inline_token.start_markdown_token.active_link_title,
+            current_inline_token.start_markdown_token.after_title_whitespace,
         )
         print(">>>>>>>>>>newline_count>" + str(newline_count))
         last_token.rehydrate_index += newline_count
@@ -1599,22 +1575,19 @@ def __verify_next_inline_inline_image(  # noqa: C901
     print(
         ">>ex_label>>" + ParserHelper.make_value_visible(previous_inline_token.ex_label)
     )
-    label_data = previous_inline_token.image_alt_text
     if previous_inline_token.ex_label:
         label_data = previous_inline_token.ex_label
+    else:
+        label_data = previous_inline_token.image_alt_text
     print(">>label_data>>" + ParserHelper.make_value_visible(label_data))
 
     before_link_whitespace = previous_inline_token.before_link_whitespace
 
-    url_data = previous_inline_token.image_uri
-    if previous_inline_token.pre_image_uri:
-        url_data = previous_inline_token.pre_image_uri
+    url_data = previous_inline_token.active_link_uri
 
     before_title_whitespace = previous_inline_token.before_title_whitespace
 
-    title_data = previous_inline_token.image_title
-    if previous_inline_token.pre_image_title:
-        title_data = previous_inline_token.pre_image_title
+    title_data = previous_inline_token.active_link_title
 
     print(">>last_token>>" + ParserHelper.make_value_visible(last_token))
     print(
@@ -1671,9 +1644,10 @@ def __verify_next_inline_inline_image(  # noqa: C901
 
     elif previous_inline_token.label_type == "collapsed":
         print(">>>>>>>>>collapsed")
-        image_alt_text = previous_inline_token.image_alt_text
         if previous_inline_token.text_from_blocks:
             image_alt_text = previous_inline_token.text_from_blocks
+        else:
+            image_alt_text = previous_inline_token.image_alt_text
 
         token_prefix = 1
         newline_count = ParserHelper.count_newlines_in_text(image_alt_text)
@@ -1698,9 +1672,10 @@ def __verify_next_inline_inline_image(  # noqa: C901
         assert previous_inline_token.label_type == "full"
         print(">>>>>>>>>full")
 
-        image_alt_text = previous_inline_token.image_alt_text
         if previous_inline_token.text_from_blocks:
             image_alt_text = previous_inline_token.text_from_blocks
+        else:
+            image_alt_text = previous_inline_token.image_alt_text
 
         print(
             ">>image_alt_text>>"
@@ -2192,28 +2167,17 @@ def __handle_last_token_end_link(
     assert last_inline_token.start_markdown_token
     use_line_number_from_start_token = True
 
-    inline_height = ParserHelper.count_newlines_in_text(
-        last_inline_token.start_markdown_token.text_from_blocks
+    inline_height = ParserHelper.count_newlines_in_texts(
+        last_inline_token.start_markdown_token.text_from_blocks,
+        last_inline_token.start_markdown_token.ex_label,
+        last_inline_token.start_markdown_token.before_link_whitespace,
+        last_inline_token.start_markdown_token.before_title_whitespace,
+        last_inline_token.start_markdown_token.after_title_whitespace,
     )
-    inline_height += ParserHelper.count_newlines_in_text(
-        last_inline_token.start_markdown_token.before_link_whitespace
-    )
-    inline_height += ParserHelper.count_newlines_in_text(
-        last_inline_token.start_markdown_token.before_title_whitespace
-    )
-
     if last_inline_token.start_markdown_token.label_type != "shortcut":
-        link_title = last_inline_token.start_markdown_token.link_title
-        if last_inline_token.start_markdown_token.pre_link_title:
-            link_title = last_inline_token.start_markdown_token.pre_link_title
+        link_title = last_inline_token.start_markdown_token.active_link_title
         inline_height += ParserHelper.count_newlines_in_text(link_title)
 
-    inline_height += ParserHelper.count_newlines_in_text(
-        last_inline_token.start_markdown_token.ex_label
-    )
-    inline_height += ParserHelper.count_newlines_in_text(
-        last_inline_token.start_markdown_token.after_title_whitespace
-    )
     if last_block_token.is_setext_heading:
         inline_height += 1
     return inline_height, use_line_number_from_start_token
@@ -2235,33 +2199,24 @@ def __handle_last_token_image(
     if last_inline_token.ex_label:
         label_data = last_inline_token.ex_label
 
-    url_data = last_inline_token.image_uri
-    if last_inline_token.pre_image_uri:
-        url_data = last_inline_token.pre_image_uri
+    url_data = last_inline_token.active_link_uri
+    title_data = last_inline_token.active_link_title
 
-    title_data = last_inline_token.image_title
-    if last_inline_token.pre_image_title:
-        title_data = last_inline_token.pre_image_title
-
-    inline_height = ParserHelper.count_newlines_in_text(label_data)
-    inline_height += ParserHelper.count_newlines_in_text(url_data)
-    inline_height += ParserHelper.count_newlines_in_text(title_data)
-    inline_height += ParserHelper.count_newlines_in_text(
-        last_inline_token.before_link_whitespace
+    inline_height = ParserHelper.count_newlines_in_texts(
+        label_data,
+        url_data,
+        title_data,
+        last_inline_token.before_link_whitespace,
+        last_inline_token.before_title_whitespace,
+        last_inline_token.after_title_whitespace,
     )
-    inline_height += ParserHelper.count_newlines_in_text(
-        last_inline_token.before_title_whitespace
-    )
-    inline_height += ParserHelper.count_newlines_in_text(
-        last_inline_token.after_title_whitespace
-    )
-    if last_block_token.is_setext_heading:
-        inline_height += 1
     if last_inline_token.label_type == "full":
         inline_height += ParserHelper.count_newlines_in_text(
             last_inline_token.text_from_blocks
         )
 
+    if last_block_token.is_setext_heading:
+        inline_height += 1
     return inline_height
 
 
@@ -2277,12 +2232,10 @@ def __handle_last_token_code_span(
 ):
     _ = (second_last_inline_token, current_token)
 
-    inline_height = ParserHelper.count_newlines_in_text(last_inline_token.span_text)
-    inline_height += ParserHelper.count_newlines_in_text(
-        last_inline_token.leading_whitespace
-    )
-    inline_height += ParserHelper.count_newlines_in_text(
-        last_inline_token.trailing_whitespace
+    inline_height = ParserHelper.count_newlines_in_texts(
+        last_inline_token.span_text,
+        last_inline_token.leading_whitespace,
+        last_inline_token.trailing_whitespace,
     )
 
     if last_block_token.is_setext_heading:

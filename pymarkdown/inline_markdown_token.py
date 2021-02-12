@@ -230,7 +230,179 @@ class HardBreakMarkdownToken(InlineMarkdownToken):
 
 
 # pylint: disable=too-many-instance-attributes
-class LinkStartMarkdownToken(InlineMarkdownToken):
+class ReferenceMarkdownToken(InlineMarkdownToken):
+    """
+    Base class for images and links.
+    """
+
+    # pylint: disable=too-many-arguments, too-many-locals
+    def __init__(
+        self,
+        token_name,
+        label_type,
+        link_uri,
+        link_title,
+        extra_data,
+        pre_link_uri,
+        pre_link_title,
+        ex_label,
+        text_from_blocks,
+        did_use_angle_start,
+        inline_title_bounding_character,
+        before_link_whitespace,
+        before_title_whitespace,
+        after_title_whitespace,
+        line_number=0,
+        column_number=0,
+    ):
+        self.__label_type = label_type
+        self.__link_uri = link_uri
+        self.__link_title = link_title
+
+        self.__pre_link_uri = pre_link_uri
+        self.__pre_link_title = pre_link_title
+        self.__ex_label = ex_label
+        self.__text_from_blocks = text_from_blocks
+        self.__did_use_angle_start = did_use_angle_start
+        self.__inline_title_bounding_character = inline_title_bounding_character
+        self.__before_link_whitespace = before_link_whitespace
+        self.__before_title_whitespace = before_title_whitespace
+        self.__after_title_whitespace = after_title_whitespace
+
+        if token_name == MarkdownToken._token_inline_image:
+            extra_data += MarkdownToken.extra_data_separator
+
+        extra_data = (
+            label_type
+            + MarkdownToken.extra_data_separator
+            + self.__link_uri
+            + MarkdownToken.extra_data_separator
+            + self.__link_title
+            + MarkdownToken.extra_data_separator
+            + extra_data
+            + self.__pre_link_uri
+            + MarkdownToken.extra_data_separator
+            + self.__pre_link_title
+            + MarkdownToken.extra_data_separator
+            + self.__ex_label
+            + MarkdownToken.extra_data_separator
+            + self.__text_from_blocks
+            + MarkdownToken.extra_data_separator
+            + str(self.__did_use_angle_start)
+            + MarkdownToken.extra_data_separator
+            + self.__inline_title_bounding_character
+            + MarkdownToken.extra_data_separator
+            + self.__before_link_whitespace
+            + MarkdownToken.extra_data_separator
+            + self.__before_title_whitespace
+            + MarkdownToken.extra_data_separator
+            + self.__after_title_whitespace
+        )
+
+        InlineMarkdownToken.__init__(
+            self,
+            token_name,
+            extra_data,
+            line_number=line_number,
+            column_number=column_number,
+        )
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    @property
+    def label_type(self):
+        """
+        Returns the type of label that was used.
+        """
+        return self.__label_type
+
+    @property
+    def link_uri(self):
+        """
+        Returns the URI for the link itself.
+        """
+        return self.__link_uri
+
+    @property
+    def active_link_uri(self):
+        """
+        Returns the active URI for the link, preferring the __pre_link_uri over the __link_uri.
+        """
+        if self.__pre_link_uri:
+            return self.__pre_link_uri
+        return self.__link_uri
+
+    @property
+    def link_title(self):
+        """
+        Returns the text associated with the link's title.
+        """
+        return self.__link_title
+
+    @property
+    def active_link_title(self):
+        """
+        Returns the active text associated with the link's title, preferring the __pre_link_title over the __link_title.
+        """
+        if self.__pre_link_title:
+            return self.__pre_link_title
+        return self.__link_title
+
+    @property
+    def ex_label(self):
+        """
+        Returns the text extracted from the blocks of the link, after processing.
+        """
+        return self.__ex_label
+
+    @property
+    def text_from_blocks(self):
+        """
+        Returns the text extracted from the blocks of the link, before processing.
+        """
+        return self.__text_from_blocks
+
+    @property
+    def did_use_angle_start(self):
+        """
+        Returns a value indicating whether an angle start was used around the URI.
+        """
+        return self.__did_use_angle_start
+
+    @property
+    def inline_title_bounding_character(self):
+        """
+        Returns the bounding character used for the title.
+        """
+        return self.__inline_title_bounding_character
+
+    @property
+    def before_link_whitespace(self):
+        """
+        Returns the whitespace extracted before the link.
+        """
+        return self.__before_link_whitespace
+
+    @property
+    def before_title_whitespace(self):
+        """
+        Returns the whitespace extracted before the title.
+        """
+        return self.__before_title_whitespace
+
+    @property
+    def after_title_whitespace(self):
+        """
+        Returns the whitespace extracted after the title.
+        """
+        return self.__after_title_whitespace
+
+
+# pylint: enable=too-many-instance-attributes
+
+
+# pylint: disable=too-many-instance-attributes
+class LinkStartMarkdownToken(ReferenceMarkdownToken):
     """
     Class to provide for an encapsulation of the link element.
     """
@@ -253,139 +425,34 @@ class LinkStartMarkdownToken(InlineMarkdownToken):
         line_number,
         column_number,
     ):
-        self.__link_uri = link_uri
-        self.__link_title = link_title
-        self.__pre_link_uri = pre_link_uri
-        self.__pre_link_title = pre_link_title
-        self.__ex_label = ex_label
-        self.__label_type = label_type
-        self.__text_from_blocks = text_from_blocks
-        self.__did_use_angle_start = did_use_angle_start
-        self.__inline_title_bounding_character = inline_title_bounding_character
-        self.__before_link_whitespace = before_link_whitespace
-        self.__before_title_whitespace = before_title_whitespace
-        self.__after_title_whitespace = after_title_whitespace
-        InlineMarkdownToken.__init__(
+        ReferenceMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_link,
-            self.__label_type
-            + MarkdownToken.extra_data_separator
-            + self.__link_uri
-            + MarkdownToken.extra_data_separator
-            + self.__link_title
-            + MarkdownToken.extra_data_separator
-            + self.__pre_link_uri
-            + MarkdownToken.extra_data_separator
-            + self.__pre_link_title
-            + MarkdownToken.extra_data_separator
-            + self.__ex_label
-            + MarkdownToken.extra_data_separator
-            + self.__text_from_blocks
-            + MarkdownToken.extra_data_separator
-            + str(self.__did_use_angle_start)
-            + MarkdownToken.extra_data_separator
-            + self.__inline_title_bounding_character
-            + MarkdownToken.extra_data_separator
-            + self.__before_link_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.__before_title_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.__after_title_whitespace,
+            label_type,
+            link_uri,
+            link_title,
+            "",
+            pre_link_uri,
+            pre_link_title,
+            ex_label,
+            text_from_blocks,
+            did_use_angle_start,
+            inline_title_bounding_character,
+            before_link_whitespace,
+            before_title_whitespace,
+            after_title_whitespace,
             line_number=line_number,
             column_number=column_number,
         )
 
     # pylint: enable=too-many-arguments
-    @property
-    def label_type(self):
-        """
-        Returns the type of label that was used.
-        """
-        return self.__label_type
-
-    @property
-    def link_uri(self):
-        """
-        Returns the URI for the link itself.
-        """
-        return self.__link_uri
-
-    @property
-    def pre_link_uri(self):
-        """
-        Returns the URI for the link itself, before any mods.
-        """
-        return self.__pre_link_uri
-
-    @property
-    def link_title(self):
-        """
-        Returns the text associated with the link's title.
-        """
-        return self.__link_title
-
-    @property
-    def pre_link_title(self):
-        """
-        Returns the text associated with the link's title, before any mods.
-        """
-        return self.__pre_link_title
-
-    @property
-    def text_from_blocks(self):
-        """
-        Returns the text extracted from the blocks of the link, before processing.
-        """
-        return self.__text_from_blocks
-
-    @property
-    def ex_label(self):
-        """
-        Returns the text extracted from the blocks of the link, after processing.
-        """
-        return self.__ex_label
-
-    @property
-    def after_title_whitespace(self):
-        """
-        Returns the whitespace extracted after the title.
-        """
-        return self.__after_title_whitespace
-
-    @property
-    def before_title_whitespace(self):
-        """
-        Returns the whitespace extracted before the title.
-        """
-        return self.__before_title_whitespace
-
-    @property
-    def before_link_whitespace(self):
-        """
-        Returns the whitespace extracted before the link.
-        """
-        return self.__before_link_whitespace
-
-    @property
-    def inline_title_bounding_character(self):
-        """
-        Returns the bounding character used for the title.
-        """
-        return self.__inline_title_bounding_character
-
-    @property
-    def did_use_angle_start(self):
-        """
-        Returns a value indicating whether an angle start was used around the URI.
-        """
-        return self.__did_use_angle_start
 
 
 # pylint: enable=too-many-instance-attributes
 
 
 # pylint: disable=too-many-instance-attributes
-class ImageStartMarkdownToken(InlineMarkdownToken):
+class ImageStartMarkdownToken(ReferenceMarkdownToken):
     """
     Class to provide for an encapsulation of the image element.
     """
@@ -409,47 +476,23 @@ class ImageStartMarkdownToken(InlineMarkdownToken):
         line_number,
         column_number,
     ):
-        self.__image_uri = image_uri
-        self.__image_title = image_title
         self.__image_alt_text = image_alt_text
-        self.__pre_image_uri = pre_image_uri
-        self.__pre_image_title = pre_image_title
-        self.__ex_label = ex_label
-        self.__label_type = label_type
-        self.__text_from_blocks = text_from_blocks
-        self.__did_use_angle_start = did_use_angle_start
-        self.__inline_title_bounding_character = inline_title_bounding_character
-        self.__before_link_whitespace = before_link_whitespace
-        self.__before_title_whitespace = before_title_whitespace
-        self.__after_title_whitespace = after_title_whitespace
-        InlineMarkdownToken.__init__(
+        ReferenceMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_image,
-            self.__label_type
-            + MarkdownToken.extra_data_separator
-            + self.__image_uri
-            + MarkdownToken.extra_data_separator
-            + self.__image_title
-            + MarkdownToken.extra_data_separator
-            + self.__image_alt_text
-            + MarkdownToken.extra_data_separator
-            + self.__pre_image_uri
-            + MarkdownToken.extra_data_separator
-            + self.__pre_image_title
-            + MarkdownToken.extra_data_separator
-            + self.__ex_label
-            + MarkdownToken.extra_data_separator
-            + self.__text_from_blocks
-            + MarkdownToken.extra_data_separator
-            + str(self.__did_use_angle_start)
-            + MarkdownToken.extra_data_separator
-            + self.__inline_title_bounding_character
-            + MarkdownToken.extra_data_separator
-            + self.__before_link_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.__before_title_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.__after_title_whitespace,
+            label_type,
+            image_uri,
+            image_title,
+            self.__image_alt_text,
+            pre_image_uri,
+            pre_image_title,
+            ex_label,
+            text_from_blocks,
+            did_use_angle_start,
+            inline_title_bounding_character,
+            before_link_whitespace,
+            before_title_whitespace,
+            after_title_whitespace,
             line_number=line_number,
             column_number=column_number,
         )
@@ -457,95 +500,11 @@ class ImageStartMarkdownToken(InlineMarkdownToken):
     # pylint: enable=too-many-arguments, too-many-locals
 
     @property
-    def label_type(self):
-        """
-        Returns the type of label that was used.
-        """
-        return self.__label_type
-
-    @property
-    def image_uri(self):
-        """
-        Returns the URI for the image itself.
-        """
-        return self.__image_uri
-
-    @property
-    def pre_image_uri(self):
-        """
-        Returns the URI for the image itself, before any mods.
-        """
-        return self.__pre_image_uri
-
-    @property
-    def image_title(self):
-        """
-        Returns the text associated with the image's title.
-        """
-        return self.__image_title
-
-    @property
-    def pre_image_title(self):
-        """
-        Returns the text associated with the image's title, before any mods.
-        """
-        return self.__pre_image_title
-
-    @property
-    def text_from_blocks(self):
-        """
-        Returns the text extracted from the blocks of the link, before processing.
-        """
-        return self.__text_from_blocks
-
-    @property
-    def ex_label(self):
-        """
-        Returns the text extracted from the blocks of the link, after processing.
-        """
-        return self.__ex_label
-
-    @property
     def image_alt_text(self):
         """
         Returns the text extracted from the blocks of the link, after processing.
         """
         return self.__image_alt_text
-
-    @property
-    def after_title_whitespace(self):
-        """
-        Returns the whitespace extracted after the title.
-        """
-        return self.__after_title_whitespace
-
-    @property
-    def before_title_whitespace(self):
-        """
-        Returns the whitespace extracted before the title.
-        """
-        return self.__before_title_whitespace
-
-    @property
-    def before_link_whitespace(self):
-        """
-        Returns the whitespace extracted before the link.
-        """
-        return self.__before_link_whitespace
-
-    @property
-    def inline_title_bounding_character(self):
-        """
-        Returns the bounding character used for the title.
-        """
-        return self.__inline_title_bounding_character
-
-    @property
-    def did_use_angle_start(self):
-        """
-        Returns a value indicating whether an angle start was used around the URI.
-        """
-        return self.__did_use_angle_start
 
 
 # pylint: enable=too-many-instance-attributes

@@ -386,6 +386,18 @@ class ParserHelper:
         )
 
     @staticmethod
+    def count_newlines_in_texts(*args):
+        """
+        Count the number of new line characters in a given string.
+        """
+        total_newlines = 0
+        for next_argument in args:
+            total_newlines += ParserHelper.count_characters_in_text(
+                next_argument, ParserHelper.newline_character
+            )
+        return total_newlines
+
+    @staticmethod
     def calculate_deltas(text_to_analyze):
         """
         Calculate the deltas associated with a given string.
