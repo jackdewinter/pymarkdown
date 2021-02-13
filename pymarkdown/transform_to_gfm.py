@@ -288,17 +288,7 @@ class TransformToGfm:
         """
         Handle the text token.
         """
-        adjusted_text_token = ParserHelper.resolve_backspaces_from_text(
-            next_token.token_text
-        )
-        adjusted_text_token = ParserHelper.resolve_references_from_text(
-            adjusted_text_token
-        )
-        adjusted_text_token = ParserHelper.resolve_noops_from_text(adjusted_text_token)
-        adjusted_text_token = ParserHelper.resolve_blechs_from_text(adjusted_text_token)
-        adjusted_text_token = ParserHelper.resolve_escapes_from_text(
-            adjusted_text_token
-        )
+        adjusted_text_token = ParserHelper.resolve_all_from_text(next_token.token_text)
 
         if transform_state.is_in_code_block:
             if transform_state.is_in_fenced_code_block:
@@ -308,11 +298,8 @@ class TransformToGfm:
                     ].is_blank_line:
                         output_html += ParserHelper.newline_character
 
-            extracted_whitespace = ParserHelper.resolve_references_from_text(
+            extracted_whitespace = ParserHelper.resolve_all_from_text(
                 next_token.extracted_whitespace
-            )
-            extracted_whitespace = ParserHelper.resolve_noops_from_text(
-                extracted_whitespace
             )
             output_html += extracted_whitespace + adjusted_text_token
         elif transform_state.is_in_html_block:
@@ -618,8 +605,7 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        adjusted_text = ParserHelper.resolve_references_from_text(next_token.span_text)
-        adjusted_text = ParserHelper.resolve_escapes_from_text(adjusted_text)
+        adjusted_text = ParserHelper.resolve_all_from_text(next_token.span_text)
 
         return output_html + "<code>" + adjusted_text + "</code>"
 
@@ -630,8 +616,7 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        adjusted_text = ParserHelper.resolve_references_from_text(next_token.raw_tag)
-        adjusted_text = ParserHelper.resolve_noops_from_text(adjusted_text)
+        adjusted_text = ParserHelper.resolve_all_from_text(next_token.raw_tag)
 
         return output_html + "<" + adjusted_text + ">"
 

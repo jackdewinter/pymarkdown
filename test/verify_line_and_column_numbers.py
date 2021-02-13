@@ -783,10 +783,8 @@ def __verify_first_inline_fenced_code_block(
         if first_inline_token.is_blank_line:
             col_pos = 0
         else:
-            resolved_extracted_whitespace = (
-                ParserHelper.resolve_replacement_markers_from_text(
-                    first_inline_token.extracted_whitespace
-                )
+            resolved_extracted_whitespace = ParserHelper.remove_all_from_text(
+                first_inline_token.extracted_whitespace
             )
             print(
                 ">resolved_extracted_whitespace>"
@@ -834,7 +832,7 @@ def __verify_first_inline_atx(last_non_inline_token, first_inline_token):
 
     assert first_inline_token.is_text, first_inline_token.token_name
 
-    replaced_extracted_whitespace = ParserHelper.resolve_replacement_markers_from_text(
+    replaced_extracted_whitespace = ParserHelper.remove_all_from_text(
         first_inline_token.extracted_whitespace
     )
     col_pos = last_non_inline_token.column_number + last_non_inline_token.hash_count
@@ -1413,7 +1411,7 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
 
     after_title_whitespace = previous_inline_token.after_title_whitespace
 
-    label_data_raw = ParserHelper.resolve_replacement_markers_from_text(label_data_raw)
+    label_data_raw = ParserHelper.remove_all_from_text(label_data_raw)
 
     newline_count = ParserHelper.count_newlines_in_text(
         previous_inline_token.text_from_blocks
@@ -1630,7 +1628,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
         newline_count = ParserHelper.count_newlines_in_text(label_text)
         if newline_count:
             print(">>x>>" + ParserHelper.make_value_visible(label_text))
-            label_text = ParserHelper.resolve_replacement_markers_from_text(label_text)
+            label_text = ParserHelper.remove_all_from_text(label_text)
             print(">>x>>" + ParserHelper.make_value_visible(label_text))
             estimated_line_number += newline_count
             if para_owner:
@@ -1653,9 +1651,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
         newline_count = ParserHelper.count_newlines_in_text(image_alt_text)
         if newline_count:
             print(">>x>>" + ParserHelper.make_value_visible(image_alt_text))
-            image_alt_text = ParserHelper.resolve_replacement_markers_from_text(
-                image_alt_text
-            )
+            image_alt_text = ParserHelper.remove_all_from_text(image_alt_text)
             print(">>x>>" + ParserHelper.make_value_visible(image_alt_text))
             estimated_line_number += newline_count
             if para_owner:
@@ -1694,9 +1690,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
         newline_count = ParserHelper.count_newlines_in_text(image_alt_text)
         if newline_count:
             print(">>x>>" + ParserHelper.make_value_visible(image_alt_text))
-            image_alt_text = ParserHelper.resolve_replacement_markers_from_text(
-                image_alt_text
-            )
+            image_alt_text = ParserHelper.remove_all_from_text(image_alt_text)
             print(">>x>>" + ParserHelper.make_value_visible(image_alt_text))
 
             estimated_line_number += newline_count
@@ -1832,13 +1826,13 @@ def __verify_next_inline_code_span(
     link_stack,
 ):
 
-    resolved_leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
+    resolved_leading_whitespace = ParserHelper.remove_all_from_text(
         previous_inline_token.leading_whitespace
     )
-    resolved_span_text = ParserHelper.resolve_replacement_markers_from_text(
+    resolved_span_text = ParserHelper.remove_all_from_text(
         previous_inline_token.span_text
     )
-    resolved_trailing_whitespace = ParserHelper.resolve_replacement_markers_from_text(
+    resolved_trailing_whitespace = ParserHelper.remove_all_from_text(
         previous_inline_token.trailing_whitespace
     )
 
@@ -2067,11 +2061,7 @@ def __verify_next_inline_text(
         + ParserHelper.make_value_visible(split_current_line)
         + "<"
     )
-    split_current_line = ParserHelper.remove_backspaces_from_text(split_current_line)
-    split_current_line = ParserHelper.resolve_replacement_markers_from_text(
-        split_current_line
-    )
-    split_current_line = ParserHelper.remove_escapes_from_text(split_current_line)
+    split_current_line = ParserHelper.remove_all_from_text(split_current_line)
     print(
         "split_current_line>"
         + ParserHelper.make_value_visible(split_current_line)
@@ -2098,9 +2088,7 @@ def __handle_last_token_text(
     last_inline_token,
 ):
 
-    resolved_text = ParserHelper.resolve_replacement_markers_from_text(
-        last_inline_token.token_text
-    )
+    resolved_text = ParserHelper.remove_all_from_text(last_inline_token.token_text)
 
     if last_block_token.is_paragraph:
         inline_height = ParserHelper.count_newlines_in_text(resolved_text)
@@ -2587,7 +2575,7 @@ def __verify_inline(  # noqa: C901
                             )
                         )
 
-                        token_text = ParserHelper.resolve_replacement_markers_from_text(
+                        token_text = ParserHelper.remove_all_from_text(
                             current_inline_token.token_text
                         )
                         print(

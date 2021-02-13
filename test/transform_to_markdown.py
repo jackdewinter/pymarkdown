@@ -438,7 +438,7 @@ class TransformToMarkdown:
                 new_data += ParserHelper.newline_character
 
         print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
-        new_data = ParserHelper.resolve_noops_from_text(new_data)
+        new_data = ParserHelper.resolve_all_from_text(new_data)
         print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
         return new_data, delayed_continue, continue_sequence
 
@@ -787,7 +787,7 @@ class TransformToMarkdown:
         if ParserHelper.newline_character in extracted_whitespace:
             line_end_index = extracted_whitespace.index(ParserHelper.newline_character)
             extracted_whitespace = extracted_whitespace[0:line_end_index]
-        return ParserHelper.resolve_blechs_from_text(extracted_whitespace)
+        return ParserHelper.resolve_all_from_text(extracted_whitespace)
 
     # pylint: enable=unused-argument
 
@@ -1066,7 +1066,7 @@ class TransformToMarkdown:
             )
             new_data = composed_data
 
-        new_data = ParserHelper.resolve_noops_from_text(new_data)
+        new_data = ParserHelper.resolve_all_from_text(new_data)
         return new_data, delayed_continue, continue_sequence
 
     # pylint: enable=unused-argument
@@ -1281,10 +1281,7 @@ class TransformToMarkdown:
                     break
 
             print("text>before>" + ParserHelper.make_value_visible(text_to_modify))
-            text_to_modify = ParserHelper.remove_backspaces_from_text(text_to_modify)
-            text_to_modify = ParserHelper.resolve_replacement_markers_from_text(
-                text_to_modify
-            )
+            text_to_modify = ParserHelper.remove_all_from_text(text_to_modify)
             print("text>after>" + ParserHelper.make_value_visible(text_to_modify))
 
             if owning_paragraph_token:
@@ -1467,21 +1464,16 @@ class TransformToMarkdown:
             ">>rehydrate_text>>"
             + ParserHelper.make_value_visible(current_token.token_text)
         )
-        main_text = ParserHelper.remove_backspaces_from_text(current_token.token_text)
-
-        print(">>rehydrate_text>>" + ParserHelper.make_value_visible(main_text))
-        main_text = ParserHelper.resolve_replacement_markers_from_text(main_text)
-        main_text = ParserHelper.remove_escapes_from_text(main_text)
+        main_text = ParserHelper.remove_all_from_text(current_token.token_text)
         print("<<rehydrate_text>>" + ParserHelper.make_value_visible(main_text))
 
         print(
             "<<leading_whitespace>>"
             + ParserHelper.make_value_visible(current_token.extracted_whitespace)
         )
-        leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
+        leading_whitespace = ParserHelper.remove_all_from_text(
             current_token.extracted_whitespace
         )
-        leading_whitespace = ParserHelper.remove_escapes_from_text(leading_whitespace)
         print(
             "<<leading_whitespace>>"
             + ParserHelper.make_value_visible(leading_whitespace)
@@ -1603,8 +1595,7 @@ class TransformToMarkdown:
             return ""
 
         raw_text = current_token.raw_tag
-        raw_text = ParserHelper.resolve_replacement_markers_from_text(raw_text)
-        raw_text = ParserHelper.remove_escapes_from_text(raw_text)
+        raw_text = ParserHelper.remove_all_from_text(raw_text)
 
         if self.block_stack[-1].is_paragraph:
             print("raw_html>>before>>" + ParserHelper.make_value_visible(raw_text))
@@ -1626,16 +1617,11 @@ class TransformToMarkdown:
         if self.block_stack[-1].is_inline_link:
             return ""
 
-        span_text = ParserHelper.resolve_replacement_markers_from_text(
-            current_token.span_text
-        )
-        span_text = ParserHelper.remove_escapes_from_text(span_text)
-
-        leading_whitespace = ParserHelper.resolve_replacement_markers_from_text(
+        span_text = ParserHelper.remove_all_from_text(current_token.span_text)
+        leading_whitespace = ParserHelper.remove_all_from_text(
             current_token.leading_whitespace
         )
-
-        trailing_whitespace = ParserHelper.resolve_replacement_markers_from_text(
+        trailing_whitespace = ParserHelper.remove_all_from_text(
             current_token.trailing_whitespace
         )
 

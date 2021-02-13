@@ -173,10 +173,8 @@ class InlineProcessor:
                                 "leading_whitespace:$<",
                                 leading_whitespace,
                             )
-                            leading_whitespace = (
-                                ParserHelper.resolve_replacement_markers_from_text(
-                                    leading_whitespace
-                                )
+                            leading_whitespace = ParserHelper.remove_all_from_text(
+                                leading_whitespace
                             )
                             POGGER.info("leading_whitespace:$<", leading_whitespace)
                             new_column_number += len(leading_whitespace)

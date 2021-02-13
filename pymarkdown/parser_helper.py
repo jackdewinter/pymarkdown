@@ -410,10 +410,10 @@ class ParserHelper:
             delta_line_number += len(split_raw_tag) - 1
 
             last_element = split_raw_tag[-1]
-            last_element = ParserHelper.resolve_replacement_markers_from_text(
+            last_element = ParserHelper.__resolve_replacement_markers_from_text(
                 last_element
             )
-            last_element = ParserHelper.remove_escapes_from_text(last_element)
+            last_element = ParserHelper.__remove_escapes_from_text(last_element)
             length_of_last_elements = len(last_element)
 
             delta_column_number = -(length_of_last_elements + 1)
@@ -528,7 +528,7 @@ class ParserHelper:
         return escaped_string
 
     @staticmethod
-    def remove_backspaces_from_text(token_text):
+    def __remove_backspaces_from_text(token_text):
         """
         Remove any backspaces from the text.
         """
@@ -623,7 +623,7 @@ class ParserHelper:
         )
 
     @staticmethod
-    def resolve_blechs_from_text(token_text):
+    def __resolve_blechs_from_text(token_text):
         """
         Resolve the blech character out of the text string.
         """
@@ -632,7 +632,7 @@ class ParserHelper:
         )
 
     @staticmethod
-    def resolve_escapes_from_text(token_text):
+    def __resolve_escapes_from_text(token_text):
         """
         Resolve any escapes from the text, leaving only what they escaped.
         """
@@ -653,14 +653,14 @@ class ParserHelper:
         return adjusted_text_token
 
     @staticmethod
-    def remove_escapes_from_text(token_text):
+    def __remove_escapes_from_text(token_text):
         """
         Remove any escape characters from the text.
         """
-        return ParserHelper.resolve_escapes_from_text(token_text)
+        return ParserHelper.__resolve_escapes_from_text(token_text)
 
     @staticmethod
-    def resolve_replacement_markers_from_text(main_text):
+    def __resolve_replacement_markers_from_text(main_text):
         """
         Resolve the alert characters (i.e. replacement markers) out of the text string.
         """
@@ -732,7 +732,7 @@ class ParserHelper:
         return found_index
 
     @staticmethod
-    def resolve_references_from_text(adjusted_text_token):
+    def __resolve_references_from_text(adjusted_text_token):
         """
         The alert characters signal that a replacement has occurred, so make sure
         we take the right text from the replacement.
@@ -788,6 +788,30 @@ class ParserHelper:
                 adjusted_text_token, ParserHelper.__alert_character, start_index
             )
         return adjusted_text_token
+
+    @staticmethod
+    def resolve_all_from_text(text_to_resolve):
+        """
+        Combination to resolve all of these special characters from the text.
+        """
+        resolved_text = ParserHelper.resolve_backspaces_from_text(text_to_resolve)
+        resolved_text = ParserHelper.__resolve_references_from_text(resolved_text)
+        resolved_text = ParserHelper.resolve_noops_from_text(resolved_text)
+        resolved_text = ParserHelper.__resolve_blechs_from_text(resolved_text)
+        resolved_text = ParserHelper.__resolve_escapes_from_text(resolved_text)
+        return resolved_text
+
+    @staticmethod
+    def remove_all_from_text(text_to_remove):
+        """
+        Combination to remove all of these special characters from the text.
+        """
+        removed_text = ParserHelper.__remove_backspaces_from_text(text_to_remove)
+        removed_text = ParserHelper.__resolve_replacement_markers_from_text(
+            removed_text
+        )
+        removed_text = ParserHelper.__remove_escapes_from_text(removed_text)
+        return removed_text
 
     @staticmethod
     def repeat_string(string_to_repeat, repeat_count):

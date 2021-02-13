@@ -409,17 +409,17 @@ class LinkHelper:
                     if inline_blocks[ind + 1].token_text == "]":
                         image_alt_text += inline_blocks[ind + 1].token_text
                 elif inline_blocks[ind + 1].is_text:
-                    image_alt_text += ParserHelper.resolve_references_from_text(
+                    image_alt_text += ParserHelper.resolve_all_from_text(
                         inline_blocks[ind + 1].token_text
                     )
                 elif inline_blocks[ind + 1].is_inline_raw_html:
                     image_alt_text += "<" + inline_blocks[ind + 1].raw_tag + ">"
                 elif inline_blocks[ind + 1].is_inline_code_span:
-                    image_alt_text += ParserHelper.resolve_references_from_text(
+                    image_alt_text += ParserHelper.resolve_all_from_text(
                         inline_blocks[ind + 1].span_text
                     )
                 elif inline_blocks[ind + 1].is_inline_autolink:
-                    image_alt_text += ParserHelper.resolve_references_from_text(
+                    image_alt_text += ParserHelper.resolve_all_from_text(
                         inline_blocks[ind + 1].autolink_text
                     )
                 elif (
@@ -448,7 +448,7 @@ class LinkHelper:
         else:
             POGGER.debug(">>composing>>$>>", text_from_blocks_raw)
             image_alt_text = xx_fn(text_from_blocks_raw)
-            image_alt_text = ParserHelper.resolve_backspaces_from_text(image_alt_text)
+            image_alt_text = ParserHelper.resolve_all_from_text(image_alt_text)
             image_alt_text = InlineHelper.append_text(
                 "", image_alt_text, add_text_signature=False
             )
@@ -507,20 +507,14 @@ class LinkHelper:
                         "CODESPAN>>$<<",
                         inline_blocks[collect_index],
                     )
-                    resolved_leading_whitespace = (
-                        ParserHelper.resolve_replacement_markers_from_text(
-                            inline_blocks[collect_index].leading_whitespace
-                        )
+                    resolved_leading_whitespace = ParserHelper.remove_all_from_text(
+                        inline_blocks[collect_index].leading_whitespace
                     )
-                    resolved_span_text = (
-                        ParserHelper.resolve_replacement_markers_from_text(
-                            inline_blocks[collect_index].span_text
-                        )
+                    resolved_span_text = ParserHelper.remove_all_from_text(
+                        inline_blocks[collect_index].span_text
                     )
-                    resolved_trailing_whitespace = (
-                        ParserHelper.resolve_replacement_markers_from_text(
-                            inline_blocks[collect_index].trailing_whitespace
-                        )
+                    resolved_trailing_whitespace = ParserHelper.remove_all_from_text(
+                        inline_blocks[collect_index].trailing_whitespace
                     )
                     converted_text = (
                         inline_blocks[collect_index].extracted_start_backticks
@@ -921,11 +915,7 @@ class LinkHelper:
         inline_title = ""
 
         POGGER.debug("pre>>$<<", link_to_lookup)
-        link_to_lookup = ParserHelper.resolve_backspaces_from_text(link_to_lookup)
-        link_to_lookup = ParserHelper.resolve_replacement_markers_from_text(
-            link_to_lookup
-        )
-        link_to_lookup = ParserHelper.remove_escapes_from_text(link_to_lookup)
+        link_to_lookup = ParserHelper.remove_all_from_text(link_to_lookup)
         POGGER.debug("mid(pre-norm)>>$<<", link_to_lookup)
 
         link_label = LinkHelper.normalize_link_label(link_to_lookup)
@@ -1330,10 +1320,7 @@ class LinkHelper:
         """
 
         if link_token.label_type == "shortcut":
-            link_label = ParserHelper.remove_backspaces_from_text(
-                link_token.text_from_blocks
-            )
-            link_label = ParserHelper.remove_escapes_from_text(link_label)
+            link_label = ParserHelper.remove_all_from_text(link_token.text_from_blocks)
             link_text = "[" + link_label + "]"
         elif link_token.label_type == "full":
 
@@ -1350,10 +1337,7 @@ class LinkHelper:
             if link_token.did_use_angle_start:
                 link_uri = "<" + link_uri + ">"
 
-            link_label = ParserHelper.remove_backspaces_from_text(
-                link_token.text_from_blocks
-            )
-            link_label = ParserHelper.remove_escapes_from_text(link_label)
+            link_label = ParserHelper.remove_all_from_text(link_token.text_from_blocks)
             link_text = (
                 "["
                 + link_label
