@@ -6,7 +6,9 @@ import os
 import tempfile
 from test.markdown_scanner import MarkdownScanner
 
+from pymarkdown.container_block_processor import ContainerIndices
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.stack_token import StackToken
 
 from .utils import write_temporary_configuration
 
@@ -309,6 +311,7 @@ def test_markdown_with_dash_dash_log_level_debug(caplog):
     expected_error = """"""
 
     # Act
+    ParserLogger.sync_on_next_call()
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
@@ -351,6 +354,7 @@ def test_markdown_with_dash_dash_log_level_info(caplog):
     expected_error = ""
 
     # Act
+    ParserLogger.sync_on_next_call()
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
@@ -400,6 +404,7 @@ main.py: error: argument --log-level: invalid log_level_type value: 'invalid'
 """
 
     # Act
+    ParserLogger.sync_on_next_call()
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
     # Assert
@@ -453,6 +458,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
         expected_error = ""
 
         # Act
+        ParserLogger.sync_on_next_call()
         execute_results = scanner.invoke_main(arguments=supplied_arguments)
 
         # Assert
@@ -899,6 +905,54 @@ Plugin id 'MD999' had a critical failure during the 'next_token' action.
 # TODO add Markdown parsing of some binary file to cause the tokenizer to throw an exception?
 
 
+def test_markdown_logger_stack_token_normal_output():
+    """
+    Test for normal output of the stack token for debug output.
+    """
+
+    # Arrange
+    stack_token = StackToken("type", extra_data=None)
+
+    # Act
+    stack_token_string = str(stack_token)
+
+    # Assert
+    assert stack_token_string == "StackToken(type)"
+
+
+def test_markdown_logger_stack_token_extra_output():
+    """
+    Test for extra output of the stack token for debug output.
+    """
+
+    # Arrange
+    stack_token = StackToken("type", extra_data="abc")
+
+    # Act
+    stack_token_string = str(stack_token)
+
+    # Assert
+    assert stack_token_string == "StackToken(type:abc)"
+
+
+def test_markdown_logger_container_indices():
+    """
+    Test for ContainerIndices class for output
+    """
+
+    # Arrange
+    container_indices = ContainerIndices(1, 2, 3)
+
+    # Act
+    container_indices_string = str(container_indices)
+
+    # Assert
+    assert (
+        container_indices_string
+        == "{ContainerIndices:ulist_index:1;olist_index:2;block_index:3}"
+    )
+
+
 # pylint: disable=broad-except
 def test_markdown_logger_arg_list_out_of_sync():
     """
@@ -912,7 +966,8 @@ def test_markdown_logger_arg_list_out_of_sync():
         root_logger = logging.getLogger()
         root_logger.setLevel(logging.DEBUG)
         assert POGGER.is_enabled_for(logging.DEBUG)
-        POGGER.debug("one sub $ but two in list", 1, 2)
+        new_logger = ParserLogger(logging.getLogger(__name__))
+        new_logger.debug("one sub $ but two in list", 1, 2)
         assert False, "An exception should have been thrown by now."
     except Exception as this_exception:
         assert (
