@@ -52,9 +52,9 @@ class HtmlHelper:
     __html_block_3_end = "?>"
     __html_block_4_end = __html_tag_end
     __html_block_5_end = "]]>"
-    
-    __attribute_start_characters = "abcdefghijklmnopqrstuvwxyz1234567890:-"
-    __attribute_other_characters = __attribute_start_characters + "._"
+
+    __attribute_start_characters = "abcdefghijklmnopqrstuvwxyz1234567890:_"
+    __attribute_other_characters = __attribute_start_characters + ".-"
 
     __raw_declaration_start_character = "!"
     __raw_declaration_whitespace = ParserHelper.space_character
@@ -137,7 +137,7 @@ class HtmlHelper:
         is_valid = bool(tag_name)
         if is_valid:
             for next_character in tag_name.lower():
-                if not (next_character in HtmlHelper.__valid_tag_name_characters):
+                if next_character not in HtmlHelper.__valid_tag_name_characters:
                     is_valid = False
                     break
         return is_valid
@@ -157,7 +157,9 @@ class HtmlHelper:
             return -1
         string_index += 1
         while string_index < len(string_to_parse):
-            if not (string_to_parse[string_index] in HtmlHelper.__attribute_other_characters):
+            if not (
+                string_to_parse[string_index] in HtmlHelper.__attribute_other_characters
+            ):
                 break
             string_index += 1
 
