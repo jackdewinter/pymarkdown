@@ -136,10 +136,11 @@ class ListBlockProcessor:
         )
 
         # Thematic breaks have precedence, so stop a list start if we find one.
-        is_break, _ = LeafBlockProcessor.is_thematic_break(
-            line_to_parse, start_index, extracted_whitespace
-        )
-        is_start = is_start and not is_break
+        if is_start:
+            is_break, _ = LeafBlockProcessor.is_thematic_break(
+                line_to_parse, start_index, extracted_whitespace
+            )
+            is_start = is_start and not is_break
         return is_start
 
     @staticmethod

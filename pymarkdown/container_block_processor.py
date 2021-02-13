@@ -477,10 +477,7 @@ class ContainerBlockProcessor:
         if init_bq is not None:
             this_bq_count = init_bq
 
-        current_container_blocks = []
-        for ind in parser_state.token_stack:
-            if ind.is_list:
-                current_container_blocks.append(ind)
+        current_container_blocks = [ind for ind in parser_state.token_stack if ind.is_list]
 
         adj_ws = ContainerBlockProcessor.__calculate_adjusted_whitespace(
             parser_state,

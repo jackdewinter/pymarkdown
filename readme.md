@@ -24,8 +24,6 @@
 ### Priority 2 - Like To Solve Before Initial
 
 - check for common code in consistency checks
-- check resolve/remove helpers for groupings per file type i.e. html, markdown, proc, verify
-  - i.e. ParserHelper.resolve_
 
 - why does fcb with only newlines and newlines with ws not fold down to text?
   - coalesce with blank lines in fenced code block?
