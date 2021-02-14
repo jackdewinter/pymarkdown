@@ -37,27 +37,31 @@ class ContainerBlockProcessor:
         Parse the line, taking care to handle any container blocks before deciding
         whether or not to pass the (remaining parts of the) line to the leaf block
         processor.
+
+        Note: This is one of the more heavily traffic functions in the
+        parser.  Debugging should be uncommented only if needed.
         """
-        # TODO work on removing this
+
         line_to_parse = position_marker.text_to_parse
         if container_depth == 0:
             parser_state.mark_start_information(position_marker)
 
-        POGGER.debug("Line:$:", position_marker.text_to_parse)
-        POGGER.debug("Stack Depth:$:", parser_state.original_stack_depth)
-        POGGER.debug("Document Depth:$:", parser_state.original_document_depth)
+        # POGGER.debug("Line:$:", line_to_parse)
+        # POGGER.debug("Stack Depth:$:", parser_state.original_stack_depth)
+        # POGGER.debug("Document Depth:$:", parser_state.original_document_depth)
 
-        POGGER.debug(
-            "Last Block Quote:$:",
-            parser_state.last_block_quote_stack_token,
-        )
-        POGGER.debug(
-            "Last Block Quote:$:",
-            parser_state.last_block_quote_markdown_token_index,
-        )
-        POGGER.debug(
-            "Last Block Quote:$:", parser_state.copy_of_last_block_quote_markdown_token
-        )
+        # Debug to be used for block quotes if needed.
+        # POGGER.debug(
+        #    "Last Block Quote:$:",
+        #    parser_state.last_block_quote_stack_token,
+        # )
+        # POGGER.debug(
+        #    "Last Block Quote:$:",
+        #    parser_state.last_block_quote_markdown_token_index,
+        # )
+        # POGGER.debug(
+        #    "Last Block Quote:$:", parser_state.copy_of_last_block_quote_markdown_token
+        # )
 
         start_index, extracted_whitespace = ParserHelper.extract_whitespace(
             line_to_parse, 0
@@ -77,11 +81,6 @@ class ContainerBlockProcessor:
         )
 
         end_container_indices = ContainerIndices(-1, -1, -1)
-
-        POGGER.debug_with_visible_whitespace(
-            ">>__get_block_start_index>>$>>",
-            line_to_parse,
-        )
         (
             did_process,
             was_container_start,
@@ -108,18 +107,16 @@ class ContainerBlockProcessor:
             start_index,
         )
         if requeue_line_info:
+            POGGER.debug(">>requeuing lines after looking for block start. returning.")
             return None, None, requeue_line_info
 
-        POGGER.debug(">>did_blank>>$", did_blank)
-        POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
         if did_blank:
+            POGGER.debug(">>already handled blank line. returning.")
             container_level_tokens.extend(leaf_tokens)
             return container_level_tokens, line_to_parse, None
 
-        POGGER.debug_with_visible_whitespace(
-            ">>__get_list_start_index>>$>>",
-            line_to_parse.replace,
-        )
+        # POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
+
         (
             did_process,
             was_container_start,
@@ -144,12 +141,11 @@ class ContainerBlockProcessor:
             container_level_tokens,
         )
         if requeue_line_info:
+            POGGER.debug(
+                ">>requeuing lines after looking for ordered list start. returning."
+            )
             return None, None, requeue_line_info
 
-        POGGER.debug_with_visible_whitespace(
-            ">>__get_list_start_index>>$>>",
-            line_to_parse,
-        )
         (
             did_process,
             was_container_start,
@@ -174,16 +170,14 @@ class ContainerBlockProcessor:
             container_level_tokens,
         )
         if requeue_line_info:
+            POGGER.debug(
+                ">>requeuing lines after looking for unordered list start. returning."
+            )
             return None, None, requeue_line_info
-        POGGER.debug_with_visible_whitespace(
-            ">>__get_list_start_index>>$>>", line_to_parse
-        )
 
-        POGGER.debug("last_block_quote_index>>$", last_block_quote_index)
-
-        POGGER.debug("olist_index>>$", end_container_indices.olist_index)
-        POGGER.debug("ulist_index>>$", end_container_indices.ulist_index)
-        POGGER.debug("block_index>>$", end_container_indices.block_index)
+        # POGGER.debug("last_block_quote_index>>$", last_block_quote_index)
+        # POGGER.debug("indices>>$", end_container_indices)
+        # POGGER.debug("line_to_parse(after containers)>>$", line_to_parse)
 
         last_list_start_index = 0
         if end_container_indices.block_index != -1:
@@ -199,9 +193,6 @@ class ContainerBlockProcessor:
         if not parser_state.token_stack[-1].is_fenced_code_block:
             new_position_marker = PositionMarker(
                 position_marker.line_number, start_index, line_to_parse
-            )
-            POGGER.debug_with_visible_whitespace(
-                "__handle_nested_container_blocks>>$>>", line_to_parse
             )
             (
                 line_to_parse,
@@ -219,20 +210,20 @@ class ContainerBlockProcessor:
                 was_container_start,
                 avoid_block_starts,
             )
-            POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
+            # POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
 
-        POGGER.debug("olist->container_level_tokens->$", container_level_tokens)
-        POGGER.debug("removed_chars_at_start>>>$", removed_chars_at_start)
+        # POGGER.debug("olist->container_level_tokens->$", container_level_tokens)
+        # POGGER.debug("removed_chars_at_start>>>$", removed_chars_at_start)
 
         if container_depth:
             assert not leaf_tokens
             POGGER.debug(">>>>>>>>$<<<<<<<<<<", line_to_parse)
             return container_level_tokens, line_to_parse, None
 
-        POGGER.debug_with_visible_whitespace(
-            ">>__process_list_in_progress>>$>>",
-            line_to_parse,
-        )
+        # POGGER.debug_with_visible_whitespace(
+        #    ">>__process_list_in_progress>>$>>",
+        #    line_to_parse,
+        # )
         (
             did_process,
             line_to_parse,
@@ -246,9 +237,9 @@ class ContainerBlockProcessor:
             container_level_tokens,
             extracted_whitespace,
         )
-        POGGER.debug_with_visible_whitespace(
-            ">>__process_list_in_progress>>$>>", line_to_parse
-        )
+        # POGGER.debug_with_visible_whitespace(
+        #    ">>__process_list_in_progress>>$>>", line_to_parse
+        # )
         ContainerBlockProcessor.__process_lazy_lines(
             parser_state,
             leaf_tokens,
@@ -258,14 +249,14 @@ class ContainerBlockProcessor:
             did_process,
             container_level_tokens,
         )
-        POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
-        POGGER.debug("container_level_tokens>>$>>", container_level_tokens)
+        # POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
+        # POGGER.debug("container_level_tokens>>$>>", container_level_tokens)
 
         # TODO refactor to make indent unnecessary?
         calculated_indent = len(parser_state.original_line_to_parse) - len(
             line_to_parse
         )
-        POGGER.debug(">>indent>>$", calculated_indent)
+        # POGGER.debug(">>indent>>$", calculated_indent)
 
         force_it = False
         if (
@@ -299,10 +290,6 @@ class ContainerBlockProcessor:
         parser_state.clear_after_leaf_processing()
 
         container_level_tokens.extend(leaf_tokens)
-        POGGER.debug(
-            "clt-end>>$<<",
-            container_level_tokens,
-        )
         return container_level_tokens, line_to_parse, requeue_line_info
         # pylint: enable=too-many-locals
         # pylint: enable=too-many-arguments
@@ -746,8 +733,6 @@ class ContainerBlockProcessor:
         adj_block = None
         if end_of_bquote_start_index != -1:
             adj_block = end_of_bquote_start_index
-
-        POGGER.debug("adj_line_to_parse>>>%s<<<", adj_line_to_parse)
 
         position_marker = PositionMarker(
             position_marker.line_number, -1, adj_line_to_parse

@@ -14,6 +14,8 @@ from .utils import write_temporary_configuration
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-many-lines
+
 
 def test_markdown_with_no_parameters():
     """
@@ -951,6 +953,18 @@ def test_markdown_logger_container_indices():
         container_indices_string
         == "{ContainerIndices:ulist_index:1;olist_index:2;block_index:3}"
     )
+
+
+def test_markdown_logger_arg_list_out_of_syncx():
+    """
+    Since calls to it are commented out most of the time,
+    test the debug_with_visible_whitespace function manually.
+    """
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.DEBUG)
+    assert POGGER.is_enabled_for(logging.DEBUG)
+    new_logger = ParserLogger(logging.getLogger(__name__))
+    new_logger.debug_with_visible_whitespace("one sub $ but two in list", " 1 ")
 
 
 # pylint: disable=broad-except
