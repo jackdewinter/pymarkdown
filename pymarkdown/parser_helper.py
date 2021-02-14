@@ -349,12 +349,16 @@ class ParserHelper:
         Determine if any of the specified characters are in the source string.
         """
 
-        source_text_size = len(source_text)
-        while start_index < source_text_size:
-            if source_text[start_index] in find_any:
-                return start_index
-            start_index += 1
-        return -1
+        first_index = -1
+        for next_character in find_any:
+            found_index = source_text.find(next_character, start_index)
+            if found_index != -1:
+                first_index = (
+                    found_index if first_index == -1 else min(first_index, found_index)
+                )
+                if first_index == 0:
+                    break
+        return first_index
 
     @staticmethod
     def replace_any_of(string_to_search_in, characters_to_search_for, replace_with):
