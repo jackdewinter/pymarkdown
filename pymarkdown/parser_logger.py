@@ -24,11 +24,10 @@ class ParserLogger:
         self.__is_debug_enabled = self.__my_logger.isEnabledFor(DEBUG)
         self.__local_count = ParserLogger.__global_count
 
-    def __reset_if_needed(self):
-        if ParserLogger.__global_count != self.__local_count:
-            self.__local_count = ParserLogger.__global_count
-            self.__is_info_enabled = self.__my_logger.isEnabledFor(INFO)
-            self.__is_debug_enabled = self.__my_logger.isEnabledFor(DEBUG)
+    def __reset_cache(self):
+        self.__local_count = ParserLogger.__global_count
+        self.__is_info_enabled = self.__my_logger.isEnabledFor(INFO)
+        self.__is_debug_enabled = self.__my_logger.isEnabledFor(DEBUG)
 
     @staticmethod
     def sync_on_next_call():
@@ -41,7 +40,8 @@ class ParserLogger:
         """
         Log information at an "INFO" level to the logger.
         """
-        self.__reset_if_needed()
+        if ParserLogger.__global_count != self.__local_count:
+            self.__reset_cache()
         if self.__is_info_enabled:
             msg = self.__munge(False, log_format, args)
             self.__my_logger.info(msg, stacklevel=2)
@@ -50,7 +50,8 @@ class ParserLogger:
         """
         Log information at a "DEBUG" level to the logger.
         """
-        self.__reset_if_needed()
+        if ParserLogger.__global_count != self.__local_count:
+            self.__reset_cache()
         if self.__is_debug_enabled:
             msg = self.__munge(False, log_format, args)
             self.__my_logger.debug(msg, stacklevel=2)
@@ -60,8 +61,11 @@ class ParserLogger:
         Log information at a "DEBUG" level to the logger, but replace the
         automatic filtering of any string with make_value_visible to
         using make_whitespace_visible.
+
+        Note: This is seldomly used, and does not have a reset check as
+        the reset will be hit by one of the other two functions long
+        before it gets here.
         """
-        self.__reset_if_needed()
         if self.__is_debug_enabled:
             msg = self.__munge(True, log_format, args)
             self.__my_logger.debug(msg, stacklevel=2)

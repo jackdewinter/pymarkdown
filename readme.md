@@ -65,6 +65,11 @@
 - LRD and block quote interaction - process_link_reference_definition - search for XXXXX
 - `LOGGER.debug("handle_block_quote_section>>fenced")` and collapse?
 
+#### Performance
+
+- count_characters_in_text
+- can further eliminate len() calls by looking for places can calculate once and pass to child functions
+
 ### Priority 4 - Like To Solve in next 6 m
 
 - verifying vs validating?
