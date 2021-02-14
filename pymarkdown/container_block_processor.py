@@ -374,24 +374,27 @@ class ContainerBlockProcessor:
         current_container_blocks,
         container_level_tokens,
     ):
-
+        """
+        Note: This is one of the more heavily traffic functions in the
+        parser.  Debugging should be uncommented only if needed.
+        """
         # TODO refactor so it doesn't need this!
         new_position_marker = PositionMarker(
             position_marker.line_number, start_index, line_to_parse
         )
 
-        POGGER.debug(
-            "pre-list>>#$#$#$#",
-            position_marker.index_number,
-            position_marker.index_indent,
-            position_marker.text_to_parse,
-        )
-        POGGER.debug(
-            "pre-list>>#$#$#$#",
-            new_position_marker.index_number,
-            new_position_marker.index_indent,
-            new_position_marker.text_to_parse,
-        )
+        # POGGER.debug(
+        #    "pre-list>>#$#$#$#",
+        #    position_marker.index_number,
+        #    position_marker.index_indent,
+        #    position_marker.text_to_parse,
+        # )
+        # POGGER.debug(
+        #    "pre-list>>#$#$#$#",
+        #    new_position_marker.index_number,
+        #    new_position_marker.index_indent,
+        #    new_position_marker.text_to_parse,
+        # )
         (
             did_process,
             was_container_start,
@@ -423,19 +426,19 @@ class ContainerBlockProcessor:
                 requeue_line_info,
             )
         container_level_tokens.extend(resultant_tokens)
-        POGGER.debug(
-            "post-ulist>>#$#$#$#",
-            position_marker.index_number,
-            position_marker.index_indent,
-            position_marker.text_to_parse,
-        )
-        POGGER.debug(
-            "post-ulist>>#$#$#$#",
-            new_position_marker.index_number,
-            new_position_marker.index_indent,
-            new_position_marker.text_to_parse,
-        )
-        POGGER.debug("text>>$>>", line_to_parse)
+        # POGGER.debug(
+        #    "post-ulist>>#$#$#$#",
+        #    position_marker.index_number,
+        #    position_marker.index_indent,
+        #    position_marker.text_to_parse,
+        # )
+        # POGGER.debug(
+        #    "post-ulist>>#$#$#$#",
+        #    new_position_marker.index_number,
+        #    new_position_marker.index_indent,
+        #    new_position_marker.text_to_parse,
+        # )
+        # POGGER.debug("text>>$>>", line_to_parse)
 
         return (
             did_process,
