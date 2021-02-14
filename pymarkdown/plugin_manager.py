@@ -111,6 +111,8 @@ class Plugin(ABC):
     def __init__(self):
         self.__scan_context = None
         self.__configuration_map = None
+        self.__is_next_token_implemented_in_plugin = True
+        self.__is_next_line_implemented_in_plugin = True
 
     @abstractmethod
     def get_details(self):
@@ -138,11 +140,32 @@ class Plugin(ABC):
         """
         self.__configuration_map = map_to_use
 
+        self.__is_next_token_implemented_in_plugin = (
+            "next_token" in self.__class__.__dict__.keys()
+        )
+        self.__is_next_line_implemented_in_plugin = (
+            "next_line" in self.__class__.__dict__.keys()
+        )
+
     def set_context(self, context):
         """
         Set the context to use for any error reporting.
         """
         self.__scan_context = context
+
+    @property
+    def is_next_line_implemented_in_plugin(self):
+        """
+        Return whether the next_line function is implemented in the plugin.
+        """
+        return self.__is_next_line_implemented_in_plugin
+
+    @property
+    def is_next_token_implemented_in_plugin(self):
+        """
+        Return whether the next_token function is implemented in the plugin.
+        """
+        return self.__is_next_token_implemented_in_plugin
 
     def report_next_line_error(self, column_number, line_number_delta=0):
         """
@@ -241,6 +264,8 @@ class PluginManager:
     def __init__(self):
         self.__registered_plugins = None
         self.__enabled_plugins = None
+        self.__enabled_plugins_for_next_token = None
+        self.__enabled_plugins_for_next_line = None
         self.__loaded_classes = None
         self.number_of_scan_failures = None
 
@@ -501,6 +526,9 @@ class PluginManager:
         Apply any supplied configuration to each of the enabled plugins.
         """
 
+        self.__enabled_plugins_for_next_token = []
+        self.__enabled_plugins_for_next_line = []
+
         for next_plugin in self.__enabled_plugins:
             try:
                 valid_key_names = [next_plugin.plugin_id]
@@ -521,6 +549,11 @@ class PluginManager:
                 raise BadPluginError(
                     next_plugin.plugin_id, inspect.stack()[0].function
                 ) from this_exception
+
+            if next_plugin.plugin_instance.is_next_token_implemented_in_plugin:
+                self.__enabled_plugins_for_next_token.append(next_plugin)
+            if next_plugin.plugin_instance.is_next_line_implemented_in_plugin:
+                self.__enabled_plugins_for_next_line.append(next_plugin)
 
     def starting_new_file(self, file_being_started):
         """
@@ -555,7 +588,7 @@ class PluginManager:
         Inform any listeners that a new line has been loaded.
         """
         context.line_number = line_number
-        for next_plugin in self.__enabled_plugins:
+        for next_plugin in self.__enabled_plugins_for_next_line:
             try:
                 next_plugin.plugin_instance.set_context(context)
                 next_plugin.plugin_instance.next_line(line)
@@ -568,7 +601,7 @@ class PluginManager:
         """
         Inform any listeners of a new token that has been processed.
         """
-        for next_plugin in self.__enabled_plugins:
+        for next_plugin in self.__enabled_plugins_for_next_token:
             try:
                 next_plugin.plugin_instance.set_context(context)
                 next_plugin.plugin_instance.next_token(token)
