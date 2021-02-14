@@ -9,7 +9,6 @@
 ### Priority 1 - Must Solve Before Initial
 
 - test_paragraph_series_m_ul_t_nl_ulb_nl_tb - with abc/def/*
-
 - stop gap solution for handling Tabs until tab work can be done
 
 - why does hard break not have \n? (fix before release)
@@ -152,3 +151,13 @@
 
 - nested block quotes and nested lists are okay, but not together
 - no install/setup support currently
+
+## Python performance
+
+https://towardsdatascience.com/how-to-assess-your-code-performance-in-python-346a17880c9f
+
+## xx
+
+https://github.com/executablebooks/mdit-py-plugins/blob/master/mdit_py_plugins/front_matter/index.py
+https://github.com/micromark/micromark
+https://github.com/commonmark/commonmark-spec-web/blob/gh-pages/0.29/spec.txt

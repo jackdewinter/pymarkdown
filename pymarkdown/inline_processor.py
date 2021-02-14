@@ -358,7 +358,8 @@ class InlineProcessor:
         consume_rest_of_line = False
         POGGER.debug(">>column_number>>$<<", column_number)
         POGGER.debug(">>remaining_line>>$<<", remaining_line)
-        column_number += len(remaining_line)
+        remaining_line_size = len(remaining_line)
+        column_number += remaining_line_size
         POGGER.debug(">>column_number>>$<<", column_number)
         special_sequence = source_text[next_index : next_index + special_length]
         if special_length == 1 and special_sequence in EmphasisHelper.inline_emphasis:
@@ -419,18 +420,20 @@ class InlineProcessor:
                 POGGER.debug(">>source_text>>$<<", source_text[new_index:])
                 POGGER.debug(">>consume_rest_of_line>>$<<", consume_rest_of_line)
                 POGGER.debug(">>old_inline_blocks_count>>$<<", old_inline_blocks_count)
-                POGGER.debug(">>len(inline_blocks)>>$<<", len(inline_blocks))
+
+                new_inline_blocks_count = len(inline_blocks)
+                POGGER.debug(">>new_inline_blocks_count>>$<<", new_inline_blocks_count)
 
                 if (
                     new_token
-                    or old_inline_blocks_count != len(inline_blocks)
+                    or old_inline_blocks_count != new_inline_blocks_count
                     or (
                         inline_blocks
                         and old_inline_blocks_last_token != inline_blocks[-1]
                     )
                 ):
                     if inline_blocks[-1].is_inline_image:
-                        repeat_count = (new_index - next_index) + len(remaining_line)
+                        repeat_count = (new_index - next_index) + remaining_line_size
                         (
                             delta_line,
                             repeat_count,
@@ -1046,12 +1049,13 @@ class InlineProcessor:
                 column_number += len(fold_space[0])
 
             elif not was_column_number_reset:
+                remaining_line_size = len(remaining_line)
                 POGGER.debug(
                     "l/c(remaining_line)>>$,$<<",
-                    len(remaining_line),
+                    remaining_line_size,
                     remaining_line,
                 )
-                column_number += len(remaining_line)
+                column_number += remaining_line_size
             POGGER.debug(
                 "l/c(after)>>$,$<<",
                 line_number,
@@ -1073,12 +1077,14 @@ class InlineProcessor:
                 current_string_unresolved = ""
             POGGER.debug("pos>>$,$<<", line_number, column_number)
             POGGER.debug("last>>$,$<<", last_line_number, last_column_number)
+
+            inline_blocks_size = len(inline_blocks)
             POGGER.debug(
                 "old>>$>>now>>$<<",
                 old_inline_blocks_count,
-                len(inline_blocks),
+                inline_blocks_size,
             )
-            if old_inline_blocks_count != len(inline_blocks) or (
+            if old_inline_blocks_count != inline_blocks_size or (
                 old_inline_blocks_last_token
                 and old_inline_blocks_last_token != inline_blocks[-1]
             ):
@@ -1111,13 +1117,11 @@ class InlineProcessor:
             )
             POGGER.debug("6<<end_string<<$<<", end_string)
             POGGER.debug(
-                "<<current_string<<$<<$<<",
-                len(current_string),
+                "<<current_string<<$<<",
                 current_string,
             )
             POGGER.debug(
-                "<<current_string_unresolved<<$<<$<<",
-                len(current_string_unresolved),
+                "<<current_string_unresolved<<$<<",
                 current_string_unresolved,
             )
 

@@ -44,10 +44,11 @@ class ParserHelper:
         specified valid character.
         """
 
+        string_to_match_size = len(string_to_match)
         return (
             index_in_string >= 0
-            and index_in_string + len(string_to_match) <= len(source_string)
-            and source_string[index_in_string : index_in_string + len(string_to_match)]
+            and index_in_string + string_to_match_size <= len(source_string)
+            and source_string[index_in_string : index_in_string + string_to_match_size]
             == string_to_match
         )
 
@@ -198,11 +199,13 @@ class ParserHelper:
         character and any extracted text in a tuple.
         """
 
-        if not 0 <= start_index <= len(source_string):
+        source_string_size = len(source_string)
+
+        if not 0 <= start_index <= source_string_size:
             return None, None
 
         index = start_index
-        while index < len(source_string) and source_string[index] == match_character:
+        while index < source_string_size and source_string[index] == match_character:
             index += 1
         return index - start_index, index
 
@@ -215,10 +218,11 @@ class ParserHelper:
         character and any extracted text in a tuple.
         """
 
-        if not -1 <= end_index <= len(source_string):
+        source_string_size = len(source_string)
+        if not -1 <= end_index <= source_string_size:
             return None, None
         if end_index == -1:
-            end_index = len(source_string)
+            end_index = source_string_size
 
         index = end_index
         while index >= 1 and source_string[index - 1] == match_character:
@@ -236,10 +240,11 @@ class ParserHelper:
         character and any extracted text in a tuple.
         """
 
-        if not -1 <= end_index <= len(source_string):
+        source_string_size = len(source_string)
+        if not -1 <= end_index <= source_string_size:
             return None, None
         if end_index == -1:
-            end_index = len(source_string)
+            end_index = source_string_size
 
         index = end_index
         while index >= 1 and source_string[index - 1] in match_characters:
@@ -255,11 +260,12 @@ class ParserHelper:
         in a tuple.
         """
 
-        if not 0 <= start_index <= len(source_string):
+        source_string_size = len(source_string)
+        if not 0 <= start_index <= source_string_size:
             return None, None
 
         index = start_index
-        while index < len(source_string) and source_string[index] != match_character:
+        while index < source_string_size and source_string[index] != match_character:
             index += 1
 
         return index, source_string[start_index:index]
@@ -273,11 +279,12 @@ class ParserHelper:
         in a tuple.
         """
 
-        if not 0 <= start_index <= len(source_string):
+        source_string_size = len(source_string)
+        if not 0 <= start_index <= source_string_size:
             return None, None
 
         index = start_index
-        while index < len(source_string) and source_string[index] in match_characters:
+        while index < source_string_size and source_string[index] in match_characters:
             index += 1
 
         return index, source_string[start_index:index]
@@ -291,12 +298,13 @@ class ParserHelper:
         in a tuple.
         """
 
-        if not 0 <= start_index <= len(source_string):
+        source_string_size = len(source_string)
+        if not 0 <= start_index <= source_string_size:
             return None, None
 
         index = start_index
         while (
-            index < len(source_string) and source_string[index] not in match_characters
+            index < source_string_size and source_string[index] not in match_characters
         ):
             index += 1
 
@@ -341,7 +349,8 @@ class ParserHelper:
         Determine if any of the specified characters are in the source string.
         """
 
-        while start_index < len(source_text):
+        source_text_size = len(source_text)
+        while start_index < source_text_size:
             if source_text[start_index] in find_any:
                 return start_index
             start_index += 1
@@ -358,7 +367,8 @@ class ParserHelper:
         index, ex_str = ParserHelper.collect_until_one_of_characters(
             string_to_search_in, start_index, characters_to_search_for
         )
-        while index < len(string_to_search_in):
+        string_to_search_in_size = len(string_to_search_in)
+        while index < string_to_search_in_size:
             rebuilt_string = rebuilt_string + ex_str + replace_with
             start_index = index + 1
             index, ex_str = ParserHelper.collect_until_one_of_characters(

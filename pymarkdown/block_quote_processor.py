@@ -519,16 +519,9 @@ class BlockQuoteProcessor:
                     ],
                     was_forced=True,
                 )
-                while this_bq_count < stack_bq_count:
-                    stack_bq_count -= 1
-                    ind = len(parser_state.token_stack) - 1
-                    (new_tokens, _,) = parser_state.close_open_blocks_fn(
-                        parser_state,
-                        include_block_quotes=True,
-                        until_this_index=ind,
-                        was_forced=True,
-                    )
-                    container_level_tokens.extend(new_tokens)
+                stack_bq_count = BlockQuoteProcessor.__decrease_stack_to_level(
+                    parser_state, this_bq_count, stack_bq_count, container_level_tokens
+                )
 
             stack_index = parser_state.find_last_block_quote_on_stack()
             found_bq_stack_token = parser_state.token_stack[stack_index]
@@ -706,24 +699,32 @@ class BlockQuoteProcessor:
                     BlockQuoteStackToken(new_markdown_token)
                 )
             POGGER.debug("container_level_tokens>>$", container_level_tokens)
-            while this_bq_count < stack_bq_count:
-                POGGER.debug(
-                    "decreasing block quotes by one>>",
-                )
-                stack_bq_count -= 1
-                ind = len(parser_state.token_stack) - 1
-                (new_tokens, _,) = parser_state.close_open_blocks_fn(
-                    parser_state,
-                    include_block_quotes=True,
-                    until_this_index=ind,
-                    was_forced=True,
-                )
-                container_level_tokens.extend(new_tokens)
+            stack_bq_count = BlockQuoteProcessor.__decrease_stack_to_level(
+                parser_state, this_bq_count, stack_bq_count, container_level_tokens
+            )
             POGGER.debug(
                 "container_level_tokens>>$",
                 container_level_tokens,
             )
 
         return container_level_tokens, stack_bq_count, None
+
+    @staticmethod
+    def __decrease_stack_to_level(
+        parser_state, this_bq_count, stack_bq_count, container_level_tokens
+    ):
+        while this_bq_count < stack_bq_count:
+            POGGER.debug(
+                "decreasing block quotes by one>>",
+            )
+            stack_bq_count -= 1
+            (new_tokens, _,) = parser_state.close_open_blocks_fn(
+                parser_state,
+                include_block_quotes=True,
+                until_this_index=len(parser_state.token_stack) - 1,
+                was_forced=True,
+            )
+            container_level_tokens.extend(new_tokens)
+        return stack_bq_count
 
     # pylint: enable=too-many-arguments, too-many-statements, too-many-locals

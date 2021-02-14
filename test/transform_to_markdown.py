@@ -592,6 +592,7 @@ class TransformToMarkdown:
         split_leading_spaces = top_block_stack_token.leading_spaces.split(
             ParserHelper.newline_character
         )
+        split_leading_spaces_size = len(split_leading_spaces)
         print(
             ">>leading_text_index>>top_block_stack_token>>"
             + str(top_block_stack_token.leading_text_index)
@@ -609,7 +610,7 @@ class TransformToMarkdown:
                 + str(split_leading_spaces)
                 + "::"
             )
-            if top_block_stack_token.leading_text_index < len(split_leading_spaces):
+            if top_block_stack_token.leading_text_index < split_leading_spaces_size:
                 new_data += (
                     ParserHelper.newline_character
                     + split_leading_spaces[top_block_stack_token.leading_text_index]
@@ -1037,15 +1038,18 @@ class TransformToMarkdown:
                 split_leading_spaces = top_of_list_token_stack.leading_spaces.split(
                     ParserHelper.newline_character
                 )
-                if top_of_list_token_stack.leading_text_index < len(
-                    split_leading_spaces
+                split_leading_spaces_size = len(split_leading_spaces)
+                if (
+                    top_of_list_token_stack.leading_text_index
+                    < split_leading_spaces_size
                 ):
                     composed_data += split_leading_spaces[
                         top_of_list_token_stack.leading_text_index
                     ]
                 else:
-                    assert top_of_list_token_stack.leading_text_index == len(
-                        split_leading_spaces
+                    assert (
+                        top_of_list_token_stack.leading_text_index
+                        == split_leading_spaces_size
                     )
                 top_of_list_token_stack.leading_text_index += 1
                 new_data = new_data[next_newline_index + 1 :]
@@ -1152,12 +1156,13 @@ class TransformToMarkdown:
             + ":<<"
         )
         adjustment_since_newline = 0
+        transformed_data_since_newline_size = len(transformed_data_since_newline)
         if (
             extracted_whitespace
-            and len(extracted_whitespace) >= len(transformed_data_since_newline)
+            and len(extracted_whitespace) >= transformed_data_since_newline_size
             and ">" in transformed_data_since_newline
         ):
-            adjustment_since_newline = len(transformed_data_since_newline)
+            adjustment_since_newline = transformed_data_since_newline_size
             extracted_whitespace = extracted_whitespace[adjustment_since_newline:]
         return adjustment_since_newline, extracted_whitespace
 
@@ -1740,13 +1745,14 @@ class TransformToMarkdown:
                     split_setext_text = split_parent_whitespace_text[
                         text_part_index
                     ].split(ParserHelper.whitespace_split_character)
-                    if len(split_setext_text) == 1:
+                    split_setext_text_size = len(split_setext_text)
+                    if split_setext_text_size == 1:
                         if text_part_index == 0:
                             ws_suffix_text = split_setext_text[0]
                         else:
                             ws_prefix_text = split_setext_text[0]
                     else:
-                        assert len(split_setext_text) == 2
+                        assert split_setext_text_size == 2
                         ws_prefix_text = split_setext_text[0]
                         ws_suffix_text = split_setext_text[1]
 

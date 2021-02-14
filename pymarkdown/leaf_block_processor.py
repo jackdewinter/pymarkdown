@@ -350,7 +350,7 @@ class LeafBlockProcessor:
                 if during_original_whitespace[0] == ParserHelper.tab_character:
                     whitespace_to_parse = during_original_whitespace
                     if (
-                        len(during_original_whitespace) > 1
+                        current_whitespace_length > 1
                         and during_original_whitespace[1] == ParserHelper.tab_character
                     ):
                         block_quote_adjust_delta = -1
@@ -592,7 +592,8 @@ class LeafBlockProcessor:
 
             char_count = 0
             repeat_loop = True
-            while repeat_loop and index < len(line_to_parse):
+            line_to_parse_size = len(line_to_parse)
+            while repeat_loop and index < line_to_parse_size:
                 if ParserHelper.is_character_at_index_whitespace(line_to_parse, index):
                     index += 1
                 elif line_to_parse[index] == start_char:
@@ -601,7 +602,7 @@ class LeafBlockProcessor:
                 else:
                     repeat_loop = False
 
-            if char_count >= 3 and index == len(line_to_parse):
+            if char_count >= 3 and index == line_to_parse_size:
                 thematic_break_character = start_char
                 end_of_break_index = index
 

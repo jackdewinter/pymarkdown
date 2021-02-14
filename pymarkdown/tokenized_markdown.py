@@ -329,12 +329,13 @@ class TokenizedMarkdown:
                 POGGER.debug("cob>>not lists")
                 break
             if until_this_index != -1:
+                token_stack_size = len(parser_state.token_stack)
                 POGGER.debug(
                     "NOT ME!!!!$<<$<<",
                     until_this_index,
-                    len(parser_state.token_stack),
+                    token_stack_size,
                 )
-                if until_this_index >= len(parser_state.token_stack):
+                if until_this_index >= token_stack_size:
                     break
                 was_close_forced = True
 

@@ -67,14 +67,12 @@ class CoalesceProcessor:
             ):
                 POGGER.debug("full_paragraph_text>$<", coalesced_list[coalesce_index])
                 POGGER.debug(
-                    "full_paragraph_text>$>$<",
-                    len(coalesced_list[coalesce_index].token_text),
+                    "full_paragraph_text>$<",
                     coalesced_list[coalesce_index].token_text,
                 )
                 removed_ws = coalesced_list[coalesce_index].remove_final_whitespace()
                 POGGER.debug(
-                    "full_paragraph_text>$>$<",
-                    len(coalesced_list[coalesce_index].token_text),
+                    "full_paragraph_text>$<",
                     coalesced_list[coalesce_index].token_text,
                 )
                 POGGER.debug(

@@ -177,12 +177,13 @@ class ListBlockProcessor:
         after_all_whitespace_index, _ = ParserHelper.extract_whitespace(
             line_to_parse, start_index + 1
         )
+        line_to_parse_size = len(line_to_parse)
         POGGER.debug(
             "after_all_whitespace_index>>$>>len>>$",
             after_all_whitespace_index,
-            len(line_to_parse),
+            line_to_parse_size,
         )
-        at_end_of_line = after_all_whitespace_index == len(line_to_parse)
+        at_end_of_line = after_all_whitespace_index == line_to_parse_size
         POGGER.debug("at_end_of_line>>$", at_end_of_line)
 
         is_paragraph_in_list = False
@@ -198,7 +199,7 @@ class ListBlockProcessor:
             ParserHelper.is_character_at_index_whitespace(
                 line_to_parse, start_index + 1
             )
-            or ((start_index + 1) == len(line_to_parse))
+            or ((start_index + 1) == line_to_parse_size)
         ):
             is_start = True
         return is_start, after_all_whitespace_index
@@ -695,13 +696,14 @@ class ListBlockProcessor:
         )
         POGGER.debug("--$--$", start_index, start_index + 1)
 
-        POGGER.debug(">>>>>XX>>$>>$<<", after_marker_ws_index, len(line_to_parse))
-        if after_marker_ws_index == len(line_to_parse) and ws_after_marker:
+        line_to_parse_size = len(line_to_parse)
+        POGGER.debug(">>>>>XX>>$>>$<<", after_marker_ws_index, line_to_parse_size)
+        if after_marker_ws_index == line_to_parse_size and ws_after_marker:
             indent_level = 2 + marker_width_minus_one + len(adj_ws)
             remaining_whitespace = ws_after_marker
             ws_after_marker = 0
         else:
-            if after_marker_ws_index == len(line_to_parse) and ws_after_marker == 0:
+            if after_marker_ws_index == line_to_parse_size and ws_after_marker == 0:
                 ws_after_marker += 1
 
             indent_level = (

@@ -652,13 +652,14 @@ class TextMarkdownToken(InlineMarkdownToken):
             whitespace_to_append = whitespace_present
             prefix_whitespace = ""
         else:
+            whitespace_present_size = len(whitespace_present)
             POGGER.debug(
                 "whitespace_present>>$>>$<<",
-                len(whitespace_present),
+                whitespace_present_size,
                 whitespace_present,
             )
             POGGER.debug("remove_leading_spaces>>$<<", remove_leading_spaces)
-            if len(whitespace_present) < remove_leading_spaces:
+            if whitespace_present_size < remove_leading_spaces:
                 removed_whitespace = whitespace_present
                 prefix_whitespace = ""
             else:

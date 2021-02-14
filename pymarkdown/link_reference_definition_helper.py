@@ -64,6 +64,7 @@ class LinkReferenceDefinitionHelper:
             )
             POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
 
+        line_to_parse_size = len(line_to_parse)
         if was_started:
             POGGER.debug(">>parse_link_reference_definition>>was_started")
             (
@@ -81,7 +82,7 @@ class LinkReferenceDefinitionHelper:
                 ">>parse_link_reference_definition>>was_started>>did_complete_lrd>>$>>end_lrd_index>>$>>len(line_to_parse)>>$",
                 did_complete_lrd,
                 end_lrd_index,
-                len(line_to_parse),
+                line_to_parse_size,
             )
 
             if not (
@@ -89,7 +90,7 @@ class LinkReferenceDefinitionHelper:
                 or (
                     not is_blank_line
                     and not did_complete_lrd
-                    and (end_lrd_index == len(line_to_parse))
+                    and (end_lrd_index == line_to_parse_size)
                 )
             ):
                 POGGER.debug(
@@ -123,11 +124,11 @@ class LinkReferenceDefinitionHelper:
                 ">>parse_link_reference_definition>>did_complete_lrd>>$>>end_lrd_index>>$>>len(line_to_parse)>>$",
                 did_complete_lrd,
                 end_lrd_index,
-                len(line_to_parse),
+                line_to_parse_size,
             )
         if (
             end_lrd_index >= 0
-            and end_lrd_index == len(line_to_parse)
+            and end_lrd_index == line_to_parse_size
             and not is_blank_line
         ):
             POGGER.debug(">>parse_link_reference_definition>>continuation")
@@ -256,14 +257,15 @@ class LinkReferenceDefinitionHelper:
                 InlineHelper.backslash_character in remaining_line
                 and remaining_line.endswith(InlineHelper.backslash_character)
             ):
-                POGGER.debug(">>$<<$", remaining_line, len(remaining_line))
+                remaining_line_size = len(remaining_line)
+                POGGER.debug(">>$<<$", remaining_line, remaining_line_size)
                 start_index = 0
                 POGGER.debug(">>$<<$", remaining_line, start_index)
                 found_index = remaining_line.find(
                     InlineHelper.backslash_character, start_index
                 )
                 POGGER.debug(">>$<<", found_index)
-                while found_index != -1 and found_index < (len(remaining_line) - 1):
+                while found_index != -1 and found_index < (remaining_line_size - 1):
                     start_index = found_index + 2
                     POGGER.debug(">>$<<$", remaining_line, start_index)
                     found_index = remaining_line.find(
@@ -271,7 +273,7 @@ class LinkReferenceDefinitionHelper:
                     )
                     POGGER.debug(">>$<<", found_index)
                 POGGER.debug(">>>>>>>$<<", found_index)
-                continue_with_lrd = found_index != len(remaining_line) - 1
+                continue_with_lrd = found_index != remaining_line_size - 1
             return continue_with_lrd
         return False
 
@@ -522,9 +524,8 @@ class LinkReferenceDefinitionHelper:
             del parser_state.token_stack[-1].continuation_lines[-1]
             del parser_state.token_stack[-1].unmodified_lines[-1]
             POGGER.debug(
-                ">>lines_to_requeue>>$>>$",
+                ">>lines_to_requeue>>$>>",
                 lines_to_requeue,
-                len(lines_to_requeue),
             )
             POGGER.debug(
                 ">>continuation_lines>>$<<",

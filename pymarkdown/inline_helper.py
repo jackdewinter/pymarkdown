@@ -142,8 +142,9 @@ class InlineHelper:
         inline_response.new_index = inline_request.next_index + 1
         inline_response.new_string = ""
         inline_response.new_string_unresolved = ""
-        if inline_response.new_index >= len(inline_request.source_text) or (
-            inline_response.new_index < len(inline_request.source_text)
+        source_text_size = len(inline_request.source_text)
+        if inline_response.new_index >= source_text_size or (
+            inline_response.new_index < source_text_size
             and inline_request.source_text[inline_response.new_index]
             == ParserHelper.newline_character
         ):
@@ -185,8 +186,9 @@ class InlineHelper:
         inline_response = InlineResponse()
         inline_response.new_index = inline_request.next_index + 1
         inline_response.new_string = ""
+        source_text_size = len(inline_request.source_text)
         if (
-            inline_response.new_index < len(inline_request.source_text)
+            inline_response.new_index < source_text_size
             and inline_request.source_text[inline_response.new_index]
             == InlineHelper.__numeric_character_reference_start_character
         ):
@@ -219,7 +221,7 @@ class InlineHelper:
                     InlineHelper.character_reference_start_character + collected_string
                 )
                 if (
-                    end_index < len(inline_request.source_text)
+                    end_index < source_text_size
                     and inline_request.source_text[end_index]
                     == InlineHelper.__character_reference_end_character
                 ):
@@ -350,6 +352,7 @@ class InlineHelper:
         )
         POGGER.debug("after_collect>$>$", new_index, extracted_start_backticks)
 
+        extracted_start_backticks_size = len(extracted_start_backticks)
         end_backtick_start_index = inline_request.source_text.find(
             extracted_start_backticks, new_index
         )
@@ -362,7 +365,7 @@ class InlineHelper:
                 end_backtick_start_index,
                 InlineHelper.code_span_bounds,
             )
-            if len(end_backticks_attempt) == len(extracted_start_backticks):
+            if len(end_backticks_attempt) == extracted_start_backticks_size:
                 break
             end_backtick_start_index = inline_request.source_text.find(
                 extracted_start_backticks, end_backticks_index
@@ -439,7 +442,7 @@ class InlineHelper:
                 "trailing_whitespace>>$<<",
                 trailing_whitespace,
             )
-            end_backtick_start_index += len(extracted_start_backticks)
+            end_backtick_start_index += extracted_start_backticks_size
             inline_response.new_string = ""
             inline_response.new_index = end_backtick_start_index
 
@@ -510,7 +513,7 @@ class InlineHelper:
         POGGER.debug(">>end_string>>$>>", end_string)
         return end_string
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def handle_line_end(
         next_index,
@@ -540,9 +543,10 @@ class InlineHelper:
         POGGER.debug(">>current_string>>$>>", current_string)
         append_to_current_string = ParserHelper.newline_character
         whitespace_to_add = None
+        removed_end_whitespace_size = len(removed_end_whitespace)
         POGGER.debug(
             ">>len(r_e_w)>>$>>rem>>$>>",
-            len(removed_end_whitespace),
+            removed_end_whitespace_size,
             remaining_line,
         )
 
@@ -551,10 +555,11 @@ class InlineHelper:
         POGGER.debug(">>current_string>>$>>", current_string)
 
         is_proper_hard_break = False
+        current_string_size = len(current_string)
         if (
-            len(removed_end_whitespace) == 0
-            and len(current_string) >= 1
-            and current_string[len(current_string) - 1]
+            removed_end_whitespace_size == 0
+            and current_string_size >= 1
+            and current_string[current_string_size - 1]
             == InlineHelper.backslash_character
         ):
             POGGER.debug(">>$<<", current_string)
@@ -570,7 +575,7 @@ class InlineHelper:
             )
             current_string = current_string[0:-1]
             whitespace_to_add = ""
-        elif len(removed_end_whitespace) >= 2:
+        elif removed_end_whitespace_size >= 2:
             new_tokens.append(
                 HardBreakMarkdownToken(
                     removed_end_whitespace, line_number, adj_hard_column
@@ -603,7 +608,7 @@ class InlineHelper:
             current_string,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def extract_bounded_string(
@@ -629,7 +634,8 @@ class InlineHelper:
             next_index,
             data,
         )
-        while next_index < len(source_text) and not (
+        source_text_size = len(source_text)
+        while next_index < source_text_size and not (
             source_text[next_index] == close_character and nesting_level == 0
         ):
             if ParserHelper.is_character_at_index(
@@ -691,7 +697,8 @@ class InlineHelper:
         original_reference = None
         new_index += 1
         translated_reference = -1
-        if new_index < len(source_text) and (
+        source_text_size = len(source_text)
+        if new_index < source_text_size and (
             source_text[new_index]
             in InlineHelper.__hex_character_reference_start_character
         ):
@@ -704,7 +711,7 @@ class InlineHelper:
                 "&#x>>a>>$>>b>>$>>$",
                 end_index,
                 collected_string,
-                len(source_text),
+                source_text_size,
             )
             delta = end_index - new_index
             POGGER.debug("delta>>$>>", delta)
@@ -725,7 +732,7 @@ class InlineHelper:
                 "&#>>a>>$>>b>>$>>$",
                 end_index,
                 collected_string,
-                len(source_text),
+                source_text_size,
             )
             delta = end_index - new_index
             POGGER.debug("delta>>$>>", delta)
@@ -740,7 +747,7 @@ class InlineHelper:
 
         if (
             translated_reference >= 0
-            and new_index < len(source_text)
+            and new_index < source_text_size
             and source_text[new_index]
             == InlineHelper.__character_reference_end_character
         ):
@@ -833,17 +840,18 @@ class InlineHelper:
             )
             uri_scheme = text_to_parse[0] + uri_scheme
 
+        text_to_parse_size = len(text_to_parse)
         if (
             2 <= len(uri_scheme) <= 32
-            and path_index < len(text_to_parse)
+            and path_index < text_to_parse_size
             and text_to_parse[path_index] == InlineHelper.__scheme_end_character
         ):
             path_index += 1
-            while path_index < len(text_to_parse):
+            while path_index < text_to_parse_size:
                 if ord(text_to_parse[path_index]) <= 32:
                     break
                 path_index += 1
-            if path_index == len(text_to_parse):
+            if path_index == text_to_parse_size:
                 return UriAutolinkMarkdownToken(
                     text_to_parse, line_number, column_number
                 )

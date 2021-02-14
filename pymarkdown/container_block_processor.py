@@ -300,8 +300,7 @@ class ContainerBlockProcessor:
 
         container_level_tokens.extend(leaf_tokens)
         POGGER.debug(
-            "clt-end>>$>>$<<",
-            len(container_level_tokens),
+            "clt-end>>$<<",
             container_level_tokens,
         )
         return container_level_tokens, line_to_parse, requeue_line_info
@@ -509,14 +508,14 @@ class ContainerBlockProcessor:
         stack_index = parser_state.find_last_list_block_on_stack()
         if stack_index <= 0:
             POGGER.debug("PLFCB>>No Started lists")
-            assert len(current_container_blocks) == 0
+            assert not current_container_blocks
             if foobar is None:
                 POGGER.debug("PLFCB>>No Started Block Quote")
             else:
                 POGGER.debug("PLFCB>>Started Block Quote")
                 adj_ws = extracted_whitespace[foobar:]
         else:
-            assert len(current_container_blocks) >= 1
+            assert current_container_blocks
             POGGER.debug(
                 "PLFCB>>Started list-last stack>>$",
                 parser_state.token_stack,
@@ -817,8 +816,7 @@ class ContainerBlockProcessor:
 
         if did_process:
             POGGER.debug(
-                "clt-before-lead>>$>>$",
-                len(container_level_tokens),
+                "clt-before-lead>>$",
                 container_level_tokens,
             )
         return did_process, line_to_parse, container_level_tokens, used_indent
@@ -863,8 +861,7 @@ class ContainerBlockProcessor:
 
         if did_process:
             POGGER.debug(
-                "clt-after-leaf>>$>>$",
-                len(container_level_tokens),
+                "clt-after-leaf>>$",
                 container_level_tokens,
             )
 
@@ -907,7 +904,6 @@ class ContainerBlockProcessor:
             force_it,
         )
         POGGER.debug("parsed leaf>>$", leaf_tokens)
-        POGGER.debug("parsed leaf>>$", len(leaf_tokens))
         if requeue_line_info:
             POGGER.debug(
                 "parsed leaf>>lines_to_requeue>>$>$",

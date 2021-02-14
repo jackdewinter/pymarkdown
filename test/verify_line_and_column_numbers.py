@@ -1673,18 +1673,8 @@ def __verify_next_inline_inline_image(  # noqa: C901
         else:
             image_alt_text = previous_inline_token.image_alt_text
 
-        print(
-            ">>image_alt_text>>"
-            + str(len(image_alt_text))
-            + ">>"
-            + ParserHelper.make_value_visible(image_alt_text)
-        )
-        print(
-            ">>label_data>>"
-            + str(len(label_data))
-            + ">>"
-            + ParserHelper.make_value_visible(label_data)
-        )
+        print(">>image_alt_text>>" + ParserHelper.make_value_visible(image_alt_text))
+        print(">>label_data>>" + ParserHelper.make_value_visible(label_data))
 
         token_prefix = 3
         newline_count = ParserHelper.count_newlines_in_text(image_alt_text)
@@ -1716,18 +1706,8 @@ def __verify_next_inline_inline_image(  # noqa: C901
             )
             token_prefix = 0
 
-        print(
-            ">>image_alt_text>>"
-            + str(len(image_alt_text))
-            + ">>"
-            + ParserHelper.make_value_visible(image_alt_text)
-        )
-        print(
-            ">>label_data>>"
-            + str(len(label_data))
-            + ">>"
-            + ParserHelper.make_value_visible(label_data)
-        )
+        print(">>image_alt_text>>" + ParserHelper.make_value_visible(image_alt_text))
+        print(">>label_data>>" + ParserHelper.make_value_visible(label_data))
 
         if token_prefix:
             estimated_column_number += token_prefix + len(label_data)

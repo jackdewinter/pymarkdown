@@ -159,9 +159,10 @@ class LinkHelper:
             ex_ws,
         )
         start_index = new_index
-        if new_index == len(line_to_parse) and not is_blank_line:
+        line_to_parse_size = len(line_to_parse)
+        if new_index == line_to_parse_size and not is_blank_line:
             return False, new_index, None, None, None, None
-        if ex_ws and new_index < len(line_to_parse):
+        if ex_ws and new_index < line_to_parse_size:
             (
                 inline_title,
                 pre_inline_title,
@@ -400,11 +401,12 @@ class LinkHelper:
         """
 
         image_alt_text = ""
-        POGGER.debug("len(inline_blocks)>>$<<", len(inline_blocks))
+        inline_blocks_size = len(inline_blocks)
+        POGGER.debug("inline_blocks_size>>$<<", inline_blocks_size)
         POGGER.debug("ind>>$<<", ind)
         POGGER.debug(">>$<<", inline_blocks[ind + 1 :])
-        if len(inline_blocks) > (ind + 1):
-            while len(inline_blocks) > (ind + 1):
+        if inline_blocks_size > (ind + 1):
+            while inline_blocks_size > (ind + 1):
                 if inline_blocks[ind + 1].is_special_text:
                     if inline_blocks[ind + 1].token_text == "]":
                         image_alt_text += inline_blocks[ind + 1].token_text
@@ -442,6 +444,7 @@ class LinkHelper:
                 POGGER.debug(">>add>>$<<$", inline_blocks[ind + 1], image_alt_text)
 
                 del inline_blocks[ind + 1]
+                inline_blocks_size -= 1
             POGGER.debug(">>before>>$>>", image_alt_text)
             image_alt_text += remaining_line
             POGGER.debug(">>after>>$>>", image_alt_text)
@@ -480,7 +483,8 @@ class LinkHelper:
         collect_index = ind + 1
 
         is_inside_of_link = False
-        while collect_index < len(inline_blocks):
+        inline_blocks_size = len(inline_blocks)
+        while collect_index < inline_blocks_size:
 
             POGGER.debug(
                 ">>collect_text>>$<<",
@@ -948,10 +952,9 @@ class LinkHelper:
         """
 
         POGGER.debug(
-            "handle_link_types>>$<<$<<$",
+            "handle_link_types>>$<<$<<",
             inline_blocks,
             ind,
-            len(inline_blocks),
         )
         POGGER.debug(
             "handle_link_types>source_text>>$<<",
@@ -967,13 +970,11 @@ class LinkHelper:
             inline_blocks, ind, current_string_unresolved + remaining_line
         )
         POGGER.debug(
-            "handle_link_types>>text_from_blocks>>$<<$<<",
-            len(text_from_blocks),
+            "handle_link_types>>text_from_blocks>>$<<",
             text_from_blocks,
         )
         POGGER.debug(
-            "handle_link_types>>text_from_blocks_raw>>$<<$<<",
-            len(text_from_blocks_raw),
+            "handle_link_types>>text_from_blocks_raw>>$<<",
             text_from_blocks_raw,
         )
         POGGER.debug(
@@ -1277,7 +1278,8 @@ class LinkHelper:
         encoded_link += urllib.parse.quote(
             before_data, safe=LinkHelper.__link_safe_characters
         )
-        while percent_index < len(link_to_encode):
+        link_to_encode_size = len(link_to_encode)
+        while percent_index < link_to_encode_size:
             special_character = link_to_encode[percent_index]
             percent_index += 1
             if special_character == "%":

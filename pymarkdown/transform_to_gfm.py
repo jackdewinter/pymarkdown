@@ -203,11 +203,12 @@ class TransformToGfm:
         POGGER.debug("\n\n---\n")
         output_html = ""
         transform_state = TransformState(actual_tokens)
+        actual_tokens_size = len(actual_tokens)
         for next_token in transform_state.actual_tokens:
             transform_state.add_trailing_text = None
             transform_state.add_leading_text = None
             transform_state.next_token = None
-            if (transform_state.actual_token_index + 1) < len(actual_tokens):
+            if (transform_state.actual_token_index + 1) < actual_tokens_size:
                 transform_state.next_token = actual_tokens[
                     transform_state.actual_token_index + 1
                 ]

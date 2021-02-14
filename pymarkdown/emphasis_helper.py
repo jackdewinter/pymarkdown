@@ -38,8 +38,7 @@ class EmphasisHelper:
             if not next_block.is_special_text:
                 continue
             POGGER.debug(
-                "i>>$>>$",
-                len(delimiter_stack),
+                "i>>>$",
                 next_block.show_process_emphasis(),
             )
             delimiter_stack.append(next_block)
@@ -49,8 +48,9 @@ class EmphasisHelper:
         )
         current_position = stack_bottom + 1
         openers_bottom = stack_bottom
-        if current_position < len(delimiter_stack):
-            POGGER.debug("BLOCK($) of ($)", current_position, len(delimiter_stack))
+        stack_size = len(delimiter_stack)
+        if current_position < stack_size:
+            POGGER.debug("BLOCK($) of ($)", current_position, stack_size)
             POGGER.debug(
                 "BLOCK($)-->$",
                 current_position,

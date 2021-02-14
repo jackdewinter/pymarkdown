@@ -190,13 +190,14 @@ class TransformToGfmListLooseness:
         POGGER.debug(">>prev>>$", actual_tokens[current_token_index - 1])
         if actual_tokens[current_token_index - 1].is_blank_line:
             search_index = current_token_index + 1
+            actual_tokens_size = len(actual_tokens)
             while (
-                search_index < len(actual_tokens)
+                search_index < actual_tokens_size
                 and actual_tokens[search_index].is_list_end
             ):
                 search_index += 1
-            POGGER.debug(">>ss>>$>>len>>$", search_index, len(actual_tokens))
-            is_valid = search_index != len(actual_tokens)
+            POGGER.debug(">>ss>>$>>len>>$", search_index, actual_tokens_size)
+            is_valid = search_index != actual_tokens_size
         if is_valid:
             POGGER.debug(">>current>>$", actual_tokens[current_token_index])
             POGGER.debug(">>current-1>>$", actual_tokens[current_token_index - 1])
@@ -267,7 +268,8 @@ class TransformToGfmListLooseness:
         POGGER.debug("!!!!!!!!!!!!!!!$", actual_token_index)
         search_index = actual_token_index + 1
         stack_count = 0
-        while search_index < len(actual_tokens):
+        actual_tokens_size = len(actual_tokens)
+        while search_index < actual_tokens_size:
             POGGER.debug(
                 "!!$::$::$",
                 stack_count,
@@ -281,10 +283,10 @@ class TransformToGfmListLooseness:
                     break
                 stack_count -= 1
             search_index += 1
-        POGGER.debug("!!!!!!!!!!!!!!!$-of-$", search_index, len(actual_tokens))
+        POGGER.debug("!!!!!!!!!!!!!!!$-of-$", search_index, actual_tokens_size)
         # check to see where we are, then grab the matching start to find
         # the loose
-        if search_index == len(actual_tokens):
+        if search_index == actual_tokens_size:
             is_in_loose_list = True
         else:
             POGGER.debug(">>reset_list_looseness-token_list_start>>")
