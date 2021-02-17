@@ -542,9 +542,7 @@ class InlineProcessor:
                 start_index,
             )
 
-        processed_line += source_text[start_index:]
-        POGGER.debug("processed_line>>$<<", processed_line)
-        return processed_line
+        return processed_line + source_text[start_index:]
 
     @staticmethod
     def __calculate_full_deltas(current_token, para_owner, delta_line, repeat_count):

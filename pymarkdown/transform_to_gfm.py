@@ -606,9 +606,7 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        adjusted_text = ParserHelper.resolve_all_from_text(next_token.span_text)
-
-        return output_html + "<code>" + adjusted_text + "</code>"
+        return output_html + "<code>" + ParserHelper.resolve_all_from_text(next_token.span_text) + "</code>"
 
     @classmethod
     def __handle_raw_html_token(cls, output_html, next_token, transform_state):
@@ -617,9 +615,7 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        adjusted_text = ParserHelper.resolve_all_from_text(next_token.raw_tag)
-
-        return output_html + "<" + adjusted_text + ">"
+        return output_html + "<" + ParserHelper.resolve_all_from_text(next_token.raw_tag) + ">"
 
     @classmethod
     def __handle_link_reference_definition_token(
@@ -729,11 +725,9 @@ class TransformToGfm:
             else:
                 in_tag_text = in_tag_text + next_character
 
-        in_anchor_text = InlineHelper.append_text(
+        return output_html + '<a href="' + in_tag_text + '">' + InlineHelper.append_text(
             "", next_token.autolink_text, add_text_signature=False
-        )
-
-        return output_html + '<a href="' + in_tag_text + '">' + in_anchor_text + "</a>"
+        ) + "</a>"
 
     @classmethod
     def __handle_start_html_block_token(cls, output_html, next_token, transform_state):
@@ -779,10 +773,8 @@ class TransformToGfm:
         _ = transform_state
 
         if next_token.emphasis_length == 1:
-            output_html += "<em>"
-        else:
-            output_html += "<strong>"
-        return output_html
+            return output_html + "<em>"
+        return output_html + "<strong>"
 
     @classmethod
     def __handle_end_emphasis_token(cls, output_html, next_token, transform_state):
@@ -792,10 +784,8 @@ class TransformToGfm:
         _ = transform_state
 
         if next_token.start_markdown_token.emphasis_length == 1:
-            output_html += "</em>"
-        else:
-            output_html += "</strong>"
-        return output_html
+            return output_html + "</em>"
+        return output_html + "</strong>"
 
     @classmethod
     def __handle_start_link_token(cls, output_html, next_token, transform_state):
@@ -804,11 +794,10 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        anchor_tag = '<a href="' + next_token.link_uri
+        anchor_tag = ""
         if next_token.link_title:
             anchor_tag += '" title="' + next_token.link_title
-        anchor_tag += '">'
-        return output_html + anchor_tag
+        return output_html + '<a href="' + next_token.link_uri + anchor_tag + '">'
 
     @classmethod
     def __handle_end_link_token(cls, output_html, next_token, transform_state):
@@ -826,13 +815,14 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        output_html += (
+        xx = ""
+        if next_token.link_title:
+            xx = 'title="' + next_token.link_title + '" '
+        return output_html + (
             '<img src="'
             + next_token.link_uri
             + '" alt="'
             + next_token.image_alt_text
             + '" '
+            + xx + "/>"
         )
-        if next_token.link_title:
-            output_html += 'title="' + next_token.link_title + '" '
-        return output_html + "/>"

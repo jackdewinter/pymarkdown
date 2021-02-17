@@ -378,8 +378,7 @@ class ParserHelper:
             index, ex_str = ParserHelper.collect_until_one_of_characters(
                 string_to_search_in, start_index, characters_to_search_for
             )
-        rebuilt_string = rebuilt_string + ex_str
-        return rebuilt_string
+        return rebuilt_string + ex_str
 
     @staticmethod
     def count_characters_in_text(text_to_examine, text_to_look_for):
@@ -418,7 +417,6 @@ class ParserHelper:
         """
 
         delta_line_number = 0
-        delta_column_number = 0
         if ParserHelper.newline_character in text_to_analyze:
             split_raw_tag = text_to_analyze.split(ParserHelper.newline_character)
             delta_line_number += len(split_raw_tag) - 1
@@ -465,8 +463,7 @@ class ParserHelper:
                 split_text_string[i] = ew_part + split_text_string[i]
             if post_increment_index:
                 start_index += 1
-        text_string = ParserHelper.newline_character.join(split_text_string)
-        return text_string, start_index
+        return ParserHelper.newline_character.join(split_text_string), start_index
 
     # pylint: enable=too-many-arguments
 
@@ -476,8 +473,7 @@ class ParserHelper:
         Determine the last line of a multi-line string.
         """
         split_label = text_string.split(ParserHelper.newline_character)
-        split_label = split_label[-1]
-        return split_label
+        return split_label[-1]
 
     @staticmethod
     def make_value_visible(value_to_modify):
@@ -812,8 +808,7 @@ class ParserHelper:
         resolved_text = ParserHelper.__resolve_references_from_text(resolved_text)
         resolved_text = ParserHelper.resolve_noops_from_text(resolved_text)
         resolved_text = ParserHelper.__resolve_blechs_from_text(resolved_text)
-        resolved_text = ParserHelper.__resolve_escapes_from_text(resolved_text)
-        return resolved_text
+        return ParserHelper.__resolve_escapes_from_text(resolved_text)
 
     @staticmethod
     def remove_all_from_text(text_to_remove):
@@ -824,8 +819,7 @@ class ParserHelper:
         removed_text = ParserHelper.__resolve_replacement_markers_from_text(
             removed_text
         )
-        removed_text = ParserHelper.__remove_escapes_from_text(removed_text)
-        return removed_text
+        return ParserHelper.__remove_escapes_from_text(removed_text)
 
     @staticmethod
     def repeat_string(string_to_repeat, repeat_count):

@@ -1374,19 +1374,17 @@ def __verify_next_inline_blank_line(
 ):
     _ = estimated_column_number
 
-    estimated_line_number += 1
     estimated_column_number = 1
     if current_inline_token.is_text:
         estimated_column_number += len(current_inline_token.extracted_whitespace)
-    return estimated_line_number, estimated_column_number
+    return estimated_line_number + 1, estimated_column_number
 
 
 def __verify_next_inline_inline_link(
     estimated_line_number,
     estimated_column_number,
 ):
-    estimated_column_number += 1
-    return estimated_line_number, estimated_column_number
+    return estimated_line_number, estimated_column_number + 1
 
 
 # pylint: disable=too-many-branches, too-many-statements, too-many-arguments, too-many-locals
@@ -1554,9 +1552,7 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
         estimated_column_number += len(
             split_paragraph_lines[para_owner.rehydrate_index - 1]
         )
-    estimated_column_number += 1
-    print(">>estimated_column_number>>" + str(estimated_column_number))
-    return estimated_line_number, estimated_column_number
+    return estimated_line_number, estimated_column_number + 1
 
 
 # pylint: enable=too-many-branches, too-many-statements, too-many-arguments, too-many-locals
@@ -1842,7 +1838,6 @@ def __verify_next_inline_code_span(
     delta_line_number, delta_column_number = ParserHelper.calculate_deltas(
         combined_text
     )
-    estimated_line_number += delta_line_number
     if delta_column_number < 0:
         estimated_column_number = -delta_column_number
     else:
@@ -1850,7 +1845,7 @@ def __verify_next_inline_code_span(
 
     if last_token.is_paragraph and not link_stack:
         last_token.rehydrate_index += delta_line_number
-    return estimated_line_number, estimated_column_number
+    return estimated_line_number + delta_line_number, estimated_column_number
 
 
 def __verify_next_inline_emphasis_start(
@@ -1858,8 +1853,7 @@ def __verify_next_inline_emphasis_start(
     estimated_line_number,
     estimated_column_number,
 ):
-    estimated_column_number += previous_inline_token.emphasis_length
-    return estimated_line_number, estimated_column_number
+    return estimated_line_number, estimated_column_number + previous_inline_token.emphasis_length
 
 
 def __verify_next_inline_emphasis_end(
@@ -1867,10 +1861,9 @@ def __verify_next_inline_emphasis_end(
     estimated_line_number,
     estimated_column_number,
 ):
-    estimated_column_number += (
+    return estimated_line_number, estimated_column_number+  (
         previous_inline_token.start_markdown_token.emphasis_length
     )
-    return estimated_line_number, estimated_column_number
 
 
 def __create_newline_tuple():
@@ -2049,13 +2042,12 @@ def __verify_next_inline_text(
     )
     delta_column = len(split_current_line)
 
-    estimated_line_number += delta_line
     if delta_line:
         estimated_column_number = 1
     estimated_column_number += delta_column
     if split_end_whitespace:
         estimated_column_number += split_end_whitespace
-    return estimated_line_number, estimated_column_number
+    return estimated_line_number+ delta_line, estimated_column_number
 
 
 # pylint: enable=too-many-statements, too-many-arguments

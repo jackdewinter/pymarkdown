@@ -75,6 +75,10 @@
 - verifying vs validating?
 - bqp:check_for_lazy_handling, why exclude tb?
 - unify 2 separate calculations in `__pre_list` function
+- raise requeue_line_info instead of returning it?  worried about recursion points
+- replace calculate_last_line with calculate_deltas with some work?
+- is_complete_html_end_tag can be more concise, but worth it?
+- modify_end_string. inline?
 
 ## Bugs - General - Uncategorized
 

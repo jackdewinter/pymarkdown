@@ -81,9 +81,9 @@ class LinkHelper:
             link_name,
             link_value,
         )
-        did_add_definition = False
         if link_name in LinkHelper.__link_definitions:
             POGGER.debug(">>def already present>>$", link_name)
+            did_add_definition = False
         else:
             LinkHelper.__link_definitions[link_name] = link_value
             did_add_definition = True
@@ -227,8 +227,7 @@ class LinkHelper:
         link_label = ParserHelper.space_character.join(link_label.split())
 
         # Fold the case of any characters to their lower equivalent.
-        link_label = link_label.casefold().strip()
-        return link_label
+        return link_label.casefold().strip()
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -352,8 +351,7 @@ class LinkHelper:
                 POGGER.debug("DEACTIVATED")
                 LinkHelper.__display_specials_in_tokens(inline_blocks)
             return updated_index, True, token_to_append, consume_rest_of_line
-        is_active = False
-        return new_index, is_active, token_to_append, consume_rest_of_line
+        return new_index, False, token_to_append, consume_rest_of_line
 
     # pylint: enable=too-many-arguments
 
@@ -579,17 +577,8 @@ class LinkHelper:
             collected_text_raw,
             suffix_text,
         )
-        collected_text += suffix_text
-        collected_text_raw += suffix_text
-        POGGER.debug(
-            ">>collect_text_from_blocks>>$<<",
-            collected_text,
-        )
-        POGGER.debug(
-            ">>collected_text_raw>>$<<",
-            collected_text_raw,
-        )
-        return collected_text, collected_text_raw
+        
+        return collected_text + suffix_text, collected_text_raw + suffix_text
 
     # pylint: enable=too-many-statements, too-many-branches
 

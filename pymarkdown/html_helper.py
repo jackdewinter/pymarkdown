@@ -134,13 +134,12 @@ class HtmlHelper:
         Determine if the html tag name is valid according to the html rules.
         """
 
-        is_valid = bool(tag_name)
-        if is_valid:
-            for next_character in tag_name.lower():
-                if next_character not in HtmlHelper.__valid_tag_name_characters:
-                    is_valid = False
-                    break
-        return is_valid
+        if not tag_name:
+            return False
+        for next_character in tag_name.lower():
+            if next_character not in HtmlHelper.__valid_tag_name_characters:
+                return False
+        return True
 
     @staticmethod
     def extract_html_attribute_name(string_to_parse, string_index):
@@ -259,8 +258,7 @@ class HtmlHelper:
         Determine if the tag name is a valid block-1 html tag name.
         """
 
-        is_tag_valid = tag_name in HtmlHelper.__html_block_1_start_tag_prefix
-        return is_tag_valid
+        return tag_name in HtmlHelper.__html_block_1_start_tag_prefix
 
     @staticmethod
     def is_complete_html_start_tag(tag_name, line_to_parse, next_char_index):

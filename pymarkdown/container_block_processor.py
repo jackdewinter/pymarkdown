@@ -1106,11 +1106,13 @@ class ContainerBlockProcessor:
     ):
         """
         Parse the contents of a line for a leaf block.
+
+        Note: This is one of the more heavily traffic functions in the
+        parser.  Debugging should be uncommented only if needed.
         """
         POGGER.debug("Leaf Line:$:", xposition_marker.text_to_parse)
         new_tokens = []
 
-        requeue_line_info = None
         # TODO rename to avoid collision with parameter
         remaining_line_to_parse = xposition_marker.text_to_parse[
             xposition_marker.index_number :
@@ -1125,9 +1127,6 @@ class ContainerBlockProcessor:
             index_indent=xposition_marker.index_indent,
         )
 
-        POGGER.debug(
-            "__close_indented_block_if_indent_not_there",
-        )
         pre_tokens = ContainerBlockProcessor.__close_indented_block_if_indent_not_there(
             parser_state, extracted_whitespace
         )
@@ -1206,7 +1205,6 @@ class ContainerBlockProcessor:
                     force_it,
                 )
 
-        POGGER.debug(">>leaf--adding>>$", new_tokens)
         pre_tokens.extend(new_tokens)
         POGGER.debug(">>leaf--added>>$", pre_tokens)
         return pre_tokens, requeue_line_info

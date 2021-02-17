@@ -985,9 +985,10 @@ class LeafBlockProcessor:
         )
         POGGER.debug(">>original_list_indent>>$>>", original_list_indent)
         POGGER.debug(">>original_text_indent>$>>", original_text_indent)
-        adjusted_whitespace_length = 0
         if dominant_indent > original_text_indent >= 4:
             adjusted_whitespace_length = dominant_indent - original_text_indent
+        else:
+            adjusted_whitespace_length = 0
         return adjusted_whitespace_length
 
     @staticmethod

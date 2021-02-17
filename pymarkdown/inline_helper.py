@@ -291,7 +291,7 @@ class InlineHelper:
             )
 
         if start_index < len(source_text):
-            current_string = current_string + source_text[start_index:]
+            current_string += source_text[start_index:]
         return current_string
 
     @staticmethod
@@ -492,26 +492,9 @@ class InlineHelper:
         """
         Modify the string at the end of the paragraph.
         """
-        POGGER.debug(
-            ">>removed_end_whitespace>>$>>$>>",
-            type(removed_end_whitespace),
-            removed_end_whitespace,
-        )
-        POGGER.debug(">>>>>>>>>>>>>>>>>>>>>>>>>>>NewLine")
-        if end_string:
-            POGGER.debug(">>end_string>>$>>", end_string)
-        POGGER.debug(
-            ">>removed_end_whitespace>>$>>",
-            removed_end_whitespace,
-        )
         if end_string is None:
-            end_string = removed_end_whitespace + ParserHelper.newline_character
-        else:
-            end_string = (
-                end_string + removed_end_whitespace + ParserHelper.newline_character
-            )
-        POGGER.debug(">>end_string>>$>>", end_string)
-        return end_string
+            end_string = ""
+        return end_string + removed_end_whitespace + ParserHelper.newline_character
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod

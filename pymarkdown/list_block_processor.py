@@ -409,7 +409,8 @@ class ListBlockProcessor:
             extracted_whitespace,
             position_marker,
         )
-        new_stack = UnorderedListStackToken(
+        return new_token, \
+            UnorderedListStackToken(
             indent_level,
             position_marker.text_to_parse[position_marker.index_number],
             ws_before_marker,
@@ -417,7 +418,6 @@ class ListBlockProcessor:
             position_marker.index_number,
             new_token,
         )
-        return new_token, new_stack
 
     # pylint: enable=too-many-arguments
 
@@ -438,7 +438,7 @@ class ListBlockProcessor:
             extracted_whitespace,
             position_marker,
         )
-        new_stack = OrderedListStackToken(
+        return new_token, OrderedListStackToken(
             indent_level,
             position_marker.text_to_parse[position_marker.index_number : index + 1],
             ws_before_marker,
@@ -446,7 +446,6 @@ class ListBlockProcessor:
             position_marker.index_number,
             new_token,
         )
-        return new_token, new_stack
 
     # pylint: enable=too-many-arguments
 
@@ -1143,11 +1142,10 @@ class ListBlockProcessor:
             removed_whitespace = ParserHelper.tab_character
         else:
             removed_whitespace = leading_space[0:requested_list_indent]
-        line_to_parse = (
+        return (
             ParserHelper.repeat_string(ParserHelper.space_character, remaining_indent)
             + line_to_parse[start_index:]
-        )
-        return line_to_parse, removed_whitespace
+        ), removed_whitespace
 
     # pylint: disable=too-many-arguments
     @staticmethod

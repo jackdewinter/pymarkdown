@@ -88,27 +88,24 @@ class TransformToGfmListLooseness:
             current_token_index += 1
 
         assert current_token_index != len(actual_tokens)
-        next_token.is_loose = is_loose
         POGGER.debug(
             "__calculate_list_looseness<<$<<$\n\n",
             actual_token_index,
             is_loose,
         )
+        next_token.is_loose = is_loose
         return is_loose
 
     @staticmethod
     def __handle_list_start(stack_count):
-        check_me = stack_count == 0
-        stack_count += 1
         POGGER.debug(">>list--new>>$", stack_count)
-        return check_me, stack_count
+        return stack_count == 0, stack_count + 1
 
     @staticmethod
     def __handle_new_list_item(current_token, stack_count):
-        check_me = stack_count == 0
         assert not current_token.is_block
         POGGER.debug(">>list--item>>$", stack_count)
-        return check_me
+        return stack_count == 0
 
     @staticmethod
     def __handle_list_end(
@@ -133,15 +130,13 @@ class TransformToGfmListLooseness:
 
     @staticmethod
     def __handle_block_quote_start(stack_count):
-        stack_count += 1
         POGGER.debug(">>block--new>>$", stack_count)
-        return stack_count
+        return stack_count + 1
 
     @staticmethod
     def __handle_block_quote_end(stack_count):
-        stack_count -= 1
         POGGER.debug(">>block--end>>$", stack_count)
-        return stack_count
+        return stack_count - 1
 
     @staticmethod
     def __handle_blank_line(
@@ -178,8 +173,7 @@ class TransformToGfmListLooseness:
             pre_prev_token,
             pre_prev_check,
         )
-        check_me = stack_count == 0 and current_check and pre_prev_check
-        return check_me
+        return stack_count == 0 and current_check and pre_prev_check
 
     @staticmethod
     def __correct_for_me(actual_tokens, current_token_index):

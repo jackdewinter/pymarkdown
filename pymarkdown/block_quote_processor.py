@@ -37,13 +37,11 @@ class BlockQuoteProcessor:
         if adj_ws is None:
             adj_ws = extracted_whitespace
 
-        if ParserHelper.is_length_less_than_or_equal_to(
+        return ParserHelper.is_length_less_than_or_equal_to(
             adj_ws, 3
         ) and ParserHelper.is_character_at_index(
             line_to_parse, start_index, BlockQuoteProcessor.__block_quote_character
-        ):
-            return True
-        return False
+        )
 
     @staticmethod
     def check_for_lazy_handling(
@@ -293,7 +291,6 @@ class BlockQuoteProcessor:
                         POGGER.debug("avoid_block_starts=$", avoid_block_starts)
                         break
                     if this_bq_count > stack_bq_count:
-                        this_bq_count = stack_bq_count
                         start_index = osi
                         adjusted_line = oltp
                         last_block_quote_index = -1

@@ -154,8 +154,7 @@ class TransformToMarkdown:
             if i == "self":
                 continue
             init_parameters[i] = ""
-        handler_instance = type_name(**init_parameters)
-        return handler_instance
+        return type_name(**init_parameters)
 
     def register_handlers(self, type_name, start_token_handler, end_token_handler=None):
         """
@@ -438,9 +437,7 @@ class TransformToMarkdown:
                 new_data += ParserHelper.newline_character
 
         print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
-        new_data = ParserHelper.resolve_all_from_text(new_data)
-        print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
-        return new_data, delayed_continue, continue_sequence
+        return ParserHelper.resolve_all_from_text(new_data), delayed_continue, continue_sequence
 
     # pylint: enable=too-many-arguments, too-many-branches, unused-argument
 
@@ -531,8 +528,7 @@ class TransformToMarkdown:
             else:
                 replacement_data = continue_sequence + split_new_data[split_index]
             split_new_data[split_index] = replacement_data
-        new_data = ParserHelper.newline_character.join(split_new_data)
-        return new_data
+        return ParserHelper.newline_character.join(split_new_data)
 
     @classmethod
     def __merge_with_blech_in_data(cls, new_data, continue_sequence):
@@ -553,8 +549,7 @@ class TransformToMarkdown:
                 next_data_item = next_data_item[1:]
             next_continue_separator += next_data_item
             split_new_data[next_split_item] = next_continue_separator
-        new_data = ParserHelper.newline_character.join(split_new_data)
-        return new_data
+        return ParserHelper.newline_character.join(split_new_data)
 
     @classmethod
     def __merge_with_leading_spaces_in_data(cls, new_data, top_of_list_token_stack):
@@ -972,8 +967,7 @@ class TransformToMarkdown:
             start_sequence = start_sequence.ljust(
                 current_token.indent_level - previous_indent, " "
             )
-        continue_sequence = ParserHelper.repeat_string(" ", current_token.indent_level)
-        return start_sequence, continue_sequence
+        return start_sequence, ParserHelper.repeat_string(" ", current_token.indent_level)
 
     # pylint: enable=unused-argument
 
@@ -1070,8 +1064,7 @@ class TransformToMarkdown:
             )
             new_data = composed_data
 
-        new_data = ParserHelper.resolve_all_from_text(new_data)
-        return new_data, delayed_continue, continue_sequence
+        return ParserHelper.resolve_all_from_text(new_data), delayed_continue, continue_sequence
 
     # pylint: enable=unused-argument
     # pylint: enable=too-many-arguments
@@ -1134,9 +1127,7 @@ class TransformToMarkdown:
                 " ",
             )
             print(">>start_sequence>>:" + str(start_sequence) + ":<<")
-        continue_sequence = ParserHelper.repeat_string(" ", current_token.indent_level)
-        print(">>continue_sequence>>:" + str(continue_sequence) + ":<<")
-        return start_sequence, continue_sequence
+        return start_sequence, ParserHelper.repeat_string(" ", current_token.indent_level)
 
     @classmethod
     def __adjust_whitespace_for_block_quote(
