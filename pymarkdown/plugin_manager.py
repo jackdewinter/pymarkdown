@@ -317,9 +317,9 @@ class PluginManager:
         Log the scan failure in the appropriate format.
         """
 
-        extra_info = ""
-        if extra_error_information:
-            extra_info = " [" + extra_error_information + "]"
+        extra_info = (
+            " [" + extra_error_information + "]" if extra_error_information else ""
+        )
 
         print(
             "{0}:{1}:{2}: {3}: {4}{5} ({6})".format(

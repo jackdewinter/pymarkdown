@@ -316,13 +316,17 @@ class InlineHelper:
 
             string_part = text_to_append[start_index:next_index]
             escaped_part = alternate_escape_map[text_to_append[next_index]]
-            if add_text_signature:
-                string_part += ParserHelper.create_replacement_markers(
-                    text_to_append[next_index], escaped_part
-                )
-            else:
-                string_part += escaped_part
 
+            string_part = (
+                (
+                    string_part
+                    + ParserHelper.create_replacement_markers(
+                        text_to_append[next_index], escaped_part
+                    )
+                )
+                if add_text_signature
+                else string_part + escaped_part
+            )
             string_to_append_to += string_part
 
             start_index = next_index + 1
@@ -331,7 +335,7 @@ class InlineHelper:
             )
 
         if start_index < len(text_to_append):
-            string_to_append_to = string_to_append_to + text_to_append[start_index:]
+            string_to_append_to += text_to_append[start_index:]
 
         return string_to_append_to
 
@@ -541,7 +545,7 @@ class InlineHelper:
         current_string_size = len(current_string)
         if (
             removed_end_whitespace_size == 0
-            and current_string_size >= 1
+            and current_string_size
             and current_string[current_string_size - 1]
             == InlineHelper.backslash_character
         ):
@@ -823,21 +827,21 @@ class InlineHelper:
             )
             uri_scheme = text_to_parse[0] + uri_scheme
 
-        text_to_parse_size = len(text_to_parse)
-        if (
-            2 <= len(uri_scheme) <= 32
-            and path_index < text_to_parse_size
-            and text_to_parse[path_index] == InlineHelper.__scheme_end_character
-        ):
-            path_index += 1
-            while path_index < text_to_parse_size:
-                if ord(text_to_parse[path_index]) <= 32:
-                    break
+            text_to_parse_size = len(text_to_parse)
+            if (
+                2 <= len(uri_scheme) <= 32
+                and path_index < text_to_parse_size
+                and text_to_parse[path_index] == InlineHelper.__scheme_end_character
+            ):
                 path_index += 1
-            if path_index == text_to_parse_size:
-                return UriAutolinkMarkdownToken(
-                    text_to_parse, line_number, column_number
-                )
+                while path_index < text_to_parse_size:
+                    if ord(text_to_parse[path_index]) <= 32:
+                        break
+                    path_index += 1
+                if path_index == text_to_parse_size:
+                    return UriAutolinkMarkdownToken(
+                        text_to_parse, line_number, column_number
+                    )
         return None
 
     @staticmethod

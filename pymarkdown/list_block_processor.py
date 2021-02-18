@@ -186,12 +186,12 @@ class ListBlockProcessor:
         at_end_of_line = after_all_whitespace_index == line_to_parse_size
         POGGER.debug("at_end_of_line>>$", at_end_of_line)
 
-        is_paragraph_in_list = False
         is_in_paragraph = parser_state.token_stack[-1].is_paragraph
-        if is_in_paragraph:
-            is_paragraph_in_list = parser_state.token_stack[-2].is_list
+        is_paragraph_in_list = (
+            parser_state.token_stack[-2].is_list if is_in_paragraph else False
+        )
 
-        if not (
+        is_start = not (
             is_in_paragraph
             and not is_paragraph_in_list
             and (at_end_of_line or is_not_one)
@@ -200,8 +200,7 @@ class ListBlockProcessor:
                 line_to_parse, start_index + 1
             )
             or ((start_index + 1) == line_to_parse_size)
-        ):
-            is_start = True
+        )
         return is_start, after_all_whitespace_index
 
     # pylint: disable=too-many-arguments
@@ -409,8 +408,7 @@ class ListBlockProcessor:
             extracted_whitespace,
             position_marker,
         )
-        return new_token, \
-            UnorderedListStackToken(
+        return new_token, UnorderedListStackToken(
             indent_level,
             position_marker.text_to_parse[position_marker.index_number],
             ws_before_marker,
@@ -493,9 +491,11 @@ class ListBlockProcessor:
             True,
         )
 
-        allow_list_continue = True
-        if leading_space_length >= 4 and (started_ulist or started_olist):
-            allow_list_continue = not parser_state.token_document[-1].is_blank_line
+        allow_list_continue = (
+            (not parser_state.token_document[-1].is_blank_line)
+            if leading_space_length >= 4 and (started_ulist or started_olist)
+            else True
+        )
 
         POGGER.debug(
             "leading_space_length>>$>>requested_list_indent>>$>>is_in_paragraph>>$",
@@ -620,11 +620,11 @@ class ListBlockProcessor:
 
                 if found_owning_list:
                     POGGER.debug(">>in list>>")
-                    requested_list_indent = found_owning_list.indent_level
-                    if found_owning_list.last_new_list_token:
-                        requested_list_indent = (
-                            found_owning_list.last_new_list_token.indent_level
-                        )
+                    requested_list_indent = (
+                        (found_owning_list.last_new_list_token.indent_level)
+                        if found_owning_list.last_new_list_token
+                        else found_owning_list.indent_level
+                    )
                     POGGER.debug(">>line_to_parse>>$>>", line_to_parse)
                     POGGER.debug(">>extracted_whitespace>>$<<", extracted_whitespace)
                     POGGER.debug(">>start_index>>$", start_index)
@@ -708,11 +708,12 @@ class ListBlockProcessor:
             indent_level = (
                 ws_before_marker + 1 + ws_after_marker + marker_width_minus_one
             )
-            remaining_whitespace = 0
             if ws_after_marker > 4:
                 indent_level = indent_level - ws_after_marker + 1
                 remaining_whitespace = ws_after_marker - 1
                 ws_after_marker = 1
+            else:
+                remaining_whitespace = 0
 
         if (
             parser_state.token_stack[-1].is_html_block
@@ -958,14 +959,12 @@ class ListBlockProcessor:
                     parser_state.token_stack[last_list_index],
                     new_stack,
                 )
-                if (
+                if not (
                     parser_state.token_stack[last_list_index].type_name
                     == new_stack.type_name
                     or new_stack.start_index
                     > parser_state.token_stack[last_list_index].start_index
                 ):
-                    pass
-                else:
                     repeat_check = True
             else:
                 POGGER.debug("post_list>>close open blocks and emit")
@@ -1200,8 +1199,6 @@ class ListBlockProcessor:
                 parser_state, until_this_index=search_index, include_lists=True
             )
             POGGER.debug("container_level_tokens>$>", container_level_tokens)
-        else:
-            POGGER.debug("ws (normal and adjusted) continue")
         return container_level_tokens
 
     # pylint: enable=too-many-arguments

@@ -328,9 +328,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         """
         Returns the active URI for the link, preferring the __pre_link_uri over the __link_uri.
         """
-        if self.__pre_link_uri:
-            return self.__pre_link_uri
-        return self.__link_uri
+        return self.__pre_link_uri if self.__pre_link_uri else self.__link_uri
 
     @property
     def link_title(self):
@@ -344,9 +342,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         """
         Returns the active text associated with the link's title, preferring the __pre_link_title over the __link_title.
         """
-        if self.__pre_link_title:
-            return self.__pre_link_title
-        return self.__link_title
+        return self.__pre_link_title if self.__pre_link_title else self.__link_title
 
     @property
     def ex_label(self):
@@ -634,7 +630,6 @@ class TextMarkdownToken(InlineMarkdownToken):
         If remove_leading_spaces == 0, then.
         """
 
-        blank_line_sequence = ""
         if other_text_token.is_blank_line:
             text_to_combine = ""
             whitespace_present = other_text_token.extra_data
@@ -643,6 +638,7 @@ class TextMarkdownToken(InlineMarkdownToken):
             assert other_text_token.is_text
             text_to_combine = other_text_token.token_text
             whitespace_present = other_text_token.extracted_whitespace
+            blank_line_sequence = ""
 
         whitespace_to_append = None
         removed_whitespace = ""

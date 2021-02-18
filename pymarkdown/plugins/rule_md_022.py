@@ -80,10 +80,7 @@ class RuleMd022(Plugin):
         elif token.is_thematic_break:
             self.__blank_line_count = 0
         elif token.is_end_token:
-            if self.__is_leaf_end_token(token):
-                self.__blank_line_count = 0
-            else:
-                self.__blank_line_count = None
+            self.__blank_line_count = 0 if self.__is_leaf_end_token(token) else None
             if token.is_atx_heading_end or token.is_setext_heading_end:
                 self.__did_heading_end = True
 

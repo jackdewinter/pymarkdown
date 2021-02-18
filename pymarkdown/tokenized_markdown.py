@@ -129,9 +129,9 @@ class TokenizedMarkdown:
                 if did_start_close:
                     POGGER.debug("\n\ncleanup")
 
-                    was_link_definition_started_before_close = False
-                    if self.stack[-1].was_link_definition_started:
-                        was_link_definition_started_before_close = True
+                    was_link_definition_started_before_close = self.stack[
+                        -1
+                    ].was_link_definition_started
 
                     did_started_close = True
                     (
@@ -438,11 +438,12 @@ class TokenizedMarkdown:
         Handle the processing of a blank line.
         """
 
-        close_only_these_blocks = None
-        do_include_block_quotes = True
         if not from_main_transform:
             close_only_these_blocks = [ParagraphStackToken]
             do_include_block_quotes = False
+        else:
+            close_only_these_blocks = None
+            do_include_block_quotes = True
         POGGER.debug("hbl>>from_main_transform>>$", from_main_transform)
         POGGER.debug("hbl>>close_only_these_blocks>>$", close_only_these_blocks)
         POGGER.debug("hbl>>do_include_block_quotes>>$", do_include_block_quotes)

@@ -213,8 +213,6 @@ class LinkReferenceDefinitionHelper:
                 len(parser_state.token_document),
             )
             while len(parser_state.token_document) > original_document_depth:
-                # if parser_state.token_document[-1].is_indented_code_block_end:
-                #    break
                 del parser_state.token_document[-1]
 
         if lines_to_requeue:
@@ -319,8 +317,6 @@ class LinkReferenceDefinitionHelper:
         keep_going, new_index, collected_destination = LinkHelper.extract_link_label(
             line_to_parse, start_index + 1
         )
-        line_destination_whitespace = ""
-        inline_raw_link = ""
         if keep_going:
             (
                 keep_going,
@@ -332,8 +328,6 @@ class LinkReferenceDefinitionHelper:
             ) = LinkHelper.extract_link_destination(
                 line_to_parse, new_index, is_blank_line
             )
-        line_title_whitespace = ""
-        inline_raw_title = ""
         if keep_going:
             (
                 keep_going,
@@ -343,7 +337,6 @@ class LinkReferenceDefinitionHelper:
                 line_title_whitespace,
                 inline_raw_title,
             ) = LinkHelper.extract_link_title(line_to_parse, new_index, is_blank_line)
-        end_whitespace = ""
         if keep_going:
             (
                 keep_going,
@@ -352,7 +345,6 @@ class LinkReferenceDefinitionHelper:
             ) = LinkReferenceDefinitionHelper.__verify_link_definition_end(
                 line_to_parse, new_index
             )
-        normalized_destination = ""
         if keep_going:
             POGGER.debug(
                 ">>collected_destination(not normalized)>>$", collected_destination
@@ -413,9 +405,7 @@ class LinkReferenceDefinitionHelper:
         """
 
         line_to_store = remaining_line_to_parse
-        if was_started:
-            POGGER.debug(">>parse_link_reference_definition>>start already marked")
-        else:
+        if not was_started:
             POGGER.debug(">>parse_link_reference_definition>>marking start")
             parser_state.token_stack.append(
                 LinkDefinitionStackToken(extracted_whitespace, position_marker)

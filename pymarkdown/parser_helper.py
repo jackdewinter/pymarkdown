@@ -161,10 +161,9 @@ class ParserHelper:
         if not source_string:
             return 0, ""
 
-        if start_index is not None:
-            index = start_index - 1
-        else:
-            index = len(source_string) - 1
+        index = (
+            (start_index - 1) if start_index is not None else (len(source_string) - 1)
+        )
         while ParserHelper.is_character_at_index_whitespace(source_string, index):
             index -= 1
 
@@ -225,7 +224,7 @@ class ParserHelper:
             end_index = source_string_size
 
         index = end_index
-        while index >= 1 and source_string[index - 1] == match_character:
+        while index and source_string[index - 1] == match_character:
             index -= 1
         return end_index - index, index
 
@@ -247,7 +246,7 @@ class ParserHelper:
             end_index = source_string_size
 
         index = end_index
-        while index >= 1 and source_string[index - 1] in match_characters:
+        while index and source_string[index - 1] in match_characters:
             index -= 1
         return end_index - index, index
 
@@ -318,10 +317,11 @@ class ParserHelper:
 
         string_length = start_index
         for source_character in source_string:
-            if source_character == ParserHelper.tab_character:
-                string_length = int((string_length + 4) / 4) * 4
-            else:
-                string_length += 1
+            string_length = (
+                (int((string_length + 4) / 4) * 4)
+                if source_character == ParserHelper.tab_character
+                else (string_length + 1)
+            )
         return string_length - start_index
 
     @staticmethod
@@ -457,10 +457,11 @@ class ParserHelper:
             ew_part = split_whitespace_string[start_index]
             if ew_part and add_replace_marker_if_empty:
                 ew_part = ParserHelper.create_replace_with_nothing_marker(ew_part)
-            if add_whitespace_after:
-                split_text_string[i] = split_text_string[i] + ew_part
-            else:
-                split_text_string[i] = ew_part + split_text_string[i]
+            split_text_string[i] = (
+                (split_text_string[i] + ew_part)
+                if add_whitespace_after
+                else (ew_part + split_text_string[i])
+            )
             if post_increment_index:
                 start_index += 1
         return ParserHelper.newline_character.join(split_text_string), start_index
@@ -705,14 +706,15 @@ class ParserHelper:
                 end_replacement_index = inner_end_replacement_index
 
             length_before_mod = len(main_text)
-            if start_replacement_index:
-                main_text = (
+            main_text = (
+                (
                     main_text[0:start_replacement_index]
                     + replace_text
                     + main_text[end_replacement_index + 1 :]
                 )
-            else:
-                main_text = replace_text + main_text[end_replacement_index + 1 :]
+                if start_replacement_index
+                else (replace_text + main_text[end_replacement_index + 1 :])
+            )
             length_after_mod = len(main_text)
             start_index = (
                 end_replacement_index + 1 + (length_after_mod - length_before_mod)
@@ -780,16 +782,15 @@ class ParserHelper:
                 ]
 
             length_before_mod = len(adjusted_text_token)
-            if start_replacement_index:
-                adjusted_text_token = (
+            adjusted_text_token = (
+                (
                     adjusted_text_token[0:start_replacement_index]
                     + replace_text
                     + adjusted_text_token[end_replacement_index + 1 :]
                 )
-            else:
-                adjusted_text_token = (
-                    replace_text + adjusted_text_token[end_replacement_index + 1 :]
-                )
+                if start_replacement_index
+                else (replace_text + adjusted_text_token[end_replacement_index + 1 :])
+            )
             length_after_mod = len(adjusted_text_token)
             start_index = (
                 end_replacement_index + 1 + (length_after_mod - length_before_mod)

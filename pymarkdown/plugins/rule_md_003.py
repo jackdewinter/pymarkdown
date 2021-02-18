@@ -101,11 +101,11 @@ class RuleMd003(Plugin):
                     )
                 ):
                     is_heading_bad = True
-
-                    if is_heading_level_1_or_2:
-                        expected_style_type = RuleMd003.__setext_style
-                    else:
-                        expected_style_type = base_atx_style
+                    expected_style_type = (
+                        RuleMd003.__setext_style
+                        if is_heading_level_1_or_2
+                        else base_atx_style
+                    )
 
             if is_heading_bad:
                 extra_data = (
@@ -125,10 +125,11 @@ class RuleMd003(Plugin):
         heading_style_type = None
         is_heading_level_1_or_2 = None
         if token.is_atx_heading:
-            if token.remove_trailing_count:
-                heading_style_type = RuleMd003.__atx_closed_style
-            else:
-                heading_style_type = RuleMd003.__atx_style
+            heading_style_type = (
+                RuleMd003.__atx_closed_style
+                if token.remove_trailing_count
+                else RuleMd003.__atx_style
+            )
             is_heading_level_1_or_2 = bool(token.hash_count < 3)
         elif token.is_setext_heading:
             heading_style_type = RuleMd003.__setext_style

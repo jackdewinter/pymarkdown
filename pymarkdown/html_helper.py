@@ -336,7 +336,6 @@ class HtmlHelper:
         """
         Parse a HTML tag name from the string.
         """
-        tag_name = ""
         if ParserHelper.is_character_at_index_one_of(
             text_to_parse, start_index, HtmlHelper.__valid_tag_name_start
         ):
@@ -346,6 +345,8 @@ class HtmlHelper:
             ):
                 index += 1
             tag_name = text_to_parse[0:index]
+        else:
+            tag_name = ""
         return tag_name
 
     @staticmethod
@@ -518,18 +519,18 @@ class HtmlHelper:
         if remaining_line.startswith(special_start):
             remaining_line = remaining_line[special_start_size:]
             parse_index = remaining_line.find(special_end)
-        if parse_index != -1:
-            remaining_line = remaining_line[0:parse_index]
-            parse_index = parse_index + special_start_size + len(special_end)
-            if (not do_extra_check) or (
-                not (
-                    remaining_line.startswith(HtmlHelper.__raw_html_exclusion_1)
-                    or remaining_line.startswith(HtmlHelper.__raw_html_exclusion_2)
-                    or remaining_line.endswith(HtmlHelper.__raw_html_exclusion_3)
-                    or HtmlHelper.__raw_html_exclusion_4 in remaining_line
-                )
-            ):
-                valid_raw_html = special_start + remaining_line + special_end[0:-1]
+            if parse_index != -1:
+                remaining_line = remaining_line[0:parse_index]
+                parse_index = parse_index + special_start_size + len(special_end)
+                if (not do_extra_check) or (
+                    not (
+                        remaining_line.startswith(HtmlHelper.__raw_html_exclusion_1)
+                        or remaining_line.startswith(HtmlHelper.__raw_html_exclusion_2)
+                        or remaining_line.endswith(HtmlHelper.__raw_html_exclusion_3)
+                        or HtmlHelper.__raw_html_exclusion_4 in remaining_line
+                    )
+                ):
+                    valid_raw_html = special_start + remaining_line + special_end[0:-1]
         return valid_raw_html, parse_index
 
     @staticmethod
@@ -648,10 +649,11 @@ class HtmlHelper:
             html_block_type = HtmlHelper.html_block_1
         else:
             adjusted_remaining_html_tag = remaining_html_tag
-            is_end_tag = False
-            if adjusted_remaining_html_tag.startswith(HtmlHelper.__html_tag_start):
+            is_end_tag = adjusted_remaining_html_tag.startswith(
+                HtmlHelper.__html_tag_start
+            )
+            if is_end_tag:
                 adjusted_remaining_html_tag = adjusted_remaining_html_tag[1:]
-                is_end_tag = True
 
             line_to_parse_size = len(line_to_parse)
             if (

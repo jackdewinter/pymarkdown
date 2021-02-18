@@ -26,9 +26,7 @@ class StackToken:
         self.__matching_markdown_token = matching_markdown_token
 
     def __str__(self):
-        add_extra = ""
-        if self.extra_data:
-            add_extra = ":" + self.extra_data
+        add_extra = ":" + self.extra_data if self.extra_data else ""
         return "StackToken(" + self.type_name + add_extra + ")"
 
     def __repr__(self):
@@ -38,12 +36,11 @@ class StackToken:
         """
         Overrides the default implementation
         """
-        if isinstance(other, StackToken):
-            return (
-                self.type_name == other.type_name
-                and self.extra_data == other.extra_data
-            )
-        return NotImplemented
+        return (
+            (self.type_name == other.type_name and self.extra_data == other.extra_data)
+            if isinstance(other, StackToken)
+            else NotImplemented
+        )
 
     @property
     def type_name(self):

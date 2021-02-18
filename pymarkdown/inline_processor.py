@@ -157,10 +157,11 @@ class InlineProcessor:
                             split_leading_spaces = coalesced_stack[
                                 -1
                             ].leading_spaces.split(ParserHelper.newline_character)
-                            if len(split_leading_spaces) >= 2:
-                                new_column_number += len(split_leading_spaces[1])
-                            else:
-                                new_column_number += len(split_leading_spaces[0])
+                            new_column_number += (
+                                (len(split_leading_spaces[1]))
+                                if len(split_leading_spaces) >= 2
+                                else (len(split_leading_spaces[0]))
+                            )
                         else:
                             leading_whitespace = coalesced_results[
                                 coalesce_index
@@ -397,9 +398,9 @@ class InlineProcessor:
                 )
                 POGGER.debug("")
                 old_inline_blocks_count = len(inline_blocks)
-                old_inline_blocks_last_token = None
-                if inline_blocks:
-                    old_inline_blocks_last_token = inline_blocks[-1]
+                old_inline_blocks_last_token = (
+                    inline_blocks[-1] if inline_blocks else None
+                )
                 (
                     new_index,
                     is_active,
@@ -546,11 +547,6 @@ class InlineProcessor:
 
     @staticmethod
     def __calculate_full_deltas(current_token, para_owner, delta_line, repeat_count):
-        newline_count = ParserHelper.count_newlines_in_text(
-            current_token.text_from_blocks
-        )
-        if newline_count:
-            POGGER.debug(">>text_from_blocks")
         newline_count = ParserHelper.count_newlines_in_text(current_token.ex_label)
         if newline_count:
             POGGER.debug(">>ex_label")
@@ -665,11 +661,7 @@ class InlineProcessor:
 
     @staticmethod
     def __calculate_shortcut_collapsed_deltas(current_token, delta_line, repeat_count):
-        newline_count = ParserHelper.count_newlines_in_text(
-            current_token.text_from_blocks
-        )
-        if newline_count:
-            POGGER.debug(">>text_from_blocks")
+        _ = current_token
         return delta_line, repeat_count
 
     @staticmethod
@@ -782,8 +774,8 @@ class InlineProcessor:
         end_string = ""
 
         inline_response = InlineResponse()
-        fold_space = None
         # POGGER.debug("__process_inline_text_block>>is_para>>$", is_para)
+        fold_space = None
         if is_para or is_setext:
             fold_space = para_space.split(ParserHelper.newline_character)
         # POGGER.debug("__process_inline_text_block>>fold_space>>$", fold_space)
@@ -832,9 +824,7 @@ class InlineProcessor:
             remaining_line = source_text[start_index:next_index]
 
             old_inline_blocks_count = len(inline_blocks)
-            old_inline_blocks_last_token = None
-            if inline_blocks:
-                old_inline_blocks_last_token = inline_blocks[-1]
+            old_inline_blocks_last_token = inline_blocks[-1] if inline_blocks else None
 
             inline_request = InlineRequest(
                 source_text,
@@ -1306,8 +1296,6 @@ class InlineProcessor:
                 current_string, source_text[start_index:]
             )
 
-        if end_string is not None:
-            POGGER.debug("xx-end-lf>$<", end_string)
         if current_string or not have_processed_once:
             inline_blocks.append(
                 TextMarkdownToken(

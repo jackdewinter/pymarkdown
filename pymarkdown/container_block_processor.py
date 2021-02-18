@@ -246,7 +246,6 @@ class ContainerBlockProcessor:
             this_bq_count,
             stack_bq_count,
             line_to_parse,
-            did_process,
             container_level_tokens,
         )
         # POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
@@ -462,9 +461,7 @@ class ContainerBlockProcessor:
         """
         Perform some calculations that will be needed for parsing the container blocks.
         """
-        this_bq_count = 0
-        if init_bq is not None:
-            this_bq_count = init_bq
+        this_bq_count = 0 if init_bq is None else init_bq
 
         current_container_blocks = [
             ind for ind in parser_state.token_stack if ind.is_list
@@ -533,8 +530,6 @@ class ContainerBlockProcessor:
             if ws_len >= old_start_index:
                 POGGER.debug("RELINE:$:", line_to_parse)
                 adj_ws = extracted_whitespace[old_start_index:]
-            else:
-                POGGER.debug("DOWNGRADE")
         return adj_ws
 
     # pylint: disable=too-many-arguments
@@ -691,13 +686,13 @@ class ContainerBlockProcessor:
         nested_olist_start, _, _, _ = ListBlockProcessor.is_olist_start(
             parser_state, line_to_parse, after_ws_index, ex_whitespace, False
         )
-        if avoid_block_starts:
-            POGGER.debug("avoiding next block container start")
-            nested_block_start = False
-        else:
-            nested_block_start = BlockQuoteProcessor.is_block_quote_start(
+        nested_block_start = (
+            False
+            if avoid_block_starts
+            else BlockQuoteProcessor.is_block_quote_start(
                 line_to_parse, after_ws_index, ex_whitespace
             )
+        )
         POGGER.debug(
             "check next container_start>ulist>$>index>$",
             nested_ulist_start,
@@ -733,9 +728,9 @@ class ContainerBlockProcessor:
         POGGER.debug("check next container_start>recursing")
         POGGER.debug("check next container_start>>$\n", adj_line_to_parse)
 
-        adj_block = None
-        if end_of_bquote_start_index != -1:
-            adj_block = end_of_bquote_start_index
+        adj_block = (
+            None if end_of_bquote_start_index == -1 else end_of_bquote_start_index
+        )
 
         position_marker = PositionMarker(
             position_marker.line_number, -1, adj_line_to_parse
@@ -802,11 +797,6 @@ class ContainerBlockProcessor:
                 POGGER.debug("clt>>used_indent>>:$:>>", used_indent)
                 did_process = True
 
-        if did_process:
-            POGGER.debug(
-                "clt-before-lead>>$",
-                container_level_tokens,
-            )
         return did_process, line_to_parse, container_level_tokens, used_indent
 
     # pylint: enable=too-many-arguments
@@ -819,7 +809,6 @@ class ContainerBlockProcessor:
         this_bq_count,
         stack_bq_count,
         line_to_parse,
-        did_process,
         container_level_tokens,
     ):
 
@@ -845,13 +834,6 @@ class ContainerBlockProcessor:
         if lazy_tokens:
             POGGER.debug("clt>>lazy-found")
             container_level_tokens.extend(lazy_tokens)
-            did_process = True
-
-        if did_process:
-            POGGER.debug(
-                "clt-after-leaf>>$",
-                container_level_tokens,
-            )
 
     # pylint: enable=too-many-arguments
 
@@ -892,16 +874,6 @@ class ContainerBlockProcessor:
             force_it,
         )
         POGGER.debug("parsed leaf>>$", leaf_tokens)
-        if requeue_line_info:
-            POGGER.debug(
-                "parsed leaf>>lines_to_requeue>>$>$",
-                requeue_line_info.lines_to_requeue,
-                len(requeue_line_info.lines_to_requeue),
-            )
-            POGGER.debug(
-                "parsed leaf>>requeue_line_info.force_ignore_first_as_lrd>>$>",
-                requeue_line_info.force_ignore_first_as_lrd,
-            )
         return leaf_tokens, requeue_line_info
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -1205,6 +1177,7 @@ class ContainerBlockProcessor:
                     force_it,
                 )
 
+        POGGER.debug(">>leaf--adding>>$", new_tokens)
         pre_tokens.extend(new_tokens)
         POGGER.debug(">>leaf--added>>$", pre_tokens)
         return pre_tokens, requeue_line_info

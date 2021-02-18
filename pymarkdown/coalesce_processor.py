@@ -35,7 +35,6 @@ class CoalesceProcessor:
                 ):
 
                     POGGER.debug("text-text>>$<<", coalesced_list[-2])
-                    remove_leading_spaces = 0
                     if coalesced_list[-2].is_indented_code_block:
                         remove_leading_spaces = len(
                             coalesced_list[-2].extracted_whitespace
@@ -45,6 +44,8 @@ class CoalesceProcessor:
                         or coalesced_list[-2].is_setext_heading
                     ):
                         remove_leading_spaces = -1
+                    else:
+                        remove_leading_spaces = 0
 
                     POGGER.debug("remove_leading_spaces>>$", remove_leading_spaces)
                     POGGER.debug("combine1>>$", coalesced_list[-1])

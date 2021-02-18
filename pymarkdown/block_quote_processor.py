@@ -91,9 +91,6 @@ class BlockQuoteProcessor:
                     include_block_quotes=True,
                     was_forced=True,
                 )
-            else:
-                POGGER.debug("__check_for_lazy_handling>>not code block")
-                POGGER.debug("__check_for_lazy_handling>>$", parser_state.token_stack)
 
         return container_level_tokens
 
@@ -170,20 +167,17 @@ class BlockQuoteProcessor:
             POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
 
             # TODO for nesting, may need to augment with this_bq_count already set.
-            if this_bq_count == 0:
-                this_bq_count = alt_this_bq_count
-            else:
+            this_bq_count = alt_this_bq_count
+            if not this_bq_count == 0:
                 POGGER.debug(">>>>>>>>>>>>>>>$>>>$", this_bq_count, alt_this_bq_count)
-                this_bq_count = alt_this_bq_count
 
             if last_block_quote_index != -1:
                 did_process = True
-                was_container_start = True
                 end_of_bquote_start_index = adjusted_index_number
             else:
                 did_process = False
-                was_container_start = False
                 end_of_bquote_start_index = -1
+            was_container_start = did_process
         elif parser_state.token_stack[-1].was_link_definition_started:
             stack_index = parser_state.find_last_block_quote_on_stack()
             if stack_index > 0:
@@ -195,8 +189,6 @@ class BlockQuoteProcessor:
                     last_block_token,
                 )
                 last_block_token.add_leading_spaces("")
-            else:
-                POGGER.debug("handle_block w/ no open>>not found")
 
         POGGER.debug("handle_block_quote_block>>end>>did_process>>$", did_process)
         return (

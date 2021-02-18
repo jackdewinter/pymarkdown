@@ -23,6 +23,7 @@
 ### Priority 2 - Like To Solve Before Initial
 
 - check for common code in consistency checks
+- __calculate_shortcut_collapsed_deltas
 
 - why does fcb with only newlines and newlines with ws not fold down to text?
   - coalesce with blank lines in fenced code block?
@@ -79,6 +80,12 @@
 - replace calculate_last_line with calculate_deltas with some work?
 - is_complete_html_end_tag can be more concise, but worth it?
 - modify_end_string. inline?
+- is_valid_tag_name refactor using ParserHelper?
+  - extract_html_attribute_name and others to use "in" where possible instead of "or"
+- __calculate_full_deltas - calc_deltas from ParserHelper?
+- __process_inline_text_block - calc_deltas from ParserHelper?
+- is_length_less_than_or_equal_to(extracted_whitespace, 3) - calc once at start of leaf block proc?
+- is_character_at_index_one_of inside of where? collect function?
 
 ## Bugs - General - Uncategorized
 

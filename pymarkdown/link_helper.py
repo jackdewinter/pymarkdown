@@ -81,12 +81,9 @@ class LinkHelper:
             link_name,
             link_value,
         )
-        if link_name in LinkHelper.__link_definitions:
-            POGGER.debug(">>def already present>>$", link_name)
-            did_add_definition = False
-        else:
+        did_add_definition = link_name not in LinkHelper.__link_definitions
+        if did_add_definition:
             LinkHelper.__link_definitions[link_name] = link_value
-            did_add_definition = True
             POGGER.debug(">>added def>>$-->$", link_name, link_value)
         return did_add_definition
 
@@ -169,9 +166,7 @@ class LinkHelper:
                 new_index,
                 _,
             ) = LinkHelper.__parse_link_title(line_to_parse, new_index)
-            if new_index == -1:
-                return False, -1, None, None, None, None
-            if inline_title is None:
+            if new_index == -1 or inline_title is None:
                 return False, new_index, None, None, None, None
         return (
             True,
@@ -577,7 +572,7 @@ class LinkHelper:
             collected_text_raw,
             suffix_text,
         )
-        
+
         return collected_text + suffix_text, collected_text_raw + suffix_text
 
     # pylint: enable=too-many-statements, too-many-branches
@@ -664,14 +659,14 @@ class LinkHelper:
                 source_text, new_index, LinkHelper.__non_angle_link_unnest
             ):
                 POGGER.debug("-1")
-                if nesting_level != 0:
+                if nesting_level:
                     collected_destination += LinkHelper.__non_angle_link_unnest
                     new_index += 1
                     nesting_level -= 1
                     keep_collecting = True
         ex_link = collected_destination
         POGGER.debug("collected_destination>>$", collected_destination)
-        if nesting_level != 0:
+        if nesting_level:
             return -1, None
         return new_index, ex_link
 

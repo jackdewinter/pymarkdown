@@ -131,9 +131,9 @@ class EmphasisHelper:
         """
 
         # Figure out whether we have emphasis or strong emphasis
-        emphasis_length = 1
-        if close_token.repeat_count >= 2 and open_token.repeat_count >= 2:
-            emphasis_length = 2
+        emphasis_length = (
+            2 if close_token.repeat_count >= 2 and open_token.repeat_count >= 2 else 1
+        )
         emphasis_character = open_token.token_text[0]
 
         # add emph node in main stream
@@ -142,9 +142,11 @@ class EmphasisHelper:
 
         POGGER.debug("open_token.repeat_count>>$", open_token.repeat_count)
         POGGER.debug("emphasis_length>>$", emphasis_length)
-        open_column_number_delta = 0
-        if emphasis_length < open_token.repeat_count:
-            open_column_number_delta = open_token.repeat_count - emphasis_length
+        open_column_number_delta = (
+            open_token.repeat_count - emphasis_length
+            if emphasis_length < open_token.repeat_count
+            else 0
+        )
         POGGER.debug("open_column_number_delta>>$", open_column_number_delta)
 
         start_index_in_blocks = inline_blocks.index(open_token)

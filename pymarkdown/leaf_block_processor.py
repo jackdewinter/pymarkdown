@@ -890,7 +890,6 @@ class LeafBlockProcessor:
                 POGGER.debug(">>block-owners>>$", top_block_token)
                 LeafBlockProcessor.__adjust_paragraph_for_block_quotes(
                     top_block_token,
-                    extracted_whitespace,
                     text_removed_by_container,
                     force_it,
                     parser_state.token_document,
@@ -968,15 +967,19 @@ class LeafBlockProcessor:
         POGGER.debug(">>last_new_list_token>>$", top_list_token.last_new_list_token)
         POGGER.debug(">>extracted_whitespace>>$", ex_ws_length)
 
-        dominant_indent = top_list_token.indent_level
-        if top_list_token.last_new_list_token:
-            dominant_indent = top_list_token.last_new_list_token.indent_level
+        dominant_indent = (
+            top_list_token.last_new_list_token.indent_level
+            if top_list_token.last_new_list_token
+            else top_list_token.indent_level
+        )
         POGGER.debug(">>dominant_indent>>$>>", dominant_indent)
 
         original_list_indent = top_list_token.indent_level - 2
-        indent_delta = 0
-        if top_list_token.ws_after_marker > 1:
-            indent_delta = top_list_token.ws_after_marker - 1
+        indent_delta = (
+            top_list_token.ws_after_marker - 1
+            if top_list_token.ws_after_marker > 1
+            else 0
+        )
         original_text_indent = (
             ex_ws_length
             + top_list_token.indent_level
@@ -985,16 +988,16 @@ class LeafBlockProcessor:
         )
         POGGER.debug(">>original_list_indent>>$>>", original_list_indent)
         POGGER.debug(">>original_text_indent>$>>", original_text_indent)
-        if dominant_indent > original_text_indent >= 4:
-            adjusted_whitespace_length = dominant_indent - original_text_indent
-        else:
-            adjusted_whitespace_length = 0
+        adjusted_whitespace_length = (
+            dominant_indent - original_text_indent
+            if dominant_indent > original_text_indent >= 4
+            else 0
+        )
         return adjusted_whitespace_length
 
     @staticmethod
     def __adjust_paragraph_for_block_quotes(
         top_block_token,
-        extracted_whitespace,
         text_removed_by_container,
         force_it,
         token_document,
@@ -1005,28 +1008,10 @@ class LeafBlockProcessor:
         while token_document[end_index].is_block_quote_end:
             number_of_block_quote_ends += 1
             end_index -= 1
-        if (
+        if not (
             number_of_block_quote_ends > 0
             and token_document[end_index].is_fenced_code_block_end
         ):
-            POGGER.debug(">>block quote does not need adjusting")
-        else:
-            POGGER.debug(
-                ">>top_block_token.md>>$", top_block_token.matching_markdown_token
-            )
-            POGGER.debug(
-                ">>top_block_token.lsi>>$",
-                top_block_token.matching_markdown_token.leading_text_index,
-            )
-            POGGER.debug(">>extracted_whitespace>>$>>", extracted_whitespace)
-            POGGER.debug(
-                ">>text_removed_by_container>>[$]>>",
-                text_removed_by_container,
-            )
-            POGGER.debug(
-                ">>force_it>>[$]>>",
-                force_it,
-            )
             if text_removed_by_container is None:
                 top_block_token.matching_markdown_token.add_leading_spaces("")
             elif force_it:
@@ -1066,9 +1051,7 @@ class LeafBlockProcessor:
             POGGER.debug("1")
             return html_tokens
 
-        statck_index = -1
-        if was_token_already_added_to_stack:
-            statck_index = -2
+        statck_index = -2 if was_token_already_added_to_stack else -1
         if not parser_state.token_stack[statck_index].is_list:
             POGGER.debug("2")
             return html_tokens

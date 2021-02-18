@@ -160,10 +160,11 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                         ">>mainline-ends>>leading_text_index>"
                         + str(last_block_quote_token.leading_text_index)
                     )
-                    last_block_quote_token.leading_text_index += 1
                     if current_token.is_fenced_code_block_end:
-                        last_block_quote_token.leading_text_index += 2
+                        last_block_quote_token.leading_text_index += 3
                     elif current_token.is_setext_heading_end:
+                        last_block_quote_token.leading_text_index += 2
+                    else:
                         last_block_quote_token.leading_text_index += 1
                     print(
                         ">>mainline-ends>>leading_text_index>"
@@ -332,10 +333,10 @@ def __push_to_stack_if_required(token_stack, current_token):
     ):
         token_stack.append(current_token)
     else:
-        if token_stack and (
-            token_stack[-1].is_html_block or token_stack[-1].is_fenced_code_block
-        ):
-            remember_token_as_last_token = False
+        remember_token_as_last_token = not (
+            token_stack
+            and (token_stack[-1].is_html_block or token_stack[-1].is_fenced_code_block)
+        )
     print(
         "__push_to_stack_if_required->after->"
         + str(remember_token_as_last_token)
@@ -398,9 +399,7 @@ def __validate_block_token_height(
         )
     elif last_token.is_html_block or last_token.is_fenced_code_block:
         current_token_index = last_token_index + 1
-        token_height = 0
-        if last_token.is_fenced_code_block:
-            token_height += 1
+        token_height = 1 if last_token.is_fenced_code_block else 0
         while not (
             actual_tokens[current_token_index].is_end_token
             and actual_tokens[current_token_index].type_name == last_token.token_name
@@ -413,11 +412,11 @@ def __validate_block_token_height(
                 assert actual_tokens[current_token_index].is_blank_line
                 token_height += 1
             current_token_index += 1
-        if last_token.is_fenced_code_block:
-            if not actual_tokens[current_token_index].was_forced:
-                token_height += 1
-    elif last_token.is_blank_line:
-        token_height = 1
+        if (
+            last_token.is_fenced_code_block
+            and not actual_tokens[current_token_index].was_forced
+        ):
+            token_height += 1
     elif last_token.is_link_reference_definition:
         token_height = 1 + ParserHelper.count_newlines_in_texts(
             last_token.extracted_whitespace,
@@ -426,7 +425,11 @@ def __validate_block_token_height(
             last_token.link_title_raw,
             last_token.link_title_whitespace,
         )
-    elif last_token.is_thematic_break or last_token.is_atx_heading:
+    elif (
+        last_token.is_thematic_break
+        or last_token.is_atx_heading
+        or last_token.is_blank_line
+    ):
         token_height = 1
     else:
         assert last_token.is_setext_heading, (
@@ -482,9 +485,11 @@ def __verify_token_height(
         None,
     )
 
-    token_line_number = current_block_token.line_number
-    if current_block_token.is_setext_heading:
-        token_line_number = current_block_token.original_line_number
+    token_line_number = (
+        current_block_token.original_line_number
+        if current_block_token.is_setext_heading
+        else current_block_token.line_number
+    )
     __validate_block_token_height(
         last_block_token,
         current_block_token,
@@ -775,10 +780,11 @@ def __verify_first_inline_fenced_code_block(
         split_leading_spaces = last_token_stack[-2].leading_spaces.split(
             ParserHelper.newline_character
         )
-        if len(split_leading_spaces) >= 2:
-            col_pos = len(split_leading_spaces[1])
-        else:
-            col_pos = len(split_leading_spaces[0])
+        col_pos = (
+            len(split_leading_spaces[1])
+            if len(split_leading_spaces) >= 2
+            else len(split_leading_spaces[0])
+        )
     else:
         if first_inline_token.is_blank_line:
             col_pos = 0
@@ -963,9 +969,11 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
 
         part_1 = 2
         part_2 = len(parent_cur_token.before_link_whitespace)
-        part_3 = len(link_uri)
-        if parent_cur_token.did_use_angle_start:
-            part_3 += 2
+        part_3 = (
+            (len(link_uri) + 2)
+            if parent_cur_token.did_use_angle_start
+            else len(link_uri)
+        )
         part_4 = len(parent_cur_token.before_title_whitespace)
         part_5 = 0
         part_6 = 0
@@ -1374,10 +1382,12 @@ def __verify_next_inline_blank_line(
 ):
     _ = estimated_column_number
 
-    estimated_column_number = 1
-    if current_inline_token.is_text:
-        estimated_column_number += len(current_inline_token.extracted_whitespace)
-    return estimated_line_number + 1, estimated_column_number
+    return (
+        estimated_line_number + 1,
+        estimated_column_number + len(current_inline_token.extracted_whitespace)
+        if current_inline_token.is_text
+        else 1,
+    )
 
 
 def __verify_next_inline_inline_link(
@@ -1515,7 +1525,7 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
         estimated_column_number += 1
         print(">>include_part_1>>" + str(estimated_column_number))
     if include_part_2:
-        estimated_column_number += len(label_data_raw) + 1 + 1
+        estimated_column_number += len(label_data_raw) + 2
         print(
             ">>label_data_raw>>"
             + ParserHelper.make_value_visible(label_data_raw)
@@ -1569,10 +1579,11 @@ def __verify_next_inline_inline_image(  # noqa: C901
     print(
         ">>ex_label>>" + ParserHelper.make_value_visible(previous_inline_token.ex_label)
     )
-    if previous_inline_token.ex_label:
-        label_data = previous_inline_token.ex_label
-    else:
-        label_data = previous_inline_token.image_alt_text
+    label_data = (
+        previous_inline_token.ex_label
+        if previous_inline_token.ex_label
+        else previous_inline_token.image_alt_text
+    )
     print(">>label_data>>" + ParserHelper.make_value_visible(label_data))
 
     before_link_whitespace = previous_inline_token.before_link_whitespace
@@ -1638,10 +1649,11 @@ def __verify_next_inline_inline_image(  # noqa: C901
 
     elif previous_inline_token.label_type == "collapsed":
         print(">>>>>>>>>collapsed")
-        if previous_inline_token.text_from_blocks:
-            image_alt_text = previous_inline_token.text_from_blocks
-        else:
-            image_alt_text = previous_inline_token.image_alt_text
+        image_alt_text = (
+            previous_inline_token.text_from_blocks
+            if previous_inline_token.text_from_blocks
+            else previous_inline_token.image_alt_text
+        )
 
         token_prefix = 1
         newline_count = ParserHelper.count_newlines_in_text(image_alt_text)
@@ -1664,10 +1676,11 @@ def __verify_next_inline_inline_image(  # noqa: C901
         assert previous_inline_token.label_type == "full"
         print(">>>>>>>>>full")
 
-        if previous_inline_token.text_from_blocks:
-            image_alt_text = previous_inline_token.text_from_blocks
-        else:
-            image_alt_text = previous_inline_token.image_alt_text
+        image_alt_text = (
+            previous_inline_token.text_from_blocks
+            if previous_inline_token.text_from_blocks
+            else previous_inline_token.image_alt_text
+        )
 
         print(">>image_alt_text>>" + ParserHelper.make_value_visible(image_alt_text))
         print(">>label_data>>" + ParserHelper.make_value_visible(label_data))
@@ -1853,7 +1866,10 @@ def __verify_next_inline_emphasis_start(
     estimated_line_number,
     estimated_column_number,
 ):
-    return estimated_line_number, estimated_column_number + previous_inline_token.emphasis_length
+    return (
+        estimated_line_number,
+        estimated_column_number + previous_inline_token.emphasis_length,
+    )
 
 
 def __verify_next_inline_emphasis_end(
@@ -1861,7 +1877,7 @@ def __verify_next_inline_emphasis_end(
     estimated_line_number,
     estimated_column_number,
 ):
-    return estimated_line_number, estimated_column_number+  (
+    return estimated_line_number, estimated_column_number + (
         previous_inline_token.start_markdown_token.emphasis_length
     )
 
@@ -2047,7 +2063,7 @@ def __verify_next_inline_text(
     estimated_column_number += delta_column
     if split_end_whitespace:
         estimated_column_number += split_end_whitespace
-    return estimated_line_number+ delta_line, estimated_column_number
+    return estimated_line_number + delta_line, estimated_column_number
 
 
 # pylint: enable=too-many-statements, too-many-arguments
@@ -2138,9 +2154,10 @@ def __handle_last_token_end_link(
         link_title = last_inline_token.start_markdown_token.active_link_title
         inline_height += ParserHelper.count_newlines_in_text(link_title)
 
-    if last_block_token.is_setext_heading:
-        inline_height += 1
-    return inline_height, use_line_number_from_start_token
+    return (
+        inline_height + 1 if last_block_token.is_setext_heading else inline_height,
+        use_line_number_from_start_token,
+    )
 
 
 # pylint: enable=unused-argument
@@ -2155,10 +2172,11 @@ def __handle_last_token_image(
 ):
     _ = (second_last_inline_token, current_token)
 
-    label_data = last_inline_token.image_alt_text
-    if last_inline_token.ex_label:
-        label_data = last_inline_token.ex_label
-
+    label_data = (
+        last_inline_token.ex_label
+        if last_inline_token.ex_label
+        else last_inline_token.image_alt_text
+    )
     url_data = last_inline_token.active_link_uri
     title_data = last_inline_token.active_link_title
 
@@ -2175,9 +2193,7 @@ def __handle_last_token_image(
             last_inline_token.text_from_blocks
         )
 
-    if last_block_token.is_setext_heading:
-        inline_height += 1
-    return inline_height
+    return inline_height + 1 if last_block_token.is_setext_heading else inline_height
 
 
 # pylint: enable=unused-argument
@@ -2198,9 +2214,7 @@ def __handle_last_token_code_span(
         last_inline_token.trailing_whitespace,
     )
 
-    if last_block_token.is_setext_heading:
-        inline_height += 1
-    return inline_height
+    return inline_height + 1 if last_block_token.is_setext_heading else inline_height
 
 
 # pylint: enable=unused-argument
@@ -2215,10 +2229,7 @@ def __handle_last_token_autolink(
 ):
     _ = (second_last_inline_token, current_token, last_inline_token)
 
-    inline_height = 0
-    if last_block_token.is_setext_heading:
-        inline_height += 1
-    return inline_height
+    return 1 if last_block_token.is_setext_heading else 0
 
 
 # pylint: enable=unused-argument
@@ -2234,9 +2245,7 @@ def __handle_last_token_raw_html(
     _ = (second_last_inline_token, current_token)
 
     inline_height = ParserHelper.count_newlines_in_text(last_inline_token.raw_tag)
-    if last_block_token.is_setext_heading:
-        inline_height += 1
-    return inline_height
+    return inline_height + 1 if last_block_token.is_setext_heading else inline_height
 
 
 # pylint: enable=unused-argument
@@ -2251,10 +2260,7 @@ def __handle_last_token_end_emphasis(
 ):
     _ = (last_block_token, second_last_inline_token, last_inline_token)
 
-    inline_height = 0
-    if current_token and current_token.is_setext_heading_end:
-        inline_height += 1
-    return inline_height
+    return 1 if current_token and current_token.is_setext_heading_end else 0
 
 
 # pylint: enable=unused-argument
@@ -2488,9 +2494,9 @@ def __verify_inline(  # noqa: C901
                     last_block_token, current_inline_token, last_token_stack
                 )
             else:
-                pre_last_token = None
-                if token_index >= 2:
-                    pre_last_token = inline_tokens[token_index - 2]
+                pre_last_token = (
+                    inline_tokens[token_index - 2] if token_index >= 2 else None
+                )
                 __verify_next_inline(
                     last_block_token,
                     pre_last_token,
@@ -2566,9 +2572,7 @@ def __verify_inline(  # noqa: C901
 
         assert not link_stack
 
-        second_last_inline_token = None
-        if len(inline_tokens) > 1:
-            second_last_inline_token = inline_tokens[-2]
+        second_last_inline_token = inline_tokens[-2] if len(inline_tokens) > 1 else None
 
         if number_of_lines is None:
             assert current_block_token

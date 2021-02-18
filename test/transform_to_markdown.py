@@ -205,9 +205,11 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(transformed_data)
                 + "<--"
             )
-            next_token = None
-            if token_index < len(actual_tokens) - 1:
-                next_token = actual_tokens[token_index + 1]
+            next_token = (
+                actual_tokens[token_index + 1]
+                if token_index < len(actual_tokens) - 1
+                else None
+            )
             skip_merge = False
 
             print(
@@ -437,7 +439,11 @@ class TransformToMarkdown:
                 new_data += ParserHelper.newline_character
 
         print("??>" + ParserHelper.make_value_visible(new_data) + "<<")
-        return ParserHelper.resolve_all_from_text(new_data), delayed_continue, continue_sequence
+        return (
+            ParserHelper.resolve_all_from_text(new_data),
+            delayed_continue,
+            continue_sequence,
+        )
 
     # pylint: enable=too-many-arguments, too-many-branches, unused-argument
 
@@ -460,17 +466,18 @@ class TransformToMarkdown:
         separate.
         """
 
-        top_of_list_token_stack = None
-        if self.container_token_stack:
-            top_of_list_token_stack = self.container_token_stack[-1]
+        top_of_list_token_stack = (
+            self.container_token_stack[-1] if self.container_token_stack else None
+        )
 
         if not top_of_list_token_stack:
             print("nada")
 
-            if self.block_stack and self.block_stack[-1].is_code_block:
-                data_to_emit = ParserHelper.resolve_noops_from_text(new_data)
-            else:
-                data_to_emit = new_data
+            data_to_emit = (
+                ParserHelper.resolve_noops_from_text(new_data)
+                if self.block_stack and self.block_stack[-1].is_code_block
+                else new_data
+            )
             return (
                 data_to_emit,
                 delayed_continue,
@@ -887,14 +894,16 @@ class TransformToMarkdown:
         self.block_stack.append(current_token)
 
         info_text = current_token.extracted_whitespace_before_info_string
-        if current_token.pre_extracted_text:
-            info_text += current_token.pre_extracted_text
-        else:
-            info_text += current_token.extracted_text
-        if current_token.pre_text_after_extracted_text:
-            info_text += current_token.pre_text_after_extracted_text
-        else:
-            info_text += current_token.text_after_extracted_text
+        info_text += (
+            current_token.pre_extracted_text
+            if current_token.pre_extracted_text
+            else current_token.extracted_text
+        )
+        info_text += (
+            current_token.pre_text_after_extracted_text
+            if current_token.pre_text_after_extracted_text
+            else current_token.text_after_extracted_text
+        )
 
         return (
             current_token.extracted_whitespace
@@ -921,9 +930,11 @@ class TransformToMarkdown:
             assert len(split_extra_data) >= 2
             fence_count = int(split_extra_data[1])
 
-            prefix_whitespace = ParserHelper.newline_character
-            if previous_token.is_blank_line or previous_token.is_fenced_code_block:
-                prefix_whitespace = ""
+            prefix_whitespace = (
+                ""
+                if previous_token.is_blank_line or previous_token.is_fenced_code_block
+                else ParserHelper.newline_character
+            )
             prefix_whitespace += current_token.extracted_whitespace
 
             del self.block_stack[-1]
@@ -933,9 +944,11 @@ class TransformToMarkdown:
                 + ParserHelper.newline_character
             )
 
-        code_end_sequence = ""
-        if next_token is not None and not previous_token.is_fenced_code_block:
-            code_end_sequence = ParserHelper.newline_character
+        code_end_sequence = (
+            ParserHelper.newline_character
+            if next_token is not None and not previous_token.is_fenced_code_block
+            else ""
+        )
         del self.block_stack[-1]
         return code_end_sequence
 
@@ -967,7 +980,9 @@ class TransformToMarkdown:
             start_sequence = start_sequence.ljust(
                 current_token.indent_level - previous_indent, " "
             )
-        return start_sequence, ParserHelper.repeat_string(" ", current_token.indent_level)
+        return start_sequence, ParserHelper.repeat_string(
+            " ", current_token.indent_level
+        )
 
     # pylint: enable=unused-argument
 
@@ -1064,7 +1079,11 @@ class TransformToMarkdown:
             )
             new_data = composed_data
 
-        return ParserHelper.resolve_all_from_text(new_data), delayed_continue, continue_sequence
+        return (
+            ParserHelper.resolve_all_from_text(new_data),
+            delayed_continue,
+            continue_sequence,
+        )
 
     # pylint: enable=unused-argument
     # pylint: enable=too-many-arguments
@@ -1127,7 +1146,9 @@ class TransformToMarkdown:
                 " ",
             )
             print(">>start_sequence>>:" + str(start_sequence) + ":<<")
-        return start_sequence, ParserHelper.repeat_string(" ", current_token.indent_level)
+        return start_sequence, ParserHelper.repeat_string(
+            " ", current_token.indent_level
+        )
 
     @classmethod
     def __adjust_whitespace_for_block_quote(
@@ -1159,12 +1180,10 @@ class TransformToMarkdown:
 
     def __reset_container_continue_sequence(self):
         continue_sequence = ""
-        if self.container_token_stack:
-            # TODO what about bq?
-            if self.container_token_stack[-1].is_list_start:
-                continue_sequence = ParserHelper.repeat_string(
-                    " ", self.container_token_stack[-1].indent_level
-                )
+        if self.container_token_stack and self.container_token_stack[-1].is_list_start:
+            continue_sequence = ParserHelper.repeat_string(
+                " ", self.container_token_stack[-1].indent_level
+            )
         return continue_sequence
 
     # pylint: disable=unused-argument
@@ -1344,21 +1363,21 @@ class TransformToMarkdown:
         """
         _ = previous_token
 
-        if current_token.link_name_debug:
-            link_name = current_token.link_name_debug
-        else:
-            link_name = current_token.link_name
-
-        if current_token.link_destination_raw:
-            link_destination = current_token.link_destination_raw
-        else:
-            link_destination = current_token.link_destination
-
-        if current_token.link_title_raw:
-            link_title = current_token.link_title_raw
-        else:
-            link_title = current_token.link_title
-
+        link_name = (
+            current_token.link_name_debug
+            if current_token.link_name_debug
+            else current_token.link_name
+        )
+        link_destination = (
+            current_token.link_destination_raw
+            if current_token.link_destination_raw
+            else current_token.link_destination
+        )
+        link_title = (
+            current_token.link_title_raw
+            if current_token.link_title_raw
+            else current_token.link_title
+        )
         return (
             current_token.extracted_whitespace
             + "["
@@ -1513,10 +1532,7 @@ class TransformToMarkdown:
         """
         _ = previous_token
 
-        if self.block_stack[-1].is_inline_link:
-            return ""
-
-        return current_token.line_end
+        return "" if self.block_stack[-1].is_inline_link else current_token.line_end
 
     # pylint: enable=unused-argument
 
@@ -1527,11 +1543,12 @@ class TransformToMarkdown:
         """
         _ = previous_token
 
-        if self.block_stack[-1].is_inline_link:
-            return ""
-
-        return ParserHelper.repeat_string(
-            current_token.emphasis_character, current_token.emphasis_length
+        return (
+            ""
+            if self.block_stack[-1].is_inline_link
+            else ParserHelper.repeat_string(
+                current_token.emphasis_character, current_token.emphasis_length
+            )
         )
 
     # pylint: enable=unused-argument
@@ -1545,11 +1562,13 @@ class TransformToMarkdown:
         """
         _ = (previous_token, next_token)
 
-        if self.block_stack[-1].is_inline_link:
-            return ""
-        return ParserHelper.repeat_string(
-            current_token.start_markdown_token.emphasis_character,
-            current_token.start_markdown_token.emphasis_length,
+        return (
+            ""
+            if self.block_stack[-1].is_inline_link
+            else ParserHelper.repeat_string(
+                current_token.start_markdown_token.emphasis_character,
+                current_token.start_markdown_token.emphasis_length,
+            )
         )
 
     # pylint: enable=unused-argument
@@ -1561,9 +1580,11 @@ class TransformToMarkdown:
         """
         _ = previous_token
 
-        if self.block_stack[-1].is_inline_link:
-            return ""
-        return "<" + current_token.autolink_text + ">"
+        return (
+            ""
+            if self.block_stack[-1].is_inline_link
+            else "<" + current_token.autolink_text + ">"
+        )
 
     # pylint: enable=unused-argument
 
@@ -1574,9 +1595,11 @@ class TransformToMarkdown:
         """
         _ = previous_token
 
-        if self.block_stack[-1].is_inline_link:
-            return ""
-        return "<" + current_token.autolink_text + ">"
+        return (
+            ""
+            if self.block_stack[-1].is_inline_link
+            else "<" + current_token.autolink_text + ">"
+        )
 
     # pylint: enable=unused-argument
 

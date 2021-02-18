@@ -46,9 +46,7 @@ class RuleMd002(Plugin):
         Event that a new token is being processed.
         """
         hash_count = None
-        if token.is_atx_heading:
-            hash_count = token.hash_count
-        elif token.is_setext_heading:
+        if token.is_atx_heading or token.is_setext_heading:
             hash_count = token.hash_count
         if not self.__have_seen_first_heading and hash_count:
             self.__have_seen_first_heading = True

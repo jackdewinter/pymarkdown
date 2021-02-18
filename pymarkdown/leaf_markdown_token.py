@@ -49,8 +49,6 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
 
     def __init__(self, extracted_whitespace, position_marker, column_delta=0):
 
-        line_number = 0
-        column_number = 0
         if position_marker:
             line_number = position_marker.line_number
             column_number = (
@@ -59,6 +57,9 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
                 + 1
                 - column_delta
             )
+        else:
+            line_number = 0
+            column_number = 0
 
         LeafMarkdownToken.__init__(
             self,
