@@ -376,7 +376,7 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(actual_tokens[ind])
             )
             if actual_tokens[ind].is_paragraph:
-                if transformed_data.endswith(ParserHelper.newline_character) and (
+                if (transformed_data and transformed_data[-1] == ParserHelper.newline_character) and (
                     current_token.is_text
                     or current_token.is_inline_emphasis
                     or current_token.is_inline_link
@@ -422,7 +422,7 @@ class TransformToMarkdown:
                 + ":<"
             )
             if current_token.is_setext_heading_end and next_token.is_list_end:
-                assert new_data.endswith(ParserHelper.newline_character)
+                assert new_data and new_data[-1] == ParserHelper.newline_character
                 new_data = new_data[:-1]
             new_data, delayed_continue = self.__merge_with_container_data(
                 new_data,
@@ -523,7 +523,7 @@ class TransformToMarkdown:
         """
         split_new_data = new_data.split(ParserHelper.newline_character)
         split_new_data_length = len(split_new_data)
-        if new_data.endswith(ParserHelper.newline_character):
+        if new_data and new_data[-1] == ParserHelper.newline_character:
             split_new_data_length -= 1
         for split_index in range(1, split_new_data_length):
             if (
@@ -551,7 +551,7 @@ class TransformToMarkdown:
         for next_split_item in range(1, len(split_new_data)):
             next_continue_separator = continue_sequence
             next_data_item = split_new_data[next_split_item]
-            while next_data_item.startswith(ParserHelper.blech_character):
+            while next_data_item and next_data_item[0] == ParserHelper.blech_character:
                 next_continue_separator = next_continue_separator[1:]
                 next_data_item = next_data_item[1:]
             next_continue_separator += next_data_item
@@ -666,9 +666,7 @@ class TransformToMarkdown:
         if ParserHelper.replace_noop_character in new_data:
             print("1>>")
             new_data = self.__merge_with_noop_in_data(new_data, continue_sequence)
-        elif not block_should_end_with_newline and new_data.endswith(
-            ParserHelper.newline_character
-        ):
+        elif not block_should_end_with_newline and new_data and new_data[-1] == ParserHelper.newline_character:
             print("2>>")
             delayed_continue = continue_sequence
             last_block_quote_block = self.__find_last_block_quote_on_stack()
@@ -698,7 +696,7 @@ class TransformToMarkdown:
                 print("2>>next_token>>" + ParserHelper.make_value_visible(next_token))
                 if current_token.is_link_reference_definition:
                     did_remove_trailing_newline = False
-                    if new_data.endswith(ParserHelper.newline_character):
+                    if new_data and new_data[-1] == ParserHelper.newline_character:
                         new_data = new_data[0:-1]
                         did_remove_trailing_newline = True
                     new_data = self.__merge_with_leading_spaces_in_data(
@@ -716,7 +714,7 @@ class TransformToMarkdown:
             )
             block_ends_with_newline = (
                 block_should_end_with_newline
-                and new_data.endswith(ParserHelper.newline_character)
+                and new_data and new_data[-1] == ParserHelper.newline_character
             )
             print("3>>block_ends_with_newline>>" + str(block_ends_with_newline))
             remove_trailing_newline = False
@@ -765,7 +763,7 @@ class TransformToMarkdown:
                 + ParserHelper.make_value_visible(new_data)
                 + ">>"
             )
-            assert new_data.startswith(ParserHelper.newline_character)
+            assert new_data and new_data[0] == ParserHelper.newline_character
             new_data = new_data[1:]
             print(
                 "special_text_in_list_exception<<"

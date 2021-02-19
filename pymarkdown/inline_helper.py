@@ -783,7 +783,7 @@ class InlineHelper:
 
             # Downloaded file is for HTML5, which includes some names that do
             # not end with ";".  These are excluded.
-            if not next_name.endswith(InlineHelper.__skip_html5_entities_ending_with):
+            if not (next_name[-1] == InlineHelper.__skip_html5_entities_ending_with):
                 continue
 
             char_entity = results_dictionary[next_name]

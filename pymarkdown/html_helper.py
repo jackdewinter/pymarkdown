@@ -524,9 +524,9 @@ class HtmlHelper:
                 parse_index = parse_index + special_start_size + len(special_end)
                 if (not do_extra_check) or (
                     not (
-                        remaining_line.startswith(HtmlHelper.__raw_html_exclusion_1)
+                        remaining_line[0] == HtmlHelper.__raw_html_exclusion_1
                         or remaining_line.startswith(HtmlHelper.__raw_html_exclusion_2)
-                        or remaining_line.endswith(HtmlHelper.__raw_html_exclusion_3)
+                        or remaining_line[-1] == HtmlHelper.__raw_html_exclusion_3
                         or HtmlHelper.__raw_html_exclusion_4 in remaining_line
                     )
                 ):
@@ -649,9 +649,7 @@ class HtmlHelper:
             html_block_type = HtmlHelper.html_block_1
         else:
             adjusted_remaining_html_tag = remaining_html_tag
-            is_end_tag = adjusted_remaining_html_tag.startswith(
-                HtmlHelper.__html_tag_start
-            )
+            is_end_tag = adjusted_remaining_html_tag and adjusted_remaining_html_tag[0] == HtmlHelper.__html_tag_start
             if is_end_tag:
                 adjusted_remaining_html_tag = adjusted_remaining_html_tag[1:]
 
@@ -659,7 +657,7 @@ class HtmlHelper:
             if (
                 character_index < line_to_parse_size
                 and line_to_parse[character_index] == HtmlHelper.__html_tag_end
-                and adjusted_remaining_html_tag.endswith(HtmlHelper.__html_tag_start)
+                and adjusted_remaining_html_tag and adjusted_remaining_html_tag[-1] == HtmlHelper.__html_tag_start
             ):
                 adjusted_remaining_html_tag = adjusted_remaining_html_tag[0:-1]
             if adjusted_remaining_html_tag in HtmlHelper.__html_block_6_start:

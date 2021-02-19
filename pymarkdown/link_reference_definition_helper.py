@@ -252,8 +252,7 @@ class LinkReferenceDefinitionHelper:
             remaining_line = line_to_parse[start_index + 1 :]
             continue_with_lrd = True
             if (
-                InlineHelper.backslash_character in remaining_line
-                and remaining_line.endswith(InlineHelper.backslash_character)
+                remaining_line and remaining_line[-1] ==InlineHelper.backslash_character
             ):
                 remaining_line_size = len(remaining_line)
                 POGGER.debug(">>$<<$", remaining_line, remaining_line_size)
@@ -365,9 +364,7 @@ class LinkReferenceDefinitionHelper:
             normalized_destination,
         )
 
-        if not inline_title and line_title_whitespace.endswith(
-            ParserHelper.newline_character
-        ):
+        if not inline_title and line_title_whitespace and line_title_whitespace[-1] == ParserHelper.newline_character:
             line_title_whitespace = line_title_whitespace[0:-1]
 
         POGGER.debug(">>inline_link>>$<<", inline_link)

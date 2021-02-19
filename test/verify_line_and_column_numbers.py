@@ -1782,12 +1782,8 @@ def __verify_next_inline_hard_break(
         new_column_number += len(ws_for_new_line)
     elif last_token.is_setext_heading:
         assert current_inline_token.is_text
-        assert current_inline_token.token_text.startswith(
-            ParserHelper.newline_character
-        )
-        assert current_inline_token.end_whitespace.startswith(
-            ParserHelper.newline_character
-        )
+        assert current_inline_token.token_text and current_inline_token.token_text[0] == ParserHelper.newline_character
+        assert current_inline_token.end_whitespace and current_inline_token.end_whitespace[0] == ParserHelper.newline_character
         split_whitespace = current_inline_token.end_whitespace.split(
             ParserHelper.newline_character
         )
@@ -1942,7 +1938,7 @@ def __verify_next_inline_text(
 ):
     current_line = previous_inline_token.token_text
     if pre_previous_inline_token and pre_previous_inline_token.is_inline_hard_break:
-        assert current_line.startswith(ParserHelper.newline_character)
+        assert current_line and current_line[0] == ParserHelper.newline_character
         current_line = current_line[1:]
     else:
         if not pre_previous_inline_token and last_token.is_atx_heading:
@@ -1974,7 +1970,7 @@ def __verify_next_inline_text(
             )
 
             if split_end_whitespace:
-                assert split_end_whitespace.endswith("\x02")
+                assert split_end_whitespace [-1] == "\x02"
                 split_end_whitespace = split_end_whitespace[0:-1]
                 print(
                     "split_end_whitespace>"

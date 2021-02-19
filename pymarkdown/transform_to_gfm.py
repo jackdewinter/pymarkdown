@@ -253,7 +253,7 @@ class TransformToGfm:
 
             transform_state.last_token = next_token
             transform_state.actual_token_index += 1
-        if output_html.endswith(ParserHelper.newline_character):
+        if output_html and output_html[-1] == ParserHelper.newline_character:
             output_html = output_html[:-1]
         return output_html
 
@@ -368,7 +368,7 @@ class TransformToGfm:
         """
         _ = next_token
 
-        if output_html and not output_html.endswith(ParserHelper.newline_character):
+        if output_html and not (output_html[-1] == ParserHelper.newline_character):
             output_html += ParserHelper.newline_character
         transform_state.is_in_loose_list = True
         return output_html + "<blockquote>" + ParserHelper.newline_character
@@ -586,7 +586,7 @@ class TransformToGfm:
         """
         _ = next_token
 
-        if output_html.endswith(">"):
+        if output_html and output_html[-1] == ">":
             output_html += ParserHelper.newline_character
         transform_state.add_trailing_text = "</li>"
         transform_state.add_leading_text = "<li>"
