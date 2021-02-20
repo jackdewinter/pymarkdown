@@ -51,17 +51,19 @@ class TransformState:
         """
         Initializes a new instance of the TransformState class.
         """
-        self.is_in_code_block = False
-        self.is_in_fenced_code_block = False
-        self.is_in_html_block = False
-        self.is_in_loose_list = True
-        self.transform_stack = []
-        self.add_trailing_text = None
-        self.add_leading_text = None
-        self.actual_tokens = actual_tokens
-        self.actual_token_index = 0
-        self.next_token = None
-        self.last_token = None
+        (
+            self.is_in_code_block,
+            self.is_in_fenced_code_block,
+            self.is_in_html_block,
+            self.is_in_loose_list,
+            self.transform_stack,
+            self.add_trailing_text,
+            self.add_leading_text,
+            self.actual_tokens,
+            self.actual_token_index,
+            self.next_token,
+            self.last_token,
+        ) = (False, False, False, True, [], None, None, actual_tokens, 0, None, None)
 
 
 # pylint: enable=too-many-instance-attributes, too-few-public-methods
@@ -94,8 +96,7 @@ class TransformToGfm:
     raw_html_percent_escape_ascii_chars = '"%[\\]^`{}|'
 
     def __init__(self):
-        self.start_token_handlers = {}
-        self.end_token_handlers = {}
+        self.start_token_handlers, self.end_token_handlers = {}, {}
 
         self.register_handlers(
             ThematicBreakMarkdownToken, self.__handle_thematic_break_token
@@ -201,13 +202,17 @@ class TransformToGfm:
         Transform the tokens into html.
         """
         POGGER.debug("\n\n---\n")
-        output_html = ""
-        transform_state = TransformState(actual_tokens)
-        actual_tokens_size = len(actual_tokens)
+        transform_state, output_html, actual_tokens_size = (
+            TransformState(actual_tokens),
+            "",
+            len(actual_tokens),
+        )
         for next_token in transform_state.actual_tokens:
-            transform_state.add_trailing_text = None
-            transform_state.add_leading_text = None
-            transform_state.next_token = None
+            (
+                transform_state.add_trailing_text,
+                transform_state.add_leading_text,
+                transform_state.next_token,
+            ) = (None, None, None)
             if (transform_state.actual_token_index + 1) < actual_tokens_size:
                 transform_state.next_token = actual_tokens[
                     transform_state.actual_token_index + 1
@@ -368,7 +373,7 @@ class TransformToGfm:
         """
         _ = next_token
 
-        if output_html and not (output_html[-1] == ParserHelper.newline_character):
+        if output_html and not output_html[-1] == ParserHelper.newline_character:
             output_html += ParserHelper.newline_character
         transform_state.is_in_loose_list = True
         return output_html + "<blockquote>" + ParserHelper.newline_character
@@ -407,8 +412,10 @@ class TransformToGfm:
             output_html = ParserHelper.newline_character
         elif output_html and output_html[-1] != ParserHelper.newline_character:
             output_html += ParserHelper.newline_character
-        transform_state.is_in_code_block = True
-        transform_state.is_in_fenced_code_block = False
+        transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (
+            True,
+            False,
+        )
         return output_html + "<pre><code>"
 
     @classmethod
@@ -442,8 +449,10 @@ class TransformToGfm:
             output_html += ParserHelper.newline_character
         elif output_html and output_html[-1] != ParserHelper.newline_character:
             output_html += ParserHelper.newline_character
-        transform_state.is_in_code_block = True
-        transform_state.is_in_fenced_code_block = True
+        transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (
+            True,
+            True,
+        )
         return output_html + "<pre><code" + inner_tag + ">"
 
     @classmethod
@@ -488,8 +497,10 @@ class TransformToGfm:
         elif transform_state.last_token.is_blank_line and not next_token.was_forced:
             POGGER.debug("#3")
             output_html += ParserHelper.newline_character
-        transform_state.is_in_code_block = False
-        transform_state.is_in_fenced_code_block = False
+        transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (
+            False,
+            False,
+        )
         return output_html + "</code></pre>" + ParserHelper.newline_character
 
     @classmethod
@@ -588,8 +599,10 @@ class TransformToGfm:
 
         if output_html and output_html[-1] == ">":
             output_html += ParserHelper.newline_character
-        transform_state.add_trailing_text = "</li>"
-        transform_state.add_leading_text = "<li>"
+        transform_state.add_trailing_text, transform_state.add_leading_text = (
+            "</li>",
+            "<li>",
+        )
         return output_html
 
     @classmethod

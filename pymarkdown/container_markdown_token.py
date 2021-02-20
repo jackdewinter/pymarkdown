@@ -46,9 +46,11 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
     def __init__(
         self, indent_level, position_marker, extracted_whitespace, list_start_content
     ):
-        self.__indent_level = indent_level
-        self.__extracted_whitespace = extracted_whitespace
-        self.__list_start_content = list_start_content
+        self.__indent_level, self.__extracted_whitespace, self.__list_start_content = (
+            indent_level,
+            extracted_whitespace,
+            list_start_content,
+        )
         ContainerMarkdownToken.__init__(
             self,
             MarkdownToken._token_new_list_item,
@@ -97,13 +99,23 @@ class OrderedListStartMarkdownToken(ContainerMarkdownToken):
         extracted_whitespace,
         position_marker,
     ):
-        self.__list_start_sequence = list_start_sequence
-        self.__list_start_content = list_start_content
-        self.__indent_level = indent_level
-        self.__extracted_whitespace = extracted_whitespace
-        self.__leading_spaces = None
-        self.is_loose = True
-        self.leading_spaces_index = 0
+        (
+            self.__list_start_sequence,
+            self.__list_start_content,
+            self.__indent_level,
+            self.__extracted_whitespace,
+            self.__leading_spaces,
+            self.is_loose,
+            self.leading_spaces_index,
+        ) = (
+            list_start_sequence,
+            list_start_content,
+            indent_level,
+            extracted_whitespace,
+            None,
+            True,
+            0,
+        )
         ContainerMarkdownToken.__init__(
             self,
             MarkdownToken._token_ordered_list_start,
@@ -155,8 +167,10 @@ class OrderedListStartMarkdownToken(ContainerMarkdownToken):
         """
         assert new_list_item_token and new_list_item_token.is_new_list_item
 
-        self.__indent_level = new_list_item_token.indent_level
-        self.__extracted_whitespace = new_list_item_token.extracted_whitespace
+        self.__indent_level, self.__extracted_whitespace = (
+            new_list_item_token.indent_level,
+            new_list_item_token.extracted_whitespace,
+        )
         self.__compose_extra_data_field()
 
     def __compose_extra_data_field(self):
@@ -199,12 +213,14 @@ class UnorderedListStartMarkdownToken(ContainerMarkdownToken):
     def __init__(
         self, list_start_sequence, indent_level, extracted_whitespace, position_marker
     ):
-        self.__list_start_sequence = list_start_sequence
-        self.__indent_level = indent_level
-        self.__extracted_whitespace = extracted_whitespace
-        self.__leading_spaces = None
-        self.is_loose = True
-        self.leading_spaces_index = 0
+        (
+            self.__list_start_sequence,
+            self.__indent_level,
+            self.__extracted_whitespace,
+            self.__leading_spaces,
+            self.is_loose,
+            self.leading_spaces_index,
+        ) = (list_start_sequence, indent_level, extracted_whitespace, None, True, 0)
         ContainerMarkdownToken.__init__(
             self,
             MarkdownToken._token_unordered_list_start,
@@ -247,8 +263,10 @@ class UnorderedListStartMarkdownToken(ContainerMarkdownToken):
         """
         assert new_list_item_token and new_list_item_token.is_new_list_item
 
-        self.__indent_level = new_list_item_token.indent_level
-        self.__extracted_whitespace = new_list_item_token.extracted_whitespace
+        self.__indent_level, self.__extracted_whitespace = (
+            new_list_item_token.indent_level,
+            new_list_item_token.extracted_whitespace,
+        )
         self.__compose_extra_data_field()
 
     def __compose_extra_data_field(self):
@@ -284,9 +302,11 @@ class BlockQuoteMarkdownToken(ContainerMarkdownToken):
     """
 
     def __init__(self, extracted_whitespace, position_marker):
-        self.__extracted_whitespace = extracted_whitespace
-        self.__leading_spaces = ""
-        self.leading_text_index = 0
+        self.__extracted_whitespace, self.__leading_spaces, self.leading_text_index = (
+            extracted_whitespace,
+            "",
+            0,
+        )
         ContainerMarkdownToken.__init__(
             self,
             MarkdownToken._token_block_quote,

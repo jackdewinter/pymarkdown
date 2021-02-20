@@ -50,16 +50,14 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
     def __init__(self, extracted_whitespace, position_marker, column_delta=0):
 
         if position_marker:
-            line_number = position_marker.line_number
-            column_number = (
+            line_number, column_number = position_marker.line_number, (
                 position_marker.index_number
                 + position_marker.index_indent
                 + 1
                 - column_delta
             )
         else:
-            line_number = 0
-            column_number = 0
+            line_number, column_number = 0, 0
 
         LeafMarkdownToken.__init__(
             self,
@@ -80,9 +78,11 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
     """
 
     def __init__(self, extracted_whitespace, position_marker):
-        self.__extracted_whitespace = extracted_whitespace
-        self.__final_whitespace = ""
-        self.rehydrate_index = 0
+        self.__extracted_whitespace, self.__final_whitespace, self.rehydrate_index = (
+            extracted_whitespace,
+            "",
+            0,
+        )
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_paragraph,
@@ -172,16 +172,14 @@ class HtmlBlockMarkdownToken(LeafMarkdownToken):
 
     def __init__(self, position_marker, extracted_whitespace):
         if position_marker:
-            line_number = position_marker.line_number
-            column_number = (
+            line_number, column_number = position_marker.line_number, (
                 position_marker.index_number
                 + position_marker.index_indent
                 + 1
                 - len(extracted_whitespace)
             )
         else:
-            line_number = -1
-            column_number = -1
+            line_number, column_number = -1, -1
 
         LeafMarkdownToken.__init__(
             self,
@@ -213,32 +211,35 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
         self.__link_name = link_name
 
         if link_value:
-            self.__link_destination = link_value[0]
-            self.__link_title = link_value[1]
+            self.__link_destination, self.__link_title = link_value[0], link_value[1]
         else:
-            self.__link_destination = ""
-            self.__link_title = ""
+            self.__link_destination, self.__link_title = "", ""
 
         if link_debug:
-            self.__link_name_debug = link_debug[0]
-            if self.__link_name_debug == self.__link_name:
-                self.__link_name_debug = ""
-            self.__link_destination_whitespace = link_debug[1]
-            self.__link_destination_raw = link_debug[2]
-            if self.__link_destination_raw == self.__link_destination:
-                self.__link_destination_raw = ""
-            self.__link_title_whitespace = link_debug[3]
-            self.__link_title_raw = link_debug[4]
-            if self.__link_title_raw == self.__link_title:
-                self.__link_title_raw = ""
-            self.__end_whitespace = link_debug[5]
+            (
+                self.__link_name_debug,
+                self.__link_destination_whitespace,
+                self.__link_destination_raw,
+                self.__link_title_whitespace,
+                self.__link_title_raw,
+                self.__end_whitespace,
+            ) = (
+                "" if link_debug[0] == self.__link_name else link_debug[0],
+                link_debug[1],
+                "" if link_debug[2] == self.__link_destination else link_debug[2],
+                link_debug[3],
+                "" if link_debug[4] == self.__link_title else link_debug[4],
+                link_debug[5],
+            )
         else:
-            self.__link_name_debug = ""
-            self.__link_destination_whitespace = ""
-            self.__link_destination_raw = ""
-            self.__link_title_whitespace = ""
-            self.__link_title_raw = ""
-            self.__end_whitespace = ""
+            (
+                self.__link_name_debug,
+                self.__link_destination_whitespace,
+                self.__link_destination_raw,
+                self.__link_title_whitespace,
+                self.__link_title_raw,
+                self.__end_whitespace,
+            ) = ("", "", "", "", "", "")
         extra_data = (
             str(self.did_add_definition)
             + MarkdownToken.extra_data_separator
@@ -358,8 +359,10 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
         extracted_whitespace,
         position_marker,
     ):
-        self.__hash_count = hash_count
-        self.__remove_trailing_count = remove_trailing_count
+        self.__hash_count, self.__remove_trailing_count = (
+            hash_count,
+            remove_trailing_count,
+        )
 
         LeafMarkdownToken.__init__(
             self,
@@ -415,21 +418,27 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
         position_marker,
         para_token,
     ):
-        self.__heading_character = heading_character
-        self.__heading_character_count = heading_character_count
-        self.__final_whitespace = ""
+        (
+            self.__heading_character,
+            self.__heading_character_count,
+            self.__final_whitespace,
+            self.__original_line_number,
+            self.__original_column_number,
+        ) = (
+            heading_character,
+            heading_character_count,
+            "",
+            para_token.line_number if para_token else -1,
+            para_token.column_number if para_token else -1,
+        )
+
         if self.__heading_character == "=":
             self.__hash_count = 1
         elif self.__heading_character == "-":
             self.__hash_count = 2
         else:
             self.__hash_count = -1
-        if para_token:
-            self.__original_line_number = para_token.line_number
-            self.__original_column_number = para_token.column_number
-        else:
-            self.__original_line_number = -1
-            self.__original_column_number = -1
+
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_setext_heading,
@@ -580,15 +589,23 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
         extracted_whitespace_before_info_string,
         position_marker,
     ):
-        self.__extracted_text = extracted_text
-        self.__pre_extracted_text = pre_extracted_text
-        self.__extracted_whitespace_before_info_string = (
-            extracted_whitespace_before_info_string
+        (
+            self.__extracted_text,
+            self.__pre_extracted_text,
+            self.__extracted_whitespace_before_info_string,
+            self.__text_after_extracted_text,
+            self.__pre_text_after_extracted_text,
+            self.__fence_character,
+            self.__fence_count,
+        ) = (
+            extracted_text,
+            pre_extracted_text,
+            extracted_whitespace_before_info_string,
+            text_after_extracted_text,
+            pre_text_after_extracted_text,
+            fence_character,
+            fence_count,
         )
-        self.__text_after_extracted_text = text_after_extracted_text
-        self.__pre_text_after_extracted_text = pre_text_after_extracted_text
-        self.__fence_character = fence_character
-        self.__fence_count = fence_count
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_fenced_code_block,

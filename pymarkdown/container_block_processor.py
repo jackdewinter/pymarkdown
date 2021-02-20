@@ -264,8 +264,7 @@ class ContainerBlockProcessor:
             and parser_state.token_stack[-2].is_block_quote
         ):
             assert text_removed_by_container is None
-            text_removed_by_container = used_indent
-            force_it = True
+            text_removed_by_container, force_it = used_indent, True
 
         newer_position_marker = PositionMarker(
             position_marker.line_number,
@@ -475,9 +474,12 @@ class ContainerBlockProcessor:
             foobar=foobar,
         )
 
-        stack_bq_count = parser_state.count_of_block_quotes_on_stack()
-
-        return current_container_blocks, adj_ws, stack_bq_count, this_bq_count
+        return (
+            current_container_blocks,
+            adj_ws,
+            parser_state.count_of_block_quotes_on_stack(),
+            this_bq_count,
+        )
 
     @staticmethod
     def __calculate_adjusted_whitespace(
@@ -491,8 +493,10 @@ class ContainerBlockProcessor:
         Based on the last container on the stack, determine what the adjusted whitespace is.
         """
 
-        adj_ws = extracted_whitespace
-        stack_index = parser_state.find_last_list_block_on_stack()
+        adj_ws, stack_index = (
+            extracted_whitespace,
+            parser_state.find_last_list_block_on_stack(),
+        )
         if stack_index <= 0:
             POGGER.debug("PLFCB>>No Started lists")
             assert not current_container_blocks
@@ -1014,8 +1018,7 @@ class ContainerBlockProcessor:
         """
         Take care of the processing for link reference definitions.
         """
-        requeue_line_info = None
-        new_tokens = []
+        requeue_line_info, new_tokens = None, []
 
         POGGER.debug(
             "handle_link_reference_definition>>pre_tokens>>$<<",
@@ -1103,10 +1106,9 @@ class ContainerBlockProcessor:
             parser_state, extracted_whitespace
         )
 
-        outer_processed = False
         outer_processed = ContainerBlockProcessor.__handle_fenced_code_block(
             parser_state,
-            outer_processed,
+            False,
             position_marker,
             extracted_whitespace,
             new_tokens,

@@ -81,12 +81,16 @@ class InlineProcessor:
     @staticmethod
     def __handle_inline_control_character(inline_request):
         inline_response = InlineResponse()
-        inline_response.new_index = inline_request.next_index + 1
-        inline_response.new_string = (
+        (
+            inline_response.new_index,
+            inline_response.new_string,
+            inline_response.delta_column_number,
+        ) = (
+            inline_request.next_index + 1,
             ParserHelper.escape_character
-            + inline_request.source_text[inline_request.next_index]
+            + inline_request.source_text[inline_request.next_index],
+            1,
         )
-        inline_response.delta_column_number = 1
         return inline_response
 
     @staticmethod
@@ -120,12 +124,9 @@ class InlineProcessor:
             POGGER.info(">>$<<", next_token)
         POGGER.info("-----")
 
-        coalesced_stack = []
-
-        coalesced_list = []
+        coalesced_stack, coalesced_list, current_token = [], [], coalesced_results[0]
         coalesced_list.extend(coalesced_results[0:1])
 
-        current_token = coalesced_results[0]
         POGGER.debug("STACK?:$", current_token)
         if current_token.is_container:
             POGGER.debug("STACK:$", coalesced_stack)
@@ -145,11 +146,12 @@ class InlineProcessor:
                     encoded_text = InlineHelper.append_text(
                         "", coalesced_results[coalesce_index].token_text
                     )
-                    line_number_delta = 0
-                    new_column_number = coalesced_list[-1].column_number
+                    line_number_delta, new_column_number = (
+                        0,
+                        coalesced_list[-1].column_number,
+                    )
                     if coalesced_list[-1].is_fenced_code_block:
-                        line_number_delta = 1
-                        new_column_number = 1
+                        line_number_delta, new_column_number = 1, 1
 
                         POGGER.info("coalesced_stack:$<", coalesced_stack)
                         if coalesced_stack:
@@ -193,10 +195,12 @@ class InlineProcessor:
                         processed_tokens,
                     )
                 elif coalesced_list[-1].is_setext_heading:
-                    combined_text = coalesced_results[coalesce_index].token_text
-                    combined_whitespace_text = coalesced_results[
-                        coalesce_index
-                    ].extracted_whitespace.replace(ParserHelper.tab_character, "    ")
+                    combined_text, combined_whitespace_text = (
+                        coalesced_results[coalesce_index].token_text,
+                        coalesced_results[coalesce_index].extracted_whitespace.replace(
+                            ParserHelper.tab_character, "    "
+                        ),
+                    )
                     POGGER.debug(
                         "combined_text>>$",
                         combined_text,
@@ -327,9 +331,11 @@ class InlineProcessor:
             assert not inline_response.consume_rest_of_line
         else:
             inline_response = InlineResponse()
-            inline_response.new_string = LinkHelper.image_start_sequence[0]
-            inline_response.new_index = inline_request.next_index + 1
-            inline_response.delta_column_number = 1
+            (
+                inline_response.new_string,
+                inline_response.new_index,
+                inline_response.delta_column_number,
+            ) = (LinkHelper.image_start_sequence[0], inline_request.next_index + 1, 1)
         return inline_response
 
     # pylint: disable=too-many-arguments, too-many-locals, too-many-statements, too-many-branches, too-many-nested-blocks
@@ -348,18 +354,18 @@ class InlineProcessor:
         """
         Handle the collection of special inline characters for later processing.
         """
-        preceding_two = None
-        following_two = None
-        new_token = None
-        repeat_count = 1
-        is_active = True
-
-        delta_line = 0
-
-        consume_rest_of_line = False
+        (
+            preceding_two,
+            following_two,
+            new_token,
+            repeat_count,
+            is_active,
+            delta_line,
+            consume_rest_of_line,
+            remaining_line_size,
+        ) = (None, None, None, 1, True, 0, False, len(remaining_line))
         POGGER.debug(">>column_number>>$<<", column_number)
         POGGER.debug(">>remaining_line>>$<<", remaining_line)
-        remaining_line_size = len(remaining_line)
         column_number += remaining_line_size
         POGGER.debug(">>column_number>>$<<", column_number)
         special_sequence = source_text[next_index : next_index + special_length]
@@ -367,12 +373,11 @@ class InlineProcessor:
             repeat_count, new_index = ParserHelper.collect_while_character(
                 source_text, next_index, special_sequence
             )
-            special_sequence = source_text[next_index:new_index]
-
-            preceding_two = source_text[max(0, next_index - 2) : next_index]
-            following_two = source_text[
-                new_index : min(len(source_text), new_index + 2)
-            ]
+            special_sequence, preceding_two, following_two = (
+                source_text[next_index:new_index],
+                source_text[max(0, next_index - 2) : next_index],
+                source_text[new_index : min(len(source_text), new_index + 2)],
+            )
         else:
             if special_sequence[0] == LinkHelper.link_label_end:
                 POGGER.debug(
@@ -397,9 +402,9 @@ class InlineProcessor:
                     source_text[next_index:],
                 )
                 POGGER.debug("")
-                old_inline_blocks_count = len(inline_blocks)
-                old_inline_blocks_last_token = (
-                    inline_blocks[-1] if inline_blocks else None
+                old_inline_blocks_count, old_inline_blocks_last_token = (
+                    len(inline_blocks),
+                    inline_blocks[-1] if inline_blocks else None,
                 )
                 (
                     new_index,
@@ -467,8 +472,7 @@ class InlineProcessor:
                         repeat_count = new_index - next_index
                         POGGER.debug(">>repeat_count>>$<<", repeat_count)
             else:
-                repeat_count = special_length
-                new_index = next_index + special_length
+                repeat_count, new_index = special_length, next_index + special_length
 
         if not new_token:
             POGGER.debug(">>create>>$,$<<", line_number, column_number)
@@ -485,12 +489,14 @@ class InlineProcessor:
         POGGER.debug(">>delta_line>>$<<", delta_line)
         POGGER.debug(">>repeat_count>>$<<", repeat_count)
         inline_response = InlineResponse()
-        inline_response.new_string = ""
-        inline_response.new_index = new_index
-        inline_response.new_tokens = [new_token]
-        inline_response.consume_rest_of_line = consume_rest_of_line
-        inline_response.delta_line_number = delta_line
-        inline_response.delta_column_number = repeat_count
+        (
+            inline_response.new_string,
+            inline_response.new_index,
+            inline_response.new_tokens,
+            inline_response.consume_rest_of_line,
+            inline_response.delta_line_number,
+            inline_response.delta_column_number,
+        ) = ("", new_index, [new_token], consume_rest_of_line, delta_line, repeat_count)
         return inline_response
 
     # pylint: enable=too-many-arguments, too-many-locals, too-many-statements, too-many-branches, too-many-nested-blocks
@@ -502,8 +508,7 @@ class InlineProcessor:
         """
 
         POGGER.debug(">>source_text>>$", source_text)
-        start_index = 0
-        processed_line = ""
+        start_index, processed_line = 0, ""
         POGGER.debug(
             ">>__valid_inline_simple_text_block_sequence_starts>>$",
             InlineProcessor.__valid_inline_simple_text_block_sequence_starts,
@@ -570,9 +575,11 @@ class InlineProcessor:
         delta_line,
         repeat_count,
     ):
-        last_spaces = ""
-        active_link_uri = current_token.active_link_uri
-        active_link_title = current_token.active_link_title
+        last_spaces, active_link_uri, active_link_title = (
+            "",
+            current_token.active_link_uri,
+            current_token.active_link_title,
+        )
 
         link_part_lengths = [0] * 5
         link_part_lengths[0] = len(active_link_uri) + len(
@@ -582,75 +589,71 @@ class InlineProcessor:
             link_part_lengths[1] = 1
             link_part_lengths[2] = len(active_link_title) + 1
             link_part_lengths[3] = len(current_token.after_title_whitespace)
-        link_part_lengths[4] = 0
 
         POGGER.debug(">>link_part_lengths>>$<<", link_part_lengths)
 
-        link_part_index = -2
+        link_part_index, total_newlines = -2, 0
         newline_count = ParserHelper.count_newlines_in_text(
             current_token.text_from_blocks
         )
         if newline_count:
-            link_part_index = -1
-            if para_owner:
-                para_owner.rehydrate_index += newline_count
+            link_part_index, total_newlines = -1, total_newlines + newline_count
+
         newline_count = ParserHelper.count_newlines_in_text(
             current_token.before_link_whitespace
         )
         if newline_count:
             POGGER.debug(">>before_link_whitespace")
-            delta_line += newline_count
-            if para_owner:
-                para_owner.rehydrate_index += newline_count
-            last_spaces = current_token.before_link_whitespace[:]
+            link_part_index, delta_line, last_spaces = (
+                0,
+                delta_line + newline_count,
+                current_token.before_link_whitespace[:],
+            )
 
-            link_part_index = 0
         newline_count = ParserHelper.count_newlines_in_text(
             current_token.before_title_whitespace
         )
         if newline_count:
             POGGER.debug(">>before_title_whitespace")
-            delta_line += newline_count
-            if para_owner:
-                para_owner.rehydrate_index += newline_count
-            last_spaces = current_token.before_title_whitespace[:]
+            link_part_index, delta_line, last_spaces = (
+                1,
+                delta_line + newline_count,
+                current_token.before_title_whitespace[:],
+            )
 
-            link_part_index = 1
         newline_count = ParserHelper.count_newlines_in_text(active_link_title)
         if newline_count:
             POGGER.debug(">>active_link_title")
             _, delta_column_number = ParserHelper.calculate_deltas(active_link_title)
-            delta_line += newline_count
-            if para_owner:
-                para_owner.rehydrate_index += newline_count
-            last_spaces = ""
+            link_part_index, delta_line, last_spaces, link_part_lengths[2] = (
+                2,
+                delta_line + newline_count,
+                "",
+                -delta_column_number,
+            )
 
-            link_part_lengths[2] = -delta_column_number
-            link_part_index = 2
         newline_count = ParserHelper.count_newlines_in_text(
             current_token.after_title_whitespace
         )
         if newline_count:
             POGGER.debug(">>after_title_whitespace")
-            delta_line += newline_count
-            if para_owner:
-                para_owner.rehydrate_index += newline_count
-            last_spaces = current_token.after_title_whitespace[:]
-
-            link_part_index = 4
+            link_part_index, delta_line, last_spaces = (
+                4,
+                delta_line + newline_count,
+                current_token.after_title_whitespace[:],
+            )
 
         POGGER.debug(">>link_part_index>>$<<", link_part_index)
         POGGER.debug(">>delta_line>>$<<", delta_line)
 
+        if para_owner:
+            para_owner.rehydrate_index += total_newlines + delta_line
         if link_part_index >= 0:
-            if split_paragraph_lines:
-                link_part_lengths[4] = len(
-                    split_paragraph_lines[para_owner.rehydrate_index]
-                )
-            else:
-                link_part_lengths[4] = len(
-                    ParserHelper.calculate_last_line(last_spaces)
-                )
+            link_part_lengths[4] = (
+                len(split_paragraph_lines[para_owner.rehydrate_index])
+                if split_paragraph_lines
+                else len(ParserHelper.calculate_last_line(last_spaces))
+            )
             link_part_lengths[:link_part_index] = [0] * link_part_index
             repeat_count = -(2 + sum(link_part_lengths))
             POGGER.debug(">>link_part_lengths>>$<<", link_part_lengths)
@@ -730,8 +733,7 @@ class InlineProcessor:
         parser.  Debugging should be uncommented only if needed.
         """
 
-        inline_blocks = []
-        start_index = 0
+        inline_blocks, start_index = [], 0
         # POGGER.debug(
         #    "__process_inline_text_block>>source_text>>$>",
         #    source_text,
@@ -761,21 +763,22 @@ class InlineProcessor:
         #    source_text,
         # )
 
-        last_line_number = line_number
-        last_column_number = column_number
+        (
+            last_line_number,
+            last_column_number,
+            current_string,
+            current_string_unresolved,
+            end_string,
+            inline_response,
+            fold_space,
+        ) = (line_number, column_number, "", "", "", InlineResponse(), None)
+
         # POGGER.debug(
         #    ">>Token_start>>$,$<<",
         #    last_line_number,
         #    last_column_number,
         # )
-
-        current_string = ""
-        current_string_unresolved = ""
-        end_string = ""
-
-        inline_response = InlineResponse()
         # POGGER.debug("__process_inline_text_block>>is_para>>$", is_para)
-        fold_space = None
         if is_para or is_setext:
             fold_space = para_space.split(ParserHelper.newline_character)
         # POGGER.debug("__process_inline_text_block>>fold_space>>$", fold_space)
@@ -814,18 +817,25 @@ class InlineProcessor:
             # )
 
             inline_response.clear_fields()
-            reset_current_string = False
-            whitespace_to_add = None
-
-            was_new_line = False
-            was_column_number_reset = False
+            (
+                reset_current_string,
+                whitespace_to_add,
+                was_new_line,
+                was_column_number_reset,
+                remaining_line,
+                old_inline_blocks_count,
+                old_inline_blocks_last_token,
+            ) = (
+                False,
+                None,
+                False,
+                False,
+                source_text[start_index:next_index],
+                len(inline_blocks),
+                inline_blocks[-1] if inline_blocks else None,
+            )
 
             # POGGER.debug("__process_inline_text_block>>$>>$", start_index, next_index)
-            remaining_line = source_text[start_index:next_index]
-
-            old_inline_blocks_count = len(inline_blocks)
-            old_inline_blocks_last_token = inline_blocks[-1] if inline_blocks else None
-
             inline_request = InlineRequest(
                 source_text,
                 next_index,
@@ -863,8 +873,10 @@ class InlineProcessor:
 
                 line_number += inline_response.delta_line_number
                 if inline_response.delta_column_number < 0:
-                    column_number = -inline_response.delta_column_number
-                    was_column_number_reset = True
+                    column_number, was_column_number_reset = (
+                        -inline_response.delta_column_number,
+                        True,
+                    )
                 else:
                     column_number += inline_response.delta_column_number
                 # POGGER.debug("handler(after)>>$,$<<", line_number, column_number)
@@ -948,22 +960,25 @@ class InlineProcessor:
 
             if inline_response.consume_rest_of_line:
                 # POGGER.debug("consume_rest_of_line>>$<", remaining_line)
-                inline_response.new_string = ""
-                reset_current_string = True
-                inline_response.new_tokens = None
-                remaining_line = ""
-                end_string = None
+                (
+                    inline_response.new_string,
+                    inline_response.new_tokens,
+                    reset_current_string,
+                    remaining_line,
+                    end_string,
+                ) = ("", None, True, "", None)
                 # POGGER.debug(
                 #    "9<<end_string<<$<<",
                 #    end_string,
                 # )
             else:
                 # POGGER.debug("append_rest_of_line>>$<", remaining_line)
-                current_string = InlineHelper.append_text(
-                    current_string, remaining_line
-                )
-                current_string_unresolved = InlineHelper.append_text(
-                    current_string_unresolved, remaining_line
+                current_string, current_string_unresolved = (
+                    InlineHelper.append_text(
+                        current_string,
+                        remaining_line,
+                    ),
+                    InlineHelper.append_text(current_string_unresolved, remaining_line),
                 )
 
             # POGGER.debug(
@@ -999,9 +1014,11 @@ class InlineProcessor:
                         )
                     )
                     # POGGER.debug("new Text>>$>>", inline_blocks)
-                    reset_current_string = True
-                    starting_whitespace = ""
-                    end_string = None
+                    reset_current_string, starting_whitespace, end_string = (
+                        True,
+                        "",
+                        None,
+                    )
                     # POGGER.debug(
                     #    "4<<end_string<<$<<",
                     #    end_string,
@@ -1030,8 +1047,7 @@ class InlineProcessor:
             # )
             if was_new_line:
                 # POGGER.debug("l/c(before)>>newline")
-                line_number += 1
-                column_number = 1
+                line_number, column_number = line_number + 1, 1
                 assert fold_space
                 # POGGER.debug("fold_space(before)>>$<<", fold_space)
                 fold_space = fold_space[1:]
@@ -1039,13 +1055,7 @@ class InlineProcessor:
                 column_number += len(fold_space[0])
 
             elif not was_column_number_reset:
-                remaining_line_size = len(remaining_line)
-                # POGGER.debug(
-                #    "l/c(remaining_line)>>$,$<<",
-                #    remaining_line_size,
-                #    remaining_line,
-                # )
-                column_number += remaining_line_size
+                column_number += len(remaining_line)
             # POGGER.debug(
             #    "l/c(after)>>$,$<<",
             #    line_number,
@@ -1063,8 +1073,7 @@ class InlineProcessor:
             # POGGER.debug("reset_current_string>>$<<", reset_current_string)
 
             if reset_current_string:
-                current_string = ""
-                current_string_unresolved = ""
+                current_string, current_string_unresolved = "", ""
             # POGGER.debug("pos>>$,$<<", line_number, column_number)
             # POGGER.debug("last>>$,$<<", last_line_number, last_column_number)
 
@@ -1078,8 +1087,7 @@ class InlineProcessor:
                 old_inline_blocks_last_token
                 and old_inline_blocks_last_token != inline_blocks[-1]
             ):
-                last_line_number = line_number
-                last_column_number = column_number
+                last_line_number, last_column_number = line_number, column_number
             # POGGER.debug("last>>$,$<<", last_line_number, last_column_number)
             # POGGER.debug(
             #    ">>Token_start>>$,$<<",
@@ -1161,9 +1169,10 @@ class InlineProcessor:
             if extracted_whitespace:
                 inline_response.new_index = new_index
                 assert end_string is not None
-                end_string += extracted_whitespace
                 assert is_setext
-                end_string += ParserHelper.whitespace_split_character
+                end_string += (
+                    extracted_whitespace + ParserHelper.whitespace_split_character
+                )
                 POGGER.debug(
                     "__arw>>end_string>>$>>",
                     end_string,

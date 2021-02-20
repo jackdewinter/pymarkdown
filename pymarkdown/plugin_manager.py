@@ -14,10 +14,11 @@ class ScanContext:
     """
 
     def __init__(self, owning_manager, scan_file):
-        self.owning_manager = owning_manager
-        self.scan_file = scan_file
-
-        self.line_number = 0
+        self.owning_manager, self.scan_file, self.line_number = (
+            owning_manager,
+            scan_file,
+            0,
+        )
 
 
 # pylint: enable=too-few-public-methods
@@ -109,10 +110,12 @@ class Plugin(ABC):
     """
 
     def __init__(self):
-        self.__scan_context = None
-        self.__configuration_map = None
-        self.__is_next_token_implemented_in_plugin = True
-        self.__is_next_line_implemented_in_plugin = True
+        (
+            self.__scan_context,
+            self.__configuration_map,
+            self.__is_next_token_implemented_in_plugin,
+            self.__is_next_line_implemented_in_plugin,
+        ) = (None, None, True, True)
 
     @abstractmethod
     def get_details(self):
@@ -229,10 +232,12 @@ class PluginDetails:
     def __init__(
         self, plugin_id, plugin_name, plugin_description, plugin_enabled_by_default
     ):
-        self.plugin_id = plugin_id
-        self.plugin_name = plugin_name
-        self.plugin_description = plugin_description
-        self.plugin_enabled_by_default = plugin_enabled_by_default
+        (
+            self.plugin_id,
+            self.plugin_name,
+            self.plugin_description,
+            self.plugin_enabled_by_default,
+        ) = (plugin_id, plugin_name, plugin_description, plugin_enabled_by_default)
 
 
 # pylint: enable=too-few-public-methods
@@ -247,10 +252,12 @@ class FoundPlugin:
     """
 
     def __init__(self, plugin_id, plugin_name, plugin_description, plugin_instance):
-        self.plugin_id = plugin_id
-        self.plugin_name = plugin_name
-        self.plugin_description = plugin_description
-        self.plugin_instance = plugin_instance
+        (
+            self.plugin_id,
+            self.plugin_name,
+            self.plugin_description,
+            self.plugin_instance,
+        ) = (plugin_id, plugin_name, plugin_description, plugin_instance)
 
 
 # pylint: enable=too-few-public-methods
@@ -262,12 +269,14 @@ class PluginManager:
     """
 
     def __init__(self):
-        self.__registered_plugins = None
-        self.__enabled_plugins = None
-        self.__enabled_plugins_for_next_token = None
-        self.__enabled_plugins_for_next_line = None
-        self.__loaded_classes = None
-        self.number_of_scan_failures = None
+        (
+            self.__registered_plugins,
+            self.__enabled_plugins,
+            self.__enabled_plugins_for_next_token,
+            self.__enabled_plugins_for_next_line,
+            self.__loaded_classes,
+            self.number_of_scan_failures,
+        ) = (None, None, None, None, None, None)
 
     def initialize(
         self, directory_to_search, additional_paths, enable_rules, disable_rules
@@ -275,9 +284,7 @@ class PluginManager:
         """
         Initializes the manager by scanning for plugins, loading them, and registering them.
         """
-        self.number_of_scan_failures = 0
-
-        self.__loaded_classes = []
+        self.number_of_scan_failures, self.__loaded_classes = 0, []
 
         plugin_files = self.__find_eligible_plugins_in_directory(directory_to_search)
         self.__load_plugins(directory_to_search, plugin_files)
@@ -457,10 +464,12 @@ class PluginManager:
 
         try:
             instance_details = plugin_instance.get_details()
-            plugin_id = instance_details.plugin_id
-            plugin_name = instance_details.plugin_name
-            plugin_description = instance_details.plugin_description
-            plugin_enabled_by_default = instance_details.plugin_enabled_by_default
+            plugin_id, plugin_name, plugin_description, plugin_enabled_by_default = (
+                instance_details.plugin_id,
+                instance_details.plugin_name,
+                instance_details.plugin_description,
+                instance_details.plugin_enabled_by_default,
+            )
         except Exception as this_exception:
             raise BadPluginError(
                 class_name=type(plugin_instance).__name__,
@@ -505,8 +514,12 @@ class PluginManager:
         plugins.
         """
 
-        command_line_enabled_rules = set()
-        command_line_disabled_rules = set()
+        (
+            command_line_enabled_rules,
+            command_line_disabled_rules,
+            self.__registered_plugins,
+            self.__enabled_plugins,
+        ) = (set(), set(), [], [])
         if enable_rules:
             for i in enable_rules.split(","):
                 command_line_enabled_rules.add(i)
@@ -514,8 +527,6 @@ class PluginManager:
             for i in disable_rules.split(","):
                 command_line_disabled_rules.add(i)
 
-        self.__registered_plugins = []
-        self.__enabled_plugins = []
         for plugin_instance in self.__loaded_classes:
             self.__register_individual_plugin(
                 plugin_instance, command_line_enabled_rules, command_line_disabled_rules
@@ -526,8 +537,10 @@ class PluginManager:
         Apply any supplied configuration to each of the enabled plugins.
         """
 
-        self.__enabled_plugins_for_next_token = []
-        self.__enabled_plugins_for_next_line = []
+        self.__enabled_plugins_for_next_token, self.__enabled_plugins_for_next_line = (
+            [],
+            [],
+        )
 
         for next_plugin in self.__enabled_plugins:
             try:

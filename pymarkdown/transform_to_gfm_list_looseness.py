@@ -20,14 +20,13 @@ class TransformToGfmListLooseness:
         """
 
         POGGER.debug("\n\n__calculate_list_looseness>>$", actual_token_index)
-        is_loose = False
-        current_token_index = actual_token_index + 1
-        stack_count = 0
+        is_loose, current_token_index, stack_count = False, actual_token_index + 1, 0
         while True:
-
-            current_token = actual_tokens[current_token_index]
-            check_me = False
-            stop_me = False
+            check_me, stop_me, current_token = (
+                False,
+                False,
+                actual_tokens[current_token_index],
+            )
             if current_token.is_list_start:
                 POGGER.debug("cll>>start list>>$", current_token)
                 check_me, stack_count = TransformToGfmListLooseness.__handle_list_start(
@@ -177,14 +176,14 @@ class TransformToGfmListLooseness:
 
     @staticmethod
     def __correct_for_me(actual_tokens, current_token_index):
-        correct_closure = False
+        correct_closure, is_valid = False, True
         assert current_token_index > 0
 
-        is_valid = True
         POGGER.debug(">>prev>>$", actual_tokens[current_token_index - 1])
         if actual_tokens[current_token_index - 1].is_blank_line:
-            search_index = current_token_index + 1
-            actual_tokens_size = len(actual_tokens)
+            search_index, actual_tokens_size = current_token_index + 1, len(
+                actual_tokens
+            )
             while (
                 search_index < actual_tokens_size
                 and actual_tokens[search_index].is_list_end
@@ -234,12 +233,8 @@ class TransformToGfmListLooseness:
         Figure out what the list start for the current token is.
         """
 
-        current_index = actual_token_index
-        assert not actual_tokens[current_index].is_list_start
-
-        current_index -= 1
-        keep_going = True
-        stack_count = 0
+        assert not actual_tokens[actual_token_index].is_list_start
+        current_index, keep_going, stack_count = actual_token_index - 1, True, 0
         while keep_going and current_index >= 0:
             if actual_tokens[current_index].is_list_start:
                 if stack_count == 0:
@@ -260,9 +255,11 @@ class TransformToGfmListLooseness:
         """
 
         POGGER.debug("!!!!!!!!!!!!!!!$", actual_token_index)
-        search_index = actual_token_index + 1
-        stack_count = 0
-        actual_tokens_size = len(actual_tokens)
+        search_index, stack_count, actual_tokens_size = (
+            actual_token_index + 1,
+            0,
+            len(actual_tokens),
+        )
         while search_index < actual_tokens_size:
             POGGER.debug(
                 "!!$::$::$",

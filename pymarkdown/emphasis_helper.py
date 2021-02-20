@@ -26,8 +26,7 @@ class EmphasisHelper:
         """
         Resolve the inline emphasis by interpreting the special text tokens.
         """
-        delimiter_stack = []
-        special_count = 0
+        delimiter_stack, special_count = [], 0
         for next_block in inline_blocks:
             POGGER.debug(
                 "special_count>>$>>$",
@@ -46,9 +45,11 @@ class EmphasisHelper:
         stack_bottom = EmphasisHelper.__find_token_in_delimiter_stack(
             inline_blocks, delimiter_stack, wall_token
         )
-        current_position = stack_bottom + 1
-        openers_bottom = stack_bottom
-        stack_size = len(delimiter_stack)
+        current_position, openers_bottom, stack_size = (
+            stack_bottom + 1,
+            stack_bottom,
+            len(delimiter_stack),
+        )
         if current_position < stack_size:
             POGGER.debug("BLOCK($) of ($)", current_position, stack_size)
             POGGER.debug(
@@ -79,10 +80,12 @@ class EmphasisHelper:
                     POGGER.debug("not closer")
                     continue
 
-                close_token = delimiter_stack[current_position]
+                close_token, scan_index, found_opener = (
+                    delimiter_stack[current_position],
+                    current_position - 1,
+                    None,
+                )
                 POGGER.debug("potential closer-->$", current_position)
-                scan_index = current_position - 1
-                found_opener = None
                 while (
                     scan_index >= 0
                     and scan_index > stack_bottom
@@ -131,10 +134,10 @@ class EmphasisHelper:
         """
 
         # Figure out whether we have emphasis or strong emphasis
-        emphasis_length = (
-            2 if close_token.repeat_count >= 2 and open_token.repeat_count >= 2 else 1
+        emphasis_character, emphasis_length = (
+            open_token.token_text[0],
+            2 if close_token.repeat_count >= 2 and open_token.repeat_count >= 2 else 1,
         )
-        emphasis_character = open_token.token_text[0]
 
         # add emph node in main stream
         POGGER.debug("open_token>>$", open_token)
@@ -269,11 +272,9 @@ class EmphasisHelper:
         Is the current token a right flanking delimiter run?
         """
 
-        preceding_two = current_token.preceding_two.rjust(
-            2, ParserHelper.space_character
-        )
-        following_two = current_token.following_two.ljust(
-            2, ParserHelper.space_character
+        preceding_two, following_two = (
+            current_token.preceding_two.rjust(2, ParserHelper.space_character),
+            current_token.following_two.ljust(2, ParserHelper.space_character),
         )
 
         return preceding_two[-1] not in Constants.unicode_whitespace and (
@@ -293,11 +294,9 @@ class EmphasisHelper:
         Is the current token a left flanking delimiter run?
         """
 
-        preceding_two = current_token.preceding_two.rjust(
-            2, ParserHelper.space_character
-        )
-        following_two = current_token.following_two.ljust(
-            2, ParserHelper.space_character
+        preceding_two, following_two = (
+            current_token.preceding_two.rjust(2, ParserHelper.space_character),
+            current_token.following_two.ljust(2, ParserHelper.space_character),
         )
 
         return following_two[0] not in Constants.unicode_whitespace and (
@@ -327,12 +326,9 @@ class EmphasisHelper:
             assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
             is_closer = EmphasisHelper.__is_right_flanking_delimiter_run(current_token)
             if is_closer:
-                is_left_flanking = EmphasisHelper.__is_left_flanking_delimiter_run(
-                    current_token
-                )
-
-                following_two = current_token.following_two.ljust(
-                    2, ParserHelper.space_character
+                is_left_flanking, following_two = (
+                    EmphasisHelper.__is_left_flanking_delimiter_run(current_token),
+                    current_token.following_two.ljust(2, ParserHelper.space_character),
                 )
                 is_closer = not is_left_flanking or (
                     is_left_flanking
@@ -355,11 +351,9 @@ class EmphasisHelper:
             assert current_token.token_text[0] == EmphasisHelper.__complex_emphasis
             is_opener = EmphasisHelper.__is_left_flanking_delimiter_run(current_token)
             if is_opener:
-                is_right_flanking = EmphasisHelper.__is_right_flanking_delimiter_run(
-                    current_token
-                )
-                preceding_two = current_token.preceding_two.ljust(
-                    2, ParserHelper.space_character
+                is_right_flanking, preceding_two = (
+                    EmphasisHelper.__is_right_flanking_delimiter_run(current_token),
+                    current_token.preceding_two.ljust(2, ParserHelper.space_character),
                 )
                 is_opener = not is_right_flanking or (
                     is_right_flanking
@@ -373,8 +367,7 @@ class EmphasisHelper:
         Determine if these two tokens together make a valid open/close emphasis pair.
         """
 
-        matching_delimiter = close_token.token_text[0]
-        is_valid_opener = False
+        matching_delimiter, is_valid_opener = close_token.token_text[0], False
 
         if not (
             open_token.token_text and open_token.token_text[0] == matching_delimiter
@@ -383,10 +376,11 @@ class EmphasisHelper:
         elif not open_token.is_active:
             POGGER.debug("  not active")
         elif open_token.is_active and EmphasisHelper.__is_potential_opener(open_token):
-            is_valid_opener = True
-            is_closer_both = EmphasisHelper.__is_potential_closer(
-                close_token
-            ) and EmphasisHelper.__is_potential_opener(close_token)
+            is_valid_opener, is_closer_both = (
+                True,
+                EmphasisHelper.__is_potential_closer(close_token)
+                and EmphasisHelper.__is_potential_opener(close_token),
+            )
             POGGER.debug("is_closer_both>>$", is_closer_both)
             is_opener_both = EmphasisHelper.__is_potential_closer(
                 open_token

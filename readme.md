@@ -86,6 +86,7 @@
 - __process_inline_text_block - calc_deltas from ParserHelper?
 - is_length_less_than_or_equal_to(extracted_whitespace, 3) - calc once at start of leaf block proc?
 - is_character_at_index_one_of inside of where? collect function?
+- __parse_line_for_leaf_blocks - why calling count_of_block_quotes_on_stack so often?
 
 ## Bugs - General - Uncategorized
 

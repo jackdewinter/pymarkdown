@@ -47,8 +47,10 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
     def __init__(
         self, emphasis_length, emphasis_character, line_number=0, column_number=0
     ):
-        self.__emphasis_length = emphasis_length
-        self.__emphasis_character = emphasis_character
+        self.__emphasis_length, self.__emphasis_character = (
+            emphasis_length,
+            emphasis_character,
+        )
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_emphasis,
@@ -158,10 +160,17 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
         line_number,
         column_number,
     ):
-        self.__span_text = span_text
-        self.__extracted_start_backticks = extracted_start_backticks
-        self.__leading_whitespace = leading_whitespace
-        self.__trailing_whitespace = trailing_whitespace
+        (
+            self.__span_text,
+            self.__extracted_start_backticks,
+            self.__leading_whitespace,
+            self.__trailing_whitespace,
+        ) = (
+            span_text,
+            extracted_start_backticks,
+            leading_whitespace,
+            trailing_whitespace,
+        )
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_code_span,
@@ -255,19 +264,33 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         line_number=0,
         column_number=0,
     ):
-        self.__label_type = label_type
-        self.__link_uri = link_uri
-        self.__link_title = link_title
-
-        self.__pre_link_uri = pre_link_uri
-        self.__pre_link_title = pre_link_title
-        self.__ex_label = ex_label
-        self.__text_from_blocks = text_from_blocks
-        self.__did_use_angle_start = did_use_angle_start
-        self.__inline_title_bounding_character = inline_title_bounding_character
-        self.__before_link_whitespace = before_link_whitespace
-        self.__before_title_whitespace = before_title_whitespace
-        self.__after_title_whitespace = after_title_whitespace
+        (
+            self.__label_type,
+            self.__link_uri,
+            self.__link_title,
+            self.__pre_link_uri,
+            self.__pre_link_title,
+            self.__ex_label,
+            self.__text_from_blocks,
+            self.__did_use_angle_start,
+            self.__inline_title_bounding_character,
+            self.__before_link_whitespace,
+            self.__before_title_whitespace,
+            self.__after_title_whitespace,
+        ) = (
+            label_type,
+            link_uri,
+            link_title,
+            pre_link_uri,
+            pre_link_title,
+            ex_label,
+            text_from_blocks,
+            did_use_angle_start,
+            inline_title_bounding_character,
+            before_link_whitespace,
+            before_title_whitespace,
+            after_title_whitespace,
+        )
 
         if token_name == MarkdownToken._token_inline_image:
             extra_data += MarkdownToken.extra_data_separator
@@ -522,10 +545,12 @@ class TextMarkdownToken(InlineMarkdownToken):
         column_number=0,
         is_special=False,
     ):
-        self.__token_text = token_text
-        self.__extracted_whitespace = extracted_whitespace
-        self.__end_whitespace = end_whitespace
-        self.__is_special = is_special
+        (
+            self.__token_text,
+            self.__extracted_whitespace,
+            self.__end_whitespace,
+            self.__is_special,
+        ) = (token_text, extracted_whitespace, end_whitespace, is_special)
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_text,
@@ -631,22 +656,24 @@ class TextMarkdownToken(InlineMarkdownToken):
         """
 
         if other_text_token.is_blank_line:
-            text_to_combine = ""
-            whitespace_present = other_text_token.extra_data
-            blank_line_sequence = ParserHelper.replace_noop_character
+            text_to_combine, whitespace_present, blank_line_sequence = (
+                "",
+                other_text_token.extra_data,
+                ParserHelper.replace_noop_character,
+            )
         else:
             assert other_text_token.is_text
-            text_to_combine = other_text_token.token_text
-            whitespace_present = other_text_token.extracted_whitespace
-            blank_line_sequence = ""
+            text_to_combine, whitespace_present, blank_line_sequence = (
+                other_text_token.token_text,
+                other_text_token.extracted_whitespace,
+                "",
+            )
 
-        whitespace_to_append = None
-        removed_whitespace = ""
+        whitespace_to_append, removed_whitespace = None, ""
         if not remove_leading_spaces:
             prefix_whitespace = whitespace_present
         elif remove_leading_spaces == -1:
-            whitespace_to_append = whitespace_present
-            prefix_whitespace = ""
+            whitespace_to_append, prefix_whitespace = whitespace_present, ""
         else:
             whitespace_present_size = len(whitespace_present)
             POGGER.debug(
@@ -656,11 +683,12 @@ class TextMarkdownToken(InlineMarkdownToken):
             )
             POGGER.debug("remove_leading_spaces>>$<<", remove_leading_spaces)
             if whitespace_present_size < remove_leading_spaces:
-                removed_whitespace = whitespace_present
-                prefix_whitespace = ""
+                removed_whitespace, prefix_whitespace = whitespace_present, ""
             else:
-                removed_whitespace = whitespace_present[0:remove_leading_spaces]
-                prefix_whitespace = whitespace_present[remove_leading_spaces:]
+                removed_whitespace, prefix_whitespace = (
+                    whitespace_present[0:remove_leading_spaces],
+                    whitespace_present[remove_leading_spaces:],
+                )
 
         if whitespace_to_append is not None:
             self.__extracted_whitespace += (
@@ -692,10 +720,12 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         line_number=0,
         column_number=0,
     ):
-        self.__repeat_count = repeat_count
-        self.__is_active = is_active
-        self.__preceding_two = preceding_two
-        self.__following_two = following_two
+        (
+            self.__repeat_count,
+            self.__is_active,
+            self.__preceding_two,
+            self.__following_two,
+        ) = (repeat_count, is_active, preceding_two, following_two)
         TextMarkdownToken.__init__(
             self,
             token_text,

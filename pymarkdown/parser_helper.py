@@ -366,8 +366,7 @@ class ParserHelper:
         Replace any of a given set of characters with a given sequence.
         """
 
-        rebuilt_string = ""
-        start_index = 0
+        rebuilt_string, start_index = "", 0
         index, ex_str = ParserHelper.collect_until_one_of_characters(
             string_to_search_in, start_index, characters_to_search_for
         )
@@ -421,9 +420,8 @@ class ParserHelper:
             split_raw_tag = text_to_analyze.split(ParserHelper.newline_character)
             delta_line_number += len(split_raw_tag) - 1
 
-            last_element = split_raw_tag[-1]
             last_element = ParserHelper.__resolve_replacement_markers_from_text(
-                last_element
+                split_raw_tag[-1]
             )
             last_element = ParserHelper.__remove_escapes_from_text(last_element)
             length_of_last_elements = len(last_element)
@@ -447,9 +445,9 @@ class ParserHelper:
         """
         Properly recombine a text-string with a matching whitespace-string.
         """
-        split_text_string = text_string.split(ParserHelper.newline_character)
-        split_whitespace_string = whitespace_string.split(
-            ParserHelper.newline_character
+        split_text_string, split_whitespace_string = (
+            text_string.split(ParserHelper.newline_character),
+            whitespace_string.split(ParserHelper.newline_character),
         )
         for i in range(start_text_index, len(split_text_string)):
             if not post_increment_index:
@@ -528,8 +526,10 @@ class ParserHelper:
         """
         Build another string that has any special characters in the argument escaped.
         """
-        escaped_string = ""
-        characters_to_escape = ParserHelper.valid_characters_to_escape()
+        escaped_string, characters_to_escape = (
+            "",
+            ParserHelper.valid_characters_to_escape(),
+        )
         for next_char_index, next_character in enumerate(string_to_escape):
             if ParserHelper.is_character_at_index_one_of(
                 string_to_escape, next_char_index, characters_to_escape
@@ -543,8 +543,7 @@ class ParserHelper:
         """
         Remove any backspaces from the text.
         """
-        start_index = 0
-        adjusted_text_token = token_text[0:]
+        start_index, adjusted_text_token = 0, token_text[0:]
         next_backspace_index = ParserHelper.__find_with_escape(
             adjusted_text_token, ParserHelper.__backspace_character, start_index
         )
@@ -564,8 +563,7 @@ class ParserHelper:
         """
         Deal with any backslash encoding in text with backspaces.
         """
-        start_index = 0
-        adjusted_text_token = token_text[0:]
+        start_index, adjusted_text_token = 0, token_text[0:]
         next_backspace_index = ParserHelper.__find_with_escape(
             adjusted_text_token, ParserHelper.__backspace_character, start_index
         )
@@ -647,8 +645,7 @@ class ParserHelper:
         """
         Resolve any escapes from the text, leaving only what they escaped.
         """
-        start_index = 0
-        adjusted_text_token = token_text[0:]
+        start_index, adjusted_text_token = 0, token_text[0:]
         next_backspace_index = ParserHelper.__find_with_escape(
             adjusted_text_token, ParserHelper.escape_character, start_index
         )
@@ -726,19 +723,18 @@ class ParserHelper:
 
     @staticmethod
     def __find_with_escape(adjusted_text_token, find_char, start_index):
-        repeat_me = True
-        found_index = -1
+        repeat_me, found_index = True, -1
         while repeat_me and start_index < len(adjusted_text_token):
-            repeat_me = False
-            start_replacement_index = adjusted_text_token.find(find_char, start_index)
+            repeat_me, start_replacement_index = False, adjusted_text_token.find(
+                find_char, start_index
+            )
             if (
                 start_replacement_index != -1
                 and start_replacement_index > 0
                 and adjusted_text_token[start_replacement_index - 1]
                 == ParserHelper.escape_character
             ):
-                repeat_me = True
-                start_index = start_replacement_index + 1
+                repeat_me, start_index = True, start_replacement_index + 1
             else:
                 found_index = start_replacement_index
         return found_index
@@ -842,21 +838,23 @@ class ParserState:
     def __init__(
         self, token_stack, token_document, close_open_blocks_fn, handle_blank_line_fn
     ):
-        self.__token_stack = token_stack
-        self.__token_document = token_document
-        self.__close_open_blocks_fn = close_open_blocks_fn
-        self.__handle_blank_line_fn = handle_blank_line_fn
+        (
+            self.__token_stack,
+            self.__token_document,
+            self.__close_open_blocks_fn,
+            self.__handle_blank_line_fn,
+        ) = (token_stack, token_document, close_open_blocks_fn, handle_blank_line_fn)
 
-        self.__same_line_container_tokens = None
-        self.__last_block_quote_stack_token = None
-        self.__last_block_quote_markdown_token_index = None
-        self.__copy_of_last_block_quote_markdown_token = None
-
-        self.__original_line_to_parse = None
-        self.__original_stack_depth = None
-        self.__original_document_depth = None
-
-        self.__no_para_start_if_empty = False
+        (
+            self.__same_line_container_tokens,
+            self.__last_block_quote_stack_token,
+            self.__last_block_quote_markdown_token_index,
+            self.__copy_of_last_block_quote_markdown_token,
+            self.__original_line_to_parse,
+            self.__original_stack_depth,
+            self.__original_document_depth,
+            self.__no_para_start_if_empty,
+        ) = (None, None, None, None, None, None, None, False)
 
     @property
     def token_stack(self):
@@ -998,17 +996,25 @@ class ParserState:
         Mark the start of processing this line of information.  A lot of
         this information is to allow a requeue to occur, if needed.
         """
-        self.__original_line_to_parse = position_marker.text_to_parse[:]
-        self.__original_stack_depth = len(self.token_stack)
-        self.__original_document_depth = len(self.token_document)
-
-        self.__no_para_start_if_empty = False
+        (
+            self.__original_line_to_parse,
+            self.__original_stack_depth,
+            self.__original_document_depth,
+            self.__no_para_start_if_empty,
+        ) = (
+            position_marker.text_to_parse[:],
+            len(self.token_stack),
+            len(self.token_document),
+            False,
+        )
 
         last_stack_index = self.find_last_block_quote_on_stack()
 
-        self.__last_block_quote_stack_token = None
-        self.__last_block_quote_markdown_token_index = None
-        self.__copy_of_last_block_quote_markdown_token = None
+        (
+            self.__last_block_quote_stack_token,
+            self.__last_block_quote_markdown_token_index,
+            self.__copy_of_last_block_quote_markdown_token,
+        ) = (None, None, None)
         if not self.token_stack[last_stack_index].is_document:
             self.__last_block_quote_stack_token = self.token_stack[last_stack_index]
             self.__last_block_quote_markdown_token_index = self.token_document.index(
@@ -1047,10 +1053,12 @@ class PositionMarker:
     """
 
     def __init__(self, line_number, index_number, text_to_parse, index_indent=0):
-        self.__line_number = line_number
-        self.__index_number = index_number
-        self.__text_to_parse = text_to_parse
-        self.__index_indent = index_indent
+        (
+            self.__line_number,
+            self.__index_number,
+            self.__text_to_parse,
+            self.__index_indent,
+        ) = (line_number, index_number, text_to_parse, index_indent)
 
     @property
     def line_number(self):

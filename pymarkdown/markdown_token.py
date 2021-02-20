@@ -59,17 +59,18 @@ class MarkdownToken:
         column_number=0,
         position_marker=None,
     ):
-        self.__token_name = token_name
-        self.__token_class = token_class
-        self.__extra_data = extra_data
-
         if position_marker:
-            line_number = position_marker.line_number
-            column_number = (
-                position_marker.index_number + position_marker.index_indent + 1
+            line_number, column_number = (
+                position_marker.line_number,
+                position_marker.index_number + position_marker.index_indent + 1,
             )
-        self.__line_number = line_number
-        self.__column_number = column_number
+        (
+            self.__token_name,
+            self.__token_class,
+            self.__extra_data,
+            self.__line_number,
+            self.__column_number,
+        ) = (token_name, token_class, extra_data, line_number, column_number)
 
     # pylint: enable=too-many-arguments
 
@@ -530,11 +531,19 @@ class EndMarkdownToken(MarkdownToken):
         column_number=0,
     ):
         assert start_markdown_token
-        self.__type_name = type_name
-        self.__extracted_whitespace = extracted_whitespace
-        self.__extra_end_data = extra_end_data
-        self.__start_markdown_token = start_markdown_token
-        self.__was_forced = was_forced
+        (
+            self.__type_name,
+            self.__extracted_whitespace,
+            self.__extra_end_data,
+            self.__start_markdown_token,
+            self.__was_forced,
+        ) = (
+            type_name,
+            extracted_whitespace,
+            extra_end_data,
+            start_markdown_token,
+            was_forced,
+        )
 
         MarkdownToken.__init__(
             self,

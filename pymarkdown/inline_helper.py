@@ -39,14 +39,25 @@ class InlineRequest:
         column_number=None,
         para_owner=None,
     ):
-        self.source_text = source_text
-        self.next_index = next_index
-        self.inline_blocks = inline_blocks
-        self.remaining_line = remaining_line
-        self.current_string_unresolved = current_string_unresolved
-        self.line_number = line_number
-        self.column_number = column_number
-        self.para_owner = para_owner
+        (
+            self.source_text,
+            self.next_index,
+            self.inline_blocks,
+            self.remaining_line,
+            self.current_string_unresolved,
+            self.line_number,
+            self.column_number,
+            self.para_owner,
+        ) = (
+            source_text,
+            next_index,
+            inline_blocks,
+            remaining_line,
+            current_string_unresolved,
+            line_number,
+            column_number,
+            para_owner,
+        )
 
     # pylint: enable=too-many-arguments
 
@@ -61,28 +72,32 @@ class InlineResponse:
     """
 
     def __init__(self):
-        self.new_string = None
-        self.new_index = None
-        self.new_tokens = None
-        self.new_string_unresolved = None
-        self.consume_rest_of_line = False
-        self.original_string = None
-        self.delta_line_number = 0
-        self.delta_column_number = 0
+        (
+            self.new_string,
+            self.new_index,
+            self.new_tokens,
+            self.new_string_unresolved,
+            self.consume_rest_of_line,
+            self.original_string,
+            self.delta_line_number,
+            self.delta_column_number,
+        ) = (None, None, None, None, False, None, 0, 0)
         self.clear_fields()
 
     def clear_fields(self):
         """
         Clear any of the fields that start with new_*.
         """
-        self.new_string = None
-        self.new_index = None
-        self.new_tokens = None
-        self.new_string_unresolved = None
-        self.consume_rest_of_line = False
-        self.original_string = None
-        self.delta_line_number = 0
-        self.delta_column_number = 0
+        (
+            self.new_string,
+            self.new_index,
+            self.new_tokens,
+            self.new_string_unresolved,
+            self.consume_rest_of_line,
+            self.original_string,
+            self.delta_line_number,
+            self.delta_column_number,
+        ) = (None, None, None, None, False, None, 0, 0)
 
 
 # pylint: enable=too-few-public-methods,too-many-arguments,too-many-instance-attributes
@@ -139,28 +154,29 @@ class InlineHelper:
         """
 
         inline_response = InlineResponse()
-        inline_response.new_index = inline_request.next_index + 1
-        inline_response.new_string = ""
-        inline_response.new_string_unresolved = ""
-        source_text_size = len(inline_request.source_text)
+        (
+            inline_response.new_index,
+            inline_response.new_string,
+            inline_response.new_string_unresolved,
+            source_text_size,
+        ) = (inline_request.next_index + 1, "", "", len(inline_request.source_text))
         if inline_response.new_index >= source_text_size or (
             inline_response.new_index < source_text_size
             and inline_request.source_text[inline_response.new_index]
             == ParserHelper.newline_character
         ):
-            inline_response.new_string = InlineHelper.backslash_character
-            inline_response.new_string_unresolved = inline_response.new_string
+            inline_response.new_string, inline_response.new_string_unresolved = (
+                InlineHelper.backslash_character,
+                inline_response.new_string,
+            )
         else:
             if (
                 inline_request.source_text[inline_response.new_index]
                 in InlineHelper.__backslash_punctuation
             ):
-                inline_response.new_string = ""
-                if add_text_signature:
-                    inline_response.new_string += ParserHelper.backslash_escape_sequence
-                inline_response.new_string += inline_request.source_text[
-                    inline_response.new_index
-                ]
+                inline_response.new_string = (
+                    ParserHelper.backslash_escape_sequence if add_text_signature else ""
+                ) + inline_request.source_text[inline_response.new_index]
                 inline_response.new_string_unresolved = (
                     InlineHelper.backslash_character + inline_response.new_string
                 )
@@ -172,9 +188,9 @@ class InlineHelper:
                 inline_response.new_string_unresolved = inline_response.new_string
             inline_response.new_index += 1
 
-        inline_response.delta_line_number = 0
-        inline_response.delta_column_number = (
-            inline_response.new_index - inline_request.next_index
+        inline_response.delta_line_number, inline_response.delta_column_number = (
+            0,
+            inline_response.new_index - inline_request.next_index,
         )
         return inline_response
 
@@ -184,9 +200,11 @@ class InlineHelper:
         Handle a generic character reference.
         """
         inline_response = InlineResponse()
-        inline_response.new_index = inline_request.next_index + 1
-        inline_response.new_string = ""
-        source_text_size = len(inline_request.source_text)
+        inline_response.new_index, inline_response.new_string, source_text_size = (
+            inline_request.next_index + 1,
+            "",
+            len(inline_request.source_text),
+        )
         if (
             inline_response.new_index < source_text_size
             and inline_request.source_text[inline_response.new_index]
@@ -234,17 +252,19 @@ class InlineHelper:
                         inline_response.new_string_unresolved = (
                             original_collected_string
                         )
-                inline_response.new_string = collected_string
-                inline_response.new_index = end_index
+                inline_response.new_string, inline_response.new_index = (
+                    collected_string,
+                    end_index,
+                )
                 POGGER.debug("there-->$<--", inline_response.new_string)
                 POGGER.debug("there-->$<--", inline_response.new_string_unresolved)
             else:
                 inline_response.new_string = (
                     InlineHelper.character_reference_start_character
                 )
-        inline_response.delta_line_number = 0
-        inline_response.delta_column_number = (
-            inline_response.new_index - inline_request.next_index
+        inline_response.delta_line_number, inline_response.delta_column_number = (
+            0,
+            inline_response.new_index - inline_request.next_index,
         )
         return inline_response
 
@@ -255,14 +275,15 @@ class InlineHelper:
         blocks, which have additional needs for parsing.
         """
 
-        start_index = 0
-        current_string = ""
+        start_index, current_string = 0, ""
         next_index = ParserHelper.index_any_of(
             source_text, InlineHelper.__valid_backslash_sequence_starts, start_index
         )
         while next_index != -1:
-            current_string = current_string + source_text[start_index:next_index]
-            current_char = source_text[next_index]
+            current_string, current_char = (
+                current_string + source_text[start_index:next_index],
+                source_text[next_index],
+            )
 
             inline_request = InlineRequest(source_text, next_index)
             POGGER.debug("handle_backslashes>>$>>", current_char)
@@ -270,8 +291,10 @@ class InlineHelper:
                 inline_response = InlineHelper.handle_inline_backslash(
                     inline_request, add_text_signature=add_text_signature
                 )
-                new_string = inline_response.new_string
-                new_index = inline_response.new_index
+                new_string, new_index = (
+                    inline_response.new_string,
+                    inline_response.new_index,
+                )
             else:
                 assert (
                     source_text[next_index]
@@ -280,19 +303,22 @@ class InlineHelper:
                 inline_response = InlineHelper.handle_character_reference(
                     inline_request
                 )
-                new_string = inline_response.new_string
-                new_index = inline_response.new_index
+                new_string, new_index = (
+                    inline_response.new_string,
+                    inline_response.new_index,
+                )
 
             POGGER.debug("handle_backslashes<<$<<$", new_string, new_index)
-            current_string = current_string + new_string
-            start_index = new_index
+            current_string, start_index = current_string + new_string, new_index
             next_index = ParserHelper.index_any_of(
                 source_text, InlineHelper.__valid_backslash_sequence_starts, start_index
             )
 
-        if start_index < len(source_text):
-            current_string += source_text[start_index:]
-        return current_string
+        return (
+            current_string + source_text[start_index:]
+            if start_index < len(source_text)
+            else current_string
+        )
 
     @staticmethod
     def append_text(
@@ -314,8 +340,10 @@ class InlineHelper:
         )
         while next_index != -1:
 
-            string_part = text_to_append[start_index:next_index]
-            escaped_part = alternate_escape_map[text_to_append[next_index]]
+            string_part, escaped_part = (
+                text_to_append[start_index:next_index],
+                alternate_escape_map[text_to_append[next_index]],
+            )
 
             string_part = (
                 (
@@ -356,9 +384,9 @@ class InlineHelper:
         )
         POGGER.debug("after_collect>$>$", new_index, extracted_start_backticks)
 
-        extracted_start_backticks_size = len(extracted_start_backticks)
-        end_backtick_start_index = inline_request.source_text.find(
-            extracted_start_backticks, new_index
+        extracted_start_backticks_size, end_backtick_start_index = (
+            len(extracted_start_backticks),
+            inline_request.source_text.find(extracted_start_backticks, new_index),
         )
         while end_backtick_start_index != -1:
             (
@@ -379,8 +407,10 @@ class InlineHelper:
         inline_response.delta_line_number = -1
 
         if end_backtick_start_index == -1:
-            inline_response.new_string = extracted_start_backticks
-            inline_response.new_index = new_index
+            inline_response.new_string, inline_response.new_index = (
+                extracted_start_backticks,
+                new_index,
+            )
         else:
             between_text = inline_request.source_text[
                 new_index:end_backtick_start_index
@@ -392,8 +422,7 @@ class InlineHelper:
                 end_backtick_start_index,
                 inline_request.source_text[end_backtick_start_index:],
             )
-            leading_whitespace = ""
-            trailing_whitespace = ""
+            leading_whitespace, trailing_whitespace = "", ""
             if (
                 len(between_text) > 2
                 and (
@@ -407,8 +436,10 @@ class InlineHelper:
             ):
                 stripped_between_attempt = between_text[1:-1]
                 if len(stripped_between_attempt.strip()) != 0:
-                    leading_whitespace = between_text[0]
-                    trailing_whitespace = between_text[-1]
+                    leading_whitespace, trailing_whitespace = (
+                        between_text[0],
+                        between_text[-1],
+                    )
                     between_text = stripped_between_attempt
 
             replaced_newline = ParserHelper.create_replacement_markers(
@@ -425,14 +456,14 @@ class InlineHelper:
                 "trailing_whitespace>>$<<",
                 trailing_whitespace,
             )
-            between_text = between_text.replace(
-                ParserHelper.newline_character, replaced_newline
-            )
-            leading_whitespace = leading_whitespace.replace(
-                ParserHelper.newline_character, replaced_newline
-            )
-            trailing_whitespace = trailing_whitespace.replace(
-                ParserHelper.newline_character, replaced_newline
+            between_text, leading_whitespace, trailing_whitespace = (
+                between_text.replace(ParserHelper.newline_character, replaced_newline),
+                leading_whitespace.replace(
+                    ParserHelper.newline_character, replaced_newline
+                ),
+                trailing_whitespace.replace(
+                    ParserHelper.newline_character, replaced_newline
+                ),
             )
 
             POGGER.debug("between_text>>$<<", between_text)
@@ -447,12 +478,13 @@ class InlineHelper:
                 trailing_whitespace,
             )
             end_backtick_start_index += extracted_start_backticks_size
-            inline_response.new_string = ""
-            inline_response.new_index = end_backtick_start_index
-
-            new_column_number = inline_request.column_number
-            POGGER.debug(">>new_column_number>>$", new_column_number)
-            new_column_number += len(inline_request.remaining_line)
+            inline_response.new_string, inline_response.new_index = (
+                "",
+                end_backtick_start_index,
+            )
+            new_column_number = inline_request.column_number + len(
+                inline_request.remaining_line
+            )
             POGGER.debug(">>new_column_number>>$", new_column_number)
 
             inline_response.new_tokens = [
@@ -483,9 +515,9 @@ class InlineHelper:
             inline_response.delta_column_number,
         )
         if inline_response.delta_line_number == -1:
-            inline_response.delta_line_number = 0
-            inline_response.delta_column_number = (
-                inline_response.new_index - inline_request.next_index
+            inline_response.delta_line_number, inline_response.delta_column_number = (
+                0,
+                inline_response.new_index - inline_request.next_index,
             )
         return inline_response
 
@@ -528,21 +560,25 @@ class InlineHelper:
         POGGER.debug(">>remaining_line>>$>>", remaining_line)
 
         POGGER.debug(">>current_string>>$>>", current_string)
-        append_to_current_string = ParserHelper.newline_character
-        whitespace_to_add = None
-        removed_end_whitespace_size = len(removed_end_whitespace)
+        (
+            append_to_current_string,
+            whitespace_to_add,
+            removed_end_whitespace_size,
+            adj_hard_column,
+        ) = (
+            ParserHelper.newline_character,
+            None,
+            len(removed_end_whitespace),
+            column_number + len(remaining_line),
+        )
         POGGER.debug(
             ">>len(r_e_w)>>$>>rem>>$>>",
             removed_end_whitespace_size,
             remaining_line,
         )
-
-        adj_hard_column = column_number + len(remaining_line)
-
         POGGER.debug(">>current_string>>$>>", current_string)
 
-        is_proper_hard_break = False
-        current_string_size = len(current_string)
+        is_proper_hard_break, current_string_size = False, len(current_string)
         if (
             removed_end_whitespace_size == 0
             and current_string_size
@@ -560,8 +596,7 @@ class InlineHelper:
                     InlineHelper.backslash_character, line_number, adj_hard_column - 1
                 )
             )
-            current_string = current_string[0:-1]
-            whitespace_to_add = ""
+            current_string, whitespace_to_add = current_string[0:-1], ""
         elif removed_end_whitespace_size >= 2:
             new_tokens.append(
                 HardBreakMarkdownToken(
@@ -634,12 +669,12 @@ class InlineHelper:
                 inline_request = InlineRequest(source_text, next_index)
                 inline_response = InlineHelper.handle_inline_backslash(inline_request)
                 next_index = inline_response.new_index
-                data = data + source_text[old_index:next_index]
+                data += source_text[old_index:next_index]
             elif start_character is not None and ParserHelper.is_character_at_index(
                 source_text, next_index, start_character
             ):
                 POGGER.debug("pre-start>>next_index>>$>>", next_index)
-                data = data + start_character
+                data += start_character
                 next_index += 1
                 nesting_level += 1
             else:
@@ -647,7 +682,7 @@ class InlineHelper:
                     source_text, next_index, close_character
                 )
                 POGGER.debug("pre-close>>next_index>>$>>", next_index)
-                data = data + close_character
+                data += close_character
                 next_index += 1
                 nesting_level -= 1
             next_index, new_data = ParserHelper.collect_until_one_of_characters(
@@ -658,7 +693,7 @@ class InlineHelper:
                 next_index,
                 data,
             )
-            data = data + new_data
+            data += new_data
         POGGER.debug(
             ">>next_index2>>$>>data>>$>>",
             next_index,
@@ -681,10 +716,12 @@ class InlineHelper:
         Handle a character reference that is numeric in nature.
         """
 
-        original_reference = None
-        new_index += 1
-        translated_reference = -1
-        source_text_size = len(source_text)
+        original_reference, new_index, translated_reference, source_text_size = (
+            None,
+            new_index + 1,
+            -1,
+            len(source_text),
+        )
         if new_index < source_text_size and (
             source_text[new_index]
             in InlineHelper.__hex_character_reference_start_character
@@ -704,13 +741,12 @@ class InlineHelper:
             POGGER.debug("delta>>$>>", delta)
             if 1 <= delta <= 6:
                 translated_reference = int(collected_string, 16)
-            new_string = (
+            new_string, new_index = (
                 InlineHelper.character_reference_start_character
                 + InlineHelper.__numeric_character_reference_start_character
                 + hex_char
                 + collected_string
-            )
-            new_index = end_index
+            ), end_index
         else:
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
                 source_text, new_index, string.digits
@@ -725,12 +761,11 @@ class InlineHelper:
             POGGER.debug("delta>>$>>", delta)
             if 1 <= delta <= 7:
                 translated_reference = int(collected_string)
-            new_string = (
+            new_string, new_index = (
                 InlineHelper.character_reference_start_character
                 + InlineHelper.__numeric_character_reference_start_character
                 + collected_string
-            )
-            new_index = end_index
+            ), end_index
 
         if (
             translated_reference >= 0
@@ -740,10 +775,11 @@ class InlineHelper:
         ):
             new_index += 1
             original_reference = new_string + ";"
-            if translated_reference == 0:
-                new_string = InlineHelper.__invalid_reference_character_substitute
-            else:
-                new_string = chr(translated_reference)
+            new_string = (
+                InlineHelper.__invalid_reference_character_substitute
+                if translated_reference == 0
+                else chr(translated_reference)
+            )
         return new_string, new_index, original_reference
 
     @staticmethod
@@ -783,7 +819,7 @@ class InlineHelper:
 
             # Downloaded file is for HTML5, which includes some names that do
             # not end with ";".  These are excluded.
-            if not (next_name[-1] == InlineHelper.__skip_html5_entities_ending_with):
+            if not next_name[-1] == InlineHelper.__skip_html5_entities_ending_with:
                 continue
 
             char_entity = results_dictionary[next_name]
@@ -816,8 +852,7 @@ class InlineHelper:
         Parse a possible uri autolink and determine if it is valid.
         """
 
-        uri_scheme = ""
-        path_index = -1
+        uri_scheme, path_index = "", -1
         if (
             InlineHelper.angle_bracket_start not in text_to_parse
             and text_to_parse[0] in string.ascii_letters
@@ -825,9 +860,9 @@ class InlineHelper:
             path_index, uri_scheme = ParserHelper.collect_while_one_of_characters(
                 text_to_parse, 1, InlineHelper.__valid_scheme_characters
             )
-            uri_scheme = text_to_parse[0] + uri_scheme
-
-            text_to_parse_size = len(text_to_parse)
+            uri_scheme, text_to_parse_size = text_to_parse[0] + uri_scheme, len(
+                text_to_parse
+            )
             if (
                 2 <= len(uri_scheme) <= 32
                 and path_index < text_to_parse_size
@@ -852,18 +887,20 @@ class InlineHelper:
         closing_angle_index = inline_request.source_text.find(
             InlineHelper.__angle_bracket_end, inline_request.next_index
         )
-        new_token = None
-        between_brackets = None
+        new_token, between_brackets = None, None
         if closing_angle_index not in (-1, inline_request.next_index + 1):
 
-            between_brackets = inline_request.source_text[
-                inline_request.next_index + 1 : closing_angle_index
-            ]
-            remaining_line = inline_request.source_text[inline_request.next_index + 1 :]
+            between_brackets, remaining_line = (
+                inline_request.source_text[
+                    inline_request.next_index + 1 : closing_angle_index
+                ],
+                inline_request.source_text[inline_request.next_index + 1 :],
+            )
             closing_angle_index += 1
 
-            new_column_number = inline_request.column_number
-            new_column_number += len(inline_request.remaining_line)
+            new_column_number = inline_request.column_number + len(
+                inline_request.remaining_line
+            )
 
             new_token = InlineHelper.__parse_valid_uri_autolink(
                 between_brackets, inline_request.line_number, new_column_number
@@ -886,18 +923,25 @@ class InlineHelper:
 
         inline_response = InlineResponse()
         if new_token:
-            inline_response.new_string = ""
-            inline_response.new_index = closing_angle_index
-            inline_response.new_tokens = [new_token]
-            between_brackets = (
+            (
+                inline_response.new_string,
+                inline_response.new_index,
+                inline_response.new_tokens,
+                between_brackets,
+            ) = (
+                "",
+                closing_angle_index,
+                [new_token],
                 InlineHelper.angle_bracket_start
                 + between_brackets
-                + InlineHelper.__angle_bracket_end
+                + InlineHelper.__angle_bracket_end,
             )
         else:
-            inline_response.new_string = InlineHelper.angle_bracket_start
-            inline_response.new_index = inline_request.next_index + 1
-            between_brackets = InlineHelper.angle_bracket_start
+            inline_response.new_string, inline_response.new_index, between_brackets = (
+                InlineHelper.angle_bracket_start,
+                inline_request.next_index + 1,
+                InlineHelper.angle_bracket_start,
+            )
 
         (
             inline_response.delta_line_number,

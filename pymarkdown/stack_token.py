@@ -21,9 +21,11 @@ class StackToken:
     _stack_link_definition = "linkdef"
 
     def __init__(self, type_name, matching_markdown_token=None, extra_data=None):
-        self.__type_name = type_name
-        self.__extra_data = extra_data
-        self.__matching_markdown_token = matching_markdown_token
+        self.__type_name, self.__extra_data, self.__matching_markdown_token = (
+            type_name,
+            extra_data,
+            matching_markdown_token,
+        )
 
     def __str__(self):
         add_extra = ":" + self.extra_data if self.extra_data else ""
@@ -229,9 +231,11 @@ class FencedCodeBlockStackToken(StackToken):
         whitespace_start_count,
         matching_markdown_token,
     ):
-        self.__code_fence_character = code_fence_character
-        self.__fence_character_count = fence_character_count
-        self.__whitespace_start_count = whitespace_start_count
+        (
+            self.__code_fence_character,
+            self.__fence_character_count,
+            self.__whitespace_start_count,
+        ) = (code_fence_character, fence_character_count, whitespace_start_count)
         extra_data = (
             self.__code_fence_character
             + ":"
@@ -284,12 +288,21 @@ class ListStackToken(StackToken):
         start_index,
         matching_markdown_token,
     ):
-        self.__indent_level = indent_level
-        self.__list_character = list_character
-        self.__ws_before_marker = ws_before_marker
-        self.__ws_after_marker = ws_after_marker
-        self.__start_index = start_index
-        self.__last_new_list_token = None
+        (
+            self.__indent_level,
+            self.__list_character,
+            self.__ws_before_marker,
+            self.__ws_after_marker,
+            self.__start_index,
+            self.__last_new_list_token,
+        ) = (
+            indent_level,
+            list_character,
+            ws_before_marker,
+            ws_after_marker,
+            start_index,
+            None,
+        )
 
         extra_data = (
             str(self.__indent_level)
@@ -447,15 +460,27 @@ class LinkDefinitionStackToken(StackToken):
     """
 
     def __init__(self, extracted_whitespace, position_marker):
-        self.__extracted_whitespace = extracted_whitespace
-        self.__continuation_lines = []
-        self.__unmodified_lines = []
-        self.__start_position_marker = position_marker
-        self.original_stack_depth = None
-        self.original_document_depth = None
-        self.last_block_quote_stack_token = None
-        self.last_block_quote_markdown_token_index = None
-        self.copy_of_last_block_quote_markdown_token = None
+        (
+            self.__extracted_whitespace,
+            self.__continuation_lines,
+            self.__unmodified_lines,
+            self.__start_position_marker,
+            self.original_stack_depth,
+            self.original_document_depth,
+            self.last_block_quote_stack_token,
+            self.last_block_quote_markdown_token_index,
+            self.copy_of_last_block_quote_markdown_token,
+        ) = (
+            extracted_whitespace,
+            [],
+            [],
+            position_marker,
+            None,
+            None,
+            None,
+            None,
+            None,
+        )
         StackToken.__init__(self, StackToken._stack_link_definition)
 
     @property
@@ -507,7 +532,7 @@ class LinkDefinitionStackToken(StackToken):
 
         joined_lines = ""
         for next_line in self.continuation_lines:
-            joined_lines = joined_lines + next_line + ParserHelper.newline_character
+            joined_lines += next_line + ParserHelper.newline_character
         return joined_lines + join_suffix
 
 

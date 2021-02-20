@@ -41,8 +41,7 @@ class ListBlockProcessor:
         Determine if we have the start of an un-numbered list.
         """
         POGGER.debug("is_ulist_start>>pre>>")
-        is_start = False
-        after_all_whitespace_index = -1
+        is_start, after_all_whitespace_index = False, -1
         if adj_ws is None:
             adj_ws = extracted_whitespace
 
@@ -88,12 +87,13 @@ class ListBlockProcessor:
         Determine if we have the start of an numbered or ordered list.
         """
 
-        is_start = False
-        after_all_whitespace_index = -1
-        index = None
-        number_of_digits = None
-        is_not_one = False
-
+        is_start, after_all_whitespace_index, index, number_of_digits, is_not_one = (
+            False,
+            -1,
+            None,
+            None,
+            False,
+        )
         if adj_ws is None:
             adj_ws = extracted_whitespace
 
@@ -145,9 +145,7 @@ class ListBlockProcessor:
 
     @staticmethod
     def __is_start_olist(line_to_parse, start_index):
-        index = None
-        number_of_digits = None
-        is_not_one = None
+        index, number_of_digits, is_not_one = None, None, None
         is_start = ParserHelper.is_character_at_index_one_of(
             line_to_parse, start_index, string.digits
         )
@@ -157,8 +155,10 @@ class ListBlockProcessor:
                 line_to_parse, index, string.digits
             ):
                 index += 1
-            number_of_digits = index - start_index
-            olist_index_number = line_to_parse[start_index:index]
+            olist_index_number, number_of_digits = (
+                line_to_parse[start_index:index],
+                index - start_index,
+            )
             POGGER.debug("olist?$<<count>>$<<", olist_index_number, number_of_digits)
             is_not_one = olist_index_number != "1"
 
@@ -172,12 +172,11 @@ class ListBlockProcessor:
 
     @staticmethod
     def __is_start_phase_one(parser_state, line_to_parse, start_index, is_not_one):
-        is_start = False
 
+        is_start, line_to_parse_size = False, len(line_to_parse)
         after_all_whitespace_index, _ = ParserHelper.extract_whitespace(
             line_to_parse, start_index + 1
         )
-        line_to_parse_size = len(line_to_parse)
         POGGER.debug(
             "after_all_whitespace_index>>$>>len>>$",
             after_all_whitespace_index,
@@ -214,15 +213,22 @@ class ListBlockProcessor:
         line_to_parse,
         start_index,
     ):
-        is_start = True
-
-        is_in_paragraph = parser_state.token_stack[-1].is_paragraph
+        (
+            is_start,
+            is_first_item_in_list,
+            is_sub_list,
+            is_in_paragraph,
+            at_end_of_line,
+        ) = (
+            True,
+            False,
+            False,
+            parser_state.token_stack[-1].is_paragraph,
+            (after_all_whitespace_index == len(line_to_parse)),
+        )
         POGGER.debug("is_in_paragraph>>$", is_in_paragraph)
-        at_end_of_line = after_all_whitespace_index == len(line_to_parse)
         POGGER.debug("at_end_of_line>>$", at_end_of_line)
 
-        is_first_item_in_list = False
-        is_sub_list = False
         if is_in_paragraph:
             if not parser_state.token_stack[-2].is_list:
                 POGGER.debug(
@@ -293,10 +299,12 @@ class ListBlockProcessor:
         """
         Handle the processing of a ulist block.
         """
-        requeue_line_info = None
-        end_of_ulist_start_index = -1
-        container_level_tokens = []
-        adjusted_text_to_parse = position_marker.text_to_parse
+        (
+            requeue_line_info,
+            end_of_ulist_start_index,
+            container_level_tokens,
+            adjusted_text_to_parse,
+        ) = (None, -1, [], position_marker.text_to_parse)
 
         if not did_process:
 
@@ -377,8 +385,7 @@ class ListBlockProcessor:
                     )
                     if new_container_level_tokens:
                         container_level_tokens.extend(new_container_level_tokens)
-                    did_process = True
-                    was_container_start = True
+                    did_process, was_container_start = True, True
         return (
             did_process,
             was_container_start,
@@ -459,22 +466,28 @@ class ListBlockProcessor:
         """
         Handle the processing of a line where there is a list in process.
         """
-        container_level_tokens = []
+        (
+            container_level_tokens,
+            requested_list_indent,
+            before_ws_length,
+            leading_space_length,
+        ) = (
+            [],
+            parser_state.token_stack[ind].indent_level,
+            parser_state.token_stack[ind].ws_before_marker,
+            ParserHelper.calculate_length(extracted_whitespace),
+        )
 
         POGGER.debug("!!!!!FOUND>>$", parser_state.token_stack[ind])
         POGGER.debug("!!!!!FOUND>>$", parser_state.token_stack[ind].extra_data)
         POGGER.debug("!!!!!ALL>>$", parser_state.token_stack)
         POGGER.debug("!!!!!ALL>>$", parser_state.token_document)
 
-        requested_list_indent = parser_state.token_stack[ind].indent_level
-        before_ws_length = parser_state.token_stack[ind].ws_before_marker
         POGGER.debug(
             "!!!!!requested_list_indent>>$,before_ws=$",
             requested_list_indent,
             before_ws_length,
         )
-
-        leading_space_length = ParserHelper.calculate_length(extracted_whitespace)
 
         started_ulist, _, _, _ = ListBlockProcessor.is_ulist_start(
             parser_state,
@@ -680,27 +693,29 @@ class ListBlockProcessor:
             after_marker_ws_index,
             after_marker_whitespace,
         ) = ParserHelper.extract_whitespace(line_to_parse, start_index + 1)
-        ws_after_marker = ParserHelper.calculate_length(
-            after_marker_whitespace, start_index=start_index + 1
+        ws_after_marker, ws_before_marker, line_to_parse_size = (
+            ParserHelper.calculate_length(
+                after_marker_whitespace, start_index=start_index + 1
+            ),
+            ParserHelper.calculate_length(extracted_whitespace),
+            len(line_to_parse),
         )
         POGGER.debug(
             "after-marker>>$>>total=$", after_marker_whitespace, ws_after_marker
         )
-
-        ws_before_marker = ParserHelper.calculate_length(extracted_whitespace)
         POGGER.debug(
             "--ws_before_marker>>$>>marker_width_minus_one>>$",
             ws_before_marker,
             marker_width_minus_one,
         )
         POGGER.debug("--$--$", start_index, start_index + 1)
-
-        line_to_parse_size = len(line_to_parse)
         POGGER.debug(">>>>>XX>>$>>$<<", after_marker_ws_index, line_to_parse_size)
         if after_marker_ws_index == line_to_parse_size and ws_after_marker:
-            indent_level = 2 + marker_width_minus_one + len(adj_ws)
-            remaining_whitespace = ws_after_marker
-            ws_after_marker = 0
+            indent_level, remaining_whitespace, ws_after_marker = (
+                2 + marker_width_minus_one + len(adj_ws),
+                ws_after_marker,
+                0,
+            )
         else:
             if after_marker_ws_index == line_to_parse_size and ws_after_marker == 0:
                 ws_after_marker += 1
@@ -709,9 +724,11 @@ class ListBlockProcessor:
                 ws_before_marker + 1 + ws_after_marker + marker_width_minus_one
             )
             if ws_after_marker > 4:
-                indent_level = indent_level - ws_after_marker + 1
-                remaining_whitespace = ws_after_marker - 1
-                ws_after_marker = 1
+                indent_level, remaining_whitespace, ws_after_marker = (
+                    indent_level - ws_after_marker + 1,
+                    ws_after_marker - 1,
+                    1,
+                )
             else:
                 remaining_whitespace = 0
 
@@ -793,8 +810,7 @@ class ListBlockProcessor:
         POGGER.debug("new_stack>>$", new_stack)
         POGGER.debug("indent_level>>$", indent_level)
 
-        emit_item = True
-        emit_li = True
+        emit_item, emit_li = True, True
         did_find, last_list_index = LeafBlockProcessor.check_for_list_in_process(
             parser_state
         )
@@ -924,8 +940,7 @@ class ListBlockProcessor:
             return None, None, requeue_line_info
 
         POGGER.debug("old-stack>>$<<", container_level_tokens)
-        repeat_check = True
-        emit_li = False
+        repeat_check, emit_li = True, False
         while repeat_check:
             POGGER.debug("start")
             repeat_check = False
@@ -1034,12 +1049,11 @@ class ListBlockProcessor:
             "ARE-EQUAL>>Last_List_token=$",
             parser_state.token_document[document_token_index],
         )
-        old_start_index = parser_state.token_document[document_token_index].indent_level
-
-        old_last_marker_character = parser_state.token_stack[
-            last_list_index
-        ].list_character[-1]
-        current_start_index = new_stack.ws_before_marker
+        old_start_index, old_last_marker_character, current_start_index = (
+            parser_state.token_document[document_token_index].indent_level,
+            parser_state.token_stack[last_list_index].list_character[-1],
+            new_stack.ws_before_marker,
+        )
         POGGER.debug(
             "old>>$>>$",
             parser_state.token_stack[last_list_index].extra_data,
@@ -1137,10 +1151,11 @@ class ListBlockProcessor:
             requested_list_indent,
             remaining_indent,
         )
-        if ParserHelper.tab_character in leading_space:
-            removed_whitespace = ParserHelper.tab_character
-        else:
-            removed_whitespace = leading_space[0:requested_list_indent]
+        removed_whitespace = (
+            ParserHelper.tab_character
+            if ParserHelper.tab_character in leading_space
+            else leading_space[0:requested_list_indent]
+        )
         return (
             ParserHelper.repeat_string(ParserHelper.space_character, remaining_indent)
             + line_to_parse[start_index:]

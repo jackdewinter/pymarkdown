@@ -33,9 +33,7 @@ class TokenizedMarkdown:
         Initializes a new instance of the TokenizedMarkdown class.
         """
 
-        self.tokenized_document = None
-        self.stack = None
-        self.source_provider = None
+        self.tokenized_document, self.stack, self.source_provider = None, None, None
 
         if not resource_path:
             resource_path = os.path.join(os.path.split(__file__)[0], "resources")
@@ -68,8 +66,7 @@ class TokenizedMarkdown:
         Transform a markdown-encoded string into an array of tokens.
         """
         try:
-            self.tokenized_document = None
-            self.stack = []
+            self.tokenized_document, self.stack = None, []
 
             InlineProcessor.initialize()
             LinkHelper.initialize()
@@ -98,8 +95,7 @@ class TokenizedMarkdown:
         The first pass at the tokens is to deal with blocks.
         """
 
-        self.stack = []
-        self.stack.append(DocumentStackToken())
+        self.stack = [DocumentStackToken()]
 
         self.tokenized_document = []
         token_to_use = self.source_provider.get_next_line()
