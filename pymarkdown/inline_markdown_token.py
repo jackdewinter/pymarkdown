@@ -54,9 +54,9 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_emphasis,
-            str(emphasis_length)
-            + MarkdownToken.extra_data_separator
-            + emphasis_character,
+            MarkdownToken.extra_data_separator.join(
+                [str(emphasis_length), emphasis_character]
+            ),
             line_number=line_number,
             column_number=column_number,
         )
@@ -174,13 +174,14 @@ class InlineCodeSpanMarkdownToken(InlineMarkdownToken):
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_code_span,
-            self.__span_text
-            + MarkdownToken.extra_data_separator
-            + self.__extracted_start_backticks
-            + MarkdownToken.extra_data_separator
-            + self.__leading_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.__trailing_whitespace,
+            MarkdownToken.extra_data_separator.join(
+                [
+                    self.__span_text,
+                    self.__extracted_start_backticks,
+                    self.__leading_whitespace,
+                    self.__trailing_whitespace,
+                ]
+            ),
             line_number=line_number,
             column_number=column_number,
         )
@@ -293,39 +294,30 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         )
 
         if token_name == MarkdownToken._token_inline_image:
-            extra_data += MarkdownToken.extra_data_separator
+            extra_data = f"{extra_data}{MarkdownToken.extra_data_separator}"
 
-        extra_data = (
-            label_type
-            + MarkdownToken.extra_data_separator
-            + self.__link_uri
-            + MarkdownToken.extra_data_separator
-            + self.__link_title
-            + MarkdownToken.extra_data_separator
-            + extra_data
-            + self.__pre_link_uri
-            + MarkdownToken.extra_data_separator
-            + self.__pre_link_title
-            + MarkdownToken.extra_data_separator
-            + self.__ex_label
-            + MarkdownToken.extra_data_separator
-            + self.__text_from_blocks
-            + MarkdownToken.extra_data_separator
-            + str(self.__did_use_angle_start)
-            + MarkdownToken.extra_data_separator
-            + self.__inline_title_bounding_character
-            + MarkdownToken.extra_data_separator
-            + self.__before_link_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.__before_title_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.__after_title_whitespace
+        # Purposefully split this way to accomodate the extra data
+        part_1 = MarkdownToken.extra_data_separator.join(
+            [label_type, self.__link_uri, self.__link_title, extra_data]
+        )
+        part_2 = MarkdownToken.extra_data_separator.join(
+            [
+                self.__pre_link_uri,
+                self.__pre_link_title,
+                self.__ex_label,
+                self.__text_from_blocks,
+                str(self.__did_use_angle_start),
+                self.__inline_title_bounding_character,
+                self.__before_link_whitespace,
+                self.__before_title_whitespace,
+                self.__after_title_whitespace,
+            ]
         )
 
         InlineMarkdownToken.__init__(
             self,
             token_name,
-            extra_data,
+            f"{part_1}{part_2}",
             line_number=line_number,
             column_number=column_number,
         )
@@ -616,14 +608,10 @@ class TextMarkdownToken(InlineMarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        new_extra_data = (
-            self.__token_text
-            + MarkdownToken.extra_data_separator
-            + self.__extracted_whitespace
-        )
+        data_field_parts = [self.__token_text, self.__extracted_whitespace]
         if self.end_whitespace:
-            new_extra_data += MarkdownToken.extra_data_separator + self.__end_whitespace
-        self._set_extra_data(new_extra_data)
+            data_field_parts.append(self.__end_whitespace)
+        self._set_extra_data(MarkdownToken.extra_data_separator.join(data_field_parts))
 
     def remove_final_whitespace(self):
         """
@@ -691,15 +679,8 @@ class TextMarkdownToken(InlineMarkdownToken):
                 )
 
         if whitespace_to_append is not None:
-            self.__extracted_whitespace += (
-                ParserHelper.newline_character + whitespace_to_append
-            )
-        self.__token_text += (
-            ParserHelper.newline_character
-            + blank_line_sequence
-            + prefix_whitespace
-            + text_to_combine
-        )
+            self.__extracted_whitespace = f"{self.__extracted_whitespace}{ParserHelper.newline_character}{whitespace_to_append}"
+        self.__token_text = f"{self.__token_text}{ParserHelper.newline_character}{blank_line_sequence}{prefix_whitespace}{text_to_combine}"
         self.__compose_extra_data_field()
         return removed_whitespace
 
@@ -790,15 +771,4 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         """
         Independent of the __str__ function, provide extra information.
         """
-        return (
-            ">>active="
-            + str(self.__is_active)
-            + ",repeat="
-            + str(self.__repeat_count)
-            + ",preceding='"
-            + str(self.__preceding_two)
-            + "',following='"
-            + str(self.__following_two)
-            + "':"
-            + str(self)
-        )
+        return f">>active={str(self.__is_active)},repeat={str(self.__repeat_count)},preceding='{str(self.__preceding_two)}',following='{str(self.__following_two)}':{str(self)}"

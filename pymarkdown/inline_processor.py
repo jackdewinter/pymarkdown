@@ -23,11 +23,7 @@ class InlineProcessor:
 
     __valid_inline_text_block_sequence_starts = ""
     __valid_inline_simple_text_block_sequence_starts = ""
-    __inline_processing_needed = (
-        EmphasisHelper.inline_emphasis
-        + LinkHelper.link_label_start
-        + LinkHelper.link_label_end
-    )
+    __inline_processing_needed = f"{EmphasisHelper.inline_emphasis}{LinkHelper.link_label_start}{LinkHelper.link_label_end}"
     __inline_character_handlers = {}
     __inline_simple_character_handlers = {}
 
@@ -87,8 +83,7 @@ class InlineProcessor:
             inline_response.delta_column_number,
         ) = (
             inline_request.next_index + 1,
-            ParserHelper.escape_character
-            + inline_request.source_text[inline_request.next_index],
+            f"{ParserHelper.escape_character}{inline_request.source_text[inline_request.next_index]}",
             1,
         )
         return inline_response
@@ -508,7 +503,7 @@ class InlineProcessor:
         """
 
         POGGER.debug(">>source_text>>$", source_text)
-        start_index, processed_line = 0, ""
+        start_index = 0
         POGGER.debug(
             ">>__valid_inline_simple_text_block_sequence_starts>>$",
             InlineProcessor.__valid_inline_simple_text_block_sequence_starts,
@@ -518,21 +513,22 @@ class InlineProcessor:
             InlineProcessor.__valid_inline_simple_text_block_sequence_starts,
             start_index,
         )
+        processed_parts = []
         POGGER.debug(">>next_index>>$", next_index)
         while next_index != -1:
-            processed_line += source_text[start_index:next_index]
+            processed_parts.append(source_text[start_index:next_index])
             inline_request = InlineRequest(source_text, next_index)
             if source_text[next_index] in InlineProcessor.__inline_character_handlers:
                 POGGER.debug(
                     "handler(before)>>$<<",
                     source_text[next_index],
                 )
-                POGGER.debug("current_string_unresolved>>$<<", processed_line)
+                POGGER.debug("current_string_unresolved>>$<<", processed_parts)
                 proc_fn = InlineProcessor.__inline_character_handlers[
                     source_text[next_index]
                 ]
                 inline_response = proc_fn(inline_request)
-                processed_line += inline_response.new_string
+                processed_parts.append(inline_response.new_string)
                 POGGER.debug("handler(after)>>$<<", source_text[next_index])
                 POGGER.debug(
                     "delta_line_number>>$<<", inline_response.delta_line_number
@@ -540,7 +536,7 @@ class InlineProcessor:
                 POGGER.debug("delta_column>>$<<", inline_response.delta_column_number)
                 start_index = inline_response.new_index
             else:
-                processed_line += ParserHelper.newline_character
+                processed_parts.append(ParserHelper.newline_character)
                 start_index = next_index + 1
             next_index = ParserHelper.index_any_of(
                 source_text,
@@ -548,7 +544,8 @@ class InlineProcessor:
                 start_index,
             )
 
-        return processed_line + source_text[start_index:]
+        processed_parts.append(source_text[start_index:])
+        return "".join(processed_parts)
 
     @staticmethod
     def __calculate_full_deltas(current_token, para_owner, delta_line, repeat_count):
@@ -563,7 +560,7 @@ class InlineProcessor:
             last_line_of_label = ParserHelper.calculate_last_line(
                 current_token.ex_label
             )
-            repeat_count = -(len(last_line_of_label) + 1 + 1)
+            repeat_count = -(len(last_line_of_label) + 2)
         return delta_line, repeat_count
 
     # pylint: disable=too-many-arguments, too-many-branches, too-many-statements
@@ -699,10 +696,10 @@ class InlineProcessor:
                     current_token, para_owner, delta_line, repeat_count
                 )
             else:
-                assert (
-                    current_token.label_type == "shortcut"
-                    or current_token.label_type == "collapsed"
-                ), ("Label type '" + current_token.label_type + "' not handled.")
+                assert current_token.label_type in (
+                    "shortcut",
+                    "collapsed",
+                ), f"Label type '{current_token.label_type}' not handled."
                 (
                     delta_line,
                     repeat_count,
@@ -1170,9 +1167,7 @@ class InlineProcessor:
                 inline_response.new_index = new_index
                 assert end_string is not None
                 assert is_setext
-                end_string += (
-                    extracted_whitespace + ParserHelper.whitespace_split_character
-                )
+                end_string = f"{end_string}{extracted_whitespace}{ParserHelper.whitespace_split_character}"
                 POGGER.debug(
                     "__arw>>end_string>>$>>",
                     end_string,
@@ -1215,16 +1210,9 @@ class InlineProcessor:
         )
         if original_string is not None:
             assert not new_string_unresolved or new_string_unresolved == original_string
-            current_string += ParserHelper.create_replacement_markers(
-                original_string, InlineHelper.append_text("", new_string)
-            )
+            current_string = f"{current_string}{ParserHelper.create_replacement_markers(original_string, InlineHelper.append_text('', new_string))}"
         else:
             current_string = InlineHelper.append_text(current_string, new_string)
-        POGGER.debug(
-            "__complete_inline_loop--current_string>>$>>",
-            current_string,
-        )
-
         POGGER.debug(
             "__complete_inline_loop--current_string>>$>>",
             current_string,
@@ -1235,7 +1223,9 @@ class InlineProcessor:
             new_string_unresolved,
         )
         if new_string_unresolved:
-            current_string_unresolved += new_string_unresolved
+            current_string_unresolved = (
+                f"{current_string_unresolved}{new_string_unresolved}"
+            )
         else:
             current_string_unresolved = InlineHelper.append_text(
                 current_string_unresolved, new_string
@@ -1298,7 +1288,7 @@ class InlineProcessor:
                 source_text, start_index
             )
             assert end_string
-            end_string += extracted_whitespace
+            end_string = f"{end_string}{extracted_whitespace}"
 
         if start_index < len(source_text):
             current_string = InlineHelper.append_text(

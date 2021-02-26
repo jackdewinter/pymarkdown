@@ -111,7 +111,7 @@ class InlineHelper:
     __valid_email_regex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
 
     __scheme_end_character = ":"
-    __valid_scheme_characters = string.ascii_letters + string.digits + ".-+"
+    __valid_scheme_characters = f"{string.ascii_letters}{string.digits}.-+"
 
     __backslash_punctuation = "!\"#$%&'()*+,-./:;<=>?@[]^_`{|}~\\"
     __html_character_escape_map = {
@@ -133,8 +133,10 @@ class InlineHelper:
     __invalid_reference_character_substitute = "\ufffd"
     __line_end_whitespace = ParserHelper.space_character
     __valid_backslash_sequence_starts = (
-        backslash_character + character_reference_start_character
+        f"{backslash_character}{character_reference_start_character}"
     )
+
+    __ascii_letters_and_digits = f"{string.ascii_letters}{string.digits}"
 
     __skip_html5_entities_ending_with = ";"
 
@@ -232,7 +234,7 @@ class InlineHelper:
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
                 inline_request.source_text,
                 inline_response.new_index,
-                string.ascii_letters + string.digits,
+                InlineHelper.__ascii_letters_and_digits,
             )
             if collected_string:
                 collected_string = (
@@ -275,15 +277,14 @@ class InlineHelper:
         blocks, which have additional needs for parsing.
         """
 
-        start_index, current_string = 0, ""
+        start_index = 0
         next_index = ParserHelper.index_any_of(
             source_text, InlineHelper.__valid_backslash_sequence_starts, start_index
         )
+        string_parts = []
         while next_index != -1:
-            current_string, current_char = (
-                current_string + source_text[start_index:next_index],
-                source_text[next_index],
-            )
+            string_parts.append(source_text[start_index:next_index])
+            current_char = source_text[next_index]
 
             inline_request = InlineRequest(source_text, next_index)
             POGGER.debug("handle_backslashes>>$>>", current_char)
@@ -309,16 +310,15 @@ class InlineHelper:
                 )
 
             POGGER.debug("handle_backslashes<<$<<$", new_string, new_index)
-            current_string, start_index = current_string + new_string, new_index
+            string_parts.append(new_string)
+            start_index = new_index
             next_index = ParserHelper.index_any_of(
                 source_text, InlineHelper.__valid_backslash_sequence_starts, start_index
             )
 
-        return (
-            current_string + source_text[start_index:]
-            if start_index < len(source_text)
-            else current_string
-        )
+        if start_index < len(source_text):
+            string_parts.append(source_text[start_index:])
+        return "".join(string_parts)
 
     @staticmethod
     def append_text(
@@ -338,24 +338,18 @@ class InlineHelper:
         next_index = ParserHelper.index_any_of(
             text_to_append, alternate_escape_map.keys(), start_index
         )
+        text_parts = [string_to_append_to]
         while next_index != -1:
 
-            string_part, escaped_part = (
-                text_to_append[start_index:next_index],
-                alternate_escape_map[text_to_append[next_index]],
-            )
-
-            string_part = (
-                (
-                    string_part
-                    + ParserHelper.create_replacement_markers(
-                        text_to_append[next_index], escaped_part
-                    )
+            escaped_part = alternate_escape_map[text_to_append[next_index]]
+            text_parts.append(text_to_append[start_index:next_index])
+            text_parts.append(
+                ParserHelper.create_replacement_markers(
+                    text_to_append[next_index], escaped_part
                 )
                 if add_text_signature
-                else string_part + escaped_part
+                else escaped_part
             )
-            string_to_append_to += string_part
 
             start_index = next_index + 1
             next_index = ParserHelper.index_any_of(
@@ -363,9 +357,9 @@ class InlineHelper:
             )
 
         if start_index < len(text_to_append):
-            string_to_append_to += text_to_append[start_index:]
+            text_parts.append(text_to_append[start_index:])
 
-        return string_to_append_to
+        return "".join(text_parts)
 
     # pylint: disable=too-many-statements, too-many-locals
     @staticmethod
@@ -529,8 +523,8 @@ class InlineHelper:
         Modify the string at the end of the paragraph.
         """
         if end_string is None:
-            end_string = ""
-        return end_string + removed_end_whitespace + ParserHelper.newline_character
+            return f"{removed_end_whitespace}{ParserHelper.newline_character}"
+        return f"{end_string}{removed_end_whitespace}{ParserHelper.newline_character}"
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -639,9 +633,11 @@ class InlineHelper:
         """
         Extract a string that is bounded by some manner of characters.
         """
-        break_characters = InlineHelper.backslash_character + close_character
-        if start_character:
-            break_characters = break_characters + start_character
+        break_characters = (
+            f"{InlineHelper.backslash_character}{close_character}{start_character}"
+            if start_character
+            else f"{InlineHelper.backslash_character}{close_character}"
+        )
         nesting_level = 0
         POGGER.debug(
             "extract_bounded_string>>new_index>>$>>data>>$>>",
@@ -651,6 +647,7 @@ class InlineHelper:
         next_index, data = ParserHelper.collect_until_one_of_characters(
             source_text, new_index, break_characters
         )
+        extracted_parts = [data]
         POGGER.debug(
             ">>next_index1>>$>>data>>$>>",
             next_index,
@@ -669,12 +666,12 @@ class InlineHelper:
                 inline_request = InlineRequest(source_text, next_index)
                 inline_response = InlineHelper.handle_inline_backslash(inline_request)
                 next_index = inline_response.new_index
-                data += source_text[old_index:next_index]
+                extracted_parts.append(source_text[old_index:next_index])
             elif start_character is not None and ParserHelper.is_character_at_index(
                 source_text, next_index, start_character
             ):
                 POGGER.debug("pre-start>>next_index>>$>>", next_index)
-                data += start_character
+                extracted_parts.append(start_character)
                 next_index += 1
                 nesting_level += 1
             else:
@@ -682,7 +679,7 @@ class InlineHelper:
                     source_text, next_index, close_character
                 )
                 POGGER.debug("pre-close>>next_index>>$>>", next_index)
-                data += close_character
+                extracted_parts.append(close_character)
                 next_index += 1
                 nesting_level -= 1
             next_index, new_data = ParserHelper.collect_until_one_of_characters(
@@ -693,7 +690,7 @@ class InlineHelper:
                 next_index,
                 data,
             )
-            data += new_data
+            extracted_parts.append(new_data)
         POGGER.debug(
             ">>next_index2>>$>>data>>$>>",
             next_index,
@@ -704,7 +701,7 @@ class InlineHelper:
             and nesting_level == 0
         ):
             POGGER.debug("extract_bounded_string>>found-close")
-            return next_index + 1, data
+            return next_index + 1, "".join(extracted_parts)
         POGGER.debug(
             "extract_bounded_string>>ran out of string>>next_index>>$", next_index
         )
@@ -742,11 +739,9 @@ class InlineHelper:
             if 1 <= delta <= 6:
                 translated_reference = int(collected_string, 16)
             new_string, new_index = (
-                InlineHelper.character_reference_start_character
-                + InlineHelper.__numeric_character_reference_start_character
-                + hex_char
-                + collected_string
-            ), end_index
+                f"{InlineHelper.character_reference_start_character}{InlineHelper.__numeric_character_reference_start_character}{hex_char}{collected_string}",
+                end_index,
+            )
         else:
             end_index, collected_string = ParserHelper.collect_while_one_of_characters(
                 source_text, new_index, string.digits
@@ -762,10 +757,9 @@ class InlineHelper:
             if 1 <= delta <= 7:
                 translated_reference = int(collected_string)
             new_string, new_index = (
-                InlineHelper.character_reference_start_character
-                + InlineHelper.__numeric_character_reference_start_character
-                + collected_string
-            ), end_index
+                f"{InlineHelper.character_reference_start_character}{InlineHelper.__numeric_character_reference_start_character}{collected_string}",
+                end_index,
+            )
 
         if (
             translated_reference >= 0
@@ -774,7 +768,7 @@ class InlineHelper:
             == InlineHelper.__character_reference_end_character
         ):
             new_index += 1
-            original_reference = new_string + ";"
+            original_reference = f"{new_string};"
             new_string = (
                 InlineHelper.__invalid_reference_character_substitute
                 if translated_reference == 0
@@ -796,22 +790,10 @@ class InlineHelper:
             with open(os.path.abspath(master_entities_file)) as infile:
                 results_dictionary = json.load(infile)
         except json.decoder.JSONDecodeError as this_exception:
-            error_message = (
-                "Named character entity map file '"
-                + master_entities_file
-                + "' is not a valid JSON file ("
-                + str(this_exception)
-                + ")."
-            )
+            error_message = f"Named character entity map file '{master_entities_file}' is not a valid JSON file ({str(this_exception)})."
             raise BadTokenizationError(error_message) from this_exception
         except IOError as this_exception:
-            error_message = (
-                "Named character entity map file '"
-                + master_entities_file
-                + "' was not loaded ("
-                + str(this_exception)
-                + ")."
-            )
+            error_message = f"Named character entity map file '{master_entities_file}' was not loaded ({str(this_exception)})."
             raise BadTokenizationError(error_message) from this_exception
 
         approved_entity_map = {}
@@ -860,7 +842,7 @@ class InlineHelper:
             path_index, uri_scheme = ParserHelper.collect_while_one_of_characters(
                 text_to_parse, 1, InlineHelper.__valid_scheme_characters
             )
-            uri_scheme, text_to_parse_size = text_to_parse[0] + uri_scheme, len(
+            uri_scheme, text_to_parse_size = f"{text_to_parse[0]}{uri_scheme}", len(
                 text_to_parse
             )
             if (
@@ -932,9 +914,7 @@ class InlineHelper:
                 "",
                 closing_angle_index,
                 [new_token],
-                InlineHelper.angle_bracket_start
-                + between_brackets
-                + InlineHelper.__angle_bracket_end,
+                f"{InlineHelper.angle_bracket_start}{between_brackets}{InlineHelper.__angle_bracket_end}",
             )
         else:
             inline_response.new_string, inline_response.new_index, between_brackets = (

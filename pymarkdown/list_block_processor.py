@@ -858,16 +858,14 @@ class ListBlockProcessor:
             remaining_whitespace,
             after_marker_ws_index,
         )
-        line_to_parse = (
-            ParserHelper.repeat_string(
-                ParserHelper.space_character, remaining_whitespace
-            )
-            + line_to_parse[after_marker_ws_index:]
-        )
         POGGER.debug("__post_list>>after>>$", container_level_tokens)
 
         parser_state.set_no_para_start_if_empty()
-        return container_level_tokens, line_to_parse, None
+        return (
+            container_level_tokens,
+            f"{ParserHelper.repeat_string(ParserHelper.space_character, remaining_whitespace)}{line_to_parse[after_marker_ws_index:]}",
+            None,
+        )
         # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
@@ -1157,9 +1155,9 @@ class ListBlockProcessor:
             else leading_space[0:requested_list_indent]
         )
         return (
-            ParserHelper.repeat_string(ParserHelper.space_character, remaining_indent)
-            + line_to_parse[start_index:]
-        ), removed_whitespace
+            f"{ParserHelper.repeat_string(ParserHelper.space_character, remaining_indent)}{line_to_parse[start_index:]}",
+            removed_whitespace,
+        )
 
     # pylint: disable=too-many-arguments
     @staticmethod

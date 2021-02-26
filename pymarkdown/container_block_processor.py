@@ -624,12 +624,7 @@ class ContainerBlockProcessor:
                 stack_bq_count,
                 this_bq_count,
             )
-            adj_line_to_parse = (
-                ParserHelper.repeat_string(
-                    ParserHelper.space_character, active_container_index
-                )
-                + adj_line_to_parse
-            )
+            adj_line_to_parse = f"{ParserHelper.repeat_string(ParserHelper.space_character, active_container_index)}{adj_line_to_parse}"
             POGGER.debug("check next container_start>post<<$<<", adj_line_to_parse)
 
             POGGER.debug("leaf_tokens>>$", leaf_tokens)
@@ -1216,15 +1211,7 @@ class ContainerIndices:
         self.block_index = block_index
 
     def __str__(self):
-        return (
-            "{ContainerIndices:ulist_index:"
-            + str(self.ulist_index)
-            + ";olist_index:"
-            + str(self.olist_index)
-            + ";block_index:"
-            + str(self.block_index)
-            + "}"
-        )
+        return f"{{ContainerIndices:ulist_index:{self.ulist_index};olist_index:{self.olist_index};block_index:{self.block_index}}}"
 
 
 # pylint: enable=too-few-public-methods

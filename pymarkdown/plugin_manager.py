@@ -47,57 +47,23 @@ class BadPluginError(Exception):
             if file_name:
                 if class_name:
                     if is_constructor:
-                        formatted_message = (
-                            "Plugin file named '"
-                            + file_name
-                            + "' threw an exception in the constructor for the class '"
-                            + class_name
-                            + "'."
-                        )
+                        formatted_message = f"Plugin file named '{file_name}' threw an exception in the constructor for the class '{class_name}'."
                     else:
-                        formatted_message = (
-                            "Plugin file named '"
-                            + file_name
-                            + "' does not contain a class named '"
-                            + class_name
-                            + "'."
-                        )
+                        formatted_message = f"Plugin file named '{file_name}' does not contain a class named '{class_name}'."
                 else:
                     formatted_message = (
-                        "Plugin file named '" + file_name + "' cannot be loaded."
+                        f"Plugin file named '{file_name}' cannot be loaded."
                     )
             elif class_name:
                 if field_name:
                     if is_empty:
-                        formatted_message = (
-                            "Plugin class '"
-                            + class_name
-                            + "' returned an empty value for field name '"
-                            + field_name
-                            + "'."
-                        )
+                        formatted_message = f"Plugin class '{class_name}' returned an empty value for field name '{field_name}'."
                     else:
-                        formatted_message = (
-                            "Plugin class '"
-                            + class_name
-                            + "' returned an improperly typed value for field name '"
-                            + field_name
-                            + "'."
-                        )
+                        formatted_message = f"Plugin class '{class_name}' returned an improperly typed value for field name '{field_name}'."
                 else:
-                    formatted_message = (
-                        "Plugin class '"
-                        + class_name
-                        + "' had a critical failure loading the plugin details."
-                    )
+                    formatted_message = f"Plugin class '{class_name}' had a critical failure loading the plugin details."
             else:
-                formatted_message = (
-                    "Plugin id '"
-                    + plugin_id
-                    + "' had a critical failure during the '"
-                    + str(plugin_action)
-                    + "' action."
-                )
+                formatted_message = f"Plugin id '{plugin_id}' had a critical failure during the '{str(plugin_action)}' action."
         super().__init__(formatted_message)
 
     # pylint: enable=too-many-arguments
@@ -293,7 +259,7 @@ class PluginManager:
             for next_additional_plugin in additional_paths:
                 if not os.path.exists(next_additional_plugin):
                     formatted_message = (
-                        "Plugin path '" + next_additional_plugin + "' does not exist."
+                        f"Plugin path '{next_additional_plugin}' does not exist."
                     )
                     raise BadPluginError(formatted_message=formatted_message)
                 if os.path.isdir(next_additional_plugin):
@@ -324,9 +290,7 @@ class PluginManager:
         Log the scan failure in the appropriate format.
         """
 
-        extra_info = (
-            " [" + extra_error_information + "]" if extra_error_information else ""
-        )
+        extra_info = f" [{extra_error_information}]" if extra_error_information else ""
 
         print(
             "{0}:{1}:{2}: {3}: {4}{5} ({6})".format(

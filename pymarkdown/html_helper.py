@@ -36,17 +36,19 @@ class HtmlHelper:
     __html_attribute_name_value_separator = "="
     __html_attribute_separator = ParserHelper.space_character
     __valid_tag_name_start = string.ascii_letters
-    __valid_tag_name_characters = string.ascii_letters + string.digits + "-"
-    __tag_attribute_name_characters = string.ascii_letters + string.digits + "_.:-"
-    __unquoted_attribute_value_stop = "\"'=<>`" + Constants.whitespace
-    __tag_attribute_name_start = string.ascii_letters + "_:"
+    __valid_tag_name_characters = f"{string.ascii_letters}{string.digits}-"
+    __tag_attribute_name_characters = f"{string.ascii_letters}{string.digits}_.:-"
+    __unquoted_attribute_value_stop = f"\"'=<>`{Constants.whitespace}"
+    __tag_attribute_name_start = f"{string.ascii_letters}_:"
     __html_block_1_start_tag_prefix = ["script", "pre", "style"]
     __html_tag_attribute_value_terminators = " \"'=<>`"
     __html_block_2_to_5_start = "!"
     __html_block_2_continued_start = "--"
+    __html_block_2_xx = f"{__html_block_2_to_5_start}{__html_block_2_continued_start}"
     __html_block_3_continued_start = "?"
     __html_block_4_continued_start = string.ascii_uppercase
     __html_block_5_continued_start = "[CDATA["
+    __html_block_5_xx = f"{__html_block_2_to_5_start}{__html_block_5_continued_start}"
     __html_block_1_end_tags = ["</script>", "</pre>", "</style>"]
     __html_block_2_end = "-->"
     __html_block_3_end = "?>"
@@ -54,7 +56,7 @@ class HtmlHelper:
     __html_block_5_end = "]]>"
 
     __attribute_start_characters = "abcdefghijklmnopqrstuvwxyz1234567890:_"
-    __attribute_other_characters = __attribute_start_characters + ".-"
+    __attribute_other_characters = f"{__attribute_start_characters}.-"
 
     __raw_declaration_start_character = "!"
     __raw_declaration_whitespace = ParserHelper.space_character
@@ -520,7 +522,9 @@ class HtmlHelper:
                         or HtmlHelper.__raw_html_exclusion_4 in remaining_line
                     )
                 ):
-                    valid_raw_html = special_start + remaining_line + special_end[0:-1]
+                    valid_raw_html = (
+                        f"{special_start}{remaining_line}{special_end[0:-1]}"
+                    )
         return valid_raw_html, parse_index
 
     @staticmethod
@@ -543,8 +547,7 @@ class HtmlHelper:
                 remaining_line_parse_index,
             ) = HtmlHelper.__process_raw_special(
                 remaining_line,
-                HtmlHelper.__html_block_2_to_5_start
-                + HtmlHelper.__html_block_2_continued_start,
+                HtmlHelper.__html_block_2_xx,
                 HtmlHelper.__html_block_2_end,
                 True,
             )
@@ -563,8 +566,7 @@ class HtmlHelper:
                 remaining_line_parse_index,
             ) = HtmlHelper.__process_raw_special(
                 remaining_line,
-                HtmlHelper.__html_block_2_to_5_start
-                + HtmlHelper.__html_block_5_continued_start,
+                HtmlHelper.__html_block_5_xx,
                 HtmlHelper.__html_block_5_end,
             )
         if not valid_raw_html:

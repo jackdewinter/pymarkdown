@@ -180,11 +180,9 @@ class TransformToGfm:
         """
         Register the handlers necessary to deal with token's start and end.
         """
-        assert issubclass(type_name, MarkdownToken), (
-            "Token class '"
-            + str(type_name)
-            + "' must be descended from the 'MarkdownToken' class."
-        )
+        assert issubclass(
+            type_name, MarkdownToken
+        ), f"Token class '{str(type_name)}' must be descended from the 'MarkdownToken' class."
         token_init_fn = type_name.__dict__["__init__"]
         init_parameters = {}
         for i in inspect.getfullargspec(token_init_fn)[0]:
@@ -228,15 +226,13 @@ class TransformToGfm:
                         output_html, next_token, transform_state
                     )
                 else:
-                    assert False, (
-                        "Markdown token end type "
-                        + next_token.type_name
-                        + " not supported."
-                    )
+                    assert (
+                        False
+                    ), f"Markdown token end type {next_token.type_name} not supported."
             else:
-                assert False, (
-                    "Markdown token type " + str(type(next_token)) + " not supported."
-                )
+                assert (
+                    False
+                ), f"Markdown token type {str(type(next_token))} not supported."
 
             POGGER.debug("======")
             POGGER.debug(
@@ -268,24 +264,29 @@ class TransformToGfm:
         Apply any trailing text to the output.
         """
         stack_text = transform_state.transform_stack.pop()
-
+        trailing_part = [stack_text]
         for next_token_to_test in TransformToGfm.add_trailing_text_tokens:
             if output_html.startswith(next_token_to_test):
-                output_html = ParserHelper.newline_character + output_html
+                trailing_part.append(ParserHelper.newline_character)
                 break
 
+        trailing_part.append(output_html)
         if output_html.endswith("</ul>") or output_html.endswith("</ol>"):
-            output_html += ParserHelper.newline_character
-        return stack_text + output_html + transform_state.add_trailing_text
+            trailing_part.append(ParserHelper.newline_character)
+        trailing_part.append(transform_state.add_trailing_text)
+        return "".join(trailing_part)
 
     @classmethod
     def __apply_leading_text(cls, output_html, transform_state):
         """
         Apply any leading text to the output.
         """
-        if output_html and output_html[-1] != ParserHelper.newline_character:
-            output_html += ParserHelper.newline_character
-        output_html += transform_state.add_leading_text
+
+        output_html = (
+            f"{output_html}{ParserHelper.newline_character}{transform_state.add_leading_text}"
+            if output_html and output_html[-1] != ParserHelper.newline_character
+            else f"{output_html}{transform_state.add_leading_text}"
+        )
         transform_state.transform_stack.append(output_html)
         return ""
 
@@ -296,28 +297,28 @@ class TransformToGfm:
         """
         adjusted_text_token = ParserHelper.resolve_all_from_text(next_token.token_text)
 
+        token_parts = []
         if transform_state.is_in_code_block:
             if transform_state.is_in_fenced_code_block:
                 if transform_state.last_token.is_blank_line:
                     if transform_state.actual_tokens[
                         transform_state.actual_token_index - 2
                     ].is_blank_line:
-                        output_html += ParserHelper.newline_character
+                        token_parts.append(ParserHelper.newline_character)
 
-            extracted_whitespace = ParserHelper.resolve_all_from_text(
-                next_token.extracted_whitespace
+            token_parts.append(
+                ParserHelper.resolve_all_from_text(next_token.extracted_whitespace)
             )
-            output_html += extracted_whitespace + adjusted_text_token
+            token_parts.append(adjusted_text_token)
         elif transform_state.is_in_html_block:
-            output_html += (
-                next_token.extracted_whitespace
-                + adjusted_text_token
-                + ParserHelper.newline_character
-            )
+            token_parts.append(next_token.extracted_whitespace)
+            token_parts.append(adjusted_text_token)
+            token_parts.append(ParserHelper.newline_character)
         else:
-            output_html += adjusted_text_token
+            token_parts.append(adjusted_text_token)
 
-        return output_html
+        token_parts.insert(0, output_html)
+        return "".join(token_parts)
 
     @classmethod
     def __handle_start_paragraph_token(cls, output_html, next_token, transform_state):
@@ -325,10 +326,12 @@ class TransformToGfm:
         Handle the start paragraph token.
         """
         _ = next_token
-
+        token_parts = [output_html]
         if output_html and output_html[-1] != ParserHelper.newline_character:
-            output_html += ParserHelper.newline_character
-        return output_html + "<p>" if transform_state.is_in_loose_list else output_html
+            token_parts.append(ParserHelper.newline_character)
+        if transform_state.is_in_loose_list:
+            token_parts.append("<p>")
+        return "".join(token_parts)
 
     @classmethod
     def __handle_end_paragraph_token(cls, output_html, next_token, transform_state):
@@ -338,7 +341,7 @@ class TransformToGfm:
         _ = next_token
 
         return (
-            output_html + "</p>" + ParserHelper.newline_character
+            f"{output_html}</p>{ParserHelper.newline_character}"
             if transform_state.is_in_loose_list
             else output_html
         )
@@ -357,13 +360,13 @@ class TransformToGfm:
                 transform_state.last_token.is_fenced_code_block
                 and transform_state.next_token.is_fenced_code_block_end
             )
-            output_html += (
-                (ParserHelper.newline_character + next_token.extracted_whitespace)
+            output_html = (
+                f"{output_html}{ParserHelper.newline_character}{next_token.extracted_whitespace}"
                 if primary_condition and not exclusion_condition
-                else next_token.extracted_whitespace
+                else f"{output_html}{next_token.extracted_whitespace}"
             )
         elif transform_state.is_in_html_block:
-            output_html += ParserHelper.newline_character
+            output_html = f"{output_html}{ParserHelper.newline_character}"
         return output_html
 
     @classmethod
@@ -373,10 +376,13 @@ class TransformToGfm:
         """
         _ = next_token
 
+        token_parts = [output_html]
         if output_html and not output_html[-1] == ParserHelper.newline_character:
-            output_html += ParserHelper.newline_character
+            token_parts.append(ParserHelper.newline_character)
         transform_state.is_in_loose_list = True
-        return output_html + "<blockquote>" + ParserHelper.newline_character
+        token_parts.append("<blockquote>")
+        token_parts.append(ParserHelper.newline_character)
+        return "".join(token_parts)
 
     @classmethod
     def __handle_end_block_quote_token(cls, output_html, next_token, transform_state):
@@ -385,15 +391,18 @@ class TransformToGfm:
         """
         _ = next_token
 
+        token_parts = [output_html]
         if output_html[-1] != ParserHelper.newline_character:
-            output_html += ParserHelper.newline_character
+            token_parts.append(ParserHelper.newline_character)
         transform_state.is_in_loose_list = (
             TransformToGfmListLooseness.reset_list_looseness(
                 transform_state.actual_tokens,
                 transform_state.actual_token_index,
             )
         )
-        return output_html + "</blockquote>" + ParserHelper.newline_character
+        token_parts.append("</blockquote>")
+        token_parts.append(ParserHelper.newline_character)
+        return "".join(token_parts)
 
     @classmethod
     def __handle_start_indented_code_block_token(
@@ -404,19 +413,24 @@ class TransformToGfm:
         """
         _ = next_token
 
+        token_parts = []
         if (
             not output_html
             and transform_state.transform_stack
             and transform_state.transform_stack[-1].endswith("<li>")
         ):
-            output_html = ParserHelper.newline_character
+            token_parts.append(ParserHelper.newline_character)
         elif output_html and output_html[-1] != ParserHelper.newline_character:
-            output_html += ParserHelper.newline_character
+            token_parts.append(output_html)
+            token_parts.append(ParserHelper.newline_character)
+        else:
+            token_parts.append(output_html)
         transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (
             True,
             False,
         )
-        return output_html + "<pre><code>"
+        token_parts.append("<pre><code>")
+        return "".join(token_parts)
 
     @classmethod
     def __handle_end_indented_code_block_token(
@@ -428,10 +442,13 @@ class TransformToGfm:
         _ = next_token
 
         transform_state.is_in_code_block = False
-        return output_html + (
-            ParserHelper.newline_character
-            + "</code></pre>"
-            + ParserHelper.newline_character
+        return "".join(
+            [
+                output_html,
+                ParserHelper.newline_character,
+                "</code></pre>",
+                ParserHelper.newline_character,
+            ]
         )
 
     @classmethod
@@ -441,19 +458,22 @@ class TransformToGfm:
         """
         Handle the start fenced code block token.
         """
-        inner_tag = ""
-        if next_token.extracted_text:
-            inner_tag = ' class="language-' + next_token.extracted_text + '"'
-
-        if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
-            output_html += ParserHelper.newline_character
-        elif output_html and output_html[-1] != ParserHelper.newline_character:
-            output_html += ParserHelper.newline_character
+        token_parts = [output_html]
+        if (output_html.endswith("</ol>") or output_html.endswith("</ul>")) or (
+            output_html and output_html[-1] != ParserHelper.newline_character
+        ):
+            token_parts.append(ParserHelper.newline_character)
         transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (
             True,
             True,
         )
-        return output_html + "<pre><code" + inner_tag + ">"
+        token_parts.append("<pre><code")
+        if next_token.extracted_text:
+            token_parts.append(' class="language-')
+            token_parts.append(next_token.extracted_text)
+            token_parts.append('"')
+        token_parts.append(">")
+        return "".join(token_parts)
 
     @classmethod
     def __handle_end_fenced_code_block_token(
@@ -466,42 +486,46 @@ class TransformToGfm:
         while not transform_state.actual_tokens[fenced_token].is_fenced_code_block:
             fenced_token -= 1
 
-        inner_tag = ""
+        # TODO can we store this in the begin so we don't have to compute it again?
+        inner_tag_parts = ["<code"]
         if transform_state.actual_tokens[fenced_token].extracted_text:
-            inner_tag = (
-                ' class="language-'
-                + transform_state.actual_tokens[fenced_token].extracted_text
-                + '"'
+            inner_tag_parts.append(' class="language-')
+            inner_tag_parts.append(
+                transform_state.actual_tokens[fenced_token].extracted_text
             )
-        inner_tag = "<code" + inner_tag + ">"
+            inner_tag_parts.append('"')
+        inner_tag_parts.append(">")
+        inner_tag = "".join(inner_tag_parts)
 
-        POGGER.debug("inner_tag>>:" + inner_tag + ":<<")
-        POGGER.debug("output_html>>:" + output_html + ":<<")
+        POGGER.debug(f"inner_tag>>:{inner_tag}:<<")
+        POGGER.debug(f"output_html>>:{output_html}:<<")
         POGGER.debug(
-            "last_token>>:"
-            + str(transform_state.actual_tokens[transform_state.actual_token_index - 1])
-            + ":<<"
+            f"last_token>>:{str(transform_state.actual_tokens[transform_state.actual_token_index - 1])}:<<"
         )
+
+        token_parts = [output_html]
         if (
             not output_html.endswith(inner_tag)
             and output_html[-1] != ParserHelper.newline_character
         ):
-            output_html += ParserHelper.newline_character
+            token_parts.append(ParserHelper.newline_character)
             POGGER.debug("#1")
         elif (
             output_html[-1] == ParserHelper.newline_character
             and transform_state.last_token.is_text
         ):
             POGGER.debug("#2")
-            output_html += ParserHelper.newline_character
+            token_parts.append(ParserHelper.newline_character)
         elif transform_state.last_token.is_blank_line and not next_token.was_forced:
             POGGER.debug("#3")
-            output_html += ParserHelper.newline_character
+            token_parts.append(ParserHelper.newline_character)
         transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (
             False,
             False,
         )
-        return output_html + "</code></pre>" + ParserHelper.newline_character
+        token_parts.append("</code></pre>")
+        token_parts.append(ParserHelper.newline_character)
+        return "".join(token_parts)
 
     @classmethod
     def __handle_thematic_break_token(cls, output_html, next_token, transform_state):
@@ -510,9 +534,12 @@ class TransformToGfm:
         """
         _ = (next_token, transform_state)
 
+        token_parts = [output_html]
         if output_html and output_html[-1] != ParserHelper.newline_character:
-            output_html += ParserHelper.newline_character
-        return output_html + "<hr />" + ParserHelper.newline_character
+            token_parts.append(ParserHelper.newline_character)
+        token_parts.append("<hr />")
+        token_parts.append(ParserHelper.newline_character)
+        return "".join(token_parts)
 
     @classmethod
     def __handle_hard_break_token(cls, output_html, next_token, transform_state):
@@ -521,7 +548,7 @@ class TransformToGfm:
         """
         _ = (next_token, transform_state)
 
-        return output_html + "<br />"
+        return "".join([output_html, "<br />"])
 
     @classmethod
     def __handle_start_atx_heading_token(cls, output_html, next_token, transform_state):
@@ -532,12 +559,15 @@ class TransformToGfm:
             transform_state.actual_token_index - 1
         ]
 
+        token_parts = [output_html]
         if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
-            output_html += ParserHelper.newline_character
-        elif previous_token.is_paragraph_end:
-            if not transform_state.is_in_loose_list:
-                output_html += ParserHelper.newline_character
-        return output_html + "<h" + str(next_token.hash_count) + ">"
+            token_parts.append(ParserHelper.newline_character)
+        elif previous_token.is_paragraph_end and not transform_state.is_in_loose_list:
+            token_parts.append(ParserHelper.newline_character)
+        token_parts.append("<h")
+        token_parts.append(str(next_token.hash_count))
+        token_parts.append(">")
+        return "".join(token_parts)
 
     @classmethod
     def __handle_end_atx_heading_token(cls, output_html, next_token, transform_state):
@@ -550,11 +580,14 @@ class TransformToGfm:
         while not transform_state.actual_tokens[fenced_token].is_atx_heading:
             fenced_token -= 1
 
-        return output_html + (
-            "</h"
-            + str(transform_state.actual_tokens[fenced_token].hash_count)
-            + ">"
-            + ParserHelper.newline_character
+        return "".join(
+            [
+                output_html,
+                "</h",
+                str(transform_state.actual_tokens[fenced_token].hash_count),
+                ">",
+                ParserHelper.newline_character,
+            ]
         )
 
     @classmethod
@@ -566,10 +599,13 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        inner_tag = "1" if next_token.heading_character == "=" else "2"
+        token_parts = [output_html]
         if output_html.endswith("</ol>") or output_html.endswith("</ul>"):
-            output_html += ParserHelper.newline_character
-        return output_html + "<h" + inner_tag + ">"
+            token_parts.append(ParserHelper.newline_character)
+        token_parts.append("<h")
+        token_parts.append("1" if next_token.heading_character == "=" else "2")
+        token_parts.append(">")
+        return "".join(token_parts)
 
     @classmethod
     def __handle_end_setext_heading_token(
@@ -583,12 +619,16 @@ class TransformToGfm:
         fenced_token = transform_state.actual_token_index - 1
         while not transform_state.actual_tokens[fenced_token].is_setext_heading:
             fenced_token -= 1
-        inner_tag = (
+        token_parts = [
+            output_html,
+            "</h",
             "1"
             if transform_state.actual_tokens[fenced_token].heading_character == "="
-            else "2"
-        )
-        return output_html + "</h" + inner_tag + ">" + ParserHelper.newline_character
+            else "2",
+            ">",
+            ParserHelper.newline_character,
+        ]
+        return "".join(token_parts)
 
     @classmethod
     def __handle_new_list_item_token(cls, output_html, next_token, transform_state):
@@ -597,13 +637,14 @@ class TransformToGfm:
         """
         _ = next_token
 
-        if output_html and output_html[-1] == ">":
-            output_html += ParserHelper.newline_character
         transform_state.add_trailing_text, transform_state.add_leading_text = (
             "</li>",
             "<li>",
         )
-        return output_html
+        token_parts = [output_html]
+        if output_html and output_html[-1] == ">":
+            token_parts.append(ParserHelper.newline_character)
+        return "".join(token_parts)
 
     @classmethod
     def __handle_inline_code_span_token(cls, output_html, next_token, transform_state):
@@ -612,11 +653,13 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        return (
-            output_html
-            + "<code>"
-            + ParserHelper.resolve_all_from_text(next_token.span_text)
-            + "</code>"
+        return "".join(
+            [
+                output_html,
+                "<code>",
+                ParserHelper.resolve_all_from_text(next_token.span_text),
+                "</code>",
+            ]
         )
 
     @classmethod
@@ -626,11 +669,13 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        return (
-            output_html
-            + "<"
-            + ParserHelper.resolve_all_from_text(next_token.raw_tag)
-            + ">"
+        return "".join(
+            [
+                output_html,
+                "<",
+                ParserHelper.resolve_all_from_text(next_token.raw_tag),
+                ">",
+            ]
         )
 
     @classmethod
@@ -651,13 +696,15 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        return (
-            output_html
-            + '<a href="mailto:'
-            + next_token.autolink_text
-            + '">'
-            + next_token.autolink_text
-            + "</a>"
+        return "".join(
+            [
+                output_html,
+                '<a href="mailto:',
+                next_token.autolink_text,
+                '">',
+                next_token.autolink_text,
+                "</a>",
+            ]
         )
 
     @classmethod
@@ -678,16 +725,18 @@ class TransformToGfm:
             )
         )
         if next_token.is_ordered_list_start:
-            ostart_attribute = ""
+            token_parts = ["<ol"]
             if next_token.list_start_content != "1":
-                list_start = int(next_token.list_start_content)
-                ostart_attribute = ' start="' + str(list_start) + '"'
-            transform_state.add_leading_text = (
-                "<ol" + ostart_attribute + ">" + ParserHelper.newline_character + "<li>"
-            )
+                token_parts.append(' start="')
+                token_parts.append(str(int(next_token.list_start_content)))
+                token_parts.append('"')
+            token_parts.append(">")
+            token_parts.append(ParserHelper.newline_character)
+            token_parts.append("<li>")
+            transform_state.add_leading_text = "".join(token_parts)
         else:
-            transform_state.add_leading_text = (
-                "<ul>" + ParserHelper.newline_character + "<li>"
+            transform_state.add_leading_text = "".join(
+                ["<ul>", ParserHelper.newline_character, "<li>"]
             )
         return output_html
 
@@ -707,10 +756,12 @@ class TransformToGfm:
                 transform_state.actual_token_index,
             )
         )
-        transform_state.add_trailing_text = (
-            "</li>"
-            + ParserHelper.newline_character
-            + ("</ul>" if next_token.is_unordered_list_end else "</ol>")
+        transform_state.add_trailing_text = "".join(
+            [
+                "</li>",
+                ParserHelper.newline_character,
+                "</ul>" if next_token.is_unordered_list_end else "</ol>",
+            ]
         )
         return output_html
 
@@ -727,26 +778,31 @@ class TransformToGfm:
             alternate_escape_map=TransformToGfm.uri_autolink_html_character_escape_map,
             add_text_signature=False,
         )
-        in_tag_text = ""
+
+        tag_text_parts = []
         for next_character in in_tag_pretext:
             if next_character in TransformToGfm.raw_html_percent_escape_ascii_chars:
-                in_tag_text = in_tag_text + "%" + (hex(ord(next_character))[2:]).upper()
+                tag_text_parts.append("%")
+                tag_text_parts.append((hex(ord(next_character))[2:]).upper())
             elif ord(next_character) >= 128:
                 encoded_data = next_character.encode("utf8")
                 for encoded_byte in encoded_data:
-                    in_tag_text = in_tag_text + "%" + (hex(encoded_byte)[2:]).upper()
+                    tag_text_parts.append("%")
+                    tag_text_parts.append((hex(encoded_byte)[2:]).upper())
             else:
-                in_tag_text = in_tag_text + next_character
+                tag_text_parts.append(next_character)
 
-        return (
-            output_html
-            + '<a href="'
-            + in_tag_text
-            + '">'
-            + InlineHelper.append_text(
-                "", next_token.autolink_text, add_text_signature=False
-            )
-            + "</a>"
+        return "".join(
+            [
+                output_html,
+                '<a href="',
+                "".join(tag_text_parts),
+                '">',
+                InlineHelper.append_text(
+                    "", next_token.autolink_text, add_text_signature=False
+                ),
+                "</a>",
+            ]
         )
 
     @classmethod
@@ -757,23 +813,25 @@ class TransformToGfm:
         _ = next_token
 
         transform_state.is_in_html_block = True
+        token_parts = []
         if (
             not output_html
             and transform_state.transform_stack
             and transform_state.transform_stack[-1].endswith("<li>")
         ):
-            output_html = ParserHelper.newline_character
+            token_parts.append(ParserHelper.newline_character)
         else:
             previous_token = transform_state.actual_tokens[
                 transform_state.actual_token_index - 1
             ]
             POGGER.debug(">previous_token>$>", previous_token)
+            token_parts.append(output_html)
             if previous_token.is_list_end:
-                output_html += ParserHelper.newline_character
+                token_parts.append(ParserHelper.newline_character)
             elif previous_token.is_paragraph_end:
                 if not transform_state.is_in_loose_list:
-                    output_html += ParserHelper.newline_character
-        return output_html
+                    token_parts.append(ParserHelper.newline_character)
+        return "".join(token_parts)
 
     @classmethod
     def __handle_end_html_block_token(cls, output_html, next_token, transform_state):
@@ -792,10 +850,8 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        return (
-            output_html + "<em>"
-            if next_token.emphasis_length == 1
-            else output_html + "<strong>"
+        return "".join(
+            [output_html, "<em>" if next_token.emphasis_length == 1 else "<strong>"]
         )
 
     @classmethod
@@ -805,10 +861,13 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        return output_html + (
-            "</em>"
-            if next_token.start_markdown_token.emphasis_length == 1
-            else "</strong>"
+        return "".join(
+            [
+                output_html,
+                "</em>"
+                if next_token.start_markdown_token.emphasis_length == 1
+                else "</strong>",
+            ]
         )
 
     @classmethod
@@ -817,11 +876,15 @@ class TransformToGfm:
         Handle the start link token.
         """
         _ = transform_state
-
-        anchor_tag = (
-            '" title="' + next_token.link_title if next_token.link_title else ""
+        return "".join(
+            [
+                output_html,
+                '<a href="',
+                next_token.link_uri,
+                f'" title="{next_token.link_title}' if next_token.link_title else "",
+                '">',
+            ]
         )
-        return output_html + '<a href="' + next_token.link_uri + anchor_tag + '">'
 
     @classmethod
     def __handle_end_link_token(cls, output_html, next_token, transform_state):
@@ -830,7 +893,7 @@ class TransformToGfm:
         """
         _ = (next_token, transform_state)
 
-        return output_html + "</a>"
+        return f"{output_html}</a>"
 
     @classmethod
     def __handle_image_token(cls, output_html, next_token, transform_state):
@@ -839,15 +902,15 @@ class TransformToGfm:
         """
         _ = transform_state
 
-        image_title = (
-            'title="' + next_token.link_title + '" ' if next_token.link_title else ""
-        )
-        return output_html + (
-            '<img src="'
-            + next_token.link_uri
-            + '" alt="'
-            + next_token.image_alt_text
-            + '" '
-            + image_title
-            + "/>"
+        return "".join(
+            [
+                output_html,
+                '<img src="',
+                next_token.link_uri,
+                '" alt="',
+                next_token.image_alt_text,
+                '" ',
+                (f'title="{next_token.link_title}" ' if next_token.link_title else ""),
+                "/>",
+            ]
         )

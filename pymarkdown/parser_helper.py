@@ -23,7 +23,9 @@ class ParserHelper:
     tab_character = "\t"
     space_character = " "
 
-    backslash_escape_sequence = backslash_character + __backspace_character
+    all_escape_characters = f"{__backspace_character}{__alert_character}{whitespace_split_character}{replace_noop_character}{blech_character}{escape_character}"
+
+    backslash_escape_sequence = f"{backslash_character}{__backspace_character}"
 
     @staticmethod
     def is_character_at_index(source_string, index_in_string, valid_character):
@@ -45,11 +47,11 @@ class ParserHelper:
         """
 
         string_to_match_size = len(string_to_match)
+        test_index = index_in_string + string_to_match_size
         return (
             index_in_string >= 0
-            and index_in_string + string_to_match_size <= len(source_string)
-            and source_string[index_in_string : index_in_string + string_to_match_size]
-            == string_to_match
+            and test_index <= len(source_string)
+            and source_string[index_in_string:test_index] == string_to_match
         )
 
     @staticmethod
@@ -366,18 +368,21 @@ class ParserHelper:
         Replace any of a given set of characters with a given sequence.
         """
 
-        rebuilt_string, start_index = "", 0
+        start_index = 0
         index, ex_str = ParserHelper.collect_until_one_of_characters(
             string_to_search_in, start_index, characters_to_search_for
         )
         string_to_search_in_size = len(string_to_search_in)
+        replaced_parts = []
         while index < string_to_search_in_size:
-            rebuilt_string = rebuilt_string + ex_str + replace_with
+            replaced_parts.append(ex_str)
+            replaced_parts.append(replace_with)
             start_index = index + 1
             index, ex_str = ParserHelper.collect_until_one_of_characters(
                 string_to_search_in, start_index, characters_to_search_for
             )
-        return rebuilt_string + ex_str
+        replaced_parts.append(ex_str)
+        return "".join(replaced_parts)
 
     @staticmethod
     def count_characters_in_text(text_to_examine, text_to_look_for):
@@ -456,9 +461,9 @@ class ParserHelper:
             if ew_part and add_replace_marker_if_empty:
                 ew_part = ParserHelper.create_replace_with_nothing_marker(ew_part)
             split_text_string[i] = (
-                (split_text_string[i] + ew_part)
+                f"{split_text_string[i]}{ew_part}"
                 if add_whitespace_after
-                else (ew_part + split_text_string[i])
+                else f"{ew_part}{split_text_string[i]}"
             )
             if post_increment_index:
                 start_index += 1
@@ -512,31 +517,21 @@ class ParserHelper:
         """
         List of valid characters that can be escaped.
         """
-        return (
-            ParserHelper.__backspace_character
-            + ParserHelper.__alert_character
-            + ParserHelper.whitespace_split_character
-            + ParserHelper.replace_noop_character
-            + ParserHelper.blech_character
-            + ParserHelper.escape_character
-        )
+        return ParserHelper.all_escape_characters
 
     @staticmethod
     def escape_special_characters(string_to_escape):
         """
         Build another string that has any special characters in the argument escaped.
         """
-        escaped_string, characters_to_escape = (
-            "",
-            ParserHelper.valid_characters_to_escape(),
-        )
+        string_parts = []
         for next_char_index, next_character in enumerate(string_to_escape):
             if ParserHelper.is_character_at_index_one_of(
-                string_to_escape, next_char_index, characters_to_escape
+                string_to_escape, next_char_index, ParserHelper.all_escape_characters
             ):
-                escaped_string += ParserHelper.escape_character
-            escaped_string += next_character
-        return escaped_string
+                string_parts.append(ParserHelper.escape_character)
+            string_parts.append(next_character)
+        return "".join(string_parts)
 
     @staticmethod
     def __remove_backspaces_from_text(token_text):
@@ -584,22 +579,14 @@ class ParserHelper:
         Create a replacement marker indicating that the first string is being replaced
         by the second string.
         """
-        return (
-            ParserHelper.__alert_character
-            + replace_this_string
-            + ParserHelper.__alert_character
-            + with_this_string
-            + ParserHelper.__alert_character
-        )
+        return f"{ParserHelper.__alert_character}{replace_this_string}{ParserHelper.__alert_character}{with_this_string}{ParserHelper.__alert_character}"
 
     @staticmethod
     def create_replace_with_nothing_marker(replace_this_string):
         """
         Create a replacement marker of the given string with the noop character.
         """
-        return ParserHelper.create_replacement_markers(
-            replace_this_string, ParserHelper.replace_noop_character
-        )
+        return f"{ParserHelper.__alert_character}{replace_this_string}{ParserHelper.__alert_character}{ParserHelper.replace_noop_character}{ParserHelper.__alert_character}"
 
     @staticmethod
     def __remove_sequence_from_text(token_text, sequence_to_remove):

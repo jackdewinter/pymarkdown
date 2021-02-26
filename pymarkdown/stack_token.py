@@ -28,8 +28,8 @@ class StackToken:
         )
 
     def __str__(self):
-        add_extra = ":" + self.extra_data if self.extra_data else ""
-        return "StackToken(" + self.type_name + add_extra + ")"
+        add_extra = f":{self.extra_data}" if self.extra_data else ""
+        return f"StackToken({self.type_name}{add_extra})"
 
     def __repr__(self):
         return self.__str__()
@@ -236,18 +236,17 @@ class FencedCodeBlockStackToken(StackToken):
             self.__fence_character_count,
             self.__whitespace_start_count,
         ) = (code_fence_character, fence_character_count, whitespace_start_count)
-        extra_data = (
-            self.__code_fence_character
-            + ":"
-            + str(self.__fence_character_count)
-            + ":"
-            + str(self.__whitespace_start_count)
-        )
         StackToken.__init__(
             self,
             StackToken._stack_fenced_code,
             matching_markdown_token=matching_markdown_token,
-            extra_data=extra_data,
+            extra_data=":".join(
+                [
+                    self.__code_fence_character,
+                    str(self.__fence_character_count),
+                    str(self.__whitespace_start_count),
+                ]
+            ),
         )
 
     @property
@@ -304,22 +303,19 @@ class ListStackToken(StackToken):
             None,
         )
 
-        extra_data = (
-            str(self.__indent_level)
-            + ":"
-            + self.__list_character
-            + ":"
-            + str(self.__ws_before_marker)
-            + ":"
-            + str(self.__ws_after_marker)
-            + ":"
-            + str(self.__start_index)
-        )
         StackToken.__init__(
             self,
             type_name,
             matching_markdown_token=matching_markdown_token,
-            extra_data=extra_data,
+            extra_data=":".join(
+                [
+                    str(self.__indent_level),
+                    self.__list_character,
+                    str(self.__ws_before_marker),
+                    str(self.__ws_after_marker),
+                    str(self.__start_index),
+                ]
+            ),
         )
 
     # pylint: enable=too-many-arguments
@@ -530,10 +526,11 @@ class LinkDefinitionStackToken(StackToken):
         Grab the continuation lines as a single line.
         """
 
-        joined_lines = ""
-        for next_line in self.continuation_lines:
-            joined_lines += next_line + ParserHelper.newline_character
-        return joined_lines + join_suffix
+        return (
+            f"{ParserHelper.newline_character.join(self.continuation_lines) }{ParserHelper.newline_character}{join_suffix}"
+            if self.continuation_lines
+            else join_suffix
+        )
 
 
 # pylint: enable=too-many-instance-attributes

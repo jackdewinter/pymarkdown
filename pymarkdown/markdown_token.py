@@ -81,20 +81,16 @@ class MarkdownToken:
         """
         More customizable version of __str__ that allows for options.
         """
-        add_extra = (
-            ":" + self.extra_data
-            if self.extra_data or self.is_paragraph or self.is_blank_line
-            else ""
-        )
-        column_row_info = (
-            "(%d,%d)" % (self.line_number, self.column_number)
-            if include_column_row_info and (self.line_number or self.column_number)
-            else ""
-        )
-        return "[%s%s%s]" % (self.token_name, column_row_info, add_extra)
+        debug_parts = ["[", self.token_name]
+        if include_column_row_info and (self.line_number or self.column_number):
+            debug_parts.append(f"({self.line_number},{self.column_number})")
+        if self.extra_data or self.is_paragraph or self.is_blank_line:
+            debug_parts.append(f":{self.extra_data}")
+        debug_parts.append("]")
+        return "".join(debug_parts)
 
     def __repr__(self):
-        return "'" + self.__str__() + "'"
+        return f"'{self.__str__()}'"
 
     @property
     def token_name(self):
@@ -547,7 +543,7 @@ class EndMarkdownToken(MarkdownToken):
 
         MarkdownToken.__init__(
             self,
-            MarkdownToken._end_token_prefix + type_name,
+            f"{MarkdownToken._end_token_prefix}{type_name}",
             MarkdownTokenClass.INLINE_BLOCK,
             "",
             line_number=line_number,
@@ -596,11 +592,15 @@ class EndMarkdownToken(MarkdownToken):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        display_data = ""
+        field_parts = []
         if self.extra_end_data is not None:
-            display_data += self.extracted_whitespace
-        display_data += MarkdownToken.extra_data_separator
+            field_parts.append(self.extracted_whitespace)
+        else:
+            field_parts.append("")
         if self.extra_end_data is not None:
-            display_data += self.extra_end_data
-        display_data += MarkdownToken.extra_data_separator + str(self.was_forced)
-        self._set_extra_data(display_data)
+            field_parts.append(self.extra_end_data)
+        else:
+            field_parts.append("")
+        field_parts.append(str(self.was_forced))
+
+        self._set_extra_data(MarkdownToken.extra_data_separator.join(field_parts))

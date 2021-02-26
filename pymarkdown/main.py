@@ -48,13 +48,13 @@ class PyMarkdownLint:
         """
         if argument in PyMarkdownLint.available_log_maps:
             return argument
-        raise ValueError("Value '" + argument + "' is not a valid log level.")
+        raise ValueError(f"Value '{argument}' is not a valid log level.")
 
     def __parse_arguments(self):
         parser = argparse.ArgumentParser(description="Lint any found Markdown files.")
 
         parser.add_argument(
-            "--version", action="version", version="%(prog)s " + self.__version_number
+            "--version", action="version", version=f"%(prog)s {self.__version_number}"
         )
 
         parser.add_argument(
@@ -182,7 +182,7 @@ class PyMarkdownLint:
         POGGER.info("Determining files to scan for path '$'.", next_path)
         if not os.path.exists(next_path):
             print(
-                "Provided path '" + next_path + "' does not exist.",
+                f"Provided path '{next_path}' does not exist.",
                 file=sys.stderr,
             )
             POGGER.debug("Provided path '$' does not exist.", next_path)
@@ -194,7 +194,7 @@ class PyMarkdownLint:
             for root, _, files in os.walk(next_path):
                 root = root.replace("\\", "/")
                 for file in files:
-                    rooted_file_path = root + "/" + file
+                    rooted_file_path = f"{root}/{file}"
                     if self.__is_file_eligible_to_scan(rooted_file_path):
                         files_to_parse.add(rooted_file_path)
         else:
@@ -211,9 +211,7 @@ class PyMarkdownLint:
                     next_path,
                 )
                 print(
-                    "Provided file path '"
-                    + next_path
-                    + "' is not a valid file. Skipping.",
+                    f"Provided file path '{next_path}' is not a valid file. Skipping.",
                     file=sys.stderr,
                 )
         return did_find_any
@@ -227,9 +225,7 @@ class PyMarkdownLint:
                 globbed_paths = glob.glob(next_path)
                 if not globbed_paths:
                     print(
-                        "Provided glob path '"
-                        + next_path
-                        + "' did not match any files.",
+                        f"Provided glob path '{next_path}' did not match any files.",
                         file=sys.stderr,
                     )
                     did_error_scanning_files = True
@@ -267,22 +263,10 @@ class PyMarkdownLint:
             with open(configuration_file) as infile:
                 configuration_map = json.load(infile)
         except json.decoder.JSONDecodeError as ex:
-            formatted_error = (
-                "Specified configuration file '"
-                + configuration_file
-                + "' is not a valid JSON file ("
-                + str(ex)
-                + ")."
-            )
+            formatted_error = f"Specified configuration file '{configuration_file}' is not a valid JSON file ({str(ex)})."
             self.__handle_error(formatted_error)
         except IOError as ex:
-            formatted_error = (
-                "Specified configuration file '"
-                + configuration_file
-                + "' was not loaded ("
-                + str(ex)
-                + ")."
-            )
+            formatted_error = f"Specified configuration file '{configuration_file}' was not loaded ({str(ex)})."
             self.__handle_error(formatted_error)
 
         return configuration_map
@@ -298,11 +282,7 @@ class PyMarkdownLint:
         try:
             self.__plugins.apply_configuration(loaded_configuration_map)
         except BadPluginError as this_exception:
-            formatted_error = (
-                str(type(this_exception).__name__)
-                + " encountered while configuring plugins:\n"
-                + str(this_exception)
-            )
+            formatted_error = f"{str(type(this_exception).__name__)} encountered while configuring plugins:\n{str(this_exception)}"
             self.__handle_error(formatted_error)
 
     def __initialize_parser(self, args):
@@ -314,11 +294,7 @@ class PyMarkdownLint:
         try:
             self.__tokenizer = TokenizedMarkdown(resource_path)
         except BadTokenizationError as this_exception:
-            formatted_error = (
-                str(type(this_exception).__name__)
-                + " encountered while initializing tokenizer:\n"
-                + str(this_exception)
-            )
+            formatted_error = f"{str(type(this_exception).__name__)} encountered while initializing tokenizer:\n{str(this_exception)}"
             self.__handle_error(formatted_error)
 
     def __initialize_plugins(self, args, plugin_dir):
@@ -332,29 +308,20 @@ class PyMarkdownLint:
                 plugin_dir, args.add_plugin, args.enable_rules, args.disable_rules
             )
         except BadPluginError as this_exception:
-            formatted_error = (
-                "BadPluginError encountered while loading plugins:\n"
-                + str(this_exception)
-            )
+            formatted_error = f"BadPluginError encountered while loading plugins:\n{str(this_exception)}"
             self.__handle_error(formatted_error)
 
     def __handle_error(self, formatted_error):
 
         LOGGER.warning(formatted_error, exc_info=True)
-        print("\n\n" + formatted_error, file=sys.stderr)
+        print(f"\n\n{formatted_error}", file=sys.stderr)
         if self.__show_stack_trace:
             traceback.print_exc(file=sys.stderr)
         sys.exit(1)
 
     def __handle_scan_error(self, next_file, this_exception):
 
-        formatted_error = (
-            str(type(this_exception).__name__)
-            + " encountered while scanning '"
-            + next_file
-            + "':\n"
-            + str(this_exception)
-        )
+        formatted_error = f"{str(type(this_exception).__name__)} encountered while scanning '{next_file}':\n{str(this_exception)}"
         self.__handle_error(formatted_error)
 
     def main(self):

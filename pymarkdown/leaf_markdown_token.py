@@ -110,12 +110,11 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        new_extra_data = self.__extracted_whitespace
-        if self.final_whitespace:
-            new_extra_data += (
-                MarkdownToken.extra_data_separator + self.__final_whitespace
-            )
-        self._set_extra_data(new_extra_data)
+        self._set_extra_data(
+            f"{self.__extracted_whitespace}{MarkdownToken.extra_data_separator}{self.__final_whitespace}"
+            if self.final_whitespace
+            else self.__extracted_whitespace
+        )
 
     def add_whitespace(self, whitespace_to_add):
         """
@@ -123,7 +122,9 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
         used when combining text blocks in a paragraph.
         """
 
-        self.__extracted_whitespace += whitespace_to_add
+        self.__extracted_whitespace = (
+            f"{self.__extracted_whitespace}{whitespace_to_add}"
+        )
         self.__compose_extra_data_field()
 
     def set_final_whitespace(self, whitespace_to_set):
@@ -148,11 +149,9 @@ class ThematicBreakMarkdownToken(LeafMarkdownToken):
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_thematic_break,
-            start_character
-            + MarkdownToken.extra_data_separator
-            + extracted_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.__rest_of_line,
+            MarkdownToken.extra_data_separator.join(
+                [start_character, extracted_whitespace, self.__rest_of_line]
+            ),
             position_marker=position_marker,
             extracted_whitespace=extracted_whitespace,
         )
@@ -240,33 +239,25 @@ class LinkReferenceDefinitionMarkdownToken(LeafMarkdownToken):
                 self.__link_title_raw,
                 self.__end_whitespace,
             ) = ("", "", "", "", "", "")
-        extra_data = (
-            str(self.did_add_definition)
-            + MarkdownToken.extra_data_separator
-            + extracted_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.__link_name
-            + MarkdownToken.extra_data_separator
-            + self.__link_name_debug
-            + MarkdownToken.extra_data_separator
-            + self.__link_destination_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.__link_destination
-            + MarkdownToken.extra_data_separator
-            + self.__link_destination_raw
-            + MarkdownToken.extra_data_separator
-            + self.__link_title_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.__link_title
-            + MarkdownToken.extra_data_separator
-            + self.__link_title_raw
-            + MarkdownToken.extra_data_separator
-            + self.__end_whitespace
-        )
+
         LeafMarkdownToken.__init__(
             self,
             MarkdownToken._token_link_reference_definition,
-            extra_data,
+            MarkdownToken.extra_data_separator.join(
+                [
+                    str(self.did_add_definition),
+                    extracted_whitespace,
+                    self.__link_name,
+                    self.__link_name_debug,
+                    self.__link_destination_whitespace,
+                    self.__link_destination,
+                    self.__link_destination_raw,
+                    self.__link_title_whitespace,
+                    self.__link_title,
+                    self.__link_title_raw,
+                    self.__end_whitespace,
+                ]
+            ),
             position_marker=position_marker,
             extracted_whitespace=extracted_whitespace,
         )
@@ -393,14 +384,15 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        new_extra_data = (
-            str(self.__hash_count)
-            + MarkdownToken.extra_data_separator
-            + str(self.__remove_trailing_count)
-            + MarkdownToken.extra_data_separator
-            + self.extracted_whitespace
+        self._set_extra_data(
+            MarkdownToken.extra_data_separator.join(
+                [
+                    str(self.__hash_count),
+                    str(self.__remove_trailing_count),
+                    self.extracted_whitespace,
+                ]
+            )
         )
-        self._set_extra_data(new_extra_data)
 
 
 # pylint: disable=too-many-instance-attributes
@@ -506,21 +498,18 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
 
-        new_extra_data = (
-            self.__heading_character
-            + MarkdownToken.extra_data_separator
-            + str(self.__heading_character_count)
-            + MarkdownToken.extra_data_separator
-            + self.extracted_whitespace
-            + ":("
-            + str(self.original_line_number)
-            + ","
-            + str(self.original_column_number)
-            + ")"
+        original_location = (
+            f"({str(self.original_line_number)},{str(self.original_column_number)})"
         )
+        field_parts = [
+            self.__heading_character,
+            str(self.__heading_character_count),
+            self.extracted_whitespace,
+            original_location,
+        ]
         if self.final_whitespace:
-            new_extra_data += MarkdownToken.extra_data_separator + self.final_whitespace
-        self._set_extra_data(new_extra_data)
+            field_parts.append(self.final_whitespace)
+        self._set_extra_data(MarkdownToken.extra_data_separator.join(field_parts))
 
 
 # pylint: enable=too-many-instance-attributes
@@ -555,18 +544,16 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
         Compose the object's self.extra_data field from the local object's variables.
         """
         self._set_extra_data(
-            self.extracted_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.indented_whitespace
+            MarkdownToken.extra_data_separator.join(
+                [self.extracted_whitespace, self.indented_whitespace]
+            )
         )
 
     def add_indented_whitespace(self, indented_whitespace):
         """
         Add the indented whitespace that comes before the text.
         """
-        self.__indented_whitespace += (
-            ParserHelper.newline_character + indented_whitespace
-        )
+        self.__indented_whitespace = f"{self.__indented_whitespace}{ParserHelper.newline_character}{indented_whitespace}"
         self.__compose_extra_data_field()
 
 
@@ -670,24 +657,20 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
         """
         Compose the object's self.extra_data field from the local object's variables.
         """
-        new_extra_data = (
-            self.__fence_character
-            + MarkdownToken.extra_data_separator
-            + str(self.__fence_count)
-            + MarkdownToken.extra_data_separator
-            + self.__extracted_text
-            + MarkdownToken.extra_data_separator
-            + self.__pre_extracted_text
-            + MarkdownToken.extra_data_separator
-            + self.__text_after_extracted_text
-            + MarkdownToken.extra_data_separator
-            + self.__pre_text_after_extracted_text
-            + MarkdownToken.extra_data_separator
-            + self.extracted_whitespace
-            + MarkdownToken.extra_data_separator
-            + self.__extracted_whitespace_before_info_string
+        self._set_extra_data(
+            MarkdownToken.extra_data_separator.join(
+                [
+                    self.__fence_character,
+                    str(self.__fence_count),
+                    self.__extracted_text,
+                    self.__pre_extracted_text,
+                    self.__text_after_extracted_text,
+                    self.__pre_text_after_extracted_text,
+                    self.extracted_whitespace,
+                    self.__extracted_whitespace_before_info_string,
+                ]
+            )
         )
-        self._set_extra_data(new_extra_data)
 
 
 # pylint: enable=too-many-instance-attributes

@@ -2,7 +2,7 @@
 Module to provide for a simple logger wrapper that provides extra
 functionality for logging parsing information.
 """
-from logging import DEBUG, INFO
+import logging
 
 from pymarkdown.parser_helper import ParserHelper
 
@@ -20,14 +20,16 @@ class ParserLogger:
 
     def __init__(self, my_logger):
         self.__my_logger = my_logger
-        self.__is_info_enabled = self.__my_logger.isEnabledFor(INFO)
-        self.__is_debug_enabled = self.__my_logger.isEnabledFor(DEBUG)
+        root_logger = logging.getLogger()
+        self.__is_info_enabled = root_logger.isEnabledFor(logging.INFO)
+        self.__is_debug_enabled = root_logger.isEnabledFor(logging.DEBUG)
         self.__local_count = ParserLogger.__global_count
 
     def __reset_cache(self):
         self.__local_count = ParserLogger.__global_count
-        self.__is_info_enabled = self.__my_logger.isEnabledFor(INFO)
-        self.__is_debug_enabled = self.__my_logger.isEnabledFor(DEBUG)
+        root_logger = logging.getLogger()
+        self.__is_info_enabled = root_logger.isEnabledFor(logging.INFO)
+        self.__is_debug_enabled = root_logger.isEnabledFor(logging.DEBUG)
 
     @staticmethod
     def sync_on_next_call():
@@ -45,6 +47,13 @@ class ParserLogger:
         if self.__is_info_enabled:
             msg = self.__munge(False, log_format, args)
             self.__my_logger.info(msg, stacklevel=2)
+
+    @property
+    def is_debug_enabled(self):
+        """
+        Determine whether debug logging is currently enabled.
+        """
+        return self.__is_debug_enabled
 
     def debug(self, log_format, *args):
         """

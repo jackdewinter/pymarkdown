@@ -22,8 +22,11 @@
 
 ### Priority 2 - Like To Solve Before Initial
 
-- check for common code in consistency checks
-- __calculate_shortcut_collapsed_deltas
+- __calculate_shortcut_collapsed_deltas - not being used at all
+  - figure out why?
+- shotrcut link over multiple line
+  - doesn't seem to have any code to handle?
+- (performance) plugin set_context: fold in to normal calls to avoid 2nd call
 
 - why does fcb with only newlines and newlines with ws not fold down to text?
   - coalesce with blank lines in fenced code block?
@@ -53,6 +56,21 @@
 
 ### Priority 3 - Like To Solve in next 3 m
 
+- (performance) debug: search for any cases where adding a call to `is_debug_enabled` would be helpful
+- (performance) assert: do as little as possible to ensure better performance
+- (performance) append: combine multiple appends into extend
+- (performance) else: ??
+- (performance) replace MarkdownToken properties like is_block_quote_end with more performant?
+- (performance) count_characters_in_text
+- (performance) can further eliminate len() calls by looking for places can calculate once and pass to child functions
+- (performance) order of "if" conditions in critical areas
+- (performance) are all "x and x.blah" requiring the "x" check first? can factor out?
+- (performance) ParserHelper functions can be further optimized? i.e. __remove_backspaces_from_text and how combines
+- (performance) handle_inline_backslash
+- (performance) handle_character_reference
+
+- (maintenance) clean up pylint warning suppressions where possible
+
 - look for places where common access patterns can be used i.e. link_title
   - `= len(parser_state.token_stack`
 - HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
@@ -65,11 +83,6 @@
 - fenced code block handling of line/col could be better
 - LRD and block quote interaction - process_link_reference_definition - search for XXXXX
 - `LOGGER.debug("handle_block_quote_section>>fenced")` and collapse?
-
-#### Performance
-
-- count_characters_in_text
-- can further eliminate len() calls by looking for places can calculate once and pass to child functions
 
 ### Priority 4 - Like To Solve in next 6 m
 

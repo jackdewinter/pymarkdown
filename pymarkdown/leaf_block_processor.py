@@ -37,7 +37,7 @@ class LeafBlockProcessor:
     __fenced_start_tilde = "~"
     __fenced_start_backtick = "`"
     __fenced_code_block_start_characters = (
-        __fenced_start_tilde + __fenced_start_backtick
+        f"{__fenced_start_tilde}{__fenced_start_backtick}"
     )
     __thematic_break_characters = "*_-"
     __atx_character = "#"
@@ -222,9 +222,7 @@ class LeafBlockProcessor:
                     current_whitespace_length - whitespace_left,
                 )
             )
-            extracted_whitespace = removed_whitespace + ParserHelper.repeat_string(
-                ParserHelper.space_character, whitespace_left
-            )
+            extracted_whitespace = f"{removed_whitespace}{ParserHelper.repeat_string(ParserHelper.space_character, whitespace_left)}"
         return new_tokens, extracted_whitespace
 
     # pylint: enable=too-many-locals
@@ -540,12 +538,7 @@ class LeafBlockProcessor:
                     POGGER.debug("before>>$>>", left_ws)
                     if excess_whitespace_count:
                         excess_whitespace_count -= kludge_adjust
-                        left_ws = (
-                            ParserHelper.repeat_string(
-                                ParserHelper.space_character, excess_whitespace_count
-                            )
-                            + left_ws
-                        )
+                        left_ws = f"{ParserHelper.repeat_string(ParserHelper.space_character, excess_whitespace_count)}{left_ws}"
                     POGGER.debug("after>>$>>", left_ws)
                 else:
                     column_number += actual_whitespace_index

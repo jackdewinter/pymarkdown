@@ -263,13 +263,14 @@ class BlockQuoteProcessor:
                             ParserHelper.tab_character, start_index=start_index
                         )
                         POGGER.debug("adj--$--", adjusted_line)
-                        adjusted_line = (
-                            adjusted_line[0:start_index]
-                            + ParserHelper.repeat_string(
+                        parts = [
+                            adjusted_line[0:start_index],
+                            ParserHelper.repeat_string(
                                 ParserHelper.space_character, adjusted_tab_length
-                            )
-                            + adjusted_line[start_index + 1 :]
-                        )
+                            ),
+                            adjusted_line[start_index + 1 :],
+                        ]
+                        adjusted_line = "".join(parts)
                         POGGER.debug("--$--", adjusted_line)
                     start_index += 1
 
@@ -438,10 +439,7 @@ class BlockQuoteProcessor:
                     requeue_line_info,
                 )
 
-            removed_text = (
-                extracted_whitespace
-                + line_to_parse[position_marker.index_number : start_index]
-            )
+            removed_text = f"{extracted_whitespace}{line_to_parse[position_marker.index_number : start_index]}"
             POGGER.debug(
                 "==EWS[$],OSI[$],SI[$],LTP[$]",
                 extracted_whitespace,
