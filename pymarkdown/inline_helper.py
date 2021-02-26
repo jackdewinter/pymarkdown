@@ -342,13 +342,15 @@ class InlineHelper:
         while next_index != -1:
 
             escaped_part = alternate_escape_map[text_to_append[next_index]]
-            text_parts.append(text_to_append[start_index:next_index])
-            text_parts.append(
-                ParserHelper.create_replacement_markers(
-                    text_to_append[next_index], escaped_part
-                )
-                if add_text_signature
-                else escaped_part
+            text_parts.extend(
+                [
+                    text_to_append[start_index:next_index],
+                    ParserHelper.create_replacement_markers(
+                        text_to_append[next_index], escaped_part
+                    )
+                    if add_text_signature
+                    else escaped_part,
+                ]
             )
 
             start_index = next_index + 1

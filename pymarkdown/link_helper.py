@@ -369,14 +369,17 @@ class LinkHelper:
         display_parts = []
         for deactivate_token in inline_blocks:
             if deactivate_token.is_special_text:
-                display_parts.append(",>>Spec:")
-                display_parts.append(str(deactivate_token.is_active))
-                display_parts.append(":")
-                display_parts.append(str(deactivate_token))
-                display_parts.append("<<")
+                display_parts.extend(
+                    [
+                        ",>>Spec:",
+                        str(deactivate_token.is_active),
+                        ":",
+                        str(deactivate_token),
+                        "<<",
+                    ]
+                )
             else:
-                display_parts.append(",")
-                display_parts.append(str(deactivate_token))
+                display_parts.extend([",", str(deactivate_token)])
 
         POGGER.debug("$", "".join(display_parts)[1:])
 
@@ -409,9 +412,9 @@ class LinkHelper:
                         )
                     )
                 elif inline_blocks[ind_plus_one].is_inline_raw_html:
-                    alt_text_parts.append("<")
-                    alt_text_parts.append(inline_blocks[ind_plus_one].raw_tag)
-                    alt_text_parts.append(">")
+                    alt_text_parts.extend(
+                        ["<", inline_blocks[ind_plus_one].raw_tag, ">"]
+                    )
                 elif inline_blocks[ind_plus_one].is_inline_code_span:
                     alt_text_parts.append(
                         ParserHelper.resolve_all_from_text(
@@ -1248,8 +1251,7 @@ class LinkHelper:
                 if len(hex_guess_characters) == 2:
                     try:
                         int(hex_guess_characters, 16)
-                        el_parts.append("%")
-                        el_parts.append(hex_guess_characters)
+                        el_parts.extend(["%", hex_guess_characters])
                         percent_index += 2
                     except ValueError:
                         el_parts.append("%25")
@@ -1286,36 +1288,34 @@ class LinkHelper:
 
         link_parts = []
         if link_token.label_type == "shortcut":
-            link_parts.append("[")
-            link_parts.append(
-                ParserHelper.remove_all_from_text(link_token.text_from_blocks)
+            link_parts.extend(
+                [
+                    "[",
+                    ParserHelper.remove_all_from_text(link_token.text_from_blocks),
+                    "]",
+                ]
             )
-            link_parts.append("]")
         elif link_token.label_type == "full":
-            link_parts.append("[")
-            link_parts.append(link_token.text_from_blocks)
-            link_parts.append("][")
-            link_parts.append(link_token.ex_label)
-            link_parts.append("]")
+            link_parts.extend(
+                ["[", link_token.text_from_blocks, "][", link_token.ex_label, "]"]
+            )
         elif link_token.label_type == "collapsed":
-            link_parts.append("[")
-            link_parts.append(link_token.text_from_blocks)
-            link_parts.append("][]")
+            link_parts.extend(["[", link_token.text_from_blocks, "][]"])
         else:
             assert link_token.label_type == "inline"
 
-            link_parts.append("[")
-            link_parts.append(
-                ParserHelper.remove_all_from_text(link_token.text_from_blocks)
+            link_parts.extend(
+                [
+                    "[",
+                    ParserHelper.remove_all_from_text(link_token.text_from_blocks),
+                    "](",
+                    link_token.before_link_whitespace,
+                    f"<{link_token.active_link_uri}>"
+                    if link_token.did_use_angle_start
+                    else link_token.active_link_uri,
+                    link_token.before_title_whitespace,
+                ]
             )
-            link_parts.append("](")
-            link_parts.append(link_token.before_link_whitespace)
-            link_parts.append(
-                f"<{link_token.active_link_uri}>"
-                if link_token.did_use_angle_start
-                else link_token.active_link_uri
-            )
-            link_parts.append(link_token.before_title_whitespace)
             if link_token.active_link_title:
                 if link_token.inline_title_bounding_character == "'":
                     title_prefix = "'"
@@ -1327,10 +1327,14 @@ class LinkHelper:
                     title_prefix = '"'
                     title_suffix = '"'
 
-                link_parts.append(title_prefix)
-                link_parts.append(link_token.active_link_title)
-                link_parts.append(title_suffix)
-                link_parts.append(link_token.after_title_whitespace)
+                link_parts.extend(
+                    [
+                        title_prefix,
+                        link_token.active_link_title,
+                        title_suffix,
+                        link_token.after_title_whitespace,
+                    ]
+                )
             link_parts.append(")")
         return "".join(link_parts)
 

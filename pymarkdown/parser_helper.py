@@ -375,8 +375,7 @@ class ParserHelper:
         string_to_search_in_size = len(string_to_search_in)
         replaced_parts = []
         while index < string_to_search_in_size:
-            replaced_parts.append(ex_str)
-            replaced_parts.append(replace_with)
+            replaced_parts.extend([ex_str, replace_with])
             start_index = index + 1
             index, ex_str = ParserHelper.collect_until_one_of_characters(
                 string_to_search_in, start_index, characters_to_search_for

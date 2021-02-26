@@ -58,7 +58,6 @@
 
 - (performance) debug: search for any cases where adding a call to `is_debug_enabled` would be helpful
 - (performance) assert: do as little as possible to ensure better performance
-- (performance) append: combine multiple appends into extend
 - (performance) else: ??
 - (performance) replace MarkdownToken properties like is_block_quote_end with more performant?
 - (performance) count_characters_in_text

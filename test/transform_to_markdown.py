@@ -489,15 +489,19 @@ class TransformToMarkdown:
                 and split_new_data[split_index][0]
                 == ParserHelper.replace_noop_character
             ):
-                line_parts.append(ParserHelper.newline_character)
-                line_parts.append(split_new_data[split_index][1:])
+                line_parts.extend(
+                    [ParserHelper.newline_character, split_new_data[split_index][1:]]
+                )
             else:
-                line_parts.append(ParserHelper.newline_character)
-                line_parts.append(continue_sequence)
-                line_parts.append(split_new_data[split_index])
+                line_parts.extend(
+                    [
+                        ParserHelper.newline_character,
+                        continue_sequence,
+                        split_new_data[split_index],
+                    ]
+                )
         if use_abbreviated_list:
-            line_parts.append(ParserHelper.newline_character)
-            line_parts.append(split_new_data[-1])
+            line_parts.extend([ParserHelper.newline_character, split_new_data[-1]])
 
         return "".join(line_parts)
 
@@ -521,9 +525,13 @@ class TransformToMarkdown:
             while next_data_item and next_data_item[0] == ParserHelper.blech_character:
                 next_continue_separator = next_continue_separator[1:]
                 next_data_item = next_data_item[1:]
-            line_parts.append(ParserHelper.newline_character)
-            line_parts.append(next_continue_separator)
-            line_parts.append(next_data_item)
+            line_parts.extend(
+                [
+                    ParserHelper.newline_character,
+                    next_continue_separator,
+                    next_data_item,
+                ]
+            )
 
         return "".join(line_parts)
 
@@ -568,14 +576,17 @@ class TransformToMarkdown:
                 f"::{str(top_block_stack_token.leading_text_index)}::{str(split_leading_spaces)}::"
             )
             if top_block_stack_token.leading_text_index < split_leading_spaces_size:
-                parts_to_merge.append(ParserHelper.newline_character)
-                parts_to_merge.append(
-                    split_leading_spaces[top_block_stack_token.leading_text_index]
+                parts_to_merge.extend(
+                    [
+                        ParserHelper.newline_character,
+                        split_leading_spaces[top_block_stack_token.leading_text_index],
+                        split_new_data[i],
+                    ]
                 )
-                parts_to_merge.append(split_new_data[i])
             else:
-                parts_to_merge.append(ParserHelper.newline_character)
-                parts_to_merge.append(split_new_data[i])
+                parts_to_merge.extend(
+                    [ParserHelper.newline_character, split_new_data[i]]
+                )
             top_block_stack_token.leading_text_index += 1
 
         return "".join(parts_to_merge)
@@ -904,8 +915,9 @@ class TransformToMarkdown:
 
                 print(">>[{ParserHelper.make_value_visible(new_data)}]<<")
                 next_newline_index = new_data.index(ParserHelper.newline_character)
-                composed_data.append(new_data[0:next_newline_index])
-                composed_data.append(ParserHelper.newline_character)
+                composed_data.extend(
+                    [new_data[0:next_newline_index], ParserHelper.newline_character]
+                )
 
                 split_leading_spaces = top_of_list_token_stack.leading_spaces.split(
                     ParserHelper.newline_character
