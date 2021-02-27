@@ -823,13 +823,10 @@ def __verify_first_inline_paragraph(last_non_inline_token, first_inline_token):
         or first_inline_token.is_inline_autolink
         or first_inline_token.is_inline_code_span
         or first_inline_token.is_inline_image
+        or first_inline_token.is_inline_hard_break
     ):
         assert first_inline_token.line_number == last_non_inline_token.line_number
         assert first_inline_token.column_number == last_non_inline_token.column_number
-    elif first_inline_token.is_inline_hard_break:
-        assert first_inline_token.line_number == 0
-        assert first_inline_token.column_number == 0
-
     else:
         assert not first_inline_token.is_blank_line, first_inline_token.token_name
 

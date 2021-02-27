@@ -364,3 +364,101 @@ def test_hard_line_breaks_668():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_01x():
+    """
+    Test case extra 01x:  Hard line breaks at start of line
+    """
+
+    # Arrange
+    source_markdown = """\a\a
+This is new.""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[BLANK(1,1):  ]",
+        "[para(2,1):]",
+        "[text(2,1):This is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>This is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_01a():
+    """
+    Test case extra 01x:  Hard line breaks at start of line
+    """
+
+    # Arrange
+    source_markdown = """\\
+This is new."""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[hard-break(1,1):\\]",
+        "[text(2,1):\nThis is new.::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p><br />
+This is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_02x():
+    """
+    Test case extra 01x:  Hard line breaks at start of line
+    """
+
+    # Arrange
+    source_markdown = """abc
+\a\a
+This is new.""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):  ]",
+        "[para(3,1):]",
+        "[text(3,1):This is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc</p>
+<p>This is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_02a():
+    """
+    Test case extra 01x:  Hard line breaks at start of line
+    """
+
+    # Arrange
+    source_markdown = """abc
+\\
+This is new."""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):abc\n::\n]",
+        "[hard-break(2,1):\\]",
+        "[text(3,1):\nThis is new.::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc
+<br />
+This is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
