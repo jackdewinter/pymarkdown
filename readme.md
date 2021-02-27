@@ -15,7 +15,6 @@
   - hard break followed by 3 spaces, then emphasis
   - variations of 52e with extra spaces after, etc.
     - variation with start of 52e, then hard break, then something like start of 52e again i.e. make /x02 splitter come into affect
-  - hard break followed by each inline type
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - leading_text_index
 

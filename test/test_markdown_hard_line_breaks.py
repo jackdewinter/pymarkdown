@@ -462,3 +462,522 @@ This is new.</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_03x():
+    """
+    Test case extra 01x:  Hard line break followed by text
+    """
+
+    # Arrange
+    source_markdown = """abc\\
+This is new."""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):\\]",
+        "[text(2,1):\nThis is new.::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+This is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_03a():
+    """
+    Test case extra 01x:  Hard line break followed by backslash escaped
+    """
+
+    # Arrange
+    source_markdown = """abc\\
+\\\\This is new."""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):\\]",
+        "[text(2,1):\n\\\b\\This is new.::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+\\This is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_03b():
+    """
+    Test case extra 01x:  Hard line break followed by entity
+    """
+
+    # Arrange
+    source_markdown = """abc\\
+&copy; This is new."""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):\\]",
+        "[text(2,1):\n\a&copy;\a©\a This is new.::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+© This is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_03c():
+    """
+    Test case extra 01x:  Hard line break followed by code span
+    """
+
+    # Arrange
+    source_markdown = """abc\\
+`This` is new."""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):\\]",
+        "[text(2,1):\n::\n]",
+        "[icode-span(2,1):This:`::]",
+        "[text(2,7): is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<code>This</code> is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_03d():
+    """
+    Test case extra 01x:  Hard line break followed by emphasis
+    """
+
+    # Arrange
+    source_markdown = """abc\\
+*This* is new."""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):\\]",
+        "[text(2,1):\n::\n]",
+        "[emphasis(2,1):1:*]",
+        "[text(2,2):This:]",
+        "[end-emphasis(2,6):::False]",
+        "[text(2,7): is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<em>This</em> is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_03e():
+    """
+    Test case extra 01x:  Hard line break followed by link
+    """
+
+    # Arrange
+    source_markdown = """abc\\
+[This](foo.com) is new."""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):\\]",
+        "[text(2,1):\n::\n]",
+        "[link(2,1):inline:foo.com:::::This:False::::]",
+        "[text(2,2):This:]",
+        "[end-link:::False]",
+        "[text(2,16): is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<a href="foo.com">This</a> is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_03f():
+    """
+    Test case extra 01x:  Hard line break followed by link
+    """
+
+    # Arrange
+    source_markdown = """abc\\
+![This](foo.com) is new."""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):\\]",
+        "[text(2,1):\n::\n]",
+        "[image(2,1):inline:foo.com::This::::This:False::::]",
+        "[text(2,17): is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<img src="foo.com" alt="This" /> is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_03g():
+    """
+    Test case extra 01x:  Hard line break followed by autolink
+    """
+
+    # Arrange
+    source_markdown = """abc\\
+<http://this.com> is new."""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):\\]",
+        "[text(2,1):\n::\n]",
+        "[uri-autolink(2,1):http://this.com]",
+        "[text(2,18): is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<a href="http://this.com">http://this.com</a> is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_03h():
+    """
+    Test case extra 01x:  Hard line break followed by autolink
+    """
+
+    # Arrange
+    source_markdown = """abc\\
+<this> is new."""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):\\]",
+        "[text(2,1):\n::\n]",
+        "[raw-html(2,1):this]",
+        "[text(2,7): is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<this> is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_03i():
+    """
+    Test case extra 01x:  Hard line break followed by hard line break
+    """
+
+    # Arrange
+    source_markdown = """abc\\
+\\
+this is new."""
+    expected_tokens = [
+        "[para(1,1):\n\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):\\]",
+        "[text(2,1):\n::\n]",
+        "[hard-break(2,1):\\]",
+        "[text(3,1):\nthis is new.::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<br />
+this is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_04x():
+    """
+    Test case extra 01x:  Hard line break followed by text
+    """
+
+    # Arrange
+    source_markdown = """abc\a\a
+This is new.""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):  ]",
+        "[text(2,1):\nThis is new.::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+This is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_04a():
+    """
+    Test case extra 01x:  Hard line break followed by backslash escaped
+    """
+
+    # Arrange
+    source_markdown = """abc\a\a
+\\\\This is new.""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):  ]",
+        "[text(2,1):\n\\\b\\This is new.::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+\\This is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_04b():
+    """
+    Test case extra 01x:  Hard line break followed by entity
+    """
+
+    # Arrange
+    source_markdown = """abc\a\a
+&copy; This is new.""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):  ]",
+        "[text(2,1):\n\a&copy;\a©\a This is new.::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+© This is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_04c():
+    """
+    Test case extra 01x:  Hard line break followed by code span
+    """
+
+    # Arrange
+    source_markdown = """abc\a\a
+`This` is new.""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):  ]",
+        "[text(2,1):\n::\n]",
+        "[icode-span(2,1):This:`::]",
+        "[text(2,7): is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<code>This</code> is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_04d():
+    """
+    Test case extra 01x:  Hard line break followed by emphasis
+    """
+
+    # Arrange
+    source_markdown = """abc\a\a
+*This* is new.""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):  ]",
+        "[text(2,1):\n::\n]",
+        "[emphasis(2,1):1:*]",
+        "[text(2,2):This:]",
+        "[end-emphasis(2,6):::False]",
+        "[text(2,7): is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<em>This</em> is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_04e():
+    """
+    Test case extra 01x:  Hard line break followed by link
+    """
+
+    # Arrange
+    source_markdown = """abc\a\a
+[This](foo.com) is new.""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):  ]",
+        "[text(2,1):\n::\n]",
+        "[link(2,1):inline:foo.com:::::This:False::::]",
+        "[text(2,2):This:]",
+        "[end-link:::False]",
+        "[text(2,16): is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<a href="foo.com">This</a> is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_04f():
+    """
+    Test case extra 01x:  Hard line break followed by link
+    """
+
+    # Arrange
+    source_markdown = """abc\a\a
+![This](foo.com) is new.""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):  ]",
+        "[text(2,1):\n::\n]",
+        "[image(2,1):inline:foo.com::This::::This:False::::]",
+        "[text(2,17): is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<img src="foo.com" alt="This" /> is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_04g():
+    """
+    Test case extra 01x:  Hard line break followed by autolink
+    """
+
+    # Arrange
+    source_markdown = """abc\a\a
+<http://this.com> is new.""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):  ]",
+        "[text(2,1):\n::\n]",
+        "[uri-autolink(2,1):http://this.com]",
+        "[text(2,18): is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<a href="http://this.com">http://this.com</a> is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_04h():
+    """
+    Test case extra 01x:  Hard line break followed by autolink
+    """
+
+    # Arrange
+    source_markdown = """abc\a\a
+<this> is new.""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):abc:]",
+        "[hard-break(1,4):  ]",
+        "[text(2,1):\n::\n]",
+        "[raw-html(2,1):this]",
+        "[text(2,7): is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc<br />
+<this> is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_hard_line_breaks_extra_04i():
+    """
+    Test case extra 01x:  Hard line break followed by hard line break
+    """
+
+    # Arrange
+    source_markdown = """abc\a\a
+\a\a
+this is new.""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1)::  ]",
+        "[text(1,1):abc:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):  ]",
+        "[para(3,1):]",
+        "[text(3,1):this is new.:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc</p>
+<p>this is new.</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

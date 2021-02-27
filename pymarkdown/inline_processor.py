@@ -1284,16 +1284,21 @@ class InlineProcessor:
         POGGER.debug("__cibp>column_number>$<", column_number)
 
         if inline_blocks and inline_blocks[-1].is_inline_hard_break:
-            start_index, extracted_whitespace = ParserHelper.extract_whitespace(
-                source_text, start_index
-            )
-            assert end_string
-            end_string = f"{end_string}{extracted_whitespace}"
+            POGGER.debug("__cibp>hb>$<", source_text[start_index - 1])
+            POGGER.debug("__cibp>hb>$<", source_text[start_index:])
+            if not start_index or source_text[start_index - 1] == "\n":
+                start_index, extracted_whitespace = ParserHelper.extract_whitespace(
+                    source_text, start_index
+                )
+                assert end_string
+                end_string = f"{end_string}{extracted_whitespace}"
+                POGGER.debug("__cibp>end_string>$<", end_string)
 
         if start_index < len(source_text):
             current_string = InlineHelper.append_text(
                 current_string, source_text[start_index:]
             )
+            POGGER.debug("__cibp>current_string>$<", current_string)
 
         if current_string or not have_processed_once:
             inline_blocks.append(
