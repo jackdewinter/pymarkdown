@@ -12,10 +12,9 @@
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - leading_text_index
 - link and emphasis (inline) tokens cannot be forced close, rewrite end to not expose :::False?
+- (performance) plugin set_context: fold in to normal calls to avoid 2nd call
 
 ### Priority 2 - Like To Solve Before Initial
-
-- (performance) plugin set_context: fold in to normal calls to avoid 2nd call
 
 - why does fcb with only newlines and newlines with ws not fold down to text?
   - coalesce with blank lines in fenced code block?
@@ -41,6 +40,8 @@
   - test_html_blocks_extra_05a
   - test_html_blocks_extra_06a
 - same as these, but with an extra level of list or block
+
+- implement missing rules
 
 ### Priority 3 - Like To Solve in next 3 m
 

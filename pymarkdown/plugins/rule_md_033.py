@@ -21,18 +21,3 @@ class RuleMd033(Plugin):
             plugin_description="Inline HTML",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md033---inline-html
         # Parameters: allowed_elements (array of string; default empty)
-
-    def starting_new_file(self):
-        """
-        Event that the a new file to be scanned is starting.
-        """
-
-    def next_line(self, line):
-        """
-        Event that a new line is being processed.
-        """
-
-    def completed_file(self):
-        """
-        Event that the file being currently scanned is now completed.
-        """

@@ -20,18 +20,3 @@ class RuleMd027(Plugin):
             plugin_enabled_by_default=True,
             plugin_description="Multiple spaces after blockquote symbol",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md027---multiple-spaces-after-blockquote-symbol
-
-    def starting_new_file(self):
-        """
-        Event that the a new file to be scanned is starting.
-        """
-
-    def next_line(self, line):
-        """
-        Event that a new line is being processed.
-        """
-
-    def completed_file(self):
-        """
-        Event that the file being currently scanned is now completed.
-        """

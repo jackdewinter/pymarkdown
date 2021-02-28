@@ -115,12 +115,25 @@ class Plugin(ABC):
         self.__is_next_line_implemented_in_plugin = (
             "next_line" in self.__class__.__dict__.keys()
         )
+        self.__is_starting_new_file_implemented_in_plugin = (
+            "starting_new_file" in self.__class__.__dict__.keys()
+        )
+        self.__is_completed_file_implemented_in_plugin = (
+            "completed_file" in self.__class__.__dict__.keys()
+        )
 
     def set_context(self, context):
         """
         Set the context to use for any error reporting.
         """
         self.__scan_context = context
+
+    @property
+    def is_starting_new_file_implemented_in_plugin(self):
+        """
+        Return whether the starting_new_file function is implemented in the plugin.
+        """
+        return self.__is_starting_new_file_implemented_in_plugin
 
     @property
     def is_next_line_implemented_in_plugin(self):
@@ -135,6 +148,13 @@ class Plugin(ABC):
         Return whether the next_token function is implemented in the plugin.
         """
         return self.__is_next_token_implemented_in_plugin
+
+    @property
+    def is_completed_file_implemented_in_plugin(self):
+        """
+        Return whether the completed_file function is implemented in the plugin.
+        """
+        return self.__is_completed_file_implemented_in_plugin
 
     def report_next_line_error(self, column_number, line_number_delta=0):
         """
@@ -238,11 +258,13 @@ class PluginManager:
         (
             self.__registered_plugins,
             self.__enabled_plugins,
+            self.__enabled_plugins_for_starting_new_file,
             self.__enabled_plugins_for_next_token,
             self.__enabled_plugins_for_next_line,
+            self.__enabled_plugins_for_completed_file,
             self.__loaded_classes,
             self.number_of_scan_failures,
-        ) = (None, None, None, None, None, None)
+        ) = (None, None, None, None, None, None, None, None)
 
     def initialize(
         self, directory_to_search, additional_paths, enable_rules, disable_rules
@@ -501,9 +523,11 @@ class PluginManager:
         Apply any supplied configuration to each of the enabled plugins.
         """
 
-        self.__enabled_plugins_for_next_token, self.__enabled_plugins_for_next_line = (
+        self.__enabled_plugins_for_starting_new_file, self.__enabled_plugins_for_next_token, self.__enabled_plugins_for_next_line, self.__enabled_plugins_for_completed_file = (
             [],
             [],
+            [],
+            []
         )
 
         for next_plugin in self.__enabled_plugins:
@@ -531,12 +555,16 @@ class PluginManager:
                 self.__enabled_plugins_for_next_token.append(next_plugin)
             if next_plugin.plugin_instance.is_next_line_implemented_in_plugin:
                 self.__enabled_plugins_for_next_line.append(next_plugin)
+            if next_plugin.plugin_instance.is_completed_file_implemented_in_plugin:
+                self.__enabled_plugins_for_completed_file.append(next_plugin)
+            if next_plugin.plugin_instance.is_starting_new_file_implemented_in_plugin:
+                self.__enabled_plugins_for_starting_new_file.append(next_plugin)
 
     def starting_new_file(self, file_being_started):
         """
         Inform any listeners that a new current file has been started.
         """
-        for next_plugin in self.__enabled_plugins:
+        for next_plugin in self.__enabled_plugins_for_starting_new_file:
             try:
                 next_plugin.plugin_instance.starting_new_file()
             except Exception as this_exception:
@@ -551,7 +579,7 @@ class PluginManager:
         Inform any listeners that the current file has been completed.
         """
         context.line_number = line_number
-        for next_plugin in self.__enabled_plugins:
+        for next_plugin in self.__enabled_plugins_for_completed_file:
             try:
                 next_plugin.plugin_instance.set_context(context)
                 next_plugin.plugin_instance.completed_file()
