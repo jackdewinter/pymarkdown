@@ -77,11 +77,12 @@ class Plugin(ABC):
 
     def __init__(self):
         (
-            self.__scan_context,
             self.__configuration_map,
             self.__is_next_token_implemented_in_plugin,
             self.__is_next_line_implemented_in_plugin,
-        ) = (None, None, True, True)
+            self.__is_starting_new_file_implemented_in_plugin,
+            self.__is_completed_file_implemented_in_plugin,
+        ) = (None, True, True, True, True)
 
     @abstractmethod
     def get_details(self):
@@ -122,12 +123,6 @@ class Plugin(ABC):
             "completed_file" in self.__class__.__dict__.keys()
         )
 
-    def set_context(self, context):
-        """
-        Set the context to use for any error reporting.
-        """
-        self.__scan_context = context
-
     @property
     def is_starting_new_file_implemented_in_plugin(self):
         """
@@ -156,25 +151,25 @@ class Plugin(ABC):
         """
         return self.__is_completed_file_implemented_in_plugin
 
-    def report_next_line_error(self, column_number, line_number_delta=0):
+    def report_next_line_error(self, context, column_number, line_number_delta=0):
         """
         Report an error with the current line being processed.
         """
-        self.__scan_context.owning_manager.log_scan_failure(
-            self.__scan_context.scan_file,
-            self.__scan_context.line_number + line_number_delta,
+        context.owning_manager.log_scan_failure(
+            context.scan_file,
+            context.line_number + line_number_delta,
             column_number,
             self.get_details().plugin_id,
             self.get_details().plugin_name,
             self.get_details().plugin_description,
         )
 
-    def report_next_token_error(self, token, extra_error_information=None):
+    def report_next_token_error(self, context, token, extra_error_information=None):
         """
         Report an error with the current token being processed.
         """
-        self.__scan_context.owning_manager.log_scan_failure(
-            self.__scan_context.scan_file,
+        context.owning_manager.log_scan_failure(
+            context.scan_file,
             token.line_number,
             token.column_number,
             self.get_details().plugin_id,
@@ -193,17 +188,17 @@ class Plugin(ABC):
         Event that the a new file to be scanned is starting.
         """
 
-    def completed_file(self):
+    def completed_file(self, context):
         """
         Event that the file being currently scanned is now completed.
         """
 
-    def next_line(self, line):
+    def next_line(self, context, line):
         """
         Event that a new line is being processed.
         """
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
@@ -249,6 +244,7 @@ class FoundPlugin:
 # pylint: enable=too-few-public-methods
 
 
+# pylint: disable=too-many-instance-attributes
 class PluginManager:
     """
     Manager object to take care of load and accessing plugin modules.
@@ -523,12 +519,12 @@ class PluginManager:
         Apply any supplied configuration to each of the enabled plugins.
         """
 
-        self.__enabled_plugins_for_starting_new_file, self.__enabled_plugins_for_next_token, self.__enabled_plugins_for_next_line, self.__enabled_plugins_for_completed_file = (
-            [],
-            [],
-            [],
-            []
-        )
+        (
+            self.__enabled_plugins_for_starting_new_file,
+            self.__enabled_plugins_for_next_token,
+            self.__enabled_plugins_for_next_line,
+            self.__enabled_plugins_for_completed_file,
+        ) = ([], [], [], [])
 
         for next_plugin in self.__enabled_plugins:
             try:
@@ -581,8 +577,7 @@ class PluginManager:
         context.line_number = line_number
         for next_plugin in self.__enabled_plugins_for_completed_file:
             try:
-                next_plugin.plugin_instance.set_context(context)
-                next_plugin.plugin_instance.completed_file()
+                next_plugin.plugin_instance.completed_file(context)
             except Exception as this_exception:
                 raise BadPluginError(
                     next_plugin.plugin_id, inspect.stack()[0].function
@@ -595,8 +590,7 @@ class PluginManager:
         context.line_number = line_number
         for next_plugin in self.__enabled_plugins_for_next_line:
             try:
-                next_plugin.plugin_instance.set_context(context)
-                next_plugin.plugin_instance.next_line(line)
+                next_plugin.plugin_instance.next_line(context, line)
             except Exception as this_exception:
                 raise BadPluginError(
                     next_plugin.plugin_id, inspect.stack()[0].function
@@ -608,9 +602,11 @@ class PluginManager:
         """
         for next_plugin in self.__enabled_plugins_for_next_token:
             try:
-                next_plugin.plugin_instance.set_context(context)
-                next_plugin.plugin_instance.next_token(token)
+                next_plugin.plugin_instance.next_token(context, token)
             except Exception as this_exception:
                 raise BadPluginError(
                     next_plugin.plugin_id, inspect.stack()[0].function
                 ) from this_exception
+
+
+# pylint: enable=too-many-instance-attributes

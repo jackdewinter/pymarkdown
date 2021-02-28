@@ -43,7 +43,7 @@ class RuleMd026(Plugin):
         self.__start_token = None
         self.__heading_text = None
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
@@ -55,7 +55,7 @@ class RuleMd026(Plugin):
 
                 if self.__heading_text:
                     if self.__heading_text[-1] in self.__punctuation:
-                        self.report_next_token_error(self.__start_token)
+                        self.report_next_token_error(context, self.__start_token)
                 self.__start_token = None
             else:
                 self.__heading_text = ""

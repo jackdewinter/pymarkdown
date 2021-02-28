@@ -35,13 +35,13 @@ class RuleMd023(Plugin):
         self.__setext_start_token = None
         self.__any_leading_whitespace_detected = False
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
         if token.is_atx_heading:
             if token.extracted_whitespace:
-                self.report_next_token_error(token)
+                self.report_next_token_error(context, token)
         elif token.is_setext_heading:
             self.__setext_start_token = token
             self.__any_leading_whitespace_detected = bool(token.extracted_whitespace)
@@ -54,5 +54,5 @@ class RuleMd023(Plugin):
                 self.__any_leading_whitespace_detected = True
 
             if self.__any_leading_whitespace_detected:
-                self.report_next_token_error(self.__setext_start_token)
+                self.report_next_token_error(context, self.__setext_start_token)
             self.__setext_start_token = None

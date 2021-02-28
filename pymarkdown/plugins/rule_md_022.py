@@ -54,17 +54,17 @@ class RuleMd022(Plugin):
         self.__start_heading_token = None
         self.__did_heading_end = False
 
-    def completed_file(self):
+    def completed_file(self, context):
         """
         Event that the file being currently scanned is now completed.
         """
-        self.perform_close_check(None)
+        self.perform_close_check(context, None)
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
-        self.perform_close_check(token)
+        self.perform_close_check(context, token)
 
         if token.is_blank_line:
             if (self.__blank_line_count is not None) and self.__blank_line_count >= 0:
@@ -101,7 +101,7 @@ class RuleMd022(Plugin):
 
     # pylint: enable=too-many-boolean-expressions
 
-    def perform_close_check(self, token):
+    def perform_close_check(self, context, token):
         """
         Perform any state checks necessary upon closing the heading context.  Also
         called at the end of a document to make sure the implicit close of the
@@ -113,10 +113,10 @@ class RuleMd022(Plugin):
         ) and self.__blank_line_count >= 0:
             if not token or not token.is_blank_line:
                 did_end_match = bool(self.__blank_line_count == self.__lines_below)
-                self.report_any_match_failures(did_end_match)
+                self.report_any_match_failures(context, did_end_match)
                 self.__start_heading_token = None
 
-    def report_any_match_failures(self, did_end_match):
+    def report_any_match_failures(self, context, did_end_match):
         """
         Take care of reporting any match failures.
         """
@@ -130,7 +130,7 @@ class RuleMd022(Plugin):
                 + "; Above"
             )
             self.report_next_token_error(
-                self.__start_heading_token, extra_error_information=extra_info
+                context, self.__start_heading_token, extra_error_information=extra_info
             )
         if not did_end_match:
             extra_info = (
@@ -141,5 +141,5 @@ class RuleMd022(Plugin):
                 + "; Below"
             )
             self.report_next_token_error(
-                self.__start_heading_token, extra_error_information=extra_info
+                context, self.__start_heading_token, extra_error_information=extra_info
             )

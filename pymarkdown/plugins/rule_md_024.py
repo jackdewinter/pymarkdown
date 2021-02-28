@@ -56,7 +56,7 @@ class RuleMd024(Plugin):
         else:
             self.__heading_content_map = [{}]
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
@@ -65,7 +65,7 @@ class RuleMd024(Plugin):
             self.handle_heading_start(token)
             skip_this_token = True
         elif token.is_setext_heading_end or token.is_atx_heading_end:
-            self.handler_heading_end()
+            self.handler_heading_end(context)
 
         if not skip_this_token and self.__heading_text is not None:
             self.__heading_text += token.debug_string(include_column_row_info=False)
@@ -81,7 +81,7 @@ class RuleMd024(Plugin):
         else:
             self.__hash_count = 1
 
-    def handler_heading_end(self):
+    def handler_heading_end(self, context):
         """
         Process the end heading token, atx or setext
         """
@@ -97,7 +97,7 @@ class RuleMd024(Plugin):
         past_headings_map = self.__heading_content_map[self.__hash_count - 1]
 
         if self.__heading_text in past_headings_map:
-            self.report_next_token_error(self.__start_token)
+            self.report_next_token_error(context, self.__start_token)
         else:
             past_headings_map[self.__heading_text] = self.__heading_text
         self.__heading_text = None

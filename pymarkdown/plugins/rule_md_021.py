@@ -35,7 +35,7 @@ class RuleMd021(Plugin):
         self.__in_atx_heading = None
         self.__is_left_in_error = False
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
@@ -46,7 +46,7 @@ class RuleMd021(Plugin):
             self.__in_atx_heading = False
         elif token.is_atx_heading_end:
             if self.__is_left_in_error or len(token.extra_end_data) > 1:
-                self.report_next_token_error(token)
+                self.report_next_token_error(context, token)
         elif token.is_text:
             if self.__in_atx_heading and len(token.extracted_whitespace) > 1:
                 self.__is_left_in_error = True

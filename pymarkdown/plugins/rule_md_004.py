@@ -21,4 +21,3 @@ class RuleMd004(Plugin):
             plugin_description="Unordered list style",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md004---unordered-list-style
         # Parameters: style ("consistent", "asterisk", "plus", "dash", "sublist"; default "consistent")
-

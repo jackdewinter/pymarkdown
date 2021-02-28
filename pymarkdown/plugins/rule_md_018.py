@@ -37,7 +37,7 @@ class RuleMd018(Plugin):
         """
         self.__last_paragraph_token = None
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
@@ -57,4 +57,4 @@ class RuleMd018(Plugin):
                 if re.search(r"^\s{0,3}#{1,6}\S", combined_text) and not re.search(
                     r"#\s*$", combined_text
                 ):
-                    self.report_next_token_error(token)
+                    self.report_next_token_error(context, token)

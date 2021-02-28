@@ -33,7 +33,7 @@ class RuleMd001(Plugin):
         """
         self.__last_heading_count = None
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
@@ -51,6 +51,6 @@ class RuleMd001(Plugin):
                         + str(hash_count)
                     )
                     self.report_next_token_error(
-                        token, extra_error_information=extra_data
+                        context, token, extra_error_information=extra_data
                     )
             self.__last_heading_count = hash_count

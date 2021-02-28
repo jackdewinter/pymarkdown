@@ -34,7 +34,7 @@ class RuleMd019(Plugin):
         """
         self.__in_atx_heading = None
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
@@ -47,4 +47,4 @@ class RuleMd019(Plugin):
                 token.extracted_whitespace
             )
             if self.__in_atx_heading and len(resolved_extracted_whitespace) > 1:
-                self.report_next_token_error(token)
+                self.report_next_token_error(context, token)

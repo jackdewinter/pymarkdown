@@ -64,7 +64,7 @@ class RuleMd003(Plugin):
         if self.__style_type != RuleMd003.__consistent_style:
             self.__actual_style_type = self.__style_type
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
@@ -114,7 +114,9 @@ class RuleMd003(Plugin):
                     + "; Actual: "
                     + str(heading_style_type)
                 )
-                self.report_next_token_error(token, extra_error_information=extra_data)
+                self.report_next_token_error(
+                    context, token, extra_error_information=extra_data
+                )
 
     @classmethod
     def __get_heading_properties(cls, token):

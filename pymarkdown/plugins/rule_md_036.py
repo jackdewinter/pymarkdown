@@ -59,7 +59,7 @@ class RuleMd036(Plugin):
         self.__current_state = RuleMd036States.LOOK_FOR_PARAGRAPH
         self.__start_token = None
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
@@ -85,6 +85,6 @@ class RuleMd036(Plugin):
         else:
             assert self.__current_state == RuleMd036States.LOOK_FOR_PARAGRAPH_END
             if token.is_paragraph_end:
-                self.report_next_token_error(self.__start_token)
+                self.report_next_token_error(context, self.__start_token)
 
         self.__current_state = new_state

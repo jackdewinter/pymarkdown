@@ -31,15 +31,15 @@ class RuleMd047(Plugin):
         """
         self.__last_line = None
 
-    def next_line(self, line):
+    def next_line(self, context, line):
         """
         Event that a new line is being processed.
         """
         self.__last_line = line
 
-    def completed_file(self):
+    def completed_file(self, context):
         """
         Event that the file being currently scanned is now completed.
         """
         if self.__last_line:
-            self.report_next_line_error(len(self.__last_line), -1)
+            self.report_next_line_error(context, len(self.__last_line), -1)

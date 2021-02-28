@@ -20,4 +20,3 @@ class RuleMd005(Plugin):
             plugin_enabled_by_default=True,
             plugin_description="Inconsistent indentation for list items at the same level",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md005---inconsistent-indentation-for-list-items-at-the-same-level
-

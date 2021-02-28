@@ -12,7 +12,7 @@
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - leading_text_index
 - link and emphasis (inline) tokens cannot be forced close, rewrite end to not expose :::False?
-- (performance) plugin set_context: fold in to normal calls to avoid 2nd call
+- optional YAML/simple front loader
 
 ### Priority 2 - Like To Solve Before Initial
 

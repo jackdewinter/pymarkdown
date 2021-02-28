@@ -41,7 +41,7 @@ class RuleMd002(Plugin):
         """
         self.__have_seen_first_heading = False
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
@@ -57,4 +57,6 @@ class RuleMd002(Plugin):
                     + "; Actual: h"
                     + str(hash_count)
                 )
-                self.report_next_token_error(token, extra_error_information=extra_data)
+                self.report_next_token_error(
+                    context, token, extra_error_information=extra_data
+                )

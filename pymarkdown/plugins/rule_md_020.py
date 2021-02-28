@@ -41,7 +41,7 @@ class RuleMd020(Plugin):
         self.__is_in_normal_atx = False
         self.__last_atx_token = None
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
@@ -57,7 +57,7 @@ class RuleMd020(Plugin):
         elif token.is_atx_heading_end:
             if self.__is_in_normal_atx and self.__last_atx_token.is_text:
                 if self.__last_atx_token.token_text.endswith("#"):
-                    self.report_next_token_error(token)
+                    self.report_next_token_error(context, token)
             self.__is_in_normal_atx = False
         elif token.is_text and self.__last_paragraph_token:
             split_whitespace = self.__last_paragraph_token.extracted_whitespace.split(
@@ -69,4 +69,4 @@ class RuleMd020(Plugin):
             for split_index, next_text in enumerate(split_text):
                 combined_text = split_whitespace[split_index] + next_text
                 if re.search(r"^\s{0,3}#{1,6}.*#+\s*$", combined_text):
-                    self.report_next_token_error(token)
+                    self.report_next_token_error(context, token)

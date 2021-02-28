@@ -51,13 +51,13 @@ class PluginOne(Plugin):
         """
         print(self.get_details().plugin_id + ">>starting_new_file>>")
 
-    def next_line(self, line):
+    def next_line(self, context, line):
         """
         Event that a new line is being processed.
         """
         print(self.get_details().plugin_id + ">>next_line:" + line)
 
-    def next_token(self, token):
+    def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
@@ -65,7 +65,7 @@ class PluginOne(Plugin):
         if self.test_value == 20:
             raise Exception("because")
 
-    def completed_file(self):
+    def completed_file(self, context):
         """
         Event that the file being currently scanned is now completed.
         """
