@@ -16,10 +16,6 @@
 
 ### Priority 2 - Like To Solve Before Initial
 
-- __calculate_shortcut_collapsed_deltas - not being used at all
-  - figure out why?
-- shotrcut link over multiple line
-  - doesn't seem to have any code to handle?
 - (performance) plugin set_context: fold in to normal calls to avoid 2nd call
 
 - why does fcb with only newlines and newlines with ws not fold down to text?

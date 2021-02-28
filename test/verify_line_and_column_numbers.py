@@ -1020,6 +1020,11 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
         else:
             adjust_column_by = len(parent_cur_token.ex_label) + 3
 
+    # Tests test_reference_links_extra_03jx and test_reference_links_extra_03ja added
+    # to ensure that this is correct.  Those tests confirm that any newlines in the
+    # label are already accounted for, and as such, do not require any further
+    # modifications.
+
     elif parent_cur_token.label_type == "shortcut":
         print(f">>shortcut:{str(parent_cur_token.ex_label)}:")
         adjust_column_by = 1

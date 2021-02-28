@@ -2796,3 +2796,71 @@ foo" />yy]</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03jx():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar\\\\
+foo]: /uri
+
+abc
+[bar\\\\
+foo]
+abc"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar\\\\ foo:bar\\\\\nfoo: :/uri:::::]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n\n\n]",
+        "[text(4,1):abc\n::\n]",
+        "[link(5,1):shortcut:/uri:::::bar\\\\\nfoo:::::]",
+        "[text(5,2):bar\\\b\\\nfoo::\n]",
+        "[end-link:::False]",
+        "[text(6,5):\nabc::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc
+<a href="/uri">bar\\
+foo</a>
+abc</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_reference_links_extra_03ja():
+    """
+    Test case extra 03h:  variation
+    """
+
+    # Arrange
+    source_markdown = """[bar\\\\
+foo]: /uri
+
+abc
+[bar\\\\
+foo][]
+abc"""
+    expected_tokens = [
+        "[link-ref-def(1,1):True::bar\\\\ foo:bar\\\\\nfoo: :/uri:::::]",
+        "[BLANK(3,1):]",
+        "[para(4,1):\n\n\n]",
+        "[text(4,1):abc\n::\n]",
+        "[link(5,1):collapsed:/uri:::::bar\\\\\nfoo:::::]",
+        "[text(5,2):bar\\\b\\\nfoo::\n]",
+        "[end-link:::False]",
+        "[text(6,7):\nabc::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>abc
+<a href="/uri">bar\\
+foo</a>
+abc</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

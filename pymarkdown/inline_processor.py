@@ -657,6 +657,12 @@ class InlineProcessor:
 
     @staticmethod
     def __calculate_shortcut_collapsed_deltas(current_token, delta_line, repeat_count):
+        """
+        Tests test_reference_links_extra_03jx and test_reference_links_extra_03ja added
+        to ensure that this is correct.  Those tests confirm that any newlines in the
+        label are already accounted for, and as such, do not require any further
+        modifications.
+        """
         _ = current_token
         return delta_line, repeat_count
 
@@ -679,6 +685,7 @@ class InlineProcessor:
                 )
                 POGGER.debug(">>split_paragraph_lines>>$<<", split_paragraph_lines)
 
+            POGGER.debug(">>current_token.label_type>>$<<", current_token.label_type)
             if current_token.label_type == "inline":
                 delta_line, repeat_count = InlineProcessor.__calculate_inline_deltas(
                     current_token,
