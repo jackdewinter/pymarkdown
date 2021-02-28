@@ -231,12 +231,8 @@ class InlineProcessor:
                         coalesced_results[coalesce_index].extracted_whitespace,
                     )
                     processed_tokens = InlineProcessor.__process_inline_text_block(
-                        coalesced_results[coalesce_index].token_text.replace(
-                            ParserHelper.tab_character, "    "
-                        ),
-                        coalesced_results[coalesce_index].extracted_whitespace.replace(
-                            ParserHelper.tab_character, "    "
-                        ),
+                        coalesced_results[coalesce_index].token_text,
+                        coalesced_results[coalesce_index].extracted_whitespace,
                         line_number=coalesced_results[coalesce_index].line_number,
                         column_number=coalesced_results[coalesce_index].column_number
                         + len(coalesced_results[coalesce_index].extracted_whitespace)

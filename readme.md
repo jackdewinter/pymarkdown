@@ -9,7 +9,6 @@
 ### Priority 1 - Must Solve Before Initial
 
 - test_paragraph_series_m_ul_t_nl_ulb_nl_tb - with abc/def/*
-- stop gap solution for handling Tabs until tab work can be done
 
 - why does hard break not have \n? (fix before release)
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi

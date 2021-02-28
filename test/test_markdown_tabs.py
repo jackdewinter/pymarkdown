@@ -221,7 +221,6 @@ def test_tabs_005():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-# @pytest.mark.skip
 @pytest.mark.gfm
 def test_tabs_006():
     """
@@ -489,7 +488,6 @@ def test_tabs_009():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_tabs_010():
     """
@@ -498,11 +496,11 @@ def test_tabs_010():
 
     # Arrange
     source_markdown = """#\tFoo"""
-    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):Foo:    ]", "[end-atx:::False]"]
+    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):Foo:\t]", "[end-atx:::False]"]
     expected_gfm = """<h1>Foo</h1>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
