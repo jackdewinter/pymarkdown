@@ -6,6 +6,7 @@ import pytest
 from .utils import act_and_assert
 
 
+# pylint: disable=too-many-lines
 @pytest.mark.gfm
 def test_setext_headings_050():
     """
@@ -222,6 +223,95 @@ def test_setext_headings_052e():
         "[end-setext:::False]",
     ]
     expected_gfm = """<h1>a
+<em>b</em><br />
+c</h1>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_052ea():
+    """
+    Test case 052a:  Deal with multiple lines that start with whitespace.
+    """
+
+    # Arrange
+    source_markdown = """  a\a
+  *b*\a\a
+  a\a
+  *b*\a\a
+  c
+===""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(6,1):=:3:  :(1,3)]",
+        "[text(1,3):a\n:: \n  \x02]",
+        "[emphasis(2,3):1:*]",
+        "[text(2,4):b:]",
+        "[end-emphasis(2,5):::False]",
+        "[hard-break(2,6):  ]",
+        "[text(3,3):\na\n::\n  \x02 \n  \x02]",
+        "[emphasis(4,3):1:*]",
+        "[text(4,4):b:]",
+        "[end-emphasis(4,5):::False]",
+        "[hard-break(4,6):  ]",
+        "[text(5,3):\nc::\n  ]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h1>a
+<em>b</em><br />
+a
+<em>b</em><br />
+c</h1>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_052eb():
+    """
+    Test case 052a:  Deal with multiple lines that start with whitespace.
+    """
+
+    # Arrange
+    source_markdown = """ a\a
+ *b*\a\a
+  a\a
+  *b*\a\a
+   a\a
+   *b*\a\a
+c
+===""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[setext(8,1):=:3: :(1,2)]",
+        "[text(1,2):a\n:: \n \x02]",
+        "[emphasis(2,2):1:*]",
+        "[text(2,3):b:]",
+        "[end-emphasis(2,4):::False]",
+        "[hard-break(2,5):  ]",
+        "[text(3,3):\na\n::\n  \x02 \n  \x02]",
+        "[emphasis(4,3):1:*]",
+        "[text(4,4):b:]",
+        "[end-emphasis(4,5):::False]",
+        "[hard-break(4,6):  ]",
+        "[text(5,4):\na\n::\n   \x02 \n   \x02]",
+        "[emphasis(6,4):1:*]",
+        "[text(6,5):b:]",
+        "[end-emphasis(6,6):::False]",
+        "[hard-break(6,7):  ]",
+        "[text(7,1):\nc::\n]",
+        "[end-setext:::False]",
+    ]
+    expected_gfm = """<h1>a
+<em>b</em><br />
+a
+<em>b</em><br />
+a
 <em>b</em><br />
 c</h1>"""
 

@@ -1708,9 +1708,25 @@ def __verify_next_inline_hard_break(
         split_whitespace = current_inline_token.end_whitespace.split(
             ParserHelper.newline_character
         )
+
+        # if current_string == "\n" and ParserHelper.is_character_at_index_whitespace(remaining_line, 0):
+        print(
+            f"previous_inline_token>{ParserHelper.make_value_visible(previous_inline_token)}<"
+        )
         print(f"split_whitespace>{ParserHelper.make_value_visible(split_whitespace)}<")
         ws_for_new_line = split_whitespace[1]
         print(f"ws_for_new_line>{ParserHelper.make_value_visible(ws_for_new_line)}<")
+
+        if previous_inline_token.is_inline_hard_break:
+            print("possible hardbreak adjustment")
+            split_index = ws_for_new_line.find(ParserHelper.whitespace_split_character)
+            if split_index != -1:
+                print("hardbreak adjustment")
+                ws_for_new_line = ws_for_new_line[0:split_index]
+                print(
+                    f"ws_for_new_line>{ParserHelper.make_value_visible(ws_for_new_line)}<"
+                )
+
         new_column_number += len(ws_for_new_line)
     return estimated_line_number + 1, new_column_number
 

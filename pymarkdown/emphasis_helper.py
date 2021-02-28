@@ -394,7 +394,7 @@ class EmphasisHelper:
             is_opener_both = EmphasisHelper.__is_potential_closer(
                 open_token
             ) and EmphasisHelper.__is_potential_opener(open_token)
-            POGGER.debug("is_opener_both>>%s", is_opener_both)
+            POGGER.debug("is_opener_both>>$", is_opener_both)
             if is_closer_both or is_opener_both:
                 sum_repeat_count = close_token.repeat_count + open_token.repeat_count
                 POGGER.debug("sum_delims>>$", sum_repeat_count)

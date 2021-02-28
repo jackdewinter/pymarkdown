@@ -969,7 +969,27 @@ class InlineProcessor:
                 #    end_string,
                 # )
             else:
-                # POGGER.debug("append_rest_of_line>>$<", remaining_line)
+                if (
+                    is_setext
+                    and current_string == "\n"
+                    and inline_blocks
+                    and inline_blocks[-1].is_inline_hard_break
+                    and ParserHelper.is_character_at_index_whitespace(remaining_line, 0)
+                ):
+                    # POGGER.debug("After hard line break correction")
+                    (
+                        index_after_whitespace,
+                        correction_whitespace,
+                    ) = ParserHelper.extract_whitespace(remaining_line, 0)
+                    remaining_line = remaining_line[index_after_whitespace:]
+                    end_string = f"\n{correction_whitespace}{ParserHelper.whitespace_split_character}{end_string[1:]}"
+                    current_string_unresolved = (
+                        f"{current_string_unresolved}{correction_whitespace}"
+                    )
+
+                # POGGER.debug("append_rest_of_line>>rem>>$<", remaining_line)
+                # POGGER.debug("append_rest_of_line>>cur>>$<", current_string)
+                # POGGER.debug("append_rest_of_line>>cur_un>>$<", current_string_unresolved)
                 current_string, current_string_unresolved = (
                     InlineHelper.append_text(
                         current_string,
