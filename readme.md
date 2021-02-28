@@ -8,11 +8,10 @@
 
 ### Priority 1 - Must Solve Before Initial
 
-- test_paragraph_series_m_ul_t_nl_ulb_nl_tb - with abc/def/*
-
 - why does hard break not have \n? (fix before release)
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - leading_text_index
+- link and emphasis (inline) tokens cannot be forced close, rewrite end to not expose :::False?
 
 ### Priority 2 - Like To Solve Before Initial
 
@@ -23,7 +22,6 @@
 - make sure to generated ordered/unordered tests to make sure both covered
   - every unordered tests should have an ordered counterpart
   - every ordered tests should have an unordered counterpart
-- link and emphasis (inline) tokens cannot be forced close, rewrite end to not expost :::False?
 
 - take `__consume_text_for_image_alt_text` and other functions like it and move as much as possible into token classes
   - TransformToGfmListLooseness.__handle_block_quote_start
@@ -59,6 +57,12 @@
 - (performance) handle_character_reference
 
 - (maintenance) clean up pylint warning suppressions where possible
+  - too-many-locals
+  - too-many-statements
+  - too-many-branches
+  - too-many-nested-blocks
+  - too-many-lines
+  - too-many-instance?
 
 - look for places where common access patterns can be used i.e. link_title
   - `= len(parser_state.token_stack`

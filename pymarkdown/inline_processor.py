@@ -974,7 +974,7 @@ class InlineProcessor:
             else:
                 if (
                     is_setext
-                    and current_string == "\n"
+                    and current_string == ParserHelper.newline_character
                     and inline_blocks
                     and inline_blocks[-1].is_inline_hard_break
                     and ParserHelper.is_character_at_index_whitespace(remaining_line, 0)
@@ -985,7 +985,7 @@ class InlineProcessor:
                         correction_whitespace,
                     ) = ParserHelper.extract_whitespace(remaining_line, 0)
                     remaining_line = remaining_line[index_after_whitespace:]
-                    end_string = f"\n{correction_whitespace}{ParserHelper.whitespace_split_character}{end_string[1:]}"
+                    end_string = f"{ParserHelper.newline_character}{correction_whitespace}{ParserHelper.whitespace_split_character}{end_string[1:]}"
                     current_string_unresolved = (
                         f"{current_string_unresolved}{correction_whitespace}"
                     )
@@ -1309,7 +1309,10 @@ class InlineProcessor:
         if inline_blocks and inline_blocks[-1].is_inline_hard_break:
             POGGER.debug("__cibp>hb>$<", source_text[start_index - 1])
             POGGER.debug("__cibp>hb>$<", source_text[start_index:])
-            if not start_index or source_text[start_index - 1] == "\n":
+            if (
+                not start_index
+                or source_text[start_index - 1] == ParserHelper.newline_character
+            ):
                 start_index, extracted_whitespace = ParserHelper.extract_whitespace(
                     source_text, start_index
                 )

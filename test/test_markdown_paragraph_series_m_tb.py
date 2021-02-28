@@ -370,6 +370,125 @@ def test_paragraph_series_m_tb_ul_t_nl_ulb_nl_tb():
 
 
 @pytest.mark.gfm
+def test_paragraph_series_m_tb_ul_t_nl_ul_t_nl_ulb_nl_tb():
+    """
+    Test case:  Unordered list text newline unordered list (b) new line thematic break
+    """
+
+    # Arrange
+    source_markdown = """- abc
+- def
+  *
+---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n]",
+        "[text(2,3):def\n::\n]",
+        "[text(3,1):*:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(4,1):-::---]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc</li>
+<li>def
+*</li>
+</ul>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_tb_ul_t_nl_ul_t_nl_i3_ulb_nl_tb():
+    """
+    Test case:  Unordered list text newline unordered list (b) new line thematic break
+    """
+
+    # Arrange
+    source_markdown = """- abc
+- def
+  *
+---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n]",
+        "[text(2,3):def\n::\n]",
+        "[text(3,1):*:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(4,1):-::---]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc</li>
+<li>def
+*</li>
+</ul>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_paragraph_series_m_tb_ul_t_nl_i3_ul_t_nl_ulb_nl_tb():
+    """
+    Test case:  Unordered list text newline unordered list (b) new line thematic break
+    """
+
+    # Arrange
+    source_markdown = """- abc
+  - def
+  *
+---
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):abc:]",
+        "[end-para:::True]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):def:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[ulist(3,3):*::4:  ]",
+        "[BLANK(3,4):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[tbreak(4,1):-::---]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<ul>
+<li>abc
+<ul>
+<li>def</li>
+</ul>
+<ul>
+<li></li>
+</ul>
+</li>
+</ul>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_paragraph_series_m_tb_ol_nl_ol_t_nl_tb():
     """
     Test case:  Ordered list newline ordered list text new line thematic break
