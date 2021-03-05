@@ -35,6 +35,7 @@ class MarkdownToken:
     _token_indented_code_block = "icode-block"
     _token_block_quote = "block-quote"
     _token_text = "text"
+    _token_front_matter = "front-matter"
 
     _token_unordered_list_start = "ulist"
     _token_ordered_list_start = "olist"
@@ -58,6 +59,7 @@ class MarkdownToken:
         line_number=0,
         column_number=0,
         position_marker=None,
+        is_extension=False,
     ):
         if position_marker:
             line_number, column_number = (
@@ -70,7 +72,15 @@ class MarkdownToken:
             self.__extra_data,
             self.__line_number,
             self.__column_number,
-        ) = (token_name, token_class, extra_data, line_number, column_number)
+            self.__is_extension,
+        ) = (
+            token_name,
+            token_class,
+            extra_data,
+            line_number,
+            column_number,
+            is_extension,
+        )
 
     # pylint: enable=too-many-arguments
 
@@ -100,33 +110,6 @@ class MarkdownToken:
         return self.__token_name
 
     @property
-    def line_number(self):
-        """
-        Returns the line number associated with the token.
-        """
-        return self.__line_number
-
-    @property
-    def column_number(self):
-        """
-        Returns the column number associated with the token.
-        """
-        return self.__column_number
-
-    def _set_column_number(self, column_number):
-        self.__column_number = column_number
-
-    @property
-    def extra_data(self):
-        """
-        Returns the extra data associated with the token.
-        """
-        return self.__extra_data
-
-    def _set_extra_data(self, extra_data):
-        self.__extra_data = extra_data
-
-    @property
     def is_container(self):
         """
         Returns whether the current token is a container block element.
@@ -146,6 +129,40 @@ class MarkdownToken:
         Returns whether the current token is an inline block element.
         """
         return self.__token_class == MarkdownTokenClass.INLINE_BLOCK
+
+    @property
+    def extra_data(self):
+        """
+        Returns the extra data associated with the token.
+        """
+        return self.__extra_data
+
+    def _set_extra_data(self, extra_data):
+        self.__extra_data = extra_data
+
+    @property
+    def line_number(self):
+        """
+        Returns the line number associated with the token.
+        """
+        return self.__line_number
+
+    @property
+    def column_number(self):
+        """
+        Returns the column number associated with the token.
+        """
+        return self.__column_number
+
+    def _set_column_number(self, column_number):
+        self.__column_number = column_number
+
+    @property
+    def is_extension(self):
+        """
+        Returns whether this token is implemented as an extension.
+        """
+        return self.__is_extension
 
     @property
     def is_end_token(self):
@@ -281,6 +298,13 @@ class MarkdownToken:
         Returns whether the current token is a thematic break element.
         """
         return self.token_name == MarkdownToken._token_thematic_break
+
+    @property
+    def is_front_matter(self):
+        """
+        Returns whether the current token is the front matter element.
+        """
+        return self.token_name == MarkdownToken._token_front_matter
 
     @property
     def is_text(self):

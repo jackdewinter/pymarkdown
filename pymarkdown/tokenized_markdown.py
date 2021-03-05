@@ -7,6 +7,7 @@ import os
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_block_processor import ContainerBlockProcessor
+from pymarkdown.extensions.front_matter_markdown_token import FrontMatterExtension
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.inline_processor import InlineProcessor
@@ -108,6 +109,10 @@ class TokenizedMarkdown:
         POGGER.debug("---")
         line_number = 1
         try:
+            token_to_use, line_number, requeue = self.__process_header_if_present(
+                token_to_use, line_number, requeue
+            )
+            did_start_close = token_to_use is None
             keep_on_going = True
             while keep_on_going:
                 POGGER.debug("next-line>>$", token_to_use)
@@ -544,6 +549,29 @@ class TokenizedMarkdown:
             parser_state.token_stack[
                 stack_index
             ].matching_markdown_token.add_leading_spaces("")
+
+    @classmethod
+    def apply_config_map(cls, config_map):
+        """
+        Apply any configuration map.
+        """
+        POGGER.info("config_map>>$", config_map)
+
+    def __process_header_if_present(self, token_to_use, line_number, requeue):
+
+        # Add code to only call if enabled.
+        (
+            token_to_use,
+            line_number,
+            requeue,
+        ) = FrontMatterExtension.process_header_if_present(
+            token_to_use,
+            line_number,
+            requeue,
+            self.source_provider,
+            self.tokenized_document,
+        )
+        return token_to_use, line_number, requeue
 
 
 # pylint: enable=too-few-public-methods

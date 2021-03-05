@@ -12,13 +12,17 @@ from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.transform_to_gfm import TransformToGfm
 
 
-def act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False):
+def act_and_assert(
+    source_markdown, expected_gfm, expected_tokens, show_debug=False, config_map=None
+):
     """
     Act and assert on the expected behavior of parsing the source_markdown.
     """
 
     # Arrange
     tokenizer = TokenizedMarkdown()
+    if config_map:
+        tokenizer.apply_config_map(config_map)
     transformer = TransformToGfm()
 
     # Act

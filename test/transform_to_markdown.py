@@ -10,6 +10,10 @@ from pymarkdown.container_markdown_token import (
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
+from pymarkdown.extensions.front_matter_markdown_token import (
+    FrontMatterExtension,
+    FrontMatterMarkdownToken,
+)
 from pymarkdown.inline_markdown_token import (
     EmailAutolinkMarkdownToken,
     EmphasisMarkdownToken,
@@ -108,6 +112,11 @@ class TransformToMarkdown:
             self.__rehydrate_setext_heading,
             self.__rehydrate_setext_heading_end,
         )
+
+        self.register_handlers(
+            FrontMatterMarkdownToken, FrontMatterExtension.rehydrate_front_matter
+        )
+
         self.register_handlers(BlankLineMarkdownToken, self.__rehydrate_blank_line)
         self.register_handlers(TextMarkdownToken, self.__rehydrate_text)
         self.register_handlers(

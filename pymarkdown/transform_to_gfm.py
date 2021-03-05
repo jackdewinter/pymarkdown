@@ -10,6 +10,10 @@ from pymarkdown.container_markdown_token import (
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
+from pymarkdown.extensions.front_matter_markdown_token import (
+    FrontMatterExtension,
+    FrontMatterMarkdownToken,
+)
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.inline_markdown_token import (
     EmailAutolinkMarkdownToken,
@@ -100,6 +104,9 @@ class TransformToGfm:
 
         self.register_handlers(
             ThematicBreakMarkdownToken, self.__handle_thematic_break_token
+        )
+        self.register_handlers(
+            FrontMatterMarkdownToken, FrontMatterExtension.handle_front_matter_token
         )
         self.register_handlers(HardBreakMarkdownToken, self.__handle_hard_break_token)
         self.register_handlers(

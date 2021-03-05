@@ -41,6 +41,7 @@
   - test_html_blocks_extra_06a
 - same as these, but with an extra level of list or block
 
+- properly address any issues with existing rules
 - implement missing rules
 
 ### Priority 3 - Like To Solve in next 3 m
@@ -56,6 +57,9 @@
 - (performance) ParserHelper functions can be further optimized? i.e. __remove_backspaces_from_text and how combines
 - (performance) handle_inline_backslash
 - (performance) handle_character_reference
+
+- (maintenance) look for cases where = True or = False, and see if can do an assignment
+  easlier i.e. if x: d_a_d = False else: d_a_d = True
 
 - (maintenance) clean up pylint warning suppressions where possible
   - too-many-locals

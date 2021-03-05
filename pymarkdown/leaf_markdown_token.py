@@ -19,6 +19,7 @@ class LeafMarkdownToken(MarkdownToken):
         column_number=0,
         position_marker=None,
         extracted_whitespace=None,
+        is_extension=False,
     ):
         self.__extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
@@ -29,6 +30,7 @@ class LeafMarkdownToken(MarkdownToken):
             line_number=line_number,
             column_number=column_number,
             position_marker=position_marker,
+            is_extension=is_extension,
         )
 
     # pylint: enable=too-many-arguments

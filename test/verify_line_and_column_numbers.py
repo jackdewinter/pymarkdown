@@ -284,8 +284,12 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
         number_of_lines,
     )
 
-    assert not token_stack
-    assert not container_block_stack
+    assert (
+        not token_stack
+    ), f"Token stack should be empty: {ParserHelper.make_value_visible(token_stack)}"
+    assert (
+        not container_block_stack
+    ), f"Container block stack should be empty: {ParserHelper.make_value_visible(container_block_stack)}"
 
 
 # pylint: enable=too-many-branches,too-many-statements,too-many-locals, too-many-boolean-expressions
@@ -302,6 +306,7 @@ def __push_to_stack_if_required(token_stack, current_token):
         and not current_token.is_new_list_item
         and not current_token.is_link_reference_definition
         and not current_token.is_thematic_break
+        and not current_token.is_front_matter
     ):
         token_stack.append(current_token)
     else:
@@ -354,7 +359,9 @@ def __validate_block_token_height(
         )
 
     delta = last_token.line_number
-    if last_token.is_paragraph:
+    if last_token.is_extension:
+        token_height = last_token.calculate_block_token_height(last_token)
+    elif last_token.is_paragraph:
         token_height = 1 + ParserHelper.count_newlines_in_text(
             last_token.extracted_whitespace
         )
@@ -602,7 +609,9 @@ def __validate_first_token(current_token, current_position):
 # pylint: disable=too-many-boolean-expressions
 def __calc_initial_whitespace(calc_token):
     had_tab = False
-    if (
+    if calc_token.is_extension:
+        indent_level, had_tab = calc_token.calculate_initial_whitespace()
+    elif (
         calc_token.is_new_list_item
         or calc_token.is_block_quote_start
         or calc_token.is_atx_heading

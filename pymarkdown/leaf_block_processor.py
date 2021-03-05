@@ -568,6 +568,7 @@ class LeafBlockProcessor:
         start_index,
         extracted_whitespace,
         skip_whitespace_check=False,
+        whitespace_allowed_between_characters=True,
     ):
         """
         Determine whether or not we have a thematic break.
@@ -588,7 +589,12 @@ class LeafBlockProcessor:
                 len(line_to_parse),
             )
             while repeat_loop and index < line_to_parse_size:
-                if ParserHelper.is_character_at_index_whitespace(line_to_parse, index):
+                if (
+                    whitespace_allowed_between_characters
+                    and ParserHelper.is_character_at_index_whitespace(
+                        line_to_parse, index
+                    )
+                ):
                     index += 1
                 elif line_to_parse[index] == start_char:
                     index += 1
