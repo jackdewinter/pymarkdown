@@ -4,6 +4,7 @@ Module to provide a tokenization of a markdown-encoded string.
 import logging
 import os
 
+from pymarkdown.application_properties import ApplicationProperties
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_block_processor import ContainerBlockProcessor
@@ -34,11 +35,25 @@ class TokenizedMarkdown:
         Initializes a new instance of the TokenizedMarkdown class.
         """
 
-        self.tokenized_document, self.stack, self.source_provider = None, None, None
+        self.tokenized_document, self.stack, self.source_provider, self.__properties = (
+            None,
+            None,
+            None,
+            ApplicationProperties(),
+        )
 
         if not resource_path:
             resource_path = os.path.join(os.path.split(__file__)[0], "resources")
         InlineHelper.initialize(resource_path)
+
+    def apply_config_map(self, config_map):
+        """
+        Apply any configuration map.
+        """
+        POGGER.info("config_map>>$", config_map)
+        self.__properties.load_from_dict(config_map)
+
+    # "extensions" : {"front-matter": {"enabled"
 
     def transform_from_provider(self, source_provider):
         """
@@ -549,13 +564,6 @@ class TokenizedMarkdown:
             parser_state.token_stack[
                 stack_index
             ].matching_markdown_token.add_leading_spaces("")
-
-    @classmethod
-    def apply_config_map(cls, config_map):
-        """
-        Apply any configuration map.
-        """
-        POGGER.info("config_map>>$", config_map)
 
     def __process_header_if_present(self, token_to_use, line_number, requeue):
 
