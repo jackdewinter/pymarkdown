@@ -261,7 +261,7 @@ def test_md036_proper_emphasis_ending_with_punctuation_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD036": {"punctuation": ".!"}}
+    supplied_configuration = {"plugins": {"md036": {"punctuation": ".!"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)

@@ -84,7 +84,7 @@ def test_md002_bad_proper_atx_heading_start_with_alternate_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD002": {"level": 2}}
+    supplied_configuration = {"plugins": {"md002": {"level": 2}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -156,7 +156,7 @@ def test_md002_bad_proper_setext_heading_start_with_alternate_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD002": {"level": 2}}
+    supplied_configuration = {"plugins": {"md002": {"level": 2}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -230,7 +230,7 @@ def test_md002_good_improper_atx_heading_start_with_alternate_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD002": {"level": 2}}
+    supplied_configuration = {"plugins": {"md002": {"level": 2}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -304,7 +304,7 @@ def test_md002_good_improper_setext_heading_start_with_alternate_configuration()
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD002": {"level": 2}}
+    supplied_configuration = {"plugins": {"md002": {"level": 2}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)

@@ -46,14 +46,19 @@ class RuleMd003(Plugin):
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md003---heading-style
         # Parameters: style ("consistent", "atx", "atx_closed", "setext", "setext_with_atx", "setext_with_atx_closed"; default "consistent")
 
+    @classmethod
+    def __validate_configuration_style(cls, found_value):
+        if found_value not in RuleMd003.__valid_styles:
+            raise ValueError(f"Allowable values: {str(RuleMd003.__valid_styles)}")
+
     def initialize_from_config(self):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__style_type = self.get_configuration_value(
+        self.__style_type = self.plugin_configuration.get_string_property(
             "style",
             default_value=RuleMd003.__consistent_style,
-            valid_values=RuleMd003.__valid_styles,
+            valid_value_fn=self.__validate_configuration_style,
         )
 
     def starting_new_file(self):

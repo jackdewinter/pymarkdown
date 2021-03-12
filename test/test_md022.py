@@ -615,7 +615,7 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD022": {"lines_above": 2}}
+    supplied_configuration = {"plugins": {"md022": {"lines_above": 2}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -655,7 +655,7 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD022": {"lines_above": 2}}
+    supplied_configuration = {"plugins": {"md022": {"lines_above": 2}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -691,7 +691,7 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD022": {"lines_below": 2}}
+    supplied_configuration = {"plugins": {"md022": {"lines_below": 2}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -734,7 +734,7 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD022": {"lines_below": 2}}
+    supplied_configuration = {"plugins": {"md022": {"lines_below": 2}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -770,7 +770,9 @@ def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD022": {"lines_below": 2, "lines_above": 2}}
+    supplied_configuration = {
+        "plugins": {"md022": {"lines_below": 2, "lines_above": 2}}
+    }
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -834,7 +836,9 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD022": {"lines_below": 2, "lines_above": 2}}
+    supplied_configuration = {
+        "plugins": {"md022": {"lines_below": 2, "lines_above": 2}}
+    }
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)

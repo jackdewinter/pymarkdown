@@ -38,10 +38,10 @@ class RuleMd022(Plugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__lines_above = self.get_configuration_value(
+        self.__lines_above = self.plugin_configuration.get_integer_property(
             "lines_above", default_value=1
         )
-        self.__lines_below = self.get_configuration_value(
+        self.__lines_below = self.plugin_configuration.get_integer_property(
             "lines_below", default_value=1
         )
 

@@ -25,9 +25,15 @@ class InProcessResult:
         self.std_out = std_out
         self.std_err = std_err
 
+    # pylint: disable=too-many-arguments
     @classmethod
     def compare_versus_expected(
-        cls, stream_name, actual_stream, expected_text, additional_text=None
+        cls,
+        stream_name,
+        actual_stream,
+        expected_text,
+        additional_text=None,
+        log_extra=None,
     ):
         """
         Do a thorough comparison of the actual stream against the expected text.
@@ -39,6 +45,8 @@ class InProcessResult:
                 + expected_text
                 + "\n---\nwas not found at the start of\n---\n"
                 + actual_stream.getvalue()
+                + "\nExtra:"
+                + str(log_extra)
             )
 
             for next_text_block in additional_text:
@@ -79,7 +87,11 @@ class InProcessResult:
                     "expect>>%s", ParserHelper.make_value_visible(expected_text)
                 )
                 print("WARN>expect>>" + ParserHelper.make_value_visible(expected_text))
+                if log_extra:
+                    print("log_extra:" + log_extra)
                 assert False, stream_name + " not as expected:\n" + diff_values
+
+    # pylint: enable=too-many-arguments
 
     def assert_results(
         self, stdout=None, stderr=None, error_code=0, additional_error=None
@@ -90,7 +102,9 @@ class InProcessResult:
 
         try:
             if stdout:
-                self.compare_versus_expected("Stdout", self.std_out, stdout)
+                self.compare_versus_expected(
+                    "Stdout", self.std_out, stdout, log_extra=self.std_err.getvalue()
+                )
             else:
                 assert not self.std_out.getvalue(), (
                     "Expected stdout to be empty, not: " + self.std_out.getvalue()

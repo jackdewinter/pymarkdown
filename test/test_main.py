@@ -472,7 +472,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
             file_data = file.read().replace("\n", "")
 
         # Info messages
-        assert "Number of files found: " in file_data
+        assert "Number of files found: " in file_data, ">" + str(file_data) + "<"
         assert (
             "Determining files to scan for path "
             + "'test/resources/rules/md047/end_with_blank_line.md'."
@@ -535,7 +535,7 @@ def test_markdown_with_dash_e_single_by_id_and_good_config():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD999": {"test_value": 2}}
+    supplied_configuration = {"plugins": {"md999": {"test_value": 2}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -589,7 +589,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD999": {"test_value": "fred"}}
+    supplied_configuration = {"plugins": {"md999": {"test_value": "fred"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -621,6 +621,46 @@ MD999>>token:[BLANK(4,1):]
 MD999>>completed_file
 """
         expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if configuration_file and os.path.exists(configuration_file):
+            os.remove(configuration_file)
+
+
+def test_markdown_with_dash_e_single_by_id_and_bad_config_file():
+    """
+    Test to make sure we get an error if we provide a configuration file that is
+    in a json format, but not valid.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_configuration = {"plugins": {"myrule.md999": {"test_value": "fred"}}}
+    configuration_file = None
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        supplied_arguments = [
+            "-e",
+            "MD999",
+            "-c",
+            configuration_file,
+            "test/resources/rules/md047/end_with_blank_line.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = (
+            "Specified configuration file '"
+            + configuration_file
+            + "' is not valid (Keys strings cannot contain the separator character '.'.).\n"
+        )
 
         # Act
         execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -717,7 +757,7 @@ def test_markdown_with_dash_e_single_by_id_and_good_select_config():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD999": {"other_test_value": 2}}
+    supplied_configuration = {"plugins": {"md999": {"other_test_value": 2}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -771,7 +811,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_select_config():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD999": {"other_test_value": 9}}
+    supplied_configuration = {"plugins": {"MD999": {"other_test_value": 9}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -824,7 +864,7 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_config_exception()
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD999": {"test_value": 10}}
+    supplied_configuration = {"plugins": {"md999": {"test_value": 10}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -865,7 +905,7 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_next_token_excepti
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD999": {"test_value": 20}}
+    supplied_configuration = {"plugins": {"md999": {"test_value": 20}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)

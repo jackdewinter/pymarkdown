@@ -33,7 +33,9 @@ class RuleMd002(Plugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__start_level = self.get_configuration_value("level", default_value=1)
+        self.__start_level = self.plugin_configuration.get_integer_property(
+            "level", default_value=1
+        )
 
     def starting_new_file(self):
         """

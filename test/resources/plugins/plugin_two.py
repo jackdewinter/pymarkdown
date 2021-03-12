@@ -14,7 +14,7 @@ class PluginTwo(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            plugin_name="debug-only",
+            plugin_name="debug-only-2",
             plugin_id="MD998",
             plugin_enabled_by_default=True,
             plugin_description="Debug plugin",

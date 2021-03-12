@@ -27,15 +27,24 @@ class PluginOne(Plugin):
             plugin_description="Debug plugin",
         )
 
+    @classmethod
+    def __validate_configuration_other_test_value(cls, found_value):
+        if found_value not in PluginOne.__valid_values:
+            raise ValueError(f"Allowable values: {str(found_value)}")
+
     def initialize_from_config(self):
         """
         Event to allow the plugin to load configuration.
         """
         print(self.get_details().plugin_id + ">>init_from_config")
-        self.test_value = self.get_configuration_value("test_value", default_value=1)
+        self.test_value = self.plugin_configuration.get_integer_property(
+            "test_value", default_value=1
+        )
         print(self.get_details().plugin_id + ">>test_value>>" + str(self.test_value))
-        self.other_test_value = self.get_configuration_value(
-            "other_test_value", default_value=1, valid_values=PluginOne.__valid_values
+        self.other_test_value = self.plugin_configuration.get_integer_property(
+            "other_test_value",
+            default_value=1,
+            valid_value_fn=self.__validate_configuration_other_test_value,
         )
         print(
             self.get_details().plugin_id

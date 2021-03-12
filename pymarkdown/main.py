@@ -3,12 +3,15 @@ Module to provide for a simple implementation of a title case algorithm.
 """
 import argparse
 import glob
-import json
 import logging
 import os
 import sys
 import traceback
 
+from pymarkdown.application_properties import (
+    ApplicationProperties,
+    ApplicationPropertiesJsonLoader,
+)
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager import BadPluginError, PluginManager
@@ -37,9 +40,12 @@ class PyMarkdownLint:
         self.__version_number = "0.1.0"
         self.__show_stack_trace = False
 
+        self.__properties = ApplicationProperties()
+
         self.__plugins = PluginManager()
         self.__tokenizer = None
         self.default_log_level = "CRITICAL"
+        self.configuration_map = None
 
     @staticmethod
     def log_level_type(argument):
@@ -121,7 +127,6 @@ class PyMarkdownLint:
             "--log-level",
             dest="log_level",
             action="store",
-            default=self.default_log_level,
             help="minimum level for any log messages",
             type=PyMarkdownLint.log_level_type,
             choices=list(PyMarkdownLint.available_log_maps.keys()),
@@ -253,34 +258,10 @@ class PyMarkdownLint:
         print("No matching files found.", file=sys.stderr)
         return 1
 
-    def load_json_configuration(self, configuration_file):
-        """
-        Load the configuration from a json file.
-        """
-
-        configuration_map = {}
-        try:
-            with open(configuration_file) as infile:
-                configuration_map = json.load(infile)
-        except json.decoder.JSONDecodeError as ex:
-            formatted_error = f"Specified configuration file '{configuration_file}' is not a valid JSON file ({str(ex)})."
-            self.__handle_error(formatted_error)
-        except IOError as ex:
-            formatted_error = f"Specified configuration file '{configuration_file}' was not loaded ({str(ex)})."
-            self.__handle_error(formatted_error)
-
-        return configuration_map
-
-    def __load_configuration_and_apply_to_plugins(self, args):
-
-        loaded_configuration_map = {}
-        if args.configuration_file:
-            loaded_configuration_map = self.load_json_configuration(
-                args.configuration_file
-            )
+    def __apply_configuration_to_plugins(self):
 
         try:
-            self.__plugins.apply_configuration(loaded_configuration_map)
+            self.__plugins.apply_configuration(self.__properties)
         except BadPluginError as this_exception:
             formatted_error = f"{str(type(this_exception).__name__)} encountered while configuring plugins:\n{str(this_exception)}"
             self.__handle_error(formatted_error)
@@ -324,24 +305,41 @@ class PyMarkdownLint:
         formatted_error = f"{str(type(this_exception).__name__)} encountered while scanning '{next_file}':\n{str(this_exception)}"
         self.__handle_error(formatted_error)
 
+    # pylint: disable=too-many-branches
     def main(self):
         """
         Main entrance point.
         """
         args = self.__parse_arguments()
+
         self.__show_stack_trace = args.show_stack_trace
+        base_logger = logging.getLogger()
+        base_logger.setLevel(
+            logging.DEBUG if self.__show_stack_trace else logging.WARNING
+        )
+
+        if args.configuration_file:
+            ApplicationPropertiesJsonLoader.load_and_set(
+                self.__properties, args.configuration_file, self.__handle_error
+            )
+
+        effective_log_level = (
+            args.log_level if args.log_level else self.default_log_level
+        )
+        log_level_to_enact = PyMarkdownLint.available_log_maps[effective_log_level]
 
         new_handler = None
         total_error_count = 0
         try:
-            base_logger = logging.getLogger()
             if args.log_file:
                 new_handler = logging.FileHandler(args.log_file)
-                new_handler.setLevel(PyMarkdownLint.available_log_maps[args.log_level])
+                new_handler.setLevel(log_level_to_enact)
+                base_logger.setLevel(log_level_to_enact)
                 base_logger.addHandler(new_handler)
             else:
-                base_logger.setLevel(PyMarkdownLint.available_log_maps[args.log_level])
+                base_logger.setLevel(log_level_to_enact)
 
+            ParserLogger.sync_on_next_call()
             POGGER.info("Determining files to scan.")
             files_to_scan, did_error_scanning_files = self.__determine_files_to_scan(
                 args.paths
@@ -356,10 +354,8 @@ class PyMarkdownLint:
                 plugin_dir = os.path.dirname(os.path.realpath(__file__))
                 plugin_dir = os.path.join(plugin_dir, "plugins")
                 self.__initialize_plugins(args, plugin_dir)
-
+                self.__apply_configuration_to_plugins()
                 self.__initialize_parser(args)
-
-                self.__load_configuration_and_apply_to_plugins(args)
 
                 for next_file in files_to_scan:
                     try:
@@ -373,6 +369,8 @@ class PyMarkdownLint:
                 new_handler.close()
         if self.__plugins.number_of_scan_failures or total_error_count:
             sys.exit(1)
+
+    # pylint: enable=too-many-branches
 
 
 if __name__ == "__main__":

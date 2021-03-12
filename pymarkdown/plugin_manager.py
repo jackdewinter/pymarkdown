@@ -6,6 +6,8 @@ import os
 import sys
 from abc import ABC, abstractmethod
 
+from pymarkdown.application_properties import ApplicationPropertiesFacade
+
 
 # pylint: disable=too-few-public-methods
 class ScanContext:
@@ -63,7 +65,7 @@ class BadPluginError(Exception):
                 else:
                     formatted_message = f"Plugin class '{class_name}' had a critical failure loading the plugin details."
             else:
-                formatted_message = f"Plugin id '{plugin_id}' had a critical failure during the '{str(plugin_action)}' action."
+                formatted_message = f"Plugin id '{plugin_id.upper()}' had a critical failure during the '{str(plugin_action)}' action."
         super().__init__(formatted_message)
 
     # pylint: enable=too-many-arguments
@@ -77,7 +79,7 @@ class Plugin(ABC):
 
     def __init__(self):
         (
-            self.__configuration_map,
+            self.__plugin_specific_facade,
             self.__is_next_token_implemented_in_plugin,
             self.__is_next_line_implemented_in_plugin,
             self.__is_starting_new_file_implemented_in_plugin,
@@ -90,25 +92,18 @@ class Plugin(ABC):
         Get the details for the plugin.
         """
 
-    def get_configuration_value(self, value_name, default_value, valid_values=None):
+    @property
+    def plugin_configuration(self):
         """
-        From the configuration map, try and grab the specified value from the map.
-        If the value is not present or is not the same type as the default value,
-        the default value will be returned.
+        Get the configuration facade associated with this plugin.
         """
-        configuration_value = default_value
-        if value_name in self.__configuration_map:
-            retrieved_value = self.__configuration_map[value_name]
-            if isinstance(retrieved_value, type(default_value)):
-                if valid_values is None or retrieved_value in valid_values:
-                    configuration_value = retrieved_value
-        return configuration_value
+        return self.__plugin_specific_facade
 
-    def set_configuration_map(self, map_to_use):
+    def set_configuration_map(self, plugin_specific_facade):
         """
         Set the configuration map with values for the plugin.
         """
-        self.__configuration_map = map_to_use
+        self.__plugin_specific_facade = plugin_specific_facade
 
         self.__is_next_token_implemented_in_plugin = (
             "next_token" in self.__class__.__dict__.keys()
@@ -233,12 +228,56 @@ class FoundPlugin:
     """
 
     def __init__(self, plugin_id, plugin_name, plugin_description, plugin_instance):
+        """
+        Initializes a new instance of the FoundPlugin class.
+        """
         (
-            self.plugin_id,
-            self.plugin_name,
-            self.plugin_description,
-            self.plugin_instance,
-        ) = (plugin_id, plugin_name, plugin_description, plugin_instance)
+            self.__plugin_id,
+            self.__plugin_names,
+            self.__plugin_description,
+            self.__plugin_instance,
+        ) = (plugin_id.strip().lower(), [], plugin_description, plugin_instance)
+        for next_name in plugin_name.lower().split(","):
+            next_name = next_name.strip()
+            if next_name:
+                self.__plugin_names.append(next_name)
+
+    @property
+    def plugin_id(self):
+        """
+        Gets the id associated with the plugin.
+        """
+        return self.__plugin_id
+
+    @property
+    def plugin_names(self):
+        """
+        Gets the names associated with the plugin.
+        """
+        return self.__plugin_names
+
+    @property
+    def plugin_identifiers(self):
+        """
+        Gets the identifiers (id+names) for the plugin.
+        """
+        plugin_keys = [self.plugin_id]
+        plugin_keys.extend(self.plugin_names)
+        return plugin_keys
+
+    @property
+    def plugin_description(self):
+        """
+        Gets the description of the plugin.
+        """
+        return self.__plugin_description
+
+    @property
+    def plugin_instance(self):
+        """
+        Gets the actual instance of the plugin.
+        """
+        return self.__plugin_instance
 
 
 # pylint: enable=too-few-public-methods
@@ -249,6 +288,8 @@ class PluginManager:
     """
     Manager object to take care of load and accessing plugin modules.
     """
+
+    __plugin_prefix = "plugins"
 
     def __init__(self):
         (
@@ -263,7 +304,11 @@ class PluginManager:
         ) = (None, None, None, None, None, None, None, None)
 
     def initialize(
-        self, directory_to_search, additional_paths, enable_rules, disable_rules
+        self,
+        directory_to_search,
+        additional_paths,
+        enable_rules_from_command_line,
+        disable_rules_from_command_line,
     ):
         """
         Initializes the manager by scanning for plugins, loading them, and registering them.
@@ -291,7 +336,9 @@ class PluginManager:
                         [os.path.basename(next_additional_plugin)],
                     )
 
-        self.__register_plugins(enable_rules, disable_rules)
+        self.__register_plugins(
+            enable_rules_from_command_line, disable_rules_from_command_line
+        )
 
     # pylint: disable=too-many-arguments
     def log_scan_failure(
@@ -315,7 +362,7 @@ class PluginManager:
                 scan_file,
                 line_number,
                 column_number,
-                rule_id,
+                rule_id.upper(),
                 rule_description,
                 extra_info,
                 rule_name,
@@ -398,16 +445,18 @@ class PluginManager:
         state of the plugin in proper order.
         """
 
-        if (
-            plugin_object.plugin_id in command_line_disabled_rules
-            or plugin_object.plugin_name in command_line_disabled_rules
-        ):
-            plugin_enabled = False
-        if (
-            plugin_object.plugin_id in command_line_enabled_rules
-            or plugin_object.plugin_name in command_line_enabled_rules
-        ):
-            plugin_enabled = True
+        new_value = None
+        for next_identifier in plugin_object.plugin_identifiers:
+            if next_identifier in command_line_disabled_rules:
+                new_value = False
+                break
+        if new_value is None:
+            for next_identifier in plugin_object.plugin_identifiers:
+                if next_identifier in command_line_enabled_rules:
+                    new_value = True
+                    break
+        if new_value is not None:
+            plugin_enabled = new_value
 
         return plugin_enabled
 
@@ -472,7 +521,11 @@ class PluginManager:
         return plugin_object, plugin_enabled_by_default
 
     def __register_individual_plugin(
-        self, plugin_instance, command_line_enabled_rules, command_line_disabled_rules
+        self,
+        plugin_instance,
+        command_line_enabled_rules,
+        command_line_disabled_rules,
+        all_ids,
     ):
         """
         Register an individual plugin for use.
@@ -481,6 +534,14 @@ class PluginManager:
         plugin_object, plugin_enabled_by_default = self.__get_plugin_details(
             plugin_instance
         )
+
+        for next_key in plugin_object.plugin_identifiers:
+            if next_key in all_ids:
+                raise ValueError(
+                    f"Unable to register plugin with name/id '{next_key}' as a plugin is already registered with that name/id."
+                )
+            all_ids.add(next_key)
+
         self.__registered_plugins.append(plugin_object)
         if self.__determine_if_plugin_enabled(
             plugin_enabled_by_default,
@@ -490,7 +551,9 @@ class PluginManager:
         ):
             self.__enabled_plugins.append(plugin_object)
 
-    def __register_plugins(self, enable_rules, disable_rules):
+    def __register_plugins(
+        self, enable_rules_from_command_line, disable_rules_from_command_line
+    ):
         """
         Scan the global namespace for all subclasses of the 'Plugin' class to use as
         plugins.
@@ -502,19 +565,27 @@ class PluginManager:
             self.__registered_plugins,
             self.__enabled_plugins,
         ) = (set(), set(), [], [])
-        if enable_rules:
-            for i in enable_rules.split(","):
-                command_line_enabled_rules.add(i)
-        if disable_rules:
-            for i in disable_rules.split(","):
-                command_line_disabled_rules.add(i)
+        if enable_rules_from_command_line:
+            for next_rule_identifier in enable_rules_from_command_line.lower().split(
+                ","
+            ):
+                command_line_enabled_rules.add(next_rule_identifier)
+        if disable_rules_from_command_line:
+            for next_rule_identifier in disable_rules_from_command_line.lower().split(
+                ","
+            ):
+                command_line_disabled_rules.add(next_rule_identifier)
 
+        all_ids = set()
         for plugin_instance in self.__loaded_classes:
             self.__register_individual_plugin(
-                plugin_instance, command_line_enabled_rules, command_line_disabled_rules
+                plugin_instance,
+                command_line_enabled_rules,
+                command_line_disabled_rules,
+                all_ids,
             )
 
-    def apply_configuration(self, configuration_map):
+    def apply_configuration(self, properties):
         """
         Apply any supplied configuration to each of the enabled plugins.
         """
@@ -528,18 +599,18 @@ class PluginManager:
 
         for next_plugin in self.__enabled_plugins:
             try:
-                valid_key_names = [next_plugin.plugin_id]
-                for next_name in next_plugin.plugin_name.split(","):
-                    valid_key_names.append(next_name.strip())
-
-                plugin_specific_configuration = {}
-                for next_key_name in valid_key_names:
-                    if next_key_name in configuration_map:
-                        plugin_specific_configuration = configuration_map[next_key_name]
+                plugin_specific_facade = None
+                for next_key_name in next_plugin.plugin_identifiers:
+                    plugin_section_title = f"{PluginManager.__plugin_prefix}{properties.separator}{next_key_name}{properties.separator}"
+                    section_facade_candidate = ApplicationPropertiesFacade(
+                        properties, plugin_section_title
+                    )
+                    if section_facade_candidate:
+                        plugin_specific_facade = section_facade_candidate
                         break
 
                 next_plugin.plugin_instance.set_configuration_map(
-                    plugin_specific_configuration
+                    plugin_specific_facade
                 )
                 next_plugin.plugin_instance.initialize_from_config()
             except Exception as this_exception:

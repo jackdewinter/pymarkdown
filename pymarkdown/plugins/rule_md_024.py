@@ -37,9 +37,9 @@ class RuleMd024(Plugin):
         """
         Event to allow the plugin to load configuration information.
         """
-        self.__siblings_only = self.get_configuration_value(
+        self.__siblings_only = self.plugin_configuration.get_boolean_property(
             "siblings_only", default_value=False
-        ) or self.get_configuration_value(
+        ) or self.plugin_configuration.get_boolean_property(
             "allow_different_nesting", default_value=False
         )
 

@@ -104,7 +104,7 @@ def test_md026_good_ends_with_punctuation_atx_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD026": {"punctuation": "?!"}}
+    supplied_configuration = {"plugins": {"md026": {"punctuation": "?!"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -225,7 +225,7 @@ def test_md026_good_ends_with_punctuation_setext_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD026": {"punctuation": "?!"}}
+    supplied_configuration = {"plugins": {"md026": {"punctuation": "?!"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)

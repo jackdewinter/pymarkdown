@@ -205,7 +205,7 @@ def test_md003_good_atx_headings_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "atx"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -248,7 +248,7 @@ def test_md003_bad_atx_headings_atx_closed():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "atx"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -291,7 +291,7 @@ def test_md003_bad_atx_headings_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "atx"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -335,7 +335,7 @@ def test_md003_bad_atx_headings_setext_with_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "atx"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -381,7 +381,7 @@ def test_md003_bad_atx_headings_setext_with_atx_closed():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "atx"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -416,7 +416,7 @@ def test_md003_atx_all_samples():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "atx"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "atx"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -461,7 +461,7 @@ def test_md003_bad_atxclosed_headings_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "atx_closed"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -499,7 +499,7 @@ def test_md003_good_atxclosed_headings_atx_closed():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "atx_closed"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -542,7 +542,7 @@ def test_md003_bad_atxclosed_headings_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "atx_closed"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -588,7 +588,7 @@ def test_md003_bad_atxclosed_headings_setext_with_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "atx_closed"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -632,7 +632,7 @@ def test_md003_bad_atxclosed_headings_setext_with_atx_closed():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "atx_closed"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -667,7 +667,7 @@ def test_md003_atxclosed_all_samples():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "atx_closed"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "atx_closed"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -712,7 +712,7 @@ def test_md003_bad_setext_headings_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -755,7 +755,7 @@ def test_md003_bad_setext_headings_atx_closed():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -793,7 +793,7 @@ def test_md003_good_setext_headings_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -835,7 +835,7 @@ def test_md003_bad_setext_headings_setext_with_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -877,7 +877,7 @@ def test_md003_bad_setext_headings_setext_with_atx_closed():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -912,7 +912,7 @@ def test_md003_setext_all_samples():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -957,7 +957,7 @@ def test_md003_bad_setext_with_atx_headings_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext_with_atx"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -1000,7 +1000,7 @@ def test_md003_bad_setext_with_atx_headings_atx_closed():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext_with_atx"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -1038,7 +1038,7 @@ def test_md003_good_setext_with_atx_headings_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext_with_atx"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -1077,7 +1077,7 @@ def test_md003_good_setext_with_atx_headings_setext_with_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext_with_atx"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -1119,7 +1119,7 @@ def test_md003_bad_setext_with_atx_headings_setext_with_atx_closed():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext_with_atx"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -1154,7 +1154,7 @@ def test_md003_setext_with_atx_all_samples():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext_with_atx"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -1199,7 +1199,7 @@ def test_md003_bad_setext_with_atx_closed_headings_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext_with_atx_closed"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -1242,7 +1242,7 @@ def test_md003_bad_setext_with_atx_closed_headings_atx_closed():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext_with_atx_closed"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -1280,7 +1280,7 @@ def test_md003_good_setext_with_atx_closed_headings_setext():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext_with_atx_closed"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -1322,7 +1322,7 @@ def test_md003_bad_setext_with_atx_closed_headings_setext_with_atx():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext_with_atx_closed"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -1361,7 +1361,7 @@ def test_md003_good_setext_with_atx_closed_headings_setext_with_atx_closed():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext_with_atx_closed"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -1398,7 +1398,7 @@ def test_md003_setext_with_atx_closed_all_samples():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD003": {"style": "setext_with_atx_closed"}}
+    supplied_configuration = {"plugins": {"md003": {"style": "setext_with_atx_closed"}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)

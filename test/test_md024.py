@@ -139,7 +139,7 @@ def test_md024_good_different_heading_content_atx_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD024": {"siblings_only": True}}
+    supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -176,7 +176,7 @@ def test_md024_good_same_heading_content_atx_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD024": {"siblings_only": True}}
+    supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -213,7 +213,7 @@ def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD024": {"siblings_only": True}}
+    supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -253,7 +253,7 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD024": {"siblings_only": True}}
+    supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -290,7 +290,7 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_alternate_configur
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD024": {"allow_different_nesting": True}}
+    supplied_configuration = {"plugins": {"md024": {"allow_different_nesting": True}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -472,7 +472,7 @@ def test_md024_good_different_heading_content_setext_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD024": {"siblings_only": True}}
+    supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -509,7 +509,7 @@ def test_md024_good_same_heading_content_setext_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD024": {"siblings_only": True}}
+    supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -546,7 +546,7 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD024": {"siblings_only": True}}
+    supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -586,7 +586,7 @@ def test_md024_good_same_heading_but_not_in_siblings_setext_with_configuration()
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"MD024": {"siblings_only": True}}
+    supplied_configuration = {"plugins": {"md024": {"siblings_only": True}}}
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)

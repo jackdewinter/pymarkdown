@@ -1,3 +1,21 @@
+"--list-files", -l
+"--enable-rules", -e
+"--disable-rules", -d
+"--add-plugin"
+"--config", -c
+
+"--stack-trace"
+ - if need to debug configuration, stack trace sets initial logging (config processing) to debug
+"--log-level"
+"--log-file"
+
+"paths" 1+
+
+plugin ordering: command line (disabled, enabled), config, default
+
+- need way of listing all plugins, info
+- need way of listing all extensions
+
 # Project To-Do List
 
 ## Bugs - Command Line
@@ -13,6 +31,7 @@
   - leading_text_index
 - link and emphasis (inline) tokens cannot be forced close, rewrite end to not expose :::False?
 - optional YAML/simple front loader
+- add version number to plugins interface
 
 ### Priority 2 - Like To Solve Before Initial
 
@@ -69,6 +88,7 @@
   - too-many-lines
   - too-many-instance?
 
+- more tests that include tab characters
 - look for places where common access patterns can be used i.e. link_title
   - `= len(parser_state.token_stack`
 - HTML and Fenced Blocks and better handling of capturing newlines to avoid counting token height
