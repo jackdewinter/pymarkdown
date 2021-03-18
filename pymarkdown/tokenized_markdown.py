@@ -46,14 +46,11 @@ class TokenizedMarkdown:
             resource_path = os.path.join(os.path.split(__file__)[0], "resources")
         InlineHelper.initialize(resource_path)
 
-    def apply_config_map(self, config_map):
+    def apply_configuration(self, application_properties):
         """
         Apply any configuration map.
         """
-        POGGER.info("config_map>>$", config_map)
-        self.__properties.load_from_dict(config_map)
-
-    # "extensions" : {"front-matter": {"enabled"
+        self.__properties = application_properties
 
     def transform_from_provider(self, source_provider):
         """
@@ -69,11 +66,7 @@ class TokenizedMarkdown:
         functionality for the purposes of testing.
         """
 
-        root_logger = logging.getLogger()
-        if show_debug:
-            root_logger.setLevel(logging.DEBUG)
-        else:
-            root_logger.setLevel(logging.WARNING)
+        logging.getLogger().setLevel(logging.DEBUG if show_debug else logging.WARNING)
         ParserLogger.sync_on_next_call()
         self.source_provider = InMemorySourceProvider(your_text_string)
         return self.__transform()
@@ -567,18 +560,20 @@ class TokenizedMarkdown:
 
     def __process_header_if_present(self, token_to_use, line_number, requeue):
 
-        # Add code to only call if enabled.
-        (
-            token_to_use,
-            line_number,
-            requeue,
-        ) = FrontMatterExtension.process_header_if_present(
-            token_to_use,
-            line_number,
-            requeue,
-            self.source_provider,
-            self.tokenized_document,
-        )
+        if self.__properties.get_boolean_property(
+            "extensions.front-matter.enabled", default_value=False
+        ):
+            (
+                token_to_use,
+                line_number,
+                requeue,
+            ) = FrontMatterExtension.process_header_if_present(
+                token_to_use,
+                line_number,
+                requeue,
+                self.source_provider,
+                self.tokenized_document,
+            )
         return token_to_use, line_number, requeue
 
 

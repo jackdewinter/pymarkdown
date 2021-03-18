@@ -11,17 +11,12 @@ def test_markdown_with_dash_l_only():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["-l"]
+    supplied_arguments = ["scan", "-l"]
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py [-h] [--version] [-l] [-e ENABLE_RULES] [-d DISABLE_RULES]
-               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--stack-trace]
-               [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
-               [--log-file LOG_FILE]
-               path [path ...]
-main.py: error: the following arguments are required: path
+    expected_error = """usage: main.py scan [-h] [-l] path [path ...]
+main.py scan: error: the following arguments are required: path
 """
 
     # Act
@@ -40,7 +35,7 @@ def test_markdown_with_dash_l_on_bad_path():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["-l", "my-bad-path"]
+    supplied_arguments = ["scan", "-l", "my-bad-path"]
 
     expected_return_code = 1
     expected_output = ""
@@ -65,7 +60,7 @@ def test_markdown_with_dash_l_on_non_md_directory():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["-l", "only-text"]
+    supplied_arguments = ["scan", "-l", "only-text"]
 
     expected_return_code = 1
     expected_output = ""
@@ -90,7 +85,7 @@ def test_markdown_with_dash_l_on_md_directory():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["-l", "simple"]
+    supplied_arguments = ["scan", "-l", "simple"]
 
     expected_return_code = 0
     expected_output = """simple/simple.md
@@ -115,7 +110,7 @@ def test_markdown_with_dash_l_on_mixed_directories():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["-l", "only-text", "simple"]
+    supplied_arguments = ["scan", "-l", "only-text", "simple"]
 
     expected_return_code = 0
     expected_output = """simple/simple.md
@@ -140,7 +135,7 @@ def test_markdown_with_dash_l_on_non_md_file():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["-l", "only-text/simple_text_file.txt"]
+    supplied_arguments = ["scan", "-l", "only-text/simple_text_file.txt"]
 
     expected_return_code = 1
     expected_output = ""
@@ -165,7 +160,7 @@ def test_markdown_with_dash_l_on_md_file():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["-l", "simple/simple.md"]
+    supplied_arguments = ["scan", "-l", "simple/simple.md"]
 
     expected_return_code = 0
     expected_output = """simple/simple.md
@@ -190,7 +185,12 @@ def test_markdown_with_dash_l_on_mixed_files():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["-l", "only-text/simple_text_file.txt", "simple/simple.md"]
+    supplied_arguments = [
+        "scan",
+        "-l",
+        "only-text/simple_text_file.txt",
+        "simple/simple.md",
+    ]
 
     expected_return_code = 1
     expected_output = """"""
@@ -215,7 +215,7 @@ def test_markdown_with_dash_l_on_globbed_files():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["-l", "rules/md001/*.md"]
+    supplied_arguments = ["scan", "-l", "rules/md001/*.md"]
 
     expected_return_code = 0
     expected_output = """rules/md001/empty.md
@@ -243,7 +243,7 @@ def test_markdown_with_dash_l_on_non_matching_globbed_files():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["-l", "rules/md001/z*.md"]
+    supplied_arguments = ["scan", "-l", "rules/md001/z*.md"]
 
     expected_return_code = 1
     expected_output = """"""

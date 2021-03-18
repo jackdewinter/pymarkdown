@@ -2,11 +2,14 @@
 Module to provide classes to deal with plugins.
 """
 import inspect
+import logging
 import os
 import sys
 from abc import ABC, abstractmethod
 
 from pymarkdown.application_properties import ApplicationPropertiesFacade
+
+LOGGER = logging.getLogger(__name__)
 
 
 # pylint: disable=too-few-public-methods
@@ -227,7 +230,15 @@ class FoundPlugin:
     external information provided.
     """
 
-    def __init__(self, plugin_id, plugin_name, plugin_description, plugin_instance):
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        plugin_id,
+        plugin_name,
+        plugin_description,
+        plugin_instance,
+        instance_file_name,
+    ):
         """
         Initializes a new instance of the FoundPlugin class.
         """
@@ -236,11 +247,20 @@ class FoundPlugin:
             self.__plugin_names,
             self.__plugin_description,
             self.__plugin_instance,
-        ) = (plugin_id.strip().lower(), [], plugin_description, plugin_instance)
+            self.__plugin_file_name,
+        ) = (
+            plugin_id.strip().lower(),
+            [],
+            plugin_description,
+            plugin_instance,
+            instance_file_name,
+        )
         for next_name in plugin_name.lower().split(","):
             next_name = next_name.strip()
             if next_name:
                 self.__plugin_names.append(next_name)
+
+    # pylint: enable=too-many-arguments
 
     @property
     def plugin_id(self):
@@ -279,6 +299,13 @@ class FoundPlugin:
         """
         return self.__plugin_instance
 
+    @property
+    def plugin_file_name(self):
+        """
+        Gets the filename where the plugin's class is stored.
+        """
+        return self.__plugin_file_name
+
 
 # pylint: enable=too-few-public-methods
 
@@ -303,12 +330,14 @@ class PluginManager:
             self.number_of_scan_failures,
         ) = (None, None, None, None, None, None, None, None)
 
+    # pylint: disable=too-many-arguments
     def initialize(
         self,
         directory_to_search,
         additional_paths,
         enable_rules_from_command_line,
         disable_rules_from_command_line,
+        properties,
     ):
         """
         Initializes the manager by scanning for plugins, loading them, and registering them.
@@ -337,8 +366,10 @@ class PluginManager:
                     )
 
         self.__register_plugins(
-            enable_rules_from_command_line, disable_rules_from_command_line
+            enable_rules_from_command_line, disable_rules_from_command_line, properties
         )
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     def log_scan_failure(
@@ -415,7 +446,7 @@ class PluginManager:
                 class_name=plugin_class_name,
                 is_constructor=True,
             ) from this_exception
-        self.__loaded_classes.append(plugin_class_instance)
+        self.__loaded_classes.append((plugin_class_instance, next_plugin_file))
 
     def __load_plugins(self, directory_to_search, plugin_files):
         """
@@ -432,13 +463,14 @@ class PluginManager:
                 next_plugin_module, plugin_class_name, next_plugin_file
             )
 
-    @classmethod
+    # pylint: disable=too-many-arguments
     def __determine_if_plugin_enabled(
-        cls,
-        plugin_enabled,
+        self,
+        default_enabled_state,
         plugin_object,
         command_line_enabled_rules,
         command_line_disabled_rules,
+        properties,
     ):
         """
         Given the enable and disable rules values, evaluate the enabled or disabled
@@ -446,19 +478,53 @@ class PluginManager:
         """
 
         new_value = None
-        for next_identifier in plugin_object.plugin_identifiers:
-            if next_identifier in command_line_disabled_rules:
-                new_value = False
-                break
-        if new_value is None:
+        LOGGER.debug(
+            "Plugin '%s', identifiers: %s",
+            plugin_object.plugin_id,
+            plugin_object.plugin_identifiers,
+        )
+
+        if command_line_disabled_rules:
+            LOGGER.debug(
+                "Disabled on command line: %s", str(command_line_disabled_rules)
+            )
+            for next_identifier in plugin_object.plugin_identifiers:
+                if next_identifier in command_line_disabled_rules:
+                    new_value = False
+                    LOGGER.debug("Plugin is disabled from command line.")
+                    break
+        if new_value is None and command_line_enabled_rules:
+            LOGGER.debug("Enabled on command line: %s", str(command_line_enabled_rules))
             for next_identifier in plugin_object.plugin_identifiers:
                 if next_identifier in command_line_enabled_rules:
                     new_value = True
+                    LOGGER.debug("Plugin is enabled from command line.")
                     break
-        if new_value is not None:
-            plugin_enabled = new_value
+        if new_value is None:
+            plugin_specific_facade = self.__find_configuration_for_plugin(
+                plugin_object, properties
+            )
+            if plugin_specific_facade:
+                LOGGER.debug(
+                    "Plugins specific configuration found, searching for key 'enabled'."
+                )
+                new_value = plugin_specific_facade.get_boolean_property(
+                    "enabled", default_value=None
+                )
+                if new_value:
+                    LOGGER.debug(
+                        "Plugin specific key 'enabled' found, value is '%s'.",
+                        str(new_value),
+                    )
+        if new_value is None:
+            LOGGER.debug(
+                "No other enable state found, setting to default of '%s'.",
+                str(default_enabled_state),
+            )
 
-        return plugin_enabled
+        return default_enabled_state if new_value is None else new_value
+
+    # pylint: enable=too-many-arguments
 
     @classmethod
     def __verify_string_field(cls, plugin_instance, field_name, field_value):
@@ -488,7 +554,7 @@ class PluginManager:
                 class_name=type(plugin_instance).__name__, field_name=field_name
             )
 
-    def __get_plugin_details(self, plugin_instance):
+    def __get_plugin_details(self, plugin_instance, instance_file_name):
         """
         Query the plugin for details and verify that they are reasonable.
         """
@@ -516,31 +582,39 @@ class PluginManager:
         )
 
         plugin_object = FoundPlugin(
-            plugin_id, plugin_name, plugin_description, plugin_instance
+            plugin_id,
+            plugin_name,
+            plugin_description,
+            plugin_instance,
+            instance_file_name,
         )
         return plugin_object, plugin_enabled_by_default
 
+    # pylint: disable=too-many-arguments
     def __register_individual_plugin(
         self,
         plugin_instance,
+        instance_file_name,
         command_line_enabled_rules,
         command_line_disabled_rules,
         all_ids,
+        properties,
     ):
         """
         Register an individual plugin for use.
         """
 
         plugin_object, plugin_enabled_by_default = self.__get_plugin_details(
-            plugin_instance
+            plugin_instance, instance_file_name
         )
 
         for next_key in plugin_object.plugin_identifiers:
             if next_key in all_ids:
+                found_plugin = all_ids[next_key]
                 raise ValueError(
-                    f"Unable to register plugin with name/id '{next_key}' as a plugin is already registered with that name/id."
+                    f"Unable to register plugin '{instance_file_name}' with name/id '{next_key}' as plugin '{found_plugin.plugin_file_name}' is already registered with that name/id."
                 )
-            all_ids.add(next_key)
+            all_ids[next_key] = plugin_object
 
         self.__registered_plugins.append(plugin_object)
         if self.__determine_if_plugin_enabled(
@@ -548,11 +622,17 @@ class PluginManager:
             plugin_object,
             command_line_enabled_rules,
             command_line_disabled_rules,
+            properties,
         ):
             self.__enabled_plugins.append(plugin_object)
 
+    # pylint: enable=too-many-arguments
+
     def __register_plugins(
-        self, enable_rules_from_command_line, disable_rules_from_command_line
+        self,
+        enable_rules_from_command_line,
+        disable_rules_from_command_line,
+        properties,
     ):
         """
         Scan the global namespace for all subclasses of the 'Plugin' class to use as
@@ -576,14 +656,48 @@ class PluginManager:
             ):
                 command_line_disabled_rules.add(next_rule_identifier)
 
-        all_ids = set()
-        for plugin_instance in self.__loaded_classes:
+        all_ids = {}
+        for plugin_instance, instance_file_name in self.__loaded_classes:
             self.__register_individual_plugin(
                 plugin_instance,
+                instance_file_name,
                 command_line_enabled_rules,
                 command_line_disabled_rules,
                 all_ids,
+                properties,
             )
+
+    @property
+    def all_plugin_ids(self):
+        """
+        Get a list of all plugins by their id.
+        """
+
+        id_list = []
+        for next_plugin in self.__registered_plugins:
+            id_list.append(next_plugin.plugin_id)
+        return id_list
+
+    @classmethod
+    def __find_configuration_for_plugin(
+        cls, next_plugin, properties, always_return_facade=False
+    ):
+        plugin_specific_facade = None
+        first_facade = None
+        for next_key_name in next_plugin.plugin_identifiers:
+            plugin_section_title = f"{PluginManager.__plugin_prefix}{properties.separator}{next_key_name}{properties.separator}"
+            section_facade_candidate = ApplicationPropertiesFacade(
+                properties, plugin_section_title
+            )
+            if not first_facade:
+                first_facade = section_facade_candidate
+            if section_facade_candidate.property_names:
+                plugin_specific_facade = section_facade_candidate
+                break
+
+        if always_return_facade and not plugin_specific_facade:
+            plugin_specific_facade = first_facade
+        return plugin_specific_facade
 
     def apply_configuration(self, properties):
         """
@@ -599,15 +713,9 @@ class PluginManager:
 
         for next_plugin in self.__enabled_plugins:
             try:
-                plugin_specific_facade = None
-                for next_key_name in next_plugin.plugin_identifiers:
-                    plugin_section_title = f"{PluginManager.__plugin_prefix}{properties.separator}{next_key_name}{properties.separator}"
-                    section_facade_candidate = ApplicationPropertiesFacade(
-                        properties, plugin_section_title
-                    )
-                    if section_facade_candidate:
-                        plugin_specific_facade = section_facade_candidate
-                        break
+                plugin_specific_facade = self.__find_configuration_for_plugin(
+                    next_plugin, properties, always_return_facade=True
+                )
 
                 next_plugin.plugin_instance.set_configuration_map(
                     plugin_specific_facade

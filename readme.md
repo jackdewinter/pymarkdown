@@ -1,17 +1,37 @@
-"--list-files", -l
-"--enable-rules", -e
-"--disable-rules", -d
-"--add-plugin"
-"--config", -c
+# PyMarkdown
 
-"--stack-trace"
- - if need to debug configuration, stack trace sets initial logging (config processing) to debug
-"--log-level"
-"--log-file"
+## Introduction
 
-"paths" 1+
+## Command Line
+
+PyMarkdown.py [options] [paths]
+
+--config, -c          Path to the configuration file to use.
+--add-plugin          Path to a plugin containing a new rule to apply.
+--enable-rules, -e    Comma separated list of rules to enable.
+--disable-rules, -d   Comma separated list of rules to disable
+
+--stack-trace         If an error occurs, print out the stack trace for debug purposes.
+   - if need to debug configuration, stack trace sets initial logging (config processing) to debug
+--log-level           Minimum level required to log messages.
+--log-file            Destination file for log messages.
+
+
+Actions:
+--list-files, -l      List the markdown files that were found, but do not scan them.
+
+paths                 One or more paths to scan for eligible Markdown files
+
+
+
+log.file
+log.level
+plugins.{id}.enabled
+plugins.{id}.properties
+extensions.front-matter.enabled
 
 plugin ordering: command line (disabled, enabled), config, default
+others ordering: command line (if exposed), config, default
 
 - need way of listing all plugins, info
 - need way of listing all extensions
@@ -30,7 +50,6 @@ plugin ordering: command line (disabled, enabled), config, default
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - leading_text_index
 - link and emphasis (inline) tokens cannot be forced close, rewrite end to not expose :::False?
-- optional YAML/simple front loader
 - add version number to plugins interface
 
 ### Priority 2 - Like To Solve Before Initial
@@ -62,6 +81,7 @@ plugin ordering: command line (disabled, enabled), config, default
 
 - properly address any issues with existing rules
 - implement missing rules
+- yaml support for front-matter
 
 ### Priority 3 - Like To Solve in next 3 m
 

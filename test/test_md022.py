@@ -22,6 +22,7 @@ def test_md022_bad_proper_line_spacing_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/proper_line_spacing_atx.md",
     ]
 
@@ -49,6 +50,7 @@ def test_md022_good_proper_line_spacing_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/proper_line_spacing_setext.md",
     ]
 
@@ -76,6 +78,7 @@ def test_md022_bad_no_line_spacing_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/no_line_spacing_atx.md",
     ]
 
@@ -113,6 +116,7 @@ def test_md022_bad_no_line_spacing_before_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/no_line_spacing_before_atx.md",
     ]
 
@@ -144,6 +148,7 @@ def test_md022_bad_no_line_spacing_after_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/no_line_spacing_after_atx.md",
     ]
 
@@ -178,6 +183,7 @@ def test_md022_good_atx_with_html_and_good_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/atx_with_html_and_good_line_spacing.md",
     ]
 
@@ -205,6 +211,7 @@ def test_md022_bad_atx_with_html_and_bad_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/atx_with_html_and_bad_line_spacing.md",
     ]
 
@@ -239,6 +246,7 @@ def test_md022_good_atx_with_code_block_and_good_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/atx_with_code_block_and_good_line_spacing.md",
     ]
 
@@ -266,6 +274,7 @@ def test_md022_bad_atx_with_code_block_and_bad_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/atx_with_code_block_and_bad_line_spacing.md",
     ]
 
@@ -300,6 +309,7 @@ def test_md022_good_atx_with_thematic_break_and_good_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/atx_with_thematic_break_and_good_line_spacing.md",
     ]
 
@@ -327,6 +337,7 @@ def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/atx_with_thematic_break_and_bad_line_spacing.md",
     ]
 
@@ -365,6 +376,7 @@ def test_md022_bad_no_line_spacing_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/no_line_spacing_setext.md",
     ]
 
@@ -399,6 +411,7 @@ def test_md022_bad_no_line_spacing_after_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/no_line_spacing_after_setext.md",
     ]
 
@@ -433,6 +446,7 @@ def test_md022_good_setext_with_code_block_and_good_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/setext_with_code_block_and_good_line_spacing.md",
     ]
 
@@ -460,6 +474,7 @@ def test_md022_bad_setext_with_code_block_and_bad_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/setext_with_code_block_and_bad_line_spacing.md",
     ]
 
@@ -494,6 +509,7 @@ def test_md022_good_setext_with_html_and_good_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/setext_with_html_and_good_line_spacing.md",
     ]
 
@@ -521,6 +537,7 @@ def test_md022_bad_setext_with_html_and_bad_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/setext_with_html_and_bad_line_spacing.md",
     ]
 
@@ -555,6 +572,7 @@ def test_md022_good_setext_with_thematic_break_and_good_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/setext_with_thematic_break_and_good_line_spacing.md",
     ]
 
@@ -582,6 +600,7 @@ def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md022/setext_with_thematic_break_and_bad_line_spacing.md",
     ]
 
@@ -622,6 +641,7 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md022/proper_line_spacing_atx.md",
         ]
 
@@ -662,6 +682,7 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md022/double_line_spacing_above_atx.md",
         ]
 
@@ -698,6 +719,7 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md022/proper_line_spacing_atx.md",
         ]
 
@@ -741,6 +763,7 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md022/double_line_spacing_below_atx.md",
         ]
 
@@ -779,6 +802,7 @@ def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md022/double_line_spacing_above_and_below_atx.md",
         ]
 
@@ -810,6 +834,7 @@ def test_md022_good_alternating_heading_types():
     supplied_arguments = [
         "--disable",
         "MD003",
+        "scan",
         "test/resources/rules/md022/alternating_heading_types.md",
     ]
 
@@ -847,6 +872,7 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
             "MD003",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md022/alternating_heading_types.md",
         ]
 

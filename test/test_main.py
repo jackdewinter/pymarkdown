@@ -27,15 +27,38 @@ def test_markdown_with_no_parameters():
     supplied_arguments = []
 
     expected_return_code = 2
-    expected_output = ""
-    expected_error = """usage: main.py [-h] [--version] [-l] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
-               path [path ...]
-main.py: error: the following arguments are required: path
+               {plugins,scan,version} ...
+
+Lint any found Markdown files.
+
+positional arguments:
+  {plugins,scan,version}
+    plugins             B command
+    scan                scan the Markdown files in the specified paths
+    version             version of the application
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -e ENABLE_RULES, --enable-rules ENABLE_RULES
+                        comma separated list of rules to enable
+  -d DISABLE_RULES, --disable-rules DISABLE_RULES
+                        comma separated list of rules to disable
+  --add-plugin ADD_PLUGIN
+                        path to a plugin containing a new rule to apply
+  --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
+                        path to the configuration file to use
+  --stack-trace         if an error occurs, print out the stack trace for
+                        debug purposes
+  --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
+                        minimum level required to log messages
+  --log-file LOG_FILE   destination file for log messages
 """
+    expected_error = ""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -56,22 +79,23 @@ def test_markdown_with_dash_h():
     supplied_arguments = ["-h"]
 
     expected_return_code = 0
-    expected_output = """usage: main.py [-h] [--version] [-l] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
-               path [path ...]
+               {plugins,scan,version} ...
 
 Lint any found Markdown files.
 
 positional arguments:
-  path                  One or more paths to scan for eligible files
+  {plugins,scan,version}
+    plugins             B command
+    scan                scan the Markdown files in the specified paths
+    version             version of the application
 
 optional arguments:
   -h, --help            show this help message and exit
-  --version             show program's version number and exit
-  -l, --list-files      list the markdown files found and exit
   -e ENABLE_RULES, --enable-rules ENABLE_RULES
                         comma separated list of rules to enable
   -d DISABLE_RULES, --disable-rules DISABLE_RULES
@@ -79,11 +103,11 @@ optional arguments:
   --add-plugin ADD_PLUGIN
                         path to a plugin containing a new rule to apply
   --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
-                        path to a configuration file
+                        path to the configuration file to use
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
-                        minimum level for any log messages
+                        minimum level required to log messages
   --log-file LOG_FILE   destination file for log messages
 """
     expected_error = ""
@@ -99,15 +123,15 @@ optional arguments:
 
 def test_markdown_with_dash_dash_version():
     """
-    Test to make sure we get help if '--version' is supplied.
+    Test to make sure we get help if 'version' is supplied.
     """
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["--version"]
+    supplied_arguments = ["version"]
 
     expected_return_code = 0
-    expected_output = """main.py 0.1.0
+    expected_output = """0.1.0
 """
     expected_error = ""
 
@@ -132,6 +156,7 @@ def test_markdown_with_dash_e_single_by_name():
     supplied_arguments = [
         "-e",
         "debug-only",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -177,6 +202,7 @@ def test_markdown_with_dash_e_single_by_id():
     supplied_arguments = [
         "-e",
         "MD999",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -210,6 +236,117 @@ MD999>>completed_file
     )
 
 
+def test_markdown_with_enabled_by_configuration_id():
+    """
+    Test to make sure we enable a rule by using the rule's id in the
+    configuration, with no help from the command line.
+    The test data for MD047 is used as it is a simple file that
+    passes normally, it is used as a comparison.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_configuration = {"plugins": {"md999": {"enabled": True}}}
+    configuration_file = None
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        supplied_arguments = [
+            "-c",
+            configuration_file,
+            "scan",
+            "test/resources/rules/md047/end_with_blank_line.md",
+        ]
+
+        expected_return_code = 0
+        expected_output = """MD999>>init_from_config
+MD999>>test_value>>1
+MD999>>other_test_value>>1
+MD999>>starting_new_file>>
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
+MD999>>token:[atx(1,1):1:0:]
+MD999>>token:[text(1,3):This is a test: ]
+MD999>>token:[end-atx:::False]
+MD999>>token:[BLANK(2,1):]
+MD999>>token:[para(3,1):]
+MD999>>token:[text(3,1):The line after this line should be blank.:]
+MD999>>token:[end-para:::True]
+MD999>>token:[BLANK(4,1):]
+MD999>>completed_file
+"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if configuration_file and os.path.exists(configuration_file):
+            os.remove(configuration_file)
+
+
+def test_markdown_with_enabled_by_configuration_name():
+    """
+    Test to make sure we enable a rule by using the rule's name in the
+    configuration, with no help from the command line.
+    The test data for MD047 is used as it is a simple file that
+    passes normally, it is used as a comparison.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_configuration = {"plugins": {"debug-only": {"enabled": True}}}
+    configuration_file = None
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        supplied_arguments = [
+            "-c",
+            configuration_file,
+            "--stack-trace",
+            "--log-level",
+            "DEBUG",
+            "scan",
+            "test/resources/rules/md047/end_with_blank_line.md",
+        ]
+
+        expected_return_code = 0
+        expected_output = """MD999>>init_from_config
+MD999>>test_value>>1
+MD999>>other_test_value>>1
+MD999>>starting_new_file>>
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
+MD999>>token:[atx(1,1):1:0:]
+MD999>>token:[text(1,3):This is a test: ]
+MD999>>token:[end-atx:::False]
+MD999>>token:[BLANK(2,1):]
+MD999>>token:[para(3,1):]
+MD999>>token:[text(3,1):The line after this line should be blank.:]
+MD999>>token:[end-para:::True]
+MD999>>token:[BLANK(4,1):]
+MD999>>completed_file
+"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if configuration_file and os.path.exists(configuration_file):
+            os.remove(configuration_file)
+
+
 def test_markdown_with_dash_d_single_by_name():
     """
     Test to make sure we get enable a rule if '-d' is supplied and the name of the
@@ -222,6 +359,7 @@ def test_markdown_with_dash_d_single_by_name():
     supplied_arguments = [
         "-d",
         "single-trailing-newline",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -250,7 +388,40 @@ def test_markdown_with_dash_d_single_by_id():
     supplied_arguments = [
         "-d",
         "MD047",
+        "scan",
         "test/resources/rules/md047/end_with_no_blank_line.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_d_and_dash_e_single_by_name():
+    """
+    Test to make sure we get disabled if a rule if '-d' is supplied
+    and if 'e' is supplied, both with the name of the rule.
+    The test data for MD047 is used as it is a simple file that
+    fails normally, it is used as a comparison.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "-d",
+        "single-trailing-newline",
+        "-e",
+        "single-trailing-newline",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
     expected_return_code = 0
@@ -276,6 +447,7 @@ def test_markdown_with_dash_x_scan():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "-x-scan",
+        "scan",
         "test/resources/rules/md047/end_with_no_blank_line.md",
     ]
 
@@ -305,6 +477,7 @@ def test_markdown_with_dash_dash_log_level_debug(caplog):
     supplied_arguments = [
         "--log-level",
         "DEBUG",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -348,6 +521,7 @@ def test_markdown_with_dash_dash_log_level_info(caplog):
     supplied_arguments = [
         "--log-level",
         "INFO",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -391,17 +565,18 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog):
     supplied_arguments = [
         "--log-level",
         "invalid",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py [-h] [--version] [-l] [-e ENABLE_RULES] [-d DISABLE_RULES]
+    expected_error = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
                [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
-               path [path ...]
+               {plugins,scan,version} ...
 main.py: error: argument --log-level: invalid log_level_type value: 'invalid'
 """
 
@@ -452,6 +627,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
             "INFO",
             "--log-file",
             log_file_name,
+            "scan",
             "test/resources/rules/md047/end_with_blank_line.md",
         ]
 
@@ -500,6 +676,7 @@ def test_markdown_with_dash_x_init():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "-x-init",
+        "scan",
         "test/resources/rules/md047/end_with_no_blank_line.md",
     ]
     fake_directory = "fredo"
@@ -544,6 +721,7 @@ def test_markdown_with_dash_e_single_by_id_and_good_config():
             "MD999",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md047/end_with_blank_line.md",
         ]
 
@@ -598,6 +776,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config():
             "MD999",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md047/end_with_blank_line.md",
         ]
 
@@ -651,6 +830,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config_file():
             "MD999",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md047/end_with_blank_line.md",
         ]
 
@@ -691,6 +871,7 @@ def test_markdown_with_dash_e_single_by_id_and_non_json_config_file():
             "MD999",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md047/end_with_blank_line.md",
         ]
 
@@ -729,6 +910,7 @@ def test_markdown_with_dash_e_single_by_id_and_non_present_config_file():
         "MD999",
         "-c",
         configuration_file,
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -766,6 +948,7 @@ def test_markdown_with_dash_e_single_by_id_and_good_select_config():
             "MD999",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md047/end_with_blank_line.md",
         ]
 
@@ -820,6 +1003,7 @@ def test_markdown_with_dash_e_single_by_id_and_bad_select_config():
             "MD999",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md047/end_with_blank_line.md",
         ]
 
@@ -873,6 +1057,7 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_config_exception()
             "MD999",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md047/end_with_blank_line.md",
         ]
 
@@ -914,6 +1099,7 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_next_token_excepti
             "MD999",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md047/end_with_blank_line.md",
         ]
 

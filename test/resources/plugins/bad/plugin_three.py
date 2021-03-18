@@ -1,12 +1,12 @@
 """
-Module to implement a sample plugin that just reports that it has been called.
+Module to implement a sample plugin that has the same name as another plugin.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
-class PluginTwo(Plugin):
+class PluginThree(Plugin):
     """
-    Class to implement a sample plugin that just reports that it has been called.
+    Class to implement a sample plugin that has the same name as another plugin.
     """
 
     def get_details(self):
@@ -14,10 +14,10 @@ class PluginTwo(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            plugin_name="debug-only-2,",
-            plugin_id="MD998",
+            plugin_name="debug-only",
+            plugin_id="MD999",
             plugin_enabled_by_default=True,
-            plugin_description="Debug plugin",
+            plugin_description="Copy of debug plugin",
         )
 
     def initialize_from_config(self):

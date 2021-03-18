@@ -20,6 +20,7 @@ def test_md026_good_ends_without_punctuation_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md026/ends_without_punctuation_atx.md",
     ]
 
@@ -47,6 +48,7 @@ def test_md026_bad_ends_with_punctuation_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md026/ends_with_punctuation_atx.md",
     ]
 
@@ -77,6 +79,7 @@ def test_md026_good_ends_with_punctuation_then_inline_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md026/ends_with_punctuation_then_inline_atx.md",
     ]
 
@@ -111,6 +114,7 @@ def test_md026_good_ends_with_punctuation_atx_with_configuration():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md026/ends_with_punctuation_atx.md",
         ]
 
@@ -141,6 +145,7 @@ def test_md026_good_ends_without_punctuation_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md026/ends_without_punctuation_setext.md",
     ]
 
@@ -168,6 +173,7 @@ def test_md026_bad_ends_with_punctuation_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md026/ends_with_punctuation_setext.md",
     ]
 
@@ -198,6 +204,7 @@ def test_md026_good_ends_with_punctuation_then_inline_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md026/ends_with_punctuation_then_inline_setext.md",
     ]
 
@@ -232,6 +239,7 @@ def test_md026_good_ends_with_punctuation_setext_with_configuration():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md026/ends_with_punctuation_setext.md",
         ]
 

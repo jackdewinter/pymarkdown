@@ -23,6 +23,7 @@ def test_md002_all_samples():
         "MD003",
         "-e",
         "MD002",
+        "scan",
         "test/resources/rules/md002",
     ]
 
@@ -58,6 +59,7 @@ def test_md002_good_proper_atx_heading_start():
     supplied_arguments = [
         "-e",
         "MD002",
+        "scan",
         "test/resources/rules/md002/proper_atx_heading_start.md",
     ]
 
@@ -93,6 +95,7 @@ def test_md002_bad_proper_atx_heading_start_with_alternate_configuration():
             "MD002",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md002/proper_atx_heading_start.md",
         ]
 
@@ -129,6 +132,7 @@ def test_md002_good_proper_setext_heading_start():
     supplied_arguments = [
         "-e",
         "MD002",
+        "scan",
         "test/resources/rules/md002/proper_setext_heading_start.md",
     ]
 
@@ -165,6 +169,7 @@ def test_md002_bad_proper_setext_heading_start_with_alternate_configuration():
             "MD002",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md002/proper_setext_heading_start.md",
         ]
 
@@ -200,6 +205,7 @@ def test_md002_bad_improper_atx_heading_start():
     supplied_arguments = [
         "-e",
         "MD002",
+        "scan",
         "test/resources/rules/md002/improper_atx_heading_start.md",
     ]
 
@@ -239,6 +245,7 @@ def test_md002_good_improper_atx_heading_start_with_alternate_configuration():
             "MD002",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md002/improper_atx_heading_start.md",
         ]
 
@@ -273,6 +280,7 @@ def test_md002_bad_improper_setext_heading_start():
         "MD003",
         "-e",
         "MD002",
+        "scan",
         "test/resources/rules/md002/improper_setext_heading_start.md",
     ]
 
@@ -315,6 +323,7 @@ def test_md002_good_improper_setext_heading_start_with_alternate_configuration()
             "MD002",
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md002/improper_setext_heading_start.md",
         ]
 

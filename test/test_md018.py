@@ -19,6 +19,7 @@ def test_md018_good_good_start_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md018/good_start_spacing.md",
     ]
 
@@ -46,6 +47,7 @@ def test_md018_bad_ignore_bad_atx_closed_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md018/ignore_bad_atx_closed_spacing.md",
     ]
 
@@ -78,6 +80,7 @@ def test_md018_bad_missing_atx_start_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md018/missing_start_spacing.md",
     ]
 
@@ -108,6 +111,7 @@ def test_md018_good_with_setext_headings():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md018/with_setext_headings.md",
     ]
 
@@ -135,6 +139,7 @@ def test_md018_good_with_code_blocks():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md018/with_code_blocks.md",
     ]
 
@@ -162,6 +167,7 @@ def test_md018_good_with_html_blocks():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md018/with_html_blocks.md",
     ]
 
@@ -189,6 +195,7 @@ def test_md018_bad_multiple_within_paragraph():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md018/multiple_within_paragraph.md",
     ]
 
@@ -221,6 +228,7 @@ def test_md018_bad_paragraphs_with_starting_whitespace():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md018/paragraphs_with_starting_whitespace.md",
     ]
 
@@ -258,6 +266,7 @@ def test_md018_bad_single_paragraph_with_starting_whitespace():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md",
     ]
 

@@ -3,11 +3,14 @@ Module to provide helper methods for tests.
 """
 import difflib
 import json
+import logging
 import tempfile
 from test.transform_to_markdown import TransformToMarkdown
 from test.verify_line_and_column_numbers import verify_line_and_column_numbers
 
+from pymarkdown.application_properties import ApplicationProperties
 from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.transform_to_gfm import TransformToGfm
 
@@ -20,9 +23,14 @@ def act_and_assert(
     """
 
     # Arrange
+    logging.getLogger().setLevel(logging.DEBUG if show_debug else logging.WARNING)
+    ParserLogger.sync_on_next_call()
+
     tokenizer = TokenizedMarkdown()
     if config_map:
-        tokenizer.apply_config_map(config_map)
+        test_properties = ApplicationProperties()
+        test_properties.load_from_dict(config_map)
+        tokenizer.apply_configuration(test_properties)
     transformer = TransformToGfm()
 
     # Act

@@ -19,6 +19,7 @@ def test_md020_good_good_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md020/good_spacing.md",
     ]
 
@@ -46,6 +47,7 @@ def test_md020_bad_ignore_bad_atx_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md020/ignore_bad_atx_spacing.md",
     ]
 
@@ -78,6 +80,7 @@ def test_md020_bad_missing_start_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md020/missing_start_spacing.md",
     ]
 
@@ -110,6 +113,7 @@ def test_md020_bad_missing_end_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md020/missing_end_spacing.md",
     ]
 
@@ -143,6 +147,7 @@ def test_md020_good_almost_missing_end_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md020/almost_missing_end_spacing.md",
     ]
 
@@ -170,6 +175,7 @@ def test_md020_bad_missing_both_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md020/missing_both_spacing.md",
     ]
 
@@ -202,6 +208,7 @@ def test_md020_good_with_setext_headings():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md020/with_setext_headings.md",
     ]
 
@@ -229,6 +236,7 @@ def test_md020_good_with_code_blocks():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md020/with_code_blocks.md",
     ]
 
@@ -256,6 +264,7 @@ def test_md020_good_with_html_blocks():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md020/with_html_blocks.md",
     ]
 
@@ -283,6 +292,7 @@ def test_md020_bad_multiple_within_paragraph():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md020/multiple_within_paragraph.md",
     ]
 
@@ -316,6 +326,7 @@ def test_md020_bad_paragraphs_with_starting_whitespace():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md020/paragraphs_with_starting_whitespace.md",
     ]
 
@@ -353,6 +364,7 @@ def test_md020_bad_single_paragraph_with_starting_whitespace():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md",
     ]
 

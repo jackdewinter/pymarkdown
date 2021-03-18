@@ -20,6 +20,7 @@ def test_md024_good_different_heading_content_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md024/different_heading_content_atx.md",
     ]
 
@@ -47,6 +48,7 @@ def test_md024_bad_same_heading_content_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md024/same_heading_content_atx.md",
     ]
 
@@ -77,6 +79,7 @@ def test_md024_bad_same_heading_in_siblings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md024/same_heading_in_siblings_atx.md",
     ]
 
@@ -109,6 +112,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md",
     ]
 
@@ -146,6 +150,7 @@ def test_md024_good_different_heading_content_atx_with_configuration():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md024/different_heading_content_atx.md",
         ]
 
@@ -183,6 +188,7 @@ def test_md024_good_same_heading_content_atx_with_configuration():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md024/same_heading_content_atx.md",
         ]
 
@@ -220,6 +226,7 @@ def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md024/same_heading_in_siblings_atx.md",
         ]
 
@@ -260,6 +267,7 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_configuration():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md",
         ]
 
@@ -297,6 +305,7 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_alternate_configur
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md",
         ]
 
@@ -326,6 +335,7 @@ def test_md024_good_different_inline_heading_content_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md024/different_inline_heading_content_atx.md",
     ]
 
@@ -353,6 +363,7 @@ def test_md024_good_different_heading_content_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md024/different_heading_content_setext.md",
     ]
 
@@ -380,6 +391,7 @@ def test_md024_bad_same_heading_content_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md024/same_heading_content_setext.md",
     ]
 
@@ -410,6 +422,7 @@ def test_md024_bad_same_heading_in_siblings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md024/same_heading_in_siblings_setext.md",
     ]
 
@@ -442,6 +455,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md",
     ]
 
@@ -479,6 +493,7 @@ def test_md024_good_different_heading_content_setext_with_configuration():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md024/different_heading_content_setext.md",
         ]
 
@@ -516,6 +531,7 @@ def test_md024_good_same_heading_content_setext_with_configuration():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md024/same_heading_content_setext.md",
         ]
 
@@ -553,6 +569,7 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md024/same_heading_in_siblings_setext.md",
         ]
 
@@ -593,6 +610,7 @@ def test_md024_good_same_heading_but_not_in_siblings_setext_with_configuration()
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md",
         ]
 

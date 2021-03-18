@@ -19,6 +19,7 @@ def test_md036_proper_headings_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md036/proper_headings_atx.md",
     ]
 
@@ -45,6 +46,7 @@ def test_md036_proper_headings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md036/proper_headings_setext.md",
     ]
 
@@ -72,6 +74,7 @@ def test_md036_proper_emphasis_with_link():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md036/proper_emphasis_with_link.md",
     ]
 
@@ -99,6 +102,7 @@ def test_md036_proper_emphasis_with_text_then_link():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md036/proper_emphasis_with_text_then_link.md",
     ]
 
@@ -126,6 +130,7 @@ def test_md036_proper_emphasis_with_text_then_link_then_text():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md036/proper_emphasis_with_text_then_link_then_text.md",
     ]
 
@@ -153,6 +158,7 @@ def test_md036_proper_emphasis_with_text_end_emphasis_more_text():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md036/proper_emphasis_with_text_end_emphasis_more_text.md",
     ]
 
@@ -180,6 +186,7 @@ def test_md036_proper_emphasis_within_text():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md036/proper_emphasis_within_text.md",
     ]
 
@@ -207,6 +214,7 @@ def test_md036_proper_emphasis_within_multiline_text():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md036/proper_emphasis_within_multiline_text.md",
     ]
 
@@ -234,6 +242,7 @@ def test_md036_proper_emphasis_ending_with_punctuation():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md036/proper_emphasis_ending_with_punctuation.md",
     ]
 
@@ -268,6 +277,7 @@ def test_md036_proper_emphasis_ending_with_punctuation_with_configuration():
         supplied_arguments = [
             "-c",
             configuration_file,
+            "scan",
             "test/resources/rules/md036/proper_emphasis_ending_with_punctuation.md",
         ]
 
@@ -304,6 +314,7 @@ def test_md036_valid_emphasis_headings():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md036/valid_emphasis_headings.md",
     ]
 

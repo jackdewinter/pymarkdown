@@ -19,6 +19,7 @@ def test_md019_good_single_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md019/single_spacing.md",
     ]
 
@@ -46,6 +47,7 @@ def test_md019_bad_multiple_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md019/multiple_spacing.md",
     ]
 
@@ -77,6 +79,7 @@ def test_md019_bad_multiple_spacing_with_inline():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "scan",
         "test/resources/rules/md019/multiple_spacing_with_inline.md",
     ]
 

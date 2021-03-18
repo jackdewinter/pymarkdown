@@ -14,6 +14,7 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_path():
     supplied_arguments = [
         "--add-plugin",
         "MD047",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -43,6 +44,7 @@ def test_markdown_with_dash_dash_add_plugin_and_single_plugin_file():
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/plugin_two.py",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -76,6 +78,7 @@ def test_markdown_with_dash_dash_add_plugin_and_single_plugin_directory():
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -99,6 +102,34 @@ MD998>>completed_file
     )
 
 
+def test_markdown_with_repeated_identifier():
+    """
+    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--add-plugin",
+        "test/resources/plugins/bad/plugin_three.py",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """ValueError encountered while initializing plugins:
+Unable to register plugin 'plugin_three.py' with name/id 'md999' as plugin 'plugin_one.py' is already registered with that name/id."""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
 def test_markdown_with_dash_dash_add_plugin_and_bad_plugin_file():
     """
     Test to make sure we get enable a rule if '--add-plugin' is supplied.
@@ -109,6 +140,7 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_plugin_file():
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/not-a-python-file.txt",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -138,6 +170,7 @@ def test_markdown_with_dash_dash_add_plugin_and_missing_class():
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/misnamed.py",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -167,6 +200,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file():
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_starting_new_file.py",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -195,6 +229,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_completed_file():
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_completed_file.py",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -223,6 +258,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line():
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_next_line.py",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -252,6 +288,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_stack_trace(
         "--stack-trace",
         "--add-plugin",
         "test/resources/plugins/bad/bad_next_line.py",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -296,6 +333,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_constructor():
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_constructor.py",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -325,6 +363,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_details():
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_details.py",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -354,6 +393,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_details_with_stack_trace():
         "--stack-trace",
         "--add-plugin",
         "test/resources/plugins/bad/bad_details.py",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -396,6 +436,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail():
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_string_detail_is_int.py",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -424,6 +465,7 @@ def test_markdown_with_dash_dash_add_plugin_with_empty_string_detail():
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_string_detail_is_empty.py",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 
@@ -452,6 +494,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_boolean_detail():
     supplied_arguments = [
         "--add-plugin",
         "test/resources/plugins/bad/bad_boolean_detail_is_int.py",
+        "scan",
         "test/resources/rules/md047/end_with_blank_line.md",
     ]
 

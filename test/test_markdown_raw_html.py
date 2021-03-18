@@ -643,6 +643,29 @@ foo <!-- foo--->"""
 
 
 @pytest.mark.gfm
+def test_raw_html_646a():
+    """
+    Test case 646a:  Not comments:
+    """
+
+    # Arrange
+    source_markdown = """foo <![CDATA[>&<>"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):foo \a<\a&lt;\a:]",
+        "[text(1,6):![:]",
+        "[text(1,8):CDATA:]",
+        "[text(1,13):[:]",
+        "[text(1,14):\a>\a&gt;\a\a&\a&amp;\a\a<\a&lt;\a\a>\a&gt;\a:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>foo &lt;![CDATA[&gt;&amp;&lt;&gt;</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
 def test_raw_html_647():
     """
     Test case 647:  Processing instructions:

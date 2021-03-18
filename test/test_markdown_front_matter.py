@@ -5,7 +5,7 @@ import pytest
 
 from .utils import act_and_assert
 
-config_map = {"extensions": {"front-matter": {"enabled", True}}}
+config_map = {"extensions": {"front-matter": {"enabled": True}}}
 
 
 @pytest.mark.gfm
@@ -306,6 +306,39 @@ def test_front_matter_12():
     expected_gfm = """<hr />
 <pre><code>continuation
 </code></pre>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, config_map=config_map
+    )
+
+
+@pytest.mark.gfm
+def test_front_matter_13():
+    """
+    If a blank line is encountered before the end marker, the entire header is
+    thrown out.
+    """
+
+    # Arrange
+    source_markdown = """---
+
+Title: my document
+---
+---
+"""
+    expected_tokens = [
+        "[tbreak(1,1):-::---]",
+        "[BLANK(2,1):]",
+        "[setext(4,1):-:3::(3,1)]",
+        "[text(3,1):Title: my document:]",
+        "[end-setext:::False]",
+        "[tbreak(5,1):-::---]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<hr />
+<h2>Title: my document</h2>
 <hr />"""
 
     # Act & Assert

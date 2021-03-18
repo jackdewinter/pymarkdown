@@ -5,9 +5,7 @@ import copy
 import json
 import logging
 
-from pymarkdown.parser_logger import ParserLogger
-
-POGGER = ParserLogger(logging.getLogger(__name__))
+LOGGER = logging.getLogger(__name__)
 
 
 class ApplicationProperties:
@@ -70,6 +68,7 @@ class ApplicationProperties:
         if not isinstance(config_map, dict):
             raise ValueError("Specified parameter was not a dictionary.")
 
+        LOGGER.debug("Loading from dictionary: {%s}", str(config_map))
         self.__flat_property_map.clear()
         self.__scan_map(config_map, "")
 
@@ -106,6 +105,7 @@ class ApplicationProperties:
 
         property_value = default_value
         property_name = property_name.lower()
+        LOGGER.debug("property_name=%s", property_name)
         if property_name in self.__flat_property_map:
             found_value = self.__flat_property_map[property_name]
             is_eligible = type(found_value) == property_type
@@ -215,6 +215,9 @@ class ApplicationProperties:
             else:
                 new_key = f"{current_prefix}{next_key}".lower()
                 self.__flat_property_map[new_key] = copy.deepcopy(next_value)
+                LOGGER.debug(
+                    "Adding configuration '%s' : {%s}", new_key, str(next_value)
+                )
 
 
 class ApplicationPropertiesFacade:
@@ -321,6 +324,17 @@ class ApplicationPropertiesFacade:
         )
 
     # pylint: enable=too-many-arguments
+
+    @property
+    def property_names(self):
+        """
+        List of each of the properties in the map.
+        """
+        facade_property_names = []
+        for next_property_name in self.__base_properties.property_names:
+            if next_property_name.startswith(self.__property_prefix):
+                facade_property_names.append(next_property_name)
+        return facade_property_names
 
 
 # pylint: disable=too-few-public-methods
