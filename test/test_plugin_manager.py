@@ -4,6 +4,39 @@ Module to provide tests related to the plugin manager for the scanner.
 from test.markdown_scanner import MarkdownScanner
 
 
+def test_markdown_with_plugins_only():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "plugins",
+    ]
+
+    expected_return_code = 2
+    expected_output = """usage: main.py plugins [-h] {list,info} ...
+
+positional arguments:
+  {list,info}
+    list       list the available plugins
+    info       information of specific plugins
+
+optional arguments:
+  -h, --help   show this help message and exit
+"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
 def test_markdown_with_dash_dash_add_plugin_and_bad_path():
     """
     Test to make sure we get enable a rule if '--add-plugin' is supplied.
@@ -119,7 +152,91 @@ def test_markdown_with_repeated_identifier():
     expected_return_code = 1
     expected_output = ""
     expected_error = """ValueError encountered while initializing plugins:
-Unable to register plugin 'plugin_three.py' with name/id 'md999' as plugin 'plugin_one.py' is already registered with that name/id."""
+Unable to register plugin 'plugin_three.py' with id 'md999' as plugin 'plugin_one.py' is already registered with that id."""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_bad_identifier():
+    """
+    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--add-plugin",
+        "test/resources/plugins/bad/plugin_five.py",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """ValueError encountered while initializing plugins:
+Unable to register plugin 'plugin_five.py' with id 'debug-only' as id is not a valid id in the form 'aannn' or 'aaannn'."""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_repeated_name():
+    """
+    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--add-plugin",
+        "test/resources/plugins/bad/plugin_four.py",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """ValueError encountered while initializing plugins:
+Unable to register plugin 'plugin_four.py' with name 'debug-only' as plugin 'plugin_one.py' is already registered with that name."""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_bad_name():
+    """
+    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--add-plugin",
+        "test/resources/plugins/bad/plugin_six.py",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """ValueError encountered while initializing plugins:
+Unable to register plugin 'plugin_six.py' with name 'debug.only' as name is not a valid name in the form 'an-an'."""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
@@ -503,6 +620,237 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_boolean_detail():
     expected_error = """BadPluginError encountered while loading plugins:
 Plugin class 'BadBooleanDetailIsInt' returned an improperly typed value for field name 'plugin_enabled_by_default'.
 """
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_plugins_list_only():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = ["plugins", "list"]
+
+    expected_return_code = 0
+    expected_output = """
+  ID     NAMES                            ENABLED (DEFAULT)  ENABLED (CURRENT)
+
+  md001  heading-increment, header-incre  True               True
+         ment
+  md002  first-heading-h1, first-header-  False              False
+         h1
+  md003  heading-style, header-style      True               True
+  md004  ul-style                         True               True
+  md005  list-indent                      True               True
+  md006  ul-start-left                    False              False
+  md007  ul-indent                        True               True
+  md009  no-trailing-spaces               True               True
+  md010  no-hard-tabs                     True               True
+  md011  no-reversed-links                True               True
+  md012  no-multiple-blanks               True               True
+  md013  line-length                      True               True
+  md014  commands-show-output             True               True
+  md018  no-missing-space-atx             True               True
+  md019  no-multiple-space-atx            True               True
+  md020  no-missing-space-closed-atx      True               True
+  md021  no-multiple-space-closed-atx     True               True
+  md022  blanks-around-headings, blanks-  True               True
+         around-headers
+  md023  heading-start-left, header-star  True               True
+         t-left
+  md024  no-duplicate-heading, no-duplic  True               True
+         ate-header
+  md025  single-title, single-h1          True               True
+  md026  no-trailing-punctuation          True               True
+  md027  no-multiple-space-blockquote     True               True
+  md028  no-blanks-blockquote             True               True
+  md029  ol-prefix                        True               True
+  md030  list-marker-space                True               True
+  md031  blanks-around-fences             True               True
+  md032  blanks-around-lists              True               True
+  md033  no-inline-html                   True               True
+  md034  no-bare-urls                     True               True
+  md035  hr-style                         True               True
+  md036  no-emphasis-as-heading, no-emph  True               True
+         asis-as-header
+  md037  no-space-in-emphasis             True               True
+  md038  no-space-in-code                 True               True
+  md039  no-space-in-links                True               True
+  md040  fenced-code-language             True               True
+  md041  first-line-heading, first-line-  True               True
+         h1
+  md042  no-empty-links                   True               True
+  md043  required-headings, required-hea  True               True
+         ders
+  md044  proper-names                     True               True
+  md045  no-alt-text                      True               True
+  md046  code-block-style                 True               True
+  md047  single-trailing-newline          True               True
+  md048  code-fence-style                 True               True
+
+"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = ["plugins", "list", "md*9"]
+
+    expected_return_code = 0
+    expected_output = """
+  ID     NAMES                  ENABLED (DEFAULT)  ENABLED (CURRENT)
+
+  md009  no-trailing-spaces     True               True
+  md019  no-multiple-space-atx  True               True
+  md029  ol-prefix              True               True
+  md039  no-space-in-links      True               True
+
+"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_plugins_list_and_filter_by_name_link():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = ["plugins", "list", "*link*"]
+
+    expected_return_code = 0
+    expected_output = """
+  ID     NAMES              ENABLED (DEFAULT)  ENABLED (CURRENT)
+
+  md011  no-reversed-links  True               True
+  md039  no-space-in-links  True               True
+  md042  no-empty-links     True               True
+
+"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_plugins_list_and_bad_filter():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = ["plugins", "list", "*"]
+
+    expected_return_code = 2
+    expected_output = ""
+    expected_error = """usage: main.py plugins list [-h] [list_filter]
+main.py plugins list: error: argument list_filter: Value '*' is not a valid pattern for an id or a name.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_plugins_info_and_bad_filter():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = ["plugins", "info", "abc.def"]
+
+    expected_return_code = 2
+    expected_output = ""
+    expected_error = """usage: main.py plugins info [-h] info_filter
+main.py plugins info: error: argument info_filter: Value 'abc.def' is not a valid id or name.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_plugins_info_and_not_found_filter():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = ["plugins", "info", "md00001"]
+
+    expected_return_code = 1
+    expected_output = "Unable to find a plugin with an id or name of 'md00001'."
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_plugins_info_and_found_filter():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = ["plugins", "info", "md001"]
+
+    expected_return_code = 0
+    expected_output = """Id:md001
+Name(s):heading-increment,header-increment
+Description:Heading levels should only increment by one level at a time"""
+    expected_error = ""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)

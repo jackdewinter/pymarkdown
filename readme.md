@@ -4,25 +4,98 @@
 
 ## Command Line
 
-PyMarkdown.py [options] [paths]
+### Root Level
 
---config, -c          Path to the configuration file to use.
---add-plugin          Path to a plugin containing a new rule to apply.
---enable-rules, -e    Comma separated list of rules to enable.
---disable-rules, -d   Comma separated list of rules to disable
+```text
+usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES] [--add-plugin ADD_PLUGIN]
+               [--config CONFIGURATION_FILE] [--stack-trace]
+               [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}] [--log-file LOG_FILE]
+               {plugins,scan,version} ...
 
---stack-trace         If an error occurs, print out the stack trace for debug purposes.
-   - if need to debug configuration, stack trace sets initial logging (config processing) to debug
---log-level           Minimum level required to log messages.
---log-file            Destination file for log messages.
+Lint any found Markdown files.
 
+positional arguments:
+  {plugins,scan,version}
+    plugins             plugin commands
+    scan                scan the Markdown files in the specified paths
+    version             version of the application
 
-Actions:
---list-files, -l      List the markdown files that were found, but do not scan them.
+optional arguments:
+  -h, --help            show this help message and exit
+  -e ENABLE_RULES, --enable-rules ENABLE_RULES
+                        comma separated list of rules to enable
+  -d DISABLE_RULES, --disable-rules DISABLE_RULES
+                        comma separated list of rules to disable
+  --add-plugin ADD_PLUGIN
+                        path to a plugin containing a new rule to apply
+  --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
+                        path to the configuration file to use
+  --stack-trace         if an error occurs, print out the stack trace for debug purposes
+  --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
+                        minimum level required to log messages
+  --log-file LOG_FILE   destination file for log messages
+```
 
-paths                 One or more paths to scan for eligible Markdown files
+#### Notes
 
+- if debug of configuration, stack trace sets initial logging (config processing) to debug
 
+### Plugins
+
+```text
+usage: main.py plugins [-h] {list,info} ...
+
+positional arguments:
+  {list,info}
+    list       list the available plugins
+    info       information of specific plugins
+
+optional arguments:
+  -h, --help   show this help message and exit
+```
+
+#### List
+
+```text
+usage: main.py plugins list [-h] [list_filter]
+
+positional arguments:
+  list_filter  filter
+
+optional arguments:
+  -h, --help   show this help message and exit
+```
+
+#### Info
+
+```text
+usage: main.py plugins info [-h] info_filter
+
+positional arguments:
+  info_filter  an id
+
+optional arguments:
+  -h, --help   show this help message and exit
+```
+
+### Scan
+
+```text
+usage: main.py scan [-h] [-l] path [path ...]
+
+positional arguments:
+  path              one or more paths to scan for eligible Markdown files
+
+optional arguments:
+  -h, --help        show this help message and exit
+  -l, --list-files  list the markdown files found and exit
+```
+
+### Version
+
+Shows the version of the program and exists.
+
+## Configuration
 
 log.file
 log.level
@@ -35,12 +108,6 @@ others ordering: command line (if exposed), config, default
 
 - need way of listing all plugins, info
 - need way of listing all extensions
-
-# Project To-Do List
-
-## Bugs - Command Line
-
-- determine which errors to print and which to log
 
 ## Bugs - General
 
@@ -82,9 +149,11 @@ others ordering: command line (if exposed), config, default
 - properly address any issues with existing rules
 - implement missing rules
 - yaml support for front-matter
+- better format for "plugins info"
 
 ### Priority 3 - Like To Solve in next 3 m
 
+- determine which errors to print and which to log
 - (performance) debug: search for any cases where adding a call to `is_debug_enabled` would be helpful
 - (performance) assert: do as little as possible to ensure better performance
 - (performance) else: ??

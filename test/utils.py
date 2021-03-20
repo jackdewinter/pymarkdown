@@ -56,6 +56,7 @@ def write_temporary_configuration(supplied_configuration):
             return outfile.name
     except IOError as ex:
         assert False, "Test configuration file was not written (" + str(ex) + ")."
+        return None
 
 
 def assert_if_lists_different(expected_tokens, actual_tokens):

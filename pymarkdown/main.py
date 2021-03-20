@@ -125,24 +125,9 @@ class PyMarkdownLint:
             help="destination file for log messages",
         )
 
-        subparsers = parser.add_subparsers(dest="frodo")
+        subparsers = parser.add_subparsers(dest="primary_subparser")
 
-        new_sub_parser = subparsers.add_parser("plugins", help="B command")
-        new_sub_parser.add_argument(
-            "-p",
-            "--list-plugins",
-            dest="list_plugins",
-            action="store_true",
-            default=False,
-            help="list the available plugins and exit",
-        )
-        new_sub_parser.add_argument(
-            "paths",
-            metavar="path",
-            type=str,
-            nargs="+",
-            help="one or more paths to scan for eligible Markdown files",
-        )
+        PluginManager.add_argparse_subparser(subparsers)
 
         new_sub_parser = subparsers.add_parser(
             "scan", help="scan the Markdown files in the specified paths"
@@ -167,10 +152,10 @@ class PyMarkdownLint:
 
         parse_arguments = parser.parse_args()
 
-        if not parse_arguments.frodo:
+        if not parse_arguments.primary_subparser:
             parser.print_help()
             sys.exit(2)
-        elif parse_arguments.frodo == "version":
+        elif parse_arguments.primary_subparser == "version":
             print(f"{self.__version_number}")
             sys.exit(0)
         return parse_arguments
@@ -291,10 +276,6 @@ class PyMarkdownLint:
         print("No matching files found.", file=sys.stderr)
         return 1
 
-    def __handle_list_plugins(self):
-        print("\n".join(self.__plugins.all_plugin_ids))
-        return 0
-
     def __apply_configuration_to_plugins(self):
 
         try:
@@ -408,9 +389,9 @@ class PyMarkdownLint:
         try:
             new_handler = self.__initialize_logging(args)
 
-            if args.frodo == "plugins":
+            if args.primary_subparser == PluginManager.argparse_subparser_name():
                 self.__initialize_plugins(args)
-                return_code = self.__handle_list_plugins()
+                return_code = self.__plugins.handle_argparse_subparser(args)
                 sys.exit(return_code)
 
             POGGER.info("Determining files to scan.")

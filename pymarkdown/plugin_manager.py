@@ -1,11 +1,15 @@
 """
 Module to provide classes to deal with plugins.
 """
+import argparse
 import inspect
 import logging
 import os
+import re
 import sys
 from abc import ABC, abstractmethod
+
+from columnar import columnar
 
 from pymarkdown.application_properties import ApplicationPropertiesFacade
 
@@ -237,6 +241,7 @@ class FoundPlugin:
         plugin_name,
         plugin_description,
         plugin_instance,
+        plugin_enabled_by_default,
         instance_file_name,
     ):
         """
@@ -247,12 +252,14 @@ class FoundPlugin:
             self.__plugin_names,
             self.__plugin_description,
             self.__plugin_instance,
+            self.__plugin_enabled_by_default,
             self.__plugin_file_name,
         ) = (
             plugin_id.strip().lower(),
             [],
             plugin_description,
             plugin_instance,
+            plugin_enabled_by_default,
             instance_file_name,
         )
         for next_name in plugin_name.lower().split(","):
@@ -306,6 +313,13 @@ class FoundPlugin:
         """
         return self.__plugin_file_name
 
+    @property
+    def plugin_enabled_by_default(self):
+        """
+        Gets a value indicating whether the plugin is enabled by default.
+        """
+        return self.__plugin_enabled_by_default
+
 
 # pylint: enable=too-few-public-methods
 
@@ -317,6 +331,11 @@ class PluginManager:
     """
 
     __plugin_prefix = "plugins"
+    __root_subparser_name = "pm_subcommand"
+    __argparse_subparser = None
+    __id_regex = re.compile("^[a-z]{2,3}[0-9]{3,3}$")
+    __name_regex = re.compile("^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$")
+    __filter_regex = re.compile("^[a-zA-Z0-9-]+$")
 
     def __init__(self):
         (
@@ -370,6 +389,145 @@ class PluginManager:
         )
 
     # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def argparse_subparser_name():
+        """
+        Gets the name of the subparser used to handle these plugins.
+        """
+        return "plugins"
+
+    @staticmethod
+    def __list_filter_type(argument):
+        test_argument = argument.replace("*", "").replace("?", "")
+        if PluginManager.__filter_regex.match(test_argument):
+            return argument
+        raise argparse.ArgumentTypeError(
+            f"Value '{argument}' is not a valid pattern for an id or a name."
+        )
+
+    @staticmethod
+    def __info_filter_type(argument):
+        if PluginManager.__id_regex.match(argument) or PluginManager.__name_regex.match(
+            argument
+        ):
+            return argument
+        raise argparse.ArgumentTypeError(
+            f"Value '{argument}' is not a valid id or name."
+        )
+
+    @staticmethod
+    def add_argparse_subparser(subparsers):
+        """
+        Populate the argparse tree to allow for plugin support.
+        """
+
+        new_sub_parser = subparsers.add_parser(
+            PluginManager.argparse_subparser_name(), help="plugin commands"
+        )
+        PluginManager.__argparse_subparser = new_sub_parser
+        plugin_subparsers = new_sub_parser.add_subparsers(
+            dest=PluginManager.__root_subparser_name
+        )
+
+        sub_sub_parser = plugin_subparsers.add_parser(
+            "list", help="list the available plugins"
+        )
+        sub_sub_parser.add_argument(
+            dest="list_filter",
+            default=None,
+            help="filter",
+            nargs="?",
+            type=PluginManager.__list_filter_type,
+        )
+        sub_sub_parser = plugin_subparsers.add_parser(
+            "info", help="information of specific plugins"
+        )
+        sub_sub_parser.add_argument(
+            dest="info_filter",
+            default=None,
+            type=PluginManager.__info_filter_type,
+            help="an id",
+        )
+
+    # pylint: disable=too-many-locals
+    def __handle_argparse_subparser_list(self, args):
+        list_re = None
+        if args.list_filter:
+            list_re = re.compile(
+                "^" + args.list_filter.replace("*", ".*").replace("?", ".") + "$"
+            )
+
+        show_rows = []
+        for next_plugin_id in self.all_plugin_ids:
+            is_debug = next_plugin_id.startswith("md9")
+            next_plugin_list = []
+            for next_plugin in self.__registered_plugins:
+                if next_plugin.plugin_id == next_plugin_id:
+                    next_plugin_list.append(next_plugin)
+            assert len(next_plugin_list) == 1
+            next_plugin = next_plugin_list[0]
+            does_match = True
+            if list_re:
+                does_match = list_re.match(next_plugin_id)
+                if not does_match:
+                    for next_name in next_plugin.plugin_names:
+                        does_match = list_re.match(next_name)
+                        if does_match:
+                            break
+            if not is_debug and does_match:
+                is_enabled_now = next_plugin in self.__enabled_plugins
+                display_row = [
+                    next_plugin_id,
+                    ", ".join(next_plugin.plugin_names),
+                    str(next_plugin.plugin_enabled_by_default),
+                    str(is_enabled_now),
+                ]
+                show_rows.append(display_row)
+
+        headers = ["id", "names", "enabled (default)", "enabled (current)"]
+        table = columnar(show_rows, headers, no_borders=True)
+        split_rows = table.split("\n")
+        new_rows = []
+        for next_row in split_rows:
+            new_rows.append(next_row.rstrip())
+        print("\n".join(new_rows))
+
+    # pylint: enable=too-many-locals
+
+    def __handle_argparse_subparser_info(self, args):
+        found_plugin = list(
+            filter(
+                lambda x: args.info_filter in x.plugin_identifiers,
+                self.__registered_plugins,
+            )
+        )
+        if not found_plugin:
+            print(
+                f"Unable to find a plugin with an id or name of '{args.info_filter}'."
+            )
+            return 1
+
+        found_plugin = found_plugin[0]
+        print("Id:" + found_plugin.plugin_id)
+        print("Name(s):" + ",".join(found_plugin.plugin_names))
+        print("Description:" + found_plugin.plugin_description)
+        return 0
+
+    def handle_argparse_subparser(self, args):
+        """
+        Handle the parsing for this subparser.
+        """
+        subparser_value = getattr(args, PluginManager.__root_subparser_name)
+        return_code = 0
+        if subparser_value == "list":
+            self.__handle_argparse_subparser_list(args)
+        elif subparser_value == "info":
+            return_code = self.__handle_argparse_subparser_info(args)
+        else:
+            PluginManager.__argparse_subparser.print_help()
+            sys.exit(2)
+        return return_code
 
     # pylint: disable=too-many-arguments
     def log_scan_failure(
@@ -463,10 +621,8 @@ class PluginManager:
                 next_plugin_module, plugin_class_name, next_plugin_file
             )
 
-    # pylint: disable=too-many-arguments
     def __determine_if_plugin_enabled(
         self,
-        default_enabled_state,
         plugin_object,
         command_line_enabled_rules,
         command_line_disabled_rules,
@@ -519,10 +675,12 @@ class PluginManager:
         if new_value is None:
             LOGGER.debug(
                 "No other enable state found, setting to default of '%s'.",
-                str(default_enabled_state),
+                str(plugin_object.plugin_enabled_by_default),
             )
 
-        return default_enabled_state if new_value is None else new_value
+        return (
+            plugin_object.plugin_enabled_by_default if new_value is None else new_value
+        )
 
     # pylint: enable=too-many-arguments
 
@@ -586,9 +744,10 @@ class PluginManager:
             plugin_name,
             plugin_description,
             plugin_instance,
+            plugin_enabled_by_default,
             instance_file_name,
         )
-        return plugin_object, plugin_enabled_by_default
+        return plugin_object
 
     # pylint: disable=too-many-arguments
     def __register_individual_plugin(
@@ -604,21 +763,35 @@ class PluginManager:
         Register an individual plugin for use.
         """
 
-        plugin_object, plugin_enabled_by_default = self.__get_plugin_details(
-            plugin_instance, instance_file_name
-        )
+        plugin_object = self.__get_plugin_details(plugin_instance, instance_file_name)
 
-        for next_key in plugin_object.plugin_identifiers:
+        next_key = plugin_object.plugin_id
+        if not PluginManager.__id_regex.match(next_key):
+            raise ValueError(
+                f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as id is not a valid id in the form 'aannn' or 'aaannn'."
+            )
+
+        if next_key in all_ids:
+            found_plugin = all_ids[next_key]
+            raise ValueError(
+                f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as plugin '{found_plugin.plugin_file_name}' is already registered with that id."
+            )
+        all_ids[next_key] = plugin_object
+
+        for next_key in plugin_object.plugin_names:
+            if not PluginManager.__name_regex.match(next_key):
+                raise ValueError(
+                    f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as name is not a valid name in the form 'an-an'."
+                )
             if next_key in all_ids:
                 found_plugin = all_ids[next_key]
                 raise ValueError(
-                    f"Unable to register plugin '{instance_file_name}' with name/id '{next_key}' as plugin '{found_plugin.plugin_file_name}' is already registered with that name/id."
+                    f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as plugin '{found_plugin.plugin_file_name}' is already registered with that name."
                 )
             all_ids[next_key] = plugin_object
 
         self.__registered_plugins.append(plugin_object)
         if self.__determine_if_plugin_enabled(
-            plugin_enabled_by_default,
             plugin_object,
             command_line_enabled_rules,
             command_line_disabled_rules,

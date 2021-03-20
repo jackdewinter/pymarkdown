@@ -18,6 +18,7 @@ pytest-html = "*"
 snakeviz = "*"
 typing-extensions = "*"
 typed-ast = "==1.4.2"
+columnar = "*"
 
 [requires]
 python_version = "3.8"

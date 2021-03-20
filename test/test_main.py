@@ -38,7 +38,7 @@ Lint any found Markdown files.
 
 positional arguments:
   {plugins,scan,version}
-    plugins             B command
+    plugins             plugin commands
     scan                scan the Markdown files in the specified paths
     version             version of the application
 
@@ -90,7 +90,7 @@ Lint any found Markdown files.
 
 positional arguments:
   {plugins,scan,version}
-    plugins             B command
+    plugins             plugin commands
     scan                scan the Markdown files in the specified paths
     version             version of the application
 
