@@ -17,7 +17,7 @@ class RuleMd012(Plugin):
             # whitespace, blank_lines
             plugin_name="no-multiple-blanks",
             plugin_id="MD012",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Multiple consecutive blank lines",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md012---multiple-consecutive-blank-lines
         # Parameters: maximum (number; default 1)

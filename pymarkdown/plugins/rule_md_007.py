@@ -17,6 +17,6 @@ class RuleMd007(Plugin):
             # bullet, ul, indentation
             plugin_name="ul-indent",
             plugin_id="MD007",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Unordered list indentation",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md007---unordered-list-indentation

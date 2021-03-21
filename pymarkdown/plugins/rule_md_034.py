@@ -17,6 +17,6 @@ class RuleMd034(Plugin):
             # links, url
             plugin_name="no-bare-urls",
             plugin_id="MD034",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Bare URL used",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md034---bare-url-used

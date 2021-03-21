@@ -17,6 +17,6 @@ class RuleMd039(Plugin):
             # whitespace, links
             plugin_name="no-space-in-links",
             plugin_id="MD039",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Spaces inside link text",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md039---spaces-inside-link-text

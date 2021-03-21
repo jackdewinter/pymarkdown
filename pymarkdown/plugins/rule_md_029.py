@@ -17,7 +17,7 @@ class RuleMd029(Plugin):
             # ol
             plugin_name="ol-prefix",
             plugin_id="MD029",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Ordered list item prefix",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md029---ordered-list-item-prefix
         # Parameters: style ("one", "ordered", "one_or_ordered", "zero"; default "one_or_ordered")

@@ -17,6 +17,6 @@ class RuleMd005(Plugin):
             # bullet, ul, indentation
             plugin_name="list-indent",
             plugin_id="MD005",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Inconsistent indentation for list items at the same level",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md005---inconsistent-indentation-for-list-items-at-the-same-level

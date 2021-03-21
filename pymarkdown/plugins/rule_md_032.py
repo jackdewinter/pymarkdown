@@ -17,6 +17,6 @@ class RuleMd032(Plugin):
             # bullet, ul, ol, blank_lines
             plugin_name="blanks-around-lists",
             plugin_id="MD032",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Lists should be surrounded by blank lines",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md032---lists-should-be-surrounded-by-blank-lines

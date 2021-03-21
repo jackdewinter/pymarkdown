@@ -17,7 +17,7 @@ class RuleMd009(Plugin):
             # whitespace
             plugin_name="no-trailing-spaces",
             plugin_id="MD009",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Trailing spaces",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md007---unordered-list-indentation
         # Parameters: br_spaces, list_item_empty_lines, strict (number; default 2, boolean; default false, boolean; default false)

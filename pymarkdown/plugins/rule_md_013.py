@@ -17,7 +17,7 @@ class RuleMd013(Plugin):
             # line_length
             plugin_name="line-length",
             plugin_id="MD013",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Line length",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md013---line-length
         # Parameters: line_length, heading_line_length, code_block_line_length, code_blocks, tables, headings, headers, strict (number; default 80, boolean; default true)

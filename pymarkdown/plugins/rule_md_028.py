@@ -17,6 +17,6 @@ class RuleMd028(Plugin):
             # blockquote, whitespace
             plugin_name="no-blanks-blockquote",
             plugin_id="MD028",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Blank line inside blockquote",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md028---blank-line-inside-blockquote

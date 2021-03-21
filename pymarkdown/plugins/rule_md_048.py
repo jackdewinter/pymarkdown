@@ -17,7 +17,7 @@ class RuleMd048(Plugin):
             # code
             plugin_name="code-fence-style",
             plugin_id="MD048",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Code fence style",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md048---code-fence-style
         # Parameters: style ("consistent", "tilde", "backtick"; default "consistent")

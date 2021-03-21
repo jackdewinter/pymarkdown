@@ -17,6 +17,6 @@ class RuleMd043(Plugin):
             # headings, headers
             plugin_name="required-headings,required-headers",
             plugin_id="MD043",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Required heading structure",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md043---required-heading-structure

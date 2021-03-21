@@ -17,6 +17,6 @@ class RuleMd040(Plugin):
             # code, language
             plugin_name="fenced-code-language",
             plugin_id="MD040",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Fenced code blocks should have a language specified",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md040---fenced-code-blocks-should-have-a-language-specified

@@ -17,6 +17,6 @@ class RuleMd011(Plugin):
             # links
             plugin_name="no-reversed-links",
             plugin_id="MD011",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Reversed link syntax",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md011---reversed-link-syntax

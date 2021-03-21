@@ -17,6 +17,6 @@ class RuleMd014(Plugin):
             # code
             plugin_name="commands-show-output",
             plugin_id="MD014",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Dollar signs used before commands without showing output",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md014---dollar-signs-used-before-commands-without-showing-output

@@ -17,6 +17,6 @@ class RuleMd027(Plugin):
             # blockquote, whitespace, indentation
             plugin_name="no-multiple-space-blockquote",
             plugin_id="MD027",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Multiple spaces after blockquote symbol",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md027---multiple-spaces-after-blockquote-symbol

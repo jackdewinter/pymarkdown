@@ -648,16 +648,16 @@ def test_markdown_with_plugins_list_only():
   md002  first-heading-h1, first-header-  False              False
          h1
   md003  heading-style, header-style      True               True
-  md004  ul-style                         True               True
-  md005  list-indent                      True               True
+  md004  ul-style                         False              False
+  md005  list-indent                      False              False
   md006  ul-start-left                    False              False
-  md007  ul-indent                        True               True
-  md009  no-trailing-spaces               True               True
-  md010  no-hard-tabs                     True               True
-  md011  no-reversed-links                True               True
-  md012  no-multiple-blanks               True               True
-  md013  line-length                      True               True
-  md014  commands-show-output             True               True
+  md007  ul-indent                        False              False
+  md009  no-trailing-spaces               False              False
+  md010  no-hard-tabs                     False              False
+  md011  no-reversed-links                False              False
+  md012  no-multiple-blanks               False              False
+  md013  line-length                      False              False
+  md014  commands-show-output             False              False
   md018  no-missing-space-atx             True               True
   md019  no-multiple-space-atx            True               True
   md020  no-missing-space-closed-atx      True               True
@@ -668,33 +668,33 @@ def test_markdown_with_plugins_list_only():
          t-left
   md024  no-duplicate-heading, no-duplic  True               True
          ate-header
-  md025  single-title, single-h1          True               True
+  md025  single-title, single-h1          False              False
   md026  no-trailing-punctuation          True               True
-  md027  no-multiple-space-blockquote     True               True
-  md028  no-blanks-blockquote             True               True
-  md029  ol-prefix                        True               True
-  md030  list-marker-space                True               True
-  md031  blanks-around-fences             True               True
-  md032  blanks-around-lists              True               True
-  md033  no-inline-html                   True               True
-  md034  no-bare-urls                     True               True
-  md035  hr-style                         True               True
+  md027  no-multiple-space-blockquote     False              False
+  md028  no-blanks-blockquote             False              False
+  md029  ol-prefix                        False              False
+  md030  list-marker-space                False              False
+  md031  blanks-around-fences             False              False
+  md032  blanks-around-lists              False              False
+  md033  no-inline-html                   False              False
+  md034  no-bare-urls                     False              False
+  md035  hr-style                         False              False
   md036  no-emphasis-as-heading, no-emph  True               True
          asis-as-header
-  md037  no-space-in-emphasis             True               True
-  md038  no-space-in-code                 True               True
-  md039  no-space-in-links                True               True
-  md040  fenced-code-language             True               True
-  md041  first-line-heading, first-line-  True               True
+  md037  no-space-in-emphasis             False              False
+  md038  no-space-in-code                 False              False
+  md039  no-space-in-links                False              False
+  md040  fenced-code-language             False              False
+  md041  first-line-heading, first-line-  False              False
          h1
-  md042  no-empty-links                   True               True
-  md043  required-headings, required-hea  True               True
+  md042  no-empty-links                   False              False
+  md043  required-headings, required-hea  False              False
          ders
-  md044  proper-names                     True               True
-  md045  no-alt-text                      True               True
-  md046  code-block-style                 True               True
+  md044  proper-names                     False              False
+  md045  no-alt-text                      False              False
+  md046  code-block-style                 False              False
   md047  single-trailing-newline          True               True
-  md048  code-fence-style                 True               True
+  md048  code-fence-style                 False              False
 
 """
     expected_error = ""
@@ -721,10 +721,10 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
     expected_output = """
   ID     NAMES                  ENABLED (DEFAULT)  ENABLED (CURRENT)
 
-  md009  no-trailing-spaces     True               True
+  md009  no-trailing-spaces     False              False
   md019  no-multiple-space-atx  True               True
-  md029  ol-prefix              True               True
-  md039  no-space-in-links      True               True
+  md029  ol-prefix              False              False
+  md039  no-space-in-links      False              False
 
 """
     expected_error = ""
@@ -751,9 +751,9 @@ def test_markdown_with_plugins_list_and_filter_by_name_link():
     expected_output = """
   ID     NAMES              ENABLED (DEFAULT)  ENABLED (CURRENT)
 
-  md011  no-reversed-links  True               True
-  md039  no-space-in-links  True               True
-  md042  no-empty-links     True               True
+  md011  no-reversed-links  False              False
+  md039  no-space-in-links  False              False
+  md042  no-empty-links     False              False
 
 """
     expected_error = ""

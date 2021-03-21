@@ -17,6 +17,6 @@ class RuleMd037(Plugin):
             # whitespace, emphasis
             plugin_name="no-space-in-emphasis",
             plugin_id="MD037",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Spaces inside emphasis markers",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md037---spaces-inside-emphasis-markers

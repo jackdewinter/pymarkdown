@@ -17,6 +17,6 @@ class RuleMd045(Plugin):
             # accessibility, images
             plugin_name="no-alt-text",
             plugin_id="MD045",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Images should have alternate text (alt text)",
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md045---images-should-have-alternate-text-alt-text
