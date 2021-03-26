@@ -21,4 +21,6 @@ class BadConstructor(Plugin):
             plugin_id="MDE004",
             plugin_enabled_by_default=True,
             plugin_description="Plugin that has a bad constructor function.",
+            plugin_version="0.0.0",
+            plugin_interface_version=1
         )

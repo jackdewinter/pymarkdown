@@ -19,5 +19,7 @@ class RuleMd030(Plugin):
             plugin_id="MD030",
             plugin_enabled_by_default=False,
             plugin_description="Spaces after list markers",
+            plugin_version="0.0.0",
+            plugin_interface_version=1
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md030---spaces-after-list-markers
         # Parameters: ul_single, ol_single, ul_multi, ol_multi (number; default 1)

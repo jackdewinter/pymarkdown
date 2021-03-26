@@ -19,4 +19,6 @@ class RuleMd007(Plugin):
             plugin_id="MD007",
             plugin_enabled_by_default=False,
             plugin_description="Unordered list indentation",
+            plugin_version="0.0.0",
+            plugin_interface_version=1
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md007---unordered-list-indentation

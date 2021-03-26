@@ -26,6 +26,8 @@ class RuleMd002(Plugin):
             plugin_id="MD002",
             plugin_enabled_by_default=False,
             plugin_description="First heading should be a top level heading",
+            plugin_version="0.5.0",
+            plugin_interface_version=1
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md002---first-heading-should-be-a-top-level-heading
         # Parameters: level (number; default 1)
 

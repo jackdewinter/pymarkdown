@@ -18,4 +18,6 @@ class BadBooleanDetailIsInt(Plugin):
             plugin_id="MDE005",
             plugin_enabled_by_default=123,
             plugin_description="Plugin that has a bad boolean detail.",
+            plugin_version="0.0.0",
+            plugin_interface_version=1
         )

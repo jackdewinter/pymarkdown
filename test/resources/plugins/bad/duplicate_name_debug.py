@@ -1,12 +1,12 @@
 """
-Module to implement a sample plugin that has the same id as another plugin.
+Module to implement a sample plugin that has the same name as another plugin.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
-class PluginThree(Plugin):
+class DuplicateNameDebug(Plugin):
     """
-    Class to implement a sample plugin that has the same id as another plugin.
+    Class to implement a sample plugin that has the same name as another plugin.
     """
 
     def get_details(self):
@@ -15,9 +15,11 @@ class PluginThree(Plugin):
         """
         return PluginDetails(
             plugin_name="debug-only",
-            plugin_id="MD999",
+            plugin_id="MDX990",
             plugin_enabled_by_default=True,
             plugin_description="Copy of debug plugin",
+            plugin_version="0.0.0",
+            plugin_interface_version=1
         )
 
     def initialize_from_config(self):

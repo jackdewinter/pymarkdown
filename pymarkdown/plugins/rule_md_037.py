@@ -19,4 +19,6 @@ class RuleMd037(Plugin):
             plugin_id="MD037",
             plugin_enabled_by_default=False,
             plugin_description="Spaces inside emphasis markers",
+            plugin_version="0.0.0",
+            plugin_interface_version=1
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md037---spaces-inside-emphasis-markers

@@ -41,6 +41,8 @@ class RuleMd036(Plugin):
             plugin_id="MD036",
             plugin_enabled_by_default=True,
             plugin_description="Emphasis used instead of a heading",
+            plugin_version="0.5.0",
+            plugin_interface_version=1
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md036---emphasis-used-instead-of-a-heading
         # Parameters: punctuation (string; default ".,;:!?。，；：！？")
 

@@ -26,6 +26,8 @@ class RuleMd023(Plugin):
             plugin_id="MD023",
             plugin_enabled_by_default=True,
             plugin_description="Headings must start at the beginning of the line",
+            plugin_version="0.5.0",
+            plugin_interface_version=1
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md023---headings-must-start-at-the-beginning-of-the-line
 
     def starting_new_file(self):

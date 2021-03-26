@@ -25,6 +25,8 @@ class PluginOne(Plugin):
             plugin_id="MD999",
             plugin_enabled_by_default=False,
             plugin_description="Debug plugin",
+            plugin_version="0.0.0",
+            plugin_interface_version=1
         )
 
     @classmethod

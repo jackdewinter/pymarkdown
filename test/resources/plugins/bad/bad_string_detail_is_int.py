@@ -18,4 +18,6 @@ class BadStringDetailIsInt(Plugin):
             plugin_id="MDE007",
             plugin_enabled_by_default=True,
             plugin_description=123,
+            plugin_version="0.0.0",
+            plugin_interface_version=1
         )

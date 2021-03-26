@@ -18,6 +18,8 @@ class PluginTwo(Plugin):
             plugin_id="MD997",
             plugin_enabled_by_default=True,
             plugin_description="Plugin that has a mismatch between the module name and the class name.",
+            plugin_version="0.0.0",
+            plugin_interface_version=1
         )
 
     def initialize_from_config(self):

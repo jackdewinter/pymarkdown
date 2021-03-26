@@ -15,6 +15,8 @@ from pymarkdown.application_properties import ApplicationPropertiesFacade
 
 LOGGER = logging.getLogger(__name__)
 
+# pylint: disable=too-many-lines
+
 
 # pylint: disable=too-few-public-methods
 class ScanContext:
@@ -212,15 +214,33 @@ class PluginDetails:
     Class to provide details about a plugin, supplied by the plugin.
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(
-        self, plugin_id, plugin_name, plugin_description, plugin_enabled_by_default
+        self,
+        plugin_id,
+        plugin_name,
+        plugin_description,
+        plugin_enabled_by_default,
+        plugin_version,
+        plugin_interface_version
     ):
         (
             self.plugin_id,
             self.plugin_name,
             self.plugin_description,
             self.plugin_enabled_by_default,
-        ) = (plugin_id, plugin_name, plugin_description, plugin_enabled_by_default)
+            self.plugin_version,
+            self.plugin_interface_version
+        ) = (
+            plugin_id,
+            plugin_name,
+            plugin_description,
+            plugin_enabled_by_default,
+            plugin_version,
+            plugin_interface_version
+        )
+
+    # pylint: enable=too-many-arguments
 
 
 # pylint: enable=too-few-public-methods
@@ -242,6 +262,8 @@ class FoundPlugin:
         plugin_description,
         plugin_instance,
         plugin_enabled_by_default,
+        plugin_version,
+        plugin_interface_version,
         instance_file_name,
     ):
         """
@@ -253,6 +275,8 @@ class FoundPlugin:
             self.__plugin_description,
             self.__plugin_instance,
             self.__plugin_enabled_by_default,
+            self.__plugin_version,
+            self.__plugin_interface_version,
             self.__plugin_file_name,
         ) = (
             plugin_id.strip().lower(),
@@ -260,6 +284,8 @@ class FoundPlugin:
             plugin_description,
             plugin_instance,
             plugin_enabled_by_default,
+            plugin_version,
+            plugin_interface_version,
             instance_file_name,
         )
         for next_name in plugin_name.lower().split(","):
@@ -314,6 +340,20 @@ class FoundPlugin:
         return self.__plugin_file_name
 
     @property
+    def plugin_version(self):
+        """
+        Gets the version of the plugin.
+        """
+        return self.__plugin_version
+
+    @property
+    def plugin_interface_version(self):
+        """
+        Gets the interface version of the plugin.
+        """
+        return self.__plugin_interface_version
+
+    @property
     def plugin_enabled_by_default(self):
         """
         Gets a value indicating whether the plugin is enabled by default.
@@ -336,6 +376,7 @@ class PluginManager:
     __id_regex = re.compile("^[a-z]{2,3}[0-9]{3,3}$")
     __name_regex = re.compile("^[a-zA-Z0-9][a-zA-Z0-9-]*[a-zA-Z0-9]$")
     __filter_regex = re.compile("^[a-zA-Z0-9-]+$")
+    __version_regex = re.compile("^(0|[1-9]\\d*)\\.(0|[1-9]\\d*)\\.(0|[1-9]\\d*)$")
 
     def __init__(self):
         (
@@ -482,10 +523,11 @@ class PluginManager:
                     ", ".join(next_plugin.plugin_names),
                     str(next_plugin.plugin_enabled_by_default),
                     str(is_enabled_now),
+                    next_plugin.plugin_version,
                 ]
                 show_rows.append(display_row)
 
-        headers = ["id", "names", "enabled (default)", "enabled (current)"]
+        headers = ["id", "names", "enabled (default)", "enabled (current)", "version"]
         table = columnar(show_rows, headers, no_borders=True)
         split_rows = table.split("\n")
         new_rows = []
@@ -712,6 +754,17 @@ class PluginManager:
                 class_name=type(plugin_instance).__name__, field_name=field_name
             )
 
+    @classmethod
+    def __verify_integer_field(cls, plugin_instance, field_name, field_value):
+        """
+        Verify that the detail field is a valid integer.
+        """
+
+        if not isinstance(field_value, int):
+            raise BadPluginError(
+                class_name=type(plugin_instance).__name__, field_name=field_name
+            )
+
     def __get_plugin_details(self, plugin_instance, instance_file_name):
         """
         Query the plugin for details and verify that they are reasonable.
@@ -719,11 +772,20 @@ class PluginManager:
 
         try:
             instance_details = plugin_instance.get_details()
-            plugin_id, plugin_name, plugin_description, plugin_enabled_by_default = (
+            (
+                plugin_id,
+                plugin_name,
+                plugin_description,
+                plugin_enabled_by_default,
+                plugin_version,
+                plugin_interface_version
+            ) = (
                 instance_details.plugin_id,
                 instance_details.plugin_name,
                 instance_details.plugin_description,
                 instance_details.plugin_enabled_by_default,
+                instance_details.plugin_version,
+                instance_details.plugin_interface_version
             )
         except Exception as this_exception:
             raise BadPluginError(
@@ -738,6 +800,10 @@ class PluginManager:
         self.__verify_boolean_field(
             plugin_instance, "plugin_enabled_by_default", plugin_enabled_by_default
         )
+        self.__verify_string_field(plugin_instance, "plugin_version", plugin_version)
+        self.__verify_integer_field(
+            plugin_instance, "plugin_interface_version", plugin_interface_version
+        )
 
         plugin_object = FoundPlugin(
             plugin_id,
@@ -745,6 +811,8 @@ class PluginManager:
             plugin_description,
             plugin_instance,
             plugin_enabled_by_default,
+            plugin_version,
+            plugin_interface_version,
             instance_file_name,
         )
         return plugin_object
@@ -764,6 +832,11 @@ class PluginManager:
         """
 
         plugin_object = self.__get_plugin_details(plugin_instance, instance_file_name)
+
+        if plugin_object.plugin_interface_version != 1:
+            raise ValueError(
+                f"Unable to register plugin '{instance_file_name}' with an interface version ('{plugin_object.plugin_interface_version}') that is not '1'."
+            )
 
         next_key = plugin_object.plugin_id
         if not PluginManager.__id_regex.match(next_key):
@@ -789,6 +862,14 @@ class PluginManager:
                     f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as plugin '{found_plugin.plugin_file_name}' is already registered with that name."
                 )
             all_ids[next_key] = plugin_object
+        if not plugin_object.plugin_description.strip():
+            raise ValueError(
+                f"Unable to register plugin '{instance_file_name}' with a description string that is blank."
+            )
+        if not PluginManager.__version_regex.match(plugin_object.plugin_version):
+            raise ValueError(
+                f"Unable to register plugin '{instance_file_name}' with a version string that is not a valid semantic version."
+            )
 
         self.__registered_plugins.append(plugin_object)
         if self.__determine_if_plugin_enabled(

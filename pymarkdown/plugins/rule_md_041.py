@@ -19,4 +19,6 @@ class RuleMd041(Plugin):
             plugin_id="MD041",
             plugin_enabled_by_default=False,
             plugin_description="First line in file should be a top level heading",
+            plugin_version="0.0.0",
+            plugin_interface_version=1
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md041---first-line-in-file-should-be-a-top-level-heading

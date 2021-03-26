@@ -19,5 +19,7 @@ class RuleMd025(Plugin):
             plugin_id="MD025",
             plugin_enabled_by_default=False,
             plugin_description="Multiple top level headings in the same document",
+            plugin_version="0.0.0",
+            plugin_interface_version=1
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md025---multiple-top-level-headings-in-the-same-document
         # Parameters: level, front_matter_title (number; default 1, string; default "^\s*title:")

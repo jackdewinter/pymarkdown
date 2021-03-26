@@ -18,4 +18,6 @@ class BadStringDetailIsEmpty(Plugin):
             plugin_id="MDE006",
             plugin_enabled_by_default=True,
             plugin_description="",
+            plugin_version="0.0.0",
+            plugin_interface_version=1
         )

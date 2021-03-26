@@ -43,6 +43,8 @@ class RuleMd003(Plugin):
             plugin_id="MD003",
             plugin_enabled_by_default=True,
             plugin_description="Heading style",
+            plugin_version="0.5.0",
+            plugin_interface_version=1
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md003---heading-style
         # Parameters: style ("consistent", "atx", "atx_closed", "setext", "setext_with_atx", "setext_with_atx_closed"; default "consistent")
 
