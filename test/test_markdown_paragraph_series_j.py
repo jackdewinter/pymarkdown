@@ -23,7 +23,7 @@ def test_paragraph_series_j_l_bh_s_t():
         "[text(1,3):foo:]",
         "[hard-break(1,6):\\]",
         "[text(2,1):\ncom::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,19):a:]",
         "[end-para:::True]",
     ]
@@ -73,7 +73,7 @@ def test_paragraph_series_j_l_sh_s_t():
         "[text(1,3):foo:]",
         "[hard-break(1,6):  ]",
         "[text(2,1):\ncom::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,19):a:]",
         "[end-para:::True]",
     ]
@@ -123,7 +123,7 @@ def test_paragraph_series_j_l_rh_s_t():
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,13):a:]",
         "[end-para:::True]",
     ]
@@ -173,9 +173,9 @@ def test_paragraph_series_j_l_em_s_t():
         "[text(1,3):a:]",
         "[emphasis(1,4):1:*]",
         "[text(1,5):li\nnk::\n]",
-        "[end-emphasis(2,3):::False]",
+        "[end-emphasis(2,3)::]",
         "[text(2,4):a:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,20):a:]",
         "[end-para:::True]",
     ]
@@ -222,8 +222,8 @@ def test_paragraph_series_j_l_em_t():
         '[link(1,2):inline:/uri:title::::*link*:False:":: :]',
         "[emphasis(1,3):1:*]",
         "[text(1,4):link:]",
-        "[end-emphasis(1,8):::False]",
-        "[end-link:::False]",
+        "[end-emphasis(1,8)::]",
+        "[end-link::]",
         "[text(1,24):a:]",
         "[end-para:::True]",
     ]
@@ -271,7 +271,7 @@ def test_paragraph_series_j_l_ua_t():
         "[text(1,3):a:]",
         "[uri-autolink(1,4):http://google.com]",
         "[text(1,23):a:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,39):a:]",
         "[end-para:::True]",
     ]
@@ -321,7 +321,7 @@ def test_paragraph_series_j_l_ea_t():
         "[text(1,3):a:]",
         "[email-autolink(1,4):foo@r.com]",
         "[text(1,15):a:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,31):a:]",
         "[end-para:::True]",
     ]
@@ -369,7 +369,7 @@ def test_paragraph_series_j_l_cs_t():
         "[text(1,3):a:]",
         "[icode-span(1,4):li nk:`::]",
         "[text(1,11):a:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,27):a:]",
         "[end-para:::True]",
     ]
@@ -417,7 +417,7 @@ def test_paragraph_series_j_l_rh_t():
         "[text(1,3):a:]",
         "[raw-html(1,4):li nk]",
         "[text(1,11):a:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,27):a:]",
         "[end-para:::True]",
     ]
@@ -464,7 +464,7 @@ def test_paragraph_series_j_l_cs_s_t():
         "[text(1,3):a:]",
         "[icode-span(1,4):li\a\n\a \ank:`::]",
         "[text(2,4):a:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,20):a:]",
         "[end-para:::True]",
     ]
@@ -534,7 +534,7 @@ o](</my url>)a"""
         "[text(1,1):a:]",
         "[link(1,2):inline:/my%20url::/my url:::fo\no:True::::]",
         "[text(1,3):fo\no::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,14):a:]",
         "[end-para:::True]",
     ]
@@ -582,7 +582,7 @@ o](</my url> "title")a"""
         "[text(1,1):a:]",
         '[link(1,2):inline:/my%20url:title:/my url:::fo\no:True:":: :]',
         "[text(1,3):fo\no::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,22):a:]",
         "[end-para:::True]",
     ]
@@ -627,7 +627,7 @@ def test_paragraph_series_j_l_nt_t_t():
         "[text(1,1):a:]",
         "[link(1,2):inline:/my%20url::/my url:::foo:True::::]",
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,18):a:]",
         "[end-para:::True]",
     ]
@@ -671,7 +671,7 @@ def test_paragraph_series_j_i_t_t():
         "[text(1,1):a:]",
         '[link(1,2):inline:/my%20url:title:/my url:::foo:True:":: :]',
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,26):a:]",
         "[end-para:::True]",
     ]
@@ -694,7 +694,7 @@ def test_paragraph_series_j_l_t_t_s():
         "[text(1,1):a:]",
         '[link(1,2):inline:/url:title::::foo:False:":: :]',
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,21):a\nb::\n]",
         "[end-para:::True]",
     ]
@@ -741,7 +741,7 @@ def test_paragraph_series_j_l_t_cs_s():
         "[text(1,1):a:]",
         '[link(1,2):inline:/url:title::::link:False:":: :]',
         "[text(1,3):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[icode-span(1,22):a\a\n\a \ab:`::]",
         "[end-para:::True]",
     ]
@@ -788,7 +788,7 @@ def test_paragraph_series_j_l_t_cs():
         "[text(1,1):a:]",
         '[link(1,2):inline:/url:title::::link:False:":: :]',
         "[text(1,3):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[icode-span(1,22):ab:`::]",
         "[end-para:::True]",
     ]
@@ -835,7 +835,7 @@ def test_paragraph_series_j_l_t_rh_s():
         "[text(1,1):a:]",
         '[link(1,2):inline:/url:title::::link:False:":: :]',
         "[text(1,3):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[raw-html(1,22):a\nb]",
         "[end-para:::True]",
     ]
@@ -883,7 +883,7 @@ def test_paragraph_series_j_l_t_rh():
         "[text(1,1):a:]",
         '[link(1,2):inline:/url:title::::link:False:":: :]',
         "[text(1,3):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[raw-html(1,22):a b]",
         "[end-para:::True]",
     ]
@@ -929,10 +929,10 @@ def test_paragraph_series_j_l_t_em_s():
         "[text(1,1):a:]",
         "[link(1,2):inline:/url:::::link:False::::]",
         "[text(1,3):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[emphasis(1,14):1:*]",
         "[text(1,15):a\nb::\n]",
-        "[end-emphasis(2,2):::False]",
+        "[end-emphasis(2,2)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<a href="/url">link</a><em>a
@@ -957,7 +957,7 @@ def test_paragraph_series_j_i_t_em_s():
         "[image(1,2):inline:/url::link::::link:False::::]",
         "[emphasis(1,15):1:*]",
         "[text(1,16):a\nb::\n]",
-        "[end-emphasis(2,2):::False]",
+        "[end-emphasis(2,2)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<img src="/url" alt="link" /><em>a
@@ -980,10 +980,10 @@ def test_paragraph_series_j_l_t_em():
         "[text(1,1):a:]",
         "[link(1,2):inline:/url:::::link:False::::]",
         "[text(1,3):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[emphasis(1,14):1:*]",
         "[text(1,15):a b:]",
-        "[end-emphasis(1,18):::False]",
+        "[end-emphasis(1,18)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<a href="/url">link</a><em>a b</em></p>"""
@@ -1007,7 +1007,7 @@ def test_paragraph_series_j_i_t_em():
         "[image(1,2):inline:/url::link::::link:False::::]",
         "[emphasis(1,15):1:*]",
         "[text(1,16):a b:]",
-        "[end-emphasis(1,19):::False]",
+        "[end-emphasis(1,19)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<img src="/url" alt="link" /><em>a b</em></p>"""
@@ -1031,7 +1031,7 @@ def test_paragraph_series_j_em_l_t_t():
         "[text(1,2):*:]",
         '[link(1,3):inline:/uri:title::::link:False:":: :]',
         "[text(1,4):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,23):*:]",
         "[text(1,24):a:]",
         "[end-para:::True]",
@@ -1079,7 +1079,7 @@ def test_paragraph_series_j_l_t_ua():
         "[text(1,1):a:]",
         '[link(1,2):inline:/url:title::::link:False:":: :]',
         "[text(1,3):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[uri-autolink(1,22):http://google.com]",
         "[text(1,41):a:]",
         "[end-para:::True]",
@@ -1125,7 +1125,7 @@ def test_paragraph_series_j_l_t_ea():
         "[text(1,1):a:]",
         '[link(1,2):inline:/url:title::::link:False:":: :]',
         "[text(1,3):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[email-autolink(1,22):foo@r.com]",
         "[text(1,33):a:]",
         "[end-para:::True]",
@@ -1171,7 +1171,7 @@ def test_paragraph_series_j_l_t_bh():
         "[text(1,1):a:]",
         '[link(1,2):inline:/url:title::::link:False:":: :]',
         "[text(1,3):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[hard-break(1,22):\\]",
         "[text(2,1):\na::\n]",
         "[end-para:::True]",
@@ -1219,7 +1219,7 @@ def test_paragraph_series_j_l_t_sh():
         "[text(1,1):a:]",
         '[link(1,2):inline:/url:title::::link:False:":: :]',
         "[text(1,3):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[hard-break(1,22):   ]",
         "[text(2,1):\na::\n]",
         "[end-para:::True]",

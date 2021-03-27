@@ -32,6 +32,7 @@ class ContainerMarkdownToken(MarkdownToken):
             line_number=line_number,
             column_number=column_number,
             position_marker=position_marker,
+            requires_end_token=True,
         )
 
 

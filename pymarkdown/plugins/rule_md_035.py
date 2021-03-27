@@ -20,6 +20,6 @@ class RuleMd035(Plugin):
             plugin_enabled_by_default=False,
             plugin_description="Horizontal rule style",
             plugin_version="0.0.0",
-            plugin_interface_version=1
+            plugin_interface_version=1,
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md035---horizontal-rule-style
         # Parameters: style ("consistent", "---", "***", or other string specifying the horizontal rule; default "consistent")

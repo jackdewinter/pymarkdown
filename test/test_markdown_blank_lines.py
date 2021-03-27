@@ -33,7 +33,7 @@ aaa
         "[BLANK(5,1):]",
         "[atx(6,1):1:0:]",
         "[text(6,3):aaa: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(7,1):]",
         "[BLANK(8,1):  ]",
     ]

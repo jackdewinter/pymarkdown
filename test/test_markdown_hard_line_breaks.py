@@ -167,7 +167,7 @@ bar*""".replace(
         "[text(1,2):foo:]",
         "[hard-break(1,5):  ]",
         "[text(2,1):\nbar::\n]",
-        "[end-emphasis(2,4):::False]",
+        "[end-emphasis(2,4)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>foo<br />
@@ -194,7 +194,7 @@ bar*""".replace(
         "[text(1,2):foo:]",
         "[hard-break(1,5):\\]",
         "[text(2,1):\nbar::\n]",
-        "[end-emphasis(2,4):::False]",
+        "[end-emphasis(2,4)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>foo<br />
@@ -345,7 +345,7 @@ def test_hard_line_breaks_667():
 
     # Arrange
     source_markdown = """### foo\\"""
-    expected_tokens = ["[atx(1,1):3:0:]", "[text(1,5):foo\\: ]", "[end-atx:::False]"]
+    expected_tokens = ["[atx(1,1):3:0:]", "[text(1,5):foo\\: ]", "[end-atx::]"]
     expected_gfm = """<h3>foo\\</h3>"""
 
     # Act & Assert
@@ -360,7 +360,7 @@ def test_hard_line_breaks_668():
 
     # Arrange
     source_markdown = """### foo  """
-    expected_tokens = ["[atx(1,1):3:0:]", "[text(1,5):foo: ]", "[end-atx:  ::False]"]
+    expected_tokens = ["[atx(1,1):3:0:]", "[text(1,5):foo: ]", "[end-atx:  :]"]
     expected_gfm = """<h3>foo</h3>"""
 
     # Act & Assert
@@ -575,7 +575,7 @@ def test_hard_line_breaks_extra_03d():
         "[text(2,1):\n::\n]",
         "[emphasis(2,1):1:*]",
         "[text(2,2):This:]",
-        "[end-emphasis(2,6):::False]",
+        "[end-emphasis(2,6)::]",
         "[text(2,7): is new.:]",
         "[end-para:::True]",
     ]
@@ -602,7 +602,7 @@ def test_hard_line_breaks_extra_03e():
         "[text(2,1):\n::\n]",
         "[link(2,1):inline:foo.com:::::This:False::::]",
         "[text(2,2):This:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,16): is new.:]",
         "[end-para:::True]",
     ]
@@ -860,7 +860,7 @@ def test_hard_line_breaks_extra_04d():
         "[text(2,1):\n::\n]",
         "[emphasis(2,1):1:*]",
         "[text(2,2):This:]",
-        "[end-emphasis(2,6):::False]",
+        "[end-emphasis(2,6)::]",
         "[text(2,7): is new.:]",
         "[end-para:::True]",
     ]
@@ -889,7 +889,7 @@ def test_hard_line_breaks_extra_04e():
         "[text(2,1):\n::\n]",
         "[link(2,1):inline:foo.com:::::This:False::::]",
         "[text(2,2):This:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,16): is new.:]",
         "[end-para:::True]",
     ]
@@ -1027,7 +1027,7 @@ def test_hard_line_breaks_extra_05x():
         "[text(2,4):\n::\n]",
         "[emphasis(2,4):1:*]",
         "[text(2,5):this:]",
-        "[end-emphasis(2,9):::False]",
+        "[end-emphasis(2,9)::]",
         "[text(2,10): is new.:]",
         "[end-para:::True]",
     ]
@@ -1054,7 +1054,7 @@ def test_hard_line_breaks_extra_05a():
         "[text(2,4):\n::\n]",
         "[emphasis(2,4):1:*]",
         "[text(2,5):this:]",
-        "[end-emphasis(2,9):::False]",
+        "[end-emphasis(2,9)::]",
         "[text(2,10): is new.:]",
         "[end-para:::True]",
     ]

@@ -24,15 +24,15 @@ Foo *bar*
         "[text(1,1):Foo :]",
         "[emphasis(1,5):1:*]",
         "[text(1,6):bar:]",
-        "[end-emphasis(1,9):::False]",
-        "[end-setext:::False]",
+        "[end-emphasis(1,9)::]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[setext(5,1):-:9::(4,1)]",
         "[text(4,1):Foo :]",
         "[emphasis(4,5):1:*]",
         "[text(4,6):bar:]",
-        "[end-emphasis(4,9):::False]",
-        "[end-setext:::False]",
+        "[end-emphasis(4,9)::]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h1>Foo <em>bar</em></h1>
 <h2>Foo <em>bar</em></h2>"""
@@ -56,8 +56,8 @@ baz*
         "[text(1,1):Foo :]",
         "[emphasis(1,5):1:*]",
         "[text(1,6):bar\nbaz::\n]",
-        "[end-emphasis(2,4):::False]",
-        "[end-setext:::False]",
+        "[end-emphasis(2,4)::]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h1>Foo <em>bar
 baz</em></h1>"""
@@ -81,8 +81,8 @@ baz*\t
         "[text(1,3):Foo :]",
         "[emphasis(1,7):1:*]",
         "[text(1,8):bar\nbaz::\n]",
-        "[end-emphasis(2,4):::False]",
-        "[end-setext:::False]",
+        "[end-emphasis(2,4)::]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h1>Foo <em>bar
 baz</em></h1>"""
@@ -105,7 +105,7 @@ def test_setext_headings_052a():
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
         "[text(1,3):a\nb\nc::\n  \x02\n  \x02]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h1>a
 b
@@ -131,7 +131,7 @@ def test_setext_headings_052b():
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
         "[text(1,3):a\nb\nc:: \n  \x02 \n  \x02]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h1>a
 b
@@ -159,7 +159,7 @@ def test_setext_headings_052c():
         "[text(1,3):a\nb:: \n  \x02]",
         "[hard-break(2,4):  ]",
         "[text(3,3):\nc::\n  ]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h1>a
 b<br />
@@ -187,9 +187,9 @@ def test_setext_headings_052d():
         "[text(1,3):a\n:: \n  \x02]",
         "[emphasis(2,3):1:*]",
         "[text(2,4):b:]",
-        "[end-emphasis(2,5):::False]",
+        "[end-emphasis(2,5)::]",
         "[text(2,6):\nc:: \n  \x02]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h1>a
 <em>b</em>
@@ -217,10 +217,10 @@ def test_setext_headings_052e():
         "[text(1,3):a\n:: \n  \x02]",
         "[emphasis(2,3):1:*]",
         "[text(2,4):b:]",
-        "[end-emphasis(2,5):::False]",
+        "[end-emphasis(2,5)::]",
         "[hard-break(2,6):  ]",
         "[text(3,3):\nc::\n  ]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h1>a
 <em>b</em><br />
@@ -250,15 +250,15 @@ def test_setext_headings_052ea():
         "[text(1,3):a\n:: \n  \x02]",
         "[emphasis(2,3):1:*]",
         "[text(2,4):b:]",
-        "[end-emphasis(2,5):::False]",
+        "[end-emphasis(2,5)::]",
         "[hard-break(2,6):  ]",
         "[text(3,3):\na\n::\n  \x02 \n  \x02]",
         "[emphasis(4,3):1:*]",
         "[text(4,4):b:]",
-        "[end-emphasis(4,5):::False]",
+        "[end-emphasis(4,5)::]",
         "[hard-break(4,6):  ]",
         "[text(5,3):\nc::\n  ]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h1>a
 <em>b</em><br />
@@ -292,20 +292,20 @@ c
         "[text(1,2):a\n:: \n \x02]",
         "[emphasis(2,2):1:*]",
         "[text(2,3):b:]",
-        "[end-emphasis(2,4):::False]",
+        "[end-emphasis(2,4)::]",
         "[hard-break(2,5):  ]",
         "[text(3,3):\na\n::\n  \x02 \n  \x02]",
         "[emphasis(4,3):1:*]",
         "[text(4,4):b:]",
-        "[end-emphasis(4,5):::False]",
+        "[end-emphasis(4,5)::]",
         "[hard-break(4,6):  ]",
         "[text(5,4):\na\n::\n   \x02 \n   \x02]",
         "[emphasis(6,4):1:*]",
         "[text(6,5):b:]",
-        "[end-emphasis(6,6):::False]",
+        "[end-emphasis(6,6)::]",
         "[hard-break(6,7):  ]",
         "[text(7,1):\nc::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h1>a
 <em>b</em><br />
@@ -337,10 +337,10 @@ def test_setext_headings_052f():
         "[text(1,3):a\n:: \n   \x02]",
         "[emphasis(2,4):1:*]",
         "[text(2,5):b:]",
-        "[end-emphasis(2,6):::False]",
+        "[end-emphasis(2,6)::]",
         "[hard-break(2,7):  ]",
         "[text(3,2):\nc::\n ]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h1>a
 <em>b</em><br />
@@ -365,11 +365,11 @@ Foo
     expected_tokens = [
         "[setext(2,1):-:25::(1,1)]",
         "[text(1,1):Foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[setext(5,1):=:1::(4,1)]",
         "[text(4,1):Foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>Foo</h2>
 <h1>Foo</h1>"""
@@ -396,15 +396,15 @@ def test_setext_headings_054():
     expected_tokens = [
         "[setext(2,1):-:3:   :(1,4)]",
         "[text(1,4):Foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[setext(5,1):-:5:  :(4,3)]",
         "[text(4,3):Foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(6,1):]",
         "[setext(8,3):=:3:  :(7,3)]",
         "[text(7,3):Foo:]",
-        "[end-setext:  ::False]",
+        "[end-setext:  :]",
     ]
     expected_gfm = """<h2>Foo</h2>
 <h2>Foo</h2>
@@ -455,7 +455,7 @@ def test_setext_headings_056():
     expected_tokens = [
         "[setext(2,4):-:4::(1,1)]",
         "[text(1,1):Foo:]",
-        "[end-setext:   :      :False]",
+        "[end-setext:   :      ]",
     ]
     expected_gfm = """<h2>Foo</h2>"""
 
@@ -529,7 +529,7 @@ def test_setext_headings_059():
     expected_tokens = [
         "[setext(2,1):-:5::(1,1):  ]",
         "[text(1,1):Foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>Foo</h2>"""
 
@@ -549,7 +549,7 @@ def test_setext_headings_060():
     expected_tokens = [
         "[setext(2,1):-:4::(1,1)]",
         "[text(1,1):Foo\\:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>Foo\\</h2>"""
 
@@ -574,14 +574,14 @@ of dashes"/>"""
     expected_tokens = [
         "[setext(2,1):-:4::(1,1)]",
         "[text(1,1):`Foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[para(3,1):]",
         "[text(3,1):`:]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[setext(6,1):-:3::(5,1)]",
         '[text(5,1):\a<\a&lt;\aa title=\a"\a&quot;\aa lot:]',
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[para(7,1):]",
         '[text(7,1):of dashes\a"\a&quot;\a/\a>\a&gt;\a:]',
         "[end-para:::True]",
@@ -713,7 +713,7 @@ Bar
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):Foo\nBar::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>Foo
 Bar</h2>"""
@@ -739,10 +739,10 @@ Baz"""
         "[tbreak(1,1):-::---]",
         "[setext(3,1):-:3::(2,1)]",
         "[text(2,1):Foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[setext(5,1):-:3::(4,1)]",
         "[text(4,1):Bar:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[para(6,1):]",
         "[text(6,1):Baz:]",
         "[end-para:::True]",
@@ -907,7 +907,7 @@ def test_setext_headings_072():
     expected_tokens = [
         "[setext(2,1):-:6::(1,1)]",
         "[text(1,1):\\\b\a>\a&gt;\a foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>&gt; foo</h2>"""
 
@@ -935,7 +935,7 @@ baz"""
         "[BLANK(2,1):]",
         "[setext(4,1):-:3::(3,1)]",
         "[text(3,1):bar:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[para(5,1):]",
         "[text(5,1):baz:]",
         "[end-para:::True]",

@@ -20,5 +20,5 @@ class RuleMd043(Plugin):
             plugin_enabled_by_default=False,
             plugin_description="Required heading structure",
             plugin_version="0.0.0",
-            plugin_interface_version=1
+            plugin_interface_version=1,
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md043---required-heading-structure

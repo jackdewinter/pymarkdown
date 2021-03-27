@@ -19,7 +19,7 @@ def test_inline_links_493x():
         "[para(1,1):]",
         '[link(1,1):inline:/uri:title::::link:False:":: :]',
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/uri" title="title">link</a></p>"""
@@ -40,7 +40,7 @@ def test_inline_links_493a():
         "[para(1,1):: ]",
         '[link(1,1):inline:/uri:title::::link:False:":: :]',
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/uri" title="title">link</a></p>"""
@@ -61,7 +61,7 @@ def test_inline_links_493b():
         "[para(1,1):]",
         '[link(1,1):inline:/uri:title::::link:False:":: :]',
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,21): abc:]",
         "[end-para:::True]",
     ]
@@ -83,7 +83,7 @@ def test_inline_links_494():
         "[para(1,1):]",
         "[link(1,1):inline:/uri:::::link:False::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/uri">link</a></p>"""
@@ -104,7 +104,7 @@ def test_inline_links_495():
         "[para(1,1):]",
         "[link(1,1):inline::::::link:::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="">link</a></p>"""
@@ -125,7 +125,7 @@ def test_inline_links_496():
         "[para(1,1):]",
         "[link(1,1):inline::::::link:True::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="">link</a></p>"""
@@ -170,7 +170,7 @@ def test_inline_links_497a():
         "[para(1,1):]",
         "[link(1,1):shortcut:/url:title::::link:None::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,7):(:]",
         "[end-para:::True]",
         "[BLANK(2,1):        ]",
@@ -194,7 +194,7 @@ def test_inline_links_498():
         "[para(1,1):]",
         "[link(1,1):inline:/my%20uri::/my uri:::link:True::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/my%20uri">link</a></p>"""
@@ -265,7 +265,7 @@ def test_inline_links_501():
         "[para(1,1):]",
         "[link(1,1):inline:b)c:::::a:True::::]",
         "[text(1,2):a:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="b)c">a</a></p>"""
@@ -344,7 +344,7 @@ def test_inline_links_504():
         "[para(1,1):]",
         "[link(1,1):inline:(foo)::\\(foo\\):::link:False::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="(foo)">link</a></p>"""
@@ -365,7 +365,7 @@ def test_inline_links_505():
         "[para(1,1):]",
         "[link(1,1):inline:foo(and(bar)):::::link:False::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="foo(and(bar))">link</a></p>"""
@@ -386,7 +386,7 @@ def test_inline_links_506():
         "[para(1,1):]",
         "[link(1,1):inline:foo(and(bar)::foo\\(and\\(bar\\):::link:False::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="foo(and(bar)">link</a></p>"""
@@ -407,7 +407,7 @@ def test_inline_links_507():
         "[para(1,1):]",
         "[link(1,1):inline:foo(and(bar):::::link:True::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="foo(and(bar)">link</a></p>"""
@@ -472,7 +472,7 @@ def test_inline_links_508():
         "[para(1,1):]",
         "[link(1,1):inline:foo):::foo\\)\\::::link:False::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="foo):">link</a></p>"""
@@ -497,19 +497,19 @@ def test_inline_links_509():
         "[para(1,1):]",
         "[link(1,1):inline:#fragment:::::link:False::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[para(3,1):]",
         "[link(3,1):inline:http://example.com#fragment:::::link:False::::]",
         "[text(3,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[para(5,1):]",
         "[link(5,1):inline:http://example.com?foo=3#frag:::::link:False::::]",
         "[text(5,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="#fragment">link</a></p>
@@ -532,7 +532,7 @@ def test_inline_links_510():
         "[para(1,1):]",
         "[link(1,1):inline:foo%5Cbar::foo\\bar:::link:False::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="foo%5Cbar">link</a></p>"""
@@ -553,7 +553,7 @@ def test_inline_links_511():
         "[para(1,1):]",
         "[link(1,1):inline:foo%20b%C3%A4::foo%20b&auml;:::link:False::::]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="foo%20b%C3%A4">link</a></p>"""
@@ -574,7 +574,7 @@ def test_inline_links_512():
         "[para(1,1):]",
         '[link(1,1):inline:%22title%22::"title":::link:False::::]',
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="%22title%22">link</a></p>"""
@@ -597,15 +597,15 @@ def test_inline_links_513():
         "[para(1,1):\n\n]",
         '[link(1,1):inline:/url:title::::link:False:":: :]',
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,21):\n::\n]",
         "[link(2,1):inline:/url:title::::link:False:':: :]",
         "[text(2,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,21):\n::\n]",
         "[link(3,1):inline:/url:title::::link:False:(:: :]",
         "[text(3,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url" title="title">link</a>
@@ -628,7 +628,7 @@ def test_inline_links_514():
         "[para(1,1):]",
         '[link(1,1):inline:/url:title &quot;&quot;::title \\"&quot;::link:False:":: :]',
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url" title="title &quot;&quot;">link</a></p>"""
@@ -649,7 +649,7 @@ def test_inline_links_515():
         "[para(1,1):]",
         '[link(1,1):inline:/url%C2%A0%22title%22::/url\u00A0"title":::link:False::::]',
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url%C2%A0%22title%22">link</a></p>"""
@@ -692,7 +692,7 @@ def test_inline_links_515c():
         "[para(1,1):]",
         "[link(1,1):inline:/url:title::::link:False:(:: :]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url" title="title">link</a></p>"""
@@ -735,7 +735,7 @@ def test_inline_links_515e():
         "[para(1,1):]",
         "[link(1,1):inline:/url:title(other)line::::link:False:(:: :]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url" title="title(other)line">link</a></p>"""
@@ -756,7 +756,7 @@ def test_inline_links_515f():
         "[para(1,1):]",
         "[link(1,1):inline:/url:title(other)line::::link:False:(:: :]",
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,32): abc:]",
         "[end-para:::True]",
     ]
@@ -822,7 +822,7 @@ def test_inline_links_517():
         "[para(1,1):]",
         '[link(1,1):inline:/url:title &quot;and&quot; title::title "and" title::link:False:\':: :]',
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = (
@@ -846,7 +846,7 @@ def test_inline_links_518():
         "[para(1,1):\n  ]",
         '[link(1,1):inline:/uri:title::::link:False:":   :\n:  ]',
         "[text(1,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/uri" title="title">link</a></p>"""
@@ -895,7 +895,7 @@ def test_inline_links_520():
         "[text(1,13):bar:]",
         "[text(1,16):]:]",
         "[text(1,17):]:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/uri">link [foo [bar]]</a></p>"""
@@ -942,7 +942,7 @@ def test_inline_links_522():
         "[text(1,2):link :]",
         "[link(1,7):inline:/uri:::::bar:False::::]",
         "[text(1,8):bar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>[link <a href="/uri">bar</a></p>"""
@@ -963,7 +963,7 @@ def test_inline_links_523():
         "[para(1,1):]",
         "[link(1,1):inline:/uri:::::link \\[bar:False::::]",
         "[text(1,2):link \\\b[bar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/uri">link [bar</a></p>"""
@@ -988,11 +988,11 @@ def test_inline_links_524():
         "[text(1,8):foo :]",
         "[emphasis(1,12):2:*]",
         "[text(1,14):bar:]",
-        "[end-emphasis(1,17):::False]",
+        "[end-emphasis(1,17)::]",
         "[text(1,19): :]",
         "[icode-span(1,20):#:`::]",
-        "[end-emphasis(1,23):::False]",
-        "[end-link:::False]",
+        "[end-emphasis(1,23)::]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/uri">link <em>foo <strong>bar</strong> <code>#</code></em></a></p>"""
@@ -1013,7 +1013,7 @@ def test_inline_links_525():
         "[para(1,1):]",
         "[link(1,1):inline:/uri:::::![moon](moon.jpg):False::::]",
         "[image(1,2):inline:moon.jpg::moon::::moon:False::::]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/uri"><img src="moon.jpg" alt="moon" /></a></p>"""
@@ -1036,7 +1036,7 @@ def test_inline_links_526():
         "[text(1,2):foo :]",
         "[link(1,6):inline:/uri:::::bar:False::::]",
         "[text(1,7):bar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,17):]:]",
         "[text(1,18):(/uri):]",
         "[end-para:::True]",
@@ -1061,7 +1061,7 @@ def test_inline_links_526a():
         "[text(1,2):foo :]",
         "[link(1,6):inline:/uri1:::::bar:False::::]",
         "[text(1,7):bar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,18):]:]",
         "[text(1,19):(/uri2):]",
         "[end-para:::True]",
@@ -1089,10 +1089,10 @@ def test_inline_links_527():
         "[text(1,8):bar :]",
         "[link(1,12):inline:/uri:::::baz:False::::]",
         "[text(1,13):baz:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,23):]:]",
         "[text(1,24):(/uri):]",
-        "[end-emphasis(1,30):::False]",
+        "[end-emphasis(1,30)::]",
         "[text(1,31):]:]",
         "[text(1,32):(/uri):]",
         "[end-para:::True]",
@@ -1120,10 +1120,10 @@ def test_inline_links_527a():
         "[text(1,8):bar :]",
         "[link(1,12):inline:/uri1:::::baz:False::::]",
         "[text(1,13):baz:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,24):]:]",
         "[text(1,25):(/uri2):]",
-        "[end-emphasis(1,32):::False]",
+        "[end-emphasis(1,32)::]",
         "[text(1,33):]:]",
         "[text(1,34):(/uri3):]",
         "[end-para:::True]",
@@ -1226,7 +1226,7 @@ def test_inline_links_529():
         "[link(1,2):inline:/uri:::::foo*:False::::]",
         "[text(1,3):foo:]",
         "[text(1,6):*:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>*<a href="/uri">foo*</a></p>"""
@@ -1249,7 +1249,7 @@ def test_inline_links_530():
         "[text(1,2):foo :]",
         "[text(1,6):*:]",
         "[text(1,7):bar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="baz*">foo *bar</a></p>"""
@@ -1272,7 +1272,7 @@ def test_inline_links_531():
         "[text(1,2):foo :]",
         "[text(1,6):[:]",
         "[text(1,7):bar:]",
-        "[end-emphasis(1,10):::False]",
+        "[end-emphasis(1,10)::]",
         "[text(1,11): baz:]",
         "[text(1,15):]:]",
         "[end-para:::True]",
@@ -1361,7 +1361,7 @@ comment - with hyphen --> bar](uri)"""
         "[text(1,2):foo :]",
         "[raw-html(1,6):!-- this is a\ncomment - with hyphen --]",
         "[text(2,26): bar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="uri">foo <!-- this is a
@@ -1391,7 +1391,7 @@ baz
         "[text(1,2):foo :]",
         "[icode-span(1,6):foo\a\n\a \abar  \a\n\a \abaz:``:\a\n\a \a:\a\n\a \a]",
         "[text(5,3): bar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="uri">foo <code>foo bar   baz</code> bar</a></p>"""

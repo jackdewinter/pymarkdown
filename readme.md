@@ -116,13 +116,11 @@ others ordering: command line (if exposed), config, default
 - why does hard break not have \n? (fix before release)
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - leading_text_index
-- link and emphasis (inline) tokens cannot be forced close, rewrite end to not expose :::False?
-- add version number to plugins interface
+- why does fcb with only newlines and newlines with ws not fold down to text?
+  - coalesce with blank lines in fenced code block?
 
 ### Priority 2 - Like To Solve Before Initial
 
-- why does fcb with only newlines and newlines with ws not fold down to text?
-  - coalesce with blank lines in fenced code block?
 - make sure to generated ordered/unordered tests to make sure both covered
   - every unordered tests should have an ordered counterpart
   - every ordered tests should have an unordered counterpart

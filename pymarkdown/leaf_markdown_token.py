@@ -20,6 +20,8 @@ class LeafMarkdownToken(MarkdownToken):
         position_marker=None,
         extracted_whitespace=None,
         is_extension=False,
+        requires_end_token=False,
+        can_force_close=True,
     ):
         self.__extracted_whitespace = extracted_whitespace
         MarkdownToken.__init__(
@@ -31,6 +33,8 @@ class LeafMarkdownToken(MarkdownToken):
             column_number=column_number,
             position_marker=position_marker,
             is_extension=is_extension,
+            requires_end_token=requires_end_token,
+            can_force_close=can_force_close,
         )
 
     # pylint: enable=too-many-arguments
@@ -90,6 +94,7 @@ class ParagraphMarkdownToken(LeafMarkdownToken):
             MarkdownToken._token_paragraph,
             "",
             position_marker=position_marker,
+            requires_end_token=True,
         )
         self.__compose_extra_data_field()
 
@@ -189,6 +194,7 @@ class HtmlBlockMarkdownToken(LeafMarkdownToken):
             line_number=line_number,
             column_number=column_number,
             extracted_whitespace=extracted_whitespace,
+            requires_end_token=True,
         )
 
 
@@ -363,6 +369,8 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
             "",
             position_marker=position_marker,
             extracted_whitespace=extracted_whitespace,
+            requires_end_token=True,
+            can_force_close=False,
         )
         self.__compose_extra_data_field()
 
@@ -439,6 +447,8 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
             "",
             position_marker=position_marker,
             extracted_whitespace=extracted_whitespace,
+            requires_end_token=True,
+            can_force_close=False,
         )
         self.__compose_extra_data_field()
 
@@ -531,6 +541,7 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
             line_number=line_number,
             column_number=column_number,
             extracted_whitespace=extracted_whitespace,
+            requires_end_token=True,
         )
         self.__compose_extra_data_field()
 
@@ -601,6 +612,7 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
             "",
             position_marker=position_marker,
             extracted_whitespace=extracted_whitespace,
+            requires_end_token=True,
         )
         self.__compose_extra_data_field()
 

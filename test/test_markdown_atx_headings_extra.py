@@ -17,7 +17,7 @@ def test_atx_headings_extra_1():
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text(1,4):\\\b\\this is a fun day: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>\\this is a fun day</h2>"""
 
@@ -33,7 +33,7 @@ def test_atx_headings_extra_2():
 
     # Arrange
     source_markdown = """## \\"""
-    expected_tokens = ["[atx(1,1):2:0:]", "[text(1,4):\\: ]", "[end-atx:::False]"]
+    expected_tokens = ["[atx(1,1):2:0:]", "[text(1,4):\\: ]", "[end-atx::]"]
     expected_gfm = """<h2>\\</h2>"""
 
     # Act & Assert
@@ -48,7 +48,7 @@ def test_atx_headings_extra_3():
 
     # Arrange
     source_markdown = """##    """
-    expected_tokens = ["[atx(1,1):2:0:]", "[text(1,7)::    ]", "[end-atx:::False]"]
+    expected_tokens = ["[atx(1,1):2:0:]", "[text(1,7)::    ]", "[end-atx::]"]
     expected_gfm = """<h2></h2>"""
 
     # Act & Assert
@@ -68,7 +68,7 @@ def test_atx_headings_extra_4():
         "[text(1,4)::\a \a\x03\a]",
         "[icode-span(1,4):this:``::]",
         "[text(1,12): is a fun day:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2><code>this</code> is a fun day</h2>"""
 
@@ -87,7 +87,7 @@ def test_atx_headings_extra_5():
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text(1,4):\a&amp;\a\a&\a&amp;\a\a the band played on: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>&amp; the band played on</h2>"""
 
@@ -108,7 +108,7 @@ def test_atx_headings_extra_6():
         "[text(1,4)::\a \a\x03\a]",
         "[raw-html(1,4):there it='is']",
         "[text(1,19):, really:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2><there it='is'>, really</h2>"""
 
@@ -129,7 +129,7 @@ def test_atx_headings_extra_7():
         "[text(1,4)::\a \a\x03\a]",
         "[uri-autolink(1,4):http://www.google.com]",
         "[text(1,27): is where to look:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2><a href="http://www.google.com">http://www.google.com</a> is where to look</h2>"""
 
@@ -150,7 +150,7 @@ def test_atx_headings_extra_8():
         "[text(1,4)::\a \a\x03\a]",
         "[email-autolink(1,4):foo@bar.com]",
         "[text(1,17): for more information:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = (
         """<h2><a href="mailto:foo@bar.com">foo@bar.com</a> for more information</h2>"""
@@ -173,9 +173,9 @@ def test_atx_headings_extra_9():
         "[text(1,4)::\a \a\x03\a]",
         "[emphasis(1,4):1:*]",
         "[text(1,5):it's:]",
-        "[end-emphasis(1,9):::False]",
+        "[end-emphasis(1,9)::]",
         "[text(1,10): me!:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2><em>it's</em> me!</h2>"""
 
@@ -196,9 +196,9 @@ def test_atx_headings_extra_10():
         "[text(1,4)::\a \a\x03\a]",
         "[link(1,4):inline:/uri:::::Foo:False::::]",
         "[text(1,5):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,15): is a link:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2><a href="/uri">Foo</a> is a link</h2>"""
 
@@ -219,7 +219,7 @@ def test_atx_headings_extra_11():
         "[text(1,4)::\a \a\x03\a]",
         '[image(1,4):inline:/url:title:foo::::foo:False:":: :]',
         "[text(1,24): is an image:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2><img src="/url" alt="foo" title="title" /> is an image</h2>"""
 
@@ -238,7 +238,7 @@ def test_atx_headings_extra_12():
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text(1,4):this is a \\\b\\fun\\\b\\ day: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>this is a \\fun\\ day</h2>"""
 
@@ -259,7 +259,7 @@ def test_atx_headings_extra_13():
         "[text(1,4):this is a : ]",
         "[icode-span(1,14):fun:``::]",
         "[text(1,21): day:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>this is a <code>fun</code> day</h2>"""
 
@@ -278,7 +278,7 @@ def test_atx_headings_extra_14():
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text(1,4):fun \a&amp;\a\a&\a&amp;\a\a joy: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>fun &amp; joy</h2>"""
 
@@ -299,7 +299,7 @@ def test_atx_headings_extra_15():
         "[text(1,4):where : ]",
         "[raw-html(1,10):there it='is']",
         "[text(1,25): it:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>where <there it='is'> it</h2>"""
 
@@ -320,7 +320,7 @@ def test_atx_headings_extra_16():
         "[text(1,4):look at : ]",
         "[uri-autolink(1,12):http://www.google.com]",
         "[text(1,35): for answers:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>look at <a href="http://www.google.com">http://www.google.com</a> for answers</h2>"""
 
@@ -341,7 +341,7 @@ def test_atx_headings_extra_17():
         "[text(1,4):email : ]",
         "[email-autolink(1,10):foo@bar.com]",
         "[text(1,23): for answers:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = (
         """<h2>email <a href="mailto:foo@bar.com">foo@bar.com</a> for answers</h2>"""
@@ -364,9 +364,9 @@ def test_atx_headings_extra_18():
         "[text(1,4):really! : ]",
         "[emphasis(1,12):1:*]",
         "[text(1,13):it's me!:]",
-        "[end-emphasis(1,21):::False]",
+        "[end-emphasis(1,21)::]",
         "[text(1,22): here!:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>really! <em>it's me!</em> here!</h2>"""
 
@@ -387,9 +387,9 @@ def test_atx_headings_extra_19():
         "[text(1,4):look at : ]",
         "[link(1,12):inline:/uri:::::Foo:False::::]",
         "[text(1,13):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,23): for more:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>look at <a href="/uri">Foo</a> for more</h2>"""
 
@@ -410,7 +410,7 @@ def test_atx_headings_extra_20():
         "[text(1,4):special : ]",
         '[image(1,12):inline:/url:title:foo::::foo:False:":: :]',
         "[text(1,32): headings:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = (
         """<h2>special <img src="/url" alt="foo" title="title" /> headings</h2>"""
@@ -431,7 +431,7 @@ def test_atx_headings_extra_21():
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text(1,4):this is a fun day\\\b\\: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>this is a fun day\\</h2>"""
 
@@ -450,7 +450,7 @@ def test_atx_headings_extra_22():
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text(1,4):this was \\: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>this was \\</h2>"""
 
@@ -469,7 +469,7 @@ def test_atx_headings_extra_23():
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text(1,4):what? no line break?: ]",
-        "[end-atx:   ::False]",
+        "[end-atx:   :]",
     ]
     expected_gfm = """<h2>what? no line break?</h2>"""
 
@@ -489,7 +489,7 @@ def test_atx_headings_extra_24():
         "[atx(1,1):2:0:]",
         "[text(1,4):this is a fun : ]",
         "[icode-span(1,18):day:``::]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>this is a fun <code>day</code></h2>"""
 
@@ -508,7 +508,7 @@ def test_atx_headings_extra_25():
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text(1,4):the band played on \a&amp;\a\a&\a&amp;\a\a: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>the band played on &amp;</h2>"""
 
@@ -528,7 +528,7 @@ def test_atx_headings_extra_26():
         "[atx(1,1):2:0:]",
         "[text(1,4):really, : ]",
         "[raw-html(1,12):there it='is']",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>really, <there it='is'></h2>"""
 
@@ -548,7 +548,7 @@ def test_atx_headings_extra_27():
         "[atx(1,1):2:0:]",
         "[text(1,4):look at : ]",
         "[uri-autolink(1,12):http://www.google.com]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = (
         """<h2>look at <a href="http://www.google.com">http://www.google.com</a></h2>"""
@@ -570,7 +570,7 @@ def test_atx_headings_extra_28():
         "[atx(1,1):2:0:]",
         "[text(1,4):for more information, contact : ]",
         "[email-autolink(1,34):foo@bar.com]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>for more information, contact <a href="mailto:foo@bar.com">foo@bar.com</a></h2>"""
 
@@ -591,8 +591,8 @@ def test_atx_headings_extra_29():
         "[text(1,4):it's : ]",
         "[emphasis(1,9):1:*]",
         "[text(1,10):me:]",
-        "[end-emphasis(1,12):::False]",
-        "[end-atx:::False]",
+        "[end-emphasis(1,12)::]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>it's <em>me</em></h2>"""
 
@@ -613,8 +613,8 @@ def test_atx_headings_extra_30():
         "[text(1,4):a link looks like : ]",
         "[link(1,22):inline:/uri:::::Foo:False::::]",
         "[text(1,23):Foo:]",
-        "[end-link:::False]",
-        "[end-atx:::False]",
+        "[end-link::]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>a link looks like <a href="/uri">Foo</a></h2>"""
 
@@ -634,7 +634,7 @@ def test_atx_headings_extra_31():
         "[atx(1,1):2:0:]",
         "[text(1,4):an image is : ]",
         '[image(1,16):inline:/url:title:foo::::foo:False:":: :]',
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>an image is <img src="/url" alt="foo" title="title" /></h2>"""
 
@@ -653,7 +653,7 @@ def test_atx_headings_extra_32():
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text(1,4):\\\b\\: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>\\</h2>"""
 
@@ -669,7 +669,7 @@ def test_atx_headings_extra_33():
 
     # Arrange
     source_markdown = """## \\"""
-    expected_tokens = ["[atx(1,1):2:0:]", "[text(1,4):\\: ]", "[end-atx:::False]"]
+    expected_tokens = ["[atx(1,1):2:0:]", "[text(1,4):\\: ]", "[end-atx::]"]
     expected_gfm = """<h2>\\</h2>"""
 
     # Act & Assert
@@ -684,7 +684,7 @@ def test_atx_headings_extra_34():
 
     # Arrange
     source_markdown = """##    """
-    expected_tokens = ["[atx(1,1):2:0:]", "[text(1,7)::    ]", "[end-atx:::False]"]
+    expected_tokens = ["[atx(1,1):2:0:]", "[text(1,7)::    ]", "[end-atx::]"]
     expected_gfm = """<h2></h2>"""
 
     # Act & Assert
@@ -703,7 +703,7 @@ def test_atx_headings_extra_35():
         "[atx(1,1):2:0:]",
         "[text(1,4)::\a \a\x03\a]",
         "[icode-span(1,4):day:``::]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2><code>day</code></h2>"""
 
@@ -722,7 +722,7 @@ def test_atx_headings_extra_36():
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text(1,4):\a&amp;\a\a&\a&amp;\a\a: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>&amp;</h2>"""
 
@@ -742,7 +742,7 @@ def test_atx_headings_extra_37():
         "[atx(1,1):2:0:]",
         "[text(1,4)::\a \a\x03\a]",
         "[raw-html(1,4):there it='is']",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2><there it='is'></h2>"""
 
@@ -762,7 +762,7 @@ def test_atx_headings_extra_38():
         "[atx(1,1):2:0:]",
         "[text(1,4)::\a \a\x03\a]",
         "[uri-autolink(1,4):http://www.google.com]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = (
         """<h2><a href="http://www.google.com">http://www.google.com</a></h2>"""
@@ -784,7 +784,7 @@ def test_atx_headings_extra_39():
         "[atx(1,1):2:0:]",
         "[text(1,4)::\a \a\x03\a]",
         "[email-autolink(1,4):foo@bar.com]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2><a href="mailto:foo@bar.com">foo@bar.com</a></h2>"""
 
@@ -805,8 +805,8 @@ def test_atx_headings_extra_40():
         "[text(1,4)::\a \a\x03\a]",
         "[emphasis(1,4):1:*]",
         "[text(1,5):me:]",
-        "[end-emphasis(1,7):::False]",
-        "[end-atx:::False]",
+        "[end-emphasis(1,7)::]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2><em>me</em></h2>"""
 
@@ -827,8 +827,8 @@ def test_atx_headings_extra_41():
         "[text(1,4)::\a \a\x03\a]",
         "[link(1,4):inline:/uri:::::Foo:False::::]",
         "[text(1,5):Foo:]",
-        "[end-link:::False]",
-        "[end-atx:::False]",
+        "[end-link::]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2><a href="/uri">Foo</a></h2>"""
 
@@ -848,7 +848,7 @@ def test_atx_headings_extra_42():
         "[atx(1,1):2:0:]",
         "[text(1,4)::\a \a\x03\a]",
         '[image(1,4):inline:/url:title:foo::::foo:False:":: :]',
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2><img src="/url" alt="foo" title="title" /></h2>"""
 

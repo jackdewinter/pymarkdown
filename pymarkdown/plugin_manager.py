@@ -222,7 +222,7 @@ class PluginDetails:
         plugin_description,
         plugin_enabled_by_default,
         plugin_version,
-        plugin_interface_version
+        plugin_interface_version,
     ):
         (
             self.plugin_id,
@@ -230,14 +230,14 @@ class PluginDetails:
             self.plugin_description,
             self.plugin_enabled_by_default,
             self.plugin_version,
-            self.plugin_interface_version
+            self.plugin_interface_version,
         ) = (
             plugin_id,
             plugin_name,
             plugin_description,
             plugin_enabled_by_default,
             plugin_version,
-            plugin_interface_version
+            plugin_interface_version,
         )
 
     # pylint: enable=too-many-arguments
@@ -246,7 +246,7 @@ class PluginDetails:
 # pylint: enable=too-few-public-methods
 
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods,too-many-instance-attributes
 class FoundPlugin:
     """
     Encapsulation of a plugin that was discovered.  While similar to the PluginDetails
@@ -347,13 +347,6 @@ class FoundPlugin:
         return self.__plugin_version
 
     @property
-    def plugin_interface_version(self):
-        """
-        Gets the interface version of the plugin.
-        """
-        return self.__plugin_interface_version
-
-    @property
     def plugin_enabled_by_default(self):
         """
         Gets a value indicating whether the plugin is enabled by default.
@@ -361,7 +354,7 @@ class FoundPlugin:
         return self.__plugin_enabled_by_default
 
 
-# pylint: enable=too-few-public-methods
+# pylint: enable=too-few-public-methods,too-many-instance-attributes
 
 
 # pylint: disable=too-many-instance-attributes
@@ -778,14 +771,14 @@ class PluginManager:
                 plugin_description,
                 plugin_enabled_by_default,
                 plugin_version,
-                plugin_interface_version
+                plugin_interface_version,
             ) = (
                 instance_details.plugin_id,
                 instance_details.plugin_name,
                 instance_details.plugin_description,
                 instance_details.plugin_enabled_by_default,
                 instance_details.plugin_version,
-                instance_details.plugin_interface_version
+                instance_details.plugin_interface_version,
             )
         except Exception as this_exception:
             raise BadPluginError(
@@ -804,6 +797,10 @@ class PluginManager:
         self.__verify_integer_field(
             plugin_instance, "plugin_interface_version", plugin_interface_version
         )
+        if plugin_interface_version != 1:
+            raise BadPluginError(
+                formatted_message=f"Plugin '{instance_file_name}' with an interface version ('{plugin_interface_version}') that is not '1'."
+            )
 
         plugin_object = FoundPlugin(
             plugin_id,
@@ -832,11 +829,6 @@ class PluginManager:
         """
 
         plugin_object = self.__get_plugin_details(plugin_instance, instance_file_name)
-
-        if plugin_object.plugin_interface_version != 1:
-            raise ValueError(
-                f"Unable to register plugin '{instance_file_name}' with an interface version ('{plugin_object.plugin_interface_version}') that is not '1'."
-            )
 
         next_key = plugin_object.plugin_id
         if not PluginManager.__id_regex.match(next_key):

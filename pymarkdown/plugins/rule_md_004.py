@@ -20,6 +20,6 @@ class RuleMd004(Plugin):
             plugin_enabled_by_default=False,
             plugin_description="Unordered list style",
             plugin_version="0.0.0",
-            plugin_interface_version=1
+            plugin_interface_version=1,
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md004---unordered-list-style
         # Parameters: style ("consistent", "asterisk", "plus", "dash", "sublist"; default "consistent")

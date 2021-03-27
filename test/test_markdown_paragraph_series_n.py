@@ -157,7 +157,7 @@ def test_paragraph_series_n_bq_t_nl_bq_ha():
         "[end-para:::False]",
         "[atx(2,3):1:0:]",
         "[text(2,5):head: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -186,7 +186,7 @@ def test_paragraph_series_n_bq_t_nl_i2_ha():
         "[end-block-quote:::True]",
         "[atx(2,3):1:0:  ]",
         "[text(2,5):head: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<blockquote>
 <p>uvw</p>
@@ -220,7 +220,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_ha():
         "[end-para:::False]",
         "[atx(3,5):1:0:]",
         "[text(3,7):head: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[end-block-quote:::True]",
         "[li(4,1):2::]",
         "[para(4,3):]",
@@ -266,7 +266,7 @@ def test_paragraph_series_n_ul_t_i2_bq_t_nl_i4_ha():
         "[end-block-quote:::True]",
         "[atx(3,5):1:0:  ]",
         "[text(3,7):head: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[li(4,1):2::]",
         "[para(4,3):]",
         "[text(4,3):def:]",
@@ -300,7 +300,7 @@ def test_paragraph_series_n_bq_t_nl_bq_tb():
         "[block-quote(1,1)::> \n> ]",
         "[setext(2,3):-:3::(1,3)]",
         "[text(1,3):uvw:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -357,7 +357,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_tb():
         "[block-quote(2,3):  :  > \n  > ]",
         "[setext(3,5):-:3::(2,5)]",
         "[text(2,5):uvw:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[end-block-quote:::True]",
         "[li(4,1):2::]",
         "[para(4,3):]",

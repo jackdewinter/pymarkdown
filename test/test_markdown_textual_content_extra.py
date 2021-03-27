@@ -94,7 +94,7 @@ def test_textual_content_extra_5():
     expected_tokens = [
         "[atx(1,1):1:0:]",
         "[text(1,3):\x05\a\a&\a&amp;\a\x05\a\a&\a&amp;\a\x05\a: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>\a&amp;\a&amp;\a</h1>"""
 
@@ -114,7 +114,7 @@ def test_textual_content_extra_6():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):\x05\a\a&\a&amp;\a\x05\a\a&\a&amp;\a\x05\a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>\a&amp;\a&amp;\a</h2>"""
 
@@ -209,7 +209,7 @@ def test_textual_content_extra_11():
     expected_tokens = [
         "[atx(1,1):1:0:]",
         "[text(1,3):\x05\b\\\b`\x05\b\\\b`\x05\b: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>\b`\b`\b</h1>"""
 
@@ -229,7 +229,7 @@ def test_textual_content_extra_12():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):\x05\b\\\b`\x05\b\\\b`\x05\b:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>\b`\b`\b</h2>"""
 
@@ -249,7 +249,7 @@ def test_textual_content_extra_13():
         "[para(1,1):]",
         '[link(1,1):inline:/bar*:ti*tle:/bar\\*:ti\\*tle::foo\\*bar:False:":: :]',
         "[text(1,2):foo\\\b*bar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/bar*" title="ti*tle">foo*bar</a></p>"""
@@ -292,7 +292,7 @@ def test_textual_content_extra_15():
         "[para(1,1):]",
         '[link(1,1):inline:/bar:title::::foo\x05\bbar:False:":: :]',
         "[text(1,2):foo\x05\bbar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/bar" title="title">foo\bbar</a></p>"""
@@ -335,7 +335,7 @@ def test_textual_content_extra_17():
         "[para(1,1):]",
         '[link(1,1):inline:/bar:ti\btle::::foobar:False:":: :]',
         "[text(1,2):foobar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/bar" title="ti\btle">foobar</a></p>"""
@@ -360,7 +360,7 @@ def test_textual_content_extra_18():
         "[text(1,1):before:]",
         "[link(1,7):shortcut:/bar:ti*\btle::::fo\x05\bo:::::]",
         "[text(1,8):fo\x05\bo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,13):after:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",

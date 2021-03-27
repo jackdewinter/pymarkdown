@@ -20,6 +20,6 @@ class RuleMd010(Plugin):
             plugin_enabled_by_default=False,
             plugin_description="Hard tabs",
             plugin_version="0.0.0",
-            plugin_interface_version=1
+            plugin_interface_version=1,
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md010---hard-tabs
         # Parameters: code_blocks (boolean; default true)

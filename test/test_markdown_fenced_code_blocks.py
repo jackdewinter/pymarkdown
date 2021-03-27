@@ -1120,13 +1120,13 @@ bar
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[fcode-block(3,1):~:3::::::]",
         "[text(4,1):bar:]",
         "[end-fcode-block::3:False]",
         "[atx(6,1):1:0:]",
         "[text(6,3):baz: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2>foo</h2>
 <pre><code>bar

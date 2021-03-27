@@ -3,6 +3,8 @@ Module to provide tests related to the plugin manager for the scanner.
 """
 from test.markdown_scanner import MarkdownScanner
 
+# pylint: disable=too-many-lines
+
 
 def test_markdown_with_plugins_only():
     """
@@ -619,6 +621,180 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_boolean_detail():
     expected_output = ""
     expected_error = """BadPluginError encountered while loading plugins:
 Plugin class 'BadBooleanDetailIsInt' returned an improperly typed value for field name 'plugin_enabled_by_default'.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_integer_detail():
+    """
+    Test to make sure we get an error logged if a plugin throws an exception that a integer detail is bad.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--add-plugin",
+        "test/resources/plugins/bad/bad_integer_detail_is_string.py",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """BadPluginError encountered while loading plugins:
+Plugin class 'BadIntegerDetailIsString' returned an improperly typed value for field name 'plugin_interface_version'.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_description():
+    """
+    Test to make sure we get an error logged if a plugin returns a bad description.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--add-plugin",
+        "test/resources/plugins/bad/bad_description.py",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """BadPluginError encountered while loading plugins:
+Plugin class 'BadDescription' returned an improperly typed value for field name 'plugin_description'.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_dash_add_plugin_with_empty_description():
+    """
+    Test to make sure we get an error logged if a plugin returns a empty description.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--add-plugin",
+        "test/resources/plugins/bad/empty_description.py",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """BadPluginError encountered while loading plugins:
+Plugin class 'EmptyDescription' returned an empty value for field name 'plugin_description'.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_dash_add_plugin_with_blank_description():
+    """
+    Test to make sure we get an error logged if a plugin returns a blank description.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--add-plugin",
+        "test/resources/plugins/bad/blank_description.py",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """ValueError encountered while initializing plugins:
+Unable to register plugin 'blank_description.py' with a description string that is blank.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_semantic_version():
+    """
+    Test to make sure we get an error logged if a plugin returns a bad semantic version.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--add-plugin",
+        "test/resources/plugins/bad/bad_semantic_version.py",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """ValueError encountered while initializing plugins:
+Unable to register plugin 'bad_semantic_version.py' with a version string that is not a valid semantic version.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_interface_version():
+    """
+    Test to make sure we get an error logged if a plugin returns a bad interface version.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--add-plugin",
+        "test/resources/plugins/bad/bad_interface_version.py",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """BadPluginError encountered while loading plugins:
+Plugin 'bad_interface_version.py' with an interface version ('2') that is not '1'.
 """
 
     # Act

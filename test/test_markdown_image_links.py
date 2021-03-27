@@ -683,7 +683,7 @@ def test_image_link_601():
         "[text(1,1):\\\b!:]",
         "[link(1,3):shortcut:/url:title::::foo:::::]",
         "[text(1,4):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/url:: :title:"title":]',

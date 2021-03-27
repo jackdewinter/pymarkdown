@@ -24,7 +24,7 @@ class RuleMd047(Plugin):
             plugin_enabled_by_default=True,
             plugin_description="Files should end with a single newline character",
             plugin_version="0.5.0",
-            plugin_interface_version=1
+            plugin_interface_version=1,
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md047---files-should-end-with-a-single-newline-character
 
     def starting_new_file(self):

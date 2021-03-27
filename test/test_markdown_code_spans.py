@@ -357,7 +357,7 @@ foo\a
         "[text(1,3):a:]",
         "[icode-span(1,4):foo :``:\a\n\a \a:\a\n\a \a]",
         "[text(3,3):a:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(3,11):a:]",
         "[end-para:::True]",
     ]
@@ -386,7 +386,7 @@ def test_code_spans_346ca():
         "[text(1,3):a:]",
         "[icode-span(1,4):foo :``:\a\n\a \a:\a\n\a \a]",
         "[text(3,3):a:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(3,11):a:]",
         "[end-para:::True]",
     ]
@@ -412,7 +412,7 @@ foo
         "[text(1,1):a:]",
         "[icode-span(1,2):foo :``:\a\n\a \a:\a\n\a \a]",
         "[text(3,3):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<code>foo </code>a</h2>"""
 

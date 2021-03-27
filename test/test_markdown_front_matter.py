@@ -24,7 +24,7 @@ Title: my document
         "[tbreak(1,2):-: :---]",
         "[setext(3,1):-:3::(2,1)]",
         "[text(2,1):Title: my document:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<hr />
@@ -228,7 +228,7 @@ test: abc
         "[tbreak(1,1):-::---]",
         "[setext(4,1):-:3::(2,1)]",
         "[text(2,1):test: abc\ndef::\n   \x02]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<hr />
@@ -333,7 +333,7 @@ Title: my document
         "[BLANK(2,1):]",
         "[setext(4,1):-:3::(3,1)]",
         "[text(3,1):Title: my document:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[tbreak(5,1):-::---]",
         "[BLANK(6,1):]",
     ]

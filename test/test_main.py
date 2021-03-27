@@ -171,7 +171,7 @@ MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
-MD999>>token:[end-atx:::False]
+MD999>>token:[end-atx::]
 MD999>>token:[BLANK(2,1):]
 MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
@@ -217,7 +217,7 @@ MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
-MD999>>token:[end-atx:::False]
+MD999>>token:[end-atx::]
 MD999>>token:[BLANK(2,1):]
 MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
@@ -268,7 +268,7 @@ MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
-MD999>>token:[end-atx:::False]
+MD999>>token:[end-atx::]
 MD999>>token:[BLANK(2,1):]
 MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
@@ -325,7 +325,7 @@ MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
-MD999>>token:[end-atx:::False]
+MD999>>token:[end-atx::]
 MD999>>token:[BLANK(2,1):]
 MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
@@ -736,7 +736,7 @@ MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
-MD999>>token:[end-atx:::False]
+MD999>>token:[end-atx::]
 MD999>>token:[BLANK(2,1):]
 MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
@@ -791,7 +791,7 @@ MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
-MD999>>token:[end-atx:::False]
+MD999>>token:[end-atx::]
 MD999>>token:[BLANK(2,1):]
 MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
@@ -963,7 +963,7 @@ MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
-MD999>>token:[end-atx:::False]
+MD999>>token:[end-atx::]
 MD999>>token:[BLANK(2,1):]
 MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
@@ -1018,7 +1018,7 @@ MD999>>next_line:The line after this line should be blank.
 MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
-MD999>>token:[end-atx:::False]
+MD999>>token:[end-atx::]
 MD999>>token:[BLANK(2,1):]
 MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]

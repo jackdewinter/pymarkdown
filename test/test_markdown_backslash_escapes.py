@@ -104,7 +104,7 @@ def test_backslash_escapes_311():
         "[text(1,1):\\\b\\:]",
         "[emphasis(1,3):1:*]",
         "[text(1,4):emphasis:]",
-        "[end-emphasis(1,12):::False]",
+        "[end-emphasis(1,12)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>\\<em>emphasis</em></p>"""
@@ -247,7 +247,7 @@ def test_backslash_escapes_318():
         "[para(1,1):]",
         '[link(1,1):inline:/bar*:ti*tle:/bar\\*:ti\\*tle::foo:False:":: :]',
         "[text(1,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/bar*" title="ti*tle">foo</a></p>"""
@@ -271,7 +271,7 @@ def test_backslash_escapes_319():
         "[para(1,1):]",
         "[link(1,1):shortcut:/bar*:ti*tle::::foo:::::]",
         "[text(1,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/bar*:/bar\\*: :ti*tle:"ti\\*tle":]',

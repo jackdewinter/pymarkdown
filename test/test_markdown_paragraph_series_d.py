@@ -182,7 +182,7 @@ def test_paragraph_series_d_e():
         "[para(1,1):]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):me:]",
-        "[end-emphasis(1,4):::False]",
+        "[end-emphasis(1,4)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em>me</em></p>"""
@@ -204,7 +204,7 @@ def test_paragraph_series_d_l_nt():
         "[para(1,1):]",
         "[link(1,1):inline:/uri:::::Foo:False::::]",
         "[text(1,2):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/uri">Foo</a></p>"""
@@ -266,7 +266,7 @@ def test_paragraph_series_d_l_t():
         "[para(1,1):]",
         '[link(1,1):inline:/url:title::::foo:False:":: :]',
         "[text(1,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""

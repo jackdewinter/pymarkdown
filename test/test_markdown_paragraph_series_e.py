@@ -106,7 +106,7 @@ def test_paragraph_series_e_em():
         "[text(1,1):a:]",
         "[emphasis(1,2):1:*]",
         "[text(1,3):foo\nbar::\n]",
-        "[end-emphasis(2,4):::False]",
+        "[end-emphasis(2,4)::]",
         "[text(2,5):a:]",
         "[end-para:::True]",
     ]

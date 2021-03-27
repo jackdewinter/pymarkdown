@@ -150,7 +150,7 @@ def test_paragraph_series_b_e():
         "[text(1,1):really! :]",
         "[emphasis(1,9):1:*]",
         "[text(1,10):it's me!:]",
-        "[end-emphasis(1,18):::False]",
+        "[end-emphasis(1,18)::]",
         "[text(1,19): here!:]",
         "[end-para:::True]",
     ]
@@ -174,7 +174,7 @@ def test_paragraph_series_b_l():
         "[text(1,1):at :]",
         '[link(1,4):inline:/uri:t::::Foo:False:":: :]',
         "[text(1,5):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,19): more:]",
         "[end-para:::True]",
     ]

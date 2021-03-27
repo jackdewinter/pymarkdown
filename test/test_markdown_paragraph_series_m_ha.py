@@ -24,7 +24,7 @@ def test_paragraph_series_m_ha_ol_nl_ha_t():
         "[end-olist:::True]",
         "[atx(2,1):1:0:]",
         "[text(2,3):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(3,1):]",
     ]
     expected_gfm = """<ol>
@@ -53,7 +53,7 @@ def test_paragraph_series_m_ha_ol_nl_i2_ha_t():
         "[end-olist:::True]",
         "[atx(2,3):1:0:  ]",
         "[text(2,5):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(3,1):]",
     ]
     expected_gfm = """<ol>
@@ -81,7 +81,7 @@ def test_paragraph_series_m_ha_ol_nl_i3_ha_t():
         "[BLANK(1,3):]",
         "[atx(2,4):1:0:]",
         "[text(2,6):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(3,1):]",
         "[end-olist:::True]",
     ]
@@ -114,7 +114,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ha_t():
         "[end-olist:::True]",
         "[atx(2,1):1:0:]",
         "[text(2,3):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(3,1):]",
     ]
     expected_gfm = """<ol>
@@ -145,7 +145,7 @@ def test_paragraph_series_m_ha_ol_t_nl_i2_ha_t():
         "[end-olist:::True]",
         "[atx(2,3):1:0:  ]",
         "[text(2,5):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(3,1):]",
     ]
     expected_gfm = """<ol>
@@ -175,7 +175,7 @@ def test_paragraph_series_m_ha_ol_t_nl_i3_ha_t():
         "[end-para:::False]",
         "[atx(2,4):1:0:]",
         "[text(2,6):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(3,1):]",
         "[end-olist:::True]",
     ]
@@ -207,7 +207,7 @@ def test_paragraph_series_m_ha_ol_ol_nl_ha_t():
         "[end-olist:::True]",
         "[atx(2,1):1:0:]",
         "[text(2,3):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(3,1):]",
     ]
     expected_gfm = """<ol>
@@ -244,7 +244,7 @@ def test_paragraph_series_m_ha_ol_ol_t_nl_ha_t():
         "[end-olist:::True]",
         "[atx(2,1):1:0:]",
         "[text(2,3):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(3,1):]",
     ]
     expected_gfm = """<ol>
@@ -280,7 +280,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_nl_ha_t():
         "[end-olist:::True]",
         "[atx(3,1):1:0:]",
         "[text(3,3):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ol>
@@ -315,7 +315,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_nl_ha_t():
         "[end-olist:::True]",
         "[atx(3,1):1:0:]",
         "[text(3,3):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ol>
@@ -343,11 +343,11 @@ def test_paragraph_series_m_ha_ul_t_nl_ul_nl_ha_t():
         "[ulist(1,1):-::2::  ]",
         "[setext(2,3):-:1::(1,3)]",
         "[text(1,3):abc:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[end-ulist:::True]",
         "[atx(3,1):1:0:]",
         "[text(3,3):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ul>
@@ -381,7 +381,7 @@ def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_ha_t():
         "[end-ulist:::True]",
         "[atx(3,1):1:0:]",
         "[text(3,3):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ul>
@@ -417,7 +417,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_t_nl_ha_t():
         "[end-olist:::True]",
         "[atx(3,1):1:0:]",
         "[text(3,3):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ol>
@@ -457,7 +457,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_t_nl_ha_t():
         "[end-olist:::True]",
         "[atx(3,1):1:0:]",
         "[text(3,3):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ol>
@@ -493,7 +493,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_nl_i2_ha_t():
         "[end-olist:::True]",
         "[atx(3,3):1:0:  ]",
         "[text(3,5):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ol>
@@ -528,7 +528,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_nl_i2_ha_t():
         "[end-olist:::True]",
         "[atx(3,3):1:0:  ]",
         "[text(3,5):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ol>
@@ -556,11 +556,11 @@ def test_paragraph_series_m_ha_ul_t_nl_ul_nl_i1_ha_t():
         "[ulist(1,1):-::2::  ]",
         "[setext(2,3):-:1::(1,3)]",
         "[text(1,3):abc:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[end-ulist:::True]",
         "[atx(3,2):1:0: ]",
         "[text(3,4):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ul>
@@ -594,7 +594,7 @@ def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_i1_ha_t():
         "[end-ulist:::True]",
         "[atx(3,2):1:0: ]",
         "[text(3,4):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ul>
@@ -630,7 +630,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_t_nl_i2_ha_t():
         "[end-olist:::True]",
         "[atx(3,3):1:0:  ]",
         "[text(3,5):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ol>
@@ -670,7 +670,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_t_nl_i2_ha_t():
         "[end-olist:::True]",
         "[atx(3,3):1:0:  ]",
         "[text(3,5):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ol>
@@ -705,7 +705,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_nl_i3_ha_t():
         "[end-olist:::True]",
         "[atx(3,4):1:0:]",
         "[text(3,6):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
     ]
@@ -740,7 +740,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_nl_i3_ha_t():
         "[end-para:::False]",
         "[atx(3,4):1:0:]",
         "[text(3,6):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
     ]
@@ -770,10 +770,10 @@ def test_paragraph_series_m_ha_ul_t_nl_ul_nl_i2_ha_t():
         "[ulist(1,1):-::2::  \n  ]",
         "[setext(2,3):-:1::(1,3)]",
         "[text(1,3):abc:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[atx(3,3):1:0:]",
         "[text(3,5):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
         "[end-ulist:::True]",
     ]
@@ -807,7 +807,7 @@ def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_i2_ha_t():
         "[end-para:::False]",
         "[atx(3,3):1:0:]",
         "[text(3,5):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
         "[end-ulist:::True]",
     ]
@@ -844,7 +844,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_t_nl_i3_ha_t():
         "[end-olist:::True]",
         "[atx(3,4):1:0:]",
         "[text(3,6):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
     ]
@@ -884,7 +884,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_t_nl_i3_ha_t():
         "[end-olist:::True]",
         "[atx(3,4):1:0:]",
         "[text(3,6):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
     ]

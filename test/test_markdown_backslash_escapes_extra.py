@@ -193,7 +193,7 @@ def test_backslash_escapes_extra_9():
         "[para(1,1):]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):\\\b*it's:]",
-        "[end-emphasis(1,8):::False]",
+        "[end-emphasis(1,8)::]",
         "[text(1,9):*:]",
         "[text(1,10): me!:]",
         "[end-para:::True]",
@@ -217,7 +217,7 @@ def test_backslash_escapes_extra_10():
         "[text(1,1):*:]",
         "[emphasis(1,2):1:*]",
         "[text(1,3):it's\\\b*:]",
-        "[end-emphasis(1,9):::False]",
+        "[end-emphasis(1,9)::]",
         "[text(1,10): me!:]",
         "[end-para:::True]",
     ]
@@ -261,7 +261,7 @@ def test_backslash_escapes_extra_12():
         "[text(1,1):\\\b!:]",
         '[link(1,3):inline:/url:title::::foo:False:":: :]',
         "[text(1,4):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,22): is an image:]",
         "[end-para:::True]",
     ]
@@ -305,7 +305,7 @@ def test_backslash_escapes_extra_14():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):\\\b`code span`:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>`code span`</h2>"""
 
@@ -325,7 +325,7 @@ def test_backslash_escapes_extra_14a():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[icode-span(1,1):code span\\:`::]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><code>code span\\</code></h2>"""
 
@@ -345,7 +345,7 @@ def test_backslash_escapes_extra_15():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):\\\b\a&\a&amp;\aamp; the band played on:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>&amp;amp; the band played on</h2>"""
 
@@ -365,7 +365,7 @@ def test_backslash_escapes_extra_16():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):\\\b\a<\a&lt;\athere it='is'\a>\a&gt;\a, really:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>&lt;there it='is'&gt;, really</h2>"""
 
@@ -385,7 +385,7 @@ def test_backslash_escapes_extra_17():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):\a<\a&lt;\athere it='is'\\\b\a>\a&gt;\a, really:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>&lt;there it='is'&gt;, really</h2>"""
 
@@ -405,7 +405,7 @@ def test_backslash_escapes_extra_18():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):\\\b\a<\a&lt;\ahttp://www.google.com\a>\a&gt;\a is where to look:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>&lt;http://www.google.com&gt; is where to look</h2>"""
 
@@ -426,7 +426,7 @@ def test_backslash_escapes_extra_19():
         "[setext(2,1):-:3::(1,1)]",
         "[uri-autolink(1,1):http://www.google.com\\]",
         "[text(1,25): is where to look:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><a href="http://www.google.com%5C">http://www.google.com\\</a> is where to look</h2>"""
 
@@ -448,7 +448,7 @@ def test_backslash_escapes_extra_20():
         "[text(1,1):\\\b*it's:]",
         "[text(1,7):*:]",
         "[text(1,8): me!:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>*it's* me!</h2>"""
 
@@ -469,7 +469,7 @@ def test_backslash_escapes_extra_21():
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):*:]",
         "[text(1,2):it's\\\b* me!:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>*it's* me!</h2>"""
 
@@ -490,10 +490,10 @@ def test_backslash_escapes_extra_22():
         "[setext(2,1):-:3::(1,1)]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):\\\b*it's:]",
-        "[end-emphasis(1,8):::False]",
+        "[end-emphasis(1,8)::]",
         "[text(1,9):*:]",
         "[text(1,10): me!:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><em>*it's</em>* me!</h2>"""
 
@@ -515,9 +515,9 @@ def test_backslash_escapes_extra_23():
         "[text(1,1):*:]",
         "[emphasis(1,2):1:*]",
         "[text(1,3):it's\\\b*:]",
-        "[end-emphasis(1,9):::False]",
+        "[end-emphasis(1,9)::]",
         "[text(1,10): me!:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>*<em>it's*</em> me!</h2>"""
 
@@ -539,7 +539,7 @@ def test_backslash_escapes_extra_24():
         "[text(1,1):\\\b[Foo:]",
         "[text(1,6):]:]",
         "[text(1,7):(/uri) is a link:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>[Foo](/uri) is a link</h2>"""
 
@@ -561,9 +561,9 @@ def test_backslash_escapes_extra_25():
         "[text(1,1):\\\b!:]",
         '[link(1,3):inline:/url:title::::foo:False:":: :]',
         "[text(1,4):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,22): is an image:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>!<a href="/url" title="title">foo</a> is an image</h2>"""
 
@@ -585,7 +585,7 @@ def test_backslash_escapes_extra_26():
         "[text(1,1):!\\\b[foo:]",
         "[text(1,7):]:]",
         '[text(1,8):(/url \a"\a&quot;\atitle\a"\a&quot;\a) is an image:]',
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>![foo](/url &quot;title&quot;) is an image</h2>"""
 
@@ -604,7 +604,7 @@ def test_backslash_escapes_extra_27():
     expected_tokens = [
         "[atx(1,1):1:0:]",
         "[text(1,3):\\\b`code span`: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>`code span`</h1>"""
 
@@ -624,7 +624,7 @@ def test_backslash_escapes_extra_27a():
         "[atx(1,1):1:0:]",
         "[text(1,3)::\a \a\x03\a]",
         "[icode-span(1,3):code span\\:`::]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1><code>code span\\</code></h1>"""
 
@@ -643,7 +643,7 @@ def test_backslash_escapes_extra_28():
     expected_tokens = [
         "[atx(1,1):1:0:]",
         "[text(1,3):\\\b\a&\a&amp;\aamp; the band played on: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>&amp;amp; the band played on</h1>"""
 
@@ -662,7 +662,7 @@ def test_backslash_escapes_extra_29():
     expected_tokens = [
         "[atx(1,1):1:0:]",
         "[text(1,3):\\\b\a<\a&lt;\athere it='is'\a>\a&gt;\a, really: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>&lt;there it='is'&gt;, really</h1>"""
 
@@ -681,7 +681,7 @@ def test_backslash_escapes_extra_30():
     expected_tokens = [
         "[atx(1,1):1:0:]",
         "[text(1,3):\a<\a&lt;\athere it='is'\\\b\a>\a&gt;\a, really: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>&lt;there it='is'&gt;, really</h1>"""
 
@@ -700,7 +700,7 @@ def test_backslash_escapes_extra_31():
     expected_tokens = [
         "[atx(1,1):1:0:]",
         "[text(1,3):\\\b\a<\a&lt;\ahttp://www.google.com\a>\a&gt;\a is where to look: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>&lt;http://www.google.com&gt; is where to look</h1>"""
 
@@ -721,7 +721,7 @@ def test_backslash_escapes_extra_32():
         "[text(1,3)::\a \a\x03\a]",
         "[uri-autolink(1,3):http://www.google.com\\]",
         "[text(1,27): is where to look:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1><a href="http://www.google.com%5C">http://www.google.com\\</a> is where to look</h1>"""
 
@@ -742,7 +742,7 @@ def test_backslash_escapes_extra_33():
         "[text(1,3):\\\b*it's: ]",
         "[text(1,9):*:]",
         "[text(1,10): me!:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>*it's* me!</h1>"""
 
@@ -763,7 +763,7 @@ def test_backslash_escapes_extra_34():
         "[text(1,3)::\a \a\x03\a]",
         "[text(1,3):*:]",
         "[text(1,4):it's\\\b* me!:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>*it's* me!</h1>"""
 
@@ -784,10 +784,10 @@ def test_backslash_escapes_extra_35():
         "[text(1,3)::\a \a\x03\a]",
         "[emphasis(1,3):1:*]",
         "[text(1,4):\\\b*it's:]",
-        "[end-emphasis(1,10):::False]",
+        "[end-emphasis(1,10)::]",
         "[text(1,11):*:]",
         "[text(1,12): me!:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1><em>*it's</em>* me!</h1>"""
 
@@ -809,9 +809,9 @@ def test_backslash_escapes_extra_36():
         "[text(1,3):*:]",
         "[emphasis(1,4):1:*]",
         "[text(1,5):it's\\\b*:]",
-        "[end-emphasis(1,11):::False]",
+        "[end-emphasis(1,11)::]",
         "[text(1,12): me!:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>*<em>it's*</em> me!</h1>"""
 
@@ -832,7 +832,7 @@ def test_backslash_escapes_extra_37():
         "[text(1,3):\\\b[Foo: ]",
         "[text(1,8):]:]",
         "[text(1,9):(/uri) is a link:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>[Foo](/uri) is a link</h1>"""
 
@@ -853,9 +853,9 @@ def test_backslash_escapes_extra_38():
         "[text(1,3):\\\b!: ]",
         '[link(1,5):inline:/url:title::::foo:False:":: :]',
         "[text(1,6):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,24): is an image:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>!<a href="/url" title="title">foo</a> is an image</h1>"""
 
@@ -876,7 +876,7 @@ def test_backslash_escapes_extra_39():
         "[text(1,3):!\\\b[foo: ]",
         "[text(1,9):]:]",
         '[text(1,10):(/url \a"\a&quot;\atitle\a"\a&quot;\a) is an image:]',
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>![foo](/url &quot;title&quot;) is an image</h1>"""
 

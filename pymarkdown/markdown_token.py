@@ -14,7 +14,7 @@ class MarkdownTokenClass(Enum):
     INLINE_BLOCK = 2
 
 
-# pylint: disable=too-many-public-methods
+# pylint: disable=too-many-public-methods,too-many-instance-attributes
 class MarkdownToken:
     """
     Class to provide for a base encapsulation of the markdown tokens.
@@ -60,6 +60,8 @@ class MarkdownToken:
         column_number=0,
         position_marker=None,
         is_extension=False,
+        can_force_close=True,
+        requires_end_token=False,
     ):
         if position_marker:
             line_number, column_number = (
@@ -73,6 +75,8 @@ class MarkdownToken:
             self.__line_number,
             self.__column_number,
             self.__is_extension,
+            self.__requires_end_token,
+            self.__can_force_close,
         ) = (
             token_name,
             token_class,
@@ -80,6 +84,8 @@ class MarkdownToken:
             line_number,
             column_number,
             is_extension,
+            requires_end_token,
+            can_force_close,
         )
 
     # pylint: enable=too-many-arguments
@@ -163,6 +169,20 @@ class MarkdownToken:
         Returns whether this token is implemented as an extension.
         """
         return self.__is_extension
+
+    @property
+    def requires_end_token(self):
+        """
+        Returns whether this token requires an end token to complete it.
+        """
+        return self.__requires_end_token
+
+    @property
+    def can_force_close(self):
+        """
+        Returns whether this token can be forceably closed.
+        """
+        return self.__can_force_close
 
     @property
     def is_end_token(self):
@@ -531,7 +551,7 @@ class MarkdownToken:
     # pylint: enable=too-many-arguments
 
 
-# pylint: enable=too-many-public-methods
+# pylint: enable=too-many-public-methods,too-many-instance-attributes
 
 
 class EndMarkdownToken(MarkdownToken):
@@ -551,6 +571,14 @@ class EndMarkdownToken(MarkdownToken):
         column_number=0,
     ):
         assert start_markdown_token
+        if isinstance(start_markdown_token, MarkdownToken):
+            assert (
+                start_markdown_token.requires_end_token
+            ), f"Token '{start_markdown_token} does not require end token."
+            if not start_markdown_token.can_force_close:
+                assert (
+                    not was_forced
+                ), f"Token '{start_markdown_token}'s end token cannot be forced."
         (
             self.__type_name,
             self.__extracted_whitespace,
@@ -625,6 +653,10 @@ class EndMarkdownToken(MarkdownToken):
             field_parts.append(self.extra_end_data)
         else:
             field_parts.append("")
-        field_parts.append(str(self.was_forced))
+        if (
+            isinstance(self.__start_markdown_token, MarkdownToken)
+            and self.__start_markdown_token.can_force_close
+        ):
+            field_parts.append(str(self.was_forced))
 
         self._set_extra_data(MarkdownToken.extra_data_separator.join(field_parts))

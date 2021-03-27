@@ -19,7 +19,7 @@ class DuplicateNameDebug(Plugin):
             plugin_enabled_by_default=True,
             plugin_description="Copy of debug plugin",
             plugin_version="0.0.0",
-            plugin_interface_version=1
+            plugin_interface_version=1,
         )
 
     def initialize_from_config(self):

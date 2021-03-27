@@ -32,7 +32,7 @@ class RuleMd020(Plugin):
             plugin_enabled_by_default=True,
             plugin_description="No space inside hashes on closed atx style heading",
             plugin_version="0.5.0",
-            plugin_interface_version=1
+            plugin_interface_version=1,
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md020---no-space-inside-hashes-on-closed-atx-style-heading
 
     def starting_new_file(self):

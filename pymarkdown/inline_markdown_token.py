@@ -24,6 +24,8 @@ class InlineMarkdownToken(MarkdownToken):
         line_number=0,
         column_number=0,
         position_marker=None,
+        requires_end_token=False,
+        can_force_close=True,
     ):
         MarkdownToken.__init__(
             self,
@@ -33,6 +35,8 @@ class InlineMarkdownToken(MarkdownToken):
             line_number=line_number,
             column_number=column_number,
             position_marker=position_marker,
+            can_force_close=can_force_close,
+            requires_end_token=requires_end_token,
         )
 
 
@@ -59,6 +63,8 @@ class EmphasisMarkdownToken(InlineMarkdownToken):
             ),
             line_number=line_number,
             column_number=column_number,
+            requires_end_token=True,
+            can_force_close=False,
         )
 
     @property
@@ -264,6 +270,8 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         after_title_whitespace,
         line_number=0,
         column_number=0,
+        requires_end_token=False,
+        can_force_close=True,
     ):
         (
             self.__label_type,
@@ -320,6 +328,8 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
             f"{part_1}{part_2}",
             line_number=line_number,
             column_number=column_number,
+            requires_end_token=requires_end_token,
+            can_force_close=can_force_close,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -454,6 +464,8 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
             after_title_whitespace,
             line_number=line_number,
             column_number=column_number,
+            requires_end_token=True,
+            can_force_close=False,
         )
 
     # pylint: enable=too-many-arguments

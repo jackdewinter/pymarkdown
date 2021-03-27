@@ -31,7 +31,7 @@ class RuleMd024(Plugin):
             plugin_enabled_by_default=True,
             plugin_description="Multiple headings with the same content",
             plugin_version="0.5.0",
-            plugin_interface_version=1
+            plugin_interface_version=1,
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md024---multiple-headings-with-the-same-content
         # Parameters: siblings_only, allow_different_nesting (boolean; default false)
 

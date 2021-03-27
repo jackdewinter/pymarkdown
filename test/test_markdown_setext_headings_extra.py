@@ -20,7 +20,7 @@ def test_setext_headings_extra_01():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):\\\b\\this is a fun day:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>\\this is a fun day</h2>"""
 
@@ -40,7 +40,7 @@ def test_setext_headings_extra_02():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):\\:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>\\</h2>"""
 
@@ -79,7 +79,7 @@ def test_setext_headings_extra_04():
         "[setext(2,1):-:3::(1,1)]",
         "[icode-span(1,1):this:``::]",
         "[text(1,9): is a fun day:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><code>this</code> is a fun day</h2>"""
 
@@ -99,7 +99,7 @@ def test_setext_headings_extra_05():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):\a&amp;\a\a&\a&amp;\a\a the band played on:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>&amp; the band played on</h2>"""
 
@@ -120,7 +120,7 @@ def test_setext_headings_extra_06():
         "[setext(2,1):-:3::(1,1)]",
         "[raw-html(1,1):there it='is']",
         "[text(1,16):, really:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><there it='is'>, really</h2>"""
 
@@ -141,7 +141,7 @@ def test_setext_headings_extra_07():
         "[setext(2,1):-:3::(1,1)]",
         "[uri-autolink(1,1):http://www.google.com]",
         "[text(1,24): is where to look:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><a href="http://www.google.com">http://www.google.com</a> is where to look</h2>"""
 
@@ -162,7 +162,7 @@ def test_setext_headings_extra_08():
         "[setext(2,1):-:3::(1,1)]",
         "[email-autolink(1,1):foo@bar.com]",
         "[text(1,14): for more information:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2><a href="mailto:foo@bar.com">foo@bar.com</a> for more information</h2>"""
@@ -185,9 +185,9 @@ def test_setext_headings_extra_09():
         "[setext(2,1):-:3::(1,1)]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):it's:]",
-        "[end-emphasis(1,6):::False]",
+        "[end-emphasis(1,6)::]",
         "[text(1,7): me!:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><em>it's</em> me!</h2>"""
 
@@ -208,9 +208,9 @@ def test_setext_headings_extra_10():
         "[setext(2,1):-:3::(1,1)]",
         "[link(1,1):inline:/uri:::::Foo:False::::]",
         "[text(1,2):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,12): is a link:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><a href="/uri">Foo</a> is a link</h2>"""
 
@@ -231,7 +231,7 @@ def test_setext_headings_extra_11():
         "[setext(2,1):-:3::(1,1)]",
         '[image(1,1):inline:/url:title:foo::::foo:False:":: :]',
         "[text(1,21): is an image:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><img src="/url" alt="foo" title="title" /> is an image</h2>"""
 
@@ -251,7 +251,7 @@ def test_setext_headings_extra_12():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):this is a \\\b\\fun\\\b\\ day:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>this is a \\fun\\ day</h2>"""
 
@@ -273,7 +273,7 @@ def test_setext_headings_extra_13():
         "[text(1,1):this is a :]",
         "[icode-span(1,11):fun:``::]",
         "[text(1,18): day:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>this is a <code>fun</code> day</h2>"""
 
@@ -293,7 +293,7 @@ def test_setext_headings_extra_14():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):fun \a&amp;\a\a&\a&amp;\a\a joy:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>fun &amp; joy</h2>"""
 
@@ -315,7 +315,7 @@ def test_setext_headings_extra_15():
         "[text(1,1):where :]",
         "[raw-html(1,7):there it='is']",
         "[text(1,22): it:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>where <there it='is'> it</h2>"""
 
@@ -337,7 +337,7 @@ def test_setext_headings_extra_16():
         "[text(1,1):look at :]",
         "[uri-autolink(1,9):http://www.google.com]",
         "[text(1,32): for answers:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>look at <a href="http://www.google.com">http://www.google.com</a> for answers</h2>"""
 
@@ -359,7 +359,7 @@ def test_setext_headings_extra_17():
         "[text(1,1):email :]",
         "[email-autolink(1,7):foo@bar.com]",
         "[text(1,20): for answers:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2>email <a href="mailto:foo@bar.com">foo@bar.com</a> for answers</h2>"""
@@ -383,9 +383,9 @@ def test_setext_headings_extra_18():
         "[text(1,1):really! :]",
         "[emphasis(1,9):1:*]",
         "[text(1,10):it's me!:]",
-        "[end-emphasis(1,18):::False]",
+        "[end-emphasis(1,18)::]",
         "[text(1,19): here!:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>really! <em>it's me!</em> here!</h2>"""
 
@@ -407,9 +407,9 @@ def test_setext_headings_extra_19():
         "[text(1,1):look at :]",
         "[link(1,9):inline:/uri:::::Foo:False::::]",
         "[text(1,10):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,20): for more:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>look at <a href="/uri">Foo</a> for more</h2>"""
 
@@ -431,7 +431,7 @@ def test_setext_headings_extra_20():
         "[text(1,1):special :]",
         '[image(1,9):inline:/url:title:foo::::foo:False:":: :]',
         "[text(1,29): headings:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2>special <img src="/url" alt="foo" title="title" /> headings</h2>"""
@@ -453,7 +453,7 @@ def test_setext_headings_extra_21():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):this is a fun day\\\b\\:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>this is a fun day\\</h2>"""
 
@@ -473,7 +473,7 @@ def test_setext_headings_extra_22():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):this was \\:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>this was \\</h2>"""
 
@@ -496,7 +496,7 @@ another line
         "[text(1,1):this was :]",
         "[hard-break(1,10):\\]",
         "[text(2,1):\nanother line::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>this was <br />\nanother line</h2>"""
 
@@ -517,7 +517,7 @@ another line
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):this was\nanother line::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>this was\nanother line</h2>"""
 
@@ -542,7 +542,7 @@ another line
         "[text(1,1):this was:]",
         "[hard-break(1,9):   ]",
         "[text(2,1):\nanother line::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>this was<br />\nanother line</h2>"""
 
@@ -567,7 +567,7 @@ def test_setext_headings_extra_22d():
         "[text(1,1):this was:]",
         "[hard-break(1,9):   ]",
         "[text(2,2):\nanother line::\n ]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>this was<br />\nanother line</h2>"""
 
@@ -589,7 +589,7 @@ def test_setext_headings_extra_23():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1):   ]",
         "[text(1,1):what? no line break?:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>what? no line break?</h2>"""
 
@@ -614,7 +614,7 @@ woe is me
         "[text(1,1):what? no line break?:]",
         "[hard-break(1,21):   ]",
         "[text(2,1):\nwoe is me::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>what? no line break?<br />\nwoe is me</h2>"""
 
@@ -635,7 +635,7 @@ def test_setext_headings_extra_24():
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):this is a fun :]",
         "[icode-span(1,15):day:``::]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>this is a fun <code>day</code></h2>"""
 
@@ -655,7 +655,7 @@ def test_setext_headings_extra_25():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):the band played on \a&amp;\a\a&\a&amp;\a\a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>the band played on &amp;</h2>"""
 
@@ -676,7 +676,7 @@ def test_setext_headings_extra_26():
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):really, :]",
         "[raw-html(1,9):there it='is']",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>really, <there it='is'></h2>"""
 
@@ -697,7 +697,7 @@ def test_setext_headings_extra_27():
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):look at :]",
         "[uri-autolink(1,9):http://www.google.com]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2>look at <a href="http://www.google.com">http://www.google.com</a></h2>"""
@@ -720,7 +720,7 @@ def test_setext_headings_extra_28():
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):for more information, contact :]",
         "[email-autolink(1,31):foo@bar.com]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>for more information, contact <a href="mailto:foo@bar.com">foo@bar.com</a></h2>"""
 
@@ -742,8 +742,8 @@ def test_setext_headings_extra_29():
         "[text(1,1):it's :]",
         "[emphasis(1,6):1:*]",
         "[text(1,7):me:]",
-        "[end-emphasis(1,9):::False]",
-        "[end-setext:::False]",
+        "[end-emphasis(1,9)::]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>it's <em>me</em></h2>"""
 
@@ -765,8 +765,8 @@ def test_setext_headings_extra_30():
         "[text(1,1):a link looks like :]",
         "[link(1,19):inline:/uri:::::Foo:False::::]",
         "[text(1,20):Foo:]",
-        "[end-link:::False]",
-        "[end-setext:::False]",
+        "[end-link::]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a link looks like <a href="/uri">Foo</a></h2>"""
 
@@ -787,7 +787,7 @@ def test_setext_headings_extra_31():
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):an image is :]",
         '[image(1,13):inline:/url:title:foo::::foo:False:":: :]',
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>an image is <img src="/url" alt="foo" title="title" /></h2>"""
 
@@ -807,7 +807,7 @@ def test_setext_headings_extra_32():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):\\\b\\:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>\\</h2>"""
 
@@ -827,7 +827,7 @@ def test_setext_headings_extra_33():
     expected_tokens = [
         "[setext(2,1):-:3: :(1,2)]",
         "[text(1,2):\\:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>\\</h2>"""
 
@@ -865,7 +865,7 @@ def test_setext_headings_extra_35():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[icode-span(1,1):day:``::]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><code>day</code></h2>"""
 
@@ -885,7 +885,7 @@ def test_setext_headings_extra_36():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):\a&amp;\a\a&\a&amp;\a\a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>&amp;</h2>"""
 
@@ -925,7 +925,7 @@ def test_setext_headings_extra_38():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[uri-autolink(1,1):http://www.google.com]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2><a href="http://www.google.com">http://www.google.com</a></h2>"""
@@ -947,7 +947,7 @@ def test_setext_headings_extra_39():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[email-autolink(1,1):foo@bar.com]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><a href="mailto:foo@bar.com">foo@bar.com</a></h2>"""
 
@@ -968,8 +968,8 @@ def test_setext_headings_extra_40():
         "[setext(2,1):-:3::(1,1)]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):me:]",
-        "[end-emphasis(1,4):::False]",
-        "[end-setext:::False]",
+        "[end-emphasis(1,4)::]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><em>me</em></h2>"""
 
@@ -990,8 +990,8 @@ def test_setext_headings_extra_41():
         "[setext(2,1):-:3::(1,1)]",
         "[link(1,1):inline:/uri:::::Foo:False::::]",
         "[text(1,2):Foo:]",
-        "[end-link:::False]",
-        "[end-setext:::False]",
+        "[end-link::]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><a href="/uri">Foo</a></h2>"""
 
@@ -1011,7 +1011,7 @@ def test_setext_headings_extra_42():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         '[image(1,1):inline:/url:title:foo::::foo:False:":: :]',
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><img src="/url" alt="foo" title="title" /></h2>"""
 
@@ -1034,7 +1034,7 @@ span`a
         "[text(1,1):a:]",
         "[icode-span(1,2):code\a\n\a \aspan:`::]",
         "[text(2,6):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<code>code span</code>a</h2>"""
 
@@ -1057,7 +1057,7 @@ html='cool'>a
         "[text(1,1):a:]",
         "[raw-html(1,2):raw\nhtml='cool']",
         "[text(2,13):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<raw\nhtml='cool'>a</h2>"""
 
@@ -1078,7 +1078,7 @@ google.com>a
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a\a<\a&lt;\ahttp://www.\ngoogle.com\a>\a&gt;\aa::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a&lt;http://www.\ngoogle.com&gt;a</h2>"""
 
@@ -1099,7 +1099,7 @@ def test_setext_headings_extra_46():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a\a<\a&lt;\afoo@bar\n.com\a>\a&gt;\aa::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a&lt;foo@bar\n.com&gt;a</h2>"""
 
@@ -1123,9 +1123,9 @@ o](/uri "testing")a
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Fo\no:False:":: :]',
         "[text(1,3):Fo\no::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,19):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Fo\no</a>a</h2>"""
 
@@ -1148,9 +1148,9 @@ def test_setext_headings_extra_48():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:":\n: :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,16):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1175,9 +1175,9 @@ def test_setext_headings_extra_48a():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:":  \n: :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,16):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1200,9 +1200,9 @@ def test_setext_headings_extra_48b():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:":\n   : :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,19):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1227,9 +1227,9 @@ def test_setext_headings_extra_48c():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:":  \n   : :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,19):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1254,7 +1254,7 @@ i "testing")a
         "[text(1,3):Foo:]",
         "[text(1,6):]:]",
         '[text(1,7):(/ur\ni \a"\a&quot;\atesting\a"\a&quot;\a)a::\n]',
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a[Foo](/ur\ni &quot;testing&quot;)a</h2>"""
 
@@ -1279,9 +1279,9 @@ def test_setext_headings_extra_50x():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:":: \n:]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,11):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1306,9 +1306,9 @@ def test_setext_headings_extra_50a():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:"::  \n:]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,11):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1331,9 +1331,9 @@ def test_setext_headings_extra_50b():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:"::\n   :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,14):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1358,9 +1358,9 @@ def test_setext_headings_extra_50c():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:"::  \n   :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,14):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1383,9 +1383,9 @@ ing")a
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:test\ning::::Foo:False:":: :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,6):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="test\ning">Foo</a>a</h2>"""
 
@@ -1408,9 +1408,9 @@ def test_setext_headings_extra_52x():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:":: :\n]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,2):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1435,9 +1435,9 @@ def test_setext_headings_extra_52a():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:":: :  \n]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,2):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1460,9 +1460,9 @@ def test_setext_headings_extra_52b():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:":: :\n  ]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,4):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1487,9 +1487,9 @@ def test_setext_headings_extra_52c():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:":: :  \n  ]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,4):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1514,9 +1514,9 @@ bar][bar]a
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::bar:foo\nbar:::::]",
         "[text(1,3):foo\nbar::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,10):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -1543,9 +1543,9 @@ r]a
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::ba\nr:foo:::::]",
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,3):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba r:ba\nr: :/url:: :title:'title':]",
     ]
@@ -1572,9 +1572,9 @@ r]a
         "[text(1,1):a:]",
         "[link(1,2):shortcut:/url:title::::ba\nr:::::]",
         "[text(1,3):ba\nr::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,3):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba r:ba\nr: :/url:: :title:'title':]",
     ]
@@ -1601,9 +1601,9 @@ r][]a
         "[text(1,1):a:]",
         "[link(1,2):collapsed:/url:title::::ba\nr:::::]",
         "[text(1,3):ba\nr::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,5):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba r:ba\nr: :/url:: :title:'title':]",
     ]
@@ -1630,9 +1630,9 @@ bar][]a
         "[text(1,1):a:]",
         "[link(1,2):collapsed:/url:title::::\nbar:::::]",
         "[text(1,3):\nbar::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,7):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:\nbar: :/url:: :title:'title':]",
     ]
@@ -1659,9 +1659,9 @@ bar]a
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::\nbar:foo:::::]",
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,5):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:\nbar: :/url:: :title:'title':]",
     ]
@@ -1686,9 +1686,9 @@ def test_setext_headings_extra_59():
         "[text(1,1):a!\n::\n]",
         '[link(2,1):inline:/uri:testing::::Foo:False:":: :]',
         "[text(2,2):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,22):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a!\n<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -1711,9 +1711,9 @@ o](/uri)a
         "[text(1,1):a:]",
         "[link(1,2):inline:/uri:::::Fo\no:False::::]",
         "[text(1,3):Fo\no::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri">Fo\no</a>a</h2>"""
 
@@ -1736,7 +1736,7 @@ o](/url "title")a
         "[text(1,1):a:]",
         '[image(1,2):inline:/url:title:fo\no::::fo\no:False:":: :]',
         "[text(2,17):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/url" alt="fo\no" title="title" />a</h2>"""
 
@@ -1759,7 +1759,7 @@ def test_setext_headings_extra_62():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":\n: :]',
         "[text(2,16):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -1784,7 +1784,7 @@ def test_setext_headings_extra_62a():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":  \n: :]',
         "[text(2,16):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -1807,7 +1807,7 @@ def test_setext_headings_extra_62b():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":\n   : :]',
         "[text(2,19):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -1832,7 +1832,7 @@ def test_setext_headings_extra_62c():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":  \n   : :]',
         "[text(2,19):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -1857,7 +1857,7 @@ i "testing")a
         "[text(1,4):Foo:]",
         "[text(1,7):]:]",
         '[text(1,8):(/ur\ni \a"\a&quot;\atesting\a"\a&quot;\a)a::\n]',
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a![Foo](/ur\ni &quot;testing&quot;)a</h2>"""
 
@@ -1880,7 +1880,7 @@ def test_setext_headings_extra_64x():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:"::\n:]',
         "[text(2,11):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -1905,7 +1905,7 @@ def test_setext_headings_extra_64a():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:"::  \n:]',
         "[text(2,11):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -1928,7 +1928,7 @@ def test_setext_headings_extra_64b():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:"::\n :]',
         "[text(2,12):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -1953,7 +1953,7 @@ def test_setext_headings_extra_64c():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:"::  \n :]',
         "[text(2,12):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -1976,7 +1976,7 @@ def test_setext_headings_extra_65():
         "[text(1,1):a:]",
         "[image(1,2):inline:/uri::Foo::::Foo:False:::\n:]",
         "[text(2,2):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" />a</h2>"""
 
@@ -1999,7 +1999,7 @@ ing")a
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:test\ning:Foo::::Foo:False:":: :]',
         "[text(2,6):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test\ning" />a</h2>"""
 
@@ -2022,7 +2022,7 @@ def test_setext_headings_extra_67():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":: :\n]',
         "[text(2,2):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -2047,7 +2047,7 @@ def test_setext_headings_extra_67a():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":: :  \n]',
         "[text(2,2):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -2070,7 +2070,7 @@ def test_setext_headings_extra_67b():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":: :\n   ]',
         "[text(2,5):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -2095,7 +2095,7 @@ def test_setext_headings_extra_67c():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":: :  \n   ]',
         "[text(2,5):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -2117,9 +2117,9 @@ def test_setext_headings_extra_68x():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Fo&beta;o:False:":: :]',
         "[text(1,3):Fo\a&beta;\aβ\ao:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,29):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foβo</a>a</h2>"""
 
@@ -2141,9 +2141,9 @@ def test_setext_headings_extra_68a():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Foo:False:":: :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,23):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Foo</a>a</h2>"""
 
@@ -2166,9 +2166,9 @@ def test_setext_headings_extra_68b():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Fo\n&beta;o:False:":: :]',
         "[text(1,3):Fo\n\a&beta;\aβ\ao::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,25):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Fo\nβo</a>a</h2>"""
 
@@ -2190,9 +2190,9 @@ def test_setext_headings_extra_69():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Fo\\]o:False:":: :]',
         "[text(1,3):Fo\\\b]o:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,25):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Fo]o</a>a</h2>"""
 
@@ -2215,9 +2215,9 @@ def test_setext_headings_extra_69a():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testing::::Fo\n\\]o:False:":: :]',
         "[text(1,3):Fo\n\\\b]o::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,21):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testing">Fo\n]o</a>a</h2>"""
 
@@ -2239,9 +2239,9 @@ def test_setext_headings_extra_70():
         "[text(1,1):a:]",
         '[link(1,2):inline:/my%20uri:testing:/my uri:::Foo:True:":: :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,28):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/my%20uri" title="testing">Foo</a>a</h2>"""
 
@@ -2266,7 +2266,7 @@ def test_setext_headings_extra_70a():
         "[text(1,3):Foo:]",
         "[text(1,6):]:]",
         '[text(1,7):(\a<\a&lt;\a/my\nuri\a>\a&gt;\a \a"\a&quot;\atesting\a"\a&quot;\a)a::\n \x02]',
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a[Foo](&lt;/my\nuri&gt; &quot;testing&quot;)a</h2>"""
 
@@ -2288,9 +2288,9 @@ def test_setext_headings_extra_71():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:testβing::test&beta;ing::Foo:False:":: :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,29):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="testβing">Foo</a>a</h2>"""
 
@@ -2313,9 +2313,9 @@ def test_setext_headings_extra_71a():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:test\nβing::test\n&beta;ing::Foo:False:":: :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,12):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="test\nβing">Foo</a>a</h2>"""
 
@@ -2337,9 +2337,9 @@ def test_setext_headings_extra_72():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:test#ing::test\\#ing::Foo:False:":: :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,25):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="test#ing">Foo</a>a</h2>"""
 
@@ -2362,9 +2362,9 @@ def test_setext_headings_extra_72a():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:test\n#ing::test\n\\#ing::Foo:False:":: :]',
         "[text(1,3):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,8):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<a href="/uri" title="test\n#ing">Foo</a>a</h2>"""
 
@@ -2386,7 +2386,7 @@ def test_setext_headings_extra_73():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foβo::::Fo&beta;o:False:":: :]',
         "[text(1,30):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foβo" title="testing" />a</h2>"""
 
@@ -2408,7 +2408,7 @@ def test_setext_headings_extra_73a():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Foo::::Foo:False:":: :]',
         "[text(1,24):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -2431,7 +2431,7 @@ def test_setext_headings_extra_73b():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Fo\nβo::::Fo\n&beta;o:False:":: :]',
         "[text(2,25):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Fo\nβo" title="testing" />a</h2>"""
 
@@ -2453,7 +2453,7 @@ def test_setext_headings_extra_74():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Fo]o::::Fo\\]o:False:":: :]',
         "[text(1,26):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Fo]o" title="testing" />a</h2>"""
 
@@ -2476,7 +2476,7 @@ def test_setext_headings_extra_74a():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testing:Fo\n]o::::Fo\n\\]o:False:":: :]',
         "[text(2,21):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Fo\n]o" title="testing" />a</h2>"""
 
@@ -2498,7 +2498,7 @@ def test_setext_headings_extra_75():
         "[text(1,1):a:]",
         '[image(1,2):inline:/my%20uri:testing:Foo:/my uri:::Foo:True:":: :]',
         "[text(1,29):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/my%20uri" alt="Foo" title="testing" />a</h2>"""
 
@@ -2523,7 +2523,7 @@ def test_setext_headings_extra_75a():
         "[text(1,4):Foo:]",
         "[text(1,7):]:]",
         '[text(1,8):(\a<\a&lt;\a/my\nuri\a>\a&gt;\a \a"\a&quot;\atesting\a"\a&quot;\a)a::\n \x02]',
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a![Foo](&lt;/my\nuri&gt; &quot;testing&quot;)a</h2>"""
 
@@ -2545,7 +2545,7 @@ def test_setext_headings_extra_76():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:testβing:Foo::test&beta;ing::Foo:False:":: :]',
         "[text(1,30):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="testβing" />a</h2>"""
 
@@ -2568,7 +2568,7 @@ def test_setext_headings_extra_76a():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:test\nβing:Foo::test\n&beta;ing::Foo:False:":: :]',
         "[text(2,12):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test\nβing" />a</h2>"""
 
@@ -2590,7 +2590,7 @@ def test_setext_headings_extra_77():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:test#ing:Foo::test\\#ing::Foo:False:":: :]',
         "[text(1,26):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test#ing" />a</h2>"""
 
@@ -2612,7 +2612,7 @@ def test_setext_headings_extra_77a():
         "[text(1,1):a:]",
         '[image(1,2):inline:/uri:test#ing:Foo::test\\#ing::Foo:False:":: :]',
         "[text(1,26):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test#ing" />a</h2>"""
 
@@ -2636,9 +2636,9 @@ def test_setext_headings_extra_78():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::bar:foo\\#bar:::::]",
         "[text(1,3):foo\\\b#bar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,17):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -2665,9 +2665,9 @@ def test_setext_headings_extra_78a():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::bar:foo\n\\#bar:::::]",
         "[text(1,3):foo\n\\\b#bar::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,12):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -2693,9 +2693,9 @@ def test_setext_headings_extra_79():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::bar:foo&beta;bar:::::]",
         "[text(1,3):foo\a&beta;\aβ\abar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,21):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -2722,9 +2722,9 @@ def test_setext_headings_extra_79a():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::bar:foo\n&beta;bar:::::]",
         "[text(1,3):foo\n\a&beta;\aβ\abar::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,16):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -2750,9 +2750,9 @@ def test_setext_headings_extra_80():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::ba&beta;r:foo:::::]",
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,18):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
     ]
@@ -2780,9 +2780,9 @@ def test_setext_headings_extra_80a():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::ba\n&beta;r:foo:::::]",
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
     ]
@@ -2808,9 +2808,9 @@ def test_setext_headings_extra_81():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::ba\\]r:foo:::::]",
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,14):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
     ]
@@ -2838,9 +2838,9 @@ def test_setext_headings_extra_81a():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::ba\n\\]r:foo:::::]",
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,5):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
     ]
@@ -2866,9 +2866,9 @@ def test_setext_headings_extra_82():
         "[text(1,1):a:]",
         "[link(1,2):shortcut:/url:title::::ba&beta;r:::::]",
         "[text(1,3):ba\a&beta;\aβ\ar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,13):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
     ]
@@ -2896,9 +2896,9 @@ def test_setext_headings_extra_82a():
         "[text(1,1):a:]",
         "[link(1,2):shortcut:/url:title::::ba\n&beta;r:::::]",
         "[text(1,3):ba\n\a&beta;\aβ\ar::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
     ]
@@ -2924,9 +2924,9 @@ def test_setext_headings_extra_83():
         "[text(1,1):a:]",
         "[link(1,2):shortcut:/url:title::::ba\\]r:::::]",
         "[text(1,3):ba\\\b]r:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
     ]
@@ -2954,9 +2954,9 @@ def test_setext_headings_extra_83a():
         "[text(1,1):a:]",
         "[link(1,2):shortcut:/url:title::::ba\n\\]r:::::]",
         "[text(1,3):ba\n\\\b]r::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,5):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
     ]
@@ -2982,9 +2982,9 @@ def test_setext_headings_extra_84x():
         "[text(1,1):a:]",
         "[link(1,2):collapsed:/url:title::::ba&beta;r:::::]",
         "[text(1,3):ba\a&beta;\aβ\ar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,15):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
     ]
@@ -3012,9 +3012,9 @@ def test_setext_headings_extra_84a():
         "[text(1,1):a:]",
         "[link(1,2):collapsed:/url:title::::ba\n&beta;r:::::]",
         "[text(1,3):ba\n\a&beta;\aβ\ar::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,11):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
     ]
@@ -3040,9 +3040,9 @@ def test_setext_headings_extra_85():
         "[text(1,1):a:]",
         "[link(1,2):collapsed:/url:title::::ba\\]r:::::]",
         "[text(1,3):ba\\\b]r:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,11):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
     ]
@@ -3070,9 +3070,9 @@ def test_setext_headings_extra_85a():
         "[text(1,1):a:]",
         "[link(1,2):collapsed:/url:title::::ba\n\\]r:::::]",
         "[text(1,3):ba\n\\\b]r::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,7):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
     ]
@@ -3098,9 +3098,9 @@ def test_setext_headings_extra_86x():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::bar:fo&beta;o:::::]",
         "[text(1,3):fo\a&beta;\aβ\ao:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,18):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -3127,9 +3127,9 @@ def test_setext_headings_extra_86a():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::bar:fo\n&beta;o:::::]",
         "[text(1,3):fo\n\a&beta;\aβ\ao::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,14):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -3155,9 +3155,9 @@ def test_setext_headings_extra_87():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::bar:fo\\]o:::::]",
         "[text(1,3):fo\\\b]o:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,14):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -3184,9 +3184,9 @@ def test_setext_headings_extra_87a():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::bar:fo\n\\]o:::::]",
         "[text(1,3):fo\n\\\b]o::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,10):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:\nbar: :/url:: :title:'title':]",
     ]
@@ -3212,9 +3212,9 @@ def test_setext_headings_extra_88x():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::ba\\]r:foo:::::]",
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,14):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
     ]
@@ -3242,9 +3242,9 @@ def test_setext_headings_extra_88a():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::ba\n\\]r:foo:::::]",
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,5):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
     ]
@@ -3270,9 +3270,9 @@ def test_setext_headings_extra_89x():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::ba&beta;r:foo:::::]",
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,18):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
     ]
@@ -3300,9 +3300,9 @@ def test_setext_headings_extra_89a():
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::ba\n&beta;r:foo:::::]",
         "[text(1,3):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
     ]
@@ -3328,7 +3328,7 @@ def test_setext_headings_extra_90x():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo#bar:::bar:foo\\#bar:::::]",
         "[text(1,18):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -3355,7 +3355,7 @@ def test_setext_headings_extra_90a():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo\n#bar:::bar:foo\n\\#bar:::::]",
         "[text(2,12):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -3381,7 +3381,7 @@ def test_setext_headings_extra_91x():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:fooβbar:::bar:foo&beta;bar:::::]",
         "[text(1,22):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -3408,7 +3408,7 @@ def test_setext_headings_extra_91a():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo\nβbar:::bar:foo\n&beta;bar:::::]",
         "[text(2,16):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -3434,7 +3434,7 @@ def test_setext_headings_extra_92x():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo:::ba&beta;r:foo:::::]",
         "[text(1,19):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
     ]
@@ -3462,7 +3462,7 @@ def test_setext_headings_extra_92a():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo:::ba\n&beta;r:foo:::::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
     ]
@@ -3488,7 +3488,7 @@ def test_setext_headings_extra_93x():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo:::ba\\]r:foo:::::]",
         "[text(1,15):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
     ]
@@ -3516,7 +3516,7 @@ def test_setext_headings_extra_93a():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo:::ba\n\\]r:foo:::::]",
         "[text(2,5):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
     ]
@@ -3542,7 +3542,7 @@ def test_setext_headings_extra_94x():
         "[text(1,1):a:]",
         "[image(1,2):shortcut:/url:title:baβr::::ba&beta;r:::::]",
         "[text(1,14):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
     ]
@@ -3570,7 +3570,7 @@ def test_setext_headings_extra_94a():
         "[text(1,1):a:]",
         "[image(1,2):shortcut:/url:title:ba\nβr::::ba\n&beta;r:::::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
     ]
@@ -3596,7 +3596,7 @@ def test_setext_headings_extra_95x():
         "[text(1,1):a:]",
         "[image(1,2):shortcut:/url:title:ba]r::::ba\\]r:::::]",
         "[text(1,10):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
     ]
@@ -3624,7 +3624,7 @@ def test_setext_headings_extra_95a():
         "[text(1,1):a:]",
         "[image(1,2):shortcut:/url:title:ba\n]r::::ba\n\\]r:::::]",
         "[text(2,5):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
     ]
@@ -3650,7 +3650,7 @@ def test_setext_headings_extra_96x():
         "[text(1,1):a:]",
         "[image(1,2):collapsed:/url:title:baβr::::ba&beta;r:::::]",
         "[text(1,16):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
     ]
@@ -3678,7 +3678,7 @@ def test_setext_headings_extra_96a():
         "[text(1,1):a:]",
         "[image(1,2):collapsed:/url:title:ba\nβr::::ba\n&beta;r:::::]",
         "[text(2,11):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
     ]
@@ -3704,7 +3704,7 @@ def test_setext_headings_extra_97x():
         "[text(1,1):a:]",
         "[image(1,2):collapsed:/url:title:ba]r::::ba\\]r:::::]",
         "[text(1,12):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
     ]
@@ -3732,7 +3732,7 @@ def test_setext_headings_extra_97a():
         "[text(1,1):a:]",
         "[image(1,2):collapsed:/url:title:ba\n]r::::ba\n\\]r:::::]",
         "[text(2,7):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
     ]
@@ -3758,7 +3758,7 @@ def test_setext_headings_extra_98x():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foβo:::bar:fo&beta;o:::::]",
         "[text(1,19):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -3785,7 +3785,7 @@ def test_setext_headings_extra_98a():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:fo\nβo:::bar:fo\n&beta;o:::::]",
         "[text(2,14):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -3811,7 +3811,7 @@ def test_setext_headings_extra_99x():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:fo]o:::bar:fo\\]o:::::]",
         "[text(1,15):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -3838,7 +3838,7 @@ def test_setext_headings_extra_99a():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:fo\n]o:::bar:fo\n\\]o:::::]",
         "[text(2,10):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:\nbar: :/url:: :title:'title':]",
     ]
@@ -3864,7 +3864,7 @@ def test_setext_headings_extra_a0x():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo:::ba\\]r:foo:::::]",
         "[text(1,15):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba\\]r:: :/url:: :title:'title':]",
     ]
@@ -3892,7 +3892,7 @@ def test_setext_headings_extra_a0a():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo:::ba\n\\]r:foo:::::]",
         "[text(2,5):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba \\]r:ba\n\\]r: :/url:: :title:'title':]",
     ]
@@ -3918,7 +3918,7 @@ def test_setext_headings_extra_a1x():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo:::ba&beta;r:foo:::::]",
         "[text(1,19):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(3,1):]",
         "[link-ref-def(4,1):True::ba&beta;r:: :/url:: :title:'title':]",
     ]
@@ -3946,7 +3946,7 @@ def test_setext_headings_extra_a1a():
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:foo:::ba\n&beta;r:foo:::::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::ba &beta;r:ba\n&beta;r: :/url:: :title:'title':]",
     ]
@@ -3971,7 +3971,7 @@ o](</my url>)a
         "[text(1,1):a:]",
         "[image(1,2):inline:/my%20url::fo\no:/my url:::fo\no:True::::]",
         "[text(2,14):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>a<img src="/my%20url" alt="fo\no" />a</h2>"""
 
@@ -3996,9 +3996,9 @@ nk](/uri "title" )
         "[text(1,1):abc\n::\n]",
         '[link(2,1):inline:/uri:title::::li\nnk:False:":: : ]',
         "[text(2,2):li\nnk::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(3,19):\ndef::\n \x02]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>abc\n<a href="/uri" title="title">li\nnk</a>\ndef</h2>"""
 
@@ -4025,9 +4025,9 @@ fg`nk](/uri "title" )
         "[text(2,2):li:]",
         "[icode-span(2,4):de\a\n\a \afg:`::]",
         "[text(3,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(3,22):\ndef::\n \x02]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2>abc\n<a href="/uri" title="title">li<code>de fg</code>nk</a>\ndef</h2>"""
@@ -4056,9 +4056,9 @@ fg>nk](/uri "title" )
         "[text(2,2):li:]",
         "[raw-html(2,4):de\nfg]",
         "[text(3,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(3,22):\ndef::\n \x02]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2>abc\n<a href="/uri" title="title">li<de\nfg>nk</a>\ndef</h2>"""
@@ -4085,9 +4085,9 @@ nk][bar]a
         "[text(1,1):a:]",
         "[link(1,2):full:/url:title:::bar:li\nnk:::::]",
         "[text(1,3):li\nnk::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -4116,9 +4116,9 @@ fg`nk][bar]a
         "[text(1,3):li:]",
         "[icode-span(1,5):de\a\n\a \afg:`::]",
         "[text(2,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,12):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -4149,9 +4149,9 @@ fg>nk][bar]a
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,12):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -4178,9 +4178,9 @@ nk][]a
         "[text(1,1):a:]",
         "[link(1,2):collapsed:/url:title::::li\nnk:::::]",
         "[text(1,3):li\nnk::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,6):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::li nk:li\nnk: :/url:: :title:'title':]",
     ]
@@ -4209,9 +4209,9 @@ fg`nk][]a
         "[text(1,3):li:]",
         "[icode-span(1,5):de\a\n\a \afg:`::]",
         "[text(2,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::li`de fg`nk:li`de\nfg`nk: :/url:: :title:'title':]",
     ]
@@ -4242,9 +4242,9 @@ fg>nk][]a
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::li<de fg>nk:li<de\nfg>nk: :/url:: :title:'title':]",
     ]
@@ -4271,9 +4271,9 @@ nk]a
         "[text(1,1):a:]",
         "[link(1,2):shortcut:/url:title::::li\nnk:::::]",
         "[text(1,3):li\nnk::\n]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,4):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::li nk:li\nnk: :/url:: :title:'title':]",
     ]
@@ -4302,9 +4302,9 @@ fg`nk]a
         "[text(1,3):li:]",
         "[icode-span(1,5):de\a\n\a \afg:`::]",
         "[text(2,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,7):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::li`de fg`nk:li`de\nfg`nk: :/url:: :title:'title':]",
     ]
@@ -4335,9 +4335,9 @@ fg>nk]a
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,7):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::li<de fg>nk:li<de\nfg>nk: :/url:: :title:'title':]",
     ]
@@ -4364,7 +4364,7 @@ nk](/uri "title" )
         "[text(1,1):abc\n::\n]",
         '[image(2,1):inline:/uri:title:li\nnk::::li\nnk:False:":: : ]',
         "[text(3,19):\ndef::\n \x02]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2>abc\n<img src="/uri" alt="li\nnk" title="title" />\ndef</h2>"""
@@ -4391,7 +4391,7 @@ fg`nk](/uri "title" )
         "[text(1,1):abc\n::\n]",
         '[image(2,1):inline:/uri:title:lide fgnk::::li`de\nfg`nk:False:":: : ]',
         "[text(3,22):\ndef::\n \x02]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2>abc\n<img src="/uri" alt="lide fgnk" title="title" />\ndef</h2>"""
@@ -4418,7 +4418,7 @@ fg>nk](/uri "title" )
         "[text(1,1):abc\n::\n]",
         '[image(2,1):inline:/uri:title:li<de\nfg>nk::::li<de\nfg>nk:False:":: : ]',
         "[text(3,22):\ndef::\n \x02]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2>abc\n<img src="/uri" alt="li<de\nfg>nk" title="title" />\ndef</h2>"""
@@ -4445,7 +4445,7 @@ nk][bar]a
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:li\nnk:::bar:li\nnk:::::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -4472,7 +4472,7 @@ fg`nk][bar]a
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:lide fgnk:::bar:li`de\nfg`nk:::::]",
         "[text(2,12):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -4499,7 +4499,7 @@ fg>nk][bar]a
         "[text(1,1):a:]",
         "[image(1,2):full:/url:title:li<de\nfg>nk:::bar:li<de\nfg>nk:::::]",
         "[text(2,12):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::bar:: :/url:: :title:'title':]",
     ]
@@ -4526,7 +4526,7 @@ nk][]a
         "[text(1,1):a:]",
         "[image(1,2):collapsed:/url:title:li\nnk::::li\nnk:::::]",
         "[text(2,6):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::li nk:li\nnk: :/url:: :title:'title':]",
     ]
@@ -4553,7 +4553,7 @@ fg`nk][]a
         "[text(1,1):a:]",
         "[image(1,2):collapsed:/url:title:lide fgnk::::li`de\nfg`nk:::::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::li`de fg`nk:li`de\nfg`nk: :/url:: :title:'title':]",
     ]
@@ -4580,7 +4580,7 @@ fg>nk][]a
         "[text(1,1):a:]",
         "[image(1,2):collapsed:/url:title:li<de\nfg>nk::::li<de\nfg>nk:::::]",
         "[text(2,9):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::li<de fg>nk:li<de\nfg>nk: :/url:: :title:'title':]",
     ]
@@ -4607,7 +4607,7 @@ nk]a
         "[text(1,1):a:]",
         "[image(1,2):shortcut:/url:title:li\nnk::::li\nnk:::::]",
         "[text(2,4):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::li nk:li\nnk: :/url:: :title:'title':]",
     ]
@@ -4634,7 +4634,7 @@ fg`nk]a
         "[text(1,1):a:]",
         "[image(1,2):shortcut:/url:title:lide fgnk::::li`de\nfg`nk:::::]",
         "[text(2,7):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::li`de fg`nk:li`de\nfg`nk: :/url:: :title:'title':]",
     ]
@@ -4661,7 +4661,7 @@ fg>nk]a
         "[text(1,1):a:]",
         "[image(1,2):shortcut:/url:title:li<de\nfg>nk::::li<de\nfg>nk:::::]",
         "[text(2,7):a:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[link-ref-def(5,1):True::li<de fg>nk:li<de\nfg>nk: :/url:: :title:'title':]",
     ]
@@ -4690,9 +4690,9 @@ b
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(2,13):a\nb::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<h2>a<a href="/url">li<de\nfg>nk</a>a\nb</h2>"""
@@ -4718,7 +4718,7 @@ b
         "[text(1,1):a:]",
         "[image(1,2):inline:/url::li<de\nfg>nk::::li<de\nfg>nk:False::::]",
         "[text(2,13):a\nb::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" />a\nb</h2>"""
@@ -4746,9 +4746,9 @@ b`
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[icode-span(2,13):a\a\n\a \ab:`::]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<h2>a<a href="/url">li<de\nfg>nk</a><code>a b</code></h2>"""
@@ -4774,7 +4774,7 @@ b`
         "[text(1,1):a:]",
         "[image(1,2):inline:/url::li<de\nfg>nk::::li<de\nfg>nk:False::::]",
         "[icode-span(2,13):a\a\n\a \ab:`::]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" /><code>a b</code></h2>"""
@@ -4802,9 +4802,9 @@ b>
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[raw-html(2,13):a\nb]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<h2>a<a href="/url">li<de\nfg>nk</a><a\nb></h2>"""
@@ -4830,7 +4830,7 @@ b>
         "[text(1,1):a:]",
         "[image(1,2):inline:/url::li<de\nfg>nk::::li<de\nfg>nk:False::::]",
         "[raw-html(2,13):a\nb]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" /><a\nb></h2>"""
@@ -4858,11 +4858,11 @@ b*
         "[text(1,3):li:]",
         "[raw-html(1,5):de\nfg]",
         "[text(2,4):nk:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[emphasis(2,13):1:*]",
         "[text(2,14):a\nb::\n]",
-        "[end-emphasis(3,2):::False]",
-        "[end-setext:::False]",
+        "[end-emphasis(3,2)::]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<h2>a<a href="/url">li<de\nfg>nk</a><em>a\nb</em></h2>"""
@@ -4889,8 +4889,8 @@ b*
         "[image(1,2):inline:/url::li<de\nfg>nk::::li<de\nfg>nk:False::::]",
         "[emphasis(2,13):1:*]",
         "[text(2,14):a\nb::\n]",
-        "[end-emphasis(3,2):::False]",
-        "[end-setext:::False]",
+        "[end-emphasis(3,2)::]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" /><em>a\nb</em></h2>"""
@@ -4918,9 +4918,9 @@ def test_setext_headings_extra_d5():
         "[text(1,1):abc\n::\n]",
         '[link(2,1):inline:/uri:title::::link:False:":\n :\n  :\n   ]',
         "[text(2,2):link:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(5,5):\ndef::\n  \x02]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>abc\n<a href="/uri" title="title">link</a>\ndef</h2>"""
 
@@ -4947,7 +4947,7 @@ def test_setext_headings_extra_d6():
         "[text(1,1):abc\n::\n]",
         '[image(2,1):inline:/uri:title:link::::link:False:":\n :\n  :\n   ]',
         "[text(5,5):\ndef::\n  \x02]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>abc\n<img src="/uri" alt="link" title="title" />\ndef</h2>"""
 
@@ -4972,10 +4972,10 @@ def
         "[emphasis(2,1):1:*]",
         '[link(2,2):inline:/uri:title::::link:False:":: :]',
         "[text(2,3):link:]",
-        "[end-link:::False]",
-        "[end-emphasis(2,22):::False]",
+        "[end-link::]",
+        "[end-emphasis(2,22)::]",
         "[text(2,23):\ndef::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2>abc\n<em><a href="/uri" title="title">link</a></em>\ndef</h2>"""
@@ -5001,9 +5001,9 @@ def
         "[text(1,1):abc\n::\n]",
         "[emphasis(2,1):1:*]",
         '[image(2,2):inline:/uri:title:link::::link:False:":: :]',
-        "[end-emphasis(2,23):::False]",
+        "[end-emphasis(2,23)::]",
         "[text(2,24):\ndef::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2>abc\n<em><img src="/uri" alt="link" title="title" /></em>\ndef</h2>"""
@@ -5030,10 +5030,10 @@ def
         '[link(2,1):inline:/uri:title::::*link*:False:":: :]',
         "[emphasis(2,2):1:*]",
         "[text(2,3):link:]",
-        "[end-emphasis(2,7):::False]",
-        "[end-link:::False]",
+        "[end-emphasis(2,7)::]",
+        "[end-link::]",
         "[text(2,23):\ndef::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = (
         """<h2>abc\n<a href="/uri" title="title"><em>link</em></a>\ndef</h2>"""
@@ -5059,7 +5059,7 @@ def
         "[text(1,1):abc\n::\n]",
         '[image(2,1):inline:/uri:title:link::::*link*:False:":: :]',
         "[text(2,24):\ndef::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>abc\n<img src="/uri" alt="link" title="title" />\ndef</h2>"""
 

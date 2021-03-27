@@ -218,7 +218,7 @@ data="foo" ><c>
         "[raw-html(1,1):a  /]",
         '[raw-html(1,7):b2\ndata="foo" ]',
         "[raw-html(2,13):c]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2><a  /><b2
 data="foo" ><c></h2>"""
@@ -241,7 +241,7 @@ data="foo" ><c>"""
         "[text(1,3)::\a \a\x03\a]",
         "[raw-html(1,3):a  /]",
         "[text(1,9):\a<\a&lt;\ab2:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[para(2,1):]",
         '[text(2,1):data=\a"\a&quot;\afoo\a"\a&quot;\a \a>\a&gt;\a:]',
         "[raw-html(2,13):c]",

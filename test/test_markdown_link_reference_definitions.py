@@ -23,7 +23,7 @@ def test_link_reference_definitions_161():
         "[para(3,1):]",
         "[link(3,1):shortcut:/url:title::::foo:::::]",
         "[text(3,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url" title="title">foo</a></p>"""
@@ -52,7 +52,7 @@ def test_link_reference_definitions_162():
         "[para(5,1):]",
         "[link(5,1):shortcut:/url:the title::::foo:::::]",
         "[text(5,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url" title="the title">foo</a></p>"""
@@ -79,7 +79,7 @@ def test_link_reference_definitions_163():
         "[text(3,2):Foo:]",
         "[text(3,5):*:]",
         "[text(3,6):bar\\\b]:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = (
@@ -108,7 +108,7 @@ def test_link_reference_definitions_164():
         "[para(5,1):]",
         "[link(5,1):shortcut:my%20url:title::::Foo bar:::::]",
         "[text(5,2):Foo bar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="my%20url" title="title">Foo bar</a></p>"""
@@ -137,7 +137,7 @@ line2
         "[para(7,1):]",
         "[link(7,1):shortcut:/url:\ntitle\nline1\nline2\n::::foo:::::]",
         "[text(7,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url" title="
@@ -283,7 +283,7 @@ with blank line
         "[para(5,1):]",
         "[link(5,1):shortcut:/url:::::foo:::::]",
         "[text(5,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>'title\nwith blank line</p>\n<p><a href="/url">foo</a></p>"""
@@ -309,7 +309,7 @@ def test_link_reference_definitions_167():
         "[para(4,1):]",
         "[link(4,1):shortcut:/url:::::foo:::::]",
         "[text(4,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url">foo</a></p>"""
@@ -365,7 +365,7 @@ def test_link_reference_definitions_169():
         "[para(3,1):]",
         "[link(3,1):shortcut::::::foo:::::]",
         "[text(3,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="">foo</a></p>"""
@@ -423,7 +423,7 @@ def test_link_reference_definitions_171():
         "[para(3,1):]",
         "[link(3,1):shortcut:/url%5Cbar*baz:foo&quot;bar\\baz::::foo:::::]",
         "[text(3,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = (
@@ -448,7 +448,7 @@ def test_link_reference_definitions_172():
         "[para(1,1):]",
         "[link(1,1):shortcut:url:::::foo:::::]",
         "[text(1,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::foo:: :url:::::]",
@@ -474,7 +474,7 @@ def test_link_reference_definitions_173():
         "[para(1,1):]",
         "[link(1,1):shortcut:first:::::foo:::::]",
         "[text(1,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[link-ref-def(3,1):True::foo:: :first:::::]",
@@ -502,7 +502,7 @@ def test_link_reference_definitions_174():
         "[para(3,1):]",
         "[link(3,1):shortcut:/url:::::Foo:::::]",
         "[text(3,2):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/url">Foo</a></p>"""
@@ -527,7 +527,7 @@ def test_link_reference_definitions_175():
         "[para(3,1):]",
         "[link(3,1):shortcut:/%CF%86%CE%BF%CF%85:::::αγω:::::]",
         "[text(3,2):αγω:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/%CF%86%CE%BF%CF%85">αγω</a></p>"""
@@ -726,8 +726,8 @@ def test_link_reference_definitions_183():
         "[text(1,3)::\a \a\x03\a]",
         "[link(1,3):shortcut:/url:::::Foo:::::]",
         "[text(1,4):Foo:]",
-        "[end-link:::False]",
-        "[end-atx:::False]",
+        "[end-link::]",
+        "[end-atx::]",
         "[link-ref-def(2,1):True::foo:: :/url:::::]",
         "[block-quote(3,1)::> ]",
         "[para(3,3):]",
@@ -761,7 +761,7 @@ def test_link_reference_definitions_183a():
         "[para(3,3):]",
         "[link(3,3):shortcut:/url:::::Foo:::::]",
         "[text(3,4):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -788,13 +788,13 @@ def test_link_reference_definitions_183b():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):abc:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[link-ref-def(3,1):True::foo:: :/url:::::]",
         "[block-quote(4,1)::> ]",
         "[para(4,3):]",
         "[link(4,3):shortcut:/url:::::Foo:::::]",
         "[text(4,4):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -826,7 +826,7 @@ def test_link_reference_definitions_183c():
         "[para(3,3):]",
         "[link(3,3):shortcut:/url:::::Foo:::::]",
         "[text(3,4):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -861,7 +861,7 @@ indented code block
         "[para(5,3):]",
         "[link(5,3):shortcut:/url:::::Foo:::::]",
         "[text(5,4):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -896,7 +896,7 @@ def test_link_reference_definitions_183e():
         "[para(5,3):]",
         "[link(5,3):shortcut:/url:::::Foo:::::]",
         "[text(5,4):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -1159,7 +1159,7 @@ def test_link_reference_definitions_183ge():
         "[text(1,3):A simple list\n::\n]",
         "[emphasis(2,1):1:*]",
         "[text(2,2):foo:]",
-        "[end-emphasis(2,5):::False]",
+        "[end-emphasis(2,5)::]",
         "[text(2,6):: /url:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
@@ -1275,11 +1275,11 @@ bar
         "[link-ref-def(1,1):True::foo:: :/url:::::]",
         "[setext(3,1):=:3::(2,1)]",
         "[text(2,1):bar:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[para(4,1):]",
         "[link(4,1):shortcut:/url:::::foo:::::]",
         "[text(4,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<h1>bar</h1>
@@ -1305,7 +1305,7 @@ def test_link_reference_definitions_185():
         "[text(2,1):===\n::\n]",
         "[link(3,1):shortcut:/url:::::foo:::::]",
         "[text(3,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>===
@@ -1329,11 +1329,11 @@ def test_link_reference_definitions_185a():
         "[link-ref-def(1,1):True::foo:: :/url:::::]",
         "[atx(2,1):1:0:]",
         "[text(2,3):Abc: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[para(3,1):]",
         "[link(3,1):shortcut:/url:::::foo:::::]",
         "[text(3,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<h1>Abc</h1>
@@ -1363,7 +1363,7 @@ my text
         "[para(5,1):]",
         "[link(5,1):shortcut:/url:::::foo:::::]",
         "[text(5,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<pre><code class="language-text">my text
@@ -1392,7 +1392,7 @@ def test_link_reference_definitions_185c():
         "[para(3,1):]",
         "[link(3,1):shortcut:/url:::::foo:::::]",
         "[text(3,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = (
@@ -1423,7 +1423,7 @@ def test_link_reference_definitions_185d():
         "[para(5,1):]",
         "[link(5,1):shortcut:/url:::::foo:::::]",
         "[text(5,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<script>
@@ -1452,7 +1452,7 @@ def test_link_reference_definitions_185e():
         "[text(2,3):This is a simple block quote\n::\n]",
         "[link(3,1):shortcut:/url:::::foo:::::]",
         "[text(3,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -1482,7 +1482,7 @@ def test_link_reference_definitions_185f():
         "[text(2,3):This is a simple list\n::\n]",
         "[link(3,1):shortcut:/url:::::foo:::::]",
         "[text(3,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
@@ -1546,15 +1546,15 @@ def test_link_reference_definitions_186():
         "[para(6,1):\n\n]",
         "[link(6,1):shortcut:/foo-url:foo::::foo:::::]",
         "[text(6,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(6,6):,\n::\n]",
         "[link(7,1):shortcut:/bar-url:bar::::bar:::::]",
         "[text(7,2):bar:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(7,6):,\n::\n]",
         "[link(8,1):shortcut:/baz-url:::::baz:::::]",
         "[text(8,2):baz:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/foo-url" title="foo">foo</a>,
@@ -1579,7 +1579,7 @@ def test_link_reference_definitions_187():
         "[para(1,1):]",
         "[link(1,1):shortcut:/url:::::foo:::::]",
         "[text(1,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         "[block-quote(3,1)::> ]",

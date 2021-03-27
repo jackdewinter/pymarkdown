@@ -192,7 +192,7 @@ def test_paragraph_series_c_e():
         "[text(1,1):it's :]",
         "[emphasis(1,6):1:*]",
         "[text(1,7):me:]",
-        "[end-emphasis(1,9):::False]",
+        "[end-emphasis(1,9)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>it's <em>me</em></p>"""
@@ -215,7 +215,7 @@ def test_paragraph_series_c_l():
         "[text(1,1):like :]",
         '[link(1,6):inline:/uri:t::::Foo:False:":: :]',
         "[text(1,7):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>like <a href="/uri" title="t">Foo</a></p>"""

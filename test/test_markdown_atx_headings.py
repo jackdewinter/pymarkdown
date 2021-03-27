@@ -22,22 +22,22 @@ def test_atx_headings_032():
     expected_tokens = [
         "[atx(1,1):1:0:]",
         "[text(1,3):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[atx(2,1):2:0:]",
         "[text(2,4):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[atx(3,1):3:0:]",
         "[text(3,5):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[atx(4,1):4:0:]",
         "[text(4,6):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[atx(5,1):5:0:]",
         "[text(5,7):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[atx(6,1):6:0:]",
         "[text(6,8):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>foo</h1>
 <h2>foo</h2>
@@ -119,9 +119,9 @@ def test_atx_headings_036():
         "[text(1,3):foo : ]",
         "[emphasis(1,7):1:*]",
         "[text(1,8):bar:]",
-        "[end-emphasis(1,11):::False]",
+        "[end-emphasis(1,11)::]",
         "[text(1,12): \\\b*baz\\\b*:]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>foo <em>bar</em> *baz*</h1>"""
 
@@ -140,7 +140,7 @@ def test_atx_headings_037():
     expected_tokens = [
         "[atx(1,1):1:0:]",
         "[text(1,20):foo:                  ]",
-        "[end-atx:                     ::False]",
+        "[end-atx:                     :]",
     ]
     expected_gfm = """<h1>foo</h1>"""
 
@@ -161,13 +161,13 @@ def test_atx_headings_038():
     expected_tokens = [
         "[atx(1,2):3:0: ]",
         "[text(1,6):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[atx(2,3):2:0:  ]",
         "[text(2,6):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[atx(3,4):1:0:   ]",
         "[text(3,6):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h3>foo</h3>
 <h2>foo</h2>
@@ -230,10 +230,10 @@ def test_atx_headings_041():
     expected_tokens = [
         "[atx(1,1):2:2:]",
         "[text(1,4):foo: ]",
-        "[end-atx:: :False]",
+        "[end-atx:: ]",
         "[atx(2,3):3:3:  ]",
         "[text(2,9):bar:   ]",
-        "[end-atx::    :False]",
+        "[end-atx::    ]",
     ]
     expected_gfm = """<h2>foo</h2>
 <h3>bar</h3>"""
@@ -254,10 +254,10 @@ def test_atx_headings_042():
     expected_tokens = [
         "[atx(1,1):1:34:]",
         "[text(1,3):foo: ]",
-        "[end-atx:: :False]",
+        "[end-atx:: ]",
         "[atx(2,1):5:2:]",
         "[text(2,7):foo: ]",
-        "[end-atx:: :False]",
+        "[end-atx:: ]",
     ]
     expected_gfm = """<h1>foo</h1>
 <h5>foo</h5>"""
@@ -277,7 +277,7 @@ def test_atx_headings_043():
     expected_tokens = [
         "[atx(1,1):3:3:]",
         "[text(1,5):foo: ]",
-        "[end-atx:     : :False]",
+        "[end-atx:     : ]",
     ]
     expected_gfm = """<h3>foo</h3>"""
 
@@ -296,7 +296,7 @@ def test_atx_headings_044():
     expected_tokens = [
         "[atx(1,1):3:0:]",
         "[text(1,5):foo ### b: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h3>foo ### b</h3>"""
 
@@ -312,7 +312,7 @@ def test_atx_headings_045():
 
     # Arrange
     source_markdown = """# foo#"""
-    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):foo#: ]", "[end-atx:::False]"]
+    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):foo#: ]", "[end-atx::]"]
     expected_gfm = """<h1>foo#</h1>"""
 
     # Act & Assert
@@ -332,13 +332,13 @@ def test_atx_headings_046():
     expected_tokens = [
         "[atx(1,1):3:0:]",
         "[text(1,5):foo \\\b###: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[atx(2,1):2:0:]",
         "[text(2,4):foo #\\\b##: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[atx(3,1):1:0:]",
         "[text(3,3):foo \\\b#: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h3>foo ###</h3>
 <h2>foo ###</h2>
@@ -362,7 +362,7 @@ def test_atx_headings_047():
         "[tbreak(1,1):*::****]",
         "[atx(2,1):2:0:]",
         "[text(2,4):foo: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[tbreak(3,1):*::****]",
     ]
     expected_gfm = """<hr />
@@ -389,7 +389,7 @@ Bar foo"""
         "[end-para:::False]",
         "[atx(2,1):1:0:]",
         "[text(2,3):baz: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[para(3,1):]",
         "[text(3,1):Bar foo:]",
         "[end-para:::True]",
@@ -417,13 +417,13 @@ def test_atx_headings_049():
     expected_tokens = [
         "[atx(1,1):2:0:]",
         "[text(1,4):: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[atx(2,1):1:0:]",
         "[text(2,2)::]",
-        "[end-atx:::False]",
+        "[end-atx::]",
         "[atx(3,1):3:3:]",
         "[text(3,5):: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h2></h2>
 <h1></h1>

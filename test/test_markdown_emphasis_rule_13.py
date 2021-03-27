@@ -18,7 +18,7 @@ def test_emphasis_469():
         "[para(1,1):]",
         "[emphasis(1,1):2:*]",
         "[text(1,3):foo:]",
-        "[end-emphasis(1,6):::False]",
+        "[end-emphasis(1,6)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><strong>foo</strong></p>"""
@@ -40,8 +40,8 @@ def test_emphasis_470():
         "[emphasis(1,1):1:*]",
         "[emphasis(1,2):1:_]",
         "[text(1,3):foo:]",
-        "[end-emphasis(1,6):::False]",
-        "[end-emphasis(1,7):::False]",
+        "[end-emphasis(1,6)::]",
+        "[end-emphasis(1,7)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em><em>foo</em></em></p>"""
@@ -62,7 +62,7 @@ def test_emphasis_471():
         "[para(1,1):]",
         "[emphasis(1,1):2:_]",
         "[text(1,3):foo:]",
-        "[end-emphasis(1,6):::False]",
+        "[end-emphasis(1,6)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><strong>foo</strong></p>"""
@@ -84,8 +84,8 @@ def test_emphasis_472():
         "[emphasis(1,1):1:_]",
         "[emphasis(1,2):1:*]",
         "[text(1,3):foo:]",
-        "[end-emphasis(1,6):::False]",
-        "[end-emphasis(1,7):::False]",
+        "[end-emphasis(1,6)::]",
+        "[end-emphasis(1,7)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><em><em>foo</em></em></p>"""
@@ -107,8 +107,8 @@ def test_emphasis_473():
         "[emphasis(1,1):2:*]",
         "[emphasis(1,3):2:*]",
         "[text(1,5):foo:]",
-        "[end-emphasis(1,8):::False]",
-        "[end-emphasis(1,10):::False]",
+        "[end-emphasis(1,8)::]",
+        "[end-emphasis(1,10)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><strong><strong>foo</strong></strong></p>"""
@@ -130,8 +130,8 @@ def test_emphasis_474():
         "[emphasis(1,1):2:_]",
         "[emphasis(1,3):2:_]",
         "[text(1,5):foo:]",
-        "[end-emphasis(1,8):::False]",
-        "[end-emphasis(1,10):::False]",
+        "[end-emphasis(1,8)::]",
+        "[end-emphasis(1,10)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><strong><strong>foo</strong></strong></p>"""
@@ -154,9 +154,9 @@ def test_emphasis_475():
         "[emphasis(1,3):2:*]",
         "[emphasis(1,5):2:*]",
         "[text(1,7):foo:]",
-        "[end-emphasis(1,10):::False]",
-        "[end-emphasis(1,12):::False]",
-        "[end-emphasis(1,14):::False]",
+        "[end-emphasis(1,10)::]",
+        "[end-emphasis(1,12)::]",
+        "[end-emphasis(1,14)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><strong><strong><strong>foo</strong></strong></strong></p>"""

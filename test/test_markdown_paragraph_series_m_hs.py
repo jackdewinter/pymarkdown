@@ -26,7 +26,7 @@ foo
         "[end-olist:::True]",
         "[setext(3,1):-:3::(2,1)]",
         "[text(2,1):foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ol>
@@ -54,7 +54,7 @@ def test_paragraph_series_m_hs_ol_nl_t_nl_all_hs():
         "[BLANK(1,3):]",
         "[setext(3,4):-:3::(2,4)]",
         "[text(2,4):foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
     ]
@@ -86,7 +86,7 @@ def test_paragraph_series_m_hs_ol_nl_i2_t_nl_hs():
         "[end-olist:::True]",
         "[setext(3,1):-:3:  :(2,3)]",
         "[text(2,3):foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ol>
@@ -146,7 +146,7 @@ def test_paragraph_series_m_hs_ol_nl_i3_t_nl_i3_hs():
         "[BLANK(1,3):]",
         "[setext(3,4):-:3::(2,4)]",
         "[text(2,4):foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
     ]
@@ -206,7 +206,7 @@ def test_paragraph_series_m_hs_ol_t_nl_t_nl_all_hs():
         "[olist(1,1):.:1:3::   \n   ]",
         "[setext(3,4):-:3::(1,4)]",
         "[text(1,4):abc\nfoo::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
     ]
@@ -299,7 +299,7 @@ def test_paragraph_series_m_hs_ol_t_nl_i3_t_nl_i3_hs():
         "[olist(1,1):.:1:3::   \n   ]",
         "[setext(3,4):-:3::(1,4)]",
         "[text(1,4):abc\nfoo::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
     ]
@@ -333,7 +333,7 @@ foo
         "[end-olist:::True]",
         "[setext(3,1):-:3::(2,1)]",
         "[text(2,1):foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """<ol>
@@ -366,7 +366,7 @@ def test_paragraph_series_m_hs_ol_ol_nl_t_nl_all_hs():
         "[BLANK(1,6):]",
         "[setext(3,7):-:3::(2,7)]",
         "[text(2,7):foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
         "[end-olist:::True]",
@@ -438,7 +438,7 @@ def test_paragraph_series_m_hs_ol_ol_t_nl_t_nl_all_hs():
         "[olist(1,4):.:1:6:   :      \n      ]",
         "[setext(3,7):-:3::(1,7)]",
         "[text(1,7):abc\nfoo::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
         "[end-olist:::True]",
@@ -479,7 +479,7 @@ foo
         "[end-olist:::True]",
         "[setext(4,1):-:3::(3,1)]",
         "[text(3,1):foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ol>
@@ -543,11 +543,11 @@ foo
         "[ulist(1,1):-::2::  ]",
         "[setext(2,3):-:1::(1,3)]",
         "[text(1,3):abc:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[end-ulist:::True]",
         "[setext(4,1):-:3::(3,1)]",
         "[text(3,1):foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ul>
@@ -695,7 +695,7 @@ def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i2_t_nl_i2_hs():
         "[end-olist:::True]",
         "[setext(4,3):-:3:  :(3,3)]",
         "[text(3,3):foo:]",
-        "[end-setext:  ::False]",
+        "[end-setext:  :]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ol>
@@ -759,11 +759,11 @@ def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i1_t_nl_i1_hs():
         "[ulist(1,1):-::2::  ]",
         "[setext(2,3):-:1::(1,3)]",
         "[text(1,3):abc:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[end-ulist:::True]",
         "[setext(4,2):-:3: :(3,2)]",
         "[text(3,2):foo:]",
-        "[end-setext: ::False]",
+        "[end-setext: :]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ul>
@@ -910,7 +910,7 @@ def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i3_t_nl_i3_hs():
         "[end-olist:::True]",
         "[setext(4,4):-:3::(3,4)]",
         "[text(3,4):foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
         "[end-olist:::True]",
     ]
@@ -943,7 +943,7 @@ def test_paragraph_series_m_hs_ol_t_nl_i3_ol_nl_i3_t_nl_i3_hs():
         "[olist(1,1):.:1:3::   \n   \n   ]",
         "[setext(4,4):-:3::(1,4)]",
         "[text(1,4):abc\n1.\nfoo::\n\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
         "[end-olist:::True]",
     ]
@@ -975,10 +975,10 @@ def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i2_t_nl_i2_hs():
         "[ulist(1,1):-::2::  \n  \n  ]",
         "[setext(2,3):-:1::(1,3)]",
         "[text(1,3):abc:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[setext(4,3):-:3::(3,3)]",
         "[text(3,3):foo:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
         "[end-ulist:::True]",
     ]
@@ -1011,7 +1011,7 @@ def test_paragraph_series_m_hs_ul_t_nl_i2_ulb_nl_i2_t_nl_i2_hs():
         "[text(1,3):abc\n::\n]",
         "[text(2,1):*:]",
         "[text(2,2):\nfoo::\n]",
-        "[end-setext:::False]",
+        "[end-setext::]",
         "[BLANK(5,1):]",
         "[end-ulist:::True]",
     ]

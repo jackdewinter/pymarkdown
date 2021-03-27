@@ -19,7 +19,7 @@ class BadStartingNewFile(Plugin):
             plugin_enabled_by_default=True,
             plugin_description="Plugin that has a bad starting_new_file function.",
             plugin_version="0.0.0",
-            plugin_interface_version=1
+            plugin_interface_version=1,
         )
 
     def starting_new_file(self):

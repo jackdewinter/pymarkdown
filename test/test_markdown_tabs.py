@@ -496,7 +496,7 @@ def test_tabs_010():
 
     # Arrange
     source_markdown = """#\tFoo"""
-    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):Foo:\t]", "[end-atx:::False]"]
+    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,3):Foo:\t]", "[end-atx::]"]
     expected_gfm = """<h1>Foo</h1>"""
 
     # Act & Assert

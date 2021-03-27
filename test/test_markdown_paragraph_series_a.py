@@ -186,7 +186,7 @@ def test_paragraph_series_a_e():
         "[para(1,1):]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):it's:]",
-        "[end-emphasis(1,6):::False]",
+        "[end-emphasis(1,6)::]",
         "[text(1,7): me!:]",
         "[end-para:::True]",
     ]
@@ -209,7 +209,7 @@ def test_paragraph_series_a_l():
         "[para(1,1):]",
         '[link(1,1):inline:/uri:t::::Foo:False:":: :]',
         "[text(1,2):Foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[text(1,16): is a link:]",
         "[end-para:::True]",
     ]

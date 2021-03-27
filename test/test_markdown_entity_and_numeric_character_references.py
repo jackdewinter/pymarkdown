@@ -223,7 +223,7 @@ def test_character_references_328():
         "[para(1,1):]",
         '[link(1,1):inline:/f%C3%B6%C3%B6:föö:/f&ouml;&ouml;:f&ouml;&ouml;::foo:False:":: :]',
         "[text(1,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/f%C3%B6%C3%B6" title="föö">foo</a></p>"""
@@ -244,7 +244,7 @@ def test_character_references_328a():
         "[para(1,1):]",
         '[link(1,1):inline:/f%C3%B6%C3%B6:föö:/f&ouml;&ouml;:f&ouml;&ouml;::f&ouml;&ouml;:False:":: :]',
         "[text(1,2):f\a&ouml;\aö\a\a&ouml;\aö\a:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><a href="/f%C3%B6%C3%B6" title="föö">föö</a></p>"""
@@ -267,7 +267,7 @@ def test_character_references_329():
         "[para(1,1):]",
         "[link(1,1):shortcut:/f%C3%B6%C3%B6:föö::::foo:::::]",
         "[text(1,2):foo:]",
-        "[end-link:::False]",
+        "[end-link::]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
         '[link-ref-def(3,1):True::foo:: :/f%C3%B6%C3%B6:/f&ouml;&ouml;: :föö:"f&ouml;&ouml;":]',
@@ -355,7 +355,7 @@ def test_character_references_333():
         "[text(1,1):\a&#42;\a*\afoo\a&#42;\a*\a\n::\n]",
         "[emphasis(2,1):1:*]",
         "[text(2,2):foo:]",
-        "[end-emphasis(2,5):::False]",
+        "[end-emphasis(2,5)::]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>*foo*
@@ -446,7 +446,7 @@ def test_character_references_336a():
     expected_tokens = [
         "[atx(1,1):1:0:]",
         "[text(1,3):F\a&ouml;\aö\ao: ]",
-        "[end-atx:::False]",
+        "[end-atx::]",
     ]
     expected_gfm = """<h1>Föo</h1>"""
 
@@ -466,7 +466,7 @@ def test_character_references_336b():
     expected_tokens = [
         "[setext(2,1):-:3::(1,1)]",
         "[text(1,1):F\a&ouml;\aö\ao:]",
-        "[end-setext:::False]",
+        "[end-setext::]",
     ]
     expected_gfm = """<h2>Föo</h2>"""
 
