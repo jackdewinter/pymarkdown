@@ -127,7 +127,7 @@ foo
         "[text(3,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(4,1):`:3::::::]",
-        "[BLANK(5,1):]",
+        "[text(5,1)::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ol>
@@ -921,7 +921,7 @@ foo
         "[text(4,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(5,1):`:3::::::]",
-        "[BLANK(6,1):]",
+        "[text(6,1)::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ol>
@@ -964,7 +964,7 @@ foo
         "[text(4,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(5,1):`:3::::::]",
-        "[BLANK(6,1):]",
+        "[text(6,1)::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ol>
@@ -1005,7 +1005,7 @@ foo
         "[text(4,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(5,1):`:3::::::]",
-        "[BLANK(6,1):]",
+        "[text(6,1)::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ul>
@@ -1047,7 +1047,7 @@ foo
         "[text(4,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(5,1):`:3::::::]",
-        "[BLANK(6,1):]",
+        "[text(6,1)::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ul>
@@ -1092,7 +1092,7 @@ foo
         "[text(4,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(5,1):`:3::::::]",
-        "[BLANK(6,1):]",
+        "[text(6,1)::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ol>
@@ -1140,7 +1140,7 @@ foo
         "[text(4,1):foo:]",
         "[end-para:::False]",
         "[fcode-block(5,1):`:3::::::]",
-        "[BLANK(6,1):]",
+        "[text(6,1)::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ol>

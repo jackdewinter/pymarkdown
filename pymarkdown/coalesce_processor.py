@@ -3,6 +3,7 @@ Processing to coalesce a text tokens with a list of tokens.
 """
 import logging
 
+from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
@@ -58,6 +59,20 @@ class CoalesceProcessor:
                     if coalesced_list[-2].is_indented_code_block:
                         coalesced_list[-2].add_indented_whitespace(indented_whitespace)
                     did_process = True
+            elif (
+                first_pass_results[coalesce_index].is_blank_line
+                and coalesced_list[-1].is_code_block
+            ):
+                POGGER.debug("was>>$", first_pass_results[coalesce_index])
+                replacement_token = TextMarkdownToken(
+                    "",
+                    first_pass_results[coalesce_index].extracted_whitespace,
+                    line_number=first_pass_results[coalesce_index].line_number,
+                    column_number=first_pass_results[coalesce_index].column_number,
+                )
+                POGGER.debug("now>>$", replacement_token)
+                coalesced_list.append(replacement_token)
+                did_process = True
             if not did_process:
                 coalesced_list.append(first_pass_results[coalesce_index])
 

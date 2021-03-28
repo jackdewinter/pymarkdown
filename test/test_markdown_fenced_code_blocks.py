@@ -198,7 +198,7 @@ def test_fenced_code_blocks_096a():
 """
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[BLANK(2,1):]",
+        "[text(2,1)::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<pre><code></code></pre>"""
@@ -219,14 +219,115 @@ def test_fenced_code_blocks_096b():
 """
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[BLANK(2,1):]",
-        "[BLANK(3,1):]",
+        "[text(2,1):\n\x03:]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<pre><code>\n</code></pre>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_096c():
+    """
+    Test case 096b:  variation
+    """
+
+    # Arrange
+    source_markdown = """```
+
+
+"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):\n\x03\n\x03:]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<pre><code>
+
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_096d():
+    """
+    Test case 096b:  variation
+    """
+
+    # Arrange
+    source_markdown = """```
+/a
+/a/a
+""".replace(
+        "/a", " "
+    )
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,2):\n\x03  \n\x03: ]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<pre><code>\a
+\a\a
+</code></pre>""".replace(
+        "\a", " "
+    )
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_096e():
+    """
+    Test case 096b:  variation
+    """
+
+    # Arrange
+    source_markdown = """```
+abc
+/a/a
+""".replace(
+        "/a", " "
+    )
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):abc\n\x03  \n\x03:]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<pre><code>abc
+  
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_096f():
+    """
+    Test case 096b:  variation
+    """
+
+    # Arrange
+    source_markdown = """```
+abc
+
+"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):abc\n\x03\n\x03:]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<pre><code>abc
+
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -242,8 +343,7 @@ def test_fenced_code_blocks_097():
 aaa"""
     expected_tokens = [
         "[fcode-block(1,1):`:5::::::]",
-        "[BLANK(2,1):]",
-        "[text(3,1):```\naaa:]",
+        "[text(2,1):\n```\naaa:]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<pre><code>
@@ -400,8 +500,7 @@ def test_fenced_code_blocks_099x():
     )
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[BLANK(2,1):]",
-        "[BLANK(3,1):  ]",
+        "[text(2,1):\n\x03  :]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>
@@ -430,9 +529,7 @@ def test_fenced_code_blocks_099a():
     )
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[BLANK(2,1):]",
-        "[BLANK(3,1):  ]",
-        "[BLANK(4,1):]",
+        "[text(2,1):\n\x03  \n\x03:]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>
@@ -464,11 +561,7 @@ def test_fenced_code_blocks_099b():
     )
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[BLANK(2,1):]",
-        "[BLANK(3,1): ]",
-        "[BLANK(4,1):  ]",
-        "[BLANK(5,1): ]",
-        "[BLANK(6,1):]",
+        "[text(2,1):\n\x03 \n\x03  \n\x03 \n\x03:]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>
@@ -564,9 +657,7 @@ def test_fenced_code_blocks_099e():
     )
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[BLANK(2,1): ]",
-        "[BLANK(3,1):  ]",
-        "[BLANK(4,1): ]",
+        "[text(2,2):\n\x03  \n\x03 : ]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>\a
@@ -598,11 +689,7 @@ def test_fenced_code_blocks_099f():
     )
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[BLANK(2,1):]",
-        "[BLANK(3,1): ]",
-        "[text(4,3):abc:  ]",
-        "[BLANK(5,1): ]",
-        "[BLANK(6,1):]",
+        "[text(2,1):\n\x03 \n  abc\n\x03 \n\x03:]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>
@@ -670,8 +757,7 @@ aaa
 `````"""
     expected_tokens = [
         "[fcode-block(1,1):`:5::::::]",
-        "[BLANK(2,1):]",
-        "[text(3,1):```\naaa:]",
+        "[text(2,1):\n```\naaa:]",
         "[end-fcode-block::5:False]",
     ]
     expected_gfm = """<pre><code>
@@ -698,9 +784,7 @@ aaa
 `````"""
     expected_tokens = [
         "[fcode-block(1,1):`:5::::::]",
-        "[BLANK(2,1):]",
-        "[BLANK(3,1):]",
-        "[text(4,1):```\naaa:]",
+        "[text(2,1):\n\x03\n```\naaa:]",
         "[end-fcode-block::5:False]",
     ]
     expected_gfm = """<pre><code>
@@ -732,16 +816,56 @@ aaa
 `````"""
     expected_tokens = [
         "[fcode-block(1,1):`:5::::::]",
-        "[BLANK(2,1):]",
-        "[BLANK(3,1):]",
-        "[text(4,1):bbb:]",
-        "[BLANK(5,1):]",
-        "[text(6,1):ccc:]",
-        "[BLANK(7,1):]",
-        "[text(8,1):```\naaa:]",
+        "[text(2,1):\n\x03\nbbb\n\x03\nccc\n\x03\n```\naaa:]",
         "[end-fcode-block::5:False]",
     ]
-    expected_gfm = """<pre><code>\n\nbbb\nccc\n```\naaa\n</code></pre>"""
+    expected_gfm = """<pre><code>
+
+bbb
+
+ccc
+
+```
+aaa
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_099ja():
+    """
+    Test case 099h:  variation
+    """
+
+    # Arrange
+    source_markdown = """`````
+
+
+bbb
+
+ccc
+
+```
+aaa
+`````
+"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:5::::::]",
+        "[text(2,1):\n\x03\nbbb\n\x03\nccc\n\x03\n```\naaa:]",
+        "[end-fcode-block::5:False]",
+        "[BLANK(11,1):]",
+    ]
+    expected_gfm = """<pre><code>
+
+bbb
+
+ccc
+
+```
+aaa
+</code></pre>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -769,15 +893,7 @@ def test_fenced_code_blocks_099k():
     )
     expected_tokens = [
         "[fcode-block(1,1):`:3::::::]",
-        "[BLANK(2,1):]",
-        "[BLANK(3,1):]",
-        "[BLANK(4,1):]",
-        "[BLANK(5,1): ]",
-        "[text(6,3):abc:  ]",
-        "[BLANK(7,1): ]",
-        "[BLANK(8,1):]",
-        "[BLANK(9,1):]",
-        "[BLANK(10,1):]",
+        "[text(2,1):\n\x03\n\x03\n\x03 \n  abc\n\x03 \n\x03\n\x03\n\x03:]",
         "[end-fcode-block::3:False]",
     ]
     expected_gfm = """<pre><code>
@@ -1346,7 +1462,7 @@ some other text
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[fcode-block(4,1):`:3::::::]",
-        "[BLANK(5,1):]",
+        "[text(5,1)::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ul>
@@ -1420,7 +1536,7 @@ some other text
         "[text(3,1):some other text:]",
         "[end-para:::False]",
         "[fcode-block(4,1):`:3::::::]",
-        "[BLANK(5,1):]",
+        "[text(5,1)::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ul>
@@ -1549,7 +1665,7 @@ some other text
         "[text(3,1):some other text:]",
         "[end-para:::False]",
         "[fcode-block(4,1):`:3::::::]",
-        "[BLANK(5,1):]",
+        "[text(5,1)::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -1600,7 +1716,7 @@ def test_fenced_code_blocks_extra_05a():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_06x():
+def test_fenced_code_blocks_extra_06xx():
     """
     Test case extra 05:  variation of 4 where block already opened but
                          no block character
@@ -1621,7 +1737,41 @@ some other text
         "[text(2,3):some text\nsome other text::\n]",
         "[end-para:::False]",
         "[fcode-block(4,1):`:3::::::]",
-        "[BLANK(5,1):]",
+        "[text(5,1)::]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<pre><code></code></pre>
+</blockquote>
+<p>some text
+some other text</p>
+<pre><code></code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_06xa():
+    """
+    Test case extra 05:  variation of 4 where block already opened but
+                         no block character
+    """
+
+    # Arrange
+    source_markdown = """> ```
+  some text
+some other text
+```"""
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[fcode-block(1,3):`:3::::::]",
+        "[end-fcode-block:::True]",
+        "[end-block-quote:::True]",
+        "[para(2,3):  \n]",
+        "[text(2,3):some text\nsome other text::\n]",
+        "[end-para:::False]",
+        "[fcode-block(4,1):`:3::::::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -1690,3 +1840,129 @@ def test_fenced_code_blocks_extra_07():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_08x():
+    """
+    Test case extra 08:  tests
+    """
+
+    # Arrange
+    source_markdown = """```
+abc
+
+def
+```"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):abc\n\x03\ndef:]",
+        "[end-fcode-block::3:False]",
+    ]
+    expected_gfm = """<pre><code>abc
+
+def
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_08a():
+    """
+    Test case extra 08:  tests
+    """
+
+    # Arrange
+    source_markdown = """```
+
+abc
+
+def
+```"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):\nabc\n\x03\ndef:]",
+        "[end-fcode-block::3:False]",
+    ]
+    expected_gfm = """<pre><code>
+abc
+
+def
+</code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_08b():
+    """
+    Test case extra 08:  tests
+    """
+
+    # Arrange
+    source_markdown = """```
+abc
+```
+
+abc
+
+def
+```"""
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,1):abc:]",
+        "[end-fcode-block::3:False]",
+        "[BLANK(4,1):]",
+        "[para(5,1):]",
+        "[text(5,1):abc:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[para(7,1):]",
+        "[text(7,1):def:]",
+        "[end-para:::False]",
+        "[fcode-block(8,1):`:3::::::]",
+        "[end-fcode-block:::True]",
+    ]
+    expected_gfm = """<pre><code>abc
+</code></pre>
+<p>abc</p>
+<p>def</p>
+<pre><code></code></pre>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_fenced_code_blocks_extra_08c():
+    """
+    Test case extra 08:  tests
+    """
+
+    # Arrange
+    source_markdown = """```
+\a\a
+abc
+
+def
+```""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[fcode-block(1,1):`:3::::::]",
+        "[text(2,3):\nabc\n\x03\ndef:  ]",
+        "[end-fcode-block::3:False]",
+    ]
+    expected_gfm = """<pre><code>\a\a
+abc
+
+def
+</code></pre>""".replace(
+        "\a", " "
+    )
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)

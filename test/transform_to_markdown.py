@@ -287,7 +287,12 @@ class TransformToMarkdown:
             previous_token = current_token
 
         if transformed_data and transformed_data[-1] == ParserHelper.newline_character:
-            transformed_data = transformed_data[0:-1]
+            if not (
+                actual_tokens[-1].is_fenced_code_block_end
+                and actual_tokens[-1].was_forced
+                and not actual_tokens[-2].is_fenced_code_block
+            ):
+                transformed_data = transformed_data[0:-1]
 
         assert not self.block_stack
         assert not self.container_token_stack

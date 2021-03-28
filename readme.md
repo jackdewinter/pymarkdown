@@ -116,8 +116,6 @@ others ordering: command line (if exposed), config, default
 - why does hard break not have \n? (fix before release)
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - leading_text_index
-- why does fcb with only newlines and newlines with ws not fold down to text?
-  - coalesce with blank lines in fenced code block?
 
 ### Priority 2 - Like To Solve Before Initial
 

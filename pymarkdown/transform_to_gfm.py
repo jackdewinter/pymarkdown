@@ -306,13 +306,6 @@ class TransformToGfm:
 
         token_parts = []
         if transform_state.is_in_code_block:
-            if transform_state.is_in_fenced_code_block:
-                if transform_state.last_token.is_blank_line:
-                    if transform_state.actual_tokens[
-                        transform_state.actual_token_index - 2
-                    ].is_blank_line:
-                        token_parts.append(ParserHelper.newline_character)
-
             token_parts.extend(
                 [
                     ParserHelper.resolve_all_from_text(next_token.extracted_whitespace),
@@ -364,21 +357,9 @@ class TransformToGfm:
         """
         Handle the black line token.
         """
-        if transform_state.is_in_fenced_code_block:
-            primary_condition = (
-                not transform_state.last_token.is_fenced_code_block
-                or not transform_state.next_token.is_blank_line
-            )
-            exclusion_condition = (
-                transform_state.last_token.is_fenced_code_block
-                and transform_state.next_token.is_fenced_code_block_end
-            )
-            output_html = (
-                f"{output_html}{ParserHelper.newline_character}{next_token.extracted_whitespace}"
-                if primary_condition and not exclusion_condition
-                else f"{output_html}{next_token.extracted_whitespace}"
-            )
-        elif transform_state.is_in_html_block:
+        _ = next_token
+
+        if transform_state.is_in_html_block:
             output_html = f"{output_html}{ParserHelper.newline_character}"
         return output_html
 
@@ -524,11 +505,12 @@ class TransformToGfm:
             output_html[-1] == ParserHelper.newline_character
             and transform_state.last_token.is_text
         ):
-            POGGER.debug("#2")
-            token_parts.append(ParserHelper.newline_character)
-        elif transform_state.last_token.is_blank_line and not next_token.was_forced:
-            POGGER.debug("#3")
-            token_parts.append(ParserHelper.newline_character)
+            POGGER.debug("#2:$", transform_state.last_token)
+            if not (
+                next_token.was_forced
+                and transform_state.last_token.token_text.endswith("\n\x03")
+            ):
+                token_parts.append(ParserHelper.newline_character)
         transform_state.is_in_code_block, transform_state.is_in_fenced_code_block = (
             False,
             False,
