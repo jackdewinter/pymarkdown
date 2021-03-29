@@ -21,8 +21,8 @@ def test_paragraph_series_j_l_bh_s_t():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:title::::foo\\\ncom:False:":: :]',
         "[text(1,3):foo:]",
-        "[hard-break(1,6):\\]",
-        "[text(2,1):\ncom::\n]",
+        "[hard-break(1,6):\\:\n]",
+        "[text(2,1):com:]",
         "[end-link::]",
         "[text(2,19):a:]",
         "[end-para:::True]",
@@ -71,8 +71,8 @@ def test_paragraph_series_j_l_sh_s_t():
         "[text(1,1):a:]",
         '[link(1,2):inline:/uri:title::::foo  \ncom:False:":: :]',
         "[text(1,3):foo:]",
-        "[hard-break(1,6):  ]",
-        "[text(2,1):\ncom::\n]",
+        "[hard-break(1,6):  :\n]",
+        "[text(2,1):com:]",
         "[end-link::]",
         "[text(2,19):a:]",
         "[end-para:::True]",
@@ -1172,8 +1172,8 @@ def test_paragraph_series_j_l_t_bh():
         '[link(1,2):inline:/url:title::::link:False:":: :]',
         "[text(1,3):link:]",
         "[end-link::]",
-        "[hard-break(1,22):\\]",
-        "[text(2,1):\na::\n]",
+        "[hard-break(1,22):\\:\n]",
+        "[text(2,1):a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<a href="/url" title="title">link</a><br />
@@ -1195,8 +1195,8 @@ def test_paragraph_series_j_i_t_bh():
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         '[image(1,2):inline:/url:title:link::::link:False:":: :]',
-        "[hard-break(1,23):\\]",
-        "[text(2,1):\na::\n]",
+        "[hard-break(1,23):\\:\n]",
+        "[text(2,1):a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<img src="/url" alt="link" title="title" /><br />
@@ -1220,8 +1220,8 @@ def test_paragraph_series_j_l_t_sh():
         '[link(1,2):inline:/url:title::::link:False:":: :]',
         "[text(1,3):link:]",
         "[end-link::]",
-        "[hard-break(1,22):   ]",
-        "[text(2,1):\na::\n]",
+        "[hard-break(1,22):   :\n]",
+        "[text(2,1):a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<a href="/url" title="title">link</a><br />
@@ -1243,8 +1243,8 @@ def test_paragraph_series_j_i_t_sh():
         "[para(1,1):\n]",
         "[text(1,1):a:]",
         '[image(1,2):inline:/url:title:link::::link:False:":: :]',
-        "[hard-break(1,23):   ]",
-        "[text(2,1):\na::\n]",
+        "[hard-break(1,23):   :\n]",
+        "[text(2,1):a:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>a<img src="/url" alt="link" title="title" /><br />

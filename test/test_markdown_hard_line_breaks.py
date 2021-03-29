@@ -22,15 +22,15 @@ baz""".replace(
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):foo:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,1):\nbaz::\n]",
+        "[hard-break(1,4):  :\n]",
+        "[text(2,1):baz:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
 baz</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -45,8 +45,8 @@ baz"""
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):foo:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,1):\nbaz::\n]",
+        "[hard-break(1,4):\\:\n]",
+        "[text(2,1):baz:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
@@ -91,8 +91,8 @@ baz""".replace(
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):foo:]",
-        "[hard-break(1,4):       ]",
-        "[text(2,1):\nbaz::\n]",
+        "[hard-break(1,4):       :\n]",
+        "[text(2,1):baz:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
@@ -116,8 +116,8 @@ def test_hard_line_breaks_657():
     expected_tokens = [
         "[para(1,1):\n     ]",
         "[text(1,1):foo:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,6):\nbar::\n]",
+        "[hard-break(1,4):  :\n]",
+        "[text(2,6):bar:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
@@ -139,8 +139,8 @@ def test_hard_line_breaks_658():
     expected_tokens = [
         "[para(1,1):\n     ]",
         "[text(1,1):foo:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,6):\nbar::\n]",
+        "[hard-break(1,4):\\:\n]",
+        "[text(2,6):bar:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />
@@ -165,8 +165,8 @@ bar*""".replace(
         "[para(1,1):\n]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):foo:]",
-        "[hard-break(1,5):  ]",
-        "[text(2,1):\nbar::\n]",
+        "[hard-break(1,5):  :\n]",
+        "[text(2,1):bar:]",
         "[end-emphasis(2,4)::]",
         "[end-para:::True]",
     ]
@@ -192,8 +192,8 @@ bar*""".replace(
         "[para(1,1):\n]",
         "[emphasis(1,1):1:*]",
         "[text(1,2):foo:]",
-        "[hard-break(1,5):\\]",
-        "[text(2,1):\nbar::\n]",
+        "[hard-break(1,5):\\:\n]",
+        "[text(2,1):bar:]",
         "[end-emphasis(2,4)::]",
         "[end-para:::True]",
     ]
@@ -401,8 +401,8 @@ def test_hard_line_breaks_extra_01a():
 This is new."""
     expected_tokens = [
         "[para(1,1):\n]",
-        "[hard-break(1,1):\\]",
-        "[text(2,1):\nThis is new.::\n]",
+        "[hard-break(1,1):\\:\n]",
+        "[text(2,1):This is new.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p><br />
@@ -453,8 +453,8 @@ This is new."""
     expected_tokens = [
         "[para(1,1):\n\n]",
         "[text(1,1):abc\n::\n]",
-        "[hard-break(2,1):\\]",
-        "[text(3,1):\nThis is new.::\n]",
+        "[hard-break(2,1):\\:\n]",
+        "[text(3,1):This is new.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc
@@ -477,8 +477,8 @@ This is new."""
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,1):\nThis is new.::\n]",
+        "[hard-break(1,4):\\:\n]",
+        "[text(2,1):This is new.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc<br />
@@ -500,8 +500,8 @@ def test_hard_line_breaks_extra_03a():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,1):\n\\\b\\This is new.::\n]",
+        "[hard-break(1,4):\\:\n]",
+        "[text(2,1):\\\b\\This is new.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc<br />
@@ -523,8 +523,8 @@ def test_hard_line_breaks_extra_03b():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,1):\n\a&copy;\a©\a This is new.::\n]",
+        "[hard-break(1,4):\\:\n]",
+        "[text(2,1):\a&copy;\a©\a This is new.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc<br />
@@ -546,8 +546,7 @@ def test_hard_line_breaks_extra_03c():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,1):\n::\n]",
+        "[hard-break(1,4):\\:\n]",
         "[icode-span(2,1):This:`::]",
         "[text(2,7): is new.:]",
         "[end-para:::True]",
@@ -571,8 +570,7 @@ def test_hard_line_breaks_extra_03d():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,1):\n::\n]",
+        "[hard-break(1,4):\\:\n]",
         "[emphasis(2,1):1:*]",
         "[text(2,2):This:]",
         "[end-emphasis(2,6)::]",
@@ -598,8 +596,7 @@ def test_hard_line_breaks_extra_03e():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,1):\n::\n]",
+        "[hard-break(1,4):\\:\n]",
         "[link(2,1):inline:foo.com:::::This:False::::]",
         "[text(2,2):This:]",
         "[end-link::]",
@@ -625,8 +622,7 @@ def test_hard_line_breaks_extra_03f():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,1):\n::\n]",
+        "[hard-break(1,4):\\:\n]",
         "[image(2,1):inline:foo.com::This::::This:False::::]",
         "[text(2,17): is new.:]",
         "[end-para:::True]",
@@ -650,8 +646,7 @@ def test_hard_line_breaks_extra_03g():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,1):\n::\n]",
+        "[hard-break(1,4):\\:\n]",
         "[uri-autolink(2,1):http://this.com]",
         "[text(2,18): is new.:]",
         "[end-para:::True]",
@@ -675,8 +670,7 @@ def test_hard_line_breaks_extra_03h():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,1):\n::\n]",
+        "[hard-break(1,4):\\:\n]",
         "[raw-html(2,1):this]",
         "[text(2,7): is new.:]",
         "[end-para:::True]",
@@ -701,10 +695,9 @@ this is new."""
     expected_tokens = [
         "[para(1,1):\n\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,1):\n::\n]",
-        "[hard-break(2,1):\\]",
-        "[text(3,1):\nthis is new.::\n]",
+        "[hard-break(1,4):\\:\n]",
+        "[hard-break(2,1):\\:\n]",
+        "[text(3,1):this is new.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc<br />
@@ -729,8 +722,8 @@ This is new.""".replace(
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,1):\nThis is new.::\n]",
+        "[hard-break(1,4):  :\n]",
+        "[text(2,1):This is new.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc<br />
@@ -754,8 +747,8 @@ def test_hard_line_breaks_extra_04xa():
     expected_tokens = [
         "[para(1,1):\n  ]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,3):\nThis is new.::\n]",
+        "[hard-break(1,4):  :\n]",
+        "[text(2,3):This is new.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc<br />
@@ -779,8 +772,8 @@ def test_hard_line_breaks_extra_04a():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,1):\n\\\b\\This is new.::\n]",
+        "[hard-break(1,4):  :\n]",
+        "[text(2,1):\\\b\\This is new.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc<br />
@@ -804,8 +797,8 @@ def test_hard_line_breaks_extra_04b():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,1):\n\a&copy;\a©\a This is new.::\n]",
+        "[hard-break(1,4):  :\n]",
+        "[text(2,1):\a&copy;\a©\a This is new.:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>abc<br />
@@ -829,8 +822,7 @@ def test_hard_line_breaks_extra_04c():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,1):\n::\n]",
+        "[hard-break(1,4):  :\n]",
         "[icode-span(2,1):This:`::]",
         "[text(2,7): is new.:]",
         "[end-para:::True]",
@@ -856,8 +848,7 @@ def test_hard_line_breaks_extra_04d():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,1):\n::\n]",
+        "[hard-break(1,4):  :\n]",
         "[emphasis(2,1):1:*]",
         "[text(2,2):This:]",
         "[end-emphasis(2,6)::]",
@@ -885,8 +876,7 @@ def test_hard_line_breaks_extra_04e():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,1):\n::\n]",
+        "[hard-break(1,4):  :\n]",
         "[link(2,1):inline:foo.com:::::This:False::::]",
         "[text(2,2):This:]",
         "[end-link::]",
@@ -914,8 +904,7 @@ def test_hard_line_breaks_extra_04f():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,1):\n::\n]",
+        "[hard-break(1,4):  :\n]",
         "[image(2,1):inline:foo.com::This::::This:False::::]",
         "[text(2,17): is new.:]",
         "[end-para:::True]",
@@ -941,8 +930,7 @@ def test_hard_line_breaks_extra_04g():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,1):\n::\n]",
+        "[hard-break(1,4):  :\n]",
         "[uri-autolink(2,1):http://this.com]",
         "[text(2,18): is new.:]",
         "[end-para:::True]",
@@ -968,8 +956,7 @@ def test_hard_line_breaks_extra_04h():
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,1):\n::\n]",
+        "[hard-break(1,4):  :\n]",
         "[raw-html(2,1):this]",
         "[text(2,7): is new.:]",
         "[end-para:::True]",
@@ -1023,8 +1010,7 @@ def test_hard_line_breaks_extra_05x():
     expected_tokens = [
         "[para(1,1):\n   ]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):  ]",
-        "[text(2,4):\n::\n]",
+        "[hard-break(1,4):  :\n]",
         "[emphasis(2,4):1:*]",
         "[text(2,5):this:]",
         "[end-emphasis(2,9)::]",
@@ -1050,8 +1036,7 @@ def test_hard_line_breaks_extra_05a():
     expected_tokens = [
         "[para(1,1):\n   ]",
         "[text(1,1):abc:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,4):\n::\n]",
+        "[hard-break(1,4):\\:\n]",
         "[emphasis(2,4):1:*]",
         "[text(2,5):this:]",
         "[end-emphasis(2,9)::]",

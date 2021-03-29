@@ -734,34 +734,34 @@ class InlineProcessor:
         """
 
         inline_blocks, start_index = [], 0
-        # POGGER.debug(
-        #    "__process_inline_text_block>>source_text>>$>",
-        #    source_text,
-        # )
-        # POGGER.debug(
-        #    "__process_inline_text_block>>starting_whitespace>>$>",
-        #    starting_whitespace,
-        # )
-        # POGGER.debug(
-        #    "__process_inline_text_block>>whitespace_to_recombine>>$>",
-        #    whitespace_to_recombine,
-        # )
-        # POGGER.debug(
-        #    "__process_inline_text_block>>line_number>>$>",
-        #    line_number,
-        # )
-        # POGGER.debug(
-        #    "__process_inline_text_block>>column_number>>$>",
-        #    column_number,
-        # )
+        POGGER.debug(
+            "__process_inline_text_block>>source_text>>$>",
+            source_text,
+        )
+        POGGER.debug(
+            "__process_inline_text_block>>starting_whitespace>>$>",
+            starting_whitespace,
+        )
+        POGGER.debug(
+            "__process_inline_text_block>>whitespace_to_recombine>>$>",
+            whitespace_to_recombine,
+        )
+        POGGER.debug(
+            "__process_inline_text_block>>line_number>>$>",
+            line_number,
+        )
+        POGGER.debug(
+            "__process_inline_text_block>>column_number>>$>",
+            column_number,
+        )
         if whitespace_to_recombine:
             source_text, _ = ParserHelper.recombine_string_with_whitespace(
                 source_text, whitespace_to_recombine
             )
-        # POGGER.debug(
-        #    "__process_inline_text_block>>source_text>>$",
-        #    source_text,
-        # )
+        POGGER.debug(
+            "__process_inline_text_block>>source_text>>$",
+            source_text,
+        )
 
         (
             last_line_number,
@@ -773,48 +773,48 @@ class InlineProcessor:
             fold_space,
         ) = (line_number, column_number, "", "", "", InlineResponse(), None)
 
-        # POGGER.debug(
-        #    ">>Token_start>>$,$<<",
-        #    last_line_number,
-        #    last_column_number,
-        # )
-        # POGGER.debug("__process_inline_text_block>>is_para>>$", is_para)
+        POGGER.debug(
+            ">>Token_start>>$,$<<",
+            last_line_number,
+            last_column_number,
+        )
+        POGGER.debug("__process_inline_text_block>>is_para>>$", is_para)
         if is_para or is_setext:
             fold_space = para_space.split(ParserHelper.newline_character)
-        # POGGER.debug("__process_inline_text_block>>fold_space>>$", fold_space)
+        POGGER.debug("__process_inline_text_block>>fold_space>>$", fold_space)
 
-        # POGGER.debug(
-        #    "starts>$<", InlineProcessor.__valid_inline_text_block_sequence_starts
-        # )
-        # POGGER.debug("look>$<", source_text[start_index:])
+        POGGER.debug(
+            "starts>$<", InlineProcessor.__valid_inline_text_block_sequence_starts
+        )
+        POGGER.debug("look>$<", source_text[start_index:])
         next_index = ParserHelper.index_any_of(
             source_text,
             InlineProcessor.__valid_inline_text_block_sequence_starts,
             start_index,
         )
-        # POGGER.debug("__process_inline_text_block>>is_setext>>$", is_setext)
-        # POGGER.debug(
-        #    "__process_inline_text_block>>$>>$",
-        #    source_text,
-        #    start_index,
-        # )
+        POGGER.debug("__process_inline_text_block>>is_setext>>$", is_setext)
+        POGGER.debug(
+            "__process_inline_text_block>>$>>$",
+            source_text,
+            start_index,
+        )
         while next_index != -1:
 
-            # POGGER.debug(
-            #    "\n\n>>Token_start>>$,$<<",
-            #    last_line_number,
-            #    last_column_number,
-            # )
-            # POGGER.debug(">>inline_blocks>>$<<", inline_blocks)
-            # POGGER.debug(">>current_string>>$<<", current_string)
-            # POGGER.debug(">>current_string_unresolved>>$<<", current_string_unresolved)
-            # POGGER.debug(">>current_string_unresolved>>$<<", current_string_unresolved)
-            # POGGER.debug(">>end_string>>$<<", end_string)
-            # POGGER.debug(
-            #    ">>source_text[]>>$<<$<<",
-            #    source_text[next_index],
-            #    source_text[next_index:],
-            # )
+            POGGER.debug(
+                "\n\n>>Token_start>>$,$<<",
+                last_line_number,
+                last_column_number,
+            )
+            POGGER.debug(">>inline_blocks>>$<<", inline_blocks)
+            POGGER.debug(">>current_string>>$<<", current_string)
+            POGGER.debug(">>current_string_unresolved>>$<<", current_string_unresolved)
+            POGGER.debug(">>current_string_unresolved>>$<<", current_string_unresolved)
+            POGGER.debug(">>end_string>>$<<", end_string)
+            POGGER.debug(
+                ">>source_text[]>>$<<$<<",
+                source_text[next_index],
+                source_text[next_index:],
+            )
 
             inline_response.clear_fields()
             (
@@ -835,7 +835,10 @@ class InlineProcessor:
                 inline_blocks[-1] if inline_blocks else None,
             )
 
-            # POGGER.debug("__process_inline_text_block>>$>>$", start_index, next_index)
+            POGGER.debug("__process_inline_text_block>>$>>$", start_index, next_index)
+            POGGER.debug(
+                "__process_inline_text_block>>$<<", source_text[start_index:next_index]
+            )
             inline_request = InlineRequest(
                 source_text,
                 next_index,
@@ -847,29 +850,29 @@ class InlineProcessor:
                 para_owner,
             )
             if source_text[next_index] in InlineProcessor.__inline_character_handlers:
-                # POGGER.debug(
-                #    "handler(before)>>$<<",
-                #    source_text[next_index],
-                # )
-                # POGGER.debug(
-                #    "current_string_unresolved>>$<<",
-                #    current_string_unresolved,
-                # )
-                # POGGER.debug("remaining_line>>$<<", remaining_line)
-                # POGGER.debug("line_number>>$<<", line_number)
-                # POGGER.debug("column_number>>$<<", column_number)
+                POGGER.debug(
+                    "handler(before)>>$<<",
+                    source_text[next_index],
+                )
+                POGGER.debug(
+                    "current_string_unresolved>>$<<",
+                    current_string_unresolved,
+                )
+                POGGER.debug("remaining_line>>$<<", remaining_line)
+                POGGER.debug("line_number>>$<<", line_number)
+                POGGER.debug("column_number>>$<<", column_number)
                 proc_fn = InlineProcessor.__inline_character_handlers[
                     source_text[next_index]
                 ]
                 inline_response = proc_fn(inline_request)
-                # POGGER.debug(
-                #    "handler(after)>>$<<",
-                #    source_text[next_index],
-                # )
-                # POGGER.debug(
-                #    "delta_line_number>>$<<", inline_response.delta_line_number
-                # )
-                # POGGER.debug("delta_column>>$<<", inline_response.delta_column_number)
+                POGGER.debug(
+                    "handler(after)>>$<<",
+                    source_text[next_index],
+                )
+                POGGER.debug(
+                    "delta_line_number>>$<<", inline_response.delta_line_number
+                )
+                POGGER.debug("delta_column>>$<<", inline_response.delta_column_number)
 
                 line_number += inline_response.delta_line_number
                 if inline_response.delta_column_number < 0:
@@ -879,17 +882,17 @@ class InlineProcessor:
                     )
                 else:
                     column_number += inline_response.delta_column_number
-                # POGGER.debug("handler(after)>>$,$<<", line_number, column_number)
-                # POGGER.debug(
-                #    "handler(after)>>new_tokens>>$<<",
-                #    inline_response.new_tokens,
-                # )
+                POGGER.debug("handler(after)>>$,$<<", line_number, column_number)
+                POGGER.debug(
+                    "handler(after)>>new_tokens>>$<<",
+                    inline_response.new_tokens,
+                )
             else:
                 assert source_text[next_index] == ParserHelper.newline_character
-                # POGGER.debug(
-                #    "end_string(before)>>$<<",
-                #    end_string,
-                # )
+                POGGER.debug(
+                    "end_string(before)>>$<<",
+                    end_string,
+                )
                 (
                     inline_response.new_string,
                     whitespace_to_add,
@@ -903,16 +906,18 @@ class InlineProcessor:
                     remaining_line,
                     end_string,
                     current_string,
+                    inline_blocks,
+                    is_setext,
                     line_number,
                     column_number,
                 )
-                # POGGER.debug("2<<end_string<<$<<", end_string)
-                # POGGER.debug(
-                #    "handle_line_end>>new_tokens>>$<<",
-                #    inline_response.new_tokens,
-                # )
+                POGGER.debug("2<<end_string<<$<<", end_string)
+                POGGER.debug(
+                    "handle_line_end>>new_tokens>>$<<",
+                    inline_response.new_tokens,
+                )
                 if not inline_response.new_tokens:
-                    # POGGER.debug("ws")
+                    POGGER.debug("ws")
                     end_string = InlineProcessor.__add_recombined_whitespace(
                         bool(whitespace_to_recombine),
                         source_text,
@@ -920,46 +925,46 @@ class InlineProcessor:
                         end_string,
                         is_setext,
                     )
-                    # POGGER.debug(
-                    #    "3<<end_string<<$<<",
-                    #    end_string,
-                    # )
-                    # POGGER.debug("ws>$<", end_string)
-                # POGGER.debug(
-                #    "handle_line_end>>$<<", source_text[inline_response.new_index :]
-                # )
-                # POGGER.debug(
-                #    "end_string(after)>>$<<",
-                #    end_string,
-                # )
+                    POGGER.debug(
+                        "3<<end_string<<$<<",
+                        end_string,
+                    )
+                    POGGER.debug("ws>$<", end_string)
+                POGGER.debug(
+                    "handle_line_end>>$<<", source_text[inline_response.new_index :]
+                )
+                POGGER.debug(
+                    "end_string(after)>>$<<",
+                    end_string,
+                )
                 was_new_line = True
                 if para_owner:
                     para_owner.rehydrate_index += 1
 
-            # POGGER.debug(
-            #    "new_string-->$<--",
-            #    inline_response.new_string,
-            # )
-            # POGGER.debug("new_index-->$<--", inline_response.new_index)
-            # POGGER.debug(
-            #    "new_tokens-->$<--",
-            #    inline_response.new_tokens,
-            # )
-            # POGGER.debug(
-            #    "new_string_unresolved-->$<--",
-            #    inline_response.new_string_unresolved,
-            # )
-            # POGGER.debug(
-            #    "consume_rest_of_line-->$<--",
-            #    inline_response.consume_rest_of_line,
-            # )
-            # POGGER.debug(
-            #    "original_string-->$<--",
-            #    inline_response.original_string,
-            # )
+            POGGER.debug(
+                "new_string-->$<--",
+                inline_response.new_string,
+            )
+            POGGER.debug("new_index-->$<--", inline_response.new_index)
+            POGGER.debug(
+                "new_tokens-->$<--",
+                inline_response.new_tokens,
+            )
+            POGGER.debug(
+                "new_string_unresolved-->$<--",
+                inline_response.new_string_unresolved,
+            )
+            POGGER.debug(
+                "consume_rest_of_line-->$<--",
+                inline_response.consume_rest_of_line,
+            )
+            POGGER.debug(
+                "original_string-->$<--",
+                inline_response.original_string,
+            )
 
             if inline_response.consume_rest_of_line:
-                # POGGER.debug("consume_rest_of_line>>$<", remaining_line)
+                POGGER.debug("consume_rest_of_line>>$<", remaining_line)
                 (
                     inline_response.new_string,
                     inline_response.new_tokens,
@@ -967,32 +972,16 @@ class InlineProcessor:
                     remaining_line,
                     end_string,
                 ) = ("", None, True, "", None)
-                # POGGER.debug(
-                #    "9<<end_string<<$<<",
-                #    end_string,
-                # )
+                POGGER.debug(
+                    "9<<end_string<<$<<",
+                    end_string,
+                )
             else:
-                if (
-                    is_setext
-                    and current_string == ParserHelper.newline_character
-                    and inline_blocks
-                    and inline_blocks[-1].is_inline_hard_break
-                    and ParserHelper.is_character_at_index_whitespace(remaining_line, 0)
-                ):
-                    # POGGER.debug("After hard line break correction")
-                    (
-                        index_after_whitespace,
-                        correction_whitespace,
-                    ) = ParserHelper.extract_whitespace(remaining_line, 0)
-                    remaining_line = remaining_line[index_after_whitespace:]
-                    end_string = f"{ParserHelper.newline_character}{correction_whitespace}{ParserHelper.whitespace_split_character}{end_string[1:]}"
-                    current_string_unresolved = (
-                        f"{current_string_unresolved}{correction_whitespace}"
-                    )
-
-                # POGGER.debug("append_rest_of_line>>rem>>$<", remaining_line)
-                # POGGER.debug("append_rest_of_line>>cur>>$<", current_string)
-                # POGGER.debug("append_rest_of_line>>cur_un>>$<", current_string_unresolved)
+                POGGER.debug("append_rest_of_line>>rem>>$<", remaining_line)
+                POGGER.debug("append_rest_of_line>>cur>>$<", current_string)
+                POGGER.debug(
+                    "append_rest_of_line>>cur_un>>$<", current_string_unresolved
+                )
                 current_string, current_string_unresolved = (
                     InlineHelper.append_text(
                         current_string,
@@ -1001,29 +990,29 @@ class InlineProcessor:
                     InlineHelper.append_text(current_string_unresolved, remaining_line),
                 )
 
-            # POGGER.debug(
-            #    "current_string>>$<<",
-            #    current_string,
-            # )
-            # POGGER.debug(
-            #    "current_string_unresolved>>$<<",
-            #    current_string_unresolved,
-            # )
-            # POGGER.debug(
-            #    "inline_blocks>>$<<",
-            #    inline_blocks,
-            # )
-            # POGGER.debug(
-            #    "inline_response.new_tokens>>$<<",
-            #    inline_response.new_tokens,
-            # )
-            # POGGER.debug(
-            #    "starting_whitespace>>$<<",
-            #    starting_whitespace,
-            # )
+            POGGER.debug(
+                "current_string>>$<<",
+                current_string,
+            )
+            POGGER.debug(
+                "current_string_unresolved>>$<<",
+                current_string_unresolved,
+            )
+            POGGER.debug(
+                "inline_blocks>>$<<",
+                inline_blocks,
+            )
+            POGGER.debug(
+                "inline_response.new_tokens>>$<<",
+                inline_response.new_tokens,
+            )
+            POGGER.debug(
+                "starting_whitespace>>$<<",
+                starting_whitespace,
+            )
             if inline_response.new_tokens:
                 if current_string:
-                    # POGGER.debug(">>>text1")
+                    POGGER.debug(">>>text1")
                     inline_blocks.append(
                         TextMarkdownToken(
                             current_string,
@@ -1033,18 +1022,18 @@ class InlineProcessor:
                             column_number=last_column_number,
                         )
                     )
-                    # POGGER.debug("new Text>>$>>", inline_blocks)
+                    POGGER.debug("new Text>>$>>", inline_blocks)
                     reset_current_string, starting_whitespace, end_string = (
                         True,
                         "",
                         None,
                     )
-                    # POGGER.debug(
-                    #    "4<<end_string<<$<<",
-                    #    end_string,
-                    # )
+                    POGGER.debug(
+                        "4<<end_string<<$<<",
+                        end_string,
+                    )
                 elif starting_whitespace:
-                    # POGGER.debug(">>>starting whitespace")
+                    POGGER.debug(">>>starting whitespace")
                     inline_blocks.append(
                         TextMarkdownToken(
                             "",
@@ -1055,67 +1044,67 @@ class InlineProcessor:
                             column_number=last_column_number,
                         )
                     )
-                    # POGGER.debug("new Text>>$>>", inline_blocks)
+                    POGGER.debug("new Text>>$>>", inline_blocks)
                     starting_whitespace = ""
 
                 inline_blocks.extend(inline_response.new_tokens)
 
-            # POGGER.debug(
-            #    "l/c(before)>>$,$<<",
-            #    line_number,
-            #    column_number,
-            # )
+            POGGER.debug(
+                "l/c(before)>>$,$<<",
+                line_number,
+                column_number,
+            )
             if was_new_line:
-                # POGGER.debug("l/c(before)>>newline")
+                POGGER.debug("l/c(before)>>newline")
                 line_number, column_number = line_number + 1, 1
                 assert fold_space
-                # POGGER.debug("fold_space(before)>>$<<", fold_space)
+                POGGER.debug("fold_space(before)>>$<<", fold_space)
                 fold_space = fold_space[1:]
-                # POGGER.debug("fold_space(after)>>$<<", fold_space)
+                POGGER.debug("fold_space(after)>>$<<", fold_space)
                 column_number += len(fold_space[0])
 
             elif not was_column_number_reset:
                 column_number += len(remaining_line)
-            # POGGER.debug(
-            #    "l/c(after)>>$,$<<",
-            #    line_number,
-            #    column_number,
-            # )
+            POGGER.debug(
+                "l/c(after)>>$,$<<",
+                line_number,
+                column_number,
+            )
 
-            # POGGER.debug(
-            #    "starting_whitespace>>$<<",
-            #    starting_whitespace,
-            # )
-            # POGGER.debug(
-            #    "inline_blocks>>$<<",
-            #    inline_blocks,
-            # )
-            # POGGER.debug("reset_current_string>>$<<", reset_current_string)
+            POGGER.debug(
+                "starting_whitespace>>$<<",
+                starting_whitespace,
+            )
+            POGGER.debug(
+                "inline_blocks>>$<<",
+                inline_blocks,
+            )
+            POGGER.debug("reset_current_string>>$<<", reset_current_string)
 
             if reset_current_string:
                 current_string, current_string_unresolved = "", ""
-            # POGGER.debug("pos>>$,$<<", line_number, column_number)
-            # POGGER.debug("last>>$,$<<", last_line_number, last_column_number)
+            POGGER.debug("pos>>$,$<<", line_number, column_number)
+            POGGER.debug("last>>$,$<<", last_line_number, last_column_number)
 
             inline_blocks_size = len(inline_blocks)
-            # POGGER.debug(
-            #    "old>>$>>now>>$<<",
-            #    old_inline_blocks_count,
-            #    inline_blocks_size,
-            # )
+            POGGER.debug(
+                "old>>$>>now>>$<<",
+                old_inline_blocks_count,
+                inline_blocks_size,
+            )
             if old_inline_blocks_count != inline_blocks_size or (
                 old_inline_blocks_last_token
                 and old_inline_blocks_last_token != inline_blocks[-1]
             ):
                 last_line_number, last_column_number = line_number, column_number
-            # POGGER.debug("last>>$,$<<", last_line_number, last_column_number)
-            # POGGER.debug(
-            #    ">>Token_start>>$,$<<",
-            #    last_line_number,
-            #    last_column_number,
-            # )
+            POGGER.debug("last>>$,$<<", last_line_number, last_column_number)
+            POGGER.debug(
+                ">>Token_start>>$,$<<",
+                last_line_number,
+                last_column_number,
+            )
 
-            # POGGER.debug("5<<end_string<<$<<", end_string)
+            POGGER.debug("5<<end_string<<$<<", end_string)
             (
                 start_index,
                 next_index,
@@ -1133,21 +1122,21 @@ class InlineProcessor:
                 inline_response.new_string,
                 inline_response.original_string,
             )
-            # POGGER.debug("6<<end_string<<$<<", end_string)
-            # POGGER.debug(
-            #    "<<current_string<<$<<",
-            #    current_string,
-            # )
-            # POGGER.debug(
-            #    "<<current_string_unresolved<<$<<",
-            #    current_string_unresolved,
-            # )
+            POGGER.debug("6<<end_string<<$<<", end_string)
+            POGGER.debug(
+                "<<current_string<<$<<",
+                current_string,
+            )
+            POGGER.debug(
+                "<<current_string_unresolved<<$<<",
+                current_string_unresolved,
+            )
 
-        # POGGER.debug("<<__complete_inline_block_processing<<")
-        # POGGER.debug(
-        #    "<<__complete_inline_block_processing<<end_string<<$<<",
-        #    end_string,
-        # )
+        POGGER.debug("<<__complete_inline_block_processing<<")
+        POGGER.debug(
+            "<<__complete_inline_block_processing<<end_string<<$<<",
+            end_string,
+        )
         return InlineProcessor.__complete_inline_block_processing(
             inline_blocks,
             source_text,
@@ -1231,6 +1220,14 @@ class InlineProcessor:
             "__complete_inline_loop--current_string>>$>>",
             current_string,
         )
+        POGGER.debug(
+            "__complete_inline_loop--end_string>>$>>",
+            end_string,
+        )
+        POGGER.debug(
+            "__complete_inline_loop--whitespace_to_add>>$>>",
+            whitespace_to_add,
+        )
         if original_string is not None:
             assert not new_string_unresolved or new_string_unresolved == original_string
             current_string = f"{current_string}{ParserHelper.create_replacement_markers(original_string, InlineHelper.append_text('', new_string))}"
@@ -1258,9 +1255,6 @@ class InlineProcessor:
             "__complete_inline_loop--current_string_unresolved>>$>>",
             current_string_unresolved,
         )
-
-        if whitespace_to_add is not None:
-            end_string = InlineHelper.modify_end_string(end_string, whitespace_to_add)
 
         start_index = new_index
         next_index = ParserHelper.index_any_of(
@@ -1306,20 +1300,6 @@ class InlineProcessor:
         POGGER.debug("__cibp>line_number>$<", line_number)
         POGGER.debug("__cibp>column_number>$<", column_number)
 
-        if inline_blocks and inline_blocks[-1].is_inline_hard_break:
-            POGGER.debug("__cibp>hb>$<", source_text[start_index - 1])
-            POGGER.debug("__cibp>hb>$<", source_text[start_index:])
-            if (
-                not start_index
-                or source_text[start_index - 1] == ParserHelper.newline_character
-            ):
-                start_index, extracted_whitespace = ParserHelper.extract_whitespace(
-                    source_text, start_index
-                )
-                assert end_string
-                end_string = f"{end_string}{extracted_whitespace}"
-                POGGER.debug("__cibp>end_string>$<", end_string)
-
         if start_index < len(source_text):
             current_string = InlineHelper.append_text(
                 current_string, source_text[start_index:]
@@ -1327,6 +1307,20 @@ class InlineProcessor:
             POGGER.debug("__cibp>current_string>$<", current_string)
 
         if current_string or not have_processed_once:
+            POGGER.debug("__cibp>current_string>$<", current_string)
+            POGGER.debug("__cibp>starting_whitespace>$<", starting_whitespace)
+            if (
+                is_setext
+                and end_string is None
+                and (inline_blocks and inline_blocks[-1].is_inline_hard_break)
+            ):
+                new_index, ex_ws = ParserHelper.extract_whitespace(current_string, 0)
+                POGGER.debug("__cibp>new_index>$<", new_index)
+                POGGER.debug("__cibp>b>$<", ex_ws)
+                if new_index:
+                    end_string = ex_ws + ParserHelper.whitespace_split_character
+                    current_string = current_string[new_index:]
+            POGGER.debug("__cibp>end_string>$<", end_string)
             inline_blocks.append(
                 TextMarkdownToken(
                     current_string,

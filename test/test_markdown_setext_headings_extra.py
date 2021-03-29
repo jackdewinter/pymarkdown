@@ -494,8 +494,8 @@ another line
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):this was :]",
-        "[hard-break(1,10):\\]",
-        "[text(2,1):\nanother line::\n]",
+        "[hard-break(1,10):\\:\n]",
+        "[text(2,1):another line:]",
         "[end-setext::]",
     ]
     expected_gfm = """<h2>this was <br />\nanother line</h2>"""
@@ -540,8 +540,8 @@ another line
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):this was:]",
-        "[hard-break(1,9):   ]",
-        "[text(2,1):\nanother line::\n]",
+        "[hard-break(1,9):   :\n]",
+        "[text(2,1):another line:]",
         "[end-setext::]",
     ]
     expected_gfm = """<h2>this was<br />\nanother line</h2>"""
@@ -565,8 +565,8 @@ def test_setext_headings_extra_22d():
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):this was:]",
-        "[hard-break(1,9):   ]",
-        "[text(2,2):\nanother line::\n ]",
+        "[hard-break(1,9):   :\n]",
+        "[text(2,2):another line:: \x02]",
         "[end-setext::]",
     ]
     expected_gfm = """<h2>this was<br />\nanother line</h2>"""
@@ -612,8 +612,8 @@ woe is me
     expected_tokens = [
         "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):what? no line break?:]",
-        "[hard-break(1,21):   ]",
-        "[text(2,1):\nwoe is me::\n]",
+        "[hard-break(1,21):   :\n]",
+        "[text(2,1):woe is me:]",
         "[end-setext::]",
     ]
     expected_gfm = """<h2>what? no line break?<br />\nwoe is me</h2>"""
@@ -4668,7 +4668,7 @@ fg>nk]a
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" title="title" />a</h2>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm

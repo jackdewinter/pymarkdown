@@ -9,7 +9,7 @@ from .utils import act_and_assert
 
 
 @pytest.mark.gfm
-def test_block_quotes_206():
+def test_block_quotes_206x():
     """
     Test case 206:  Here is a simple example:
     """

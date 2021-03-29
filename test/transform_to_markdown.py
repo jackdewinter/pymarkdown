@@ -1335,7 +1335,7 @@ class TransformToMarkdown:
         print(f"<<rehydrate_text>>{ParserHelper.make_value_visible(main_text)}")
 
         print(
-            f"<<leading_whitespace>>{ParserHelper.make_value_visible(current_token.extracted_whitespace)}"
+            f">>leading_whitespace>>{ParserHelper.make_value_visible(current_token.extracted_whitespace)}"
         )
         leading_whitespace = ParserHelper.remove_all_from_text(
             current_token.extracted_whitespace
@@ -1378,7 +1378,18 @@ class TransformToMarkdown:
         """
         _ = previous_token
 
-        return "" if self.block_stack[-1].is_inline_link else current_token.line_end
+        leading_whitespace = current_token.line_end + ParserHelper.newline_character
+        if self.block_stack[-1].is_paragraph:
+            (
+                leading_whitespace,
+                self.block_stack[-1].rehydrate_index,
+            ) = ParserHelper.recombine_string_with_whitespace(
+                leading_whitespace,
+                self.block_stack[-1].extracted_whitespace,
+                self.block_stack[-1].rehydrate_index,
+            )
+
+        return "" if self.block_stack[-1].is_inline_link else leading_whitespace
 
     # pylint: enable=unused-argument
 
@@ -1623,6 +1634,13 @@ class TransformToMarkdown:
                 )
 
             main_text = ParserHelper.newline_character.join(rejoined_token_text)
+        else:
+            print(f"main_text>>{ParserHelper.make_value_visible(main_text)}")
+            print(f"current_token>>{ParserHelper.make_value_visible(current_token)}")
+            if current_token.end_whitespace and current_token.end_whitespace.endswith(
+                ParserHelper.whitespace_split_character
+            ):
+                main_text = current_token.end_whitespace[0:-1] + main_text
         return main_text
 
     def __find_last_block_quote_on_stack(self):

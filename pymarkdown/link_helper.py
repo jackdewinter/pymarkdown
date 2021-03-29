@@ -543,7 +543,9 @@ class LinkHelper:
                 text_parts.append(converted_text)
                 if converted_text == "\\":
                     text_parts.append(converted_text)
+                text_parts.append(ParserHelper.newline_character)
                 text_raw_parts.append(converted_text)
+                text_raw_parts.append(ParserHelper.newline_character)
                 POGGER.debug(
                     "is_inline_hard_break>>collected_text_raw>>$<<", text_raw_parts
                 )

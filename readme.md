@@ -113,11 +113,18 @@ others ordering: command line (if exposed), config, default
 
 ### Priority 1 - Must Solve Before Initial
 
-- why does hard break not have \n? (fix before release)
-- track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
-  - leading_text_index
+Done
 
 ### Priority 2 - Like To Solve Before Initial
+
+- track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
+  - leading_text_index - verify_line_and... ~715
+  - see 213c.  doesn't seem to have enough information to properly reconstruct
+  - compare to 213d which does
+  - _215, _229gx, _229ga, _229hx, _229ha,
+  - test_fenced_code_blocks_098c, _extra_05x, _extra_05a, _extra_06xx, _extra_06xa
+  - test_paragraph_extra_j0ea
+  - test_paragraph_series_n_bq_t_nl_bq_fb_nl_without_bq
 
 - make sure to generated ordered/unordered tests to make sure both covered
   - every unordered tests should have an ordered counterpart

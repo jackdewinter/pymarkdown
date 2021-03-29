@@ -538,7 +538,7 @@ class TransformToGfm:
         """
         _ = (next_token, transform_state)
 
-        return "".join([output_html, "<br />"])
+        return "".join([output_html, "<br />", ParserHelper.newline_character])
 
     @classmethod
     def __handle_start_atx_heading_token(cls, output_html, next_token, transform_state):

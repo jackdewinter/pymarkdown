@@ -528,13 +528,15 @@ class InlineHelper:
             return f"{removed_end_whitespace}{ParserHelper.newline_character}"
         return f"{end_string}{removed_end_whitespace}{ParserHelper.newline_character}"
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
     @staticmethod
     def handle_line_end(
         next_index,
         remaining_line,
         end_string,
         current_string,
+        inline_blocks,
+        is_setext,
         line_number,
         column_number,
     ):
@@ -587,23 +589,48 @@ class InlineHelper:
             POGGER.debug(">>$<<", is_proper_hard_break)
 
         if is_proper_hard_break:
+            POGGER.debug(">>proper hard break")
             new_tokens.append(
                 HardBreakMarkdownToken(
                     InlineHelper.backslash_character, line_number, adj_hard_column - 1
                 )
             )
-            current_string, whitespace_to_add = current_string[0:-1], ""
+            current_string, whitespace_to_add = current_string[0:-1], None
+            append_to_current_string = ""
         elif removed_end_whitespace_size >= 2:
+            POGGER.debug(">>whitespace hard break")
             new_tokens.append(
                 HardBreakMarkdownToken(
                     removed_end_whitespace, line_number, adj_hard_column
                 )
             )
-            whitespace_to_add = ""
+            whitespace_to_add = None
+            append_to_current_string = ""
         else:
+            POGGER.debug(">>normal end")
+            POGGER.debug("<<is_setext<<$<<", is_setext)
+            POGGER.debug("<<inline_blocks<<$<<", inline_blocks)
+            POGGER.debug("<<current_string<<$<<", current_string)
+            POGGER.debug("<<remaining_line<<$<<", remaining_line)
+            POGGER.debug("<<end_string<<$<<", end_string)
+            POGGER.debug("<<removed_end_whitespace<<$<<", removed_end_whitespace)
+            if (
+                is_setext
+                and inline_blocks
+                and inline_blocks[-1].is_inline_hard_break
+                and not current_string
+            ):
+                new_index, ex_ws = ParserHelper.extract_whitespace(remaining_line, 0)
+                POGGER.debug("<<new_index<<$<<", new_index)
+                POGGER.debug("<<ex_ws<<$<<", ex_ws)
+                if new_index:
+                    end_string = ex_ws + ParserHelper.whitespace_split_character
+                    remaining_line = remaining_line[new_index:]
+
             end_string = InlineHelper.modify_end_string(
                 end_string, removed_end_whitespace
             )
+            POGGER.debug("<<end_string<<$<<", end_string)
 
         POGGER.debug(
             "<<append_to_current_string<<$<<",
@@ -626,7 +653,7 @@ class InlineHelper:
             current_string,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments, too-many-locals, too-many-statements
 
     @staticmethod
     def extract_bounded_string(

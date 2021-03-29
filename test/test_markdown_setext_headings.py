@@ -157,8 +157,8 @@ def test_setext_headings_052c():
     expected_tokens = [
         "[setext(4,1):=:3:  :(1,3)]",
         "[text(1,3):a\nb:: \n  \x02]",
-        "[hard-break(2,4):  ]",
-        "[text(3,3):\nc::\n  ]",
+        "[hard-break(2,4):  :\n]",
+        "[text(3,3):c::  \x02]",
         "[end-setext::]",
     ]
     expected_gfm = """<h1>a
@@ -166,7 +166,7 @@ b<br />
 c</h1>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -200,7 +200,7 @@ c</h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_052e():
+def test_setext_headings_052ex():
     """
     Test case 052a:  Deal with multiple lines that start with whitespace.
     """
@@ -218,8 +218,8 @@ def test_setext_headings_052e():
         "[emphasis(2,3):1:*]",
         "[text(2,4):b:]",
         "[end-emphasis(2,5)::]",
-        "[hard-break(2,6):  ]",
-        "[text(3,3):\nc::\n  ]",
+        "[hard-break(2,6):  :\n]",
+        "[text(3,3):c::  \x02]",
         "[end-setext::]",
     ]
     expected_gfm = """<h1>a
@@ -251,13 +251,13 @@ def test_setext_headings_052ea():
         "[emphasis(2,3):1:*]",
         "[text(2,4):b:]",
         "[end-emphasis(2,5)::]",
-        "[hard-break(2,6):  ]",
-        "[text(3,3):\na\n::\n  \x02 \n  \x02]",
+        "[hard-break(2,6):  :\n]",
+        "[text(3,3):a\n::  \x02 \n  \x02]",
         "[emphasis(4,3):1:*]",
         "[text(4,4):b:]",
         "[end-emphasis(4,5)::]",
-        "[hard-break(4,6):  ]",
-        "[text(5,3):\nc::\n  ]",
+        "[hard-break(4,6):  :\n]",
+        "[text(5,3):c::  \x02]",
         "[end-setext::]",
     ]
     expected_gfm = """<h1>a
@@ -293,18 +293,18 @@ c
         "[emphasis(2,2):1:*]",
         "[text(2,3):b:]",
         "[end-emphasis(2,4)::]",
-        "[hard-break(2,5):  ]",
-        "[text(3,3):\na\n::\n  \x02 \n  \x02]",
+        "[hard-break(2,5):  :\n]",
+        "[text(3,3):a\n::  \x02 \n  \x02]",
         "[emphasis(4,3):1:*]",
         "[text(4,4):b:]",
         "[end-emphasis(4,5)::]",
-        "[hard-break(4,6):  ]",
-        "[text(5,4):\na\n::\n   \x02 \n   \x02]",
+        "[hard-break(4,6):  :\n]",
+        "[text(5,4):a\n::   \x02 \n   \x02]",
         "[emphasis(6,4):1:*]",
         "[text(6,5):b:]",
         "[end-emphasis(6,6)::]",
-        "[hard-break(6,7):  ]",
-        "[text(7,1):\nc::\n]",
+        "[hard-break(6,7):  :\n]",
+        "[text(7,1):c:]",
         "[end-setext::]",
     ]
     expected_gfm = """<h1>a
@@ -338,8 +338,8 @@ def test_setext_headings_052f():
         "[emphasis(2,4):1:*]",
         "[text(2,5):b:]",
         "[end-emphasis(2,6)::]",
-        "[hard-break(2,7):  ]",
-        "[text(3,2):\nc::\n ]",
+        "[hard-break(2,7):  :\n]",
+        "[text(3,2):c:: \x02]",
         "[end-setext::]",
     ]
     expected_gfm = """<h1>a

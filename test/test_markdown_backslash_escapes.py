@@ -125,8 +125,8 @@ bar"""
     expected_tokens = [
         "[para(1,1):\n]",
         "[text(1,1):foo:]",
-        "[hard-break(1,4):\\]",
-        "[text(2,1):\nbar::\n]",
+        "[hard-break(1,4):\\:\n]",
+        "[text(2,1):bar:]",
         "[end-para:::True]",
     ]
     expected_gfm = """<p>foo<br />

@@ -232,7 +232,12 @@ class HardBreakMarkdownToken(InlineMarkdownToken):
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_inline_hard_break,
-            self.__line_end,
+            MarkdownToken.extra_data_separator.join(
+                [
+                    self.__line_end,
+                    ParserHelper.newline_character,
+                ]
+            ),
             line_number=line_number,
             column_number=column_number,
         )

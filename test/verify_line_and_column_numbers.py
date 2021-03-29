@@ -691,26 +691,34 @@ def __maintain_block_stack(container_block_stack, current_token):
         container_block_stack.append(current_token)
         print(f">>CON>>after>>{ParserHelper.make_value_visible(container_block_stack)}")
 
-    elif current_token.is_end_token:
+    elif current_token.is_end_token and (
+        current_token.is_block_quote_end
+        or current_token.is_list_end
+        or current_token.is_new_list_item
+    ):
+        print("--")
+        print(
+            f"<<CON<<before<<{ParserHelper.make_value_visible(container_block_stack)}"
+        )
 
-        if (
-            current_token.is_block_quote_end
-            or current_token.is_list_end
-            or current_token.is_new_list_item
-        ):
-            print("--")
-            print(
-                f"<<CON<<before<<{ParserHelper.make_value_visible(container_block_stack)}"
-            )
-
-            if container_block_stack[-1].is_new_list_item:
-                del container_block_stack[-1]
-
-            assert container_block_stack[-1].token_name == current_token.type_name
+        if container_block_stack[-1].is_new_list_item:
             del container_block_stack[-1]
-            print(
-                f"<<CON<<after<<{ParserHelper.make_value_visible(container_block_stack)}"
-            )
+
+        assert container_block_stack[-1].token_name == current_token.type_name
+        del container_block_stack[-1]
+        print(f"<<CON<<after<<{ParserHelper.make_value_visible(container_block_stack)}")
+        # if current_token.is_block_quote_end:
+        #    leading_text_index, expected_leading_text_index = (
+        #        current_token.start_markdown_token.leading_text_index,
+        #        ParserHelper.count_newlines_in_text(
+        #            current_token.start_markdown_token.leading_spaces
+        #        ),
+        #    )
+
+        # assert True or (
+        #    leading_text_index == expected_leading_text_index + 1
+        #   or (leading_text_index == expected_leading_text_index)
+        # ), f"leading_text_index={str(leading_text_index)};expected_leading_text_index={str(expected_leading_text_index)}"
 
 
 def __verify_first_inline(last_non_inline_token, first_inline_token, last_token_stack):
@@ -1709,37 +1717,44 @@ def __verify_next_inline_hard_break(
             f"rehydrate_index(__verify_next_inline_hard_break)>{str(last_token.rehydrate_index)}"
         )
         new_column_number += len(ws_for_new_line)
+
     elif last_token.is_setext_heading:
         assert current_inline_token.is_text
-        assert (
-            current_inline_token.token_text
-            and current_inline_token.token_text[0] == ParserHelper.newline_character
-        )
-        assert (
-            current_inline_token.end_whitespace
-            and current_inline_token.end_whitespace[0] == ParserHelper.newline_character
-        )
-        split_whitespace = current_inline_token.end_whitespace.split(
-            ParserHelper.newline_character
-        )
-
-        # if current_string == "\n" and ParserHelper.is_character_at_index_whitespace(remaining_line, 0):
+        # assert (
+        #    current_inline_token.token_text
+        #    and current_inline_token.token_text[0] == ParserHelper.newline_character
+        # )
+        # assert (
+        #    current_inline_token.end_whitespace
+        #    and current_inline_token.end_whitespace[0] == ParserHelper.newline_character
+        # )
         print(
             f"previous_inline_token>{ParserHelper.make_value_visible(previous_inline_token)}<"
         )
-        print(f"split_whitespace>{ParserHelper.make_value_visible(split_whitespace)}<")
-        ws_for_new_line = split_whitespace[1]
-        print(f"ws_for_new_line>{ParserHelper.make_value_visible(ws_for_new_line)}<")
+        print(
+            f"current_inline_token>{ParserHelper.make_value_visible(current_inline_token)}<"
+        )
+        end_ws = current_inline_token.end_whitespace
+        print(f"current_inline_token>{ParserHelper.make_value_visible(end_ws)}<")
 
-        if previous_inline_token.is_inline_hard_break:
-            print("possible hardbreak adjustment")
-            split_index = ws_for_new_line.find(ParserHelper.whitespace_split_character)
-            if split_index != -1:
-                print("hardbreak adjustment")
-                ws_for_new_line = ws_for_new_line[0:split_index]
-                print(
-                    f"ws_for_new_line>{ParserHelper.make_value_visible(ws_for_new_line)}<"
-                )
+        ws_for_new_line = ""
+        if end_ws is not None:
+            split_whitespace = current_inline_token.end_whitespace.split(
+                ParserHelper.newline_character
+            )
+
+            print(
+                f"split_whitespace>{ParserHelper.make_value_visible(split_whitespace)}<"
+            )
+            if len(split_whitespace) >= 2:
+                ws_for_new_line = split_whitespace[1]
+            else:
+                ws_for_new_line = split_whitespace[0]
+            if ws_for_new_line.endswith(ParserHelper.whitespace_split_character):
+                ws_for_new_line = ws_for_new_line[0:-1]
+            print(
+                f"ws_for_new_line>{ParserHelper.make_value_visible(ws_for_new_line)}<"
+            )
 
         new_column_number += len(ws_for_new_line)
     return estimated_line_number + 1, new_column_number
@@ -1861,14 +1876,10 @@ def __verify_next_inline_text(
     link_stack,
 ):
     current_line = previous_inline_token.token_text
-    if pre_previous_inline_token and pre_previous_inline_token.is_inline_hard_break:
-        assert current_line and current_line[0] == ParserHelper.newline_character
-        current_line = current_line[1:]
+    if not pre_previous_inline_token and last_token.is_atx_heading:
+        pass
     else:
-        if not pre_previous_inline_token and last_token.is_atx_heading:
-            pass
-        else:
-            current_line = f"{previous_inline_token.extracted_whitespace}{current_line}"
+        current_line = f"{previous_inline_token.extracted_whitespace}{current_line}"
 
     print(f"last_token>{ParserHelper.make_value_visible(last_token)}<")
     split_extracted_whitespace, split_end_whitespace = None, None
@@ -1956,14 +1967,12 @@ def __handle_last_token_text(
     current_token,
     last_inline_token,
 ):
+    _ = second_last_inline_token
 
     resolved_text = ParserHelper.remove_all_from_text(last_inline_token.token_text)
 
     if last_block_token.is_paragraph:
         inline_height = ParserHelper.count_newlines_in_text(resolved_text)
-        if second_last_inline_token and second_last_inline_token.is_inline_hard_break:
-            inline_height -= 1
-
         print(
             f"last_block_token.rehydrate_index>>{str(last_block_token.rehydrate_index)}"
         )
@@ -1999,10 +2008,7 @@ def __handle_last_token_text(
         assert (
             last_block_token.is_setext_heading
         ), f"bad block token: {str(last_block_token)}"
-        inline_height = ParserHelper.count_newlines_in_text(resolved_text)
-        if second_last_inline_token and second_last_inline_token.is_inline_hard_break:
-            inline_height -= 1
-        inline_height += 1
+        inline_height = ParserHelper.count_newlines_in_text(resolved_text) + 1
     return inline_height
 
 
@@ -2283,7 +2289,7 @@ def __verify_last_inline(
 
 # pylint: enable=too-many-arguments
 
-# pylint: disable=too-many-branches, too-many-arguments, too-many-statements, too-many-locals
+# pylint: disable=too-many-branches, too-many-arguments, too-many-statements, too-many-locals, too-many-nested-blocks
 def __verify_inline(  # noqa: C901
     actual_tokens,
     last_block_token,
@@ -2395,6 +2401,9 @@ def __verify_inline(  # noqa: C901
                         )
                     elif current_inline_token.is_inline_image:
                         pass
+                    elif current_inline_token.is_inline_hard_break:
+                        if not link_stack:
+                            last_block_token.rehydrate_index += 1
                     else:
                         assert (
                             current_inline_token.is_text
@@ -2454,4 +2463,4 @@ def __verify_inline(  # noqa: C901
     print("<<__verify_inline\n\n")
 
 
-# pylint: enable=too-many-branches, too-many-arguments, too-many-statements, too-many-locals
+# pylint: enable=too-many-branches, too-many-arguments, too-many-statements, too-many-locals, too-many-nested-blocks
