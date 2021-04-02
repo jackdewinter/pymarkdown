@@ -5,6 +5,7 @@ import argparse
 import glob
 import logging
 import os
+import runpy
 import sys
 import traceback
 
@@ -37,7 +38,7 @@ class PyMarkdownLint:
     }
 
     def __init__(self):
-        self.__version_number = "0.1.0"
+        self.__version_number = PyMarkdownLint.__get_semantic_version()
         self.__show_stack_trace = False
 
         self.__properties = ApplicationProperties()
@@ -45,6 +46,18 @@ class PyMarkdownLint:
         self.__plugins = PluginManager()
         self.__tokenizer = None
         self.default_log_level = "CRITICAL"
+
+    @staticmethod
+    def __get_semantic_version():
+        file_path = __file__
+        if not os.path.isabs(file_path):
+            assert False
+        file_path = file_path.replace(os.sep, "/")
+        last_index = file_path.rindex("/")
+        second_last_index = file_path.rindex("/", 0, last_index)
+        file_path = file_path[0 : second_last_index + 1] + "version.py"
+        version_meta = runpy.run_path(file_path)
+        return version_meta["__version__"]
 
     @staticmethod
     def log_level_type(argument):

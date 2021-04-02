@@ -3,6 +3,7 @@ Module to provide tests related to the basic parts of the scanner.
 """
 import logging
 import os
+import runpy
 import tempfile
 from test.markdown_scanner import MarkdownScanner
 
@@ -130,9 +131,14 @@ def test_markdown_with_dash_dash_version():
     scanner = MarkdownScanner()
     supplied_arguments = ["version"]
 
+    version_meta = runpy.run_path("./version.py")
+    semantic_version = version_meta["__version__"]
+
     expected_return_code = 0
-    expected_output = """0.1.0
-"""
+    expected_output = """{version}
+""".replace(
+        "{version}", semantic_version
+    )
     expected_error = ""
 
     # Act
