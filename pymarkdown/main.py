@@ -322,6 +322,7 @@ class PyMarkdownLint:
                 args.enable_rules,
                 args.disable_rules,
                 self.__properties,
+                self.__show_stack_trace
             )
         except BadPluginError as this_exception:
             formatted_error = f"BadPluginError encountered while loading plugins:\n{str(this_exception)}"

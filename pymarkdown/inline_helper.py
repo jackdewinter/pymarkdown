@@ -623,9 +623,9 @@ class InlineHelper:
                 new_index, ex_ws = ParserHelper.extract_whitespace(remaining_line, 0)
                 POGGER.debug("<<new_index<<$<<", new_index)
                 POGGER.debug("<<ex_ws<<$<<", ex_ws)
-                if new_index:
-                    end_string = ex_ws + ParserHelper.whitespace_split_character
-                    remaining_line = remaining_line[new_index:]
+                assert new_index
+                end_string = ex_ws + ParserHelper.whitespace_split_character
+                remaining_line = remaining_line[new_index:]
 
             end_string = InlineHelper.modify_end_string(
                 end_string, removed_end_whitespace

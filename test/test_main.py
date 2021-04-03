@@ -1121,7 +1121,7 @@ MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 """
         expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
-Plugin id 'MD999' had a critical failure during the 'next_token' action.
+(1,1): Plugin id 'MD999' had a critical failure during the 'next_token' action.
 """
 
         # Act

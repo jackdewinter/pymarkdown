@@ -384,7 +384,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line():
     expected_return_code = 1
     expected_output = ""
     expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
-Plugin id 'MDE003' had a critical failure during the 'next_line' action.
+(Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 """
 
     # Act
@@ -414,7 +414,8 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_stack_trace(
     expected_return_code = 1
     expected_output = ""
     expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
-Plugin id 'MDE003' had a critical failure during the 'next_line' action.
+(Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
+Actual Line: # This is a test
 Traceback (most recent call last):
 """
 
@@ -436,11 +437,84 @@ Traceback (most recent call last):
 """,
             """, in next_line
     raise BadPluginError(
-pymarkdown.plugin_manager.BadPluginError: Plugin id 'MDE003' had a critical failure during the 'next_line' action.
+pymarkdown.plugin_manager.BadPluginError: (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
 """,
         ],
     )
 
+def test_markdown_with_dash_dash_add_plugin_with_bad_next_token():
+    """
+    Test to make sure we get an error logged if a plugin throws an exception within the next_token function.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--add-plugin",
+        "test/resources/plugins/bad/bad_next_token.py",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
+(1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+def test_markdown_with_dash_dash_add_plugin_with_bad_next_token_with_stack_trace():
+    """
+    Test to make sure we get an error logged if a plugin throws an exception within the next_token function.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--stack-trace",
+        "--add-plugin",
+        "test/resources/plugins/bad/bad_next_token.py",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
+(1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.
+Actual Token: [atx(1,1):1:0:]
+Traceback (most recent call last):
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output,
+        expected_error,
+        expected_return_code,
+        additional_error=[
+            """    raise Exception("bad next_token")
+Exception: bad next_token
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+""",
+            """, in next_token
+    raise BadPluginError(
+pymarkdown.plugin_manager.BadPluginError: (1,1): Plugin id 'MDE003' had a critical failure during the 'next_token' action.
+""",
+        ],
+    )
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_constructor():
     """
