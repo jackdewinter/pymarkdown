@@ -2,7 +2,7 @@
 Module to provide for command line access but does not perform
 any actions if imported into another Python module.
 """
-# from pymarkdown import PyMarkdownLint
+from pymarkdown.main import PyMarkdownLint
 
 # def main():
 #    PyMarkdownLint().main()

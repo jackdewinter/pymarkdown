@@ -6,3 +6,5 @@ report/
 .vscode/
 build/
 .idea/
+PyMarkdown.egg-info/
+dist/

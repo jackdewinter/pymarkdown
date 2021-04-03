@@ -131,7 +131,7 @@ def test_markdown_with_dash_dash_version():
     scanner = MarkdownScanner()
     supplied_arguments = ["version"]
 
-    version_meta = runpy.run_path("./version.py")
+    version_meta = runpy.run_path("./pymarkdown/version.py")
     semantic_version = version_meta["__version__"]
 
     expected_return_code = 0

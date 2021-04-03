@@ -54,8 +54,7 @@ class PyMarkdownLint:
             assert False
         file_path = file_path.replace(os.sep, "/")
         last_index = file_path.rindex("/")
-        second_last_index = file_path.rindex("/", 0, last_index)
-        file_path = file_path[0 : second_last_index + 1] + "version.py"
+        file_path = file_path[0 : last_index + 1] + "version.py"
         version_meta = runpy.run_path(file_path)
         return version_meta["__version__"]
 

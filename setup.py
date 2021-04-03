@@ -14,7 +14,7 @@ def parse_requirements():
 
 
 def get_semantic_version():
-    version_meta = runpy.run_path("./version.py")
+    version_meta = runpy.run_path("./pymarkdown/version.py")
     return version_meta["__version__"]
 
 
@@ -28,48 +28,55 @@ def ensure_scripts(linux_scripts):
     Creates the proper script names required for each platform (taken from PyLint)
     """
     if util.get_platform()[:3] == "win":
-        return linux_scripts + [script + ".cmd" for script in linux_scripts]
+        return linux_scripts + [script + ".bat" for script in linux_scripts]
     return linux_scripts
 
+
+AUTHOR = "Jack De Winter"
+AUTHOR_EMAIL = "jack.de.winter@outlook.com"
+PROJECT_URL = "https://github.com/jackdewinter/pymarkdown"
 
 PACKAGE_NAME = "PyMarkdown"
 SEMANTIC_VERSION = get_semantic_version()
 MINIMUM_PYTHON_VERSION = "3.8.0"
 
-AUTHOR = "Jack De Winter"
-AUTHOR_EMAIL = "jack.de.winter@outlook.com"
-
 ONE_LINE_DESCRIPTION = "A GitHub Flavored Markdown compliant Markdown linter."
 LONG_DESCRIPTION = load_readme_file()
 LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
-KEYWORDS = ["markdown", "linter", "markdown linter"]
 
+KEYWORDS = ["markdown", "linter", "markdown linter"]
 PROJECT_CLASSIFIERS = [
     "Development Status :: 4 - Beta",
-    "Programming Language :: Python :: 3.7",
+    'Environment :: Console',
+    "Programming Language :: Python :: 3.8",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 
-setup(
-    name=PACKAGE_NAME,  # check
-    version=SEMANTIC_VERSION,  # check
-    python_requires=">=" + MINIMUM_PYTHON_VERSION,  # check
-    install_requires=parse_requirements(),  # check
-    author=AUTHOR,  # check
-    author_email=AUTHOR_EMAIL,  # check
-    description=ONE_LINE_DESCRIPTION,  # check
-    long_description=LONG_DESCRIPTION,  # check
-    long_description_content_type=LONG_DESCRIPTION_CONTENT_TYPE,  # check
-    keywords=KEYWORDS,
-    classifiers=PROJECT_CLASSIFIERS,  # check
-    scripts=ensure_scripts(["scripts/pymarkdown"]),  # check
-    packages=[
+PACKAGE_MODULES=[
         "pymarkdown",
         "pymarkdown.extensions",
         "pymarkdown.plugins",
         "pymarkdown.resources",
-    ],
-    # py_modules=["pymarkdownz"],
-    # entry_points={"console_scripts": ["pymarkdown=pymarkdown.main:main"]},
+    ]
+PACKAGE_SCRIPTS=ensure_scripts(["scripts/pymarkdown"])
+
+setup(
+    name=PACKAGE_NAME,
+    version=SEMANTIC_VERSION,
+    python_requires=">=" + MINIMUM_PYTHON_VERSION,
+    install_requires=parse_requirements(),
+    author=AUTHOR,
+    author_email=AUTHOR_EMAIL,
+    maintainer=AUTHOR,
+    maintainer_email=AUTHOR_EMAIL,
+    url=PROJECT_URL,
+    description=ONE_LINE_DESCRIPTION,
+    long_description=LONG_DESCRIPTION,
+    long_description_content_type=LONG_DESCRIPTION_CONTENT_TYPE,
+    keywords=KEYWORDS,
+    classifiers=PROJECT_CLASSIFIERS,
+    scripts=PACKAGE_SCRIPTS,
+    packages=PACKAGE_MODULES,
+    data_files=[('Lib/site-packages/pymarkdown/resources', ['pymarkdown/resources/entities.json'])]
 )

@@ -2,7 +2,4 @@
 
 from pymarkdown import PyMarkdownLint
 
-PyMarkdownLint.main()
-
-#from pymarkdown import main
-#main()
+PyMarkdownLint().main()
