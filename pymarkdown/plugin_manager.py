@@ -486,6 +486,13 @@ class PluginManager:
             "list", help="list the available plugins"
         )
         sub_sub_parser.add_argument(
+            "--all",
+            dest="show_all",
+            action="store_true",
+            default=False,
+            help="show all loaded plugins (default is False)",
+        )
+        sub_sub_parser.add_argument(
             dest="list_filter",
             default=None,
             help="filter",
@@ -512,13 +519,16 @@ class PluginManager:
 
         show_rows = []
         for next_plugin_id in self.all_plugin_ids:
-            is_debug = next_plugin_id.startswith("md9")
+            if next_plugin_id.startswith("md9"):
+                continue
             next_plugin_list = []
             for next_plugin in self.__registered_plugins:
                 if next_plugin.plugin_id == next_plugin_id:
                     next_plugin_list.append(next_plugin)
             assert len(next_plugin_list) == 1
             next_plugin = next_plugin_list[0]
+            if next_plugin.plugin_version == "0.0.0" and not args.show_all:
+                continue
             does_match = True
             if list_re:
                 does_match = list_re.match(next_plugin_id)
@@ -527,7 +537,7 @@ class PluginManager:
                         does_match = list_re.match(next_name)
                         if does_match:
                             break
-            if not is_debug and does_match:
+            if does_match:
                 is_enabled_now = next_plugin in self.__enabled_plugins
                 display_row = [
                     next_plugin_id,

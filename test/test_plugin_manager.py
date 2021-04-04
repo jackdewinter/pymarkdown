@@ -899,6 +899,57 @@ def test_markdown_with_plugins_list_only():
          t-header-h1
   md003  heading-style, header-  True               True               0.5.0
          style
+  md018  no-missing-space-atx    True               True               0.5.0
+  md019  no-multiple-space-atx   True               True               0.5.0
+  md020  no-missing-space-close  True               True               0.5.0
+         d-atx
+  md021  no-multiple-space-clos  True               True               0.5.0
+         ed-atx
+  md022  blanks-around-headings  True               True               0.5.0
+         , blanks-around-header
+         s
+  md023  heading-start-left, he  True               True               0.5.0
+         ader-start-left
+  md024  no-duplicate-heading,   True               True               0.5.0
+         no-duplicate-header
+  md026  no-trailing-punctuatio  True               True               0.5.0
+         n
+  md036  no-emphasis-as-heading  True               True               0.5.0
+         , no-emphasis-as-heade
+         r
+  md047  single-trailing-newlin  True               True               0.5.0
+         e
+
+"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+def test_markdown_with_plugins_list_only_all():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = ["plugins", "list", "--all"]
+
+    expected_return_code = 0
+    expected_output = """
+  ID     NAMES                   ENABLED (DEFAULT)  ENABLED (CURRENT)  VERSION
+
+  md001  heading-increment, hea  True               True               0.5.0
+         der-increment
+  md002  first-heading-h1, firs  False              False              0.5.0
+         t-header-h1
+  md003  heading-style, header-  True               True               0.5.0
+         style
   md004  ul-style                False              False              0.0.0
   md005  list-indent             False              False              0.0.0
   md006  ul-start-left           False              False              0.0.0
@@ -966,7 +1017,6 @@ def test_markdown_with_plugins_list_only():
         expected_output, expected_error, expected_return_code
     )
 
-
 def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
     """
     Test to make sure
@@ -980,10 +1030,7 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
     expected_output = """
   ID     NAMES                  ENABLED (DEFAULT)  ENABLED (CURRENT)  VERSION
 
-  md009  no-trailing-spaces     False              False              0.0.0
   md019  no-multiple-space-atx  True               True               0.5.0
-  md029  ol-prefix              False              False              0.0.0
-  md039  no-space-in-links      False              False              0.0.0
 
 """
     expected_error = ""
@@ -1004,16 +1051,28 @@ def test_markdown_with_plugins_list_and_filter_by_name_link():
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_arguments = ["plugins", "list", "*link*"]
+    supplied_arguments = ["plugins", "list", "*header*"]
 
     expected_return_code = 0
     expected_output = """
-  ID     NAMES              ENABLED (DEFAULT)  ENABLED (CURRENT)  VERSION
+  ID     NAMES                   ENABLED (DEFAULT)  ENABLED (CURRENT)  VERSION
 
-  md011  no-reversed-links  False              False              0.0.0
-  md039  no-space-in-links  False              False              0.0.0
-  md042  no-empty-links     False              False              0.0.0
-
+  md001  heading-increment, hea  True               True               0.5.0
+         der-increment
+  md002  first-heading-h1, firs  False              False              0.5.0
+         t-header-h1
+  md003  heading-style, header-  True               True               0.5.0
+         style
+  md022  blanks-around-headings  True               True               0.5.0
+         , blanks-around-header
+         s
+  md023  heading-start-left, he  True               True               0.5.0
+         ader-start-left
+  md024  no-duplicate-heading,   True               True               0.5.0
+         no-duplicate-header
+  md036  no-emphasis-as-heading  True               True               0.5.0
+         , no-emphasis-as-heade
+         r
 """
     expected_error = ""
 
@@ -1037,7 +1096,7 @@ def test_markdown_with_plugins_list_and_bad_filter():
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py plugins list [-h] [list_filter]
+    expected_error = """usage: main.py plugins list [-h] [--all] [list_filter]
 main.py plugins list: error: argument list_filter: Value '*' is not a valid pattern for an id or a name.
 """
 
