@@ -116,6 +116,15 @@ class PyMarkdownLint:
             help="path to the configuration file to use",
         )
         parser.add_argument(
+            "--set",
+            "-s",
+            dest="set_configuration",
+            action="append",
+            default=None,
+            help="manualy set properties",
+            type=ApplicationProperties.verify_manual_property_form,
+        )
+        parser.add_argument(
             "--stack-trace",
             dest="show_stack_trace",
             action="store_true",
@@ -185,28 +194,31 @@ class PyMarkdownLint:
         Scan a given file and call the plugin manager for any significant events.
         """
 
-        POGGER.info(f"Scanning file '{next_file}'.")
+        POGGER.info("Scanning file '$'.", next_file)
         source_provider = FileSourceProvider(next_file)
 
-        POGGER.info(f"Scanning file '{next_file}' line-by-line.")
+        POGGER.info("Scanning file '$' line-by-line.", next_file)
         line_number = 1
         next_line = source_provider.get_next_line()
         context = self.__plugins.starting_new_file(next_file)
         while next_line is not None:
+            POGGER.info("Processing line $: $", line_number, next_line)
             self.__plugins.next_line(context, line_number, next_line)
             line_number += 1
             next_line = source_provider.get_next_line()
 
-        POGGER.info(f"Scanning file '{next_file}' token-by-token.")
+        POGGER.info("Scanning file '$' token-by-token.", next_file)
         source_provider = FileSourceProvider(next_file)
         if args.x_test_scan_fault:
             source_provider = None
         actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
 
+        POGGER.info("Scanning file '$' token-by-token.", next_file)
         for next_token in actual_tokens:
+            POGGER.info("Processing token: $", next_token)
             self.__plugins.next_token(context, next_token)
 
-        POGGER.info(f"Complated scanning file '{next_file}'.")
+        POGGER.info("Completed scanning file '$'.", next_file)
         self.__plugins.completed_file(context, line_number)
 
     # pylint: enable=broad-except
@@ -322,7 +334,7 @@ class PyMarkdownLint:
                 args.enable_rules,
                 args.disable_rules,
                 self.__properties,
-                self.__show_stack_trace
+                self.__show_stack_trace,
             )
         except BadPluginError as this_exception:
             formatted_error = f"BadPluginError encountered while loading plugins:\n{str(this_exception)}"
@@ -354,6 +366,8 @@ class PyMarkdownLint:
             ApplicationPropertiesJsonLoader.load_and_set(
                 self.__properties, args.configuration_file, self.__handle_error
             )
+        if args.set_configuration:
+            self.__properties.set_manual_property(args.set_configuration)
 
     def __initialize_logging(self, args):
 
@@ -365,6 +379,8 @@ class PyMarkdownLint:
         if effective_log_file:
             new_handler = logging.FileHandler(args.log_file)
             logging.getLogger().addHandler(new_handler)
+        else:
+            logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)
 
         effective_log_level = args.log_level if args.log_level else None
         if effective_log_level is None:

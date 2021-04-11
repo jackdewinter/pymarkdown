@@ -30,7 +30,7 @@ def test_markdown_with_no_parameters():
     expected_return_code = 2
     expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--stack-trace]
+               [--set SET_CONFIGURATION] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,scan,version} ...
@@ -53,6 +53,8 @@ optional arguments:
                         path to a plugin containing a new rule to apply
   --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
                         path to the configuration file to use
+  --set SET_CONFIGURATION, -s SET_CONFIGURATION
+                        manualy set properties
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
@@ -82,7 +84,7 @@ def test_markdown_with_dash_h():
     expected_return_code = 0
     expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--stack-trace]
+               [--set SET_CONFIGURATION] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,scan,version} ...
@@ -105,6 +107,8 @@ optional arguments:
                         path to a plugin containing a new rule to apply
   --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
                         path to the configuration file to use
+  --set SET_CONFIGURATION, -s SET_CONFIGURATION
+                        manualy set properties
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
@@ -579,7 +583,7 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog):
     expected_output = ""
     expected_error = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--stack-trace]
+               [--set SET_CONFIGURATION] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,scan,version} ...

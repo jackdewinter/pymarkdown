@@ -442,6 +442,7 @@ pymarkdown.plugin_manager.BadPluginError: (Line 1): Plugin id 'MDE003' had a cri
         ],
     )
 
+
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_token():
     """
     Test to make sure we get an error logged if a plugin throws an exception within the next_token function.
@@ -469,6 +470,7 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_token_with_stack_trace():
     """
@@ -515,6 +517,7 @@ pymarkdown.plugin_manager.BadPluginError: (1,1): Plugin id 'MDE003' had a critic
 """,
         ],
     )
+
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_constructor():
     """
@@ -931,6 +934,7 @@ def test_markdown_with_plugins_list_only():
         expected_output, expected_error, expected_return_code
     )
 
+
 def test_markdown_with_plugins_list_only_all():
     """
     Test to make sure
@@ -1016,6 +1020,7 @@ def test_markdown_with_plugins_list_only_all():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
     """

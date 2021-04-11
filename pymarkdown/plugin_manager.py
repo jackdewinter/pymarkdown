@@ -42,7 +42,7 @@ class BadPluginError(Exception):
     and reported.
     """
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-branches
     def __init__(
         self,
         plugin_id=None,
@@ -56,7 +56,7 @@ class BadPluginError(Exception):
         line_number=0,
         column_number=0,
         actual_line=None,
-        actual_token=None
+        actual_token=None,
     ):
 
         if not formatted_message:
@@ -81,10 +81,11 @@ class BadPluginError(Exception):
             else:
                 formatted_message = f"Plugin id '{plugin_id.upper()}' had a critical failure during the '{str(plugin_action)}' action."
             if line_number:
-                if column_number:
-                    position_message=f"({line_number},{column_number})"
-                else:
-                    position_message=f"(Line {line_number})"
+                position_message = (
+                    f"({line_number},{column_number})"
+                    if column_number
+                    else f"(Line {line_number})"
+                )
                 formatted_message = f"{position_message}: {formatted_message}"
             if actual_line:
                 formatted_message = f"{formatted_message}\nActual Line: {actual_line}"
@@ -92,7 +93,7 @@ class BadPluginError(Exception):
                 formatted_message = f"{formatted_message}\nActual Token: {ParserHelper.make_value_visible(actual_token)}"
         super().__init__(formatted_message)
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-branches
 
 
 class Plugin(ABC):
@@ -396,7 +397,7 @@ class PluginManager:
             self.__enabled_plugins_for_completed_file,
             self.__loaded_classes,
             self.number_of_scan_failures,
-            self.__show_stack_trace
+            self.__show_stack_trace,
         ) = (None, None, None, None, None, None, None, None, False)
 
     # pylint: disable=too-many-arguments
@@ -407,7 +408,7 @@ class PluginManager:
         enable_rules_from_command_line,
         disable_rules_from_command_line,
         properties,
-        show_stack_trace
+        show_stack_trace,
     ):
         """
         Initializes the manager by scanning for plugins, loading them, and registering them.
@@ -1048,7 +1049,10 @@ class PluginManager:
                 actual_line = line if self.__show_stack_trace else None
 
                 raise BadPluginError(
-                    next_plugin.plugin_id, inspect.stack()[0].function, line_number=line_number, actual_line=actual_line
+                    next_plugin.plugin_id,
+                    inspect.stack()[0].function,
+                    line_number=line_number,
+                    actual_line=actual_line,
                 ) from this_exception
 
     def next_token(self, context, token):
@@ -1060,11 +1064,13 @@ class PluginManager:
                 next_plugin.plugin_instance.next_token(context, token)
             except Exception as this_exception:
                 actual_token = token if self.__show_stack_trace else None
-                #assert actual_token, "is set"
-                #assert False, ParserHelper.make_value_visible(actual_token)
 
                 raise BadPluginError(
-                    next_plugin.plugin_id, inspect.stack()[0].function, line_number=token.line_number, column_number=token.column_number, actual_token=actual_token
+                    next_plugin.plugin_id,
+                    inspect.stack()[0].function,
+                    line_number=token.line_number,
+                    column_number=token.column_number,
+                    actual_token=actual_token,
                 ) from this_exception
 
 

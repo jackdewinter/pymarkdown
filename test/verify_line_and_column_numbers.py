@@ -707,18 +707,6 @@ def __maintain_block_stack(container_block_stack, current_token):
         assert container_block_stack[-1].token_name == current_token.type_name
         del container_block_stack[-1]
         print(f"<<CON<<after<<{ParserHelper.make_value_visible(container_block_stack)}")
-        # if current_token.is_block_quote_end:
-        #    leading_text_index, expected_leading_text_index = (
-        #        current_token.start_markdown_token.leading_text_index,
-        #        ParserHelper.count_newlines_in_text(
-        #            current_token.start_markdown_token.leading_spaces
-        #        ),
-        #    )
-
-        # assert True or (
-        #    leading_text_index == expected_leading_text_index + 1
-        #   or (leading_text_index == expected_leading_text_index)
-        # ), f"leading_text_index={str(leading_text_index)};expected_leading_text_index={str(expected_leading_text_index)}"
 
 
 def __verify_first_inline(last_non_inline_token, first_inline_token, last_token_stack):
@@ -1720,14 +1708,6 @@ def __verify_next_inline_hard_break(
 
     elif last_token.is_setext_heading:
         assert current_inline_token.is_text
-        # assert (
-        #    current_inline_token.token_text
-        #    and current_inline_token.token_text[0] == ParserHelper.newline_character
-        # )
-        # assert (
-        #    current_inline_token.end_whitespace
-        #    and current_inline_token.end_whitespace[0] == ParserHelper.newline_character
-        # )
         print(
             f"previous_inline_token>{ParserHelper.make_value_visible(previous_inline_token)}<"
         )

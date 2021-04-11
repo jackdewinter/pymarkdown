@@ -47,19 +47,19 @@ LONG_DESCRIPTION_CONTENT_TYPE = "text/markdown"
 KEYWORDS = ["markdown", "linter", "markdown linter"]
 PROJECT_CLASSIFIERS = [
     "Development Status :: 4 - Beta",
-    'Environment :: Console',
+    "Environment :: Console",
     "Programming Language :: Python :: 3.8",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
 
-PACKAGE_MODULES=[
-        "pymarkdown",
-        "pymarkdown.extensions",
-        "pymarkdown.plugins",
-        "pymarkdown.resources",
-    ]
-PACKAGE_SCRIPTS=ensure_scripts(["scripts/pymarkdown"])
+PACKAGE_MODULES = [
+    "pymarkdown",
+    "pymarkdown.extensions",
+    "pymarkdown.plugins",
+    "pymarkdown.resources",
+]
+PACKAGE_SCRIPTS = ensure_scripts(["scripts/pymarkdown"])
 
 setup(
     name=PACKAGE_NAME,
@@ -78,5 +78,10 @@ setup(
     classifiers=PROJECT_CLASSIFIERS,
     scripts=PACKAGE_SCRIPTS,
     packages=PACKAGE_MODULES,
-    data_files=[('Lib/site-packages/pymarkdown/resources', ['pymarkdown/resources/entities.json'])]
+    data_files=[
+        (
+            "Lib/site-packages/pymarkdown/resources",
+            ["pymarkdown/resources/entities.json"],
+        )
+    ],
 )

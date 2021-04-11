@@ -20,6 +20,11 @@ class ApplicationProperties:
     """
 
     __separator = "."
+    __assignment_operator = "="
+    __manual_property_type_prefix = "$"
+    __manual_property_type_string = "$"
+    __manual_property_type_integer = "#"
+    __manual_property_type_boolean = "!"
 
     """
     Class to provide for a container of properties that belong to the application.
@@ -72,6 +77,123 @@ class ApplicationProperties:
         self.__flat_property_map.clear()
         self.__scan_map(config_map, "")
 
+    @staticmethod
+    def verify_full_part_form(property_key):
+        """
+        Given one part of a full key, verify that it is composed properly.
+        """
+
+        if (
+            " " in property_key
+            or "\t" in property_key
+            or "\n" in property_key
+            or ApplicationProperties.__assignment_operator in property_key
+        ):
+            raise ValueError(
+                f"Each part of the property key must not contain a whitespace character or the '{ApplicationProperties.__separator}' character."
+            )
+        if not property_key:
+            raise ValueError(
+                "Each part of the property key must contain at least one character."
+            )
+        return property_key
+
+    @staticmethod
+    def verify_full_key_form(property_key):
+        """
+        Given a full key, verify that it is composed properly.
+        """
+
+        if property_key.startswith(
+            ApplicationProperties.__separator
+        ) or property_key.endswith(ApplicationProperties.__separator):
+            raise ValueError(
+                f"Full property key must not start or end with the '{ApplicationProperties.__separator}' character."
+            )
+        doubles = (
+            f"{ApplicationProperties.__separator}{ApplicationProperties.__separator}"
+        )
+        doubles_index = property_key.find(doubles)
+        if doubles_index != -1:
+            raise ValueError(
+                f"Full property key cannot contain multiples of the {ApplicationProperties.__separator} without any text between them."
+            )
+        split_key = property_key.split(ApplicationProperties.__separator)
+        for next_key in split_key:
+            ApplicationProperties.verify_full_part_form(next_key)
+        return property_key
+
+    @staticmethod
+    def verify_manual_property_form(string_to_verify):
+        """
+        Verify the general form of a manual property string. i.e. key=value
+        """
+
+        if not isinstance(string_to_verify, str):
+            raise ValueError("Manual property form must be a string.")
+        equals_index = string_to_verify.find(
+            ApplicationProperties.__assignment_operator
+        )
+        if equals_index == -1:
+            raise ValueError(
+                "Manual property key and value must be separated by the '=' character."
+            )
+        property_key = string_to_verify[0:equals_index]
+        ApplicationProperties.verify_full_key_form(property_key)
+        return string_to_verify
+
+    def set_manual_property(self, combined_string):
+        """
+        Manually set a property for the object.
+        """
+
+        if not isinstance(combined_string, str):
+            iterator = None
+            try:
+                iterator = iter(combined_string)
+            except TypeError as this_exception:
+                raise ValueError(
+                    "Manual property form must either be a string or an iterable of strings."
+                ) from this_exception
+            for i in iterator:
+                self.set_manual_property(i)
+            return
+
+        ApplicationProperties.verify_manual_property_form(combined_string)
+        equals_index = combined_string.find(ApplicationProperties.__assignment_operator)
+        property_key = combined_string[0:equals_index].lower()
+        property_value = combined_string[equals_index + 1 :]
+
+        if (
+            property_value.startswith(
+                ApplicationProperties.__manual_property_type_prefix
+            )
+            and len(property_value) >= 2
+        ):
+            if property_value[1] == ApplicationProperties.__manual_property_type_string:
+                property_value = property_value[2:]
+            elif (
+                property_value[1]
+                == ApplicationProperties.__manual_property_type_integer
+            ):
+                try:
+                    property_value = int(property_value[2:])
+                except ValueError as this_exception:
+                    raise ValueError(
+                        f"Manual property value '{property_value}' cannot be translated into an integer."
+                    ) from this_exception
+            elif (
+                property_value[1]
+                == ApplicationProperties.__manual_property_type_boolean
+            ):
+                property_value = property_value[2:].lower() == "true"
+            else:
+                property_value = property_value[1:]
+        self.__flat_property_map[property_key] = copy.deepcopy(property_value)
+        LOGGER.debug(
+            "Adding configuration '%s' : {%s}", property_key, str(property_value)
+        )
+
     # pylint: disable=unidiomatic-typecheck
     # pylint: disable=too-many-arguments
     # pylint: disable=broad-except
@@ -94,6 +216,7 @@ class ApplicationProperties:
 
         if not isinstance(property_name, str):
             raise ValueError("The propertyName argument must be a string.")
+        ApplicationProperties.verify_full_key_form(property_name)
         if not isinstance(property_type, type):
             raise ValueError(
                 f"The property_type argument for '{property_name}' must be a type."

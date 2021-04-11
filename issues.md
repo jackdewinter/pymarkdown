@@ -3,17 +3,15 @@
 ## Priority 1 - Must Solve Before Initial
 
 - command line and configuration documentation
+- properly address any issues with existing rules
 
 ## Priority 2 - Like To Solve Before Initial
 
-- how to set properties from the command line
 - plugins list, enabled default and current not taking up so much space
 
-- properly address any issues with existing rules
 - implement missing rules
 - yaml support for front-matter
 - better format for "plugins info"
-
 
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - leading_text_index - verify_line_and... ~715
@@ -183,5 +181,3 @@
 ## document current restrictions
 
 - nested block quotes and nested lists are okay, but not together
-- no install/setup support currently
-

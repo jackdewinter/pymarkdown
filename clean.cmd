@@ -56,7 +56,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing flake8 static analyzer on Python code.}
-pipenv run flake8 %MY_VERBOSE%
+pipenv run flake8 --exclude dist,build %MY_VERBOSE%
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing static analyzer on Python code failed.}
