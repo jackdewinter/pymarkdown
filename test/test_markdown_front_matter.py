@@ -78,7 +78,7 @@ Title: my document
 ---
 """
     expected_tokens = [
-        "[front-matter(1,1):---:['Title: my document']:{'Title': ' my document'}]",
+        "[front-matter(1,1):---:['Title: my document']:{'title': 'my document'}]",
         "[tbreak(4,1):-::---]",
         "[BLANK(5,1):]",
     ]
@@ -177,7 +177,7 @@ test: abc
 ---
 """
     expected_tokens = [
-        "[front-matter(1,1):---:['test: abc']:{'test': ' abc'}]",
+        "[front-matter(1,1):---:['test: abc']:{'test': 'abc'}]",
         "[BLANK(4,1):]",
     ]
     expected_gfm = """"""
@@ -201,7 +201,7 @@ test: abc
 ---
 """
     expected_tokens = [
-        "[front-matter(1,1):---:['test: abc', '    def']:{'test': ' abc\\n    def'}]",
+        "[front-matter(1,1):---:['test: abc', '    def']:{'test': 'abc\\ndef'}]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """"""
@@ -254,7 +254,7 @@ test: abc
 ---
 """
     expected_tokens = [
-        "[front-matter(1,1):---:['test: abc', '   def:']:{'test': ' abc', 'def': ''}]",
+        "[front-matter(1,1):---:['test: abc', '   def:']:{'test': 'abc', 'def': ''}]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """"""

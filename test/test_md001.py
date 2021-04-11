@@ -17,7 +17,7 @@ def test_md001_all_samples():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "MD003",
+        "MD003,md022",
         "scan",
         "test/resources/rules/md001",
     ]
@@ -155,6 +155,98 @@ def test_md001_bad_improper_setext_heading_incrementing():
         + "MD001: Heading levels should only increment by one level at a time "
         + "[Expected: h3; Actual: h4] (heading-increment,header-increment)\n"
     )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md001_front_matter_with_no_title():
+    """
+    Test to make
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "MD003,MD022",
+        "--set",
+        "extensions.front-matter.enabled=$!True",
+        "scan",
+        "test/resources/rules/md001/front_matter_with_no_title.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md001_front_matter_with_title():
+    """
+    Test to make
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "MD003,MD022",
+        "--set",
+        "extensions.front-matter.enabled=$!True",
+        "scan",
+        "test/resources/rules/md001/front_matter_with_title.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = "test/resources/rules/md001/front_matter_with_title.md:5:1: MD001: Heading levels should only increment by one level at a time [Expected: h2; Actual: h3] (heading-increment,header-increment)\n"
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md001_front_matter_with_alternate_title():
+    """
+    Test to make
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "MD003,MD022",
+        "--set",
+        "extensions.front-matter.enabled=$!True",
+        "--set",
+        "plugins.md001.front_matter_title=Subject",
+        "scan",
+        "test/resources/rules/md001/front_matter_with_alternate_title.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = "test/resources/rules/md001/front_matter_with_alternate_title.md:5:1: MD001: Heading levels should only increment by one level at a time [Expected: h2; Actual: h3] (heading-increment,header-increment)\n"
     expected_error = ""
 
     # Act

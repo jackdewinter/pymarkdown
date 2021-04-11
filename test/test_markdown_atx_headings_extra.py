@@ -854,3 +854,44 @@ def test_atx_headings_extra_42():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_atx_headings_extra_43x():
+    """
+    Test case extra 43x:  Not quote ATX.
+    """
+
+    # Arrange
+    source_markdown = """#Heading 1 with no blank lines"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):#Heading 1 with no blank lines:]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>#Heading 1 with no blank lines</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_atx_headings_extra_43a():
+    """
+    Test case extra 43:  Not quote ATX.
+    """
+
+    # Arrange
+    source_markdown = """#Heading 1 with no blank lines
+##Heading 2 with no blank lines"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):#Heading 1 with no blank lines\n##Heading 2 with no blank lines::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = (
+        """<p>#Heading 1 with no blank lines\n##Heading 2 with no blank lines</p>"""
+    )
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

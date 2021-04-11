@@ -456,7 +456,9 @@ class ApplicationPropertiesFacade:
         facade_property_names = []
         for next_property_name in self.__base_properties.property_names:
             if next_property_name.startswith(self.__property_prefix):
-                facade_property_names.append(next_property_name)
+                facade_property_names.append(
+                    next_property_name[len(self.__property_prefix) :]
+                )
         return facade_property_names
 
 

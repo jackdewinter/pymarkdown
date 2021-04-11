@@ -219,6 +219,9 @@ def test_markdown_with_dash_l_on_globbed_files():
 
     expected_return_code = 0
     expected_output = """rules/md001/empty.md
+rules/md001/front_matter_with_alternate_title.md
+rules/md001/front_matter_with_no_title.md
+rules/md001/front_matter_with_title.md
 rules/md001/improper_atx_heading_incrementing.md
 rules/md001/improper_setext_heading_incrementing.md
 rules/md001/proper_atx_heading_incrementing.md

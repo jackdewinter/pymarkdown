@@ -211,7 +211,7 @@ class FrontMatterExtension:
             if next_index >= 4:
                 POGGER.debug("Indented line established.")
                 if current_title:
-                    current_value = current_value + "\n" + next_line
+                    current_value += "\n" + next_line.strip()
                     POGGER.debug("current_value>$<", current_value)
                 else:
                     return "Continuation line encountered before a keyword line."
@@ -228,12 +228,12 @@ class FrontMatterExtension:
                     next_line, next_index, ascii_letters_and_digits
                 )
                 if next_index < len(next_line) and next_line[next_index] == ":":
-                    current_value = next_line[next_index + 1 :]
+                    current_value = next_line[next_index + 1 :].strip()
                 else:
                     return "Newline did not start with `keyword:`."
         if current_title:
             POGGER.debug("Adding final '$' as '$'.", current_title, current_value)
-            value_map[current_title] = current_value
+            value_map[current_title.lower()] = current_value
         if not value_map:
             return "No valid metadata header lines were found."
         return value_map

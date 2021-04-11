@@ -15,6 +15,7 @@ class RuleMd001(Plugin):
     def __init__(self):
         super().__init__()
         self.__last_heading_count = None
+        self.__front_matter_title = None
 
     def get_details(self):
         """
@@ -30,6 +31,11 @@ class RuleMd001(Plugin):
             plugin_interface_version=1,
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md001---heading-levels-should-only-increment-by-one-level-at-a-time
 
+    def initialize_from_config(self):
+        self.__front_matter_title = self.plugin_configuration.get_string_property(
+            "front_matter_title", default_value="title"
+        ).lower()
+
     def starting_new_file(self):
         """
         Event that the a new file to be scanned is starting.
@@ -43,6 +49,10 @@ class RuleMd001(Plugin):
         hash_count = None
         if token.is_atx_heading or token.is_setext_heading:
             hash_count = token.hash_count
+        elif token.is_front_matter:
+            if self.__front_matter_title in token.matter_map:
+                hash_count = 1
+
         if hash_count:
             if self.__last_heading_count and (hash_count > self.__last_heading_count):
                 delta = hash_count - self.__last_heading_count
