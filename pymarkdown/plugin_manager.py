@@ -184,19 +184,31 @@ class Plugin(ABC):
             self.get_details().plugin_description,
         )
 
-    def report_next_token_error(self, context, token, extra_error_information=None):
+    # pylint: disable=too-many-arguments
+    def report_next_token_error(
+        self,
+        context,
+        token,
+        extra_error_information=None,
+        line_number_delta=0,
+        column_number_delta=0,
+    ):
         """
         Report an error with the current token being processed.
         """
         context.owning_manager.log_scan_failure(
             context.scan_file,
-            token.line_number,
-            token.column_number,
+            token.line_number + line_number_delta,
+            token.column_number + column_number_delta
+            if column_number_delta >= 0
+            else -column_number_delta,
             self.get_details().plugin_id,
             self.get_details().plugin_name,
             self.get_details().plugin_description,
             extra_error_information=extra_error_information,
         )
+
+    # pylint: enable=too-many-arguments
 
     def initialize_from_config(self):
         """

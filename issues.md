@@ -47,6 +47,8 @@
 
 ## Priority 3 - Like To Solve in next 3 m
 
+- mypy?
+
 - determine which errors to print and which to log
 - (performance) debug: search for any cases where adding a call to `is_debug_enabled` would be helpful
 - (performance) assert: do as little as possible to ensure better performance
@@ -126,10 +128,6 @@
 
 ## Bugs - Rules - Rounding Out Rules
 
-- MD018
-  - for multiple occurrences inside of a single paragraph, reporting line/col of starting token
-  - whitespace starts, etc.
-  - lists and block quotes
 - MD020
   - for multiple occurrences inside of a single paragraph, reporting line/col of starting token
   - whitespace starts, etc.
