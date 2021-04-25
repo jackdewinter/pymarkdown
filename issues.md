@@ -12,28 +12,22 @@
   - 019
   - 020
   - 021
-
   - 022
+  
   - 023
   - 024
   - 026
   - 036
   - 047
 
-## Bugs - Rules - Rounding Out Rules
-
-- MD022 - lists and block quotes and LRDs
-- MD022 - should line 96-104 with all of the leaf node names be added to Markdown token?
-- MD022 - what if the document had a paragraph before the first heading?
-
 ## Bugs - Rules - SetExt
 
-- MD041 requires metadata
-  - implemented MD043 at the same time
-  - implement MD025 at the same time
 - MD023 with inline that includes leading spaces?
 - MD024 with whitespace, and inline differences
 - MD024 level 2 (me), level 3 (my), level 2 (me) -  should fire? is considered siblings?
+- MD041 requires metadata
+  - implemented MD043 at the same time
+  - implement MD025 at the same time
 
 ## Priority 2 - Like To Solve Before Initial
 

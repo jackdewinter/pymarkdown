@@ -106,6 +106,120 @@ def test_md022_bad_no_line_spacing_atx():
 
 
 @pytest.mark.rules
+def test_md022_bad_no_line_spacing_atx_in_same_block_quote():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
+    default spacing both before and after the heading.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/no_line_spacing_atx_in_same_block_quote.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/no_line_spacing_atx_in_same_block_quote.md:1:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/no_line_spacing_atx_in_same_block_quote.md:4:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/no_line_spacing_atx_in_same_block_quote.md:4:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_bad_no_line_spacing_atx_in_same_list_item():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
+    default spacing both before and after the heading.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/no_line_spacing_atx_in_same_list_item.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/no_line_spacing_atx_in_same_list_item.md:1:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/no_line_spacing_atx_in_same_list_item.md:4:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/no_line_spacing_atx_in_same_list_item.md:4:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_bad_no_line_spacing_atx_in_different_list_items():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
+    default spacing both before and after the heading.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/no_line_spacing_atx_in_different_list_items.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/no_line_spacing_atx_in_different_list_items.md:1:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/no_line_spacing_atx_in_different_list_items.md:4:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/no_line_spacing_atx_in_different_list_items.md:4:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
 def test_md022_bad_no_line_spacing_before_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
@@ -138,6 +252,130 @@ def test_md022_bad_no_line_spacing_before_atx():
 
 
 @pytest.mark.rules
+def test_md022_bad_no_line_spacing_before_atx_in_same_list_item():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
+    default spacing before the heading.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/no_line_spacing_before_atx_in_same_list_item.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/no_line_spacing_before_atx_in_same_list_item.md:5:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_bad_no_line_spacing_before_atx_in_different_list_items():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
+    default spacing before the heading.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/no_line_spacing_before_atx_in_different_list_items.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/no_line_spacing_before_atx_in_different_list_items.md:5:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_bad_no_line_spacing_before_atx_in_same_block_quote():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
+    default spacing before the heading.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/no_line_spacing_before_atx_in_same_block_quote.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/no_line_spacing_before_atx_in_same_block_quote.md:5:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_bad_no_line_spacing_before_setext():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
+    default spacing before the heading.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/no_line_spacing_before_setext.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
 def test_md022_bad_no_line_spacing_after_atx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
@@ -158,6 +396,149 @@ def test_md022_bad_no_line_spacing_after_atx():
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
         + "test/resources/rules/md022/no_line_spacing_after_atx.md:5:1: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_bad_no_line_spacing_after_atx_in_same_list_item():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
+    default spacing after the heading.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/no_line_spacing_after_atx_in_same_list_item.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/no_line_spacing_after_atx_in_same_list_item.md:1:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/no_line_spacing_after_atx_in_same_list_item.md:5:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_bad_no_line_spacing_after_atx_in_same_block_quote():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
+    default spacing after the heading.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/no_line_spacing_after_atx_in_same_block_quote.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/no_line_spacing_after_atx_in_same_block_quote.md:1:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/no_line_spacing_after_atx_in_same_block_quote.md:5:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_bad_no_line_spacing_after_atx_in_different_list_items():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
+    default spacing after the heading.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/no_line_spacing_after_atx_in_different_list_items.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/no_line_spacing_after_atx_in_different_list_items.md:1:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/no_line_spacing_after_atx_in_different_list_items.md:5:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_bad_no_line_spacing_after_atx_in_different_block_quotes():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
+    default spacing after the heading.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/no_line_spacing_after_atx_in_different_block_quotes.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/no_line_spacing_after_atx_in_different_block_quotes.md:2:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/no_line_spacing_after_atx_in_different_block_quotes.md:7:3: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: None; Above] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/no_line_spacing_after_atx_in_different_block_quotes.md:7:3: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
     )
@@ -221,6 +602,69 @@ def test_md022_bad_atx_with_html_and_bad_line_spacing():
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
         + "test/resources/rules/md022/atx_with_html_and_bad_line_spacing.md:8:1: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_good_atx_with_paragraph_and_good_line_spacing():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do have proper
+    default spacing before and after the heading, surrounded by html blocks.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/atx_with_paragraph_and_good_line_spacing.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_bad_atx_with_paragraph_and_bad_line_spacing():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has atx headings that do not have proper
+    default spacing before and after the heading, surrounded by html blocks.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/atx_with_paragraph_and_bad_line_spacing.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/atx_with_paragraph_and_bad_line_spacing.md:2:1: "
+        + "MD022: Headings should be surrounded by blank lines "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/atx_with_paragraph_and_bad_line_spacing.md:7:1: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
     )
