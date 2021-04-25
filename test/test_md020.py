@@ -9,7 +9,36 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md020_good_good_spacing():
+def test_md020_good_start_spacing():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with good spacing
+    inside of both hashes.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--stack-trace",
+        "scan",
+        "test/resources/rules/md020/good_start_spacing.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_good_start_spacing_in_list():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md020 directory that has a closed atx heading with good spacing
@@ -20,7 +49,37 @@ def test_md020_good_good_spacing():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md020/good_spacing.md",
+        "test/resources/rules/md020/good_start_spacing_in_list.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_good_start_spacing_in_block_quote():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with good spacing
+    inside of both hashes.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md022",
+        "scan",
+        "test/resources/rules/md020/good_start_spacing_in_block_quote.md",
     ]
 
     expected_return_code = 0
@@ -103,6 +162,72 @@ def test_md020_bad_missing_start_spacing():
 
 
 @pytest.mark.rules
+def test_md020_bad_missing_start_spacing_in_list():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/missing_start_spacing_in_list.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/missing_start_spacing_in_list.md:1:4: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/missing_start_spacing_in_list.md:3:4: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_missing_start_spacing_in_block_quotes():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/missing_start_spacing_in_block_quotes.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/missing_start_spacing_in_block_quotes.md:1:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/missing_start_spacing_in_block_quotes.md:3:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
 def test_md020_bad_missing_end_spacing():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
@@ -122,6 +247,74 @@ def test_md020_bad_missing_end_spacing():
         "test/resources/rules/md020/missing_end_spacing.md:0:0: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/missing_end_spacing.md:0:0: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_missing_end_spacing_in_list():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the end hashes.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/missing_end_spacing_in_list.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/missing_end_spacing_in_list.md:0:0: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/missing_end_spacing_in_list.md:0:0: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_missing_end_spacing_in_block_quotes():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the end hashes.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md022",
+        "scan",
+        "test/resources/rules/md020/missing_end_spacing_in_block_quotes.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/missing_end_spacing_in_block_quotes.md:0:0: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/missing_end_spacing_in_block_quotes.md:0:0: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -184,6 +377,72 @@ def test_md020_bad_missing_both_spacing():
         "test/resources/rules/md020/missing_both_spacing.md:1:1: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/missing_both_spacing.md:3:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_missing_both_spacing_in_list():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside both of the hashes.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/missing_both_spacing_in_list.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/missing_both_spacing_in_list.md:1:4: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/missing_both_spacing_in_list.md:3:4: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_missing_both_spacing_in_block_quotes():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside both of the hashes.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/missing_both_spacing_in_block_quotes.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/missing_both_spacing_in_block_quotes.md:1:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/missing_both_spacing_in_block_quotes.md:3:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -300,7 +559,438 @@ def test_md020_bad_multiple_within_paragraph():
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph.md:1:1: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph.md:1:1: "
+        + "test/resources/rules/md020/multiple_within_paragraph.md:2:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_codespan():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_codespan.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_codespan.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_codespan.md:3:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_codespan_multi():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_codespan_multi.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_codespan_multi.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_codespan_multi.md:4:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_inline_codespan_multi():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_codespan_multi.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_codespan_multi.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_inline_codespan_multi.md:3:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_rawhtml_multi.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_rawhtml_multi.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_inline_rawhtml_multi.md:3:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_inline_image_multi():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_image_multi.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_image_multi.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_inline_image_multi.md:7:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_full_image_multi():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_full_image_multi.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_full_image_multi.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_full_image_multi.md:4:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_shortcut_image_multi():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_image_multi.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_image_multi.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_image_multi.md:3:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_collapsed_image_multi():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_image_multi.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_image_multi.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_image_multi.md:3:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_inline_link_multi():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_link_multi.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_link_multi.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_inline_link_multi.md:7:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_full_link_multi():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_full_link_multi.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_full_link_multi.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_full_link_multi.md:4:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_separated_shortcut_link_multi():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_link_multi.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_link_multi.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_link_multi.md:3:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_collapsed_link_multi():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_link_multi.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_link_multi.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_link_multi.md:3:3: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_multiple_within_paragraph_separated_inline_hardbreak_multi():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
+    inside of the start hashes, multiple times in the same paragraph.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_hardbreak_multi.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_hardbreak_multi.md:1:1: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_inline_hardbreak_multi.md:2:2: "
+        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/multiple_within_paragraph_separated_inline_hardbreak_multi.md:3:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -372,11 +1062,11 @@ def test_md020_bad_single_paragraph_with_starting_whitespace():
     expected_output = (
         "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:1:1: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:1:1: "
+        + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:2:2: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:1:1: "
+        + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:3:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:1:1: "
+        + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:4:4: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -388,7 +1078,3 @@ def test_md020_bad_single_paragraph_with_starting_whitespace():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
-
-
-# TODO not in list
-# TODO not in block quote

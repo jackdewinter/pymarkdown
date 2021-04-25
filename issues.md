@@ -4,6 +4,36 @@
 
 - command line and configuration documentation
 - properly address any issues with existing rules
+- verify each file against mdlint, especially with extra data after sequence, document
+  - 001
+  - 003
+  - 010
+  - 018
+  - 019
+  - 020
+  - 021
+
+  - 022
+  - 023
+  - 024
+  - 026
+  - 036
+  - 047
+
+## Bugs - Rules - Rounding Out Rules
+
+- MD022 - lists and block quotes and LRDs
+- MD022 - should line 96-104 with all of the leaf node names be added to Markdown token?
+- MD022 - what if the document had a paragraph before the first heading?
+
+## Bugs - Rules - SetExt
+
+- MD041 requires metadata
+  - implemented MD043 at the same time
+  - implement MD025 at the same time
+- MD023 with inline that includes leading spaces?
+- MD024 with whitespace, and inline differences
+- MD024 level 2 (me), level 3 (my), level 2 (me) -  should fire? is considered siblings?
 
 ## Priority 2 - Like To Solve Before Initial
 
@@ -125,25 +155,6 @@
 - 235, 236, 252, 255
   - need to account for the fact that indent may not be all spaces all the time
   - for indented code blocks, starts at the start of the icb, else at the first non-ws
-
-## Bugs - Rules - Rounding Out Rules
-
-- MD020
-  - for multiple occurrences inside of a single paragraph, reporting line/col of starting token
-  - whitespace starts, etc.
-  - lists and block quotes
-- MD022 - lists and block quotes and LRDs
-- MD022 - should line 96-104 with all of the leaf node names be added to Markdown token?
-- MD022 - what if the document had a paragraph before the first heading?
-
-## Bugs - Rules - SetExt
-
-- MD041 requires metadata
-  - implemented MD043 at the same time
-  - implement MD025 at the same time
-- MD023 with inline that includes leading spaces?
-- MD024 with whitespace, and inline differences
-- MD024 level 2 (me), level 3 (my), level 2 (me) -  should fire? is considered siblings?
 
 ## Features - Extensions
 

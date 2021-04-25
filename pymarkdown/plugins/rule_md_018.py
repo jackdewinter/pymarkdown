@@ -8,33 +8,19 @@ import re
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
-class RuleMd018(Plugin):
+class StartOfLineTokenParser:
     """
-    Class to implement a plugin that looks for text in a paragraph where a line starts
-    with what could be an atx heading, except there is no spaces between the hashes and
-    the text of the heading.
+    Token parser that activates a check only on valid newlines within
+    a paragraph.
     """
 
     def __init__(self):
-        super().__init__()
         self.__last_paragraph_token = None
         self.__paragraph_index = None
         self.__first_line_after_other_token = None
         self.__paragraph_column_number = None
-
-    def get_details(self):
-        """
-        Get the details for the plugin.
-        """
-        return PluginDetails(
-            # headings, headers, atx, spaces
-            plugin_name="no-missing-space-atx",
-            plugin_id="MD018",
-            plugin_enabled_by_default=True,
-            plugin_description="No space after hash on atx style heading",
-            plugin_version="0.5.0",
-            plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md018---no-space-after-hash-on-atx-style-heading
+        self.__inside_of_link = None
+        self.__first_line_after_hard_break = None
 
     def starting_new_file(self):
         """
@@ -45,6 +31,7 @@ class RuleMd018(Plugin):
         self.__first_line_after_other_token = None
         self.__paragraph_column_number = None
 
+    # pylint: disable=too-many-branches
     def next_token(self, context, token):
         """
         Event that a new token is being processed.
@@ -88,15 +75,15 @@ class RuleMd018(Plugin):
                                     ]
                                 )
                             )
-                        if re.search(
-                            r"^\s{0,3}#{1,6}\S", combined_text
-                        ) and not re.search(r"#\s*$", combined_text):
-                            self.report_next_token_error(
-                                context,
-                                token,
-                                line_number_delta=split_index,
-                                column_number_delta=-adjusted_column_number,
-                            )
+                        # pylint: disable=invalid-unary-operand-type
+                        self.check_start_of_line(
+                            combined_text,
+                            context,
+                            token,
+                            split_index,
+                            -adjusted_column_number,
+                        )
+                        # pylint: enable=invalid-unary-operand-type
                     self.__first_line_after_other_token = False
                     self.__first_line_after_hard_break = False
                 self.__paragraph_index += token.token_text.count("\n")
@@ -121,3 +108,82 @@ class RuleMd018(Plugin):
             elif token.is_inline_hard_break:
                 self.__paragraph_index += 1
                 self.__first_line_after_hard_break = True
+
+    # pylint: enable=too-many-branches
+
+    # pylint: disable=too-many-arguments
+    def check_start_of_line(
+        self, combined_text, context, token, line_number_delta, column_number_delta
+    ):
+        """
+        Check for a pattern at the start of the line.
+        """
+
+    # pylint: enable=too-many-arguments
+
+
+class MyStartOfLineTokenParser(StartOfLineTokenParser):
+    """
+    Local implementation of the token parser.
+    """
+
+    def __init__(self, owner):
+        super().__init__()
+        self.__owner = owner
+
+    # pylint: disable=too-many-arguments
+    def check_start_of_line(
+        self, combined_text, context, token, line_number_delta, column_number_delta
+    ):
+        """
+        Check for a pattern at the start of the line.
+        """
+        if re.search(r"^\s{0,3}#{1,6}\S", combined_text) and not re.search(
+            r"#\s*$", combined_text
+        ):
+            self.__owner.report_next_token_error(
+                context,
+                token,
+                line_number_delta=line_number_delta,
+                column_number_delta=column_number_delta,
+            )
+
+    # pylint: enable=too-many-arguments
+
+
+class RuleMd018(Plugin):
+    """
+    Class to implement a plugin that looks for text in a paragraph where a line starts
+    with what could be an atx heading, except there is no spaces between the hashes and
+    the text of the heading.
+    """
+
+    def __init__(self):
+        super().__init__()
+        self.__token_parser = MyStartOfLineTokenParser(self)
+
+    def get_details(self):
+        """
+        Get the details for the plugin.
+        """
+        return PluginDetails(
+            # headings, headers, atx, spaces
+            plugin_name="no-missing-space-atx",
+            plugin_id="MD018",
+            plugin_enabled_by_default=True,
+            plugin_description="No space after hash on atx style heading",
+            plugin_version="0.5.0",
+            plugin_interface_version=1,
+        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md018---no-space-after-hash-on-atx-style-heading
+
+    def starting_new_file(self):
+        """
+        Event that the a new file to be scanned is starting.
+        """
+        self.__token_parser.starting_new_file()
+
+    def next_token(self, context, token):
+        """
+        Event that a new token is being processed.
+        """
+        self.__token_parser.next_token(context, token)

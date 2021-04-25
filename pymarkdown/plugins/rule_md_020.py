@@ -6,6 +6,34 @@ and the text of the heading, either at the start, end, or both.
 import re
 
 from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugins.rule_md_018 import StartOfLineTokenParser
+
+
+class MyStartOfLineTokenParser(StartOfLineTokenParser):
+    """
+    Local implementation of the token parser.
+    """
+
+    def __init__(self, owner):
+        super().__init__()
+        self.__owner = owner
+
+    # pylint: disable=too-many-arguments
+    def check_start_of_line(
+        self, combined_text, context, token, line_number_delta, column_number_delta
+    ):
+        """
+        Check for a pattern at the start of the line.
+        """
+        if re.search(r"^\s{0,3}#{1,6}.*#+\s*$", combined_text):
+            self.__owner.report_next_token_error(
+                context,
+                token,
+                line_number_delta=line_number_delta,
+                column_number_delta=column_number_delta,
+            )
+
+    # pylint: enable=too-many-arguments
 
 
 class RuleMd020(Plugin):
@@ -17,7 +45,7 @@ class RuleMd020(Plugin):
 
     def __init__(self):
         super().__init__()
-        self.__last_paragraph_token = None
+        self.__token_parser = MyStartOfLineTokenParser(self)
         self.__is_in_normal_atx = None
         self.__last_atx_token = None
 
@@ -39,7 +67,7 @@ class RuleMd020(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.__last_paragraph_token = None
+        self.__token_parser.starting_new_file()
         self.__is_in_normal_atx = False
         self.__last_atx_token = None
 
@@ -47,28 +75,14 @@ class RuleMd020(Plugin):
         """
         Event that a new token is being processed.
         """
+        self.__token_parser.next_token(context, token)
         if not token.is_atx_heading_end and self.__is_in_normal_atx:
             self.__last_atx_token = token
 
-        if token.is_paragraph:
-            self.__last_paragraph_token = token
-        elif token.is_atx_heading:
+        if token.is_atx_heading:
             self.__is_in_normal_atx = True
-        elif token.is_paragraph_end:
-            self.__last_paragraph_token = None
         elif token.is_atx_heading_end:
             if self.__is_in_normal_atx and self.__last_atx_token.is_text:
                 if self.__last_atx_token.token_text.endswith("#"):
                     self.report_next_token_error(context, token)
             self.__is_in_normal_atx = False
-        elif token.is_text and self.__last_paragraph_token:
-            split_whitespace = self.__last_paragraph_token.extracted_whitespace.split(
-                "\n"
-            )
-            split_text = token.token_text.split("\n")
-            assert len(split_whitespace) == len(split_text)
-
-            for split_index, next_text in enumerate(split_text):
-                combined_text = split_whitespace[split_index] + next_text
-                if re.search(r"^\s{0,3}#{1,6}.*#+\s*$", combined_text):
-                    self.report_next_token_error(context, token)
