@@ -67,6 +67,185 @@ def test_md024_bad_same_heading_content_atx():
         expected_output, expected_error, expected_return_code
     )
 
+@pytest.mark.rules
+def test_md024_bad_same_heading_content_atx_with_extra_whitespace():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text in them.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md:3:1: "
+        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md024_bad_same_heading_content_atx_with_extra_emphasis():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text in them.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md024/same_heading_content_atx_with_extra_emphasis.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md:3:1: "
+        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md024_bad_same_heading_content_atx_in_same_list_item():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text in them.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md024/same_heading_content_atx_in_same_list_item.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md:3:1: "
+        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md024_bad_same_heading_content_atx_in_different_list_items():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text in them.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md024/same_heading_content_atx_in_different_list_items.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md:3:1: "
+        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md024_bad_same_heading_content_atx_in_same_block_quote():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text in them.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md024/same_heading_content_atx_in_same_block_quote.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md:3:1: "
+        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md024_bad_same_heading_content_atx_in_different_block_quotes():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD024 directory that has atx headings that have some duplicated
+    text in them.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md024/same_heading_content_atx_in_different_block_quotes.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md:3:1: "
+        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
 
 @pytest.mark.rules
 def test_md024_bad_same_heading_in_siblings_atx():

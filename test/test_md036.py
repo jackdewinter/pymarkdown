@@ -334,3 +334,67 @@ def test_md036_valid_emphasis_headings():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+@pytest.mark.rules
+def test_md036_valid_emphasis_headings_in_list():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md036 directory that has a single line with emphasis wrapped
+    around the text, valid golden case for recommending.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md036/valid_emphasis_headings_in_list.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md036/valid_emphasis_headings.md:1:1: "
+        + "MD036: Emphasis used instead of a heading (no-emphasis-as-heading,no-emphasis-as-header)\n"
+        + "test/resources/rules/md036/valid_emphasis_headings.md:5:1: "
+        + "MD036: Emphasis used instead of a heading (no-emphasis-as-heading,no-emphasis-as-header)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md036_valid_emphasis_headings_in_block_quote():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md036 directory that has a single line with emphasis wrapped
+    around the text, valid golden case for recommending.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md036/valid_emphasis_headings_in_block_quote.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md036/valid_emphasis_headings.md:1:1: "
+        + "MD036: Emphasis used instead of a heading (no-emphasis-as-heading,no-emphasis-as-header)\n"
+        + "test/resources/rules/md036/valid_emphasis_headings.md:5:1: "
+        + "MD036: Emphasis used instead of a heading (no-emphasis-as-heading,no-emphasis-as-header)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )

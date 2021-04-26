@@ -256,3 +256,30 @@ def test_md023_bad_improper_indent_setext_in_list_item():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+@pytest.mark.rules
+def test_md023_bad_improper_indented_atx_after_emphasis():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md023 directory that has a setext heading that is indented from
+    the start of the line.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md023/improper_indented_atx_after_emphasis.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )

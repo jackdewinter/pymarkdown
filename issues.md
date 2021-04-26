@@ -13,23 +13,17 @@
   - 020
   - 021
   - 022
-  
   - 023
   - 024
   - 026
   - 036
   - 047
 
-## Bugs - Rules - SetExt
-
-- MD023 with inline that includes leading spaces?
-- MD024 with whitespace, and inline differences
-- MD024 level 2 (me), level 3 (my), level 2 (me) -  should fire? is considered siblings?
-- MD041 requires metadata
-  - implemented MD043 at the same time
-  - implement MD025 at the same time
-
 ## Priority 2 - Like To Solve Before Initial
+
+- MD041 requires metadata
+  - implement MD043 at the same time
+  - implement MD025 at the same time
 
 - plugins list, enabled default and current not taking up so much space
 
@@ -41,7 +35,7 @@
   - leading_text_index - verify_line_and... ~715
   - see 213c.  doesn't seem to have enough information to properly reconstruct
   - compare to 213d which does
-  - _215, _229gx, _229ga, _229hx, _229ha,
+  - _215, 229gx, 229ga, 229hx, 229ha,
   - test_fenced_code_blocks_098c, _extra_05x, _extra_05a, _extra_06xx, _extra_06xa
   - test_paragraph_extra_j0ea
   - test_paragraph_series_n_bq_t_nl_bq_fb_nl_without_bq
