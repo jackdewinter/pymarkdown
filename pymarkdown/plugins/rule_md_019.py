@@ -14,7 +14,7 @@ class RuleMd019(Plugin):
 
     def __init__(self):
         super().__init__()
-        self.__in_atx_heading = None
+        self.__atx_heading_token = None
 
     def get_details(self):
         """
@@ -34,19 +34,20 @@ class RuleMd019(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.__in_atx_heading = None
+        self.__atx_heading_token = None
 
     def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
         if token.is_atx_heading:
-            self.__in_atx_heading = not token.remove_trailing_count
+            if not token.remove_trailing_count:
+                self.__atx_heading_token = token
         elif token.is_paragraph_end:
-            self.__in_atx_heading = False
+            self.__atx_heading_token = None
         elif token.is_text:
             resolved_extracted_whitespace = ParserHelper.remove_all_from_text(
                 token.extracted_whitespace
             )
-            if self.__in_atx_heading and len(resolved_extracted_whitespace) > 1:
-                self.report_next_token_error(context, token)
+            if self.__atx_heading_token and len(resolved_extracted_whitespace) > 1:
+                self.report_next_token_error(context, self.__atx_heading_token)

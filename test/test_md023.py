@@ -17,6 +17,8 @@ def test_md023_good_proper_indent_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--enable-rules",
+        "MD023",
         "scan",
         "test/resources/rules/md023/proper_indent_atx.md",
     ]
@@ -45,6 +47,8 @@ def test_md023_good_proper_indent_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--enable-rules",
+        "MD023",
         "scan",
         "test/resources/rules/md023/proper_indent_setext.md",
     ]
@@ -73,6 +77,8 @@ def test_md023_bad_improper_indent_atx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--enable-rules",
+        "MD023",
         "scan",
         "test/resources/rules/md023/improper_indent_atx.md",
     ]
@@ -104,6 +110,8 @@ def test_md023_bad_improper_indent_atx_in_list_item():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--enable-rules",
+        "MD023",
         "scan",
         "test/resources/rules/md023/improper_indent_atx_in_list_item.md",
     ]
@@ -132,6 +140,8 @@ def test_md023_bad_improper_indent_atx_in_block_quote():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--enable-rules",
+        "MD023",
         "scan",
         "test/resources/rules/md023/improper_indent_atx_in_block_quote.md",
     ]
@@ -160,6 +170,8 @@ def test_md023_bad_improper_indent_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--enable-rules",
+        "MD023",
         "scan",
         "test/resources/rules/md023/improper_indent_setext.md",
     ]
@@ -197,6 +209,8 @@ def test_md023_bad_improper_indent_setext_in_block_quote():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--enable-rules",
+        "MD023",
         "scan",
         "test/resources/rules/md023/improper_indent_setext_in_block_quote.md",
     ]
@@ -234,6 +248,8 @@ def test_md023_bad_improper_indent_setext_in_list_item():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--enable-rules",
+        "MD023",
         "scan",
         "test/resources/rules/md023/improper_indent_setext_in_list_item.md",
     ]
@@ -257,6 +273,7 @@ def test_md023_bad_improper_indent_setext_in_list_item():
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md023_bad_improper_indented_atx_after_emphasis():
     """
@@ -268,6 +285,8 @@ def test_md023_bad_improper_indented_atx_after_emphasis():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--enable-rules",
+        "MD023",
         "scan",
         "test/resources/rules/md023/improper_indented_atx_after_emphasis.md",
     ]

@@ -53,9 +53,9 @@ def test_md021_bad_multiple_spacing_both():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md021/multiple_spacing.md:0:0: "
+        "test/resources/rules/md021/multiple_spacing.md:1:1: "
         + "MD021: Multiple spaces inside hashes on closed atx style heading (no-multiple-space-closed-atx)\n"
-        + "test/resources/rules/md021/multiple_spacing.md:0:0: "
+        + "test/resources/rules/md021/multiple_spacing.md:3:1: "
         + "MD021: Multiple spaces inside hashes on closed atx style heading (no-multiple-space-closed-atx)\n"
     )
     expected_error = ""
@@ -86,9 +86,9 @@ def test_md021_bad_multiple_spacing_left():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md021/multiple_spacing_left.md:0:0: "
+        "test/resources/rules/md021/multiple_spacing_left.md:1:1: "
         + "MD021: Multiple spaces inside hashes on closed atx style heading (no-multiple-space-closed-atx)\n"
-        + "test/resources/rules/md021/multiple_spacing_left.md:0:0: "
+        + "test/resources/rules/md021/multiple_spacing_left.md:3:1: "
         + "MD021: Multiple spaces inside hashes on closed atx style heading (no-multiple-space-closed-atx)\n"
     )
     expected_error = ""
@@ -119,9 +119,9 @@ def test_md021_bad_multiple_spacing_right():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md021/multiple_spacing_right.md:0:0: "
+        "test/resources/rules/md021/multiple_spacing_right.md:1:1: "
         + "MD021: Multiple spaces inside hashes on closed atx style heading (no-multiple-space-closed-atx)\n"
-        + "test/resources/rules/md021/multiple_spacing_right.md:0:0: "
+        + "test/resources/rules/md021/multiple_spacing_right.md:3:1: "
         + "MD021: Multiple spaces inside hashes on closed atx style heading (no-multiple-space-closed-atx)\n"
     )
     expected_error = ""
@@ -152,6 +152,41 @@ def test_md021_good_multiple_spacing_with_inline():
 
     expected_return_code = 0
     expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md021_good_multiple_spacing_with_indent():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md021 directory that has single spacing inside the hashes of
+    a closed atx heading, with inline.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md023",
+        "scan",
+        "test/resources/rules/md021/multiple_spacing_with_indent.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md021/multiple_spacing_with_indent.md:1:2: "
+        + "MD021: Multiple spaces inside hashes on closed atx style heading (no-multiple-space-closed-atx)\n"
+        + "test/resources/rules/md021/multiple_spacing_with_indent.md:3:3: "
+        + "MD021: Multiple spaces inside hashes on closed atx style heading (no-multiple-space-closed-atx)\n"
+    )
     expected_error = ""
 
     # Act

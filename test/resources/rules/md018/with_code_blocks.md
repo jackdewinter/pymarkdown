@@ -1,5 +1,5 @@
 ```text
-#Heading 1
+#Heading in Fenced Block
 ```
 
-    #Heading 2
+    #Heading in Indented Code Block

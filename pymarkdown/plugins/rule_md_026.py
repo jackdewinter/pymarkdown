@@ -53,16 +53,36 @@ class RuleMd026(Plugin):
             self.__heading_text = ""
             self.__start_token = token
         elif token.is_end_token:
-            if token.is_setext_heading_end or token.is_atx_heading_end:
-
-                if self.__heading_text:
-                    if self.__heading_text[-1] in self.__punctuation:
-                        self.report_next_token_error(context, self.__start_token)
-                self.__start_token = None
-            else:
-                self.__heading_text = ""
+            self.__next_token_end(token, context)
         elif self.__start_token:
             if token.is_text:
                 self.__heading_text += token.token_text
             else:
                 self.__heading_text = ""
+
+    def __next_token_end(self, token, context):
+        if token.is_setext_heading_end or token.is_atx_heading_end:
+            if self.__heading_text:
+                if token.is_atx_heading_end:
+                    use_original_position = False
+                    line_delta = 0
+                    column_delta = len(self.__heading_text) - 1
+                else:
+                    use_original_position = True
+                    line_delta = self.__heading_text.count("\n")
+                    if line_delta:
+                        split_heading_text = self.__heading_text.split("\n")
+                        column_delta = len(split_heading_text[-1]) - 1
+                    else:
+                        column_delta = len(self.__heading_text) - 1
+                if self.__heading_text[-1] in self.__punctuation:
+                    self.report_next_token_error(
+                        context,
+                        self.__start_token,
+                        line_number_delta=line_delta,
+                        column_number_delta=column_delta,
+                        use_original_position=use_original_position,
+                    )
+            self.__start_token = None
+        else:
+            self.__heading_text = ""

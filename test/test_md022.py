@@ -532,13 +532,10 @@ def test_md022_bad_no_line_spacing_after_atx_in_different_block_quotes():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md022/no_line_spacing_after_atx_in_different_block_quotes.md:2:3: "
+        "test/resources/rules/md022/no_line_spacing_after_atx_in_different_block_quotes.md:1:3: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + "test/resources/rules/md022/no_line_spacing_after_atx_in_different_block_quotes.md:7:3: "
-        + "MD022: Headings should be surrounded by blank lines "
-        + "[Expected: 1; Actual: None; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + "test/resources/rules/md022/no_line_spacing_after_atx_in_different_block_quotes.md:7:3: "
+        + "test/resources/rules/md022/no_line_spacing_after_atx_in_different_block_quotes.md:5:3: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
     )
@@ -826,10 +823,10 @@ def test_md022_bad_no_line_spacing_setext():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md022/no_line_spacing_setext.md:2:1: "
+        "test/resources/rules/md022/no_line_spacing_setext.md:1:1: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + "test/resources/rules/md022/no_line_spacing_setext.md:7:1: "
+        + "test/resources/rules/md022/no_line_spacing_setext.md:6:1: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
     )
@@ -861,10 +858,10 @@ def test_md022_bad_no_line_spacing_after_setext():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md022/no_line_spacing_after_setext.md:2:1: "
+        "test/resources/rules/md022/no_line_spacing_after_setext.md:1:1: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
-        + "test/resources/rules/md022/no_line_spacing_after_setext.md:7:1: "
+        + "test/resources/rules/md022/no_line_spacing_after_setext.md:6:1: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
     )
@@ -924,10 +921,10 @@ def test_md022_bad_setext_with_code_block_and_bad_line_spacing():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md022/setext_with_code_block_and_bad_line_spacing.md:5:1: "
+        "test/resources/rules/md022/setext_with_code_block_and_bad_line_spacing.md:4:1: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + "test/resources/rules/md022/setext_with_code_block_and_bad_line_spacing.md:11:1: "
+        + "test/resources/rules/md022/setext_with_code_block_and_bad_line_spacing.md:10:1: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
     )
@@ -987,10 +984,10 @@ def test_md022_bad_setext_with_html_and_bad_line_spacing():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md022/setext_with_html_and_bad_line_spacing.md:4:1: "
+        "test/resources/rules/md022/setext_with_html_and_bad_line_spacing.md:3:1: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + "test/resources/rules/md022/setext_with_html_and_bad_line_spacing.md:10:1: "
+        + "test/resources/rules/md022/setext_with_html_and_bad_line_spacing.md:9:1: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
     )
@@ -1050,10 +1047,10 @@ def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md022/setext_with_thematic_break_and_bad_line_spacing.md:3:1: "
+        "test/resources/rules/md022/setext_with_thematic_break_and_bad_line_spacing.md:2:1: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
-        + "test/resources/rules/md022/setext_with_thematic_break_and_bad_line_spacing.md:9:1: "
+        + "test/resources/rules/md022/setext_with_thematic_break_and_bad_line_spacing.md:8:1: "
         + "MD022: Headings should be surrounded by blank lines "
         + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)\n"
     )
@@ -1325,10 +1322,10 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
             "test/resources/rules/md022/alternating_heading_types.md:1:1: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
-            + "test/resources/rules/md022/alternating_heading_types.md:4:1: "
+            + "test/resources/rules/md022/alternating_heading_types.md:3:1: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
-            + "test/resources/rules/md022/alternating_heading_types.md:4:1: "
+            + "test/resources/rules/md022/alternating_heading_types.md:3:1: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
             + "test/resources/rules/md022/alternating_heading_types.md:6:1: "
@@ -1337,10 +1334,10 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
             + "test/resources/rules/md022/alternating_heading_types.md:6:1: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
-            + "test/resources/rules/md022/alternating_heading_types.md:9:1: "
+            + "test/resources/rules/md022/alternating_heading_types.md:8:1: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
-            + "test/resources/rules/md022/alternating_heading_types.md:9:1: "
+            + "test/resources/rules/md022/alternating_heading_types.md:8:1: "
             + "MD022: Headings should be surrounded by blank lines "
             + "[Expected: 2; Actual: 1; Below] (blanks-around-headings,blanks-around-headers)\n"
         )
@@ -1356,8 +1353,3 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
     finally:
         if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
-
-
-# TODO LRDs
-# TODO Lists
-# TODO Block Quotes

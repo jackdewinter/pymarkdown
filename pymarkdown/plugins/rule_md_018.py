@@ -21,6 +21,7 @@ class StartOfLineTokenParser:
         self.__paragraph_column_number = None
         self.__inside_of_link = None
         self.__first_line_after_hard_break = None
+        self.__delayed_line = None
 
     def starting_new_file(self):
         """
@@ -31,85 +32,116 @@ class StartOfLineTokenParser:
         self.__first_line_after_other_token = None
         self.__paragraph_column_number = None
 
-    # pylint: disable=too-many-branches
     def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
         if token.is_paragraph:
-            self.__last_paragraph_token = token
-            self.__paragraph_index = 0
-            self.__first_line_after_other_token = True
-            self.__first_line_after_hard_break = False
-            self.__inside_of_link = False
-            self.__paragraph_column_number = token.column_number
+            self.__next_token_paragraph_start(token)
         elif token.is_paragraph_end:
-            self.__last_paragraph_token = None
+            self.__next_token_paragraph_end()
         elif self.__last_paragraph_token:
             if self.__inside_of_link:
                 if token.is_inline_link_end:
                     self.__inside_of_link = False
             elif token.is_text:
-                split_whitespace = (
-                    self.__last_paragraph_token.extracted_whitespace.split("\n")
-                )
-                split_text = token.token_text.split("\n")
+                self.__next_token_paragraph_text_inline(token, context)
+            else:
+                self.__next_token_paragraph_non_text_inline(token)
 
-                for split_index, next_text in enumerate(split_text):
-                    combined_text = (
+    def __next_token_paragraph_start(self, token):
+        self.__last_paragraph_token = token
+        self.__paragraph_index = 0
+        self.__first_line_after_other_token = True
+        self.__first_line_after_hard_break = False
+        self.__inside_of_link = False
+        self.__paragraph_column_number = token.column_number
+        self.__delayed_line = None
+
+    def __next_token_paragraph_end(self):
+        if self.__delayed_line:
+            self.check_start_of_line(
+                self.__delayed_line[0],
+                self.__delayed_line[1],
+                self.__delayed_line[2],
+                self.__delayed_line[3],
+                self.__delayed_line[4],
+            )
+            self.__delayed_line = None
+        self.__last_paragraph_token = None
+
+    def __next_token_paragraph_non_text_inline(self, token):
+        if token.is_inline_code_span:
+            self.__delayed_line = None
+            self.__paragraph_index += (
+                token.leading_whitespace.count("\n")
+                + token.span_text.count("\n")
+                + token.trailing_whitespace.count("\n")
+            )
+        elif token.is_inline_raw_html:
+            self.__delayed_line = None
+            self.__paragraph_index += token.raw_tag.count("\n")
+        elif token.is_inline_image or token.is_inline_link:
+            self.__delayed_line = None
+            self.__paragraph_index += token.text_from_blocks.count("\n")
+            if token.label_type == "inline":
+                self.__paragraph_index += token.before_link_whitespace.count("\n")
+                self.__paragraph_index += token.before_title_whitespace.count("\n")
+                self.__paragraph_index += token.after_title_whitespace.count("\n")
+                self.__paragraph_index += token.active_link_title.count("\n")
+            if token.label_type == "full":
+                self.__paragraph_index += token.ex_label.count("\n")
+            self.__inside_of_link = token.is_inline_link
+        elif token.is_inline_hard_break:
+            self.__delayed_line = None
+            self.__paragraph_index += 1
+            self.__first_line_after_hard_break = True
+        elif (
+            token.is_inline_emphasis
+            or token.is_inline_emphasis_end
+            or token.is_inline_autolink
+        ):
+            self.__delayed_line = None
+
+    def __next_token_paragraph_text_inline(self, token, context):
+        split_whitespace = self.__last_paragraph_token.extracted_whitespace.split("\n")
+        split_text = token.token_text.split("\n")
+
+        for split_index, next_text in enumerate(split_text):
+            combined_text = (
+                split_whitespace[split_index + self.__paragraph_index] + next_text
+            )
+            if (
+                self.__first_line_after_hard_break
+                or self.__first_line_after_other_token
+            ) or split_index:
+                if self.__first_line_after_other_token:
+                    adjusted_column_number = self.__paragraph_column_number
+                else:
+                    adjusted_column_number = self.__paragraph_column_number + len(
                         split_whitespace[split_index + self.__paragraph_index]
-                        + next_text
                     )
-                    if (
-                        self.__first_line_after_hard_break
-                        or self.__first_line_after_other_token
-                    ) or split_index:
-                        if self.__first_line_after_other_token:
-                            adjusted_column_number = self.__paragraph_column_number
-                        else:
-                            adjusted_column_number = (
-                                self.__paragraph_column_number
-                                + len(
-                                    split_whitespace[
-                                        split_index + self.__paragraph_index
-                                    ]
-                                )
-                            )
-                        # pylint: disable=invalid-unary-operand-type
-                        self.check_start_of_line(
-                            combined_text,
-                            context,
-                            token,
-                            split_index,
-                            -adjusted_column_number,
-                        )
-                        # pylint: enable=invalid-unary-operand-type
-                    self.__first_line_after_other_token = False
-                    self.__first_line_after_hard_break = False
-                self.__paragraph_index += token.token_text.count("\n")
-            elif token.is_inline_code_span:
-                self.__paragraph_index += (
-                    token.leading_whitespace.count("\n")
-                    + token.span_text.count("\n")
-                    + token.trailing_whitespace.count("\n")
-                )
-            elif token.is_inline_raw_html:
-                self.__paragraph_index += token.raw_tag.count("\n")
-            elif token.is_inline_image or token.is_inline_link:
-                self.__paragraph_index += token.text_from_blocks.count("\n")
-                if token.label_type == "inline":
-                    self.__paragraph_index += token.before_link_whitespace.count("\n")
-                    self.__paragraph_index += token.before_title_whitespace.count("\n")
-                    self.__paragraph_index += token.after_title_whitespace.count("\n")
-                    self.__paragraph_index += token.active_link_title.count("\n")
-                if token.label_type == "full":
-                    self.__paragraph_index += token.ex_label.count("\n")
-                self.__inside_of_link = token.is_inline_link
-            elif token.is_inline_hard_break:
-                self.__paragraph_index += 1
-                self.__first_line_after_hard_break = True
-
-    # pylint: enable=too-many-branches
+                # pylint: disable=invalid-unary-operand-type
+                if split_index == len(split_text) - 1:
+                    self.__delayed_line = (
+                        combined_text,
+                        context,
+                        token,
+                        split_index,
+                        -adjusted_column_number,
+                    )
+                else:
+                    self.check_start_of_line(
+                        combined_text,
+                        context,
+                        token,
+                        split_index,
+                        -adjusted_column_number,
+                    )
+                # pylint: enable=invalid-unary-operand-type
+            self.__first_line_after_other_token = False
+            self.__first_line_after_hard_break = False
+        self.__paragraph_index += token.token_text.count("\n")
 
     # pylint: disable=too-many-arguments
     def check_start_of_line(

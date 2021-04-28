@@ -192,14 +192,21 @@ class Plugin(ABC):
         extra_error_information=None,
         line_number_delta=0,
         column_number_delta=0,
+        use_original_position=False,
     ):
         """
         Report an error with the current token being processed.
         """
         context.owning_manager.log_scan_failure(
             context.scan_file,
-            token.line_number + line_number_delta,
-            token.column_number + column_number_delta
+            (token.original_line_number if use_original_position else token.line_number)
+            + line_number_delta,
+            (
+                token.original_column_number
+                if use_original_position
+                else token.column_number
+            )
+            + column_number_delta
             if column_number_delta >= 0
             else -column_number_delta,
             self.get_details().plugin_id,

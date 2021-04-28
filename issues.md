@@ -3,28 +3,15 @@
 ## Priority 1 - Must Solve Before Initial
 
 - command line and configuration documentation
-- properly address any issues with existing rules
 - verify each file against mdlint, especially with extra data after sequence, document
-  - 001
-  - 003
-  - 010
-  - 018
-  - 019
   - 020
-  - 021
-  - 022
-  - 023
-  - 024
-  - 026
-  - 036
-  - 047
-
+  
 ## Priority 2 - Like To Solve Before Initial
 
 - MD041 requires metadata
   - implement MD043 at the same time
   - implement MD025 at the same time
-
+- __is_container_end_token, __is_leaf_end_token --> put into markdown_token?
 - plugins list, enabled default and current not taking up so much space
 
 - implement missing rules

@@ -335,6 +335,7 @@ def test_md036_valid_emphasis_headings():
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md036_valid_emphasis_headings_in_list():
     """
@@ -352,9 +353,9 @@ def test_md036_valid_emphasis_headings_in_list():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md036/valid_emphasis_headings.md:1:1: "
+        "test/resources/rules/md036/valid_emphasis_headings_in_list.md:1:3: "
         + "MD036: Emphasis used instead of a heading (no-emphasis-as-heading,no-emphasis-as-header)\n"
-        + "test/resources/rules/md036/valid_emphasis_headings.md:5:1: "
+        + "test/resources/rules/md036/valid_emphasis_headings_in_list.md:5:3: "
         + "MD036: Emphasis used instead of a heading (no-emphasis-as-heading,no-emphasis-as-header)\n"
     )
     expected_error = ""
@@ -366,6 +367,7 @@ def test_md036_valid_emphasis_headings_in_list():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md036_valid_emphasis_headings_in_block_quote():
@@ -384,9 +386,9 @@ def test_md036_valid_emphasis_headings_in_block_quote():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md036/valid_emphasis_headings.md:1:1: "
+        "test/resources/rules/md036/valid_emphasis_headings_in_block_quote.md:1:3: "
         + "MD036: Emphasis used instead of a heading (no-emphasis-as-heading,no-emphasis-as-header)\n"
-        + "test/resources/rules/md036/valid_emphasis_headings.md:5:1: "
+        + "test/resources/rules/md036/valid_emphasis_headings_in_block_quote.md:5:3: "
         + "MD036: Emphasis used instead of a heading (no-emphasis-as-heading,no-emphasis-as-header)\n"
     )
     expected_error = ""

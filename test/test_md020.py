@@ -106,17 +106,14 @@ def test_md020_bad_ignore_bad_atx_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md018",
         "scan",
         "test/resources/rules/md020/ignore_bad_atx_spacing.md",
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md020/ignore_bad_atx_spacing.md:1:1: "
-        + "MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
-        + "test/resources/rules/md020/ignore_bad_atx_spacing.md:3:1: "
-        + "MD018: No space after hash on atx style heading (no-missing-space-atx)\n"
-    )
+    expected_return_code = 0
+    expected_output = ""
     expected_error = ""
 
     # Act
@@ -228,7 +225,7 @@ def test_md020_bad_missing_start_spacing_in_block_quotes():
 
 
 @pytest.mark.rules
-def test_md020_bad_missing_end_spacing():
+def test_md020_bad_missing_end_spacingx():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md020 directory that has a closed atx heading with bad spacing
@@ -238,15 +235,16 @@ def test_md020_bad_missing_end_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--stack-trace",
         "scan",
         "test/resources/rules/md020/missing_end_spacing.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/missing_end_spacing.md:0:0: "
+        "test/resources/rules/md020/missing_end_spacing.md:1:12: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/missing_end_spacing.md:0:0: "
+        + "test/resources/rules/md020/missing_end_spacing.md:3:13: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -277,9 +275,9 @@ def test_md020_bad_missing_end_spacing_in_list():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/missing_end_spacing_in_list.md:0:0: "
+        "test/resources/rules/md020/missing_end_spacing_in_list.md:1:15: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/missing_end_spacing_in_list.md:0:0: "
+        + "test/resources/rules/md020/missing_end_spacing_in_list.md:3:16: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -312,9 +310,9 @@ def test_md020_bad_missing_end_spacing_in_block_quotes():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/missing_end_spacing_in_block_quotes.md:0:0: "
+        "test/resources/rules/md020/missing_end_spacing_in_block_quotes.md:1:14: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/missing_end_spacing_in_block_quotes.md:0:0: "
+        + "test/resources/rules/md020/missing_end_spacing_in_block_quotes.md:3:15: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -656,9 +654,7 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_codespan_multi():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_codespan_multi.md:1:1: "
-        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_inline_codespan_multi.md:3:3: "
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_codespan_multi.md:4:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -689,9 +685,7 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_rawhtml_multi.md:1:1: "
-        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_inline_rawhtml_multi.md:3:3: "
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_rawhtml_multi.md:4:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -722,9 +716,7 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_image_multi():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_image_multi.md:1:1: "
-        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_inline_image_multi.md:7:3: "
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_image_multi.md:8:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -755,9 +747,7 @@ def test_md020_bad_multiple_within_paragraph_separated_full_image_multi():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_full_image_multi.md:1:1: "
-        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_full_image_multi.md:4:3: "
+        "test/resources/rules/md020/multiple_within_paragraph_separated_full_image_multi.md:5:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -788,9 +778,7 @@ def test_md020_bad_multiple_within_paragraph_separated_shortcut_image_multi():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_image_multi.md:1:1: "
-        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_image_multi.md:3:3: "
+        "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_image_multi.md:4:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -821,9 +809,7 @@ def test_md020_bad_multiple_within_paragraph_separated_collapsed_image_multi():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_image_multi.md:1:1: "
-        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_image_multi.md:3:3: "
+        "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_image_multi.md:4:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -854,9 +840,7 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_link_multi():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_link_multi.md:1:1: "
-        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_inline_link_multi.md:7:3: "
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_link_multi.md:8:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -887,9 +871,7 @@ def test_md020_bad_multiple_within_paragraph_separated_full_link_multi():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_full_link_multi.md:1:1: "
-        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_full_link_multi.md:4:3: "
+        "test/resources/rules/md020/multiple_within_paragraph_separated_full_link_multi.md:5:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -920,9 +902,7 @@ def test_md020_bad_multiple_within_paragraph_separated_separated_shortcut_link_m
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_link_multi.md:1:1: "
-        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_link_multi.md:3:3: "
+        "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_link_multi.md:4:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -953,9 +933,7 @@ def test_md020_bad_multiple_within_paragraph_separated_collapsed_link_multi():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_link_multi.md:1:1: "
-        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_link_multi.md:3:3: "
+        "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_link_multi.md:4:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""
@@ -986,11 +964,7 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_hardbreak_multi():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_hardbreak_multi.md:1:1: "
-        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_inline_hardbreak_multi.md:2:2: "
-        + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/multiple_within_paragraph_separated_inline_hardbreak_multi.md:3:3: "
+        "test/resources/rules/md020/multiple_within_paragraph_separated_inline_hardbreak_multi.md:3:3: "
         + "MD020: No space inside hashes on closed atx style heading (no-missing-space-closed-atx)\n"
     )
     expected_error = ""

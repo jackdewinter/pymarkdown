@@ -54,7 +54,7 @@ def test_md026_bad_ends_with_punctuation_atx():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md026/ends_with_punctuation_atx.md:1:1: "
+        "test/resources/rules/md026/ends_with_punctuation_atx.md:1:18: "
         + "MD026: Trailing punctuation in heading (no-trailing-punctuation)\n"
     )
     expected_error = ""
@@ -179,7 +179,38 @@ def test_md026_bad_ends_with_punctuation_setext():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md026/ends_with_punctuation_setext.md:2:1: "
+        "test/resources/rules/md026/ends_with_punctuation_setext.md:1:18: "
+        + "MD026: Trailing punctuation in heading (no-trailing-punctuation)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md026_bad_ends_with_punctuation_setext_multiline():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD026 directory that has setext headings that do end with a
+    punctuation character.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md026/ends_with_punctuation_setext_multiline.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md026/ends_with_punctuation_setext_multiline.md:2:18: "
         + "MD026: Trailing punctuation in heading (no-trailing-punctuation)\n"
     )
     expected_error = ""

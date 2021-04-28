@@ -15,6 +15,7 @@ class RuleMd002(Plugin):
         super().__init__()
         self.__start_level = None
         self.__have_seen_first_heading = None
+        self.__front_matter_title = None
 
     def get_details(self):
         """
@@ -52,6 +53,7 @@ class RuleMd002(Plugin):
         hash_count = None
         if token.is_atx_heading or token.is_setext_heading:
             hash_count = token.hash_count
+
         if not self.__have_seen_first_heading and hash_count:
             self.__have_seen_first_heading = True
             if hash_count != self.__start_level:

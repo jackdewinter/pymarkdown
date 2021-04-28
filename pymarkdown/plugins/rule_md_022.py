@@ -66,12 +66,16 @@ class RuleMd022(Plugin):
         """
         Event that a new token is being processed.
         """
+        # print(">>" + str(token).replace("\n", "\\n"))
+        # print(">>self.__blank_line_count>>" + str(self.__blank_line_count))
         self.perform_close_check(context, token)
 
         if token.is_blank_line:
+            # print(">>token.is_blank_line>>")
             if (self.__blank_line_count is not None) and self.__blank_line_count >= 0:
                 self.__blank_line_count += 1
         if token.is_setext_heading or token.is_atx_heading:
+            # print(">>token.is_setext_heading or token.is_atx_heading>>")
             self.__did_above_line_count_match = bool(
                 self.__blank_line_count == -1
                 or self.__blank_line_count == self.__lines_above
@@ -79,14 +83,28 @@ class RuleMd022(Plugin):
             self.__start_heading_token = token
             self.__start_heading_blank_line_count = self.__blank_line_count
             self.__did_heading_end = False
+            # print("self.__did_above_line_count_match>>" + str(self.__did_above_line_count_match))
         elif token.is_thematic_break:
             self.__blank_line_count = 0
         elif token.is_end_token:
-            self.__blank_line_count = 0 if self.__is_leaf_end_token(token) else None
+            # print(">>token.is_end_token>>")
+            self.__blank_line_count = (
+                0
+                if self.__is_leaf_end_token(token)
+                or self.__is_container_end_token(token)
+                else None
+            )
             if token.is_atx_heading_end or token.is_setext_heading_end:
                 self.__did_heading_end = True
+        # print(">>self.__blank_line_count>>" + str(self.__blank_line_count))
 
     # pylint: disable=too-many-boolean-expressions
+    @classmethod
+    def __is_container_end_token(cls, token):
+        if token.is_list_end or token.is_block_quote_end:
+            return True
+        return False
+
     @classmethod
     def __is_leaf_end_token(cls, token):
         if (
@@ -132,7 +150,10 @@ class RuleMd022(Plugin):
                 + "; Above"
             )
             self.report_next_token_error(
-                context, self.__start_heading_token, extra_error_information=extra_info
+                context,
+                self.__start_heading_token,
+                extra_error_information=extra_info,
+                use_original_position=self.__start_heading_token.is_setext_heading,
             )
         if not did_end_match:
             extra_info = (
@@ -143,5 +164,8 @@ class RuleMd022(Plugin):
                 + "; Below"
             )
             self.report_next_token_error(
-                context, self.__start_heading_token, extra_error_information=extra_info
+                context,
+                self.__start_heading_token,
+                extra_error_information=extra_info,
+                use_original_position=self.__start_heading_token.is_setext_heading,
             )

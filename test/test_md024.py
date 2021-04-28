@@ -67,6 +67,7 @@ def test_md024_bad_same_heading_content_atx():
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_with_extra_whitespace():
     """
@@ -82,11 +83,8 @@ def test_md024_bad_same_heading_content_atx_with_extra_whitespace():
         "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md",
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md:3:1: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
-    )
+    expected_return_code = 0
+    expected_output = ""
     expected_error = ""
 
     # Act
@@ -96,6 +94,7 @@ def test_md024_bad_same_heading_content_atx_with_extra_whitespace():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_with_extra_emphasis():
@@ -112,11 +111,8 @@ def test_md024_bad_same_heading_content_atx_with_extra_emphasis():
         "test/resources/rules/md024/same_heading_content_atx_with_extra_emphasis.md",
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md:3:1: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
-    )
+    expected_return_code = 0
+    expected_output = ""
     expected_error = ""
 
     # Act
@@ -126,6 +122,7 @@ def test_md024_bad_same_heading_content_atx_with_extra_emphasis():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_in_same_list_item():
@@ -144,7 +141,7 @@ def test_md024_bad_same_heading_content_atx_in_same_list_item():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md:3:1: "
+        "test/resources/rules/md024/same_heading_content_atx_in_same_list_item.md:3:3: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -156,6 +153,7 @@ def test_md024_bad_same_heading_content_atx_in_same_list_item():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_in_different_list_items():
@@ -174,7 +172,7 @@ def test_md024_bad_same_heading_content_atx_in_different_list_items():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md:3:1: "
+        "test/resources/rules/md024/same_heading_content_atx_in_different_list_items.md:3:3: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -186,6 +184,7 @@ def test_md024_bad_same_heading_content_atx_in_different_list_items():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_in_same_block_quote():
@@ -198,13 +197,15 @@ def test_md024_bad_same_heading_content_atx_in_same_block_quote():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md022",
         "scan",
         "test/resources/rules/md024/same_heading_content_atx_in_same_block_quote.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md:3:1: "
+        "test/resources/rules/md024/same_heading_content_atx_in_same_block_quote.md:3:3: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -216,6 +217,7 @@ def test_md024_bad_same_heading_content_atx_in_same_block_quote():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_in_different_block_quotes():
@@ -228,13 +230,15 @@ def test_md024_bad_same_heading_content_atx_in_different_block_quotes():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md022",
         "scan",
         "test/resources/rules/md024/same_heading_content_atx_in_different_block_quotes.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_atx_with_extra_whitespace.md:3:1: "
+        "test/resources/rules/md024/same_heading_content_atx_in_different_block_quotes.md:3:3: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -246,6 +250,7 @@ def test_md024_bad_same_heading_content_atx_in_different_block_quotes():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md024_bad_same_heading_in_siblings_atx():
@@ -576,7 +581,7 @@ def test_md024_bad_same_heading_content_setext():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_content_setext.md:5:1: "
+        "test/resources/rules/md024/same_heading_content_setext.md:4:1: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -607,9 +612,9 @@ def test_md024_bad_same_heading_in_siblings_setext():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_in_siblings_setext.md:8:1: "
+        "test/resources/rules/md024/same_heading_in_siblings_setext.md:7:1: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
-        + "test/resources/rules/md024/same_heading_in_siblings_setext.md:14:1: "
+        + "test/resources/rules/md024/same_heading_in_siblings_setext.md:13:1: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -640,7 +645,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_setext():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md:11:1: "
+        "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md:10:1: "
         + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
@@ -754,7 +759,7 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
 
         expected_return_code = 1
         expected_output = (
-            "test/resources/rules/md024/same_heading_in_siblings_setext.md:8:1: "
+            "test/resources/rules/md024/same_heading_in_siblings_setext.md:7:1: "
             + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
         )
         expected_error = ""

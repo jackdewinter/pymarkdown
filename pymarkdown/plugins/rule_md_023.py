@@ -24,7 +24,7 @@ class RuleMd023(Plugin):
             # headings, headers, spaces
             plugin_name="heading-start-left, header-start-left",
             plugin_id="MD023",
-            plugin_enabled_by_default=True,
+            plugin_enabled_by_default=False,
             plugin_description="Headings must start at the beginning of the line",
             plugin_version="0.5.0",
             plugin_interface_version=1,
