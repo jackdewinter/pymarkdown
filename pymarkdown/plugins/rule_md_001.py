@@ -22,14 +22,13 @@ class RuleMd001(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # headings, headers
             plugin_name="heading-increment,header-increment",
             plugin_id="MD001",
             plugin_enabled_by_default=True,
-            plugin_description="Heading levels should only increment by one level at a time",
+            plugin_description="Heading levels should only increment by one level at a time.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md001---heading-levels-should-only-increment-by-one-level-at-a-time
+        )
 
     def initialize_from_config(self):
         self.__front_matter_title = self.plugin_configuration.get_string_property(

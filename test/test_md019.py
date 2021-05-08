@@ -54,9 +54,9 @@ def test_md019_bad_multiple_spacing():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md019/multiple_spacing.md:1:1: "
-        + "MD019: Multiple spaces after hash on atx style heading (no-multiple-space-atx)\n"
+        + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
         "test/resources/rules/md019/multiple_spacing.md:3:1: "
-        + "MD019: Multiple spaces after hash on atx style heading (no-multiple-space-atx)\n"
+        + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
 
@@ -86,9 +86,9 @@ def test_md019_bad_multiple_spacing_with_inline():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md019/multiple_spacing_with_inline.md:1:1: "
-        + "MD019: Multiple spaces after hash on atx style heading (no-multiple-space-atx)\n"
+        + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
         "test/resources/rules/md019/multiple_spacing_with_inline.md:3:1: "
-        + "MD019: Multiple spaces after hash on atx style heading (no-multiple-space-atx)\n"
+        + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
 
@@ -120,9 +120,9 @@ def test_md019_bad_multiple_spacing_with_indent():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md019/multiple_spacing_with_indent.md:1:2: "
-        + "MD019: Multiple spaces after hash on atx style heading (no-multiple-space-atx)\n"
+        + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
         "test/resources/rules/md019/multiple_spacing_with_indent.md:3:3: "
-        + "MD019: Multiple spaces after hash on atx style heading (no-multiple-space-atx)\n"
+        + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
     )
     expected_error = ""
 

@@ -3,9 +3,14 @@
 ## Priority 1 - Must Solve Before Initial
 
 - command line and configuration documentation
-- verify each file against mdlint, especially with extra data after sequence, document
-  - 020
-  
+- verify rule 26 and punctuation list
+- verify rule 03 with front-matter
+- try test-blog.cmd without disabled rules
+- ensure 18 only space between # and non-space, try whitespace
+- ensure 19 only space between # and non-space, try whitespace
+- same with 20, 21
+- 22 handle config < 0
+
 ## Priority 2 - Like To Solve Before Initial
 
 - MD041 requires metadata
@@ -52,7 +57,7 @@
 
 ## Priority 3 - Like To Solve in next 3 m
 
-- mypy?
+- [mypy?](https://mypy.readthedocs.io/en/stable/getting_started.html)
 
 - determine which errors to print and which to log
 - (performance) debug: search for any cases where adding a call to `is_debug_enabled` would be helpful

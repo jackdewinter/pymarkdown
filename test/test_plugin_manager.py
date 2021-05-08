@@ -911,7 +911,7 @@ def test_markdown_with_plugins_list_only():
   md022  blanks-around-headings  True               True               0.5.0
          , blanks-around-header
          s
-  md023  heading-start-left, he  False              False              0.5.0
+  md023  heading-start-left, he  True               True               0.5.0
          ader-start-left
   md024  no-duplicate-heading,   True               True               0.5.0
          no-duplicate-header
@@ -973,7 +973,7 @@ def test_markdown_with_plugins_list_only_all():
   md022  blanks-around-headings  True               True               0.5.0
          , blanks-around-header
          s
-  md023  heading-start-left, he  False              False              0.5.0
+  md023  heading-start-left, he  True               True               0.5.0
          ader-start-left
   md024  no-duplicate-heading,   True               True               0.5.0
          no-duplicate-header
@@ -1071,7 +1071,7 @@ def test_markdown_with_plugins_list_and_filter_by_name_link():
   md022  blanks-around-headings  True               True               0.5.0
          , blanks-around-header
          s
-  md023  heading-start-left, he  False              False              0.5.0
+  md023  heading-start-left, he  True               True               0.5.0
          ader-start-left
   md024  no-duplicate-heading,   True               True               0.5.0
          no-duplicate-header
@@ -1172,7 +1172,7 @@ def test_markdown_with_plugins_info_and_found_filter():
     expected_return_code = 0
     expected_output = """Id:md001
 Name(s):heading-increment,header-increment
-Description:Heading levels should only increment by one level at a time"""
+Description:Heading levels should only increment by one level at a time."""
     expected_error = ""
 
     # Act

@@ -55,7 +55,7 @@ def test_md024_bad_same_heading_content_atx():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md024/same_heading_content_atx.md:3:1: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
 
@@ -142,7 +142,7 @@ def test_md024_bad_same_heading_content_atx_in_same_list_item():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md024/same_heading_content_atx_in_same_list_item.md:3:3: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
 
@@ -173,7 +173,7 @@ def test_md024_bad_same_heading_content_atx_in_different_list_items():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md024/same_heading_content_atx_in_different_list_items.md:3:3: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
 
@@ -206,7 +206,7 @@ def test_md024_bad_same_heading_content_atx_in_same_block_quote():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md024/same_heading_content_atx_in_same_block_quote.md:3:3: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
 
@@ -239,7 +239,7 @@ def test_md024_bad_same_heading_content_atx_in_different_block_quotes():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md024/same_heading_content_atx_in_different_block_quotes.md:3:3: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
 
@@ -270,9 +270,9 @@ def test_md024_bad_same_heading_in_siblings_atx():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md024/same_heading_in_siblings_atx.md:7:1: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
         + "test/resources/rules/md024/same_heading_in_siblings_atx.md:11:1: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
 
@@ -303,7 +303,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_atx():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md024/same_heading_but_not_in_siblings_atx.md:9:1: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
 
@@ -417,7 +417,7 @@ def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
         expected_return_code = 1
         expected_output = (
             "test/resources/rules/md024/same_heading_in_siblings_atx.md:7:1: "
-            + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+            + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
         )
         expected_error = ""
 
@@ -582,7 +582,7 @@ def test_md024_bad_same_heading_content_setext():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md024/same_heading_content_setext.md:4:1: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
 
@@ -613,9 +613,9 @@ def test_md024_bad_same_heading_in_siblings_setext():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md024/same_heading_in_siblings_setext.md:7:1: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
         + "test/resources/rules/md024/same_heading_in_siblings_setext.md:13:1: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
 
@@ -646,7 +646,7 @@ def test_md024_bad_same_heading_but_not_in_siblings_setext():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md:10:1: "
-        + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+        + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
     )
     expected_error = ""
 
@@ -760,7 +760,7 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
         expected_return_code = 1
         expected_output = (
             "test/resources/rules/md024/same_heading_in_siblings_setext.md:7:1: "
-            + "MD024: Multiple headings with the same content (no-duplicate-heading,no-duplicate-header)\n"
+            + "MD024: Multiple headings cannot contain the same content. (no-duplicate-heading,no-duplicate-header)\n"
         )
         expected_error = ""
 

@@ -21,14 +21,13 @@ class RuleMd019(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # headings, headers, atx, spaces
             plugin_name="no-multiple-space-atx",
             plugin_id="MD019",
             plugin_enabled_by_default=True,
-            plugin_description="Multiple spaces after hash on atx style heading",
+            plugin_description="Multiple spaces are present after hash character on Atx Heading.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md019---multiple-spaces-after-hash-on-atx-style-heading
+        )
 
     def starting_new_file(self):
         """

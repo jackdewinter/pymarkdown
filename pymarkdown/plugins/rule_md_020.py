@@ -54,14 +54,13 @@ class RuleMd020(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # headings, headers, atx_closed, spaces
             plugin_name="no-missing-space-closed-atx",
             plugin_id="MD020",
             plugin_enabled_by_default=True,
-            plugin_description="No space inside hashes on closed atx style heading",
+            plugin_description="No space present inside of the hashes on a possible Atx Closed Heading.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md020---no-space-inside-hashes-on-closed-atx-style-heading
+        )
 
     def starting_new_file(self):
         """

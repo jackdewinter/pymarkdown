@@ -21,14 +21,13 @@ class RuleMd021(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # headings, headers, atx_closed, spaces
             plugin_name="no-multiple-space-closed-atx",
             plugin_id="MD021",
             plugin_enabled_by_default=True,
-            plugin_description="Multiple spaces inside hashes on closed atx style heading",
+            plugin_description="Multiple spaces are present inside hash characters on Atx Closed Heading.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md021---multiple-spaces-inside-hashes-on-closed-atx-style-heading
+        )
 
     def starting_new_file(self):
         """

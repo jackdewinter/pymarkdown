@@ -20,22 +20,20 @@ class RuleMd026(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # headings, headers
             plugin_name="no-trailing-punctuation",
             plugin_id="MD026",
             plugin_enabled_by_default=True,
-            plugin_description="Trailing punctuation in heading",
+            plugin_description="Trailing punctuation present in heading text.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md026---trailing-punctuation-in-heading
-        # Parameters: punctuation (string; default ".,;:!?。，；：？")
+        )
 
     def initialize_from_config(self):
         """
         Event to allow the plugin to load configuration information.
         """
         self.__punctuation = self.plugin_configuration.get_string_property(
-            "punctuation", default_value=".,;:!?。，；：？"
+            "punctuation", default_value=".,;:!。，；：！"
         )
 
     def starting_new_file(self):

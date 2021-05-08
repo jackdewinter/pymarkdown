@@ -26,15 +26,13 @@ class RuleMd022(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # headings, headers, blank_lines
             plugin_name="blanks-around-headings,blanks-around-headers",
             plugin_id="MD022",
             plugin_enabled_by_default=True,
-            plugin_description="Headings should be surrounded by blank lines",
+            plugin_description="Headings should be surrounded by blank lines.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md022---headings-should-be-surrounded-by-blank-lines
-        # Parameters: lines_above, lines_below (number; default 1)
+        )
 
     def initialize_from_config(self):
         """
@@ -43,9 +41,13 @@ class RuleMd022(Plugin):
         self.__lines_above = self.plugin_configuration.get_integer_property(
             "lines_above", default_value=1
         )
+        if self.__lines_above < 0:
+            pass
         self.__lines_below = self.plugin_configuration.get_integer_property(
             "lines_below", default_value=1
         )
+        if self.__lines_below < 0:
+            pass
 
     def starting_new_file(self):
         """

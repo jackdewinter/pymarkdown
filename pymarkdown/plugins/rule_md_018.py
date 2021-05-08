@@ -199,14 +199,13 @@ class RuleMd018(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # headings, headers, atx, spaces
             plugin_name="no-missing-space-atx",
             plugin_id="MD018",
             plugin_enabled_by_default=True,
-            plugin_description="No space after hash on atx style heading",
+            plugin_description="No space present after the hash character on a possible Atx Heading.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md018---no-space-after-hash-on-atx-style-heading
+        )
 
     def starting_new_file(self):
         """

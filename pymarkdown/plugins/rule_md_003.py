@@ -38,15 +38,13 @@ class RuleMd003(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # headings, headers
             plugin_name="heading-style,header-style",
             plugin_id="MD003",
             plugin_enabled_by_default=True,
-            plugin_description="Heading style",
+            plugin_description="Heading style should be consistent throughout the document.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md003---heading-style
-        # Parameters: style ("consistent", "atx", "atx_closed", "setext", "setext_with_atx", "setext_with_atx_closed"; default "consistent")
+        )
 
     @classmethod
     def __validate_configuration_style(cls, found_value):
