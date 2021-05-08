@@ -125,6 +125,13 @@ class PyMarkdownLint:
             type=ApplicationProperties.verify_manual_property_form,
         )
         parser.add_argument(
+            "--strict-config",
+            dest="strict_configuration",
+            action="store_true",
+            default=False,
+            help="throw an error if configuration is bad, instead of assuming default",
+        )
+        parser.add_argument(
             "--stack-trace",
             dest="show_stack_trace",
             action="store_true",
@@ -368,6 +375,8 @@ class PyMarkdownLint:
             )
         if args.set_configuration:
             self.__properties.set_manual_property(args.set_configuration)
+        if args.strict_configuration:
+            self.__properties.enable_strict_mode()
 
     def __initialize_logging(self, args):
 

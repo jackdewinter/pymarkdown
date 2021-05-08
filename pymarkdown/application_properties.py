@@ -65,6 +65,12 @@ class ApplicationProperties:
         """
         return self.__strict_mode
 
+    def enable_strict_mode(self):
+        """
+        Sets struct mode to True to enable it.
+        """
+        self.__strict_mode = True
+
     def load_from_dict(self, config_map):
         """
         Load the properties from a provided dictionary.
@@ -280,7 +286,7 @@ class ApplicationProperties:
         default_value=None,
         valid_value_fn=None,
         is_required=False,
-        strict_mode=False,
+        strict_mode=None,
     ):
         """
         Get an integer property from the configuration.
@@ -411,7 +417,7 @@ class ApplicationPropertiesFacade:
         default_value=None,
         valid_value_fn=None,
         is_required=False,
-        strict_mode=False,
+        strict_mode=None,
     ):
         """
         Get an integer property from the configuration.
@@ -433,7 +439,7 @@ class ApplicationPropertiesFacade:
         default_value=None,
         valid_value_fn=None,
         is_required=False,
-        strict_mode=False,
+        strict_mode=None,
     ):
         """
         Get a string property from the configuration.

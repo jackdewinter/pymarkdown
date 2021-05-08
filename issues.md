@@ -9,7 +9,7 @@
 - ensure 18 only space between # and non-space, try whitespace
 - ensure 19 only space between # and non-space, try whitespace
 - same with 20, 21
-- 22 handle config < 0
+- make sure new strict mode reports config properly
 
 ## Priority 2 - Like To Solve Before Initial
 

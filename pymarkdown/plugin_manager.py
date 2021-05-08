@@ -57,6 +57,7 @@ class BadPluginError(Exception):
         column_number=0,
         actual_line=None,
         actual_token=None,
+        cause=None
     ):
 
         if not formatted_message:
@@ -79,7 +80,10 @@ class BadPluginError(Exception):
                 else:
                     formatted_message = f"Plugin class '{class_name}' had a critical failure loading the plugin details."
             else:
-                formatted_message = f"Plugin id '{plugin_id.upper()}' had a critical failure during the '{str(plugin_action)}' action."
+                if cause and isinstance(cause, ValueError):
+                    formatted_message = str(cause)
+                else:
+                    formatted_message = f"Plugin id '{plugin_id.upper()}' had a critical failure during the '{str(plugin_action)}' action."
             if line_number:
                 position_message = (
                     f"({line_number},{column_number})"
@@ -1017,7 +1021,7 @@ class PluginManager:
                 next_plugin.plugin_instance.initialize_from_config()
             except Exception as this_exception:
                 raise BadPluginError(
-                    next_plugin.plugin_id, inspect.stack()[0].function
+                    next_plugin.plugin_id, inspect.stack()[0].function, cause=this_exception
                 ) from this_exception
 
             if next_plugin.plugin_instance.is_next_token_implemented_in_plugin:
@@ -1038,7 +1042,7 @@ class PluginManager:
                 next_plugin.plugin_instance.starting_new_file()
             except Exception as this_exception:
                 raise BadPluginError(
-                    next_plugin.plugin_id, inspect.stack()[0].function
+                    next_plugin.plugin_id, inspect.stack()[0].function, cause=this_exception
                 ) from this_exception
 
         return ScanContext(self, file_being_started)
@@ -1053,7 +1057,7 @@ class PluginManager:
                 next_plugin.plugin_instance.completed_file(context)
             except Exception as this_exception:
                 raise BadPluginError(
-                    next_plugin.plugin_id, inspect.stack()[0].function
+                    next_plugin.plugin_id, inspect.stack()[0].function, cause=this_exception
                 ) from this_exception
 
     def next_line(self, context, line_number, line):
@@ -1072,6 +1076,7 @@ class PluginManager:
                     inspect.stack()[0].function,
                     line_number=line_number,
                     actual_line=actual_line,
+                    cause=this_exception
                 ) from this_exception
 
     def next_token(self, context, token):
@@ -1090,6 +1095,7 @@ class PluginManager:
                     line_number=token.line_number,
                     column_number=token.column_number,
                     actual_token=actual_token,
+                    cause=this_exception
                 ) from this_exception
 
 

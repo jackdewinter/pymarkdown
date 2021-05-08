@@ -30,7 +30,7 @@ def test_markdown_with_no_parameters():
     expected_return_code = 2
     expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--set SET_CONFIGURATION] [--stack-trace]
+               [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,scan,version} ...
@@ -55,6 +55,8 @@ optional arguments:
                         path to the configuration file to use
   --set SET_CONFIGURATION, -s SET_CONFIGURATION
                         manualy set properties
+  --strict-config       throw an error if configuration is bad, instead of
+                        assuming default
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
@@ -84,7 +86,7 @@ def test_markdown_with_dash_h():
     expected_return_code = 0
     expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--set SET_CONFIGURATION] [--stack-trace]
+               [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,scan,version} ...
@@ -109,6 +111,8 @@ optional arguments:
                         path to the configuration file to use
   --set SET_CONFIGURATION, -s SET_CONFIGURATION
                         manualy set properties
+  --strict-config       throw an error if configuration is bad, instead of
+                        assuming default
   --stack-trace         if an error occurs, print out the stack trace for
                         debug purposes
   --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
@@ -583,7 +587,7 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog):
     expected_output = ""
     expected_error = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
                [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
-               [--set SET_CONFIGURATION] [--stack-trace]
+               [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
                {plugins,scan,version} ...

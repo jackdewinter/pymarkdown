@@ -1353,3 +1353,94 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
     finally:
         if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
+
+@pytest.mark.rules
+def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config():
+    """
+    Same as above, but with the lines_below being an illegal value.  Without
+    strict mode, this means the value will not be used, and the default of 1
+    will be used.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_configuration = {
+        "plugins": {"md022": {"lines_below": -2, "lines_above": 2}}
+    }
+    configuration_file = None
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        supplied_arguments = [
+            "--disable",
+            "MD003",
+            "-c",
+            configuration_file,
+            "scan",
+            "test/resources/rules/md022/alternating_heading_types.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = (
+            "test/resources/rules/md022/alternating_heading_types.md:3:1: "
+            + "MD022: Headings should be surrounded by blank lines. "
+            + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
+            + "test/resources/rules/md022/alternating_heading_types.md:6:1: "
+            + "MD022: Headings should be surrounded by blank lines. "
+            + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
+            + "test/resources/rules/md022/alternating_heading_types.md:8:1: "
+            + "MD022: Headings should be surrounded by blank lines. "
+            + "[Expected: 2; Actual: 1; Above] (blanks-around-headings,blanks-around-headers)\n"
+        )
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if configuration_file and os.path.exists(configuration_file):
+            os.remove(configuration_file)
+
+@pytest.mark.rules
+def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config_strict_mode():
+    """
+    Same as above, but with the lines_below being an illegal value.  With strict mode,
+    this means that an error will be displayed.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_configuration = {
+        "plugins": {"md022": {"lines_below": -2, "lines_above": 2}}
+    }
+    configuration_file = None
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        supplied_arguments = [
+            "--strict-config",
+            "--disable",
+            "MD003",
+            "-c",
+            configuration_file,
+            "scan",
+            "test/resources/rules/md022/alternating_heading_types.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = "BadPluginError encountered while configuring plugins:\n" \
+        + "The value for property 'plugins.md022.lines_below' is not valid: Value must not be zero or a positive integer.\n"
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if configuration_file and os.path.exists(configuration_file):
+            os.remove(configuration_file)
