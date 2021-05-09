@@ -169,6 +169,13 @@ class MyStartOfLineTokenParser(StartOfLineTokenParser):
     ):
         """
         Check for a pattern at the start of the line.
+
+        Note that the logic here is a bit weird for the `\\S` at the end of the
+        regular expression.  If everything else is good except for that `\\S`,
+        which is equivalent to any whitespace character, and it was a space character,
+        it would match the Atx code in the leaf processor and be an Atx Heading token
+        already.  Hence, what is left is any other whitespace character which is not
+        the space character, which should still trigger the rule.
         """
         if re.search(r"^\s{0,3}#{1,6}\S", combined_text) and not re.search(
             r"#\s*$", combined_text

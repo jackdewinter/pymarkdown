@@ -676,18 +676,17 @@ class LeafBlockProcessor:
                 start_index,
                 LeafBlockProcessor.__atx_character,
             )
-            (
-                non_whitespace_index,
-                extracted_whitespace_at_start,
-            ) = ParserHelper.extract_whitespace(line_to_parse, new_index)
+
+            non_whitespace_index = ParserHelper.collect_while_character(line_to_parse, new_index, " ")
+            extracted_whitespace_at_start = line_to_parse[new_index:non_whitespace_index[1]]
 
             if hash_count <= 6 and (
                 extracted_whitespace_at_start
-                or non_whitespace_index == len(line_to_parse)
+                or non_whitespace_index[1] == len(line_to_parse)
             ):
                 return (
                     True,
-                    non_whitespace_index,
+                    non_whitespace_index[1],
                     hash_count,
                     extracted_whitespace_at_start,
                 )
@@ -742,8 +741,8 @@ class LeafBlockProcessor:
                 remove_trailing_count += 1
             if remove_trailing_count:
                 if end_index > 0:
-                    if ParserHelper.is_character_at_index_whitespace(
-                        remaining_line, end_index - 1
+                    if ParserHelper.is_character_at_index(
+                        remaining_line, end_index - 1, " "
                     ):
                         remaining_line = remaining_line[:end_index]
                         (

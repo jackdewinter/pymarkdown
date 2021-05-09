@@ -822,6 +822,42 @@ def test_md018_bad_paragraphs_with_starting_whitespace():
 
 
 @pytest.mark.rules
+def test_md018_bad_single_paragraph_with_starting_space():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md018 directory that has multiple possible atx headings within
+    a single paragraph each one with starting space that would normally be permitted.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md018/single_paragraph_with_starting_space.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md018/single_paragraph_with_starting_space.md:1:1: "
+        + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
+        + "test/resources/rules/md018/single_paragraph_with_starting_space.md:2:2: "
+        + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
+        + "test/resources/rules/md018/single_paragraph_with_starting_space.md:3:3: "
+        + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
+        + "test/resources/rules/md018/single_paragraph_with_starting_space.md:4:4: "
+        + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
 def test_md018_bad_single_paragraph_with_starting_whitespace():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
@@ -841,11 +877,39 @@ def test_md018_bad_single_paragraph_with_starting_whitespace():
     expected_output = (
         "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:2:2: "
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+@pytest.mark.rules
+def test_md018_bad_single_paragraph_with_whitespace():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md018 directory that has multiple possible atx headings within
+    a single paragraph. The first one should be detected as it has a space character
+    between the # and the text, but the second one should not as it contains a tab
+    character between the # and the text.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md018/single_paragraph_with_whitespace.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md018/single_paragraph_with_whitespace.md:1:1: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:3:3: "
-        + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/single_paragraph_with_starting_whitespace.md:4:4: "
+        + "test/resources/rules/md018/single_paragraph_with_whitespace.md:2:2: "
         + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""

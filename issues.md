@@ -6,9 +6,6 @@
 - verify rule 26 and punctuation list
 - verify rule 03 with front-matter
 - try test-blog.cmd without disabled rules
-- ensure 18 only space between # and non-space, try whitespace
-- ensure 19 only space between # and non-space, try whitespace
-- same with 20, 21
 - make sure new strict mode reports config properly
 
 ## Priority 2 - Like To Solve Before Initial
@@ -22,6 +19,7 @@
 - implement missing rules
 - yaml support for front-matter
 - better format for "plugins info"
+- show url for failed rules as option
 
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - leading_text_index - verify_line_and... ~715

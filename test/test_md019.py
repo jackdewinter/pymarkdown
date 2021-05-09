@@ -133,3 +133,34 @@ def test_md019_bad_multiple_spacing_with_indent():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+def test_md019_bad_single_space_single_tab():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md019 directory that has two headers that start with various
+    amounts of leading whitespace, followed by 1-2 hash characters, a single space
+    character, and a single tab character.  This rule should not fire as in both cases,
+    there is a single space after the hash character.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--stack-trace",
+        "--disable-rules",
+        "md023",
+        "scan",
+        "test/resources/rules/md019/single_space_single_tab.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
