@@ -19,7 +19,6 @@ def test_md020_good_start_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "test/resources/rules/md020/good_start_spacing.md",
     ]
@@ -1041,6 +1040,72 @@ def test_md020_bad_single_paragraph_with_starting_whitespace():
         + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:3:3: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:4:4: "
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_single_paragraph_with_whitespace_at_start():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has ...
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md020/single_paragraph_with_whitespace_at_start.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/single_paragraph_with_whitespace_at_start.md:1:1: "
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/single_paragraph_with_whitespace_at_start.md:2:2: "
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md020_bad_single_paragraph_with_whitespace_at_end():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md020 directory that has ...
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md022,md023",
+        "scan",
+        "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:1:13: "
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:2:15: "
         + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
     )
     expected_error = ""

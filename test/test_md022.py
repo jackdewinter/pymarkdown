@@ -1354,6 +1354,7 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
         if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
+
 @pytest.mark.rules
 def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config():
     """
@@ -1404,6 +1405,7 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
         if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
 
+
 @pytest.mark.rules
 def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config_strict_mode():
     """
@@ -1431,8 +1433,10 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
 
         expected_return_code = 1
         expected_output = ""
-        expected_error = "BadPluginError encountered while configuring plugins:\n" \
-        + "The value for property 'plugins.md022.lines_below' is not valid: Value must not be zero or a positive integer.\n"
+        expected_error = (
+            "BadPluginError encountered while configuring plugins:\n"
+            + "The value for property 'plugins.md022.lines_below' is not valid: Value must not be zero or a positive integer.\n"
+        )
 
         # Act
         execute_results = scanner.invoke_main(arguments=supplied_arguments)

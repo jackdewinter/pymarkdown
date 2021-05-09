@@ -44,10 +44,14 @@ class RuleMd022(Plugin):
         Event to allow the plugin to load configuration information.
         """
         self.__lines_above = self.plugin_configuration.get_integer_property(
-            "lines_above", default_value=1, valid_value_fn=RuleMd022.__validate_configuration_value
+            "lines_above",
+            default_value=1,
+            valid_value_fn=RuleMd022.__validate_configuration_value,
         )
         self.__lines_below = self.plugin_configuration.get_integer_property(
-            "lines_below", default_value=1, valid_value_fn=RuleMd022.__validate_configuration_value
+            "lines_below",
+            default_value=1,
+            valid_value_fn=RuleMd022.__validate_configuration_value,
         )
 
     def starting_new_file(self):

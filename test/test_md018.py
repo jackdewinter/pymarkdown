@@ -857,6 +857,7 @@ def test_md018_bad_single_paragraph_with_starting_space():
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md018_bad_single_paragraph_with_starting_whitespace():
     """
@@ -887,6 +888,7 @@ def test_md018_bad_single_paragraph_with_starting_whitespace():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 def test_md018_bad_single_paragraph_with_whitespace():

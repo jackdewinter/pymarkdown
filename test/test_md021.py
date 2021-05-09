@@ -196,3 +196,61 @@ def test_md021_good_multiple_spacing_with_indent():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md021_good_single_space_single_tab_before():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md021 directory that has ...
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md023",
+        "scan",
+        "test/resources/rules/md021/single_space_single_tab_before.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md021_good_single_space_single_tab_after():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md021 directory that has ...
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md023",
+        "scan",
+        "test/resources/rules/md021/single_space_single_tab_after.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )

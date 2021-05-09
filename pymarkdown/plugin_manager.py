@@ -57,7 +57,7 @@ class BadPluginError(Exception):
         column_number=0,
         actual_line=None,
         actual_token=None,
-        cause=None
+        cause=None,
     ):
 
         if not formatted_message:
@@ -1021,7 +1021,9 @@ class PluginManager:
                 next_plugin.plugin_instance.initialize_from_config()
             except Exception as this_exception:
                 raise BadPluginError(
-                    next_plugin.plugin_id, inspect.stack()[0].function, cause=this_exception
+                    next_plugin.plugin_id,
+                    inspect.stack()[0].function,
+                    cause=this_exception,
                 ) from this_exception
 
             if next_plugin.plugin_instance.is_next_token_implemented_in_plugin:
@@ -1042,7 +1044,9 @@ class PluginManager:
                 next_plugin.plugin_instance.starting_new_file()
             except Exception as this_exception:
                 raise BadPluginError(
-                    next_plugin.plugin_id, inspect.stack()[0].function, cause=this_exception
+                    next_plugin.plugin_id,
+                    inspect.stack()[0].function,
+                    cause=this_exception,
                 ) from this_exception
 
         return ScanContext(self, file_being_started)
@@ -1057,7 +1061,9 @@ class PluginManager:
                 next_plugin.plugin_instance.completed_file(context)
             except Exception as this_exception:
                 raise BadPluginError(
-                    next_plugin.plugin_id, inspect.stack()[0].function, cause=this_exception
+                    next_plugin.plugin_id,
+                    inspect.stack()[0].function,
+                    cause=this_exception,
                 ) from this_exception
 
     def next_line(self, context, line_number, line):
@@ -1076,7 +1082,7 @@ class PluginManager:
                     inspect.stack()[0].function,
                     line_number=line_number,
                     actual_line=actual_line,
-                    cause=this_exception
+                    cause=this_exception,
                 ) from this_exception
 
     def next_token(self, context, token):
@@ -1095,7 +1101,7 @@ class PluginManager:
                     line_number=token.line_number,
                     column_number=token.column_number,
                     actual_token=actual_token,
-                    cause=this_exception
+                    cause=this_exception,
                 ) from this_exception
 
 

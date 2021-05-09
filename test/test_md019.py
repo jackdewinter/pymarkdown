@@ -134,6 +134,7 @@ def test_md019_bad_multiple_spacing_with_indent():
         expected_output, expected_error, expected_return_code
     )
 
+
 def test_md019_bad_single_space_single_tab():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
