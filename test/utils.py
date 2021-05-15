@@ -15,8 +15,14 @@ from pymarkdown.tokenized_markdown import TokenizedMarkdown
 from pymarkdown.transform_to_gfm import TransformToGfm
 
 
+# pylint: disable=too-many-arguments
 def act_and_assert(
-    source_markdown, expected_gfm, expected_tokens, show_debug=False, config_map=None
+    source_markdown,
+    expected_gfm,
+    expected_tokens,
+    show_debug=False,
+    config_map=None,
+    disable_consistency_checks=False,
 ):
     """
     Act and assert on the expected behavior of parsing the source_markdown.
@@ -40,7 +46,11 @@ def act_and_assert(
     # Assert
     assert_if_lists_different(expected_tokens, actual_tokens)
     assert_if_strings_different(expected_gfm, actual_gfm)
-    assert_token_consistency(source_markdown, actual_tokens)
+    if not disable_consistency_checks:
+        assert_token_consistency(source_markdown, actual_tokens)
+
+
+# pylint: enable=too-many-arguments
 
 
 def write_temporary_configuration(supplied_configuration):

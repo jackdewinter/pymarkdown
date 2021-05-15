@@ -202,17 +202,7 @@ class PyMarkdownLint:
         """
 
         POGGER.info("Scanning file '$'.", next_file)
-        source_provider = FileSourceProvider(next_file)
-
-        POGGER.info("Scanning file '$' line-by-line.", next_file)
-        line_number = 1
-        next_line = source_provider.get_next_line()
         context = self.__plugins.starting_new_file(next_file)
-        while next_line is not None:
-            POGGER.info("Processing line $: $", line_number, next_line)
-            self.__plugins.next_line(context, line_number, next_line)
-            line_number += 1
-            next_line = source_provider.get_next_line()
 
         POGGER.info("Scanning file '$' token-by-token.", next_file)
         source_provider = FileSourceProvider(next_file)
@@ -220,10 +210,24 @@ class PyMarkdownLint:
             source_provider = None
         actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
 
-        POGGER.info("Scanning file '$' token-by-token.", next_file)
+        if actual_tokens and actual_tokens[-1].is_pragma:
+            self.__plugins.compile_pragmas(next_file, actual_tokens[-1])
+            actual_tokens = actual_tokens[:-1]
+
+        POGGER.info("Scanning file '$' tokens.", next_file)
         for next_token in actual_tokens:
             POGGER.info("Processing token: $", next_token)
             self.__plugins.next_token(context, next_token)
+
+        POGGER.info("Scanning file '$' line-by-line.", next_file)
+        source_provider = FileSourceProvider(next_file)
+        line_number = 1
+        next_line = source_provider.get_next_line()
+        while next_line is not None:
+            POGGER.info("Processing line $: $", line_number, next_line)
+            self.__plugins.next_line(context, line_number, next_line)
+            line_number += 1
+            next_line = source_provider.get_next_line()
 
         POGGER.info("Completed scanning file '$'.", next_file)
         self.__plugins.completed_file(context, line_number)
@@ -459,6 +463,8 @@ class PyMarkdownLint:
         finally:
             if new_handler:
                 new_handler.close()
+
+        # TODO self.__plugins.number_of_pragma_failures
         if self.__plugins.number_of_scan_failures or total_error_count:
             sys.exit(1)
 

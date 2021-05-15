@@ -1,6 +1,7 @@
 """
 Module to provide for a transformation from tokens to a markdown document.
 """
+import collections
 import copy
 import inspect
 
@@ -190,7 +191,7 @@ class TransformToMarkdown:
                 handler_instance.token_name
             ] = end_token_handler
 
-    # pylint: disable=too-many-locals, too-many-branches
+    # pylint: disable=too-many-locals, too-many-branches, too-many-statements
     def transform(self, actual_tokens):
         """
         Transform the incoming token stream back into Markdown.
@@ -204,6 +205,8 @@ class TransformToMarkdown:
         ) = ("", False, None, "", "")
 
         print("---\nTransformToMarkdown\n---")
+
+        pragma_token = None
 
         for token_index, current_token in enumerate(actual_tokens):
             print(
@@ -228,12 +231,15 @@ class TransformToMarkdown:
                     current_token, previous_token, next_token, transformed_data
                 )
                 skip_merge = True
+
             elif current_token.token_name in self.start_token_handlers:
                 start_handler_fn = self.start_token_handlers[current_token.token_name]
                 new_data = start_handler_fn(current_token, previous_token)
 
+            elif current_token.is_pragma:
+                new_data = ""
+                pragma_token = current_token
             elif current_token.is_end_token:
-
                 if current_token.type_name in self.end_token_handlers:
                     end_handler_fn = self.end_token_handlers[current_token.type_name]
                     new_data = end_handler_fn(current_token, previous_token, next_token)
@@ -294,11 +300,46 @@ class TransformToMarkdown:
             ):
                 transformed_data = transformed_data[0:-1]
 
+        if pragma_token:
+            ordered_lines = collections.OrderedDict(
+                sorted(pragma_token.pragma_lines.items())
+            )
+
+            for next_line_number in ordered_lines:
+                if next_line_number == 1:
+                    if transformed_data:
+                        transformed_data = (
+                            ordered_lines[next_line_number]
+                            + ParserHelper.newline_character
+                            + transformed_data
+                        )
+                    else:
+                        transformed_data = ordered_lines[next_line_number]
+                else:
+                    nth_index = ParserHelper.find_nth_occurrence(
+                        transformed_data,
+                        ParserHelper.newline_character,
+                        next_line_number - 1,
+                    )
+                    if nth_index == -1:
+                        transformed_data = (
+                            transformed_data
+                            + ParserHelper.newline_character
+                            + ordered_lines[next_line_number]
+                        )
+                    else:
+                        transformed_data = (
+                            transformed_data[0:nth_index]
+                            + ParserHelper.newline_character
+                            + ordered_lines[next_line_number]
+                            + transformed_data[nth_index:]
+                        )
+
         assert not self.block_stack
         assert not self.container_token_stack
         return transformed_data, avoid_processing
 
-    # pylint: enable=too-many-locals, too-many-branches
+    # pylint: enable=too-many-locals, too-many-branches, too-many-statements
 
     # pylint: disable=too-many-arguments, too-many-branches, unused-argument, too-many-boolean-expressions, too-many-locals
     def __perform_container_post_processing_lists(

@@ -179,10 +179,6 @@ def test_markdown_with_dash_e_single_by_name():
 MD999>>test_value>>1
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
-MD999>>next_line:# This is a test
-MD999>>next_line:
-MD999>>next_line:The line after this line should be blank.
-MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
 MD999>>token:[end-atx::]
@@ -191,6 +187,10 @@ MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
 MD999>>token:[end-para:::True]
 MD999>>token:[BLANK(4,1):]
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
 MD999>>completed_file
 """
     expected_error = ""
@@ -225,10 +225,6 @@ def test_markdown_with_dash_e_single_by_id():
 MD999>>test_value>>1
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
-MD999>>next_line:# This is a test
-MD999>>next_line:
-MD999>>next_line:The line after this line should be blank.
-MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
 MD999>>token:[end-atx::]
@@ -237,6 +233,10 @@ MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
 MD999>>token:[end-para:::True]
 MD999>>token:[BLANK(4,1):]
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
 MD999>>completed_file
 """
     expected_error = ""
@@ -276,10 +276,6 @@ def test_markdown_with_enabled_by_configuration_id():
 MD999>>test_value>>1
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
-MD999>>next_line:# This is a test
-MD999>>next_line:
-MD999>>next_line:The line after this line should be blank.
-MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
 MD999>>token:[end-atx::]
@@ -288,6 +284,10 @@ MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
 MD999>>token:[end-para:::True]
 MD999>>token:[BLANK(4,1):]
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
 MD999>>completed_file
 """
         expected_error = ""
@@ -333,10 +333,6 @@ def test_markdown_with_enabled_by_configuration_name():
 MD999>>test_value>>1
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
-MD999>>next_line:# This is a test
-MD999>>next_line:
-MD999>>next_line:The line after this line should be blank.
-MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
 MD999>>token:[end-atx::]
@@ -345,6 +341,10 @@ MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
 MD999>>token:[end-para:::True]
 MD999>>token:[BLANK(4,1):]
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
 MD999>>completed_file
 """
         expected_error = ""
@@ -744,10 +744,6 @@ def test_markdown_with_dash_e_single_by_id_and_good_config():
 MD999>>test_value>>2
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
-MD999>>next_line:# This is a test
-MD999>>next_line:
-MD999>>next_line:The line after this line should be blank.
-MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
 MD999>>token:[end-atx::]
@@ -756,6 +752,10 @@ MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
 MD999>>token:[end-para:::True]
 MD999>>token:[BLANK(4,1):]
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
 MD999>>completed_file
 """
         expected_error = ""
@@ -799,10 +799,6 @@ def test_markdown_with_dash_e_single_by_id_and_bad_config():
 MD999>>test_value>>1
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
-MD999>>next_line:# This is a test
-MD999>>next_line:
-MD999>>next_line:The line after this line should be blank.
-MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
 MD999>>token:[end-atx::]
@@ -811,6 +807,10 @@ MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
 MD999>>token:[end-para:::True]
 MD999>>token:[BLANK(4,1):]
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
 MD999>>completed_file
 """
         expected_error = ""
@@ -971,10 +971,6 @@ def test_markdown_with_dash_e_single_by_id_and_good_select_config():
 MD999>>test_value>>1
 MD999>>other_test_value>>2
 MD999>>starting_new_file>>
-MD999>>next_line:# This is a test
-MD999>>next_line:
-MD999>>next_line:The line after this line should be blank.
-MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
 MD999>>token:[end-atx::]
@@ -983,6 +979,10 @@ MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
 MD999>>token:[end-para:::True]
 MD999>>token:[BLANK(4,1):]
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
 MD999>>completed_file
 """
         expected_error = ""
@@ -1026,10 +1026,6 @@ def test_markdown_with_dash_e_single_by_id_and_bad_select_config():
 MD999>>test_value>>1
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
-MD999>>next_line:# This is a test
-MD999>>next_line:
-MD999>>next_line:The line after this line should be blank.
-MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 MD999>>token:[text(1,3):This is a test: ]
 MD999>>token:[end-atx::]
@@ -1038,6 +1034,10 @@ MD999>>token:[para(3,1):]
 MD999>>token:[text(3,1):The line after this line should be blank.:]
 MD999>>token:[end-para:::True]
 MD999>>token:[BLANK(4,1):]
+MD999>>next_line:# This is a test
+MD999>>next_line:
+MD999>>next_line:The line after this line should be blank.
+MD999>>next_line:
 MD999>>completed_file
 """
         expected_error = ""
@@ -1122,10 +1122,6 @@ def test_markdown_with_dash_e_single_by_id_and_config_causing_next_token_excepti
 MD999>>test_value>>20
 MD999>>other_test_value>>1
 MD999>>starting_new_file>>
-MD999>>next_line:# This is a test
-MD999>>next_line:
-MD999>>next_line:The line after this line should be blank.
-MD999>>next_line:
 MD999>>token:[atx(1,1):1:0:]
 """
         expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':

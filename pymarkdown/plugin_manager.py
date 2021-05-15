@@ -12,6 +12,7 @@ from abc import ABC, abstractmethod
 from columnar import columnar
 
 from pymarkdown.application_properties import ApplicationPropertiesFacade
+from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
@@ -420,8 +421,11 @@ class PluginManager:
             self.__enabled_plugins_for_completed_file,
             self.__loaded_classes,
             self.number_of_scan_failures,
+            self.number_of_pragma_failures,
             self.__show_stack_trace,
-        ) = (None, None, None, None, None, None, None, None, False)
+            self.__document_pragmas,
+            self.__all_ids,
+        ) = (None, None, None, None, None, None, None, None, None, False, None, None)
 
     # pylint: disable=too-many-arguments
     def initialize(
@@ -437,7 +441,11 @@ class PluginManager:
         Initializes the manager by scanning for plugins, loading them, and registering them.
         """
         self.__show_stack_trace = show_stack_trace
-        self.number_of_scan_failures, self.__loaded_classes = 0, []
+        (
+            self.number_of_scan_failures,
+            self.number_of_pragma_failures,
+            self.__loaded_classes,
+        ) = (0, 0, [])
 
         plugin_files = self.__find_eligible_plugins_in_directory(directory_to_search)
         self.__load_plugins(directory_to_search, plugin_files)
@@ -631,6 +639,12 @@ class PluginManager:
         Log the scan failure in the appropriate format.
         """
 
+        if self.__document_pragmas and line_number in self.__document_pragmas:
+            id_set = self.__document_pragmas[line_number]
+            rule_id = rule_id.lower()
+            if rule_id in id_set:
+                return
+
         extra_info = f" [{extra_error_information}]" if extra_error_information else ""
 
         print(
@@ -647,6 +661,80 @@ class PluginManager:
         self.number_of_scan_failures += 1
 
     # pylint: enable=too-many-arguments
+
+    def log_pragma_failure(self, scan_file, line_number, pragma_error):
+        """
+        Log the pragma failure in the appropriate format.
+        """
+
+        print("{0}:{1}:1: INLINE: {2}".format(scan_file, line_number, pragma_error))
+        self.number_of_pragma_failures += 1
+
+    # pylint: disable=too-many-locals
+    def compile_pragmas(self, scan_file, pragma_token):
+        """
+        Go through the list of extracted pragmas and compile them.
+        """
+
+        for next_line_number in pragma_token.pragma_lines.keys():
+            if next_line_number > 0:
+                prefix_length = len(PragmaToken.pragma_prefix)
+                actual_line_number = next_line_number
+            else:
+                prefix_length = len(PragmaToken.pragma_alternate_prefix)
+                actual_line_number = -next_line_number
+
+            line_after_prefix = pragma_token.pragma_lines[next_line_number][
+                prefix_length:
+            ].rstrip()
+            after_whitespace_index, _ = ParserHelper.extract_whitespace(
+                line_after_prefix, 0
+            )
+            command_data = line_after_prefix[
+                after_whitespace_index
+                + len(PragmaToken.pragma_title) : -len(PragmaToken.pragma_suffix)
+            ]
+            after_command_index, command = ParserHelper.extract_until_whitespace(
+                command_data, 0
+            )
+            command = command.lower()
+            if not command:
+                self.log_pragma_failure(
+                    scan_file,
+                    actual_line_number,
+                    "Inline configuration specified without command.",
+                )
+            elif command == "disable-next-line":
+                ids_to_disable = command_data[after_command_index:].split(",")
+                processed_ids = set()
+                for next_id in ids_to_disable:
+                    next_id = next_id.strip().lower()
+                    if not next_id:
+                        self.log_pragma_failure(
+                            scan_file,
+                            actual_line_number,
+                            f"Inline configuration command '{command}' specified a plugin with a blank id.",
+                        )
+                    elif next_id in self.__all_ids:
+                        normalized_id = self.__all_ids[next_id].plugin_id
+                        processed_ids.add(normalized_id)
+                    else:
+                        self.log_pragma_failure(
+                            scan_file,
+                            actual_line_number,
+                            f"Inline configuration command '{command}' unable to find a plugin with the id '{next_id}'.",
+                        )
+
+                if processed_ids:
+                    self.__document_pragmas[actual_line_number + 1] = processed_ids
+            else:
+                self.log_pragma_failure(
+                    scan_file,
+                    actual_line_number,
+                    f"Inline configuration command '{command}' not understood.",
+                )
+
+    # pylint: enable=too-many-locals
 
     @classmethod
     def __find_eligible_plugins_in_directory(cls, directory_to_search):
@@ -873,7 +961,6 @@ class PluginManager:
         instance_file_name,
         command_line_enabled_rules,
         command_line_disabled_rules,
-        all_ids,
         properties,
     ):
         """
@@ -888,24 +975,24 @@ class PluginManager:
                 f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as id is not a valid id in the form 'aannn' or 'aaannn'."
             )
 
-        if next_key in all_ids:
-            found_plugin = all_ids[next_key]
+        if next_key in self.__all_ids:
+            found_plugin = self.__all_ids[next_key]
             raise ValueError(
                 f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as plugin '{found_plugin.plugin_file_name}' is already registered with that id."
             )
-        all_ids[next_key] = plugin_object
+        self.__all_ids[next_key] = plugin_object
 
         for next_key in plugin_object.plugin_names:
             if not PluginManager.__name_regex.match(next_key):
                 raise ValueError(
                     f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as name is not a valid name in the form 'an-an'."
                 )
-            if next_key in all_ids:
-                found_plugin = all_ids[next_key]
+            if next_key in self.__all_ids:
+                found_plugin = self.__all_ids[next_key]
                 raise ValueError(
                     f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as plugin '{found_plugin.plugin_file_name}' is already registered with that name."
                 )
-            all_ids[next_key] = plugin_object
+            self.__all_ids[next_key] = plugin_object
         if not plugin_object.plugin_description.strip():
             raise ValueError(
                 f"Unable to register plugin '{instance_file_name}' with a description string that is blank."
@@ -942,7 +1029,8 @@ class PluginManager:
             command_line_disabled_rules,
             self.__registered_plugins,
             self.__enabled_plugins,
-        ) = (set(), set(), [], [])
+            self.__all_ids,
+        ) = (set(), set(), [], [], {})
         if enable_rules_from_command_line:
             for next_rule_identifier in enable_rules_from_command_line.lower().split(
                 ","
@@ -954,14 +1042,12 @@ class PluginManager:
             ):
                 command_line_disabled_rules.add(next_rule_identifier)
 
-        all_ids = {}
         for plugin_instance, instance_file_name in self.__loaded_classes:
             self.__register_individual_plugin(
                 plugin_instance,
                 instance_file_name,
                 command_line_enabled_rules,
                 command_line_disabled_rules,
-                all_ids,
                 properties,
             )
 
@@ -1039,6 +1125,7 @@ class PluginManager:
         """
         Inform any listeners that a new current file has been started.
         """
+        self.__document_pragmas = {}
         for next_plugin in self.__enabled_plugins_for_starting_new_file:
             try:
                 next_plugin.plugin_instance.starting_new_file()

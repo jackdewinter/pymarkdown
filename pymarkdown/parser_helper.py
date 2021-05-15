@@ -811,6 +811,24 @@ class ParserHelper:
         """
         return "".rjust(repeat_count, string_to_repeat)
 
+    @staticmethod
+    def find_nth_occurrence(search_in, search_for, nth):
+        """
+        Search for the nth (1-based) occurrence of the search_for
+        string within the search_in string.
+        """
+
+        found_index = -1
+        start_index = 0
+        did_find_last = True
+        while nth > 0 and did_find_last:
+            found_index = search_in.find(search_for, start_index)
+            did_find_last = found_index != -1
+            if did_find_last:
+                start_index = found_index + 1
+                nth -= 1
+        return found_index if did_find_last else -1
+
 
 # pylint: enable=too-many-public-methods
 

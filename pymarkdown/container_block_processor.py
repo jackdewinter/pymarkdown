@@ -4,6 +4,7 @@ Module to provide processing for the container blocks.
 import logging
 
 from pymarkdown.block_quote_processor import BlockQuoteProcessor
+from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
@@ -24,6 +25,7 @@ class ContainerBlockProcessor:
     # pylint: disable=too-many-arguments
     # pylint: disable=too-many-statements
     # pylint: disable=too-many-branches
+    # pylint: disable=too-many-return-statements
     @staticmethod
     def parse_line_for_container_blocks(
         parser_state,
@@ -32,6 +34,7 @@ class ContainerBlockProcessor:
         container_depth=0,
         foobar=None,
         init_bq=None,
+        pragma_lines=None,
     ):
         """
         Parse the line, taking care to handle any container blocks before deciding
@@ -66,6 +69,15 @@ class ContainerBlockProcessor:
         start_index, extracted_whitespace = ParserHelper.extract_whitespace(
             line_to_parse, 0
         )
+
+        if ContainerBlockProcessor.__look_for_pragmas(
+            position_marker,
+            line_to_parse,
+            container_depth,
+            extracted_whitespace,
+            pragma_lines,
+        ):
+            return None, None, None
 
         (
             current_container_blocks,
@@ -293,6 +305,7 @@ class ContainerBlockProcessor:
         # pylint: enable=too-many-arguments
         # pylint: enable=too-many-statements
         # pylint: enable=too-many-branches
+        # pylint: enable=too-many-return-statements
 
     @staticmethod
     # pylint: disable=too-many-locals, too-many-arguments
@@ -1196,6 +1209,48 @@ class ContainerBlockProcessor:
         return pre_tokens
 
     # pylint: enable=too-many-arguments, too-many-locals
+
+    @staticmethod
+    def __look_for_pragmas(
+        position_marker,
+        line_to_parse,
+        container_depth,
+        extracted_whitespace,
+        pragma_lines,
+    ):
+
+        if (
+            not container_depth
+            and not extracted_whitespace
+            and (
+                line_to_parse.startswith(PragmaToken.pragma_prefix)
+                or line_to_parse.startswith(PragmaToken.pragma_alternate_prefix)
+            )
+        ):
+            was_extended_prefix = line_to_parse.startswith(
+                PragmaToken.pragma_alternate_prefix
+            )
+
+            start_index, _ = ParserHelper.extract_whitespace(
+                line_to_parse,
+                len(
+                    PragmaToken.pragma_alternate_prefix
+                    if was_extended_prefix
+                    else PragmaToken.pragma_prefix
+                ),
+            )
+            remaining_line = line_to_parse[start_index:].rstrip().lower()
+            if remaining_line.startswith(
+                PragmaToken.pragma_title
+            ) and remaining_line.endswith(PragmaToken.pragma_suffix):
+                index_number = (
+                    -position_marker.line_number
+                    if was_extended_prefix
+                    else position_marker.line_number
+                )
+                pragma_lines[index_number] = line_to_parse
+                return True
+        return False
 
 
 # pylint: disable=too-few-public-methods

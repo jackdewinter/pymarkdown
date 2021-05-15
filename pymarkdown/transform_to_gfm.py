@@ -14,6 +14,7 @@ from pymarkdown.extensions.front_matter_markdown_token import (
     FrontMatterExtension,
     FrontMatterMarkdownToken,
 )
+from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.inline_markdown_token import (
     EmailAutolinkMarkdownToken,
@@ -181,6 +182,10 @@ class TransformToGfm:
         self.register_handlers(
             LinkReferenceDefinitionMarkdownToken,
             self.__handle_link_reference_definition_token,
+        )
+        self.register_handlers(
+            PragmaToken,
+            self.__handle_pragma_token,
         )
 
     def register_handlers(self, type_name, start_token_handler, end_token_handler=None):
@@ -670,6 +675,15 @@ class TransformToGfm:
     def __handle_link_reference_definition_token(
         cls, output_html, next_token, transform_state
     ):
+        """
+        Handle the link reference definition token.
+        """
+        _ = (transform_state, next_token)
+
+        return output_html
+
+    @classmethod
+    def __handle_pragma_token(cls, output_html, next_token, transform_state):
         """
         Handle the link reference definition token.
         """

@@ -12,6 +12,7 @@ class MarkdownTokenClass(Enum):
     CONTAINER_BLOCK = 0
     LEAF_BLOCK = 1
     INLINE_BLOCK = 2
+    SPECIAL = 3
 
 
 # pylint: disable=too-many-public-methods,too-many-instance-attributes
@@ -23,6 +24,7 @@ class MarkdownToken:
     extra_data_separator = ":"
 
     _end_token_prefix = "end-"
+    _token_pragma = "pragma"
 
     _token_paragraph = "para"
     _token_blank_line = "BLANK"
@@ -207,6 +209,13 @@ class MarkdownToken:
             or self.is_paragraph
         )
         # or tables
+
+    @property
+    def is_pragma(self):
+        """
+        Returns whether the current token is the pragma element.
+        """
+        return self.token_name == MarkdownToken._token_pragma
 
     @property
     def is_blank_line(self):

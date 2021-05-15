@@ -4,8 +4,6 @@
 
 - command line and configuration documentation
 - verify rule 26 and punctuation list
-- verify rule 03 with front-matter
-- try test-blog.cmd without disabled rules
 - make sure new strict mode reports config properly
 
 ## Priority 2 - Like To Solve Before Initial
@@ -15,6 +13,7 @@
   - implement MD025 at the same time
 - __is_container_end_token, __is_leaf_end_token --> put into markdown_token?
 - plugins list, enabled default and current not taking up so much space
+- pragma tests need to remove `disable_consistency_checks=True`
 
 - implement missing rules
 - yaml support for front-matter

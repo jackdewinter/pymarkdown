@@ -9,6 +9,7 @@ from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_block_processor import ContainerBlockProcessor
 from pymarkdown.extensions.front_matter_markdown_token import FrontMatterExtension
+from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_helper import InlineHelper
 from pymarkdown.inline_processor import InlineProcessor
@@ -115,6 +116,7 @@ class TokenizedMarkdown:
         ignore_link_definition_start = False
         POGGER.debug("---$---", token_to_use)
         POGGER.debug("---")
+        pragma_lines = {}
         line_number = 1
         try:
             token_to_use, line_number, requeue = self.__process_header_if_present(
@@ -193,6 +195,7 @@ class TokenizedMarkdown:
                             parser_state,
                             position_marker,
                             ignore_link_definition_start,
+                            pragma_lines=pragma_lines,
                         )
 
                     POGGER.debug("<<<<$", self.tokenized_document)
@@ -228,6 +231,8 @@ class TokenizedMarkdown:
             error_message = f"A project assertion failed on line {str(line_number)} of the current document."
             raise BadTokenizationError(error_message) from this_exception
 
+        if pragma_lines:
+            self.tokenized_document.append(PragmaToken(pragma_lines))
         return self.tokenized_document
 
     # pylint: enable=too-many-statements,too-many-locals,too-many-branches
