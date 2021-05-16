@@ -96,11 +96,12 @@ class StartOfLineTokenParser:
             self.__delayed_line = None
             self.__paragraph_index += 1
             self.__first_line_after_hard_break = True
-        elif (
-            token.is_inline_emphasis
-            or token.is_inline_emphasis_end
-            or token.is_inline_autolink
-        ):
+        else:
+            assert (
+                token.is_inline_emphasis
+                or token.is_inline_emphasis_end
+                or token.is_inline_autolink
+            )
             self.__delayed_line = None
 
     def __next_token_paragraph_text_inline(self, token, context):

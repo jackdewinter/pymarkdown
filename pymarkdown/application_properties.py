@@ -265,7 +265,7 @@ class ApplicationProperties:
     # pylint: enable=raise-missing-from
 
     def get_boolean_property(
-        self, property_name, default_value=None, is_required=False
+        self, property_name, default_value=None, is_required=False, strict_mode=None
     ):
         """
         Get a boolean property from the configuration.
@@ -276,7 +276,7 @@ class ApplicationProperties:
             default_value=default_value,
             valid_value_fn=None,
             is_required=is_required,
-            strict_mode=None,
+            strict_mode=strict_mode,
         )
 
     # pylint: disable=too-many-arguments

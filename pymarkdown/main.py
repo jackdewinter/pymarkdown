@@ -328,6 +328,9 @@ class PyMarkdownLint:
         try:
             self.__tokenizer = TokenizedMarkdown(resource_path)
             self.__tokenizer.apply_configuration(self.__properties)
+        except ValueError as this_exception:
+            formatted_error = "Configuration Error: " + str(this_exception)
+            self.__handle_error(formatted_error)
         except BadTokenizationError as this_exception:
             formatted_error = f"{str(type(this_exception).__name__)} encountered while initializing tokenizer:\n{str(this_exception)}"
             self.__handle_error(formatted_error)
@@ -379,7 +382,15 @@ class PyMarkdownLint:
             )
         if args.set_configuration:
             self.__properties.set_manual_property(args.set_configuration)
-        if args.strict_configuration:
+
+    def __initialize_strict_mode(self, args):
+        effective_strict_configuration = args.strict_configuration
+        if not effective_strict_configuration:
+            effective_strict_configuration = self.__properties.get_boolean_property(
+                "mode.strict-config", strict_mode=True
+            )
+
+        if effective_strict_configuration:
             self.__properties.enable_strict_mode()
 
     def __initialize_logging(self, args):
@@ -429,6 +440,7 @@ class PyMarkdownLint:
         new_handler = None
         total_error_count = 0
         try:
+            self.__initialize_strict_mode(args)
             new_handler = self.__initialize_logging(args)
 
             if args.primary_subparser == PluginManager.argparse_subparser_name():
@@ -460,6 +472,9 @@ class PyMarkdownLint:
                         self.__handle_scan_error(next_file, this_exception)
                     except BadTokenizationError as this_exception:
                         self.__handle_scan_error(next_file, this_exception)
+        except ValueError as this_exception:
+            formatted_error = f"Configuration Error: {this_exception}"
+            self.__handle_error(formatted_error)
         finally:
             if new_handler:
                 new_handler.close()

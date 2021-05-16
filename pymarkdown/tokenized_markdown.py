@@ -36,12 +36,13 @@ class TokenizedMarkdown:
         Initializes a new instance of the TokenizedMarkdown class.
         """
 
-        self.tokenized_document, self.stack, self.source_provider, self.__properties = (
-            None,
-            None,
-            None,
-            ApplicationProperties(),
-        )
+        (
+            self.tokenized_document,
+            self.stack,
+            self.source_provider,
+            self.__properties,
+            self.__front_matter_enabled,
+        ) = (None, None, None, ApplicationProperties(), None)
 
         if not resource_path:
             resource_path = os.path.join(os.path.split(__file__)[0], "resources")
@@ -52,6 +53,9 @@ class TokenizedMarkdown:
         Apply any configuration map.
         """
         self.__properties = application_properties
+        self.__front_matter_enabled = self.__properties.get_boolean_property(
+            "extensions.front-matter.enabled", default_value=False
+        )
 
     def transform_from_provider(self, source_provider):
         """
@@ -565,9 +569,7 @@ class TokenizedMarkdown:
 
     def __process_header_if_present(self, token_to_use, line_number, requeue):
 
-        if self.__properties.get_boolean_property(
-            "extensions.front-matter.enabled", default_value=False
-        ):
+        if self.__front_matter_enabled:
             (
                 token_to_use,
                 line_number,

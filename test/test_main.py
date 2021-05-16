@@ -1227,3 +1227,73 @@ def test_markdown_logger_arg_list_out_of_sync():
 
 
 # pylint: enable=broad-except
+
+
+def test_markdown_with_bad_strict_config_type():
+    """
+    Test to make sure that we can set the strict configuration mode from
+    the configuration file, capturing any bad errors.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_configuration = {"mode": {"strict-config": 2}}
+    configuration_file = None
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        supplied_arguments = [
+            "-c",
+            configuration_file,
+            "scan",
+            "test/resources/rules/md047/end_with_blank_line.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = "Configuration Error: The value for property 'mode.strict-config' must be of type 'bool'."
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if configuration_file and os.path.exists(configuration_file):
+            os.remove(configuration_file)
+
+
+def test_markdown_with_good_strict_config_type():
+    """
+    Test to make sure that we can set the strict configuration mode from
+    the configuration file, capturing any bad errors.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_configuration = {"mode": {"strict-config": True}, "log": {"file": 0}}
+    configuration_file = None
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        supplied_arguments = [
+            "-c",
+            configuration_file,
+            "scan",
+            "test/resources/rules/md047/end_with_blank_line.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = "Configuration Error: The value for property 'log.file' must be of type 'str'.\n"
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if configuration_file and os.path.exists(configuration_file):
+            os.remove(configuration_file)

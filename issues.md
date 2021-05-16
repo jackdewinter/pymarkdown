@@ -3,7 +3,6 @@
 ## Priority 1 - Must Solve Before Initial
 
 - command line and configuration documentation
-- make sure new strict mode reports config properly
 
 ## Priority 2 - Like To Solve Before Initial
 
