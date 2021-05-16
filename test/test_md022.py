@@ -1448,3 +1448,31 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
     finally:
         if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
+
+
+@pytest.mark.rules
+def test_md022_good_unordered_list_into_atx_into_paragraph():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has an atx heading after an unsorted
+    list and a paragraph following it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/unordered_list_into_atx_into_paragraph.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
