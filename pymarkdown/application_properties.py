@@ -485,16 +485,16 @@ class ApplicationPropertiesJsonLoader:
                 configuration_map = json.load(infile)
         except json.decoder.JSONDecodeError as this_exception:
             formatted_error = f"Specified configuration file '{configuration_file}' is not a valid JSON file ({str(this_exception)})."
-            handle_error_fn(formatted_error)
+            handle_error_fn(formatted_error, this_exception)
         except IOError as this_exception:
             formatted_error = f"Specified configuration file '{configuration_file}' was not loaded ({str(this_exception)})."
-            handle_error_fn(formatted_error)
+            handle_error_fn(formatted_error, this_exception)
 
         try:
             properties_object.load_from_dict(configuration_map)
         except ValueError as this_exception:
             formatted_error = f"Specified configuration file '{configuration_file}' is not valid ({str(this_exception)})."
-            handle_error_fn(formatted_error)
+            handle_error_fn(formatted_error, this_exception)
 
 
 # pylint: enable=too-few-public-methods

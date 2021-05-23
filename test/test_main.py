@@ -54,7 +54,7 @@ optional arguments:
   --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
                         path to the configuration file to use
   --set SET_CONFIGURATION, -s SET_CONFIGURATION
-                        manualy set properties
+                        manually set an individual configuration property
   --strict-config       throw an error if configuration is bad, instead of
                         assuming default
   --stack-trace         if an error occurs, print out the stack trace for
@@ -110,7 +110,7 @@ optional arguments:
   --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
                         path to the configuration file to use
   --set SET_CONFIGURATION, -s SET_CONFIGURATION
-                        manualy set properties
+                        manually set an individual configuration property
   --strict-config       throw an error if configuration is bad, instead of
                         assuming default
   --stack-trace         if an error occurs, print out the stack trace for

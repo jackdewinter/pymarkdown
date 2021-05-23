@@ -2,20 +2,11 @@
 
 ## Priority 1 - Must Solve Before Initial
 
-- when scanning a directory, is it always recursive?
-  - can have switch for recursion?
-- make sure configuration versions of
-  - --add-plugin
-  --strict-config       throw an error if configuration is bad, instead of assuming default
-  --stack-trace         if an error occurs, print out the stack trace for debug purposes
-  --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
-                        minimum level required to log messages
-  --log-file LOG_FILE   destination file for log messages
-- clean up
-  pipenv run python main.py --strict-config -s log.level=$#1 scan examples
-
 ## Priority 2 - Like To Solve Before Initial
 
+- make sure configuration versions of
+  - --add-plugin
+  - --stack-trace
 - documentation on Markdown Front-Matter
 - documentation for developers
 
@@ -37,6 +28,7 @@ from previous
 - implement missing rules
 - yaml support for front-matter
 - better format for "plugins info"
+  - show configuration values
 - show url for failed rules as option
 
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi

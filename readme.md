@@ -24,7 +24,7 @@ The PyMarkdown project has the following advantages:
     a given situation, as it has a clear set of rules to follow.
 - Accurate
   - The parser passes all GFM conformance tests and CommonMark conformance tests.  In
-    test scenarions that were not present in either set of test, the CommonMark
+    test scenarios that were not present in either set of tests, the CommonMark
     0.29.2 release was used to determine the correct parsing.
 - Flexible
   - Each Markdown document is parsed into an internal token format.  Most of the rules
@@ -36,9 +36,8 @@ The PyMarkdown project has the following advantages:
 - Extensible
   - The parser for the project adheres to the GFM specification and most of
     the rules for the parser leverage the tokens produced by that parser. The
-    rules themselves are implemented as plugins, so they are extensible by
-    default.  The parser itself will be extended as needed to provide for other
-    Markdown features as needed.
+    rules themselves are plugins, so they are extensible by default.  The
+    parser itself will be extended as needed to provide for other Markdown features as needed.
 
 ## Note
 
@@ -75,10 +74,10 @@ python main.py scan --help
 
 ### Prerequisites
 
-These sections require examples to illustrate how things work.
-For the purpose of the following sections, this documentation will assume that
-there is a file called `example-1.md` in a directory called `/examples` that
-has the following content:
+Various sections of this document benefit from having concrete examples
+to illustrate how things work. For the following sections,
+this documentation will assume that there is a file called `example-1.md`
+in a directory called `/examples` that has the following content:
 
 ```Markdown
 ## This is an example
@@ -105,9 +104,17 @@ The PyMarkdown project includes 13 out-of-the-box [rules](/docs/rules.md),
 with another 29 rules to be added before the
 1.0.0 release.  These rules are implemented using a simple plugin
 system that is documented in the [developer documentation](/docs/developer.md).
-It is these rules that allow the PyMarkdown project to examine or scan
+It is these rules that allow the PyMarkdown project to scan
 the various Markdown files, looking for bad patterns over that set of
 Markdown documents.
+
+Because of the way that the rules are provided, sometimes we
+refer to the rules as `rules` and sometimes as `rule plugins`.  A `rule`
+is a specific set of conditions that trigger the reporting of a violation
+when those conditions occur.  A `rule plugin` is the Python class
+and Python file in which the `rule` is supplied to the PyMarkdown application.
+Our goal is to not use these phrases interchangeably, but that is not
+always the case.  If we do mess up and use the wrong phase, we do apologize.
 
 Note that the initial set of rules are modelled after the 42 rules provided by
 David Anson's [Markdown Lint](https://github.com/markdownlint/markdownlint)
@@ -118,7 +125,8 @@ in what they can consistently check for.
 
 ### Basic Scanning
 
-The linter is executed by calling the project from the command line and
+The PyMarkdown linter is executed by calling the project from the
+command line and
 specifying one or more files and directories to scan for Markdown `.md`
 files.  The set of files and/or directories must be prefaced with the
 `scan` keyword to denote that scanning is required. For the examples
@@ -134,7 +142,7 @@ and this form:
 python main.py scan /examples/example-1.md /examples/example-2.md
 ```
 
-can be used to scan both file in the directory.  The only difference
+can be used to scan both files in the directory.  The only difference
 between the two invocations is that the first example will scan every
 Markdown `.md` file in the `/examples` directory, while the second
 invocation will only scan the two specified files.  For clarity purposes,
@@ -160,7 +168,7 @@ The format of the output for any rules that are triggered is as follows:
 - `aliases` - One or more aliases used to reference the rule.
 
 For the rule violation that was reported at the start of this section,
-the first step in diagnozing
+the first step in diagnosing
 that violation is to look at the file `/examples/example-1.md` at the end of
 line 3, which is column 16.  Rule [md047](/docs/rule_md047.md) specifies
 that every file should end with a single newline character, which is
@@ -171,18 +179,18 @@ rule can also be identified by the more human readable alias of
 ### Advanced Scanning
 
 For more advanced scanning options, please consult the document
-on [Advanced Scanning](advanced_scanning.md).
+on [Advanced Scanning](/docs/advanced_scanning.md).
 
-### Plugin Rule Information
+### Rule Plugin Information
 
-For information on what rules are currently present, the following
-command may be used:
+For information on what rule plugins are currently present, the following
+command is used:
 
 ```shell
 python main.py plugins list
 ```
 
-This command will list all of the rules in a table in the following format:
+This command lists all the rules in a table using the following format:
 
 `rule-id aliases enabled-default enabled-current version`
 
@@ -194,8 +202,9 @@ This command will list all of the rules in a table in the following format:
   rule, this version will always be the version of the project.
 
 In addition, the `list` command may be followed by text that
-specifies a Glob pattern used to match against the rules.  For example,
-using the command `plugins list md00?` produced this output:
+specifies a Glob pattern used to match against the rule plugins.
+For example, with the default configuration, using the command
+`plugins list md00?` produces this output:
 
 ```text
 ID     NAMES                    ENABLED (DEFAULT)  ENABLED (CURRENT)  VERSION
@@ -204,11 +213,11 @@ md047  first-heading-h1, first  False              False              0.5.0
        -header-h1
 ```
 
-If more verbose information is needed on a given rule, the
-`plugins info` command may be used with a specific `rule-id`
-or `alias` used to refer to the plugin.  If provided with a `rule-id`
-of `md047` or `single-trailing-newline`, this command will produce
-the following output:
+If more verbose information is needed on a given rule plugin, the
+`plugins info` command can be used with the `rule-id` for the
+rule plugin or one of the `aliases` used to refer to the rule plugin.
+If provided with a `rule-id` of `md047` or an alias of `single-trailing-newline`,
+this command produces the following output:
 
 ```text
 Id:md047
@@ -217,7 +226,7 @@ Description:Each file should end with a single newline character.
 ```
 
 - Note that better support for this command is priortized as
-  required for the general release and should happen fairly quickly
+  required for the general release and should happen fairly quickly.
 
 ### Basic Configuration
 
@@ -242,7 +251,7 @@ the scan no longer reporting any violations of rule md047
 against the Markdown file `example-1.md`.
 
 Alternatively, rules can also be enabled.  As the modelled
-base rules for this project are based off of those for David
+base rules for this project are based off those rules for David
 Anson's project, rule md002 is disable by default in both
 projects.  Specifically, rule md002 is disabled by default
 as rule md041 provides a better implementation of that rule
@@ -259,8 +268,8 @@ or
 python main.py --enable-rules md002 scan /examples
 ```
 
-The effect of enabling the rule should be evidenced by
-the scan reporting a violation of rule md002 against
+The effect of enabling the rule is evidenced by
+the scan reporting a violation of Rule md002 against
 Markdown file `example-1.md`:
 
 ```text
@@ -276,19 +285,22 @@ For more advanced configuration options, please consult the document
 on [Advanced Configuration](/docs/advanced_configuration.md).  This
 document includes information on:
 
-- specifying configuration files
+- [Command Line Settings](/docs/advanced_configuration.md#command-line-settings)
+- [Configuration File Settings](/docs/advanced_configuration.md#configuration-file-settings)
+- [Available Configuration Values](/docs/advanced_configuration.md#available-configuration-values)
 
 ## Open Issues and Future Plans
 
 During the development phase of this project, it was more useful to have
 an actual list of issues to track and prioritize, rather than relying on
-GitHub to do all of the work. Here is the [Issues List](/issues.md).
+GitHub to do all the work. This is the location of the prioritized
+[Issues List](/issues.md).
 
 If you find any issues, please report them using the standard GitHub
-issues process.  When our team takes a look at your issue and triages
-it, it will be added to our Issues List with the specified priority.
+issues process.  When our team looks at your issue and triages
+it, it will be added to our Issues List with the triaged priority.
 For us, this provides transparency as to what we are currently working
-on, what is up next, and what our future plans are.
+on, what is up next, and what our plans are for further development.
 
 ## Still Have Questions?
 
@@ -302,7 +314,7 @@ The changelog for this project is maintained [at this location](/changelog.md).
 ## Contact Information
 
 If you would like to report an issue with the linter, a rule, or
-the documentation, please file an issue [using GitHub](/issues.md).
+the documentation, please file an issue [using GitHub](https://github.com/jackdewinter/pymarkdown/issues).
 
 If you would like to help fix a specific issue or do some work to
 implement a feature that you believe is important, please file
@@ -334,5 +346,5 @@ While I have raised some issues that were cut and dry, a lot of them
 involved significant amount of discussion to figure out what the
 right approach is.  Through all those discussions, I rarely, if ever,
 felt like they treated me as less than equal, no matter how stupid
-my questions was.  For their patience and their professionalism,
+my questions were.  For their patience and their professionalism,
 thank you.

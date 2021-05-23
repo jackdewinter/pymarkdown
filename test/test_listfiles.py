@@ -4,6 +4,37 @@ Module to provide tests related to the "-l" option.
 from test.markdown_scanner import MarkdownScanner
 
 
+def test_markdown_with_dash_h():
+    """
+    Test to make sure we get help if '-h' is supplied
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = ["scan", "-h"]
+
+    expected_return_code = 0
+    expected_output = """usage: main.py scan [-h] [-l] [-r] path [path ...]
+
+positional arguments:
+  path              one or more paths to scan for eligible Markdown files
+
+optional arguments:
+  -h, --help        show this help message and exit
+  -l, --list-files  list the markdown files found and exit
+  -r, --recurse     recursively scan directories
+"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
 def test_markdown_with_dash_l_only():
     """
     Test to make sure we get help if '-l' is supplied without any paths
@@ -15,7 +46,7 @@ def test_markdown_with_dash_l_only():
 
     expected_return_code = 2
     expected_output = ""
-    expected_error = """usage: main.py scan [-h] [-l] path [path ...]
+    expected_error = """usage: main.py scan [-h] [-l] [-r] path [path ...]
 main.py scan: error: the following arguments are required: path
 """
 
@@ -253,6 +284,76 @@ def test_markdown_with_dash_l_on_non_matching_globbed_files():
     expected_error = (
         """Provided glob path 'rules/md001/z*.md' did not match any files."""
     )
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_on_directory():
+    """
+    Test to make sure we get help if '-l' is supplied with a directory.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = ["scan", "-l", "../../docs"]
+
+    expected_return_code = 0
+    expected_output = """../../docs/advanced_configuration.md
+../../docs/advanced_scanning.md
+../../docs/developer.md
+../../docs/faq.md
+../../docs/rules.md"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, cwd=scanner.resource_directory
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+def test_markdown_with_dash_l_and_dash_r_on_directory():
+    """
+    Test to make sure we get help if '-l' and '-r' is supplied with a directory.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = ["scan", "-l", "-r", "../../docs"]
+
+    expected_return_code = 0
+    expected_output = """../../docs/advanced_configuration.md
+../../docs/advanced_scanning.md
+../../docs/developer.md
+../../docs/extensions/front-matter.md
+../../docs/faq.md
+../../docs/rules.md
+../../docs/rules/rule_md001.md
+../../docs/rules/rule_md002.md
+../../docs/rules/rule_md003.md
+../../docs/rules/rule_md018.md
+../../docs/rules/rule_md019.md
+../../docs/rules/rule_md020.md
+../../docs/rules/rule_md021.md
+../../docs/rules/rule_md022.md
+../../docs/rules/rule_md023.md
+../../docs/rules/rule_md024.md
+../../docs/rules/rule_md026.md
+../../docs/rules/rule_md036.md
+../../docs/rules/rule_md047.md"""
+    expected_error = ""
 
     # Act
     execute_results = scanner.invoke_main(
