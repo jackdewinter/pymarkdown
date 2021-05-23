@@ -2,9 +2,22 @@
 
 ## Priority 1 - Must Solve Before Initial
 
-- command line and configuration documentation
+- when scanning a directory, is it always recursive?
+  - can have switch for recursion?
+- make sure configuration versions of
+  - --add-plugin
+  --strict-config       throw an error if configuration is bad, instead of assuming default
+  --stack-trace         if an error occurs, print out the stack trace for debug purposes
+  --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
+                        minimum level required to log messages
+  --log-file LOG_FILE   destination file for log messages
+- clean up
+  pipenv run python main.py --strict-config -s log.level=$#1 scan examples
 
 ## Priority 2 - Like To Solve Before Initial
+
+- documentation on Markdown Front-Matter
+- documentation for developers
 
 - test_md026_good_unordered_list_into_atx_into_paragraph should not need to test
   - what is the effect of changing the ordering of a blank that closes a list so the blank comes last
@@ -14,6 +27,12 @@
 - __is_container_end_token, __is_leaf_end_token --> put into markdown_token?
 - plugins list, enabled default and current not taking up so much space
 - pragma tests need to remove `disable_consistency_checks=True`
+
+from previous
+```
+- need way of listing all plugins, info
+- need way of listing all extensions
+```
 
 - implement missing rules
 - yaml support for front-matter

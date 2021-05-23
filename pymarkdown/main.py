@@ -401,7 +401,7 @@ class PyMarkdownLint:
             effective_log_file = self.__properties.get_string_property("log.file")
 
         if effective_log_file:
-            new_handler = logging.FileHandler(args.log_file)
+            new_handler = logging.FileHandler(effective_log_file)
             logging.getLogger().addHandler(new_handler)
         else:
             logging.basicConfig(stream=sys.stdout, level=logging.DEBUG)

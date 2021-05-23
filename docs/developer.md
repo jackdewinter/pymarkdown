@@ -1,3 +1,3 @@
 # Developer Documentation
 
-To be added.
+To be added after the initial release.

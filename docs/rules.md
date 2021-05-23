@@ -1,5 +1,7 @@
 # Implemented Rules
 
+These are the rules that are currently implemented.
+
 - [Rule Md001 - heading-increment](rule_md001.md)
 - [Rule Md002 - first-heading-h1](rule_md002.md)
 - [Rule Md003 - heading-style](rule_md003.md)
