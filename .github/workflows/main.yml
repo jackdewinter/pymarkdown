@@ -25,9 +25,15 @@ jobs:
   test-2:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@master
-    - uses: actions/setup-python@v1
+    - name: Checkout Repository
+      uses: actions/checkout@master
+    - name: Setup Python 3.8
+      uses: actions/setup-python@v1
       with:
         python-version: 3.8
-    - uses: dschep/install-pipenv-action@v1
-    - run: pipenv --help
+    - name: Install PipEnv
+      uses: dschep/install-pipenv-action@v1
+    - name: Sync With Repository
+      run: pipenv sync
+    - name: Execute Tests
+      run: pipenv run pytest
