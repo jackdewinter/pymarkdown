@@ -7,21 +7,30 @@ violations.
 
 ## Glob Support
 
+| Command Line | Description |
+| -- | -- |
+| `scan *-id.md` | Scan files that end with `-id.md`. |
+| `scan ?-id.md` | Scan files that start with a single character followed by `-id.md`. |
+| `scan */*-id.md` | In any direct subdirectory of the current directory, scan files ending with `-id.md`. |
+| `scan */a?c*id.md` |In any direct subdirectory of the current directory, scan files that start with an `a` character, then any single character, then a `c` character, then zero of more extra characters, but ending with `id.md`. |
+
 In addition to scanning using exact directories and exact files,
 glob paths may be used.  While the Python documentation for
 [glob.glob](https://docs.python.org/3/library/glob.html)
-spells out everything in details, the quick and dirty answer
+spells out everything in detail, the quick and dirty answer
 is simple.
 
 If you specify a path of `*-id.md`, all files that end with
 `-id.md` will be scanned. If you specify a path of `?-id.md`,
 all files that start with a single character followed by
 `-id.md` will be scanned.  If you specify a path of `*/*-id.md`,
-any file ending with `-id.md` in the directory subdirectory
+any file ending with `-id.md` in the direct subdirectory
 of the current directory will be scanned.  Bringing these
-together, if you specify a path of `*/a?c*-id.md`, any file
-in any subdirectory that starts with an `a`, then any character,
-then `c`, and ends with `-id.md` will be scanned.
+together, if you specify a path of `*/a?c*-id.md`, then in
+any subdirectory of the current directory, any file that
+starts with an `a` character, then any single character,
+then a `c` character, then zero or more extra characters, but
+ends with `-id.md` will be scanned.
 
 Note that due to internal checking, only files that end with
 `*.md` will be scanned.  This was added as a safety feature
@@ -74,19 +83,13 @@ docs/extensions/front-matter.md
 docs/faq.md
 docs/rules.md
 docs/rules/rule_md001.md
-docs/rules/rule_md002.md
-docs/rules/rule_md003.md
-docs/rules/rule_md018.md
-docs/rules/rule_md019.md
-docs/rules/rule_md020.md
-docs/rules/rule_md021.md
-docs/rules/rule_md022.md
-docs/rules/rule_md023.md
-docs/rules/rule_md024.md
-docs/rules/rule_md026.md
-docs/rules/rule_md036.md
+...
 docs/rules/rule_md047.md
 ```
+
+where the `...` stands for each file in the `docs/rules` directory
+except for the first file, `rule_md001.md`, and the last file,
+`rule_md047.md`.
 
 ## Test It Out
 
@@ -126,12 +129,12 @@ two files.
 ### Reasoning
 
 While the [Advanced Configuration document](/docs/advanced_configuration.md)
-takes care of configuration the scanner at a macro level, there are
+takes care of configuring the scanner at a macro level, there are
 always instances where document authors need to override the rule violations
 that were discovered.
 
 A favorite one of these for me is
-[Rule MD026](/docs/rule_md026.md)
+[Rule MD026](/docs/rules/rule_md026.md)
 which protects against punctuation characters at the end of Headings.
 To be honest, 95% of the time I agree with that rule and will fix
 the document to prevent this rule from triggering.  But there are also
@@ -149,11 +152,11 @@ do I want to effectively mark those violations as "reviewed and please ignore".
 
 It is times like this that
 [pragmas](https://jackdewinter.github.io/2021/05/17/markdown-linter-road-to-initial-release-dotting-the-is/#pragmas)
-come into play.  The linter supports a very simple form or pragmas that allow
+come into play.  The linter supports a very simple form of pragmas that allow
 a specific set of rules to be ignored for a single line.  To accomplish
 this, a line of one of the following two forms is placed in the Markdown
 document.  This text must be at the start of the line and be the only thing
-on the entire line.
+on the entire line:
 
 ```Markdown
 <!-- pyml disable-next-line no-multiple-space-atx-->
@@ -176,7 +179,7 @@ used in that list can either be the rule's id, such as `md019`,
 or one of the rules aliases, such as `no-multiple-space-atx`.
 Any duplication of the identifiers is ignored.  As such, both
 Markdown pragmas above will disable Rule md019 on the line
-following the pragma:
+following the pragma in this example:
 
 ```Markdown
 # Top Level Header
@@ -191,16 +194,16 @@ More text here.
 
 Partially because it is a slippery slope argument.  Allowing for
 the disabling of a rule for the next line just makes sense for me.
-Handle exceptions that come up during documents.  After that, I
-am concerned that adding one more command will entail
+To me, this is handling exceptions that come up during documents.
+After that, I am concerned that adding one more command will entail
 adding 5+ commands just to ensure that the one command can be
-controlled properly.  At the start, I decided I wanted to keep
-things simple if possible.
+controlled properly.  At the start of this project, I decided to keep
+things simple if possible, and I believe that applies here.
 
 Partially because it is easier and more performant.  From a
 low-level perspective, this is implemented as a list of line numbers
 and the rule ids that should be ignored if a violation is reported.
-That is a very quick check with few downsides.  Starting to add
+That is a very quick check with very few downsides.  Starting to add
 `enable` or `disable` or `restore` or any other commands probably
 mean enabling all rules and applying any pragmas after the rules
 had fired.  In my mind, that would degrade the performance of the

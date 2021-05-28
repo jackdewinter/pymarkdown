@@ -8,7 +8,7 @@ configuration values are.
 ## Setting Configuration Properties
 
 Outside of the Markdown files themselves, the next most
-important things are the configuration properties.  These
+important thing is the configuration properties.  These
 configuration properties alter how those Markdown files
 are parsed and how the PyMarkdown interprets the rules
 it applies to the Markdown files.
@@ -17,7 +17,7 @@ it applies to the Markdown files.
 
 The configuration for this project follows a consistent theme when
 deciding what configuration applies to a given item.  Specifically,
-the order for interpreting configuration properties is:
+the order of precedence for interpreting configuration properties is:
 command line setting, configuration value setting, and
 finally default setting.
 
@@ -25,7 +25,7 @@ The special case for this ordering is the disabling
 and the enabling of rules from the command line using the `-d` and
 `---disable-rules` flags along with the `-e` and `--enable-rules`
 flags.  For these special cases, the command line setting is
-further defined to start that disabling a rule takes priority
+further defined to state that disabling a rule takes priority
 over enabling a rule.  While it is highly unlikely that someone
 will specify both actions at the same time, we felt it was
 important to specify the order to eliminate any possible confusion.
@@ -54,6 +54,7 @@ setting:
 
 - `scan`
   - `-l`/`--list-files`
+  - `-r`/`--recurse`
 - `plugins`
   - `list`
     - `--all`
@@ -138,13 +139,13 @@ coalesced_results
 
 #### Specifying A Single Configuration Value
 
-There are specific times that specifying a single configuration
+There are times that specifying a single configuration
 value is useful.  For me, those times are usually when I am testing
 the setting of a configuration property or when I just need to set a single
 value while scanning a directory.  That is where the `--set` or
 `-s` command line option helps.
 
-When I was testing the configuration for the above log configuration,
+For example, when I was testing the configuration for the above log configuration,
 I used the following command line to verify that the settings
 were correct:
 
@@ -160,25 +161,26 @@ level of specification allows more confidence that the value that
 is provided for that property is interpreted properly.  Note that
 if you are using a configuration file format that already provides
 type information, such as the JSON format, this extra information
-is not required.
+may not be required.
 
-This specification is performed using a prefix for the property value.
+The type specification is performed using a prefix for the property value.
 Assuming that the `*` character refers to any character, the following
 table specifies the type behavior:
 
 | Prefix | Type | Examples |
 | --- | --- | --- |
-| `*` | Default (String) | `abc` |
+| `*` or None | Default (String) | `abc` |
 | `$*` (except for characters below) | Default (string) | `$abc` |
 | `$$` | String | `$$abc` |
 | `$#` | Integer | `$#1`, `$#-12345` |
 | `$!` | Boolean | `$!True`, `$!anything-else-is-false` |
 
 The only two interpretations that require further explanation are
-the integer and the boolean types.  The integer type translates any
-characters past the prefix as a signed integer and the boolen type
-compares any characters past the prefix in a case-insensitive manner
-against the sequence `true`.
+the integer and the boolean types.  The integer type attempts to
+translate any characters past the prefix as a signed integer.  The
+boolean type compares any characters past the prefix in a case-insensitive
+manner against the sequence `true`, setting the value to `True` if
+that comparison is true.
 
 For the integer translation, if the value `$#1.1` is provided, the
 behavior afterwards depends on how that value is referenced.  In the
@@ -294,8 +296,8 @@ For more information on Markdown Front-Matter, see [this document](/docs/extensi
 
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
-| `plugins.{id}.enabled` | --enable-rules, --disable-rules | Boolean | ... |
-| `plugins.{id}.other` | - | Various | ... |
+| `plugins.{id}.enabled` | --enable-rules, --disable-rules | Boolean | Enable the rule. |
+| `plugins.{id}.other` | - | Various | Specify other configuration properties specific to the rule. |
 
 The list of configuration values for rule plugins is slightly
 different than the configuration for the rest of the system.
@@ -338,14 +340,15 @@ the contents of:
 }
 ```
 
-According to the documentation on [Rule md003](/docs/rules/rule_md019.md),
+According to the documentation on [Rule md003](/docs/rules/rule_md003.md),
 the id for that rule is `md003` and it has one alias `heading-style-h1`.
-This means that the `plugins.md019` configuration takes
-precedence over the `plugins.heading-style-h1` configuration.
-Regardless of its position in the configuration, the
-`plugins.md019` hierarchy has precedence. Also, assuming that
+This means that the `plugins.md003` configuration takes
+precedence over the `plugins.heading-style-h1` configuration,
+due to the rules specified above, regardless of its position in
+the configuration file. Also, assuming that
 the `"enabled" : false` configuration value was `"enabled" : true`
 instead, even though the `plugins.heading-style-h1.style`
 configuration value is set, it will not be used.  For that
-configuration value to be used, the `plugins.md019` configuration
-hierarchy must be removed completely.
+configuration value to be used, the `plugins.md003` configuration
+hierarchy must be removed completely as the entire hierarchy
+has precedence, not just individual configuration properties.

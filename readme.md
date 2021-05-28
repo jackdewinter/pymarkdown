@@ -1,5 +1,22 @@
 # PyMarkdown
 
+[![Version](https://img.shields.io/pypi/v/pymarkdownlnt.svg)](https://pypi.org/project/pymarkdownlnt)
+[![Python Versions](https://img.shields.io/pypi/pyversions/pymarkdownlnt.svg)](https://pypi.org/project/pymarkdownlnt)
+[![GitHub top language](https://img.shields.io/github/languages/top/jackdewinter/pymarkdown)](https://github.com/jackdewinter/pymarkdown)
+[![Stars](https://img.shields.io/github/stars/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/stargazers)
+[![Downloads](https://img.shields.io/pypi/dm/pymarkdownlnt.svg)](https://pypistats.org/packages/pymarkdownlnt)
+
+![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/black/master)
+![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/flake8/master)
+![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/pylint/master)
+
+[![Issues](https://img.shields.io/github/issues/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/issues)
+[![License](https://img.shields.io/github/license/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/blob/main/LICENSE.txt)
+[![Contributors](https://img.shields.io/github/contributors/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/graphs/contributors)
+[![Forks](https://img.shields.io/github/forks/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/network/members)
+
+[![LinkedIn](https://img.shields.io/badge/-LinkedIn-black.svg?logo=linkedin&colorB=555)](https://www.linkedin.com/in/jackdewinter/)
+
 PyMarkdown is primarily a Markdown Linter.  To ensure that the Markdown
 [linting](https://en.wikipedia.org/wiki/Lint_%28software%29)
 is accomplished successfully, the rules engine that powers the linter
@@ -64,7 +81,7 @@ Full help support is available by entering
 python main.py --help
 ```
 
-on the command line and pressing enter.  For any individual command,
+on the command line and pressing enter.  For an individual command,
 help is available by following the command or commands with `--help`
 as follows:
 
@@ -77,7 +94,7 @@ python main.py scan --help
 Various sections of this document benefit from having concrete examples
 to illustrate how things work. For the following sections,
 this documentation will assume that there is a file called `example-1.md`
-in a directory called `/examples` that has the following content:
+in a directory called `examples` that has the following content:
 
 ```Markdown
 ## This is an example
@@ -98,6 +115,39 @@ Just an example.
 If you prefer concrete files, these files are checked into the
 [examples directory](https://github.com/jackdewinter/pymarkdown/tree/main/examples) of the GitHub project.
 
+### Basic Scanning
+
+The PyMarkdown linter is executed by calling the project from the
+command line and
+specifying one or more files and directories to scan for Markdown `.md`
+files.  The set of files and/or directories must be prefaced with the
+`scan` keyword to denote that scanning is required. For the examples
+directory, both this form:
+
+```shell
+python main.py scan examples
+```
+
+and this form:
+
+```shell
+python main.py scan examples/example-1.md examples/example-2.md
+```
+
+can be used to scan both files in the directory.  The only difference
+between the two invocations is that the first example will scan every
+Markdown `.md` file in the `examples` directory, while the second
+invocation will only scan the two specified files.  For clarity purposes,
+if the command line specifies the same file multiple times, that file
+name will only be added to the list of files to scan once.
+
+If everything is working properly, both of the above scans will
+produce the following output:
+
+```text
+examples/example-1.md:3:16: MD047: Each file should end with a single newline character. (single-trailing-newline)
+```
+
 ### Rules
 
 The PyMarkdown project includes 13 out-of-the-box [rules](/docs/rules.md),
@@ -113,8 +163,8 @@ refer to the rules as `rules` and sometimes as `rule plugins`.  A `rule`
 is a specific set of conditions that trigger the reporting of a violation
 when those conditions occur.  A `rule plugin` is the Python class
 and Python file in which the `rule` is supplied to the PyMarkdown application.
-Our goal is to not use these phrases interchangeably, but that is not
-always the case.  If we do mess up and use the wrong phase, we do apologize.
+Our goal is to try to not use these phrases interchangeably, but we are only
+human.  If we do mess up and use the wrong phase, we do apologize.
 
 Note that the initial set of rules are modelled after the 42 rules provided by
 David Anson's [Markdown Lint](https://github.com/markdownlint/markdownlint)
@@ -122,32 +172,6 @@ project.  This decision was made
 to give Markdown authors that use his project in their IDEs (such as
 the MarkdownLint plugin for VSCode that I use), a good grounding
 in what they can consistently check for.
-
-### Basic Scanning
-
-The PyMarkdown linter is executed by calling the project from the
-command line and
-specifying one or more files and directories to scan for Markdown `.md`
-files.  The set of files and/or directories must be prefaced with the
-`scan` keyword to denote that scanning is required. For the examples
-directory, both this form:
-
-```shell
-python main.py scan /examples
-```
-
-and this form:
-
-```shell
-python main.py scan /examples/example-1.md /examples/example-2.md
-```
-
-can be used to scan both files in the directory.  The only difference
-between the two invocations is that the first example will scan every
-Markdown `.md` file in the `/examples` directory, while the second
-invocation will only scan the two specified files.  For clarity purposes,
-if the command line specifies the same file multiple times, that file
-name will only be added to the list of files to scan once.
 
 ### Rule Violation Format
 
@@ -170,63 +194,11 @@ The format of the output for any rules that are triggered is as follows:
 For the rule violation that was reported at the start of this section,
 the first step in diagnosing
 that violation is to look at the file `/examples/example-1.md` at the end of
-line 3, which is column 16.  Rule [md047](/docs/rule_md047.md) specifies
+line 3, which is column 16.  Rule [md047](/docs/rules/rule_md047.md) specifies
 that every file should end with a single newline character, which is
 what is reported in the violation's description.  Additionally, it reports that this
 rule can also be identified by the more human readable alias of
 `single-trailing-newline`.
-
-### Advanced Scanning
-
-For more advanced scanning options, please consult the document
-on [Advanced Scanning](/docs/advanced_scanning.md).
-
-### Rule Plugin Information
-
-For information on what rule plugins are currently present, the following
-command is used:
-
-```shell
-python main.py plugins list
-```
-
-This command lists all the rules in a table using the following format:
-
-`rule-id aliases enabled-default enabled-current version`
-
-- `rule-id` - Unique identifier assigned to the rule.
-- `aliases` - One or more aliases used to reference the rule.
-- `enabled-default` - Whether the rule is enabled by default.
-- `enabled-current` - Whether the rule is currently enabled.
-- `version` - Version associated with the rule.  If the rule is a project
-  rule, this version will always be the version of the project.
-
-In addition, the `list` command may be followed by text that
-specifies a Glob pattern used to match against the rule plugins.
-For example, with the default configuration, using the command
-`plugins list md00?` produces this output:
-
-```text
-ID     NAMES                    ENABLED (DEFAULT)  ENABLED (CURRENT)  VERSION
-
-md047  first-heading-h1, first  False              False              0.5.0
-       -header-h1
-```
-
-If more verbose information is needed on a given rule plugin, the
-`plugins info` command can be used with the `rule-id` for the
-rule plugin or one of the `aliases` used to refer to the rule plugin.
-If provided with a `rule-id` of `md047` or an alias of `single-trailing-newline`,
-this command produces the following output:
-
-```text
-Id:md047
-Name(s):single-trailing-newline
-Description:Each file should end with a single newline character.
-```
-
-- Note that better support for this command is priortized as
-  required for the general release and should happen fairly quickly.
 
 ### Basic Configuration
 
@@ -279,6 +251,11 @@ examples/example-1.md:3:16: MD047: Each file should end with a single newline ch
 (single-trailing-newline)
 ```
 
+### Advanced Scanning
+
+For more advanced scanning options, please consult the document
+on [Advanced Scanning](/docs/advanced_scanning.md).
+
 ### Advanced Configuration
 
 For more advanced configuration options, please consult the document
@@ -288,6 +265,12 @@ document includes information on:
 - [Command Line Settings](/docs/advanced_configuration.md#command-line-settings)
 - [Configuration File Settings](/docs/advanced_configuration.md#configuration-file-settings)
 - [Available Configuration Values](/docs/advanced_configuration.md#available-configuration-values)
+
+### Advanced Rule Plugins
+
+For more information of how to query information on the rule plugins
+that are currently loaded, please consult the document on
+[Advanced Rule Plugins](/docs/advanced_plugins.md).
 
 ## Open Issues and Future Plans
 
@@ -302,31 +285,39 @@ it, it will be added to our Issues List with the triaged priority.
 For us, this provides transparency as to what we are currently working
 on, what is up next, and what our plans are for further development.
 
+## When Did Things Change?
+
+The changelog for this project is maintained [at this location](/changelog.md).
+
 ## Still Have Questions?
 
 If you still have questions, please consult our
 [Frequently Asked Questions](/docs/faq.md) document.
-
-## Version Information
-
-The changelog for this project is maintained [at this location](/changelog.md).
 
 ## Contact Information
 
 If you would like to report an issue with the linter, a rule, or
 the documentation, please file an issue [using GitHub](https://github.com/jackdewinter/pymarkdown/issues).
 
-If you would like to help fix a specific issue or do some work to
-implement a feature that you believe is important, please file
-an issue that includes what you want to add, why you want to add
-it, and why it is important.
+If you would like to us to implement a feature that you believe is
+important, please file an issue
+[using GitHub](https://github.com/jackdewinter/pymarkdown/issues)
+that includes what you want to add, why you want to add it,
+and why it is important.  Please note that the issue will usually be
+the start of a conversation, and be ready for more questions.
 
 If you would like to contribute to the project in a more
-substantial manner, please contact me at `jack.de.winter@outlook.com`.
+substantial manner, please contact me at `jack.de.winter` at `outlook.com`.
 
 ## Instructions For Contributing
 
-See [CONTRIBUTING.md](/CONTRIBUTING.md) file.
+Developer notes on various topics are kept in the the
+[Developer Notes](/docs/developer.md) document.
+
+If you attempting to contribute something to this project,
+please follow the steps outlined in the
+[CONTRIBUTING.md](/CONTRIBUTING.md)
+file.
 
 ## Acknowledgements
 

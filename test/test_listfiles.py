@@ -307,6 +307,7 @@ def test_markdown_with_dash_l_on_directory():
 
     expected_return_code = 0
     expected_output = """../../docs/advanced_configuration.md
+../../docs/advanced_plugins.md
 ../../docs/advanced_scanning.md
 ../../docs/developer.md
 ../../docs/faq.md
@@ -335,6 +336,7 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
 
     expected_return_code = 0
     expected_output = """../../docs/advanced_configuration.md
+../../docs/advanced_plugins.md
 ../../docs/advanced_scanning.md
 ../../docs/developer.md
 ../../docs/extensions/front-matter.md
