@@ -7,21 +7,6 @@ on:
     - cron: '0 0 * * *'  # daily at midnight
 
 jobs:
-#   install-test:
-#     runs-on: ubuntu-latest
-
-#     steps:
-#     - uses: actions/checkout@v2 # Checking out the repo
-
-#     - name: Install dependecies
-#       uses: VaultVulp/action-pipenv@v2.0.1
-#       with:
-#         command: install -d # Install all dependencies, including development ones
-    
-#     - name: Test
-#       uses: VaultVulp/action-pipenv@v2.0.1
-#       with:
-#         command: run pytest # Run custom `pytest` command defined in the `[scripts]` block of Pipfile
   scenario-tests:
     strategy:
       matrix:
@@ -50,3 +35,26 @@ jobs:
         file: ./report/coverage.xml
         name: ${{ matrix.python }} - ${{ matrix.platform }}
         fail_ci_if_error: true
+  lint:
+    strategy:
+      matrix:
+        python: [3.8]
+        platform: [windows-latest]
+    runs-on: ${{ matrix.platform }}
+    steps:
+    - name: Checkout Repository
+      uses: actions/checkout@master
+    - name: Setup Python 3.8
+      uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
+    - name: Install PipEnv
+      uses: dschep/install-pipenv-action@v1
+    - name: Sync With Repository
+      run: pipenv sync
+    - name: Execute Flake8
+      run: pipenv run flake8 --exclude dist,build
+    - name: Execute PyLint on Source
+      run: pipenv run pylint --rcfile=setup.cfg ./pymarkdown ./pymarkdown/extensions ./pymarkdown/plugins
+    - name: Execute PyLint on Tests
+      run: pipenv run pylint --rcfile=setup.cfg ./test
