@@ -6,7 +6,7 @@ on:
   schedule:
     - cron: '0 0 * * *'  # daily at midnight
 
-# jobs:
+jobs:
 #   install-test:
 #     runs-on: ubuntu-latest
 
