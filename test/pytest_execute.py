@@ -238,14 +238,19 @@ class InProcessExecution(ABC):
 
         try:
             returncode = 0
+            print("invoke_main>>")
             self.execute_main()
+            print("invoke_main<<")
         except SystemExit as this_exception:
+            print("invoke_main<<SystemExit")
             returncode = self.handle_system_exit(this_exception, std_error)
         except Exception:
+            print("invoke_main<<Exception")
             returncode = self.handle_normal_exception()
         finally:
             saved_state.restore()
 
+        print("invoke_main<<returncode=" + str(returncode))
         return InProcessResult(returncode, std_output, std_error)
 
     # pylint: enable=broad-except

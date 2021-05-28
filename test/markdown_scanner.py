@@ -26,7 +26,9 @@ class MarkdownScanner(InProcessExecution):
         self.resource_directory = resource_directory
 
     def execute_main(self):
+        print("execute_main>>")
         PyMarkdownLint().main()
+        print("execute_main<<")
 
     def get_main_name(self):
         return "main.py"
