@@ -47,7 +47,7 @@ that directory is scanned without recursing into any directories
 found within that directory.  That is why the command line:
 
 ```sh
-python main.py scan -l docs
+pymarkdown scan -l docs
 ```
 
 returns the files:
@@ -70,7 +70,7 @@ subdirectories found.
 Modifying the command line to include the recursive flag:
 
 ```sh
-python main.py scan -l -r docs
+pymarkdown scan -l -r docs
 ```
 
 then returns the files:
@@ -109,7 +109,7 @@ found file is output to the command line.
 For example, if you execute this command in the project directory:
 
 ```shell
-python main.py scan -l examples
+pymarkdown scan -l examples
 ```
 
 the output will be:

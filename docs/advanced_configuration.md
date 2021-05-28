@@ -115,7 +115,7 @@ By placing that configuration in a file called `pymarkdown.cfg`
 be specified to the linter as:
 
 ```sh
-python main.py -c pymarkdown.cfg scan examples
+pymarkdown -c pymarkdown.cfg scan examples
 ```
 
 Executing that command, you should see the usual output from
@@ -150,7 +150,7 @@ I used the following command line to verify that the settings
 were correct:
 
 ```sh
-python main.py --stack-trace -s log.level=INFO -s log.file=log.txt scan examples
+pymarkdown --stack-trace -s log.level=INFO -s log.file=log.txt scan examples
 ```
 
 #### Specifying Configuration Types
@@ -222,7 +222,7 @@ However, with the strict configuration mode enabled, the following command
 line:
 
 ```sh
-python main.py --strict-config -s log.level=$#1 scan examples
+pymarkdown --strict-config -s log.level=$#1 scan examples
 ```
 
 produces the following output:
@@ -234,7 +234,7 @@ Configuration Error: The value for property 'log.level' must be of type 'str'.
 and the following command line:
 
 ```sh
-python main.py --strict-config -s log.level=information scan examples
+pymarkdown --strict-config -s log.level=information scan examples
 ```
 
 produces the following output:

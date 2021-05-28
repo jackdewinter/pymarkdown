@@ -6,6 +6,8 @@
 [![Stars](https://img.shields.io/github/stars/jackdewinter/pymarkdown.svg)](https://github.com/jackdewinter/pymarkdown/stargazers)
 [![Downloads](https://img.shields.io/pypi/dm/pymarkdownlnt.svg)](https://pypistats.org/packages/pymarkdownlnt)
 
+[![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/jackdewinter/pymarkdown/Main)](https://github.com/jackdewinter/pymarkdown/actions/workflows/main.yml)
+[![Codecov](https://img.shields.io/codecov/c/github/jackdewinter/pymarkdown)](https://app.codecov.io/gh/jackdewinter/pymarkdown)
 ![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/black/master)
 ![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/flake8/master)
 ![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/pylint/master)

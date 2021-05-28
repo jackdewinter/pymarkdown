@@ -10,7 +10,7 @@ For information on what rule plugins are currently present, the following
 command is used:
 
 ```shell
-python main.py plugins list
+pymarkdown plugins list
 ```
 
 This command lists all the rules in a table using the following format:
