@@ -5,6 +5,7 @@ import difflib
 import json
 import logging
 import tempfile
+import sys
 from test.transform_to_markdown import TransformToMarkdown
 from test.verify_line_and_column_numbers import verify_line_and_column_numbers
 
@@ -58,12 +59,20 @@ def write_temporary_configuration(supplied_configuration):
     Write the configuration as a temporary file that is kept around.
     """
     try:
-        with tempfile.TemporaryFile("wt", delete=False) as outfile:
-            if isinstance(supplied_configuration, str):
-                outfile.write(supplied_configuration)
-            else:
-                json.dump(supplied_configuration, outfile)
-            return outfile.name
+        if "linux" in sys.platform:
+            with tempfile.TemporaryFile("wt") as outfile:
+                if isinstance(supplied_configuration, str):
+                    outfile.write(supplied_configuration)
+                else:
+                    json.dump(supplied_configuration, outfile)
+                return outfile.name
+        else:
+            with tempfile.TemporaryFile("wt", delete=False) as outfile:
+                if isinstance(supplied_configuration, str):
+                    outfile.write(supplied_configuration)
+                else:
+                    json.dump(supplied_configuration, outfile)
+                return outfile.name
     except IOError as ex:
         assert False, "Test configuration file was not written (" + str(ex) + ")."
         return None
