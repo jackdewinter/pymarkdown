@@ -6,26 +6,28 @@ on:
   schedule:
     - cron: '0 0 * * *'  # daily at midnight
 
-jobs:
-  install-test:
-    runs-on: ubuntu-latest
+# jobs:
+#   install-test:
+#     runs-on: ubuntu-latest
 
-    steps:
-    - uses: actions/checkout@v2 # Checking out the repo
+#     steps:
+#     - uses: actions/checkout@v2 # Checking out the repo
 
-    - name: Install dependecies
-      uses: VaultVulp/action-pipenv@v2.0.1
-      with:
-        command: install -d # Install all dependencies, including development ones
+#     - name: Install dependecies
+#       uses: VaultVulp/action-pipenv@v2.0.1
+#       with:
+#         command: install -d # Install all dependencies, including development ones
     
-    - name: Test
-      uses: VaultVulp/action-pipenv@v2.0.1
-      with:
-        command: run pytest # Run custom `pytest` command defined in the `[scripts]` block of Pipfile
+#     - name: Test
+#       uses: VaultVulp/action-pipenv@v2.0.1
+#       with:
+#         command: run pytest # Run custom `pytest` command defined in the `[scripts]` block of Pipfile
   test-2:
     runs-on: ubuntu-latest
     steps:
     - uses: actions/checkout@master
     - uses: actions/setup-python@v1
+      with:
+        python-version: 3.8
     - uses: dschep/install-pipenv-action@v1
-    - run: pipenv run pytest
+    - run: pipenv --help
