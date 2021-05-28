@@ -80,7 +80,7 @@ pip install PyMarkdown
 Full help support is available by entering
 
 ```shell
-python main.py --help
+pymarkdown --help
 ```
 
 on the command line and pressing enter.  For an individual command,
@@ -88,7 +88,7 @@ help is available by following the command or commands with `--help`
 as follows:
 
 ```shell
-python main.py scan --help
+pymarkdown scan --help
 ```
 
 ### Prerequisites
@@ -127,13 +127,13 @@ files.  The set of files and/or directories must be prefaced with the
 directory, both this form:
 
 ```shell
-python main.py scan examples
+pymarkdown scan examples
 ```
 
 and this form:
 
 ```shell
-python main.py scan examples/example-1.md examples/example-2.md
+pymarkdown scan examples/example-1.md examples/example-2.md
 ```
 
 can be used to scan both files in the directory.  The only difference
@@ -211,13 +211,13 @@ states that each file must end with a single newline, you can
 disable that rule by specifying:
 
 ```shell
-python main.py -d md047 scan /examples
+pymarkdown -d md047 scan /examples
 ```
 
 or:
 
 ```shell
-python main.py --disable-rules md047 scan /examples
+pymarkdown --disable-rules md047 scan /examples
 ```
 
 The effect of disabling the rule should be evidenced by
@@ -233,13 +233,13 @@ that takes front-matter into account.  Until that rule is
 implemented, you can enable rule md002 by specifying either:
 
 ```shell
-python main.py -e md002 scan /examples
+pymarkdown -e md002 scan /examples
 ```
 
 or
 
 ```shell
-python main.py --enable-rules md002 scan /examples
+pymarkdown --enable-rules md002 scan /examples
 ```
 
 The effect of enabling the rule is evidenced by
