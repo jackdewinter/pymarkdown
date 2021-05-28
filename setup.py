@@ -36,7 +36,7 @@ AUTHOR = "Jack De Winter"
 AUTHOR_EMAIL = "jack.de.winter@outlook.com"
 PROJECT_URL = "https://github.com/jackdewinter/pymarkdown"
 
-PACKAGE_NAME = "PyMarkdown"
+PACKAGE_NAME = "pymarkdownlnt"
 SEMANTIC_VERSION = get_semantic_version()
 MINIMUM_PYTHON_VERSION = "3.8.0"
 
@@ -49,8 +49,10 @@ PROJECT_CLASSIFIERS = [
     "Development Status :: 4 - Beta",
     "Environment :: Console",
     "Programming Language :: Python :: 3.8",
+    "Programming Language :: Python :: 3.9",
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
+    "Natural Language :: English",
 ]
 
 PACKAGE_MODULES = [
