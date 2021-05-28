@@ -265,6 +265,7 @@ def test_markdown_with_enabled_by_configuration_id():
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
+            "--log-level", "DEBUG",
             "-c",
             configuration_file,
             "scan",
