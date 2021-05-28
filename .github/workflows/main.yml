@@ -22,7 +22,7 @@ jobs:
 #       uses: VaultVulp/action-pipenv@v2.0.1
 #       with:
 #         command: run pytest # Run custom `pytest` command defined in the `[scripts]` block of Pipfile
-  test-2:
+  scenario-tests:
     strategy:
       matrix:
         #python: [3.8, 3.9]
@@ -43,3 +43,10 @@ jobs:
       run: pipenv sync
     - name: Execute Tests
       run: pipenv run pytest
+    - name: Report Coverage
+      uses: codecov/codecov-action@v1
+        if: github.event_name != 'schedule'
+        with:
+          file: ./report/coverage.xml
+          name: ${{ matrix.python }} - ${{ matrix.platform }}
+          fail_ci_if_error: true
