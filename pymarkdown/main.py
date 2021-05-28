@@ -186,6 +186,7 @@ class PyMarkdownLint:
 
         subparsers.add_parser("version", help="version of the application")
 
+        print("args:" + str(sys.argv))
         parse_arguments = parser.parse_args()
 
         if not parse_arguments.primary_subparser:
