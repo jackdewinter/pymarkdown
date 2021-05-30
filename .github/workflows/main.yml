@@ -27,7 +27,7 @@ jobs:
     - name: Sync With Repository
       run: pipenv sync
     - name: Execute Tests
-      run: pipenv run pytest -k test_markdown_with_enabled_by_configuration_id
+      run: pipenv run pytest
     - name: Report Coverage
       uses: codecov/codecov-action@v1
       if: github.event_name != 'schedule'
