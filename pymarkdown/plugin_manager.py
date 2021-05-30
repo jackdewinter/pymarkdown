@@ -550,7 +550,9 @@ class PluginManager:
             )
 
         show_rows = []
-        for next_plugin_id in self.all_plugin_ids:
+        ids = self.all_plugin_ids
+        ids.sort()
+        for next_plugin_id in ids:
             if next_plugin_id.startswith("md9"):
                 continue
             next_plugin_list = []
