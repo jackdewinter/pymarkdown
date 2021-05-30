@@ -186,7 +186,7 @@ class PyMarkdownLint:
 
         subparsers.add_parser("version", help="version of the application")
 
-        print("args:" + str(sys.argv))
+        #print("args:" + str(sys.argv))
         parse_arguments = parser.parse_args()
 
         if not parse_arguments.primary_subparser:
@@ -462,15 +462,15 @@ class PyMarkdownLint:
         Main entrance point.
         """
         args = self.__parse_arguments()
-        print(">>init_state>" + str(args))
+        #print(">>init_state>" + str(args))
         self.__set_initial_state(args)
 
         new_handler = None
         total_error_count = 0
         try:
-            print(">>__initialize_strict_mode")
+            #print(">>__initialize_strict_mode")
             self.__initialize_strict_mode(args)
-            print(">>__initialize_logging")
+            #print(">>__initialize_logging")
             new_handler = self.__initialize_logging(args)
 
             if args.primary_subparser == PluginManager.argparse_subparser_name():

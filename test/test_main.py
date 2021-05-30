@@ -695,18 +695,20 @@ def test_markdown_with_dash_x_init():
         "test/resources/rules/md047/end_with_no_blank_line.md",
     ]
     fake_directory = "fredo"
-    abs_fake_directory = os.path.abspath(fake_directory).replace("\\", "\\\\")
+    fake_file = "entities.json"
+    fake_path = os.path.join(fake_directory, fake_file)
+    abs_fake_path = os.path.abspath(fake_path).replace("\\", "\\\\")
 
     expected_return_code = 1
     expected_output = ""
     expected_error = (
         "BadTokenizationError encountered while initializing tokenizer:\n"
         + "Named character entity map file '"
-        + fake_directory
-        + "\\entities.json' was not loaded "
+        + fake_path
+        + "' was not loaded "
         + "([Errno 2] No such file or directory: '"
-        + abs_fake_directory
-        + "\\\\entities.json').\n"
+        + abs_fake_path
+        + "').\n"
     )
 
     # Act

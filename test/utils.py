@@ -59,20 +59,12 @@ def write_temporary_configuration(supplied_configuration):
     Write the configuration as a temporary file that is kept around.
     """
     try:
-        if "linux" in sys.platform:
-            with tempfile.TemporaryFile("wt") as outfile:
-                if isinstance(supplied_configuration, str):
-                    outfile.write(supplied_configuration)
-                else:
-                    json.dump(supplied_configuration, outfile)
-                return outfile.name
-        else:
-            with tempfile.TemporaryFile("wt", delete=False) as outfile:
-                if isinstance(supplied_configuration, str):
-                    outfile.write(supplied_configuration)
-                else:
-                    json.dump(supplied_configuration, outfile)
-                return outfile.name
+        with tempfile.NamedTemporaryFile("wt", delete=False) as outfile:
+            if isinstance(supplied_configuration, str):
+                outfile.write(supplied_configuration)
+            else:
+                json.dump(supplied_configuration, outfile)
+            return outfile.name
     except IOError as ex:
         assert False, "Test configuration file was not written (" + str(ex) + ")."
         return None
