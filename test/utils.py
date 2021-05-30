@@ -5,7 +5,6 @@ import difflib
 import json
 import logging
 import tempfile
-import sys
 from test.transform_to_markdown import TransformToMarkdown
 from test.verify_line_and_column_numbers import verify_line_and_column_numbers
 

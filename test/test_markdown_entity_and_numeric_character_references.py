@@ -625,7 +625,9 @@ def test_missing_entities_json_file():
 
     alternate_resource_directory = "bob"
     alternate_resource_file = "entities.json"
-    alternate_resource_path = os.path.join(alternate_resource_directory, alternate_resource_file)
+    alternate_resource_path = os.path.join(
+        alternate_resource_directory, alternate_resource_file
+    )
 
     try:
         TokenizedMarkdown(resource_path=alternate_resource_directory)
@@ -633,10 +635,10 @@ def test_missing_entities_json_file():
         assert False, "Should have exited prior to this."
     except BadTokenizationError as this_exception:
         assert str(this_exception).startswith(
-            "Named character entity map file '" \
-            + alternate_resource_path \
+            "Named character entity map file '"
+            + alternate_resource_path
             + "' was not loaded ([Errno 2] No such file or directory: '"
-                    )
+        )
 
 
 def test_bad_entities_json_file():
@@ -645,7 +647,9 @@ def test_bad_entities_json_file():
     """
 
     alternate_resource_path = os.path.join(os.path.split(__file__)[0], "resources")
-    full_alternate_resource_path = os.path.abspath(os.path.join(alternate_resource_path, "entities.json"))
+    full_alternate_resource_path = os.path.abspath(
+        os.path.join(alternate_resource_path, "entities.json")
+    )
 
     try:
         TokenizedMarkdown(resource_path=alternate_resource_path)
