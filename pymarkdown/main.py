@@ -9,10 +9,11 @@ import runpy
 import sys
 import traceback
 
-from pymarkdown.application_properties import (
+from application_properties import (
     ApplicationProperties,
     ApplicationPropertiesJsonLoader,
 )
+
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager import BadPluginError, PluginManager
@@ -432,7 +433,7 @@ class PyMarkdownLint:
             )
             logging.basicConfig(stream=sys.stdout, level=temp_log_level)
 
-        effective_log_level = args.log_level if args.log_level else None
+        effective_log_level = args.log_level or None
         if effective_log_level is None:
             effective_log_level = self.__properties.get_string_property(
                 "log.level", valid_value_fn=PyMarkdownLint.log_level_type

@@ -4,7 +4,8 @@ Module to provide a tokenization of a markdown-encoded string.
 import logging
 import os
 
-from pymarkdown.application_properties import ApplicationProperties
+from application_properties import ApplicationProperties
+
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_block_processor import ContainerBlockProcessor

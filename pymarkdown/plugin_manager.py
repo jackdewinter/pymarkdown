@@ -9,9 +9,9 @@ import re
 import sys
 from abc import ABC, abstractmethod
 
+from application_properties import ApplicationPropertiesFacade
 from columnar import columnar
 
-from pymarkdown.application_properties import ApplicationPropertiesFacade
 from pymarkdown.extensions.pragma_token import PragmaToken
 from pymarkdown.parser_helper import ParserHelper
 

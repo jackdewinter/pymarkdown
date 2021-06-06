@@ -628,13 +628,8 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
     """
 
     # Arrange
-    temp_file = None
-    try:
-        temp_file = tempfile.NamedTemporaryFile()
+    with tempfile.NamedTemporaryFile(delete=False) as temp_file:
         log_file_name = temp_file.name
-    finally:
-        if temp_file:
-            temp_file.close()
 
     try:
         scanner = MarkdownScanner()

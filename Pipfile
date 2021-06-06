@@ -21,6 +21,8 @@ typed-ast = "==1.4.2"
 columnar = "*"
 twine = "*"
 setuptools = "*"
+coverage = "==5.5"
+application-properties = "*"
 
 [requires]
 python_version = "3.8"

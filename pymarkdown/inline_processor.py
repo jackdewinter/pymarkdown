@@ -713,8 +713,8 @@ class InlineProcessor:
         POGGER.debug(">>delta_line>>$<<repeat_count>>$<<", delta_line, repeat_count)
         return delta_line, repeat_count
 
+    # pylint: disable=too-many-statements, too-many-locals, too-many-arguments, too-many-branches, invalid-unary-operand-type
     @staticmethod  # noqa: C901
-    # pylint: disable=too-many-statements, too-many-locals, too-many-arguments, too-many-branches
     def __process_inline_text_block(
         source_text,
         starting_whitespace="",
@@ -1149,7 +1149,7 @@ class InlineProcessor:
             column_number=last_column_number,
         )
 
-    # pylint: enable=too-many-statements, too-many-locals, too-many-arguments, too-many-branches
+    # pylint: enable=too-many-statements, too-many-locals, too-many-arguments, too-many-branches, invalid-unary-operand-type
 
     @staticmethod
     def __add_recombined_whitespace(

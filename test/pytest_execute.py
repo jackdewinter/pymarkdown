@@ -227,10 +227,7 @@ class InProcessExecution(ABC):
         sys.stdout = std_output
         sys.stderr = std_error
 
-        if arguments:
-            sys.argv = arguments.copy()
-        else:
-            sys.argv = []
+        sys.argv = arguments.copy() if arguments else []
         sys.argv.insert(0, self.get_main_name())
 
         if cwd:

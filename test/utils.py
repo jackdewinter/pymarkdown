@@ -8,7 +8,8 @@ import tempfile
 from test.transform_to_markdown import TransformToMarkdown
 from test.verify_line_and_column_numbers import verify_line_and_column_numbers
 
-from pymarkdown.application_properties import ApplicationProperties
+from application_properties import ApplicationProperties
+
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokenized_markdown import TokenizedMarkdown

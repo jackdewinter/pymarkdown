@@ -57,3 +57,5 @@ jobs:
       run: pipenv run pylint --rcfile=setup.cfg ./pymarkdown ./pymarkdown/extensions ./pymarkdown/plugins
     - name: Execute PyLint on Tests
       run: pipenv run pylint --rcfile=setup.cfg ./test
+    - name: Execute PyMarkdown on Current Docs
+      run: pipenv run python main.py scan . ./docs

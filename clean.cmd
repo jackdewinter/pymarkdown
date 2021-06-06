@@ -37,7 +37,11 @@ shift
 goto process_arguments
 :after_process_arguments
 
+rem Announce what this script does.
+
 echo {Analysis of project started.}
+
+rem Cleanly start the main part of the script
 
 echo {Executing black formatter on Python code.}
 pipenv run black %MY_VERBOSE% .
@@ -79,6 +83,14 @@ if ERRORLEVEL 1 (
 	goto error_end
 )
 
+echo {Executing PyMarkdown scan on Markdown documents.}
+pipenv run python main.py scan . ./docs
+if ERRORLEVEL 1 (
+	echo.
+	echo {PyMarkdown scan on Markdown documents failed.}
+	goto error_end
+)
+
 echo {Executing unit tests on Python code.}
 call ptest.cmd
 if ERRORLEVEL 1 (
@@ -96,6 +108,8 @@ if defined MY_PUBLISH (
 		goto error_end
 	)
 )
+
+rem Cleanly exit the script
 
 echo.
 set PC_EXIT_CODE=0

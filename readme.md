@@ -6,7 +6,7 @@
 [![Version](https://img.shields.io/pypi/v/pymarkdownlnt.svg)](https://pypi.org/project/pymarkdownlnt)
 
 [![GitHub Workflow Status (event)](https://img.shields.io/github/workflow/status/jackdewinter/pymarkdown/Main)](https://github.com/jackdewinter/pymarkdown/actions/workflows/main.yml)
-[![Codecov](https://img.shields.io/codecov/c/github/jackdewinter/pymarkdown)](https://app.codecov.io/gh/jackdewinter/pymarkdown)
+[![codecov](https://codecov.io/gh/jackdewinter/pymarkdown/branch/main/graph/badge.svg?token=PD5TKS8NQQ)](https://codecov.io/gh/jackdewinter/pymarkdown)
 ![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/black/master)
 ![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/flake8/master)
 ![GitHub Pipenv locked dependency version (branch)](https://img.shields.io/github/pipenv/locked/dependency-version/jackdewinter/pymarkdown/pylint/master)
