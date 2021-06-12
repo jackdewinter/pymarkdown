@@ -4,9 +4,6 @@
 
 ## Priority 2 - Like To Solve Before Initial
 
-- make sure configuration versions of
-  - --add-plugin
-  - --stack-trace
 - documentation on Markdown Front-Matter
 - documentation for developers
 

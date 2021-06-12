@@ -3,6 +3,8 @@ Module to provide tests related to the plugin manager for the scanner.
 """
 from test.markdown_scanner import MarkdownScanner
 
+import os
+from .utils import write_temporary_configuration
 # pylint: disable=too-many-lines
 
 
@@ -442,6 +444,53 @@ pymarkdown.plugin_manager.BadPluginError: (Line 1): Plugin id 'MDE003' had a cri
         ],
     )
 
+def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_configuration_stack_trace():
+    """
+    Test to make sure we get an error logged if a plugin throws an exception within the next_line function.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--stack-trace",
+        "--add-plugin",
+        "test/resources/plugins/bad/bad_next_line.py",
+        "--set",
+        "log.stack-trace=$!True",
+        "scan",
+        "test/resources/rules/md047/end_with_blank_line.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = """BadPluginError encountered while scanning 'test/resources/rules/md047/end_with_blank_line.md':
+(Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
+Actual Line: # This is a test
+Traceback (most recent call last):
+"""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output,
+        expected_error,
+        expected_return_code,
+        additional_error=[
+            """    raise Exception("bad next_line")
+Exception: bad next_line
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+""",
+            """, in next_line
+    raise BadPluginError(
+pymarkdown.plugin_manager.BadPluginError: (Line 1): Plugin id 'MDE003' had a critical failure during the 'next_line' action.
+""",
+        ],
+    )
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_token():
     """
@@ -650,6 +699,41 @@ Plugin class 'BadStringDetailIsInt' returned an improperly typed value for field
         expected_output, expected_error, expected_return_code
     )
 
+def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail_from_configuration():
+    """
+    Test to make sure we get an error logged if a plugin throws an exception that a string detail is bad.
+    Note: this version loads from configuration.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_configuration = {"plugins": {"additional_paths": "test/resources/plugins/bad/bad_string_detail_is_int.py"}}
+    configuration_file = None
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        supplied_arguments = [
+            "-c",
+            configuration_file,
+            "scan",
+            "test/resources/rules/md047/end_with_blank_line.md",
+        ]
+
+        expected_return_code = 1
+        expected_output = ""
+        expected_error = """\n\nBadPluginError encountered while loading plugins:
+Plugin class 'BadStringDetailIsInt' returned an improperly typed value for field name 'plugin_description'.
+"""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if configuration_file and os.path.exists(configuration_file):
+            os.remove(configuration_file)
 
 def test_markdown_with_dash_dash_add_plugin_with_empty_string_detail():
     """

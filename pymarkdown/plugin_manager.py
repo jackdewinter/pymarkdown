@@ -450,8 +450,15 @@ class PluginManager:
         plugin_files = self.__find_eligible_plugins_in_directory(directory_to_search)
         self.__load_plugins(directory_to_search, plugin_files)
 
+        all_additional_paths = []
         if additional_paths:
-            for next_additional_plugin in additional_paths:
+            all_additional_paths.extend(additional_paths)
+        more_paths = properties.get_string_property("plugins.additional_paths")
+        if more_paths:
+            all_additional_paths.extend(more_paths.split(","))
+
+        if all_additional_paths:
+            for next_additional_plugin in all_additional_paths:
                 if not os.path.exists(next_additional_plugin):
                     formatted_message = (
                         f"Plugin path '{next_additional_plugin}' does not exist."

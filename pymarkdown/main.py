@@ -420,6 +420,12 @@ class PyMarkdownLint:
 
         new_handler = None
 
+        self.__show_stack_trace = args.show_stack_trace
+        if not self.__show_stack_trace:
+            self.__show_stack_trace = self.__properties.get_boolean_property(
+                "log.stack-trace"
+            )
+
         effective_log_file = args.log_file
         if effective_log_file is None:
             effective_log_file = self.__properties.get_string_property("log.file")

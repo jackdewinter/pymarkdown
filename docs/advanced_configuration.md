@@ -263,6 +263,31 @@ These affect the logging for the application.
 | -- | -- | -- |-- |
 | log.file          | --log-file        | string  | Destination file for log messages. |
 | log.level         | --log-level       | string* | Minimum level required to log messages. Valid values are: `CRITICAL`, `ERROR`, `WARNING`, `INFO`, or `DEBUG`. (Default: `WARNING`)  |
+| log.stack-trace | --stack-trace | boolean | if an error occurs, print out the stack trace for debug purposes.  Also sets the initial logging (config processing) to debug. (Default: `false`) |
+
+These configuration values affect how the application logs information.  The two
+easiest to explain are the `*file` and `*level` values.  These configuration values
+specify what the log level is for the application and whether to redirect any logged
+information away from the standard ouput (stdout) to the specified log file.
+
+The `log.stack-trace` configuration value and the `--stack-trace` command line flag are
+a bit more nuanced in their behavior.  Due to implementation reasons, the configuration
+value form of the flag can only be accessed once the logging system has been initialized,
+that is after the configuration file has been loaded and a possible
+[strict configuration mode](#Specifying Strict Configuration Mode) has been
+enacted.
+Generally speaking, this flag enables the application to provide additional information
+on why a critical error occurred.  As the name of the value suggests, the reporting of a
+critical error occuring will include a Python stack trace if this flag is set.  While
+this information will be confusing to the typical user of the application, that information
+is vital to help diagnose the critical error.
+
+This behavior gets nuanced when there is a need to obtain a stack trace to debug
+an issue with the small amount of Python code that exists before the logging system
+is initialized.  In this case, the `--stack-trace` command line option will work
+to obtain that stack trace as documented.  But, since the logging system that
+includes the combined stack trace function has not yet been initialized, the
+`log.stack-trace` configuration value will not be effective.
 
 ### Plugins
 
@@ -270,15 +295,21 @@ These affect the collection of rule plugins and whether they are called.
 
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
-| -- | --enable-rules   | string    | Comma separated list of rules to enable. |
-| -- | --disable-rules  | string    | Comma separated list of rules to disable. |
-| -- | --add-plugin     | string    | Path to a plugin containing a new rule to apply. |
+| *special* | --enable-rules   | string    | Comma separated list of rules to enable. |
+| *special* | --disable-rules  | string    | Comma separated list of rules to disable. |
+| plugins.additional_paths | --add-plugin     | string    | Path to a plugin containing a new rule to apply. |
 
-### Other
+Enabling and disabling of plugins can be accomplished in two ways.  From the
+command line, the `--enable-rules` and `--disable-rules` arguments allow for a comma-separated
+set of rule identifiers to be specified in the next argument.  If a configuration file option
+is required, the plugin rule can be enabled as specified in the [Plugins Section](#plugins-section) below.
 
-| Key | Command Line | Type | Description |
-| -- | -- | -- |-- |
-| -- | --stack-trace | boolean | if an error occurs, print out the stack trace for debug purposes.  Also sets the initial logging (config processing) to debug. (Default: `false`) |
+Additional rule plugins can be added to the configuration in one of two ways.  To test new rule plugins,
+the recommended way to add a rule plugin is to use the `--add-plugin` command line argument or more times.
+Each `--add-plugin` argument is followed by another argument that specifies a file or a directory to load
+any new plugins from.  For a more permanent solution, the `plugins.additional_paths` configuration value
+can be used in a similar manner, specifying one or more paths using a comma-separated string containing
+the paths.
 
 ### Extensions Section
 
