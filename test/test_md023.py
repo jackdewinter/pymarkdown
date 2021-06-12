@@ -285,6 +285,8 @@ def test_md023_bad_improper_indented_atx_after_emphasis():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "MD022",
         "--enable-rules",
         "MD023",
         "scan",

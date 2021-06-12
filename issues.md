@@ -10,8 +10,6 @@
 - documentation on Markdown Front-Matter
 - documentation for developers
 
-- test_md026_good_unordered_list_into_atx_into_paragraph should not need to test
-  - what is the effect of changing the ordering of a blank that closes a list so the blank comes last
 - MD041 requires metadata
   - implement MD043 at the same time
   - implement MD025 at the same time

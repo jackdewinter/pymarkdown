@@ -622,12 +622,14 @@ main.py: error: argument --log-level: invalid log_level_type value: 'invalid'
 
 
 def test_markdown_with_dash_dash_log_level_info_with_file():
+    # sourcery skip: extract-method
     """
     Test to make sure we get the right effect if the `--log-level` flag
     is set for info with the results going to a file.
     """
 
     # Arrange
+    temp_file = None
     with tempfile.NamedTemporaryFile(delete=False) as temp_file:
         log_file_name = temp_file.name
 
