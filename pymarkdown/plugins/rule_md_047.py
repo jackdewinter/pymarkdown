@@ -24,6 +24,7 @@ class RuleMd047(Plugin):
             plugin_description="Each file should end with a single newline character.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md047.md",
         )
 
     def starting_new_file(self):

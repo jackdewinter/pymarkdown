@@ -248,7 +248,7 @@ class Plugin(ABC):
         """
 
 
-# pylint: disable=too-few-public-methods
+# pylint: disable=too-few-public-methods,too-many-instance-attributes
 class PluginDetails:
     """
     Class to provide details about a plugin, supplied by the plugin.
@@ -263,6 +263,8 @@ class PluginDetails:
         plugin_enabled_by_default,
         plugin_version,
         plugin_interface_version,
+        plugin_url=None,
+        plugin_configuration=None,
     ):
         (
             self.plugin_id,
@@ -271,6 +273,8 @@ class PluginDetails:
             self.plugin_enabled_by_default,
             self.plugin_version,
             self.plugin_interface_version,
+            self.plugin_url,
+            self.plugin_configuration,
         ) = (
             plugin_id,
             plugin_name,
@@ -278,12 +282,14 @@ class PluginDetails:
             plugin_enabled_by_default,
             plugin_version,
             plugin_interface_version,
+            plugin_url,
+            plugin_configuration,
         )
 
     # pylint: enable=too-many-arguments
 
 
-# pylint: enable=too-few-public-methods
+# pylint: enable=too-few-public-methods,too-many-instance-attributes
 
 
 # pylint: disable=too-few-public-methods,too-many-instance-attributes
@@ -305,6 +311,8 @@ class FoundPlugin:
         plugin_version,
         plugin_interface_version,
         instance_file_name,
+        plugin_url,
+        plugin_configuration,
     ):
         """
         Initializes a new instance of the FoundPlugin class.
@@ -318,6 +326,8 @@ class FoundPlugin:
             self.__plugin_version,
             self.__plugin_interface_version,
             self.__plugin_file_name,
+            self.__plugin_url,
+            self.__plugin_configuration,
         ) = (
             plugin_id.strip().lower(),
             [],
@@ -327,6 +337,8 @@ class FoundPlugin:
             plugin_version,
             plugin_interface_version,
             instance_file_name,
+            plugin_url,
+            plugin_configuration,
         )
         for next_name in plugin_name.lower().split(","):
             next_name = next_name.strip()
@@ -385,6 +397,20 @@ class FoundPlugin:
         Gets the version of the plugin.
         """
         return self.__plugin_version
+
+    @property
+    def plugin_url(self):
+        """
+        Gets the optional url for the plugin.
+        """
+        return self.__plugin_url
+
+    @property
+    def plugin_configuration(self):
+        """
+        Gets the optional configuration items for the plugin.
+        """
+        return self.__plugin_configuration
 
     @property
     def plugin_enabled_by_default(self):
@@ -548,7 +574,7 @@ class PluginManager:
             help="an id",
         )
 
-    # pylint: disable=too-many-locals
+    # pylint: disable=too-many-locals,too-many-branches
     def __handle_argparse_subparser_list(self, args):
         list_re = None
         if args.list_filter:
@@ -589,15 +615,24 @@ class PluginManager:
                 ]
                 show_rows.append(display_row)
 
-        headers = ["id", "names", "enabled (default)", "enabled (current)", "version"]
-        table = columnar(show_rows, headers, no_borders=True)
-        split_rows = table.split("\n")
-        new_rows = []
-        for next_row in split_rows:
-            new_rows.append(next_row.rstrip())
-        print("\n".join(new_rows))
+        if show_rows:
+            headers = [
+                "id",
+                "names",
+                "enabled\n(default)",
+                "enabled\n(current)",
+                "version",
+            ]
+            table = columnar(show_rows, headers, no_borders=True)
+            split_rows = table.split("\n")
+            new_rows = []
+            for next_row in split_rows:
+                new_rows.append(next_row.rstrip())
+            print("\n".join(new_rows))
+        else:
+            print(f"No plugin rule identifiers match the pattern '{args.list_filter}'.")
 
-    # pylint: enable=too-many-locals
+    # pylint: enable=too-many-locals,too-many-branches
 
     def __handle_argparse_subparser_info(self, args):
         found_plugin = list(
@@ -613,9 +648,27 @@ class PluginManager:
             return 1
 
         found_plugin = found_plugin[0]
-        print("Id:" + found_plugin.plugin_id)
-        print("Name(s):" + ",".join(found_plugin.plugin_names))
-        print("Description:" + found_plugin.plugin_description)
+        show_rows = []
+        next_row = ["Id", found_plugin.plugin_id]
+        show_rows.append(next_row)
+        next_row = ["Name(s)", ",".join(found_plugin.plugin_names)]
+        show_rows.append(next_row)
+        next_row = ["Short Description", found_plugin.plugin_description]
+        show_rows.append(next_row)
+        if found_plugin.plugin_url:
+            next_row = ["Description Url", found_plugin.plugin_url]
+            show_rows.append(next_row)
+        if found_plugin.plugin_configuration:
+            next_row = ["Configuration Items", found_plugin.plugin_configuration]
+            show_rows.append(next_row)
+
+        headers = ["Item", "Description"]
+        table = columnar(show_rows, headers, no_borders=True)
+        split_rows = table.split("\n")
+        new_rows = []
+        for next_row in split_rows:
+            new_rows.append(next_row.rstrip())
+        print("\n".join(new_rows))
         return 0
 
     def handle_argparse_subparser(self, args):
@@ -921,6 +974,8 @@ class PluginManager:
                 plugin_enabled_by_default,
                 plugin_version,
                 plugin_interface_version,
+                plugin_url,
+                plugin_configuration,
             ) = (
                 instance_details.plugin_id,
                 instance_details.plugin_name,
@@ -928,6 +983,8 @@ class PluginManager:
                 instance_details.plugin_enabled_by_default,
                 instance_details.plugin_version,
                 instance_details.plugin_interface_version,
+                instance_details.plugin_url,
+                instance_details.plugin_configuration,
             )
         except Exception as this_exception:
             raise BadPluginError(
@@ -950,6 +1007,12 @@ class PluginManager:
             raise BadPluginError(
                 formatted_message=f"Plugin '{instance_file_name}' with an interface version ('{plugin_interface_version}') that is not '1'."
             )
+        if plugin_url:
+            self.__verify_string_field(plugin_instance, "plugin_url", plugin_url)
+        if plugin_configuration:
+            self.__verify_string_field(
+                plugin_instance, "plugin_configuration", plugin_configuration
+            )
 
         plugin_object = FoundPlugin(
             plugin_id,
@@ -960,6 +1023,8 @@ class PluginManager:
             plugin_version,
             plugin_interface_version,
             instance_file_name,
+            plugin_url,
+            plugin_configuration,
         )
         return plugin_object
 

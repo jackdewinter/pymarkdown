@@ -31,6 +31,8 @@ class RuleMd024(Plugin):
             plugin_description="Multiple headings cannot contain the same content.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md024.md",
+            plugin_configuration="siblings_only, allow_different_nesting",
         )
 
     def initialize_from_config(self):

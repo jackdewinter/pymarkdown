@@ -28,6 +28,8 @@ class RuleMd001(Plugin):
             plugin_description="Heading levels should only increment by one level at a time.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md001.md",
+            plugin_configuration="front_matter_title",
         )
 
     def initialize_from_config(self):

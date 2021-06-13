@@ -42,6 +42,8 @@ class RuleMd036(Plugin):
             plugin_description="Emphasis possibly used instead of a heading element.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md036.md",
+            plugin_configuration="punctuation",
         )
 
     def initialize_from_config(self):

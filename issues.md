@@ -11,19 +11,16 @@
   - implement MD043 at the same time
   - implement MD025 at the same time
 - __is_container_end_token, __is_leaf_end_token --> put into markdown_token?
-- plugins list, enabled default and current not taking up so much space
 - pragma tests need to remove `disable_consistency_checks=True`
 
 from previous
-```
-- need way of listing all plugins, info
+
+```md
 - need way of listing all extensions
 ```
 
 - implement missing rules
 - yaml support for front-matter
-- better format for "plugins info"
-  - show configuration values
 - show url for failed rules as option
 
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi

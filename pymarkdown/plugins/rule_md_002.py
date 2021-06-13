@@ -28,6 +28,8 @@ class RuleMd002(Plugin):
             plugin_description="First heading of the document should be a top level heading.",
             plugin_version="0.5.0",
             plugin_interface_version=1,
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md002.md",
+            plugin_configuration="level",
         )
 
     def initialize_from_config(self):
