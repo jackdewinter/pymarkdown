@@ -10,7 +10,6 @@
 - MD041 requires metadata
   - implement MD043 at the same time
   - implement MD025 at the same time
-- __is_container_end_token, __is_leaf_end_token --> put into markdown_token?
 - pragma tests need to remove `disable_consistency_checks=True`
 
 from previous

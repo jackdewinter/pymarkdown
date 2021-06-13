@@ -291,6 +291,35 @@ class MarkdownToken:
         )
 
     @property
+    def is_container_end_token(self):
+        """
+        Returns whether the current token is an end element for a container elements.
+        """
+        if self.is_list_end or self.is_block_quote_end:
+            return True
+        return False
+
+    # pylint: disable=too-many-boolean-expressions
+    @property
+    def is_leaf_end_token(self):
+        """
+        Returns whether the current token is an end element for a leaf element.
+        """
+        if (
+            self.is_paragraph_end
+            or self.is_atx_heading_end
+            or self.is_setext_heading_end
+            or self.is_thematic_break
+            or self.is_html_block_end
+            or self.is_fenced_code_block_end
+            or self.is_indented_code_block_end
+        ):
+            return True
+        return False
+
+    # pylint: enable=too-many-boolean-expressions
+
+    @property
     def is_new_list_item(self):
         """
         Returns whether the current token is a list item element.

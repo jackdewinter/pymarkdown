@@ -100,36 +100,12 @@ class RuleMd022(Plugin):
             if not token.is_list_end:
                 self.__blank_line_count = (
                     0
-                    if self.__is_leaf_end_token(token)
-                    or self.__is_container_end_token(token)
+                    if token.is_leaf_end_token or token.is_container_end_token
                     else None
                 )
             if token.is_atx_heading_end or token.is_setext_heading_end:
                 self.__did_heading_end = True
         # print(">>self.__blank_line_count>>" + str(self.__blank_line_count))
-
-    # pylint: disable=too-many-boolean-expressions
-    @classmethod
-    def __is_container_end_token(cls, token):
-        if token.is_list_end or token.is_block_quote_end:
-            return True
-        return False
-
-    @classmethod
-    def __is_leaf_end_token(cls, token):
-        if (
-            token.is_paragraph_end
-            or token.is_atx_heading_end
-            or token.is_setext_heading_end
-            or token.is_thematic_break
-            or token.is_html_block_end
-            or token.is_fenced_code_block_end
-            or token.is_indented_code_block_end
-        ):
-            return True
-        return False
-
-    # pylint: enable=too-many-boolean-expressions
 
     def perform_close_check(self, context, token):
         """
