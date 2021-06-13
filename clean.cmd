@@ -92,7 +92,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing unit tests on Python code.}
-call ptest.cmd
+call ptest.cmd -q -c
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing unit tests on Python code failed.}

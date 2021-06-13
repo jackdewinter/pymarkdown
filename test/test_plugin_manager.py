@@ -1,10 +1,11 @@
 """
 Module to provide tests related to the plugin manager for the scanner.
 """
+import os
 from test.markdown_scanner import MarkdownScanner
 
-import os
 from .utils import write_temporary_configuration
+
 # pylint: disable=too-many-lines
 
 
@@ -444,6 +445,7 @@ pymarkdown.plugin_manager.BadPluginError: (Line 1): Plugin id 'MDE003' had a cri
         ],
     )
 
+
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_configuration_stack_trace():
     """
     Test to make sure we get an error logged if a plugin throws an exception within the next_line function.
@@ -491,6 +493,7 @@ pymarkdown.plugin_manager.BadPluginError: (Line 1): Plugin id 'MDE003' had a cri
 """,
         ],
     )
+
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_token():
     """
@@ -699,6 +702,7 @@ Plugin class 'BadStringDetailIsInt' returned an improperly typed value for field
         expected_output, expected_error, expected_return_code
     )
 
+
 def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail_from_configuration():
     """
     Test to make sure we get an error logged if a plugin throws an exception that a string detail is bad.
@@ -707,7 +711,11 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail_from_configur
 
     # Arrange
     scanner = MarkdownScanner()
-    supplied_configuration = {"plugins": {"additional_paths": "test/resources/plugins/bad/bad_string_detail_is_int.py"}}
+    supplied_configuration = {
+        "plugins": {
+            "additional_paths": "test/resources/plugins/bad/bad_string_detail_is_int.py"
+        }
+    }
     configuration_file = None
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
@@ -734,6 +742,7 @@ Plugin class 'BadStringDetailIsInt' returned an improperly typed value for field
     finally:
         if configuration_file and os.path.exists(configuration_file):
             os.remove(configuration_file)
+
 
 def test_markdown_with_dash_dash_add_plugin_with_empty_string_detail():
     """
