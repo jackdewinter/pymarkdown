@@ -310,6 +310,7 @@ def test_markdown_with_dash_l_on_directory():
 ../../docs/advanced_plugins.md
 ../../docs/advanced_scanning.md
 ../../docs/developer.md
+../../docs/extensions.md
 ../../docs/faq.md
 ../../docs/rules.md"""
     expected_error = ""
@@ -339,7 +340,9 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
 ../../docs/advanced_plugins.md
 ../../docs/advanced_scanning.md
 ../../docs/developer.md
+../../docs/extensions.md
 ../../docs/extensions/front-matter.md
+../../docs/extensions/pragmas.md
 ../../docs/faq.md
 ../../docs/rules.md
 ../../docs/rules/rule_md001.md

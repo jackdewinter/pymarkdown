@@ -31,6 +31,7 @@ class ContainerBlockProcessor:
         parser_state,
         position_marker,
         ignore_link_definition_start,
+        parser_properties,
         container_depth=0,
         foobar=None,
         init_bq=None,
@@ -75,6 +76,7 @@ class ContainerBlockProcessor:
             line_to_parse,
             container_depth,
             extracted_whitespace,
+            parser_properties,
             pragma_lines,
         ):
             return None, None, None
@@ -216,6 +218,7 @@ class ContainerBlockProcessor:
                 this_bq_count,
                 stack_bq_count,
                 new_position_marker,
+                parser_properties,
                 end_container_indices,
                 leaf_tokens,
                 container_level_tokens,
@@ -557,6 +560,7 @@ class ContainerBlockProcessor:
         this_bq_count,
         stack_bq_count,
         position_marker,
+        parser_properties,
         end_container_indices,
         leaf_tokens,
         container_level_tokens,
@@ -667,6 +671,7 @@ class ContainerBlockProcessor:
                         container_depth,
                         this_bq_count,
                         position_marker,
+                        parser_properties,
                     )
                 )
             parser_state.set_no_para_start_if_empty()
@@ -733,6 +738,7 @@ class ContainerBlockProcessor:
         container_depth,
         this_bq_count,
         position_marker,
+        parser_properties,
     ):
         """
         Look for container blocks that we can use.
@@ -755,6 +761,7 @@ class ContainerBlockProcessor:
             parser_state,
             position_marker,
             False,
+            parser_properties,
             container_depth=container_depth + 1,
             foobar=adj_block,
             init_bq=this_bq_count,
@@ -1210,17 +1217,20 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __look_for_pragmas(
         position_marker,
         line_to_parse,
         container_depth,
         extracted_whitespace,
+        parser_properties,
         pragma_lines,
     ):
 
         if (
-            not container_depth
+            parser_properties.is_pragmas_enabled
+            and not container_depth
             and not extracted_whitespace
             and (
                 line_to_parse.startswith(PragmaToken.pragma_prefix)
@@ -1251,6 +1261,8 @@ class ContainerBlockProcessor:
                 pragma_lines[index_number] = line_to_parse
                 return True
         return False
+
+    # pylint: enable=too-many-arguments
 
 
 # pylint: disable=too-few-public-methods

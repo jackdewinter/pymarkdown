@@ -56,8 +56,9 @@ The PyMarkdown project has the following advantages:
 - Extensible
   - The parser for the project adheres to the GFM specification and most of
     the rules for the parser leverage the tokens produced by that parser. The
-    rules themselves are plugins, so they are extensible by default.  The
-    parser itself will be extended as needed to provide for other Markdown features as needed.
+    [rules](/docs/rules.md) themselves are plugins, so they are extensible by default.
+    The parser itself will be extended as needed to provide for other Markdown
+    [extensions](/docs/extensions.md) as needed.
 
 ## Note
 
@@ -253,6 +254,14 @@ examples/example-1.md:1:1: MD002: First heading of the document should be a top 
 examples/example-1.md:3:16: MD047: Each file should end with a single newline character.
 (single-trailing-newline)
 ```
+
+### Extensions
+
+Extensions are any features that are implemented in addition to the base
+[GitHub Flavored Markdown](https://github.github.com/gfm/) specification.
+These extensions are documented in the [extensions](/docs/extensions.md)
+document, including information about how they perform, details on the
+extension, and configuration information.
 
 ### Advanced Scanning
 

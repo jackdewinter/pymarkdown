@@ -20,12 +20,14 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
 
     def __init__(
         self,
-        boundary_line,
+        start_boundary_line,
+        end_boundary_line,
         collected_lines,
         matter_map,
         position_marker,
     ):
-        self.__boundary_line = boundary_line
+        self.__start_boundary_line = start_boundary_line
+        self.__end_boundary_line = end_boundary_line
         self.__collected_lines = collected_lines
         self.__matter_map = matter_map
 
@@ -39,11 +41,18 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
         self.__compose_extra_data_field()
 
     @property
-    def boundary_line(self):
+    def start_boundary_line(self):
         """
-        Returns the boundary line used to start and stop the front matter block.
+        Returns the boundary line used to start the front matter block.
         """
-        return self.__boundary_line
+        return self.__start_boundary_line
+
+    @property
+    def end_boundary_line(self):
+        """
+        Returns the boundary line used to stop the front matter block.
+        """
+        return self.__end_boundary_line
 
     @property
     def collected_lines(self):
@@ -66,7 +75,8 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
         self._set_extra_data(
             MarkdownToken.extra_data_separator.join(
                 [
-                    self.__boundary_line,
+                    self.__start_boundary_line,
+                    self.__end_boundary_line,
                     str(self.__collected_lines),
                     str(self.__matter_map),
                 ]
@@ -110,9 +120,9 @@ class FrontMatterExtension:
         """
         _ = previous_token
 
-        front_matter_parts = [current_token.boundary_line]
+        front_matter_parts = [current_token.start_boundary_line]
         front_matter_parts.extend(current_token.collected_lines)
-        front_matter_parts.extend([current_token.boundary_line, ""])
+        front_matter_parts.extend([current_token.end_boundary_line, ""])
         return ParserHelper.newline_character.join(front_matter_parts)
 
     @staticmethod
@@ -123,10 +133,10 @@ class FrontMatterExtension:
         Take care of processing eligibility and processing for front matter support.
         """
 
-        start_char, _ = LeafBlockProcessor.is_thematic_break(
-            token_to_use, 0, "", whitespace_allowed_between_characters=False
+        start_char, xx = LeafBlockProcessor.is_thematic_break(
+            token_to_use.rstrip(), 0, "", whitespace_allowed_between_characters=False, skip_whitespace_check=True
         )
-        if start_char == "-":
+        if start_char == "-" and xx == 3:
             (
                 token_to_use,
                 new_token,
@@ -149,17 +159,18 @@ class FrontMatterExtension:
     def __handle_document_front_matter(token_to_use, source_provider):
 
         starting_line = token_to_use
+        clean_starting_line = starting_line.rstrip()
         repeat_again = True
         have_closing = False
         collected_lines = []
         POGGER.info("Metadata prefix detected, scanning for metadata header.")
         while repeat_again:
             token_to_use = source_provider.get_next_line()
-            if token_to_use and token_to_use.strip():
+            if token_to_use and token_to_use.rstrip():
                 start_char, _ = LeafBlockProcessor.is_thematic_break(
-                    token_to_use, 0, "", whitespace_allowed_between_characters=False
+                    token_to_use.rstrip(), 0, "", whitespace_allowed_between_characters=False
                 )
-                have_closing = start_char and starting_line == token_to_use
+                have_closing = start_char and clean_starting_line == token_to_use.rstrip()
                 repeat_again = not have_closing
             else:
                 repeat_again = token_to_use is not None
@@ -185,7 +196,7 @@ class FrontMatterExtension:
         POGGER.info("Metadata validation succeeded.")
         position_marker = PositionMarker(1, 0, starting_line)
         new_token = FrontMatterMarkdownToken(
-            starting_line, collected_lines, matter_map, position_marker
+            starting_line, token_to_use, collected_lines, matter_map, position_marker
         )
         return (
             source_provider.get_next_line(),
@@ -205,8 +216,6 @@ class FrontMatterExtension:
 
         for next_line in collected_lines:
             POGGER.debug("Next fm:>$s<", next_line)
-            if not next_line.strip():
-                return "Blank line encountered before end of metadata."
             next_index, _ = ParserHelper.extract_whitespace(next_line, 0)
             if next_index >= 4:
                 POGGER.debug("Indented line established.")
@@ -216,6 +225,9 @@ class FrontMatterExtension:
                 else:
                     return "Continuation line encountered before a keyword line."
             else:
+                if not next_line.strip():
+                    return "Blank line encountered before end of metadata."
+
                 POGGER.debug("Non-indented line established.")
                 if current_title:
                     POGGER.debug("Adding '$' as '$'.", current_title, current_value)

@@ -4,7 +4,6 @@
 
 ## Priority 2 - Like To Solve Before Initial
 
-- documentation on Markdown Front-Matter
 - documentation for developers
 
 - MD041 requires metadata
@@ -20,6 +19,7 @@ from previous
 
 - implement missing rules
 - yaml support for front-matter
+  - if front matter is found to be disqualified, send error?
 - show url for failed rules as option
 
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi

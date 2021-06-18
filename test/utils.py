@@ -34,10 +34,10 @@ def act_and_assert(
     ParserLogger.sync_on_next_call()
 
     tokenizer = TokenizedMarkdown()
+    test_properties = ApplicationProperties()
     if config_map:
-        test_properties = ApplicationProperties()
         test_properties.load_from_dict(config_map)
-        tokenizer.apply_configuration(test_properties)
+    tokenizer.apply_configuration(test_properties)
     transformer = TransformToGfm()
 
     # Act

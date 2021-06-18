@@ -866,7 +866,7 @@ class PluginManager:
         properties,
     ):
         """
-        Given the enable and disable rules values, evaluate the enabled or disabled
+        Given the enable and disable rule values, evaluate the enabled or disabled
         state of the plugin in proper order.
         """
 

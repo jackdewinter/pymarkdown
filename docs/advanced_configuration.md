@@ -315,13 +315,23 @@ the paths.
 
 #### Front Matter
 
-These affect how front matter is interpreted for the parser.
+This configuration affects how document front matter is interpreted for the parser.
 
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
 | `extensions.front-matter.enabled` | - | Boolean | Enable the parser to recognize front-matter. |
 
 For more information on Markdown Front-Matter, see [this document](/docs/extensions/front-matter.md).
+
+#### Pragmas
+
+This configuration affects whether HTML-style comments can be interpretted as linter commands.
+
+| Key | Command Line | Type | Description |
+| -- | -- | -- |-- |
+| `extensions.pragmas.enabled` | - | Boolean | Enable the parser to recognize pragmas. |
+
+For more information on PyMarkdown Pragmas, see [this document](/docs/extensions/pragmas.md).
 
 ### Plugins Section
 

@@ -4,8 +4,6 @@ Module to provide a tokenization of a markdown-encoded string.
 import logging
 import os
 
-from application_properties import ApplicationProperties
-
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.coalesce_processor import CoalesceProcessor
 from pymarkdown.container_block_processor import ContainerBlockProcessor
@@ -41,9 +39,8 @@ class TokenizedMarkdown:
             self.tokenized_document,
             self.stack,
             self.source_provider,
-            self.__properties,
-            self.__front_matter_enabled,
-        ) = (None, None, None, ApplicationProperties(), None)
+            self.__parse_properties,
+        ) = (None, None, None, None)
 
         if not resource_path:
             resource_path = os.path.join(os.path.split(__file__)[0], "resources")
@@ -53,10 +50,7 @@ class TokenizedMarkdown:
         """
         Apply any configuration map.
         """
-        self.__properties = application_properties
-        self.__front_matter_enabled = self.__properties.get_boolean_property(
-            "extensions.front-matter.enabled", default_value=False
-        )
+        self.__parse_properties = ParseBlockPassProperties(application_properties)
 
     def transform_from_provider(self, source_provider):
         """
@@ -200,6 +194,7 @@ class TokenizedMarkdown:
                             parser_state,
                             position_marker,
                             ignore_link_definition_start,
+                            self.__parse_properties,
                             pragma_lines=pragma_lines,
                         )
 
@@ -570,7 +565,10 @@ class TokenizedMarkdown:
 
     def __process_header_if_present(self, token_to_use, line_number, requeue):
 
-        if self.__front_matter_enabled:
+        POGGER.debug(
+            "is_front_matter_enabled>>$",self.__parse_properties.is_front_matter_enabled
+        )
+        if self.__parse_properties.is_front_matter_enabled:
             (
                 token_to_use,
                 line_number,
@@ -586,3 +584,32 @@ class TokenizedMarkdown:
 
 
 # pylint: enable=too-few-public-methods
+
+
+class ParseBlockPassProperties:
+    """
+    Class to provide
+    """
+
+    def __init__(self, properties):
+        self.__properties = properties
+        self.__front_matter_enabled = self.__properties.get_boolean_property(
+            "extensions.front-matter.enabled", default_value=False
+        )
+        self.__pragmas_enabled = self.__properties.get_boolean_property(
+            "extensions.pragmas.enabled", default_value=True
+        )
+
+    @property
+    def is_front_matter_enabled(self):
+        """
+        Returns whether front matter parsing is enabled.
+        """
+        return self.__front_matter_enabled
+
+    @property
+    def is_pragmas_enabled(self):
+        """
+        Returns whether pragma parsing is enabled.
+        """
+        return self.__pragmas_enabled
