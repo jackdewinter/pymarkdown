@@ -18,6 +18,7 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
     Class to provide for an encapsulation of the front matter data.
     """
 
+    # pylint: disable=too-many-arguments
     def __init__(
         self,
         start_boundary_line,
@@ -39,6 +40,8 @@ class FrontMatterMarkdownToken(LeafMarkdownToken):
             is_extension=True,
         )
         self.__compose_extra_data_field()
+
+    # pylint: enable=too-many-arguments
 
     @property
     def start_boundary_line(self):
@@ -133,10 +136,14 @@ class FrontMatterExtension:
         Take care of processing eligibility and processing for front matter support.
         """
 
-        start_char, xx = LeafBlockProcessor.is_thematic_break(
-            token_to_use.rstrip(), 0, "", whitespace_allowed_between_characters=False, skip_whitespace_check=True
+        start_char, extracted_index = LeafBlockProcessor.is_thematic_break(
+            token_to_use.rstrip(),
+            0,
+            "",
+            whitespace_allowed_between_characters=False,
+            skip_whitespace_check=True,
         )
-        if start_char == "-" and xx == 3:
+        if start_char == "-" and extracted_index == 3:
             (
                 token_to_use,
                 new_token,
@@ -168,9 +175,14 @@ class FrontMatterExtension:
             token_to_use = source_provider.get_next_line()
             if token_to_use and token_to_use.rstrip():
                 start_char, _ = LeafBlockProcessor.is_thematic_break(
-                    token_to_use.rstrip(), 0, "", whitespace_allowed_between_characters=False
+                    token_to_use.rstrip(),
+                    0,
+                    "",
+                    whitespace_allowed_between_characters=False,
                 )
-                have_closing = start_char and clean_starting_line == token_to_use.rstrip()
+                have_closing = (
+                    start_char and clean_starting_line == token_to_use.rstrip()
+                )
                 repeat_again = not have_closing
             else:
                 repeat_again = token_to_use is not None

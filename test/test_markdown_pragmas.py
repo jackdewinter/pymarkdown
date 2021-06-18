@@ -301,6 +301,7 @@ def test_pragmas_10():
         expected_output, expected_error, expected_return_code
     )
 
+
 def test_pragmas_11():
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable and extra whitespace
@@ -325,6 +326,7 @@ def test_pragmas_11():
         expected_output, expected_error, expected_return_code
     )
 
+
 def test_pragmas_12():
     """
     Test the case where we specify a 'disable-next-line' pragma with a valid id to disable and extra whitespace
@@ -341,7 +343,7 @@ def test_pragmas_12():
     expected_output = """
 test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id_with_space_after_pyml.md:1:1: INLINE: Inline configuration specified without command.
 test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id_with_space_after_pyml.md:2:1: MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)
-"""    
+"""
     expected_error = ""
 
     # Act
@@ -351,6 +353,7 @@ test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id_with_
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 def test_pragmas_13():
     """

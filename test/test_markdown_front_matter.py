@@ -351,6 +351,7 @@ Title: my document
         source_markdown, expected_gfm, expected_tokens, config_map=config_map
     )
 
+
 @pytest.mark.gfm
 def test_front_matter_14():
     """
@@ -361,14 +362,20 @@ def test_front_matter_14():
     source_markdown = """---\a\a
 Title: my document
 ---
-""".replace("\a", " ")
-    expected_tokens = ["[front-matter(1,1):---  :---:['Title: my document']:{'title': 'my document'}]", '[BLANK(4,1):]']
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[front-matter(1,1):---  :---:['Title: my document']:{'title': 'my document'}]",
+        "[BLANK(4,1):]",
+    ]
     expected_gfm = """"""
 
     # Act & Assert
     act_and_assert(
         source_markdown, expected_gfm, expected_tokens, config_map=config_map
     )
+
 
 @pytest.mark.gfm
 def test_front_matter_15():
@@ -380,14 +387,20 @@ def test_front_matter_15():
     source_markdown = """---
 Title: my document
 ---\a\a
-""".replace("\a", " ")
-    expected_tokens = ["[front-matter(1,1):---:---  :['Title: my document']:{'title': 'my document'}]", '[BLANK(4,1):]']
+""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[front-matter(1,1):---:---  :['Title: my document']:{'title': 'my document'}]",
+        "[BLANK(4,1):]",
+    ]
     expected_gfm = """"""
 
     # Act & Assert
     act_and_assert(
         source_markdown, expected_gfm, expected_tokens, config_map=config_map
     )
+
 
 @pytest.mark.gfm
 def test_front_matter_16():
@@ -400,13 +413,24 @@ def test_front_matter_16():
 Title: my document
 ----
 """
-    expected_tokens = ['[tbreak(1,1):-::----]', '[setext(3,1):-:4::(2,1)]', '[text(2,1):Title: my document:]', '[end-setext::]', '[BLANK(4,1):]']
+    expected_tokens = [
+        "[tbreak(1,1):-::----]",
+        "[setext(3,1):-:4::(2,1)]",
+        "[text(2,1):Title: my document:]",
+        "[end-setext::]",
+        "[BLANK(4,1):]",
+    ]
     expected_gfm = """<hr />\n<h2>Title: my document</h2>"""
 
     # Act & Assert
     act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, config_map=config_map, show_debug=True
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        config_map=config_map,
+        show_debug=True,
     )
+
 
 @pytest.mark.gfm
 def test_front_matter_17():
@@ -422,7 +446,16 @@ Title: my document
 ---
 ---
 """
-    expected_tokens = ['[tbreak(1,1):-::---]', '[para(2,1):]', '[text(2,1):Title: my document:]', '[end-para:::True]', '[BLANK(3,1):]','[tbreak(4,1):-::---]', '[tbreak(5,1):-::---]', '[BLANK(6,1):]']
+    expected_tokens = [
+        "[tbreak(1,1):-::---]",
+        "[para(2,1):]",
+        "[text(2,1):Title: my document:]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        "[tbreak(4,1):-::---]",
+        "[tbreak(5,1):-::---]",
+        "[BLANK(6,1):]",
+    ]
     expected_gfm = """<hr />
 <p>Title: my document</p>
 <hr />
@@ -432,6 +465,7 @@ Title: my document
     act_and_assert(
         source_markdown, expected_gfm, expected_tokens, config_map=config_map
     )
+
 
 @pytest.mark.gfm
 def test_front_matter_18():
@@ -447,14 +481,21 @@ Title: my document
 /a/a/a/a
 ---
 ---
-""".replace("/a", " ")
-    expected_tokens = ["[front-matter(1,1):---:---:['Title: my document', '    ']:{'title': 'my document\\n'}]", '[tbreak(5,1):-::---]','[BLANK(6,1):]']
+""".replace(
+        "/a", " "
+    )
+    expected_tokens = [
+        "[front-matter(1,1):---:---:['Title: my document', '    ']:{'title': 'my document\\n'}]",
+        "[tbreak(5,1):-::---]",
+        "[BLANK(6,1):]",
+    ]
     expected_gfm = """<hr />"""
 
     # Act & Assert
     act_and_assert(
         source_markdown, expected_gfm, expected_tokens, config_map=config_map
     )
+
 
 @pytest.mark.gfm
 def test_front_matter_19():
@@ -470,8 +511,18 @@ def test_front_matter_19():
 Title: my document
 ---
 ---
-""".replace("/a", " ")
-    expected_tokens = ['[tbreak(1,1):-::---]', '[BLANK(2,1):    ]', '[setext(4,1):-:3::(3,1)]', '[text(3,1):Title: my document:]', '[end-setext::]', '[tbreak(5,1):-::---]', '[BLANK(6,1):]']
+""".replace(
+        "/a", " "
+    )
+    expected_tokens = [
+        "[tbreak(1,1):-::---]",
+        "[BLANK(2,1):    ]",
+        "[setext(4,1):-:3::(3,1)]",
+        "[text(3,1):Title: my document:]",
+        "[end-setext::]",
+        "[tbreak(5,1):-::---]",
+        "[BLANK(6,1):]",
+    ]
     expected_gfm = """<hr />
 <h2>Title: my document</h2>
 <hr />"""

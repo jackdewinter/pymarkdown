@@ -31,11 +31,11 @@ as PyMarkdown.
 
 ### History
 
-The various linters and analyzers in existance today already have proven
+The various linters and analyzers in existence today already have proven
 mechanisms to deal with suppressing the notifications that each application
 scans for.  Whether those notifications are called issues, failures, or
-violations, the need is the same.  Each application provides a high level
-syntactical contstuct that allows the reporting of those items to be suppressed.
+violations, the need is the same.  Each application provides a high-level
+syntactical construct that allows the reporting of those items to be suppressed.
 A small collection of those constructs are as follows:
 
 - [PMD](https://pmd.github.io/latest/pmd_userdocs_suppressing_warnings.html)
@@ -55,9 +55,12 @@ a given set of class of failures.
 
 ### Specifics
 
-To provide a consistent and common manner in which to suppress rule violations
+To provide a consistent and common way to suppress rule violations
 for Markdown documents, the pragma format of a specialized HTML comment is
 used.
+
+For clarity in the following sections, any mention of the word "whitespace"
+refers to either the space character or the tab character.
 
 #### Pragma Statements
 
@@ -65,11 +68,11 @@ Pragmas must occur at the start of the line.  No initial whitespace is allowed.
 The pragma appears to be a normal HTML comment, starting with the character
 sequence `<!--` or the character sequence `<!---`, and ending with the character
 sequence `-->`.  As some editors do not clearly show trailing whitespace
-characters, any number of tab characters or whitespace characters may follow
+characters, any number of whitespace characters may follow
 the closing character sequence.  Within the bounds of the HTML comment, the
-pragma data is preceded by zero or more whitespace characters (space character
-or tab character), the character sequence `pyml` and a single space character.
-The remaining text is the pragma command.
+pragma data is preceded by zero or more whitespace characters, the character
+sequence `pyml` and a single space character. The remaining text is
+the pragma command.
 
 To put this into practical terms, a valid pragma line matches the following
 regular expression:
@@ -96,8 +99,8 @@ This further processing
 must occur after that parsing and before the linter is executed, as
 pragma commands may affect which rule violations are emitted by the linter.
 If there are any errors processing the pragma commands, errors will be
-reported. These errors, which should look very similar to rule violations,
-will be raised for the failing pragma command.  Similar to how rule
+reported. These errors, which should look similar to rule violations,
+will be raised for the failing pragma command.  Like how rule
 violations are handled, pragma processing errors should not prevent
 further processing of other pragma commands and the linter pass itself.
 
@@ -107,7 +110,7 @@ section for more details), and it was consumed without any errors.  In that
 outcome, nothing additional is output.
 
 The second outcome is that there was no pragma command specified, in which
-case, something similar to the following is output:
+case, something like the following text is output:
 
 ```text
 file.md:1:1: INLINE: Inline configuration specified without command.
@@ -122,16 +125,17 @@ Inline configuration command 'bad-command' not understood.
 
 #### Available Commands
 
-The only command that is in place in the `disable-next-line` command.
+The only command that is currently in place in the `disable-next-line` command.
 
 Note that due to the reasons mentioned
 [in this section](https://github.com/jackdewinter/pymarkdown/blob/main/docs/advanced_scanning.md#pragmas),
-there will have to be sufficient reasons presented as to why the number
-of commands should be increased.
+sufficient reasons must be presented as to why the number
+of pragma commands should be increased.  As noted, this is not for
+any other reason than to keep the system simple and performant.
 
 ##### Disable-next-line Command
 
-After one or more whitespace characters (spaces or tabs), a comma-separated
+After one or more whitespace characters, a comma-separated
 list of identifiers specifies the rules to disable only for the line
 directly following the line containing the pragma. If any element in the
 list is blank, the error that is output will look like:
@@ -152,8 +156,7 @@ file.md:1:1: INLINE: Inline configuration command 'disable-next-line' unable to 
 The removal of the pragma statement takes some getting used to, but it is
 logical and just makes sense. As the pragma statements provide the Markdown
 document with the ability to communicate with the linter, it logically
-should not appear in the token stream on how to represent the document as
-it is interpretted as Markdown elements.  Take this example:
+should not appear in the token stream.  Take this example:
 
 ```Markdown
 some paragraph
@@ -177,9 +180,9 @@ some paragraph
 some other paragraph
 ```
 
-If the pragma is not "invisible", then adding the pragma statement would
+If that pragma is not "invisible" to the parser, then adding the pragma statement would
 cause Rule md022 to trigger, because an Atx Heading element is
-not preceded by at least one blank line.  It does not make sense to have
+not preceded by one blank line.  It does not make sense to have
 to add a pragma to conceal the presence of another pragma.  The most
 logical thing to do is to have that parser just ignore the presence of
-the pragma.
+the pragma, avoiding that need altogether.

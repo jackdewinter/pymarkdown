@@ -23,14 +23,15 @@ document or a draft document.
 
 The [GitHub Flavored Markdown](https://github.github.com/gfm/) specification
 focuses on the parsing of Markdown and the uniform generation of HTML based on
-that parsing.  As the Markdown front-matter is not Markdown, but one of a
-handful of other formats, the authors of that document did not provide anything
-in that specification that deals with Markdown front-matter.
+that parsing.  As Markdown Front Matter is not Markdown, but one of a
+handful of other formats, the authors of that document justifiably did not
+provide anything to deal with Markdown front matter.
 
 ### History
 
 There is not a lot of information documented about Front Matter, even
-though most static website generators use it.
+though most static website generators use it.  The bulk of the information
+we found was contained in these documents:
 
 - [Markdown Lint](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md041---first-line-in-a-file-should-be-a-top-level-heading)
 - [Python Markdown](https://python-markdown.github.io/extensions/meta_data/)
@@ -46,7 +47,7 @@ properly, trailing whitespace is allowed after the above character sequence.
 The Front Matter Block end character sequence `---` concludes the front
 matter section. It also must be by itself on a subsequent line of
 the document with no whitespace before that character sequence. As with
-the start sequence, trailing whitespace after the end character seqience
+the start sequence, trailing whitespace after the end character sequence
 is allowed.
 
 Everything on the line after the start character sequence to the line
@@ -60,7 +61,7 @@ A singular `FrontMatterToken` instance can occur at the very start of
 the Markdown token stream.  As with all other tokens, this token contains
 the necessary information to successfully rebuild the Front Matter
 Block from that data.  This may be used by rules that need to examine
-the Front Matter block data and need a character-by-character accurate record
+the Front Matter Block Data and need a accurate character-by-character record
 of what was in the Front Matter Block element.
 
 For more casual use, the `matter_map` property contains a dictionary
@@ -68,6 +69,11 @@ with a fully parsed set of field names and values.  This parsing is
 accomplished using one of the data formats specified in the next section.
 
 ### Data Formats
+
+The following section describe the various data formats that are allowed
+for the Front Matter Block Data.  In both cases, at least one field must
+be parsed according to the Front Matter Data Format for the data to be
+considered valid.
 
 #### Normal Format
 
@@ -77,21 +83,21 @@ metadata format, except as mentioned in the next paragraph.
 A valid field name line starts with a field comprised of one or more characters
 in the regular expression group `([a-z][A-Z][0-9]_-)+` followed by the
 colon character ':'.  Optionally, any character data may follow the colon
-character up to the end of the line, and is called the field value.
+character up to the end of the line and is called the field value.
 
 A continuation line is any line that follows a field name line or another
 continuation line that starts with 4 or more whitespace characters.  As
-the name suggests, the data in a continuation line is considered to be a
-coninuation of the data presented in the last field name.  The data that
+the name suggests, the data in a continuation line is the
+continuation of the data presented in the last field name.  The data that
 is appended to the field value is the newline character followed by any
 data following the leading whitespace.  The interpretation of that data
-as a single value or as a set or separated values is totally dependent
+as a single value or as a set of separated values is totally dependent
 on the needs of the function requesting the field value.
 
 Any blank lines in the Front Matter Block invalidate the entire front
 matter block.  The only exception to that is if the blank line starts
-with 4 or more whitespace characters, in which case it is interpretted
-as a continuation line.
+with 4 or more whitespace characters, in which case it is interpreted
+as a continuation line, as documented in the last paragraph.
 
 #### Changes from Python Markdown
 
@@ -106,7 +112,8 @@ When the Front Matter Data Format is shown to be invalid, the Front Matter
 Block is discarded, and the parser then parses those same lines as
 straight Markdown.
 
-The supported cases of invalidating the Front Matter Block Data are:
+The supported cases of invalidating the Front Matter Block Data for
+this data format are:
 
 - "Continuation line encountered before a keyword line."
 - "Blank line encountered before end of metadata."
@@ -114,10 +121,10 @@ The supported cases of invalidating the Front Matter Block Data are:
 
 ##### New Lines
 
-The second changes is the support for newlines.  In the Python Markdown
+The second change is the support for newlines.  In the Python Markdown
 documentation, any blank line will terminate the Front Matter Block Data at
 that point.  Instead of that approach, we decided that to be more
-predictable, excep for a continuation blank line (see above), any
+predictable, except for a continuation blank line (see above), any
 blank line will invalidate the entire Front Matter Block Data format.
 If that happens, the process outlined in the previous section for
 an invalidate Front Matter Block Data Format takes effect.
@@ -151,7 +158,7 @@ This is my Markdown document.
 ```
 
 One of the common settings for blog-oriented static sites is to set
-the file name of the bog article to be a combination of the `Date`
+the file name of the article to be a combination of the `Date`
 metadata field and the `Title` metadata field.  In this case, the
 article would be published to the relative path
 `content/2021/06/14/my-markdown-document/index.html`.

@@ -566,7 +566,8 @@ class TokenizedMarkdown:
     def __process_header_if_present(self, token_to_use, line_number, requeue):
 
         POGGER.debug(
-            "is_front_matter_enabled>>$",self.__parse_properties.is_front_matter_enabled
+            "is_front_matter_enabled>>$",
+            self.__parse_properties.is_front_matter_enabled,
         )
         if self.__parse_properties.is_front_matter_enabled:
             (
