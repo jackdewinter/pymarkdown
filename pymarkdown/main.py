@@ -15,6 +15,7 @@ from application_properties import (
 )
 
 from pymarkdown.bad_tokenization_error import BadTokenizationError
+from pymarkdown.extension_manager import ExtensionManager
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager import BadPluginError, PluginManager
 from pymarkdown.source_providers import FileSourceProvider
@@ -45,6 +46,8 @@ class PyMarkdownLint:
         self.__properties = ApplicationProperties()
 
         self.__plugins = PluginManager()
+        self.__extensions = ExtensionManager()
+
         self.__tokenizer = None
         self.default_log_level = "CRITICAL"
 
@@ -157,6 +160,7 @@ class PyMarkdownLint:
         subparsers = parser.add_subparsers(dest="primary_subparser")
 
         PluginManager.add_argparse_subparser(subparsers)
+        ExtensionManager.add_argparse_subparser(subparsers)
 
         new_sub_parser = subparsers.add_parser(
             "scan", help="scan the Markdown files in the specified paths"
@@ -332,13 +336,16 @@ class PyMarkdownLint:
         print("No matching files found.", file=sys.stderr)
         return 1
 
+    # pylint: disable=broad-except
     def __apply_configuration_to_plugins(self):
 
         try:
             self.__plugins.apply_configuration(self.__properties)
-        except BadPluginError as this_exception:
+        except Exception as this_exception:
             formatted_error = f"{str(type(this_exception).__name__)} encountered while configuring plugins:\n{str(this_exception)}"
             self.__handle_error(formatted_error, this_exception)
+
+    # pylint: enable=broad-except
 
     def __initialize_parser(self, args):
 
@@ -349,19 +356,19 @@ class PyMarkdownLint:
         try:
             self.__tokenizer = TokenizedMarkdown(resource_path)
             self.__tokenizer.apply_configuration(self.__properties)
-        except ValueError as this_exception:
-            formatted_error = "Configuration Error: " + str(this_exception)
-            self.__handle_error(formatted_error, this_exception)
+        # except ValueError as this_exception:
+        #     formatted_error = "Configuration Error: " + str(this_exception)
+        #     self.__handle_error(formatted_error, this_exception)
         except BadTokenizationError as this_exception:
             formatted_error = f"{str(type(this_exception).__name__)} encountered while initializing tokenizer:\n{str(this_exception)}"
             self.__handle_error(formatted_error, this_exception)
 
+    # pylint: disable=broad-except
     def __initialize_plugin_manager(self, args, plugin_dir):
         """
         Make sure all plugins are ready before being initialized.
         """
 
-        self.__plugins = PluginManager()
         try:
             self.__plugins.initialize(
                 plugin_dir,
@@ -374,6 +381,8 @@ class PyMarkdownLint:
         except BadPluginError as this_exception:
             formatted_error = f"BadPluginError encountered while loading plugins:\n{str(this_exception)}"
             self.__handle_error(formatted_error, this_exception)
+
+    # pylint: enable=broad-except
 
     def __handle_error(self, formatted_error, thrown_error):
 
@@ -463,6 +472,25 @@ class PyMarkdownLint:
             formatted_error = f"{str(type(this_exception).__name__)} encountered while initializing plugins:\n{str(this_exception)}"
             self.__handle_error(formatted_error, this_exception)
 
+    # pylint: disable=broad-except
+    def __initialize_extensions(self, args):
+        try:
+            self.__extensions.initialize(
+                args,
+                self.__properties,
+            )
+            self.__extensions.apply_configuration()
+
+        except ValueError as this_exception:
+            formatted_error = f"{str(type(this_exception).__name__)} encountered while initializing extensions:\n{str(this_exception)}"
+            self.__handle_error(formatted_error, this_exception)
+        except Exception as this_exception:
+            formatted_error = f"{str(type(this_exception).__name__)} encountered while initializing extensions:\n{str(this_exception)}"
+            self.__handle_error(formatted_error, this_exception)
+
+    # pylint: enable=broad-except
+
+    # pylint: disable=too-many-branches
     def main(self):
         """
         Main entrance point.
@@ -476,9 +504,14 @@ class PyMarkdownLint:
             self.__initialize_strict_mode(args)
             new_handler = self.__initialize_logging(args)
 
+            self.__initialize_plugins(args)
+            self.__initialize_extensions(args)
+
             if args.primary_subparser == PluginManager.argparse_subparser_name():
-                self.__initialize_plugins(args)
                 return_code = self.__plugins.handle_argparse_subparser(args)
+                sys.exit(return_code)
+            if args.primary_subparser == ExtensionManager.argparse_subparser_name():
+                return_code = self.__extensions.handle_argparse_subparser(args)
                 sys.exit(return_code)
 
             POGGER.info("Determining files to scan.")
@@ -488,7 +521,6 @@ class PyMarkdownLint:
             if did_error_scanning_files:
                 total_error_count = 1
             else:
-                self.__initialize_plugins(args)
                 self.__initialize_parser(args)
 
                 if args.list_files:
@@ -515,6 +547,8 @@ class PyMarkdownLint:
         # TODO self.__plugins.number_of_pragma_failures
         if self.__plugins.number_of_scan_failures or total_error_count:
             sys.exit(1)
+
+    # pylint: enable=too-many-branches
 
 
 if __name__ == "__main__":

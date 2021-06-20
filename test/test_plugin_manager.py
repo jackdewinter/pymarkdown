@@ -26,7 +26,7 @@ def test_markdown_with_plugins_only():
 positional arguments:
   {list,info}
     list       list the available plugins
-    info       information of specific plugins
+    info       information on a specific plugin
 
 optional arguments:
   -h, --help   show this help message and exit
@@ -1131,7 +1131,7 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_non_sequence():
     supplied_arguments = ["plugins", "list", "this-is-not-an-used-identifier"]
 
     expected_return_code = 0
-    expected_output = """No plugin rule identifiers match the pattern 'this-is-not-an-used-identifier'."""
+    expected_output = """No plugin rule identifiers matches the pattern 'this-is-not-an-used-identifier'."""
     expected_error = ""
 
     # Act

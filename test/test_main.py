@@ -33,13 +33,14 @@ def test_markdown_with_no_parameters():
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
-               {plugins,scan,version} ...
+               {plugins,extensions,scan,version} ...
 
 Lint any found Markdown files.
 
 positional arguments:
-  {plugins,scan,version}
+  {plugins,extensions,scan,version}
     plugins             plugin commands
+    extensions          extension commands
     scan                scan the Markdown files in the specified paths
     version             version of the application
 
@@ -89,13 +90,14 @@ def test_markdown_with_dash_h():
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
-               {plugins,scan,version} ...
+               {plugins,extensions,scan,version} ...
 
 Lint any found Markdown files.
 
 positional arguments:
-  {plugins,scan,version}
+  {plugins,extensions,scan,version}
     plugins             plugin commands
+    extensions          extension commands
     scan                scan the Markdown files in the specified paths
     version             version of the application
 
@@ -592,7 +594,7 @@ def test_markdown_with_dash_dash_log_level_invalid(caplog):
                [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
                [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
                [--log-file LOG_FILE]
-               {plugins,scan,version} ...
+               {plugins,extensions,scan,version} ...
 main.py: error: argument --log-level: invalid log_level_type value: 'invalid'
 """
 

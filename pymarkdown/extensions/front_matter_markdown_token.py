@@ -1,9 +1,10 @@
 """
-Module to provide for a leaf element that can be added to markdown parsing stream.
+Module to provide for a leaf element that can be added to markdown parsing stream that handles front matter.
 """
 import logging
 import string
 
+from pymarkdown.extension_impl import ExtensionDetails
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
@@ -13,98 +14,33 @@ from pymarkdown.parser_logger import ParserLogger
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
-class FrontMatterMarkdownToken(LeafMarkdownToken):
-    """
-    Class to provide for an encapsulation of the front matter data.
-    """
-
-    # pylint: disable=too-many-arguments
-    def __init__(
-        self,
-        start_boundary_line,
-        end_boundary_line,
-        collected_lines,
-        matter_map,
-        position_marker,
-    ):
-        self.__start_boundary_line = start_boundary_line
-        self.__end_boundary_line = end_boundary_line
-        self.__collected_lines = collected_lines
-        self.__matter_map = matter_map
-
-        LeafMarkdownToken.__init__(
-            self,
-            MarkdownToken._token_front_matter,
-            "",
-            position_marker=position_marker,
-            is_extension=True,
-        )
-        self.__compose_extra_data_field()
-
-    # pylint: enable=too-many-arguments
-
-    @property
-    def start_boundary_line(self):
-        """
-        Returns the boundary line used to start the front matter block.
-        """
-        return self.__start_boundary_line
-
-    @property
-    def end_boundary_line(self):
-        """
-        Returns the boundary line used to stop the front matter block.
-        """
-        return self.__end_boundary_line
-
-    @property
-    def collected_lines(self):
-        """
-        Returns the collected lines that comprise the front matter block.
-        """
-        return self.__collected_lines
-
-    @property
-    def matter_map(self):
-        """
-        Returns the processed lines from the front matter block.
-        """
-        return self.__matter_map
-
-    def __compose_extra_data_field(self):
-        """
-        Compose the object's self.extra_data field from the local object's variables.
-        """
-        self._set_extra_data(
-            MarkdownToken.extra_data_separator.join(
-                [
-                    self.__start_boundary_line,
-                    self.__end_boundary_line,
-                    str(self.__collected_lines),
-                    str(self.__matter_map),
-                ]
-            )
-        )
-
-    @classmethod
-    def calculate_block_token_height(cls, last_token):
-        """
-        Calculate the height of the token with the given properties.
-        """
-        return 2 + len(last_token.collected_lines)
-
-    @classmethod
-    def calculate_initial_whitespace(cls):
-        """
-        Calculate the amount of whitespace for the token.
-        """
-        return 0, False
-
-
 class FrontMatterExtension:
     """
     Extension to implement the front matter extensions.
     """
+
+    @classmethod
+    def get_details(cls):
+        """
+        Get the details for the extension.
+        """
+        return ExtensionDetails(
+            extension_id="front-matter",
+            extension_name="Front Matter Metadata",
+            extension_description="Allows metadata to be parsed from document front matter.",
+            extension_enabled_by_default=False,
+            extension_version="0.5.0",
+            extension_interface_version=1,
+            extension_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/extensions/front-matter.md",
+            extension_configuration=None,
+        )
+
+    @classmethod
+    def apply_configuration(cls, extension_specific_facade):
+        """
+        Apply any configuration required by the extension.
+        """
+        _ = extension_specific_facade
 
     @staticmethod
     def handle_front_matter_token(output_html, next_token, transform_state):
@@ -261,3 +197,91 @@ class FrontMatterExtension:
         if not value_map:
             return "No valid metadata header lines were found."
         return value_map
+
+
+class FrontMatterMarkdownToken(LeafMarkdownToken):
+    """
+    Class to provide for an encapsulation of the front matter data.
+    """
+
+    # pylint: disable=too-many-arguments
+    def __init__(
+        self,
+        start_boundary_line,
+        end_boundary_line,
+        collected_lines,
+        matter_map,
+        position_marker,
+    ):
+        self.__start_boundary_line = start_boundary_line
+        self.__end_boundary_line = end_boundary_line
+        self.__collected_lines = collected_lines
+        self.__matter_map = matter_map
+
+        LeafMarkdownToken.__init__(
+            self,
+            MarkdownToken._token_front_matter,
+            "",
+            position_marker=position_marker,
+            is_extension=True,
+        )
+        self.__compose_extra_data_field()
+
+    # pylint: enable=too-many-arguments
+
+    @property
+    def start_boundary_line(self):
+        """
+        Returns the boundary line used to start the front matter block.
+        """
+        return self.__start_boundary_line
+
+    @property
+    def end_boundary_line(self):
+        """
+        Returns the boundary line used to stop the front matter block.
+        """
+        return self.__end_boundary_line
+
+    @property
+    def collected_lines(self):
+        """
+        Returns the collected lines that comprise the front matter block.
+        """
+        return self.__collected_lines
+
+    @property
+    def matter_map(self):
+        """
+        Returns the processed lines from the front matter block.
+        """
+        return self.__matter_map
+
+    def __compose_extra_data_field(self):
+        """
+        Compose the object's self.extra_data field from the local object's variables.
+        """
+        self._set_extra_data(
+            MarkdownToken.extra_data_separator.join(
+                [
+                    self.__start_boundary_line,
+                    self.__end_boundary_line,
+                    str(self.__collected_lines),
+                    str(self.__matter_map),
+                ]
+            )
+        )
+
+    @classmethod
+    def calculate_block_token_height(cls, last_token):
+        """
+        Calculate the height of the token with the given properties.
+        """
+        return 2 + len(last_token.collected_lines)
+
+    @classmethod
+    def calculate_initial_whitespace(cls):
+        """
+        Calculate the amount of whitespace for the token.
+        """
+        return 0, False

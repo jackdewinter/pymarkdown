@@ -1,12 +1,46 @@
 """
-Module to provide for...
+Module to provide for linter instructions that can be embedded within the document.
 """
 import logging
 
+from pymarkdown.extension_impl import ExtensionDetails
 from pymarkdown.markdown_token import MarkdownToken, MarkdownTokenClass
 from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
+
+
+# pylint: disable=too-few-public-methods
+class PragmaExtension:
+    """
+    Extension to implement the pragma extensions.
+    """
+
+    @classmethod
+    def get_details(cls):
+        """
+        Get the details for the extension.
+        """
+        return ExtensionDetails(
+            extension_id="linter-pragmas",
+            extension_name="Pragma Linter Instructions",
+            extension_description="Allows parsing of instructions for the linter.",
+            extension_enabled_by_default=True,
+            extension_version="0.5.0",
+            extension_interface_version=1,
+            extension_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/extensions/pragmas.md",
+            extension_configuration=None,
+        )
+
+    @classmethod
+    def apply_configuration(cls, extension_specific_facade):
+        """
+        Apply any configuration required by the extension.
+        """
+        _ = extension_specific_facade
+
+
+# pylint: enable=too-few-public-methods
 
 
 class PragmaToken(MarkdownToken):

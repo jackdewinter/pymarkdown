@@ -466,12 +466,12 @@ class PluginManager:
         """
         Initializes the manager by scanning for plugins, loading them, and registering them.
         """
-        self.__show_stack_trace = show_stack_trace
         (
             self.number_of_scan_failures,
             self.number_of_pragma_failures,
             self.__loaded_classes,
-        ) = (0, 0, [])
+            self.__show_stack_trace,
+        ) = (0, 0, [], show_stack_trace)
 
         plugin_files = self.__find_eligible_plugins_in_directory(directory_to_search)
         self.__load_plugins(directory_to_search, plugin_files)
@@ -565,7 +565,7 @@ class PluginManager:
             type=PluginManager.__list_filter_type,
         )
         sub_sub_parser = plugin_subparsers.add_parser(
-            "info", help="information of specific plugins"
+            "info", help="information on a specific plugin"
         )
         sub_sub_parser.add_argument(
             dest="info_filter",
@@ -630,7 +630,9 @@ class PluginManager:
                 new_rows.append(next_row.rstrip())
             print("\n".join(new_rows))
         else:
-            print(f"No plugin rule identifiers match the pattern '{args.list_filter}'.")
+            print(
+                f"No plugin rule identifiers matches the pattern '{args.list_filter}'."
+            )
 
     # pylint: enable=too-many-locals,too-many-branches
 

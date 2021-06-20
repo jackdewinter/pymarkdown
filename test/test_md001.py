@@ -276,7 +276,8 @@ def test_md001_front_matter_with_bad_enable_in_strict_mode():
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = "Configuration Error: The value for property 'extensions.front-matter.enabled' must be of type 'bool'."
+    expected_error = """ValueError encountered while initializing extensions:
+The value for property 'extensions.front-matter.enabled' must be of type 'bool'."""
 
     # Act
     execute_results = scanner.invoke_main(arguments=supplied_arguments)
