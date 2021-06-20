@@ -11,12 +11,6 @@
   - implement MD025 at the same time
 - pragma tests need to remove `disable_consistency_checks=True`
 
-from previous
-
-```md
-- need way of listing all extensions
-```
-
 - implement missing rules
 - yaml support for front-matter
   - if front matter is found to be disqualified, send error?
