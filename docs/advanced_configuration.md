@@ -329,7 +329,7 @@ This configuration affects whether HTML-style comments can be interpretted as li
 
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |
-| `extensions.pragmas.enabled` | - | Boolean | Enable the parser to recognize pragmas. |
+| `extensions.linter-pragmas.enabled` | - | Boolean | Enable the parser to recognize pragmas. |
 
 For more information on PyMarkdown Pragmas, see [this document](/docs/extensions/pragmas.md).
 

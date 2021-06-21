@@ -4,7 +4,7 @@ Module to provide processing for the container blocks.
 import logging
 
 from pymarkdown.block_quote_processor import BlockQuoteProcessor
-from pymarkdown.extensions.pragma_token import PragmaToken
+from pymarkdown.extensions.pragma_token import PragmaExtension
 from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.inline_markdown_token import TextMarkdownToken
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
@@ -35,7 +35,6 @@ class ContainerBlockProcessor:
         container_depth=0,
         foobar=None,
         init_bq=None,
-        pragma_lines=None,
     ):
         """
         Parse the line, taking care to handle any container blocks before deciding
@@ -77,7 +76,6 @@ class ContainerBlockProcessor:
             container_depth,
             extracted_whitespace,
             parser_properties,
-            pragma_lines,
         ):
             return None, None, None
 
@@ -1225,42 +1223,18 @@ class ContainerBlockProcessor:
         container_depth,
         extracted_whitespace,
         parser_properties,
-        pragma_lines,
     ):
 
-        if (
-            parser_properties.is_pragmas_enabled
-            and not container_depth
-            and not extracted_whitespace
-            and (
-                line_to_parse.startswith(PragmaToken.pragma_prefix)
-                or line_to_parse.startswith(PragmaToken.pragma_alternate_prefix)
-            )
-        ):
-            was_extended_prefix = line_to_parse.startswith(
-                PragmaToken.pragma_alternate_prefix
-            )
-
-            start_index, _ = ParserHelper.extract_whitespace(
+        found_pragmas = False
+        if parser_properties.is_pragmas_enabled:
+            found_pragmas = PragmaExtension.look_for_pragmas(
+                position_marker,
                 line_to_parse,
-                len(
-                    PragmaToken.pragma_alternate_prefix
-                    if was_extended_prefix
-                    else PragmaToken.pragma_prefix
-                ),
+                container_depth,
+                extracted_whitespace,
+                parser_properties,
             )
-            remaining_line = line_to_parse[start_index:].rstrip().lower()
-            if remaining_line.startswith(
-                PragmaToken.pragma_title
-            ) and remaining_line.endswith(PragmaToken.pragma_suffix):
-                index_number = (
-                    -position_marker.line_number
-                    if was_extended_prefix
-                    else position_marker.line_number
-                )
-                pragma_lines[index_number] = line_to_parse
-                return True
-        return False
+        return found_pragmas
 
     # pylint: enable=too-many-arguments
 

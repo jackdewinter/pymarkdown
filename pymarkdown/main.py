@@ -224,7 +224,7 @@ class PyMarkdownLint:
         actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
 
         if actual_tokens and actual_tokens[-1].is_pragma:
-            self.__plugins.compile_pragmas(next_file, actual_tokens[-1])
+            self.__plugins.compile_pragmas(next_file, actual_tokens[-1].pragma_lines)
             actual_tokens = actual_tokens[:-1]
 
         POGGER.info("Scanning file '$' tokens.", next_file)
@@ -355,10 +355,7 @@ class PyMarkdownLint:
 
         try:
             self.__tokenizer = TokenizedMarkdown(resource_path)
-            self.__tokenizer.apply_configuration(self.__properties)
-        # except ValueError as this_exception:
-        #     formatted_error = "Configuration Error: " + str(this_exception)
-        #     self.__handle_error(formatted_error, this_exception)
+            self.__tokenizer.apply_configuration(self.__properties, self.__extensions)
         except BadTokenizationError as this_exception:
             formatted_error = f"{str(type(this_exception).__name__)} encountered while initializing tokenizer:\n{str(this_exception)}"
             self.__handle_error(formatted_error, this_exception)

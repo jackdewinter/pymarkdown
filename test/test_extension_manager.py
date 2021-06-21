@@ -273,6 +273,43 @@ blah
             os.remove(configuration_file)
 
 
+def test_markdown_with_extensions_and_no_error_during_configuration():
+    """
+    Test to make sure
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_configuration = {
+        "extensions": {"debug-extension": {"enabled": True, "debug_mode": 0}}
+    }
+    configuration_file = None
+    try:
+        configuration_file = write_temporary_configuration(supplied_configuration)
+        supplied_arguments = ["-c", configuration_file, "extensions", "list", "f*r"]
+
+        expected_return_code = 0
+        expected_output = """
+  ID            NAME                   ENABLED    ENABLED    VERSION
+                                       (DEFAULT)  (CURRENT)
+
+  front-matter  Front Matter Metadata  False      False      0.5.0
+
+"""
+        expected_error = ""
+
+        # Act
+        execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+        # Assert
+        execute_results.assert_results(
+            expected_output, expected_error, expected_return_code
+        )
+    finally:
+        if configuration_file and os.path.exists(configuration_file):
+            os.remove(configuration_file)
+
+
 def test_markdown_with_extensions_list_and_filter_by_id_ends_with_non_sequence():
     """
     Test to make sure

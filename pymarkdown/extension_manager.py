@@ -36,6 +36,8 @@ class ExtensionManager:
         self.__extension_details = {}
         self.__enabled_extensions = []
         self.__properties = None
+        self.__is_front_matter_enabled = None
+        self.__is_linter_pragmas_enabled = None
 
     def initialize(
         self,
@@ -71,17 +73,39 @@ class ExtensionManager:
         """
         Apply any supplied configuration to each of the enabled extensions.
         """
-        for next_extension_name in self.__extension_details:
-            next_extension_detail = self.__extension_details[next_extension_name]
+        for next_extension_id in self.__extension_details:
+            next_extension_detail = self.__extension_details[next_extension_id]
             (
                 is_enabled,
                 extension_specific_facade,
             ) = self.__determine_if_extension_enabled(next_extension_detail, None, None)
+            LOGGER.info("extension %s: enabled=%s", next_extension_id, is_enabled)
             if is_enabled:
-                self.__enabled_extensions.append(next_extension_name)
+                self.__enabled_extensions.append(next_extension_id)
 
-                next_extension_object = self.__extension_objects[next_extension_name]
+                next_extension_object = self.__extension_objects[next_extension_id]
                 next_extension_object.apply_configuration(extension_specific_facade)
+
+        self.__is_front_matter_enabled = (
+            FrontMatterExtension().get_identifier() in self.__enabled_extensions
+        )
+        self.__is_linter_pragmas_enabled = (
+            PragmaExtension().get_identifier() in self.__enabled_extensions
+        )
+
+    @property
+    def is_front_matter_enabled(self):
+        """
+        Check to see if front-matter support is enabled.
+        """
+        return self.__is_front_matter_enabled
+
+    @property
+    def is_linter_pragmas_enabled(self):
+        """
+        Check to see if linter-pragmas support is enabled.
+        """
+        return self.__is_linter_pragmas_enabled
 
     @staticmethod
     def argparse_subparser_name():

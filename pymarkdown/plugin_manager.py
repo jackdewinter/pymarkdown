@@ -12,7 +12,7 @@ from abc import ABC, abstractmethod
 from application_properties import ApplicationPropertiesFacade
 from columnar import columnar
 
-from pymarkdown.extensions.pragma_token import PragmaToken
+from pymarkdown.extensions.pragma_token import PragmaExtension
 from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
@@ -735,68 +735,20 @@ class PluginManager:
         self.number_of_pragma_failures += 1
 
     # pylint: disable=too-many-locals
-    def compile_pragmas(self, scan_file, pragma_token):
+    def compile_pragmas(self, scan_file, pragma_lines):
         """
         Go through the list of extracted pragmas and compile them.
         """
 
-        for next_line_number in pragma_token.pragma_lines.keys():
-            if next_line_number > 0:
-                prefix_length = len(PragmaToken.pragma_prefix)
-                actual_line_number = next_line_number
-            else:
-                prefix_length = len(PragmaToken.pragma_alternate_prefix)
-                actual_line_number = -next_line_number
-
-            line_after_prefix = pragma_token.pragma_lines[next_line_number][
-                prefix_length:
-            ].rstrip()
-            after_whitespace_index, _ = ParserHelper.extract_whitespace(
-                line_after_prefix, 0
+        for next_line_number in pragma_lines.keys():
+            PragmaExtension.compile_single_pragma(
+                scan_file,
+                next_line_number,
+                pragma_lines,
+                self.__all_ids,
+                self.__document_pragmas,
+                self.log_pragma_failure,
             )
-            command_data = line_after_prefix[
-                after_whitespace_index
-                + len(PragmaToken.pragma_title) : -len(PragmaToken.pragma_suffix)
-            ]
-            after_command_index, command = ParserHelper.extract_until_whitespace(
-                command_data, 0
-            )
-            command = command.lower()
-            if not command:
-                self.log_pragma_failure(
-                    scan_file,
-                    actual_line_number,
-                    "Inline configuration specified without command.",
-                )
-            elif command == "disable-next-line":
-                ids_to_disable = command_data[after_command_index:].split(",")
-                processed_ids = set()
-                for next_id in ids_to_disable:
-                    next_id = next_id.strip().lower()
-                    if not next_id:
-                        self.log_pragma_failure(
-                            scan_file,
-                            actual_line_number,
-                            f"Inline configuration command '{command}' specified a plugin with a blank id.",
-                        )
-                    elif next_id in self.__all_ids:
-                        normalized_id = self.__all_ids[next_id].plugin_id
-                        processed_ids.add(normalized_id)
-                    else:
-                        self.log_pragma_failure(
-                            scan_file,
-                            actual_line_number,
-                            f"Inline configuration command '{command}' unable to find a plugin with the id '{next_id}'.",
-                        )
-
-                if processed_ids:
-                    self.__document_pragmas[actual_line_number + 1] = processed_ids
-            else:
-                self.log_pragma_failure(
-                    scan_file,
-                    actual_line_number,
-                    f"Inline configuration command '{command}' not understood.",
-                )
 
     # pylint: enable=too-many-locals
 

@@ -46,11 +46,12 @@ class TokenizedMarkdown:
             resource_path = os.path.join(os.path.split(__file__)[0], "resources")
         InlineHelper.initialize(resource_path)
 
-    def apply_configuration(self, application_properties):
+    def apply_configuration(self, application_properties, extension_manager):
         """
         Apply any configuration map.
         """
-        self.__parse_properties = ParseBlockPassProperties(application_properties)
+        _ = application_properties
+        self.__parse_properties = ParseBlockPassProperties(extension_manager)
 
     def transform_from_provider(self, source_provider):
         """
@@ -115,10 +116,14 @@ class TokenizedMarkdown:
         ignore_link_definition_start = False
         POGGER.debug("---$---", token_to_use)
         POGGER.debug("---")
-        pragma_lines = {}
+        self.__parse_properties.pragma_lines = {}
         line_number = 1
         try:
-            token_to_use, line_number, requeue = self.__process_header_if_present(
+            (
+                token_to_use,
+                line_number,
+                requeue,
+            ) = self.__process_front_matter_header_if_present(
                 token_to_use, line_number, requeue
             )
             did_start_close = token_to_use is None
@@ -195,7 +200,6 @@ class TokenizedMarkdown:
                             position_marker,
                             ignore_link_definition_start,
                             self.__parse_properties,
-                            pragma_lines=pragma_lines,
                         )
 
                     POGGER.debug("<<<<$", self.tokenized_document)
@@ -231,8 +235,10 @@ class TokenizedMarkdown:
             error_message = f"A project assertion failed on line {str(line_number)} of the current document."
             raise BadTokenizationError(error_message) from this_exception
 
-        if pragma_lines:
-            self.tokenized_document.append(PragmaToken(pragma_lines))
+        if self.__parse_properties.pragma_lines:
+            self.tokenized_document.append(
+                PragmaToken(self.__parse_properties.pragma_lines)
+            )
         return self.tokenized_document
 
     # pylint: enable=too-many-statements,too-many-locals,too-many-branches
@@ -563,7 +569,9 @@ class TokenizedMarkdown:
                 stack_index
             ].matching_markdown_token.add_leading_spaces("")
 
-    def __process_header_if_present(self, token_to_use, line_number, requeue):
+    def __process_front_matter_header_if_present(
+        self, token_to_use, line_number, requeue
+    ):
 
         POGGER.debug(
             "is_front_matter_enabled>>$",
@@ -592,14 +600,10 @@ class ParseBlockPassProperties:
     Class to provide
     """
 
-    def __init__(self, properties):
-        self.__properties = properties
-        self.__front_matter_enabled = self.__properties.get_boolean_property(
-            "extensions.front-matter.enabled", default_value=False
-        )
-        self.__pragmas_enabled = self.__properties.get_boolean_property(
-            "extensions.pragmas.enabled", default_value=True
-        )
+    def __init__(self, extension_manager):
+        self.__front_matter_enabled = extension_manager.is_front_matter_enabled
+        self.__pragmas_enabled = extension_manager.is_linter_pragmas_enabled
+        self.pragma_lines = None
 
     @property
     def is_front_matter_enabled(self):

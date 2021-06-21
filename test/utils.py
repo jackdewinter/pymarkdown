@@ -10,6 +10,7 @@ from test.verify_line_and_column_numbers import verify_line_and_column_numbers
 
 from application_properties import ApplicationProperties
 
+from pymarkdown.extension_manager import ExtensionManager
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.tokenized_markdown import TokenizedMarkdown
@@ -37,7 +38,10 @@ def act_and_assert(
     test_properties = ApplicationProperties()
     if config_map:
         test_properties.load_from_dict(config_map)
-    tokenizer.apply_configuration(test_properties)
+    extension_manager = ExtensionManager()
+    extension_manager.initialize(None, test_properties)
+    extension_manager.apply_configuration()
+    tokenizer.apply_configuration(test_properties, extension_manager)
     transformer = TransformToGfm()
 
     # Act

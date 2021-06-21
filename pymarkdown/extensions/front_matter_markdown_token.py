@@ -20,12 +20,19 @@ class FrontMatterExtension:
     """
 
     @classmethod
+    def get_identifier(cls):
+        """
+        Get the identifier associated with this extension.
+        """
+        return "front-matter"
+
+    @classmethod
     def get_details(cls):
         """
         Get the details for the extension.
         """
         return ExtensionDetails(
-            extension_id="front-matter",
+            extension_id=cls.get_identifier(),
             extension_name="Front Matter Metadata",
             extension_description="Allows metadata to be parsed from document front matter.",
             extension_enabled_by_default=False,

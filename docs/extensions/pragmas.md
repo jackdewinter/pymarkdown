@@ -4,7 +4,7 @@
 | --- | --- |
 | Extension Id | `pragmas` |
 | GFM Extension Status | Unofficial |
-| Configuration Item | `extensions.pragmas.enabled` |
+| Configuration Item | `extensions.linter-pragmas.enabled` |
 | Default Value | `True` |
 
 ## Summary

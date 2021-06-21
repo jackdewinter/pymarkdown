@@ -279,7 +279,7 @@ def test_pragmas_10():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--set",
-        "extensions.pragmas.enabled=$!False",
+        "extensions.linter-pragmas.enabled=$!False",
         "scan",
         "test/resources/pragmas/atx_heading_with_multiple_spaces_disable_line_by_id.md",
     ]
