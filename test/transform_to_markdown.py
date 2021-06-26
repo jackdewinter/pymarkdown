@@ -276,6 +276,9 @@ class TransformToMarkdown:
             print(
                 f"post-p>new_data>{ParserHelper.make_value_visible(new_data)}<continue_sequence>{str(continue_sequence)}<delayed_continue>{str(delayed_continue)}<"
             )
+            print(
+                f"post-p>transformed_data>{ParserHelper.make_value_visible(transformed_data)}<"
+            )
 
             transformed_data = f"{transformed_data}{new_data}"
 
@@ -341,7 +344,7 @@ class TransformToMarkdown:
 
     # pylint: enable=too-many-locals, too-many-branches, too-many-statements
 
-    # pylint: disable=too-many-arguments, too-many-branches, unused-argument, too-many-boolean-expressions, too-many-locals
+    # pylint: disable=too-many-arguments, too-many-branches, unused-argument, too-many-boolean-expressions, too-many-locals, too-many-statements
     def __perform_container_post_processing_lists(
         self,
         current_token,
@@ -379,6 +382,13 @@ class TransformToMarkdown:
         print(f">>previous_token>>{ParserHelper.make_value_visible(previous_token)}")
         print(f">>current_token>>{ParserHelper.make_value_visible(current_token)}")
         print(f">>next_token>>{ParserHelper.make_value_visible(next_token)}")
+        print(
+            f">>self.container_token_stack>>{ParserHelper.make_value_visible(self.container_token_stack)}"
+        )
+
+        merge_with_block_start = False
+        if self.container_token_stack[0].is_block_quote_start:
+            merge_with_block_start = True
         if not block_should_end_with_newline:
             ind = actual_tokens.index(current_token)
             print(
@@ -408,11 +418,21 @@ class TransformToMarkdown:
         print(
             f"?>{ParserHelper.make_value_visible(delayed_continue)}>>{ParserHelper.make_value_visible(new_data)}>>"
         )
-        if delayed_continue and new_data and not current_token.is_blank_line:
-            print("nd>")
+        if (
+            delayed_continue
+            and new_data
+            and not current_token.is_blank_line
+            and not merge_with_block_start
+        ):
+            print(
+                f"__merge_with_container_data--nd>:{ParserHelper.make_value_visible(new_data)}:<"
+            )
             if not special_text_in_list_exception:
                 new_data = f"{delayed_continue}{new_data}"
             delayed_continue = ""
+            print(
+                f"__merge_with_container_data--nd>:{ParserHelper.make_value_visible(new_data)}:<"
+            )
 
         print(
             f"s/c>{ParserHelper.make_value_visible(skip_merge)}>>{ParserHelper.make_value_visible(continue_sequence)}>>"
@@ -428,6 +448,10 @@ class TransformToMarkdown:
             print(
                 f"__merge_with_container_data>:{ParserHelper.make_value_visible(new_data)}:<"
             )
+            print(
+                f"merge_with_block_start>:{ParserHelper.make_value_visible(merge_with_block_start)}:<"
+            )
+
             need_to_massage_data = (
                 current_token.is_setext_heading_end and next_token.is_list_end
             )
@@ -444,18 +468,23 @@ class TransformToMarkdown:
                 top_of_list_token_stack,
                 force_newline_processing,
                 special_text_in_list_exception,
+                merge_with_block_start,
             )
             if need_to_massage_data:
                 new_data = f"{new_data}{ParserHelper.newline_character}"
 
-        print(f"??>{ParserHelper.make_value_visible(new_data)}<<")
+        print(f"new_data>{ParserHelper.make_value_visible(new_data)}<<")
+        print(f"delayed_continue>{ParserHelper.make_value_visible(delayed_continue)}<<")
+        print(
+            f"continue_sequence>{ParserHelper.make_value_visible(continue_sequence)}<<"
+        )
         return (
             ParserHelper.resolve_all_from_text(new_data),
             delayed_continue,
             continue_sequence,
         )
 
-    # pylint: enable=too-many-arguments, too-many-branches, unused-argument, too-many-boolean-expressions, too-many-locals
+    # pylint: enable=too-many-arguments, too-many-branches, unused-argument, too-many-boolean-expressions, too-many-locals, too-many-statements
 
     # pylint: disable=too-many-arguments
     def __perform_container_post_processing(
@@ -555,6 +584,7 @@ class TransformToMarkdown:
                         split_new_data[split_index],
                     ]
                 )
+        print(">>line_parts>>" + str(line_parts))
         if use_abbreviated_list:
             line_parts.extend([ParserHelper.newline_character, split_new_data[-1]])
 
@@ -644,6 +674,7 @@ class TransformToMarkdown:
                 )
             top_block_stack_token.leading_text_index += 1
 
+        print("parts_to_merge>>" + str(parts_to_merge) + "<<")
         return "".join(parts_to_merge)
 
     # pylint: disable=too-many-arguments, too-many-branches, too-many-statements
@@ -658,6 +689,7 @@ class TransformToMarkdown:
         top_of_list_token_stack,
         force_newline_processing,
         special_text_in_list_exception,
+        merge_with_block_start,
     ):
         """
         Merge the leaf data with the container data.
@@ -665,22 +697,28 @@ class TransformToMarkdown:
 
         # TODO can this be simplified like block quote?
 
+        print("mwcd:>>new_data>>" + ParserHelper.make_value_visible(new_data) + "<<")
         if special_text_in_list_exception:
             new_data = f"{ParserHelper.newline_character}{new_data}"
 
         if ParserHelper.replace_noop_character in new_data:
+            print("noop")
             new_data = self.__merge_with_noop_in_data(new_data, continue_sequence)
         elif (
             not block_should_end_with_newline
             and new_data
             and new_data[-1] == ParserHelper.newline_character
         ):
+            print("block 1")
             delayed_continue = continue_sequence
             last_block_quote_block = self.__find_last_block_quote_on_stack()
             if last_block_quote_block:
+                print("block 1a")
                 new_data = self.__merge_xx(new_data, last_block_quote_block)
             elif top_of_list_token_stack and top_of_list_token_stack.leading_spaces:
+                print("block 1b?")
                 if current_token.is_link_reference_definition:
+                    print("block 1b")
                     did_remove_trailing_newline = (
                         new_data and new_data[-1] == ParserHelper.newline_character
                     )
@@ -692,6 +730,7 @@ class TransformToMarkdown:
                     if did_remove_trailing_newline:
                         new_data = f"{new_data}{ParserHelper.newline_character}"
         elif ParserHelper.newline_character in new_data:
+            print("block 2")
             block_ends_with_newline = (
                 block_should_end_with_newline
                 and new_data
@@ -717,11 +756,14 @@ class TransformToMarkdown:
                 new_data = f"{new_data}{ParserHelper.newline_character}"
             if block_ends_with_newline and next_token and next_token.is_new_list_item:
                 new_data = new_data[0 : -len(continue_sequence)]
+        elif merge_with_block_start:
+            print("block 3")
 
         if special_text_in_list_exception:
             assert new_data and new_data[0] == ParserHelper.newline_character
             new_data = new_data[1:]
 
+        print("mwcd:>>new_data>>" + ParserHelper.make_value_visible(new_data) + "<<")
         return new_data, delayed_continue
 
     # pylint: enable=too-many-arguments, too-many-branches, too-many-statements

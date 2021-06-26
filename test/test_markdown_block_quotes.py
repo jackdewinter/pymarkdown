@@ -2234,7 +2234,7 @@ def test_block_quotes_extra_02ax():
         "[para(2,5):]",
         "[text(2,5):quote:]",
         "[end-para:::True]",
-        "[end-ulist:::True]",
+        "[end-ulist:::False]",
         "[BLANK(3,2):]",
         "[para(4,3):]",
         "[text(4,3):end:]",
@@ -2300,7 +2300,7 @@ def test_block_quotes_extra_02ab():
         "[para(1,5):\n]",
         "[text(1,5):start\nquote::\n]",
         "[end-para:::True]",
-        "[end-ulist:::True]",
+        "[end-ulist:::False]",
         "[BLANK(3,2):]",
         "[para(4,3):]",
         "[text(4,3):end:]",
@@ -2340,7 +2340,7 @@ def test_block_quotes_extra_02ac():
         "[para(2,5):]",
         "[text(2,5):quote:]",
         "[end-para:::True]",
-        "[end-ulist:::True]",
+        "[end-ulist:::False]",
         "[BLANK(3,2):]",
         "[para(4,3):]",
         "[text(4,3):end:]",
@@ -2380,8 +2380,8 @@ def test_block_quotes_extra_02ad():
         "[para(2,7):]",
         "[text(2,7):quote:]",
         "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[end-ulist:::True]",
+        "[end-ulist:::False]",
+        "[end-ulist:::False]",
         "[BLANK(3,2):]",
         "[para(4,3):]",
         "[text(4,3):end:]",
@@ -2401,6 +2401,52 @@ def test_block_quotes_extra_02ad():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_block_quotes_extra_02ae():
+    """
+    Test case Bq02ad:  variant
+    """
+
+    # Arrange
+    source_markdown = """> - start
+> - quote
+>
+>   end"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n>\n> ]",
+        "[ulist(1,3):-::4:  ]",
+        "[para(1,5):]",
+        "[text(1,5):start:]",
+        "[end-para:::True]",
+        "[li(2,3):4:  :]",
+        "[para(2,5):]",
+        "[text(2,5):quote:]",
+        "[end-para:::True]",
+        "[BLANK(3,2):]",
+        "[para(4,5):  ]",
+        "[text(4,5):end:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<p>start</p>
+</li>
+<li>
+<p>quote</p>
+<p>end</p>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
 
 
 @pytest.mark.gfm

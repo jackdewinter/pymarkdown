@@ -306,6 +306,11 @@ class ListBlockProcessor:
             adjusted_text_to_parse,
         ) = (None, -1, [], position_marker.text_to_parse)
 
+        POGGER.debug("hlb>>did_process>$", did_process)
+        POGGER.debug(
+            "hlb>>parser_state.nested_list_start>$", parser_state.nested_list_start
+        )
+
         if not did_process:
 
             if is_ulist:

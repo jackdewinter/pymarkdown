@@ -171,8 +171,28 @@ class BlockQuoteProcessor:
 
             # TODO for nesting, may need to augment with this_bq_count already set.
             this_bq_count = alt_this_bq_count
-            if not this_bq_count == 0:
+            POGGER.debug(">>this_bq_count>>$", this_bq_count)
+            POGGER.debug(">>did_process>>$", did_process)
+            if this_bq_count:
                 POGGER.debug(">>>>>>>>>>>>>>>$>>>$", this_bq_count, alt_this_bq_count)
+                POGGER.debug("token_stack>$", parser_state.token_stack)
+                POGGER.debug("token_document>$", parser_state.token_document)
+                POGGER.debug("this_bq_count>$", this_bq_count)
+                if this_bq_count + 1 < len(parser_state.token_stack):
+                    POGGER.debug(
+                        "token_stack[x]>$", parser_state.token_stack[this_bq_count + 1]
+                    )
+                    POGGER.debug("leaf_tokens>$", leaf_tokens)
+                    POGGER.debug("container_level_tokens>$", container_level_tokens)
+                    POGGER.debug("adjusted_text_to_parse>$<", adjusted_text_to_parse)
+                    if (
+                        parser_state.token_stack[this_bq_count + 1].is_list
+                        and adjusted_text_to_parse.strip()
+                    ):
+                        POGGER.debug("\n\nBOOM\n\n")
+                        parser_state.nested_list_start = parser_state.token_stack[
+                            this_bq_count + 1
+                        ]
 
             if last_block_quote_index != -1:
                 did_process, end_of_bquote_start_index = True, adjusted_index_number
@@ -478,7 +498,7 @@ class BlockQuoteProcessor:
                     possible_list_start_index < len(parser_state.token_stack)
                     and parser_state.token_stack[possible_list_start_index].is_list
                 ):
-                    forced_close_until_index = possible_list_start_index
+                    # forced_close_until_index = possible_list_start_index
                     POGGER.debug(
                         "__hbqs>>fgg>>$<<",
                         parser_state.token_stack[possible_list_start_index],

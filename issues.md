@@ -31,9 +31,6 @@
 
 - take `__consume_text_for_image_alt_text` and other functions like it and move as much as possible into token classes
   - TransformToGfmListLooseness.__handle_block_quote_start
-- switch from bq to list and back again
-  - switch from list to bq and back again
-  - 270 and check for indent levels after
 
 - LRD + FCB in list/block
   - test_fenced_code_blocks_extra_02a
