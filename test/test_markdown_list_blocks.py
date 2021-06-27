@@ -227,7 +227,7 @@ def test_list_blocks_236():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.gfm
 def test_list_blocks_237():
     """
@@ -239,13 +239,19 @@ def test_list_blocks_237():
 >>
 >>     two"""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
-        "[para:]",
-        "[text:bar:]",
-        "[text:baz:]",
-        "[end-para]",
-        "[end-block-quote]",
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n>>\n>> ]",
+        "[olist(1,8):.:1:11:       ]",
+        "[para(1,12):]",
+        "[text(1,12):one:]",
+        "[end-para:::True]",
+        "[end-olist:::False]",
+        "[BLANK(2,3):]",
+        "[icode-block(3,8):    :]",
+        "[text(3,8):two:]",
+        "[end-icode-block:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
 <blockquote>
@@ -259,10 +265,10 @@ def test_list_blocks_237():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.gfm
 def test_list_blocks_238():
     """
@@ -1996,7 +2002,6 @@ the two lines.</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_list_blocks_270():
     """
@@ -2007,12 +2012,14 @@ def test_list_blocks_270():
     source_markdown = """> 1. > Blockquote
 continued here."""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
-        "[para(1,8):]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[block-quote(1,1)::> ]",
+        "[olist(1,3):.:1:5:  :]",
+        "[block-quote(1,6)::> \n]",
+        "[para(1,8):\n]",
+        "[text(1,8):Blockquote\ncontinued here.::\n]",
         "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
@@ -2030,7 +2037,6 @@ continued here.</p>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_list_blocks_271():
     """
@@ -2041,12 +2047,14 @@ def test_list_blocks_271():
     source_markdown = """> 1. > Blockquote
 > continued here."""
     expected_tokens = [
-        "[block-quote:]",
-        "[atx:1:Foo:: ::]",
-        "[para(1,8):]",
-        "[text:bar:]",
-        "[text:baz:]",
+        "[block-quote(1,1)::> ]",
+        "[olist(1,3):.:1:5:  ]",
+        "[block-quote(1,6)::> \n> ]",
+        "[para(1,8):\n]",
+        "[text(1,8):Blockquote\ncontinued here.::\n]",
         "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>

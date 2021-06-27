@@ -200,6 +200,7 @@ class TokenizedMarkdown:
                             position_marker,
                             ignore_link_definition_start,
                             self.__parse_properties,
+                            None,
                         )
 
                     POGGER.debug("<<<<$", self.tokenized_document)

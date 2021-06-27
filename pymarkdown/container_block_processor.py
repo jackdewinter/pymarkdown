@@ -32,6 +32,7 @@ class ContainerBlockProcessor:
         position_marker,
         ignore_link_definition_start,
         parser_properties,
+        container_start_bq_count,
         container_depth=0,
         foobar=None,
         init_bq=None,
@@ -118,6 +119,7 @@ class ContainerBlockProcessor:
             this_bq_count,
             stack_bq_count,
             start_index,
+            container_start_bq_count,
         )
         if requeue_line_info:
             POGGER.debug(">>requeuing lines after looking for block start. returning.")
@@ -320,6 +322,7 @@ class ContainerBlockProcessor:
         this_bq_count,
         stack_bq_count,
         start_index,
+        container_start_bq_count,
     ):
         new_position_marker = PositionMarker(
             position_marker.line_number, start_index, position_marker.text_to_parse
@@ -347,6 +350,7 @@ class ContainerBlockProcessor:
             adj_ws,
             this_bq_count,
             stack_bq_count,
+            container_start_bq_count,
         )
         POGGER.debug("text>>:$:>>", line_to_parse)
         POGGER.debug(">>container_level_tokens>>$", container_level_tokens)
@@ -706,6 +710,9 @@ class ContainerBlockProcessor:
                 or nested_container_starts.olist_index
                 or nested_container_starts.block_index
             ):
+                POGGER.debug(
+                    "check next container_start>nested_container",
+                )
                 adjusted_text_to_parse = (
                     ContainerBlockProcessor.__look_for_container_blocks(
                         parser_state,
@@ -788,6 +795,8 @@ class ContainerBlockProcessor:
         """
         POGGER.debug("check next container_start>recursing")
         POGGER.debug("check next container_start>>$\n", adj_line_to_parse)
+        POGGER.debug("this_bq_count>$", this_bq_count)
+        container_start_bq_count = this_bq_count
 
         adj_block = (
             None if end_of_bquote_start_index == -1 else end_of_bquote_start_index
@@ -805,6 +814,7 @@ class ContainerBlockProcessor:
             position_marker,
             False,
             parser_properties,
+            container_start_bq_count,
             container_depth=container_depth + 1,
             foobar=adj_block,
             init_bq=this_bq_count,

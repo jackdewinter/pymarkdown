@@ -252,6 +252,7 @@ class TransformToGfm:
                 transform_state.add_trailing_text,
             )
             POGGER.debug("add_leading_text -->$<--", transform_state.add_leading_text)
+            POGGER.debug("output_html    -->$<--", output_html)
 
             if transform_state.add_trailing_text:
                 output_html = self.__apply_trailing_text(output_html, transform_state)
@@ -268,6 +269,7 @@ class TransformToGfm:
             transform_state.actual_token_index += 1
         if output_html and output_html[-1] == ParserHelper.newline_character:
             output_html = output_html[:-1]
+        POGGER.debug("output_html    -->$<--", output_html)
         return output_html
 
     @classmethod
@@ -275,6 +277,7 @@ class TransformToGfm:
         """
         Apply any trailing text to the output.
         """
+        POGGER.debug("__apply_trailing_text>:$:<", output_html)
         stack_text = transform_state.transform_stack.pop()
         trailing_part = [stack_text]
         for next_token_to_test in TransformToGfm.add_trailing_text_tokens:
@@ -282,11 +285,19 @@ class TransformToGfm:
                 trailing_part.append(ParserHelper.newline_character)
                 break
 
+        POGGER.debug("trailing_part>:$:<", trailing_part)
+        if trailing_part[-1].endswith("<li>") and output_html.startswith(
+            "<blockquote>"
+        ):
+            trailing_part.append(ParserHelper.newline_character)
         trailing_part.append(output_html)
+        POGGER.debug("trailing_part>:$:<", trailing_part)
         if output_html.endswith("</ul>") or output_html.endswith("</ol>"):
             trailing_part.append(ParserHelper.newline_character)
         trailing_part.append(transform_state.add_trailing_text)
-        return "".join(trailing_part)
+        combined_text = "".join(trailing_part)
+        POGGER.debug("__apply_trailing_text>:$:<", combined_text)
+        return combined_text
 
     @classmethod
     def __apply_leading_text(cls, output_html, transform_state):

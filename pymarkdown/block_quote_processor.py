@@ -104,6 +104,7 @@ class BlockQuoteProcessor:
         adj_ws,
         this_bq_count,
         stack_bq_count,
+        container_start_bq_count,
     ):
         """
         Handle the processing of a block quote block.
@@ -166,6 +167,7 @@ class BlockQuoteProcessor:
                 position_marker,
                 stack_bq_count,
                 extracted_whitespace,
+                container_start_bq_count,
             )
             POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
 
@@ -358,6 +360,7 @@ class BlockQuoteProcessor:
         position_marker,
         stack_bq_count,
         extracted_whitespace,
+        container_start_bq_count,
     ):
         """
         Handle the processing of a section clearly identified as having block quotes.
@@ -374,6 +377,11 @@ class BlockQuoteProcessor:
             "IN>__handle_block_quote_section---$<<<",
             line_to_parse,
         )
+        POGGER.debug(
+            "IN>start_index---$<<<",
+            start_index,
+        )
+
         POGGER.debug("stack_bq_count--$", stack_bq_count)
         POGGER.debug("token_stack[-1]--$", parser_state.token_stack[-1])
 
@@ -395,6 +403,9 @@ class BlockQuoteProcessor:
             parser_state.token_stack[-1].is_fenced_code_block,
             parser_state.token_stack[-1].is_html_block,
         )
+        POGGER.debug(">>container_start_bq_count>>$", container_start_bq_count)
+        POGGER.debug(">>this_bq_count>>$", this_bq_count)
+        POGGER.debug(">>stack_bq_count>>$", stack_bq_count)
         POGGER.debug(">>start_index>>$", start_index)
         POGGER.debug(">>original_start_index>>$", original_start_index)
         if last_block_quote_index == -1:
@@ -429,6 +440,10 @@ class BlockQuoteProcessor:
         )
         POGGER.debug("NOW -->SI[$]--[$]", start_index, line_to_parse)
 
+        if container_start_bq_count:
+            this_bq_count += container_start_bq_count
+            POGGER.debug(">>this_bq_count>>$", this_bq_count)
+
         if not parser_state.token_stack[-1].is_fenced_code_block:
             POGGER.debug("handle_block_quote_section>>not fenced")
             (
@@ -442,6 +457,7 @@ class BlockQuoteProcessor:
                 extracted_whitespace,
                 position_marker,
                 original_start_index,
+                container_start_bq_count,
             )
             if requeue_line_info:
                 return (
@@ -478,9 +494,15 @@ class BlockQuoteProcessor:
                 removed_text,
             )
             assert stack_index != -1
+
+            adjusted_removed_text = (
+                removed_text[original_start_index:]
+                if container_start_bq_count and original_start_index
+                else removed_text
+            )
             found_bq_stack_token = parser_state.token_stack[stack_index]
             found_bq_stack_token.matching_markdown_token.add_leading_spaces(
-                removed_text
+                adjusted_removed_text
             )
 
             if not line_to_parse.strip():
@@ -585,6 +607,7 @@ class BlockQuoteProcessor:
         extracted_whitespace,
         position_marker,
         original_start_index,
+        container_start_bq_count,
     ):
         """
         Ensure that the block quote stack is at the proper level on the stack.
@@ -702,6 +725,15 @@ class BlockQuoteProcessor:
                     original_start_index,
                     position_marker.text_to_parse,
                 )
+
+                if container_start_bq_count:
+                    POGGER.debug("extracted_whitespace>>$<<", extracted_whitespace)
+                    POGGER.debug(
+                        "container_start_bq_count>>$<<", container_start_bq_count
+                    )
+                    POGGER.debug("original_start_index>>$<<", original_start_index)
+                    extracted_whitespace = extracted_whitespace[original_start_index:]
+                    POGGER.debug("extracted_whitespace>>$<<", extracted_whitespace)
 
                 assert (
                     position_marker.text_to_parse[original_start_index]
