@@ -248,7 +248,7 @@ class TransformToMarkdown:
                         current_token.type_name
                     ]
                     new_data, continue_sequence, delayed_continue = end_handler_fn(
-                        current_token
+                        current_token, actual_tokens, token_index
                     )
                 else:
                     assert False, f"end_current_token>>{str(current_token.type_name)}"
@@ -637,8 +637,7 @@ class TransformToMarkdown:
         )
         return new_data
 
-    @classmethod
-    def __merge_xx(cls, new_data, top_block_stack_token):
+    def __merge_xx(self, new_data, top_block_stack_token, last_list_block, next_token):
         """
         Take care of a merge for a new leaf line with leading spaces in the container
         block's whitespaces.
@@ -654,6 +653,34 @@ class TransformToMarkdown:
             len(split_leading_spaces),
             split_new_data[0],
         )
+
+        print("last_list_block>" + ParserHelper.make_value_visible(last_list_block))
+        additional_whitespace = ""
+        if last_list_block:
+            block_token_index = self.container_token_stack.index(top_block_stack_token)
+            list_token_index = self.container_token_stack.index(last_list_block)
+            print(
+                "block_token_index>"
+                + str(block_token_index)
+                + ", list_token_index="
+                + str(list_token_index)
+            )
+            if list_token_index > block_token_index:
+                extra_count = last_list_block.indent_level - len(
+                    last_list_block.extracted_whitespace
+                )
+                print("extra_count>" + str(extra_count))
+                print("next_token>" + ParserHelper.make_value_visible(next_token))
+                if (
+                    not next_token.is_blank_line
+                    and not next_token.is_new_list_item
+                    and not next_token.is_list_end
+                ):
+                    additional_whitespace = ParserHelper.repeat_string(
+                        ParserHelper.space_character, extra_count
+                    )
+                    print("additional_whitespace->" + str(additional_whitespace) + "<")
+
         parts_to_merge = [new_data]
         for i in range(1, len(split_new_data)):
             print(f"::{str(i)}::{split_new_data[i]}::")
@@ -661,14 +688,17 @@ class TransformToMarkdown:
                 f"::{str(top_block_stack_token.leading_text_index)}::{str(split_leading_spaces)}::"
             )
             if top_block_stack_token.leading_text_index < split_leading_spaces_size:
+                print("a")
                 parts_to_merge.extend(
                     [
                         ParserHelper.newline_character,
                         split_leading_spaces[top_block_stack_token.leading_text_index],
                         split_new_data[i],
+                        additional_whitespace,
                     ]
                 )
             else:
+                print("b")
                 parts_to_merge.extend(
                     [ParserHelper.newline_character, split_new_data[i]]
                 )
@@ -677,7 +707,7 @@ class TransformToMarkdown:
         print("parts_to_merge>>" + str(parts_to_merge) + "<<")
         return "".join(parts_to_merge)
 
-    # pylint: disable=too-many-arguments, too-many-branches, too-many-statements
+    # pylint: disable=too-many-arguments, too-many-branches, too-many-statements, too-many-locals
     def __merge_with_container_data(
         self,
         new_data,
@@ -712,9 +742,12 @@ class TransformToMarkdown:
             print("block 1")
             delayed_continue = continue_sequence
             last_block_quote_block = self.__find_last_block_quote_on_stack()
+            last_list_block = self.__find_last_list_on_stack()
             if last_block_quote_block:
                 print("block 1a")
-                new_data = self.__merge_xx(new_data, last_block_quote_block)
+                new_data = self.__merge_xx(
+                    new_data, last_block_quote_block, last_list_block, next_token
+                )
             elif top_of_list_token_stack and top_of_list_token_stack.leading_spaces:
                 print("block 1b?")
                 if current_token.is_link_reference_definition:
@@ -750,7 +783,9 @@ class TransformToMarkdown:
                     new_data, top_of_list_token_stack
                 )
             elif last_block_quote_block:
-                new_data = self.__merge_xx(new_data, last_block_quote_block)
+                new_data = self.__merge_xx(
+                    new_data, last_block_quote_block, None, next_token
+                )
 
             if remove_trailing_newline:
                 new_data = f"{new_data}{ParserHelper.newline_character}"
@@ -766,7 +801,7 @@ class TransformToMarkdown:
         print("mwcd:>>new_data>>" + ParserHelper.make_value_visible(new_data) + "<<")
         return new_data, delayed_continue
 
-    # pylint: enable=too-many-arguments, too-many-branches, too-many-statements
+    # pylint: enable=too-many-arguments, too-many-branches, too-many-statements, too-many-locals
 
     # pylint: disable=unused-argument
     def __rehydrate_paragraph(self, current_token, previous_token):
@@ -1143,37 +1178,54 @@ class TransformToMarkdown:
         )
 
     # pylint: disable=unused-argument
-    def __rehydrate_block_quote_end(self, current_token):
+    def __rehydrate_block_quote_end(self, current_token, actual_tokens, token_index):
 
-        text_to_add, old_line_number = "", self.container_token_stack[-1].line_number
-        del self.container_token_stack[-1]
-        continue_sequence = self.__reset_container_continue_sequence()
-        if (
-            self.container_token_stack
-            and self.container_token_stack[-1].is_block_quote_start
-            and self.container_token_stack[-1].line_number == old_line_number
-        ):
-            text_to_add = self.container_token_stack[
-                -1
-            ].calculate_next_leading_space_part()
-
-        leading_text_index, expected_leading_text_index = (
-            current_token.start_markdown_token.leading_text_index,
-            ParserHelper.count_newlines_in_text(
-                current_token.start_markdown_token.extracted_whitespace
-            ),
+        text_to_add, continue_sequence, old_line_number = (
+            "",
+            "",
+            self.container_token_stack[-1].line_number,
         )
 
-        assert (
-            leading_text_index == expected_leading_text_index
-        ), f"leading_text_index={str(leading_text_index)};expected_leading_text_index={str(len(expected_leading_text_index))}"
+        print(">>" + ParserHelper.make_value_visible(actual_tokens[token_index:]))
+        search_index = token_index + 1
+        while (
+            search_index < len(actual_tokens)
+            and actual_tokens[search_index].is_container_end_token
+        ):
+            search_index += 1
+        print(">>" + str(search_index))
+        any_non_container_end_tokens = search_index < len(actual_tokens)
+        print(">>" + str(any_non_container_end_tokens))
+
+        del self.container_token_stack[-1]
+        if any_non_container_end_tokens:
+            continue_sequence = self.__reset_container_continue_sequence()
+            if (
+                self.container_token_stack
+                and self.container_token_stack[-1].is_block_quote_start
+                and self.container_token_stack[-1].line_number == old_line_number
+            ):
+                text_to_add = self.container_token_stack[
+                    -1
+                ].calculate_next_leading_space_part()
+
+            leading_text_index, expected_leading_text_index = (
+                current_token.start_markdown_token.leading_text_index,
+                ParserHelper.count_newlines_in_text(
+                    current_token.start_markdown_token.extracted_whitespace
+                ),
+            )
+
+            assert (
+                leading_text_index == expected_leading_text_index
+            ), f"leading_text_index={str(leading_text_index)};expected_leading_text_index={str(len(expected_leading_text_index))}"
 
         return text_to_add, continue_sequence, continue_sequence
 
     # pylint: enable=unused-argument
 
     # pylint: disable=unused-argument
-    def __rehydrate_list_start_end(self, current_token):
+    def __rehydrate_list_start_end(self, current_token, actual_tokens, token_index):
         """
         Rehydrate the ordered list end token.
         """
@@ -1746,3 +1798,20 @@ class TransformToMarkdown:
                     f"__find_last_block_quote_on_stack>>last_block_quote_block.leading_text_index>>{str(last_block_quote_block.leading_text_index)}<<"
                 )
         return last_block_quote_block
+
+    def __find_last_list_on_stack(self):
+        last_list_block = None
+        if self.container_token_stack:
+            print(
+                f"__find_last_list_on_stack>>{ParserHelper.make_value_visible(self.container_token_stack)}<<"
+            )
+            search_index = len(self.container_token_stack) - 1
+            while search_index >= 0:
+                if self.container_token_stack[search_index].is_list_start:
+                    last_list_block = self.container_token_stack[search_index]
+                    break
+                search_index -= 1
+            print(
+                f"__find_last_list_on_stack>>last_list_block>>{ParserHelper.make_value_visible(last_list_block)}<<"
+            )
+        return last_list_block

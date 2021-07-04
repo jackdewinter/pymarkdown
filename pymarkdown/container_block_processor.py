@@ -632,15 +632,13 @@ class ContainerBlockProcessor:
                 active_container_index,
                 end_container_indices.block_index,
             )
+            delta = 0
             if (
                 end_container_indices.block_index != -1
                 and not nested_container_starts.ulist_index
                 and not nested_container_starts.olist_index
             ):
                 assert active_container_index == end_container_indices.block_index
-                # adj_line_to_parse = adj_line_to_parse[
-                #    end_container_indices.block_index :
-                # ]
                 POGGER.debug(
                     "parser_state.nested_list_start>>$<<",
                     parser_state.nested_list_start,
@@ -658,15 +656,61 @@ class ContainerBlockProcessor:
                         end_container_indices.block_index,
                     )
                     POGGER.debug("start_index>>$<<", start_index)
+
+                    indent_level = parser_state.nested_list_start.indent_level
                     POGGER.debug(
-                        "parser_state.nested_list_start.indent_level>>$<<",
-                        parser_state.nested_list_start.indent_level,
+                        "indent_level>>$<<",
+                        indent_level,
+                    )
+
+                    POGGER.debug(
+                        "parser_state.nested_list_start.matching_markdown_token>>$<<",
+                        parser_state.nested_list_start.matching_markdown_token,
+                    )
+                    list_start_token_index = parser_state.token_document.index(
+                        parser_state.nested_list_start.matching_markdown_token
+                    )
+                    POGGER.debug(
+                        "list_start_token_index>>$<<",
+                        list_start_token_index,
+                    )
+                    token_after_list_start = parser_state.token_document[
+                        list_start_token_index + 1
+                    ]
+                    POGGER.debug(
+                        "token_after_list_start>>$<<",
+                        token_after_list_start,
+                    )
+                    assert (
+                        parser_state.nested_list_start.matching_markdown_token.line_number
+                        == token_after_list_start.line_number
+                    )
+                    column_number_delta = (
+                        token_after_list_start.column_number
+                        - parser_state.nested_list_start.matching_markdown_token.column_number
+                    )
+                    POGGER.debug(
+                        "column_number_delta>>$<<",
+                        column_number_delta,
+                    )
+                    adjusted_indent_level = (
+                        column_number_delta + end_container_indices.block_index
+                    )
+                    POGGER.debug(
+                        "adjusted_indent_level>>$<<  indent_level>$",
+                        adjusted_indent_level,
+                        indent_level,
+                    )
+                    if indent_level > adjusted_indent_level:
+                        delta = indent_level - adjusted_indent_level
+                    indent_level = (
+                        column_number_delta + end_container_indices.block_index
                     )
 
                     if (
                         parser_state.token_document[-1].is_blank_line
                         and (end_container_indices.block_index + start_index)
-                        < parser_state.nested_list_start.indent_level
+                        < indent_level
                     ):
                         POGGER.debug("\n\nBOOM\n\n")
 
@@ -682,14 +726,26 @@ class ContainerBlockProcessor:
                         # assert False
                         parser_state.token_document.extend(x_tokens)
                         parser_state.token_document.extend(y_tokens)
+                    elif delta:
+                        POGGER.debug("adj_line_to_parse>>$<<", adj_line_to_parse)
+                        adj_line_to_parse = adj_line_to_parse[delta:]
+                        POGGER.debug("adj_line_to_parse>>$<<", adj_line_to_parse)
 
             POGGER.debug(
                 "check next container_start>mid>>stack_bq_count>>$<<this_bq_count<<$",
                 stack_bq_count,
                 this_bq_count,
             )
-            adj_line_to_parse = f"{ParserHelper.repeat_string(ParserHelper.space_character, active_container_index)}{adj_line_to_parse}"
-            POGGER.debug("check next container_start>post<<$<<", adj_line_to_parse)
+            if delta:
+                POGGER.debug(
+                    "check next container_start>already adjusted<<$<<",
+                    adj_line_to_parse,
+                )
+                adjusted_text_to_parse = adj_line_to_parse
+            else:
+                POGGER.debug("check next container_start>post<<$<<", adj_line_to_parse)
+                adj_line_to_parse = f"{ParserHelper.repeat_string(ParserHelper.space_character, active_container_index)}{adj_line_to_parse}"
+                POGGER.debug("check next container_start>post<<$<<", adj_line_to_parse)
 
             POGGER.debug("leaf_tokens>>$", leaf_tokens)
             assert not leaf_tokens

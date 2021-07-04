@@ -450,7 +450,6 @@ class TokenizedMarkdown:
         input_line,
         from_main_transform,
         position_marker=None,
-        forced_close_until_index=None,
     ):
         """
         Handle the processing of a blank line.
@@ -465,7 +464,6 @@ class TokenizedMarkdown:
         POGGER.debug("hbl>>from_main_transform>>$", from_main_transform)
         POGGER.debug("hbl>>close_only_these_blocks>>$", close_only_these_blocks)
         POGGER.debug("hbl>>do_include_block_quotes>>$", do_include_block_quotes)
-        POGGER.debug("hbl>>forced_close_until_index>>$", forced_close_until_index)
 
         non_whitespace_index, extracted_whitespace = ParserHelper.extract_whitespace(
             input_line, 0
@@ -518,14 +516,6 @@ class TokenizedMarkdown:
             POGGER.debug("hbl>>double blank in list")
             new_tokens, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state, until_this_index=in_index, include_lists=True
-            )
-        elif forced_close_until_index:
-            POGGER.debug("hbl>>forced_close_until_index")
-            new_tokens, _ = TokenizedMarkdown.__close_open_blocks(
-                parser_state,
-                until_this_index=forced_close_until_index,
-                include_lists=True,
-                include_block_quotes=True,
             )
 
         if from_main_transform:
