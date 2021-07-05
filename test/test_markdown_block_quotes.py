@@ -738,7 +738,7 @@ brr</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -2445,7 +2445,11 @@ def test_block_quotes_extra_02ae():
 
     # Act & Assert
     act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        disable_consistency_checks=True,
+        show_debug=True,
     )
 
 

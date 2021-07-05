@@ -441,6 +441,44 @@ def test_list_blocks_237d():
 
 
 @pytest.mark.gfm
+def test_list_blocks_237e():
+    """
+    Test case 237:  237 with not enough on final
+    """
+
+    # Arrange
+    source_markdown = """   > > 1.  one
+>>
+>>    two"""
+    expected_tokens = [
+        "[block-quote(1,4):   :]",
+        "[block-quote(1,6):   :   > > \n>>\n>> ]",
+        "[olist(1,8):.:1:11:       ]",
+        "[para(1,12):]",
+        "[text(1,12):one:]",
+        "[end-para:::True]",
+        "[end-olist:::False]",
+        "[BLANK(2,3):]",
+        "[para(3,7):   ]",
+        "[text(3,7):two:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<ol>
+<li>one</li>
+</ol>
+<p>two</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
 def test_list_blocks_238():
     """
     Test case 238:  The converse is also possible. In the following example, the word two occurs far to the right of the initial text of the list item, one, but it is not considered part of the list item, because it is not indented far enough past the blockquote marker:
@@ -476,6 +514,48 @@ def test_list_blocks_238():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_238a():
+    """
+    Test case 238:  variant
+    """
+
+    # Arrange
+    source_markdown = """>>- one
+>>
+  >  >   two"""
+    expected_tokens = [
+        "[block-quote(1,1)::]",
+        "[block-quote(1,2)::>>\n>>\n  >  > ]",
+        "[ulist(1,3):-::4:  ]",
+        "[para(1,5):]",
+        "[text(1,5):one:]",
+        "[end-para:::True]",
+        "[BLANK(2,3):]",
+        "[para(3,10):]",
+        "[text(3,10):two:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<ul>
+<li>
+<p>one</p>
+<p>two</p>
+</li>
+</ul>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
 
 
 @pytest.mark.gfm

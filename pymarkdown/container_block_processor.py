@@ -130,6 +130,8 @@ class ContainerBlockProcessor:
             container_level_tokens.extend(leaf_tokens)
             return container_level_tokens, line_to_parse, None
 
+        POGGER.debug("this_bq_count>>$", this_bq_count)
+        POGGER.debug("stack_bq_count>>$", stack_bq_count)
         # POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
         # POGGER.debug(">>did_process>>$", did_process)
 
@@ -161,6 +163,8 @@ class ContainerBlockProcessor:
                 ">>requeuing lines after looking for ordered list start. returning."
             )
             return None, None, requeue_line_info
+        POGGER.debug("this_bq_count>>$", this_bq_count)
+        POGGER.debug("stack_bq_count>>$", stack_bq_count)
 
         (
             did_process,
@@ -190,6 +194,8 @@ class ContainerBlockProcessor:
                 ">>requeuing lines after looking for unordered list start. returning."
             )
             return None, None, requeue_line_info
+        POGGER.debug("this_bq_count>>$", this_bq_count)
+        POGGER.debug("stack_bq_count>>$", stack_bq_count)
 
         # POGGER.debug("last_block_quote_index>>$", last_block_quote_index)
         # POGGER.debug("indices>>$", end_container_indices)
@@ -210,6 +216,8 @@ class ContainerBlockProcessor:
             new_position_marker = PositionMarker(
                 position_marker.line_number, start_index, line_to_parse
             )
+            POGGER.debug("this_bq_count>>$", this_bq_count)
+            POGGER.debug("stack_bq_count>>$", stack_bq_count)
             (
                 line_to_parse,
                 leaf_tokens,
@@ -228,6 +236,8 @@ class ContainerBlockProcessor:
                 avoid_block_starts,
             )
             # POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
+            POGGER.debug("this_bq_count>>$", this_bq_count)
+            POGGER.debug("stack_bq_count>>$", stack_bq_count)
 
         # POGGER.debug("olist->container_level_tokens->$", container_level_tokens)
         # POGGER.debug("removed_chars_at_start>>>$", removed_chars_at_start)
@@ -237,10 +247,10 @@ class ContainerBlockProcessor:
             POGGER.debug(">>>>>>>>$<<<<<<<<<<", line_to_parse)
             return container_level_tokens, line_to_parse, None
 
-        # POGGER.debug_with_visible_whitespace(
-        #    ">>__process_list_in_progress>>$>>",
-        #    line_to_parse,
-        # )
+        POGGER.debug_with_visible_whitespace(
+            ">>__process_list_in_progress>>$>>",
+            line_to_parse,
+        )
         (
             did_process,
             line_to_parse,
@@ -254,9 +264,12 @@ class ContainerBlockProcessor:
             container_level_tokens,
             extracted_whitespace,
         )
-        # POGGER.debug_with_visible_whitespace(
-        #    ">>__process_list_in_progress>>$>>", line_to_parse
-        # )
+        POGGER.debug_with_visible_whitespace(
+            ">>__process_list_in_progress>>$>>", line_to_parse
+        )
+        POGGER.debug("container_start_bq_count>>$", container_start_bq_count)
+        POGGER.debug("this_bq_count>>$", this_bq_count)
+        POGGER.debug("stack_bq_count>>$", stack_bq_count)
         ContainerBlockProcessor.__process_lazy_lines(
             parser_state,
             leaf_tokens,
@@ -264,9 +277,10 @@ class ContainerBlockProcessor:
             stack_bq_count,
             line_to_parse,
             container_level_tokens,
+            container_start_bq_count,
         )
-        # POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
-        # POGGER.debug("container_level_tokens>>$>>", container_level_tokens)
+        POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
+        POGGER.debug("container_level_tokens>>$>>", container_level_tokens)
 
         # TODO refactor to make indent unnecessary?
         calculated_indent = len(parser_state.original_line_to_parse) - len(
@@ -352,6 +366,9 @@ class ContainerBlockProcessor:
             stack_bq_count,
             container_start_bq_count,
         )
+        POGGER.debug("container_start_bq_count>>:$", container_start_bq_count)
+        POGGER.debug("this_bq_count>>:$", this_bq_count)
+        POGGER.debug("stack_bq_count>>$", stack_bq_count)
         POGGER.debug("text>>:$:>>", line_to_parse)
         POGGER.debug(">>container_level_tokens>>$", container_level_tokens)
         return (
@@ -633,6 +650,7 @@ class ContainerBlockProcessor:
                 end_container_indices.block_index,
             )
             delta = 0
+            already_adjusted = False
             if (
                 end_container_indices.block_index != -1
                 and not nested_container_starts.ulist_index
@@ -701,6 +719,7 @@ class ContainerBlockProcessor:
                         adjusted_indent_level,
                         indent_level,
                     )
+                    indent_was_adjusted = indent_level != adjusted_indent_level
                     if indent_level > adjusted_indent_level:
                         delta = indent_level - adjusted_indent_level
                     indent_level = (
@@ -730,13 +749,36 @@ class ContainerBlockProcessor:
                         POGGER.debug("adj_line_to_parse>>$<<", adj_line_to_parse)
                         adj_line_to_parse = adj_line_to_parse[delta:]
                         POGGER.debug("adj_line_to_parse>>$<<", adj_line_to_parse)
+                    elif (
+                        not nested_container_starts.block_index
+                        and adj_line_to_parse
+                        and adj_line_to_parse[0] == " "
+                        and indent_was_adjusted
+                        and parser_state.nested_list_start
+                    ):
+
+                        POGGER.debug("adj_line_to_parse>:$:<", adj_line_to_parse)
+                        POGGER.debug(
+                            "parser_state.nested_list_start>:$:<",
+                            parser_state.nested_list_start.matching_markdown_token,
+                        )
+                        POGGER.debug("BOOM")
+                        assert adj_line_to_parse.startswith(
+                            parser_state.nested_list_start.matching_markdown_token.extracted_whitespace
+                        )
+                        adj_line_to_parse = adj_line_to_parse[
+                            len(
+                                parser_state.nested_list_start.matching_markdown_token.extracted_whitespace
+                            ) :
+                        ]
+                        already_adjusted = True
 
             POGGER.debug(
                 "check next container_start>mid>>stack_bq_count>>$<<this_bq_count<<$",
                 stack_bq_count,
                 this_bq_count,
             )
-            if delta:
+            if delta or already_adjusted:
                 POGGER.debug(
                     "check next container_start>already adjusted<<$<<",
                     adj_line_to_parse,
@@ -938,6 +980,7 @@ class ContainerBlockProcessor:
         stack_bq_count,
         line_to_parse,
         container_level_tokens,
+        container_start_bq_count,
     ):
 
         POGGER.debug("LINE-lazy>$", line_to_parse)
@@ -949,6 +992,9 @@ class ContainerBlockProcessor:
             line_to_parse, 0
         )
         remaining_line = line_to_parse[after_ws_index:]
+        POGGER.debug("container_start_bq_count>>:$", container_start_bq_count)
+        POGGER.debug("__process_lazy_lines>>this_bq_count>$<", this_bq_count)
+        POGGER.debug("__process_lazy_lines>>stack_bq_count>$<", stack_bq_count)
         POGGER.debug("__process_lazy_lines>>mod->ltp>$<", remaining_line)
         POGGER.debug("__process_lazy_lines>>mod->ews>$<", ex_whitespace)
 

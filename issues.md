@@ -46,12 +46,11 @@
 - same as these, but with an extra level of list or block
 
 if time 270, 271, 237, 238
-- with enough space
-- with not enough space
 - with list item
 - start with blank
 - list starts after bq starts
 - varying spaces between bqs
+- no space between bq and following list
 
 ## Priority 3 - Like To Solve in next 3 m
 
