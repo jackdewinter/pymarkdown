@@ -440,7 +440,6 @@ def test_list_blocks_237d():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_list_blocks_238():
     """
@@ -453,7 +452,7 @@ def test_list_blocks_238():
   >  > two"""
     expected_tokens = [
         "[block-quote(1,1)::]",
-        "[block-quote(1,2)::>>\n>>\n  > \n     > ]",
+        "[block-quote(1,2)::>>\n>>\n  >  > ]",
         "[ulist(1,3):-::4:  ]",
         "[para(1,5):]",
         "[text(1,5):one:]",
