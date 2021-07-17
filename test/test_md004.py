@@ -82,7 +82,7 @@ def test_md004_bad_asterisk_dash_single_level():
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md004/good_list_dash_single_level.md:1:1: MD004: Consistent Unordered list style (ul-style)"
+    expected_output = "test/resources/rules/md004/good_list_dash_single_level.md:1:1: MD004: Inconsistent Unordered List Start style (ul-style)"
     expected_error = ""
 
     # Act
@@ -112,7 +112,7 @@ def test_md004_bad_asterisk_plus_single_level():
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md004/good_list_plus_single_level.md:1:1: MD004: Consistent Unordered list style (ul-style)"
+    expected_output = "test/resources/rules/md004/good_list_plus_single_level.md:1:1: MD004: Inconsistent Unordered List Start style (ul-style)"
     expected_error = ""
 
     # Act
@@ -200,7 +200,7 @@ def test_md004_bad_dash_asterisk_single_level():
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md004/good_list_asterisk_single_level.md:1:1: MD004: Consistent Unordered list style (ul-style)"
+    expected_output = "test/resources/rules/md004/good_list_asterisk_single_level.md:1:1: MD004: Inconsistent Unordered List Start style (ul-style)"
     expected_error = ""
 
     # Act
@@ -230,7 +230,7 @@ def test_md004_bad_dash_plus_single_level():
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md004/good_list_plus_single_level.md:1:1: MD004: Consistent Unordered list style (ul-style)"
+    expected_output = "test/resources/rules/md004/good_list_plus_single_level.md:1:1: MD004: Inconsistent Unordered List Start style (ul-style)"
     expected_error = ""
 
     # Act
@@ -318,7 +318,7 @@ def test_md004_bad_plus_asterisk_single_level():
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md004/good_list_asterisk_single_level.md:1:1: MD004: Consistent Unordered list style (ul-style)"
+    expected_output = "test/resources/rules/md004/good_list_asterisk_single_level.md:1:1: MD004: Inconsistent Unordered List Start style (ul-style)"
     expected_error = ""
 
     # Act
@@ -348,7 +348,7 @@ def test_md004_bad_plus_dash_single_level():
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md004/good_list_dash_single_level.md:1:1: MD004: Consistent Unordered list style (ul-style)"
+    expected_output = "test/resources/rules/md004/good_list_dash_single_level.md:1:1: MD004: Inconsistent Unordered List Start style (ul-style)"
     expected_error = ""
 
     # Act
@@ -377,8 +377,8 @@ def test_md004_bad_single_level_consistent():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md004/bad_list_different_single_level.md:2:1: MD004: Consistent Unordered list style (ul-style)\n"
-        + "test/resources/rules/md004/bad_list_different_single_level.md:3:1: MD004: Consistent Unordered list style (ul-style)"
+        "test/resources/rules/md004/bad_list_different_single_level.md:2:1: MD004: Inconsistent Unordered List Start style (ul-style)\n"
+        + "test/resources/rules/md004/bad_list_different_single_level.md:3:1: MD004: Inconsistent Unordered List Start style (ul-style)"
     )
     expected_error = ""
 
@@ -466,7 +466,7 @@ def test_md004_bad_multi_level_sublevel_complex():
     ]
 
     expected_return_code = 1
-    expected_output = "test/resources/rules/md004/bad_multi_level_complex.md:6:6: MD004: Consistent Unordered list style (ul-style)"
+    expected_output = "test/resources/rules/md004/bad_multi_level_complex.md:6:6: MD004: Inconsistent Unordered List Start style (ul-style)"
     expected_error = ""
 
     # Act
