@@ -1,0 +1,12 @@
++ first
+  1. second
+     - third
++ first
+  1. second
+     + third
+       1. fourth
+          * fifth
+     + third
+       1. fourth
+          * fifth
+     + third
