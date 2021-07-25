@@ -3659,3 +3659,85 @@ def</li>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_list_blocks_extra_6x():
+    """
+    Test case 06:  the sublist is properly idented, but the start is extra
+                   indented to right justify the list
+    """
+
+    # Arrange
+    source_markdown = """1. Item 1
+    1. Item 1a
+   10. Item 1b
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):Item 1:]",
+        "[end-para:::True]",
+        "[olist(2,5):.:1:7:    ]",
+        "[para(2,8):]",
+        "[text(2,8):Item 1a:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(3,4):7:   :10]",
+        "[para(3,8):]",
+        "[text(3,8):Item 1b:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Item 1
+<ol>
+<li>Item 1a</li>
+<li>Item 1b</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+
+
+@pytest.mark.skip
+@pytest.mark.gfm
+def test_list_blocks_extra_6a():
+    """
+    Test case 06:  the sublist is properly idented, but the start is extra
+                   indented to right justify the list
+    """
+
+    # Arrange
+    source_markdown = """1. Item 1
+   1. Item 1a
+    10. Item 1b
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):Item 1:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :    ]",
+        "[para(2,7):\n]",
+        "[text(2,7):Item 1a\n10. Item 1b::\n]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Item 1
+<ol>
+<li>Item 1a</li>
+<li>Item 1b</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)

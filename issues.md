@@ -52,6 +52,11 @@ if time 270, 271, 237, 238
 - varying spaces between bqs
 - no space between bq and following list
 
+nested lists
+- test_list_blocks_extra_6x, test_list_blocks_extra_6a
+  - test_md005_good_ordered_list_double_level_right
+- check for nested within bq and decide how rule should react?
+
 ## Priority 3 - Like To Solve in next 3 m
 
 - [mypy?](https://mypy.readthedocs.io/en/stable/getting_started.html)
