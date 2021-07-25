@@ -57,6 +57,8 @@ nested lists
   - test_md005_good_ordered_list_double_level_right
 - check for nested within bq and decide how rule should react?
 
+md006 - how works within bq?
+
 ## Priority 3 - Like To Solve in next 3 m
 
 - [mypy?](https://mypy.readthedocs.io/en/stable/getting_started.html)

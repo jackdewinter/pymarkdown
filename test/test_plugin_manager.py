@@ -995,6 +995,7 @@ def test_markdown_with_plugins_list_only():
   md003  heading-style, header-style             True       True       0.5.0
   md004  ul-style                                True       True       0.5.0
   md005  list-indent                             True       True       0.5.0
+  md006  ul-start-left                           False      False      0.5.0
   md018  no-missing-space-atx                    True       True       0.5.0
   md019  no-multiple-space-atx                   True       True       0.5.0
   md020  no-missing-space-closed-atx             True       True       0.5.0
@@ -1040,7 +1041,7 @@ def test_markdown_with_plugins_list_only_all():
   md003  heading-style, header-style             True       True       0.5.0
   md004  ul-style                                True       True       0.5.0
   md005  list-indent                             True       True       0.5.0
-  md006  ul-start-left                           False      False      0.0.0
+  md006  ul-start-left                           False      False      0.5.0
   md007  ul-indent                               False      False      0.0.0
   md009  no-trailing-spaces                      False      False      0.0.0
   md010  no-hard-tabs                            False      False      0.0.0
