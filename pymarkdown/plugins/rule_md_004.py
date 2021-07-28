@@ -88,13 +88,22 @@ class RuleMd004(Plugin):
         """
         if token.is_unordered_list_start:
             if self.__current_list_level not in self.__actual_style_type:
-                self.__actual_style_type[
-                    self.__current_list_level
-                ] = self.__get_sequence_type(token)
+                if self.__style_type in (RuleMd004.__sublist_style,) or (
+                    self.__style_type in (RuleMd004.__consistent_style)
+                    and not self.__actual_style_type
+                ):
+                    self.__actual_style_type[
+                        self.__current_list_level
+                    ] = self.__get_sequence_type(token)
+                else:
+                    self.__actual_style_type[
+                        self.__current_list_level
+                    ] = self.__actual_style_type[0]
 
             this_start_style = self.__get_sequence_type(token)
             if self.__actual_style_type[self.__current_list_level] != this_start_style:
-                self.report_next_token_error(context, token)
+                extra_data = f"Expected: {self.__actual_style_type[self.__current_list_level]}; Actual: {this_start_style}"
+                self.report_next_token_error(context, token, extra_data)
             self.__current_list_level += 1
         elif token.is_unordered_list_end:
             self.__current_list_level -= 1

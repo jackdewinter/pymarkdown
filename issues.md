@@ -55,9 +55,13 @@ if time 270, 271, 237, 238
 nested lists
 - test_list_blocks_extra_6x, test_list_blocks_extra_6a
   - test_md005_good_ordered_list_double_level_right
+  - test_md005_*weird*
 - check for nested within bq and decide how rule should react?
 
 md006 - how works within bq?
+      - two lists in same top-level... same indent?
+      - mixing left and right in same list?
+      - ordered with unordered sub, and unordered with ordered sub
 
 ## Priority 3 - Like To Solve in next 3 m
 

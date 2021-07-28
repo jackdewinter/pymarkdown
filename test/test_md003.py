@@ -10,6 +10,40 @@ from .utils import write_temporary_configuration
 
 # pylint: disable=too-many-lines
 
+
+@pytest.mark.rules
+def test_md003_bad_configuration_style():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md003 directory that has only atx headings.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--strict-config",
+        "--set",
+        "plugins.md003.style=fred",
+        "scan",
+        "test/resources/rules/md003/headings_atx.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = (
+        "BadPluginError encountered while configuring plugins:\n"
+        + "The value for property 'plugins.md003.style' is not valid: Allowable values: ['consistent', 'atx', 'atx_closed', 'setext', 'setext_with_atx', 'setext_with_atx_closed']"
+    )
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
 CONSISTENT_ATX_HEADINGS_SAMPLE_OUTPUT = ""
 
 

@@ -48,6 +48,41 @@ def test_md002_all_samples():
 
 
 @pytest.mark.rules
+def test_md002_bad_configuration_level():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md002 directory that starts with a h1 atx heading.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--strict-config",
+        "--set",
+        "plugins.md002.level=1",
+        "-e",
+        "MD002",
+        "scan",
+        "test/resources/rules/md002/proper_atx_heading_start.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = (
+        "BadPluginError encountered while configuring plugins:\n"
+        + "The value for property 'plugins.md002.level' must be of type 'int'."
+    )
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
 def test_md002_good_proper_atx_heading_start():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
