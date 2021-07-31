@@ -28,6 +28,7 @@
 - make sure to generated ordered/unordered tests to make sure both covered
   - every unordered tests should have an ordered counterpart
   - every ordered tests should have an unordered counterpart
+- make sure that all inline elements treat blank lines properly and have test cases
 
 - take `__consume_text_for_image_alt_text` and other functions like it and move as much as possible into token classes
   - TransformToGfmListLooseness.__handle_block_quote_start
@@ -62,6 +63,7 @@ md006 - how works within bq?
       - two lists in same top-level... same indent?
       - mixing left and right in same list?
       - ordered with unordered sub, and unordered with ordered sub
+md010 - tabs "converted"
 
 ## Priority 3 - Like To Solve in next 3 m
 

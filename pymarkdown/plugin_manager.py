@@ -176,7 +176,9 @@ class Plugin(ABC):
         """
         return self.__is_completed_file_implemented_in_plugin
 
-    def report_next_line_error(self, context, column_number, line_number_delta=0):
+    def report_next_line_error(
+        self, context, column_number, line_number_delta=0, extra_error_information=None
+    ):
         """
         Report an error with the current line being processed.
         """
@@ -187,6 +189,7 @@ class Plugin(ABC):
             self.get_details().plugin_id,
             self.get_details().plugin_name,
             self.get_details().plugin_description,
+            extra_error_information=extra_error_information,
         )
 
     # pylint: disable=too-many-arguments

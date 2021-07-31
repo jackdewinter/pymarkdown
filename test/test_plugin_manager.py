@@ -996,6 +996,8 @@ def test_markdown_with_plugins_list_only():
   md004  ul-style                                True       True       0.5.0
   md005  list-indent                             True       True       0.5.0
   md006  ul-start-left                           False      False      0.5.0
+  md010  no-hard-tabs                            True       True       0.5.0
+  md012  no-multiple-blanks                      True       True       0.5.0
   md018  no-missing-space-atx                    True       True       0.5.0
   md019  no-multiple-space-atx                   True       True       0.5.0
   md020  no-missing-space-closed-atx             True       True       0.5.0
@@ -1044,9 +1046,9 @@ def test_markdown_with_plugins_list_only_all():
   md006  ul-start-left                           False      False      0.5.0
   md007  ul-indent                               False      False      0.0.0
   md009  no-trailing-spaces                      False      False      0.0.0
-  md010  no-hard-tabs                            False      False      0.0.0
+  md010  no-hard-tabs                            True       True       0.5.0
   md011  no-reversed-links                       False      False      0.0.0
-  md012  no-multiple-blanks                      False      False      0.0.0
+  md012  no-multiple-blanks                      True       True       0.5.0
   md013  line-length                             False      False      0.0.0
   md014  commands-show-output                    False      False      0.0.0
   md018  no-missing-space-atx                    True       True       0.5.0

@@ -209,7 +209,7 @@ def test_md021_good_single_space_single_tab_before():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md023",
+        "md010,md023",
         "scan",
         "test/resources/rules/md021/single_space_single_tab_before.md",
     ]
@@ -238,7 +238,7 @@ def test_md021_good_single_space_single_tab_after():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md023",
+        "md010,md023",
         "scan",
         "test/resources/rules/md021/single_space_single_tab_after.md",
     ]

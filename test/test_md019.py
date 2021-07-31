@@ -149,7 +149,7 @@ def test_md019_bad_single_space_single_tab():
     supplied_arguments = [
         "--stack-trace",
         "--disable-rules",
-        "md023",
+        "md010,md023",
         "scan",
         "test/resources/rules/md019/single_space_single_tab.md",
     ]

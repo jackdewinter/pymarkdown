@@ -1063,6 +1063,8 @@ def test_md020_bad_single_paragraph_with_whitespace_at_start():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md010",
         "scan",
         "test/resources/rules/md020/single_paragraph_with_whitespace_at_start.md",
     ]
@@ -1096,7 +1098,7 @@ def test_md020_bad_single_paragraph_with_whitespace_at_end():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md022,md023",
+        "md010,md022,md023",
         "scan",
         "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md",
     ]

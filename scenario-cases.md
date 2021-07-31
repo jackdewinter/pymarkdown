@@ -794,4 +794,3 @@ Sh space hard break
 Orphan?
 |J5  |inline link label split at whitespace| `abc\n[link](\n /uri\n  "title"\n   )\n  def` | test_paragraph_extra_d5 |
 |J5i  |inline image label split at whitespace| `abc\n![link](\n /uri\n  "title"\n   )\n  def` | test_paragraph_extra_d6 |
-

@@ -1121,6 +1121,8 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
+            "--disable-rules",
+            "md012",
             "-c",
             configuration_file,
             "scan",
@@ -1202,6 +1204,8 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
+            "--disable-rules",
+            "md012",
             "-c",
             configuration_file,
             "scan",
@@ -1241,6 +1245,8 @@ def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
+            "--disable-rules",
+            "md012",
             "-c",
             configuration_file,
             "scan",
