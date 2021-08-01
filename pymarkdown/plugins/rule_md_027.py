@@ -9,6 +9,9 @@ class RuleMd027(Plugin):
     Class to implement a plugin that looks for hard tabs in the files.
     """
 
+    # def __init__(self):
+    #     super().__init__()
+
     def get_details(self):
         """
         Get the details for the plugin.
@@ -22,3 +25,14 @@ class RuleMd027(Plugin):
             plugin_version="0.0.0",
             plugin_interface_version=1,
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md027---multiple-spaces-after-blockquote-symbol
+
+    def starting_new_file(self):
+        """
+        Event that the a new file to be scanned is starting.
+        """
+
+    def next_token(self, context, token):
+        """
+        Event that a new token is being processed.
+        """
+        # print("token:" + str(token).replace("\n", "\\n"))

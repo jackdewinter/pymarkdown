@@ -998,6 +998,7 @@ def test_markdown_with_plugins_list_only():
   md006  ul-start-left                           False      False      0.5.0
   md010  no-hard-tabs                            True       True       0.5.0
   md012  no-multiple-blanks                      True       True       0.5.0
+  md014  commands-show-output                    True       True       0.5.0
   md018  no-missing-space-atx                    True       True       0.5.0
   md019  no-multiple-space-atx                   True       True       0.5.0
   md020  no-missing-space-closed-atx             True       True       0.5.0
@@ -1008,6 +1009,7 @@ def test_markdown_with_plugins_list_only():
   md024  no-duplicate-heading, no-duplicate-hea  True       True       0.5.0
          der
   md026  no-trailing-punctuation                 True       True       0.5.0
+  md033  no-inline-html                          True       True       0.5.0
   md036  no-emphasis-as-heading, no-emphasis-as  True       True       0.5.0
          -header
   md047  single-trailing-newline                 True       True       0.5.0
@@ -1050,7 +1052,7 @@ def test_markdown_with_plugins_list_only_all():
   md011  no-reversed-links                       False      False      0.0.0
   md012  no-multiple-blanks                      True       True       0.5.0
   md013  line-length                             False      False      0.0.0
-  md014  commands-show-output                    False      False      0.0.0
+  md014  commands-show-output                    True       True       0.5.0
   md018  no-missing-space-atx                    True       True       0.5.0
   md019  no-multiple-space-atx                   True       True       0.5.0
   md020  no-missing-space-closed-atx             True       True       0.5.0
@@ -1068,7 +1070,7 @@ def test_markdown_with_plugins_list_only_all():
   md030  list-marker-space                       False      False      0.0.0
   md031  blanks-around-fences                    False      False      0.0.0
   md032  blanks-around-lists                     False      False      0.0.0
-  md033  no-inline-html                          False      False      0.0.0
+  md033  no-inline-html                          True       True       0.5.0
   md034  no-bare-urls                            False      False      0.0.0
   md035  hr-style                                False      False      0.0.0
   md036  no-emphasis-as-heading, no-emphasis-as  True       True       0.5.0

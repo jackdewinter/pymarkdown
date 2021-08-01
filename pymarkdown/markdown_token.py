@@ -423,6 +423,13 @@ class MarkdownToken:
         return self.is_indented_code_block or self.is_fenced_code_block
 
     @property
+    def is_code_block_end(self):
+        """
+        Returns whether the current token is a code block end element.
+        """
+        return self.is_indented_code_block_end or self.is_fenced_code_block_end
+
+    @property
     def is_indented_code_block(self):
         """
         Returns whether the current token is an indented code block element.

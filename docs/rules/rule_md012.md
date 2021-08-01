@@ -83,8 +83,3 @@ first line
 
 second line
 ```
-
-# TBD
-
-- same as inspiration except where n > max + m.  in case, max + 1 to max +m will be issued.
-- did not report in bq

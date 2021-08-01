@@ -288,6 +288,8 @@ def test_md018_good_with_html_blocks():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md033",
         "scan",
         "test/resources/rules/md018/with_html_blocks.md",
     ]
@@ -455,9 +457,10 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--stack-trace",
         "--disable-rules",
         "md020",
+        "--disable-rules",
+        "md033",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_inline_rawhtml_multi.md",
     ]

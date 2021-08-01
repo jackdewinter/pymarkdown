@@ -353,6 +353,7 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
 ../../docs/rules/rule_md006.md
 ../../docs/rules/rule_md010.md
 ../../docs/rules/rule_md012.md
+../../docs/rules/rule_md014.md
 ../../docs/rules/rule_md018.md
 ../../docs/rules/rule_md019.md
 ../../docs/rules/rule_md020.md
@@ -361,6 +362,8 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
 ../../docs/rules/rule_md023.md
 ../../docs/rules/rule_md024.md
 ../../docs/rules/rule_md026.md
+../../docs/rules/rule_md027.md
+../../docs/rules/rule_md033.md
 ../../docs/rules/rule_md036.md
 ../../docs/rules/rule_md047.md"""
     expected_error = ""
