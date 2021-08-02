@@ -58,4 +58,4 @@ jobs:
     - name: Execute PyLint on Tests
       run: pipenv run pylint --rcfile=setup.cfg ./test
     - name: Execute PyMarkdown on Current Docs
-      run: pipenv run python main.py scan . ./docs
+      run: pipenv run python main.py --disable-rules no-space-in-code,no-space-in-emphasis scan . ./docs
