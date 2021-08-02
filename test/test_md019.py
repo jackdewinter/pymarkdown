@@ -147,7 +147,6 @@ def test_md019_bad_single_space_single_tab():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--stack-trace",
         "--disable-rules",
         "md010,md023",
         "scan",

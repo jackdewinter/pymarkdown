@@ -73,7 +73,6 @@ def test_md014_bad_shell_example():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "test/resources/rules/md014/bad_shell_example.md",
     ]
@@ -105,7 +104,6 @@ def test_md014_bad_shell_example_with_leading_space():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "test/resources/rules/md014/bad_shell_example_with_leading_space.md",
     ]

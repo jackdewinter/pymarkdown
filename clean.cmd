@@ -84,7 +84,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing PyMarkdown scan on Markdown documents.}
-pipenv run python main.py scan . ./docs
+pipenv run python main.py --disable-rules no-space-in-code,no-space-in-emphasis scan . ./docs
 if ERRORLEVEL 1 (
 	echo.
 	echo {PyMarkdown scan on Markdown documents failed.}

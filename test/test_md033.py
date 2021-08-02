@@ -184,7 +184,6 @@ def test_md033_bad_inline_html_present():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "test/resources/rules/md033/bad_inline_html_present.md",
     ]

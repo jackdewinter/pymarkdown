@@ -234,7 +234,6 @@ def test_md020_bad_missing_end_spacingx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "test/resources/rules/md020/missing_end_spacing.md",
     ]

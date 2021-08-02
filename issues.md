@@ -4,6 +4,8 @@
 
 ## Priority 2 - Like To Solve Before Initial
 
+- before release, check that all md* files and test file commented properly
+
 - documentation for developers
 
 - MD041 requires metadata
@@ -64,6 +66,8 @@ md006 - how works within bq?
       - mixing left and right in same list?
       - ordered with unordered sub, and unordered with ordered sub
 md010 - tabs "converted"
+
+- better solution than `no-space-in-code` for scenario-cases.md
 
 ## Priority 3 - Like To Solve in next 3 m
 

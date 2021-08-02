@@ -1010,8 +1010,11 @@ def test_markdown_with_plugins_list_only():
          der
   md026  no-trailing-punctuation                 True       True       0.5.0
   md033  no-inline-html                          True       True       0.5.0
+  md035  hr-style                                True       True       0.5.0
   md036  no-emphasis-as-heading, no-emphasis-as  True       True       0.5.0
          -header
+  md037  no-space-in-emphasis                    True       True       0.5.0
+  md038  no-space-in-code                        True       True       0.5.0
   md047  single-trailing-newline                 True       True       0.5.0
 
 """
@@ -1072,11 +1075,11 @@ def test_markdown_with_plugins_list_only_all():
   md032  blanks-around-lists                     False      False      0.0.0
   md033  no-inline-html                          True       True       0.5.0
   md034  no-bare-urls                            False      False      0.0.0
-  md035  hr-style                                False      False      0.0.0
+  md035  hr-style                                True       True       0.5.0
   md036  no-emphasis-as-heading, no-emphasis-as  True       True       0.5.0
          -header
-  md037  no-space-in-emphasis                    False      False      0.0.0
-  md038  no-space-in-code                        False      False      0.0.0
+  md037  no-space-in-emphasis                    True       True       0.5.0
+  md038  no-space-in-code                        True       True       0.5.0
   md039  no-space-in-links                       False      False      0.0.0
   md040  fenced-code-language                    False      False      0.0.0
   md041  first-line-heading, first-line-h1       False      False      0.0.0
