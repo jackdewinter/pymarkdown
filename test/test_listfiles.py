@@ -368,6 +368,8 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
 ../../docs/rules/rule_md036.md
 ../../docs/rules/rule_md037.md
 ../../docs/rules/rule_md038.md
+../../docs/rules/rule_md039.md
+../../docs/rules/rule_md040.md
 ../../docs/rules/rule_md047.md"""
     expected_error = ""
 

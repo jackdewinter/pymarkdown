@@ -1015,6 +1015,8 @@ def test_markdown_with_plugins_list_only():
          -header
   md037  no-space-in-emphasis                    True       True       0.5.0
   md038  no-space-in-code                        True       True       0.5.0
+  md039  no-space-in-links                       True       True       0.5.0
+  md040  fenced-code-language                    True       True       0.5.0
   md047  single-trailing-newline                 True       True       0.5.0
 
 """
@@ -1080,8 +1082,8 @@ def test_markdown_with_plugins_list_only_all():
          -header
   md037  no-space-in-emphasis                    True       True       0.5.0
   md038  no-space-in-code                        True       True       0.5.0
-  md039  no-space-in-links                       False      False      0.0.0
-  md040  fenced-code-language                    False      False      0.0.0
+  md039  no-space-in-links                       True       True       0.5.0
+  md040  fenced-code-language                    True       True       0.5.0
   md041  first-line-heading, first-line-h1       False      False      0.0.0
   md042  no-empty-links                          False      False      0.0.0
   md043  required-headings, required-headers     False      False      0.0.0
@@ -1118,6 +1120,7 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
                                 (DEFAULT)  (CURRENT)
 
   md019  no-multiple-space-atx  True       True       0.5.0
+  md039  no-space-in-links      True       True       0.5.0
 
 """
     expected_error = ""

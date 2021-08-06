@@ -687,6 +687,8 @@ def test_md022_good_atx_with_code_block_and_good_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md040",
         "scan",
         "test/resources/rules/md022/atx_with_code_block_and_good_line_spacing.md",
     ]
@@ -715,6 +717,8 @@ def test_md022_bad_atx_with_code_block_and_bad_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md040",
         "scan",
         "test/resources/rules/md022/atx_with_code_block_and_bad_line_spacing.md",
     ]
@@ -887,6 +891,8 @@ def test_md022_good_setext_with_code_block_and_good_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md040",
         "scan",
         "test/resources/rules/md022/setext_with_code_block_and_good_line_spacing.md",
     ]
@@ -915,6 +921,8 @@ def test_md022_bad_setext_with_code_block_and_bad_line_spacing():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md040",
         "scan",
         "test/resources/rules/md022/setext_with_code_block_and_bad_line_spacing.md",
     ]
