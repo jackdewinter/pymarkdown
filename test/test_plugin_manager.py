@@ -1017,7 +1017,12 @@ def test_markdown_with_plugins_list_only():
   md038  no-space-in-code                        True       True       0.5.0
   md039  no-space-in-links                       True       True       0.5.0
   md040  fenced-code-language                    True       True       0.5.0
+  md042  no-empty-links                          True       True       0.5.0
+  md044  proper-names                            True       True       0.5.0
+  md045  no-alt-text                             True       True       0.5.0
+  md046  code-block-style                        True       True       0.5.0
   md047  single-trailing-newline                 True       True       0.5.0
+  md048  code-fence-style                        True       True       0.5.0
 
 """
     expected_error = ""
@@ -1085,13 +1090,13 @@ def test_markdown_with_plugins_list_only_all():
   md039  no-space-in-links                       True       True       0.5.0
   md040  fenced-code-language                    True       True       0.5.0
   md041  first-line-heading, first-line-h1       False      False      0.0.0
-  md042  no-empty-links                          False      False      0.0.0
+  md042  no-empty-links                          True       True       0.5.0
   md043  required-headings, required-headers     False      False      0.0.0
-  md044  proper-names                            False      False      0.0.0
-  md045  no-alt-text                             False      False      0.0.0
-  md046  code-block-style                        False      False      0.0.0
+  md044  proper-names                            True       True       0.5.0
+  md045  no-alt-text                             True       True       0.5.0
+  md046  code-block-style                        True       True       0.5.0
   md047  single-trailing-newline                 True       True       0.5.0
-  md048  code-fence-style                        False      False      0.0.0
+  md048  code-fence-style                        True       True       0.5.0
 
 """
     expected_error = ""

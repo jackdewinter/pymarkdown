@@ -260,6 +260,8 @@ def test_md018_good_with_code_blocks():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md046",
         "scan",
         "test/resources/rules/md018/with_code_blocks.md",
     ]

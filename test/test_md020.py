@@ -491,6 +491,8 @@ def test_md020_good_with_code_blocks():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md046",
         "scan",
         "test/resources/rules/md020/with_code_blocks.md",
     ]

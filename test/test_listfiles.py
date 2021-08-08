@@ -370,7 +370,12 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
 ../../docs/rules/rule_md038.md
 ../../docs/rules/rule_md039.md
 ../../docs/rules/rule_md040.md
-../../docs/rules/rule_md047.md"""
+../../docs/rules/rule_md042.md
+../../docs/rules/rule_md044.md
+../../docs/rules/rule_md045.md
+../../docs/rules/rule_md046.md
+../../docs/rules/rule_md047.md
+../../docs/rules/rule_md048.md"""
     expected_error = ""
 
     # Act

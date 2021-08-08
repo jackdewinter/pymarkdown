@@ -67,6 +67,14 @@ md006 - how works within bq?
       - ordered with unordered sub, and unordered with ordered sub
 md010 - tabs "converted"
 
+```markdown
+[a
+paragraph inspired link](
+/paragraph
+"paragraph")
+
+```
+
 - better solution than `no-space-in-code` for scenario-cases.md
 
 ## Priority 3 - Like To Solve in next 3 m

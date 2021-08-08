@@ -17,8 +17,16 @@ class RuleMd045(Plugin):
             # accessibility, images
             plugin_name="no-alt-text",
             plugin_id="MD045",
-            plugin_enabled_by_default=False,
+            plugin_enabled_by_default=True,
             plugin_description="Images should have alternate text (alt text)",
-            plugin_version="0.0.0",
+            plugin_version="0.5.0",
             plugin_interface_version=1,
         )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md045---images-should-have-alternate-text-alt-text
+
+    def next_token(self, context, token):
+        """
+        Event that a new token is being processed.
+        """
+        if token.is_inline_image:
+            if not token.text_from_blocks.strip():
+                self.report_next_token_error(context, token)
