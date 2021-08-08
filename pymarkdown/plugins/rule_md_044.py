@@ -108,18 +108,6 @@ class RuleMd044(Plugin):
 
     # pylint: enable=too-many-arguments
 
-    @classmethod
-    def __adjust_for_newlines(cls, source_string, start_index, end_index):
-
-        col_adjust = end_index
-        line_adjust = 0
-        newline_index = source_string.find("\n", start_index)
-        while newline_index != -1 and newline_index < end_index:
-            line_adjust += 1
-            col_adjust = -(end_index - newline_index)
-            newline_index = source_string.find("\n", newline_index + 1)
-        return col_adjust, line_adjust
-
     # pylint: disable=too-many-arguments
     def __search_for_matches(
         self,
@@ -138,7 +126,7 @@ class RuleMd044(Plugin):
             search_start = 0
             found_index = string_to_check_lower.find(next_name_lower, search_start)
             while found_index != -1:
-                col_adjust, line_adjust = self.__adjust_for_newlines(
+                col_adjust, line_adjust = ParserHelper.adjust_for_newlines(
                     string_to_check_lower, search_start, found_index
                 )
                 if line_adjust == 0 and start_y_offset == 0:
@@ -183,7 +171,7 @@ class RuleMd044(Plugin):
         start_x_offset = 0
         start_y_offset = 0
         if "\n" in link_body_text:
-            start_x_offset, start_y_offset = self.__adjust_for_newlines(
+            start_x_offset, start_y_offset = ParserHelper.adjust_for_newlines(
                 full_link_text, 0, len(full_link_text)
             )
         self.__search_for_matches(

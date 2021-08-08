@@ -829,6 +829,23 @@ class ParserHelper:
                 nth -= 1
         return found_index if did_find_last else -1
 
+    @staticmethod
+    def adjust_for_newlines(source_string, start_index, end_index):
+        """
+        Given the various parameters, determine the column and
+        line offsets implied by newline characters in the
+        specified text.
+        """
+
+        col_adjust = end_index
+        line_adjust = 0
+        newline_index = source_string.find("\n", start_index)
+        while newline_index != -1 and newline_index < end_index:
+            line_adjust += 1
+            col_adjust = -(end_index - newline_index)
+            newline_index = source_string.find("\n", newline_index + 1)
+        return col_adjust, line_adjust
+
 
 # pylint: enable=too-many-public-methods
 
