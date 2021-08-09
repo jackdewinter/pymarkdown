@@ -231,7 +231,7 @@ def test_md024_bad_same_heading_content_atx_in_different_block_quotes():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md022",
+        "md022,md028",
         "scan",
         "test/resources/rules/md024/same_heading_content_atx_in_different_block_quotes.md",
     ]

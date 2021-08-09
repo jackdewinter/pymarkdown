@@ -5,6 +5,8 @@
 ## Priority 2 - Like To Solve Before Initial
 
 - before release, check that all md* files and test file commented properly
+- go through each rule, and make sure all look the same
+  - i.e. make sure the get_details all look the same
 
 - documentation for developers
 
@@ -73,6 +75,14 @@ paragraph inspired link](
 /paragraph
 "paragraph")
 
+```
+
+### bad_split_block_quote_in_list
+
+```markdown
+- > This is one section of a block quote
+
+  > This is the other section.
 ```
 
 - better solution than `no-space-in-code` for scenario-cases.md

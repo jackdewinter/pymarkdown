@@ -526,6 +526,8 @@ def test_md022_bad_no_line_spacing_after_atx_in_different_block_quotes():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md028",
         "scan",
         "test/resources/rules/md022/no_line_spacing_after_atx_in_different_block_quotes.md",
     ]

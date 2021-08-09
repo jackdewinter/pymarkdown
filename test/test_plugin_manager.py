@@ -1009,6 +1009,7 @@ def test_markdown_with_plugins_list_only():
   md024  no-duplicate-heading, no-duplicate-hea  True       True       0.5.0
          der
   md026  no-trailing-punctuation                 True       True       0.5.0
+  md028  no-blanks-blockquote                    True       True       0.5.0
   md033  no-inline-html                          True       True       0.5.0
   md034  no-bare-urls                            True       True       0.5.0
   md035  hr-style                                True       True       0.5.0
@@ -1076,7 +1077,7 @@ def test_markdown_with_plugins_list_only_all():
   md025  single-title, single-h1                 False      False      0.0.0
   md026  no-trailing-punctuation                 True       True       0.5.0
   md027  no-multiple-space-blockquote            False      False      0.0.0
-  md028  no-blanks-blockquote                    False      False      0.0.0
+  md028  no-blanks-blockquote                    True       True       0.5.0
   md029  ol-prefix                               False      False      0.0.0
   md030  list-marker-space                       False      False      0.0.0
   md031  blanks-around-fences                    False      False      0.0.0

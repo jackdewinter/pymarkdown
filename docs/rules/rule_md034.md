@@ -62,12 +62,18 @@ an Indented Code Block element:
     s = "http://www.google.com"
 ````
 
-or a HTML Block element:
+a HTML Block element:
 
 ````Markdown
 <!--
 This code was copied from "http://www.google.com".
 -->
+````
+
+or a Link element:
+
+````Markdown
+[a http://www.google.com link](/url)
 ````
 
 ## Configuration

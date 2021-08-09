@@ -1,6 +1,6 @@
-"""
-Module to provide tests related to the MD026 rule.
-"""
+# """
+# Module to provide tests related to the MD026 rule.
+# """
 # import os
 # from test.markdown_scanner import MarkdownScanner
 
@@ -14,7 +14,6 @@ Module to provide tests related to the MD026 rule.
 #     punctuation.
 #     """
 
-#     pass
 #     # Arrange
 #     scanner = MarkdownScanner()
 #     supplied_arguments = [

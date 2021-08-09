@@ -11,6 +11,8 @@ class RuleMd027(Plugin):
 
     # def __init__(self):
     #     super().__init__()
+    #     self.__xx = None
+    #     self.__yy = None
 
     def get_details(self):
         """
@@ -30,9 +32,46 @@ class RuleMd027(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
+        # self.__xx = []
+        # self.__yy = {}
 
     def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
-        # print("token:" + str(token).replace("\n", "\\n"))
+        # return
+        # if token.is_block_quote_start:
+        #     self.__xx.append(token)
+        #     self.__yy[len(self.__xx)] = 0
+        #     print("bq>" + str(self.__xx[-1]).replace("\n","\\n"))
+        # elif token.is_list_start:
+        #     self.__xx.append(token)
+        # elif token.is_block_quote_end:
+        #     sd = len(self.__xx)
+        #     fg = self.__xx[-1].leading_spaces.count("\n")
+        #     print(str(fg) + "--" + str(self.__yy[sd]))
+        #     assert fg == self.__yy[sd]
+        #     del self.__yy[self.__yy[sd]]
+        #     del self.__xx[-1]
+        # elif token.is_list_end:
+        #     del self.__xx[-1]
+        # elif self.__xx and self.__xx[-1].is_block_quote_start:
+        #     sd = len(self.__xx)
+        #     print(str(self.__yy[sd]) + "-->token>" + str(token))
+        #     if token.is_paragraph_end:
+        #         self.__yy[sd] += 1
+        #     elif token.is_blank_line:
+        #         self.__yy[sd] += 1
+        #         fgg = self.__xx[-1].leading_spaces.split("\n")
+        #         print(str(fgg))
+        #     print(str(self.__yy[sd]) + "<--token>" + str(token))
+
+
+# > this is text
+# > within a block quote
+# [block-quote(1,1)::> \n> \n]
+#
+# >  this is text
+# >  within a block quote
+# [block-quote(1,1)::> \n> \n]
+# [token:[para(1,4): \n ]
