@@ -211,6 +211,8 @@ def test_md023_bad_improper_indent_setext_in_block_quote():
     supplied_arguments = [
         "--enable-rules",
         "MD023",
+        "--disable-rules",
+        "MD027",
         "scan",
         "test/resources/rules/md023/improper_indent_setext_in_block_quote.md",
     ]

@@ -50,14 +50,16 @@
   - test_html_blocks_extra_06a
 - same as these, but with an extra level of list or block
 
-if time 270, 271, 237, 238
+### if time 270, 271, 237, 238
+
 - with list item
 - start with blank
 - list starts after bq starts
 - varying spaces between bqs
 - no space between bq and following list
 
-nested lists
+### nested lists
+
 - test_list_blocks_extra_6x, test_list_blocks_extra_6a
   - test_md005_good_ordered_list_double_level_right
   - test_md005_*weird*
@@ -79,10 +81,39 @@ paragraph inspired link](
 
 ### bad_split_block_quote_in_list
 
+- test_md027_good_alligned_quote_within_list
+- test_md027_bad_misalligned_quote_within_list
+
 ```markdown
 - > This is one section of a block quote
 
   > This is the other section.
+```
+
+## xxx
+
+- similar to other bad lrd tests for md027
+
+```markdown
+> this is text
+> [a not
+>  so
+>  simple](/link
+> "a
+>  title"
+>  )
+> a real test
+```
+
+## Inconsistent end for bq
+
+- different ending to block quote if ends with newline or not
+
+```markdown
+> simple text
+> dd
+> dd
+# a
 ```
 
 - better solution than `no-space-in-code` for scenario-cases.md

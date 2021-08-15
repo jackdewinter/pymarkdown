@@ -106,9 +106,12 @@ class InProcessResult:
                     "Stdout", self.std_out, stdout, log_extra=self.std_err.getvalue()
                 )
             else:
-                assert not self.std_out.getvalue(), (
+                assert_text = (
                     "Expected stdout to be empty, not: " + self.std_out.getvalue()
                 )
+                if self.std_err.getvalue():
+                    assert_text += "\nStdErr was:" + self.std_err.getvalue()
+                assert not self.std_out.getvalue(), assert_text
 
             if stderr:
                 self.compare_versus_expected(
