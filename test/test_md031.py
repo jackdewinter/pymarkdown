@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD027 rule.
+Module to provide tests related to the MD031 rule.
 """
 from test.markdown_scanner import MarkdownScanner
 
@@ -7,7 +7,159 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_atx_heading_plus_one():
+def test_md031_bad_configuration_list_items():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md004 directory that has consistent asterisk usage on a single
+    level list.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--set",
+        "plugins.md031.list_items=bad",
+        "--strict-config",
+        "scan",
+        "test/resources/rules/md031/good_fenced_block_surrounded.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = (
+        "BadPluginError encountered while configuring plugins:\n"
+        + "The value for property 'plugins.md031.list_items' must be of type 'bool'."
+    )
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md031_good_fenced_block_surrounded():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD026 directory that has atx headings that do not end with
+    punctuation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md031/good_fenced_block_surrounded.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md031_bad_fenced_block_only_after():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD026 directory that has atx headings that do not end with
+    punctuation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md031/bad_fenced_block_only_after.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md031/bad_fenced_block_only_after.md:2:1: "
+        + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md031_bad_fenced_block_only_before():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD026 directory that has atx headings that do not end with
+    punctuation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md031/bad_fenced_block_only_before.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md031/bad_fenced_block_only_before.md:5:1: "
+        + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md031_good_fenced_block_at_start():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD026 directory that has atx headings that do not end with
+    punctuation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md031/good_fenced_block_at_start.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md031_good_fenced_block_at_end():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD026 directory that has atx headings that do not end with
@@ -18,15 +170,43 @@ def test_md027_bad_block_quote_atx_heading_plus_one():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md022,md023",
+        "md047",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_atx_heading_plus_one.md",
+        "test/resources/rules/md031/good_fenced_block_at_end.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md031_bad_fenced_block_only_after_start_indent():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD026 directory that has atx headings that do not end with
+    punctuation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md031/bad_fenced_block_only_after_start_indent.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_atx_heading_plus_one.md:2:4: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
+        "test/resources/rules/md031/bad_fenced_block_only_after_start_indent.md:2:2: "
+        + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
 
@@ -40,7 +220,7 @@ def test_md027_bad_block_quote_atx_heading_plus_one():
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_atx_heading_misaligned():
+def test_md031_bad_fenced_block_only_before_start_indent():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD026 directory that has atx headings that do not end with
@@ -50,16 +230,14 @@ def test_md027_bad_block_quote_atx_heading_misaligned():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md022,md023",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_atx_heading_misaligned.md",
+        "test/resources/rules/md031/bad_fenced_block_only_before_start_indent.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_atx_heading_misaligned.md:2:3: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
+        "test/resources/rules/md031/bad_fenced_block_only_before_start_indent.md:5:1: "
+        + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
 
@@ -73,7 +251,7 @@ def test_md027_bad_block_quote_atx_heading_misaligned():
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_fenced_first_plus_one():
+def test_md031_bad_fenced_block_only_before_end_indent():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD026 directory that has atx headings that do not end with
@@ -83,16 +261,14 @@ def test_md027_bad_block_quote_fenced_first_plus_one():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md031",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_fenced_first_plus_one.md",
+        "test/resources/rules/md031/bad_fenced_block_only_before_end_indent.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_fenced_first_plus_one.md:2:4: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
+        "test/resources/rules/md031/bad_fenced_block_only_before_end_indent.md:5:2: "
+        + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
 
@@ -106,7 +282,7 @@ def test_md027_bad_block_quote_fenced_first_plus_one():
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_fenced_last_plus_one():
+def test_md031_good_fenced_block_surrounded_in_block_quote():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD026 directory that has atx headings that do not end with
@@ -116,16 +292,98 @@ def test_md027_bad_block_quote_fenced_last_plus_one():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md031",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_fenced_last_plus_one.md",
+        "test/resources/rules/md031/good_fenced_block_surrounded_in_block_quote.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md031_good_fenced_block_surrounded_in_ordered_list():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD026 directory that has atx headings that do not end with
+    punctuation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md031/good_fenced_block_surrounded_in_ordered_list.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md031_good_fenced_block_surrounded_in_unordered_list():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD026 directory that has atx headings that do not end with
+    punctuation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md031/good_fenced_block_surrounded_in_unordered_list.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md031_bad_fenced_block_only_after_in_block_quote():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD026 directory that has atx headings that do not end with
+    punctuation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md031/bad_fenced_block_only_after_in_block_quote.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_fenced_last_plus_one.md:4:4: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
+        "test/resources/rules/md031/bad_fenced_block_only_after_in_block_quote.md:2:3: "
+        + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
 
@@ -139,7 +397,7 @@ def test_md027_bad_block_quote_fenced_last_plus_one():
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_fenced_last_misaligned():
+def test_md031_bad_fenced_block_only_after_in_unordered_list():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD026 directory that has atx headings that do not end with
@@ -149,16 +407,14 @@ def test_md027_bad_block_quote_fenced_last_misaligned():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md031",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_fenced_last_misaligned.md",
+        "test/resources/rules/md031/bad_fenced_block_only_after_in_unordered_list.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_fenced_last_misaligned.md:4:3: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
+        "test/resources/rules/md031/bad_fenced_block_only_after_in_unordered_list.md:2:3: "
+        + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
 
@@ -172,7 +428,7 @@ def test_md027_bad_block_quote_fenced_last_misaligned():
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_lrd_multiple_one_plus_one():
+def test_md031_bad_fenced_block_only_before_in_unordered_list():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD026 directory that has atx headings that do not end with
@@ -183,13 +439,13 @@ def test_md027_bad_block_quote_lrd_multiple_one_plus_one():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_one_plus_one.md",
+        "test/resources/rules/md031/bad_fenced_block_only_before_in_unordered_list.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_one_plus_one.md:3:4: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
+        "test/resources/rules/md031/bad_fenced_block_only_before_in_unordered_list.md:5:3: "
+        + "MD031: Fenced code blocks should be surrounded by blank lines (blanks-around-fences)"
     )
     expected_error = ""
 
@@ -203,7 +459,7 @@ def test_md027_bad_block_quote_lrd_multiple_one_plus_one():
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_lrd_multiple_three_plus_one():
+def test_md031_good_fenced_block_only_after_in_unordered_list_with_config():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD026 directory that has atx headings that do not end with
@@ -213,15 +469,15 @@ def test_md027_bad_block_quote_lrd_multiple_three_plus_one():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--set",
+        "plugins.md031.list_items=$!False",
+        "--strict-config",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_three_plus_one.md",
+        "test/resources/rules/md031/bad_fenced_block_only_after_in_unordered_list.md",
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_three_plus_one.md:5:4: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
+    expected_return_code = 0
+    expected_output = ""
     expected_error = ""
 
     # Act
@@ -234,7 +490,7 @@ def test_md027_bad_block_quote_lrd_multiple_three_plus_one():
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_lrd_multiple_three_misaligned():
+def test_md031_good_fenced_block_only_before_in_unordered_list_with_config():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD026 directory that has atx headings that do not end with
@@ -244,15 +500,14 @@ def test_md027_bad_block_quote_lrd_multiple_three_misaligned():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--set",
+        "plugins.md031.list_items=$!False",
         "scan",
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_three_misaligned.md",
+        "test/resources/rules/md031/bad_fenced_block_only_before_in_unordered_list.md",
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_three_misaligned.md:5:3: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
+    expected_return_code = 0
+    expected_output = ""
     expected_error = ""
 
     # Act
@@ -265,7 +520,7 @@ def test_md027_bad_block_quote_lrd_multiple_three_misaligned():
 
 
 @pytest.mark.rules
-def test_md027_bad_block_quote_lrd_multiple_four_plus_one():
+def test_md031_good_fenced_block_empty():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD026 directory that has atx headings that do not end with
@@ -276,342 +531,11 @@ def test_md027_bad_block_quote_lrd_multiple_four_plus_one():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "scan",
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_four_plus_one.md",
+        "test/resources/rules/md031/good_fenced_block_empty.md",
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_four_plus_one.md:6:4: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md027_bad_block_quote_lrd_multiple_four_misaligned():
-    """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "scan",
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_four_misaligned.md",
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_lrd_multiple_four_misaligned.md:6:3: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md027_bad_block_quote_thematic_plus_one():
-    """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--disable-rules",
-        "md022,md023",
-        "scan",
-        "test/resources/rules/md027/bad_block_quote_thematic_plus_one.md",
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_thematic_plus_one.md:3:4: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md027_bad_block_quote_setext_heading_first_line_plus_one():
-    """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--disable-rules",
-        "md022,md023",
-        "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_first_line_plus_one.md",
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_first_line_plus_one.md:3:4: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md027_bad_block_quote_setext_heading_multiples_first_plus_one():
-    """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--disable-rules",
-        "md022,md023",
-        "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_first_plus_one.md",
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_first_plus_one.md:3:4: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md027_bad_block_quote_setext_heading_multiples_middle_plus_one():
-    """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--disable-rules",
-        "md022,md023",
-        "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_middle_plus_one.md",
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_middle_plus_one.md:4:4: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md027_bad_block_quote_setext_heading_multiples_middle_misaligned():
-    """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--disable-rules",
-        "md022,md023",
-        "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_middle_misaligned.md",
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_middle_misaligned.md:4:3: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md027_bad_block_quote_setext_heading_multiples_last_plus_one():
-    """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--disable-rules",
-        "md022,md023",
-        "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_last_plus_one.md",
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_last_plus_one.md:5:4: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md027_bad_block_quote_setext_heading_multiples_last_misaligned():
-    """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--disable-rules",
-        "md022,md023",
-        "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_last_misaligned.md",
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_last_misaligned.md:5:3: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md027_bad_block_quote_setext_heading_second_line_plus_one():
-    """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--disable-rules",
-        "md022,md023",
-        "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_second_line_plus_one.md",
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_second_line_plus_one.md:4:4: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
-def test_md027_bad_block_quote_setext_heading_second_line_misaligned():
-    """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--disable-rules",
-        "md022,md023",
-        "scan",
-        "test/resources/rules/md027/bad_block_quote_setext_heading_second_line_misaligned.md",
-    ]
-
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md027/bad_block_quote_setext_heading_second_line_misaligned.md:4:3: "
-        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
-    )
+    expected_return_code = 0
+    expected_output = ""
     expected_error = ""
 
     # Act

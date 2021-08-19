@@ -478,6 +478,8 @@ def test_md027_good_block_quote_fenced():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md031",
         "scan",
         "test/resources/rules/md027/good_block_quote_fenced.md",
     ]
@@ -506,6 +508,8 @@ def test_md027_good_block_quote_fenced_middle():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md031",
         "scan",
         "test/resources/rules/md027/good_block_quote_fenced_middle.md",
     ]
@@ -534,6 +538,8 @@ def test_md027_bad_block_quote_fenced_first():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md031",
         "scan",
         "test/resources/rules/md027/bad_block_quote_fenced_first.md",
     ]
@@ -565,6 +571,8 @@ def test_md027_bad_block_quote_fenced_last():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md031",
         "scan",
         "test/resources/rules/md027/bad_block_quote_fenced_last.md",
     ]
