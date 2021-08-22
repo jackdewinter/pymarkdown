@@ -142,11 +142,25 @@ This is a blank line and some text.
 > 1. another list
 ```
 
+## Rule 007
+
+```Markdown
+This is a test
+
+> * this is level 1
+>   * this is level 2
+>     * this is level 3
+```
+
+- level 2 and level 3 text are in same item, does not identify as sublevel.
+
 - finish off inline elements for rule 027
 
 - better solution than `no-space-in-code` for scenario-cases.md
 
 ## Priority 3 - Like To Solve in next 3 m
+
+- combine traversal for 027 and 007?
 
 - [mypy?](https://mypy.readthedocs.io/en/stable/getting_started.html)
 

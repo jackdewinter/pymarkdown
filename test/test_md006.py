@@ -47,6 +47,8 @@ def test_md006_bad_indentation():
     supplied_arguments = [
         "--enable-rules",
         "MD006",
+        "--disable-rules",
+        "MD007",
         "scan",
         "test/resources/rules/md006/bad_indentation.md",
     ]
@@ -82,7 +84,7 @@ def test_md006_good_ignore_bad_second_level():
         "--enable-rules",
         "MD006",
         "--disable-rules",
-        "MD005,md032",
+        "MD005,md032,Md007",
         "scan",
         "test/resources/rules/md006/good_ignore_bad_second_level.md",
     ]
