@@ -1492,3 +1492,131 @@ def test_md022_good_unordered_list_into_atx_into_paragraph():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md022_bad_heading_surrounded_by_block_quote():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has an atx heading after an unsorted
+    list and a paragraph following it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/bad_heading_surrounded_by_block_quote.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/bad_heading_surrounded_by_block_quote.md:2:1: "
+        + "MD022: Headings should be surrounded by blank lines. "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/bad_heading_surrounded_by_block_quote.md:2:1: "
+        + "MD022: Headings should be surrounded by blank lines. "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_bad_heading_surrounded_by_list():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has an atx heading after an unsorted
+    list and a paragraph following it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md032",
+        "scan",
+        "test/resources/rules/md022/bad_heading_surrounded_by_list.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md022/bad_heading_surrounded_by_list.md:2:1: "
+        + "MD022: Headings should be surrounded by blank lines. "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md022/bad_heading_surrounded_by_list.md:2:1: "
+        + "MD022: Headings should be surrounded by blank lines. "
+        + "[Expected: 1; Actual: 0; Below] (blanks-around-headings,blanks-around-headers)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_good_heading_in_block_quote():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has an atx heading after an unsorted
+    list and a paragraph following it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/good_heading_in_block_quote.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md022_good_heading_in_list():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD022 directory that has an atx heading after an unsorted
+    list and a paragraph following it.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md022/good_heading_in_list.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )

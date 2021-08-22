@@ -12,7 +12,7 @@ Fenced code blocks should be surrounded by blank lines.
 ## Reasoning
 
 The main reason for this rule is readability.  By separating
-Block Quote elements from the other elements in a document, their
+Fenced Code Block elements from the other elements in a document, their
 existence in the document is highlighted.  In addition, some parsers
 may not properly recognize the Fenced Code Block without the extra
 blank lines on both sides.

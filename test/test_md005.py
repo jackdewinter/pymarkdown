@@ -74,6 +74,8 @@ def test_md005_good_unordered_list_double_level():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md032",
         "scan",
         "test/resources/rules/md005/good_unordered_list_double_level.md",
     ]
@@ -101,6 +103,8 @@ def test_md005_bad_unordered_list_double_level_bad_first():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md032",
         "scan",
         "test/resources/rules/md005/bad_unordered_list_double_level_bad_first.md",
     ]
@@ -132,6 +136,8 @@ def test_md005_bad_unordered_list_double_level_bad_second():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md032",
         "scan",
         "test/resources/rules/md005/bad_unordered_list_double_level_bad_second.md",
     ]
@@ -445,6 +451,8 @@ def test_md005_good_ordered_list_double_level():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md032",
         "scan",
         "test/resources/rules/md005/good_ordered_list_double_level.md",
     ]

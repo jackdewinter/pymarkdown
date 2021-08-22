@@ -96,6 +96,10 @@ class RuleMd031(Plugin):
         """
         Event that a new token is being processed.
         """
+        # print(">>token>>" + str(token))
+        if self.__end_fenced_code_block_token and not token.is_end_token:
+            self.__handle_end_fenced_code_block(context, token)
+
         if token.is_block_quote_start:
             self.__container_token_stack.append(token)
         elif token.is_block_quote_end:
@@ -108,8 +112,6 @@ class RuleMd031(Plugin):
             self.__handle_fenced_code_block(context, token)
         elif token.is_fenced_code_block_end:
             self.__end_fenced_code_block_token = token
-        elif self.__end_fenced_code_block_token:
-            self.__handle_end_fenced_code_block(context, token)
 
         if (
             not token.is_end_token

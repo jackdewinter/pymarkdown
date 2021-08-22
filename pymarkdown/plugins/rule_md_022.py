@@ -75,7 +75,7 @@ class RuleMd022(Plugin):
         """
         Event that a new token is being processed.
         """
-        # print(">>" + str(token).replace("\n", "\\n").replace("\t", "\\t"))
+        # print("START>>" + str(token).replace("\n", "\\n").replace("\t", "\\t"))
         # print(">>self.__blank_line_count>>" + str(self.__blank_line_count))
         self.perform_close_check(context, token)
 
@@ -97,7 +97,7 @@ class RuleMd022(Plugin):
             self.__blank_line_count = 0
         elif token.is_end_token:
             # print(">>token.is_end_token>>")
-            if not token.is_list_end:
+            if not token.is_list_end and not token.is_block_quote_end:
                 self.__blank_line_count = (
                     0
                     if token.is_leaf_end_token or token.is_container_end_token
@@ -117,7 +117,7 @@ class RuleMd022(Plugin):
         if (
             (self.__start_heading_token and self.__did_heading_end)
         ) and self.__blank_line_count >= 0:
-            if not token or not token.is_blank_line:
+            if not token or (not token.is_blank_line and not token.is_block_quote_end):
                 did_end_match = bool(self.__blank_line_count == self.__lines_below)
                 self.report_any_match_failures(context, did_end_match)
                 self.__start_heading_token = None

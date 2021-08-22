@@ -429,6 +429,8 @@ def test_md004_bad_single_level_consistent():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md032",
         "scan",
         "test/resources/rules/md004/bad_list_different_single_level.md",
     ]
@@ -492,6 +494,8 @@ def test_md004_good_multi_level_sublevel_complex():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md032",
         "--set",
         "plugins.md004.style=sublist",
         "scan",
@@ -521,6 +525,8 @@ def test_md004_bad_multi_level_sublevel_complex():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md032",
         "--set",
         "plugins.md004.style=sublist",
         "scan",
@@ -556,6 +562,8 @@ def test_md004_bad_multi_level_sublevel_complex_asterisk():
     supplied_arguments = [
         "--set",
         "plugins.md004.style=asterisk",
+        "--disable-rules",
+        "md032",
         "scan",
         "test/resources/rules/md004/bad_multi_level_complex.md",
     ]

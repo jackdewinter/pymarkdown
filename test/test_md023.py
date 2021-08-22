@@ -212,7 +212,7 @@ def test_md023_bad_improper_indent_setext_in_block_quote():
         "--enable-rules",
         "MD023",
         "--disable-rules",
-        "MD027",
+        "MD027,md022",
         "scan",
         "test/resources/rules/md023/improper_indent_setext_in_block_quote.md",
     ]

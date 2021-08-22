@@ -82,7 +82,7 @@ def test_md006_good_ignore_bad_second_level():
         "--enable-rules",
         "MD006",
         "--disable-rules",
-        "MD005",
+        "MD005,md032",
         "scan",
         "test/resources/rules/md006/good_ignore_bad_second_level.md",
     ]

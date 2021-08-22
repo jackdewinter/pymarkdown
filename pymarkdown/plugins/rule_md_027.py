@@ -52,8 +52,6 @@ class RuleMd027(Plugin):
             self.__bq_line_index[len(self.__container_tokens)] = 0
             # if self.__debug_on:
             #     print("bq>" + str(self.__container_tokens[-1]).replace("\n","\\n"))
-        elif token.is_list_start:
-            self.__container_tokens.append(token)
         elif token.is_block_quote_end:
             num_container_tokens = len(self.__container_tokens)
             newlines_in_container = self.__container_tokens[-1].leading_spaces.count(
@@ -68,15 +66,17 @@ class RuleMd027(Plugin):
             ):
                 newlines_in_container += 1
 
-            assert (
-                newlines_in_container == self.__bq_line_index[num_container_tokens]
-            ), (
-                str(newlines_in_container)
-                + " == "
-                + str(self.__bq_line_index[num_container_tokens])
-            )
+            # assert (
+            #     newlines_in_container == self.__bq_line_index[num_container_tokens]
+            # ), (
+            #     str(newlines_in_container)
+            #     + " == "
+            #     + str(self.__bq_line_index[num_container_tokens])
+            # )
             del self.__bq_line_index[num_container_tokens]
             del self.__container_tokens[-1]
+        elif token.is_list_start:
+            self.__container_tokens.append(token)
         elif token.is_list_end:
             del self.__container_tokens[-1]
         elif (
@@ -101,7 +101,6 @@ class RuleMd027(Plugin):
             self.report_next_token_error(
                 context, token, column_number_delta=column_number_delta
             )
-        self.__last_leaf_token = None
         self.__bq_line_index[num_container_tokens] += 1
 
     def __handle_atx_heading(self, context, token, num_container_tokens):
@@ -162,10 +161,9 @@ class RuleMd027(Plugin):
         self.__bq_line_index[num_container_tokens] += 1
         self.__line_index_at_bq_start = self.__bq_line_index[num_container_tokens]
 
-    def __handle_fenced_code_block_end(
-        self, context, token, num_container_tokens, scoped_block_quote_token
-    ):
+    def __handle_fenced_code_block_end(self, context, token, num_container_tokens):
         if token.extracted_whitespace:
+            scoped_block_quote_token = self.__container_tokens[-1]
             split_leading_spaces = scoped_block_quote_token.leading_spaces.split("\n")
             specific_block_quote_prefix = split_leading_spaces[
                 self.__bq_line_index[num_container_tokens]
@@ -191,9 +189,8 @@ class RuleMd027(Plugin):
         self.__last_leaf_token = None
         self.__bq_line_index[num_container_tokens] += 1
 
-    def __handle_link_reference_definition(
-        self, context, token, num_container_tokens, scoped_block_quote_token
-    ):
+    def __handle_link_reference_definition(self, context, token, num_container_tokens):
+        scoped_block_quote_token = self.__container_tokens[-1]
         if token.extracted_whitespace:
             column_number_delta = -(
                 token.column_number - len(token.extracted_whitespace)
@@ -271,10 +268,9 @@ class RuleMd027(Plugin):
             + token.link_title_raw.count("\n")
         )
 
-    def __handle_text(
-        self, context, token, num_container_tokens, scoped_block_quote_token
-    ):
+    def __handle_text(self, context, token, num_container_tokens):
         if self.__last_leaf_token.is_setext_heading:
+            scoped_block_quote_token = self.__container_tokens[-1]
             for line_number_delta, next_line in enumerate(
                 token.end_whitespace.split("\n")
             ):
@@ -316,10 +312,10 @@ class RuleMd027(Plugin):
                 token.token_text.count("\n") + 1
             )
 
-    def __handle_paragraph(
-        self, context, token, num_container_tokens, scoped_block_quote_token
-    ):
+    def __handle_paragraph(self, context, token, num_container_tokens):
         self.__last_leaf_token = token
+        scoped_block_quote_token = self.__container_tokens[-1]
+
         for line_number_delta, next_line in enumerate(
             token.extracted_whitespace.split("\n")
         ):
@@ -353,7 +349,6 @@ class RuleMd027(Plugin):
     # pylint: disable=too-many-branches
     def __handle_within_block_quotes(self, context, token):
         num_container_tokens = len(self.__container_tokens)
-        scoped_block_quote_token = self.__container_tokens[-1]
         # if self.__debug_on:
         #     print(
         #         str(self.__bq_line_index[num_container_tokens])
@@ -361,13 +356,9 @@ class RuleMd027(Plugin):
         #         + ParserHelper.make_value_visible(token)
         #     )
         if token.is_paragraph:
-            self.__handle_paragraph(
-                context, token, num_container_tokens, scoped_block_quote_token
-            )
+            self.__handle_paragraph(context, token, num_container_tokens)
         elif token.is_text:
-            self.__handle_text(
-                context, token, num_container_tokens, scoped_block_quote_token
-            )
+            self.__handle_text(context, token, num_container_tokens)
         elif token.is_paragraph_end:
             self.__last_leaf_token = None
             self.__bq_line_index[num_container_tokens] += 1
@@ -390,14 +381,12 @@ class RuleMd027(Plugin):
         elif token.is_fenced_code_block:
             self.__handle_fenced_code_block(context, token, num_container_tokens)
         elif token.is_fenced_code_block_end:
-            self.__handle_fenced_code_block_end(
-                context, token, num_container_tokens, scoped_block_quote_token
-            )
+            self.__handle_fenced_code_block_end(context, token, num_container_tokens)
         elif token.is_thematic_break:
             self.__handle_thematic_break(context, token, num_container_tokens)
         elif token.is_link_reference_definition:
             self.__handle_link_reference_definition(
-                context, token, num_container_tokens, scoped_block_quote_token
+                context, token, num_container_tokens
             )
         # if self.__debug_on:
         #     print(

@@ -81,6 +81,7 @@ paragraph inspired link](
 
 ### bad_split_block_quote_in_list
 
+- commented out `rule_md_027.py#69` for now
 - test_md027_good_alligned_quote_within_list
 - test_md027_bad_misalligned_quote_within_list
 
@@ -88,6 +89,19 @@ paragraph inspired link](
 - > This is one section of a block quote
 
   > This is the other section.
+```
+
+### also 027
+
+- rule 32
+
+```Markdown
+This is text and a blank line.
+
+> a block quote
+> + a list
+
+This is a blank line and some text.
 ```
 
 ## xxx
@@ -115,6 +129,20 @@ paragraph inspired link](
 > dd
 # a
 ```
+
+## Rule 31
+
+- bad_fenced_block_in_list_in_block_quote
+
+```Markdown
+> + list
+> ```block
+> A code block
+> ```
+> 1. another list
+```
+
+- finish off inline elements for rule 027
 
 - better solution than `no-space-in-code` for scenario-cases.md
 
