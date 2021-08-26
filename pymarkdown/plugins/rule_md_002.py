@@ -15,7 +15,6 @@ class RuleMd002(Plugin):
         super().__init__()
         self.__start_level = None
         self.__have_seen_first_heading = None
-        self.__front_matter_title = None
 
     def get_details(self):
         """

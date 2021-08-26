@@ -606,6 +606,8 @@ def test_md024_bad_same_heading_in_siblings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md025",
         "scan",
         "test/resources/rules/md024/same_heading_in_siblings_setext.md",
     ]
@@ -639,6 +641,8 @@ def test_md024_bad_same_heading_but_not_in_siblings_setext():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md025",
         "scan",
         "test/resources/rules/md024/same_heading_but_not_in_siblings_setext.md",
     ]
@@ -751,6 +755,8 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
+            "--disable-rules",
+            "md025",
             "-c",
             configuration_file,
             "scan",
@@ -792,6 +798,8 @@ def test_md024_good_same_heading_but_not_in_siblings_setext_with_configuration()
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
+            "--disable-rules",
+            "md025",
             "-c",
             configuration_file,
             "scan",

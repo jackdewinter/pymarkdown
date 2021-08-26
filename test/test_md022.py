@@ -1290,7 +1290,7 @@ def test_md022_good_alternating_heading_types():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable",
-        "MD003",
+        "MD003,md025",
         "scan",
         "test/resources/rules/md022/alternating_heading_types.md",
     ]
@@ -1326,7 +1326,7 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
             "--disable",
-            "MD003",
+            "MD003,md025",
             "-c",
             configuration_file,
             "scan",
@@ -1389,7 +1389,7 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
             "--disable",
-            "MD003",
+            "MD003,md025",
             "-c",
             configuration_file,
             "scan",

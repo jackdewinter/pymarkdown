@@ -95,3 +95,11 @@ This rule is largely inspired by the MarkdownLint rule
 [MD001](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md001---heading-levels-should-only-increment-by-one-level-at-a-time)
 and the
 [W3C standards](https://www.w3.org/WAI/tutorials/page-structure/headings/).
+
+### Differences From MarkdownLint Rule
+
+The difference between this rule and the original rule is that the
+original rule specified a regular expression used to look for the
+specific element within a raw front-matter element.  By default, this
+was `"^\s*"?title"?\s*[:=]"`.  To maintain simplicity, this rule
+simply looks for the value of the front-matter key `title` by default.

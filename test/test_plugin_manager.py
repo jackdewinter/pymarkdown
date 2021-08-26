@@ -1009,6 +1009,7 @@ def test_markdown_with_plugins_list_only():
   md023  heading-start-left, header-start-left   True       True       0.5.0
   md024  no-duplicate-heading, no-duplicate-hea  True       True       0.5.0
          der
+  md025  single-title, single-h1                 True       True       0.5.0
   md026  no-trailing-punctuation                 True       True       0.5.0
   md027  no-multiple-space-blockquote            True       True       0.5.0
   md028  no-blanks-blockquote                    True       True       0.5.0
@@ -1078,7 +1079,7 @@ def test_markdown_with_plugins_list_only_all():
   md023  heading-start-left, header-start-left   True       True       0.5.0
   md024  no-duplicate-heading, no-duplicate-hea  True       True       0.5.0
          der
-  md025  single-title, single-h1                 False      False      0.0.0
+  md025  single-title, single-h1                 True       True       0.5.0
   md026  no-trailing-punctuation                 True       True       0.5.0
   md027  no-multiple-space-blockquote            True       True       0.5.0
   md028  no-blanks-blockquote                    True       True       0.5.0

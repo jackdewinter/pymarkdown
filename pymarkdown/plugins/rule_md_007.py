@@ -193,15 +193,15 @@ class RuleMd007(Plugin):
             list_depth += 1
 
         adjusted_column_number = token.column_number - 1 - container_base_column
-        # print(f"container_base_column={container_base_column}")
         # print(f"adjusted_column_number={adjusted_column_number}")
-        if block_quote_base:
-            container_base_column -= block_quote_base
-        elif container_base_column:
-            container_base_column += 1
         calculated_column_number = list_depth * self.__indent_basis
         # print(f"adjusted_column_number={adjusted_column_number}, calculated_column_number={calculated_column_number},block_quote_base={block_quote_base}")
         if adjusted_column_number != calculated_column_number:
+            # print(f"container_base_column={container_base_column}")
+            if block_quote_base:
+                container_base_column -= block_quote_base
+            elif container_base_column:
+                container_base_column += 1
             extra_error_information = f"Expected: {calculated_column_number+container_base_column}, Actual={adjusted_column_number+container_base_column}"
             self.report_next_token_error(
                 context, token, extra_error_information=extra_error_information

@@ -4,9 +4,11 @@
 
 ## Priority 2 - Like To Solve Before Initial
 
-- before release, check that all md* files and test file commented properly
-- go through each rule, and make sure all look the same
+- before release, check that all rule md* files look the same
   - i.e. make sure the get_details all look the same
+- before release, check that all test file commented properly
+
+- go through every disabled rule for tests, and determine if disable makes sense
 
 - documentation for developers
 
@@ -104,7 +106,7 @@ This is text and a blank line.
 This is a blank line and some text.
 ```
 
-## xxx
+### xxx
 
 - similar to other bad lrd tests for md027
 
@@ -119,7 +121,7 @@ This is a blank line and some text.
 > a real test
 ```
 
-## Inconsistent end for bq
+### Inconsistent end for bq
 
 - different ending to block quote if ends with newline or not
 
@@ -130,7 +132,9 @@ This is a blank line and some text.
 # a
 ```
 
-## Rule 31
+### Rule 31
+
+- check to make sure line/col for FCB in bq/list reported properly
 
 - bad_fenced_block_in_list_in_block_quote
 
@@ -142,7 +146,7 @@ This is a blank line and some text.
 > 1. another list
 ```
 
-## Rule 007
+### Rule 007
 
 ```Markdown
 This is a test
@@ -153,6 +157,13 @@ This is a test
 ```
 
 - level 2 and level 3 text are in same item, does not identify as sublevel.
+- try deeper nesting
+
+### Rule ???
+
+- is there a rule that can detect a possible front-matter header and trigger?
+
+### Other
 
 - finish off inline elements for rule 027
 
