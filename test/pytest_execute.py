@@ -218,10 +218,27 @@ class InProcessExecution(ABC):
         return 1
 
     # pylint: disable=broad-except
-    def invoke_main(self, arguments=None, cwd=None):
+    def invoke_main(
+        self, arguments=None, cwd=None, suppress_first_line_heading_rule=True
+    ):
         """
         Invoke the mainline so that we can capture results.
         """
+
+        if suppress_first_line_heading_rule:
+            new_arguments = arguments.copy() if arguments else []
+            if "--disable-rules" not in new_arguments:
+                new_arguments.insert(0, "--disable-rules")
+                new_arguments.insert(1, "md041")
+            else:
+                disable_index = new_arguments.index("--disable-rules")
+                disable_value = new_arguments[disable_index + 1]
+                if not disable_value.endswith(","):
+                    disable_value += ","
+                disable_value += "md041"
+                new_arguments[disable_index + 1] = disable_value
+            arguments = new_arguments
+            print(">>" + str(arguments))
 
         saved_state = SystemState()
 

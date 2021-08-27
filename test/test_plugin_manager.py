@@ -1024,6 +1024,7 @@ def test_markdown_with_plugins_list_only():
   md038  no-space-in-code                        True       True       0.5.0
   md039  no-space-in-links                       True       True       0.5.0
   md040  fenced-code-language                    True       True       0.5.0
+  md041  first-line-heading, first-line-h1       True       True       0.5.0
   md042  no-empty-links                          True       True       0.5.0
   md044  proper-names                            True       True       0.5.0
   md045  no-alt-text                             True       True       0.5.0
@@ -1035,7 +1036,9 @@ def test_markdown_with_plugins_list_only():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, suppress_first_line_heading_rule=False
+    )
 
     # Assert
     execute_results.assert_results(
@@ -1096,7 +1099,7 @@ def test_markdown_with_plugins_list_only_all():
   md038  no-space-in-code                        True       True       0.5.0
   md039  no-space-in-links                       True       True       0.5.0
   md040  fenced-code-language                    True       True       0.5.0
-  md041  first-line-heading, first-line-h1       False      False      0.0.0
+  md041  first-line-heading, first-line-h1       True       True       0.5.0
   md042  no-empty-links                          True       True       0.5.0
   md043  required-headings, required-headers     False      False      0.0.0
   md044  proper-names                            True       True       0.5.0
@@ -1109,7 +1112,9 @@ def test_markdown_with_plugins_list_only_all():
     expected_error = ""
 
     # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, suppress_first_line_heading_rule=False
+    )
 
     # Assert
     execute_results.assert_results(

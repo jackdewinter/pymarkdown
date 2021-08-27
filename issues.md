@@ -12,9 +12,7 @@
 
 - documentation for developers
 
-- MD041 requires metadata
-  - implement MD043 at the same time
-  - implement MD025 at the same time
+- implement MD043 at the same time
 - pragma tests need to remove `disable_consistency_checks=True`
 
 - implement missing rules

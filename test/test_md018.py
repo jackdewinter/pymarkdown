@@ -457,9 +457,7 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md020",
-        "--disable-rules",
-        "md033",
+        "md020,md033",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_inline_rawhtml_multi.md",
     ]
