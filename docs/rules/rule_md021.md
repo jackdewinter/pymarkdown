@@ -21,7 +21,7 @@ Closed Heading element.
 
 ### Failure Scenarios
 
-This rule triggers when the start of a Atx Heading element contains more
+This rule triggers when the start of an Atx Heading element contains more
 than one space character between the last start hash character (`#`) and
 the first non-space character:
 

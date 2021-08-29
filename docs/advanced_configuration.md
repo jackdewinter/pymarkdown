@@ -268,7 +268,7 @@ These affect the logging for the application.
 These configuration values affect how the application logs information.  The two
 easiest to explain are the `*file` and `*level` values.  These configuration values
 specify what the log level is for the application and whether to redirect any logged
-information away from the standard ouput (stdout) to the specified log file.
+information away from the standard output (stdout) to the specified log file.
 
 The `log.stack-trace` configuration value and the `--stack-trace` command line flag are
 a bit more nuanced in their behavior.  Due to implementation reasons, the configuration
@@ -278,7 +278,7 @@ that is after the configuration file has been loaded and a possible
 enacted.
 Generally speaking, this flag enables the application to provide additional information
 on why a critical error occurred.  As the name of the value suggests, the reporting of a
-critical error occuring will include a Python stack trace if this flag is set.  While
+critical error occurring will include a Python stack trace if this flag is set.  While
 this information will be confusing to the typical user of the application, that information
 is vital to help diagnose the critical error.
 
@@ -325,7 +325,7 @@ For more information on Markdown Front-Matter, see [this document](/docs/extensi
 
 #### Pragmas
 
-This configuration affects whether HTML-style comments can be interpretted as linter commands.
+This configuration affects whether HTML-style comments can be interpreted as linter commands.
 
 | Key | Command Line | Type | Description |
 | -- | -- | -- |-- |

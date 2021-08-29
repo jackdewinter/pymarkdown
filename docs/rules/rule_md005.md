@@ -33,7 +33,7 @@ the indentation either matches up or not:
 
 A failure for this rule for Ordered List elements is a bit more nuanced as this
 rule supports both left aligned and right aligned.  That means that either the
-first character must match the identation of the list or the list delimiter
+first character must match the indentation of the list or the list delimiter
 character (`.` or `)`) must match.  Therefore
 
 ```Markdown
@@ -75,7 +75,7 @@ or
 100. Item
 ```
 
-Note that in the right aligment format, having an Ordered List item
+Note that in the right alignment format, having an Ordered List item
 starts with more than 4 characters is impossible without switching
 aligmnent.
 

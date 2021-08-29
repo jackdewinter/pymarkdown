@@ -47,7 +47,7 @@ This is *Raw* HTML.
 Depending on the reasons for enabling this rule, the other approach is
 to add any required elements to the `allowed_elements` list.  Added
 through configuration, setting the `allowed_elements` to `image,i` will
-also supress the triggering of this rule.
+also suppress the triggering of this rule.
 However, as this rule is generally used for a sincere and overwhelming
 reason to not allow inline HTML, the use of this approach for any other
 image tags than the default `!--` (HTML comment) are strongly discouraged.

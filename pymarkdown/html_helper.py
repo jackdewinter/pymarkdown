@@ -712,7 +712,7 @@ class HtmlHelper:
             return None, None
         if html_block_type == HtmlHelper.html_block_7:
             if token_stack[-1].is_paragraph:
-                POGGER.debug("html_block_type 7 cannot interupt a paragraph")
+                POGGER.debug("html_block_type 7 cannot interrupt a paragraph")
                 return None, None
         return html_block_type, remaining_html_tag
 

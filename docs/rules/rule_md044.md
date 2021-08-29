@@ -15,8 +15,8 @@ The main reason for this rule is consistency. Quite often, when writing
 groups of documents, there are certain proper nouns that have specific
 capitalization.  A good example of this is this project, the
 [PyMarkdown](https://github.com/jackdewinter/pymarkdown).  It very specifically
-has the `P` and `M` characters captialized.  This rule enforces that
-captialization.
+has the `P` and `M` characters capitalized.  This rule enforces that
+capitalization.
 
 ## Examples
 
@@ -39,11 +39,11 @@ matching text in the link label and the link title, but not the link URI:
 this is a [paragraph](/paragraph "a paragraph item") link.
 ````
 
-For that example, the rule triggers on the first occurence of
+For that example, the rule triggers on the first occurrence of
 paragraph (link label) and the last occurrence (link title).
 
 For every other type of link and image, this rule triggers on
-any occurence in the link label.
+any occurrence in the link label.
 
 ![collapsed
 paragraph][]
@@ -53,7 +53,7 @@ link
 paragraph]: /url "a paragraph title"
 
 Since any link title is physically
-associated with the Link Reference Definition, any occurence found
+associated with the Link Reference Definition, any occurrence found
 in the link title triggers this rule.
 
 ### Correct Scenarios
@@ -86,7 +86,7 @@ this is a reparagraph
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
-| `names`   | `string` | None | Comma-seperated list of proper nouns to preserve capitalization on. |
+| `names`   | `string` | None | Comma-separated list of proper nouns to preserve capitalization on. |
 | `code_blocks` | `boolean` | `True` | Search in Fenced Code Block elements and Indented Code Block elements. |
 
 ## Origination of Rule

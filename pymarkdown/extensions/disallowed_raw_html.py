@@ -18,7 +18,7 @@ class MarkdownDisallowRawHtmlExtension:
         """
         return ExtensionDetails(
             extension_id="markdown-disallow_raw_html",
-            extension_name="Markdown Disalow Raw HTML",
+            extension_name="Markdown Disallow Raw HTML",
             extension_description="Disallows parsing of any raw HTML.",
             extension_enabled_by_default=False,
             extension_version="0.0.0",

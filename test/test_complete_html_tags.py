@@ -69,7 +69,7 @@ def test_simple_complete_html_end_tag_with_whitespace():
 
 def test_complete_html_end_tag_with_bad_attribute():
     """
-    Make sure to test a complete html tag with a attribute specified (bad).
+    Make sure to test a complete html tag with an attribute specified (bad).
     """
 
     # Arrange

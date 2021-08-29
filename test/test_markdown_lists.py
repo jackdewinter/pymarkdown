@@ -1582,7 +1582,7 @@ def test_list_items_294():
 @pytest.mark.gfm
 def test_list_items_295():
     """
-    Test case 295:  So is this, with a empty second item:
+    Test case 295:  So is this, with an empty second item:
     """
 
     # Arrange

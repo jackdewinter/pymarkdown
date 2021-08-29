@@ -1,1 +1,1 @@
-this is a paragraph with paragraph captialization errors
+this is a paragraph with paragraph capitalization errors

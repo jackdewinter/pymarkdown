@@ -266,7 +266,7 @@ class FencedCodeBlockStackToken(StackToken):
     @property
     def whitespace_start_count(self):
         """
-        Returns the count of whitespaces preceeding this stack token.
+        Returns the count of whitespaces preceding this stack token.
         """
         return self.__whitespace_start_count
 
@@ -336,14 +336,14 @@ class ListStackToken(StackToken):
     @property
     def ws_before_marker(self):
         """
-        Returns the whitespace occuring before this stack token.
+        Returns the whitespace occurring before this stack token.
         """
         return self.__ws_before_marker
 
     @property
     def ws_after_marker(self):
         """
-        Returns the whitespace occuring after this stack token.
+        Returns the whitespace occurring after this stack token.
         """
         return self.__ws_after_marker
 

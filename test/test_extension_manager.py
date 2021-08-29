@@ -88,7 +88,7 @@ def test_markdown_with_extensions_list_only_all():
   front-matter           Front Matter Metadata  False      False      0.5.0
   linter-pragmas         Pragma Linter Instruc  True       True       0.5.0
                          tions
-  markdown-disallow_raw  Markdown Disalow Raw   False      False      0.0.0
+  markdown-disallow_raw  Markdown Disallow Raw  False      False      0.0.0
   _html                  HTML
   markdown-extended-aut  Markdown Extended Aut  False      False      0.0.0
   olinks                 olinks

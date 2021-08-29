@@ -392,7 +392,7 @@ def test_md005_good_ordered_list_single_level_short_widths_right():
 
 
 @pytest.mark.rules
-def test_md005_good_ordered_list_seperate_single_level_short_widths_right():
+def test_md005_good_ordered_list_separate_single_level_short_widths_right():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md005 directory that has...
@@ -419,7 +419,7 @@ def test_md005_good_ordered_list_seperate_single_level_short_widths_right():
 
 
 @pytest.mark.rules
-def test_md005_good_ordered_list_seperate_single_level_short_widths():
+def test_md005_good_ordered_list_separate_single_level_short_widths():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md005 directory that has...

@@ -84,7 +84,7 @@ class ListBlockProcessor:
         adj_ws=None,
     ):
         """
-        Determine if we have the start of an numbered or ordered list.
+        Determine if we have the start of a numbered or ordered list.
         """
 
         is_start, after_all_whitespace_index, index, number_of_digits, is_not_one = (
@@ -557,7 +557,7 @@ class ListBlockProcessor:
             )
 
             # This needs to be in place to prevent a thematic break after a paragraph
-            # within a list from being misinterpretted as a SetExt Heading.
+            # within a list from being misinterpreted as a SetExt Heading.
             is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
                 line_to_parse,
                 start_index,
