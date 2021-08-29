@@ -80,10 +80,7 @@ setup(
     classifiers=PROJECT_CLASSIFIERS,
     scripts=PACKAGE_SCRIPTS,
     packages=PACKAGE_MODULES,
-    data_files=[
-        (
-            "Lib/site-packages/pymarkdown/resources",
-            ["pymarkdown/resources/entities.json"],
-        )
-    ],
+    package_data={
+        "pymarkdown.resources": ["entities.json"],
+    },
 )
