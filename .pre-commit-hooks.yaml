@@ -1,0 +1,7 @@
+- id: pymarkdown
+  name: pymarkdown
+  description: Markdown linter
+  language: python
+  language_version: python3
+  entry: pymarkdown scan
+  types: [markdown]
