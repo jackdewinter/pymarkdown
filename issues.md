@@ -12,7 +12,6 @@
 
 - documentation for developers
 
-- implement MD043 at the same time
 - pragma tests need to remove `disable_consistency_checks=True`
 
 - implement missing rules
@@ -164,6 +163,7 @@ This is a test
 ### Other
 
 - finish off inline elements for rule 027
+- better globbing for 043
 
 - better solution than `no-space-in-code` for scenario-cases.md
 

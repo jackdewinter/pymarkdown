@@ -652,7 +652,6 @@ def test_md041_good_html_block_heading():
     supplied_arguments = [
         "--disable-rules",
         "md033",
-        "--stack-trace",
         "scan",
         "test/resources/rules/md041/good_html_block_heading.md",
     ]

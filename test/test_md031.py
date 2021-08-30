@@ -664,7 +664,6 @@ def test_md031_bad_fenced_block_in_list_in_block_quote():
     supplied_arguments = [
         "--disable-rules",
         "md032",
-        "--stack-trace",
         "scan",
         "test/resources/rules/md031/bad_fenced_block_in_list_in_block_quote.md",
     ]

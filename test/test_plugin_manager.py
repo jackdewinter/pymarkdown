@@ -1026,6 +1026,7 @@ def test_markdown_with_plugins_list_only():
   md040  fenced-code-language                    True       True       0.5.0
   md041  first-line-heading, first-line-h1       True       True       0.5.0
   md042  no-empty-links                          True       True       0.5.0
+  md043  required-headings, required-headers     True       True       0.5.0
   md044  proper-names                            True       True       0.5.0
   md045  no-alt-text                             True       True       0.5.0
   md046  code-block-style                        True       True       0.5.0
@@ -1101,7 +1102,7 @@ def test_markdown_with_plugins_list_only_all():
   md040  fenced-code-language                    True       True       0.5.0
   md041  first-line-heading, first-line-h1       True       True       0.5.0
   md042  no-empty-links                          True       True       0.5.0
-  md043  required-headings, required-headers     False      False      0.0.0
+  md043  required-headings, required-headers     True       True       0.5.0
   md044  proper-names                            True       True       0.5.0
   md045  no-alt-text                             True       True       0.5.0
   md046  code-block-style                        True       True       0.5.0
@@ -1197,6 +1198,7 @@ def test_markdown_with_plugins_list_and_filter_by_name_link():
          der
   md036  no-emphasis-as-heading, no-emphasis-as  True       True       0.5.0
          -header
+  md043  required-headings, required-headers     True       True       0.5.0
 """
     expected_error = ""
 

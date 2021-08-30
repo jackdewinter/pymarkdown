@@ -190,7 +190,6 @@ def test_md027_bad_block_quote_indent():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "test/resources/rules/md027/bad_block_quote_indent.md",
     ]
@@ -224,7 +223,6 @@ def test_md027_bad_block_quote_indent_plus_one():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "test/resources/rules/md027/bad_block_quote_indent_plus_one.md",
     ]
@@ -654,7 +652,6 @@ def test_md027_good_alligned_quote_within_list():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "test/resources/rules/md027/good_alligned_quote_within_list.md",
     ]

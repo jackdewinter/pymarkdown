@@ -209,7 +209,6 @@ def test_md007_good_list_indentation_in_block_quote():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--stack-trace",
         "scan",
         "test/resources/rules/md007/good_list_indentation_in_block_quote.md",
     ]

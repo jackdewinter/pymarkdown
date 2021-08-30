@@ -238,7 +238,6 @@ class InProcessExecution(ABC):
                 disable_value += "md041"
                 new_arguments[disable_index + 1] = disable_value
             arguments = new_arguments
-            print(">>" + str(arguments))
 
         saved_state = SystemState()
 
