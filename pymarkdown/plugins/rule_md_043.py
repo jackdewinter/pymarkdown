@@ -12,7 +12,7 @@ class RuleMd043(Plugin):
 
     def __init__(self):
         super().__init__()
-        # self.__show_debug = False
+        self.__show_debug = False
         self.__collected_tokens = None
         self.__all_tokens = None
         self.__headings_have_wildcards = None
@@ -48,6 +48,12 @@ class RuleMd043(Plugin):
         are_any_wildcards = False
         for next_part in found_parts:
             if next_part == "*":
+                if compiled_lines and compiled_lines[-1] == "*":
+                    return (
+                        None,
+                        None,
+                        "Two wildcard elements cannot be next to each other.",
+                    )
                 compiled_lines.append(next_part)
                 are_any_wildcards = True
             else:
@@ -152,6 +158,15 @@ class RuleMd043(Plugin):
             scan_limit = len(self.__compiled_headings)
 
         failure_token, failure_reason = (None, None)
+        # if self.__show_debug:
+        #     print(
+        #         "vghm:heading_index="
+        #         + str(heading_index)
+        #         + ",len="
+        #         + str(len(self.__compiled_headings))
+        #         + ",scan_limit="
+        #         + str(scan_limit)
+        #     )
         while (
             not failure_token
             and heading_index < len(self.__compiled_headings)
@@ -160,7 +175,7 @@ class RuleMd043(Plugin):
             this_compiled_heading = self.__compiled_headings[heading_index]
             # if self.__show_debug:
             #     print(
-            #         "this_compiled_heading="
+            #         "vghm:this_compiled_heading="
             #         + str(this_compiled_heading)
             #         + ",all_token_index="
             #         + str(all_token_index)
@@ -168,6 +183,13 @@ class RuleMd043(Plugin):
             failure_token, failure_reason = self.__verify_single_heading_match(
                 this_compiled_heading, all_token_index
             )
+            # if self.__show_debug:
+            #     print(
+            #         "vghm:failure_token="
+            #         + str(failure_token)
+            #         + ",failure_reason="
+            #         + str(failure_reason)
+            #     )
             if not failure_token:
                 heading_index += 1
                 all_token_index += 1
@@ -248,6 +270,99 @@ class RuleMd043(Plugin):
         self.__collected_tokens = None
         self.__all_tokens = []
 
+    # pylint: disable=too-many-locals
+    def __do_recursive(
+        self, remaining_headings, top_heading_index, remaining_tokens, top_token_index
+    ):
+
+        bottom_heading_index = top_heading_index + len(remaining_headings)
+
+        # if self.__show_debug:
+        #     print(
+        #         "remaining_headings:"
+        #         + str(remaining_headings)
+        #         + ",top="
+        #         + str(top_heading_index)
+        #         + ",bottom="
+        #         + str(bottom_heading_index)
+        #     )
+        #     print(
+        #         "remaining_tokens:"
+        #         + str(remaining_tokens)
+        #         + ",index="
+        #         + str(top_token_index)
+        #     )
+        assert remaining_headings[0] == "*" and remaining_headings[-1] == "*"
+        start_index = 1
+        end_index = 2
+        while remaining_headings[end_index] != "*":
+            end_index += 1
+        delta = end_index - start_index
+        # if self.__show_debug:
+        #     print(
+        #         "start_index="
+        #         + str(start_index)
+        #         + ",end_index="
+        #         + str(end_index)
+        #         + ",delta="
+        #         + str(delta)
+        #     )
+        #     print("headings:" + str(remaining_headings[start_index:end_index]))
+        search_index = 0
+        heading_index = top_heading_index + 1
+        scan_limit = top_heading_index + 1 + delta
+        found_match = False
+        while search_index < len(remaining_headings) and search_index < len(
+            remaining_tokens
+        ):
+            (
+                end_heading_index,
+                end_token_index,
+                failure_token,
+                _,
+            ) = self.__verify_group_heading_match(
+                heading_index, top_token_index + search_index, scan_limit=scan_limit
+            )
+            # if self.__show_debug:
+            #     print(str((end_heading_index, end_token_index, failure_token)))
+            if not failure_token and end_heading_index < len(self.__compiled_headings):
+                # if self.__show_debug:
+                #     print(
+                #         "FOUND:"
+                #         + str((end_heading_index, end_token_index, failure_token))
+                #     )
+                if end_heading_index == bottom_heading_index - 1:
+                    # if self.__show_debug:
+                    #     print("done")
+                    found_match = True
+                else:
+                    new_top_heading_index = end_heading_index
+                    new_remaining_headings = remaining_headings[
+                        (end_heading_index - top_heading_index) :
+                    ]
+
+                    new_remaining_tokens = remaining_tokens[
+                        (end_token_index - top_token_index) :
+                    ]
+                    new_top_token_index = end_token_index
+
+                    # if self.__show_debug:
+                    #     print("recurse")
+                    found_match = self.__do_recursive(
+                        new_remaining_headings,
+                        new_top_heading_index,
+                        new_remaining_tokens,
+                        new_top_token_index,
+                    )
+                    # if self.__show_debug:
+                    #     print("found_match=" + str(found_match))
+            if found_match:
+                break
+            search_index += 1
+        return found_match
+
+    # pylint: enable=too-many-locals
+
     def completed_file(self, context):
         """
         Event that the file being currently scanned is now completed.
@@ -314,11 +429,18 @@ class RuleMd043(Plugin):
             #         + str(remaining_tokens)
             #     )
             if len(remaining_headings) != 1:
-                self.report_next_token_error(
-                    context,
-                    remaining_tokens[0][0],
-                    extra_error_information="More than one wildcard not supported.",
+                recurse_result = self.__do_recursive(
+                    remaining_headings,
+                    top_heading_index,
+                    remaining_tokens,
+                    top_token_index,
                 )
+                if not recurse_result:
+                    self.report_next_token_error(
+                        context,
+                        remaining_tokens[0][0],
+                        extra_error_information="Multiple wildcard matching failed.",
+                    )
         if failure_token:
             self.report_next_token_error(
                 context,
