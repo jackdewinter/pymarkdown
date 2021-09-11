@@ -61,7 +61,7 @@ A singular `FrontMatterToken` instance can occur at the very start of
 the Markdown token stream.  As with all other tokens, this token contains
 the necessary information to successfully rebuild the Front Matter
 Block from that data.  This may be used by rules that need to examine
-the Front Matter Block Data and need a accurate character-by-character record
+the Front Matter Block Data and need an accurate character-by-character record
 of what was in the Front Matter Block element.
 
 For more casual use, the `matter_map` property contains a dictionary

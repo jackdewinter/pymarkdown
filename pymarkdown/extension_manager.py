@@ -62,10 +62,10 @@ class ExtensionManager:
             DebugExtension(),
         ]
 
-        for next_exension_object in all_extensions:
-            next_extension = next_exension_object.get_details()
+        for next_extension_object in all_extensions:
+            next_extension = next_extension_object.get_details()
             self.__extension_details[next_extension.extension_id] = next_extension
-            self.__extension_objects[next_extension.extension_id] = next_exension_object
+            self.__extension_objects[next_extension.extension_id] = next_extension_object
             _ = next_extension.extension_interface_version
             _ = next_extension.extension_configuration
 

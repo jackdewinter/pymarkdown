@@ -309,7 +309,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         if token_name == MarkdownToken._token_inline_image:
             extra_data = f"{extra_data}{MarkdownToken.extra_data_separator}"
 
-        # Purposefully split this way to accomodate the extra data
+        # Purposefully split this way to accommodate the extra data
         part_1 = MarkdownToken.extra_data_separator.join(
             [label_type, self.__link_uri, self.__link_title, extra_data]
         )
@@ -753,7 +753,7 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
     @property
     def preceding_two(self):
         """
-        Returns the preceeding two characters before this token.
+        Returns the preceding two characters before this token.
         """
         return self.__preceding_two
 

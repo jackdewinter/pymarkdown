@@ -9,7 +9,7 @@ from .utils import act_and_assert
 @pytest.mark.gfm
 def test_emphasis_431():
     """
-    Test case 431:  (part 1) Any nonempty sequence of inline elements can be the contents of an strongly emphasized span.
+    Test case 431:  (part 1) Any nonempty sequence of inline elements can be the contents of a strongly emphasized span.
     """
 
     # Arrange
@@ -33,7 +33,7 @@ def test_emphasis_431():
 @pytest.mark.gfm
 def test_emphasis_432():
     """
-    Test case 432:  (part 2) Any nonempty sequence of inline elements can be the contents of an strongly emphasized span.
+    Test case 432:  (part 2) Any nonempty sequence of inline elements can be the contents of a strongly emphasized span.
     """
 
     # Arrange

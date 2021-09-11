@@ -804,7 +804,7 @@ Plugin class 'BadBooleanDetailIsInt' returned an improperly typed value for fiel
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_integer_detail():
     """
-    Test to make sure we get an error logged if a plugin throws an exception that a integer detail is bad.
+    Test to make sure we get an error logged if a plugin throws an exception that an integer detail is bad.
     """
 
     # Arrange
@@ -862,7 +862,7 @@ Plugin class 'BadDescription' returned an improperly typed value for field name 
 
 def test_markdown_with_dash_dash_add_plugin_with_empty_description():
     """
-    Test to make sure we get an error logged if a plugin returns a empty description.
+    Test to make sure we get an error logged if a plugin returns an empty description.
     """
 
     # Arrange

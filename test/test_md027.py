@@ -584,7 +584,7 @@ def test_md027_bad_misalligned_double_quote():
 
 
 @pytest.mark.rules
-def test_md027_good_alligned_double_quote():
+def test_md027_good_aligned_double_quote():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD026 directory that has atx headings that do not end with
@@ -642,7 +642,7 @@ def test_md027_bad_misalligned_quote_within_list():
 
 @pytest.mark.skip
 @pytest.mark.rules
-def test_md027_good_alligned_quote_within_list():
+def test_md027_good_aligned_quote_within_list():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/MD026 directory that has atx headings that do not end with

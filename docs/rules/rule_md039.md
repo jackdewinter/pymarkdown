@@ -62,7 +62,7 @@ This rule is largely inspired by the MarkdownLint rule
 
 ### Differences From MarkdownLint Rule
 
-The differnece between this rule and the original rule is that the original
+The difference between this rule and the original rule is that the original
 rule only fired on links, not image links.  As the only difference between
 a link:
 

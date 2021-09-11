@@ -737,7 +737,7 @@ def __verify_first_inline_fenced_code_block(
     last_non_inline_token, first_inline_token, last_token_stack
 ):
     """
-    Handle the case where the last non-inline token is an Fenced Code Block token.
+    Handle the case where the last non-inline token is a Fenced Code Block token.
     """
 
     assert first_inline_token.is_text or first_inline_token.is_blank_line

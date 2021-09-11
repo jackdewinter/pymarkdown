@@ -1,5 +1,5 @@
 """
-Module to provide for a local instance of a InProcessExecution class.
+Module to provide for a local instance of an InProcessExecution class.
 """
 import os
 import sys
@@ -15,7 +15,7 @@ from pymarkdown.main import PyMarkdownLint  # isort:skip
 
 class MarkdownScanner(InProcessExecution):
     """
-    Class to provide for a local instance of a InProcessExecution class.
+    Class to provide for a local instance of an InProcessExecution class.
     """
 
     def __init__(self):

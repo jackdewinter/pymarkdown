@@ -408,7 +408,7 @@ def test_md041_bad_single_top_level_setext():
 @pytest.mark.rules
 def test_md041_good_front_matter_top_level():
     """
-    Test to verify that a good title is interpretted from the front-matter.
+    Test to verify that a good title is interpreted from the front-matter.
     If the verification goes properly, line 5 should trigger a md025 for
     a multiple top level heading.
     """
@@ -443,7 +443,7 @@ def test_md041_good_front_matter_top_level():
 @pytest.mark.rules
 def test_md041_bad_front_matter_top_level():
     """
-    Test to verify that a bad title is not interpretted from the front-matter.
+    Test to verify that a bad title is not interpreted from the front-matter.
     If the verification goes properly, no rules should be triggered as the
     front-matter did not contribute to the top-level.
     """
@@ -475,7 +475,7 @@ def test_md041_bad_front_matter_top_level():
 @pytest.mark.rules
 def test_md041_bad_fenced_code_block():
     """
-    Test to verify that a bad title is not interpretted from the front-matter.
+    Test to verify that a bad title is not interpreted from the front-matter.
     If the verification goes properly, no rules should be triggered as the
     front-matter did not contribute to the top-level.
     """
@@ -508,7 +508,7 @@ def test_md041_bad_fenced_code_block():
 @pytest.mark.rules
 def test_md041_bad_thematic_break():
     """
-    Test to verify that a bad title is not interpretted from the front-matter.
+    Test to verify that a bad title is not interpreted from the front-matter.
     If the verification goes properly, no rules should be triggered as the
     front-matter did not contribute to the top-level.
     """
@@ -541,7 +541,7 @@ def test_md041_bad_thematic_break():
 @pytest.mark.rules
 def test_md041_bad_indented_code_block():
     """
-    Test to verify that a bad title is not interpretted from the front-matter.
+    Test to verify that a bad title is not interpreted from the front-matter.
     If the verification goes properly, no rules should be triggered as the
     front-matter did not contribute to the top-level.
     """
@@ -574,7 +574,7 @@ def test_md041_bad_indented_code_block():
 @pytest.mark.rules
 def test_md041_bad_html_block():
     """
-    Test to verify that a bad title is not interpretted from the front-matter.
+    Test to verify that a bad title is not interpreted from the front-matter.
     If the verification goes properly, no rules should be triggered as the
     front-matter did not contribute to the top-level.
     """
@@ -607,7 +607,7 @@ def test_md041_bad_html_block():
 @pytest.mark.rules
 def test_md041_bad_html_block_heading():
     """
-    Test to verify that a bad title is not interpretted from the front-matter.
+    Test to verify that a bad title is not interpreted from the front-matter.
     If the verification goes properly, no rules should be triggered as the
     front-matter did not contribute to the top-level.
     """
@@ -642,7 +642,7 @@ def test_md041_bad_html_block_heading():
 @pytest.mark.rules
 def test_md041_good_html_block_heading():
     """
-    Test to verify that a bad title is not interpretted from the front-matter.
+    Test to verify that a bad title is not interpreted from the front-matter.
     If the verification goes properly, no rules should be triggered as the
     front-matter did not contribute to the top-level.
     """

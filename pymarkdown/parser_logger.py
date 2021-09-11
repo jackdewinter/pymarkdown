@@ -71,7 +71,7 @@ class ParserLogger:
         automatic filtering of any string with make_value_visible to
         using make_whitespace_visible.
 
-        Note: This is seldomly used, and does not have a reset check as
+        Note: This is seldom used, and does not have a reset check as
         the reset will be hit by one of the other two functions long
         before it gets here.
         """

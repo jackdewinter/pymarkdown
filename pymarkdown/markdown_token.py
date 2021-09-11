@@ -258,21 +258,21 @@ class MarkdownToken:
     @property
     def is_unordered_list_start(self):
         """
-        Returns whether the current token is a unordered list element.
+        Returns whether the current token is an unordered list element.
         """
         return self.token_name == MarkdownToken._token_unordered_list_start
 
     @property
     def is_ordered_list_start(self):
         """
-        Returns whether the current token is a ordered list element.
+        Returns whether the current token is an ordered list element.
         """
         return self.token_name == MarkdownToken._token_ordered_list_start
 
     @property
     def is_unordered_list_end(self):
         """
-        Returns whether the current token is a unordered list end element.
+        Returns whether the current token is an unordered list end element.
         """
         return (
             self.token_name
@@ -283,7 +283,7 @@ class MarkdownToken:
     @property
     def is_ordered_list_end(self):
         """
-        Returns whether the current token is a ordered list end element.
+        Returns whether the current token is an ordered list end element.
         """
         return (
             self.token_name
@@ -667,7 +667,7 @@ class EndMarkdownToken(MarkdownToken):
     @property
     def extra_end_data(self):
         """
-        Returns any extra data specificially tied to the end element.
+        Returns any extra data specifically tied to the end element.
         """
         return self.__extra_end_data
 
