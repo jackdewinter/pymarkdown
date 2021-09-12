@@ -89,7 +89,7 @@ def test_markdown_with_extensions_list_only_all():
   linter-pragmas         Pragma Linter Instruc  True       True       0.5.0
                          tions
   markdown-disallow_raw  Markdown Disallow Raw  False      False      0.0.0
-  _html                  HTML
+  _html                   HTML
   markdown-extended-aut  Markdown Extended Aut  False      False      0.0.0
   olinks                 olinks
   markdown-strikethroug  Markdown Strikethroug  False      False      0.0.0
