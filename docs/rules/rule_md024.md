@@ -83,7 +83,7 @@ can be set to `True` to allow this Markdown document to not trigger this rule:
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
 | `siblings_only` | `boolean` | `False` | Whether the plugin rule allows the same text on sibling headings. |
 | `allow_different_nesting` | `boolean` | `False` | Whether the plugin rule allows the same text within different nesting hierarchies. |
 

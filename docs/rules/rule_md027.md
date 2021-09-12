@@ -111,7 +111,7 @@ This will be changed in a future release.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
 
 ## Origination of Rule
 

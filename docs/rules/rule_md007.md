@@ -72,7 +72,7 @@ of indentation, the `start_indented` configuration value can be set to
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
 | `indent` | `integer` | `2` | Number of spaces required between unordered sublists. |
 | `start_indented` | `boolean` | `False` | Whether the first unordered list should be indented. |
 

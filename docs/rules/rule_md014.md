@@ -74,7 +74,7 @@ $ cat /my/dir/file
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
 
 ## Origination of Rule
 
