@@ -258,6 +258,8 @@ def test_md005_good_ordered_list_single_level_widths():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md029",
         "scan",
         "test/resources/rules/md005/good_ordered_list_single_level_widths.md",
     ]
@@ -285,6 +287,8 @@ def test_md005_bad_ordered_list_single_level_widths():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md029",
         "scan",
         "test/resources/rules/md005/bad_ordered_list_single_level_widths.md",
     ]
@@ -316,6 +320,8 @@ def test_md005_good_ordered_list_single_level_widths_right():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md029",
         "scan",
         "test/resources/rules/md005/good_ordered_list_single_level_widths_right.md",
     ]
@@ -343,6 +349,8 @@ def test_md005_bad_ordered_list_single_level_widths_right():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md029",
         "scan",
         "test/resources/rules/md005/bad_ordered_list_single_level_widths_right.md",
     ]
@@ -374,6 +382,8 @@ def test_md005_good_ordered_list_single_level_short_widths_right():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md029",
         "scan",
         "test/resources/rules/md005/good_ordered_list_single_level_short_widths_right.md",
     ]
@@ -401,6 +411,8 @@ def test_md005_good_ordered_list_separate_single_level_short_widths_right():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md029",
         "scan",
         "test/resources/rules/md005/good_ordered_list_seperate_single_level_short_widths_right.md",
     ]
@@ -428,6 +440,8 @@ def test_md005_good_ordered_list_separate_single_level_short_widths():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md029",
         "scan",
         "test/resources/rules/md005/good_ordered_list_seperate_single_level_short_widths.md",
     ]
@@ -456,7 +470,7 @@ def test_md005_good_ordered_list_double_level():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md032",
+        "md032,md029",
         "scan",
         "test/resources/rules/md005/good_ordered_list_double_level.md",
     ]

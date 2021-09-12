@@ -1013,6 +1013,7 @@ def test_markdown_with_plugins_list_only():
   md026  no-trailing-punctuation                 True       True       0.5.0
   md027  no-multiple-space-blockquote            True       True       0.5.0
   md028  no-blanks-blockquote                    True       True       0.5.0
+  md029  ol-prefix                               True       True       0.5.0
   md031  blanks-around-fences                    True       True       0.5.0
   md032  blanks-around-lists                     True       True       0.5.0
   md033  no-inline-html                          True       True       0.5.0
@@ -1087,7 +1088,7 @@ def test_markdown_with_plugins_list_only_all():
   md026  no-trailing-punctuation                 True       True       0.5.0
   md027  no-multiple-space-blockquote            True       True       0.5.0
   md028  no-blanks-blockquote                    True       True       0.5.0
-  md029  ol-prefix                               False      False      0.0.0
+  md029  ol-prefix                               True       True       0.5.0
   md030  list-marker-space                       False      False      0.0.0
   md031  blanks-around-fences                    True       True       0.5.0
   md032  blanks-around-lists                     True       True       0.5.0
@@ -1138,6 +1139,7 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
                                 (DEFAULT)  (CURRENT)
 
   md019  no-multiple-space-atx  True       True       0.5.0
+  md029  ol-prefix              True       True       0.5.0
   md039  no-space-in-links      True       True       0.5.0
 
 """
