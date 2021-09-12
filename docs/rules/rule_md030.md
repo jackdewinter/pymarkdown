@@ -66,7 +66,7 @@ to trigger this rule:
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `ul_single` | integer | `1` | Spaces after an Unordered List Item and any following text for a single line item. |
 | `ol_single` | integer | `1` | Spaces after an Ordered List Item and any following text for a single line item. |
 | `ul_multi` | integer | `1` | Spaces after an Unordered List Item and any following text for a multiple line item. |

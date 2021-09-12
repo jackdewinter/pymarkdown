@@ -85,7 +85,7 @@ that are tracked.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | string (see below) | `consistent` | Style for Unordered List Starts in the document. |
 
 Valid heading styles:

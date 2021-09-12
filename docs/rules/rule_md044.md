@@ -85,7 +85,7 @@ this is a reparagraph
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `names`   | `string` | None | Comma-separated list of proper nouns to preserve capitalization on. |
 | `code_blocks` | `boolean` | `True` | Search in Fenced Code Block elements and Indented Code Block elements. |
 

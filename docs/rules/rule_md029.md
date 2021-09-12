@@ -73,7 +73,7 @@ will trigger is any Ordered List Item element does not start with `1` and the
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | string (see below) | `one_or_ordered` | Style for Ordered List Starts in the document. |
 
 Valid heading styles:

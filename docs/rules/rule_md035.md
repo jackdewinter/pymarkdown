@@ -66,7 +66,7 @@ is made, so that the following example will not trigger this rule:
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | `string` | `consistent` | `consistent` for consistent, or a specific marker** |
 
 ** If a specific marker is configured, it must be valid multiples (three or more) of either the

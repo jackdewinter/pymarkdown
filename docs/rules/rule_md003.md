@@ -75,7 +75,7 @@ Setext style H2
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | string (see below) | `"consistent"` | Style of headings expected in the document. |
 
 Valid heading styles:

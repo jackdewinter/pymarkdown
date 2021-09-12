@@ -78,7 +78,7 @@ as the next Unordered List element starts is at the beginning of the line.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule
 

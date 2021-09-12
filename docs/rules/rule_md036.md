@@ -67,7 +67,7 @@ Consectetur adipiscing elit, sed do eiusmod.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `punctuation` | `string` | `".,;:!?。，；：？"` | Punctuation characters that are considered sentence ending characters. |
 
 ## Origination of Rule
