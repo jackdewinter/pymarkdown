@@ -441,7 +441,7 @@ def test_md005_good_ordered_list_separate_single_level_short_widths():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md029",
+        "md029,md030",
         "scan",
         "test/resources/rules/md005/good_ordered_list_seperate_single_level_short_widths.md",
     ]

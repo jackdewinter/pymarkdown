@@ -253,7 +253,7 @@ def test_md023_bad_improper_indent_setext_in_list_item():
         "--enable-rules",
         "MD023",
         "--disable-rules",
-        "MD005",
+        "MD005,md030",
         "scan",
         "test/resources/rules/md023/improper_indent_setext_in_list_item.md",
     ]
