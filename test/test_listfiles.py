@@ -354,6 +354,7 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
 ../../docs/rules/rule_md007.md
 ../../docs/rules/rule_md010.md
 ../../docs/rules/rule_md012.md
+../../docs/rules/rule_md013.md
 ../../docs/rules/rule_md014.md
 ../../docs/rules/rule_md018.md
 ../../docs/rules/rule_md019.md

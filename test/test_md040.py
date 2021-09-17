@@ -104,6 +104,8 @@ def test_md040_bad_fenced_block_with_whitespace():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md013",
         "scan",
         "test/resources/rules/md040/bad_fenced_block_with_whitespace.md",
     ]

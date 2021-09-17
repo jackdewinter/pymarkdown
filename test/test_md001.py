@@ -17,7 +17,7 @@ def test_md001_all_samples():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "MD003,md022",
+        "MD003,md013,md022",
         "scan",
         "test/resources/rules/md001",
     ]
@@ -241,7 +241,7 @@ def test_md001_front_matter_with_no_title():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "MD003,MD022",
+        "MD003,md013,MD022",
         "--set",
         "extensions.front-matter.enabled=$!True",
         "scan",
@@ -271,7 +271,7 @@ def test_md001_front_matter_with_title():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "MD003,MD022",
+        "MD003,md013,MD022",
         "--set",
         "extensions.front-matter.enabled=$!True",
         "scan",
@@ -301,7 +301,7 @@ def test_md001_front_matter_with_alternate_title():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "MD003,MD022",
+        "MD003,md013,MD022",
         "--set",
         "extensions.front-matter.enabled=$!True",
         "--set",
