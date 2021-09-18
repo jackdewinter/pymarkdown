@@ -201,6 +201,8 @@ def test_md020_bad_missing_start_spacing_in_block_quotes():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md009",
         "scan",
         "test/resources/rules/md020/missing_start_spacing_in_block_quotes.md",
     ]
@@ -430,6 +432,8 @@ def test_md020_bad_missing_both_spacing_in_block_quotes():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md009",
         "scan",
         "test/resources/rules/md020/missing_both_spacing_in_block_quotes.md",
     ]

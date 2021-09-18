@@ -997,6 +997,7 @@ def test_markdown_with_plugins_list_only():
   md005  list-indent                             True       True       0.5.0
   md006  ul-start-left                           False      False      0.5.0
   md007  ul-indent                               True       True       0.5.0
+  md009  no-trailing-spaces                      True       True       0.5.0
   md010  no-hard-tabs                            True       True       0.5.0
   md012  no-multiple-blanks                      True       True       0.5.0
   md013  line-length                             True       True       0.5.0
@@ -1071,7 +1072,7 @@ def test_markdown_with_plugins_list_only_all():
   md005  list-indent                             True       True       0.5.0
   md006  ul-start-left                           False      False      0.5.0
   md007  ul-indent                               True       True       0.5.0
-  md009  no-trailing-spaces                      False      False      0.0.0
+  md009  no-trailing-spaces                      True       True       0.5.0
   md010  no-hard-tabs                            True       True       0.5.0
   md011  no-reversed-links                       False      False      0.0.0
   md012  no-multiple-blanks                      True       True       0.5.0
@@ -1140,6 +1141,7 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
   ID     NAMES                  ENABLED    ENABLED    VERSION
                                 (DEFAULT)  (CURRENT)
 
+  md009  no-trailing-spaces     True       True       0.5.0
   md019  no-multiple-space-atx  True       True       0.5.0
   md029  ol-prefix              True       True       0.5.0
   md039  no-space-in-links      True       True       0.5.0

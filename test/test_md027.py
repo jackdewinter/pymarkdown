@@ -45,6 +45,8 @@ def test_md027_good_block_quote_empty_just_blank():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md009",
         "scan",
         "test/resources/rules/md027/good_block_quote_empty_just_blank.md",
     ]
@@ -346,6 +348,8 @@ def test_md027_good_block_quote_indent_with_blank_space():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md009",
         "scan",
         "test/resources/rules/md027/good_block_quote_indent_with_blank_space.md",
     ]
@@ -468,7 +472,7 @@ def test_md027_good_block_quote_indent_with_blank_space_no_start():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md028",
+        "md009,md028",
         "scan",
         "test/resources/rules/md027/good_block_quote_indent_with_blank_space_no_start.md",
     ]

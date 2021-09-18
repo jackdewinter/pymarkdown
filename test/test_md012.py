@@ -234,6 +234,8 @@ def test_md012_bad_multiple_blanks_in_list():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md009",
         "scan",
         "test/resources/rules/md012/bad_multiple_blanks_in_list.md",
     ]
