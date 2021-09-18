@@ -86,7 +86,7 @@ title: my title
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `front_matter_title` | `string` | `"title"` | Name of the front-matter field that contains the title associated with the document. |
 
 ## Origination of Rule

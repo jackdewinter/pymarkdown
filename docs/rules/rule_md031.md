@@ -92,7 +92,7 @@ lack of whitespace around Fenced Code Blocks, such as:
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `list_items` | `boolean` | `True` | Whether this plugin rule triggers directly within a list item. |
 
 ## Origination of Rule

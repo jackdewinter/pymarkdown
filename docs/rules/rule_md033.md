@@ -61,7 +61,7 @@ image tags than the default `!--` (HTML comment) are strongly discouraged.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `allowed_elements` | `string` | `!--` | Comma separated list of tag starts that are allowable. |
 
 To be clear, if using the `allowed_elements` configuration value, the provided

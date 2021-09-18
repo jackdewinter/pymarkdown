@@ -67,7 +67,7 @@ value of `backtick` or `consistent` will not cause this rule to trigger.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `style` | string (see below) | `"consistent"` | Style of fenced code block fence characters expected in the document. |
 
 Valid heading styles:

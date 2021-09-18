@@ -54,7 +54,7 @@ this is another line
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `maximum` | `integer` | `1` | Number of blank lines to exceed before this rule triggers |
 
 ## Origination of Rule

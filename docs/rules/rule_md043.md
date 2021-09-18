@@ -93,7 +93,7 @@ sequence is not followed by anything, it cannot be followed by any headings.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `required_headings` | `string` | `""` | Comma separated list of headings to require the document to have. |
 
 For the `required_headings` list, each element is expected to be in one
