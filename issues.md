@@ -14,10 +14,8 @@
 
 - pragma tests need to remove `disable_consistency_checks=True`
 
-- implement missing rules
 - yaml support for front-matter
   - if front matter is found to be disqualified, send error?
-- show url for failed rules as option
 
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - leading_text_index - verify_line_and... ~715
@@ -169,6 +167,7 @@ This is a test
 
 ## Priority 3 - Like To Solve in next 3 m
 
+- show url for failed rules as option
 - combine traversal for 027 and 007?
 
 - [mypy?](https://mypy.readthedocs.io/en/stable/getting_started.html)

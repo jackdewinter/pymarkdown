@@ -999,6 +999,7 @@ def test_markdown_with_plugins_list_only():
   md007  ul-indent                               True       True       0.5.0
   md009  no-trailing-spaces                      True       True       0.5.0
   md010  no-hard-tabs                            True       True       0.5.0
+  md011  no-reversed-links                       True       True       0.5.0
   md012  no-multiple-blanks                      True       True       0.5.0
   md013  line-length                             True       True       0.5.0
   md014  commands-show-output                    True       True       0.5.0
@@ -1074,7 +1075,7 @@ def test_markdown_with_plugins_list_only_all():
   md007  ul-indent                               True       True       0.5.0
   md009  no-trailing-spaces                      True       True       0.5.0
   md010  no-hard-tabs                            True       True       0.5.0
-  md011  no-reversed-links                       False      False      0.0.0
+  md011  no-reversed-links                       True       True       0.5.0
   md012  no-multiple-blanks                      True       True       0.5.0
   md013  line-length                             True       True       0.5.0
   md014  commands-show-output                    True       True       0.5.0
@@ -1112,6 +1113,7 @@ def test_markdown_with_plugins_list_only_all():
   md046  code-block-style                        True       True       0.5.0
   md047  single-trailing-newline                 True       True       0.5.0
   md048  code-fence-style                        True       True       0.5.0
+  md999  debug-only                              False      False      0.0.0
 
 """
     expected_error = ""

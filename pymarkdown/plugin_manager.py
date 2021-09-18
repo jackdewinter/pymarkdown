@@ -589,8 +589,8 @@ class PluginManager:
         ids = self.all_plugin_ids
         ids.sort()
         for next_plugin_id in ids:
-            if next_plugin_id.startswith("md9"):
-                continue
+            # if next_plugin_id.startswith("md9"):
+            #     continue
             next_plugin_list = []
             for next_plugin in self.__registered_plugins:
                 if next_plugin.plugin_id == next_plugin_id:
