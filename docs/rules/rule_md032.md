@@ -11,7 +11,9 @@ Fenced code blocks should be surrounded by blank lines.
 
 ## Reasoning
 
-The main reason for this rule is readability.  By separating
+### Readability
+
+By separating
 List elements from the other elements in a document, their
 existence in the document is highlighted.  In addition, some parsers
 may not properly recognize the List elements without the extra

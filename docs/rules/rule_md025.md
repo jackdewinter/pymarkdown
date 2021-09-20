@@ -8,15 +8,18 @@
 
 ## Summary
 
-Multiple top level headings in the same document.
+Multiple top-level headings in the same document.
 
 ## Reasoning
 
-The main reason for this rule is correctness.  While not accepted
-as the document title in some parsers, the majority of the parsers
-consider the top-level heading or Heading 1 element to be the
-title of the document.  That being said, a document cannot have
-more than one title.
+### Correctness
+
+While not accepted as the document title in some parsers, the
+majority of the parsers consider the top-level heading or
+Heading 1 element to be the title of the document.  It follows
+that a document cannot have more than one title, and allowing
+multiple Heading 1 elements would force the parser to choose
+which element was the title.
 
 ## Examples
 
@@ -82,7 +85,7 @@ subject: This is a title
 
 In certain situations, it is necessary to override the heading level
 to check for multiples top-level elements.  In these situations, the
-`level` configuration value can be set to indicate the heading level
+`level` configuration value can be set to specify the heading level
 to check against for multiples.
 
 ## Configuration
@@ -96,7 +99,7 @@ to check against for multiples.
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `front_matter_title` | `string` | `"title"` | Name of the front-matter field that contains the title associated with the document. |
+| `front_matter_title` | `string` | `title` | Name of the front-matter field that has the title associated with the document. |
 | `level` | `integer` | `1` | Heading level to be considered as the top-level. |
 
 ## Origination of Rule
@@ -109,5 +112,5 @@ This rule is largely inspired by the MarkdownLint rule
 The difference between this rule and the original rule is that the
 original rule specified a regular expression used to look for the
 specific element within a raw front-matter element.  By default, this
-was `"^\s*"?title"?\s*[:=]"`.  To maintain simplicity, this rule
+was `"^\s*"?title"?\s*[:=]"`.  To support simplicity, this rule
 simply looks for the value of the front-matter key `title` by default.

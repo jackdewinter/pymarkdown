@@ -6,7 +6,6 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd001(Plugin):
-
     """
     Class to implement a plugin that looks for headings that increment more than one
     level at a time (going up).

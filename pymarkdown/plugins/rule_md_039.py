@@ -1,12 +1,12 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for spaces within link labels.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd039(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for spaces within link labels.
     """
 
     def get_details(self):
@@ -14,14 +14,14 @@ class RuleMd039(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # whitespace, links
             plugin_name="no-space-in-links",
             plugin_id="MD039",
             plugin_enabled_by_default=True,
             plugin_description="Spaces inside link text",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md039---spaces-inside-link-text
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md039.md",
+        )
 
     def next_token(self, context, token):
         """

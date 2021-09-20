@@ -11,8 +11,10 @@ Spaces after list markers.
 
 ## Reasoning
 
-The main reason for this rule is consistency.  Some older parsers
-do not handle varying amount of spaces after the list marksers properly.
+### Consistency
+
+Some older parsers do not manage varying number of spaces after
+the list markers properly.
 
 ## Examples
 
@@ -43,9 +45,10 @@ This rule does not trigger if all List Item elements are followed by
 ````
 
 The `ol_single` and `ol_multi` configuration values specify the number of space
-before text for Ordered List elements, and the `ul_single` and `ul_multi` configuration
-values specify the number of space before text for Unordered List elements.
-For the purpose of this rule, a `single` line List Item is one that contains text
+characters before text for Ordered List elements, and the `ul_single` and `ul_multi`
+configuration values specify the number of space characters before text for
+Unordered List elements.
+For this rule, a `single` line List Item is one that has text
 only on the line on which that given List Item is started.
 
 Therefore, setting `ul_single` to 2 and `ul_multi` to 1 will cause this list not

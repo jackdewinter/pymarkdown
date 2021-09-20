@@ -11,9 +11,10 @@ Fenced code blocks should have a language specified.
 
 ## Reasoning
 
-The main reason for this rule is readability.  When a language is specified,
-the rendering engine has the option to apply syntax highlighting to the code
-block, if the language is recognized.
+### Readability
+
+When a language is specified, the rendering engine has the choice to
+apply syntax highlighting to the code block if the language is recognized.
 
 ## Examples
 

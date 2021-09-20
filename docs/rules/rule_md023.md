@@ -12,6 +12,8 @@ Headings must start at the beginning of the line.
 
 ## Reasoning
 
+### Correctness
+
 During research, more than half the parsers failed to detect a heading element
 if it is preceded by any leading whitespace.  In those cases, the text is
 parsed as normal text within a Paragraph element.  By removing any leading

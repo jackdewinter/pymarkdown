@@ -11,16 +11,20 @@ Multiple spaces after blockquote symbol.
 
 ## Reasoning
 
+### Consistency
+
 One of the main keys to readability is to have consistent formatting applied
-throughout a group of documents.  Extending the concept even further, many
-organizations have specific rules on how documents should be authored throughout
+throughout a group of documents.  Extending the concept even further,
+organizations may have specific rules on how documents should be authored throughout
 that organization.  It follows that both concepts may extend to specifying
 that only zero or one space characters can follow the block quote character
 (`>`).
 
-The exceptions to this rule are the
-
 ## Examples
+
+As the space character is not normally visible, each occurrence of
+the text `{space}` in the following example stands for a single
+space character.
 
 ### Failure Scenarios
 
@@ -31,7 +35,7 @@ one space character:
 >  This is text
 ```
 
-Most of the exceptions for triggering this rule are detailed in the following section
+Many of the exceptions for triggering this rule are detailed in the following section
 on Correct Scenarios.  One that bears special mention is the Link Reference Definition
 element.  A Link Reference Definition element that has extra spaces in the non-Label
 and non-Title parts of the element will trigger this rule:
@@ -47,8 +51,7 @@ and non-Title parts of the element will trigger this rule:
 The above example will trigger the rule three times.  Once for the first line,
 once for the third line, and once for the fourth line.  Because the Link Label
 part and the Link Title part of the element may require that extra space to be
-present for some reason, they are excluded from the trigger conditions for this
-rule.
+present, they are excluded from the trigger conditions for this rule.
 
 ### Correct Scenarios
 
@@ -62,7 +65,7 @@ zero or one space characters:
 
 This rule does not trigger at any text inside of a Fenced Code Block element,
 any text in an Indented Code Block element, or any text in a HTML Block element.
-Similar to the reasons for excluding certain parts of the Link Reference
+Like the reasons for excluding certain parts of the Link Reference
 Definition element from triggering this rule (see last section), the text in
 these areas have special meaning which may include the presence of any
 space characters.  Note that while an entire Indented Code Block element
@@ -95,7 +98,7 @@ this rule.
 
 ### Future
 
-For reasons similar to the ones already expressed above, the
+For reasons like the ones already expressed above, the
 Link element and the Raw HTML element should not trigger this rule.
 Currently, these two elements are not treated any differently than
 any of the other text within a Paragraph element.
@@ -122,8 +125,8 @@ This rule is largely inspired by the MarkdownLint rule
 
 The most obvious difference between is in the treatment of extra
 spaces on Blank Lines within a Block Quote element.  A frequent
-victim of cut-and-paste accidents, there are often times when a
-Blank Line is followed by extra whitespace characters, as such:
+victim of cut-and-paste accidents, it is not unusual to have a
+Blank Line that is followed by extra whitespace characters:
 
 ```Markdown
 >{space}{space}

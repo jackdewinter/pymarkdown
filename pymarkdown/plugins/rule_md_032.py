@@ -1,12 +1,12 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that ensures that top-level lists are surrounded by Blank Lines.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd032(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that ensures that top-level lists are surrounded by Blank Lines.
     """
 
     def __init__(self):
@@ -20,14 +20,14 @@ class RuleMd032(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # bullet, ul, ol, blank_lines
             plugin_name="blanks-around-lists",
             plugin_id="MD032",
             plugin_enabled_by_default=True,
             plugin_description="Lists should be surrounded by blank lines",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md032---lists-should-be-surrounded-by-blank-lines
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md032.md",
+        )
 
     def starting_new_file(self):
         """

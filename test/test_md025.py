@@ -312,7 +312,7 @@ def test_md025_bad_top_level_atx_top_level_atx():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md025/bad_top_level_atx_top_level_atx.md:5:1: "
-        + "MD025: Multiple top level headings in the same document (single-title,single-h1)"
+        + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
 
@@ -345,7 +345,7 @@ def test_md025_bad_top_level_atx_top_level_setext():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md025/bad_top_level_atx_top_level_setext.md:6:1: "
-        + "MD025: Multiple top level headings in the same document (single-title,single-h1)"
+        + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
 
@@ -376,7 +376,7 @@ def test_md025_bad_top_level_setext_top_level_setext():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md025/bad_top_level_setext_top_level_setext.md:7:1: "
-        + "MD025: Multiple top level headings in the same document (single-title,single-h1)"
+        + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
 
@@ -409,7 +409,7 @@ def test_md025_bad_top_level_setext_top_level_atx():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md025/bad_top_level_setext_top_level_atx.md:6:1: "
-        + "MD025: Multiple top level headings in the same document (single-title,single-h1)"
+        + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
 
@@ -472,7 +472,7 @@ def test_md025_bad_front_matter_title_top_level_atx():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md025/bad_front_matter_title_top_level_atx.md:7:1: "
-        + "MD025: Multiple top level headings in the same document (single-title,single-h1)"
+        + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
 
@@ -505,7 +505,7 @@ def test_md025_bad_front_matter_title_top_level_setext():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md025/bad_front_matter_title_top_level_setext.md:8:1: "
-        + "MD025: Multiple top level headings in the same document (single-title,single-h1)"
+        + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
 

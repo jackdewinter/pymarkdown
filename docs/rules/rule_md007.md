@@ -11,16 +11,18 @@ Unordered list indentation.
 
 ## Reasoning
 
-The primary reason for this rule is consistency.  While existing specifications
-for Markdown specify that multiple spaces are allowed, using those extra spaces
-will confused the reader.  Instead, it is recommended that all unordered list
-markers start at the first column where they are allowed, without any extra
-indentation.
+### Readability/Consistency
+
+While existing specifications for Markdown specify that multiple spaces
+are allowed, using those extra spaces will confuse readers.  Instead,
+it is recommended that all unordered list markers start at the first column
+where they are allowed, without any extra indentation.
 
 In addition, there are
 [various Markdown parsers](https://babelmark.github.io/?text=%2B+sublist%0A++%2B+sublist%0A)
 that do not acknowledge a sublist without a non-standard amount of indentation
-before the sublist.  This rule provides configuration for those situations.
+before the sublist.  This rule supplies configuration for those situations to
+allow consistent rendering between parsers.
 
 ## Examples
 
@@ -49,9 +51,9 @@ characters:
 ```
 
 If required, the amount of indentation at each level can be set using
-the `indent` configuration value.  This may be required for certain parsers
+the `indent` configuration value.  This may be needed for certain parsers
 that require four space characters for indentation instead of the normal
-two characters.  For thost parsers, the following example specifies a
+two characters.  For those parsers, the following example specifies a
 valid list with a sublist:
 
 ```Markdown
@@ -73,7 +75,7 @@ of indentation, the `start_indented` configuration value can be set to
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `indent` | `integer` | `2` | Number of spaces required between unordered sublists. |
+| `indent` | `integer` | `2` | Number of spaces needed between unordered sublists starts. |
 | `start_indented` | `boolean` | `False` | Whether the first unordered list should be indented. |
 
 ## Origination of Rule

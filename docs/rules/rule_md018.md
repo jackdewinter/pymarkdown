@@ -11,9 +11,13 @@ No space present after the hash character on a possible Atx Heading.
 
 ## Reasoning
 
+### Correctness
+
 In most cases, one or more hash characters (`#`) followed by text was
-meant to indicate an Atx Heading, with the space between the hash characters
-and the text being omitted.
+probably meant to indicate an Atx Heading, with the space between the
+hash characters and the text being omitted.  The triggering of this rule
+will allow the document's author to decide on whether the o mission of
+the space was accidental or not.
 
 ## Examples
 
@@ -85,7 +89,7 @@ or due to no text following the hash characters:
 ```
 
 Another scenario in which this rule does not trigger is when the line
-containing the otherwise eligible text contains any inline elements
+holding the otherwise eligible text has any inline elements
 within that same line.
 
 ```Markdown
@@ -97,7 +101,7 @@ was present, the presence of the inline Emphasis element prevents it from
 triggering.  
 
 Finally, this rule will not trigger if the Atx Heading element has closing
-hash characters, such as `#Heading1#`.  The rule for properly handling Atx
+hash characters, such as `#Heading1#`.  The rule for effectively managing Atx
 Heading Close elements is
 [Rule md020](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rule_md020.md).
 
@@ -134,6 +138,6 @@ not an Atx Heading element.
 Finally, the last change was that the original rule triggered regardless of
 what extra text occurred on the possibly eligible line.  The decision to add
 that change to the trigger conditions was arrived at after significant
-deliberation.  It was determined that the "logical distance" to go from
+deliberation.  It was decided that the "logical distance" to go from
 text within a Paragraph element to text within an Atx Heading element
 was too far once inline elements were included.

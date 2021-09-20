@@ -1,5 +1,5 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for excessively long lines in the file.
 """
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -8,7 +8,7 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 # pylint: disable=too-many-instance-attributes
 class RuleMd013(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for excessively long lines in the file.
     """
 
     __maximum_line_length = 99999
@@ -32,15 +32,15 @@ class RuleMd013(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # line_length
             plugin_name="line-length",
             plugin_id="MD013",
             plugin_enabled_by_default=True,
             plugin_description="Line length",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md013---line-length
-        # Parameters: line_length, heading_line_length, code_block_line_length, code_blocks, tables, headings, headers, strict (number; default 80, boolean; default true)
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md013.md",
+            plugin_configuration="line_length,heading_line_length,code_block_line_length,code_blocks,headings,strict,stern",
+        )
 
     @classmethod
     def __validate_minimum(cls, found_value):

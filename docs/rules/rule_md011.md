@@ -11,11 +11,12 @@ Reversed link syntax.
 
 ## Reasoning
 
-The primary reason for enabling this rule is correctness.  It is
-possible to transpose the `[]` characters and the `()` characters
-while typing, resulting in something that is not a link.  This pattern
-has probably happened enough times that the original rule was authored
-to correct this transposition.
+### Correctness
+
+It is possible to transpose the `[]` characters and the `()` characters
+while typing, resulting in text that does not represent the intended link.
+This pattern has probably happened enough times that the original rule was
+authored to correct for situations like this.
 
 ## Examples
 
@@ -26,7 +27,7 @@ contains an Inline Link that appears to have the `[]` characters and
 the `()` characters transposed:
 
 ```Markdown
-This link (is)[/tranposed].
+This link (is)[/transposed].
 ```
 
 ### Correct Scenarios
@@ -35,7 +36,7 @@ To correct the above example, transpose the `[]` characters and
 the `()` characters to their correct order:
 
 ```Markdown
-This link [is not](/tranposed).
+This link [is not](/transposed).
 ```
 
 Note that some parsers implement the
@@ -47,7 +48,7 @@ that may look like a reversed link:
 ... to it (as an example)[^footnote].  Therefore...
 ```
 
-To accomodate these footnotes, if the apparent URL section
+To accommodate those footnotes sequences, if the apparent URL section
 starts with a `^` character, this rule will not trigger.
 
 ## Configuration
@@ -59,7 +60,7 @@ starts with a `^` character, this rule will not trigger.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 
 ## Origination of Rule
 

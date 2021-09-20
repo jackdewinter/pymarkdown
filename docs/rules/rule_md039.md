@@ -11,8 +11,9 @@ Spaces inside link text.
 
 ## Reasoning
 
-The main reasons for this rule is readability and correctness.  When
-creating a document or reading that same document, it is easy to confuse
+### Readability/Correctness
+
+When creating a document or reading that same document, it is easy to confuse
 the link labels `[ label ]`, `[label ]`, `[ label]` with the link label
 `[label]`.  Being consistent with the leading spaces and trailing spaces
 for a link label addresses this specific issue.

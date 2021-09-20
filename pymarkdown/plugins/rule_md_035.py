@@ -1,12 +1,12 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for inconsistent styles for thematic breaks.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd035(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for inconsistent styles for thematic breaks.
     """
 
     __consistent_style = "consistent"
@@ -21,7 +21,6 @@ class RuleMd035(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # hr
             plugin_name="hr-style",
             plugin_id="MD035",
             plugin_enabled_by_default=True,
@@ -30,8 +29,7 @@ class RuleMd035(Plugin):
             plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md035.md",
             plugin_configuration="style",
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md035---horizontal-rule-style
-        # Parameters: style ("consistent", "---", "***", or other string specifying the horizontal rule; default "consistent")
+        )
 
     @classmethod
     def __validate_configuration_style(cls, found_value):

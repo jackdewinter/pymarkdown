@@ -11,7 +11,9 @@ Images should have alternate text (alt text).
 
 ## Reasoning
 
-The main reason for this rule is accessibility.  The label text part
+### Accessibility
+
+The label text part
 of all four types of Image element is translated in HTML to the `alt`
 parameter of the `img` tag.  That parameter is often used by screen
 readers to render an auto description of what that image is to
@@ -21,7 +23,7 @@ sight impaired people.
 
 ### Failure Scenarios
 
-This rule triggers when the link label for an image contains no characters or only
+This rule triggers when the link label for an image has no characters or only
 whitespace characters:
 
 ````Markdown
@@ -39,7 +41,7 @@ specification.
 
 ### Correct Scenarios
 
-This rule does not trigger if the link label for an image contains
+This rule does not trigger if the link label for an image has
 at least one non-whitespace character:
 
 ````Markdown

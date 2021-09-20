@@ -11,17 +11,18 @@ Consider starting bulleted lists at the beginning of the line.
 
 ## Reasoning
 
+### Consistency
+
 The primary reason for enabling this rule is to force any Unordered List
 to start at the beginning of the line.  While there are ancillary scenarios
 that this rule can help, the main focus is to allow for predictability
 in how Unordered List elements are constructed.
 
 When creating lists with an editor, it is common to use the Tab key to create
-lists that are properly indented.  This occurs with an Unordered List
-element that does not start are the beginning of the line, causing the number of
-spaces inserted by the Tab key to not be an even number.  As the normal indent
-for an Unordered List element is 2, this may cause issues with other parts of
-the list.
+lists that are properly indented.  If an Unordered List element does not start
+at the beginning of the line, using the Tab key can cause the number of
+spaces inserted to not be an even number.  As the normal indent for an Unordered
+List element is 2, this may cause issues with other parts of the list.
 
 ## Examples
 

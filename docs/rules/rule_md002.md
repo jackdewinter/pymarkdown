@@ -16,6 +16,8 @@ First heading of the document should be a top-level heading.
 
 ## Reasoning
 
+### Consistency
+
 In most cases, the top-level heading of a document is used as the title of
 that document.  Therefore, the first heading in the document should be a
 level 1 header to reflect that reality.
@@ -56,7 +58,7 @@ This is a SetExt H1 heading
 
 Note that configuration may be applied to change the expected top-level of
 this rule from its default of `1` to another value.  This should only be done
-if some manner of external process is generating the title of the document.
+if an external process is generating the title of the document.
 For example, if the `level` configuration value is set to `2`, then the following
 document will not trigger this rule:
 

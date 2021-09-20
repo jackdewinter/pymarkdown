@@ -1,5 +1,5 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for excessive spaces after the block quote character.
 """
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -7,7 +7,7 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 class RuleMd027(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for excessive spaces after the block quote character.
     """
 
     def __init__(self):
@@ -23,14 +23,14 @@ class RuleMd027(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # blockquote, whitespace, indentation
             plugin_name="no-multiple-space-blockquote",
             plugin_id="MD027",
             plugin_enabled_by_default=True,
             plugin_description="Multiple spaces after blockquote symbol",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md027---multiple-spaces-after-blockquote-symbol
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md027.md",
+        )
 
     def starting_new_file(self):
         """

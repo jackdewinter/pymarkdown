@@ -37,6 +37,7 @@ class RuleMd047(Plugin):
         """
         Event that a new line is being processed.
         """
+        _ = context
         self.__last_line = line
 
     def completed_file(self, context):

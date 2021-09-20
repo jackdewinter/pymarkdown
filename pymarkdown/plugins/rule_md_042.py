@@ -1,12 +1,12 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for inline links with empty link URIs.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd042(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for inline links with empty link URIs.
     """
 
     def get_details(self):
@@ -14,14 +14,14 @@ class RuleMd042(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # links
             plugin_name="no-empty-links",
             plugin_id="MD042",
             plugin_enabled_by_default=True,
             plugin_description="No empty links",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md042---no-empty-links
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md042.md",
+        )
 
     def next_token(self, context, token):
         """

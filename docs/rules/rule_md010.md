@@ -11,6 +11,8 @@ Hard tabs.
 
 ## Reasoning
 
+## Consistency
+
 The primary reason for enabling this rule is to force Markdown writers to be
 explicit about their intent with the document.  As different editors and different
 parsers treat tab characters differently, the interpretation of a tab character's
@@ -22,8 +24,8 @@ intentions for document indentation without any ambiguity.
 
 ### Failure Scenarios
 
-This rule triggers when any line of the document contains a hard tab character
-instead of using space characters for indentation. A simple example is:
+This rule triggers when any line of the document has a hard tab character.
+A simple example is:
 
 ```Markdown
 {tab}Indented Code Block
@@ -52,6 +54,7 @@ characters:
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
+| `code_blocks` | `boolean` | `True` | Whether hard tabs are searched for within code blocks. |
 
 ## Origination of Rule
 

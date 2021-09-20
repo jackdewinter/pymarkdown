@@ -6,6 +6,7 @@
 
 - before release, check that all rule md* files look the same
   - i.e. make sure the get_details all look the same
+
 - before release, check that all test file commented properly
 
 - go through every disabled rule for tests, and determine if disable makes sense
@@ -67,6 +68,7 @@ md006 - how works within bq?
       - mixing left and right in same list?
       - ordered with unordered sub, and unordered with ordered sub
 md010 - tabs "converted"
+      - tabs in code blocks
 
 ```markdown
 [a

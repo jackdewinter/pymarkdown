@@ -1,12 +1,12 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that ensures that Block Quote elements are surrounded by Blank Lines.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd028(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that ensures that Block Quote elements are surrounded by Blank Lines.
     """
 
     __look_for_end_of_block_quote = 0
@@ -23,14 +23,14 @@ class RuleMd028(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # blockquote, whitespace
             plugin_name="no-blanks-blockquote",
             plugin_id="MD028",
             plugin_enabled_by_default=True,
             plugin_description="Blank line inside blockquote",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md028---blank-line-inside-blockquote
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md028.md",
+        )
 
     def starting_new_file(self):
         """

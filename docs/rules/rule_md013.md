@@ -11,11 +11,14 @@ Line length.
 
 ## Reasoning
 
-The primary reason for enabling this rule is readability.  There comes
-a specific number of columns of data before a line becomes unreadable to
-a given user.  While that specific number may vary, certain groups may
-establish that specific number to use across documents produced by that
-entire group.
+### Readability
+
+For every user, there is a specific number of columns that can be displayed
+on a screen before that data becomes unreadable.  While that specific number
+varies among individual users, certain groups may establish what that number
+is for documents produced by that group.  By setting this number at a value
+that most people in the group find acceptable, the readability of
+those documents increase.
 
 ## Examples
 
@@ -32,7 +35,7 @@ This is a sample line that is a total of 60 characters long.
 ### Correct Scenarios
 
 This rule does not trigger if the length of any line is less than or
-equal to a given character count. Assuming that the configuration values
+equal to a given character count. If the configuration values
 are set to a maximum line length of 50 characters, the following
 example will not trigger this rule:
 
@@ -42,7 +45,7 @@ This is a sample line  that is 50 characters long.
 
 #### Long Last Words
 
-To allow for longer, contiuous constructs, such as URLs, a check
+To allow for longer, continuous constructs, such as URLs, a check
 is performed to see if there is any whitespace beyond the specified
 character count.  If there are no whitespace characters, then this
 rule will not trigger.  An example of this is:
@@ -61,12 +64,12 @@ while triggering on lines that are too long.
 
 #### Special Elements
 
-For the purpose of line lengths, two types of elements stick out as
+For line lengths, two types of elements stick out as
 needing special attention: headings and code blocks.  To that extent,
 the `heading_line_length` configuration value specifies the line length
 for headings and `headings` configuration value specifies whether this
 rule triggers at all for headings.  Similarly, the `code_block_line_length`
-and `code_blocks` confiuration values perform the same action for
+and `code_blocks` configuration values perform the same action for
 code blocks.
 
 ## Configuration
@@ -78,7 +81,7 @@ code blocks.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled by default. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `line_length` | `integer` | `80` | Maximum number of characters on a normal line. |
 | `heading_line_length` | `integer` | `80` | Maximum number of characters on a heading line. |
 | `code_block_line_length` | `integer` | `80` | Maximum number of characters on a code block line. |
@@ -94,5 +97,5 @@ This rule is largely inspired by the MarkdownLint rule
 
 ### Differences From MarkdownLint Rule
 
-The big difference from the original rule is that the `table` configuration
+The substantial difference from the original rule is that the `table` configuration
 value is not present as the parser does not currently support tables.

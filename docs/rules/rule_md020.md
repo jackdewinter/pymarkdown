@@ -11,6 +11,8 @@ No space present inside of the hashes on a possible Atx Closed Heading.
 
 ## Reasoning
 
+### Correctness
+
 In most cases, one or more hash characters (`#`) followed by text and closing
 hash characters were meant to indicate an Atx Closed Heading, with the
 space between the hash characters and the text being omitted.
@@ -57,7 +59,7 @@ or if a closing hash character is not present:
 ##Heading 2
 ```
 
-This failure scenario is handled by
+This failure scenario is managed by
 [Rule md018](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rule_md018.md).
 
 ## Configuration
@@ -78,7 +80,7 @@ This rule is largely inspired by the MarkdownLint rule
 
 ### Differences From MarkdownLint Rule
 
-Similar to
+Like
 [Rule md018](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rule_md018.md),
 the original rule did not trigger in Block Quote elements or
 List elements, but did fire within SetExt Heading elements.  These

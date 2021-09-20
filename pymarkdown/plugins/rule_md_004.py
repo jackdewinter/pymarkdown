@@ -1,12 +1,14 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for inconsistencies in the
+style used for Unordered List elements.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd004(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for inconsistencies in the
+    style used for Unordered List elements.
     """
 
     __consistent_style = "consistent"
@@ -43,8 +45,7 @@ class RuleMd004(Plugin):
             plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md004.md",
             plugin_configuration="style",
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md004---unordered-list-style
-        # Parameters: style ("consistent", "asterisk", "plus", "dash", "sublist"; default "consistent")
+        )
 
     @classmethod
     def __validate_configuration_style(cls, found_value):

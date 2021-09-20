@@ -11,8 +11,9 @@ Fenced code blocks should have a language specified.
 
 ## Reasoning
 
-The main reason for this rule is correctness.  By definition, both
-normal links and image links present an URI that determines what they
+### Correctness
+
+Both normal links and image links present an URI that decides what they
 link to.  If the URI that they refer to is not present, then is
 goes against their very nature.
 
@@ -24,7 +25,7 @@ creative process.  This rule also helps enforce that practice.
 
 ### Failure Scenarios
 
-This rule triggers when the link is empty and contains no characters or only
+This rule triggers when the link is empty and has no characters or only
 whitespace characters:
 
 ````Markdown
@@ -40,7 +41,7 @@ This rule also triggers on URI fragments that are also similarly empty:
 ### Correct Scenarios
 
 This rule does not trigger if any non-whitespace text is present within
-the URI portion of the link:
+the URI part of the link:
 
 ````Markdown
 [link](a)

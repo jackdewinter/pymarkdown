@@ -1,5 +1,6 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for text sequences that make
+it appear like the author got the inline link syntax reversed.
 """
 import re
 
@@ -8,7 +9,8 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 class RuleMd011(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for text sequences that make
+    it appear like the author got the inline link syntax reversed.
     """
 
     def __init__(self):
@@ -23,14 +25,14 @@ class RuleMd011(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # links
             plugin_name="no-reversed-links",
             plugin_id="MD011",
             plugin_enabled_by_default=True,
             plugin_description="Reversed link syntax",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md011---reversed-link-syntax
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md011.md",
+        )
 
     def starting_new_file(self):
         """

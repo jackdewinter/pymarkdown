@@ -11,12 +11,14 @@ Multiple consecutive blank lines.
 
 ## Reasoning
 
-The primary reason for enabling this rule is that, with the exception of an
+### Simplicity
+
+The primary reason for enabling this rule is that, except for an
 Indented Code Block element or a Fenced Code Block element, blank lines in
 the Markdown document do not alter the rendering of the document as HTML. Except
 in Code Block elements, blank lines only serve as delimiters between one element
 and any following element.  Therefore, replacing multiple blank lines with a
-single blank line provides equivalent functionality in those non-Code Block scenarios.
+single blank line supplies equivalent functionality in those non-Code Block scenarios.
 
 ## Examples
 
@@ -72,14 +74,4 @@ as this example:
 >
 >
 > block quote after
-```
-
-In addition, in scenarios where the 
-
-```Markdown
-first line
-
-
-
-second line
 ```

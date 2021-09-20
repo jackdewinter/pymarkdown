@@ -11,11 +11,13 @@ Inconsistent indentation for list items at the same level.
 
 ## Reasoning
 
+### Readability
+
 While the parsing engines do not usually have any problems with inconsistent
 starting indentation for List elements, a human reader of the same document will
-encounter difficulty.  By enforcing the items within a List element to start at
-predictable locations, the human reader will be able to read the document with
-less difficulty.
+encounter difficulty with shifting starting positions.  By enforcing the items
+within a List element to start at predictable locations, the human reader will
+be able to read the document with less difficulty.
 
 ## Examples
 
@@ -59,7 +61,7 @@ document is the same, regardless of whether they are lists or sublists:
 
 As mentioned above, the indentation of Ordered List elements supports
 both left alignment and right alignment.  This means that either of
-these two formats is acceptable:
+these two formats are acceptable:
 
 ```Markdown
 1. Item
@@ -77,7 +79,7 @@ or
 
 Note that in the right alignment format, having an Ordered List item
 starts with more than 4 characters is impossible without switching
-aligmnent.
+alignment.
 
 ```Markdown
     1. Item

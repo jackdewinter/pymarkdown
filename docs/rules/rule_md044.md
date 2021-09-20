@@ -59,8 +59,8 @@ in the link title triggers this rule.
 ### Correct Scenarios
 
 This rule does not trigger if it cannot find any of the words present
-in the the `names` configuration value.  This rule also does not trigger
-if any of those words are found, but are correctly capitalized.
+in the `names` configuration value.  This rule also does not trigger
+if any of those words are found but are correctly capitalized.
 Assuming `names` is set to `ParaGraph`, then the following example will not trigger this rule:
 
 ````Markdown

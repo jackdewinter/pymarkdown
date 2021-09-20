@@ -1,12 +1,12 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for multiple blank lines in the files.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd012(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for multiple blank lines in the files.
     """
 
     def __init__(self):
@@ -20,7 +20,6 @@ class RuleMd012(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # whitespace, blank_lines
             plugin_name="no-multiple-blanks",
             plugin_id="MD012",
             plugin_enabled_by_default=True,
@@ -29,8 +28,7 @@ class RuleMd012(Plugin):
             plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md012.md",
             plugin_configuration="maximum",
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md012---multiple-consecutive-blank-lines
-        # Parameters: maximum (number; default 1)
+        )
 
     @classmethod
     def __validate_maximum(cls, found_value):

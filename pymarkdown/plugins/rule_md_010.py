@@ -18,7 +18,6 @@ class RuleMd010(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # whitespace, hard_tab
             plugin_name="no-hard-tabs",
             plugin_id="MD010",
             plugin_enabled_by_default=True,
@@ -27,8 +26,7 @@ class RuleMd010(Plugin):
             plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md010.md",
             plugin_configuration="code_blocks",
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md010---hard-tabs
-        # Parameters: code_blocks (boolean; default true)
+        )
 
     def initialize_from_config(self):
         """

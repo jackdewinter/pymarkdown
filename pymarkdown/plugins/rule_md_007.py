@@ -1,12 +1,14 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that ensures that nested Unordered List Items
+start at predictable positions.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd007(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that ensures that nested Unordered List Items
+    start at predictable positions.
     """
 
     def __init__(self):
@@ -22,14 +24,15 @@ class RuleMd007(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # bullet, ul, indentation
             plugin_name="ul-indent",
             plugin_id="MD007",
             plugin_enabled_by_default=True,
             plugin_description="Unordered list indentation",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md007---unordered-list-indentation
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md007.md",
+            plugin_configuration="indent,start_indented",
+        )
 
     @classmethod
     def __validate_configuration_indent(cls, found_value):

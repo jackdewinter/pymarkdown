@@ -12,14 +12,14 @@ Trailing spaces.
 ## Reasoning
 
 The primary reason for enabling this rule is simplicity.  Two spaces at
-the end of a line within a paragraph produce a Hard Line Break element.
+the end of a line within a paragraph produces a Hard Line Break element.
 Other than that, there is no other reason for trailing spaces on any line
-as they are ignored, and therefore do not effect the final HTML document.
+as they are ignored, and therefore do not affect the final HTML document.
 
 ## Examples
 
-As the space character is not normally visible, each occurence of
-the text `{space}` in the following example represents a single
+As the space character is not normally visible, each occurrence of
+the text `{space}` in the following example stands for a single
 space character.
 
 ### Failure Scenarios
@@ -61,7 +61,7 @@ the Indented Code Blocks and Fenced Code Blocks do not trigger this rule
 for any of their lines.
 
 In addition, various parsers may require spaces on blank lines within
-List elements to maintain that List element.  Enabling the `list_item_empty_lines`
+List elements to keep that List element open.  Enabling the `list_item_empty_lines`
 configuration value will cause this sample to not trigger the rule:
 
 ```Markdown
@@ -70,9 +70,9 @@ configuration value will cause this sample to not trigger the rule:
   still the same item, different paragraph
 ```
 
-Note that the number of spaces required to maintain the List element
-is determined by the current List Item element that contains the
-Blank Lines.
+Note that the number of spaces needed to recognize the Blank Line
+within the List element is decided by the current List Item element
+that has the Blank Line.
 
 ## Configuration
 
@@ -83,7 +83,7 @@ Blank Lines.
 
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
-| `enabled` | `boolean` | `False` | Whether the plugin rule is enabled. |
+| `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `br_spaces` | `integer` | `2` | Specifies the exact number of spaces allowed at the end of the line. |
 | `strict` | `boolean` | `False` | Whether strict mode is enabled for the plugin. |
 | `list_item_empty_lines` | `boolean` | `False` | Whether empty list item lines are exempt from this rule. |
@@ -95,17 +95,18 @@ This rule is largely inspired by the MarkdownLint rule
 
 ### Differences From MarkdownLint Rule
 
-The main difference from the original rule is in how a HTML block is handled.
-According to the original rule:
+The main difference from the original rule is in how a HTML block is
+managed. According to the original rule:
 
 > Trailing space is allowed in indented and fenced code blocks because some languages require it.
 
 However, in tests against the original rule, HTML blocks seemed to be
-immune to triggering that rule.  This rule adheres to the text in the
+immune to triggering this rule.  This rule adheres to the text in the
 original specification by not triggering on indented code blocks and
-fenced code blocks, but triggering on HTML blocks.
+fenced code blocks but triggering on HTML blocks.
 
-In addition, the original implementation required the `br_spaces`
-number of spaces when using the `list_item_empty_lines` configuration
-value.  This had been changed for this rule to be the number of spaces
+In addition, the original implementation used the `br_spaces` value
+when using the `list_item_empty_lines` configuration value to decide
+if that List Item Empty Line triggered the rule.  That algorithm has
+been changed in this rule to instead use the number of spaces
 required to satisfy the indentation requirements of the List element.

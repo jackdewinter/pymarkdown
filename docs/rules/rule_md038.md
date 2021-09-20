@@ -11,6 +11,8 @@ Spaces inside code span elements.
 
 ## Reasoning
 
+### Correctness
+
 The primary reason for enabling this rule is that different parsers
 will interpret extra leading and trailing spaces in code spans differently.
 To ensure that the author's intent for the code span is respected,
@@ -20,7 +22,7 @@ mismatched extra leading and trailing spaces trigger this rule.
 
 ### Failure Scenarios
 
-This rule triggers if there is unbalanced spaces at the start:
+This rule triggers if there are unbalanced spaces at the start:
 
 ```Markdown
 this is an ` invalid` code span
@@ -57,8 +59,8 @@ or if there are single spaces at the start and the end of the code span text:
 this is a ` valid ` code span
 ```
 
-Because it is possible for a code span to contain the backtick character (`` ` ``)
-itself under certain situations, a single space character is allowed before
+Because it is possible for a code span to have the backtick character (`` ` ``) within
+its own bounds, a single space character is allowed before
 that backtick character to distinguish it from the code span boundary itself.
 
 ```Markdown

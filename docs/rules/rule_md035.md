@@ -11,6 +11,8 @@ Horizontal rule style.
 
 ## Reasoning
 
+### Readability
+
 The primary reason for enabling this rule is to force the document
 writer to not use a single representation for a horizontal rule to
 enhance readability.

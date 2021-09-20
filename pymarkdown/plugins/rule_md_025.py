@@ -1,12 +1,12 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for multiple top level headings.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd025(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for multiple top level headings.
     """
 
     def __init__(self):
@@ -20,15 +20,15 @@ class RuleMd025(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # headings, headers
             plugin_name="single-title,single-h1",
             plugin_id="MD025",
             plugin_enabled_by_default=True,
-            plugin_description="Multiple top level headings in the same document",
+            plugin_description="Multiple top-level headings in the same document",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md025---multiple-top-level-headings-in-the-same-document
-        # Parameters: level, front_matter_title (number; default 1, string; default "^\s*title:")
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md025.md",
+            plugin_configuration="level, front_matter_title",
+        )
 
     @classmethod
     def __validate_configuration_level(cls, found_value):

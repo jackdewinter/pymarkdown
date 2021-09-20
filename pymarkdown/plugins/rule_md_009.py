@@ -1,5 +1,5 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for trailing spaces in the files.
 """
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -8,7 +8,7 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 # pylint: disable=too-many-instance-attributes
 class RuleMd009(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for trailing spaces in the files.
     """
 
     def __init__(self):
@@ -28,15 +28,15 @@ class RuleMd009(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # whitespace
             plugin_name="no-trailing-spaces",
             plugin_id="MD009",
             plugin_enabled_by_default=True,
             plugin_description="Trailing spaces",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md007---unordered-list-indentation
-        # Parameters: br_spaces, list_item_empty_lines, strict (number; default 2, boolean; default false, boolean; default false)
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md009.md",
+            plugin_configuration="br_spaces,list_item_empty_lines,strict",
+        )
 
     @classmethod
     def __validate_break_spaces(cls, found_value):

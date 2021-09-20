@@ -1,12 +1,14 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that ensures that the indentation for List Items
+are equivalent with each other.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd005(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that ensures that the indentation for List Items
+    are equivalent with each other.
     """
 
     def __init__(self):
@@ -18,7 +20,6 @@ class RuleMd005(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # bullet, ul, indentation
             plugin_name="list-indent",
             plugin_id="MD005",
             plugin_enabled_by_default=True,
@@ -26,7 +27,7 @@ class RuleMd005(Plugin):
             plugin_version="0.5.0",
             plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md005.md",
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md005---inconsistent-indentation-for-list-items-at-the-same-level
+        )
 
     def starting_new_file(self):
         """

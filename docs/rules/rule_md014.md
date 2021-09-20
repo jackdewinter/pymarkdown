@@ -11,14 +11,18 @@ Dollar signs used before commands without showing output.
 
 ## Reasoning
 
+### Portability/Readability
+
 The primary reason for enabling this rule is that Bash-style script text
 are more readable and ready for copy-and-paste when the `$` indicator for
 a new script line is removed.  The exception to this rule is when the
 script text includes both the input and the output for the script.
 
-As long as one line without the leading indicator is present in the code
-block, this rule will not fire.  This is present to take into account
-that some commands do not produce any output.
+If at least one line without the leading indicator is present in the code
+block, this rule will not fire.  This is in consideration of the real
+world observations that while a group of commands may not output any
+data, the likelihood of that occurring decreases with the number of
+commands provided.
 
 ## Examples
 
@@ -48,7 +52,7 @@ cat /my/dir/file
 ````
 
 Note that while technically only one leading `$` needs to be removed to
-prevent this rule from triggering, that will leave some of the commands
+prevent this rule from triggering, which will leave some of the commands
 with the leading character and some without.  It is recommended that
 all leading `$` characters are removed.
 
@@ -85,5 +89,5 @@ This rule is largely inspired by the MarkdownLint rule
 
 The only difference is that when this rule is triggered, it is triggered for
 every line in the code block, instead of just the first line in the code block.
-Because this rule only triggers if every line starts withe a dollar sign
+Because this rule only triggers if every line starts with a dollar sign
 character (`$`), it made more sense to only fire this rule once.

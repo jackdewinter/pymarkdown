@@ -11,9 +11,11 @@ Trailing punctuation present in heading text.
 
 ## Reasoning
 
+### Readability
+
 Headings are meant to be the titles for separate sections of the document,
 not complete sentences.  Except for the question mark character (`?`), often
-used for a section title that contains a question, no other sentence ending
+used for a section title that asks a question, no other sentence ending
 punctuation characters should be used.
 
 ## Examples
@@ -60,7 +62,7 @@ one of the entities:
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `punctuation` | `string` | `".,;:!。，；：！"` | Punctuation characters that are considered sentence ending characters. |
+| `punctuation` | `string` | `.,;:!。，；：！` | Punctuation characters that are considered sentence ending characters. |
 
 ## Origination of Rule
 
@@ -71,5 +73,5 @@ and
 
 ### Differences From MarkdownLint Rule
 
-The main difference encountered was that the original rule did not handle
+The main difference met was that the original rule did not manage
 anything to do with multiple line SetExt Heading elements.

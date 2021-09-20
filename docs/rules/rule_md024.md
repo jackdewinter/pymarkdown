@@ -12,6 +12,8 @@ Multiple headings cannot contain the same content.
 
 ## Reasoning
 
+### Correctness
+
 While not common to the default installation of most parsers, a common extension
 to those parsers is to generate an `id` attribute for the heading element and/or
 an anchor tag based on the content of the heading element.  Therefore, having
@@ -22,7 +24,7 @@ poor results for those anchors.
 
 ### Failure Scenarios
 
-This rule triggers when there are multiple headings that contain the same text:
+This rule triggers when there are multiple headings that have the same text:
 
 ```Markdown
 # Heading Text
@@ -57,7 +59,7 @@ or a change in capitalization is enough to avoid this rule triggering:
 ```
 
 In certain Markdown documents, such as `changelog.md` files, non-sibling
-headings may purposefully contain the same text.  As this is the desired
+headings may purposefully have the same text.  As this is the desired
 behavior, the `siblings_only` or `allow_different_nesting` configuration value
 can be set to `True` to allow this Markdown document to not trigger this rule:
 

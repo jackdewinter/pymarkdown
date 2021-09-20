@@ -1,5 +1,6 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that ensures that specific proper names have
+the correct capitalization.
 """
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -7,7 +8,8 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 class RuleMd044(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that ensures that specific proper names have
+    the correct capitalization.
     """
 
     def __init__(self):
@@ -21,15 +23,15 @@ class RuleMd044(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # spelling
             plugin_name="proper-names",
             plugin_id="MD044",
             plugin_enabled_by_default=True,
             plugin_description="Proper names should have the correct capitalization",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md044---proper-names-should-have-the-correct-capitalization
-        # Parameters: names, code_blocks (string array; default null, boolean; default true)
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md044.md",
+            plugin_configuration="names,code_blocks",
+        )
 
     def starting_new_file(self):
         """

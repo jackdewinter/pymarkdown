@@ -12,10 +12,12 @@ Headings should be surrounded by blank lines.
 
 ## Reasoning
 
+### Readability
+
 From a readability point of view, it makes sense to have at least a single
 line before and after a heading to visually separate it from the rest of
-the content.  In addition, some parsers do not handle an Atx Heading element
-properly unless there is a blank line before it.
+the content.  In addition, a small fraction of the surveyed parsers do not
+handle an Atx Heading element properly unless there is a blank line before it.
 
 ## Examples
 
@@ -82,6 +84,6 @@ The differences between this rule and the inspiring rule were largely
 cosmetic.  In scenarios where the heading is part of a Block Quote or
 a List, the column number was changed to reflect the start of the
 heading element itself, not the start of the line.  In addition, the
-original rule failed to correct assess some boundary scenarios with
+original rule did not correctly assess a handful of boundary scenarios with
 Thematic Break elements and HTML Block elements before and after the
 heading elements.

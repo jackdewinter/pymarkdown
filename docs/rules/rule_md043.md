@@ -12,15 +12,17 @@ Required heading structure.
 
 ## Reasoning
 
+### Consistency
+
 In certain situations, there may be a need to enforce a heading structure
 on one or more documents.  This rule uses configuration to specify
 what heading elements are expected in the document, and in which order
-they are required to show up.
+they must show up.
 
 ## Examples
 
 For these examples, Atx Heading elements are used.  The SetExt Heading
-element equivalents of those Atx Heading elements provide for an identical
+element equivalents of those Atx Heading elements support an identical
 behavior.
 
 ### Failure Scenarios
@@ -57,7 +59,7 @@ will cause this rule to trigger.
 
 This rule is not triggered when the required heading structure constraints
 are met by the actual heading structure.  Using the default configuration
-value of an empty string, every actual heading structure meets that criteria.
+value of an empty string, every actual heading structure meets those criteria.
 
 Given a configuration value of `# Level 1,## Level 2`, those two Heading elements
 must be present in the document and in that order to satisfy the requirements:
@@ -78,10 +80,10 @@ of `## Header,*,## Footer` can be used to specify a header and footer section fo
 ## Footer
 ```
 
-Note that specificaly in this case, because of the `*` that follows the
+Note that specifically in this case, because of the `*` that follows the
 `## Header` sequence in the configuration value, the `Header` section may have
 any number of subheadings underneath it.  However, since the `## Footer`
-sequence is not followed by anything, it cannot be followed by any headings.
+sequence is not followed by anything; it cannot be followed by any headings.
 
 ## Configuration
 
@@ -97,7 +99,7 @@ sequence is not followed by anything, it cannot be followed by any headings.
 | `required_headings` | `string` | `""` | Comma separated list of headings to require the document to have. |
 
 For the `required_headings` list, each element is expected to be in one
-of two forms.  The first form is that of a simple text Atx Heading, such as
+of two forms.  The first form is that of a uncomplicated text Atx Heading, such as
 `# Heading 1`.  Regardless of whether the heading in the document is an
 Atx Heading element or a SetExt Heading element, this form must be used.
 The second form is that of a single wildcard character.  Currently, only

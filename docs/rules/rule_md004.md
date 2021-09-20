@@ -11,8 +11,12 @@ Inconsistent Unordered List Start style.
 
 ## Reasoning
 
+### Readability
+
 While the parsing engines do not usually have any problems with inconsistent
-Unordered List Start styles, a human reader of the same document will encounter difficulty.
+Unordered List Start styles, a human reader of the same document will not have the same experience.
+A human reader will need to mentally keep track of which List elements belong
+to which List Start characters, slowing them down in the process.
 By enforcing a rule to make the Unordered List Start style consistent, the human reader
 will be able to read the document with less issues.
 
@@ -42,9 +46,9 @@ document is the same, regardless of whether they are lists or sublists:
 ```
 
 By default, the [configured style](#configuration) is set to `consistent`.
-This means that as long as every Unordered List Start in the document
+This means that unless every Unordered List Start in the document
 is the same as the first in the document, the rule will not fire.
-If more precision is required, one of the values `plus`, `dash`, or `asterisk` can
+If more precision is needed, one of the values `plus`, `dash`, or `asterisk` can
 be specified to lock down the Unordered List Start, instead of
 relying on the first Unordered List Start in the document to be the correct style.
 
@@ -72,7 +76,7 @@ characters to avoid triggering the rule:
     * At each level
 ```
 
-Note that while these examples contain three level of Unordered Lists for
+Note that while these examples have three level of Unordered Lists for
 illustration purposes, there is no limit to the number of sublist levels
 that are tracked.
 
@@ -92,11 +96,11 @@ Valid heading styles:
 
 | Style | Description |
 | -- | -- |
-| `"consistent"` | The first Unordered List Start in the document specifies the style for the rest of the document. |
-| `"asterisk"` | Only Unordered List Starts with asterisks are to be used. |
-| `"dash"` | Only Unordered List Starts with dashes are to be used. |
-| `"plus"` | Only Unordered List Starts with pluses are to be used. |
-| `"sublist"` | The first Unordered List Start in the document for that level of sublist specifies the style for that level of sublist for the rest of the document. |
+| `consistent` | The first Unordered List Start in the document specifies the style for the rest of the document. |
+| `asterisk` | Only Unordered List Starts with asterisks are used. |
+| `dash` | Only Unordered List Starts with dashes are used. |
+| `plus` | Only Unordered List Starts with pluses are used. |
+| `sublist` | The first Unordered List Start in the document for that level of sublist specifies the style for that level of sublist for the rest of the document. |
 
 ## Origination of Rule
 

@@ -11,9 +11,11 @@ Multiple spaces are present inside hash characters on Atx Closed Heading.
 
 ## Reasoning
 
-While all of the researched parsers treat one space character after
+### Simplicity
+
+While all the researched parsers treat one space character after
 the start hash character (`#`) and one space before the end hash
-character the same as many space characters, the extra characters
+character the same as multiple space characters, the extra characters
 have no purpose as it does not affect the rendering of the Atx
 Closed Heading element.
 
@@ -21,7 +23,7 @@ Closed Heading element.
 
 ### Failure Scenarios
 
-This rule triggers when the start of an Atx Heading element contains more
+This rule triggers when the start of an Atx Heading element has more
 than one space character between the last start hash character (`#`) and
 the first non-space character:
 
@@ -76,7 +78,7 @@ This rule is largely inspired by the MarkdownLint rule
 The original rule did not take any leading spaces into consideration,
 declaring that any leading spaces were a violation of this rule.  As
 [Rule md023](https://github.com/jackdewinter/pymarkdown/blob/main/docs/rule_md023.md)
-addresses the amount of leading spaces preceding an Atx Heading element,
+addresses the number of leading spaces preceding an Atx Heading element,
 this rule was developed to ignore any leading spaces.  The rationale is
 that if leading spaces before Atx Heading elements are not desired, there
 should only be one rule's configuration that needs to be set to

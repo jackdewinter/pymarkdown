@@ -11,9 +11,11 @@ Images should have alternate text (alt text).
 
 ## Reasoning
 
+### Readability
+
 One of the main keys to readability is to have consistent formatting applied
-throughout a group of documents.  Extending the concept even further, many
-organizations have specific rules on how documents should be authored throughout
+throughout a group of documents.  Extending the concept even further,
+organizations may have specific rules on how documents should be authored throughout
 that organization.  It follows that both concepts may extend to specifying
 which element should be used for specifying code blocks in a Markdown document.
 
@@ -65,15 +67,15 @@ value of `fenced` or `consistent` will not cause this rule to trigger.
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `style` | string (see below) | `"consistent"` | Style of code blocks expected in the document. |
+| `style` | string (see below) | `consistent` | Style of code blocks expected in the document. |
 
 Valid heading styles:
 
 | Style | Description |
 | -- | -- |
-| `"consistent"` | The first heading in the document specifies the style for the rest of the document. |
-| `"fenced"` | Only fenced code blocks are to be used. |
-| `"indented"` | Only indented code blocks are to be used. |
+| `consistent` | The first heading in the document specifies the style for the rest of the document. |
+| `fenced` | Only fenced code blocks are to be used. |
+| `indented` | Only indented code blocks are to be used. |
 
 ## Origination of Rule
 

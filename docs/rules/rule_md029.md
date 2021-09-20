@@ -11,9 +11,10 @@ Ordered list item prefix.
 
 ## Reasoning
 
-The main reasons for this rule are readability and consistency.  While
-it may not seem important, keeping the Ordered List Item prefix in a
-common form enhances the readability of the document by providing
+### Readability
+
+Writing the Ordered List Item prefix using a consistent
+form enhances the readability of the document by supplying
 consistency.  This consistency can also be set to take advantage of
 the strengths and weaknesses of the Markdown parser, to ensure the
 correct HTML is output.
@@ -80,10 +81,10 @@ Valid heading styles:
 
 | Style | Description |
 | -- | -- |
-| `"one_or_ordered"` | Either of the `one` or `ordered` styles below. |
-| `"one"` | All Ordered List Items must start with `1`. |
-| `"ordered"` | Starting with `0` or `1`, each subsequent item must be one greater than its predecessor. |
-| `"zero"` | All Ordered List Items must start with `0`. |
+| `one_or_ordered` | Either of the `one` or `ordered` styles below. |
+| `one` | All Ordered List Items must start with `1`. |
+| `ordered` | Starting with `0` or `1`, each following List Item must be one greater than its predecessor. |
+| `zero` | All Ordered List Items must start with `0`. |
 
 ## Origination of Rule
 
@@ -94,6 +95,6 @@ This rule is largely inspired by the MarkdownLint rule
 
 This rule differs from the original implementation in that it only
 fires for the first non-matching item.  As that first item will most
-likely indicate the pattern for any other items that follow, it should
+likely provide the pattern for any other items that follow, it should
 be enough to call out the first item and let the user fix the rest of
 the list.

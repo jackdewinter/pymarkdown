@@ -11,11 +11,14 @@ Blank line inside blockquote.
 
 ## Reasoning
 
-The main reasons for this rule are readability and consistency.  Especially
-with *weird* cases like this one, parsers can return surprisingly different
-results for how the failure scenarios below are interepretted into HTML.
-To reduce the complexity needed to determine which parsers return which
-results, this rule attempts to ...
+### Consistency
+
+Especially with *weird* cases, like the one this rule tries to protect
+against, parsers can return surprisingly different results for how "failure"
+scenarios below are interpreted into HTML.  To reduce the complexity needed
+to determine which parser return which result, this rule attempts to
+remove the single most divisive scenario between parsers: blank lines within
+Block Quote elements.
 
 ## Examples
 
@@ -36,7 +39,7 @@ may be included in the previous Block Quote section.
 
 ````Markdown
 > This is one section of a block quote
-This looks like its own paragraph, but is really part of the above block quote.
+This looks like its own paragraph but is really part of the above block quote.
 
 > This is the other section.
 ````
@@ -65,7 +68,7 @@ This is its own paragraph.
 ````
 
 To ensure that the above example is readable, it is suggested that the
-Block Quote is prefaced with its own Blank Line, as such:
+Block Quote is prefaced with its own Blank Line:
 
 ````Markdown
 > This is one section of a block quote

@@ -11,6 +11,8 @@ Inline HTML.
 
 ## Reasoning
 
+### Portability
+
 The primary reason for enabling this rule is to force the document
 writer to not use any HTML elements, or only a small subset of HTML
 elements,  in their documents.  The two main reasons for this are:
@@ -22,8 +24,7 @@ elements,  in their documents.  The two main reasons for this are:
 
 ### Failure Scenarios
 
-This rule triggers if either HTML element, either HTML block or inline
-Raw HTML elements, are detected.
+This rule triggers if either a HTML block or an inline Raw HTML element is detected.
 
 ```Markdown
 This is <i>Raw</i> HTML.
@@ -64,7 +65,7 @@ image tags than the default `!--` (HTML comment) are strongly discouraged.
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `allowed_elements` | `string` | `!--` | Comma separated list of tag starts that are allowable. |
 
-To be clear, if using the `allowed_elements` configuration value, the provided
+To be clear, if using the `allowed_elements` configuration value, the supplied
 value is a comma separated list of allowable element sequences.  Those
 element names are derived by taking the start of the tag and skipping
 over the start character `<` or the start and close characters `</`.
@@ -75,12 +76,12 @@ following:
 - the close HTML tag character (`/`)
 - the end HTML tag character (`>`)
 
-As most of the tags either require a whitespace character or one of the end or
-closing characters, this provides a simple manner in which to represent each HTML
+As tags either require a whitespace character, the end character, or
+the closing characters, this supplies a straightforward way to represent each HTML
 tag.  The only exception to this is when the rule encounters the
 [CDATA](https://github.github.com/gfm/#cdata-section)
 character sequence `![CDATA[` right after the start HTML tag character (`<`).
-Because that sequence does not require any whitespace to follow it, it is handled
+Because that sequence does not require any whitespace to follow it, it is managed
 separately.
 
 ## Origination of Rule
@@ -90,9 +91,9 @@ This rule is largely inspired by the MarkdownLint rule
 
 ### Differences From MarkdownLint Rule
 
-The big difference from the original rule is that the original rule only
+The substantial difference from the original rule is that the original rule only
 triggers if an alphabetic character followed the starting `<` character. While
-that worked in a majority of cases, it precluded the detection of
+that worked in most cases, it precluded the detection of
 [HTML start conditions](https://github.github.com/gfm/#html-blocks)
 number 2 to number 5 and the closing tag case for number 7.
 

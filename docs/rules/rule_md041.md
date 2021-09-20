@@ -8,9 +8,11 @@
 
 ## Summary
 
-First line in file should be a top level heading.
+First line in file should be a top-level heading.
 
 ## Reasoning
+
+### Correctness
 
 In most cases, the top-level heading of a document is used as the title of
 that document.  Therefore, the first heading in the document should be a
@@ -42,7 +44,7 @@ This is a SetExt H1 heading
 ===
 ```
 
-Some documents, most notably GitHub project pages, use an image for the
+Most notable with GitHub project pages, documents may use an image for the
 title of the document.  To support this, a document started with a HTML
 block that begins with a valid `h1` token is acknowledged as a valid
 top-level document heading:
@@ -77,7 +79,7 @@ value to an empty string (`""`).
 
 Configuration may be applied to change the expected top-level of
 this rule from its default of `1` to another value.  This should only be done
-if some manner of external process is generating the title of the document.
+if an external process is generating the title of the document.
 For example, if the `level` configuration value is set to `2`, then the following
 document will not trigger this rule:
 
@@ -97,7 +99,7 @@ document will not trigger this rule:
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
 | `level` | `integer` | `1` | Level that is expected from the first heading (Atx or SetExt) in the document. |
-| `front_matter_title` | `string` | `"title"` | Name of the front-matter field that contains the title associated with the document. |
+| `front_matter_title` | `string` | `title` | Name of the front-matter field that has the title associated with the document. |
 
 ## Origination of Rule
 

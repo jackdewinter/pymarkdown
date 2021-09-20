@@ -1,12 +1,12 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that ensures the code blocks maintain a consistent style.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd046(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that ensures the code blocks maintain a consistent style.
     """
 
     __consistent_style = "consistent"
@@ -28,15 +28,15 @@ class RuleMd046(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # code
             plugin_name="code-block-style",
             plugin_id="MD046",
             plugin_enabled_by_default=True,
             plugin_description="Code block style",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md045---images-should-have-alternate-text-alt-text
-        # Parameters: style ("consistent", "fenced", "indented"; default "consistent")
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md046.md",
+            plugin_configuration="style",
+        )
 
     @classmethod
     def __validate_configuration_style(cls, found_value):

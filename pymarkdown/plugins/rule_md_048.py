@@ -1,12 +1,12 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that ensures that the style of fenced code blocks is consistent.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd048(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that ensures that the style of fenced code blocks is consistent.
     """
 
     __consistent_style = "consistent"
@@ -28,15 +28,15 @@ class RuleMd048(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # code
             plugin_name="code-fence-style",
             plugin_id="MD048",
             plugin_enabled_by_default=True,
             plugin_description="Code fence style",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md048---code-fence-style
-        # Parameters: style ("consistent", "tilde", "backtick"; default "consistent")
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md048.md",
+            plugin_configuration="style",
+        )
 
     @classmethod
     def __validate_configuration_style(cls, found_value):

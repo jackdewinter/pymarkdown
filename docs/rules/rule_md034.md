@@ -1,4 +1,4 @@
-# Rule - MD035
+# Rule - MD034
 
 | Aliases |
 | --- |
@@ -11,14 +11,16 @@ Bare URL used.
 
 ## Reasoning
 
-The primary reason for enabling this rule is correctness.  When text
-that looks like the start of a formal URL is encountered by a reader,
-that reader will try and click on the text, thinking it is a link unless
+### Correctness
+
+When text
+that looks like the start of a formal URL is seen by someone reading the document,
+that person will try and click on the text, thinking it is a link unless
 there is other formatting to convince them otherwise.
 
 Note that as the various allowed forms of URLs and URIs is a very
 [complex topic](https://stackoverflow.com/questions/30847/regex-to-validate-uris),
-this rule only strives to handle the most mainstream cases.
+this rule only strives to address the most mainstream cases.
 
 ## Examples
 
@@ -96,13 +98,13 @@ This rule is largely inspired by the MarkdownLint rule
 
 There are two main differences between the original rule and this rule.
 
-The first difference is in the requirements for finding an eligible url to trigger
-on.  In the description for the original rule, a lot of time is spent describing the
-various bounding characters that negate the firing of that rule.  To provide a
+The first difference is in the requirements for finding an eligible URL to trigger
+on.  In the description for the original rule, significant time is spent describing the
+various bounding characters that negate the firing of that rule.  To supply a
 similar effect but in a simpler manner, this rule just checks for a single non-whitespace
 character preceding the found URL.
 
 The second difference is in this documentation.  The original rule's documentation
 focused mostly on what would not trigger the rule.  In this description of the rule,
-effort has been made to clearly state when this rule triggers, and simplify the
+effort has been made to clearly specify when this rule triggers, and simplify the
 description of when this rule will not trigger.

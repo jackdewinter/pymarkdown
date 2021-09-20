@@ -1,12 +1,12 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for spaces within emphasis sections.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd037(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for spaces within emphasis sections.
     """
 
     def __init__(self):
@@ -20,7 +20,6 @@ class RuleMd037(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # whitespace, emphasis
             plugin_name="no-space-in-emphasis",
             plugin_id="MD037",
             plugin_enabled_by_default=True,
@@ -28,7 +27,7 @@ class RuleMd037(Plugin):
             plugin_version="0.5.0",
             plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md037.md",
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md037---spaces-inside-emphasis-markers
+        )
 
     def starting_new_file(self):
         """

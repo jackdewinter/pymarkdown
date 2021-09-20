@@ -425,7 +425,7 @@ def test_md041_good_front_matter_top_level():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md041/good_front_matter_top_level.md:5:1: "
-        + "MD025: Multiple top level headings in the same document (single-title,single-h1)"
+        + "MD025: Multiple top-level headings in the same document (single-title,single-h1)"
     )
     expected_error = ""
 

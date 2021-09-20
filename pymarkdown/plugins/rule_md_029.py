@@ -1,12 +1,14 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that ensures that Ordered List Items have
+consistent numeric prefaces.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd029(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that ensures that Ordered List Items have
+    consistent numeric prefaces.
     """
 
     __one_style = "one"
@@ -32,15 +34,15 @@ class RuleMd029(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # ol
             plugin_name="ol-prefix",
             plugin_id="MD029",
             plugin_enabled_by_default=True,
             plugin_description="Ordered list item prefix",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md029---ordered-list-item-prefix
-        # Parameters: style ("one", "ordered", "one_or_ordered", "zero"; default "one_or_ordered")
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md029.md",
+            plugin_configuration="style",
+        )
 
     @classmethod
     def __validate_configuration_style(cls, found_value):

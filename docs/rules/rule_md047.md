@@ -11,14 +11,20 @@ Each file should end with a single newline character.
 
 ## Reasoning
 
+### Consistency
+
 Various parsers and operating system calls have trouble with files that
 do not end with at least one newline character on its own.
 It is common on any POSIX operating systems to mandate that each text file
-be terminated with a single newline character.  To make the Markdown
+be ended with a single newline character.  To make the Markdown
 documents compatible with these various systems, it just makes sense to
 end documents with a newline character.
 
 ## Examples
+
+As the space character is not normally visible, each occurrence of
+the text `{space}` in the following example stands for a single
+space character.
 
 ### Failure Scenarios
 
@@ -31,7 +37,7 @@ newline character.
 This file ends without a newline.
 ```
 
-This includes triggering on a final line that contains a newline
+This includes triggering on a final line that has a newline
 character followed by one or more whitespace characters.  To
 properly illustrate this, the space characters at the end of the
 following example have been replaced with the string `{space}`

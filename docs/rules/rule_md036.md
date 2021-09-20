@@ -39,8 +39,7 @@ Consectetur adipiscing elit, sed do eiusmod.
 
 ### Correct Scenarios
 
-This rule does not trigger when all of the above constraints have
-not been met:
+This rule does not trigger when all constraints have not been met:
 
 ```Markdown
 **My
@@ -68,7 +67,7 @@ Consectetur adipiscing elit, sed do eiusmod.
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `punctuation` | `string` | `".,;:!?。，；：？"` | Punctuation characters that are considered sentence ending characters. |
+| `punctuation` | `string` | `.,;:!?。，；：？` | Punctuation characters that are considered sentence ending characters. |
 
 ## Origination of Rule
 

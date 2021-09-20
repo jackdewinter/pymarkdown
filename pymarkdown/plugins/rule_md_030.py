@@ -1,5 +1,5 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that ensures consistent spacing after the list markers.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
@@ -7,7 +7,7 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 # pylint: disable=too-many-instance-attributes
 class RuleMd030(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that ensures consistent spacing after the list markers.
     """
 
     def __init__(self):
@@ -26,15 +26,15 @@ class RuleMd030(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # ol, ul, whitespace
             plugin_name="list-marker-space",
             plugin_id="MD030",
             plugin_enabled_by_default=True,
             plugin_description="Spaces after list markers",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md030---spaces-after-list-markers
-        # Parameters: ul_single, ol_single, ul_multi, ol_multi (number; default 1)
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md030.md",
+            plugin_configuration="ul_single,ol_single,ul_multi,ol_multi",
+        )
 
     @classmethod
     def __validate_minimum(cls, found_value):

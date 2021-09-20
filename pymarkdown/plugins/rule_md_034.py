@@ -1,5 +1,5 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for bare URLs in the files.
 """
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -7,7 +7,7 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 class RuleMd034(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for bare URLs in the files.
     """
 
     __valid_uri_types = ["http:", "https:", "ftp:", "ftps:"]
@@ -23,14 +23,14 @@ class RuleMd034(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # links, url
             plugin_name="no-bare-urls",
             plugin_id="MD034",
             plugin_enabled_by_default=True,
             plugin_description="Bare URL used",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md034---bare-url-used
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md034.md",
+        )
 
     def starting_new_file(self):
         """

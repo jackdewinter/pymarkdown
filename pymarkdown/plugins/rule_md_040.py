@@ -1,12 +1,12 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for fenced code blocks without a language specified.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd040(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for fenced code blocks without a language specified.
     """
 
     def get_details(self):
@@ -14,14 +14,14 @@ class RuleMd040(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # code, language
             plugin_name="fenced-code-language",
             plugin_id="MD040",
             plugin_enabled_by_default=True,
             plugin_description="Fenced code blocks should have a language specified",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md040---fenced-code-blocks-should-have-a-language-specified
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md040.md",
+        )
 
     def next_token(self, context, token):
         """

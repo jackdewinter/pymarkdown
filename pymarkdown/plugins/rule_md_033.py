@@ -1,5 +1,5 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that looks for inline HTML in the files.
 """
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager import Plugin, PluginDetails
@@ -7,7 +7,7 @@ from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 class RuleMd033(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that looks for inline HTML in the files.
     """
 
     def __init__(self):
@@ -20,7 +20,6 @@ class RuleMd033(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # html
             plugin_name="no-inline-html",
             plugin_id="MD033",
             plugin_enabled_by_default=True,
@@ -29,8 +28,7 @@ class RuleMd033(Plugin):
             plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md033.md",
             plugin_configuration="allowed_elements",
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md033---inline-html
-        # Parameters: allowed_elements (array of string; default "!--")
+        )
 
     def initialize_from_config(self):
         """

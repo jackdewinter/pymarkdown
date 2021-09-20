@@ -1,12 +1,12 @@
 """
-Module to implement a plugin that looks for hard tabs in the files.
+Module to implement a plugin that ensures that the first line in a file is a top level heading.
 """
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
 class RuleMd041(Plugin):
     """
-    Class to implement a plugin that looks for hard tabs in the files.
+    Class to implement a plugin that ensures that the first line in a file is a top level heading.
     """
 
     def __init__(self):
@@ -21,14 +21,15 @@ class RuleMd041(Plugin):
         Get the details for the plugin.
         """
         return PluginDetails(
-            # headings, headers
             plugin_name="first-line-heading,first-line-h1",
             plugin_id="MD041",
             plugin_enabled_by_default=True,
             plugin_description="First line in file should be a top level heading",
             plugin_version="0.5.0",
             plugin_interface_version=1,
-        )  # https://github.com/DavidAnson/markdownlint/blob/master/doc/Rules.md#md041---first-line-in-file-should-be-a-top-level-heading
+            plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md041.md",
+            plugin_configuration="level,front_matter_title",
+        )
 
     @classmethod
     def __validate_configuration_level(cls, found_value):
