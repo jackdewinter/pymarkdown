@@ -72,7 +72,7 @@ This project required Python 3.8 or later to function.
 ## Installation
 
 ```text
-pip install PyMarkdown
+pip install pymarkdownlnt
 ```
 
 ## How To Use
