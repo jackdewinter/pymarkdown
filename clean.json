@@ -1,0 +1,16 @@
+{
+    "plugins": {
+        "no-space-in-code": {
+            "enabled": false
+        },
+        "no-space-in-emphasis": {
+            "enabled": false
+        },
+        "line-length": {
+            "enabled": false
+        },
+        "no-duplicate-heading": {
+            "enabled": false
+        }
+    }
+}
