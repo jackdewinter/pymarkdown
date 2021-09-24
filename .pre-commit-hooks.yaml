@@ -1,7 +1,8 @@
 - id: pymarkdown
-  name: pymarkdown
-  description: Markdown linter
+  name: PyMarkdown
+  description: "PyMarkdown - GitHub Flavored Markdown and CommonMark Compliant Linter"
   language: python
   language_version: python3
-  entry: pymarkdown scan
+  entry: pymarkdown
+  args: [scan]
   types: [markdown]

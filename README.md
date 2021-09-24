@@ -62,8 +62,18 @@ The PyMarkdown project has the following advantages:
 
 ## Note
 
-This project is currently in pre-release, and some of these documented things
-may not work 100% as advertised until after the initial release.
+This project is currently in beta, and some of these documented things
+may not work 100% as advertised until after the final release.  However,
+everything should be close enough to done that if you find something missing,
+please let us know.
+
+## GitHub Pre Commit Hooks
+
+If you intend to use the PyMarkdown project as a linter for your
+GitHub Pre-Commit hooks, then refer to this document on how to set
+that up.  Once setup, you can continue reading at the
+[How To Use section](#how-to-use) for more information on the options
+available for use in your Pre-Commit Hooks.
 
 ## Requirements
 
