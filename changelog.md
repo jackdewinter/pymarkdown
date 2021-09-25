@@ -12,7 +12,9 @@
 
 ### Fixed
 
-- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/23) - Whitespace at end of lines in SetExt Heading no longer being recognized as starting whitespace.
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/22) - no longer triggers on end tags, adjusted default allowed tags
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/23) - whitespace at end of lines in SetExt Heading no longer being recognized as starting whitespace.
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/27) - was not recognizing 2 end list tokens in a row
 
 ## Version 0.9.0 - Date: 2021-09-21
 
