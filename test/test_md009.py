@@ -379,8 +379,6 @@ def test_md009_bad_setext_heading_with_extra():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md023",
         "scan",
         "test/resources/rules/md009/bad_setext_heading_with_extra.md",
     ]

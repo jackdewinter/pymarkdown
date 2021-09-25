@@ -1,5 +1,19 @@
 # Change Log
 
+## Unversion - In Main, Not Released
+
+### Added
+
+- None
+
+### Changed
+
+- None
+
+### Fixed
+
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/23) - Whitespace at end of lines in SetExt Heading no longer being recognized as starting whitespace.
+
 ## Version 0.9.0 - Date: 2021-09-21
 
 The main focus of this release was to fill out the features that the
