@@ -59,17 +59,12 @@ def test_md033_bad_html_block_present():
     expected_output = (
         "test/resources/rules/md033/bad_html_block_present.md:3:1: "
         + "MD033: Inline HTML [Element: script] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:12:1: "
-        + "MD033: Inline HTML [Element: ?] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:16:1: "
-        + "MD033: Inline HTML [Element: !A] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:20:1: "
-        + "MD033: Inline HTML [Element: ![CDATA[] (no-inline-html)\n"
+        + "MD033: Inline HTML "
+        + "[Element: !A] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:24:1: "
         + "MD033: Inline HTML [Element: p] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:28:1: "
-        + "MD033: Inline HTML [Element: robert] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:31:1: "
         + "MD033: Inline HTML [Element: robert] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:34:1: "
         + "MD033: Inline HTML [Element: robert] (no-inline-html)"
@@ -107,18 +102,20 @@ def test_md033_bad_html_block_present_with_configuration():
         "test/resources/rules/md033/bad_html_block_present.md:3:1: "
         + "MD033: Inline HTML [Element: script] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:7:1: "
-        + "MD033: Inline HTML [Element: !--] (no-inline-html)\n"
+        + "MD033: Inline HTML "
+        + "[Element: !--] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:12:1: "
-        + "MD033: Inline HTML [Element: ?] (no-inline-html)\n"
+        + "MD033: Inline HTML "
+        + "[Element: ?] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:16:1: "
-        + "MD033: Inline HTML [Element: !A] (no-inline-html)\n"
+        + "MD033: Inline HTML "
+        + "[Element: !A] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:20:1: "
-        + "MD033: Inline HTML [Element: ![CDATA[] (no-inline-html)\n"
+        + "MD033: Inline HTML "
+        + "[Element: ![CDATA[] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:24:1: "
         + "MD033: Inline HTML [Element: p] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:28:1: "
-        + "MD033: Inline HTML [Element: robert] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_html_block_present.md:31:1: "
         + "MD033: Inline HTML [Element: robert] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:34:1: "
         + "MD033: Inline HTML [Element: robert] (no-inline-html)"
@@ -156,11 +153,14 @@ def test_md033_bad_html_block_present_with_other_configuration():
         "test/resources/rules/md033/bad_html_block_present.md:3:1: "
         + "MD033: Inline HTML [Element: script] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:7:1: "
-        + "MD033: Inline HTML [Element: !--] (no-inline-html)\n"
+        + "MD033: Inline HTML "
+        + "[Element: !--] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:12:1: "
-        + "MD033: Inline HTML [Element: ?] (no-inline-html)\n"
+        + "MD033: Inline HTML "
+        + "[Element: ?] (no-inline-html)\n"
         + "test/resources/rules/md033/bad_html_block_present.md:20:1: "
-        + "MD033: Inline HTML [Element: ![CDATA[] (no-inline-html)"
+        + "MD033: Inline HTML "
+        + "[Element: ![CDATA[] (no-inline-html)"
     )
     expected_error = ""
 
@@ -191,10 +191,71 @@ def test_md033_bad_inline_html_present():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md033/bad_inline_html_present.md:3:9: "
-        + "MD033: Inline HTML [Element: a] (no-inline-html)\n"
-        + "test/resources/rules/md033/bad_inline_html_present.md:5:17: "
-        + "MD033: Inline HTML [Element: ![CDATA[] (no-inline-html)"
+        + "MD033: Inline HTML [Element: a] (no-inline-html)"
     )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md033_bad_html_in_atx_heading():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD026 directory that has atx headings that do not end with
+    punctuation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md033/bad_html_in_atx_heading.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md033/bad_html_in_atx_heading.md:1:3: "
+        + "MD033: Inline HTML "
+        + "[Element: foo] (no-inline-html)\n"
+        + "test/resources/rules/md033/bad_html_in_atx_heading.md:1:14: "
+        + "MD033: Inline HTML "
+        + "[Element: foo] (no-inline-html) "
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md033_good_html_comment():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD026 directory that has atx headings that do not end with
+    punctuation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md033/good_html_comment.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
     expected_error = ""
 
     # Act

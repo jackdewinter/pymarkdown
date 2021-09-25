@@ -36,7 +36,7 @@ class RuleMd033(Plugin):
         """
         allowed_elements = self.plugin_configuration.get_string_property(
             "allowed_elements",
-            default_value="!--",
+            default_value="!--,![CDATA[,?",
         )
         self.__allowed_elements = []
         for next_element in allowed_elements.split(","):
@@ -51,13 +51,19 @@ class RuleMd033(Plugin):
         self.__is_next_html_block_start = False
 
     def __look_for_html_start(self, context, token, tag_text):
+        if tag_text.startswith("/"):
+            return
         if tag_text.startswith("![CDATA["):
             tag_text = "![CDATA["
+        elif tag_text.startswith("!--"):
+            tag_text = "!--"
         else:
             _, tag_text = ParserHelper.collect_until_one_of_characters(
                 tag_text, 0, " \n\t/>"
             )
         extra_data = "Element: " + tag_text
+        # print(">>" + str(tag_text))
+        # print(">>" + str(self.__allowed_elements))
         if tag_text not in self.__allowed_elements:
             self.report_next_token_error(
                 context, token, extra_error_information=extra_data
@@ -72,11 +78,6 @@ class RuleMd033(Plugin):
         elif token.is_html_block:
             self.__is_next_html_block_start = True
         elif token.is_text and self.__is_next_html_block_start:
-            modified_text = (
-                token.token_text[2:]
-                if token.token_text.startswith("</")
-                else token.token_text[1:]
-            )
-            self.__look_for_html_start(context, token, modified_text)
+            self.__look_for_html_start(context, token, token.token_text[1:])
         else:
             self.__is_next_html_block_start = False

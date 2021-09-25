@@ -63,12 +63,12 @@ image tags than the default `!--` (HTML comment) are strongly discouraged.
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `allowed_elements` | `string` | `!--` | Comma separated list of tag starts that are allowable. |
+| `allowed_elements` | `string` | `!--,![CDATA[,?` | Comma separated list of tag starts that are allowable. |
 
 To be clear, if using the `allowed_elements` configuration value, the supplied
 value is a comma separated list of allowable element sequences.  Those
 element names are derived by taking the start of the tag and skipping
-over the start character `<` or the start and close characters `</`.
+over the start character `<`.
 From that point, the parser collects the contents of the tag up to one of the
 following:
 
@@ -78,10 +78,11 @@ following:
 
 As tags either require a whitespace character, the end character, or
 the closing characters, this supplies a straightforward way to represent each HTML
-tag.  The only exception to this is when the rule encounters the
+tag.  The only exceptions to this is when the rule encounters the
 [CDATA](https://github.github.com/gfm/#cdata-section)
-character sequence `![CDATA[` right after the start HTML tag character (`<`).
-Because that sequence does not require any whitespace to follow it, it is managed
+character sequence `![CDATA[` right after the start HTML tag character (`<`) or
+the HTML comment sequence `!--`.
+Because those sequences do not require any whitespace to follow it, they are managed
 separately.
 
 ## Origination of Rule
@@ -98,6 +99,6 @@ that worked in most cases, it precluded the detection of
 number 2 to number 5 and the closing tag case for number 7.
 
 In creating this rule to work with all HTML tags, including the missing
-HTML start conditions and the close HTML tag character (`/`), the
-`allowed_elements` configuration default value is set to `!--` to allow
-for HTML comment tags to not trigger this rule by default.
+HTML start conditions, the
+`allowed_elements` configuration default value is set to `!--,![CDATA[,?` to allow
+for common HTML tags to not trigger this rule by default.
