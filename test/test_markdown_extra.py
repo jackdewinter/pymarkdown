@@ -108,3 +108,51 @@ def test_extra_005():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_006():
+    """
+    When encoding link characters, special attention is used for the % characters as
+    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
+    this is tested at the end of the link.
+    """
+
+    # Arrange
+    source_markdown = """> + list
+> ```block
+> A code block
+> ```
+> 1. another list
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> ]",
+        "[ulist(1,3):+::4:  ]",
+        "[para(1,5):]",
+        "[text(1,5):list:]",
+        "[end-para:::False]",
+        "[end-ulist:::True]",
+        "[fcode-block(2,3):`:3:block:::::]",
+        "[text(3,3):A code block:]",
+        "[end-fcode-block::3:False]",
+        "[olist(5,3):.:1:5:  ]",
+        "[para(5,6):]",
+        "[text(5,6):another list:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>list</li>
+</ul>
+<pre><code class="language-block">A code block
+</code></pre>
+<ol>
+<li>another list</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

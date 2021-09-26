@@ -129,20 +129,6 @@ This is a blank line and some text.
 # a
 ```
 
-### Rule 31
-
-- check to make sure line/col for FCB in bq/list reported properly
-
-- bad_fenced_block_in_list_in_block_quote
-
-```Markdown
-> + list
-> ```block
-> A code block
-> ```
-> 1. another list
-```
-
 ### Rule 007
 
 ```Markdown

@@ -401,3 +401,38 @@ def test_md032_good_list_levels_1_2_3_1():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md032_bad_fenced_block_in_list_in_block_quote():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/MD026 directory that has atx headings that do not end with
+    punctuation.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md031",
+        "scan",
+        "test/resources/rules/md031/bad_fenced_block_in_list_in_block_quote.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md031/bad_fenced_block_in_list_in_block_quote.md:1:3: "
+        + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)\n"
+        + "test/resources/rules/md031/bad_fenced_block_in_list_in_block_quote.md:5:3: "
+        + "MD032: Lists should be surrounded by blank lines (blanks-around-lists)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )

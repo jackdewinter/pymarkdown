@@ -243,11 +243,11 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                     and not did_x
                 ):
                     print(
-                        f">>mainline-top_block_token>>leading_text_index>{str(container_block_stack[-1].leading_text_index)}"
+                        f">>mainline-top_block_token>>leading_text_index>{str(top_block_token.leading_text_index)}"
                     )
                     top_block_token.leading_text_index += 1
                     print(
-                        f">>mainline-top_block_token>>leading_text_index>{str(container_block_stack[-1].leading_text_index)}"
+                        f">>mainline-top_block_token>>leading_text_index>{str(top_block_token.leading_text_index)}"
                     )
         else:
             __validate_first_token(current_token, current_position)
