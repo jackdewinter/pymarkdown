@@ -54,14 +54,19 @@ class RuleMd037(Plugin):
                 token.is_text
                 and token.token_text == self.__start_emphasis_token.token_text
             ):
-                # if (
-                #     # len(self.__emphasis_token_list) == 1
-                #     # and self.__emphasis_token_list[0].is_text and
-                #     #self.__emphasis_token_list[0].token_text
-                #     #!= self.__emphasis_token_list[0].token_text.strip()
-                #     True
-                # ):
-                self.report_next_token_error(context, self.__start_emphasis_token)
+                assert self.__emphasis_token_list
+                first_capture_token = self.__emphasis_token_list[0]
+                did_first_start_with_space = (
+                    first_capture_token.is_text
+                    and first_capture_token.token_text[0] == " "
+                )
+                last_capture_token = self.__emphasis_token_list[-1]
+                did_last_end_with_space = (
+                    last_capture_token.is_text
+                    and last_capture_token.token_text[-1] == " "
+                )
+                if did_first_start_with_space or did_last_end_with_space:
+                    self.report_next_token_error(context, self.__start_emphasis_token)
 
                 self.__start_emphasis_token = None
                 self.__emphasis_token_list = []
