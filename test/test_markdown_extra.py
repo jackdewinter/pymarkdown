@@ -156,3 +156,223 @@ def test_extra_006():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_007a():
+    """
+    When encoding link characters, special attention is used for the % characters as
+    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
+    this is tested at the end of the link.
+    """
+
+    # Arrange
+    source_markdown = """> this is text
+> [a not so
+>  simple](/link
+> "a title")
+>   a real test
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n]",
+        "[para(1,3):\n\n \n\n  ]",
+        "[text(1,3):this is text\n::\n]",
+        '[link(2,3):inline:/link:a title::::a not so\nsimple:False:"::\n:]',
+        "[text(2,4):a not so\nsimple::\n]",
+        "[end-link::]",
+        "[text(4,13):\na real test::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>this is text
+<a href="/link" title="a title">a not so
+simple</a>
+a real test</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        show_debug=False,
+        disable_consistency_checks=True,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_007b():
+    """
+    When encoding link characters, special attention is used for the % characters as
+    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
+    this is tested at the end of the link.
+    """
+
+    # Arrange
+    source_markdown = """> this is text
+> [a not
+>  so simple](/link
+> "a
+>  title"
+>  )
+> a real test
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n]",
+        "[para(1,3):\n\n \n\n \n \n]",
+        "[text(1,3):this is text\n::\n]",
+        '[link(2,3):inline:/link:a\ntitle::::a not\nso simple:False:"::\n:\n]',
+        "[text(2,4):a not\nso simple::\n]",
+        "[end-link::]",
+        "[text(6,5):\na real test::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>this is text
+<a href="/link" title="a
+title">a not
+so simple</a>
+a real test</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        show_debug=True,
+        disable_consistency_checks=True,
+    )
+
+
+@pytest.mark.gfm
+def test_extra_007c():
+    """
+    When encoding link characters, special attention is used for the % characters as
+    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
+    this is tested at the end of the link.
+    """
+
+    # Arrange
+    source_markdown = """> this is text
+> [a 
+>  not
+>  so simple](/link
+> "a
+>  title"
+>  )
+> a real test
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n]",
+        "[para(1,3):\n\n \n \n\n \n \n]",
+        "[text(1,3):this is text\n::\n]",
+        '[link(2,3):inline:/link:a\ntitle::::a\nnot\nso simple:False:"::\n:\n]',
+        "[text(2,4):a\nnot\nso simple:: \n\n]",
+        "[end-link::]",
+        "[text(7,5):\na real test::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(9,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>this is text
+<a href="/link" title="a
+title">a
+not
+so simple</a>
+a real test</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
+
+
+@pytest.mark.gfm
+def test_extra_007d():
+    """
+    When encoding link characters, special attention is used for the % characters as
+    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
+    this is tested at the end of the link.
+    """
+
+    # Arrange
+    source_markdown = """> this is text
+> [a 
+>  not
+>  so simple](/link
+> "a
+>  title"
+>  )
+> a real test
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n]",
+        "[para(1,3):\n\n \n \n\n \n \n]",
+        "[text(1,3):this is text\n::\n]",
+        '[link(2,3):inline:/link:a\ntitle::::a\nnot\nso simple:False:"::\n:\n]',
+        "[text(2,4):a\nnot\nso simple:: \n\n]",
+        "[end-link::]",
+        "[text(7,5):\na real test::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(9,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>this is text
+<a href="/link" title="a
+title">a
+not
+so simple</a>
+a real test</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
+
+
+@pytest.mark.gfm
+def test_extra_007e():
+    """
+    When encoding link characters, special attention is used for the % characters as
+    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
+    this is tested at the end of the link.
+    """
+
+    # Arrange
+    source_markdown = """> this is text
+> ``
+> foo
+> bar  
+> baz
+> ``
+> a real test
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n]",
+        "[para(1,3):\n\n\n\n\n\n]",
+        "[text(1,3):this is text\n::\n]",
+        "[icode-span(2,3):foo\a\n\a \abar  \a\n\a \abaz:``:\a\n\a \a:\a\n\a \a]",
+        "[text(6,5):\na real test::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(8,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>this is text
+<code>foo bar   baz</code>
+a real test</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )

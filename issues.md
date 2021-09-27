@@ -103,21 +103,6 @@ This is text and a blank line.
 This is a blank line and some text.
 ```
 
-### xxx
-
-- similar to other bad lrd tests for md027
-
-```markdown
-> this is text
-> [a not
->  so
->  simple](/link
-> "a
->  title"
->  )
-> a real test
-```
-
 ### Inconsistent end for bq
 
 - different ending to block quote if ends with newline or not
@@ -155,6 +140,8 @@ This is a test
 
 ## Priority 3 - Like To Solve in next 3 m
 
+- in inline, does `if coalesced_stack and coalesced_stack[-1].is_block_quote_start:` really need
+  to look for any bq on the stack?
 - show url for failed rules as option
 - combine traversal for 027 and 007?
 

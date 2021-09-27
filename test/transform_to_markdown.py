@@ -508,6 +508,10 @@ class TransformToMarkdown:
         top_of_list_token_stack = (
             self.container_token_stack[-1] if self.container_token_stack else None
         )
+        if top_of_list_token_stack and top_of_list_token_stack.is_block_quote_start:
+            print(
+                f"pcpp-leading_text_index>{top_of_list_token_stack.leading_text_index}"
+            )
 
         if not top_of_list_token_stack:
             print("nada")
@@ -537,9 +541,14 @@ class TransformToMarkdown:
                 actual_tokens,
                 transformed_data,
             )
+
         assert top_of_list_token_stack.is_block_quote_start
         print("bq")
-        return self.__perform_container_post_processing_block_quote(
+        (
+            new_data,
+            delayed_continue,
+            continue_sequence,
+        ) = self.__perform_container_post_processing_block_quote(
             current_token,
             new_data,
             skip_merge,
@@ -547,6 +556,15 @@ class TransformToMarkdown:
             continue_sequence,
             next_token,
             top_of_list_token_stack,
+        )
+        if top_of_list_token_stack and top_of_list_token_stack.is_block_quote_start:
+            print(
+                f"pcpp-leading_text_index<{top_of_list_token_stack.leading_text_index}"
+            )
+        return (
+            new_data,
+            delayed_continue,
+            continue_sequence,
         )
 
     # pylint: enable=too-many-arguments
@@ -702,6 +720,8 @@ class TransformToMarkdown:
                 parts_to_merge.extend(
                     [ParserHelper.newline_character, split_new_data[i]]
                 )
+
+            print(f"__merge_xx-post->{top_block_stack_token.leading_text_index}")
             top_block_stack_token.leading_text_index += 1
 
         print("parts_to_merge>>" + str(parts_to_merge) + "<<")
@@ -1004,6 +1024,7 @@ class TransformToMarkdown:
         _ = (previous_token, transformed_data)
 
         new_instance = copy.deepcopy(current_token)
+        new_instance.leading_text_index = 0
         self.container_token_stack.append(new_instance)
         print(f">bquote>{ParserHelper.make_value_visible(new_instance)}")
 
@@ -1041,11 +1062,12 @@ class TransformToMarkdown:
         if ParserHelper.newline_character in new_data:
             composed_data = []
             print(
-                f"<<composed_data<<{ParserHelper.make_value_visible(composed_data)}<<new<<{ParserHelper.make_value_visible(new_data)}<<"
+                f"1<<composed_data<<{ParserHelper.make_value_visible(composed_data)}<<new<<{ParserHelper.make_value_visible(new_data)}<<"
             )
             while ParserHelper.newline_character in new_data:
 
                 print(">>[{ParserHelper.make_value_visible(new_data)}]<<")
+                print(f"bq-post->{top_of_list_token_stack.leading_text_index}")
                 next_newline_index = new_data.index(ParserHelper.newline_character)
                 composed_data.extend(
                     [new_data[0:next_newline_index], ParserHelper.newline_character]
@@ -1063,18 +1085,22 @@ class TransformToMarkdown:
                         split_leading_spaces[top_of_list_token_stack.leading_text_index]
                     )
                 else:
+                    print(
+                        f"top_of_list_token_stack.leading_text_index={top_of_list_token_stack.leading_text_index},split_leading_spaces_size={split_leading_spaces_size}"
+                    )
                     assert (
                         top_of_list_token_stack.leading_text_index
                         == split_leading_spaces_size
                     )
+                print(f"bq-post->{top_of_list_token_stack.leading_text_index}")
                 top_of_list_token_stack.leading_text_index += 1
                 new_data = new_data[next_newline_index + 1 :]
             print(
-                f"<<composed_data<<{ParserHelper.make_value_visible(composed_data)}<<new<<{ParserHelper.make_value_visible(new_data)}<<"
+                f"2<<composed_data<<{ParserHelper.make_value_visible(composed_data)}<<new<<{ParserHelper.make_value_visible(new_data)}<<"
             )
             composed_data.append(new_data)
             print(
-                f"<<composed_data<<{ParserHelper.make_value_visible(composed_data)}<<new<<{ParserHelper.make_value_visible(new_data)}<<"
+                f"3<<composed_data<<{ParserHelper.make_value_visible(composed_data)}<<new<<{ParserHelper.make_value_visible(new_data)}<<"
             )
             new_data = "".join(composed_data)
 
@@ -1209,6 +1235,11 @@ class TransformToMarkdown:
                     -1
                 ].calculate_next_leading_space_part()
 
+            print(">>current_token>>" + ParserHelper.make_value_visible(current_token))
+            print(
+                ">>current_token.start_markdown_token>>"
+                + ParserHelper.make_value_visible(current_token.start_markdown_token)
+            )
             leading_text_index, expected_leading_text_index = (
                 current_token.start_markdown_token.leading_text_index,
                 ParserHelper.count_newlines_in_text(
@@ -1216,9 +1247,11 @@ class TransformToMarkdown:
                 ),
             )
 
-            assert (
-                leading_text_index == expected_leading_text_index
-            ), f"leading_text_index={str(leading_text_index)};expected_leading_text_index={str(len(expected_leading_text_index))}"
+            assert isinstance(expected_leading_text_index, int)
+            _ = leading_text_index
+            # assert (
+            #     leading_text_index == expected_leading_text_index
+            # ), f"leading_text_index={str(leading_text_index)};expected_leading_text_index={str(expected_leading_text_index)}"
 
         return text_to_add, continue_sequence, continue_sequence
 

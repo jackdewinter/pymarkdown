@@ -1090,8 +1090,8 @@ class LeafBlockProcessor:
         POGGER.debug(">>__xx>>tokens_to_add>>$>>", html_tokens)
 
         repeat_loop = True
-        uid = True
-        while repeat_loop and uid:
+        is_remaining_list_token = True
+        while repeat_loop and is_remaining_list_token:
             assert parser_state.token_stack[-1].is_list
 
             POGGER.debug(">>removed_chars_at_start>>$>>", removed_chars_at_start)
@@ -1109,9 +1109,9 @@ class LeafBlockProcessor:
                 POGGER.debug(">>__xx>>tokens_from_close>>$>>", tokens_from_close)
                 html_tokens.extend(tokens_from_close)
 
-                uid = parser_state.token_stack[-1].is_list
+                is_remaining_list_token = parser_state.token_stack[-1].is_list
 
-        if uid:
+        if is_remaining_list_token:
             assert parser_state.token_stack[-1].is_list
             last_indent = parser_state.token_stack[-1].indent_level
             delta_indent = removed_chars_at_start - last_indent
