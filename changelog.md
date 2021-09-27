@@ -17,6 +17,7 @@
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/27) - was not recognizing 2 end list tokens in a row
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/32) - was not properly looking for spaces inside of possible emphasis characters
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/33) - found parsing error with lists in block quotes, fixed that and fixed issues in rules md031 and md032
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/34) - Multiline inline elements with a Block Quote were not getting their starting positions calculated properly.  Any element directly after those elements were also likely to have a bad position.
 
 ## Version 0.9.0 - Date: 2021-09-21
 
