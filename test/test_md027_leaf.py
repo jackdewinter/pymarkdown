@@ -80,8 +80,6 @@ def test_md027_good_block_quote_setext_heading():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md022",
         "scan",
         "test/resources/rules/md027/good_block_quote_setext_heading.md",
     ]
@@ -111,7 +109,7 @@ def test_md027_bad_block_quote_setext_heading_first_line():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md022,md023",
+        "md023",
         "scan",
         "test/resources/rules/md027/bad_block_quote_setext_heading_first_line.md",
     ]
@@ -144,7 +142,7 @@ def test_md027_bad_block_quote_setext_heading_second_line():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md022,md023",
+        "md023",
         "scan",
         "test/resources/rules/md027/bad_block_quote_setext_heading_second_line.md",
     ]
@@ -176,8 +174,6 @@ def test_md027_good_block_quote_setext_heading_multiples():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md022,md023",
         "scan",
         "test/resources/rules/md027/good_block_quote_setext_heading_multiples.md",
     ]
@@ -207,7 +203,7 @@ def test_md027_bad_block_quote_setext_heading_multiples_first():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md022,md023",
+        "md023",
         "scan",
         "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_first.md",
     ]
@@ -240,7 +236,7 @@ def test_md027_bad_block_quote_setext_heading_multiples_middle():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md022,md023",
+        "md023",
         "scan",
         "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_middle.md",
     ]
@@ -273,7 +269,7 @@ def test_md027_bad_block_quote_setext_heading_multiples_last():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md022,md023",
+        "md023",
         "scan",
         "test/resources/rules/md027/bad_block_quote_setext_heading_multiples_last.md",
     ]
@@ -333,8 +329,6 @@ def test_md027_bad_block_quote_thematic():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md022,md023",
         "scan",
         "test/resources/rules/md027/bad_block_quote_thematic.md",
     ]

@@ -21,7 +21,7 @@ def test_md002_all_samples():
     supplied_arguments = [
         "--disable-rules",
         "MD003",
-        "-e",
+        "--enable-rules",
         "MD002",
         "scan",
         "test/resources/rules/md002",
@@ -60,7 +60,7 @@ def test_md002_bad_configuration_level():
         "--strict-config",
         "--set",
         "plugins.md002.level=1",
-        "-e",
+        "--enable-rules",
         "MD002",
         "scan",
         "test/resources/rules/md002/proper_atx_heading_start.md",
@@ -92,7 +92,7 @@ def test_md002_good_proper_atx_heading_start():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "-e",
+        "--enable-rules",
         "MD002",
         "scan",
         "test/resources/rules/md002/proper_atx_heading_start.md",
@@ -126,7 +126,7 @@ def test_md002_bad_proper_atx_heading_start_with_alternate_configuration():
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
-            "-e",
+            "--enable-rules",
             "MD002",
             "-c",
             configuration_file,
@@ -165,7 +165,7 @@ def test_md002_good_proper_setext_heading_start():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "-e",
+        "--enable-rules",
         "MD002",
         "scan",
         "test/resources/rules/md002/proper_setext_heading_start.md",
@@ -200,7 +200,7 @@ def test_md002_bad_proper_setext_heading_start_with_alternate_configuration():
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
-            "-e",
+            "--enable-rules",
             "MD002",
             "-c",
             configuration_file,
@@ -238,7 +238,7 @@ def test_md002_bad_improper_atx_heading_start():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "-e",
+        "--enable-rules",
         "MD002",
         "scan",
         "test/resources/rules/md002/improper_atx_heading_start.md",
@@ -276,7 +276,7 @@ def test_md002_good_improper_atx_heading_start_with_alternate_configuration():
     try:
         configuration_file = write_temporary_configuration(supplied_configuration)
         supplied_arguments = [
-            "-e",
+            "--enable-rules",
             "MD002",
             "-c",
             configuration_file,
@@ -313,7 +313,7 @@ def test_md002_bad_improper_setext_heading_start():
     supplied_arguments = [
         "--disable-rules",
         "MD003",
-        "-e",
+        "--enable-rules",
         "MD002",
         "scan",
         "test/resources/rules/md002/improper_setext_heading_start.md",
@@ -354,7 +354,7 @@ def test_md002_good_improper_setext_heading_start_with_alternate_configuration()
         supplied_arguments = [
             "--disable-rules",
             "MD003",
-            "-e",
+            "--enable-rules",
             "MD002",
             "-c",
             configuration_file,

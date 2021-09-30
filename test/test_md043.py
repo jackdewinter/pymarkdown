@@ -318,8 +318,6 @@ def test_md043_good_single_heading_atx_with_single_rule():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=# This is a single heading",
         "--strict-config",
@@ -353,8 +351,6 @@ def test_md043_bad_single_heading_atx_with_double_rule():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=# This is a single heading,## Another heading",
         "--strict-config",
@@ -392,8 +388,6 @@ def test_md043_bad_double_heading_atx_with_single_rule():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=# This is a single heading",
         "--strict-config",
@@ -431,8 +425,6 @@ def test_md043_good_double_heading_atx_with_double_rule():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=# This is a single heading,## Another heading",
         "--strict-config",
@@ -466,8 +458,6 @@ def test_md043_bad_double_heading_atx_with_double_rule_bad_level():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=# This is a single heading,### A bad level",
         "--strict-config",
@@ -505,8 +495,6 @@ def test_md043_bad_double_heading_atx_with_double_rule_bad_text():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=# This is a single heading,## A bad level",
         "--strict-config",
@@ -544,8 +532,6 @@ def test_md043_good_double_heading_atx_second_has_emphasis():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=# This is a single heading,## Another heading",
         "--strict-config",
@@ -618,8 +604,6 @@ def test_md043_good_double_heading_atx_with_double_rule_matching_1_star():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=# This is a single heading,*",
         "--strict-config",
@@ -653,8 +637,6 @@ def test_md043_bad_double_heading_atx_with_double_rule_unmatching_1_star():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=# A single heading,*",
         "--strict-config",
@@ -692,8 +674,6 @@ def test_md043_good_double_heading_atx_with_double_rule_matching_star_2():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=*,## Another heading",
         "--strict-config",
@@ -727,8 +707,6 @@ def test_md043_bad_double_heading_atx_with_double_rule_unmatching_star_2():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=*,## Second heading",
         "--strict-config",
@@ -766,8 +744,6 @@ def test_md043_bad_double_heading_atx_unmatching_1_2_3_star():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=# This is a single heading,## Another heading,## Another heading,*",
         "--strict-config",
@@ -805,8 +781,6 @@ def test_md043_bad_double_heading_atx_unmatching_star_1_2_3():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=*,# This is a single heading,## Another heading,## Another heading",
         "--strict-config",
@@ -844,8 +818,6 @@ def test_md043_bad_double_heading_atx_matching_1_2_start_2_over():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024",
         "--set",
         "plugins.md043.headings=# This is a single heading,## Another heading,*,## Another heading",
         "--strict-config",

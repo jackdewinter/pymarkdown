@@ -29,7 +29,7 @@ These are the rules that are currently implemented.
 - [Rule Md029 - ol-prefix](/docs/rules/rule_md029.md)
 - [Rule Md030 - list-marker-space](/docs/rules/rule_md030.md)
 - [Rule Md031 - blanks-around-fences](/docs/rules/rule_md031.md)
-- [Rule Md032 - blanks-around-fences](/docs/rules/rule_md032.md)
+- [Rule Md032 - blanks-around-lists](/docs/rules/rule_md032.md)
 - [Rule Md033 - no-inline-html](/docs/rules/rule_md033.md)
 - [Rule Md034 - no-bare-urls](/docs/rules/rule_md034.md)
 - [Rule Md035 - hr-style](/docs/rules/rule_md035.md)

@@ -10,21 +10,32 @@ import pytest
 def test_md001_all_samples():
     """
     Test to make sure we get the expected behavior after scanning all the files in the
-    test/resources/rules/md001 directory.
+    test/resources/rules/md001 directory.  Note that with three front-matter files in
+    this directory and no config to enable that extension, Md022 will report bad
+    heading formats.
     """
 
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "MD003,md013,md022",
+        "MD003",
         "scan",
         "test/resources/rules/md001",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md001/improper_atx_heading_incrementing.md:3:1: "
+        "test/resources/rules/md001/front_matter_with_alternate_title.md:2:1: "
+        + "MD022: Headings should be surrounded by blank lines. "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md001/front_matter_with_no_title.md:2:1: "
+        + "MD022: Headings should be surrounded by blank lines. "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md001/front_matter_with_title.md:2:1: "
+        + "MD022: Headings should be surrounded by blank lines. "
+        + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
+        + "test/resources/rules/md001/improper_atx_heading_incrementing.md:3:1: "
         + "MD001: Heading levels should only increment by one level at a time. "
         + "[Expected: h2; Actual: h3] (heading-increment,header-increment)\n"
         + "test/resources/rules/md001/improper_setext_heading_incrementing.md:4:1: "
@@ -240,8 +251,6 @@ def test_md001_front_matter_with_no_title():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "MD003,md013,MD022",
         "--set",
         "extensions.front-matter.enabled=$!True",
         "scan",
@@ -270,8 +279,6 @@ def test_md001_front_matter_with_title():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "MD003,md013,MD022",
         "--set",
         "extensions.front-matter.enabled=$!True",
         "scan",
@@ -300,8 +307,6 @@ def test_md001_front_matter_with_alternate_title():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "MD003,md013,MD022",
         "--set",
         "extensions.front-matter.enabled=$!True",
         "--set",

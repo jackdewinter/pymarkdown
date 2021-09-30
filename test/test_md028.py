@@ -171,8 +171,6 @@ def test_md028_good_blank_paragraph_blank():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md022",
         "scan",
         "test/resources/rules/md028/good_blank_paragraph_blank.md",
     ]
@@ -201,8 +199,6 @@ def test_md028_bad_blank_paragraph():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md022",
         "scan",
         "test/resources/rules/md028/bad_blank_paragraph.md",
     ]
@@ -234,8 +230,6 @@ def test_md028_good_blank_paragraph():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md022",
         "scan",
         "test/resources/rules/md028/good_blank_paragraph.md",
     ]

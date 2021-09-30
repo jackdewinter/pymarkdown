@@ -75,8 +75,6 @@ def test_md018_good_start_spacing_in_block_quotes():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md022",
         "scan",
         "test/resources/rules/md018/good_start_spacing_in_block_quote.md",
     ]
@@ -353,8 +351,6 @@ def test_md018_bad_multiple_within_paragraph_separated_codespan():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md020",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_codespan.md",
     ]
@@ -388,8 +384,6 @@ def test_md018_bad_multiple_within_paragraph_separated_codespan_multi():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md020",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_codespan_multi.md",
     ]
@@ -423,8 +417,6 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_codespan_multi():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md020",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_inline_codespan_multi.md",
     ]
@@ -457,7 +449,7 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md020,md033",
+        "md033",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_inline_rawhtml_multi.md",
     ]
@@ -489,8 +481,6 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_image_multi():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md020",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_inline_image_multi.md",
     ]
@@ -522,8 +512,6 @@ def test_md018_bad_multiple_within_paragraph_separated_full_image_multi():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md020",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_full_image_multi.md",
     ]
@@ -555,8 +543,6 @@ def test_md018_bad_multiple_within_paragraph_separated_shortcut_image_multi():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md020",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_shortcut_image_multi.md",
     ]
@@ -588,8 +574,6 @@ def test_md018_bad_multiple_within_paragraph_separated_collapsed_image_multi():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md020",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_collapsed_image_multi.md",
     ]
@@ -621,8 +605,6 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_link_multi():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md020",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_inline_link_multi.md",
     ]
@@ -654,8 +636,6 @@ def test_md018_bad_multiple_within_paragraph_separated_full_link_multi():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md020",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_full_link_multi.md",
     ]
@@ -687,8 +667,6 @@ def test_md018_bad_multiple_within_paragraph_separated_shortcut_link_multi():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md020",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_shortcut_link_multi.md",
     ]
@@ -720,8 +698,6 @@ def test_md018_bad_multiple_within_paragraph_separated_collapsed_link_multi():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md020",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_collapsed_link_multi.md",
     ]
@@ -753,8 +729,6 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_hardbreak_multi():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md020",
         "scan",
         "test/resources/rules/md018/multiple_within_paragraph_separated_inline_hardbreak_multi.md",
     ]

@@ -324,8 +324,6 @@ def test_md032_good_list_levels_1_2_3_2_1():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024,md025",
         "scan",
         "test/resources/rules/md032/good_list_levels_1_2_3_2_1.md",
     ]
@@ -354,8 +352,6 @@ def test_md032_good_list_levels_1_2_3_space_1():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024,md025",
         "scan",
         "test/resources/rules/md032/good_list_levels_1_2_3_space_1.md",
     ]
@@ -384,8 +380,6 @@ def test_md032_good_list_levels_1_2_3_1():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md024,md025",
         "scan",
         "test/resources/rules/md032/good_list_levels_1_2_3_1.md",
     ]

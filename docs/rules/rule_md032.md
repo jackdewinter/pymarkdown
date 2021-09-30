@@ -7,7 +7,7 @@
 
 ## Summary
 
-Fenced code blocks should be surrounded by blank lines.
+List blocks should be surrounded by blank lines.
 
 ## Reasoning
 

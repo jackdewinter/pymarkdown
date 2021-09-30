@@ -4,12 +4,7 @@
 
 ## Priority 2 - Like To Solve Before Initial
 
-- before release, check that all rule md* files look the same
-  - i.e. make sure the get_details all look the same
-
 - before release, check that all test file commented properly
-
-- go through every disabled rule for tests, and determine if disable makes sense
 
 - documentation for developers
 
@@ -78,6 +73,16 @@ paragraph inspired link](
 
 ```
 
+md005/md007 - only reporting first?
+
+```Markdown
+* First Item
+  * First-First
+   * First-Second
+    * First-Third
+* Second Item
+```
+
 ### bad_split_block_quote_in_list
 
 - commented out `rule_md_027.py#69` for now
@@ -127,19 +132,47 @@ This is a test
 - level 2 and level 3 text are in same item, does not identify as sublevel.
 - try deeper nesting
 
+### md022
+
+- test_md023_bad_improper_indent_setext_in_block_quote
+
+```Markdown
+>
+> Normal Heading
+> ---------
+>
+
+```
+
+### md023
+
+- verify
+- test_md027_bad_block_quote_setext_heading_first_line
+
+```Markdown
+> this is text
+>
+>  a setext heading
+> ---
+```
+
 ### Rule ???
 
 - is there a rule that can detect a possible front-matter header and trigger?
 
 ### Other
 
+- Md041 with `<h1>` and Md033
+- Md041.md -> `diff html comments`??
+- sort output within file by line/col
 - finish off inline elements for rule 027
 - better globbing for 043
-
+- md033 - <? and <! with alpha character after
 - better solution than `no-space-in-code` for scenario-cases.md
 
 ## Priority 3 - Like To Solve in next 3 m
 
+- md023 - can line 61 search be done more efficiently by looking for `{space}\x02` ?
 - in inline, does `if coalesced_stack and coalesced_stack[-1].is_block_quote_start:` really need
   to look for any bq on the stack?
 - show url for failed rules as option

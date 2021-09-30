@@ -135,8 +135,6 @@ def test_md014_bad_shell_example_indented():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md033",
         "scan",
         "test/resources/rules/md014/bad_shell_example_indented.md",
     ]
