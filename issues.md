@@ -132,30 +132,6 @@ This is a test
 - level 2 and level 3 text are in same item, does not identify as sublevel.
 - try deeper nesting
 
-### md022
-
-- test_md023_bad_improper_indent_setext_in_block_quote
-
-```Markdown
->
-> Normal Heading
-> ---------
->
-
-```
-
-### md023
-
-- verify
-- test_md027_bad_block_quote_setext_heading_first_line
-
-```Markdown
-> this is text
->
->  a setext heading
-> ---
-```
-
 ### Rule ???
 
 - is there a rule that can detect a possible front-matter header and trigger?
