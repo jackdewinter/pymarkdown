@@ -6,12 +6,15 @@
 
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/37)
   - verified existing case, added missing related case
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/38)
+  - added new test case with provided data
+  - addressed documentation issue with description for rule_md044.md
 
 ### Changed
 
 - [Changed](https://github.com/jackdewinter/pymarkdown/issues/36)
   - verified need for `--disable-rules` through tests, removing any that were not needed
-  - address some documentation issues with docs/rules.md and doc/rules/rule_md032.md
+  - addressed some documentation issues with docs/rules.md and doc/rules/rule_md032.md
 
 ### Fixed
 
