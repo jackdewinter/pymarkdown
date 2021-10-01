@@ -926,6 +926,8 @@ def test_md044_good_inline_link_multiple_lines_two():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
 @pytest.mark.rules
 def test_md044_good_inline_link_multiple_lines_three():
     """
