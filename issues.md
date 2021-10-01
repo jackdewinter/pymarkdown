@@ -65,14 +65,6 @@ md006 - how works within bq?
 md010 - tabs "converted"
       - tabs in code blocks
 
-```markdown
-[a
-paragraph inspired link](
-/paragraph
-"paragraph")
-
-```
-
 md005/md007 - only reporting first?
 
 ```Markdown

@@ -7,12 +7,13 @@
 
 ## Summary
 
-Fenced code blocks should have a language specified.
+Proper names should have the correct capitalization.
 
 ## Reasoning
 
-The main reason for this rule is consistency. Quite often, when writing
-groups of documents, there are certain proper nouns that have specific
+### Consistency
+
+Quite often, when writing groups of documents, there are certain proper nouns that have specific
 capitalization.  A good example of this is this project, the
 [PyMarkdown](https://github.com/jackdewinter/pymarkdown).  It very specifically
 has the `P` and `M` characters capitalized.  This rule enforces that
