@@ -95,19 +95,6 @@ md005/md007 - only reporting first?
   > This is the other section.
 ```
 
-### also 027
-
-- rule 32
-
-```Markdown
-This is text and a blank line.
-
-> a block quote
-> + a list
-
-This is a blank line and some text.
-```
-
 ### Inconsistent end for bq
 
 - different ending to block quote if ends with newline or not
