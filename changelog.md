@@ -1,36 +1,41 @@
 # Change Log
 
-## Unversion - In Main, Not Released
+## Unversioned - In Main, Not Released
 
 ### Added
 
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/37)
-  - verified existing case, added missing related case
+  - rules test: verified existing case, added missing related case
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/38)
-  - added new test case with provided data
-  - addressed documentation issue with description for rule_md044.md
+  - rules test: added new test case with provided data
+  - documentation: addressed documentation issue with description for rule_md044.md
 
 ### Changed
 
 - [Changed](https://github.com/jackdewinter/pymarkdown/issues/36)
-  - verified need for `--disable-rules` through tests, removing any that were not needed
-  - addressed some documentation issues with docs/rules.md and doc/rules/rule_md032.md
+  - rules tests:verified need for `--disable-rules` through tests, removing any that were not needed
+  - documentation: addressed some documentation issues with docs/rules.md and doc/rules/rule_md032.md
 
 ### Fixed
 
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/22)
-  - no longer triggers on end tags, adjusted default allowed tags
+  - rule Md033: no longer triggers on end tags, adjusted default allowed tags
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/23)
-  - whitespace at end of lines in SetExt Heading no longer being recognized as starting whitespace.
+  - rule Md023: whitespace at end of lines in SetExt Heading no longer being recognized as starting whitespace.
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/27)
-  - was not recognizing 2 end list tokens in a row
+  - rule Md032: was not recognizing 2 end list tokens in a row
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/32)
-  - was not properly looking for spaces inside of possible emphasis characters
+  - rule Md037: was not properly looking for spaces inside of possible emphasis characters
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/33)
-  - found parsing error with lists in block quotes, fixed that and fixed issues in rules md031 and md032
+  - parser: found parsing error with lists in block quotes
+  - rule md031,md032: fixed that and fixed issues in rules md031 and md032
 - [Fixed](https://github.com/jackdewinter/pymarkdown/issues/34)
-  - multiline inline elements with a Block Quote were not getting their starting positions calculated properly
-  - any element directly after those elements were also likely to have a bad position
+  - parser: multiline inline elements with a Block Quote were not getting their starting positions calculated properly
+    - any element directly after those elements were also likely to have a bad position
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/39)
+  - parser: fixed instance of multi-level list within block quotes not firing properly
+  - issues: added item to issues list to do more looking on nested lists
+  - rule md007: may show up here with nested lists
 
 ## Version 0.9.0 - Date: 2021-09-21
 
