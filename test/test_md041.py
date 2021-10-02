@@ -650,8 +650,6 @@ def test_md041_good_html_block_heading():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md033",
         "scan",
         "test/resources/rules/md041/good_html_block_heading.md",
     ]
