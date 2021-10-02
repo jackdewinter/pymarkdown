@@ -106,7 +106,6 @@ md010 - tabs "converted"
 
 ### Other
 
-- Md041.md -> `diff html comments`??
 - sort output within file by line/col
 - finish off inline elements for rule 027
 - better globbing for 043

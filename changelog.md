@@ -11,7 +11,9 @@
   - documentation: addressed documentation issue with description for rule_md044.md
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/40)
   - new configuration value `allow_first_image_element` to Md033
-  - if True, allows ONLY `<h1><img></h1>` sequence (with any parameters needed) if is first token in document
+    - if True, allows ONLY `<h1><img></h1>` sequence (with any parameters needed) if is first token in document
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/41)
+  - documentation: added description of how HTML comments are different
 
 ### Changed
 

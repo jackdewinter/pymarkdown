@@ -106,4 +106,12 @@ document will not trigger this rule:
 This rule is largely inspired by the MarkdownLint rule
 [MD041](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md041---first-line-in-a-file-should-be-a-top-level-heading).
 
-diff html comments
+### Differences From MarkdownLint Rule
+
+The difference between this rule and the original rule is in
+regard to the HTML comment tag.  The original rule dealt with
+the HTML comment tag and other special tags as invisible, only
+triggering based on any information that occurred after that
+tag.  This rule is implemented to include any special tags,
+including the HTML comment tag, in the triggering conditions for
+this rule.
