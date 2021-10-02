@@ -376,3 +376,103 @@ a real test</p>
     act_and_assert(
         source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
     )
+
+
+@pytest.mark.gfm
+def test_extra_008x():
+    """
+    When encoding link characters, special attention is used for the % characters as
+    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
+    this is tested at the end of the link.
+    """
+
+    # Arrange
+    source_markdown = """> * this is level 1
+>   * this is level 2
+>     * this is level 3
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[ulist(1,3):*::4:  ]",
+        "[para(1,5):]",
+        "[text(1,5):this is level 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):*::6:    ]",
+        "[para(2,7):]",
+        "[text(2,7):this is level 2:]",
+        "[end-para:::True]",
+        "[ulist(3,7):*::8:      ]",
+        "[para(3,9):]",
+        "[text(3,9):this is level 3:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>
+<p>this is level 1</p>
+<ul>
+<li>
+<p>this is level 2</p>
+<ul>
+<li>this is level 3</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+
+@pytest.mark.gfm
+def test_extra_008a():
+    """
+    When encoding link characters, special attention is used for the % characters as
+    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
+    this is tested at the end of the link.
+    """
+
+    # Arrange
+    source_markdown = """* this is level 1
+  * this is level 2
+    * this is level 3
+"""
+    expected_tokens = [
+        "[ulist(1,1):*::2:]",
+        "[para(1,3):]",
+        "[text(1,3):this is level 1:]",
+        "[end-para:::True]",
+        "[ulist(2,3):*::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):this is level 2:]",
+        "[end-para:::True]",
+        "[ulist(3,5):*::6:    ]",
+        "[para(3,7):]",
+        "[text(3,7):this is level 3:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>this is level 1
+<ul>
+<li>this is level 2
+<ul>
+<li>this is level 3</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)

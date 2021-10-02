@@ -65,7 +65,9 @@ md006 - how works within bq?
 md010 - tabs "converted"
       - tabs in code blocks
 
-md005/md007 - only reporting first?
+- md005/md007
+  - only reporting first?
+  - need more comprehensive tests like test_extra_008x
 
 ```Markdown
 * First Item
@@ -97,19 +99,6 @@ md005/md007 - only reporting first?
 > dd
 # a
 ```
-
-### Rule 007
-
-```Markdown
-This is a test
-
-> * this is level 1
->   * this is level 2
->     * this is level 3
-```
-
-- level 2 and level 3 text are in same item, does not identify as sublevel.
-- try deeper nesting
 
 ### Rule ???
 

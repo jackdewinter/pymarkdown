@@ -558,7 +558,10 @@ def test_md007_bad_list_indentation_in_block_quote_level_0():
         + "[Expected: 0, Actual=1] (ul-indent)\n"
         + "test/resources/rules/md007/bad_list_indentation_in_block_quote_level_0.md:4:6: "
         + "MD007: Unordered list indentation "
-        + "[Expected: 2, Actual=3] (ul-indent)"
+        + "[Expected: 2, Actual=3] (ul-indent)\n"
+        + "test/resources/rules/md007/bad_list_indentation_in_block_quote_level_0.md:5:8: "
+        + "MD007: Unordered list indentation "
+        + "[Expected: 4, Actual=5] (ul-indent)"
     )
     expected_error = ""
 

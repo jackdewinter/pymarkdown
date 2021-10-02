@@ -234,6 +234,9 @@ class ContainerBlockProcessor:
                 container_level_tokens,
                 was_container_start,
                 avoid_block_starts,
+                start_index,
+                removed_chars_at_start,
+                text_removed_by_container,
             )
             # POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
             # POGGER.debug("this_bq_count>>$", this_bq_count)
@@ -369,6 +372,7 @@ class ContainerBlockProcessor:
         # POGGER.debug("container_start_bq_count>>:$", container_start_bq_count)
         # POGGER.debug("this_bq_count>>:$", this_bq_count)
         # POGGER.debug("stack_bq_count>>$", stack_bq_count)
+        # POGGER.debug("did_process>>$", did_process)
         POGGER.debug("text>>:$:>>", line_to_parse)
         POGGER.debug(">>container_level_tokens>>$", container_level_tokens)
         return (
@@ -518,6 +522,7 @@ class ContainerBlockProcessor:
             this_bq_count,
         )
 
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __calculate_adjusted_whitespace(
         parser_state,
@@ -525,6 +530,7 @@ class ContainerBlockProcessor:
         line_to_parse,
         extracted_whitespace,
         foobar=None,
+        previous_ws_len=0,
     ):
         """
         Based on the last container on the stack, determine what the adjusted whitespace is.
@@ -566,12 +572,16 @@ class ContainerBlockProcessor:
 
             old_start_index = parser_state.token_document[token_index].indent_level
 
-            ws_len = ParserHelper.calculate_length(extracted_whitespace)
+            ws_len = (
+                ParserHelper.calculate_length(extracted_whitespace) + previous_ws_len
+            )
             POGGER.debug("old_start_index>>$>>ws_len>>$", old_start_index, ws_len)
             if ws_len >= old_start_index:
                 POGGER.debug("RELINE:$:", line_to_parse)
                 adj_ws = extracted_whitespace[old_start_index:]
         return adj_ws
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
     @staticmethod
@@ -587,6 +597,9 @@ class ContainerBlockProcessor:
         container_level_tokens,
         was_container_start,
         avoid_block_starts,
+        start_index,
+        removed_chars_at_start,
+        text_removed_by_container,
     ):
         """
         Handle the processing of nested container blocks, as they can contain
@@ -597,7 +610,7 @@ class ContainerBlockProcessor:
         POGGER.debug("adjusted_text_to_parse>$<", adjusted_text_to_parse)
         POGGER.debug("index_number>$<", position_marker.index_number)
         POGGER.debug("index_indent>$<", position_marker.index_indent)
-
+        POGGER.debug("start_index>$<", start_index)
         POGGER.debug("parser_state.nested_list_start>$", parser_state.nested_list_start)
 
         if was_container_start and position_marker.text_to_parse:
@@ -616,6 +629,9 @@ class ContainerBlockProcessor:
                     position_marker.text_to_parse,
                     end_container_indices,
                     avoid_block_starts,
+                    start_index,
+                    removed_chars_at_start,
+                    text_removed_by_container,
                 )
             )
             POGGER.debug(
@@ -831,19 +847,53 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments, too-many-locals, too-many-statements
 
+    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
     @staticmethod
     def __get_nested_container_starts(
         parser_state,
         line_to_parse,
         end_container_indices,
         avoid_block_starts,
+        start_index,
+        removed_chars_at_start,
+        text_removed_by_container,
     ):
 
         POGGER.debug("check next container_start>")
+        POGGER.debug("check next container_start>start_index>$", start_index)
+        POGGER.debug(
+            "check next container_start>removed_chars_at_start:$:",
+            removed_chars_at_start,
+        )
+        POGGER.debug(
+            "check next container_start>text_removed_by_container:$:",
+            text_removed_by_container,
+        )
+        POGGER.debug("check next container_start>stack>>$", parser_state.token_stack)
+
+        _, ex_ws_test = ParserHelper.extract_whitespace(line_to_parse, 0)
+
+        whitespace_scan_start_index = 0
+        for token_stack_index in parser_state.token_stack:
+            if token_stack_index.is_block_quote:
+                # if text_removed_by_container:
+                #     if text_removed_by_container.startswith("> "):
+                #         text_removed_by_container = text_removed_by_container[2:]
+                #     elif text_removed_by_container.startswith(">"):
+                #         text_removed_by_container = text_removed_by_container[1:]
+                #     else:
+                #         POGGER.info("check next container_start> out of block quote data")
+                pass
+            elif token_stack_index.is_list:
+                if token_stack_index.ws_before_marker <= len(ex_ws_test):
+                    whitespace_scan_start_index = token_stack_index.ws_before_marker
 
         after_ws_index, ex_whitespace = ParserHelper.extract_whitespace(
-            line_to_parse, 0
+            line_to_parse, whitespace_scan_start_index
         )
+        if not ex_whitespace:
+            ex_whitespace = ""
+            after_ws_index = whitespace_scan_start_index
 
         nested_ulist_start, _, _, _ = ListBlockProcessor.is_ulist_start(
             parser_state, line_to_parse, after_ws_index, ex_whitespace, False
@@ -876,6 +926,8 @@ class ContainerBlockProcessor:
         return ContainerIndices(
             nested_ulist_start, nested_olist_start, nested_block_start
         )
+
+    # pylint: enable=too-many-arguments, too-many-locals, too-many-statements
 
     # pylint: disable=too-many-arguments
     @staticmethod
