@@ -16,6 +16,8 @@
   - documentation: added description of how HTML comments are different
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/42)
   - core: added sorting of triggered rules before they are displayed
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/31)
+  - core: support for executing pymarkdown as a module (`python -m pymarkdown`)
 
 ### Changed
 

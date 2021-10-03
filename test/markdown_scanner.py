@@ -18,8 +18,9 @@ class MarkdownScanner(InProcessExecution):
     Class to provide for a local instance of an InProcessExecution class.
     """
 
-    def __init__(self):
+    def __init__(self, use_module=False):
         super().__init__()
+        self.__entry_point = "__main.py__" if use_module else "main.py"
         resource_directory = os.path.join(os.getcwd(), "test", "resources")
         assert os.path.exists(resource_directory)
         assert os.path.isdir(resource_directory)
@@ -29,4 +30,4 @@ class MarkdownScanner(InProcessExecution):
         PyMarkdownLint().main()
 
     def get_main_name(self):
-        return "main.py"
+        return self.__entry_point
