@@ -197,7 +197,6 @@ a real test</p>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         disable_consistency_checks=True,
     )
 
@@ -244,7 +243,6 @@ a real test</p>
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=True,
         disable_consistency_checks=True,
     )
 
@@ -428,7 +426,7 @@ def test_extra_008x():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -475,4 +473,4 @@ def test_extra_008a():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

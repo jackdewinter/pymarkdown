@@ -4668,7 +4668,7 @@ fg>nk]a
     expected_gfm = """<h2>a<img src="/url" alt="li<de\nfg>nk" title="title" />a</h2>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

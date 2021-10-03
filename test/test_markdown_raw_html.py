@@ -666,7 +666,7 @@ def test_raw_html_646a():
     expected_gfm = """<p>foo &lt;![CDATA[&gt;&amp;&lt;&gt;</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
