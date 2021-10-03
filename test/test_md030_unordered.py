@@ -493,13 +493,13 @@ def test_md030_bad_spacing_ul_double():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ul_double.md:3:4: "
-        + "MD030: Spaces after list markers "
-        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ul_double.md:1:1: "
+        "test/resources/rules/md030/bad_spacing_ul_double.md:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
         + "test/resources/rules/md030/bad_spacing_ul_double.md:2:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
+        + "test/resources/rules/md030/bad_spacing_ul_double.md:3:4: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
         + "test/resources/rules/md030/bad_spacing_ul_double.md:4:1: "

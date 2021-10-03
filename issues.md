@@ -103,10 +103,10 @@ md010 - tabs "converted"
 ### Rule ???
 
 - is there a rule that can detect a possible front-matter header and trigger?
+  i.e. something looks like front-matter and should be interpretted as front-matter
 
 ### Other
 
-- sort output within file by line/col
 - finish off inline elements for rule 027
 - better globbing for 043
 - md033 - <? and <! with alpha character after

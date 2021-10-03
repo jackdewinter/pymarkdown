@@ -32,6 +32,53 @@ class ScanContext:
             scan_file,
             0,
         )
+        self.__reported = []
+
+    # pylint: disable=too-many-arguments
+    def add_triggered_rule(
+        self,
+        scan_file,
+        line_number,
+        column_number,
+        rule_id,
+        rule_name,
+        rule_description,
+        extra_error_information,
+    ):
+        """
+        Add the triggering information for a rule.
+        """
+        new_entry = (
+            scan_file,
+            line_number,
+            column_number,
+            rule_id,
+            rule_name,
+            rule_description,
+            extra_error_information,
+        )
+        self.__reported.append(new_entry)
+
+    # pylint: enable=too-many-arguments
+
+    def report_on_triggered_rules(self):
+        """
+        Report on the various points where rules were triggered,
+        in sorted order.
+        """
+        reported_and_sorted = sorted(self.__reported)
+
+        for next_entry in reported_and_sorted:
+            self.owning_manager.log_scan_failure(
+                scan_file=next_entry[0],
+                line_number=next_entry[1],
+                column_number=next_entry[2],
+                rule_id=next_entry[3],
+                rule_name=next_entry[4],
+                rule_description=next_entry[5],
+                extra_error_information=next_entry[6],
+            )
+        self.__reported.clear()
 
 
 # pylint: enable=too-few-public-methods
@@ -182,14 +229,14 @@ class Plugin(ABC):
         """
         Report an error with the current line being processed.
         """
-        context.owning_manager.log_scan_failure(
+        context.add_triggered_rule(
             context.scan_file,
             context.line_number + line_number_delta,
             column_number,
             self.get_details().plugin_id,
             self.get_details().plugin_name,
             self.get_details().plugin_description,
-            extra_error_information=extra_error_information,
+            extra_error_information,
         )
 
     # pylint: disable=too-many-arguments
@@ -205,7 +252,7 @@ class Plugin(ABC):
         """
         Report an error with the current token being processed.
         """
-        context.owning_manager.log_scan_failure(
+        context.add_triggered_rule(
             context.scan_file,
             (token.original_line_number if use_original_position else token.line_number)
             + line_number_delta,
@@ -220,7 +267,7 @@ class Plugin(ABC):
             self.get_details().plugin_id,
             self.get_details().plugin_name,
             self.get_details().plugin_description,
-            extra_error_information=extra_error_information,
+            extra_error_information,
         )
 
     # pylint: enable=too-many-arguments
