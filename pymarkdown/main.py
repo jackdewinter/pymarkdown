@@ -217,33 +217,41 @@ class PyMarkdownLint:
         POGGER.info("Scanning file '$'.", next_file)
         context = self.__plugins.starting_new_file(next_file)
 
-        POGGER.info("Scanning file '$' token-by-token.", next_file)
-        source_provider = FileSourceProvider(next_file)
-        if args.x_test_scan_fault:
-            source_provider = None
-        actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
+        try:
+            POGGER.info("Scanning file '$' token-by-token.", next_file)
+            source_provider = FileSourceProvider(next_file)
+            if args.x_test_scan_fault:
+                source_provider = None
+            actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
 
-        if actual_tokens and actual_tokens[-1].is_pragma:
-            self.__plugins.compile_pragmas(next_file, actual_tokens[-1].pragma_lines)
-            actual_tokens = actual_tokens[:-1]
+            if actual_tokens and actual_tokens[-1].is_pragma:
+                self.__plugins.compile_pragmas(
+                    next_file, actual_tokens[-1].pragma_lines
+                )
+                actual_tokens = actual_tokens[:-1]
 
-        POGGER.info("Scanning file '$' tokens.", next_file)
-        for next_token in actual_tokens:
-            POGGER.info("Processing token: $", next_token)
-            self.__plugins.next_token(context, next_token)
+            POGGER.info("Scanning file '$' tokens.", next_file)
+            for next_token in actual_tokens:
+                POGGER.info("Processing token: $", next_token)
+                self.__plugins.next_token(context, next_token)
 
-        POGGER.info("Scanning file '$' line-by-line.", next_file)
-        source_provider = FileSourceProvider(next_file)
-        line_number = 1
-        next_line = source_provider.get_next_line()
-        while next_line is not None:
-            POGGER.info("Processing line $: $", line_number, next_line)
-            self.__plugins.next_line(context, line_number, next_line)
-            line_number += 1
+            POGGER.info("Scanning file '$' line-by-line.", next_file)
+            source_provider = FileSourceProvider(next_file)
+            line_number = 1
             next_line = source_provider.get_next_line()
+            while next_line is not None:
+                POGGER.info("Processing line $: $", line_number, next_line)
+                self.__plugins.next_line(context, line_number, next_line)
+                line_number += 1
+                next_line = source_provider.get_next_line()
 
-        POGGER.info("Completed scanning file '$'.", next_file)
-        self.__plugins.completed_file(context, line_number)
+            POGGER.info("Completed scanning file '$'.", next_file)
+            self.__plugins.completed_file(context, line_number)
+
+            context.report_on_triggered_rules()
+        except Exception:
+            context.report_on_triggered_rules()
+            raise
 
     # pylint: enable=broad-except
 

@@ -148,7 +148,7 @@ def test_md019_bad_single_space_single_tab():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md010,md023",
+        "md010",
         "scan",
         "test/resources/rules/md019/single_space_single_tab.md",
     ]

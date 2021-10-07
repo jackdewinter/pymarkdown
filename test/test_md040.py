@@ -104,15 +104,13 @@ def test_md040_bad_fenced_block_with_whitespace():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md013",
         "scan",
         "test/resources/rules/md040/bad_fenced_block_with_whitespace.md",
     ]
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md040/bad_fenced_block_with_whitespace.md:3:1: "
+        "test/resources/rules/md040/bad_fenced_block_with_whitespace.md:4:1: "
         + "MD040: Fenced code blocks should have a language specified (fenced-code-language)"
     )
     expected_error = ""

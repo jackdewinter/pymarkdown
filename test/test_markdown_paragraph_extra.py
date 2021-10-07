@@ -8482,10 +8482,10 @@ def test_paragraph_extra_j0ea():
         "[block-quote(1,1)::> \n> \n> \n> \n> \n> ]",
         "[para(1,3):\n\n  \n   \n \n]",
         "[text(1,3):abc\n::\n]",
-        '[link(2,1):inline:/uri:title::::link:False:":    \n:  \n:   \n]',
-        "[text(2,2):link:]",
+        '[link(2,3):inline:/uri:title::::link:False:":    \n:  \n:   \n]',
+        "[text(2,4):link:]",
         "[end-link::]",
-        "[text(5,3):\ndef::\n]",
+        "[text(5,5):\ndef::\n]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -8496,7 +8496,9 @@ def</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
 
 
 @pytest.mark.gfm

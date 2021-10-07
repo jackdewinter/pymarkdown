@@ -4,12 +4,7 @@
 
 ## Priority 2 - Like To Solve Before Initial
 
-- before release, check that all rule md* files look the same
-  - i.e. make sure the get_details all look the same
-
 - before release, check that all test file commented properly
-
-- go through every disabled rule for tests, and determine if disable makes sense
 
 - documentation for developers
 
@@ -70,12 +65,16 @@ md006 - how works within bq?
 md010 - tabs "converted"
       - tabs in code blocks
 
-```markdown
-[a
-paragraph inspired link](
-/paragraph
-"paragraph")
+- md005/md007
+  - only reporting first?
+  - need more comprehensive tests like test_extra_008x
 
+```Markdown
+* First Item
+  * First-First
+   * First-Second
+    * First-Third
+* Second Item
 ```
 
 ### bad_split_block_quote_in_list
@@ -90,34 +89,6 @@ paragraph inspired link](
   > This is the other section.
 ```
 
-### also 027
-
-- rule 32
-
-```Markdown
-This is text and a blank line.
-
-> a block quote
-> + a list
-
-This is a blank line and some text.
-```
-
-### xxx
-
-- similar to other bad lrd tests for md027
-
-```markdown
-> this is text
-> [a not
->  so
->  simple](/link
-> "a
->  title"
->  )
-> a real test
-```
-
 ### Inconsistent end for bq
 
 - different ending to block quote if ends with newline or not
@@ -129,46 +100,23 @@ This is a blank line and some text.
 # a
 ```
 
-### Rule 31
-
-- check to make sure line/col for FCB in bq/list reported properly
-
-- bad_fenced_block_in_list_in_block_quote
-
-```Markdown
-> + list
-> ```block
-> A code block
-> ```
-> 1. another list
-```
-
-### Rule 007
-
-```Markdown
-This is a test
-
-> * this is level 1
->   * this is level 2
->     * this is level 3
-```
-
-- level 2 and level 3 text are in same item, does not identify as sublevel.
-- try deeper nesting
-
 ### Rule ???
 
 - is there a rule that can detect a possible front-matter header and trigger?
+  i.e. something looks like front-matter and should be interpretted as front-matter
 
 ### Other
 
 - finish off inline elements for rule 027
 - better globbing for 043
-
+- md033 - <? and <! with alpha character after
 - better solution than `no-space-in-code` for scenario-cases.md
 
 ## Priority 3 - Like To Solve in next 3 m
 
+- md023 - can line 61 search be done more efficiently by looking for `{space}\x02` ?
+- in inline, does `if coalesced_stack and coalesced_stack[-1].is_block_quote_start:` really need
+  to look for any bq on the stack?
 - show url for failed rules as option
 - combine traversal for 027 and 007?
 

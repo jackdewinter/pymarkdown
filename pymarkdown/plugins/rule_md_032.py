@@ -41,9 +41,12 @@ class RuleMd032(Plugin):
         """
         Event that a new token is being processed.
         """
-        # print(str(token))
         if self.__end_list_end_token:
-            if not token.is_blank_line and not token.is_new_list_item:
+            if (
+                not token.is_blank_line
+                and not token.is_new_list_item
+                and not token.is_list_end
+            ):
                 self.report_next_token_error(context, token, line_number_delta=-1)
             self.__end_list_end_token = None
 

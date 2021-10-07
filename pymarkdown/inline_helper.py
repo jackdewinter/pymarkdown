@@ -539,6 +539,7 @@ class InlineHelper:
         is_setext,
         line_number,
         column_number,
+        coalesced_stack,
     ):
         """
         Handle the inline case of having the end of line character encountered.
@@ -631,6 +632,9 @@ class InlineHelper:
                 end_string, removed_end_whitespace
             )
             POGGER.debug("<<end_string<<$<<", end_string)
+
+        if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
+            coalesced_stack[-1].leading_text_index += 1
 
         POGGER.debug(
             "<<append_to_current_string<<$<<",

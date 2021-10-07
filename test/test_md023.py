@@ -160,7 +160,7 @@ def test_md023_bad_improper_indent_atx_in_block_quote():
 
 
 @pytest.mark.rules
-def test_md023_bad_improper_indent_setext():
+def test_md023_bad_improper_indent_setext_x():
     """
     Test to make sure we get the expected behavior after scanning a good file from the
     test/resources/rules/md023 directory that has a setext heading that is indented from
@@ -289,12 +289,170 @@ def test_md023_bad_improper_indented_atx_after_emphasis():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "MD022",
         "--enable-rules",
         "MD023",
         "scan",
         "test/resources/rules/md023/improper_indented_atx_after_emphasis.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md023_proper_indent_setext_trailing_x():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md023 directory that has a setext heading that is indented from
+    the start of the line.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "MD009",
+        "--enable-rules",
+        "MD023",
+        "scan",
+        "test/resources/rules/md023/proper_indent_setext_trailing.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md023_proper_indent_setext_trailing_first():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md023 directory that has a setext heading that is indented from
+    the start of the line.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--enable-rules",
+        "MD023",
+        "--disable-rules",
+        "MD009",
+        "scan",
+        "test/resources/rules/md023/proper_indent_setext_trailing_first.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md023_proper_indent_setext_trailing_second():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md023 directory that has a setext heading that is indented from
+    the start of the line.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--enable-rules",
+        "MD023",
+        "--disable-rules",
+        "MD009",
+        "scan",
+        "test/resources/rules/md023/proper_indent_setext_trailing_second.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md023_proper_indent_setext_trailing_third():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md023 directory that has a setext heading that is indented from
+    the start of the line.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--enable-rules",
+        "MD023",
+        "--disable-rules",
+        "MD009",
+        "scan",
+        "test/resources/rules/md023/proper_indent_setext_trailing_third.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md023_proper_indent_setext_larger_trailing_middle():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md023 directory that has a setext heading that is indented from
+    the start of the line.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--enable-rules",
+        "MD023",
+        "--disable-rules",
+        "MD009",
+        "scan",
+        "test/resources/rules/md023/proper_indent_setext_larger_trailing_middle.md",
     ]
 
     expected_return_code = 0

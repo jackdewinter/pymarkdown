@@ -1,5 +1,51 @@
 # Change Log
 
+## Unversioned - In Main, Not Released
+
+### Added
+
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/37)
+  - rules test: verified existing case, added missing related case
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/38)
+  - rules test: added new test case with provided data
+  - documentation: addressed documentation issue with description for rule_md044.md
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/40)
+  - rule md033: new configuration value `allow_first_image_element`
+    - if True, allows ONLY `<h1><img></h1>` sequence (with any parameters needed) if is first token in document
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/41)
+  - documentation: added description of how HTML comments are different
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/42)
+  - core: added sorting of triggered rules before they are displayed
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/31)
+  - core: support for executing pymarkdown as a module (`python -m pymarkdown`)
+
+### Changed
+
+- [Changed](https://github.com/jackdewinter/pymarkdown/issues/36)
+  - rules tests:verified need for `--disable-rules` through tests, removing any that were not needed
+  - documentation: addressed some documentation issues with docs/rules.md and doc/rules/rule_md032.md
+
+### Fixed
+
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/22)
+  - rule Md033: no longer triggers on end tags, adjusted default allowed tags
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/23)
+  - rule Md023: whitespace at end of lines in SetExt Heading no longer being recognized as starting whitespace.
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/27)
+  - rule Md032: was not recognizing 2 end list tokens in a row
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/32)
+  - rule Md037: was not properly looking for spaces inside of possible emphasis characters
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/33)
+  - parser: found parsing error with lists in block quotes
+  - rule md031,md032: fixed that and fixed issues in rules md031 and md032
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/34)
+  - parser: multiline inline elements with a Block Quote were not getting their starting positions calculated properly
+    - any element directly after those elements were also likely to have a bad position
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/39)
+  - parser: fixed instance of multi-level list within block quotes not firing properly
+  - issues: added item to issues list to do more looking on nested lists
+  - rule md007: may show up here with nested lists
+
 ## Version 0.9.0 - Date: 2021-09-21
 
 The main focus of this release was to fill out the features that the
@@ -11,20 +57,20 @@ were:
 
 ### Added
 
-- [Added](https://github.com/jackdewinter/pymarkdown/issues/8) ability to have configuration values for adding pluings and enabling stack trace.
-- [Added](https://github.com/jackdewinter/pymarkdown/issues/9) better access for plugin information from the command line.
-- [Added](https://github.com/jackdewinter/pymarkdown/issues/12) extension manager to start to bring extensions up to the same level as plugins.
-- [Added](https://github.com/jackdewinter/pymarkdown/issues/14) support for missing rules in the initial set of rules.
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/8) - ability to have configuration values for adding pluings and enabling stack trace.
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/9) - better access for plugin information from the command line.
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/12) - extension manager to start to bring extensions up to the same level as plugins.
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/14) - support for missing rules in the initial set of rules.
 
 ### Changed
 
-- [Changed](https://github.com/jackdewinter/pymarkdown/issues/7) to move the code for `application_properties` class from this project into a new Python package, and to make this project dependant on that package.
-- [Changed](https://github.com/jackdewinter/pymarkdown/issues/10) `markdown_token.py` to included better high level `is_*_token` functions
-- [Updated](https://github.com/jackdewinter/pymarkdown/issues/11) documentation on front-matter and pragma extensions.
+- [Changed](https://github.com/jackdewinter/pymarkdown/issues/7) - to move the code for `application_properties` class from this project into a new Python package, and to make this project dependant on that package.
+- [Changed](https://github.com/jackdewinter/pymarkdown/issues/10) - `markdown_token.py` to included better high level `is_*_token` functions
+- [Updated](https://github.com/jackdewinter/pymarkdown/issues/11) - documentation on front-matter and pragma extensions.
 
 ### Fixed
 
-- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/13) issues with nested Block Quotes and Lists not interacting properly with each other
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/13) - issues with nested Block Quotes and Lists not interacting properly with each other
 
 ## Version 0.8.0 - Date: 2021-05-31
 

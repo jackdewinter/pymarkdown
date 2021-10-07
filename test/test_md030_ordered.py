@@ -484,8 +484,6 @@ def test_md030_bad_spacing_ol_double():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md005,md007",
         "--stack-trace",
         "scan",
         "test/resources/rules/md030/bad_spacing_ol_double.md",
@@ -493,13 +491,13 @@ def test_md030_bad_spacing_ol_double():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ol_double.md:3:5: "
-        + "MD030: Spaces after list markers "
-        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_double.md:1:1: "
+        "test/resources/rules/md030/bad_spacing_ol_double.md:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
         + "test/resources/rules/md030/bad_spacing_ol_double.md:2:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
+        + "test/resources/rules/md030/bad_spacing_ol_double.md:3:5: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
         + "test/resources/rules/md030/bad_spacing_ol_double.md:4:1: "
@@ -528,8 +526,6 @@ def test_md030_bad_spacing_ol_double_config_1_2():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md005,md007",
         "--set",
         "plugins.md030.ol_single=$#1",
         "--set",
@@ -567,8 +563,6 @@ def test_md030_bad_spacing_ol_double_config_2_1():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md005,md007",
         "--set",
         "plugins.md030.ol_single=$#2",
         "--set",

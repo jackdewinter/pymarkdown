@@ -107,7 +107,6 @@ def test_front_matter_04():
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=config_map,
     )
 
@@ -137,7 +136,6 @@ test:
         source_markdown,
         expected_gfm,
         expected_tokens,
-        show_debug=False,
         config_map=config_map,
     )
 
@@ -428,7 +426,6 @@ Title: my document
         expected_gfm,
         expected_tokens,
         config_map=config_map,
-        show_debug=True,
     )
 
 

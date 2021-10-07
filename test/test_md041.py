@@ -441,7 +441,7 @@ def test_md041_good_front_matter_top_level():
 
 
 @pytest.mark.rules
-def test_md041_bad_front_matter_top_level():
+def test_md041_good_bad_front_matter_top_level():
     """
     Test to verify that a bad title is not interpreted from the front-matter.
     If the verification goes properly, no rules should be triggered as the
@@ -454,7 +454,7 @@ def test_md041_bad_front_matter_top_level():
         "--set",
         "extensions.front-matter.enabled=$!True",
         "scan",
-        "test/resources/rules/md041/bad_front_matter_top_level.md",
+        "test/resources/rules/md041/good_bad_front_matter_top_level.md",
     ]
 
     expected_return_code = 0
@@ -650,8 +650,6 @@ def test_md041_good_html_block_heading():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
-        "--disable-rules",
-        "md033",
         "scan",
         "test/resources/rules/md041/good_html_block_heading.md",
     ]

@@ -650,7 +650,6 @@ def test_md031_bad_fenced_block_in_block_quote_in_list():
     )
 
 
-@pytest.mark.skip
 @pytest.mark.rules
 def test_md031_bad_fenced_block_in_list_in_block_quote():
     """

@@ -63,12 +63,13 @@ image tags than the default `!--` (HTML comment) are strongly discouraged.
 | Value Name | Type | Default | Description |
 | -- | -- | -- | -- |
 | `enabled` | `boolean` | `True` | Whether the plugin rule is enabled. |
-| `allowed_elements` | `string` | `!--` | Comma separated list of tag starts that are allowable. |
+| `allowed_elements` | `string` | `!--,![CDATA[,?` | Comma separated list of tag starts that are allowable. |
+| `allow_first_image_element` | `boolean` | `True` | Whether to allow an image HTML block. |
 
 To be clear, if using the `allowed_elements` configuration value, the supplied
 value is a comma separated list of allowable element sequences.  Those
 element names are derived by taking the start of the tag and skipping
-over the start character `<` or the start and close characters `</`.
+over the start character `<`.
 From that point, the parser collects the contents of the tag up to one of the
 following:
 
@@ -78,11 +79,29 @@ following:
 
 As tags either require a whitespace character, the end character, or
 the closing characters, this supplies a straightforward way to represent each HTML
-tag.  The only exception to this is when the rule encounters the
+tag.  The only exceptions to this is when the rule encounters the
 [CDATA](https://github.github.com/gfm/#cdata-section)
-character sequence `![CDATA[` right after the start HTML tag character (`<`).
-Because that sequence does not require any whitespace to follow it, it is managed
+character sequence `![CDATA[` right after the start HTML tag character (`<`) or
+the HTML comment sequence `!--`.
+Because those sequences do not require any whitespace to follow it, they are managed
 separately.
+
+### Allowing For Image Headings
+
+Looking at numerous GitHub project pages, there are a significant number of more established
+projects that use an HTML Image for their initial heading.  This is already supported
+through Rule Md041 which allows an `h1` tag at the very start of the document to satisfy
+the requirements for the document starting with a level 1 Heading element:
+
+```Markdown
+<h1 align="center"><img src="/path/to/image"/></h1>
+```
+
+To round out that support in this rule, the `allow_first_image_element` was added
+to provide an exception to the normal `allowed_elements` configuration value.  This
+exception is specifically for the very first element in the document, and only
+triggers if that HTML Block element starts and ends with a `h1` tag, with only an `img`
+tag between them.
 
 ## Origination of Rule
 
@@ -98,6 +117,10 @@ that worked in most cases, it precluded the detection of
 number 2 to number 5 and the closing tag case for number 7.
 
 In creating this rule to work with all HTML tags, including the missing
-HTML start conditions and the close HTML tag character (`/`), the
-`allowed_elements` configuration default value is set to `!--` to allow
-for HTML comment tags to not trigger this rule by default.
+HTML start conditions, the
+`allowed_elements` configuration default value is set to `!--,![CDATA[,?` to allow
+for common HTML tags to not trigger this rule by default.
+
+To provide better support for the "image as a heading" scenario, the
+`allow_first_image_element` configuration value was added to specifically
+allow that scenario to not trigger this rule.

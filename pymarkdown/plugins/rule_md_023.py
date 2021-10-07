@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for headings that do not start at the
 beginning of the line.
 """
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
@@ -15,6 +16,7 @@ class RuleMd023(Plugin):
         super().__init__()
         self.__setext_start_token = None
         self.__any_leading_whitespace_detected = None
+        self.__seen_first_line_of_setext = None
 
     def get_details(self):
         """
@@ -36,6 +38,7 @@ class RuleMd023(Plugin):
         """
         self.__setext_start_token = None
         self.__any_leading_whitespace_detected = False
+        self.__seen_first_line_of_setext = False
 
     def next_token(self, context, token):
         """
@@ -47,10 +50,23 @@ class RuleMd023(Plugin):
         elif token.is_setext_heading:
             self.__setext_start_token = token
             self.__any_leading_whitespace_detected = bool(token.extracted_whitespace)
+            self.__seen_first_line_of_setext = False
         elif token.is_text:
-            if self.__setext_start_token and not self.__any_leading_whitespace_detected:
-                if token.end_whitespace and " " in token.end_whitespace:
-                    self.__any_leading_whitespace_detected = True
+            if (
+                self.__setext_start_token
+                and not self.__any_leading_whitespace_detected
+                and token.end_whitespace
+            ):
+                split_end_whitespace = token.end_whitespace.split("\n")
+                for next_split in split_end_whitespace:
+                    if self.__seen_first_line_of_setext:
+                        split_next_split = next_split.split(
+                            ParserHelper.whitespace_split_character
+                        )
+                        if len(split_next_split) == 2 and split_next_split[0]:
+                            self.__any_leading_whitespace_detected = True
+                    else:
+                        self.__seen_first_line_of_setext = True
         elif token.is_setext_heading_end:
             if token.extracted_whitespace:
                 self.__any_leading_whitespace_detected = True

@@ -738,7 +738,7 @@ brr</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2449,7 +2449,6 @@ def test_block_quotes_extra_02ae():
         expected_gfm,
         expected_tokens,
         disable_consistency_checks=True,
-        show_debug=True,
     )
 
 
@@ -2807,10 +2806,10 @@ def test_block_quotes_extra_04a():
         "[block-quote(1,1)::> \n> \n>\n> ]",
         "[para(1,3):\n]",
         "[text(1,3):start\n::\n]",
-        "[emphasis(2,1):1:*]",
-        "[text(2,2):the:]",
-        "[end-emphasis(2,5)::]",
-        "[text(2,6): quote:]",
+        "[emphasis(2,3):1:*]",
+        "[text(2,4):the:]",
+        "[end-emphasis(2,7)::]",
+        "[text(2,8): quote:]",
         "[end-para:::True]",
         "[BLANK(3,2):]",
         "[para(4,3):]",
@@ -2825,7 +2824,9 @@ def test_block_quotes_extra_04a():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
 
 
 @pytest.mark.gfm
@@ -2844,10 +2845,10 @@ def test_block_quotes_extra_04b():
         "[block-quote(1,1)::> \n> \n> \n>\n> ]",
         "[setext(3,3):-:3::(1,3)]",
         "[text(1,3):start\n::\n]",
-        "[emphasis(2,1):1:*]",
-        "[text(2,2):the:]",
-        "[end-emphasis(2,5)::]",
-        "[text(2,6): quote:]",
+        "[emphasis(2,3):1:*]",
+        "[text(2,4):the:]",
+        "[end-emphasis(2,7)::]",
+        "[text(2,8): quote:]",
         "[end-setext::]",
         "[BLANK(4,2):]",
         "[para(5,3):]",
@@ -2862,7 +2863,9 @@ def test_block_quotes_extra_04b():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
 
 
 @pytest.mark.gfm

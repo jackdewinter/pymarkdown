@@ -929,6 +929,43 @@ def test_md044_good_inline_link_multiple_lines_two():
 
 
 @pytest.mark.rules
+def test_md044_good_inline_link_multiple_lines_three():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md004 directory that has consistent asterisk usage on a single
+    level list.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--set",
+        "plugins.md044.names=ParaGraph",
+        "scan",
+        "test/resources/rules/md044/good_inline_link_multiple_lines_three.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md044/good_inline_link_multiple_lines_three.md:2:1: "
+        + "MD044: Proper names should have the correct capitalization "
+        + "[Expected: ParaGraph; Actual: paragraph] (proper-names)\n"
+        + "test/resources/rules/md044/good_inline_link_multiple_lines_three.md:4:2: "
+        + "MD044: Proper names should have the correct capitalization "
+        + "[Expected: ParaGraph; Actual: paragraph] (proper-names)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
 def test_md044_good_inline_image():
     """
     Test to make sure we get the expected behavior after scanning a good file from the

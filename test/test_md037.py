@@ -290,3 +290,31 @@ def test_md037_good_emphasis_with_code_span():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
+
+@pytest.mark.rules
+def test_md037_good_no_emphasis_but_stars():
+    """
+    Test to make sure we get the expected behavior after scanning a good file from the
+    test/resources/rules/md004 directory that has consistent asterisk usage on a single
+    level list.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md037/good_no_emphasis_but_stars.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )

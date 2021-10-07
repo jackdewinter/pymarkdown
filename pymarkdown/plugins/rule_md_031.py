@@ -96,7 +96,6 @@ class RuleMd031(Plugin):
         """
         Event that a new token is being processed.
         """
-        # print(">>token>>" + str(token))
         if self.__end_fenced_code_block_token and not token.is_end_token:
             self.__handle_end_fenced_code_block(context, token)
 

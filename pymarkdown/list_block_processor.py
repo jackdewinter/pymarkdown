@@ -41,6 +41,9 @@ class ListBlockProcessor:
         Determine if we have the start of an un-numbered list.
         """
         POGGER.debug("is_ulist_start>>pre>>")
+        POGGER.debug("is_ulist_start>>start_index>>$<<", start_index)
+        POGGER.debug("is_ulist_start>>adj_ws>>$<<", adj_ws)
+        POGGER.debug("is_ulist_start>>extracted_whitespace>>$<<", extracted_whitespace)
         is_start, after_all_whitespace_index = False, -1
         if adj_ws is None:
             adj_ws = extracted_whitespace

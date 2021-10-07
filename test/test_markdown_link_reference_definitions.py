@@ -929,9 +929,9 @@ def test_link_reference_definitions_183f():
         "[text(2,2):foo:]",
         "[text(2,5):]:]",
         "[text(2,6):: /url\n::\n]",
-        "[text(3,1):[:]",
-        "[text(3,2):Foo:]",
-        "[text(3,5):]:]",
+        "[text(3,3):[:]",
+        "[text(3,4):Foo:]",
+        "[text(3,7):]:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
     ]
@@ -942,7 +942,9 @@ def test_link_reference_definitions_183f():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
 
 
 @pytest.mark.gfm
