@@ -51,7 +51,7 @@ The PyMarkdown project has the following advantages:
     and made more efficient by leveraging this token format. Where that is not possible,
     simple regular expressions and simple algorithms are used on a line-by-line basis.
 - Thoroughly tested
-  - The project currently has over 2700 scenario tests and coverage percentages
+  - The project currently has over 3200 scenario tests and coverage percentages
     over 99%.
 - Extensible
   - The parser for the project adheres to the GFM specification and most of
@@ -59,11 +59,24 @@ The PyMarkdown project has the following advantages:
     [rules](/docs/rules.md) themselves are plugins, so they are extensible by default.
     The parser itself will be extended as needed to provide for other Markdown
     [extensions](/docs/extensions.md) as needed.
+- Versatile
+  - The PyMarkdown linter can be executed from a script on the command line,
+    from within another Python program, or using the popular Git Pre-Commit hooks.
 
 ## Note
 
-This project is currently in pre-release, and some of these documented things
-may not work 100% as advertised until after the initial release.
+This project is currently in beta, and some of these documented things
+may not work 100% as advertised until after the final release.  However,
+everything should be close enough to done that if you find something missing,
+please let us know.
+
+## GitHub Pre Commit Hooks
+
+If you intend to use the PyMarkdown project as a linter for your
+GitHub Pre-Commit hooks, then refer to this document on how to set
+that up.  Once setup, you can continue reading at the
+[How To Use section](#how-to-use) for more information on the options
+available for use in your Pre-Commit Hooks.
 
 ## Requirements
 

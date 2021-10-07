@@ -4,6 +4,10 @@
 
 ### Added
 
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/28)
+  - documentation: documentation on how to use pre-commit hooks
+- [Added](https://github.com/jackdewinter/pymarkdown/issues/31)
+  - core: support for executing pymarkdown as a module (`python -m pymarkdown`)
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/37)
   - rules test: verified existing case, added missing related case
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/38)
@@ -16,8 +20,6 @@
   - documentation: added description of how HTML comments are different
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/42)
   - core: added sorting of triggered rules before they are displayed
-- [Added](https://github.com/jackdewinter/pymarkdown/issues/31)
-  - core: support for executing pymarkdown as a module (`python -m pymarkdown`)
 
 ### Changed
 
