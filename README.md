@@ -51,7 +51,7 @@ The PyMarkdown project has the following advantages:
     and made more efficient by leveraging this token format. Where that is not possible,
     simple regular expressions and simple algorithms are used on a line-by-line basis.
 - Thoroughly tested
-  - The project currently has over 2700 scenario tests and coverage percentages
+  - The project currently has over 3200 scenario tests and coverage percentages
     over 99%.
 - Extensible
   - The parser for the project adheres to the GFM specification and most of
@@ -59,6 +59,9 @@ The PyMarkdown project has the following advantages:
     [rules](/docs/rules.md) themselves are plugins, so they are extensible by default.
     The parser itself will be extended as needed to provide for other Markdown
     [extensions](/docs/extensions.md) as needed.
+- Versatile
+  - The PyMarkdown linter can be executed from a script on the command line,
+    from within another Python program, or using the popular Git Pre-Commit hooks.
 
 ## Note
 

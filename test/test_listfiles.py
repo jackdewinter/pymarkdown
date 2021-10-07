@@ -312,6 +312,7 @@ def test_markdown_with_dash_l_on_directory():
 ../../docs/developer.md
 ../../docs/extensions.md
 ../../docs/faq.md
+../../docs/pre-commit.md
 ../../docs/rules.md"""
     expected_error = ""
 
@@ -344,6 +345,7 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
 ../../docs/extensions/front-matter.md
 ../../docs/extensions/pragmas.md
 ../../docs/faq.md
+../../docs/pre-commit.md
 ../../docs/rules.md
 ../../docs/rules/rule_md001.md
 ../../docs/rules/rule_md002.md

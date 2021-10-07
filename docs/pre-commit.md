@@ -1,6 +1,6 @@
-# GitHub Pre-Commit Hooks
+# Git Pre-Commit Hooks
 
-GitHub repositories can take advantage of integration with
+Git repositories can take advantage of integration with
 the [pre-commit](https://pre-commit.com/) family of
 checks and formatters.  There are tons of information
 on their website, and if you are using this feature,
