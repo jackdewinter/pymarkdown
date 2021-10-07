@@ -73,8 +73,8 @@ please let us know.
 ## GitHub Pre Commit Hooks
 
 If you intend to use the PyMarkdown project as a linter for your
-GitHub Pre-Commit hooks, then refer to this document on how to set
-that up.  Once setup, you can continue reading at the
+GitHub Pre-Commit hooks, then refer to [this document](/docs/pre-commit.md)
+on how to set that up.  Once setup, you can continue reading at the
 [How To Use section](#how-to-use) for more information on the options
 available for use in your Pre-Commit Hooks.
 
