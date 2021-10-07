@@ -4,6 +4,28 @@
 
 ### Added
 
+- None
+
+### Changed
+
+- None
+
+### Fixed
+
+- None
+
+## Version 0.9.1 - Date: 2021-10-06
+
+This was a point release to make several new features and fixed
+issues to be released.  While the full descriptions are below,
+here are some highlights:
+
+- Added documentation on how to use Git Pre-Commit hooks with PyMarkdown
+- Added support to allow PyMarkdown to be executed as a module with `-m`
+- Various scenario test tasks including verifying disabled rules were required
+
+### Added
+
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/28)
   - documentation: documentation on how to use pre-commit hooks
 - [Added](https://github.com/jackdewinter/pymarkdown/issues/31)
