@@ -273,7 +273,7 @@ def test_list_blocks_237x():
 @pytest.mark.gfm
 def test_list_blocks_237a():
     """
-    Test case 237:  variant
+    Test case 237a:  variation of 237 properly indented
     """
 
     # Arrange
@@ -307,7 +307,7 @@ def test_list_blocks_237a():
 @pytest.mark.gfm
 def test_list_blocks_237bx():
     """
-    Test case 237:  variant
+    Test case 237a:  variation of 237 improperly indented
     """
 
     # Arrange
@@ -341,7 +341,7 @@ def test_list_blocks_237bx():
 @pytest.mark.gfm
 def test_list_blocks_237ba():
     """
-    Test case 237:  variant
+    Test case 237ba:  variation of 237b improperly indented
     """
 
     # Arrange
@@ -375,7 +375,7 @@ def test_list_blocks_237ba():
 @pytest.mark.gfm
 def test_list_blocks_237c():
     """
-    Test case 237:  variant
+    Test case 237c:  variation of 237 properly indented
     """
 
     # Arrange
@@ -409,7 +409,7 @@ def test_list_blocks_237c():
 @pytest.mark.gfm
 def test_list_blocks_237d():
     """
-    Test case 237:  variant
+    Test case 237d:  variation of 237 properly indented
     """
 
     # Arrange
@@ -443,7 +443,7 @@ def test_list_blocks_237d():
 @pytest.mark.gfm
 def test_list_blocks_237e():
     """
-    Test case 237:  237 with not enough on final
+    Test case 237:  variation of 237 with not enough on final
     """
 
     # Arrange
@@ -519,7 +519,7 @@ def test_list_blocks_238():
 @pytest.mark.gfm
 def test_list_blocks_238a():
     """
-    Test case 238:  variant
+    Test case 238a:  variation of 238 with  more spacing
     """
 
     # Arrange
@@ -713,7 +713,7 @@ baz
 @pytest.mark.gfm
 def test_list_blocks_242a():
     """
-    Test case 242a:  variation
+    Test case 242a:  variation of 242 with no blank line after first line
     """
 
     # Arrange
@@ -750,7 +750,7 @@ bar</p>
 @pytest.mark.gfm
 def test_list_blocks_242b():
     """
-    Test case 242b:  variation
+    Test case 242b:  variation of 242 with extra blank lines
     """
 
     # Arrange
@@ -795,7 +795,7 @@ baz
 @pytest.mark.gfm
 def test_list_blocks_242c():
     """
-    Test case 242c:  A list item that contains an indented code block will preserve empty lines within the code block verbatim.
+    Test case 242c:  variation of 242 with extra blank lines
     """
 
     # Arrange
@@ -838,7 +838,7 @@ baz
 @pytest.mark.gfm
 def test_list_blocks_242d():
     """
-    Test case 242d:  variation, if in a paragraph, the text's indents are split
+    Test case 242d:  variation of 242, if in a paragraph, the text's indents are split
                      between the paragraph and the enclosing list
     """
 
@@ -1009,7 +1009,7 @@ def test_list_blocks_248():
 @pytest.mark.gfm
 def test_list_blocks_248a():
     """
-    Test case 248a:  mod'n
+    Test case 248a:  variation of 248 with less indent on line three
     """
 
     # Arrange
@@ -1328,7 +1328,7 @@ def test_list_blocks_256x():
 @pytest.mark.gfm
 def test_list_blocks_256a():
     """
-    Test case 256a:  extra spaces on blank lines don't make any impact
+    Test case 256a:  variation on 256 with extra spaces on blank lines don't make any impact
     """
 
     # Arrange
@@ -1379,7 +1379,7 @@ def test_list_blocks_256a():
 @pytest.mark.gfm
 def test_list_blocks_256b():
     """
-    Test case 256b:  extra spaces on blank lines don't make any impact
+    Test case 256b:  variation on 256 with extra spaces on blank lines don't make any impact
     """
 
     # Arrange
@@ -1430,7 +1430,7 @@ def test_list_blocks_256b():
 @pytest.mark.gfm
 def test_list_blocks_256c():
     """
-    Test case 256c:  variation with ordered list
+    Test case 256c:  variation of 256 with ordered list
     """
 
     # Arrange
@@ -1476,7 +1476,7 @@ def test_list_blocks_256c():
 @pytest.mark.gfm
 def test_list_blocks_256d():
     """
-    Test case 256c:  variation with (almost) ordered list
+    Test case 256d:  variation of 256with (almost) ordered list
     """
 
     # Arrange
@@ -1531,7 +1531,7 @@ def test_list_blocks_256d():
 @pytest.mark.gfm
 def test_list_blocks_256e():
     """
-    Test case 256e:  variation with (almost) ordered list
+    Test case 256e:  variation of 256 with (almost) ordered list
     """
 
     # Arrange
@@ -1605,7 +1605,7 @@ def test_list_blocks_257():
 @pytest.mark.gfm
 def test_list_blocks_257a():
     """
-    Test case 257a:  Variation on 257
+    Test case 257a:  variation on 257 with no extra spaces on start line
     """
 
     # Arrange
@@ -1630,7 +1630,8 @@ def test_list_blocks_257a():
 @pytest.mark.gfm
 def test_list_blocks_257b():
     """
-    Test case 257b:  Variation on 257
+    Test case 257b:  variation on 257 with no extra spaces on start line
+        and ordered list
     """
 
     # Arrange
@@ -1801,7 +1802,7 @@ def test_list_blocks_262():
 @pytest.mark.gfm
 def test_list_blocks_262a():
     """
-    Test case 262a:  variation on 262
+    Test case 262a:  variation on 262 with ordered list
     """
 
     # Arrange
@@ -1849,7 +1850,7 @@ foo
 @pytest.mark.gfm
 def test_list_blocks_263a():
     """
-    Test case 263a:  variations
+    Test case 263a:  variation on 263
     """
 
     # Arrange
@@ -1884,7 +1885,7 @@ def test_list_blocks_263a():
 @pytest.mark.gfm
 def test_list_blocks_263b():
     """
-    Test case 263b:  variations
+    Test case 263b:  variation on 263a with following list number
     """
 
     # Arrange
@@ -1911,7 +1912,7 @@ def test_list_blocks_263b():
 @pytest.mark.gfm
 def test_list_blocks_263bu():
     """
-    Test case 263b:  variations
+    Test case 257bu:  variation on 257b with unordered
     """
 
     # Arrange
@@ -2185,7 +2186,7 @@ with two lines.</li>
 @pytest.mark.gfm
 def test_list_blocks_269a():
     """
-    Test case 269:  Variation on 269
+    Test case 269a:  variation on 269 with less indent on second line
     """
 
     # Arrange
@@ -2210,7 +2211,7 @@ with two lines.</li>
 @pytest.mark.gfm
 def test_list_blocks_269b():
     """
-    Test case 269b:  Variation on 269
+    Test case 269b:  variation on 269 with more indent on second line
     """
 
     # Arrange
@@ -2235,7 +2236,7 @@ with two lines.</li>
 @pytest.mark.gfm
 def test_list_blocks_269c():
     """
-    Test case 269c:  variation
+    Test case 269c:  variation on 269 with extra line
     """
 
     # Arrange
@@ -2459,7 +2460,7 @@ def test_list_blocks_274():
 @pytest.mark.gfm
 def test_list_blocks_274a():
     """
-    Test case 274a:  modification for 274
+    Test case 274a:  variation on 274 with different start number and extra list
     """
 
     # Arrange
@@ -2501,7 +2502,7 @@ def test_list_blocks_274a():
 @pytest.mark.gfm
 def test_list_blocks_274b():
     """
-    Test case 274b:  modification for 274
+    Test case 274b:  variation on 274 with different start number and extra unordered list
     """
 
     # Arrange
@@ -2543,7 +2544,7 @@ def test_list_blocks_274b():
 @pytest.mark.gfm
 def test_list_blocks_274c():
     """
-    Test case 274c:  modification for 274
+    Test case 274c:  variation on 274 with ul start and other lists as ordered
     """
 
     # Arrange
@@ -2646,7 +2647,7 @@ def test_list_blocks_276():
 @pytest.mark.gfm
 def test_list_blocks_276a():
     """
-    Test case 276a:  variation
+    Test case 276a:  variation on 276 with ol as second list
     """
 
     # Arrange
@@ -2675,7 +2676,7 @@ def test_list_blocks_276a():
 @pytest.mark.gfm
 def test_list_blocks_276aa():
     """
-    Test case 276a:  variation
+    Test case 276aa:  variation on 276 with extra list
     """
 
     # Arrange
@@ -2710,7 +2711,7 @@ def test_list_blocks_276aa():
 @pytest.mark.gfm
 def test_list_blocks_276ab():
     """
-    Test case 276a:  variation
+    Test case 276ab:  variation on 276 with extra list
     """
 
     # Arrange
@@ -2745,7 +2746,7 @@ def test_list_blocks_276ab():
 @pytest.mark.gfm
 def test_list_blocks_276b():
     """
-    Test case 276b:  variation
+    Test case 276b:  variation on 276 inverted list types
     """
 
     # Arrange
@@ -2774,7 +2775,7 @@ def test_list_blocks_276b():
 @pytest.mark.gfm
 def test_list_blocks_276ba():
     """
-    Test case 276b:  variation
+    Test case 276ba:  variation on 276b with extra list
     """
 
     # Arrange
@@ -2809,7 +2810,7 @@ def test_list_blocks_276ba():
 @pytest.mark.gfm
 def test_list_blocks_276bb():
     """
-    Test case 276b:  variation
+    Test case 276bb:  variation on 276b with extra list
     """
 
     # Arrange
@@ -2844,7 +2845,7 @@ def test_list_blocks_276bb():
 @pytest.mark.gfm
 def test_list_blocks_276c():
     """
-    Test case 276c:  variation
+    Test case 276c:  variation on 276 both ordered
     """
 
     # Arrange
@@ -2873,7 +2874,7 @@ def test_list_blocks_276c():
 @pytest.mark.gfm
 def test_list_blocks_276ca():
     """
-    Test case 276c:  variation
+    Test case 276ca:  variation on 276 both ordered and extra list
     """
 
     # Arrange
@@ -2908,7 +2909,7 @@ def test_list_blocks_276ca():
 @pytest.mark.gfm
 def test_list_blocks_276cb():
     """
-    Test case 276c:  variation
+    Test case 276cb:  variation on 276 both ordered and extra list
     """
 
     # Arrange
@@ -2943,7 +2944,7 @@ def test_list_blocks_276cb():
 @pytest.mark.gfm
 def test_list_blocks_276d():
     """
-    Test case 276c:  variation
+    Test case 276d:  variation on 276 with ordered list increment
     """
 
     # Arrange
@@ -2972,7 +2973,7 @@ def test_list_blocks_276d():
 @pytest.mark.gfm
 def test_list_blocks_276da():
     """
-    Test case 276c:  variation
+    Test case 276da:  variation on 276d with ordered list increment and extra list
     """
 
     # Arrange
@@ -3007,7 +3008,7 @@ def test_list_blocks_276da():
 @pytest.mark.gfm
 def test_list_blocks_276db():
     """
-    Test case 276c:  variation
+    Test case 276db:  variation on 276d with ordered list increment and extra list
     """
 
     # Arrange
@@ -3115,7 +3116,7 @@ baz</li>
 @pytest.mark.gfm
 def test_list_blocks_extra_1():
     """
-    Test case 01:  A list item can contain a heading:
+    Test case 01:  Lists and sublists
     """
 
     # Arrange
@@ -3170,7 +3171,7 @@ def test_list_blocks_extra_1():
 @pytest.mark.gfm
 def test_list_blocks_extra_2():
     """
-    Test case 02:  A list item can contain a heading:
+    Test case 02:  Lists and sublists with increasing numbers
     """
 
     # Arrange
@@ -3217,7 +3218,7 @@ def test_list_blocks_extra_2():
 @pytest.mark.gfm
 def test_list_blocks_extra_2u():
     """
-    Test case 02:  A list item can contain a heading:
+    Test case 02u:  unordered lists and sublists
     """
 
     # Arrange
@@ -3272,7 +3273,7 @@ def test_list_blocks_extra_2u():
 @pytest.mark.gfm
 def test_list_blocks_extra_2a():
     """
-    Test case 02a:  A list item can contain a heading:
+    Test case 02a:  ordered lists and sublists with text on next line
     """
 
     # Arrange
@@ -3315,7 +3316,7 @@ jkl</li>
 @pytest.mark.gfm
 def test_list_blocks_extra_3():
     """
-    Test case 03:  Code span in a list.
+    Test case 03:  Code span in lists.
     """
 
     # Arrange

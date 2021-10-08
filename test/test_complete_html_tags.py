@@ -27,7 +27,7 @@ def test_simple_complete_html_end_tag():
 
 def test_simple_complete_html_end_tag_with_invalid_tag_name():
     """
-    Make sure to test a simple complete html tag.
+    Make sure to test a simple complete html tag with an invalid tag name.
     """
 
     # Arrange

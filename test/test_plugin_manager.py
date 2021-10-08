@@ -11,7 +11,7 @@ from .utils import write_temporary_configuration
 
 def test_markdown_with_plugins_only():
     """
-    Test to make sure
+    Test to make sure "plugins" from the command line shows help
     """
 
     # Arrange
@@ -44,7 +44,7 @@ optional arguments:
 
 def test_markdown_with_dash_dash_add_plugin_and_bad_path():
     """
-    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    Test to make sure we get an error if '--add-plugin' is supplied with a bad path.
     """
 
     # Arrange
@@ -74,7 +74,7 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_path():
 
 def test_markdown_with_dash_dash_add_plugin_and_single_plugin_file():
     """
-    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    Test to make sure we add a plugin if '--add-plugin' is supplied with a valid plugin.
     """
 
     # Arrange
@@ -108,7 +108,7 @@ MD998>>completed_file
 
 def test_markdown_with_dash_dash_add_plugin_and_single_plugin_directory():
     """
-    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    Test to make sure we add a plugin if '--add-plugin' is supplied with a valid plugin directory.
     """
 
     # Arrange
@@ -142,7 +142,8 @@ MD998>>completed_file
 
 def test_markdown_with_repeated_identifier():
     """
-    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    Test to make sure we report an error if '--add-plugin' is supplied with a plugin that
+        specifies an already present id.
     """
 
     # Arrange
@@ -170,7 +171,8 @@ Unable to register plugin 'duplicate_id_debug.py' with id 'md999' as plugin 'plu
 
 def test_markdown_with_bad_identifier():
     """
-    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    Test to make sure we report an error if '--add-plugin' is supplied with a plugin that
+        specifies an invalid id.
     """
 
     # Arrange
@@ -198,7 +200,8 @@ Unable to register plugin 'bad_id.py' with id 'debug-only' as id is not a valid 
 
 def test_markdown_with_repeated_name():
     """
-    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    Test to make sure we report an error if '--add-plugin' is supplied with a plugin that
+        specifies an already present name.
     """
 
     # Arrange
@@ -226,7 +229,8 @@ Unable to register plugin 'duplicate_name_debug.py' with name 'debug-only' as pl
 
 def test_markdown_with_bad_name():
     """
-    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    Test to make sure we report an error if '--add-plugin' is supplied with a plugin that
+        specifies a bad name.
     """
 
     # Arrange
@@ -254,7 +258,8 @@ Unable to register plugin 'bad_name.py' with name 'debug.only' as name is not a 
 
 def test_markdown_with_dash_dash_add_plugin_and_bad_plugin_file():
     """
-    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    Test to make sure we report an error if '--add-plugin' is supplied with a plugin file
+        that is not really a plugin file.
     """
 
     # Arrange
@@ -284,7 +289,8 @@ def test_markdown_with_dash_dash_add_plugin_and_bad_plugin_file():
 
 def test_markdown_with_dash_dash_add_plugin_and_missing_class():
     """
-    Test to make sure we get enable a rule if '--add-plugin' is supplied.
+    Test to make sure we report an error if '--add-plugin' is supplied with a plugin file
+        that does not specify a plugin with the same name.
     """
 
     # Arrange
@@ -314,7 +320,8 @@ def test_markdown_with_dash_dash_add_plugin_and_missing_class():
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_starting_new_file():
     """
-    Test to make sure we get an error logged if a plugin throws an exception within the starting_new_file function.
+    Test to make sure we get an error logged if a plugin throws an exception
+        within the starting_new_file function.
     """
 
     # Arrange
@@ -343,7 +350,8 @@ Plugin id 'MDE001' had a critical failure during the 'starting_new_file' action.
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_completed_file():
     """
-    Test to make sure we get an error logged if a plugin throws an exception within the completed_file function.
+    Test to make sure we get an error logged if a plugin throws an exception
+        within the completed_file function.
     """
 
     # Arrange
@@ -372,7 +380,8 @@ Plugin id 'MDE002' had a critical failure during the 'completed_file' action.
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_line():
     """
-    Test to make sure we get an error logged if a plugin throws an exception within the next_line function.
+    Test to make sure we get an error logged if a plugin throws an exception
+        within the next_line function.
     """
 
     # Arrange
@@ -401,7 +410,8 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_line():
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_stack_trace():
     """
-    Test to make sure we get an error logged if a plugin throws an exception within the next_line function.
+    Test to make sure we get an error logged if a plugin throws an exception
+        within the next_line function.
     """
 
     # Arrange
@@ -448,7 +458,8 @@ pymarkdown.plugin_manager.BadPluginError: (Line 1): Plugin id 'MDE003' had a cri
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_line_with_configuration_stack_trace():
     """
-    Test to make sure we get an error logged if a plugin throws an exception within the next_line function.
+    Test to make sure we get an error logged if a plugin throws an exception
+        within the next_line function.
     """
 
     # Arrange
@@ -497,7 +508,8 @@ pymarkdown.plugin_manager.BadPluginError: (Line 1): Plugin id 'MDE003' had a cri
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_token():
     """
-    Test to make sure we get an error logged if a plugin throws an exception within the next_token function.
+    Test to make sure we get an error logged if a plugin throws an exception
+        within the next_token function.
     """
 
     # Arrange
@@ -526,7 +538,8 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_next_token():
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_next_token_with_stack_trace():
     """
-    Test to make sure we get an error logged if a plugin throws an exception within the next_token function.
+    Test to make sure we get an error logged if a plugin throws an exception
+        within the next_token function.
     """
 
     # Arrange
@@ -573,7 +586,8 @@ pymarkdown.plugin_manager.BadPluginError: (1,1): Plugin id 'MDE003' had a critic
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_constructor():
     """
-    Test to make sure we get an error logged if a plugin throws an exception within the constructor function.
+    Test to make sure we get an error logged if a plugin throws an exception
+        within the constructor function.
     """
 
     # Arrange
@@ -603,7 +617,8 @@ def test_markdown_with_dash_dash_add_plugin_with_bad_constructor():
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_details():
     """
-    Test to make sure we get an error logged if a plugin throws an exception within the details function.
+    Test to make sure we get an error logged if a plugin throws an exception
+        within the details function.
     """
 
     # Arrange
@@ -632,7 +647,8 @@ Plugin class 'BadDetails' had a critical failure loading the plugin details.
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_details_with_stack_trace():
     """
-    Test to make sure we get an error logged if a plugin throws an exception within the details function.
+    Test to make sure we get an error logged if a plugin throws an exception
+        within the details function.
     """
 
     # Arrange
@@ -676,7 +692,8 @@ pymarkdown.plugin_manager.BadPluginError: Plugin class 'BadDetails' had a critic
 
 def test_markdown_with_dash_dash_add_plugin_with_bad_string_detail():
     """
-    Test to make sure we get an error logged if a plugin throws an exception that a string detail is bad.
+    Test to make sure we get an error logged if a plugin throws an exception
+        that a descirption is bad.
     """
 
     # Arrange
@@ -978,7 +995,7 @@ Plugin 'bad_interface_version.py' with an interface version ('2') that is not '1
 
 def test_markdown_with_plugins_list_only():
     """
-    Test to make sure
+    Test to make sure that `plugins list` lists all plugins.
     """
 
     # Arrange
@@ -1054,7 +1071,8 @@ def test_markdown_with_plugins_list_only():
 
 def test_markdown_with_plugins_list_only_all():
     """
-    Test to make sure
+    Test to make sure that `plugins list` lists all plugins, even ones
+        that may not usually appear.
     """
 
     # Arrange
@@ -1131,7 +1149,7 @@ def test_markdown_with_plugins_list_only_all():
 
 def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
     """
-    Test to make sure
+    Test to make sure that `plugins list` lists all plugins with the specified id filter.
     """
 
     # Arrange
@@ -1162,7 +1180,8 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_nine():
 
 def test_markdown_with_plugins_list_and_filter_by_id_ends_with_non_sequence():
     """
-    Test to make sure
+    Test to make sure that `plugins list` lists all plugins with the specified id filter
+        for a filter that returns no values.
     """
 
     # Arrange
@@ -1184,7 +1203,7 @@ def test_markdown_with_plugins_list_and_filter_by_id_ends_with_non_sequence():
 
 def test_markdown_with_plugins_list_and_filter_by_name_link():
     """
-    Test to make sure
+    Test to make sure that `plugins list` lists all plugins with the specified name filter.
     """
 
     # Arrange
@@ -1221,7 +1240,7 @@ def test_markdown_with_plugins_list_and_filter_by_name_link():
 
 def test_markdown_with_plugins_list_and_bad_filter():
     """
-    Test to make sure
+    Test to make sure that `plugins list` errors when provided an overly generic filter.
     """
 
     # Arrange
@@ -1245,7 +1264,8 @@ main.py plugins list: error: argument list_filter: Value '*' is not a valid patt
 
 def test_markdown_with_plugins_info_and_bad_filter():
     """
-    Test to make sure
+    Test to make sure that `plugins list` errors when provided with a filter
+        that is not a valid id or name.
     """
 
     # Arrange
@@ -1269,7 +1289,7 @@ main.py plugins info: error: argument info_filter: Value 'abc.def' is not a vali
 
 def test_markdown_with_plugins_info_and_not_found_filter():
     """
-    Test to make sure
+    Test to make sure that `plugins list` errors when a valid id or name is not found.
     """
 
     # Arrange
@@ -1291,7 +1311,7 @@ def test_markdown_with_plugins_info_and_not_found_filter():
 
 def test_markdown_with_plugins_info_and_found_filter():
     """
-    Test to make sure
+    Test to make sure that `plugins info` shows the proper information for the specified plugin.
     """
 
     # Arrange
@@ -1322,7 +1342,8 @@ def test_markdown_with_plugins_info_and_found_filter():
 
 def test_markdown_with_plugins_info_and_found_filter_no_configuration():
     """
-    Test to make sure
+    Test to make sure that `plugins info` shows the proper information for the specified plugin
+        that does not have any configuration.
     """
 
     # Arrange
@@ -1351,7 +1372,8 @@ def test_markdown_with_plugins_info_and_found_filter_no_configuration():
 
 def test_markdown_with_plugins_info_and_found_filter_no_configuration_and_no_url():
     """
-    Test to make sure
+    Test to make sure that `plugins info` shows the proper information for the specified plugin
+        that does not have any configuration or url.
     """
 
     # Arrange

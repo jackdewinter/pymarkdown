@@ -59,7 +59,7 @@ baz</p>"""
 @pytest.mark.gfm
 def test_hard_line_breaks_655a():
     """
-    Test case 655a:  variation with two backslashes at end
+    Test case 655a:  variation of 655 with two backslashes at end
     """
 
     # Arrange
@@ -415,7 +415,7 @@ This is new.</p>"""
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_02x():
     """
-    Test case extra 01x:  Hard line breaks at start of line
+    Test case extra 02x:  Hard line breaks as the only whitespace on the line
     """
 
     # Arrange
@@ -443,7 +443,7 @@ This is new.""".replace(
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_02a():
     """
-    Test case extra 01x:  Hard line breaks at start of line
+    Test case extra 02a:  Hard line breaks at start of blank line
     """
 
     # Arrange
@@ -468,7 +468,7 @@ This is new.</p>"""
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_03x():
     """
-    Test case extra 01x:  Hard line break followed by text
+    Test case extra 03x:  Hard line break followed by text
     """
 
     # Arrange
@@ -491,7 +491,7 @@ This is new.</p>"""
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_03a():
     """
-    Test case extra 01x:  Hard line break followed by backslash escaped
+    Test case extra 03a:  Hard line break followed by backslash escaped
     """
 
     # Arrange
@@ -514,7 +514,7 @@ def test_hard_line_breaks_extra_03a():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_03b():
     """
-    Test case extra 01x:  Hard line break followed by entity
+    Test case extra 03b:  Hard line break followed by entity
     """
 
     # Arrange
@@ -537,7 +537,7 @@ def test_hard_line_breaks_extra_03b():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_03c():
     """
-    Test case extra 01x:  Hard line break followed by code span
+    Test case extra 03c:  Hard line break followed by code span
     """
 
     # Arrange
@@ -561,7 +561,7 @@ def test_hard_line_breaks_extra_03c():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_03d():
     """
-    Test case extra 01x:  Hard line break followed by emphasis
+    Test case extra 03d:  Hard line break followed by emphasis
     """
 
     # Arrange
@@ -587,7 +587,7 @@ def test_hard_line_breaks_extra_03d():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_03e():
     """
-    Test case extra 01x:  Hard line break followed by link
+    Test case extra 03e:  Hard line break followed by link
     """
 
     # Arrange
@@ -613,7 +613,7 @@ def test_hard_line_breaks_extra_03e():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_03f():
     """
-    Test case extra 01x:  Hard line break followed by link
+    Test case extra 03f:  Hard line break followed by link
     """
 
     # Arrange
@@ -637,7 +637,7 @@ def test_hard_line_breaks_extra_03f():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_03g():
     """
-    Test case extra 01x:  Hard line break followed by autolink
+    Test case extra 03g:  Hard line break followed by autolink
     """
 
     # Arrange
@@ -661,7 +661,7 @@ def test_hard_line_breaks_extra_03g():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_03h():
     """
-    Test case extra 01x:  Hard line break followed by autolink
+    Test case extra 03h:  Hard line break followed by autolink
     """
 
     # Arrange
@@ -685,7 +685,7 @@ def test_hard_line_breaks_extra_03h():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_03i():
     """
-    Test case extra 01x:  Hard line break followed by hard line break
+    Test case extra 03i:  Hard line break followed by hard line break
     """
 
     # Arrange
@@ -711,7 +711,7 @@ this is new.</p>"""
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_04x():
     """
-    Test case extra 01x:  Hard line break followed by text
+    Test case extra 04:  Hard line break followed by text
     """
 
     # Arrange
@@ -736,7 +736,7 @@ This is new.</p>"""
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_04xa():
     """
-    Test case extra 01x:  Hard line break followed by text
+    Test case extra 04xa:  Hard line break followed by whitespace and text
     """
 
     # Arrange
@@ -761,7 +761,7 @@ This is new.</p>"""
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_04a():
     """
-    Test case extra 01x:  Hard line break followed by backslash escaped
+    Test case extra 04a:  Hard line break followed by backslash escaped
     """
 
     # Arrange
@@ -786,7 +786,7 @@ def test_hard_line_breaks_extra_04a():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_04b():
     """
-    Test case extra 01x:  Hard line break followed by entity
+    Test case extra 04b:  Hard line break followed by entity
     """
 
     # Arrange
@@ -811,7 +811,7 @@ def test_hard_line_breaks_extra_04b():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_04c():
     """
-    Test case extra 01x:  Hard line break followed by code span
+    Test case extra 04c:  Hard line break followed by code span
     """
 
     # Arrange
@@ -837,7 +837,7 @@ def test_hard_line_breaks_extra_04c():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_04d():
     """
-    Test case extra 01x:  Hard line break followed by emphasis
+    Test case extra 04d:  Hard line break followed by emphasis
     """
 
     # Arrange
@@ -865,7 +865,7 @@ def test_hard_line_breaks_extra_04d():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_04e():
     """
-    Test case extra 01x:  Hard line break followed by link
+    Test case extra 04e:  Hard line break followed by link
     """
 
     # Arrange
@@ -893,7 +893,7 @@ def test_hard_line_breaks_extra_04e():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_04f():
     """
-    Test case extra 01x:  Hard line break followed by link
+    Test case extra 04f:  Hard line break followed by link
     """
 
     # Arrange
@@ -919,7 +919,7 @@ def test_hard_line_breaks_extra_04f():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_04g():
     """
-    Test case extra 01x:  Hard line break followed by autolink
+    Test case extra 04g:  Hard line break followed by autolink
     """
 
     # Arrange
@@ -945,7 +945,7 @@ def test_hard_line_breaks_extra_04g():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_04h():
     """
-    Test case extra 01x:  Hard line break followed by autolink
+    Test case extra 04h:  Hard line break followed by autolink
     """
 
     # Arrange
@@ -971,7 +971,7 @@ def test_hard_line_breaks_extra_04h():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_04i():
     """
-    Test case extra 01x:  Hard line break followed by hard line break
+    Test case extra 04i:  Hard line break followed by hard line break
     """
 
     # Arrange
@@ -999,7 +999,7 @@ this is new.""".replace(
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_05x():
     """
-    Test case extra 01x:  Hard line break followed by hard line break
+    Test case extra 05:  Hard line break followed by space and emphasis
     """
 
     # Arrange
@@ -1027,7 +1027,7 @@ def test_hard_line_breaks_extra_05x():
 @pytest.mark.gfm
 def test_hard_line_breaks_extra_05a():
     """
-    Test case extra 01x:  Hard line break followed by hard line break
+    Test case extra 05a:  Hard line break followed by space and emphasis
     """
 
     # Arrange

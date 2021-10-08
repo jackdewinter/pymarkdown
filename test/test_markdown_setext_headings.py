@@ -94,7 +94,7 @@ baz</em></h1>"""
 @pytest.mark.gfm
 def test_setext_headings_052a():
     """
-    Test case 052a:  Deal with multiple lines that start with whitespace.
+    Test case 052a:  variation of 52 to deal with multiple lines that start with whitespace.
     """
 
     # Arrange
@@ -118,7 +118,7 @@ c</h1>"""
 @pytest.mark.gfm
 def test_setext_headings_052b():
     """
-    Test case 052a:  Deal with multiple lines that start with whitespace.
+    Test case 052b:  variation of 52a with extra trailing spaces
     """
 
     # Arrange
@@ -144,7 +144,7 @@ c</h1>"""
 @pytest.mark.gfm
 def test_setext_headings_052c():
     """
-    Test case 052a:  Deal with multiple lines that start with whitespace.
+    Test case 052c:  variation of 52 with more trailing spaces
     """
 
     # Arrange
@@ -172,7 +172,7 @@ c</h1>"""
 @pytest.mark.gfm
 def test_setext_headings_052d():
     """
-    Test case 052a:  Deal with multiple lines that start with whitespace.
+    Test case 052d:  variation of 52 with inline emphasis
     """
 
     # Arrange
@@ -202,7 +202,7 @@ c</h1>"""
 @pytest.mark.gfm
 def test_setext_headings_052ex():
     """
-    Test case 052a:  Deal with multiple lines that start with whitespace.
+    Test case 052e:  variation of 52 with inline emphasis and trailing space
     """
 
     # Arrange
@@ -233,7 +233,7 @@ c</h1>"""
 @pytest.mark.gfm
 def test_setext_headings_052ea():
     """
-    Test case 052a:  Deal with multiple lines that start with whitespace.
+    Test case 052ea:  variation of 52e with more
     """
 
     # Arrange
@@ -273,7 +273,7 @@ c</h1>"""
 @pytest.mark.gfm
 def test_setext_headings_052eb():
     """
-    Test case 052a:  Deal with multiple lines that start with whitespace.
+    Test case 052eb:  variation of 52e with even more
     """
 
     # Arrange
@@ -322,7 +322,7 @@ c</h1>"""
 @pytest.mark.gfm
 def test_setext_headings_052f():
     """
-    Test case 052f:  Deal with multiple lines that start with whitespace.
+    Test case 052f:  variation of 52f with more
     """
 
     # Arrange
@@ -674,27 +674,21 @@ def test_setext_headings_064():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_setext_headings_064a():
     """
-    Test case 064a:  064 with with other underline
+    Test case 064a:  variation of 64 other underline
     """
 
     # Arrange
     source_markdown = """- Foo
----"""
-    expected_tokens = [
-        "[ulist(1,1):-::2:]",
-        "[para(1,3):]",
-        "[text(1,3):Foo:]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[tbreak(2,1):-::---]",
-    ]
+==="""
+    expected_tokens = ['[ulist(1,1):-::2::]', '[setext(2,1):=:3::(1,3)]', '[text(1,3):Foo:]', '[end-setext::]', '[end-ulist:::True]']
     expected_gfm = """<ul>
-<li>Foo</li>
-</ul>
-<hr />"""
+<li>Foo
+===</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -821,26 +815,20 @@ def test_setext_headings_069():
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_setext_headings_069a():
     """
-    Test case 069a:  069 with other underline
+    Test case 069a: variation of 069 with other underline
     """
 
     # Arrange
     source_markdown = """- foo
------"""
-    expected_tokens = [
-        "[ulist(1,1):-::2:]",
-        "[para(1,3):]",
-        "[text(1,3):foo:]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[tbreak(2,1):-::-----]",
-    ]
+====="""
+    expected_tokens = ['[ulist(1,1):-::2::]', '[setext(2,1):=:5::(1,3)]', '[text(1,3):foo:]', '[end-setext::]', '[end-ulist:::True]']
     expected_gfm = """<ul>
-<li>foo</li>
-</ul>
-<hr />"""
+<li>foo
+=====</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

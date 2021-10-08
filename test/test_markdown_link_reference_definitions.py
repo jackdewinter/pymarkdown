@@ -153,7 +153,7 @@ line2
 @pytest.mark.gfm
 def test_link_reference_definitions_165a():
     """
-    Test case 165a:  The title may extend over multiple lines:
+    Test case 165a:  variation of 165 to try and include a blank line
     """
 
     # Arrange
@@ -234,7 +234,8 @@ with blank line'
 @pytest.mark.gfm
 def test_link_reference_definitions_166a():
     """
-    Test case 166a:  variation
+    Test case 166a:  variation of 166 to try and include a blank line
+        in the title
     """
 
     # Arrange
@@ -265,7 +266,7 @@ with blank line
 @pytest.mark.gfm
 def test_link_reference_definitions_166b():
     """
-    Test case 166b:  variation
+    Test case 166b:  variation of 166 to try and include a newline into the title
     """
 
     # Arrange
@@ -747,7 +748,7 @@ def test_link_reference_definitions_183():
 @pytest.mark.gfm
 def test_link_reference_definitions_183a():
     """
-    Test case 183a:  variation
+    Test case 183a:  variation of 183 with it following a thematic break
     """
 
     # Arrange
@@ -777,7 +778,7 @@ def test_link_reference_definitions_183a():
 @pytest.mark.gfm
 def test_link_reference_definitions_183b():
     """
-    Test case 183b:  variation
+    Test case 183b:  variation of 183 with it following a SetExt Heading
     """
 
     # Arrange
@@ -810,7 +811,7 @@ def test_link_reference_definitions_183b():
 @pytest.mark.gfm
 def test_link_reference_definitions_183c():
     """
-    Test case 183c:  variation
+    Test case 183a:  variation of 183 with it following an indented code block
     """
 
     # Arrange
@@ -843,7 +844,7 @@ def test_link_reference_definitions_183c():
 @pytest.mark.gfm
 def test_link_reference_definitions_183d():
     """
-    Test case 183d:  variation
+    Test case 183d:  variation of 183 with it following a fenced code block
     """
 
     # Arrange
@@ -878,7 +879,7 @@ indented code block
 @pytest.mark.gfm
 def test_link_reference_definitions_183e():
     """
-    Test case 183d:  variation
+    Test case 183e:  variation of 183 with it following a HTML block
     """
 
     # Arrange
@@ -914,7 +915,7 @@ def test_link_reference_definitions_183e():
 @pytest.mark.gfm
 def test_link_reference_definitions_183f():
     """
-    Test case 183e:  variation
+    Test case 183f:  variation of 183 with it following a block quote
     """
 
     # Arrange
@@ -950,7 +951,7 @@ def test_link_reference_definitions_183f():
 @pytest.mark.gfm
 def test_link_reference_definitions_183g():
     """
-    Test case 183gx:  variation
+    Test case 183g:  variation of 183 with it following a list
     """
 
     # Arrange
@@ -990,7 +991,7 @@ def test_link_reference_definitions_183g():
 @pytest.mark.gfm
 def test_link_reference_definitions_183ga():
     """
-    Test case 183gx:  variation
+    Test case 183ga:  variation of 183g with an improperly started LRD
     """
 
     # Arrange
@@ -1028,7 +1029,7 @@ foo]: /url</li>
 @pytest.mark.gfm
 def test_link_reference_definitions_183gb():
     """
-    Test case 183gx:  variation
+    Test case 183ga:  variation of 183g with an improperly indented LRD
     """
 
     # Arrange
@@ -1068,7 +1069,8 @@ def test_link_reference_definitions_183gb():
 @pytest.mark.gfm
 def test_link_reference_definitions_183gc():
     """
-    Test case 183gx:  variation
+    Test case 183ga:  variation of 183g with an improperly started LRD
+        within an ordered list
     """
 
     # Arrange
@@ -1108,7 +1110,7 @@ def test_link_reference_definitions_183gc():
 @pytest.mark.gfm
 def test_link_reference_definitions_183gd():
     """
-    Test case 183gx:  variation
+    Test case 183gd:  variation of 183g with an overly indented LRD
     """
 
     # Arrange
@@ -1148,7 +1150,7 @@ def test_link_reference_definitions_183gd():
 @pytest.mark.gfm
 def test_link_reference_definitions_183ge():
     """
-    Test case 183gx:  variation
+    Test case 183ge:  variation of 183g with an improperly started LRD
     """
 
     # Arrange
@@ -1188,7 +1190,7 @@ def test_link_reference_definitions_183ge():
 @pytest.mark.gfm
 def test_link_reference_definitions_183gf():
     """
-    Test case 183gx:  variation
+    Test case 183gf:  variation of 183g with no LRD
     """
 
     # Arrange
@@ -1224,7 +1226,7 @@ items</li>
 @pytest.mark.gfm
 def test_link_reference_definitions_183gg():
     """
-    Test case 183ga:  variation
+    Test case 183ga:  variation of 183g with a list before and a block quote after
     """
 
     # Arrange
@@ -1320,7 +1322,7 @@ def test_link_reference_definitions_185():
 @pytest.mark.gfm
 def test_link_reference_definitions_185a():
     """
-    Test case 185a:  variation
+    Test case 185a:  variation of 185 with Atx Heading between
     """
 
     # Arrange
@@ -1348,7 +1350,7 @@ def test_link_reference_definitions_185a():
 @pytest.mark.gfm
 def test_link_reference_definitions_185b():
     """
-    Test case 185b:  variation
+    Test case 185b:  variation of 185 with fenced code block between
     """
 
     # Arrange
@@ -1379,7 +1381,7 @@ my text
 @pytest.mark.gfm
 def test_link_reference_definitions_185c():
     """
-    Test case 185c:  variation
+    Test case 185c:  variation of 185 with indented code block between
     """
 
     # Arrange
@@ -1408,7 +1410,7 @@ def test_link_reference_definitions_185c():
 @pytest.mark.gfm
 def test_link_reference_definitions_185d():
     """
-    Test case 185d:  variation
+    Test case 185d:  variation of 185 with HTML Block between
     """
 
     # Arrange
@@ -1440,7 +1442,7 @@ def test_link_reference_definitions_185d():
 @pytest.mark.gfm
 def test_link_reference_definitions_185e():
     """
-    Test case 185e:  variation
+    Test case 185a:  variation of 185 with Block Quote between
     """
 
     # Arrange
@@ -1470,7 +1472,7 @@ def test_link_reference_definitions_185e():
 @pytest.mark.gfm
 def test_link_reference_definitions_185f():
     """
-    Test case 185f:  variation
+    Test case 185a:  variation of 185 with List between
     """
 
     # Arrange
@@ -1500,7 +1502,7 @@ def test_link_reference_definitions_185f():
 @pytest.mark.gfm
 def test_link_reference_definitions_185fa():
     """
-    Test case 185f:  variation
+    Test case 185fa: variation of 185f with image
     """
 
     # Arrange
@@ -1614,7 +1616,7 @@ def test_link_reference_definitions_188():
 @pytest.mark.gfm
 def test_link_reference_definitions_188a():
     """
-    Test case 188a:  variation
+    Test case 188a: variation of 188 with only start
     """
 
     # Arrange
@@ -1629,7 +1631,7 @@ def test_link_reference_definitions_188a():
 @pytest.mark.gfm
 def test_link_reference_definitions_188b():
     """
-    Test case 188b:  variation
+    Test case 188b: variation of 188 with only start and text
     """
 
     # Arrange
@@ -1649,7 +1651,7 @@ def test_link_reference_definitions_188b():
 @pytest.mark.gfm
 def test_link_reference_definitions_188c():
     """
-    Test case 188c:  variation
+    Test case 188c: variation of 188 with only link label
     """
 
     # Arrange
@@ -1670,7 +1672,7 @@ def test_link_reference_definitions_188c():
 @pytest.mark.gfm
 def test_link_reference_definitions_188d():
     """
-    Test case 188d:  variation
+    Test case 188d: variation of 188 with only link label and following colon
     """
 
     # Arrange
@@ -1692,7 +1694,7 @@ def test_link_reference_definitions_188d():
 @pytest.mark.gfm
 def test_link_reference_definitions_188e():
     """
-    Test case 188e:  variation
+    Test case 188e: variation of 188 with only link label and url, and start of title
     """
 
     # Arrange
@@ -1714,7 +1716,7 @@ def test_link_reference_definitions_188e():
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_01():
     """
-    Test case extra 01:  variation
+    Test case extra 01:  LRD within list item
     """
 
     # Arrange
@@ -1736,7 +1738,7 @@ def test_link_reference_definitions_extra_01():
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_01a():
     """
-    Test case extra 01:  variation
+    Test case extra 01a:  variation on 1 with proper indent
     """
 
     # Arrange
@@ -1758,7 +1760,7 @@ def test_link_reference_definitions_extra_01a():
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_01b():
     """
-    Test case extra 01:  variation
+    Test case extra 01b:  variation on 1 with almost proper indent
     """
 
     # Arrange
@@ -1780,7 +1782,7 @@ def test_link_reference_definitions_extra_01b():
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_01c():
     """
-    Test case extra 01:  variation
+    Test case extra 01c:  variation of 1 split across list items
     """
 
     # Arrange
@@ -1812,7 +1814,7 @@ def test_link_reference_definitions_extra_01c():
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_01d():
     """
-    Test case extra 01:  variation
+    Test case extra 01d:  variation of 1 split across ordered list items
     """
 
     # Arrange
@@ -1865,7 +1867,7 @@ def test_link_reference_definitions_extra_02x():
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_02a():
     """
-    Test case extra 02a:  variation
+    Test case extra 02a:  variation of 2 within block quote
     """
 
     # Arrange
@@ -1886,7 +1888,7 @@ def test_link_reference_definitions_extra_02a():
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_02bx():
     """
-    Test case extra 02b:  variation
+    Test case extra 02b:  variation of 2 within different block quote
     """
 
     # Arrange
@@ -1921,7 +1923,7 @@ def test_link_reference_definitions_extra_02bx():
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_02ba():
     """
-    Test case extra 02b:  variation
+    Test case extra 02ba:  variation of 2 within different block quote
     """
 
     # Arrange
@@ -1960,7 +1962,7 @@ def test_link_reference_definitions_extra_02ba():
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_02cx():
     """
-    Test case extra 02c:  variation
+    Test case extra 02c:  variation of 2 within decreasing quote
     """
 
     # Arrange
@@ -1985,7 +1987,7 @@ def test_link_reference_definitions_extra_02cx():
 @pytest.mark.gfm
 def test_link_reference_definitions_extra_02ca():
     """
-    Test case extra 02c:  variation
+    Test case extra 02c:  variation of 2 within more decreasing quote
     """
 
     # Arrange

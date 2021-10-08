@@ -878,7 +878,7 @@ def test_atx_headings_extra_43x():
 @pytest.mark.gfm
 def test_atx_headings_extra_43a():
     """
-    Test case extra 43:  Not quote ATX.
+    Test case extra 43:  Not quote ATX, on either of two possible lines.
     """
 
     # Arrange
@@ -919,7 +919,7 @@ def test_atx_headings_extra_44():
 @pytest.mark.gfm
 def test_atx_headings_extra_44a():
     """
-    Test case extra 44:  Tab character instead of space between the # and text.
+    Test case extra 44:  Tab character instead of space between the # and text at the end.
     """
 
     # Arrange

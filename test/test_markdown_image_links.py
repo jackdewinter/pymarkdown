@@ -28,7 +28,7 @@ def test_image_link_580x():
 @pytest.mark.gfm
 def test_image_link_580a():
     """
-    Test case 580a:  variation
+    Test case 580a:  variation of 580 with apostrophes instead of quotation marks
     """
 
     # Arrange
@@ -47,7 +47,7 @@ def test_image_link_580a():
 @pytest.mark.gfm
 def test_image_link_580b():
     """
-    Test case 580a:  variation
+    Test case 580b:  variation of 580 with parentheses instead of quotation marks
     """
 
     # Arrange
@@ -66,7 +66,7 @@ def test_image_link_580b():
 @pytest.mark.gfm
 def test_image_link_580c():
     """
-    Test case 580c:  variation
+    Test case 580c:  variation of 580 with angle brackets around url
     """
 
     # Arrange
@@ -85,7 +85,8 @@ def test_image_link_580c():
 @pytest.mark.gfm
 def test_image_link_580d():
     """
-    Test case 580d:  variation
+    Test case 580f:  variation of 580 with angle brackets around url and parentheses
+        around title
     """
 
     # Arrange
@@ -106,7 +107,7 @@ def test_image_link_580d():
 @pytest.mark.gfm
 def test_image_link_580e():
     """
-    Test case 580:  (part 1) Syntax for images is like the syntax for links, with one difference
+    Test case 580e:  variation of 580 with text after
     """
 
     # Arrange
@@ -395,7 +396,7 @@ def test_image_link_592():
 @pytest.mark.gfm
 def test_image_link_592a():
     """
-    Test case 592:  (part 1) Collapsed:
+    Test case 592a:  variation of 592 with extra space after
     """
 
     # Arrange
@@ -422,7 +423,7 @@ def test_image_link_592a():
 @pytest.mark.gfm
 def test_image_link_592b():
     """
-    Test case 592:  (part 1) Collapsed:
+    Test case 592a:  variation of 592 with extra space and text after
     """
 
     # Arrange

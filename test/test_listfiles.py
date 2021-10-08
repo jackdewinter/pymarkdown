@@ -37,7 +37,7 @@ optional arguments:
 
 def test_markdown_with_dash_l_only():
     """
-    Test to make sure we get help if '-l' is supplied without any paths
+    Test to make sure we get simple help if '-l' is supplied without any paths
     """
 
     # Arrange
@@ -61,7 +61,7 @@ main.py scan: error: the following arguments are required: path
 
 def test_markdown_with_dash_l_on_bad_path():
     """
-    Test to make sure we get help if '-l' is supplied with a bad path.
+    Test to make sure we get failure text if '-l' is supplied with a bad path.
     """
 
     # Arrange
@@ -86,7 +86,7 @@ def test_markdown_with_dash_l_on_bad_path():
 
 def test_markdown_with_dash_l_on_non_md_directory():
     """
-    Test to make sure we get help if '-l' is supplied with a path containing no md files.
+    Test to make sure we get failure text if '-l' is supplied with a path containing no md files.
     """
 
     # Arrange
@@ -111,7 +111,8 @@ def test_markdown_with_dash_l_on_non_md_directory():
 
 def test_markdown_with_dash_l_on_md_directory():
     """
-    Test to make sure we get help if '-l' is supplied with a path containing a simple md file.
+    Test to make sure we get the path to a single file if '-l' is supplied
+    with a path containing a simple md file.
     """
 
     # Arrange
@@ -136,7 +137,8 @@ def test_markdown_with_dash_l_on_md_directory():
 
 def test_markdown_with_dash_l_on_mixed_directories():
     """
-    Test to make sure we get help if '-l' is supplied with a path containing the md directory and the non-md directory.
+    Test to make sure we get the path to a single file if '-l' is supplied
+    with multiple paths containing a simple md file.
     """
 
     # Arrange
@@ -161,7 +163,7 @@ def test_markdown_with_dash_l_on_mixed_directories():
 
 def test_markdown_with_dash_l_on_non_md_file():
     """
-    Test to make sure we get help if '-l' is supplied with a file path that isn't a md file.
+    Test to make sure we get a failure if '-l' is supplied with a file path that isn't a md file.
     """
 
     # Arrange
@@ -186,7 +188,8 @@ def test_markdown_with_dash_l_on_non_md_file():
 
 def test_markdown_with_dash_l_on_md_file():
     """
-    Test to make sure we get help if '-l' is supplied with a file path that is a simple md file.
+    Test to make sure we a single path to a file if '-l' is supplied with
+    a file path that is a simple md file.
     """
 
     # Arrange
@@ -211,7 +214,8 @@ def test_markdown_with_dash_l_on_md_file():
 
 def test_markdown_with_dash_l_on_mixed_files():
     """
-    Test to make sure we get help if '-l' is supplied with a file path that is a simple md file and one that isn't.
+    Test to make sure we get a failure '-l' is supplied with a file path
+    that is a simple md file and one that isn't.
     """
 
     # Arrange
@@ -241,7 +245,8 @@ def test_markdown_with_dash_l_on_mixed_files():
 
 def test_markdown_with_dash_l_on_globbed_files():
     """
-    Test to make sure we get help if '-l' is supplied with a globbed file path that works.
+    Test to make sure we get a list of valid paths if '-l' is supplied
+    with a globbed file path that works.
     """
 
     # Arrange
@@ -272,7 +277,8 @@ rules/md001/proper_setext_heading_incrementing.md"""
 
 def test_markdown_with_dash_l_on_non_matching_globbed_files():
     """
-    Test to make sure we get help if '-l' is supplied with a globbed file path that works.
+    Test to make sure we get a failure if '-l' is supplied with a
+    globbed file path that works but does not find any matching files.
     """
 
     # Arrange
@@ -298,7 +304,8 @@ def test_markdown_with_dash_l_on_non_matching_globbed_files():
 
 def test_markdown_with_dash_l_on_directory():
     """
-    Test to make sure we get help if '-l' is supplied with a directory.
+    Test to make sure we get a list of paths if '-l' is supplied with a directory
+    containing valid Markdown files.
     """
 
     # Arrange
@@ -329,7 +336,9 @@ def test_markdown_with_dash_l_on_directory():
 
 def test_markdown_with_dash_l_and_dash_r_on_directory():
     """
-    Test to make sure we get help if '-l' and '-r' is supplied with a directory.
+    Test to make sure we get a large list of files if '-l' and '-r' is
+    supplied with a directory that, recursively, contains lots of valid
+    files.
     """
 
     # Arrange

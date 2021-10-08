@@ -442,7 +442,7 @@ def test_thematic_breaks_031():
 @pytest.mark.gfm
 def test_thematic_breaks_031o():
     """
-    Test case 031:  If you want a thematic break in a list item, use a different bullet:
+    Test case 031o:  variation on 31 with ordered list
     """
 
     # Arrange

@@ -4,8 +4,6 @@
 
 ## Priority 2 - Like To Solve Before Initial
 
-- before release, check that all test file commented properly
-
 - documentation for developers
 
 - pragma tests need to remove `disable_consistency_checks=True`
@@ -82,6 +80,8 @@ md010 - tabs "converted"
 - commented out `rule_md_027.py#69` for now
 - test_md027_good_alligned_quote_within_list
 - test_md027_bad_misalligned_quote_within_list
+
+### test_md028_bad_split_block_quote_in_list
 
 ```markdown
 - > This is one section of a block quote

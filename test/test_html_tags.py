@@ -22,7 +22,7 @@ def test_empty_tag_name():
 
 def test_simple_alphabetic_tag_name():
     """
-    Make sure to test a simple valid tag name.
+    Make sure to test a simple alphabetic tag name.
     """
 
     # Arrange
@@ -38,7 +38,7 @@ def test_simple_alphabetic_tag_name():
 
 def test_simple_alphanumeric_tag_name():
     """
-    Make sure to test a simple valid tag name.
+    Make sure to test a simple alphanumeric tag name.
     """
 
     # Arrange
@@ -54,7 +54,7 @@ def test_simple_alphanumeric_tag_name():
 
 def test_simple_upper_case_alphanumeric_tag_name():
     """
-    Make sure to test a simple valid tag name.
+    Make sure to test a simple uppercase alphanumeric tag name.
     """
 
     # Arrange
@@ -70,7 +70,7 @@ def test_simple_upper_case_alphanumeric_tag_name():
 
 def test_simple_mixed_case_alphanumeric_tag_name():
     """
-    Make sure to test a simple valid tag name.
+    Make sure to test a mixed case alphabetic tag name.
     """
 
     # Arrange

@@ -192,7 +192,7 @@ def test_html_blocks_123():
 @pytest.mark.gfm
 def test_html_blocks_123a():
     """
-    Test case 123a:  variation
+    Test case 123a:  variation of 123 within a list
     """
 
     # Arrange
@@ -227,7 +227,7 @@ class="bar">
 @pytest.mark.gfm
 def test_html_blocks_123bx():
     """
-    Test case 123b:  variation
+    Test case 123b:  variation of 123 within a block quote
     """
 
     # Arrange
@@ -260,7 +260,8 @@ class="bar">
 @pytest.mark.gfm
 def test_html_blocks_123ba():
     """
-    Test case 123ba:  variation
+    Test case 123ba:  variation of 123b within a block quote with all
+        lines starting with block quote
     """
 
     # Arrange
@@ -287,7 +288,8 @@ class="bar">
 @pytest.mark.gfm
 def test_html_blocks_123bb():
     """
-    Test case 123bb:  variation
+    Test case 123bb:  variation of 123b within a block quote with all
+        lines starting with block quote, and extra spaces
     """
 
     # Arrange
@@ -314,7 +316,7 @@ def test_html_blocks_123bb():
 @pytest.mark.gfm
 def test_html_blocks_123c():
     """
-    Test case 123c:  variation
+    Test case 123c:  variation of 123 within a SetExt Heading
     """
 
     # Arrange
@@ -337,7 +339,7 @@ class="bar">
 @pytest.mark.gfm
 def test_html_blocks_123d():
     """
-    Test case 123d:  variation
+    Test case 123c:  variation of 123 within a Atx Heading
     """
 
     # Arrange
@@ -848,7 +850,7 @@ foo"""
 @pytest.mark.gfm
 def test_html_blocks_142a():
     """
-    Test case 142:  (part 1) If there is no matching end tag, the block will end at the end of the document (or the enclosing block quote or list item):
+    Test case 142a:  variation of 142 with extra parameter
     """
 
     # Arrange
@@ -909,7 +911,7 @@ foo
 @pytest.mark.gfm
 def test_html_blocks_143a():
     """
-    Test case 143a:  (part 2) If there is no matching end tag, the block will end at the end of the document (or the enclosing block quote or list item):
+    Test case 143a:  variation of 143 with extra line
     """
 
     # Arrange
@@ -943,7 +945,7 @@ bar
 @pytest.mark.gfm
 def test_html_blocks_143b():
     """
-    Test case 143b:  (part 2) If there is no matching end tag, the block will end at the end of the document (or the enclosing block quote or list item):
+    Test case 143b:  variation of 143 with extra two lines
     """
 
     # Arrange
@@ -979,7 +981,7 @@ baz
 @pytest.mark.gfm
 def test_html_blocks_143c():
     """
-    Test case 143c:  (part 2) If there is no matching end tag, the block will end at the end of the document (or the enclosing block quote or list item):
+    Test case 143b:  variation of 143 with extra three lines
     """
 
     # Arrange
@@ -1046,7 +1048,7 @@ def test_html_blocks_144():
 @pytest.mark.gfm
 def test_html_blocks_144a():
     """
-    Test case 144a:  Modification of 144 to add extra paragraph
+    Test case 144a:  Variation of 144 to add extra paragraph
     """
 
     # Arrange
@@ -1590,7 +1592,7 @@ def test_html_blocks_160():
 @pytest.mark.gfm
 def test_html_blocks_160a():
     """
-    Test case 160a:  Test case 160 with the blank lines removed
+    Test case 160a:  variation of 160 with the blank lines removed
     """
 
     # Arrange

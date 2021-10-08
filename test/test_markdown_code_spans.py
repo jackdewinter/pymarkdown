@@ -147,7 +147,7 @@ def test_code_spans_344():
 @pytest.mark.gfm
 def test_code_spans_344a():
     """
-    Test case 344a:  Extension of 344 with a whitespace string that is longer than 2.
+    Test case 344a:  variation of 344 with a whitespace string that is longer than 2.
     """
 
     # Arrange
@@ -191,7 +191,7 @@ baz
 @pytest.mark.gfm
 def test_code_spans_345a():
     """
-    Test case 345a:  variations
+    Test case 345a:  variation of 345 with extra indentation
     """
 
     # Arrange
@@ -216,7 +216,7 @@ baz
 @pytest.mark.gfm
 def test_code_spans_345b():
     """
-    Test case 345b:  variations
+    Test case 345b:  variation of 345 over a single newline
     """
 
     # Arrange
@@ -257,7 +257,7 @@ foo
 @pytest.mark.gfm
 def test_code_spans_346ax():
     """
-    Test case 346a:  variation
+    Test case 346a:  variation of 346 within a list with no indentation
     """
 
     # Arrange
@@ -284,7 +284,7 @@ foo\a
 @pytest.mark.gfm
 def test_code_spans_346aa():
     """
-    Test case 346a:  variation
+    Test case 346aa:  variation of 346a within a list with indentation
     """
 
     # Arrange
@@ -311,7 +311,7 @@ def test_code_spans_346aa():
 @pytest.mark.gfm
 def test_code_spans_346bx():
     """
-    Test case 346a:  variation
+    Test case 346b:  variation of 346 within a block quote with no indentation
     """
 
     # Arrange
@@ -336,7 +336,8 @@ foo
 @pytest.mark.gfm
 def test_code_spans_346ba():
     """
-    Test case 346a:  variation
+    Test case 346ba:  variation of 346b within a block quote with
+        block quotes indentation
     """
 
     # Arrange
@@ -361,7 +362,7 @@ def test_code_spans_346ba():
 @pytest.mark.gfm
 def test_code_spans_346c():
     """
-    Test case 346a:  variation
+    Test case 346c:  variation of 346 within a link label
     """
 
     # Arrange
@@ -390,7 +391,7 @@ foo\a
 @pytest.mark.gfm
 def test_code_spans_346ca():
     """
-    Test case 346a:  variation
+    Test case 346c:  variation of 346c with extra space
     """
 
     # Arrange
@@ -419,7 +420,7 @@ def test_code_spans_346ca():
 @pytest.mark.gfm
 def test_code_spans_346d():
     """
-    Test case 346d:  variation
+    Test case 346:  variation of 346 within a setext heading
     """
 
     # Arrange
@@ -704,7 +705,8 @@ def test_code_spans_359():
 @pytest.mark.gfm
 def test_code_spans_extra_01():
     """
-    Test case 115:
+    Test case extra 01: test case with text before, during, and after
+        the code span, which goes over two lines
     """
 
     # Arrange
