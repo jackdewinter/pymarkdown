@@ -208,22 +208,35 @@ class LinkReferenceDefinitionHelper:
                     lrd_stack_token.copy_of_last_block_quote_markdown_token
                 )
 
-            POGGER.debug(">>XXXXXX>>original_stack_depth:$:", original_stack_depth)
-            POGGER.debug(
-                ">>XXXXXX>>token_stack_depth:$:", len(parser_state.token_stack)
-            )
-            while len(parser_state.token_stack) > original_stack_depth:
-                del parser_state.token_stack[-1]
+            if not did_complete_lrd:
+                POGGER.debug(">>XXXXXX>>original_stack_depth:$:", original_stack_depth)
+                POGGER.debug(
+                    ">>XXXXXX>>token_stack_depth:$:", len(parser_state.token_stack)
+                )
+                POGGER.debug(
+                    ">>XXXXXX>>token_stack(before):$:", parser_state.token_stack
+                )
+                while len(parser_state.token_stack) > original_stack_depth:
+                    del parser_state.token_stack[-1]
+                POGGER.debug(
+                    ">>XXXXXX>>token_stack(after):$:", parser_state.token_stack
+                )
 
-            POGGER.debug(
-                ">>XXXXXX>>original_document_depth:$:", original_document_depth
-            )
-            POGGER.debug(
-                ">>XXXXXX>>token_document_depth:$:",
-                len(parser_state.token_document),
-            )
-            while len(parser_state.token_document) > original_document_depth:
-                del parser_state.token_document[-1]
+                POGGER.debug(
+                    ">>XXXXXX>>original_document_depth:$:", original_document_depth
+                )
+                POGGER.debug(
+                    ">>XXXXXX>>token_document_depth:$:",
+                    len(parser_state.token_document),
+                )
+                POGGER.debug(
+                    ">>XXXXXX>>token_document(before):$:", parser_state.token_document
+                )
+                while len(parser_state.token_document) > original_document_depth:
+                    del parser_state.token_document[-1]
+                POGGER.debug(
+                    ">>XXXXXX>>token_document(after):$:", parser_state.token_document
+                )
 
         if lines_to_requeue:
             requeue_line_info = RequeueLineInfo(
