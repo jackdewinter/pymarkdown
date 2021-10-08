@@ -12,7 +12,8 @@
 
 ### Fixed
 
-- None
+- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/47)
+  - parser: wasn't treating "partial" LRDs as valid, rewinding past their start
 
 ## Version 0.9.1 - Date: 2021-10-06
 

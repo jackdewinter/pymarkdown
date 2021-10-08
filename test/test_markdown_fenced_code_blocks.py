@@ -1478,7 +1478,6 @@ some other text</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_02a():
     """
@@ -1494,10 +1493,12 @@ def test_fenced_code_blocks_extra_02a():
     expected_tokens = [
         "[ulist(1,1):-::2::\n]",
         "[fcode-block(1,3):`:3::::::]",
+        "[end-fcode-block:::True]",
+        "[li(2,1):2::]",
         "[link-ref-def(2,3):True::foo::\n:/url:::::]",
         "[end-ulist:::True]",
         "[fcode-block(4,1):`:3::::::]",
-        "[BLANK(5,1):]",
+        "[text(5,1)::]",
         "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ul>
@@ -1552,7 +1553,6 @@ some other text
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_03a():
     """
@@ -1566,17 +1566,17 @@ def test_fenced_code_blocks_extra_03a():
 ```
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n\n]",
-        "[html-block(1,3)]",
-        "[text(1,3):<script>:]",
-        "[link-ref-def(2,3):True::foo::\n:/url:::::]",
-        "[text(4,1):</script>:]",
-        "[end-html-block:::False]",
+        "[ulist(1,1):-::2::  ]",
+        "[fcode-block(1,3):`:3::::::]",
+        "[text(2,3):[foo]::]",
+        "[end-fcode-block:::True]",
         "[end-ulist:::True]",
-        "[html-block(4,1)]",
-        "[text(4,1):</script>:]",
-        "[end-html-block:::False]",
-        "[BLANK(5,1):]",
+        "[para(3,1):]",
+        "[text(3,1):/url:]",
+        "[end-para:::False]",
+        "[fcode-block(4,1):`:3::::::]",
+        "[text(5,1)::]",
+        "[end-fcode-block:::True]",
     ]
     expected_gfm = """<ul>
 <li>
@@ -1785,7 +1785,6 @@ some other text</p>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_06a():
     """
@@ -1801,6 +1800,8 @@ def test_fenced_code_blocks_extra_06a():
     expected_tokens = [
         "[block-quote(1,1)::> ]",
         "[fcode-block(1,3):`:3::::::]",
+        "[end-fcode-block:::True]",
+        "[end-block-quote:::True]",
         "[link-ref-def(2,3):True:  :foo::\n:/url:::::]",
         "[fcode-block(4,1):`:3::::::]",
         "[end-fcode-block:::True]",
@@ -1811,7 +1812,7 @@ def test_fenced_code_blocks_extra_06a():
 <pre><code></code></pre>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
