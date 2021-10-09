@@ -227,7 +227,7 @@ def test_list_blocks_236():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-# @pytest.mark.skip
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_list_blocks_237x():
     """

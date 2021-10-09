@@ -761,10 +761,6 @@ class ContainerBlockProcessor:
                         # assert False
                         parser_state.token_document.extend(x_tokens)
                         parser_state.token_document.extend(y_tokens)
-                    elif delta:
-                        POGGER.debug("adj_line_to_parse>>$<<", adj_line_to_parse)
-                        adj_line_to_parse = adj_line_to_parse[delta:]
-                        POGGER.debug("adj_line_to_parse>>$<<", adj_line_to_parse)
                     elif (
                         not nested_container_starts.block_index
                         and adj_line_to_parse
@@ -1336,6 +1332,10 @@ class ContainerBlockProcessor:
             new_tokens,
         )
 
+        ignore_lrd_start = (
+            ignore_link_definition_start or parser_state.token_stack[-1].is_html_block
+        )
+
         (
             outer_processed,
             requeue_line_info,
@@ -1345,7 +1345,7 @@ class ContainerBlockProcessor:
             position_marker,
             extracted_whitespace,
             remaining_line_to_parse,
-            ignore_link_definition_start,
+            ignore_lrd_start,
             pre_tokens,
         )
 
