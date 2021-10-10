@@ -1491,11 +1491,16 @@ def test_fenced_code_blocks_extra_02a():
 ```
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::\n]",
+        "[ulist(1,1):-::2::]",
         "[fcode-block(1,3):`:3::::::]",
         "[end-fcode-block:::True]",
         "[li(2,1):2::]",
-        "[link-ref-def(2,3):True::foo::\n:/url:::::]",
+        "[para(2,3):\n]",
+        "[text(2,3):[:]",
+        "[text(2,4):foo:]",
+        "[text(2,7):]:]",
+        "[text(2,8)::\n/url::\n]",
+        "[end-para:::True]",
         "[end-ulist:::True]",
         "[fcode-block(4,1):`:3::::::]",
         "[text(5,1)::]",
@@ -1505,7 +1510,8 @@ def test_fenced_code_blocks_extra_02a():
 <li>
 <pre><code></code></pre>
 </li>
-<li></li>
+<li>[foo]:
+/url</li>
 </ul>
 <pre><code></code></pre>"""
 

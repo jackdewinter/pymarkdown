@@ -80,6 +80,11 @@ class ContainerBlockProcessor:
         ):
             return None, None, None
 
+        if container_depth == 0:
+            parser_state.copy_of_token_stack = []
+            for next_item in parser_state.token_stack:
+                parser_state.copy_of_token_stack.append(next_item)
+
         (
             current_container_blocks,
             adj_ws,
@@ -259,6 +264,7 @@ class ContainerBlockProcessor:
             line_to_parse,
             container_level_tokens,
             used_indent,
+            requeue_line_info,
         ) = ContainerBlockProcessor.__process_list_in_progress(
             parser_state,
             did_process,
@@ -267,6 +273,9 @@ class ContainerBlockProcessor:
             container_level_tokens,
             extracted_whitespace,
         )
+        if requeue_line_info:
+            return None, None, requeue_line_info
+
         # POGGER.debug_with_visible_whitespace(
         #     ">>__process_list_in_progress>>$>>", line_to_parse
         # )
@@ -992,6 +1001,7 @@ class ContainerBlockProcessor:
         extracted_whitespace,
     ):
         used_indent = None
+        requeue_line_info = None
         if not did_process:
             is_list_in_process, ind = LeafBlockProcessor.check_for_list_in_process(
                 parser_state
@@ -1004,6 +1014,7 @@ class ContainerBlockProcessor:
                     container_level_tokens,
                     line_to_parse,
                     used_indent,
+                    requeue_line_info,
                 ) = ListBlockProcessor.list_in_process(
                     parser_state,
                     line_to_parse,
@@ -1013,9 +1024,16 @@ class ContainerBlockProcessor:
                 )
                 POGGER.debug("clt>>line_to_parse>>:$:>>", line_to_parse)
                 POGGER.debug("clt>>used_indent>>:$:>>", used_indent)
+                POGGER.debug("clt>>requeue_line_info>>:$:>>", requeue_line_info)
                 did_process = True
 
-        return did_process, line_to_parse, container_level_tokens, used_indent
+        return (
+            did_process,
+            line_to_parse,
+            container_level_tokens,
+            used_indent,
+            requeue_line_info,
+        )
 
     # pylint: enable=too-many-arguments
 

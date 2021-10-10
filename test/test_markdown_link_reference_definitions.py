@@ -1722,11 +1722,17 @@ def test_link_reference_definitions_extra_01():
 /url"""
     expected_tokens = [
         "[ulist(1,1):-::2::]",
-        "[link-ref-def(1,3):True::foo::\n:/url:::::]",
+        "[para(1,3):\n]",
+        "[text(1,3):[:]",
+        "[text(1,4):foo:]",
+        "[text(1,7):]:]",
+        "[text(1,8)::\n/url::\n]",
+        "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
-<li></li>
+<li>[foo]:
+/url</li>
 </ul>"""
 
     # Act & Assert
@@ -1766,11 +1772,17 @@ def test_link_reference_definitions_extra_01b():
  /url"""
     expected_tokens = [
         "[ulist(1,1):-::2:: ]",
-        "[link-ref-def(1,3):True::foo::\n:/url:::::]",
+        "[para(1,3):\n]",
+        "[text(1,3):[:]",
+        "[text(1,4):foo:]",
+        "[text(1,7):]:]",
+        "[text(1,8)::\n/url::\n]",
+        "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
-<li></li>
+<li>[foo]:
+/url</li>
 </ul>"""
 
     # Act & Assert

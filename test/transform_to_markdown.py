@@ -411,6 +411,7 @@ class TransformToMarkdown:
                     or current_token.is_inline_emphasis
                     or current_token.is_inline_link
                     or current_token.is_inline_image
+                    or current_token.is_inline_raw_html
                 ):
                     special_text_in_list_exception = True
 
