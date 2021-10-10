@@ -216,8 +216,21 @@ class LinkReferenceDefinitionHelper:
                 POGGER.debug(
                     ">>XXXXXX>>token_stack(before):$:", parser_state.token_stack
                 )
-                while len(parser_state.token_stack) > original_stack_depth:
-                    del parser_state.token_stack[-1]
+                POGGER.debug(
+                    ">>XXXXXX>>copy_of_token_stack:$:", parser_state.copy_of_token_stack
+                )
+                POGGER.debug(
+                    ">>lrd_stack_token>>copy_of_token_stack:$:",
+                    lrd_stack_token.copy_of_token_stack,
+                )
+                if len(parser_state.token_stack) >= original_stack_depth:
+                    while len(parser_state.token_stack) > original_stack_depth:
+                        del parser_state.token_stack[-1]
+                else:
+                    while len(parser_state.token_stack):
+                        del parser_state.token_stack[-1]
+                    for next_token in lrd_stack_token.copy_of_token_stack:
+                        parser_state.token_stack.append(next_token)
                 POGGER.debug(
                     ">>XXXXXX>>token_stack(after):$:", parser_state.token_stack
                 )
@@ -449,6 +462,9 @@ class LinkReferenceDefinitionHelper:
             ].copy_of_last_block_quote_markdown_token = (
                 parser_state.copy_of_last_block_quote_markdown_token
             )
+            parser_state.token_stack[
+                -1
+            ].copy_of_token_stack = parser_state.copy_of_token_stack
         POGGER.debug(">>parse_link_reference_definition>>add>:$<<", line_to_store)
         parser_state.token_stack[-1].add_continuation_line(line_to_store)
         parser_state.token_stack[-1].add_unmodified_line(unmodified_line_to_parse)

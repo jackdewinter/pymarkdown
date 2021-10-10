@@ -599,7 +599,10 @@ class ListBlockProcessor:
                     "2>>line_to_parse>>$>>",
                     line_to_parse,
                 )
-                container_level_tokens = ListBlockProcessor.__check_for_list_closures(
+                (
+                    container_level_tokens,
+                    requeue_line_info,
+                ) = ListBlockProcessor.__check_for_list_closures(
                     parser_state,
                     line_to_parse,
                     start_index,
@@ -607,6 +610,12 @@ class ListBlockProcessor:
                     ind,
                     leading_space_length,
                 )
+                POGGER.debug(
+                    "2>>requeue_line_info>>$>>",
+                    requeue_line_info,
+                )
+                if requeue_line_info:
+                    return None, None, None, requeue_line_info
 
                 POGGER.debug(
                     "2>>__check_for_list_closures>>$>>",
@@ -677,7 +686,7 @@ class ListBlockProcessor:
                 ">>adj_after>>$<<",
                 parser_state.token_stack[ind].matching_markdown_token,
             )
-        return container_level_tokens, line_to_parse, used_indent
+        return container_level_tokens, line_to_parse, used_indent, None
 
     # pylint: enable=too-many-statements, too-many-locals
 
@@ -1182,6 +1191,7 @@ class ListBlockProcessor:
         the closing of some of the sublists.
         """
         container_level_tokens = []
+        requeue_line_info = None
         POGGER.debug("ws(naa)>>line_to_parse>>$<<", line_to_parse)
         POGGER.debug("ws(naa)>>stack>>$", parser_state.token_stack)
         POGGER.debug("ws(naa)>>tokens>>$", parser_state.token_document)
@@ -1189,9 +1199,7 @@ class ListBlockProcessor:
         is_leaf_block_start = LeafBlockProcessor.is_paragraph_ending_leaf_block_start(
             parser_state, line_to_parse, start_index, extracted_whitespace
         )
-        if (
-            not parser_state.token_stack[-1].is_paragraph or is_leaf_block_start
-        ) and not parser_state.token_stack[-1].was_link_definition_started:
+        if not parser_state.token_stack[-1].is_paragraph or is_leaf_block_start:
             POGGER.debug("ws (normal and adjusted) not enough to continue")
 
             POGGER.debug("lsl $", leading_space_length)
@@ -1216,10 +1224,26 @@ class ListBlockProcessor:
 
             POGGER.debug("lsl $", parser_state.token_stack[search_index])
 
-            container_level_tokens, _ = parser_state.close_open_blocks_fn(
-                parser_state, until_this_index=search_index, include_lists=True
+            (
+                container_level_tokens,
+                requeue_line_info,
+            ) = parser_state.close_open_blocks_fn(
+                parser_state,
+                until_this_index=search_index,
+                include_lists=True,
+                caller_can_handle_requeue=True,
             )
             POGGER.debug("container_level_tokens>$>", container_level_tokens)
-        return container_level_tokens
+            if requeue_line_info:
+                POGGER.debug("requeue_line_info>$>", requeue_line_info.lines_to_requeue)
+                POGGER.debug(
+                    "original_line_to_parse>$>", parser_state.original_line_to_parse
+                )
+                assert len(requeue_line_info.lines_to_requeue) > 1
+                assert not requeue_line_info.lines_to_requeue[0]
+                requeue_line_info.lines_to_requeue[
+                    0
+                ] = parser_state.original_line_to_parse
+        return container_level_tokens, requeue_line_info
 
     # pylint: enable=too-many-arguments

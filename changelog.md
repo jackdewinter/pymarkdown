@@ -12,8 +12,12 @@
 
 ### Fixed
 
-- [Fixed](https://github.com/jackdewinter/pymarkdown/issues/47)
+- [Fixed - Issue 47](https://github.com/jackdewinter/pymarkdown/issues/47)
   - parser: wasn't treating "partial" LRDs as valid, rewinding past their start
+- [Fixed - Issue 49](https://github.com/jackdewinter/pymarkdown/issues/49)
+  - parser: aborting a LRD within a list was not generating correct reset state
+  - scenario tests: addressed same issue in fenced code block and LRD tests
+  - issue: added [Issue 50](https://github.com/jackdewinter/pymarkdown/issues/50) to test with extra levels
 
 ## Version 0.9.1 - Date: 2021-10-06
 

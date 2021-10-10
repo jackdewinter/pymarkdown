@@ -466,11 +466,13 @@ class LinkDefinitionStackToken(StackToken):
             self.last_block_quote_stack_token,
             self.last_block_quote_markdown_token_index,
             self.copy_of_last_block_quote_markdown_token,
+            self.copy_of_token_stack,
         ) = (
             extracted_whitespace,
             [],
             [],
             position_marker,
+            None,
             None,
             None,
             None,

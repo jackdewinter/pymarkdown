@@ -1836,7 +1836,7 @@ def test_html_blocks_extra_01a():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
+# @pytest.mark.skip
 @pytest.mark.gfm
 def test_html_blocks_extra_02x():
     """
@@ -1867,15 +1867,14 @@ some other text
 <script>
 </li>
 <li>some text
-some other text</li>
-</ul>
-</script>"""
+some other text
+</script></li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_html_blocks_extra_02a():
     """
@@ -1888,24 +1887,113 @@ def test_html_blocks_extra_02a():
 /url
 </script>
 """
+
     expected_tokens = [
         "[ulist(1,1):-::2::\n]",
         "[html-block(1,3)]",
         "[text(1,3):<script>:]",
-        "[link-ref-def(2,3):True::foo::\n:/url:::::]",
-        "[end-ulist:::True]",
-        "[html-block(4,1)]",
-        "[text(4,1):</script>:]",
-        "[end-html-block:::False]",
+        "[end-html-block:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n\n]",
+        "[text(2,3):[:]",
+        "[text(2,4):foo:]",
+        "[text(2,7):]:]",
+        "[text(2,8)::\n/url\n::\n\n]",
+        "[raw-html(4,1):/script]",
+        "[end-para:::True]",
         "[BLANK(5,1):]",
+        "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>
 <script>
 </li>
-<li></li>
-</ul>
-</script>"""
+<li>[foo]:
+/url
+</script></li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_02b():
+    """
+    Test case extra 02:  variation of 1 where list already opened
+    """
+
+    # Arrange
+    source_markdown = """- <script>
+- [foo]:
+ /url
+ script
+"""
+
+    expected_tokens = [
+        "[ulist(1,1):-::2:: \n ]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[end-html-block:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n\n]",
+        "[text(2,3):[:]",
+        "[text(2,4):foo:]",
+        "[text(2,7):]:]",
+        "[text(2,8)::\n/url\nscript::\n\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<script>
+</li>
+<li>[foo]:
+/url
+script</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_html_blocks_extra_02c():
+    """
+    Test case extra 02:  variation of 1 where list already opened
+    """
+
+    # Arrange
+    source_markdown = """- <script>
+- [foo]:
+/url
+script
+"""
+
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[end-html-block:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n\n]",
+        "[text(2,3):[:]",
+        "[text(2,4):foo:]",
+        "[text(2,7):]:]",
+        "[text(2,8)::\n/url\nscript::\n\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<script>
+</li>
+<li>[foo]:
+/url
+script</li>
+</ul>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1948,7 +2036,6 @@ some text
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_html_blocks_extra_03a():
     """
@@ -1962,16 +2049,15 @@ def test_html_blocks_extra_03a():
 </script>
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n\n]",
+        "[ulist(1,1):-::2::  ]",
         "[html-block(1,3)]",
-        "[text(1,3):<script>:]",
-        "[link-ref-def(2,3):True::foo::\n:/url:::::]",
-        "[text(4,1):</script>:]",
-        "[end-html-block:::False]",
+        "[text(1,3):<script>\n[foo]::]",
+        "[end-html-block:::True]",
         "[end-ulist:::True]",
-        "[html-block(4,1)]",
-        "[text(4,1):</script>:]",
-        "[end-html-block:::False]",
+        "[para(3,1):\n]",
+        "[text(3,1):/url\n::\n]",
+        "[raw-html(4,1):/script]",
+        "[end-para:::True]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<ul>
@@ -2014,7 +2100,6 @@ some other text
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_html_blocks_extra_04a():
     """
@@ -2029,13 +2114,7 @@ def test_html_blocks_extra_04a():
 """
     expected_tokens = [
         "[html-block(1,1)]",
-        "[text(1,1):<script>:]",
-        "[end-html-block:::True]",
-        "[block-quote(2,1)::> \n\n]",
-        "[link-ref-def(2,3):True::foo::\n:/url:::::]",
-        "[end-block-quote:::True]",
-        "[html-block(4,1)]",
-        "[text(4,1):</script>:]",
+        "[text(1,1):<script>\n> [foo]:\n/url\n</script>:]",
         "[end-html-block:::False]",
         "[BLANK(5,1):]",
     ]
@@ -2083,7 +2162,6 @@ some text
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_html_blocks_extra_05a():
     """
@@ -2097,13 +2175,15 @@ def test_html_blocks_extra_05a():
 </script>
 """
     expected_tokens = [
-        "[block-quote(1,1)::> \n> \n\n\n]",
+        "[block-quote(1,1)::> \n> ]",
         "[html-block(1,3)]",
-        "[text(1,3):<script>:]",
-        "[link-ref-def(2,3):True::foo::\n:/url:::::]",
-        "[text(4,1):</script>:]",
-        "[end-html-block:::False]",
+        "[text(1,3):<script>\n[foo]::]",
+        "[end-html-block:::True]",
         "[end-block-quote:::True]",
+        "[para(3,1):\n]",
+        "[text(3,1):/url\n::\n]",
+        "[raw-html(4,1):/script]",
+        "[end-para:::True]",
         "[BLANK(5,1):]",
     ]
     expected_gfm = """<blockquote>
@@ -2114,7 +2194,7 @@ def test_html_blocks_extra_05a():
 </script></p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -2152,11 +2232,14 @@ some other text
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_html_blocks_extra_06a():
     """
     Test case extra 05:  variation of 4 where list already opened but no new list item
+
+    NOTE: Due to https://talk.commonmark.org/t/block-quotes-laziness-and-link-reference-definitions/3751
+          the GFM output has been adjusted to compensate for PyMarkdown using a token and not parsing
+          the text afterwards.
     """
 
     # Arrange
@@ -2169,6 +2252,8 @@ def test_html_blocks_extra_06a():
         "[block-quote(1,1)::> ]",
         "[html-block(1,3)]",
         "[text(1,3):<script>:]",
+        "[end-html-block:::True]",
+        "[end-block-quote:::True]",
         "[link-ref-def(2,3):True:  :foo::\n:/url:::::]",
         "[html-block(4,1)]",
         "[text(4,1):</script>:]",
@@ -2178,7 +2263,7 @@ def test_html_blocks_extra_06a():
     expected_gfm = """<blockquote>
 <script>
 </blockquote>
-<p></script></p>"""
+</script>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
