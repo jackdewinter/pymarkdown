@@ -18,6 +18,8 @@
   - parser: aborting a LRD within a list was not generating correct reset state
   - scenario tests: addressed same issue in fenced code block and LRD tests
   - issue: added [Issue 50](https://github.com/jackdewinter/pymarkdown/issues/50) to test with extra levels
+- [Fixed - Issue 51](https://github.com/jackdewinter/pymarkdown/issues/51)
+  - parser: not handling list starts properly where the list indent was less than the line before it
 
 ## Version 0.9.1 - Date: 2021-10-06
 
