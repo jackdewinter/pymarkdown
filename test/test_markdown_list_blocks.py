@@ -227,7 +227,7 @@ def test_list_blocks_236():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-# @pytest.mark.skip
+@pytest.mark.skip
 @pytest.mark.gfm
 def test_list_blocks_237x():
     """
@@ -3662,9 +3662,8 @@ def</li>
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
-def test_list_blocks_extra_6x():
+def test_list_blocks_extra_6xx():
     """
     Test case 06:  the sublist is properly idented, but the start is extra
                    indented to right justify the list
@@ -3684,12 +3683,12 @@ def test_list_blocks_extra_6x():
         "[para(2,8):]",
         "[text(2,8):Item 1a:]",
         "[end-para:::True]",
-        "[end-olist:::True]",
         "[li(3,4):7:   :10]",
         "[para(3,8):]",
         "[text(3,8):Item 1b:]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
+        "[end-olist:::True]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
@@ -3702,12 +3701,110 @@ def test_list_blocks_extra_6x():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
-def test_list_blocks_extra_6a():
+def test_list_blocks_extra_6xa():
+    """
+    Test case 06:  the sublist is properly idented, but the start is extra
+                   indented to right justify the list
+    """
+
+    # Arrange
+    source_markdown = """1. Item 1
+    1. Item 1a
+    10. Item 1b
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):Item 1:]",
+        "[end-para:::True]",
+        "[olist(2,5):.:1:7:    ]",
+        "[para(2,8):]",
+        "[text(2,8):Item 1a:]",
+        "[end-para:::True]",
+        "[li(3,5):8:    :10]",
+        "[para(3,9):]",
+        "[text(3,9):Item 1b:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Item 1
+<ol>
+<li>Item 1a</li>
+<li>Item 1b</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_6xb():
+    """
+    Test case 06:  the sublist is properly idented, but the start is extra
+                   indented to right justify the list
+    """
+
+    # Arrange
+    source_markdown = """1. Item 1
+      1. Item 1a
+     10. Item 1b
+    100. Item 1c
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):Item 1:]",
+        "[end-para:::True]",
+        "[olist(2,7):.:1:9:      ]",
+        "[para(2,10):]",
+        "[text(2,10):Item 1a:]",
+        "[end-para:::True]",
+        "[li(3,6):9:     :10]",
+        "[para(3,10):]",
+        "[text(3,10):Item 1b:]",
+        "[end-para:::True]",
+        "[li(4,5):9:    :100]",
+        "[para(4,10):]",
+        "[text(4,10):Item 1c:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Item 1
+<ol>
+<li>Item 1a</li>
+<li>Item 1b</li>
+<li>Item 1c</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown,
+        expected_gfm,
+        expected_tokens,
+        disable_consistency_checks=True,
+    )
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_6ax():
     """
     Test case 06:  the sublist is properly idented, but the start is extra
                    indented to right justify the list
@@ -3723,9 +3820,13 @@ def test_list_blocks_extra_6a():
         "[para(1,4):]",
         "[text(1,4):Item 1:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :    ]",
-        "[para(2,7):\n]",
-        "[text(2,7):Item 1a\n10. Item 1b::\n]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[text(2,7):Item 1a:]",
+        "[end-para:::True]",
+        "[li(3,5):8:    :10]",
+        "[para(3,9):]",
+        "[text(3,9):Item 1b:]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
         "[end-olist:::True]",
@@ -3741,4 +3842,178 @@ def test_list_blocks_extra_6a():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_6aa():
+    """
+    Test case 06:  the sublist is properly idented, but the start is extra
+                   indented to right justify the list
+    """
+
+    # Arrange
+    source_markdown = """1. Item 1
+    1. Item 1a
+      1. Item 1b
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):Item 1:]",
+        "[end-para:::True]",
+        "[olist(2,5):.:1:7:    ]",
+        "[para(2,8):]",
+        "[text(2,8):Item 1a:]",
+        "[end-para:::True]",
+        "[li(3,7):9:      :1]",
+        "[para(3,10):]",
+        "[text(3,10):Item 1b:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Item 1
+<ol>
+<li>Item 1a</li>
+<li>Item 1b</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_6ab():
+    """
+    Test case 06:  the sublist is properly idented, but the start is extra
+                   indented to right justify the list
+    """
+
+    # Arrange
+    source_markdown = """1. Item 1
+    1. Item 1a
+       1. Item 1b
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):Item 1:]",
+        "[end-para:::True]",
+        "[olist(2,5):.:1:7:    ]",
+        "[para(2,8):]",
+        "[text(2,8):Item 1a:]",
+        "[end-para:::True]",
+        "[olist(3,8):.:1:10:       ]",
+        "[para(3,11):]",
+        "[text(3,11):Item 1b:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Item 1
+<ol>
+<li>Item 1a
+<ol>
+<li>Item 1b</li>
+</ol>
+</li>
+</ol>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_6ac():
+    """
+    Test case 06:  the sublist is properly idented, but the start is extra
+                   indented to right justify the list
+    """
+
+    # Arrange
+    source_markdown = """1. Item 1
+   - Item 1a
+    - Item 1b
+"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):Item 1:]",
+        "[end-para:::True]",
+        "[ulist(2,4):-::5:   ]",
+        "[para(2,6):]",
+        "[text(2,6):Item 1a:]",
+        "[end-para:::True]",
+        "[li(3,5):6:    :]",
+        "[para(3,7):]",
+        "[text(3,7):Item 1b:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Item 1
+<ul>
+<li>Item 1a</li>
+<li>Item 1b</li>
+</ul>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_6ad():
+    """
+    Test case 06:  the sublist is properly idented, but the start is extra
+                   indented to right justify the list
+    """
+
+    # Arrange
+    source_markdown = """- Item 1
+  1. Item 1a
+    2. Item 1b
+"""
+    expected_tokens = [
+        "[ulist(1,1):-::2:]",
+        "[para(1,3):]",
+        "[text(1,3):Item 1:]",
+        "[end-para:::True]",
+        "[olist(2,3):.:1:5:  ]",
+        "[para(2,6):]",
+        "[text(2,6):Item 1a:]",
+        "[end-para:::True]",
+        "[li(3,5):7:    :2]",
+        "[para(3,8):]",
+        "[text(3,8):Item 1b:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>Item 1
+<ol>
+<li>Item 1a</li>
+<li>Item 1b</li>
+</ol>
+</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

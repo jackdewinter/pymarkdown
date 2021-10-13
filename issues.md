@@ -28,19 +28,6 @@
 - take `__consume_text_for_image_alt_text` and other functions like it and move as much as possible into token classes
   - TransformToGfmListLooseness.__handle_block_quote_start
 
-- LRD + FCB in list/block
-  - test_fenced_code_blocks_extra_02a
-  - test_fenced_code_blocks_extra_03a
-  - test_fenced_code_blocks_extra_06a
-- LRD + HTML in list/block
-  - test_html_blocks_extra_02x
-  - test_html_blocks_extra_02a
-  - test_html_blocks_extra_03a
-  - test_html_blocks_extra_04a
-  - test_html_blocks_extra_05a
-  - test_html_blocks_extra_06a
-- same as these, but with an extra level of list or block
-
 ### if time 270, 271, 237, 238
 
 - with list item

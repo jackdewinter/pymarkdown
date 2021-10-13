@@ -877,6 +877,7 @@ class ParserState:
             self.__no_para_start_if_empty,
         ) = (None, None, None, None, None, None, None, False)
         self.nested_list_start = None
+        self.copy_of_token_stack = None
 
     @property
     def token_stack(self):

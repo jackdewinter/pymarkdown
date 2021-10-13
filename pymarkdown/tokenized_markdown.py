@@ -371,7 +371,9 @@ class TokenizedMarkdown:
                 ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
                     parser_state, empty_position_marker, "", "", "", 0, 0
                 )
-                POGGER.debug("BOOOM")
+                POGGER.debug(
+                    "BOOOM: caller_can_handle_requeue=$", caller_can_handle_requeue
+                )
                 if (
                     caller_can_handle_requeue
                     and requeue_line_info
