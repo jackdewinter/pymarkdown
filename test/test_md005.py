@@ -9,8 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md005_good_unordered_list_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    is only level 1 unordered lists with no indentation.
     """
 
     # Arrange
@@ -36,8 +36,8 @@ def test_md005_good_unordered_list_single_level():
 @pytest.mark.rules
 def test_md005_bad_unordered_list_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists with 1 indent before the second list.
     """
 
     # Arrange
@@ -69,8 +69,9 @@ def test_md005_bad_unordered_list_single_level():
 @pytest.mark.rules
 def test_md005_good_unordered_list_double_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    is level 1 and 2 unordered lists, both with consistent left-aligned
+    indentation.
     """
 
     # Arrange
@@ -96,8 +97,9 @@ def test_md005_good_unordered_list_double_level():
 @pytest.mark.rules
 def test_md005_bad_unordered_list_double_level_bad_first():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does trigger with a document that
+    is has level 1 and 2 unordered lists with inconsistent indentation
+    at the first level.
     """
 
     # Arrange
@@ -129,8 +131,9 @@ def test_md005_bad_unordered_list_double_level_bad_first():
 @pytest.mark.rules
 def test_md005_bad_unordered_list_double_level_bad_second():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does trigger with a document that
+    is has level 1 and 2 unordered lists with inconsistent indentation
+    at the second level.
     """
 
     # Arrange
@@ -162,8 +165,8 @@ def test_md005_bad_unordered_list_double_level_bad_second():
 @pytest.mark.rules
 def test_md005_good_unordered_list_separate_lists():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    has level 1 and 2 unordered lists with consistent indentation.
     """
 
     # Arrange
@@ -191,8 +194,8 @@ def test_md005_good_unordered_list_separate_lists():
 @pytest.mark.rules
 def test_md005_good_ordered_list_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    has level 1 ordered lists with consistent indentation.
     """
 
     # Arrange
@@ -218,8 +221,8 @@ def test_md005_good_ordered_list_single_level():
 @pytest.mark.rules
 def test_md005_bad_ordered_list_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does trigger with a document that
+    has level 1 ordered lists with inconsistent indentation.
     """
 
     # Arrange
@@ -249,8 +252,9 @@ def test_md005_bad_ordered_list_single_level():
 @pytest.mark.rules
 def test_md005_good_ordered_list_single_level_widths():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    has level 1 ordered lists with consistent indentation with either
+    left or right alignment.
     """
 
     # Arrange
@@ -278,8 +282,9 @@ def test_md005_good_ordered_list_single_level_widths():
 @pytest.mark.rules
 def test_md005_bad_ordered_list_single_level_widths():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does trigger with a document that
+    has level 1 ordered lists with inconsistent indentation with either
+    left alignment.
     """
 
     # Arrange
@@ -311,8 +316,8 @@ def test_md005_bad_ordered_list_single_level_widths():
 @pytest.mark.rules
 def test_md005_good_ordered_list_single_level_widths_right():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    has level 1 ordered lists with consistent indentation and right alignment.
     """
 
     # Arrange
@@ -340,8 +345,9 @@ def test_md005_good_ordered_list_single_level_widths_right():
 @pytest.mark.rules
 def test_md005_bad_ordered_list_single_level_widths_right():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does trigger with a document that
+    has level 1 ordered lists with inconsistent indentation with either
+    right alignment.
     """
 
     # Arrange
@@ -373,8 +379,8 @@ def test_md005_bad_ordered_list_single_level_widths_right():
 @pytest.mark.rules
 def test_md005_good_ordered_list_single_level_short_widths_right():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    has level 1 ordered lists with consistent indentation and right alignment.
     """
 
     # Arrange
@@ -402,8 +408,8 @@ def test_md005_good_ordered_list_single_level_short_widths_right():
 @pytest.mark.rules
 def test_md005_good_ordered_list_separate_single_level_short_widths_right():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    has two level 1 ordered lists with consistent indentation and right alignment.
     """
 
     # Arrange
@@ -431,8 +437,8 @@ def test_md005_good_ordered_list_separate_single_level_short_widths_right():
 @pytest.mark.rules
 def test_md005_good_ordered_list_separate_single_level_short_widths():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    has two level 1 ordered lists with consistent indentation and left alignment.
     """
 
     # Arrange
@@ -460,8 +466,8 @@ def test_md005_good_ordered_list_separate_single_level_short_widths():
 @pytest.mark.rules
 def test_md005_good_ordered_list_double_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    has two level 1 ordered lists with consistent indentation and left alignment.
     """
 
     # Arrange
@@ -490,8 +496,8 @@ def test_md005_good_ordered_list_double_level():
 @pytest.mark.skip
 def test_md005_good_ordered_list_double_level_right():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    has two level 1 ordered lists with consistent indentation and right alignment.
     """
 
     # Arrange
@@ -518,8 +524,8 @@ def test_md005_good_ordered_list_double_level_right():
 @pytest.mark.skip
 def test_md005_bad_ordered_list_double_level_weirdx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does trigger with a document that
+    has two level 1 ordered lists with consistent indentation and weird alignment.
     """
 
     # Arrange
@@ -546,8 +552,8 @@ def test_md005_bad_ordered_list_double_level_weirdx():
 @pytest.mark.rules
 def test_md005_bad_ordered_list_double_level_weirder():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md005 directory that has...
+    Test to make sure this rule does trigger with a document that
+    has two level 1 ordered lists with consistent indentation and weirder alignment.
     """
 
     # Arrange

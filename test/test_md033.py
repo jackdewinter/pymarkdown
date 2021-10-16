@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD026 rule.
+Module to provide tests related to the MD033 rule.
 """
 from test.markdown_scanner import MarkdownScanner
 
@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md033_bad_configuration_allowed_elements():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    allowed_elements value with an integer that is not a string.
     """
 
     # Arrange
@@ -43,9 +42,8 @@ def test_md033_bad_configuration_allowed_elements():
 @pytest.mark.rules
 def test_md033_bad_configuration_allow_first_image_element():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    allow_first_image_element value with an integer that is not a boolean.
     """
 
     # Arrange
@@ -77,9 +75,8 @@ def test_md033_bad_configuration_allow_first_image_element():
 @pytest.mark.rules
 def test_md033_bad_html_block_present():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains html blocks.
     """
 
     # Arrange
@@ -117,9 +114,8 @@ def test_md033_bad_html_block_present():
 @pytest.mark.rules
 def test_md033_bad_html_block_present_with_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains html blocks with emptied out allowed_elements.
     """
 
     # Arrange
@@ -168,9 +164,8 @@ def test_md033_bad_html_block_present_with_configuration():
 @pytest.mark.rules
 def test_md033_bad_html_block_present_with_other_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains html blocks with alternate allowed_elements.
     """
 
     # Arrange
@@ -210,9 +205,8 @@ def test_md033_bad_html_block_present_with_other_configuration():
 @pytest.mark.rules
 def test_md033_bad_inline_html_present():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains raw html.
     """
 
     # Arrange
@@ -241,9 +235,8 @@ def test_md033_bad_inline_html_present():
 @pytest.mark.rules
 def test_md033_bad_html_in_atx_heading():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains raw html in an atx heading.
     """
 
     # Arrange
@@ -276,9 +269,8 @@ def test_md033_bad_html_in_atx_heading():
 @pytest.mark.rules
 def test_md033_good_html_comment():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains an hTML comment block.
     """
 
     # Arrange
@@ -304,9 +296,8 @@ def test_md033_good_html_comment():
 @pytest.mark.rules
 def test_md033_good_html_image_heading():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a html block image heading.
     """
 
     # Arrange
@@ -332,9 +323,9 @@ def test_md033_good_html_image_heading():
 @pytest.mark.rules
 def test_md033_good_html_image_heading_with_config():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a html block image heading and configuration to turn
+    that support off.
     """
 
     # Arrange
@@ -367,9 +358,8 @@ def test_md033_good_html_image_heading_with_config():
 @pytest.mark.rules
 def test_md033_bad_html_heading():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a bad html block image heading.
     """
 
     # Arrange
@@ -400,9 +390,8 @@ def test_md033_bad_html_heading():
 @pytest.mark.rules
 def test_md033_bad_html_image_heading_blank():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a bad html block image heading.
     """
 
     # Arrange
@@ -432,9 +421,8 @@ def test_md033_bad_html_image_heading_blank():
 @pytest.mark.rules
 def test_md033_bad_html_image_with_other():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a bad html block image heading.
     """
 
     # Arrange
@@ -464,9 +452,8 @@ def test_md033_bad_html_image_with_other():
 @pytest.mark.rules
 def test_md033_good_convoluted():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a weird html block.
     """
 
     # Arrange
@@ -492,9 +479,8 @@ def test_md033_good_convoluted():
 @pytest.mark.rules
 def test_md033_bad_html_dangling():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a html block that is opened but not closed.
     """
 
     # Arrange

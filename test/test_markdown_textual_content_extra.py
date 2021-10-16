@@ -10,7 +10,7 @@ from .utils import act_and_assert
 @pytest.mark.gfm
 def test_textual_content_extra_1():
     """
-    Test case extra 1: special characters.
+    Test case extra 1: special characters should be escaped
     """
 
     # Arrange
@@ -86,7 +86,7 @@ def test_textual_content_extra_4():
 @pytest.mark.gfm
 def test_textual_content_extra_5():
     """
-    Test case extra 4: Multiple alert characters and actual replacements in atx
+    Test case extra 5: Multiple alert characters and actual replacements in atx
     """
 
     # Arrange
@@ -105,7 +105,7 @@ def test_textual_content_extra_5():
 @pytest.mark.gfm
 def test_textual_content_extra_6():
     """
-    Test case extra 4: Multiple alert characters and actual replacements in setext
+    Test case extra 6: Multiple alert characters and actual replacements in setext
     """
 
     # Arrange
@@ -125,7 +125,7 @@ def test_textual_content_extra_6():
 @pytest.mark.gfm
 def test_textual_content_extra_7():
     """
-    Test case extra 4: Multiple alert characters and actual replacements
+    Test case extra 7: Multiple alert characters and actual replacements
     """
 
     # Arrange
@@ -144,7 +144,7 @@ def test_textual_content_extra_7():
 @pytest.mark.gfm
 def test_textual_content_extra_8():
     """
-    Test case extra 8: Single backspace
+    Test case extra 8: Single backspace should be escaped
     """
 
     # Arrange

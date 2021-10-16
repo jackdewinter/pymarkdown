@@ -31,7 +31,7 @@ def test_raw_html_632():
 @pytest.mark.gfm
 def test_raw_html_632a():
     """
-    Test case 632a:  Here are some simple open tags:
+    Test case 632a:  variation of 632 with text between tags
     """
 
     # Arrange
@@ -98,7 +98,7 @@ data="foo" ></p>"""
 @pytest.mark.gfm
 def test_raw_html_634a():
     """
-    Test case 634a:  variation
+    Test case 634a:  variation of 634 in list
     """
 
     # Arrange
@@ -125,7 +125,7 @@ data="foo" ><c></li>
 @pytest.mark.gfm
 def test_raw_html_634bx():
     """
-    Test case 634b:  variation
+    Test case 634b:  variation of 634 in block quote
     """
 
     # Arrange
@@ -152,7 +152,7 @@ data="foo" ><c></p>
 @pytest.mark.gfm
 def test_raw_html_634ba():
     """
-    Test case 634ba:  variation
+    Test case 634ba:  variation of 634 in block quote
     """
 
     # Arrange
@@ -181,7 +181,7 @@ data="foo" ><c></p>
 @pytest.mark.gfm
 def test_raw_html_634bb():
     """
-    Test case 634bb:  variation
+    Test case 634bb:  variation of 634 in block quote
     """
 
     # Arrange
@@ -210,7 +210,7 @@ data="foo" ><c></p>
 @pytest.mark.gfm
 def test_raw_html_634c():
     """
-    Test case 634c:  variation
+    Test case 634c:  variation of 634 in setext
     """
 
     # Arrange
@@ -234,7 +234,7 @@ data="foo" ><c></h2>"""
 @pytest.mark.gfm
 def test_raw_html_634d():
     """
-    Test case 634c:  variation
+    Test case 634c:  variation of 634 in atx
     """
 
     # Arrange
@@ -447,7 +447,7 @@ def test_raw_html_642():
 @pytest.mark.gfm
 def test_raw_html_642a():
     """
-    Test case 642a:  closing tag character without a valid closing tag name
+    Test case 642a:  variation on 642 with a closing tag character without a valid closing tag name
     """
 
     # Arrange
@@ -507,7 +507,7 @@ comment - with hyphen --></p>"""
 @pytest.mark.gfm
 def test_raw_html_644a():
     """
-    Test case 644a:  variation with space
+    Test case 644a:  variation of 644 with extra indent
     """
 
     # Arrange
@@ -529,7 +529,7 @@ comment - with hyphen --></p>"""
 @pytest.mark.gfm
 def test_raw_html_644aa():
     """
-    Test case 644aa:  variation with space
+    Test case 644a:  variation of 644 with extra indent and trailing text
     """
 
     # Arrange
@@ -552,7 +552,7 @@ comment - with hyphen -->bar</p>"""
 @pytest.mark.gfm
 def test_raw_html_644b():
     """
-    Test case 644b:  variation with space
+    Test case 644b:  variation of 644 with extra indent and trailing text
     """
 
     # Arrange
@@ -577,7 +577,7 @@ bar</p>"""
 @pytest.mark.gfm
 def test_raw_html_644c():
     """
-    Test case 644c:  variation with space
+    Test case 644c:  variation of 644 with comment text
     """
 
     # Arrange
@@ -712,7 +712,7 @@ def test_raw_html_648():
 @pytest.mark.gfm
 def test_raw_html_648a():
     """
-    Test case 648:  Declarations:
+    Test case 648a:  variation of 644 with shorter
     """
 
     # Arrange

@@ -11,7 +11,8 @@ from .utils import write_temporary_configuration
 
 def test_markdown_with_extensions_only():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    only shows the extensions help related information.
     """
 
     # Arrange
@@ -44,7 +45,8 @@ optional arguments:
 
 def test_markdown_with_extensions_list_only():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    only shows the installed extensions when asked for a list.
     """
 
     # Arrange
@@ -73,7 +75,9 @@ def test_markdown_with_extensions_list_only():
 
 def test_markdown_with_extensions_list_only_all():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    only shows the installed extensions when asked for a list.
+    With the -all flag.
     """
 
     # Arrange
@@ -111,7 +115,9 @@ def test_markdown_with_extensions_list_only_all():
 
 def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    only shows the installed extensions when asked for a list.
+    With a globbed name.
     """
 
     # Arrange
@@ -139,7 +145,9 @@ def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r():
 
 def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r_and_configuration_true():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    only shows the installed extensions when asked for a list.
+    With globbed name and enabled extension.
     """
 
     # Arrange
@@ -174,7 +182,9 @@ def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r_and_configur
 
 def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r_and_configuration_false():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    only shows the installed extensions when asked for a list.
+    With globbed and disabled extension.
     """
 
     # Arrange
@@ -209,7 +219,9 @@ def test_markdown_with_extensions_list_and_filter_by_id_ends_with_r_and_configur
 
 def test_markdown_with_extensions_error_during_configuration():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    shows the exception text when the initialization fails due
+    to an exception.
     """
 
     # Arrange
@@ -242,7 +254,9 @@ blah
 
 def test_markdown_with_extensions_value_error_during_configuration():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    shows the exception text when the configuration fails due
+    to an exception.
     """
 
     # Arrange
@@ -275,7 +289,8 @@ blah
 
 def test_markdown_with_extensions_and_no_error_during_configuration():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    list the exception text when the initialization does not fail.
     """
 
     # Arrange
@@ -312,7 +327,9 @@ def test_markdown_with_extensions_and_no_error_during_configuration():
 
 def test_markdown_with_extensions_list_and_filter_by_id_ends_with_non_sequence():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    lists the matching items (none) when presented with an identifier
+    that does not match any extension.
     """
 
     # Arrange
@@ -334,7 +351,9 @@ def test_markdown_with_extensions_list_and_filter_by_id_ends_with_non_sequence()
 
 def test_markdown_with_extensions_list_and_filter_by_name_link():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    lists the matching items when presented with an identifier
+    surrounded by wildcards that matches.
     """
 
     # Arrange
@@ -362,7 +381,8 @@ def test_markdown_with_extensions_list_and_filter_by_name_link():
 
 def test_markdown_with_extensions_list_and_bad_filter():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    lists presents an error when a bad filter is supplied.
     """
 
     # Arrange
@@ -386,7 +406,9 @@ main.py extensions list: error: argument list_filter: Value '*' is not a valid p
 
 def test_markdown_with_extensions_info_and_bad_filter():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    lists presents an error when a bad filter is supplied with
+    no wildcards.
     """
 
     # Arrange
@@ -410,7 +432,8 @@ main.py extensions info: error: argument info_filter: Value 'abc.def' is not a v
 
 def test_markdown_with_extensions_info_and_not_found_filter():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    info presents an error when a bad id is supplied.
     """
 
     # Arrange
@@ -432,7 +455,8 @@ def test_markdown_with_extensions_info_and_not_found_filter():
 
 def test_markdown_with_extensions_info_and_found_filter():
     """
-    Test to make sure
+    Test to make sure the command line interface to extensions
+    info presents information when a valid id is supplied.
     """
 
     # Arrange

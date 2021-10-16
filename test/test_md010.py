@@ -7,11 +7,10 @@ import pytest
 
 
 @pytest.mark.rules
-def test_md010_bad_configuration_style():
+def test_md010_bad_configuration_code_blocks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    code_blocks value with a string that is not a boolean.
     """
 
     # Arrange
@@ -43,9 +42,8 @@ def test_md010_bad_configuration_style():
 @pytest.mark.rules
 def test_md010_good_simple_text_no_tab():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains no tab characters.
     """
 
     # Arrange
@@ -71,9 +69,8 @@ def test_md010_good_simple_text_no_tab():
 @pytest.mark.rules
 def test_md010_bad_simple_text_with_tab():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains tab characters.
     """
 
     # Arrange

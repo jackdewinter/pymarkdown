@@ -41,7 +41,7 @@ baz</p>
 @pytest.mark.gfm
 def test_block_quotes_206a():
     """
-    Test case 206:  Here is a simple example:
+    Test case 206a:  variation of 206 with the first line as a paragraph
     """
 
     # Arrange
@@ -68,7 +68,8 @@ baz</p>
 @pytest.mark.gfm
 def test_block_quotes_206b():
     """
-    Test case 206:  Here is a simple example:
+    Test case 206b: variation of 206 with the first line as a paragraph and
+    both following lines without a start indicator
     """
 
     # Arrange
@@ -95,7 +96,8 @@ baz</p>
 @pytest.mark.gfm
 def test_block_quotes_206c():
     """
-    Test case 206:  Here is a simple example:
+    Test case 206:  variation of 206 with the first line as a paragraph
+        and the following three lines with increasing indentation
     """
 
     # Arrange
@@ -265,7 +267,7 @@ foo</p>
 @pytest.mark.gfm
 def test_block_quotes_211a():
     """
-    Test case 211a:  variations
+    Test case 211a:  variation on 211 with all lines starting with block quote
     """
 
     # Arrange
@@ -292,7 +294,8 @@ foo</p>
 @pytest.mark.gfm
 def test_block_quotes_211b():
     """
-    Test case 211b:  variations
+    Test case 211b:  variation on 211 with all lines starting with block quote
+        and blank lines between
     """
 
     # Arrange
@@ -337,7 +340,8 @@ def test_block_quotes_211b():
 @pytest.mark.gfm
 def test_block_quotes_211c():
     """
-    Test case 211c:  variations
+    Test case 211c:variation on 211 with all lines starting with block quote
+        with blank line starting with block quote between
     """
 
     # Arrange
@@ -400,7 +404,7 @@ def test_block_quotes_212():
 @pytest.mark.gfm
 def test_block_quotes_212a():
     """
-    Test case 212a:  variation
+    Test case 212a:  variation of 212 with second line in a block quote
     """
 
     # Arrange
@@ -424,7 +428,8 @@ def test_block_quotes_212a():
 @pytest.mark.gfm
 def test_block_quotes_212b():
     """
-    Test case 212b:  variation
+    Test case 212b:  variation of 212 with second line in a block quote
+        and a blank line inserted between the first and second lines
     """
 
     # Arrange
@@ -456,7 +461,9 @@ def test_block_quotes_212b():
 @pytest.mark.gfm
 def test_block_quotes_212c():
     """
-    Test case 212c:  variation
+    Test case 212b:  variation of 212 with second line in a block quote
+        and a blank line starting with a block quote inserted between the
+        first and second lines
     """
 
     # Arrange
@@ -520,7 +527,8 @@ def test_block_quotes_213():
 @pytest.mark.gfm
 def test_block_quotes_213ax():
     """
-    Test case 213a:  variation
+    Test case 213a:  variation of 213 that continues after the first
+        line because of the block quote start
     """
 
     # Arrange
@@ -553,7 +561,9 @@ def test_block_quotes_213ax():
 @pytest.mark.gfm
 def test_block_quotes_213aa():
     """
-    Test case 213aa:  variation
+    Test case 213aa:  variation of 213a that continues after the first
+        line because of the block quote start on all list lines that
+        follow
     """
 
     # Arrange
@@ -596,7 +606,8 @@ def test_block_quotes_213aa():
 @pytest.mark.gfm
 def test_block_quotes_213ab():
     """
-    Test case 213ab:  variation
+    Test case 213ab:  variation of 213a for comparison that is 213aa
+        without any block quote characters
     """
 
     # Arrange
@@ -635,7 +646,8 @@ def test_block_quotes_213ab():
 @pytest.mark.gfm
 def test_block_quotes_213b():
     """
-    Test case 213b:  variation
+    Test case 213b:  variation of 213 with an extra list line
+        and all three lines in the block quote
     """
 
     # Arrange
@@ -674,7 +686,9 @@ def test_block_quotes_213b():
 @pytest.mark.gfm
 def test_block_quotes_213c():
     """
-    Test case 213b:  variation
+    Test case 213c:  variation of 213 that has a block quote before the
+        second line, but also includes a properly indented text line that
+        belongs to the list
     """
 
     # Arrange
@@ -709,7 +723,9 @@ brr</li>
 @pytest.mark.gfm
 def test_block_quotes_213d():
     """
-    Test case 213d:  variation
+    Test case 213c:  variation of 213 that has a block quote before the
+        second line, but also includes a properly indented text and prefacted
+        line that belongs to the list
     """
 
     # Arrange
@@ -847,7 +863,8 @@ def test_block_quotes_216():
 @pytest.mark.gfm
 def test_block_quotes_216a():
     """
-    Test case 216a:  variation
+    Test case 216a:  variation of 216 that has a block quote before
+        both lines
     """
 
     # Arrange
@@ -1041,7 +1058,8 @@ def test_block_quotes_222():
 @pytest.mark.gfm
 def test_block_quotes_222a():
     """
-    Test case 222a:  To get a block quote with two paragraphs, use:
+    Test case 222a:  variation of 222 that includes a single space at
+        the end of the second line
     """
 
     # Arrange
@@ -1073,7 +1091,8 @@ def test_block_quotes_222a():
 @pytest.mark.gfm
 def test_block_quotes_222b():
     """
-    Test case 222a:  To get a block quote with two paragraphs, use:
+    Test case 222b:  variation of 222 that includes two spaces at
+        the end of the second line
     """
 
     # Arrange
@@ -1105,7 +1124,8 @@ def test_block_quotes_222b():
 @pytest.mark.gfm
 def test_block_quotes_222c():
     """
-    Test case 222a:  To get a block quote with two paragraphs, use:
+    Test case 222c:  variation of 222 that includes two blank lines
+        prefaced with a block quote instead of one
     """
 
     # Arrange
@@ -1353,7 +1373,7 @@ baz</p>
 @pytest.mark.gfm
 def test_block_quotes_229a():
     """
-    Test case 229a:  variation
+    Test case 229a:  variation of 229 with simpler text and different spacing
     """
 
     # Arrange
@@ -1400,7 +1420,7 @@ def test_block_quotes_229a():
 @pytest.mark.gfm
 def test_block_quotes_229b():
     """
-    Test case 229b:  variation
+    Test case 229a:  variation of 229 with simpler text and different spacing
     """
 
     # Arrange
@@ -1485,7 +1505,7 @@ def test_block_quotes_229b():
 @pytest.mark.gfm
 def test_block_quotes_229cx():
     """
-    Test case 229b:  variation
+    Test case 229c:  variation of 229 with simpler text and different spacing
     """
 
     # Arrange
@@ -1521,7 +1541,7 @@ def test_block_quotes_229cx():
 @pytest.mark.gfm
 def test_block_quotes_229ca():
     """
-    Test case 229b:  variation
+    Test case 229ca:  variation of 229c with different spacing
     """
 
     # Arrange
@@ -1561,7 +1581,7 @@ def test_block_quotes_229ca():
 @pytest.mark.gfm
 def test_block_quotes_229dx():
     """
-    Test case 229d:  variation
+    Test case 229d:  variation of 229c with different spacing
     """
 
     # Arrange
@@ -1597,7 +1617,7 @@ def test_block_quotes_229dx():
 @pytest.mark.gfm
 def test_block_quotes_229da():
     """
-    Test case 229d:  variation
+    Test case 229d:  variation of 229d with different spacing
     """
 
     # Arrange
@@ -1637,7 +1657,7 @@ def test_block_quotes_229da():
 @pytest.mark.gfm
 def test_block_quotes_229ex():
     """
-    Test case 229d:  variation
+    Test case 229e:  variation of 229 with different spacing
     """
 
     # Arrange
@@ -1666,7 +1686,7 @@ def test_block_quotes_229ex():
 @pytest.mark.gfm
 def test_block_quotes_229ea():
     """
-    Test case 229d:  variation
+    Test case 229ea:  variation of 229e with different spacing
     """
 
     # Arrange
@@ -1695,7 +1715,7 @@ def test_block_quotes_229ea():
 @pytest.mark.gfm
 def test_block_quotes_229fx():
     """
-    Test case 229e:  variation
+    Test case 229f:  variation of 229 with different spacing
     """
 
     # Arrange
@@ -1724,7 +1744,7 @@ def test_block_quotes_229fx():
 @pytest.mark.gfm
 def test_block_quotes_229fa():
     """
-    Test case 229e:  variation
+    Test case 229fa:  variation of 229f with different spacing
     """
 
     # Arrange
@@ -1753,7 +1773,7 @@ def test_block_quotes_229fa():
 @pytest.mark.gfm
 def test_block_quotes_229gx():
     """
-    Test case 229f:  variation
+    Test case 229g:  variation of 229 with different spacing
     """
 
     # Arrange
@@ -1790,7 +1810,7 @@ def test_block_quotes_229gx():
 @pytest.mark.gfm
 def test_block_quotes_229ga():
     """
-    Test case 229f:  variation
+    Test case 229ga:  variation of 229g with different spacing
     """
 
     # Arrange
@@ -1831,7 +1851,7 @@ def test_block_quotes_229ga():
 @pytest.mark.gfm
 def test_block_quotes_229hx():
     """
-    Test case 229g:  variation
+    Test case 229h:  variation of 229 with different spacing
     """
 
     # Arrange
@@ -1866,7 +1886,7 @@ def test_block_quotes_229hx():
 @pytest.mark.gfm
 def test_block_quotes_229ha():
     """
-    Test case 229g:  variation
+    Test case 229ha:  variation of 229h with different spacing
     """
 
     # Arrange
@@ -1905,7 +1925,7 @@ def test_block_quotes_229ha():
 @pytest.mark.gfm
 def test_block_quotes_229ix():
     """
-    Test case 229g:  variation
+    Test case 229i:  variation of 229 with different spacing
     """
 
     # Arrange
@@ -1934,7 +1954,7 @@ comments
 @pytest.mark.gfm
 def test_block_quotes_229ia():
     """
-    Test case 229ia:  variation
+    Test case 229ia:  variation of 229i with different spacing
     """
 
     # Arrange
@@ -1963,7 +1983,7 @@ comments
 @pytest.mark.gfm
 def test_block_quotes_229jx():
     """
-    Test case 229j:  variation
+    Test case 229j:  variation of 229 with different spacing
     """
 
     # Arrange
@@ -1999,7 +2019,7 @@ comments
 @pytest.mark.gfm
 def test_block_quotes_229ja():
     """
-    Test case 229j:  variation
+    Test case 229ja:  variation of 229j with different spacing
     """
 
     # Arrange
@@ -2485,8 +2505,8 @@ def test_block_quotes_extra_03x():
 @pytest.mark.gfm
 def test_block_quotes_extra_03xa():
     """
-    Test case Bq03:  link definition within a block quote
-                     copy of test_link_reference_definitions_161 but within single block
+    Test case Bq03xa:   link definition within a block quote after a blank line
+                        copy of test_link_reference_definitions_161 but within single block
     """
 
     # Arrange
@@ -2517,8 +2537,9 @@ def test_block_quotes_extra_03xa():
 @pytest.mark.gfm
 def test_block_quotes_extra_03xb():
     """
-    Test case Bq03:  link definition within a block quote
-                     copy of test_link_reference_definitions_161 but within single block
+    Test case Bq03xb:   link definition within a block quote after a paragraph in a
+        block quote and a blank line in the same block quote
+                        copy of test_link_reference_definitions_161 but within single block
     """
 
     # Arrange
@@ -2589,9 +2610,7 @@ def test_block_quotes_extra_03a():
 @pytest.mark.gfm
 def test_block_quotes_extra_03aa():
     """
-    Test case Bq03a:  link definition within a block quote
-                      copy of test_link_reference_definitions_161 but within
-                      two distinct blocks
+    Test case Bq03aa:  variation on 03a with no blank line between
     """
 
     # Arrange
@@ -2618,9 +2637,8 @@ def test_block_quotes_extra_03aa():
 @pytest.mark.gfm
 def test_block_quotes_extra_03ab():
     """
-    Test case Bq03a:  link definition within a block quote
-                      copy of test_link_reference_definitions_161 but within
-                      two distinct blocks
+    Test case Bq03ab:  line within a block quote, blank line not in,
+        undefined link reference
     """
 
     # Arrange
@@ -2692,6 +2710,7 @@ def test_block_quotes_extra_03ba():
     Test case Bq03a:  link definition within a block quote
                       copy of test_link_reference_definitions_164 but within
                       a single block
+                      title over two lines
     """
 
     # Arrange
@@ -2727,6 +2746,7 @@ def test_block_quotes_extra_03bb():
     Test case Bq03a:  link definition within a block quote
                       copy of test_link_reference_definitions_164 but within
                       a single block
+                      link label and title over two lines
     """
 
     # Arrange

@@ -31,7 +31,7 @@ def test_inline_links_493x():
 @pytest.mark.gfm
 def test_inline_links_493a():
     """
-    Test case 493:  Here is a simple inline link:
+    Test case 493a:  variation of 493 with space after
     """
 
     # Arrange
@@ -52,7 +52,7 @@ def test_inline_links_493a():
 @pytest.mark.gfm
 def test_inline_links_493b():
     """
-    Test case 493:  Here is a simple inline link:
+    Test case 493b:  variation of 493 with space and text after
     """
 
     # Arrange
@@ -159,7 +159,8 @@ def test_inline_links_497():
 @pytest.mark.gfm
 def test_inline_links_497a():
     """
-    Test case 497a:  (part 1) The destination can only contain spaces if it is enclosed in pointy brackets
+    Test case 497a:  variation of 497 with no inline close and
+        defined reference
     """
 
     # Arrange
@@ -419,7 +420,7 @@ def test_inline_links_507():
 @pytest.mark.gfm
 def test_inline_links_507b():
     """
-    Test case 507b:  Modification of 507 without the angle brackets.
+    Test case 507b:  variation of 507 without the angle brackets.
     """
 
     # Arrange
@@ -441,7 +442,7 @@ def test_inline_links_507b():
 @pytest.mark.gfm
 def test_inline_links_507c():
     """
-    Test case 507c:  Modification of 507 without the angle brackets, and more open
+    Test case 507c:  variation of 507 without the angle brackets, and more open
     """
 
     # Arrange
@@ -661,7 +662,7 @@ def test_inline_links_515():
 @pytest.mark.gfm
 def test_inline_links_515b():
     """
-    Test case 515b:  Modification of 515 to use normal space and remove closing quotes.
+    Test case 515b:  variation of 515 to use normal space and remove closing quotes.
     """
 
     # Arrange
@@ -683,7 +684,7 @@ def test_inline_links_515b():
 @pytest.mark.gfm
 def test_inline_links_515c():
     """
-    Test case 515c:  Modification of 515 to use normal space and remove closing quotes.
+    Test case 515c:  variation of 515 to use normal space and remove closing quotes.
     """
 
     # Arrange
@@ -704,7 +705,7 @@ def test_inline_links_515c():
 @pytest.mark.gfm
 def test_inline_links_515d():
     """
-    Test case 515d:  Modification of 515 to use normal space and remove closing quotes.
+    Test case 515d:  variation of 515 to use normal space and remove closing quotes.
     """
 
     # Arrange
@@ -726,7 +727,7 @@ def test_inline_links_515d():
 @pytest.mark.gfm
 def test_inline_links_515e():
     """
-    Test case 515e:  Modification of 515 to use normal space and remove closing quotes.
+    Test case 515e:  variation of 515 to use normal space and remove closing quotes.
     """
 
     # Arrange
@@ -747,7 +748,7 @@ def test_inline_links_515e():
 @pytest.mark.gfm
 def test_inline_links_515f():
     """
-    Test case 515e:  Modification of 515 to use normal space and remove closing quotes.
+    Test case 515e:  variation of 515 to use normal space and remove closing quotes.
     """
 
     # Arrange
@@ -769,7 +770,7 @@ def test_inline_links_515f():
 @pytest.mark.gfm
 def test_inline_links_515g():
     """
-    Test case 515e:  Modification of 515 to use normal space and remove closing quotes.
+    Test case 515e:  variation of 515 to use normal space and remove closing quotes.
     """
 
     # Arrange
@@ -1050,7 +1051,7 @@ def test_inline_links_526():
 @pytest.mark.gfm
 def test_inline_links_526a():
     """
-    Test case 526a:  (part 1) However, links may not contain other links, at any level of nesting.
+    Test case 526a:  variation of 526 to switch uris
     """
 
     # Arrange
@@ -1106,7 +1107,7 @@ def test_inline_links_527():
 @pytest.mark.gfm
 def test_inline_links_527a():
     """
-    Test case 527a:  (part 2) However, links may not contain other links, at any level of nesting.
+    Test case 527a:  variation of 527 to have multiple uris instead of one
     """
 
     # Arrange
@@ -1158,7 +1159,7 @@ def test_inline_links_528():
 @pytest.mark.gfm
 def test_inline_links_528a():
     """
-    Test case 528a:  variation
+    Test case 528a:  variation of 528 to have multuple uris instead of one
     """
 
     # Arrange
@@ -1177,7 +1178,7 @@ def test_inline_links_528a():
 @pytest.mark.gfm
 def test_inline_links_528b():
     """
-    Test case 528b:  variation
+    Test case 528b:  variation of 528 to have a slightly different format
     """
 
     # Arrange
@@ -1196,7 +1197,7 @@ def test_inline_links_528b():
 @pytest.mark.gfm
 def test_inline_links_528c():
     """
-    Test case 528c:  variation
+    Test case 528c:  variation of 528 to have a slightly different format
     """
 
     # Arrange

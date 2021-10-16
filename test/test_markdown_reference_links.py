@@ -37,7 +37,7 @@ def test_reference_links_535():
 @pytest.mark.gfm
 def test_reference_links_535a():
     """
-    Test case 535:  Here is a simple example:
+    Test case 535a:  variation of 535 with trailing space
     """
 
     # Arrange
@@ -66,7 +66,7 @@ def test_reference_links_535a():
 @pytest.mark.gfm
 def test_reference_links_535b():
     """
-    Test case 535:  Here is a simple example:
+    Test case 535b:  variation of 535 with trailing space and text
     """
 
     # Arrange
@@ -769,7 +769,7 @@ def test_reference_links_558():
 @pytest.mark.gfm
 def test_reference_links_558a():
     """
-    Test case 558a:  variation
+    Test case 558a:  variation of 558 with reference
     """
 
     # Arrange
@@ -794,7 +794,7 @@ def test_reference_links_558a():
 @pytest.mark.gfm
 def test_reference_links_558b():
     """
-    Test case 558a:  variation
+    Test case 558b:  variation of 558 with reference
     """
 
     # Arrange
@@ -1171,7 +1171,7 @@ def test_reference_links_570():
 @pytest.mark.gfm
 def test_reference_links_570a():
     """
-    Test case 570a:  Variation of 570 to show how link inside of link doesn't work.
+    Test case 570a:  variation of 570 to show how link inside of link doesn't work.
     """
 
     # Arrange
@@ -1537,7 +1537,7 @@ def test_reference_links_extra_03x():
 @pytest.mark.gfm
 def test_reference_links_extra_03xa():
     """
-    Test case extra 03xa:  variation
+    Test case extra 03xa:  variation of 3 with extra text in label
     """
 
     # Arrange
@@ -1567,7 +1567,7 @@ def test_reference_links_extra_03xa():
 @pytest.mark.gfm
 def test_reference_links_extra_03xb():
     """
-    Test case extra 03xb:  variation
+    Test case extra 03xb:  variation of 3xa as image
     """
 
     # Arrange
@@ -1590,7 +1590,7 @@ def test_reference_links_extra_03xb():
 @pytest.mark.gfm
 def test_reference_links_extra_03xc():
     """
-    Test case extra 03xc:  variation
+    Test case extra 03xc:  variation of 3xa with inner as image
     """
 
     # Arrange
@@ -1619,7 +1619,7 @@ def test_reference_links_extra_03xc():
 @pytest.mark.gfm
 def test_reference_links_extra_03a():
     """
-    Test case extra 03a:  variation
+    Test case extra 03a:  variation of 3 with reference
     """
 
     # Arrange
@@ -1644,7 +1644,7 @@ def test_reference_links_extra_03a():
 @pytest.mark.gfm
 def test_reference_links_extra_03aa():
     """
-    Test case extra 03a:  variation
+    Test case extra 03aa:  variation of 3a with extra text
     """
 
     # Arrange
@@ -1674,7 +1674,7 @@ def test_reference_links_extra_03aa():
 @pytest.mark.gfm
 def test_reference_links_extra_03ab():
     """
-    Test case extra 03a:  variation
+    Test case extra 03ab:  variation of 3a with outer image
     """
 
     # Arrange
@@ -1697,7 +1697,7 @@ def test_reference_links_extra_03ab():
 @pytest.mark.gfm
 def test_reference_links_extra_03ac():
     """
-    Test case extra 03a:  variation
+    Test case extra 03ac:  variation of 3a with inner image
     """
 
     # Arrange
@@ -1724,7 +1724,7 @@ def test_reference_links_extra_03ac():
 @pytest.mark.gfm
 def test_reference_links_extra_03b():
     """
-    Test case extra 03b:  variation
+    Test case extra 03b:  variation of 3 with copyright
     """
 
     # Arrange
@@ -1749,7 +1749,7 @@ def test_reference_links_extra_03b():
 @pytest.mark.gfm
 def test_reference_links_extra_03ba():
     """
-    Test case extra 03b:  variation
+    Test case extra 03ba:  variation of 3b with text
     """
 
     # Arrange
@@ -1779,7 +1779,7 @@ def test_reference_links_extra_03ba():
 @pytest.mark.gfm
 def test_reference_links_extra_03bb():
     """
-    Test case extra 03b:  variation
+    Test case extra 03bb:  variation of 3b with outer image
     """
 
     # Arrange
@@ -1802,7 +1802,7 @@ def test_reference_links_extra_03bb():
 @pytest.mark.gfm
 def test_reference_links_extra_03bc():
     """
-    Test case extra 03b:  variation
+    Test case extra 03bc:  variation of 3b with inner image
     """
 
     # Arrange
@@ -1829,7 +1829,7 @@ def test_reference_links_extra_03bc():
 @pytest.mark.gfm
 def test_reference_links_extra_03c():
     """
-    Test case extra 03c:  variation
+    Test case extra 03c:  variation of 3 with code span
     """
 
     # Arrange
@@ -1856,7 +1856,7 @@ def test_reference_links_extra_03c():
 @pytest.mark.gfm
 def test_reference_links_extra_03ca():
     """
-    Test case extra 03ca:  variation
+    Test case extra 03ca:  variation of 3c with text
     """
 
     # Arrange
@@ -1888,7 +1888,7 @@ def test_reference_links_extra_03ca():
 @pytest.mark.gfm
 def test_reference_links_extra_03cb():
     """
-    Test case extra 03cb:  variation
+    Test case extra 03cb:  variation of 3c with outer image
     """
 
     # Arrange
@@ -1911,7 +1911,7 @@ def test_reference_links_extra_03cb():
 @pytest.mark.gfm
 def test_reference_links_extra_03cc():
     """
-    Test case extra 03cb:  variation
+    Test case extra 03cc:  variation of 3c with inner image
     """
 
     # Arrange
@@ -1940,7 +1940,7 @@ def test_reference_links_extra_03cc():
 @pytest.mark.gfm
 def test_reference_links_extra_03d():
     """
-    Test case extra 03c:  variation
+    Test case extra 03d:  variation of 3 with emphasis
     """
 
     # Arrange
@@ -1969,7 +1969,7 @@ def test_reference_links_extra_03d():
 @pytest.mark.gfm
 def test_reference_links_extra_03da():
     """
-    Test case extra 03c:  variation
+    Test case extra 03da:  variation of 3d with text
     """
 
     # Arrange
@@ -2003,7 +2003,7 @@ def test_reference_links_extra_03da():
 @pytest.mark.gfm
 def test_reference_links_extra_03db():
     """
-    Test case extra 03c:  variation
+    Test case extra 03db:  variation of 3d with outer image
     """
 
     # Arrange
@@ -2026,7 +2026,7 @@ def test_reference_links_extra_03db():
 @pytest.mark.gfm
 def test_reference_links_extra_03dc():
     """
-    Test case extra 03c:  variation
+    Test case extra 03dc:  variation of 3d with inner image
     """
 
     # Arrange
@@ -2055,7 +2055,7 @@ def test_reference_links_extra_03dc():
 @pytest.mark.gfm
 def test_reference_links_extra_03e():
     """
-    Test case extra 03e:  variation
+    Test case extra 03e:  variation of 3 with autolink
     """
 
     # Arrange
@@ -2082,7 +2082,7 @@ def test_reference_links_extra_03e():
 @pytest.mark.gfm
 def test_reference_links_extra_03ea():
     """
-    Test case extra 03e:  variation
+    Test case extra 03ea:  variation of 3e with text
     """
 
     # Arrange
@@ -2114,7 +2114,7 @@ def test_reference_links_extra_03ea():
 @pytest.mark.gfm
 def test_reference_links_extra_03eb():
     """
-    Test case extra 03e:  variation
+    Test case extra 03eb:  variation of 3e with outer image
     """
 
     # Arrange
@@ -2137,7 +2137,7 @@ def test_reference_links_extra_03eb():
 @pytest.mark.gfm
 def test_reference_links_extra_03ec():
     """
-    Test case extra 03e:  variation
+    Test case extra 03ec:  variation of 3e with inner image
     """
 
     # Arrange
@@ -2164,7 +2164,7 @@ def test_reference_links_extra_03ec():
 @pytest.mark.gfm
 def test_reference_links_extra_03f():
     """
-    Test case extra 03f:  variation
+    Test case extra 03f:  variation of 3 with raw html
     """
 
     # Arrange
@@ -2191,7 +2191,7 @@ def test_reference_links_extra_03f():
 @pytest.mark.gfm
 def test_reference_links_extra_03fa():
     """
-    Test case extra 03f:  variation
+    Test case extra 03fa:  variation of 3f with text
     """
 
     # Arrange
@@ -2223,7 +2223,7 @@ def test_reference_links_extra_03fa():
 @pytest.mark.gfm
 def test_reference_links_extra_03fb():
     """
-    Test case extra 03f:  variation
+    Test case extra 03fb:  variation of 3f with outer image
     """
 
     # Arrange
@@ -2246,7 +2246,7 @@ def test_reference_links_extra_03fb():
 @pytest.mark.gfm
 def test_reference_links_extra_03fc():
     """
-    Test case extra 03f:  variation
+    Test case extra 03fc:  variation of 3f with inner iage
     """
 
     # Arrange
@@ -2273,7 +2273,7 @@ def test_reference_links_extra_03fc():
 @pytest.mark.gfm
 def test_reference_links_extra_03g():
     """
-    Test case extra 03g:  variation
+    Test case extra 03g:  variation of 3 with newline
     """
 
     # Arrange
@@ -2300,7 +2300,7 @@ foo</a></p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03ga():
     """
-    Test case extra 03g:  variation
+    Test case extra 03ga:  variation of 3g with text
     """
 
     # Arrange
@@ -2335,7 +2335,7 @@ foo</a>yy](/uri1)</p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03gb():
     """
-    Test case extra 03g:  variation
+    Test case extra 03gb:  variation of 3g with outer image
     """
 
     # Arrange
@@ -2363,7 +2363,7 @@ fooyy" /></p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03gc():
     """
-    Test case extra 03g:  variation
+    Test case extra 03gc:  variation of 3g with inner image
     """
 
     # Arrange
@@ -2393,7 +2393,7 @@ foo" />yy</a></p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03hx():
     """
-    Test case extra 03h:  variation
+    Test case extra 03h:  variation of 3 with backslash
     """
 
     # Arrange
@@ -2432,7 +2432,7 @@ foo]</p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03hxa():
     """
-    Test case extra 03h:  variation
+    Test case extra 03hxa:  variation of 3h with newline
     """
 
     # Arrange
@@ -2469,7 +2469,7 @@ foo]</p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03hy():
     """
-    Test case extra 03h:  variation
+    Test case extra 03hy:  variation of 3h with multiple backslashes
     """
 
     # Arrange
@@ -2508,7 +2508,7 @@ foo]</p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03hz():
     """
-    Test case extra 03h:  variation
+    Test case extra 03hz:  variation of 3h with double backslash
     """
 
     # Arrange
@@ -2536,7 +2536,7 @@ foo</a></p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03ha():
     """
-    Test case extra 03h:  variation
+    Test case extra 03ha:  variation of 3h with text
     """
 
     # Arrange
@@ -2579,7 +2579,7 @@ foo]yy]</p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03hb():
     """
-    Test case extra 03h:  variation
+    Test case extra 03hb:  variation of 3h with outer image
     """
 
     # Arrange
@@ -2622,7 +2622,7 @@ foo]yy]</p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03hc():
     """
-    Test case extra 03h:  variation
+    Test case extra 03hc:  variation of 3h with inner image
     """
 
     # Arrange
@@ -2665,7 +2665,7 @@ foo]yy]</p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03i():
     """
-    Test case extra 03h:  variation
+    Test case extra 03i:  variation of 3 with double space
     """
 
     # Arrange
@@ -2697,7 +2697,7 @@ foo</a></p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03ia():
     """
-    Test case extra 03h:  variation
+    Test case extra 03ia:  variation of 3i with text
     """
 
     # Arrange
@@ -2733,7 +2733,7 @@ foo</a>yy]</p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03ib():
     """
-    Test case extra 03h:  variation
+    Test case extra 03ib:  variation of 3i with outer image
     """
 
     # Arrange
@@ -2769,7 +2769,7 @@ foo</a>yy]</p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03ic():
     """
-    Test case extra 03h:  variation
+    Test case extra 03ic:  variation of 03 with inner image
     """
 
     # Arrange
@@ -2801,7 +2801,7 @@ foo" />yy]</p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03jx():
     """
-    Test case extra 03h:  variation
+    Test case extra 03j:  variation of 3 with double backslash
     """
 
     # Arrange
@@ -2835,7 +2835,7 @@ abc</p>"""
 @pytest.mark.gfm
 def test_reference_links_extra_03ja():
     """
-    Test case extra 03h:  variation
+    Test case extra 03ja:  variation of 3 with text
     """
 
     # Arrange

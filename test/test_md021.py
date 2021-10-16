@@ -11,9 +11,8 @@ import pytest
 @pytest.mark.rules
 def test_md021_good_single_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has single spacing inside the hashes of
-    a closed atx heading.
+    Test to make sure this rule does not trigger with a document that
+    contains an Atx Closed Heading with single spaces at both ends.
     """
 
     # Arrange
@@ -39,9 +38,8 @@ def test_md021_good_single_spacing():
 @pytest.mark.rules
 def test_md021_bad_multiple_spacing_both():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has multiple spacing inside the hashes of
-    a closed atx heading on both sides.
+    Test to make sure this rule does trigger with a document that
+    contains an Atx Closed Heading with multiple spaces at both ends.
     """
 
     # Arrange
@@ -72,9 +70,8 @@ def test_md021_bad_multiple_spacing_both():
 @pytest.mark.rules
 def test_md021_bad_multiple_spacing_left():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has multiple spacing inside the hashes of
-    a closed atx heading on the left.
+    Test to make sure this rule does trigger with a document that
+    contains an Atx Closed Heading with multiples spaces at the start.
     """
 
     # Arrange
@@ -105,9 +102,8 @@ def test_md021_bad_multiple_spacing_left():
 @pytest.mark.rules
 def test_md021_bad_multiple_spacing_right():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has multiple spacing inside the hashes of
-    a closed atx heading on the right.
+    Test to make sure this rule does trigger with a document that
+    contains an Atx Closed Heading with multiple spaces at the end.
     """
 
     # Arrange
@@ -138,9 +134,8 @@ def test_md021_bad_multiple_spacing_right():
 @pytest.mark.rules
 def test_md021_good_multiple_spacing_with_inline():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has single spacing inside the hashes of
-    a closed atx heading, with inline.
+    Test to make sure this rule does not trigger with a document that
+    contains an Atx Closed Heading with inline emphasis.
     """
 
     # Arrange
@@ -166,9 +161,8 @@ def test_md021_good_multiple_spacing_with_inline():
 @pytest.mark.rules
 def test_md021_good_multiple_spacing_with_indent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has single spacing inside the hashes of
-    a closed atx heading, with inline.
+    Test to make sure this rule does trigger with a document that
+    contains an Atx Closed Heading with multiple spaces at both ends and indents.
     """
 
     # Arrange
@@ -201,8 +195,8 @@ def test_md021_good_multiple_spacing_with_indent():
 @pytest.mark.rules
 def test_md021_good_single_space_single_tab_before():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has ...
+    Test to make sure this rule does not trigger with a document that
+    contains an Atx Closed Heading with tabs at the left end.
     """
 
     # Arrange
@@ -230,8 +224,8 @@ def test_md021_good_single_space_single_tab_before():
 @pytest.mark.rules
 def test_md021_good_single_space_single_tab_after():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has ...
+    Test to make sure this rule does not trigger with a document that
+    contains an Atx Closed Heading with tabs at the end.
     """
 
     # Arrange

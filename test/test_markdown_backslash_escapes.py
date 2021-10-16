@@ -308,7 +308,7 @@ foo
 @pytest.mark.gfm
 def test_backslash_escapes_320a():
     """
-    Test case 320a:  (part 3) But they work in all other contexts, including URLs and link titles, link references, and info strings in fenced code blocks:
+    Test case 320a:  variation of 320 with an extra backslash after the +
     """
 
     # Arrange
@@ -330,7 +330,7 @@ foo
 @pytest.mark.gfm
 def test_backslash_escapes_320b():
     """
-    Test case 320b:  (part 3) But they work in all other contexts, including URLs and link titles, link references, and info strings in fenced code blocks:
+    Test case 320b:  variation of 320 with an extra backslash at the end
     """
 
     # Arrange
@@ -352,7 +352,7 @@ foo
 @pytest.mark.gfm
 def test_backslash_escapes_320c():
     """
-    Test case 320c:  (part 3) But they work in all other contexts, including URLs and link titles, link references, and info strings in fenced code blocks:
+    Test case 320c:  variation of 320 with an extra backslash at the end and extra space
     """
 
     # Arrange

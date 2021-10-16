@@ -49,7 +49,7 @@ def test_tabs_002():
 @pytest.mark.gfm
 def test_tabs_002a():
     """
-    Test case 002a:  002 with spaces instead of tabs
+    Test case 002a:  variation on 002 with spaces instead of tabs
     """
 
     # Arrange
@@ -69,7 +69,7 @@ def test_tabs_002a():
 @pytest.mark.gfm
 def test_tabs_002b():
     """
-    Test case 002b:  Variation of 002 tested against Babelmark
+    Test case 002b:  variation of 002 tested against Babelmark
     """
 
     # Arrange
@@ -157,7 +157,7 @@ def test_tabs_004x():
 @pytest.mark.gfm
 def test_tabs_004a():
     """
-    Test case 004a:  variation on 004
+    Test case 004a:  variation on 004 with spaces instead of tabs
     """
 
     # Arrange
@@ -248,7 +248,7 @@ def test_tabs_006():
 @pytest.mark.gfm
 def test_tabs_006a():
     """
-    Test case 006a:  modified version of 006 with spaces leading in instead of tab
+    Test case 006a:  variation of 006 with spaces leading in instead of tab
     """
 
     # Arrange
@@ -272,7 +272,7 @@ def test_tabs_006a():
 @pytest.mark.gfm
 def test_tabs_006b():
     """
-    Test case 006b:  modified version of 006 with spaces leading in instead of tab
+    Test case 006b:  variation of 006 with spaces leading in instead of tab
     """
 
     # Arrange
@@ -296,7 +296,7 @@ def test_tabs_006b():
 @pytest.mark.gfm
 def test_tabs_006c():
     """
-    Test case 006c:  modified version of 006 with spaces leading in instead of tab
+    Test case 006c:  variation of 006 with spaces leading in instead of tab
     """
 
     # Arrange

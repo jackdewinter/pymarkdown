@@ -37,7 +37,7 @@ def test_character_references_321():
 @pytest.mark.gfm
 def test_character_references_321a():
     """
-    Test case 321a:  must be case sensitive
+    Test case 321a:  variation on 321 to show it must be case sensitive
     """
 
     # Arrange
@@ -94,7 +94,7 @@ def test_character_references_323():
 @pytest.mark.gfm
 def test_character_references_323a():
     """
-    Test case 323a:  code point 0
+    Test case 323a:  variation on 323 with code point 0
     """
 
     # Arrange
@@ -138,7 +138,7 @@ def test_character_references_324():
 @pytest.mark.gfm
 def test_character_references_324a():
     """
-    Test case 324a:  Extension of 324
+    Test case 324a:  variation of 324 with a "bad" reference
     """
 
     # Arrange
@@ -235,7 +235,7 @@ def test_character_references_328():
 @pytest.mark.gfm
 def test_character_references_328a():
     """
-    Test case 328a:  variation
+    Test case 328a:  variation of 328 with references in the link label as well
     """
 
     # Arrange
@@ -438,7 +438,7 @@ def test_character_references_336():
 @pytest.mark.gfm
 def test_character_references_336a():
     """
-    Test case 336a:  variations
+    Test case 336a:  variation of 336 with reference inside of an Atx Heading
     """
 
     # Arrange
@@ -457,7 +457,7 @@ def test_character_references_336a():
 @pytest.mark.gfm
 def test_character_references_336b():
     """
-    Test case 336b:  variations
+    Test case 336b:  variation of 336 with reference inside of an SetExt Heading
     """
 
     # Arrange
@@ -477,7 +477,7 @@ def test_character_references_336b():
 @pytest.mark.gfm
 def test_character_references_336c():
     """
-    Test case 336c:  variations
+    Test case 336c:  variation of 336 with reference inside of an indented code block
     """
 
     # Arrange
@@ -497,7 +497,7 @@ def test_character_references_336c():
 @pytest.mark.gfm
 def test_character_references_336d():
     """
-    Test case 336d:  variations
+    Test case 336d:  variation of 336 with reference inside of a fenced code block
     """
 
     # Arrange
@@ -519,7 +519,7 @@ F&ouml;o
 @pytest.mark.gfm
 def test_character_references_336e():
     """
-    Test case 336e:  variations
+    Test case 336e:  variation of 336 with reference inside of a HTML block
     """
 
     # Arrange

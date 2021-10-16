@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD012 rule.
+Module to provide tests related to the MD014 rule.
 """
 from test.markdown_scanner import MarkdownScanner
 
@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md014_good_shell_example():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a fenced block with a `shell` tag and no leading $.
     """
 
     # Arrange
@@ -37,9 +36,9 @@ def test_md014_good_shell_example():
 @pytest.mark.rules
 def test_md014_good_shell_example_some_output():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a fenced block with a `shell` tag and mixed lines with leading $
+    and no leading $.
     """
 
     # Arrange
@@ -65,9 +64,8 @@ def test_md014_good_shell_example_some_output():
 @pytest.mark.rules
 def test_md014_bad_shell_example():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced block with a `shell` tag and only leading $.
     """
 
     # Arrange
@@ -96,9 +94,9 @@ def test_md014_bad_shell_example():
 @pytest.mark.rules
 def test_md014_bad_shell_example_with_leading_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule not trigger with a document that
+    contains a fenced block with a `shell` tag and only leading $
+    with leading space before that.
     """
 
     # Arrange
@@ -127,9 +125,8 @@ def test_md014_bad_shell_example_with_leading_space():
 @pytest.mark.rules
 def test_md014_bad_shell_example_indented():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule not trigger with a document that
+    contains an indented block with leading $ that looks like shell output.
     """
 
     # Arrange

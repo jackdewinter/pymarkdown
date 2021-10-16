@@ -113,9 +113,7 @@ def test_extra_005():
 @pytest.mark.gfm
 def test_extra_006():
     """
-    When encoding link characters, special attention is used for the % characters as
-    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
-    this is tested at the end of the link.
+    lists and fenced code blocks within a block quote
     """
 
     # Arrange
@@ -161,9 +159,7 @@ def test_extra_006():
 @pytest.mark.gfm
 def test_extra_007a():
     """
-    When encoding link characters, special attention is used for the % characters as
-    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
-    this is tested at the end of the link.
+    Text and a link reference definition within a block quote.
     """
 
     # Arrange
@@ -204,9 +200,7 @@ a real test</p>
 @pytest.mark.gfm
 def test_extra_007b():
     """
-    When encoding link characters, special attention is used for the % characters as
-    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
-    this is tested at the end of the link.
+    Variation on 7a with more spacing
     """
 
     # Arrange
@@ -250,9 +244,7 @@ a real test</p>
 @pytest.mark.gfm
 def test_extra_007c():
     """
-    When encoding link characters, special attention is used for the % characters as
-    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
-    this is tested at the end of the link.
+    Variation on 7a with more spacing
     """
 
     # Arrange
@@ -295,9 +287,7 @@ a real test</p>
 @pytest.mark.gfm
 def test_extra_007d():
     """
-    When encoding link characters, special attention is used for the % characters as
-    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
-    this is tested at the end of the link.
+    Variation on 7a with more spacing
     """
 
     # Arrange
@@ -340,9 +330,7 @@ a real test</p>
 @pytest.mark.gfm
 def test_extra_007e():
     """
-    When encoding link characters, special attention is used for the % characters as
-    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
-    this is tested at the end of the link.
+    Almost looks like a fenced code block, but is really a code span.
     """
 
     # Arrange
@@ -379,9 +367,7 @@ a real test</p>
 @pytest.mark.gfm
 def test_extra_008x():
     """
-    When encoding link characters, special attention is used for the % characters as
-    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
-    this is tested at the end of the link.
+    Simple unordered list with increasing indent in a block quote.
     """
 
     # Arrange
@@ -432,9 +418,7 @@ def test_extra_008x():
 @pytest.mark.gfm
 def test_extra_008a():
     """
-    When encoding link characters, special attention is used for the % characters as
-    the CommonMark parser treats "%<hex-char><hex-char>" as non-encodable.  Make sure
-    this is tested at the end of the link.
+    Variation on 8 with no block quote.
     """
 
     # Arrange

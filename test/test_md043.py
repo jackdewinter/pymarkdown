@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD026 rule.
+Module to provide tests related to the MD043 rule.
 """
 from test.markdown_scanner import MarkdownScanner
 
@@ -11,9 +11,8 @@ import pytest
 @pytest.mark.rules
 def test_md043_bad_configuration_headings():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    headings value with an integer that is not a string.
     """
 
     # Arrange
@@ -49,9 +48,8 @@ def test_md043_bad_configuration_headings():
 @pytest.mark.rules
 def test_md043_bad_configuration_headings_dupicate_stars():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    headings value with duplicate wildcards.
     """
 
     # Arrange
@@ -87,9 +85,8 @@ def test_md043_bad_configuration_headings_dupicate_stars():
 @pytest.mark.rules
 def test_md043_good_configuration_headings_empty():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    headings value that is an empty string.
     """
 
     # Arrange
@@ -122,9 +119,8 @@ def test_md043_good_configuration_headings_empty():
 @pytest.mark.rules
 def test_md043_bad_configuration_headings_no_atx_start():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains multiple headings and a pattern of one constant heading.
     """
 
     # Arrange
@@ -161,9 +157,8 @@ def test_md043_bad_configuration_headings_no_atx_start():
 @pytest.mark.rules
 def test_md043_bad_configuration_headings_too_many_hashes():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains multiple headings and a pattern of one bad level constant heading.
     """
 
     # Arrange
@@ -200,9 +195,8 @@ def test_md043_bad_configuration_headings_too_many_hashes():
 @pytest.mark.rules
 def test_md043_bad_configuration_headings_bad_whitespace():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains multiple headings and a pattern of one badly specified heading.
     """
 
     # Arrange
@@ -239,9 +233,8 @@ def test_md043_bad_configuration_headings_bad_whitespace():
 @pytest.mark.rules
 def test_md043_bad_configuration_headings_bad_text():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains multiple headings and a pattern with no text.
     """
 
     # Arrange
@@ -278,9 +271,8 @@ def test_md043_bad_configuration_headings_bad_text():
 @pytest.mark.rules
 def test_md043_good_simple_headings_no_format():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains multiple headings and a default pattern.
     """
 
     # Arrange
@@ -310,9 +302,8 @@ def test_md043_good_simple_headings_no_format():
 @pytest.mark.rules
 def test_md043_good_single_heading_atx_with_single_rule():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a single heading and a pattern of that one heading.
     """
 
     # Arrange
@@ -343,9 +334,8 @@ def test_md043_good_single_heading_atx_with_single_rule():
 @pytest.mark.rules
 def test_md043_bad_single_heading_atx_with_double_rule():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a single heading and a pattern of two headings.
     """
 
     # Arrange
@@ -380,9 +370,8 @@ def test_md043_bad_single_heading_atx_with_double_rule():
 @pytest.mark.rules
 def test_md043_bad_double_heading_atx_with_single_rule():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains two headings and a pattern of one heading.
     """
 
     # Arrange
@@ -417,9 +406,8 @@ def test_md043_bad_double_heading_atx_with_single_rule():
 @pytest.mark.rules
 def test_md043_good_double_heading_atx_with_double_rule():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains two headings and a pattern of those two headings.
     """
 
     # Arrange
@@ -450,9 +438,8 @@ def test_md043_good_double_heading_atx_with_double_rule():
 @pytest.mark.rules
 def test_md043_bad_double_heading_atx_with_double_rule_bad_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains two headings and a pattern with a bad level matching second heading.
     """
 
     # Arrange
@@ -487,9 +474,8 @@ def test_md043_bad_double_heading_atx_with_double_rule_bad_level():
 @pytest.mark.rules
 def test_md043_bad_double_heading_atx_with_double_rule_bad_text():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains two headings and a pattern with a bad text matching second heading.
     """
 
     # Arrange
@@ -524,9 +510,8 @@ def test_md043_bad_double_heading_atx_with_double_rule_bad_text():
 @pytest.mark.rules
 def test_md043_good_double_heading_atx_second_has_emphasis():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains two headings and a pattern with a bad text (emphasis) matching second heading.
     """
 
     # Arrange
@@ -561,9 +546,8 @@ def test_md043_good_double_heading_atx_second_has_emphasis():
 @pytest.mark.rules
 def test_md043_good_simple_headings_simple_format():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains mixed headings and a pattern with those headings.
     """
 
     # Arrange
@@ -596,9 +580,8 @@ def test_md043_good_simple_headings_simple_format():
 @pytest.mark.rules
 def test_md043_good_double_heading_atx_with_double_rule_matching_1_star():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains two headings and a pattern with the first heading and a wildcard.
     """
 
     # Arrange
@@ -629,9 +612,8 @@ def test_md043_good_double_heading_atx_with_double_rule_matching_1_star():
 @pytest.mark.rules
 def test_md043_bad_double_heading_atx_with_double_rule_unmatching_1_star():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains two headings and a pattern that does not match the first, followed by wildcard.
     """
 
     # Arrange
@@ -666,9 +648,8 @@ def test_md043_bad_double_heading_atx_with_double_rule_unmatching_1_star():
 @pytest.mark.rules
 def test_md043_good_double_heading_atx_with_double_rule_matching_star_2():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains two headings and a pattern with a wildcard and the second heading.
     """
 
     # Arrange
@@ -699,9 +680,8 @@ def test_md043_good_double_heading_atx_with_double_rule_matching_star_2():
 @pytest.mark.rules
 def test_md043_bad_double_heading_atx_with_double_rule_unmatching_star_2():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains two headings and a pattern with a wildcard and a bad matching second.
     """
 
     # Arrange
@@ -736,9 +716,8 @@ def test_md043_bad_double_heading_atx_with_double_rule_unmatching_star_2():
 @pytest.mark.rules
 def test_md043_bad_double_heading_atx_unmatching_1_2_3_star():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains two headings and a pattern with three constant headings.
     """
 
     # Arrange
@@ -773,9 +752,8 @@ def test_md043_bad_double_heading_atx_unmatching_1_2_3_star():
 @pytest.mark.rules
 def test_md043_bad_double_heading_atx_unmatching_star_1_2_3():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains two headings and a pattern with a wildcard and three headings.
     """
 
     # Arrange
@@ -810,9 +788,8 @@ def test_md043_bad_double_heading_atx_unmatching_star_1_2_3():
 @pytest.mark.rules
 def test_md043_bad_double_heading_atx_matching_1_2_start_2_over():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains two headings and a pattern with two headings, a wildcard, and a matching heading.
     """
 
     # Arrange
@@ -847,9 +824,8 @@ def test_md043_bad_double_heading_atx_matching_1_2_start_2_over():
 @pytest.mark.rules
 def test_md043_good_simple_headings_rule_matching_1_star_2_3():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains headings and a pattern with a pattern of wildcards and matching headings.
     """
 
     # Arrange
@@ -882,9 +858,8 @@ def test_md043_good_simple_headings_rule_matching_1_star_2_3():
 @pytest.mark.rules
 def test_md043_good_good_simple_headings_1_star_3_star_3():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains headings and a pattern with a pattern of wildcards and matching headings.
     """
 
     # Arrange
@@ -918,9 +893,8 @@ def test_md043_good_good_simple_headings_1_star_3_star_3():
 @pytest.mark.rules
 def test_md043_bad_good_many_level_two_1_star_3_star_3():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains headings and a pattern with a pattern of wildcards and matching headings.
     """
 
     # Arrange
@@ -958,9 +932,8 @@ def test_md043_bad_good_many_level_two_1_star_3_star_3():
 @pytest.mark.rules
 def test_md043_good_good_many_level_two_1_star_2_star_2_star_3():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains headings and a pattern with a pattern of wildcards and matching headings.
     """
 
     # Arrange
@@ -994,9 +967,8 @@ def test_md043_good_good_many_level_two_1_star_2_star_2_star_3():
 @pytest.mark.rules
 def test_md043_bad_good_many_level_two_1_star_2_star_2_star_3():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains headings and a pattern with a pattern of wildcards and matching headings.
     """
 
     # Arrange
@@ -1034,9 +1006,8 @@ def test_md043_bad_good_many_level_two_1_star_2_star_2_star_3():
 @pytest.mark.rules
 def test_md043_good_good_simple_headings_two_1_star_3_2_star_3():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains headings and a pattern with a pattern of wildcards and matching headings.
     """
 
     # Arrange
@@ -1070,9 +1041,8 @@ def test_md043_good_good_simple_headings_two_1_star_3_2_star_3():
 @pytest.mark.rules
 def test_md043_bad_good_many_level_two_1_star_3_2_star_3():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains headings and a pattern with a pattern of wildcards and matching headings.
     """
 
     # Arrange

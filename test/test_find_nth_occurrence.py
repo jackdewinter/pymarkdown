@@ -6,7 +6,7 @@ from pymarkdown.parser_helper import ParserHelper
 
 def test_find_nth_simple_positive():
     """
-    Make sure that...
+    Make sure that a simple case of the first of a sample in that sample works.
     """
 
     # Arrange
@@ -24,7 +24,7 @@ def test_find_nth_simple_positive():
 
 def test_find_nth_simple_negative():
     """
-    Make sure that...
+    Make sure that a simple case of the first of a sample not in that sample works.
     """
 
     # Arrange
@@ -42,7 +42,8 @@ def test_find_nth_simple_negative():
 
 def test_find_nth_double_positive():
     """
-    Make sure that...
+    Make sure that a simple case of the second of a sample in
+    another sample with two occurrences works.
     """
 
     # Arrange
@@ -60,7 +61,8 @@ def test_find_nth_double_positive():
 
 def test_find_nth_double_negative():
     """
-    Make sure that...
+    Make sure that a simple case of the second of a sample in
+    another sample with only one occurrence does not work.
     """
 
     # Arrange
@@ -78,7 +80,7 @@ def test_find_nth_double_negative():
 
 def test_find_nth_overlap_positive():
     """
-    Make sure that...
+    Make sure that a more complex case of overlapping positivies works.
     """
 
     # Arrange

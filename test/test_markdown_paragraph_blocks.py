@@ -65,7 +65,7 @@ ddd</p>"""
 @pytest.mark.gfm
 def test_paragraph_blocks_190a():
     """
-    Test case 189:  Paragraphs can contain multiple lines, but no blank lines:
+    Test case 190a:  variation of 190 with extra lines
     """
 
     # Arrange
@@ -242,7 +242,7 @@ bbb</p>"""
 @pytest.mark.gfm
 def test_paragraph_blocks_196a():
     """
-    Test case 196a:  Modification of 196, but with tabs instead of space.
+    Test case 196a:  variation of 196, but with tabs instead of space.
     """
 
     # Arrange

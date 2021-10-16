@@ -40,8 +40,8 @@ def test_md047_all_samples():
 @pytest.mark.rules
 def test_md047_good_end_with_blank_line():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md047 directory.
+    Test to make sure this rule does not trigger with a document that
+    properly ends with a blank line.
     """
 
     # Arrange
@@ -64,8 +64,8 @@ def test_md047_good_end_with_blank_line():
 @pytest.mark.rules
 def test_md047_bad_end_with_no_blank_line():
     """
-    Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md047 directory which does not end with a blank line.
+    Test to make sure this rule does trigger with a document that
+    does not end with a blank line.
     """
 
     # Arrange
@@ -94,8 +94,8 @@ def test_md047_bad_end_with_no_blank_line():
 @pytest.mark.rules
 def test_md047_bad_end_with_blank_line_containing_spaces():
     """
-    Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md047 directory which does not end with a blank line.
+    Test to make sure this rule does trigger with a document that
+    ends with a line that is only whitespace.
     """
 
     # Arrange

@@ -11,9 +11,8 @@ import pytest
 @pytest.mark.rules
 def test_md013_bad_configuration_line_length():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    line_length value with a string that is not an integer.
     """
 
     # Arrange
@@ -45,9 +44,8 @@ def test_md013_bad_configuration_line_length():
 @pytest.mark.rules
 def test_md013_bad_configuration_line_length_zero():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    line_length value with an integer that is 0.
     """
 
     # Arrange
@@ -79,9 +77,8 @@ def test_md013_bad_configuration_line_length_zero():
 @pytest.mark.rules
 def test_md013_bad_configuration_heading_line_length():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    heading_line_length value with a string that is not an integer.
     """
 
     # Arrange
@@ -113,9 +110,8 @@ def test_md013_bad_configuration_heading_line_length():
 @pytest.mark.rules
 def test_md013_bad_configuration_headings_active():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    headings value with a string that is not a boolean.
     """
 
     # Arrange
@@ -147,9 +143,8 @@ def test_md013_bad_configuration_headings_active():
 @pytest.mark.rules
 def test_md013_bad_configuration_code_block_line_length():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    code_block_line_length value with a string that is not an integer.
     """
 
     # Arrange
@@ -181,9 +176,8 @@ def test_md013_bad_configuration_code_block_line_length():
 @pytest.mark.rules
 def test_md013_bad_configuration_code_blocks_active():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    code_blocks value with a string that is not a boolean.
     """
 
     # Arrange
@@ -215,9 +209,8 @@ def test_md013_bad_configuration_code_blocks_active():
 @pytest.mark.rules
 def test_md013_bad_configuration_strict_mode():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    strict value with a string that is not a boolean.
     """
 
     # Arrange
@@ -249,9 +242,8 @@ def test_md013_bad_configuration_strict_mode():
 @pytest.mark.rules
 def test_md013_bad_configuration_stern_mode():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    stern value with a string that is not a boolean.
     """
 
     # Arrange
@@ -283,9 +275,8 @@ def test_md013_bad_configuration_stern_mode():
 @pytest.mark.rules
 def test_md013_good_small_line():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a single line with 38 characters.
     """
 
     # Arrange
@@ -311,9 +302,9 @@ def test_md013_good_small_line():
 @pytest.mark.rules
 def test_md013_good_small_line_with_config():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a single line with 38 characters, with configuration
+    setting the maximum line length to 25.
     """
 
     # Arrange
@@ -346,9 +337,8 @@ def test_md013_good_small_line_with_config():
 @pytest.mark.rules
 def test_md013_good_medium_line():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a single line with 80 characters.
     """
 
     # Arrange
@@ -374,9 +364,9 @@ def test_md013_good_medium_line():
 @pytest.mark.rules
 def test_md013_good_medium_line_with_config():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a single line with 80 characters with a configured maximum
+    line length of 80.
     """
 
     # Arrange
@@ -409,9 +399,8 @@ def test_md013_good_medium_line_with_config():
 @pytest.mark.rules
 def test_md013_good_long_line():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a single line with 80 characters.
     """
 
     # Arrange
@@ -441,9 +430,9 @@ def test_md013_good_long_line():
 @pytest.mark.rules
 def test_md013_good_long_line_with_config():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a single line with 80 characters with a configured maximum
+    line length of 110.
     """
 
     # Arrange
@@ -472,9 +461,9 @@ def test_md013_good_long_line_with_config():
 @pytest.mark.rules
 def test_md013_good_medium_line_with_long_last_word():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a single line the crosses the normal 80 character limit
+    with a 31 character last "word".
     """
 
     # Arrange
@@ -500,9 +489,9 @@ def test_md013_good_medium_line_with_long_last_word():
 @pytest.mark.rules
 def test_md013_good_medium_line_with_long_last_word_with_config_strict():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a single line the crosses the normal 80 character limit
+    with a 31 character last "word" and strict mode active.
     """
 
     # Arrange
@@ -535,9 +524,9 @@ def test_md013_good_medium_line_with_long_last_word_with_config_strict():
 @pytest.mark.rules
 def test_md013_good_medium_line_with_long_last_word_with_config_stern():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a single line the crosses the normal 80 character limit
+    with a 31 character last "word" and stern mode active.
     """
 
     # Arrange
@@ -570,9 +559,9 @@ def test_md013_good_medium_line_with_long_last_word_with_config_stern():
 @pytest.mark.rules
 def test_md013_bad_medium_line_with_long_last_word():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a single line with multiple words past the 80 character
+    boundary.
     """
 
     # Arrange
@@ -602,9 +591,9 @@ def test_md013_bad_medium_line_with_long_last_word():
 @pytest.mark.rules
 def test_md013_bad_medium_line_with_long_last_word_with_config_strict():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a single line with multiple words past the 80 character
+    boundary and strict mode.
     """
 
     # Arrange
@@ -637,9 +626,9 @@ def test_md013_bad_medium_line_with_long_last_word_with_config_strict():
 @pytest.mark.rules
 def test_md013_bad_medium_line_with_long_last_word_with_config_stern():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a single line with multiple words past the 80 character
+    boundary and stern mode.
     """
 
     # Arrange
@@ -668,9 +657,8 @@ def test_md013_bad_medium_line_with_long_last_word_with_config_stern():
 @pytest.mark.rules
 def test_md013_bad_paragraph_with_long_line_in_middle():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a multiple lines with a very long line in the middle.
     """
 
     # Arrange
@@ -700,9 +688,8 @@ def test_md013_bad_paragraph_with_long_line_in_middle():
 @pytest.mark.rules
 def test_md013_good_fenced_code_block():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a good line within a fenced code block.
     """
 
     # Arrange
@@ -728,9 +715,8 @@ def test_md013_good_fenced_code_block():
 @pytest.mark.rules
 def test_md013_bad_fenced_code_block():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a long line within a fenced code block.
     """
 
     # Arrange
@@ -756,9 +742,9 @@ def test_md013_bad_fenced_code_block():
 @pytest.mark.rules
 def test_md013_bad_fenced_code_block_with_config():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a very long line within a fenced code block, even with
+    an extended line length for code blocks.
     """
 
     # Arrange
@@ -787,9 +773,9 @@ def test_md013_bad_fenced_code_block_with_config():
 @pytest.mark.rules
 def test_md013_bad_fenced_code_block_with_config_active():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within a fenced code block, but with the
+    code_block value turned off.
     """
 
     # Arrange
@@ -818,9 +804,9 @@ def test_md013_bad_fenced_code_block_with_config_active():
 @pytest.mark.rules
 def test_md013_good_indented_code_block():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within an indented code block, but with the
+    code_block value turned off.
     """
 
     # Arrange
@@ -846,9 +832,8 @@ def test_md013_good_indented_code_block():
 @pytest.mark.rules
 def test_md013_bad_indented_code_block():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a long line within an indented code block.
     """
 
     # Arrange
@@ -874,9 +859,9 @@ def test_md013_bad_indented_code_block():
 @pytest.mark.rules
 def test_md013_bad_indented_code_block_with_config():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within an indented code block, but with the
+    code_block_line_length set to 100.
     """
 
     # Arrange
@@ -905,9 +890,9 @@ def test_md013_bad_indented_code_block_with_config():
 @pytest.mark.rules
 def test_md013_bad_indented_code_block_with_config_active():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within an indented code block, but with the
+    code_blocks set to False.
     """
 
     # Arrange
@@ -936,9 +921,8 @@ def test_md013_bad_indented_code_block_with_config_active():
 @pytest.mark.rules
 def test_md013_good_thematic_break():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a normal line within a thematic break.
     """
 
     # Arrange
@@ -964,9 +948,8 @@ def test_md013_good_thematic_break():
 @pytest.mark.rules
 def test_md013_bad_thematic_break():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a long line within a thematic break.
     """
 
     # Arrange
@@ -992,9 +975,9 @@ def test_md013_bad_thematic_break():
 @pytest.mark.rules
 def test_md013_bad_thematic_break_with_config():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within a thematic break, but with a configuration
+    to allow the long line.
     """
 
     # Arrange
@@ -1023,9 +1006,8 @@ def test_md013_bad_thematic_break_with_config():
 @pytest.mark.rules
 def test_md013_good_atx_heading():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a normal line within an Atx Heading.
     """
 
     # Arrange
@@ -1051,9 +1033,8 @@ def test_md013_good_atx_heading():
 @pytest.mark.rules
 def test_md013_bad_atx_heading():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a long line within an Atx Heading.
     """
 
     # Arrange
@@ -1079,9 +1060,9 @@ def test_md013_bad_atx_heading():
 @pytest.mark.rules
 def test_md013_bad_atx_heading_with_config():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within an Atx Heading, but with configuration
+    to allow it.
     """
 
     # Arrange
@@ -1110,9 +1091,9 @@ def test_md013_bad_atx_heading_with_config():
 @pytest.mark.rules
 def test_md013_bad_atx_heading_with_config_active():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within an Atx Heading, but with configuration
+    to exclude headings.
     """
 
     # Arrange
@@ -1141,9 +1122,8 @@ def test_md013_bad_atx_heading_with_config_active():
 @pytest.mark.rules
 def test_md013_good_setext_heading():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a normal line within a SetExt Heading.
     """
 
     # Arrange
@@ -1169,9 +1149,8 @@ def test_md013_good_setext_heading():
 @pytest.mark.rules
 def test_md013_bad_setext_heading():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a long line within a SetExt Heading.
     """
 
     # Arrange
@@ -1197,9 +1176,9 @@ def test_md013_bad_setext_heading():
 @pytest.mark.rules
 def test_md013_bad_setext_heading_with_config():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within a SetExt Heading, but configuration to
+    allow it.
     """
 
     # Arrange
@@ -1228,9 +1207,9 @@ def test_md013_bad_setext_heading_with_config():
 @pytest.mark.rules
 def test_md013_bad_setext_heading_with_config_active():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within a SetExt Heading, but with headings
+    turned off.
     """
 
     # Arrange
@@ -1259,9 +1238,8 @@ def test_md013_bad_setext_heading_with_config_active():
 @pytest.mark.rules
 def test_md013_good_html_block():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a normal line within a HTML block.
     """
 
     # Arrange
@@ -1287,9 +1265,8 @@ def test_md013_good_html_block():
 @pytest.mark.rules
 def test_md013_bad_html_block():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a long line within a HTML block.
     """
 
     # Arrange
@@ -1315,9 +1292,9 @@ def test_md013_bad_html_block():
 @pytest.mark.rules
 def test_md013_bad_html_block_with_config():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a long line within a HTML block, but configuration to allow
+    it.
     """
 
     # Arrange

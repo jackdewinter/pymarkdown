@@ -68,7 +68,7 @@ def test_autolinks_604():
 @pytest.mark.gfm
 def test_autolinks_604a():
     """
-    Test case 604a:  variations
+    Test case 604a:  variation of 604 that only has a root url
     """
 
     # Arrange
@@ -87,7 +87,7 @@ def test_autolinks_604a():
 @pytest.mark.gfm
 def test_autolinks_604b():
     """
-    Test case 604b:  variations
+    Test case 604b:  variation on 604 that has a weird scheme
     """
 
     # Arrange
@@ -243,7 +243,7 @@ def test_autolinks_611():
 @pytest.mark.gfm
 def test_autolinks_611a():
     """
-    Test case 611a:  Backslash-escapes do not work inside autolinks:
+    Test case 611a:  Variation on 611 that includes unicode characters.
     """
 
     # Arrange
@@ -262,7 +262,7 @@ def test_autolinks_611a():
 @pytest.mark.gfm
 def test_autolinks_611b():
     """
-    Test case 611b:  Backslash-escapes do not work inside autolinks:
+    Test case 611b:  Variation on 611 that includes every eligible character.
     """
 
     # Arrange
@@ -321,7 +321,7 @@ def test_autolinks_613():
 @pytest.mark.gfm
 def test_autolinks_613a():
     """
-    Test case 613a:  variations
+    Test case 613a:  variation of 613 that is a minimal mail address
     """
 
     # Arrange
@@ -469,7 +469,7 @@ def test_autolinks_620():
 @pytest.mark.gfm
 def test_autolinks_620a():
     """
-    Test case 620a:  variation (not enough in scheme)
+    Test case 620a:  variation of 620 with not enough in the scheme part
     """
 
     # Arrange
@@ -488,7 +488,7 @@ def test_autolinks_620a():
 @pytest.mark.gfm
 def test_autolinks_620b():
     """
-    Test case 620b:  variation (too much in scheme)
+    Test case 620b:  variation of 620 with too much in the scheme part
     """
 
     # Arrange
@@ -507,7 +507,7 @@ def test_autolinks_620b():
 @pytest.mark.gfm
 def test_autolinks_620c():
     """
-    Test case 620c:  variation (illegal char in scheme)
+    Test case 620c:  variation of 620 with an illegal char in scheme
     """
 
     # Arrange
@@ -528,7 +528,7 @@ def test_autolinks_620c():
 @pytest.mark.gfm
 def test_autolinks_620d():
     """
-    Test case 620d:  variation (no domain part)
+    Test case 620d:  variation of 620 with no domain part
     """
 
     # Arrange
@@ -549,7 +549,7 @@ def test_autolinks_620d():
 @pytest.mark.gfm
 def test_autolinks_620e():
     """
-    Test case 620e:  variation (no mailbox part)
+    Test case 620e:  variation of 620 with no mailbox part
     """
 
     # Arrange

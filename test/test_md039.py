@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md039_good_inline_link():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains an inline link with no space on either side of the link label.
     """
 
     # Arrange
@@ -37,9 +36,8 @@ def test_md039_good_inline_link():
 @pytest.mark.rules
 def test_md039_bad_inline_link_trailing_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains an inline link with space on the right side of the link label.
     """
 
     # Arrange
@@ -68,9 +66,8 @@ def test_md039_bad_inline_link_trailing_space():
 @pytest.mark.rules
 def test_md039_bad_inline_link_leading_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains an inline link with space on the left side of the link label.
     """
 
     # Arrange
@@ -99,9 +96,8 @@ def test_md039_bad_inline_link_leading_space():
 @pytest.mark.rules
 def test_md039_bad_inline_link_both_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains an inline link with space on both sides of the link label.
     """
 
     # Arrange
@@ -130,9 +126,8 @@ def test_md039_bad_inline_link_both_space():
 @pytest.mark.rules
 def test_md039_good_full_link():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a full link with no space on either side of the link label.
     """
 
     # Arrange
@@ -158,9 +153,8 @@ def test_md039_good_full_link():
 @pytest.mark.rules
 def test_md039_bad_full_link_both_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a full link with space on both sides of the link label.
     """
 
     # Arrange
@@ -189,9 +183,8 @@ def test_md039_bad_full_link_both_space():
 @pytest.mark.rules
 def test_md039_good_collapsed_link():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a collapsed link with no space on either side of the link label.
     """
 
     # Arrange
@@ -217,9 +210,8 @@ def test_md039_good_collapsed_link():
 @pytest.mark.rules
 def test_md039_bad_collapsed_link_both_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a collapsed link with space on both sides of the link label.
     """
 
     # Arrange
@@ -248,9 +240,8 @@ def test_md039_bad_collapsed_link_both_space():
 @pytest.mark.rules
 def test_md039_good_shortcut_link():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a shortcut link with no space on either side of the link label.
     """
 
     # Arrange
@@ -276,9 +267,8 @@ def test_md039_good_shortcut_link():
 @pytest.mark.rules
 def test_md039_bad_shortcut_link_both_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a shortcut link with spaces on both sides of the link label.
     """
 
     # Arrange
@@ -307,9 +297,8 @@ def test_md039_bad_shortcut_link_both_space():
 @pytest.mark.rules
 def test_md039_good_inline_image():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains an inline image with no space on either side of the link label.
     """
 
     # Arrange
@@ -335,9 +324,8 @@ def test_md039_good_inline_image():
 @pytest.mark.rules
 def test_md039_bad_inline_image_trailing_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains an inline image with space on the right side of the link label.
     """
 
     # Arrange
@@ -366,9 +354,8 @@ def test_md039_bad_inline_image_trailing_space():
 @pytest.mark.rules
 def test_md039_bad_inline_image_leading_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains an inline image with space on the left side of the link label.
     """
 
     # Arrange
@@ -397,9 +384,8 @@ def test_md039_bad_inline_image_leading_space():
 @pytest.mark.rules
 def test_md039_bad_inline_image_both_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains an inline image with space on both sides of the link label.
     """
 
     # Arrange
@@ -428,9 +414,8 @@ def test_md039_bad_inline_image_both_space():
 @pytest.mark.rules
 def test_md039_good_full_image():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a full image with no space on either side of the link label.
     """
 
     # Arrange
@@ -456,9 +441,8 @@ def test_md039_good_full_image():
 @pytest.mark.rules
 def test_md039_bad_full_image_both_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a full image with spaces on both sides of the link label.
     """
 
     # Arrange
@@ -487,9 +471,8 @@ def test_md039_bad_full_image_both_space():
 @pytest.mark.rules
 def test_md039_good_collapsed_image():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a collapsed image with no space on either side of the link label.
     """
 
     # Arrange
@@ -515,9 +498,8 @@ def test_md039_good_collapsed_image():
 @pytest.mark.rules
 def test_md039_bad_collapsed_image_both_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a collapsed image with spaces on both sides of the link label.
     """
 
     # Arrange
@@ -546,9 +528,8 @@ def test_md039_bad_collapsed_image_both_space():
 @pytest.mark.rules
 def test_md039_good_shortcut_image():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a shortcut image with no space on either side of the link label.
     """
 
     # Arrange
@@ -574,9 +555,8 @@ def test_md039_good_shortcut_image():
 @pytest.mark.rules
 def test_md039_bad_shortcut_image_both_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a shortcut image with spaces on both sides of the link label.
     """
 
     # Arrange

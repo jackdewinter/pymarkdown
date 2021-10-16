@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md012_bad_configuration_maximum():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    maximum value with an integer that is negative.
     """
 
     # Arrange
@@ -43,9 +42,8 @@ def test_md012_bad_configuration_maximum():
 @pytest.mark.rules
 def test_md012_good_simple_paragraphs_single_blanks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains only paragraphs with a single blank line between them.
     """
 
     # Arrange
@@ -71,9 +69,8 @@ def test_md012_good_simple_paragraphs_single_blanks():
 @pytest.mark.rules
 def test_md012_bad_simple_paragraphs_double_blanks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains only paragraphs with two blank lines between them.
     """
 
     # Arrange
@@ -102,9 +99,9 @@ def test_md012_bad_simple_paragraphs_double_blanks():
 @pytest.mark.rules
 def test_md012_good_simple_paragraphs_double_blanks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains only paragraphs with two blank lines between them and
+    the configuration to make that correct.
     """
 
     # Arrange
@@ -133,9 +130,8 @@ def test_md012_good_simple_paragraphs_double_blanks():
 @pytest.mark.rules
 def test_md012_good_simple_paragraphs_triple_blanks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains only paragraphs with three blank lines between them.
     """
 
     # Arrange
@@ -164,9 +160,8 @@ def test_md012_good_simple_paragraphs_triple_blanks():
 @pytest.mark.rules
 def test_md012_bad_double_blanks_at_end():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a paragraph followed by two blank lines.
     """
 
     # Arrange
@@ -195,9 +190,8 @@ def test_md012_bad_double_blanks_at_end():
 @pytest.mark.rules
 def test_md012_bad_multiple_blanks_in_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains two paragraphs separated by two blank lines, all within a block quote.
     """
 
     # Arrange
@@ -226,9 +220,8 @@ def test_md012_bad_multiple_blanks_in_block_quote():
 @pytest.mark.rules
 def test_md012_bad_multiple_blanks_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a paragraph followed by two blank lines, in a list item.
     """
 
     # Arrange
@@ -259,9 +252,8 @@ def test_md012_bad_multiple_blanks_in_list():
 @pytest.mark.rules
 def test_md012_good_multiple_blanks_in_fenced():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a two blank lines within a fenced code block.
     """
 
     # Arrange
@@ -287,9 +279,8 @@ def test_md012_good_multiple_blanks_in_fenced():
 @pytest.mark.rules
 def test_md012_good_multiple_blanks_in_indented():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a two blank lines within a indented code block.
     """
 
     # Arrange
@@ -315,9 +306,8 @@ def test_md012_good_multiple_blanks_in_indented():
 @pytest.mark.rules
 def test_md012_bad_multiple_blanks_in_html():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md010 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a two blank lines within a HTML block.
     """
 
     # Arrange

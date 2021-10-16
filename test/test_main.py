@@ -77,7 +77,8 @@ optional arguments:
 
 def test_markdown_with_no_parameters_through_module():
     """
-    Test to make sure we get the simple information if no parameters are supplied.
+    Test to make sure we get the simple information if no parameters are supplied,
+    but through the module interface.
     """
 
     # Arrange

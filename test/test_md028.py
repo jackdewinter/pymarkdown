@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md028_good_split_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a single block quote containing a blank line with no missing bq character.
     """
 
     # Arrange
@@ -37,9 +36,8 @@ def test_md028_good_split_block_quote():
 @pytest.mark.rules
 def test_md028_bad_split_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains two block quotes separated by a blank line with no bq character.
     """
 
     # Arrange
@@ -68,9 +66,8 @@ def test_md028_bad_split_block_quote():
 @pytest.mark.rules
 def test_md028_bad_split_block_quote_multiple_blanks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains two block quotes containing two blank lines with no bq character.
     """
 
     # Arrange
@@ -103,9 +100,8 @@ def test_md028_bad_split_block_quote_multiple_blanks():
 @pytest.mark.rules
 def test_md028_good_split_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains two block quotes separated by an Atx Heading.
     """
 
     # Arrange
@@ -133,9 +129,8 @@ def test_md028_good_split_atx():
 @pytest.mark.rules
 def test_md028_good_split_blank_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains two block quotes separated by a blank Atx Heading.
     """
 
     # Arrange
@@ -163,9 +158,9 @@ def test_md028_good_split_blank_atx():
 @pytest.mark.rules
 def test_md028_good_blank_paragraph_blank():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains two block quotes separated by a blank line, a paragraph,
+    and another blank line.
     """
 
     # Arrange
@@ -191,9 +186,8 @@ def test_md028_good_blank_paragraph_blank():
 @pytest.mark.rules
 def test_md028_bad_blank_paragraph():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains two block quotes separated by a paragraph and a blank line.
     """
 
     # Arrange
@@ -222,9 +216,8 @@ def test_md028_bad_blank_paragraph():
 @pytest.mark.rules
 def test_md028_good_blank_paragraph():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains two block quotes separated by a blank line and a paragraph.
     """
 
     # Arrange
@@ -251,9 +244,7 @@ def test_md028_good_blank_paragraph():
 @pytest.mark.skip
 def test_md028_bad_split_block_quote_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    TBD
     """
 
     # Arrange
@@ -279,9 +270,8 @@ def test_md028_bad_split_block_quote_in_list():
 @pytest.mark.rules
 def test_md028_bad_para_and_split_block_quote_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains two block quotes separated by a blank within a list item.
     """
 
     # Arrange
@@ -310,9 +300,8 @@ def test_md028_bad_para_and_split_block_quote_in_list():
 @pytest.mark.rules
 def test_md028_bad_split_blank_with_nested_bq():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains two double block quotes separated by a blank line with a bq start character.
     """
 
     # Arrange

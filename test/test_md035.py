@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD026 rule.
+Module to provide tests related to the MD035 rule.
 """
 from test.markdown_scanner import MarkdownScanner
 
@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md035_bad_configuration_style():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with an integer that is not a string.
     """
 
     # Arrange
@@ -43,9 +42,8 @@ def test_md035_bad_configuration_style():
 @pytest.mark.rules
 def test_md035_bad_configuration_style_leading_spaces():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with string specifying thematic break with leading spaces.
     """
 
     # Arrange
@@ -75,42 +73,10 @@ def test_md035_bad_configuration_style_leading_spaces():
 
 
 @pytest.mark.rules
-def test_md035_good_configuration_style_consistent():
-    """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
-    """
-
-    # Arrange
-    scanner = MarkdownScanner()
-    supplied_arguments = [
-        "--set",
-        "plugins.md035.style=consistent",
-        "--strict-config",
-        "scan",
-        "test/resources/rules/md035/good_consistent_dash.md",
-    ]
-
-    expected_return_code = 0
-    expected_output = ""
-    expected_error = ""
-
-    # Act
-    execute_results = scanner.invoke_main(arguments=supplied_arguments)
-
-    # Assert
-    execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
-    )
-
-
-@pytest.mark.rules
 def test_md035_bad_configuration_style_empty():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with string specifying thematic break that is empty
     """
 
     # Arrange
@@ -142,9 +108,8 @@ def test_md035_bad_configuration_style_empty():
 @pytest.mark.rules
 def test_md035_bad_configuration_style_trailing_spaces():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with string specifying thematic break with trailing spaces.
     """
 
     # Arrange
@@ -176,9 +141,8 @@ def test_md035_bad_configuration_style_trailing_spaces():
 @pytest.mark.rules
 def test_md035_bad_configuration_style_bad_character():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with string specifying thematic break with a bad character.
     """
 
     # Arrange
@@ -208,11 +172,40 @@ def test_md035_bad_configuration_style_bad_character():
 
 
 @pytest.mark.rules
+def test_md035_good_configuration_style_consistent():
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains thematic breaks that are consistent dashes with consistent.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--set",
+        "plugins.md035.style=consistent",
+        "--strict-config",
+        "scan",
+        "test/resources/rules/md035/good_consistent_dash.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
 def test_md035_good_consistent_dash():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains thematic breaks that are consistent dashes with consistent.
     """
 
     # Arrange
@@ -238,9 +231,8 @@ def test_md035_good_consistent_dash():
 @pytest.mark.rules
 def test_md035_bad_consistent_dash():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are not consistent dashes with consistent.
     """
 
     # Arrange
@@ -270,9 +262,8 @@ def test_md035_bad_consistent_dash():
 @pytest.mark.rules
 def test_md035_bad_consistent_dash_with_leading_spaces():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are not consistent dashes with consistent.
     """
 
     # Arrange
@@ -302,9 +293,8 @@ def test_md035_bad_consistent_dash_with_leading_spaces():
 @pytest.mark.rules
 def test_md035_good_dash_marker():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains thematic breaks that are three dashes with configuration of three dashes.
     """
 
     # Arrange
@@ -333,9 +323,8 @@ def test_md035_good_dash_marker():
 @pytest.mark.rules
 def test_md035_bad_dash_marker():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are not three dashes with configuration of three dashes.
     """
 
     # Arrange
@@ -367,9 +356,8 @@ def test_md035_bad_dash_marker():
 @pytest.mark.rules
 def test_md035_good_consistent_asterisk():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains thematic breaks that are asterisks with consistent.
     """
 
     # Arrange
@@ -395,9 +383,8 @@ def test_md035_good_consistent_asterisk():
 @pytest.mark.rules
 def test_md035_bad_consistent_asterisk():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are different asterisks with consistent.
     """
 
     # Arrange
@@ -427,9 +414,8 @@ def test_md035_bad_consistent_asterisk():
 @pytest.mark.rules
 def test_md035_good_asterisk_marker():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains thematic breaks that are three asterisk with configuration of three asterisks.
     """
 
     # Arrange
@@ -458,9 +444,8 @@ def test_md035_good_asterisk_marker():
 @pytest.mark.rules
 def test_md035_bad_asterisk_marker():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are three asterisk with configuration of different three asterisks.
     """
 
     # Arrange
@@ -492,9 +477,8 @@ def test_md035_bad_asterisk_marker():
 @pytest.mark.rules
 def test_md035_good_consistent_underscore():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains thematic breaks that are three underscores with consistent.
     """
 
     # Arrange
@@ -520,9 +504,8 @@ def test_md035_good_consistent_underscore():
 @pytest.mark.rules
 def test_md035_bad_consistent_underscore():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains thematic breaks that are underscores with consistent and different underscores.
     """
 
     # Arrange
@@ -552,9 +535,8 @@ def test_md035_bad_consistent_underscore():
 @pytest.mark.rules
 def test_md035_good_underscore_marker():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains thematic breaks that are underscores with configuration to match.
     """
 
     # Arrange
@@ -583,9 +565,8 @@ def test_md035_good_underscore_marker():
 @pytest.mark.rules
 def test_md035_bad_underscore_marker():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains thematic breaks that are underscores with configuration that does not match.
     """
 
     # Arrange

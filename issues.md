@@ -4,8 +4,6 @@
 
 ## Priority 2 - Like To Solve Before Initial
 
-- before release, check that all test file commented properly
-
 - documentation for developers
 
 - pragma tests need to remove `disable_consistency_checks=True`
@@ -70,6 +68,8 @@ md010 - tabs "converted"
 - test_md027_good_alligned_quote_within_list
 - test_md027_bad_misalligned_quote_within_list
 
+### test_md028_bad_split_block_quote_in_list
+
 ```markdown
 - > This is one section of a block quote
 
@@ -86,6 +86,16 @@ md010 - tabs "converted"
 > dd
 # a
 ```
+
+### Verify test_md023_bad_improper_indent_atx_in_list_item in lists and block quotes
+
+### verify test_md024_bad_same_heading_in_siblings_atx_with_configuration
+
+- backwards with config?
+
+### 036 needs configuration tests for puncuation and proper
+
+### 030 verify right understanding, maybe adjust docs for single vs multi
 
 ### Rule ???
 

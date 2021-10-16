@@ -484,7 +484,7 @@ def test_setext_headings_extra_22():
 @pytest.mark.gfm
 def test_setext_headings_extra_22a():
     """
-    Test case extra 22a:  SetExt heading ends with a backslash as in a hard line break
+    Test case extra 22a:  variation on 22 with more text after the hard break
     """
 
     # Arrange
@@ -507,7 +507,7 @@ another line
 @pytest.mark.gfm
 def test_setext_headings_extra_22b():
     """
-    Test case extra 22a:  SetExt heading ends with a backslash as in a hard line break
+    Test case extra 22b:  variation on 22 with a soft line break
     """
 
     # Arrange
@@ -528,7 +528,7 @@ another line
 @pytest.mark.gfm
 def test_setext_headings_extra_22c():
     """
-    Test case extra 22a:  SetExt heading ends with a backslash as in a hard line break
+    Test case extra 22c:  variation on 22 with more spaces than needed for a hard break
     """
 
     # Arrange
@@ -553,7 +553,7 @@ another line
 @pytest.mark.gfm
 def test_setext_headings_extra_22d():
     """
-    Test case extra 22a:  SetExt heading ends with a backslash as in a hard line break
+    Test case extra 22d:  variation on 22c with next line indented
     """
 
     # Arrange
@@ -578,7 +578,7 @@ def test_setext_headings_extra_22d():
 @pytest.mark.gfm
 def test_setext_headings_extra_23():
     """
-    Test case extra 23:  SetExt heading ends with 2+ spaces as in a hard line break
+    Test case extra 23:  SetExt heading ends with 2+ spaces as in a hard line break, but not since end of paragraph
     """
 
     # Arrange
@@ -600,7 +600,7 @@ def test_setext_headings_extra_23():
 @pytest.mark.gfm
 def test_setext_headings_extra_23a():
     """
-    Test case extra 23a:  SetExt heading ends with 2+ spaces as in a hard line break
+    Test case extra 23a:  variation on 23, but with more text so hard break in scope
     """
 
     # Arrange
@@ -818,7 +818,7 @@ def test_setext_headings_extra_32():
 @pytest.mark.gfm
 def test_setext_headings_extra_33():
     """
-    Test case extra 33:  SetExt heading this is only a backslash as in a hard line break
+    Test case extra 33:  SetExt heading this is only a backslash as in a hard line break, but not since end of paragraph
     """
 
     # Arrange
@@ -838,7 +838,7 @@ def test_setext_headings_extra_33():
 @pytest.mark.gfm
 def test_setext_headings_extra_34():
     """
-    Test case extra 34:  SetExt heading this is only 2+ spaces as in a hard line break
+    Test case extra 34:  SetExt heading this is only 2+ spaces as in a hard line break, but not since end of paragraph
     """
 
     # Arrange
@@ -1161,7 +1161,7 @@ def test_setext_headings_extra_48():
 @pytest.mark.gfm
 def test_setext_headings_extra_48a():
     """
-    Test case extra 48a:  48 with whitespace before newline
+    Test case extra 48a:  variation on 48, with whitespace
     """
 
     # Arrange
@@ -1188,7 +1188,7 @@ def test_setext_headings_extra_48a():
 @pytest.mark.gfm
 def test_setext_headings_extra_48b():
     """
-    Test case extra 48b:  48 with whitespace after newline
+    Test case extra 48b: variation on 48 with whitespace after newline
     """
 
     # Arrange
@@ -1213,7 +1213,7 @@ def test_setext_headings_extra_48b():
 @pytest.mark.gfm
 def test_setext_headings_extra_48c():
     """
-    Test case extra 48c:  48 with whitespace before and after newline
+    Test case extra 48c:  variation on 48 with whitespace before and after newline
     """
 
     # Arrange
@@ -1292,7 +1292,7 @@ def test_setext_headings_extra_50x():
 @pytest.mark.gfm
 def test_setext_headings_extra_50a():
     """
-    Test case extra 50:  50 with whitespace before newline
+    Test case extra 50:  variation 50 with whitespace before newline
     """
 
     # Arrange
@@ -1319,7 +1319,7 @@ def test_setext_headings_extra_50a():
 @pytest.mark.gfm
 def test_setext_headings_extra_50b():
     """
-    Test case extra 50:  50 with whitespace after newline
+    Test case extra 50:  variation with 50 with whitespace after newline
     """
 
     # Arrange
@@ -1344,7 +1344,7 @@ def test_setext_headings_extra_50b():
 @pytest.mark.gfm
 def test_setext_headings_extra_50c():
     """
-    Test case extra 50c:  50 with whitespace before and after newline
+    Test case extra 50c:  variation of 50 with whitespace before and after newline
     """
 
     # Arrange
@@ -1421,7 +1421,7 @@ def test_setext_headings_extra_52x():
 @pytest.mark.gfm
 def test_setext_headings_extra_52a():
     """
-    Test case extra 52:  52 with whitespace before newline
+    Test case extra 52:  variation of 52 with whitespace before newline
     """
 
     # Arrange
@@ -1448,7 +1448,7 @@ def test_setext_headings_extra_52a():
 @pytest.mark.gfm
 def test_setext_headings_extra_52b():
     """
-    Test case extra 52b:  52 with whitespace after newline
+    Test case extra 52b:  variation of 52 with whitespace after newline
     """
 
     # Arrange
@@ -1473,7 +1473,7 @@ def test_setext_headings_extra_52b():
 @pytest.mark.gfm
 def test_setext_headings_extra_52c():
     """
-    Test case extra 52c:  52 with whitespace before and after newline
+    Test case extra 52c:  variation of 52 with whitespace before and after newline
     """
 
     # Arrange
@@ -1770,7 +1770,7 @@ def test_setext_headings_extra_62():
 @pytest.mark.gfm
 def test_setext_headings_extra_62a():
     """
-    Test case extra 62a:  62 with whitespace before newline
+    Test case extra 62a:  variation of 62 with whitespace before newline
     """
 
     # Arrange
@@ -1795,7 +1795,7 @@ def test_setext_headings_extra_62a():
 @pytest.mark.gfm
 def test_setext_headings_extra_62b():
     """
-    Test case extra 62b:  62 with whitespace after newline
+    Test case extra 62b:  variation of 62 with whitespace after newline
     """
 
     # Arrange
@@ -1818,7 +1818,7 @@ def test_setext_headings_extra_62b():
 @pytest.mark.gfm
 def test_setext_headings_extra_62c():
     """
-    Test case extra 62c:  62 with whitespace before and after newline
+    Test case extra 62c: variation of 62 with whitespace before and after newline
     """
 
     # Arrange
@@ -1891,7 +1891,7 @@ def test_setext_headings_extra_64x():
 @pytest.mark.gfm
 def test_setext_headings_extra_64a():
     """
-    Test case extra 64a:  64 with whitespace before newline
+    Test case extra 64a: variation of 64 with whitespace before newline
     """
 
     # Arrange
@@ -1916,7 +1916,7 @@ def test_setext_headings_extra_64a():
 @pytest.mark.gfm
 def test_setext_headings_extra_64b():
     """
-    Test case extra 64b:  64 with whitespace after newline
+    Test case extra 64b:  variation of 64 with whitespace after newline
     """
 
     # Arrange
@@ -1939,7 +1939,7 @@ def test_setext_headings_extra_64b():
 @pytest.mark.gfm
 def test_setext_headings_extra_64c():
     """
-    Test case extra 64c:  64 with whitespace before and after newline
+    Test case extra 64c:  variation of 64 with whitespace before and after newline
     """
 
     # Arrange
@@ -2033,7 +2033,7 @@ def test_setext_headings_extra_67():
 @pytest.mark.gfm
 def test_setext_headings_extra_67a():
     """
-    Test case extra 67a:  67 with whitespace before newline
+    Test case extra 67a: variation of  67 with whitespace before newline
     """
 
     # Arrange
@@ -2058,7 +2058,7 @@ def test_setext_headings_extra_67a():
 @pytest.mark.gfm
 def test_setext_headings_extra_67b():
     """
-    Test case extra 67b:  67 with whitespace after newline
+    Test case extra 67b:  variation of 67 with whitespace after newline
     """
 
     # Arrange
@@ -2081,7 +2081,7 @@ def test_setext_headings_extra_67b():
 @pytest.mark.gfm
 def test_setext_headings_extra_67c():
     """
-    Test case extra 67c:  67 with whitespace before and after newline
+    Test case extra 67c:  variation of 67 with whitespace before and after newline
     """
 
     # Arrange
@@ -2130,7 +2130,7 @@ def test_setext_headings_extra_68x():
 @pytest.mark.gfm
 def test_setext_headings_extra_68a():
     """
-    Test case extra 68a:  68 without special characters
+    Test case extra 68a:  variation of 68 without special characters
     """
 
     # Arrange
@@ -2154,7 +2154,7 @@ def test_setext_headings_extra_68a():
 @pytest.mark.gfm
 def test_setext_headings_extra_68b():
     """
-    Test case extra 68b:  68 with newline before special characters
+    Test case extra 68b:  variation of 68 with newline before special characters
     """
 
     # Arrange
@@ -2203,7 +2203,7 @@ def test_setext_headings_extra_69():
 @pytest.mark.gfm
 def test_setext_headings_extra_69a():
     """
-    Test case extra 69a:  69 with newline before special characters
+    Test case extra 69a:  variation of 69 with newline before special characters
     """
 
     # Arrange
@@ -2252,7 +2252,7 @@ def test_setext_headings_extra_70():
 @pytest.mark.gfm
 def test_setext_headings_extra_70a():
     """
-    Test case extra 70a:  70 with newline before special characters, rendering it invalid
+    Test case extra 70a:  variation of 70 with newline before special characters, rendering it invalid
     """
 
     # Arrange
@@ -2301,7 +2301,7 @@ def test_setext_headings_extra_71():
 @pytest.mark.gfm
 def test_setext_headings_extra_71a():
     """
-    Test case extra 71a:  71 with newline before special characters
+    Test case extra 71a:  variation of 71 with newline before special characters
     """
 
     # Arrange
@@ -2350,7 +2350,7 @@ def test_setext_headings_extra_72():
 @pytest.mark.gfm
 def test_setext_headings_extra_72a():
     """
-    Test case extra 72a:  72 with newline before special characters
+    Test case extra 72a:  variation of 72 with newline before special characters
     """
 
     # Arrange
@@ -2397,7 +2397,7 @@ def test_setext_headings_extra_73():
 @pytest.mark.gfm
 def test_setext_headings_extra_73a():
     """
-    Test case extra 73a:  73 without special characters
+    Test case extra 73a:  variation of 73 without special characters
     """
 
     # Arrange
@@ -2419,7 +2419,7 @@ def test_setext_headings_extra_73a():
 @pytest.mark.gfm
 def test_setext_headings_extra_73b():
     """
-    Test case extra 73b:  73 with newline before special characters
+    Test case extra 73b:  73 variation of with newline before special characters
     """
 
     # Arrange
@@ -2464,7 +2464,7 @@ def test_setext_headings_extra_74():
 @pytest.mark.gfm
 def test_setext_headings_extra_74a():
     """
-    Test case extra 74a:  74 with newline before special characters
+    Test case extra 74a:  variation of 74 with newline before special characters
     """
 
     # Arrange
@@ -2509,7 +2509,7 @@ def test_setext_headings_extra_75():
 @pytest.mark.gfm
 def test_setext_headings_extra_75a():
     """
-    Test case extra 75a:  75 with newline before special characters, invalidating it
+    Test case extra 75a:  variation of 75 with newline before special characters, invalidating it
     """
 
     # Arrange
@@ -2556,7 +2556,7 @@ def test_setext_headings_extra_76():
 @pytest.mark.gfm
 def test_setext_headings_extra_76a():
     """
-    Test case extra 76a:  76 with newline before special characters
+    Test case extra 76a:  variation of 76 with newline before special characters
     """
 
     # Arrange
@@ -2601,20 +2601,22 @@ def test_setext_headings_extra_77():
 @pytest.mark.gfm
 def test_setext_headings_extra_77a():
     """
-    Test case extra 77a:  77 with newline before special characters
+    Test case extra 77a:  variation of 77 with newline before special characters
     """
 
     # Arrange
-    source_markdown = """a![Foo](/uri "test\\#ing")a
+    source_markdown = """a![Foo](/uri "test
+\\#ing")a
 ---"""
     expected_tokens = [
-        "[setext(2,1):-:3::(1,1)]",
+        "[setext(3,1):-:3::(1,1)]",
         "[text(1,1):a:]",
-        '[image(1,2):inline:/uri:test#ing:Foo::test\\#ing::Foo:False:":: :]',
-        "[text(1,26):a:]",
+        '[image(1,2):inline:/uri:test\n#ing:Foo::test\n\\#ing::Foo:False:":: :]',
+        "[text(2,8):a:]",
         "[end-setext::]",
     ]
-    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test#ing" />a</h2>"""
+    expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test
+#ing" />a</h2>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -2651,7 +2653,7 @@ def test_setext_headings_extra_78():
 @pytest.mark.gfm
 def test_setext_headings_extra_78a():
     """
-    Test case extra 78a:  78 with newline before special chars
+    Test case extra 78a:  variation of 78 with newline before special chars
     """
 
     # Arrange
@@ -2708,7 +2710,7 @@ def test_setext_headings_extra_79():
 @pytest.mark.gfm
 def test_setext_headings_extra_79a():
     """
-    Test case extra 79a:  79 with newline before special characters
+    Test case extra 79a:  variation of 79 with newline before special characters
     """
 
     # Arrange
@@ -2765,7 +2767,7 @@ def test_setext_headings_extra_80():
 @pytest.mark.gfm
 def test_setext_headings_extra_80a():
     """
-    Test case extra 80a:  80 with newline before special characters
+    Test case extra 80a:  variation of 80 with newline before special characters
     """
 
     # Arrange
@@ -2823,7 +2825,7 @@ def test_setext_headings_extra_81():
 @pytest.mark.gfm
 def test_setext_headings_extra_81a():
     """
-    Test case extra 81a:  81 with newline before special characters
+    Test case extra 81a:  variation of 81 with newline before special characters
     """
 
     # Arrange
@@ -2881,7 +2883,7 @@ def test_setext_headings_extra_82():
 @pytest.mark.gfm
 def test_setext_headings_extra_82a():
     """
-    Test case extra 82a:  82 with newline before special characters
+    Test case extra 82a:  variation of 82 with newline before special characters
     """
 
     # Arrange
@@ -2939,7 +2941,7 @@ def test_setext_headings_extra_83():
 @pytest.mark.gfm
 def test_setext_headings_extra_83a():
     """
-    Test case extra 83a:  83 with newline before special characters
+    Test case extra 83a:  variation of 83 with newline before special characters
     """
 
     # Arrange
@@ -2997,7 +2999,7 @@ def test_setext_headings_extra_84x():
 @pytest.mark.gfm
 def test_setext_headings_extra_84a():
     """
-    Test case extra 84a:  84 with newline before special characters
+    Test case extra 84a:  variation of 84 with newline before special characters
     """
 
     # Arrange
@@ -3055,7 +3057,7 @@ def test_setext_headings_extra_85():
 @pytest.mark.gfm
 def test_setext_headings_extra_85a():
     """
-    Test case extra 85a:  85 with newline before special characters
+    Test case extra 85a:  variation of 85 with newline before special characters
     """
 
     # Arrange
@@ -3113,7 +3115,7 @@ def test_setext_headings_extra_86x():
 @pytest.mark.gfm
 def test_setext_headings_extra_86a():
     """
-    Test case extra 86a:  86 with newline before special characters
+    Test case extra 86a:  variation of 86 with newline before special characters
     """
 
     # Arrange
@@ -3170,7 +3172,7 @@ def test_setext_headings_extra_87():
 @pytest.mark.gfm
 def test_setext_headings_extra_87a():
     """
-    Test case extra 87a:  87 with newline before special characters
+    Test case extra 87a:  variation of 87 with newline before special characters
     """
 
     # Arrange
@@ -3227,7 +3229,7 @@ def test_setext_headings_extra_88x():
 @pytest.mark.gfm
 def test_setext_headings_extra_88a():
     """
-    Test case extra 88a:  88 with newline before special characters
+    Test case extra 88a:  variation of 88 with newline before special characters
     """
 
     # Arrange
@@ -3285,7 +3287,7 @@ def test_setext_headings_extra_89x():
 @pytest.mark.gfm
 def test_setext_headings_extra_89a():
     """
-    Test case extra 88a:  88 with newline before special characters
+    Test case extra 88a:  variation of 88 with newline before special characters
     """
 
     # Arrange
@@ -3341,7 +3343,7 @@ def test_setext_headings_extra_90x():
 @pytest.mark.gfm
 def test_setext_headings_extra_90a():
     """
-    Test case extra 90a:  90 with newline before special chars
+    Test case extra 90a:  variation of 90 with newline before special chars
     """
 
     # Arrange
@@ -3394,7 +3396,7 @@ def test_setext_headings_extra_91x():
 @pytest.mark.gfm
 def test_setext_headings_extra_91a():
     """
-    Test case extra 91a:  91 with newline before special characters
+    Test case extra 91a:  variation of 91 with newline before special characters
     """
 
     # Arrange
@@ -3447,7 +3449,7 @@ def test_setext_headings_extra_92x():
 @pytest.mark.gfm
 def test_setext_headings_extra_92a():
     """
-    Test case extra 92a:  92 with newline before special characters
+    Test case extra 92a:  variation of 92 with newline before special characters
     """
 
     # Arrange
@@ -3501,7 +3503,7 @@ def test_setext_headings_extra_93x():
 @pytest.mark.gfm
 def test_setext_headings_extra_93a():
     """
-    Test case extra 93a:  93 with newline before special characters
+    Test case extra 93a:  variation of 93 with newline before special characters
     """
 
     # Arrange
@@ -3555,7 +3557,7 @@ def test_setext_headings_extra_94x():
 @pytest.mark.gfm
 def test_setext_headings_extra_94a():
     """
-    Test case extra 94a:  94 with newline before special characters
+    Test case extra 94a:  variation of 94 with newline before special characters
     """
 
     # Arrange
@@ -3609,7 +3611,7 @@ def test_setext_headings_extra_95x():
 @pytest.mark.gfm
 def test_setext_headings_extra_95a():
     """
-    Test case extra 95a:  95 with newline before special characters
+    Test case extra 95a:  variation of 95 with newline before special characters
     """
 
     # Arrange
@@ -3663,7 +3665,7 @@ def test_setext_headings_extra_96x():
 @pytest.mark.gfm
 def test_setext_headings_extra_96a():
     """
-    Test case extra 96a:  96 with newline before special characters
+    Test case extra 96a:  variation of 96 with newline before special characters
     """
 
     # Arrange
@@ -3717,7 +3719,7 @@ def test_setext_headings_extra_97x():
 @pytest.mark.gfm
 def test_setext_headings_extra_97a():
     """
-    Test case extra 97a:  97 with newline before special characters
+    Test case extra 97a:  variation of 97 with newline before special characters
     """
 
     # Arrange
@@ -3771,7 +3773,7 @@ def test_setext_headings_extra_98x():
 @pytest.mark.gfm
 def test_setext_headings_extra_98a():
     """
-    Test case extra 98a:  98 with newline before special characters
+    Test case extra 98a:  variation of 98 with newline before special characters
     """
 
     # Arrange
@@ -3824,7 +3826,7 @@ def test_setext_headings_extra_99x():
 @pytest.mark.gfm
 def test_setext_headings_extra_99a():
     """
-    Test case extra 99a:  99 with newline before special characters
+    Test case extra 99a:  variation of 99 with newline before special characters
     """
 
     # Arrange
@@ -3877,7 +3879,7 @@ def test_setext_headings_extra_a0x():
 @pytest.mark.gfm
 def test_setext_headings_extra_a0a():
     """
-    Test case extra A0a:  A0 with newline before special characters
+    Test case extra A0a:  variation of A0 with newline before special characters
     """
 
     # Arrange
@@ -3931,7 +3933,7 @@ def test_setext_headings_extra_a1x():
 @pytest.mark.gfm
 def test_setext_headings_extra_a1a():
     """
-    Test case extra A1a:  A1 with newline before special characters
+    Test case extra A1a:  variation of A1 with newline before special characters
     """
 
     # Arrange
@@ -3959,7 +3961,7 @@ def test_setext_headings_extra_a1a():
 @pytest.mark.gfm
 def test_setext_headings_extra_a2():
     """
-    Test case extra A2:  SetExt heading with full image with x in url link
+    Test case extra A2:  SetExt heading with full image with label newline in url link
     """
 
     # Arrange

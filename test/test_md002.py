@@ -50,8 +50,8 @@ def test_md002_all_samples():
 @pytest.mark.rules
 def test_md002_bad_configuration_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md002 directory that starts with a h1 atx heading.
+    Test to verify that a configuration error is thrown when supplying the
+    level value with a string of "1".
     """
 
     # Arrange
@@ -85,8 +85,8 @@ def test_md002_bad_configuration_level():
 @pytest.mark.rules
 def test_md002_good_proper_atx_heading_start():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md002 directory that starts with a h1 atx heading.
+    Test to make sure the rule does not trigger with a level 1
+    Atx Heading at the start of the document.
     """
 
     # Arrange
@@ -114,9 +114,8 @@ def test_md002_good_proper_atx_heading_start():
 @pytest.mark.rules
 def test_md002_bad_proper_atx_heading_start_with_alternate_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md002 directory that starts with a h1 atx heading.  The modified
-    configuration will cause the file to be parsed with reported issues.
+    Test to make sure the rule does trigger with a level 1 Atx Heading at the
+    start of the document with configuration to change the level to 2.
     """
 
     # Arrange
@@ -157,9 +156,8 @@ def test_md002_bad_proper_atx_heading_start_with_alternate_configuration():
 @pytest.mark.rules
 def test_md002_good_proper_setext_heading_start():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md002 directory starting with a setext heading of ====== to
-    create a h1 heading.
+    Test to make sure the rule does not trigger with a level 1 SetExt Heading at the
+    start of the document.
     """
 
     # Arrange
@@ -187,10 +185,8 @@ def test_md002_good_proper_setext_heading_start():
 @pytest.mark.rules
 def test_md002_bad_proper_setext_heading_start_with_alternate_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md002 directory starting with a setext heading of ====== to
-    create a h1 heading.  The modified  configuration will cause the file to be parsed
-    with reported issues.
+    Test to make sure the rule does trigger with a level 1 SetExt Heading at the
+    start of the document and configuration to change level to `2`.
     """
 
     # Arrange
@@ -231,8 +227,8 @@ def test_md002_bad_proper_setext_heading_start_with_alternate_configuration():
 @pytest.mark.rules
 def test_md002_bad_improper_atx_heading_start():
     """
-    Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md002 directory that starts with a non-h1 heading.
+    Test to make sure the rule does trigger with a non-level 1 Atx Heading at the
+    start of the document.
     """
 
     # Arrange
@@ -264,9 +260,8 @@ def test_md002_bad_improper_atx_heading_start():
 @pytest.mark.rules
 def test_md002_good_improper_atx_heading_start_with_alternate_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md002 directory that starts with a non-h1 heading.  The modified
-    configuration will allow the file to be parsed properly.
+    Test to make sure the rule does not trigger with a level 2 Atx Heading at the
+    start of the document and configuration to match.
     """
 
     # Arrange
@@ -303,9 +298,8 @@ def test_md002_good_improper_atx_heading_start_with_alternate_configuration():
 @pytest.mark.rules
 def test_md002_bad_improper_setext_heading_start():
     """
-    Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md002 directory starting with a setext heading of ----- to
-    create a h2 heading.
+    Test to make sure the rule does trigger with a non-level 1 SetExt Heading at the
+    start of the document.
     """
 
     # Arrange
@@ -339,10 +333,8 @@ def test_md002_bad_improper_setext_heading_start():
 @pytest.mark.rules
 def test_md002_good_improper_setext_heading_start_with_alternate_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md002 directory starting with a setext heading of ----- to
-    create a h2 heading.   The modified configuration will allow the file to be parsed
-    properly.
+    Test to make sure the rule does not trigger with a level 2 SetExt Heading at the
+    start of the document and configuration to match.
     """
 
     # Arrange

@@ -183,7 +183,7 @@ def test_indented_code_blocks_082():
 @pytest.mark.gfm
 def test_indented_code_blocks_082a():
     """
-    Test case 082a:  variation
+    Test case 082a:  variation of 82 with just enough indentation on second line
     """
 
     # Arrange
@@ -255,7 +255,6 @@ bar"""
 @pytest.mark.gfm
 def test_indented_code_blocks_084a():
     """
-    ADDED:
     Test case 084a:  Copied from 84 with extra lines inserted to verify trailing blanks are not part of section.
     """
 
@@ -347,7 +346,7 @@ bar
 @pytest.mark.gfm
 def test_indented_code_blocks_086a():
     """
-    Test case 086a:  Modification of 86 to include more spaces so extracted != left
+    Test case 086a:  variation of 86 to include more spaces so extracted != left
     """
 
     # Arrange
@@ -369,7 +368,7 @@ bar
 @pytest.mark.gfm
 def test_indented_code_blocks_086b():
     """
-    Test case 086ba:  variation
+    Test case 086b:  variation of 86 to play around with spaces
     """
 
     # Arrange

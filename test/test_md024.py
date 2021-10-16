@@ -12,9 +12,8 @@ from .utils import write_temporary_configuration
 @pytest.mark.rules
 def test_md024_good_different_heading_content_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that all have different
-    text in them.
+    Test to make sure this rule does not trigger with a document that
+    contains Atx headings with no duplicate content.
     """
 
     # Arrange
@@ -40,9 +39,8 @@ def test_md024_good_different_heading_content_atx():
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text in them.
+    Test to make sure this rule does trigger with a document that
+    contains Atx headings with duplicate content.
     """
 
     # Arrange
@@ -71,9 +69,9 @@ def test_md024_bad_same_heading_content_atx():
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_with_extra_whitespace():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text in them.
+    Test to make sure this rule does not trigger with a document that
+    contains Atx headings with content that is almost duplicate except for
+    whitespace.
     """
 
     # Arrange
@@ -99,9 +97,8 @@ def test_md024_bad_same_heading_content_atx_with_extra_whitespace():
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_with_extra_emphasis():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text in them.
+    Test to make sure this rule does not trigger with a document that
+    contains Atx headings with content that is almost duplicate except for emphasis.
     """
 
     # Arrange
@@ -127,9 +124,8 @@ def test_md024_bad_same_heading_content_atx_with_extra_emphasis():
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_in_same_list_item():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text in them.
+    Test to make sure this rule does trigger with a document that
+    contains Atx headings with duplicate content within the same list item.
     """
 
     # Arrange
@@ -158,9 +154,8 @@ def test_md024_bad_same_heading_content_atx_in_same_list_item():
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_in_different_list_items():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text in them.
+    Test to make sure this rule does trigger with a document that
+    contains Atx headings with duplicate content in different list items.
     """
 
     # Arrange
@@ -189,9 +184,8 @@ def test_md024_bad_same_heading_content_atx_in_different_list_items():
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_in_same_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text in them.
+    Test to make sure this rule does trigger with a document that
+    contains Atx headings with duplicate content in the same block quote.
     """
 
     # Arrange
@@ -220,9 +214,8 @@ def test_md024_bad_same_heading_content_atx_in_same_block_quote():
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_atx_in_different_block_quotes():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text in them.
+    Test to make sure this rule does trigger with a document that
+    contains Atx headings with duplicate content in the different block quotes.
     """
 
     # Arrange
@@ -253,9 +246,8 @@ def test_md024_bad_same_heading_content_atx_in_different_block_quotes():
 @pytest.mark.rules
 def test_md024_bad_same_heading_in_siblings_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text in siblings.
+    Test to make sure this rule does trigger with a document that
+    contains Atx headings with duplicate content in sibling headings.
     """
 
     # Arrange
@@ -286,9 +278,8 @@ def test_md024_bad_same_heading_in_siblings_atx():
 @pytest.mark.rules
 def test_md024_bad_same_heading_but_not_in_siblings_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text but not in siblings.
+    Test to make sure this rule does trigger with a document that
+    contains Atx headings with duplicate content in non-siblings.
     """
 
     # Arrange
@@ -317,10 +308,8 @@ def test_md024_bad_same_heading_but_not_in_siblings_atx():
 @pytest.mark.rules
 def test_md024_good_different_heading_content_atx_with_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that all have different
-    text in them, with configuration allowing for duplicated text except for in
-    sibling headings.
+    Test to make sure this rule does not trigger with a document that
+    contains Atx headings with different content.
     """
 
     # Arrange
@@ -355,10 +344,8 @@ def test_md024_good_different_heading_content_atx_with_configuration():
 @pytest.mark.rules
 def test_md024_good_same_heading_content_atx_with_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text in them, with configuration allowing for duplicated text except for in
-    sibling headings.
+    Test to make sure this rule does not trigger with a document that
+    contains Atx headings with duplicate content in non-siblings.
     """
 
     # Arrange
@@ -393,10 +380,8 @@ def test_md024_good_same_heading_content_atx_with_configuration():
 @pytest.mark.rules
 def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text in siblings, with configuration allowing for duplicated text except for in
-    sibling headings.
+    Test to make sure this rule does not trigger with a document that
+    contains Atx headings with duplicate content in siblings.
     """
 
     # Arrange
@@ -434,10 +419,8 @@ def test_md024_bad_same_heading_in_siblings_atx_with_configuration():
 @pytest.mark.rules
 def test_md024_good_same_heading_but_not_in_siblings_atx_with_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text but not in siblings, with configuration allowing for duplicated text except for
-    in sibling headings.
+    Test to make sure this rule does not trigger with a document that
+    contains Atx headings with duplicate content in siblings.
     """
 
     # Arrange
@@ -472,10 +455,8 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_configuration():
 @pytest.mark.rules
 def test_md024_good_same_heading_but_not_in_siblings_atx_with_alternate_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has atx headings that have some duplicated
-    text but not in siblings, with the alternate configuration name allowing for
-    duplicated text except for in sibling headings.
+    Test to make sure this rule does not trigger with a document that
+    contains Atx headings with duplicate content in siblings.
     """
 
     # Arrange
@@ -510,8 +491,8 @@ def test_md024_good_same_heading_but_not_in_siblings_atx_with_alternate_configur
 @pytest.mark.rules
 def test_md024_good_different_inline_heading_content_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md021 directory that has good atx heading start spacing
+    Test to make sure this rule does not trigger with a document that
+    contains Atx headings with almost duplicate content.
     """
 
     # Arrange
@@ -537,9 +518,8 @@ def test_md024_good_different_inline_heading_content_atx():
 @pytest.mark.rules
 def test_md024_good_different_heading_content_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has setext headings that all have different
-    text in them.
+    Test to make sure this rule does not trigger with a document that
+    contains SetExt headings with no duplicate content.
     """
 
     # Arrange
@@ -565,9 +545,8 @@ def test_md024_good_different_heading_content_setext():
 @pytest.mark.rules
 def test_md024_bad_same_heading_content_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has setext headings that have some duplicated
-    text in them.
+    Test to make sure this rule does trigger with a document that
+    contains SetExt headings with duplicate content.
     """
 
     # Arrange
@@ -596,9 +575,8 @@ def test_md024_bad_same_heading_content_setext():
 @pytest.mark.rules
 def test_md024_bad_same_heading_in_siblings_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has setext headings that have some duplicated
-    text in siblings.
+    Test to make sure this rule does trigger with a document that
+    contains SetExt headings with duplicate content in siblings.
     """
 
     # Arrange
@@ -631,9 +609,8 @@ def test_md024_bad_same_heading_in_siblings_setext():
 @pytest.mark.rules
 def test_md024_bad_same_heading_but_not_in_siblings_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has setext headings that have some duplicated
-    text but not in siblings.
+    Test to make sure this rule does trigger with a document that
+    contains SetExt headings with duplicate content in siblings.
     """
 
     # Arrange
@@ -664,10 +641,8 @@ def test_md024_bad_same_heading_but_not_in_siblings_setext():
 @pytest.mark.rules
 def test_md024_good_different_heading_content_setext_with_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has setext headings that all have different
-    text in them, with configuration allowing for duplicated text except for in
-    sibling headings.
+    Test to make sure this rule does not trigger with a document that
+    contains SetExt headings with duplicate content in siblings with configuration.
     """
 
     # Arrange
@@ -702,10 +677,8 @@ def test_md024_good_different_heading_content_setext_with_configuration():
 @pytest.mark.rules
 def test_md024_good_same_heading_content_setext_with_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has setext headings that have some
-    duplicated text in them, with configuration allowing for duplicated text except for
-    in sibling headings.
+    Test to make sure this rule does trigger with a document that
+    contains SetExt headings with duplicate content in siblings with configuration.
     """
 
     # Arrange
@@ -740,10 +713,8 @@ def test_md024_good_same_heading_content_setext_with_configuration():
 @pytest.mark.rules
 def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has setext headings that have some duplicated
-    text in siblings, with configuration allowing for duplicated text except for in
-    sibling headings.
+    Test to make sure this rule does trigger with a document that
+    contains SetExt headings with duplicate content in siblings with configuration.
     """
 
     # Arrange
@@ -783,10 +754,8 @@ def test_md024_bad_same_heading_in_siblings_setext_with_configuration():
 @pytest.mark.rules
 def test_md024_good_same_heading_but_not_in_siblings_setext_with_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD024 directory that has setext headings that have some duplicated
-    text but not in siblings, with configuration allowing for duplicated text except for
-    in sibling headings.
+    Test to make sure this rule does not trigger with a document that
+    contains SetExt headings with duplicate content in siblings with configuration.
     """
 
     # Arrange
