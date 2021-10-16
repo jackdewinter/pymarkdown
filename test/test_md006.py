@@ -9,8 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md006_good_indentation():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md006 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    is only level 1 lists with no indentation.
     """
 
     # Arrange
@@ -38,8 +38,8 @@ def test_md006_good_indentation():
 @pytest.mark.rules
 def test_md006_bad_indentation():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md006 directory that has...
+    Test to make sure this rule does trigger with a document that
+    is only level 1 lists with a single space of indentation.
     """
 
     # Arrange
@@ -74,8 +74,8 @@ def test_md006_bad_indentation():
 @pytest.mark.rules
 def test_md006_good_ignore_bad_second_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md006 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    is nested lists with level 1 lists properly indented.
     """
 
     # Arrange
@@ -105,8 +105,8 @@ def test_md006_good_ignore_bad_second_level():
 @pytest.mark.rules
 def test_md006_good_not_ordered():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md006 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    is ordered lists.
     """
 
     # Arrange
@@ -134,8 +134,8 @@ def test_md006_good_not_ordered():
 @pytest.mark.rules
 def test_md006_good_items_with_multiple_lines():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md006 directory that has...
+    Test to make sure this rule does not trigger with a document that
+    is contains list items with multiple lines.
     """
 
     # Arrange

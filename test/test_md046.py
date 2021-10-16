@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD045 rule.
+Module to provide tests related to the MD046 rule.
 """
 from test.markdown_scanner import MarkdownScanner
 
@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md046_bad_configuration_style():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with an integer that is not a string.
     """
 
     # Arrange
@@ -43,9 +42,8 @@ def test_md046_bad_configuration_style():
 @pytest.mark.rules
 def test_md046_bad_configuration_style_bad():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with a string that is not valid.
     """
 
     # Arrange
@@ -77,9 +75,8 @@ def test_md046_bad_configuration_style_bad():
 @pytest.mark.rules
 def test_md046_good_both_fenced_with_consistent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains code blocks that are fenced and consistent configuration.
     """
 
     # Arrange
@@ -107,9 +104,8 @@ def test_md046_good_both_fenced_with_consistent():
 @pytest.mark.rules
 def test_md046_good_both_indented_with_consistent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains code blocks that are indented and consistent configuration.
     """
 
     # Arrange
@@ -137,9 +133,8 @@ def test_md046_good_both_indented_with_consistent():
 @pytest.mark.rules
 def test_md046_bad_fenced_and_indented_with_consistent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains code blocks that are fenced and indented and consistent configuration.
     """
 
     # Arrange
@@ -171,9 +166,8 @@ def test_md046_bad_fenced_and_indented_with_consistent():
 @pytest.mark.rules
 def test_md046_good_both_fenced_with_fenced():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains code blocks that are fenced and fenced configuration.
     """
 
     # Arrange
@@ -201,9 +195,8 @@ def test_md046_good_both_fenced_with_fenced():
 @pytest.mark.rules
 def test_md046_good_both_indented_with_fenced():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains code blocks that are indented and fenced configuration.
     """
 
     # Arrange
@@ -238,9 +231,8 @@ def test_md046_good_both_indented_with_fenced():
 @pytest.mark.rules
 def test_md046_bad_fenced_and_indented_with_fenced():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains code blocks that are fenced and indented and fenced configuration.
     """
 
     # Arrange
@@ -272,9 +264,8 @@ def test_md046_bad_fenced_and_indented_with_fenced():
 @pytest.mark.rules
 def test_md046_good_both_fenced_with_indented():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains code blocks that are fenced and indented configuration.
     """
 
     # Arrange
@@ -309,9 +300,8 @@ def test_md046_good_both_fenced_with_indented():
 @pytest.mark.rules
 def test_md046_good_both_indented_with_indented():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains code blocks that are indented and indented configuration.
     """
 
     # Arrange
@@ -339,9 +329,8 @@ def test_md046_good_both_indented_with_indented():
 @pytest.mark.rules
 def test_md046_bad_fenced_and_indented_with_indented():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains code blocks that are fenced and indented and indented configuration.
     """
 
     # Arrange

@@ -14,9 +14,8 @@ from .utils import write_temporary_configuration
 @pytest.mark.rules
 def test_md022_bad_proper_line_spacing_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that have proper default
-    spacing both before and after the heading.
+    Test to make sure this rule does not trigger with a document that
+    contains atx headings with proper spacing around them.
     """
 
     # Arrange
@@ -42,9 +41,8 @@ def test_md022_bad_proper_line_spacing_atx():
 @pytest.mark.rules
 def test_md022_good_proper_line_spacing_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headings that have proper default
-    spacing both before and after the heading.
+    Test to make sure this rule does not trigger with a document that
+    contains setext headings with proper spacing around them.
     """
 
     # Arrange
@@ -70,9 +68,8 @@ def test_md022_good_proper_line_spacing_setext():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing both before and after the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing around them.
     """
 
     # Arrange
@@ -108,9 +105,8 @@ def test_md022_bad_no_line_spacing_atx():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_atx_in_same_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing both before and after the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing around them in a block quote.
     """
 
     # Arrange
@@ -146,9 +142,8 @@ def test_md022_bad_no_line_spacing_atx_in_same_block_quote():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_atx_in_same_list_item():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing both before and after the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing around them in a list item.
     """
 
     # Arrange
@@ -184,9 +179,8 @@ def test_md022_bad_no_line_spacing_atx_in_same_list_item():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_atx_in_different_list_items():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing both before and after the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing around them in different list items.
     """
 
     # Arrange
@@ -222,9 +216,8 @@ def test_md022_bad_no_line_spacing_atx_in_different_list_items():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_before_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing before the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing before them.
     """
 
     # Arrange
@@ -254,9 +247,8 @@ def test_md022_bad_no_line_spacing_before_atx():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_before_atx_in_same_list_item():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing before the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing before them in a list item.
     """
 
     # Arrange
@@ -286,9 +278,8 @@ def test_md022_bad_no_line_spacing_before_atx_in_same_list_item():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_before_atx_in_different_list_items():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing before the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing before them in different list items.
     """
 
     # Arrange
@@ -318,9 +309,8 @@ def test_md022_bad_no_line_spacing_before_atx_in_different_list_items():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_before_atx_in_same_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing before the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing before them in a block quote.
     """
 
     # Arrange
@@ -350,9 +340,8 @@ def test_md022_bad_no_line_spacing_before_atx_in_same_block_quote():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_before_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing before the heading.
+    Test to make sure this rule does trigger with a document that
+    contains setext headings with no proper spacing before them.
     """
 
     # Arrange
@@ -378,9 +367,8 @@ def test_md022_bad_no_line_spacing_before_setext():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_after_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing after the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing after them.
     """
 
     # Arrange
@@ -413,9 +401,8 @@ def test_md022_bad_no_line_spacing_after_atx():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_after_atx_in_same_list_item():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing after the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing after them in the same list item.
     """
 
     # Arrange
@@ -448,9 +435,8 @@ def test_md022_bad_no_line_spacing_after_atx_in_same_list_item():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_after_atx_in_same_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing after the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing after them in a block quote.
     """
 
     # Arrange
@@ -483,9 +469,8 @@ def test_md022_bad_no_line_spacing_after_atx_in_same_block_quote():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_after_atx_in_different_list_items():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing after the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing after them in different list items.
     """
 
     # Arrange
@@ -518,9 +503,8 @@ def test_md022_bad_no_line_spacing_after_atx_in_different_list_items():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_after_atx_in_different_block_quotes():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing after the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with no proper spacing after them in different block quotes.
     """
 
     # Arrange
@@ -555,9 +539,9 @@ def test_md022_bad_no_line_spacing_after_atx_in_different_block_quotes():
 @pytest.mark.rules
 def test_md022_good_atx_with_html_and_good_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do have proper
-    default spacing before and after the heading, surrounded by html blocks.
+    Test to make sure this rule does not trigger with a document that
+    contains atx headings with good spacing between them and the HTML
+    blocks on either side.
     """
 
     # Arrange
@@ -583,9 +567,9 @@ def test_md022_good_atx_with_html_and_good_line_spacing():
 @pytest.mark.rules
 def test_md022_bad_atx_with_html_and_bad_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing before and after the heading, surrounded by html blocks.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings without good spacing between them and the HTML
+    blocks on either side.
     """
 
     # Arrange
@@ -618,9 +602,9 @@ def test_md022_bad_atx_with_html_and_bad_line_spacing():
 @pytest.mark.rules
 def test_md022_good_atx_with_paragraph_and_good_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do have proper
-    default spacing before and after the heading, surrounded by html blocks.
+    Test to make sure this rule does not trigger with a document that
+    contains atx headings with good spacing between them and the paragraphs
+    on either side.
     """
 
     # Arrange
@@ -646,9 +630,9 @@ def test_md022_good_atx_with_paragraph_and_good_line_spacing():
 @pytest.mark.rules
 def test_md022_bad_atx_with_paragraph_and_bad_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing before and after the heading, surrounded by html blocks.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with good spacing between them and the paragraphs
+    on either side.
     """
 
     # Arrange
@@ -681,9 +665,9 @@ def test_md022_bad_atx_with_paragraph_and_bad_line_spacing():
 @pytest.mark.rules
 def test_md022_good_atx_with_code_block_and_good_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do have proper
-    default spacing before and after the heading, surrounded by code blocks.
+    Test to make sure this rule does not trigger with a document that
+    contains atx headings with good spacing between them and the code
+    blocks on either side.
     """
 
     # Arrange
@@ -711,9 +695,9 @@ def test_md022_good_atx_with_code_block_and_good_line_spacing():
 @pytest.mark.rules
 def test_md022_bad_atx_with_code_block_and_bad_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing before and after the heading, surrounded by code blocks.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with bad spacing between them and the code
+    blocks on either side.
     """
 
     # Arrange
@@ -748,9 +732,9 @@ def test_md022_bad_atx_with_code_block_and_bad_line_spacing():
 @pytest.mark.rules
 def test_md022_good_atx_with_thematic_break_and_good_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do have proper
-    default spacing before and after the heading, surrounded by thematic breaks.
+    Test to make sure this rule does not trigger with a document that
+    contains atx headings with good spacing between them and the thematic
+    breaks on either side.
     """
 
     # Arrange
@@ -776,9 +760,9 @@ def test_md022_good_atx_with_thematic_break_and_good_line_spacing():
 @pytest.mark.rules
 def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    default spacing before and after the heading, surrounded by thematic breaks.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with bad spacing between them and the thematic
+    breaks on either side.
     """
 
     # Arrange
@@ -811,9 +795,9 @@ def test_md022_bad_atx_with_thematic_break_and_bad_line_spacing():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headings that do have proper
-    default spacing before the heading.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with bad spacing after them and the
+    paragraphs on either side.
 
     Note that setext grabs the last paragraph before the marker and puts it as the
     heading.  As such, testing this for one line space before is implied as one line
@@ -850,9 +834,9 @@ def test_md022_bad_no_line_spacing_setext():
 @pytest.mark.rules
 def test_md022_bad_no_line_spacing_after_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headings that do not have proper
-    default spacing before the heading.
+    Test to make sure this rule does trigger with a document that
+    contains setext headings with bad spacing after them and the
+    paragraphs on either side.
     """
 
     # Arrange
@@ -885,9 +869,9 @@ def test_md022_bad_no_line_spacing_after_setext():
 @pytest.mark.rules
 def test_md022_good_setext_with_code_block_and_good_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headings that do have proper
-    default spacing before and after the heading, surrounded by code blocks.
+    Test to make sure this rule does not trigger with a document that
+    contains setext headings with good spacing between them and the
+    code blocks on either side.
     """
 
     # Arrange
@@ -915,9 +899,9 @@ def test_md022_good_setext_with_code_block_and_good_line_spacing():
 @pytest.mark.rules
 def test_md022_bad_setext_with_code_block_and_bad_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headings that do not have proper
-    default spacing before and after the heading, surrounded by code blocks.
+    Test to make sure this rule does trigger with a document that
+    contains setext headings with bad spacing between them and the
+    code blocks on either side.
     """
 
     # Arrange
@@ -952,9 +936,9 @@ def test_md022_bad_setext_with_code_block_and_bad_line_spacing():
 @pytest.mark.rules
 def test_md022_good_setext_with_html_and_good_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headings that do have proper
-    default spacing before and after the heading, surrounded by html blocks.
+    Test to make sure this rule does not trigger with a document that
+    contains setext headings with good spacing between them and the
+    HTML blocks on either side.
     """
 
     # Arrange
@@ -980,9 +964,9 @@ def test_md022_good_setext_with_html_and_good_line_spacing():
 @pytest.mark.rules
 def test_md022_bad_setext_with_html_and_bad_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headings that do not have proper
-    default spacing before and after the heading, surrounded by html blocks.
+    Test to make sure this rule does trigger with a document that
+    contains setext headings with bad spacing between them and the
+    HTML blocks on either side.
     """
 
     # Arrange
@@ -1015,9 +999,9 @@ def test_md022_bad_setext_with_html_and_bad_line_spacing():
 @pytest.mark.rules
 def test_md022_good_setext_with_thematic_break_and_good_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headings that do have proper
-    default spacing before and after the heading, surrounded by thematic breaks.
+    Test to make sure this rule does not trigger with a document that
+    contains setext headings with good spacing between them and the
+    thematic breaks on either side.
     """
 
     # Arrange
@@ -1043,9 +1027,9 @@ def test_md022_good_setext_with_thematic_break_and_good_line_spacing():
 @pytest.mark.rules
 def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has setext headings that do not have proper
-    default spacing before and after the heading, surrounded by thematic breaks.
+    Test to make sure this rule does trigger with a document that
+    contains setext headings with bad spacing between them and the
+    thematic breaks on either side.
     """
 
     # Arrange
@@ -1078,9 +1062,9 @@ def test_md022_bad_setext_with_thematic_break_and_bad_line_spacing():
 @pytest.mark.rules
 def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    spacing before the heading with an alternate configuration.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with good spacing between them and the
+    lines on either side, but configuration the requests more space.
     """
 
     # Arrange
@@ -1119,9 +1103,9 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_above():
 @pytest.mark.rules
 def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do have proper
-    spacing before the heading with an alternate configuration.
+    Test to make sure this rule does not trigger with a document that
+    contains atx headings with extra spacing between them and the
+    lines on either side, but configuration that requests more space.
     """
 
     # Arrange
@@ -1158,9 +1142,9 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_above():
 @pytest.mark.rules
 def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do not have proper
-    spacing below the heading with an alternate configuration.
+    Test to make sure this rule does trigger with a document that
+    contains atx headings with good spacing between them and the
+    lines on either side, but configuration the requests more space below.
     """
 
     # Arrange
@@ -1202,9 +1186,9 @@ def test_md022_bad_proper_line_spacing_atx_with_alternate_lines_below():
 @pytest.mark.rules
 def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do have proper
-    spacing below the heading with an alternate configuration.
+    Test to make sure this rule does not trigger with a document that
+    contains atx headings with extra spacing between them and the
+    lines below, but configuration the requests more space below.
     """
 
     # Arrange
@@ -1241,9 +1225,9 @@ def test_md022_good_double_line_spacing_above_atx_with_alternate_lines_below():
 @pytest.mark.rules
 def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines_both():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has atx headings that do have proper
-    spacing above and below the heading with an alternate configuration.
+    Test to make sure this rule does not trigger with a document that
+    contains atx headings with extra spacing above them and the
+    lines on either side, but configuration the requests more space above.
     """
 
     # Arrange
@@ -1282,8 +1266,9 @@ def test_md022_good_double_line_spacing_above_and_below_atx_with_alternate_lines
 @pytest.mark.rules
 def test_md022_good_alternating_heading_types():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has alternating heading types.
+    Test to make sure this rule does not trigger with a document that
+    contains alternating heading types with good spacing between them and the
+    lines on either side.
     """
 
     # Arrange
@@ -1311,9 +1296,9 @@ def test_md022_good_alternating_heading_types():
 @pytest.mark.rules
 def test_md022_bad_alternating_heading_types_with_alternate_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has alternating heading types with
-    an alternate configuration.
+    Test to make sure this rule does trigger with a document that
+    contains alternating heading types with good spacing between them and the
+    lines on either side, but alternative configuration.
     """
 
     # Arrange
@@ -1374,9 +1359,10 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing():
 @pytest.mark.rules
 def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config():
     """
-    Same as above, but with the lines_below being an illegal value.  Without
-    strict mode, this means the value will not be used, and the default of 1
-    will be used.
+    Test to make sure this rule does trigger with a document that
+    contains alternating heading types with good spacing between them and the
+    lines on either side, but alternative configuration.  Note that due to
+    bad configuration on the `below` setting, it will be ignored.
     """
 
     # Arrange
@@ -1425,8 +1411,7 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
 @pytest.mark.rules
 def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_config_strict_mode():
     """
-    Same as above, but with the lines_below being an illegal value.  With strict mode,
-    this means that an error will be displayed.
+    Test to make sure this rule fails with alternative configuration that is invalid.
     """
 
     # Arrange
@@ -1469,9 +1454,9 @@ def test_md022_bad_alternating_heading_types_with_alternate_spacing_and_bad_conf
 @pytest.mark.rules
 def test_md022_good_unordered_list_into_atx_into_paragraph():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has an atx heading after an unsorted
-    list and a paragraph following it.
+    Test to make sure this rule does not trigger with a document that
+    contains an Atx heading types with good spacing between them and
+    the list item above and the paragraph below.
     """
 
     # Arrange
@@ -1497,9 +1482,9 @@ def test_md022_good_unordered_list_into_atx_into_paragraph():
 @pytest.mark.rules
 def test_md022_bad_heading_surrounded_by_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has an atx heading after an unsorted
-    list and a paragraph following it.
+    Test to make sure this rule does trigger with a document that
+    contains an Atx heading types with block quotes directly before
+    and after the heading.
     """
 
     # Arrange
@@ -1532,9 +1517,9 @@ def test_md022_bad_heading_surrounded_by_block_quote():
 @pytest.mark.rules
 def test_md022_bad_heading_surrounded_by_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has an atx heading after an unsorted
-    list and a paragraph following it.
+    Test to make sure this rule does trigger with a document that
+    contains an Atx heading types with list items directly before
+    and after the heading.
     """
 
     # Arrange
@@ -1569,9 +1554,9 @@ def test_md022_bad_heading_surrounded_by_list():
 @pytest.mark.rules
 def test_md022_good_heading_in_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has an atx heading after an unsorted
-    list and a paragraph following it.
+    Test to make sure this rule does not trigger with a document that
+    contains an Atx heading in a block quote, with nicely spaced
+    elements before and after the block quote.
     """
 
     # Arrange
@@ -1597,9 +1582,9 @@ def test_md022_good_heading_in_block_quote():
 @pytest.mark.rules
 def test_md022_good_heading_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD022 directory that has an atx heading after an unsorted
-    list and a paragraph following it.
+    Test to make sure this rule does not trigger with a document that
+    contains an Atx heading in a list item, with nicely spaced
+    elements before and after the list item.
     """
 
     # Arrange

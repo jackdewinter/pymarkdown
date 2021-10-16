@@ -11,9 +11,8 @@ import pytest
 @pytest.mark.rules
 def test_md009_bad_configuration_br_spaces():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    br_spaces value with a string that is not an integer.
     """
 
     # Arrange
@@ -45,9 +44,8 @@ def test_md009_bad_configuration_br_spaces():
 @pytest.mark.rules
 def test_md009_bad_configuration_br_spaces_invalid():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    br_spaces value is not an integer in the proper range.
     """
 
     # Arrange
@@ -79,9 +77,8 @@ def test_md009_bad_configuration_br_spaces_invalid():
 @pytest.mark.rules
 def test_md009_bad_configuration_strict():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    strict value with a string that is not a boolean.
     """
 
     # Arrange
@@ -113,9 +110,8 @@ def test_md009_bad_configuration_strict():
 @pytest.mark.rules
 def test_md009_bad_configuration_list_item_empty_lines():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    list_item_empty_lines value with a string that is not a boolean.
     """
 
     # Arrange
@@ -147,9 +143,8 @@ def test_md009_bad_configuration_list_item_empty_lines():
 @pytest.mark.rules
 def test_md009_good_paragraph_no_extra():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    has no trailing spaces at the end of lines.
     """
 
     # Arrange
@@ -175,9 +170,8 @@ def test_md009_good_paragraph_no_extra():
 @pytest.mark.rules
 def test_md009_bad_paragraph_increasing_extra():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    has increasing amounts of trailing spaces at the end of lines.
     """
 
     # Arrange
@@ -210,9 +204,9 @@ def test_md009_bad_paragraph_increasing_extra():
 @pytest.mark.rules
 def test_md009_bad_paragraph_increasing_extra_with_config_br_spaces_3():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    has increasing amounts trailing spaces at the end of lines, and
+    configuration set to 3.
     """
 
     # Arrange
@@ -251,9 +245,9 @@ def test_md009_bad_paragraph_increasing_extra_with_config_br_spaces_3():
 @pytest.mark.rules
 def test_md009_bad_paragraph_increasing_extra_with_config_br_spaces_0():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    has increasing amounts trailing spaces at the end of lines, and
+    configuration set to 0.
     """
 
     # Arrange
@@ -295,9 +289,9 @@ def test_md009_bad_paragraph_increasing_extra_with_config_br_spaces_0():
 @pytest.mark.rules
 def test_md009_bad_paragraph_increasing_extra_with_config_strict():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    has increasing amounts trailing spaces at the end of lines, and
+    configuration set to strict.
     """
 
     # Arrange
@@ -339,9 +333,8 @@ def test_md009_bad_paragraph_increasing_extra_with_config_strict():
 @pytest.mark.rules
 def test_md009_bad_atx_heading_with_extra():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    has trailing spaces at the end of an Atx Heading element.
     """
 
     # Arrange
@@ -371,9 +364,8 @@ def test_md009_bad_atx_heading_with_extra():
 @pytest.mark.rules
 def test_md009_bad_setext_heading_with_extra():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    has trailing spaces at the end of a SetExt Heading element.
     """
 
     # Arrange
@@ -409,9 +401,8 @@ def test_md009_bad_setext_heading_with_extra():
 @pytest.mark.rules
 def test_md009_bad_theamtic_break_with_extra():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    has trailing spaces at the end of a Thematic break element.
     """
 
     # Arrange
@@ -441,9 +432,8 @@ def test_md009_bad_theamtic_break_with_extra():
 @pytest.mark.rules
 def test_md009_good_indented_code_block_with_extra():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    has trailing spaces inside of an indented code block.
     """
 
     # Arrange
@@ -469,9 +459,8 @@ def test_md009_good_indented_code_block_with_extra():
 @pytest.mark.rules
 def test_md009_good_fenced_code_block_with_extra():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    has trailing spaces inside of a fenced code block.
     """
 
     # Arrange
@@ -497,14 +486,15 @@ def test_md009_good_fenced_code_block_with_extra():
 @pytest.mark.rules
 def test_md009_bad_html_block_with_extra():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    has trailing spaces for text within a HTML block.
     """
 
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md033",
         "scan",
         "test/resources/rules/md009/bad_html_block_with_extra.md",
     ]
@@ -541,9 +531,8 @@ def test_md009_bad_html_block_with_extra():
 @pytest.mark.rules
 def test_md009_bad_link_reference_definition_with_extra():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    has trailing spaces within a Link Reference Definition.
     """
 
     # Arrange
@@ -579,9 +568,8 @@ def test_md009_bad_link_reference_definition_with_extra():
 @pytest.mark.rules
 def test_md009_bad_blank_lines_with_extra():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    has trailing spaces at the end various blank lines.
     """
 
     # Arrange
@@ -616,9 +604,8 @@ def test_md009_bad_blank_lines_with_extra():
 @pytest.mark.rules
 def test_md009_good_unordered_list_item_empty_lines():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    has trailing spaces at the end of a blank line within a list item.
     """
 
     # Arrange
@@ -644,9 +631,9 @@ def test_md009_good_unordered_list_item_empty_lines():
 @pytest.mark.rules
 def test_md009_good_unordered_list_item_empty_lines_with_config_strict():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    has trailing spaces at the end of a blank line within a list item,
+    but with strict configuration enabled.
     """
 
     # Arrange
@@ -679,9 +666,9 @@ def test_md009_good_unordered_list_item_empty_lines_with_config_strict():
 @pytest.mark.rules
 def test_md009_good_unordered_list_item_empty_lines_with_config_strict_and_list_empty():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    has trailing spaces at the end of a blank line within a list item,
+    with strict and list item empty lines configuration.
     """
 
     # Arrange
@@ -712,9 +699,9 @@ def test_md009_good_unordered_list_item_empty_lines_with_config_strict_and_list_
 @pytest.mark.rules
 def test_md009_good_ordered_list_item_empty_lines_with_list_empty():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    has trailing spaces at the end of a blank line within a list item,
+    with list item empty lines configuration.
     """
 
     # Arrange

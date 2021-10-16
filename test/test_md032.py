@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md032_good_list_surrounded():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains lists surrounded by blank lines.
     """
 
     # Arrange
@@ -37,9 +36,8 @@ def test_md032_good_list_surrounded():
 @pytest.mark.rules
 def test_md032_good_list_at_start():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains lists surrounded by blank lines at the very start of the document.
     """
 
     # Arrange
@@ -65,9 +63,8 @@ def test_md032_good_list_at_start():
 @pytest.mark.rules
 def test_md032_good_list_at_end():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains lists surrounded by blank lines at the very end of the document.
     """
 
     # Arrange
@@ -95,9 +92,8 @@ def test_md032_good_list_at_end():
 @pytest.mark.rules
 def test_md032_bad_list_before():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a list that does not have a blank line before it.
     """
 
     # Arrange
@@ -126,9 +122,8 @@ def test_md032_bad_list_before():
 @pytest.mark.rules
 def test_md032_bad_list_after():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a list that does not have a blank line after it.
     """
 
     # Arrange
@@ -159,9 +154,8 @@ def test_md032_bad_list_after():
 @pytest.mark.rules
 def test_md032_bad_block_quote_list_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a list that has a block quote directly before and after it.
     """
 
     # Arrange
@@ -192,9 +186,8 @@ def test_md032_bad_block_quote_list_block_quote():
 @pytest.mark.rules
 def test_md032_bad_other_list_list_other_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a list that has another list before and after it.
     """
 
     # Arrange
@@ -229,9 +222,8 @@ def test_md032_bad_other_list_list_other_list():
 @pytest.mark.rules
 def test_md032_good_list_within_list_surrounded():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a 2-level list with blank lines before and after.
     """
 
     # Arrange
@@ -257,9 +249,8 @@ def test_md032_good_list_within_list_surrounded():
 @pytest.mark.rules
 def test_md032_good_list_within_block_quote_surrounded():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a list inside of a block quote surrounded by blank lines.
     """
 
     # Arrange
@@ -285,9 +276,9 @@ def test_md032_good_list_within_block_quote_surrounded():
 @pytest.mark.rules
 def test_md032_bad_list_within_block_quote_surrounded():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a list within a block quote that is immediately after a text line
+    within the block quote.
     """
 
     # Arrange
@@ -316,9 +307,8 @@ def test_md032_bad_list_within_block_quote_surrounded():
 @pytest.mark.rules
 def test_md032_good_nested_lists():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains nested lists with proper blank lines around.
     """
 
     # Arrange
@@ -344,9 +334,8 @@ def test_md032_good_nested_lists():
 @pytest.mark.rules
 def test_md032_good_list_levels_1_2_3_2_1():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains deeper nested lists with proper blank lines around.
     """
 
     # Arrange
@@ -372,9 +361,8 @@ def test_md032_good_list_levels_1_2_3_2_1():
 @pytest.mark.rules
 def test_md032_good_list_levels_1_2_3_space_1():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains more complex nested lists with proper blank lines around.
     """
 
     # Arrange
@@ -400,9 +388,9 @@ def test_md032_good_list_levels_1_2_3_space_1():
 @pytest.mark.rules
 def test_md032_good_list_levels_1_2_3_1():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains nested lists with proper blank lines around.  With a 2 level
+    drop.
     """
 
     # Arrange
@@ -428,9 +416,8 @@ def test_md032_good_list_levels_1_2_3_1():
 @pytest.mark.rules
 def test_md032_bad_fenced_block_in_list_in_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains lists on either side of a fenced code block with no blank lines.
     """
 
     # Arrange

@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md023_good_proper_indent_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD023 directory that has an atx heading that is not indented
-    from the start of the line.
+    Test to make sure this rule does not trigger with a document that
+    contains an Atx heading that starts at the very left.
     """
 
     # Arrange
@@ -39,9 +38,8 @@ def test_md023_good_proper_indent_atx():
 @pytest.mark.rules
 def test_md023_good_proper_indent_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD023 directory that has an setext heading that is not indented
-    from the start of the line.
+    Test to make sure this rule does not trigger with a document that
+    contains a SetExt heading that starts at the very left.
     """
 
     # Arrange
@@ -69,9 +67,8 @@ def test_md023_good_proper_indent_setext():
 @pytest.mark.rules
 def test_md023_bad_improper_indent_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has an atx heading that is indented from
-    the start of the line.
+    Test to make sure this rule does trigger with a document that
+    contains an Atx heading that does not start at the very left.
     """
 
     # Arrange
@@ -102,9 +99,8 @@ def test_md023_bad_improper_indent_atx():
 @pytest.mark.rules
 def test_md023_bad_improper_indent_atx_in_list_item():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has an atx heading that is indented from
-    the start of the line.
+    Test to make sure this rule does not trigger with a document that
+    contains an Atx heading that does not start at the very left in a list item.
     """
 
     # Arrange
@@ -132,9 +128,8 @@ def test_md023_bad_improper_indent_atx_in_list_item():
 @pytest.mark.rules
 def test_md023_bad_improper_indent_atx_in_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has an atx heading that is indented from
-    the start of the line.
+    Test to make sure this rule does not trigger with a document that
+    contains an Atx heading that does not start at the very left in a block quote.
     """
 
     # Arrange
@@ -162,9 +157,9 @@ def test_md023_bad_improper_indent_atx_in_block_quote():
 @pytest.mark.rules
 def test_md023_bad_improper_indent_setext_x():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has a setext heading that is indented from
-    the start of the line.
+    Test to make sure this rule does trigger with a document that
+    contains a SetExt heading that any part of it does not start at
+    the very left.
     """
 
     # Arrange
@@ -201,9 +196,9 @@ def test_md023_bad_improper_indent_setext_x():
 @pytest.mark.rules
 def test_md023_bad_improper_indent_setext_in_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has a setext heading that is indented from
-    the start of the line.
+    Test to make sure this rule does trigger with a document that
+    contains a SetExt heading that any part of it does not start at
+    the very left in a block quote.
     """
 
     # Arrange
@@ -242,9 +237,9 @@ def test_md023_bad_improper_indent_setext_in_block_quote():
 @pytest.mark.rules
 def test_md023_bad_improper_indent_setext_in_list_item():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has a setext heading that is indented from
-    the start of the line.
+    Test to make sure this rule does trigger with a document that
+    contains a SetExt heading that any part of it does not start at
+    the very left in a list item.
     """
 
     # Arrange
@@ -281,9 +276,8 @@ def test_md023_bad_improper_indent_setext_in_list_item():
 @pytest.mark.rules
 def test_md023_bad_improper_indented_atx_after_emphasis():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has a setext heading that is indented from
-    the start of the line.
+    Test to make sure this rule does not trigger with a document that
+    contains a "SetExt heading" that is encapsulated in emphasis.
     """
 
     # Arrange
@@ -311,9 +305,8 @@ def test_md023_bad_improper_indented_atx_after_emphasis():
 @pytest.mark.rules
 def test_md023_proper_indent_setext_trailing_x():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has a setext heading that is indented from
-    the start of the line.
+    Test to make sure this rule does not trigger with a document that
+    contains a SetExt heading that ends with spaces.
     """
 
     # Arrange
@@ -343,9 +336,8 @@ def test_md023_proper_indent_setext_trailing_x():
 @pytest.mark.rules
 def test_md023_proper_indent_setext_trailing_first():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has a setext heading that is indented from
-    the start of the line.
+    Test to make sure this rule does not trigger with a document that
+    contains a SetExt heading that ends with spaces on the first line.
     """
 
     # Arrange
@@ -375,9 +367,8 @@ def test_md023_proper_indent_setext_trailing_first():
 @pytest.mark.rules
 def test_md023_proper_indent_setext_trailing_second():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has a setext heading that is indented from
-    the start of the line.
+    Test to make sure this rule does not trigger with a document that
+    contains a SetExt heading that ends with spaces on the second line.
     """
 
     # Arrange
@@ -407,9 +398,8 @@ def test_md023_proper_indent_setext_trailing_second():
 @pytest.mark.rules
 def test_md023_proper_indent_setext_trailing_third():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has a setext heading that is indented from
-    the start of the line.
+    Test to make sure this rule does not trigger with a document that
+    contains a SetExt heading that ends with spaces on the third line.
     """
 
     # Arrange
@@ -439,9 +429,8 @@ def test_md023_proper_indent_setext_trailing_third():
 @pytest.mark.rules
 def test_md023_proper_indent_setext_larger_trailing_middle():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md023 directory that has a setext heading that is indented from
-    the start of the line.
+    Test to make sure this rule does not trigger with a document that
+    contains a SetExt heading that ends with spaces in the middle.
     """
 
     # Arrange

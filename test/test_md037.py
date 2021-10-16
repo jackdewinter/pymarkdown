@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md037_good_valid_emphasis():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains one or more valid emphasis sequences.
     """
 
     # Arrange
@@ -37,9 +36,8 @@ def test_md037_good_valid_emphasis():
 @pytest.mark.rules
 def test_md037_bad_surrounding_emphasis():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains one or two valid emphasis characters surrounded by spaces.
     """
 
     # Arrange
@@ -70,9 +68,8 @@ def test_md037_bad_surrounding_emphasis():
 @pytest.mark.rules
 def test_md037_bad_leading_emphasis():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains one or two valid emphasis characters with leading spaces.
     """
 
     # Arrange
@@ -103,9 +100,8 @@ def test_md037_bad_leading_emphasis():
 @pytest.mark.rules
 def test_md037_bad_trailing_emphasis():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains one or two valid emphasis characters followed by spaces.
     """
 
     # Arrange
@@ -136,9 +132,9 @@ def test_md037_bad_trailing_emphasis():
 @pytest.mark.rules
 def test_md037_bad_surrounding_emphasis_multiline():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains one or two valid emphasis characters surrounded by spaces,
+    and the emphasis spans lines.
     """
 
     # Arrange
@@ -169,9 +165,9 @@ def test_md037_bad_surrounding_emphasis_multiline():
 @pytest.mark.rules
 def test_md037_bad_surrounding_empahsis_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains one or two valid emphasis characters surrounded by spaces,
+    within an SetExt heading.
     """
 
     # Arrange
@@ -202,9 +198,9 @@ def test_md037_bad_surrounding_empahsis_setext():
 @pytest.mark.rules
 def test_md037_bad_surrounding_empahsis_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains one or two valid emphasis characters surrounded by spaces,
+    within an Atx Heading element.
     """
 
     # Arrange
@@ -235,9 +231,9 @@ def test_md037_bad_surrounding_empahsis_atx():
 @pytest.mark.rules
 def test_md037_bad_surrounding_emphasis_containers():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains one or two valid emphasis characters surrounded by spaces,
+    within a single line within a container element.
     """
 
     # Arrange
@@ -267,9 +263,9 @@ def test_md037_bad_surrounding_emphasis_containers():
 @pytest.mark.rules
 def test_md037_good_emphasis_with_code_span():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains one or two valid emphasis characters surrounded by spaces,
+    within a code span.
     """
 
     # Arrange
@@ -295,9 +291,9 @@ def test_md037_good_emphasis_with_code_span():
 @pytest.mark.rules
 def test_md037_good_no_emphasis_but_stars():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains one or two valid emphasis characters as part of other parts
+    of a paragraph.
     """
 
     # Arrange

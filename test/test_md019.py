@@ -11,9 +11,8 @@ import pytest
 @pytest.mark.rules
 def test_md019_good_single_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md019 directory that has atx headings with a single space
-    after the initial hash.
+    Test to make sure this rule does not trigger with a document that
+    contains an Atx Heading with a single space before text.
     """
 
     # Arrange
@@ -39,9 +38,8 @@ def test_md019_good_single_spacing():
 @pytest.mark.rules
 def test_md019_bad_multiple_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md019 directory that has atx headings with multiple spaces
-    after the initial hash.
+    Test to make sure this rule does not trigger with a document that
+    contains Atx Headings with multiple spaces before text.
     """
 
     # Arrange
@@ -71,9 +69,9 @@ def test_md019_bad_multiple_spacing():
 
 def test_md019_bad_multiple_spacing_with_inline():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md019 directory that has atx headings with a single space
-    after the initial hash, with inline processing in the heading for good measure.
+    Test to make sure this rule does not trigger with a document that
+    contains multiple Atx Headings with multiple spaces before text,
+    including an inline element in the heading.
     """
 
     # Arrange
@@ -103,9 +101,9 @@ def test_md019_bad_multiple_spacing_with_inline():
 
 def test_md019_bad_multiple_spacing_with_indent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md019 directory that has atx headings with a single space
-    after the initial hash, with inline processing in the heading for good measure.
+    Test to make sure this rule does not trigger with a document that
+    contains multiple Atx Headings with multiple spaces before text,
+    including indets.
     """
 
     # Arrange
@@ -137,11 +135,8 @@ def test_md019_bad_multiple_spacing_with_indent():
 
 def test_md019_bad_single_space_single_tab():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md019 directory that has two headers that start with various
-    amounts of leading whitespace, followed by 1-2 hash characters, a single space
-    character, and a single tab character.  This rule should not fire as in both cases,
-    there is a single space after the hash character.
+    Test to make sure this rule does not trigger with a document that
+    contains multiple Atx Headings with tabs before text.
     """
 
     # Arrange

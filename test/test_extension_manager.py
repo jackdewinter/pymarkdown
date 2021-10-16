@@ -329,7 +329,7 @@ def test_markdown_with_extensions_list_and_filter_by_id_ends_with_non_sequence()
     """
     Test to make sure the command line interface to extensions
     lists the matching items (none) when presented with an identifier
-    that does not match any extension. 
+    that does not match any extension.
     """
 
     # Arrange

@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md042_good_non_empty_link():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains links that have non-empty urls.
     """
 
     # Arrange
@@ -37,9 +36,8 @@ def test_md042_good_non_empty_link():
 @pytest.mark.rules
 def test_md042_bad_empty_link():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains links that have empty urls.
     """
 
     # Arrange
@@ -68,9 +66,8 @@ def test_md042_bad_empty_link():
 @pytest.mark.rules
 def test_md042_bad_whitespace_link():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains links that have whitespace only urls.
     """
 
     # Arrange
@@ -99,9 +96,8 @@ def test_md042_bad_whitespace_link():
 @pytest.mark.rules
 def test_md042_good_non_empty_fragment():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains links that has a non-empty url fragment.
     """
 
     # Arrange
@@ -127,9 +123,8 @@ def test_md042_good_non_empty_fragment():
 @pytest.mark.rules
 def test_md042_bad_link_empty_fragment():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains links that have empty url fragments.
     """
 
     # Arrange
@@ -158,9 +153,8 @@ def test_md042_bad_link_empty_fragment():
 @pytest.mark.rules
 def test_md042_bad_link_whitespace_fragment():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains links that have whitespace only url fragments.
     """
 
     # Arrange
@@ -189,9 +183,8 @@ def test_md042_bad_link_whitespace_fragment():
 @pytest.mark.rules
 def test_md042_good_non_empty_image():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains images that have non-empty urls.
     """
 
     # Arrange
@@ -217,9 +210,8 @@ def test_md042_good_non_empty_image():
 @pytest.mark.rules
 def test_md042_bad_empty_image():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains links that have empty urls.
     """
 
     # Arrange

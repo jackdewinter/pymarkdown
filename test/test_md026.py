@@ -12,9 +12,8 @@ from .utils import write_temporary_configuration
 @pytest.mark.rules
 def test_md026_good_ends_without_punctuation_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a Atx heading that does not end in punctuation.
     """
 
     # Arrange
@@ -40,9 +39,8 @@ def test_md026_good_ends_without_punctuation_atx():
 @pytest.mark.rules
 def test_md026_good_ends_with_entity_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a Atx heading that does end in punctuation, but in entity form.
     """
 
     # Arrange
@@ -68,9 +66,8 @@ def test_md026_good_ends_with_entity_atx():
 @pytest.mark.rules
 def test_md026_bad_ends_with_punctuation_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do end with a
-    punctuation character.
+    Test to make sure this rule does trigger with a document that
+    contains a Atx heading that does end in punctuation.
     """
 
     # Arrange
@@ -99,9 +96,8 @@ def test_md026_bad_ends_with_punctuation_atx():
 @pytest.mark.rules
 def test_md026_good_ends_with_punctuation_then_inline_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do end with a
-    punctuation character, but after that character have an inline sequence.
+    Test to make sure this rule does not trigger with a document that
+    contains a Atx heading that ends in punctuation followed by emphasis.
     """
 
     # Arrange
@@ -127,10 +123,9 @@ def test_md026_good_ends_with_punctuation_then_inline_atx():
 @pytest.mark.rules
 def test_md026_good_ends_with_punctuation_atx_with_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do end with what
-    would normally be punctuation, but have configuration that changes those characters
-    that are considered punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a Atx heading that does end in punctuation, but with configuration
+    to compensate.
     """
 
     # Arrange
@@ -165,9 +160,8 @@ def test_md026_good_ends_with_punctuation_atx_with_configuration():
 @pytest.mark.rules
 def test_md026_good_ends_without_punctuation_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has setext headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a SetExt heading that does not end in punctuation.
     """
 
     # Arrange
@@ -193,9 +187,8 @@ def test_md026_good_ends_without_punctuation_setext():
 @pytest.mark.rules
 def test_md026_good_ends_with_entity_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has setext headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a SetExt heading that does end in punctuation, but as an entity.
     """
 
     # Arrange
@@ -221,9 +214,8 @@ def test_md026_good_ends_with_entity_setext():
 @pytest.mark.rules
 def test_md026_bad_ends_with_punctuation_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has setext headings that do end with a
-    punctuation character.
+    Test to make sure this rule does trigger with a document that
+    contains a SetExt heading that does end in punctuation.
     """
 
     # Arrange
@@ -252,9 +244,8 @@ def test_md026_bad_ends_with_punctuation_setext():
 @pytest.mark.rules
 def test_md026_bad_ends_with_punctuation_setext_multiline():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has setext headings that do end with a
-    punctuation character.
+    Test to make sure this rule does trigger with a document that
+    contains a SetExt heading that is multiline and does end in punctuation.
     """
 
     # Arrange
@@ -283,9 +274,8 @@ def test_md026_bad_ends_with_punctuation_setext_multiline():
 @pytest.mark.rules
 def test_md026_good_ends_with_punctuation_then_inline_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has setext headings that do end with a
-    punctuation character, but after that character have an inline sequence.
+    Test to make sure this rule does not trigger with a document that
+    contains a SetExt heading that does end in punctuation and then emphasis.
     """
 
     # Arrange
@@ -311,10 +301,8 @@ def test_md026_good_ends_with_punctuation_then_inline_setext():
 @pytest.mark.rules
 def test_md026_good_ends_with_punctuation_setext_with_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has setext headings that do end with what
-    would normally be punctuation, but have configuration that changes those characters
-    that are considered punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a SetExt heading that does end in punctuation, but configuration to compensate for it.
     """
 
     # Arrange

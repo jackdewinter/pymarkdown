@@ -2608,7 +2608,13 @@ def test_setext_headings_extra_77a():
     source_markdown = """a![Foo](/uri "test
 \\#ing")a
 ---"""
-    expected_tokens = ['[setext(3,1):-:3::(1,1)]', '[text(1,1):a:]', '[image(1,2):inline:/uri:test\n#ing:Foo::test\n\#ing::Foo:False:":: :]', '[text(2,8):a:]', '[end-setext::]']
+    expected_tokens = [
+        "[setext(3,1):-:3::(1,1)]",
+        "[text(1,1):a:]",
+        '[image(1,2):inline:/uri:test\n#ing:Foo::test\n\\#ing::Foo:False:":: :]',
+        "[text(2,8):a:]",
+        "[end-setext::]",
+    ]
     expected_gfm = """<h2>a<img src="/uri" alt="Foo" title="test
 #ing" />a</h2>"""
 

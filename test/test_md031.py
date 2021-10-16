@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md031_bad_configuration_list_items():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    list_items value with a string that is not a boolean.
     """
 
     # Arrange
@@ -43,9 +42,8 @@ def test_md031_bad_configuration_list_items():
 @pytest.mark.rules
 def test_md031_good_fenced_block_surrounded():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a fenced code block surrounded by blank lines.
     """
 
     # Arrange
@@ -71,9 +69,8 @@ def test_md031_good_fenced_block_surrounded():
 @pytest.mark.rules
 def test_md031_bad_fenced_block_only_after():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block only followed by blank lines.
     """
 
     # Arrange
@@ -102,9 +99,8 @@ def test_md031_bad_fenced_block_only_after():
 @pytest.mark.rules
 def test_md031_bad_fenced_block_only_before():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block only prefaced by blank lines.
     """
 
     # Arrange
@@ -133,9 +129,8 @@ def test_md031_bad_fenced_block_only_before():
 @pytest.mark.rules
 def test_md031_good_fenced_block_at_start():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a fenced code block at the start of the document.
     """
 
     # Arrange
@@ -161,9 +156,8 @@ def test_md031_good_fenced_block_at_start():
 @pytest.mark.rules
 def test_md031_good_fenced_block_at_end():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a fenced code block at the end of the document.
     """
 
     # Arrange
@@ -191,9 +185,9 @@ def test_md031_good_fenced_block_at_end():
 @pytest.mark.rules
 def test_md031_bad_fenced_block_only_after_start_indent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block right after a text line, with the
+    fenced code block indented by 1.
     """
 
     # Arrange
@@ -222,9 +216,9 @@ def test_md031_bad_fenced_block_only_after_start_indent():
 @pytest.mark.rules
 def test_md031_bad_fenced_block_only_before_start_indent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block right before a text line, with the
+    fenced code block indented by 1.
     """
 
     # Arrange
@@ -253,9 +247,9 @@ def test_md031_bad_fenced_block_only_before_start_indent():
 @pytest.mark.rules
 def test_md031_bad_fenced_block_only_before_end_indent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block right before a text line, with the
+    end fenced code block indented by 1.
     """
 
     # Arrange
@@ -284,9 +278,9 @@ def test_md031_bad_fenced_block_only_before_end_indent():
 @pytest.mark.rules
 def test_md031_good_fenced_block_surrounded_in_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a fenced code block within a block quote surrounded by
+    blank lines.
     """
 
     # Arrange
@@ -312,9 +306,9 @@ def test_md031_good_fenced_block_surrounded_in_block_quote():
 @pytest.mark.rules
 def test_md031_good_fenced_block_surrounded_in_ordered_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a fenced code block within an ordered list surrounded by
+    blank lines.
     """
 
     # Arrange
@@ -340,9 +334,9 @@ def test_md031_good_fenced_block_surrounded_in_ordered_list():
 @pytest.mark.rules
 def test_md031_good_fenced_block_surrounded_in_unordered_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a fenced code block within an unordered list surrounded by
+    blank lines.
     """
 
     # Arrange
@@ -368,9 +362,9 @@ def test_md031_good_fenced_block_surrounded_in_unordered_list():
 @pytest.mark.rules
 def test_md031_bad_fenced_block_only_after_in_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block within a block quote the is immediately
+    after a text line.
     """
 
     # Arrange
@@ -399,9 +393,9 @@ def test_md031_bad_fenced_block_only_after_in_block_quote():
 @pytest.mark.rules
 def test_md031_bad_fenced_block_only_after_in_unordered_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block within an unordered list the is immediately
+    after a text line.
     """
 
     # Arrange
@@ -430,9 +424,9 @@ def test_md031_bad_fenced_block_only_after_in_unordered_list():
 @pytest.mark.rules
 def test_md031_bad_fenced_block_only_before_in_unordered_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block within an unordered list tha is immediately
+    before a text line.
     """
 
     # Arrange
@@ -461,9 +455,9 @@ def test_md031_bad_fenced_block_only_before_in_unordered_list():
 @pytest.mark.rules
 def test_md031_good_fenced_block_only_after_in_unordered_list_with_config():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block within an unordered list tha is immediately
+    after a text line, but configuration.
     """
 
     # Arrange
@@ -492,9 +486,9 @@ def test_md031_good_fenced_block_only_after_in_unordered_list_with_config():
 @pytest.mark.rules
 def test_md031_good_fenced_block_only_before_in_unordered_list_with_config():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block within an unordered list tha is immediately
+    before a text line, but configuration.
     """
 
     # Arrange
@@ -522,9 +516,8 @@ def test_md031_good_fenced_block_only_before_in_unordered_list_with_config():
 @pytest.mark.rules
 def test_md031_good_fenced_block_empty():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains an empty fenced code block surrounded by blank lines.
     """
 
     # Arrange
@@ -550,9 +543,8 @@ def test_md031_good_fenced_block_empty():
 @pytest.mark.rules
 def test_md031_bad_fenced_block_in_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block surrounded by block quotes.
     """
 
     # Arrange
@@ -583,9 +575,8 @@ def test_md031_bad_fenced_block_in_block_quote():
 @pytest.mark.rules
 def test_md031_bad_fenced_block_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block surrounded by lists.
     """
 
     # Arrange
@@ -618,9 +609,8 @@ def test_md031_bad_fenced_block_in_list():
 @pytest.mark.rules
 def test_md031_bad_fenced_block_in_block_quote_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block surrounded by block quotes within a list item.
     """
 
     # Arrange
@@ -653,9 +643,8 @@ def test_md031_bad_fenced_block_in_block_quote_in_list():
 @pytest.mark.rules
 def test_md031_bad_fenced_block_in_list_in_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block surrounded by  list item within a block quote.
     """
 
     # Arrange

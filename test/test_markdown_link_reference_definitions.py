@@ -1717,6 +1717,10 @@ def test_link_reference_definitions_188e():
 def test_link_reference_definitions_extra_01():
     """
     Test case extra 01:  LRD within list item
+
+    NOTE: Due to https://talk.commonmark.org/t/block-quotes-laziness-and-link-reference-definitions/3751
+          the GFM output has been adjusted to compensate for PyMarkdown using a token and not parsing
+          the text afterwards.
     """
 
     # Arrange
@@ -1767,6 +1771,10 @@ def test_link_reference_definitions_extra_01a():
 def test_link_reference_definitions_extra_01b():
     """
     Test case extra 01b:  variation on 1 with almost proper indent
+
+    NOTE: Due to https://talk.commonmark.org/t/block-quotes-laziness-and-link-reference-definitions/3751
+          the GFM output has been adjusted to compensate for PyMarkdown using a token and not parsing
+          the text afterwards.
     """
 
     # Arrange

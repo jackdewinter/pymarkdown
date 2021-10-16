@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD045 rule.
+Module to provide tests related to the MD048 rule.
 """
 from test.markdown_scanner import MarkdownScanner
 
@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md048_bad_configuration_style():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with an integer that is not a string.
     """
 
     # Arrange
@@ -43,9 +42,8 @@ def test_md048_bad_configuration_style():
 @pytest.mark.rules
 def test_md048_bad_configuration_style_bad():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with a string that is not valid.
     """
 
     # Arrange
@@ -77,9 +75,8 @@ def test_md048_bad_configuration_style_bad():
 @pytest.mark.rules
 def test_md048_good_fenced_tildes_with_consistent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains fenced code blocks with tildes and consistent configuration.
     """
 
     # Arrange
@@ -107,9 +104,8 @@ def test_md048_good_fenced_tildes_with_consistent():
 @pytest.mark.rules
 def test_md048_good_fenced_backticks_with_consistent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains fenced code blocks with backticks and consistent configuration.
     """
 
     # Arrange
@@ -137,9 +133,8 @@ def test_md048_good_fenced_backticks_with_consistent():
 @pytest.mark.rules
 def test_md048_bad_fenced_backticks_and_tildes_with_consistent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains fenced code blocks with tildes and backticks and consistent configuration.
     """
 
     # Arrange
@@ -171,9 +166,8 @@ def test_md048_bad_fenced_backticks_and_tildes_with_consistent():
 @pytest.mark.rules
 def test_md048_good_fenced_backticks_with_backticks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains fenced code blocks with backticks and backtick configuration.
     """
 
     # Arrange
@@ -201,9 +195,8 @@ def test_md048_good_fenced_backticks_with_backticks():
 @pytest.mark.rules
 def test_md048_good_fenced_tildes_with_backticks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains fenced code blocks with backticks and tilde configuration.
     """
 
     # Arrange
@@ -238,9 +231,8 @@ def test_md048_good_fenced_tildes_with_backticks():
 @pytest.mark.rules
 def test_md048_bad_fenced_backticks_and_tildes_with_backticks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains fenced code blocks with backticks and tildes and backtick configuration.
     """
 
     # Arrange
@@ -272,9 +264,8 @@ def test_md048_bad_fenced_backticks_and_tildes_with_backticks():
 @pytest.mark.rules
 def test_md048_good_fenced_tildes_with_tilde():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains fenced code blocks with tildes and tilde configuration.
     """
 
     # Arrange
@@ -302,9 +293,8 @@ def test_md048_good_fenced_tildes_with_tilde():
 @pytest.mark.rules
 def test_md048_good_fenced_backticks_with_tilde():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains fenced code blocks with backticks and tilde configuration.
     """
 
     # Arrange
@@ -339,9 +329,8 @@ def test_md048_good_fenced_backticks_with_tilde():
 @pytest.mark.rules
 def test_md048_bad_fenced_backticks_and_tildes_with_indented():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains fenced code blocks with backticks and tildes and tilde configuration.
     """
 
     # Arrange

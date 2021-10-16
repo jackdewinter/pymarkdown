@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md004_bad_configuration_style():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with a string that is not in the list of acceptable values.
     """
 
     # Arrange
@@ -43,9 +42,9 @@ def test_md004_bad_configuration_style():
 @pytest.mark.rules
 def test_md004_good_asterisk_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    is only level 1 unordered lists starting with asterisk and the
+    configuration is set to asterisk.
     """
 
     # Arrange
@@ -73,9 +72,9 @@ def test_md004_good_asterisk_single_level():
 @pytest.mark.rules
 def test_md004_good_asterisk_single_level_consistent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    is only level 1 unordered lists starting with asterisk and the
+    configuration is set to consistent.
     """
 
     # Arrange
@@ -101,9 +100,9 @@ def test_md004_good_asterisk_single_level_consistent():
 @pytest.mark.rules
 def test_md004_bad_asterisk_dash_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to asterisk.
     """
 
     # Arrange
@@ -135,9 +134,9 @@ def test_md004_bad_asterisk_dash_single_level():
 @pytest.mark.rules
 def test_md004_bad_asterisk_plus_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with plus and the
+    configuration is also set to asterisk.
     """
 
     # Arrange
@@ -169,9 +168,9 @@ def test_md004_bad_asterisk_plus_single_level():
 @pytest.mark.rules
 def test_md004_good_dash_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to dash.
     """
 
     # Arrange
@@ -199,9 +198,9 @@ def test_md004_good_dash_single_level():
 @pytest.mark.rules
 def test_md004_good_dash_single_level_consistent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to consistent.
     """
 
     # Arrange
@@ -227,9 +226,9 @@ def test_md004_good_dash_single_level_consistent():
 @pytest.mark.rules
 def test_md004_bad_dash_asterisk_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with asterisks and the
+    configuration is also set to dash.
     """
 
     # Arrange
@@ -261,9 +260,9 @@ def test_md004_bad_dash_asterisk_single_level():
 @pytest.mark.rules
 def test_md004_bad_dash_plus_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with plus and the
+    configuration is also set to dash.
     """
 
     # Arrange
@@ -295,9 +294,9 @@ def test_md004_bad_dash_plus_single_level():
 @pytest.mark.rules
 def test_md004_good_plus_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    is only level 1 unordered lists starting with plus and the
+    configuration is also set to plus.
     """
 
     # Arrange
@@ -325,9 +324,9 @@ def test_md004_good_plus_single_level():
 @pytest.mark.rules
 def test_md004_good_plus_single_level_consistent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to consistent.
     """
 
     # Arrange
@@ -353,9 +352,9 @@ def test_md004_good_plus_single_level_consistent():
 @pytest.mark.rules
 def test_md004_bad_plus_asterisk_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    is only level 1 unordered lists starting with asterisk and the
+    configuration is also set to plus.
     """
 
     # Arrange
@@ -387,9 +386,9 @@ def test_md004_bad_plus_asterisk_single_level():
 @pytest.mark.rules
 def test_md004_bad_plus_dash_single_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with dash and the
+    configuration is also set to plus.
     """
 
     # Arrange
@@ -421,9 +420,8 @@ def test_md004_bad_plus_dash_single_level():
 @pytest.mark.rules
 def test_md004_bad_single_level_consistent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has inconsistent usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    is only level 1 unordered lists starting with each of the valid starts.
     """
 
     # Arrange
@@ -458,8 +456,8 @@ def test_md004_bad_single_level_consistent():
 @pytest.mark.rules
 def test_md004_good_multi_level_sublevel():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent usage on multiple levels of list.
+    Test to make sure this rule does not trigger with a document that contains
+    the three start characters, each on their own sublevel.
     """
 
     # Arrange
@@ -487,8 +485,7 @@ def test_md004_good_multi_level_sublevel():
 @pytest.mark.rules
 def test_md004_good_multi_level_sublevel_complex():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent usage on multiple levels of list.
+    Variation of the previous test with a more complex list structure.
     """
 
     # Arrange
@@ -516,8 +513,8 @@ def test_md004_good_multi_level_sublevel_complex():
 @pytest.mark.rules
 def test_md004_bad_multi_level_sublevel_complex():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent usage on multiple levels of list.
+    Test to make sure this rule does trigger with a document that contains
+    the inconsistent start characters at one specific sublevel.
     """
 
     # Arrange
@@ -549,8 +546,9 @@ def test_md004_bad_multi_level_sublevel_complex():
 @pytest.mark.rules
 def test_md004_bad_multi_level_sublevel_complex_asterisk():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent usage on multiple levels of list.
+    Test to make sure this rule does trigger with a document that contains
+    the three start characters, each on their own sublevel, and configuration
+    specifically set to asterisk.
     """
 
     # Arrange
@@ -588,8 +586,9 @@ def test_md004_bad_multi_level_sublevel_complex_asterisk():
 @pytest.mark.rules
 def test_md004_bad_dual_lists_with_separator():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent usage on multiple levels of list.
+    Test to make sure this rule does trigger with a document that contains
+    two separate lists with different start characters, and configuration
+    specifically set to sublist.
     """
 
     # Arrange

@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md038_good_code_span():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a code span element that does not start or end with spaces.
     """
 
     # Arrange
@@ -37,9 +36,8 @@ def test_md038_good_code_span():
 @pytest.mark.rules
 def test_md038_bad_code_span_trailing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a code span element that end with spaces.
     """
 
     # Arrange
@@ -68,9 +66,8 @@ def test_md038_bad_code_span_trailing():
 @pytest.mark.rules
 def test_md038_bad_code_span_leading():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a code span element that starts with spaces.
     """
 
     # Arrange
@@ -99,9 +96,8 @@ def test_md038_bad_code_span_leading():
 @pytest.mark.rules
 def test_md038_good_code_span_both():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a code span element that starts and ends with a single space.
     """
 
     # Arrange
@@ -127,9 +123,8 @@ def test_md038_good_code_span_both():
 @pytest.mark.rules
 def test_md038_bad_code_span_both_extra():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a code span element that starts and ends with multiple spaces.
     """
 
     # Arrange
@@ -158,9 +153,9 @@ def test_md038_bad_code_span_both_extra():
 @pytest.mark.rules
 def test_md038_good_code_span_embedded_leading_backtick():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a code span element that starts with a single space
+    followed by a backtick.
     """
 
     # Arrange
@@ -186,9 +181,9 @@ def test_md038_good_code_span_embedded_leading_backtick():
 @pytest.mark.rules
 def test_md038_good_code_span_embedded_trailing_backtick():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a code span element that ends with a single backtick
+    followed by a space.
     """
 
     # Arrange

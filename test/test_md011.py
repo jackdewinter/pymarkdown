@@ -1,5 +1,5 @@
 """
-Module to provide tests related to the MD009 rule.
+Module to provide tests related to the MD011 rule.
 """
 from test.markdown_scanner import MarkdownScanner
 
@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md011_good_no_reversed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains no reversed links.
     """
 
     # Arrange
@@ -37,9 +36,8 @@ def test_md011_good_no_reversed():
 @pytest.mark.rules
 def test_md011_bad_with_reversed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains at least one reversed link.
     """
 
     # Arrange
@@ -67,11 +65,10 @@ def test_md011_bad_with_reversed():
 
 
 @pytest.mark.rules
-def test_md011_good_markdown_extra():
+def test_md011_good_markdown_footnote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains what looks like a reversed link, but also looks like a footnote.
     """
 
     # Arrange
@@ -97,9 +94,8 @@ def test_md011_good_markdown_extra():
 @pytest.mark.rules
 def test_md011_good_with_reversed_in_code_block():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a "reversed link" in a code block.
     """
 
     # Arrange
@@ -125,9 +121,8 @@ def test_md011_good_with_reversed_in_code_block():
 @pytest.mark.rules
 def test_md011_good_with_reversed_in_html_block():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a "reversed link" in a HTML block.
     """
 
     # Arrange

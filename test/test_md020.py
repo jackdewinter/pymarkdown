@@ -11,9 +11,8 @@ import pytest
 @pytest.mark.rules
 def test_md020_good_start_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with good spacing
-    inside of both hashes.
+    Test to make sure this rule does not trigger with a document that
+    contains multiple Atx Closed Headings with proper spacing.
     """
 
     # Arrange
@@ -39,9 +38,8 @@ def test_md020_good_start_spacing():
 @pytest.mark.rules
 def test_md020_good_start_spacing_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with good spacing
-    inside of both hashes.
+    Test to make sure this rule does not trigger with a document that
+    contains multiple Atx Closed Headings with proper spacing in a list.
     """
 
     # Arrange
@@ -67,9 +65,8 @@ def test_md020_good_start_spacing_in_list():
 @pytest.mark.rules
 def test_md020_good_start_spacing_in_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with good spacing
-    inside of both hashes.
+    Test to make sure this rule does not trigger with a document that
+    contains multiple Atx Closed Headings with proper spacing in a block quote.
     """
 
     # Arrange
@@ -95,9 +92,8 @@ def test_md020_good_start_spacing_in_block_quote():
 @pytest.mark.rules
 def test_md020_bad_ignore_bad_atx_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has an atx heading with bad spacing
-    inside of the starting hash, that should be ignored.
+    Test to make sure this rule does not trigger with a document that
+    contains multiple Atx Headings that are not closed.
     """
 
     # Arrange
@@ -125,9 +121,8 @@ def test_md020_bad_ignore_bad_atx_spacing():
 @pytest.mark.rules
 def test_md020_bad_missing_start_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings with missing spacing at the start.
     """
 
     # Arrange
@@ -158,9 +153,9 @@ def test_md020_bad_missing_start_spacing():
 @pytest.mark.rules
 def test_md020_bad_missing_start_spacing_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings with missing spacing at the start,
+    in a list.
     """
 
     # Arrange
@@ -191,9 +186,9 @@ def test_md020_bad_missing_start_spacing_in_list():
 @pytest.mark.rules
 def test_md020_bad_missing_start_spacing_in_block_quotes():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings with missing spacing at the start
+    in block quotes.
     """
 
     # Arrange
@@ -226,9 +221,8 @@ def test_md020_bad_missing_start_spacing_in_block_quotes():
 @pytest.mark.rules
 def test_md020_bad_missing_end_spacingx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the end hashes.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings with missing spacing at the end.
     """
 
     # Arrange
@@ -259,9 +253,8 @@ def test_md020_bad_missing_end_spacingx():
 @pytest.mark.rules
 def test_md020_bad_missing_end_spacing_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the end hashes.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings with missing spacing at the end in a list.
     """
 
     # Arrange
@@ -292,9 +285,8 @@ def test_md020_bad_missing_end_spacing_in_list():
 @pytest.mark.rules
 def test_md020_bad_missing_end_spacing_in_block_quotes():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the end hashes.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings with missing spacing at the end in a block quote.
     """
 
     # Arrange
@@ -325,10 +317,9 @@ def test_md020_bad_missing_end_spacing_in_block_quotes():
 @pytest.mark.rules
 def test_md020_good_almost_missing_end_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading that is almost
-    missing end spacing, except that the hashes are followed by something else, making
-    it a plain atx heading.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Headings that might be Atx Closed, except for
+    extra characters after the last #
     """
 
     # Arrange
@@ -354,9 +345,9 @@ def test_md020_good_almost_missing_end_spacing():
 @pytest.mark.rules
 def test_md020_bad_missing_both_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside both of the hashes.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings with missing spacing at the
+    start and the end.
     """
 
     # Arrange
@@ -387,9 +378,9 @@ def test_md020_bad_missing_both_spacing():
 @pytest.mark.rules
 def test_md020_bad_missing_both_spacing_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside both of the hashes.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings with missing spacing at the
+    start and the end in a list.
     """
 
     # Arrange
@@ -420,9 +411,9 @@ def test_md020_bad_missing_both_spacing_in_list():
 @pytest.mark.rules
 def test_md020_bad_missing_both_spacing_in_block_quotes():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside both of the hashes.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings with missing spacing at the
+    start and the end in block quotes.
     """
 
     # Arrange
@@ -455,9 +446,8 @@ def test_md020_bad_missing_both_spacing_in_block_quotes():
 @pytest.mark.rules
 def test_md020_good_with_setext_headings():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, except that is is part of a setext heading.
+    Test to make sure this rule does not trigger with a document that
+    contains multiple Atx Closed Headings within a SetExt heading.
     """
 
     # Arrange
@@ -483,9 +473,8 @@ def test_md020_good_with_setext_headings():
 @pytest.mark.rules
 def test_md020_good_with_code_blocks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, except that is is part of a code block.
+    Test to make sure this rule does not trigger with a document that
+    contains multiple Atx Closed Headings within a code block.
     """
 
     # Arrange
@@ -513,9 +502,8 @@ def test_md020_good_with_code_blocks():
 @pytest.mark.rules
 def test_md020_good_with_html_blocks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, except that is is part of a html block.
+    Test to make sure this rule does not trigger with a document that
+    contains multiple Atx Closed Headings within a HTML block.
     """
 
     # Arrange
@@ -543,9 +531,8 @@ def test_md020_good_with_html_blocks():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph.
     """
 
     # Arrange
@@ -576,9 +563,9 @@ def test_md020_bad_multiple_within_paragraph():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_codespan():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by the code span.
     """
 
     # Arrange
@@ -609,9 +596,9 @@ def test_md020_bad_multiple_within_paragraph_separated_codespan():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_codespan_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by the multi line code span.
     """
 
     # Arrange
@@ -642,9 +629,9 @@ def test_md020_bad_multiple_within_paragraph_separated_codespan_multi():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_inline_codespan_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by the multiple types of code span.
     """
 
     # Arrange
@@ -673,9 +660,9 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_codespan_multi():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by the multiple types of raw html.
     """
 
     # Arrange
@@ -706,9 +693,9 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_inline_image_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by the multiple types of inline images.
     """
 
     # Arrange
@@ -737,9 +724,9 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_image_multi():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_full_image_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by the multiple types of full images.
     """
 
     # Arrange
@@ -768,9 +755,9 @@ def test_md020_bad_multiple_within_paragraph_separated_full_image_multi():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_shortcut_image_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by the multiple types of shortcut images.
     """
 
     # Arrange
@@ -799,9 +786,9 @@ def test_md020_bad_multiple_within_paragraph_separated_shortcut_image_multi():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_collapsed_image_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by the multiple types of collapsed images.
     """
 
     # Arrange
@@ -830,9 +817,9 @@ def test_md020_bad_multiple_within_paragraph_separated_collapsed_image_multi():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_inline_link_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by the multiple types of inline links.
     """
 
     # Arrange
@@ -861,9 +848,9 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_link_multi():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_full_link_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by the multiple types of full links.
     """
 
     # Arrange
@@ -892,9 +879,9 @@ def test_md020_bad_multiple_within_paragraph_separated_full_link_multi():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_separated_shortcut_link_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by the multiple types of separated links.
     """
 
     # Arrange
@@ -923,9 +910,9 @@ def test_md020_bad_multiple_within_paragraph_separated_separated_shortcut_link_m
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_collapsed_link_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by the multiple types of collapsed links.
     """
 
     # Arrange
@@ -954,9 +941,9 @@ def test_md020_bad_multiple_within_paragraph_separated_collapsed_link_multi():
 @pytest.mark.rules
 def test_md020_bad_multiple_within_paragraph_separated_inline_hardbreak_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times in the same paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    separated by at least one hard line break.
     """
 
     # Arrange
@@ -985,10 +972,9 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_hardbreak_multi():
 @pytest.mark.rules
 def test_md020_bad_paragraphs_with_starting_whitespace():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times with varying amount of starting
-    whitespace.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    with increasing starting whitespace.
     """
 
     # Arrange
@@ -1023,10 +1009,9 @@ def test_md020_bad_paragraphs_with_starting_whitespace():
 @pytest.mark.rules
 def test_md020_bad_single_paragraph_with_starting_whitespace():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has a closed atx heading with bad spacing
-    inside of the start hashes, multiple times with varying amount of starting
-    whitespace within a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    with increasing starting whitespace.
     """
 
     # Arrange
@@ -1061,8 +1046,9 @@ def test_md020_bad_single_paragraph_with_starting_whitespace():
 @pytest.mark.rules
 def test_md020_bad_single_paragraph_with_whitespace_at_start():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has ...
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    including extra whitespace at the start of the heading.
     """
 
     # Arrange
@@ -1095,8 +1081,9 @@ def test_md020_bad_single_paragraph_with_whitespace_at_start():
 @pytest.mark.rules
 def test_md020_bad_single_paragraph_with_whitespace_at_end():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md020 directory that has ...
+    Test to make sure this rule does trigger with a document that
+    contains multiple Atx Closed Headings within a paragraph
+    including extra whitespace at the end of the heading.
     """
 
     # Arrange

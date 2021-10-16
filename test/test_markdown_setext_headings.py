@@ -684,7 +684,13 @@ def test_setext_headings_064a():
     # Arrange
     source_markdown = """- Foo
 ==="""
-    expected_tokens = ['[ulist(1,1):-::2::]', '[setext(2,1):=:3::(1,3)]', '[text(1,3):Foo:]', '[end-setext::]', '[end-ulist:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[setext(2,1):=:3::(1,3)]",
+        "[text(1,3):Foo:]",
+        "[end-setext::]",
+        "[end-ulist:::True]",
+    ]
     expected_gfm = """<ul>
 <li>Foo
 ===</li>
@@ -824,7 +830,13 @@ def test_setext_headings_069a():
     # Arrange
     source_markdown = """- foo
 ====="""
-    expected_tokens = ['[ulist(1,1):-::2::]', '[setext(2,1):=:5::(1,3)]', '[text(1,3):foo:]', '[end-setext::]', '[end-ulist:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[setext(2,1):=:5::(1,3)]",
+        "[text(1,3):foo:]",
+        "[end-setext::]",
+        "[end-ulist:::True]",
+    ]
     expected_gfm = """<ul>
 <li>foo
 =====</li>

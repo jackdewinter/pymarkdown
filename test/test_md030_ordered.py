@@ -11,9 +11,8 @@ import pytest
 @pytest.mark.rules
 def test_md030_bad_configuration_ol_single():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    ol_single value with a string that is not an integer.
     """
 
     # Arrange
@@ -45,9 +44,8 @@ def test_md030_bad_configuration_ol_single():
 @pytest.mark.rules
 def test_md030_bad_configuration_ol_single_zero():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    ol_single value with an integer not greater than 0.
     """
 
     # Arrange
@@ -79,9 +77,8 @@ def test_md030_bad_configuration_ol_single_zero():
 @pytest.mark.rules
 def test_md030_bad_configuration_ol_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    ol_multi value with a string that is not an integer.
     """
 
     # Arrange
@@ -113,9 +110,8 @@ def test_md030_bad_configuration_ol_multi():
 @pytest.mark.rules
 def test_md030_bad_configuration_ol_multi_zero():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    ol_multi value with an integer not greater than 0.
     """
 
     # Arrange
@@ -147,9 +143,8 @@ def test_md030_bad_configuration_ol_multi_zero():
 @pytest.mark.rules
 def test_md030_good_spacing_ol_single_x():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains ordered lists with a single space after the marker.
     """
 
     # Arrange
@@ -175,9 +170,10 @@ def test_md030_good_spacing_ol_single_x():
 @pytest.mark.rules
 def test_md030_good_spacing_ol_single_with_config_1_2():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains ordered lists with a single space after the marker,
+    with configuration.  ul_multi does not come into effect as all
+    lines are single
     """
 
     # Arrange
@@ -208,9 +204,9 @@ def test_md030_good_spacing_ol_single_with_config_1_2():
 @pytest.mark.rules
 def test_md030_good_spacing_ol_single_with_config_2_1():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains unordered lists with a single space after the marker,
+    and configuration that applies.
     """
 
     # Arrange
@@ -251,9 +247,8 @@ def test_md030_good_spacing_ol_single_with_config_2_1():
 @pytest.mark.rules
 def test_md030_bad_spacing_ol_single():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists with two spaces after the marker.
     """
 
     # Arrange
@@ -290,9 +285,9 @@ def test_md030_bad_spacing_ol_single():
 @pytest.mark.rules
 def test_md030_bad_spacing_ol_single_config_1_2():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists with two spaces after the marker and
+    configuration for multi line lists.
     """
 
     # Arrange
@@ -334,9 +329,9 @@ def test_md030_bad_spacing_ol_single_config_1_2():
 @pytest.mark.rules
 def test_md030_bad_spacing_ol_single_config_2_1():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains ordered lists with two spaces after the marker,
+    and configuration to make it okay.
     """
 
     # Arrange
@@ -368,9 +363,8 @@ def test_md030_bad_spacing_ol_single_config_2_1():
 @pytest.mark.rules
 def test_md030_good_spacing_ol_double():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains nested ordered lists with one space after the marker.
     """
 
     # Arrange
@@ -396,9 +390,9 @@ def test_md030_good_spacing_ol_double():
 @pytest.mark.rules
 def test_md030_good_spacing_ol_double_config_1_2():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains nested ordered lists with one space after the marker,
+    and configuration.
     """
 
     # Arrange
@@ -439,9 +433,9 @@ def test_md030_good_spacing_ol_double_config_1_2():
 @pytest.mark.rules
 def test_md030_good_spacing_ol_double_config_2_1():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains nested ordered lists with one space after the marker,
+    and configuration.
     """
 
     # Arrange
@@ -476,9 +470,8 @@ def test_md030_good_spacing_ol_double_config_2_1():
 @pytest.mark.rules
 def test_md030_bad_spacing_ol_double():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains nested ordered lists with two space after the marker.
     """
 
     # Arrange
@@ -518,9 +511,9 @@ def test_md030_bad_spacing_ol_double():
 @pytest.mark.rules
 def test_md030_bad_spacing_ol_double_config_1_2():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains nested ordered lists with two space after the marker,
+    and configuration.
     """
 
     # Arrange
@@ -555,9 +548,9 @@ def test_md030_bad_spacing_ol_double_config_1_2():
 @pytest.mark.rules
 def test_md030_bad_spacing_ol_double_config_2_1():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains nested ordered lists with two space after the marker,
+    and configuration.
     """
 
     # Arrange

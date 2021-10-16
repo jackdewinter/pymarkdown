@@ -42,7 +42,7 @@ def test_find_nth_simple_negative():
 
 def test_find_nth_double_positive():
     """
-    Make sure that a simple case of the second of a sample in 
+    Make sure that a simple case of the second of a sample in
     another sample with two occurrences works.
     """
 
@@ -61,7 +61,7 @@ def test_find_nth_double_positive():
 
 def test_find_nth_double_negative():
     """
-    Make sure that a simple case of the second of a sample in 
+    Make sure that a simple case of the second of a sample in
     another sample with only one occurrence does not work.
     """
 

@@ -1814,7 +1814,7 @@ some other text
 @pytest.mark.gfm
 def test_html_blocks_extra_01a():
     """
-    Test case extra 01:  start a "list block" within a HTML code block
+    Test case extra 01:  variation of 1 with a LRD instead of text
     """
 
     # Arrange
@@ -1838,11 +1838,10 @@ def test_html_blocks_extra_01a():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-# @pytest.mark.skip
 @pytest.mark.gfm
 def test_html_blocks_extra_02x():
     """
-    Test case extra 02:  variation of 1 where list already opened
+    Test case extra 02:  variation of 1 with html block started in list item
     """
 
     # Arrange
@@ -1880,7 +1879,11 @@ some other text
 @pytest.mark.gfm
 def test_html_blocks_extra_02a():
     """
-    Test case extra 02:  variation of 1 where list already opened
+    Test case extra 02:  variation of 2 with LRD
+
+    NOTE: Due to https://talk.commonmark.org/t/block-quotes-laziness-and-link-reference-definitions/3751
+          the GFM output has been adjusted to compensate for PyMarkdown using a token and not parsing
+          the text afterwards.
     """
 
     # Arrange
@@ -1922,7 +1925,11 @@ def test_html_blocks_extra_02a():
 @pytest.mark.gfm
 def test_html_blocks_extra_02b():
     """
-    Test case extra 02:  variation of 1 where list already opened
+    Test case extra 02:  variation of 2a with extra indents
+
+    NOTE: Due to https://talk.commonmark.org/t/block-quotes-laziness-and-link-reference-definitions/3751
+          the GFM output has been adjusted to compensate for PyMarkdown using a token and not parsing
+          the text afterwards.
     """
 
     # Arrange
@@ -1963,7 +1970,11 @@ script</li>
 @pytest.mark.gfm
 def test_html_blocks_extra_02c():
     """
-    Test case extra 02:  variation of 1 where list already opened
+    Test case extra 02:  variation of 2b without indents
+
+    NOTE: Due to https://talk.commonmark.org/t/block-quotes-laziness-and-link-reference-definitions/3751
+          the GFM output has been adjusted to compensate for PyMarkdown using a token and not parsing
+          the text afterwards.
     """
 
     # Arrange
@@ -2004,7 +2015,7 @@ script</li>
 @pytest.mark.gfm
 def test_html_blocks_extra_03x():
     """
-    Test case extra 03:  variation of 1 where list already opened but no new list item
+    Test case extra 03:  variation of 2 without list start on line 2
     """
 
     # Arrange
@@ -2041,7 +2052,7 @@ some text
 @pytest.mark.gfm
 def test_html_blocks_extra_03a():
     """
-    Test case extra 03:  variation of 1 where list already opened but no new list item
+    Test case extra 03:  variation of 3 with LRD
     """
 
     # Arrange
@@ -2078,7 +2089,7 @@ def test_html_blocks_extra_03a():
 @pytest.mark.gfm
 def test_html_blocks_extra_04x():
     """
-    Test case extra 04:  variation of 3 where list already opened
+    Test case extra 04:  variation of 1 with "block quote" on line 2
     """
 
     # Arrange
@@ -2105,7 +2116,7 @@ some other text
 @pytest.mark.gfm
 def test_html_blocks_extra_04a():
     """
-    Test case extra 04:  variation of 3 where list already opened
+    Test case extra 04:  variation of 4 with LRD
     """
 
     # Arrange
@@ -2132,7 +2143,7 @@ def test_html_blocks_extra_04a():
 @pytest.mark.gfm
 def test_html_blocks_extra_05x():
     """
-    Test case extra 04:  variation of 3 where list already opened
+    Test case extra 05:  variation of 4 with HTML block in block quote
     """
 
     # Arrange
@@ -2167,7 +2178,7 @@ some text
 @pytest.mark.gfm
 def test_html_blocks_extra_05a():
     """
-    Test case extra 04:  variation of 3 where list already opened
+    Test case extra 05:  variation of 5 with LRD
     """
 
     # Arrange
@@ -2202,7 +2213,7 @@ def test_html_blocks_extra_05a():
 @pytest.mark.gfm
 def test_html_blocks_extra_06x():
     """
-    Test case extra 05:  variation of 4 where list already opened but no new list item
+    Test case extra 06:  variation of 4 with start on line 1 and not line 2
     """
 
     # Arrange
@@ -2237,7 +2248,7 @@ some other text
 @pytest.mark.gfm
 def test_html_blocks_extra_06a():
     """
-    Test case extra 05:  variation of 4 where list already opened but no new list item
+    Test case extra 06:  variation of 6 with LRD
 
     NOTE: Due to https://talk.commonmark.org/t/block-quotes-laziness-and-link-reference-definitions/3751
           the GFM output has been adjusted to compensate for PyMarkdown using a token and not parsing
@@ -2274,7 +2285,7 @@ def test_html_blocks_extra_06a():
 @pytest.mark.gfm
 def test_html_blocks_extra_07():
     """
-    Test case extra 07:  mixed block quotes and list blocks
+    Test case extra 07:  mixed "block quotes" and "list blocks" inside of HTML block
     """
 
     # Arrange

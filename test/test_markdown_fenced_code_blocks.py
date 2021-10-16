@@ -1423,7 +1423,7 @@ some other text
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_01a():
     """
-    Test case extra 01:  start a "link reference defintion" within a fenced code block
+    Test case extra 01:  "start" a "link reference defintion" within a fenced code block
     """
 
     # Arrange
@@ -1449,8 +1449,8 @@ def test_fenced_code_blocks_extra_01a():
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_02x():
     """
-    Test case extra 02:  variation of 01 where list already opened
-        with a fenced code block started within the list item
+    Test case extra 02:  start a fenced code block in a list item,
+         starting a new list item without closing the block
     """
 
     # Arrange
@@ -1488,9 +1488,12 @@ some other text</li>
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_02a():
     """
-    Test case extra 02:  variation of 1 where list already opened
-    """
+    Test case extra 02:  variation of 2 with LRD instead of text in second list item
 
+    NOTE: Due to https://talk.commonmark.org/t/block-quotes-laziness-and-link-reference-definitions/3751
+          the GFM output has been adjusted to compensate for PyMarkdown using a token and not parsing
+          the text afterwards.
+    """
     # Arrange
     source_markdown = """- ```
 - [foo]:
@@ -1569,7 +1572,7 @@ some other text
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_03a():
     """
-    Test case extra 03:  variation of 1 where list already opened but no new list item
+    Test case extra 03:  variation of 3 with LRD instead of text in second list item
     """
 
     # Arrange
@@ -1633,7 +1636,7 @@ some other text
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_04a():
     """
-    Test case extra 04:  start a "block quote" within a fenced code block
+    Test case extra 04:  variation of 4 with LRD instead of text in second line
     """
 
     # Arrange
@@ -1659,7 +1662,7 @@ def test_fenced_code_blocks_extra_04a():
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_05x():
     """
-    Test case extra 05:  variation of 4 where list already opened
+    Test case extra 05:  variation of 4 where block quote already opened
     """
 
     # Arrange
@@ -1695,7 +1698,7 @@ some other text
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_05a():
     """
-    Test case extra 05:  variation of 4 where list already opened
+    Test case extra 05:  variation of 5 with LRD instead of text in second line
 
     NOTE: Small change to output to remove newline at pre/code at end.
     """
@@ -1729,10 +1732,10 @@ def test_fenced_code_blocks_extra_05a():
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_06xx():
+def test_fenced_code_blocks_extra_06x():
     """
-    Test case extra 05:  variation of 4 where block already opened but
-                         no block character
+    Test case extra 06:  variation of 4 where block already opened but
+                         no block quote line start character
     """
 
     # Arrange
@@ -1765,44 +1768,9 @@ some other text</p>
 
 
 @pytest.mark.gfm
-def test_fenced_code_blocks_extra_06xa():
-    """
-    Test case extra 05:  variation of 4 where block already opened but
-                         no block character
-    """
-
-    # Arrange
-    source_markdown = """> ```
-  some text
-some other text
-```"""
-    expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[fcode-block(1,3):`:3::::::]",
-        "[end-fcode-block:::True]",
-        "[end-block-quote:::True]",
-        "[para(2,3):  \n]",
-        "[text(2,3):some text\nsome other text::\n]",
-        "[end-para:::False]",
-        "[fcode-block(4,1):`:3::::::]",
-        "[end-fcode-block:::True]",
-    ]
-    expected_gfm = """<blockquote>
-<pre><code></code></pre>
-</blockquote>
-<p>some text
-some other text</p>
-<pre><code></code></pre>"""
-
-    # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
-
-
-@pytest.mark.gfm
 def test_fenced_code_blocks_extra_06a():
     """
-    Test case extra 05:  variation of 4 where block already opened but
-                         no block character
+    Test case extra 06a:  variation of 6 with LRD instead of text in second line
     """
 
     # Arrange
@@ -1831,7 +1799,7 @@ def test_fenced_code_blocks_extra_06a():
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_07():
     """
-    Test case extra 07:  mixed block quotes and list blocks
+    Test case extra 07:  mixed "block quotes" and "list blocks"
     """
 
     # Arrange
@@ -1859,7 +1827,7 @@ def test_fenced_code_blocks_extra_07():
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_08x():
     """
-    Test case extra 08:  tests
+    Test case extra 08:  capturing text and newlines alike
     """
 
     # Arrange
@@ -1885,7 +1853,7 @@ def
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_08a():
     """
-    Test case extra 08:  tests
+    Test case extra 08:  variation of 8 with extra newlines
     """
 
     # Arrange
@@ -1913,7 +1881,7 @@ def
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_08b():
     """
-    Test case extra 08:  tests
+    Test case extra 08:  variation of 8 with close fence and extra tex
     """
 
     # Arrange
@@ -1953,7 +1921,7 @@ def
 @pytest.mark.gfm
 def test_fenced_code_blocks_extra_08c():
     """
-    Test case extra 08:  tests
+    Test case extra 08:  variation of 8b with trailing spaces
     """
 
     # Arrange

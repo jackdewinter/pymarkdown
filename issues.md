@@ -87,6 +87,16 @@ md010 - tabs "converted"
 # a
 ```
 
+### Verify test_md023_bad_improper_indent_atx_in_list_item in lists and block quotes
+
+### verify test_md024_bad_same_heading_in_siblings_atx_with_configuration
+
+- backwards with config?
+
+### 036 needs configuration tests for puncuation and proper
+
+### 030 verify right understanding, maybe adjust docs for single vs multi
+
 ### Rule ???
 
 - is there a rule that can detect a possible front-matter header and trigger?

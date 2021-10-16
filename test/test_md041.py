@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md041_bad_configuration_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    level value with a string that is not an integer.
     """
 
     # Arrange
@@ -45,9 +44,8 @@ def test_md041_bad_configuration_level():
 @pytest.mark.rules
 def test_md041_good_configuration_level():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is not thrown when supplying the
+    level value with an integer that is valid.
     """
 
     # Arrange
@@ -78,9 +76,8 @@ def test_md041_good_configuration_level():
 @pytest.mark.rules
 def test_md041_bad_configuration_level_bad():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    level value with an integer that is invalid.
     """
 
     # Arrange
@@ -114,9 +111,8 @@ def test_md041_bad_configuration_level_bad():
 @pytest.mark.rules
 def test_md041_bad_configuration_front_matter_title():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    front_matter_title value with an integer instead of a string.
     """
 
     # Arrange
@@ -150,9 +146,8 @@ def test_md041_bad_configuration_front_matter_title():
 @pytest.mark.rules
 def test_md041_good_configuration_front_matter_title():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is not thrown when supplying the
+    front_matter_title value with a valid string.
     """
 
     # Arrange
@@ -183,9 +178,8 @@ def test_md041_good_configuration_front_matter_title():
 @pytest.mark.rules
 def test_md041_bad_configuration_front_matter_title_bad():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    front_matter_title value with a bad string.
     """
 
     # Arrange
@@ -216,9 +210,8 @@ def test_md041_bad_configuration_front_matter_title_bad():
 @pytest.mark.rules
 def test_md041_bad_configuration_front_matter_title_invalid():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is not thrown when supplying the
+    front_matter_title value with an invalid string.
     """
 
     # Arrange
@@ -252,9 +245,8 @@ def test_md041_bad_configuration_front_matter_title_invalid():
 @pytest.mark.rules
 def test_md041_good_single_top_level_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a good top level atx heading.
     """
 
     # Arrange
@@ -282,9 +274,8 @@ def test_md041_good_single_top_level_atx():
 @pytest.mark.rules
 def test_md041_good_blank_lines_top_level_atx_heading():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a good top level atx heading preceeded by blank lines.
     """
 
     # Arrange
@@ -312,9 +303,8 @@ def test_md041_good_blank_lines_top_level_atx_heading():
 @pytest.mark.rules
 def test_md041_bad_single_top_level_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a bad top level atx heading.
     """
 
     # Arrange
@@ -345,9 +335,8 @@ def test_md041_bad_single_top_level_atx():
 @pytest.mark.rules
 def test_md041_good_heading_top_level_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a good top level setext heading.
     """
 
     # Arrange
@@ -375,9 +364,8 @@ def test_md041_good_heading_top_level_setext():
 @pytest.mark.rules
 def test_md041_bad_single_top_level_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a bad top level setext heading.
     """
 
     # Arrange
@@ -408,9 +396,8 @@ def test_md041_bad_single_top_level_setext():
 @pytest.mark.rules
 def test_md041_good_front_matter_top_level():
     """
-    Test to verify that a good title is interpreted from the front-matter.
-    If the verification goes properly, line 5 should trigger a md025 for
-    a multiple top level heading.
+    Test to make sure this rule does trigger with a document that
+    contains a good top level atx heading and a front-matter title.
     """
 
     # Arrange
@@ -443,9 +430,8 @@ def test_md041_good_front_matter_top_level():
 @pytest.mark.rules
 def test_md041_good_bad_front_matter_top_level():
     """
-    Test to verify that a bad title is not interpreted from the front-matter.
-    If the verification goes properly, no rules should be triggered as the
-    front-matter did not contribute to the top-level.
+    Test to make sure this rule does trigger with a document that
+    contains no top level atx heading and a front-matter title.
     """
 
     # Arrange
@@ -475,9 +461,8 @@ def test_md041_good_bad_front_matter_top_level():
 @pytest.mark.rules
 def test_md041_bad_fenced_code_block():
     """
-    Test to verify that a bad title is not interpreted from the front-matter.
-    If the verification goes properly, no rules should be triggered as the
-    front-matter did not contribute to the top-level.
+    Test to make sure this rule does trigger with a document that
+    contains a fencde code block to start off the document.
     """
 
     # Arrange
@@ -508,9 +493,8 @@ def test_md041_bad_fenced_code_block():
 @pytest.mark.rules
 def test_md041_bad_thematic_break():
     """
-    Test to verify that a bad title is not interpreted from the front-matter.
-    If the verification goes properly, no rules should be triggered as the
-    front-matter did not contribute to the top-level.
+    Test to make sure this rule does trigger with a document that
+    contains a thematic break to start off the document.
     """
 
     # Arrange
@@ -541,9 +525,8 @@ def test_md041_bad_thematic_break():
 @pytest.mark.rules
 def test_md041_bad_indented_code_block():
     """
-    Test to verify that a bad title is not interpreted from the front-matter.
-    If the verification goes properly, no rules should be triggered as the
-    front-matter did not contribute to the top-level.
+    Test to make sure this rule does trigger with a document that
+    contains an indented code block to start off the document.
     """
 
     # Arrange
@@ -574,9 +557,8 @@ def test_md041_bad_indented_code_block():
 @pytest.mark.rules
 def test_md041_bad_html_block():
     """
-    Test to verify that a bad title is not interpreted from the front-matter.
-    If the verification goes properly, no rules should be triggered as the
-    front-matter did not contribute to the top-level.
+    Test to make sure this rule does trigger with a document that
+    contains a HTML block to start off the document.
     """
 
     # Arrange
@@ -607,9 +589,8 @@ def test_md041_bad_html_block():
 @pytest.mark.rules
 def test_md041_bad_html_block_heading():
     """
-    Test to verify that a bad title is not interpreted from the front-matter.
-    If the verification goes properly, no rules should be triggered as the
-    front-matter did not contribute to the top-level.
+    Test to make sure this rule does trigger with a document that
+    contains a HTML block to start off the document that is not a <h1>
     """
 
     # Arrange
@@ -642,9 +623,8 @@ def test_md041_bad_html_block_heading():
 @pytest.mark.rules
 def test_md041_good_html_block_heading():
     """
-    Test to verify that a bad title is not interpreted from the front-matter.
-    If the verification goes properly, no rules should be triggered as the
-    front-matter did not contribute to the top-level.
+    Test to make sure this rule does trigger with a document that
+    contains a HTML block to start off the document that is a <h1>
     """
 
     # Arrange

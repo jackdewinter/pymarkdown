@@ -11,9 +11,8 @@ import pytest
 @pytest.mark.rules
 def test_md018_good_start_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx heading start spacing after
-    the first hash.
+    Test to make sure this rule does not trigger with a document that
+    contains properly spaced Atx Headings that are interpretted as such.
     """
 
     # Arrange
@@ -39,9 +38,9 @@ def test_md018_good_start_spacing():
 @pytest.mark.rules
 def test_md018_good_start_spacing_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx heading start spacing after
-    the first hash.
+    Test to make sure this rule does not trigger with a document that
+    contains properly spaced Atx Headings that are interpretted as such
+    with a list.
     """
 
     # Arrange
@@ -67,9 +66,9 @@ def test_md018_good_start_spacing_in_list():
 @pytest.mark.rules
 def test_md018_good_start_spacing_in_block_quotes():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has good atx heading start spacing after
-    the first hash.
+    Test to make sure this rule does not trigger with a document that
+    contains properly spaced Atx Headings that are interpretted as such
+    within a block quote.
     """
 
     # Arrange
@@ -95,9 +94,9 @@ def test_md018_good_start_spacing_in_block_quotes():
 @pytest.mark.rules
 def test_md018_bad_ignore_bad_atx_closed_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has an atx heading with no spaces after
-    initial hash, but ends with a close hash, making it a closed atx.
+    Test to make sure this rule does not trigger with a document that
+    contains improperly spaced Atx Headings that are considered to be
+    Atx Closed Headings.
     """
 
     # Arrange
@@ -125,9 +124,8 @@ def test_md018_bad_ignore_bad_atx_closed_spacing():
 @pytest.mark.rules
 def test_md018_bad_missing_atx_start_spacing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has an atx heading with no spaces after
-    initial hash.
+    Test to make sure this rule does trigger with a document that
+    contains a possible Atx Headings without the proper space at the start.
     """
 
     # Arrange
@@ -158,9 +156,9 @@ def test_md018_bad_missing_atx_start_spacing():
 @pytest.mark.rules
 def test_md018_bad_missing_atx_start_spacing_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has an atx heading with no spaces after
-    initial hash.
+    Test to make sure this rule does trigger with a document that
+    contains a possible Atx Headings without the proper space at the start
+    and in a list.
     """
 
     # Arrange
@@ -191,9 +189,9 @@ def test_md018_bad_missing_atx_start_spacing_in_list():
 @pytest.mark.rules
 def test_md018_bad_missing_atx_start_spacing_in_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has an atx heading with no spaces after
-    initial hash.
+    Test to make sure this rule does trigger with a document that
+    contains a possible Atx Headings without the proper space at the start
+    in a block quote.
     """
 
     # Arrange
@@ -222,9 +220,9 @@ def test_md018_bad_missing_atx_start_spacing_in_block_quote():
 @pytest.mark.rules
 def test_md018_good_with_setext_headings():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has a possible atx heading except that
-    it is followed by setext headings.
+    Test to make sure this rule does not trigger with a document that
+    contains a possible Atx Headings without the proper space at the start
+    if contained within a SetExt Heading.
     """
 
     # Arrange
@@ -250,9 +248,9 @@ def test_md018_good_with_setext_headings():
 @pytest.mark.rules
 def test_md018_good_with_code_blocks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has a possible atx heading except that
-    it is followed by code blocks.
+    Test to make sure this rule does not trigger with a document that
+    contains a possible Atx Headings without the proper space at the start
+    if contained within a code block.
     """
 
     # Arrange
@@ -280,9 +278,9 @@ def test_md018_good_with_code_blocks():
 @pytest.mark.rules
 def test_md018_good_with_html_blocks():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has a possible atx heading except that
-    it is followed by html blocks.
+    Test to make sure this rule does not trigger with a document that
+    contains a possible Atx Headings without the proper space at the start
+    if contained within a HTML block.
     """
 
     # Arrange
@@ -310,9 +308,9 @@ def test_md018_good_with_html_blocks():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph.
     """
 
     # Arrange
@@ -343,9 +341,9 @@ def test_md018_bad_multiple_within_paragraph():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_codespan():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by a code span on its own line.
     """
 
     # Arrange
@@ -376,9 +374,9 @@ def test_md018_bad_multiple_within_paragraph_separated_codespan():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_codespan_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by a code span over two lines.
     """
 
     # Arrange
@@ -409,9 +407,10 @@ def test_md018_bad_multiple_within_paragraph_separated_codespan_multi():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_inline_codespan_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by a code span on its own line and a code
+    span interupting two of the lines.
     """
 
     # Arrange
@@ -440,9 +439,10 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_codespan_multi():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by an html on its own line and
+    between lines.
     """
 
     # Arrange
@@ -473,9 +473,10 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_inline_image_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by an image on its own line as well
+    as splitting.
     """
 
     # Arrange
@@ -504,9 +505,10 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_image_multi():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_full_image_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by a full image on its own line as well
+    as splitting.
     """
 
     # Arrange
@@ -535,9 +537,10 @@ def test_md018_bad_multiple_within_paragraph_separated_full_image_multi():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_shortcut_image_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by a shortcut image on its own line as well
+    as splitting.
     """
 
     # Arrange
@@ -566,9 +569,10 @@ def test_md018_bad_multiple_within_paragraph_separated_shortcut_image_multi():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_collapsed_image_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by a collapsed image on its own line as well
+    as splitting.
     """
 
     # Arrange
@@ -597,9 +601,10 @@ def test_md018_bad_multiple_within_paragraph_separated_collapsed_image_multi():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_inline_link_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by a link on its own line as well
+    as splitting.
     """
 
     # Arrange
@@ -628,9 +633,10 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_link_multi():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_full_link_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by a full link on its own line as well
+    as splitting.
     """
 
     # Arrange
@@ -659,9 +665,10 @@ def test_md018_bad_multiple_within_paragraph_separated_full_link_multi():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_shortcut_link_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by a shortcut link on its own line as well
+    as splitting.
     """
 
     # Arrange
@@ -690,9 +697,10 @@ def test_md018_bad_multiple_within_paragraph_separated_shortcut_link_multi():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_collapsed_link_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by a collapsed link on its own line as well
+    as splitting.
     """
 
     # Arrange
@@ -721,9 +729,9 @@ def test_md018_bad_multiple_within_paragraph_separated_collapsed_link_multi():
 @pytest.mark.rules
 def test_md018_bad_multiple_within_paragraph_separated_inline_hardbreak_multi():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but separated by a hardbreak.
     """
 
     # Arrange
@@ -752,9 +760,9 @@ def test_md018_bad_multiple_within_paragraph_separated_inline_hardbreak_multi():
 @pytest.mark.rules
 def test_md018_bad_paragraphs_with_starting_whitespace():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings each
-    one with starting whitespace that would normally be permitted.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but with increasing whitespace.
     """
 
     # Arrange
@@ -789,9 +797,9 @@ def test_md018_bad_paragraphs_with_starting_whitespace():
 @pytest.mark.rules
 def test_md018_bad_single_paragraph_with_starting_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph each one with starting space that would normally be permitted.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph but with increasing indent.
     """
 
     # Arrange
@@ -826,10 +834,9 @@ def test_md018_bad_single_paragraph_with_starting_space():
 @pytest.mark.rules
 def test_md018_bad_single_paragraph_with_starting_whitespace():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph each one with starting whitespace that would normally be
-    permitted.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph with a lot of leading space.
     """
 
     # Arrange
@@ -860,11 +867,9 @@ def test_md018_bad_single_paragraph_with_starting_whitespace():
 @pytest.mark.rules
 def test_md018_bad_single_paragraph_with_whitespace():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md018 directory that has multiple possible atx headings within
-    a single paragraph. The first one should be detected as it has a space character
-    between the # and the text, but the second one should not as it contains a tab
-    character between the # and the text.
+    Test to make sure this rule does trigger with a document that
+    contains multiple possible Atx Headings without the proper space at the start
+    with a single paragraph with leading space.
     """
 
     # Arrange

@@ -3709,8 +3709,8 @@ def test_list_blocks_extra_6xx():
 @pytest.mark.gfm
 def test_list_blocks_extra_6xa():
     """
-    Test case 06:  the sublist is properly idented, but the start is extra
-                   indented to right justify the list
+    Test case 06:  the sublist is properly idented, but the list start is aligned
+                   to left justify the list
     """
 
     # Arrange
@@ -3806,8 +3806,8 @@ def test_list_blocks_extra_6xb():
 @pytest.mark.gfm
 def test_list_blocks_extra_6ax():
     """
-    Test case 06:  the sublist is properly idented, but the start is extra
-                   indented to right justify the list
+    Test case 06:  the sublist is properly idented, but the start is
+                   indented an extra space "just because"
     """
 
     # Arrange
@@ -3850,8 +3850,7 @@ def test_list_blocks_extra_6ax():
 @pytest.mark.gfm
 def test_list_blocks_extra_6aa():
     """
-    Test case 06:  the sublist is properly idented, but the start is extra
-                   indented to right justify the list
+    Test case 06:  variation of 6ax with extra ident
     """
 
     # Arrange
@@ -3892,8 +3891,7 @@ def test_list_blocks_extra_6aa():
 @pytest.mark.gfm
 def test_list_blocks_extra_6ab():
     """
-    Test case 06:  the sublist is properly idented, but the start is extra
-                   indented to right justify the list
+    Test case 06:  variation of 6ax with extra ident
     """
 
     # Arrange
@@ -3938,8 +3936,7 @@ def test_list_blocks_extra_6ab():
 @pytest.mark.gfm
 def test_list_blocks_extra_6ac():
     """
-    Test case 06:  the sublist is properly idented, but the start is extra
-                   indented to right justify the list
+    Test case 06:  variation of 6ax with unordered list
     """
 
     # Arrange
@@ -3980,8 +3977,7 @@ def test_list_blocks_extra_6ac():
 @pytest.mark.gfm
 def test_list_blocks_extra_6ad():
     """
-    Test case 06:  the sublist is properly idented, but the start is extra
-                   indented to right justify the list
+    Test case 06:  variation of 6ax with first level list being unordered
     """
 
     # Arrange

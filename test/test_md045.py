@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md045_good_inline_image():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains inline images with alt text.
     """
 
     # Arrange
@@ -39,9 +38,8 @@ def test_md045_good_inline_image():
 @pytest.mark.rules
 def test_md045_bad_inline_image():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains inline images with no alt text.
     """
 
     # Arrange
@@ -72,9 +70,8 @@ def test_md045_bad_inline_image():
 @pytest.mark.rules
 def test_md045_bad_inline_image_whitespace_only():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains inline images with alt text that is whitespace only.
     """
 
     # Arrange
@@ -107,9 +104,8 @@ def test_md045_bad_inline_image_whitespace_only():
 @pytest.mark.rules
 def test_md045_good_full_image():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains full images with alt text.
     """
 
     # Arrange
@@ -137,9 +133,8 @@ def test_md045_good_full_image():
 @pytest.mark.rules
 def test_md045_bad_full_image():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains full images with not alt text.
     """
 
     # Arrange
@@ -170,9 +165,8 @@ def test_md045_bad_full_image():
 @pytest.mark.rules
 def test_md045_good_shortcut_image():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains shortcut images with alt text.
     """
 
     # Arrange

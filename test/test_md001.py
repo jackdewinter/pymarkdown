@@ -56,7 +56,7 @@ def test_md001_all_samples():
 @pytest.mark.rules
 def test_md001_bad_configuration_enabled():
     """
-    Test to make
+    Test to verify that enabling front matter with text "True" fails.
     """
 
     # Arrange
@@ -86,8 +86,7 @@ The value for property 'extensions.front-matter.enabled' must be of type 'bool'.
 @pytest.mark.rules
 def test_md001_bad_configuration_front_matter_title():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md001 directory using atx headings.
+    Test to verify that enabling front matter title with number "1" fails.
     """
 
     # Arrange
@@ -121,8 +120,8 @@ def test_md001_bad_configuration_front_matter_title():
 @pytest.mark.rules
 def test_md001_good_proper_atx_heading_incrementing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md001 directory using atx headings.
+    Test to make sure the rule doesn't trigger with a document with
+    only Atx Headings, that when they increase, only increase by 1.
     """
 
     # Arrange
@@ -148,9 +147,9 @@ def test_md001_good_proper_atx_heading_incrementing():
 @pytest.mark.rules
 def test_md001_good_proper_setext_heading_incrementing():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md001 directory starting with a pair of setext headings and finishing
-    with a pair of atx headings.
+    Test to make sure the rule doesn't trigger with a document with
+    only SetExt Headings, that when they increase, only increase by 1.
+    Note that after the first 2 headings, it switches over to Atx Headings.
     """
 
     # Arrange
@@ -178,9 +177,8 @@ def test_md001_good_proper_setext_heading_incrementing():
 @pytest.mark.rules
 def test_md001_bad_improper_atx_heading_incrementing():
     """
-    Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md001 directory that has an atx heading that is more than a 1
-    step positive jump.
+    Test to make sure the rule does trigger with a document with
+    only Atx Headings, that when they increase, only increase by 2.
     """
 
     # Arrange
@@ -210,10 +208,9 @@ def test_md001_bad_improper_atx_heading_incrementing():
 @pytest.mark.rules
 def test_md001_bad_improper_setext_heading_incrementing():
     """
-    Test to make sure we get the expected behavior after scanning a bad file from the
-    test/resources/rules/md001 directory that starts with a level 2 setext heading and
-    is then followed by a level 4 atx heading (as there is only a level 1 and 2 setext
-    heading).
+    Test to make sure the rule does trigger with a document with
+    only SetExt Headings (and Atx Headings after level 2), that when they
+    increase, only increase by 2.
     """
 
     # Arrange
@@ -245,7 +242,9 @@ def test_md001_bad_improper_setext_heading_incrementing():
 @pytest.mark.rules
 def test_md001_front_matter_with_no_title():
     """
-    Test to make
+    Test to make sure the rule does not trigger with a document with
+    a front-matter element with no title and the front matter extension
+    enabled, and a following Atx Heading of level 3.
     """
 
     # Arrange
@@ -273,7 +272,9 @@ def test_md001_front_matter_with_no_title():
 @pytest.mark.rules
 def test_md001_front_matter_with_title():
     """
-    Test to make
+    Test to make sure the rule does trigger with a document with
+    a front-matter element with a title and the front matter extension
+    enabled, and a following Atx Heading of level 3.
     """
 
     # Arrange
@@ -301,7 +302,8 @@ def test_md001_front_matter_with_title():
 @pytest.mark.rules
 def test_md001_front_matter_with_alternate_title():
     """
-    Test to make
+    Variation of test_md001_front_matter_with_title using configuration
+    to specify an alternate title.
     """
 
     # Arrange

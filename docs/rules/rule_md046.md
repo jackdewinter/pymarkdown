@@ -7,7 +7,7 @@
 
 ## Summary
 
-Images should have alternate text (alt text).
+Code block style.
 
 ## Reasoning
 

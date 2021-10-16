@@ -11,9 +11,8 @@ import pytest
 @pytest.mark.rules
 def test_md029_bad_configuration_style():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with an integer that is not a string.
     """
 
     # Arrange
@@ -43,11 +42,10 @@ def test_md029_bad_configuration_style():
 
 
 @pytest.mark.rules
-def test_md029_bad_configuration_style_invalide():
+def test_md029_bad_configuration_style_invalid():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with a string that is not valid.
     """
 
     # Arrange
@@ -79,9 +77,8 @@ def test_md029_bad_configuration_style_invalide():
 @pytest.mark.rules
 def test_md029_good_one_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains ordered lists that only have number 1.
     """
 
     # Arrange
@@ -107,9 +104,8 @@ def test_md029_good_one_list():
 @pytest.mark.rules
 def test_md029_bad_one_one_three_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have numbers 1 and 3.
     """
 
     # Arrange
@@ -139,9 +135,8 @@ def test_md029_bad_one_one_three_list():
 @pytest.mark.rules
 def test_md029_bad_one_two_one_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have numbers 1 and 2.
     """
 
     # Arrange
@@ -171,9 +166,8 @@ def test_md029_bad_one_two_one_list():
 @pytest.mark.rules
 def test_md029_good_one_two_three_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have numbers 1, 2, and 3.
     """
 
     # Arrange
@@ -199,9 +193,8 @@ def test_md029_good_one_two_three_list():
 @pytest.mark.rules
 def test_md029_bad_two_three_four_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have numbers 2 to 4.
     """
 
     # Arrange
@@ -231,9 +224,8 @@ def test_md029_bad_two_three_four_list():
 @pytest.mark.rules
 def test_md029_good_zero_one_two_three_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains ordered lists that have numbers 0 to 3.
     """
 
     # Arrange
@@ -259,9 +251,8 @@ def test_md029_good_zero_one_two_three_list():
 @pytest.mark.rules
 def test_md029_good_zero_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that only have number 0.
     """
 
     # Arrange
@@ -291,9 +282,8 @@ def test_md029_good_zero_list():
 @pytest.mark.rules
 def test_md029_good_one_list_with_config_one():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains ordered lists that only have number 1 and matching configuration.
     """
 
     # Arrange
@@ -322,9 +312,8 @@ def test_md029_good_one_list_with_config_one():
 @pytest.mark.rules
 def test_md029_bad_one_one_three_list_with_config_one():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 1 and 3 and `one` configuration.
     """
 
     # Arrange
@@ -357,9 +346,8 @@ def test_md029_bad_one_one_three_list_with_config_one():
 @pytest.mark.rules
 def test_md029_bad_one_two_one_list_with_config_one():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 1 and 2 and `one` configuration.
     """
 
     # Arrange
@@ -392,9 +380,8 @@ def test_md029_bad_one_two_one_list_with_config_one():
 @pytest.mark.rules
 def test_md029_good_one_two_three_list_with_config_one():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 1, 2, 3 and `one` configuration.
     """
 
     # Arrange
@@ -427,9 +414,8 @@ def test_md029_good_one_two_three_list_with_config_one():
 @pytest.mark.rules
 def test_md029_bad_two_three_four_list_with_config_one():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 2 to 4 and `one` configuration.
     """
 
     # Arrange
@@ -462,9 +448,8 @@ def test_md029_bad_two_three_four_list_with_config_one():
 @pytest.mark.rules
 def test_md029_good_zero_one_two_list_with_config_one():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 0 to 2 and `one` configuration.
     """
 
     # Arrange
@@ -497,9 +482,8 @@ def test_md029_good_zero_one_two_list_with_config_one():
 @pytest.mark.rules
 def test_md029_good_zero_list_with_config_one():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have only number 0 and `one` configuration.
     """
 
     # Arrange
@@ -532,9 +516,8 @@ def test_md029_good_zero_list_with_config_one():
 @pytest.mark.rules
 def test_md029_good_one_list_with_config_ordered():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 1 and `ordered` configuration.
     """
 
     # Arrange
@@ -567,9 +550,8 @@ def test_md029_good_one_list_with_config_ordered():
 @pytest.mark.rules
 def test_md029_bad_one_one_three_list_with_config_ordered():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 1 and 3 and `ordered` configuration.
     """
 
     # Arrange
@@ -602,9 +584,8 @@ def test_md029_bad_one_one_three_list_with_config_ordered():
 @pytest.mark.rules
 def test_md029_bad_one_two_one_list_with_config_ordered():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 1 and 2 and `ordered` configuration.
     """
 
     # Arrange
@@ -637,9 +618,8 @@ def test_md029_bad_one_two_one_list_with_config_ordered():
 @pytest.mark.rules
 def test_md029_good_one_two_three_list_with_config_ordered():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains ordered lists that have number 1 to 3 and `ordered` configuration.
     """
 
     # Arrange
@@ -668,9 +648,8 @@ def test_md029_good_one_two_three_list_with_config_ordered():
 @pytest.mark.rules
 def test_md029_bad_two_three_four_list_with_config_ordered():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 2 to 4 and `ordered` configuration.
     """
 
     # Arrange
@@ -703,9 +682,8 @@ def test_md029_bad_two_three_four_list_with_config_ordered():
 @pytest.mark.rules
 def test_md029_good_zero_one_two_list_with_config_ordered():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains ordered lists that have number 0 to 3 and `ordered` configuration.
     """
 
     # Arrange
@@ -734,9 +712,8 @@ def test_md029_good_zero_one_two_list_with_config_ordered():
 @pytest.mark.rules
 def test_md029_good_zero_list_with_config_ordered():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 0 and `ordered` configuration.
     """
 
     # Arrange
@@ -769,9 +746,8 @@ def test_md029_good_zero_list_with_config_ordered():
 @pytest.mark.rules
 def test_md029_good_one_list_with_config_zero():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 1 and `zero` configuration.
     """
 
     # Arrange
@@ -804,9 +780,8 @@ def test_md029_good_one_list_with_config_zero():
 @pytest.mark.rules
 def test_md029_bad_one_one_three_list_with_config_zero():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 1 and 3 and `zero` configuration.
     """
 
     # Arrange
@@ -839,9 +814,8 @@ def test_md029_bad_one_one_three_list_with_config_zero():
 @pytest.mark.rules
 def test_md029_bad_one_two_one_list_with_config_zero():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 1 and 2 and `zero` configuration.
     """
 
     # Arrange
@@ -874,9 +848,8 @@ def test_md029_bad_one_two_one_list_with_config_zero():
 @pytest.mark.rules
 def test_md029_good_one_two_three_list_with_config_zero():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 1 to 3 and `zero` configuration.
     """
 
     # Arrange
@@ -909,9 +882,8 @@ def test_md029_good_one_two_three_list_with_config_zero():
 @pytest.mark.rules
 def test_md029_bad_two_three_four_list_with_config_zero():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 2 to 4 and `zero` configuration.
     """
 
     # Arrange
@@ -944,9 +916,8 @@ def test_md029_bad_two_three_four_list_with_config_zero():
 @pytest.mark.rules
 def test_md029_good_zero_one_two_list_with_config_zero():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains ordered lists that have number 0 to 2 and `zero` configuration.
     """
 
     # Arrange
@@ -979,9 +950,8 @@ def test_md029_good_zero_one_two_list_with_config_zero():
 @pytest.mark.rules
 def test_md029_good_zero_list_with_config_zero():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains ordered lists that have number 0 and `zero` configuration.
     """
 
     # Arrange

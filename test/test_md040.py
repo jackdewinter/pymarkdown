@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md040_good_fenced_block_with_language():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a fenced code block with language specified.
     """
 
     # Arrange
@@ -37,9 +36,8 @@ def test_md040_good_fenced_block_with_language():
 @pytest.mark.rules
 def test_md040_good_fenced_block_with_space_before_language():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does not trigger with a document that
+    contains a fenced code block with language specified after a space.
     """
 
     # Arrange
@@ -65,9 +63,8 @@ def test_md040_good_fenced_block_with_space_before_language():
 @pytest.mark.rules
 def test_md040_bad_fenced_block_with_no_language():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block with no language specified.
     """
 
     # Arrange
@@ -96,9 +93,8 @@ def test_md040_bad_fenced_block_with_no_language():
 @pytest.mark.rules
 def test_md040_bad_fenced_block_with_whitespace():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md004 directory that has consistent asterisk usage on a single
-    level list.
+    Test to make sure this rule does trigger with a document that
+    contains a fenced code block with only whitespace specified.
     """
 
     # Arrange

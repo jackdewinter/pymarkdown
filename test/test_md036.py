@@ -12,8 +12,8 @@ from .utils import write_temporary_configuration
 @pytest.mark.rules
 def test_md036_proper_headings_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that normal atx headings.
+    Test to make sure this rule does trigger with a document that
+    contains valid Atx Headings and not emphasis.
     """
 
     # Arrange
@@ -39,8 +39,8 @@ def test_md036_proper_headings_atx():
 @pytest.mark.rules
 def test_md036_proper_headings_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that normal setext headings.
+    Test to make sure this rule does not trigger with a document that
+    contains valid SetExt Headings and not emphasis.
     """
 
     # Arrange
@@ -66,9 +66,8 @@ def test_md036_proper_headings_setext():
 @pytest.mark.rules
 def test_md036_proper_emphasis_with_link():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that has a single line wrapped in emphasis
-    that contains an inline link.
+    Test to make sure this rule does not trigger with a document that
+    contains an emphasis "heading" containing a link.
     """
 
     # Arrange
@@ -94,9 +93,8 @@ def test_md036_proper_emphasis_with_link():
 @pytest.mark.rules
 def test_md036_proper_emphasis_with_text_then_link():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that has a single line wrapped in emphasis
-    that contains text and then an inline link.
+    Test to make sure this rule does not trigger with a document that
+    contains an emphasis "heading" containing text and then a link.
     """
 
     # Arrange
@@ -122,9 +120,8 @@ def test_md036_proper_emphasis_with_text_then_link():
 @pytest.mark.rules
 def test_md036_proper_emphasis_with_text_then_link_then_text():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that has a single line wrapped in emphasis
-    that contains text, an inline link, and then text again.
+    Test to make sure this rule does not trigger with a document that
+    contains an emphasis "heading" containing text and then a link and then text.
     """
 
     # Arrange
@@ -150,9 +147,9 @@ def test_md036_proper_emphasis_with_text_then_link_then_text():
 @pytest.mark.rules
 def test_md036_proper_emphasis_with_text_end_emphasis_more_text():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that has a single line wrapped with emphasis
-    that contains text, followed by more text.
+    Test to make sure this rule does not trigger with a document that
+    contains an emphasis "heading" containing text in the emphasis and
+    more text after.
     """
 
     # Arrange
@@ -178,9 +175,8 @@ def test_md036_proper_emphasis_with_text_end_emphasis_more_text():
 @pytest.mark.rules
 def test_md036_proper_emphasis_within_text():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that has a single line with emphasis within
-    the text.
+    Test to make sure this rule does not trigger with a document that
+    contains a line containing text and emphasis within the line.
     """
 
     # Arrange
@@ -206,9 +202,8 @@ def test_md036_proper_emphasis_within_text():
 @pytest.mark.rules
 def test_md036_proper_emphasis_within_multiline_text():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that has a single line with emphasis wrapped
-    around the multiline text.
+    Test to make sure this rule does not trigger with a document that
+    contains an emphasis "heading", with the emphasis going over 2 lines.
     """
 
     # Arrange
@@ -234,9 +229,8 @@ def test_md036_proper_emphasis_within_multiline_text():
 @pytest.mark.rules
 def test_md036_proper_emphasis_ending_with_punctuation():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that has a single line with emphasis wrapped
-    around the text, the text ending with punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains an emphasis "heading" where the text ends with punctuation.
     """
 
     # Arrange
@@ -262,10 +256,9 @@ def test_md036_proper_emphasis_ending_with_punctuation():
 @pytest.mark.rules
 def test_md036_proper_emphasis_ending_with_punctuation_with_configuration():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that has a single line with emphasis wrapped
-    around the text, the text ending with punctuation, with configuration that makes
-    the punctuation okay.
+    Test to make sure this rule does trigger with a document that
+    contains an emphasis "heading" ending with punctuation, but not punctuation
+    according to configuration.
     """
 
     # Arrange
@@ -306,9 +299,8 @@ def test_md036_proper_emphasis_ending_with_punctuation_with_configuration():
 @pytest.mark.rules
 def test_md036_valid_emphasis_headings():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that has a single line with emphasis wrapped
-    around the text, valid golden case for recommending.
+    Test to make sure this rule does trigger with a document that
+    contains a valid emphasis "heading".
     """
 
     # Arrange
@@ -339,9 +331,8 @@ def test_md036_valid_emphasis_headings():
 @pytest.mark.rules
 def test_md036_valid_emphasis_headings_in_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that has a single line with emphasis wrapped
-    around the text, valid golden case for recommending.
+    Test to make sure this rule does trigger with a document that
+    contains a valid emphasis "heading" in a list.
     """
 
     # Arrange
@@ -372,9 +363,8 @@ def test_md036_valid_emphasis_headings_in_list():
 @pytest.mark.rules
 def test_md036_valid_emphasis_headings_in_block_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md036 directory that has a single line with emphasis wrapped
-    around the text, valid golden case for recommending.
+    Test to make sure this rule does trigger with a document that
+    contains a valid emphasis "heading" in a block quote.
     """
 
     # Arrange

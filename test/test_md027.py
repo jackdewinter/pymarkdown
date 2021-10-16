@@ -9,9 +9,8 @@ import pytest
 @pytest.mark.rules
 def test_md027_good_block_quote_empty():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a block quote with nothing after it.
     """
 
     # Arrange
@@ -37,9 +36,8 @@ def test_md027_good_block_quote_empty():
 @pytest.mark.rules
 def test_md027_good_block_quote_empty_just_blank():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a block quote with only a single space after it.
     """
 
     # Arrange
@@ -67,9 +65,8 @@ def test_md027_good_block_quote_empty_just_blank():
 @pytest.mark.rules
 def test_md027_bad_block_quote_empty_too_many_spaces():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with more than 1 space after it.
     """
 
     # Arrange
@@ -98,9 +95,8 @@ def test_md027_bad_block_quote_empty_too_many_spaces():
 @pytest.mark.rules
 def test_md027_good_block_quote_simple_text():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a block quote with simple text
     """
 
     # Arrange
@@ -126,9 +122,9 @@ def test_md027_good_block_quote_simple_text():
 @pytest.mark.rules
 def test_md027_good_block_quote_followed_by_heading():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a block quote with simple text, an Atx Heading, and more text
+    within it.
     """
 
     # Arrange
@@ -156,9 +152,8 @@ def test_md027_good_block_quote_followed_by_heading():
 @pytest.mark.rules
 def test_md027_good_block_quote_indent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a block quote with simple text.
     """
 
     # Arrange
@@ -184,9 +179,8 @@ def test_md027_good_block_quote_indent():
 @pytest.mark.rules
 def test_md027_bad_block_quote_indent():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with simple text, indented an extra space.
     """
 
     # Arrange
@@ -217,9 +211,9 @@ def test_md027_bad_block_quote_indent():
 @pytest.mark.rules
 def test_md027_bad_block_quote_indent_plus_one():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with simple text indented by 2 spaces, with
+    the entire block being indented by 1 space.
     """
 
     # Arrange
@@ -250,9 +244,9 @@ def test_md027_bad_block_quote_indent_plus_one():
 @pytest.mark.rules
 def test_md027_bad_block_quote_only_one_properly_indented():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with text, where only one line is properly
+    indented.
     """
 
     # Arrange
@@ -281,9 +275,9 @@ def test_md027_bad_block_quote_only_one_properly_indented():
 @pytest.mark.rules
 def test_md027_bad_block_quote_only_one_properly_indented_plus_one():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with text, where only one line is properly
+    indented, with the entire block being indented by 1.
     """
 
     # Arrange
@@ -312,9 +306,8 @@ def test_md027_bad_block_quote_only_one_properly_indented_plus_one():
 @pytest.mark.rules
 def test_md027_good_block_quote_indent_with_blank():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a block quote with text and a blank line.
     """
 
     # Arrange
@@ -340,9 +333,8 @@ def test_md027_good_block_quote_indent_with_blank():
 @pytest.mark.rules
 def test_md027_good_block_quote_indent_with_blank_space():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a block quote with text and a blank line that has a single space.
     """
 
     # Arrange
@@ -370,9 +362,8 @@ def test_md027_good_block_quote_indent_with_blank_space():
 @pytest.mark.rules
 def test_md027_bad_block_quote_indent_with_blank_two_spaces():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with text and a blank line that has two spaces.
     """
 
     # Arrange
@@ -401,9 +392,9 @@ def test_md027_bad_block_quote_indent_with_blank_two_spaces():
 @pytest.mark.rules
 def test_md027_bad_block_quote_indent_with_blank_two_spaces_plus_one():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with text and a blank line that has two spaces,
+    the entire block being indented by 1.
     """
 
     # Arrange
@@ -432,9 +423,9 @@ def test_md027_bad_block_quote_indent_with_blank_two_spaces_plus_one():
 @pytest.mark.rules
 def test_md027_bad_block_quote_indent_with_blank_two_spaces_misaligned():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with text and a blank line that has two spaces,
+    even though the line has extra indent before the block quote.
     """
 
     # Arrange
@@ -463,9 +454,8 @@ def test_md027_bad_block_quote_indent_with_blank_two_spaces_misaligned():
 @pytest.mark.rules
 def test_md027_good_block_quote_indent_with_blank_space_no_start():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a block quote with text and a blank line that has no bq start.
     """
 
     # Arrange
@@ -493,9 +483,8 @@ def test_md027_good_block_quote_indent_with_blank_space_no_start():
 @pytest.mark.rules
 def test_md027_bad_two_block_quotes_space_top():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with text, where the top has extra space.
     """
 
     # Arrange
@@ -526,9 +515,8 @@ def test_md027_bad_two_block_quotes_space_top():
 @pytest.mark.rules
 def test_md027_bad_two_block_quotes_space_bottom():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with text, where the bottom has extra space.
     """
 
     # Arrange
@@ -559,9 +547,9 @@ def test_md027_bad_two_block_quotes_space_bottom():
 @pytest.mark.rules
 def test_md027_bad_misalligned_double_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does trigger with a document that
+    contains a double block quote with text, where the text is aligned
+    even though the block quotes are not.
     """
 
     # Arrange
@@ -590,9 +578,9 @@ def test_md027_bad_misalligned_double_quote():
 @pytest.mark.rules
 def test_md027_good_aligned_double_quote():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    Test to make sure this rule does not trigger with a document that
+    contains a double block quote with text that is aligned to the block
+    quote, not the text.
     """
 
     # Arrange
@@ -619,9 +607,7 @@ def test_md027_good_aligned_double_quote():
 @pytest.mark.rules
 def test_md027_bad_misalligned_quote_within_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    TBD
     """
 
     # Arrange
@@ -648,9 +634,7 @@ def test_md027_bad_misalligned_quote_within_list():
 @pytest.mark.rules
 def test_md027_good_aligned_quote_within_list():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/MD026 directory that has atx headings that do not end with
-    punctuation.
+    TBD
     """
 
     # Arrange

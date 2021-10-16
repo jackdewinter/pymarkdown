@@ -14,8 +14,8 @@ from .utils import write_temporary_configuration
 @pytest.mark.rules
 def test_md003_bad_configuration_style():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only atx headings.
+    Test to verify that a configuration error is thrown when supplying the
+    style value with a string that is not in the list of acceptable values.
     """
 
     # Arrange
@@ -50,8 +50,8 @@ CONSISTENT_ATX_HEADINGS_SAMPLE_OUTPUT = ""
 @pytest.mark.rules
 def test_md003_good_consistent_headings_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only atx headings.
+    Test to make sure this rule does not trigger with a document that
+    only contains Atx Headings.
     """
 
     # Arrange
@@ -80,8 +80,8 @@ CONSISTENT_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = ""
 @pytest.mark.rules
 def test_md003_good_consistent_headings_atx_closed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only closed atx headings.
+    Test to make sure this rule does not trigger with a document that
+    only contains Atx Closed Headings.
     """
 
     # Arrange
@@ -110,8 +110,8 @@ CONSISTENT_SETEXT_HEADINGS_SAMPLE_OUTPUT = ""
 @pytest.mark.rules
 def test_md003_good_consistent_headings_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings.
+    Test to make sure this rule does not trigger with a document that
+    only contains SetExt Headings.
     """
 
     # Arrange
@@ -143,9 +143,9 @@ CONSISTENT_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_consistent_headings_setext_with_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings for the first two
-    levels and then atx headings beyond that.
+    Test to make sure this rule does trigger with a document that
+    only contains SetExt Headings for the first two levels and
+    Atx Headings after that.
     """
 
     # Arrange
@@ -177,9 +177,9 @@ CONSISTENT_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_consistent_headings_setext_with_atx_closed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings for the first two
-    levels and then atx closed headings beyond that.
+    Test to make sure this rule does trigger with a document that
+    only contains SetExt Headings for the first two levels and Atx Closed Headings
+    for the other levels.
     """
 
     # Arrange
@@ -205,7 +205,7 @@ def test_md003_bad_consistent_headings_setext_with_atx_closed():
 @pytest.mark.rules
 def test_md003_consistent_all_samples():
     """
-    Test to make sure we get the expected behavior after scanning the files in the
+    Test to make sure we get the expected behavior after scanning all files in the
     test/resources/rules/md003 directory.
     """
 
@@ -238,8 +238,8 @@ ATX_ATX_HEADINGS_SAMPLE_OUTPUT = ""
 @pytest.mark.rules
 def test_md003_good_atx_headings_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only atx headings.
+    Test to make sure this rule does not trigger with a document that
+    only contains Atx Headings for configuration set to "atx".
     """
 
     # Arrange
@@ -274,8 +274,7 @@ def test_md003_good_atx_headings_atx():
 @pytest.mark.rules
 def test_md003_good_atx_headings_atxx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only atx headings.
+    Variation of previous test to test default.
     """
 
     # Arrange
@@ -318,8 +317,8 @@ ATX_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_atx_headings_atx_closed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only closed atx headings.
+    Test to make sure this rule does trigger with a document that
+    only contains Atx Closed Headings for configuration set to "atx".
     """
 
     # Arrange
@@ -362,8 +361,8 @@ ATX_SETEXT_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_atx_headings_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings.
+    Test to make sure this rule does trigger with a document that
+    only contains SetExt Headings for configuration set to "atx".
     """
 
     # Arrange
@@ -406,9 +405,8 @@ ATX_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_atx_headings_setext_with_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings for the first two
-    levels and then atx headings beyond that.
+    Test to make sure this rule does trigger with a document that
+    only contains SetExt_Atx Headings for configuration set to "atx".
     """
 
     # Arrange
@@ -453,9 +451,8 @@ ATX_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_atx_headings_setext_with_atx_closed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings for the first two
-    levels and then atx closed headings beyond that.
+    Test to make sure this rule does trigger with a document that
+    only contains SetExt+Atx Closed Headings for configuration set to "atx".
     """
 
     # Arrange
@@ -491,7 +488,7 @@ def test_md003_bad_atx_headings_setext_with_atx_closed():
 def test_md003_atx_all_samples():
     """
     Test to make sure we get the expected behavior after scanning the files in the
-    test/resources/rules/md003 directory.
+    test/resources/rules/md003 directory for configuration "atx".
     """
 
     # Arrange
@@ -540,8 +537,8 @@ ATXCLOSED_ATX_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_atxclosed_headings_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only atx headings.
+    Test to make sure this rule does trigger with a document that
+    only contains Atx Headings for configuration set to "atx_closed".
     """
 
     # Arrange
@@ -579,8 +576,8 @@ ATXCLOSED_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = ""
 @pytest.mark.rules
 def test_md003_good_atxclosed_headings_atx_closed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only closed atx headings.
+    Test to make sure this rule does not trigger with a document that
+    only contains Atx Closed Headings for configuration set to "atx_closed".
     """
 
     # Arrange
@@ -623,8 +620,8 @@ ATXCLOSED_SETEXT_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_atxclosed_headings_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings.
+    Test to make sure this rule does trigger with a document that
+    only contains SetExt Headings for configuration set to "atx_closed".
     """
 
     # Arrange
@@ -669,9 +666,8 @@ ATXCLOSED_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_atxclosed_headings_setext_with_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings for the first two
-    levels and then atx headings beyond that.
+    Test to make sure this rule does trigger with a document that
+    only contains SetExt+Atx Headings for configuration set to "atx_closed".
     """
 
     # Arrange
@@ -714,9 +710,8 @@ ATXCLOSED_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_atxclosed_headings_setext_with_atx_closed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings for the first two
-    levels and then atx closed headings beyond that.
+    Test to make sure this rule does trigger with a document that
+    only contains SetExt+Atx Closed Headings for configuration set to "atx_closed".
     """
 
     # Arrange
@@ -752,7 +747,7 @@ def test_md003_bad_atxclosed_headings_setext_with_atx_closed():
 def test_md003_atxclosed_all_samples():
     """
     Test to make sure we get the expected behavior after scanning the files in the
-    test/resources/rules/md003 directory.
+    test/resources/rules/md003 directory with an "atx closed" configuration.
     """
 
     # Arrange
@@ -801,8 +796,8 @@ SETEXT_ATX_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_setext_headings_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only atx headings.
+    Test to make sure this rule does trigger with a document that
+    only contains Atx Headings for configuration set to "setext".
     """
 
     # Arrange
@@ -845,8 +840,8 @@ SETEXT_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_setext_headings_atx_closed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only closed atx headings.
+    Test to make sure this rule does trigger with a document that
+    only contains Atx Closed Headings for configuration set to "setext".
     """
 
     # Arrange
@@ -884,8 +879,8 @@ SETEXT_SETEXT_HEADINGS_SAMPLE_OUTPUT = ""
 @pytest.mark.rules
 def test_md003_good_setext_headings_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings.
+    Test to make sure this rule does not trigger with a document that
+    only contains SetExt Headings for configuration set to "setext".
     """
 
     # Arrange
@@ -926,9 +921,8 @@ SETEXT_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_setext_headings_setext_with_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings for the first two
-    levels and then atx headings beyond that.
+    Test to make sure this rule does trigger with a document that
+    only contains SetExt+Atx Headings for configuration set to "setext".
     """
 
     # Arrange
@@ -969,9 +963,8 @@ SETEXT_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_setext_headings_setext_with_atx_closed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings for the first two
-    levels and then atx closed headings beyond that.
+    Test to make sure this rule does trigger with a document that
+    only contains Atx Closed Headings for configuration set to "setext".
     """
 
     # Arrange
@@ -1007,7 +1000,7 @@ def test_md003_bad_setext_headings_setext_with_atx_closed():
 def test_md003_setext_all_samples():
     """
     Test to make sure we get the expected behavior after scanning the files in the
-    test/resources/rules/md003 directory.
+    test/resources/rules/md003 directory with configuration "setext".
     """
 
     # Arrange
@@ -1056,8 +1049,8 @@ SETEXT_WITH_ATX_ATX_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_setext_with_atx_headings_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only atx headings.
+    Test to make sure this rule does trigger with a document that
+    only contains Atx Headings for configuration set to "setext_with_atx".
     """
 
     # Arrange
@@ -1100,8 +1093,8 @@ SETEXT_WITH_ATX_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_setext_with_atx_headings_atx_closed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only closed atx headings.
+    Test to make sure this rule does trigger with a document that
+    only contains Atx Closed Headings for configuration set to "setext_with_atx".
     """
 
     # Arrange
@@ -1139,8 +1132,8 @@ SETEXT_WITH_ATX_SETEXT_HEADINGS_SAMPLE_OUTPUT = ""
 @pytest.mark.rules
 def test_md003_good_setext_with_atx_headings_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings.
+    Test to make sure this rule does not trigger with a document that
+    only contains SetExt Headings for configuration set to "setext_with_atx".
     """
 
     # Arrange
@@ -1178,9 +1171,8 @@ SETEXT_WITH_ATX_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = ""
 @pytest.mark.rules
 def test_md003_good_setext_with_atx_headings_setext_with_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings for the first two
-    levels and then atx headings beyond that.
+    Test to make sure this rule does not trigger with a document that
+    only contains SetExt+Atx Headings for configuration set to "setext_with_atx".
     """
 
     # Arrange
@@ -1221,9 +1213,8 @@ SETEXT_WITH_ATX_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_setext_with_atx_headings_setext_with_atx_closed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings for the first two
-    levels and then atx closed headings beyond that.
+    Test to make sure this rule does trigger with a document that
+    only contains SetExt+Atx Closed Headings for configuration set to "setext_with_atx".
     """
 
     # Arrange
@@ -1259,7 +1250,7 @@ def test_md003_bad_setext_with_atx_headings_setext_with_atx_closed():
 def test_md003_setext_with_atx_all_samples():
     """
     Test to make sure we get the expected behavior after scanning the files in the
-    test/resources/rules/md003 directory.
+    test/resources/rules/md003 directory with configuration "setext_with_atx".
     """
 
     # Arrange
@@ -1308,8 +1299,8 @@ SETEXT_WITH_ATX_CLOSED_ATX_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_setext_with_atx_closed_headings_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only atx headings.
+    Test to make sure this rule does trigger with a document that
+    only contains Atx Headings for configuration set to "setext_with_atx_closed".
     """
 
     # Arrange
@@ -1352,8 +1343,8 @@ SETEXT_WITH_ATX_CLOSED_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_setext_with_atx_closed_headings_atx_closed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only closed atx headings.
+    Test to make sure this rule does trigger with a document that
+    only contains Atx Closed Headings for configuration set to "setext_with_atx_closed".
     """
 
     # Arrange
@@ -1391,8 +1382,8 @@ SETEXT_WITH_ATX_CLOSED_SETEXT_HEADINGS_SAMPLE_OUTPUT = ""
 @pytest.mark.rules
 def test_md003_good_setext_with_atx_closed_headings_setext():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings.
+    Test to make sure this rule does not trigger with a document that
+    only contains SetExt Headings for configuration set to "setext_with_atx_closed".
     """
 
     # Arrange
@@ -1433,9 +1424,8 @@ SETEXT_WITH_ATX_CLOSED_SETEXT_WITH_ATX_HEADINGS_SAMPLE_OUTPUT = (
 @pytest.mark.rules
 def test_md003_bad_setext_with_atx_closed_headings_setext_with_atx():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings for the first two
-    levels and then atx headings beyond that.
+    Test to make sure this rule does trigger with a document that
+    only contains SetExt+Atx Headings for configuration set to "setext_with_atx_closed".
     """
 
     # Arrange
@@ -1473,9 +1463,8 @@ SETEXT_WITH_ATX_CLOSED_SETEXT_WITH_ATX_CLOSED_HEADINGS_SAMPLE_OUTPUT = ""
 @pytest.mark.rules
 def test_md003_good_setext_with_atx_closed_headings_setext_with_atx_closed():
     """
-    Test to make sure we get the expected behavior after scanning a good file from the
-    test/resources/rules/md003 directory that has only setext headings for the first two
-    levels and then atx closed headings beyond that.
+    Test to make sure this rule does not trigger with a document that
+    only contains SetExt+Atx Closed Headings for configuration set to "setext_with_atx_closed".
     """
 
     # Arrange
@@ -1513,7 +1502,7 @@ def test_md003_good_setext_with_atx_closed_headings_setext_with_atx_closed():
 def test_md003_setext_with_atx_closed_all_samples():
     """
     Test to make sure we get the expected behavior after scanning the files in the
-    test/resources/rules/md003 directory.
+    test/resources/rules/md003 directory with configuration setext+atx closed
     """
 
     # Arrange
