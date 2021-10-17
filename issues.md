@@ -25,9 +25,6 @@
   - every ordered tests should have an unordered counterpart
 - make sure that all inline elements treat blank lines properly and have test cases
 
-- take `__consume_text_for_image_alt_text` and other functions like it and move as much as possible into token classes
-  - TransformToGfmListLooseness.__handle_block_quote_start
-
 ### if time 270, 271, 237, 238
 
 - with list item
@@ -53,14 +50,6 @@ md010 - tabs "converted"
 - md005/md007
   - only reporting first?
   - need more comprehensive tests like test_extra_008x
-
-```Markdown
-* First Item
-  * First-First
-   * First-Second
-    * First-Third
-* Second Item
-```
 
 ### bad_split_block_quote_in_list
 
@@ -92,12 +81,14 @@ md010 - tabs "converted"
 - is there a rule that can detect a possible front-matter header and trigger?
   i.e. something looks like front-matter and should be interpretted as front-matter
 
-### Other
+### Like To Have
 
 - finish off inline elements for rule 027
 - better globbing for 043
 - md033 - <? and <! with alpha character after
 - better solution than `no-space-in-code` for scenario-cases.md
+- take `__consume_text_for_image_alt_text` and other functions like it and move as much as possible into token classes
+  - TransformToGfmListLooseness.__handle_block_quote_start
 
 ## Priority 3 - Like To Solve in next 3 m
 

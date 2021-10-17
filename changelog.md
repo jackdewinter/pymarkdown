@@ -13,6 +13,8 @@
 
 ### Fixed
 
+- [Fixed - Issue 43](https://github.com/jackdewinter/pymarkdown/issues/43)
+  - parser: on start of nested list, was not allowing indent to be based on parent indent
 - [Fixed - Issue 47](https://github.com/jackdewinter/pymarkdown/issues/47)
   - parser: wasn't treating "partial" LRDs as valid, rewinding past their start
 - [Fixed - Issue 49](https://github.com/jackdewinter/pymarkdown/issues/49)
