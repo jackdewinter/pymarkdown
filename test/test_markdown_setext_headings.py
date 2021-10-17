@@ -674,7 +674,6 @@ def test_setext_headings_064():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
-@pytest.mark.skip
 @pytest.mark.gfm
 def test_setext_headings_064a():
     """
@@ -684,16 +683,96 @@ def test_setext_headings_064a():
     # Arrange
     source_markdown = """- Foo
 ==="""
+
     expected_tokens = [
         "[ulist(1,1):-::2::]",
-        "[setext(2,1):=:3::(1,3)]",
-        "[text(1,3):Foo:]",
-        "[end-setext::]",
+        "[para(1,3):\n]",
+        "[text(1,3):Foo\n===::\n]",
+        "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>
 <li>Foo
 ===</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_064b():
+    """
+    Test case 064a:  variation of 64 other underline
+    """
+
+    # Arrange
+    source_markdown = """- Foo
+ ==="""
+
+    expected_tokens = [
+        "[ulist(1,1):-::2:: ]",
+        "[para(1,3):\n]",
+        "[text(1,3):Foo\n===::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>Foo
+===</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_064ba():
+    """
+    Test case 064a:  variation of 64 other underline
+    """
+
+    # Arrange
+    source_markdown = """1. Foo
+ ==="""
+
+    expected_tokens = [
+        "[olist(1,1):.:1:3:: ]",
+        "[para(1,4):\n]",
+        "[text(1,4):Foo\n===::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Foo
+===</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_setext_headings_064c():
+    """
+    Test case 064a:  variation of 64 other underline
+    """
+
+    # Arrange
+    source_markdown = """- Foo
+  ==="""
+
+    expected_tokens = [
+        "[ulist(1,1):-::2::  ]",
+        "[setext(2,3):=:3::(1,3)]",
+        "[text(1,3):Foo:]",
+        "[end-setext::]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<ul>
+<li>
+<h1>Foo</h1>
+</li>
 </ul>"""
 
     # Act & Assert
@@ -821,7 +900,6 @@ def test_setext_headings_069():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_setext_headings_069a():
     """
     Test case 069a: variation of 069 with other underline
@@ -832,9 +910,9 @@ def test_setext_headings_069a():
 ====="""
     expected_tokens = [
         "[ulist(1,1):-::2::]",
-        "[setext(2,1):=:5::(1,3)]",
-        "[text(1,3):foo:]",
-        "[end-setext::]",
+        "[para(1,3):\n]",
+        "[text(1,3):foo\n=====::\n]",
+        "[end-para:::True]",
         "[end-ulist:::True]",
     ]
     expected_gfm = """<ul>

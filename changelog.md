@@ -26,6 +26,8 @@
 - [Fixed - Issue 56](https://github.com/jackdewinter/pymarkdown/issues/56)
   - scenario tests: resolved outstanding rules tests that were skipped
   - parser: when parsing `- > `, did not properly retain new block quote level on return
+- [Fixed - Issue 59](https://github.com/jackdewinter/pymarkdown/issues/59)
+  - parser: on line after list item, if started with `===`, would think it was SetExt instead of continuation text.
 
 ## Version 0.9.1 - Date: 2021-10-06
 
