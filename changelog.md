@@ -8,7 +8,8 @@
 
 ### Changed
 
-- None
+- [Changed - Issue 44](https://github.com/jackdewinter/pymarkdown/issues/44)
+  - scenario tests: went through every scenario test and validated comment string
 
 ### Fixed
 
@@ -20,6 +21,11 @@
   - issue: added [Issue 50](https://github.com/jackdewinter/pymarkdown/issues/50) to test with extra levels
 - [Fixed - Issue 51](https://github.com/jackdewinter/pymarkdown/issues/51)
   - parser: not handling list starts properly where the list indent was less than the line before it
+- [Fixed - Issued 53](https://github.com/jackdewinter/pymarkdown/issues/53)
+  - parser: when dealing with lines within a list item within a block quote, not removing leading spaces properly
+- [Fixed - Issue 56](https://github.com/jackdewinter/pymarkdown/issues/56)
+  - scenario tests: resolved outstanding rules tests that were skipped
+  - parser: when parsing `- > `, did not properly retain new block quote level on return
 
 ## Version 0.9.1 - Date: 2021-10-06
 

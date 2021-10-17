@@ -594,7 +594,7 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
+    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements, too-many-branches
     @staticmethod
     def __handle_nested_container_blocks(
         parser_state,
@@ -783,17 +783,52 @@ class ContainerBlockProcessor:
                         POGGER.debug("adj_line_to_parse>:$:<", adj_line_to_parse)
                         POGGER.debug(
                             "parser_state.nested_list_start>:$:<",
-                            parser_state.nested_list_start.matching_markdown_token,
+                            parser_state.nested_list_start.matching_markdown_token.extracted_whitespace,
                         )
+
+                        POGGER.debug(
+                            "this_bq_count:$, stack_bq_count:$",
+                            this_bq_count,
+                            stack_bq_count,
+                        )
+                        POGGER.debug(
+                            "original_line_to_parse:>:$:<",
+                            parser_state.original_line_to_parse,
+                        )
+
                         POGGER.debug("BOOM")
-                        assert adj_line_to_parse.startswith(
+                        if adj_line_to_parse.startswith(
                             parser_state.nested_list_start.matching_markdown_token.extracted_whitespace
-                        )
-                        adj_line_to_parse = adj_line_to_parse[
-                            len(
-                                parser_state.nested_list_start.matching_markdown_token.extracted_whitespace
-                            ) :
-                        ]
+                        ):
+                            adj_line_to_parse = adj_line_to_parse[
+                                len(
+                                    parser_state.nested_list_start.matching_markdown_token.extracted_whitespace
+                                ) :
+                            ]
+                        else:
+                            assert parser_state.original_line_to_parse.endswith(
+                                adj_line_to_parse
+                            )
+                            orig_parse = len(parser_state.original_line_to_parse)
+                            curr_parse = len(adj_line_to_parse)
+                            delta_parse = orig_parse - curr_parse
+                            POGGER.debug(
+                                "delta_parse($) = curr_parse($) - orig_parse($)",
+                                delta_parse,
+                                curr_parse,
+                                orig_parse,
+                            )
+                            whitespace_to_remove = parser_state.nested_list_start.matching_markdown_token.extracted_whitespace[
+                                delta_parse:
+                            ]
+                            POGGER.debug(
+                                "whitespace_to_remove>:$:<", whitespace_to_remove
+                            )
+                            assert adj_line_to_parse.startswith(whitespace_to_remove)
+                            adj_line_to_parse = adj_line_to_parse[
+                                len(whitespace_to_remove) :
+                            ]
+
                         already_adjusted = True
 
             POGGER.debug(
@@ -854,7 +889,7 @@ class ContainerBlockProcessor:
             this_bq_count,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals, too-many-statements
+    # pylint: enable=too-many-arguments, too-many-locals, too-many-statements, too-many-branches
 
     # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
     @staticmethod
