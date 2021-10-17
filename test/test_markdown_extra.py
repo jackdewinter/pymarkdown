@@ -669,3 +669,103 @@ def test_extra_010b():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_011x():
+    """
+    Block quote followed directly by Atx Heading.
+    """
+
+    # Arrange
+    source_markdown = """> simple text
+> dd
+> dd
+# a
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[para(1,3):\n\n]",
+        "[text(1,3):simple text\ndd\ndd::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[atx(4,1):1:0:]",
+        "[text(4,3):a: ]",
+        "[end-atx::]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>simple text
+dd
+dd</p>
+</blockquote>
+<h1>a</h1>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_011a():
+    """
+    Variation of 11 with no newline after Atx Heading
+    """
+
+    # Arrange
+    source_markdown = """> simple text
+> dd
+> dd
+# a"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[para(1,3):\n\n]",
+        "[text(1,3):simple text\ndd\ndd::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[atx(4,1):1:0:]",
+        "[text(4,3):a: ]",
+        "[end-atx::]",
+    ]
+    expected_gfm = """<blockquote>
+<p>simple text
+dd
+dd</p>
+</blockquote>
+<h1>a</h1>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_011b():
+    """
+    Variation of 11 with newline after Block Quote and before Atx Heading
+    """
+
+    # Arrange
+    source_markdown = """> simple text
+> dd
+> dd
+
+# a"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n]",
+        "[para(1,3):\n\n]",
+        "[text(1,3):simple text\ndd\ndd::\n\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
+        "[atx(5,1):1:0:]",
+        "[text(5,3):a: ]",
+        "[end-atx::]",
+    ]
+    expected_gfm = """<blockquote>
+<p>simple text
+dd
+dd</p>
+</blockquote>
+<h1>a</h1>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
