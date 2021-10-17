@@ -194,6 +194,7 @@ class TokenizedMarkdown:
                         (
                             tokens_from_line,
                             _,
+                            _,
                             requeue_line_info,
                         ) = ContainerBlockProcessor.parse_line_for_container_blocks(
                             parser_state,

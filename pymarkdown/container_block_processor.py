@@ -78,7 +78,7 @@ class ContainerBlockProcessor:
             extracted_whitespace,
             parser_properties,
         ):
-            return None, None, None
+            return None, None, None, None
 
         if container_depth == 0:
             parser_state.copy_of_token_stack = []
@@ -97,6 +97,7 @@ class ContainerBlockProcessor:
             foobar,
             init_bq,
         )
+        # POGGER.debug("this_bq_count>>$", this_bq_count)
 
         end_container_indices = ContainerIndices(-1, -1, -1)
         parser_state.nested_list_start = None
@@ -128,12 +129,12 @@ class ContainerBlockProcessor:
         )
         if requeue_line_info:
             POGGER.debug(">>requeuing lines after looking for block start. returning.")
-            return None, None, requeue_line_info
+            return None, None, None, requeue_line_info
 
         if did_blank:
             POGGER.debug(">>already handled blank line. returning.")
             container_level_tokens.extend(leaf_tokens)
-            return container_level_tokens, line_to_parse, None
+            return container_level_tokens, line_to_parse, this_bq_count, None
 
         # POGGER.debug("this_bq_count>>$", this_bq_count)
         # POGGER.debug("stack_bq_count>>$", stack_bq_count)
@@ -167,7 +168,7 @@ class ContainerBlockProcessor:
             POGGER.debug(
                 ">>requeuing lines after looking for ordered list start. returning."
             )
-            return None, None, requeue_line_info
+            return None, None, None, requeue_line_info
         # POGGER.debug("this_bq_count>>$", this_bq_count)
         # POGGER.debug("stack_bq_count>>$", stack_bq_count)
 
@@ -198,7 +199,7 @@ class ContainerBlockProcessor:
             POGGER.debug(
                 ">>requeuing lines after looking for unordered list start. returning."
             )
-            return None, None, requeue_line_info
+            return None, None, None, requeue_line_info
         # POGGER.debug("this_bq_count>>$", this_bq_count)
         # POGGER.debug("stack_bq_count>>$", stack_bq_count)
 
@@ -227,6 +228,7 @@ class ContainerBlockProcessor:
                 line_to_parse,
                 leaf_tokens,
                 container_level_tokens,
+                this_bq_count,
             ) = ContainerBlockProcessor.__handle_nested_container_blocks(
                 parser_state,
                 container_depth,
@@ -253,7 +255,7 @@ class ContainerBlockProcessor:
         if container_depth:
             assert not leaf_tokens
             POGGER.debug(">>>>>>>>$<<<<<<<<<<", line_to_parse)
-            return container_level_tokens, line_to_parse, None
+            return container_level_tokens, line_to_parse, this_bq_count, None
 
         # POGGER.debug_with_visible_whitespace(
         #     ">>__process_list_in_progress>>$>>",
@@ -274,7 +276,7 @@ class ContainerBlockProcessor:
             extracted_whitespace,
         )
         if requeue_line_info:
-            return None, None, requeue_line_info
+            return None, None, None, requeue_line_info
 
         # POGGER.debug_with_visible_whitespace(
         #     ">>__process_list_in_progress>>$>>", line_to_parse
@@ -331,7 +333,7 @@ class ContainerBlockProcessor:
         parser_state.clear_after_leaf_processing()
 
         container_level_tokens.extend(leaf_tokens)
-        return container_level_tokens, line_to_parse, requeue_line_info
+        return container_level_tokens, line_to_parse, this_bq_count, requeue_line_info
         # pylint: enable=too-many-locals
         # pylint: enable=too-many-arguments
         # pylint: enable=too-many-statements
@@ -832,22 +834,24 @@ class ContainerBlockProcessor:
                 POGGER.debug(
                     "check next container_start>nested_container",
                 )
-                adjusted_text_to_parse = (
-                    ContainerBlockProcessor.__look_for_container_blocks(
-                        parser_state,
-                        adj_line_to_parse,
-                        end_container_indices.block_index,
-                        container_depth,
-                        this_bq_count,
-                        position_marker,
-                        parser_properties,
-                    )
+                (
+                    adjusted_text_to_parse,
+                    this_bq_count,
+                ) = ContainerBlockProcessor.__look_for_container_blocks(
+                    parser_state,
+                    adj_line_to_parse,
+                    end_container_indices.block_index,
+                    container_depth,
+                    this_bq_count,
+                    position_marker,
+                    parser_properties,
                 )
             parser_state.set_no_para_start_if_empty()
         return (
             adjusted_text_to_parse,
             leaf_tokens,
             container_level_tokens,
+            this_bq_count,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals, too-many-statements
@@ -963,6 +967,7 @@ class ContainerBlockProcessor:
         (
             produced_inner_tokens,
             line_to_parse,
+            proposed_this_bq_count,
             requeue_line_info,
         ) = ContainerBlockProcessor.parse_line_for_container_blocks(
             parser_state,
@@ -984,9 +989,13 @@ class ContainerBlockProcessor:
             parser_state.token_document,
         )
         POGGER.debug("check next container_start>line_parse>>$", line_to_parse)
+        POGGER.debug("this_bq_count>$", this_bq_count)
+        if proposed_this_bq_count:
+            this_bq_count += proposed_this_bq_count
+        POGGER.debug("this_bq_count>$", this_bq_count)
 
         parser_state.token_document.extend(produced_inner_tokens)
-        return line_to_parse
+        return line_to_parse, this_bq_count
 
     # pylint: enable=too-many-arguments
 
@@ -1322,6 +1331,7 @@ class ContainerBlockProcessor:
         parser.  Debugging should be uncommented only if needed.
         """
         POGGER.debug("Leaf Line:$:", xposition_marker.text_to_parse)
+        # POGGER.debug("this_bq_count:$:", this_bq_count)
         new_tokens = []
 
         # TODO rename to avoid collision with parameter
