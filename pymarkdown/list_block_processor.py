@@ -48,14 +48,15 @@ class ListBlockProcessor:
         if adj_ws is None:
             adj_ws = extracted_whitespace
 
-        adj_ws = ListBlockProcessor.__adjust_whitespace_for_nested_lists(
+        adj_ws, parent_indent = ListBlockProcessor.__adjust_whitespace_for_nested_lists(
             parser_state, adj_ws
         )
         POGGER.debug("skip_whitespace_check>>$", skip_whitespace_check)
         POGGER.debug("len(adj_ws)>>$", len(adj_ws))
+        POGGER.debug("parent_indent>>$", parent_indent)
 
         if (
-            ParserHelper.is_length_less_than_or_equal_to(adj_ws, 3)
+            ParserHelper.is_length_less_than_or_equal_to(adj_ws, 3 + parent_indent)
             or skip_whitespace_check
         ):
             is_start = ListBlockProcessor.__is_start_ulist(
@@ -106,14 +107,14 @@ class ListBlockProcessor:
         if adj_ws is None:
             adj_ws = extracted_whitespace
 
-        adj_ws = ListBlockProcessor.__adjust_whitespace_for_nested_lists(
+        adj_ws, parent_indent = ListBlockProcessor.__adjust_whitespace_for_nested_lists(
             parser_state, adj_ws
         )
         POGGER.debug("skip_whitespace_check>>$", skip_whitespace_check)
         POGGER.debug("len(adj_ws)>>$", len(adj_ws))
 
         if (
-            ParserHelper.is_length_less_than_or_equal_to(adj_ws, 3)
+            ParserHelper.is_length_less_than_or_equal_to(adj_ws, 3 + parent_indent)
             or skip_whitespace_check
         ):
             (
@@ -206,6 +207,7 @@ class ListBlockProcessor:
         POGGER.debug("len(adj_ws)>>$", len(adj_ws))
         POGGER.debug("child_list_token>>$", child_list_token)
         POGGER.debug("parent_list_token>>$", parent_list_token)
+        parent_indent = 0
         if child_list_token and parent_list_token:
             parent_indent = parent_list_token.indent_level
             child_indent = child_list_token.indent_level
@@ -213,7 +215,7 @@ class ListBlockProcessor:
             POGGER.debug("child_indent>>$", child_indent)
             if len(adj_ws) > parent_indent and len(adj_ws) < child_indent:
                 adj_ws = adj_ws[parent_indent:]
-        return adj_ws
+        return adj_ws, parent_indent
 
     @staticmethod
     def __is_start_phase_one(parser_state, line_to_parse, start_index, is_not_one):
