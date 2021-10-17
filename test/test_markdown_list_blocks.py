@@ -265,11 +265,7 @@ def test_list_blocks_237x():
 
     # Act & Assert
     act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        disable_consistency_checks=True,
-        show_debug=True,
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
     )
 
 

@@ -824,6 +824,31 @@ class LeafBlockProcessor:
             and parser_state.token_stack[-1].is_paragraph
             and (this_bq_count == stack_bq_count)
         ):
+            is_paragraph_continuation = False
+            if (
+                len(parser_state.token_stack) > 1
+                and parser_state.token_stack[-2].is_list
+            ):
+                POGGER.debug(
+                    "parser_state.original_line_to_parse>:$:<",
+                    parser_state.original_line_to_parse,
+                )
+                adj_text = position_marker.text_to_parse[position_marker.index_number :]
+                assert parser_state.original_line_to_parse.endswith(adj_text)
+                removed_text_length = len(parser_state.original_line_to_parse) - len(
+                    adj_text
+                )
+                POGGER.debug("removed_text_length>:$:<", removed_text_length)
+                POGGER.debug("adj_text>:$:<", adj_text)
+                POGGER.debug(
+                    "indent_level>:$:<", parser_state.token_stack[-2].indent_level
+                )
+                if (
+                    adj_text
+                    and removed_text_length < parser_state.token_stack[-2].indent_level
+                ):
+                    is_paragraph_continuation = True
+
             _, collected_to_index = ParserHelper.collect_while_character(
                 position_marker.text_to_parse,
                 position_marker.index_number,
@@ -835,7 +860,10 @@ class LeafBlockProcessor:
             ) = ParserHelper.extract_whitespace(
                 position_marker.text_to_parse, collected_to_index
             )
-            if after_whitespace_index == len(position_marker.text_to_parse):
+
+            if not is_paragraph_continuation and after_whitespace_index == len(
+                position_marker.text_to_parse
+            ):
 
                 token_index = len(parser_state.token_document) - 1
                 while not parser_state.token_document[token_index].is_paragraph:
