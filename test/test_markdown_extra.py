@@ -521,6 +521,7 @@ def test_extra_009a():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_extra_010x():
     """
@@ -535,19 +536,30 @@ def test_extra_010x():
 * Second Item
 """
     expected_tokens = [
-        '[ulist(1,1):*::2:]',
-        '[para(1,3):]', '[text(1,3):First Item:]', '[end-para:::True]',
-        '[ulist(2,3):*::4:  ]',
-        '[para(2,5):]', '[text(2,5):First-First:]', '[end-para:::True]',
-        '[li(3,4):5:   :]',
-        '[para(3,6):]', '[text(3,6):First-Second:]', '[end-para:::True]',
-        '[li(4,5):6:    :]',
-        '[para(4,7):]', '[text(4,7):First-Third:]', '[end-para:::True]',
-        '[end-ulist:::True]',
-        '[li(5,1):2::]',
-        '[para(5,3):]', '[text(5,3):Second Item:]', '[end-para:::True]',
-        '[BLANK(6,1):]',
-        '[end-ulist:::True]']
+        "[ulist(1,1):*::2:]",
+        "[para(1,3):]",
+        "[text(1,3):First Item:]",
+        "[end-para:::True]",
+        "[ulist(2,3):*::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):First-First:]",
+        "[end-para:::True]",
+        "[li(3,4):5:   :]",
+        "[para(3,6):]",
+        "[text(3,6):First-Second:]",
+        "[end-para:::True]",
+        "[li(4,5):6:    :]",
+        "[para(4,7):]",
+        "[text(4,7):First-Third:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(5,1):2::]",
+        "[para(5,3):]",
+        "[text(5,3):Second Item:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+    ]
     expected_gfm = """<ul>
 <li>First Item
 <ul>
@@ -562,6 +574,7 @@ def test_extra_010x():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_extra_010a():
     """
@@ -573,7 +586,22 @@ def test_extra_010a():
  * Second Item    
   * Third Item
 """
-    expected_tokens = ['[ulist(1,1):*::2:]', '[para(1,3):]', '[text(1,3):First Item:]', '[end-para:::True]', '[li(2,2):3: :]', '[para(2,4)::    ]', '[text(2,4):Second Item:]', '[end-para:::True]', '[li(3,3):4:  :]', '[para(3,5):]', '[text(3,5):Third Item:]', '[end-para:::True]', '[BLANK(4,1):]', '[end-ulist:::True]']
+    expected_tokens = [
+        "[ulist(1,1):*::2:]",
+        "[para(1,3):]",
+        "[text(1,3):First Item:]",
+        "[end-para:::True]",
+        "[li(2,2):3: :]",
+        "[para(2,4)::    ]",
+        "[text(2,4):Second Item:]",
+        "[end-para:::True]",
+        "[li(3,3):4:  :]",
+        "[para(3,5):]",
+        "[text(3,5):Third Item:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+    ]
     expected_gfm = """<ul>
 <li>First Item</li>
 <li>Second Item</li>
@@ -582,6 +610,7 @@ def test_extra_010a():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_extra_010b():
@@ -597,8 +626,35 @@ def test_extra_010b():
       1. First-Four
 1. Second Item
 """
-    expected_tokens = ['[olist(1,1):.:1:3:]', '[para(1,4):]', '[text(1,4):First Item:]', '[end-para:::True]', '[olist(2,4):.:1:6:   ]',
-'[para(2,7):]', '[text(2,7):First-First:]', '[end-para:::True]', '[li(3,5):7:    :1]', '[para(3,8):]', '[text(3,8):First-Second:]', '[end-para:::True]', '[li(4,6):8:     :1]', '[para(4,9):]', '[text(4,9):First-Third:]', '[end-para:::True]', '[li(5,7):9:      :1]', '[para(5,10):]', '[text(5,10):First-Four:]', '[end-para:::True]', '[end-olist:::True]', '[li(6,1):3::1]', '[para(6,4):]', '[text(6,4):Second Item:]', '[end-para:::True]', '[BLANK(7,1):]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):First Item:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[text(2,7):First-First:]",
+        "[end-para:::True]",
+        "[li(3,5):7:    :1]",
+        "[para(3,8):]",
+        "[text(3,8):First-Second:]",
+        "[end-para:::True]",
+        "[li(4,6):8:     :1]",
+        "[para(4,9):]",
+        "[text(4,9):First-Third:]",
+        "[end-para:::True]",
+        "[li(5,7):9:      :1]",
+        "[para(5,10):]",
+        "[text(5,10):First-Four:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[li(6,1):3::1]",
+        "[para(6,4):]",
+        "[text(6,4):Second Item:]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>First Item
 <ol>
