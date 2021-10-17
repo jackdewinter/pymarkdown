@@ -409,15 +409,9 @@ def test_md030_good_spacing_ol_double_config_1_2():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/good_spacing_ol_double.md:1:1: "
+        "test/resources/rules/md030/good_spacing_ol_double.md:2:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 2; Actual: 1] (list-marker-space)\n"
-        + "test/resources/rules/md030/good_spacing_ol_double.md:2:1: "
-        + "MD030: Spaces after list markers "
-        + "[Expected: 2; Actual: 1] (list-marker-space)\n"
-        + "test/resources/rules/md030/good_spacing_ol_double.md:4:1: "
-        + "MD030: Spaces after list markers "
-        + "[Expected: 2; Actual: 1] (list-marker-space)"
     )
     expected_error = ""
 
@@ -452,7 +446,10 @@ def test_md030_good_spacing_ol_double_config_2_1():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/good_spacing_ol_double.md:3:4: "
+        "test/resources/rules/md030/good_spacing_ol_double.md:1:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 2; Actual: 1] (list-marker-space)\n"
+        + "test/resources/rules/md030/good_spacing_ol_double.md:5:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 2; Actual: 1] (list-marker-space)"
     )
@@ -490,10 +487,7 @@ def test_md030_bad_spacing_ol_double():
         + "test/resources/rules/md030/bad_spacing_ol_double.md:2:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_double.md:3:5: "
-        + "MD030: Spaces after list markers "
-        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_double.md:4:1: "
+        + "test/resources/rules/md030/bad_spacing_ol_double.md:5:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )
@@ -530,7 +524,10 @@ def test_md030_bad_spacing_ol_double_config_1_2():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ol_double.md:3:5: "
+        "test/resources/rules/md030/bad_spacing_ol_double.md:1:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
+        + "test/resources/rules/md030/bad_spacing_ol_double.md:5:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )
@@ -567,13 +564,222 @@ def test_md030_bad_spacing_ol_double_config_2_1():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ol_double.md:1:1: "
+        "test/resources/rules/md030/bad_spacing_ol_double.md:2:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_double.md:2:1: "
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md030_good_spacing_ol_single_nested():
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains nested ordered lists with one space after the marker,
+    single-paragraph and double-paragraph lists.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md030/good_spacing_ol_single_nested.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md030_bad_spacing_ol_single_nested():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains nested ordered lists with two space after the marker,
+    single-paragraph and double-paragraph lists.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md007",
+        "scan",
+        "test/resources/rules/md030/bad_spacing_ol_single_nested.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md030/bad_spacing_ol_single_nested.md:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ol_double.md:4:1: "
+        + "test/resources/rules/md030/bad_spacing_ol_single_nested.md:2:5: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
+        + "test/resources/rules/md030/bad_spacing_ol_single_nested.md:3:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md030_good_spacing_ol_single_nested_double():
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains nested ordered lists with one space after the marker,
+    single-paragraph and nested double-paragraph lists.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md030/good_spacing_ol_single_nested_double.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md030_good_spacing_ol_single_nested_double_2_1():
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains nested ordered lists with one space after the marker,
+    single-paragraph and nested double-paragraph lists.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--set",
+        "plugins.md030.ol_single=$#2",
+        "--set",
+        "plugins.md030.ol_multi=$#1",
+        "--strict-config",
+        "scan",
+        "test/resources/rules/md030/good_spacing_ol_single_nested_double.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md030/good_spacing_ol_single_nested_double.md:4:4: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 2; Actual: 1] (list-marker-space)\n"
+        + "test/resources/rules/md030/good_spacing_ol_single_nested_double.md:7:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 2; Actual: 1] (list-marker-space)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md030_bad_spacing_ol_single_nested_double():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains nested ordered lists with two space after the marker,
+    single-paragraph and nested double-paragraph lists.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md007",
+        "scan",
+        "test/resources/rules/md030/bad_spacing_ol_single_nested_double.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md030/bad_spacing_ol_single_nested_double.md:1:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
+        + "test/resources/rules/md030/bad_spacing_ol_single_nested_double.md:2:5: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
+        + "test/resources/rules/md030/bad_spacing_ol_single_nested_double.md:5:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md030_bad_spacing_ol_single_nested_double_2_1():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains nested ordered lists with two space after the marker,
+    single-paragraph and nested double-paragraph lists.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--set",
+        "plugins.md030.ol_single=$#2",
+        "--set",
+        "plugins.md030.ol_multi=$#1",
+        "--strict-config",
+        "--disable-rules",
+        "md007",
+        "scan",
+        "test/resources/rules/md030/bad_spacing_ol_single_nested_double.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md030/bad_spacing_ol_single_nested_double.md:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )

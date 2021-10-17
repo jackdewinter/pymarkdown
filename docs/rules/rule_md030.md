@@ -48,8 +48,8 @@ The `ol_single` and `ol_multi` configuration values specify the number of space
 characters before text for Ordered List elements, and the `ul_single` and `ul_multi`
 configuration values specify the number of space characters before text for
 Unordered List elements.
-For this rule, a `single` line List Item is one that has text
-only on the line on which that given List Item is started.
+For this rule, a `single` List Item is one that does not contain two or
+more paragraphs and a `double` List Item is one that does contain two or more paragraphs.
 
 Therefore, setting `ul_single` to 2 and `ul_multi` to 1 will cause this list not
 to trigger this rule:
@@ -58,6 +58,8 @@ to trigger this rule:
 + first item
 + second item
   +  inner item
+
+     inner item
 ```
 
 ## Configuration

@@ -10,6 +10,8 @@
 
 - [Changed - Issue 44](https://github.com/jackdewinter/pymarkdown/issues/44)
   - scenario tests: went through every scenario test and validated comment string
+- [Changed - Issue 64](https://github.com/jackdewinter/pymarkdown/issues/64)
+  - rule md030: was not implemented according to specification for "double, changed to do so.
 
 ### Fixed
 

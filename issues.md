@@ -63,8 +63,6 @@ md010 - tabs "converted"
 
 ### 036 needs configuration tests for puncuation and proper
 
-### 030 verify right understanding, maybe adjust docs for single vs multi
-
 ### Rule ???
 
 - is there a rule that can detect a possible front-matter header and trigger?
