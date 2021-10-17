@@ -1028,6 +1028,20 @@ class TransformToMarkdown:
         new_instance.leading_text_index = 0
         self.container_token_stack.append(new_instance)
         print(f">bquote>{ParserHelper.make_value_visible(new_instance)}")
+        print(
+            f">self.container_token_stack>{ParserHelper.make_value_visible(self.container_token_stack)}"
+        )
+
+        already_existing_whitespace = None
+        if len(self.container_token_stack) > 1:
+            if (
+                self.container_token_stack[-2].is_list_start
+                and current_token.line_number
+                == self.container_token_stack[-2].line_number
+            ):
+                already_existing_whitespace = ParserHelper.repeat_string(
+                    " ", self.container_token_stack[-2].indent_level
+                )
 
         print(f">bquote>current_token>{ParserHelper.make_value_visible(current_token)}")
         print(f">bquote>next_token>{ParserHelper.make_value_visible(next_token)}")
@@ -1041,6 +1055,14 @@ class TransformToMarkdown:
             selected_leading_sequence = ""
         else:
             selected_leading_sequence = new_instance.calculate_next_leading_space_part()
+            print(f">bquote>selected_leading_sequence>{selected_leading_sequence}<")
+
+        if already_existing_whitespace and selected_leading_sequence.startswith(
+            already_existing_whitespace
+        ):
+            selected_leading_sequence = selected_leading_sequence[
+                len(already_existing_whitespace) :
+            ]
         return selected_leading_sequence, ""
 
     # pylint: enable=unused-argument

@@ -241,10 +241,11 @@ def test_md028_good_blank_paragraph():
 
 
 @pytest.mark.rules
-@pytest.mark.skip
 def test_md028_bad_split_block_quote_in_list():
     """
-    TBD
+    Test to make sure this rule does trigger with a document that
+    contains two block quotes separated by a blank line, all within
+    a list item.
     """
 
     # Arrange
@@ -255,7 +256,10 @@ def test_md028_bad_split_block_quote_in_list():
     ]
 
     expected_return_code = 1
-    expected_output = ""
+    expected_output = (
+        "test/resources/rules/md028/bad_split_block_quote_in_list.md:2:1: "
+        + "MD028: Blank line inside blockquote (no-blanks-blockquote)"
+    )
     expected_error = ""
 
     # Act

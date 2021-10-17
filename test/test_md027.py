@@ -603,22 +603,27 @@ def test_md027_good_aligned_double_quote():
     )
 
 
-@pytest.mark.skip
 @pytest.mark.rules
 def test_md027_bad_misalligned_quote_within_list():
     """
-    TBD
+    Test to make sure this rule does trigger with a document that
+    contains a block quote with a list and text, with a misaligned block quote.
     """
 
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md032",
         "scan",
         "test/resources/rules/md027/bad_misalligned_quote_within_list.md",
     ]
 
     expected_return_code = 1
-    expected_output = ""
+    expected_output = (
+        "test/resources/rules/md027/bad_misalligned_quote_within_list.md:2:1: "
+        + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
+    )
     expected_error = ""
 
     # Act
@@ -630,11 +635,11 @@ def test_md027_bad_misalligned_quote_within_list():
     )
 
 
-@pytest.mark.skip
 @pytest.mark.rules
 def test_md027_good_aligned_quote_within_list():
     """
-    TBD
+    Test to make sure this rule does not trigger with a document that
+    contains a block quote with a list and text, all properly aligned.
     """
 
     # Arrange
