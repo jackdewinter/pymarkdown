@@ -18,8 +18,9 @@ class RuleMd030(Plugin):
         self.__ol_single = None
         self.__ol_multi = None
         self.__list_stack = None
-        self.__last_non_end_token = None
         self.__list_tokens = None
+        self.__current_list_parent = None
+        self.__paragraph_count_map = None
 
     def get_details(self):
         """
@@ -72,54 +73,44 @@ class RuleMd030(Plugin):
         """
         self.__list_stack = []
         self.__list_tokens = []
-        self.__last_non_end_token = None
-
-    def __is_current_list_multiline(self):
-        is_multiline = False
-        for token_index, list_token in enumerate(self.__list_tokens[-1]):
-            if token_index:
-                delta = (
-                    list_token.line_number
-                    - self.__list_tokens[-1][token_index - 1].line_number
-                )
-                # if self.__debug:
-                #     print(
-                #         "delta="
-                #         + str(delta)
-                #         + ", n->"
-                #         + str(list_token.line_number)
-                #         + ", n-1->"
-                #         + str(self.__list_tokens[-1][token_index - 1].line_number)
-                #     )
-                if delta > 1:
-                    is_multiline = True
-                    break
-        if not is_multiline:
-            delta = (
-                self.__last_non_end_token.line_number
-                - self.__list_tokens[-1][-1].line_number
-            )
-            # if self.__debug:
-            #     print(
-            #         "delta="
-            #         + str(delta)
-            #         + ", n->"
-            #         + str(self.__last_non_end_token.line_number)
-            #         + ", n-1->"
-            #         + str(self.__list_tokens[-1][-1].line_number)
-            #     )
-            is_multiline = delta > 1
-        return is_multiline
+        self.__current_list_parent = None
+        self.__paragraph_count_map = {}
 
     def __handle_list_end(self, context):
-        is_multiline = self.__is_current_list_multiline()
-        # if self.__debug:
-        #     print("is_multiline=" + str(is_multiline))
-        if self.__list_tokens[-1][0].is_ordered_list_start:
-            required_spaces = self.__ol_multi if is_multiline else self.__ol_single
-        else:
-            required_spaces = self.__ul_multi if is_multiline else self.__ul_single
+
         for _, list_token in enumerate(self.__list_tokens[-1]):
+
+            this_list_token_paragraph_count = 0
+            if str(list_token) in self.__paragraph_count_map:
+                this_list_token_paragraph_count = self.__paragraph_count_map[
+                    str(list_token)
+                ]
+            if self.__list_tokens[-1][0].is_ordered_list_start:
+                required_spaces = (
+                    self.__ol_multi
+                    if this_list_token_paragraph_count > 1
+                    else self.__ol_single
+                )
+            else:
+                required_spaces = (
+                    self.__ul_multi
+                    if this_list_token_paragraph_count > 1
+                    else self.__ul_single
+                )
+            # if self.__debug:
+            #     print(">>" + str(list_token))
+            #     print(
+            #         ">>"
+            #         + str(this_list_token_paragraph_count)
+            #         + "..."
+            #         + str(required_spaces)
+            #     )
+            #     print(">>" + str(self.__paragraph_count_map))
+            if str(list_token) in self.__paragraph_count_map:
+                del self.__paragraph_count_map[str(list_token)]
+            # if self.__debug:
+            #     print(">>" + str(self.__paragraph_count_map))
+
             delta = list_token.indent_level - list_token.column_number
             if self.__list_stack[-1].is_ordered_list_start:
                 delta -= len(list_token.list_start_content)
@@ -148,20 +139,37 @@ class RuleMd030(Plugin):
         """
         Event that a new token is being processed.
         """
+        # if self.__debug:
+        #     print(">>>>" + str(token))
+        #     print("parent-->" + str(self.__current_list_parent))
+        #     print("paragraph_count_map-->" + str(self.__paragraph_count_map))
         if token.is_list_start:
             self.__list_stack.append(token)
             self.__list_tokens.append([])
             self.__list_tokens[-1].append(token)
-            self.__last_non_end_token = None
+            self.__current_list_parent = token
         elif token.is_list_end:
             self.__handle_list_end(context)
             del self.__list_stack[-1]
             del self.__list_tokens[-1]
+            self.__current_list_parent = None
+            if self.__list_tokens:
+                # if self.__debug:
+                #     print("__list_stack-->" + str(self.__list_stack))
+                #     print("__list_tokens-->" + str(self.__list_tokens))
+                self.__current_list_parent = self.__list_tokens[-1][-1]
         elif token.is_new_list_item:
             self.__list_tokens[-1].append(token)
-            self.__last_non_end_token = None
-        elif not token.is_end_token:
-            self.__last_non_end_token = token
+            self.__current_list_parent = token
+        elif token.is_paragraph and self.__current_list_parent:
+            new_count = (
+                self.__paragraph_count_map[str(self.__current_list_parent)]
+                if str(self.__current_list_parent) in self.__paragraph_count_map
+                else 0
+            )
+            self.__paragraph_count_map[str(self.__current_list_parent)] = new_count + 1
+        # if self.__debug:
+        #     print("parent-->" + str(self.__current_list_parent))
 
 
 # pylint: enable=too-many-instance-attributes

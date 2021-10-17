@@ -173,7 +173,7 @@ def test_md030_good_spacing_ul_single_with_config_1_2():
     Test to make sure this rule does not trigger with a document that
     contains unordered lists with a single space after the marker,
     with configuration.  ul_multi does not come into effect as all
-    lines are single
+    list items have a single paragraph.
     """
 
     # Arrange
@@ -206,7 +206,8 @@ def test_md030_good_spacing_ul_single_with_config_2_1():
     """
     Test to make sure this rule does trigger with a document that
     contains unordered lists with a single space after the marker,
-    and configuration that applies.
+    and configuration that applies. ul_multi does not come into effect
+    as all list items have a single paragraph.
     """
 
     # Arrange
@@ -287,7 +288,8 @@ def test_md030_bad_spacing_ul_single_config_1_2():
     """
     Test to make sure this rule does trigger with a document that
     contains unordered lists with two spaces after the marker and
-    configuration for multi line lists.
+    configuration for multi line lists.  ul_multi does not come into
+    effect as all list items have a single paragraph.
     """
 
     # Arrange
@@ -329,9 +331,10 @@ def test_md030_bad_spacing_ul_single_config_1_2():
 @pytest.mark.rules
 def test_md030_bad_spacing_ul_single_config_2_1():
     """
-    Test to make sure this rule does not trigger with a document that
-    contains unordered lists with two spaces after the marker,
-    and configuration to make it okay.
+    Test to make sure this rule does not trigger with a document that contains
+    unordered lists with two spaces after the marker, and configuration to make
+    it okay. ul_multi does not come into effect as all list items have a single
+    paragraph.
     """
 
     # Arrange
@@ -364,7 +367,7 @@ def test_md030_bad_spacing_ul_single_config_2_1():
 def test_md030_good_spacing_ul_double():
     """
     Test to make sure this rule does not trigger with a document that
-    contains nested unordered lists with one space after the marker.
+    contains single-paragraph unordered lists with one space after the marker.
     """
 
     # Arrange
@@ -391,7 +394,7 @@ def test_md030_good_spacing_ul_double():
 def test_md030_good_spacing_ul_double_config_1_2():
     """
     Test to make sure this rule does trigger with a document that
-    contains nested unordered lists with one space after the marker,
+    contains single-paragraph unordered lists with one space after the marker,
     and configuration.
     """
 
@@ -409,13 +412,7 @@ def test_md030_good_spacing_ul_double_config_1_2():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/good_spacing_ul_double.md:1:1: "
-        + "MD030: Spaces after list markers "
-        + "[Expected: 2; Actual: 1] (list-marker-space)\n"
-        + "test/resources/rules/md030/good_spacing_ul_double.md:2:1: "
-        + "MD030: Spaces after list markers "
-        + "[Expected: 2; Actual: 1] (list-marker-space)\n"
-        + "test/resources/rules/md030/good_spacing_ul_double.md:4:1: "
+        "test/resources/rules/md030/good_spacing_ul_double.md:2:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 2; Actual: 1] (list-marker-space)"
     )
@@ -434,7 +431,7 @@ def test_md030_good_spacing_ul_double_config_1_2():
 def test_md030_good_spacing_ul_double_config_2_1():
     """
     Test to make sure this rule does trigger with a document that
-    contains nested unordered lists with one space after the marker,
+    contains single-paragraph unordered lists with one space after the marker,
     and configuration.
     """
 
@@ -452,7 +449,10 @@ def test_md030_good_spacing_ul_double_config_2_1():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/good_spacing_ul_double.md:3:3: "
+        "test/resources/rules/md030/good_spacing_ul_double.md:1:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 2; Actual: 1] (list-marker-space)\n"
+        + "test/resources/rules/md030/good_spacing_ul_double.md:5:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 2; Actual: 1] (list-marker-space)"
     )
@@ -471,7 +471,7 @@ def test_md030_good_spacing_ul_double_config_2_1():
 def test_md030_bad_spacing_ul_double():
     """
     Test to make sure this rule does trigger with a document that
-    contains nested unordered lists with two space after the marker.
+    contains single-paragraph unordered lists with two space after the marker.
     """
 
     # Arrange
@@ -492,10 +492,7 @@ def test_md030_bad_spacing_ul_double():
         + "test/resources/rules/md030/bad_spacing_ul_double.md:2:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ul_double.md:3:4: "
-        + "MD030: Spaces after list markers "
-        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ul_double.md:4:1: "
+        + "test/resources/rules/md030/bad_spacing_ul_double.md:5:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )
@@ -514,7 +511,7 @@ def test_md030_bad_spacing_ul_double():
 def test_md030_bad_spacing_ul_double_config_1_2():
     """
     Test to make sure this rule does trigger with a document that
-    contains nested unordered lists with two space after the marker,
+    contains single-paragraph unordered lists with two space after the marker,
     and configuration.
     """
 
@@ -534,7 +531,10 @@ def test_md030_bad_spacing_ul_double_config_1_2():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ul_double.md:3:4: "
+        "test/resources/rules/md030/bad_spacing_ul_double.md:1:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
+        + "test/resources/rules/md030/bad_spacing_ul_double.md:5:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )
@@ -553,7 +553,7 @@ def test_md030_bad_spacing_ul_double_config_1_2():
 def test_md030_bad_spacing_ul_double_config_2_1():
     """
     Test to make sure this rule does trigger with a document that
-    contains nested unordered lists with two space after the marker,
+    contains single-paragraph unordered lists with two space after the marker,
     and configuration.
     """
 
@@ -573,13 +573,222 @@ def test_md030_bad_spacing_ul_double_config_2_1():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md030/bad_spacing_ul_double.md:1:1: "
+        "test/resources/rules/md030/bad_spacing_ul_double.md:2:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ul_double.md:2:1: "
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md030_good_spacing_ul_single_nested():
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains nested unordered lists with one space after the marker,
+    single-paragraph and double-paragraph lists.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md030/good_spacing_ul_single_nested.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md030_bad_spacing_ul_single_nested():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains nested unordered lists with two space after the marker,
+    single-paragraph and double-paragraph lists.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md007",
+        "scan",
+        "test/resources/rules/md030/bad_spacing_ul_single_nested.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md030/bad_spacing_ul_single_nested.md:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)\n"
-        + "test/resources/rules/md030/bad_spacing_ul_double.md:4:1: "
+        + "test/resources/rules/md030/bad_spacing_ul_single_nested.md:2:4: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
+        + "test/resources/rules/md030/bad_spacing_ul_single_nested.md:3:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md030_good_spacing_ul_single_nested_double():
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains nested unordered lists with one space after the marker,
+    single-paragraph and nested double-paragraph lists.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "scan",
+        "test/resources/rules/md030/good_spacing_ul_single_nested_double.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md030_good_spacing_ul_single_nested_double_2_1():
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains nested unordered lists with one space after the marker,
+    single-paragraph and nested double-paragraph lists.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--set",
+        "plugins.md030.ul_single=$#2",
+        "--set",
+        "plugins.md030.ul_multi=$#1",
+        "--strict-config",
+        "scan",
+        "test/resources/rules/md030/good_spacing_ul_single_nested_double.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md030/good_spacing_ul_single_nested_double.md:4:3: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 2; Actual: 1] (list-marker-space)\n"
+        + "test/resources/rules/md030/good_spacing_ul_single_nested_double.md:7:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 2; Actual: 1] (list-marker-space)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md030_bad_spacing_ul_single_nested_double():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains nested unordered lists with two space after the marker,
+    single-paragraph and nested double-paragraph lists.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md007",
+        "scan",
+        "test/resources/rules/md030/bad_spacing_ul_single_nested_double.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md030/bad_spacing_ul_single_nested_double.md:1:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
+        + "test/resources/rules/md030/bad_spacing_ul_single_nested_double.md:2:4: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)\n"
+        + "test/resources/rules/md030/bad_spacing_ul_single_nested_double.md:5:1: "
+        + "MD030: Spaces after list markers "
+        + "[Expected: 1; Actual: 2] (list-marker-space)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md030_bad_spacing_ul_single_nested_double_2_1():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains nested unordered lists with two space after the marker,
+    single-paragraph and nested double-paragraph lists.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--set",
+        "plugins.md030.ul_single=$#2",
+        "--set",
+        "plugins.md030.ul_multi=$#1",
+        "--strict-config",
+        "--disable-rules",
+        "md007",
+        "scan",
+        "test/resources/rules/md030/bad_spacing_ul_single_nested_double.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md030/bad_spacing_ul_single_nested_double.md:1:1: "
         + "MD030: Spaces after list markers "
         + "[Expected: 1; Actual: 2] (list-marker-space)"
     )
