@@ -493,7 +493,6 @@ def test_md005_good_ordered_list_double_level():
 
 
 @pytest.mark.rules
-@pytest.mark.skip
 def test_md005_good_ordered_list_double_level_right():
     """
     Test to make sure this rule does not trigger with a document that
@@ -503,6 +502,8 @@ def test_md005_good_ordered_list_double_level_right():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md029",
         "scan",
         "test/resources/rules/md005/good_ordered_list_double_level_right.md",
     ]
@@ -521,7 +522,6 @@ def test_md005_good_ordered_list_double_level_right():
 
 
 @pytest.mark.rules
-@pytest.mark.skip
 def test_md005_bad_ordered_list_double_level_weirdx():
     """
     Test to make sure this rule does trigger with a document that
@@ -531,12 +531,18 @@ def test_md005_bad_ordered_list_double_level_weirdx():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md029",
         "scan",
         "test/resources/rules/md005/bad_ordered_list_double_level_weird.md",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md005/bad_ordered_list_double_level_weird.md:3:5: "
+        + "MD005: Inconsistent indentation for list items at the same level "
+        + "[Expected: 3; Actual: 4] (list-indent)"
+    )
     expected_error = ""
 
     # Act
@@ -548,7 +554,6 @@ def test_md005_bad_ordered_list_double_level_weirdx():
     )
 
 
-@pytest.mark.skip
 @pytest.mark.rules
 def test_md005_bad_ordered_list_double_level_weirder():
     """
@@ -559,6 +564,8 @@ def test_md005_bad_ordered_list_double_level_weirder():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md029",
         "scan",
         "test/resources/rules/md005/bad_ordered_list_double_level_weirder.md",
     ]
@@ -566,7 +573,7 @@ def test_md005_bad_ordered_list_double_level_weirder():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md005/bad_ordered_list_double_level_weirder.md:3:3: "
-        + "MD005: Inconsistent indentation for list items at the same level [Expected: 3; Actual: 7] (list-indent)"
+        + "MD005: Inconsistent indentation for list items at the same level [Expected: 0; Actual: 2] (list-indent)"
     )
     expected_error = ""
 
