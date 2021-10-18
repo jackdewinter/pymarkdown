@@ -58,6 +58,8 @@ or a change in capitalization is enough to avoid this rule triggering:
 ## Heading Text
 ```
 
+### Siblings
+
 In certain Markdown documents, such as `changelog.md` files, non-sibling
 headings may purposefully have the same text.  As this is the desired
 behavior, the `siblings_only` or `allow_different_nesting` configuration value
@@ -74,6 +76,18 @@ can be set to `True` to allow this Markdown document to not trigger this rule:
 
 ### Features
 ```
+
+Continuing the use of the family analogy, the way to view a sbiling
+relationship is as follows.  If the same heading occurs at the same
+level, it is considered a *twin* heading.  This mirrors a real life
+twin that has the same parents, in this case the heading before
+the twin headings.  And while it might more properly be called
+a *cousin* heading, a *sibling* heading is a heading with the same
+name at the same depth in the heading hierarchy.
+
+Using the change log example above, this relationship is true as
+both occurences of the heading text `Features` occurs in a level
+3 heading under a level 2 heading.
 
 ## Configuration
 

@@ -55,10 +55,6 @@ md010 - tabs "converted"
 
 - commented out `rule_md_027.py#69` for now
 
-### verify test_md024_bad_same_heading_in_siblings_atx_with_configuration
-
-- backwards with config?
-
 ### 036 needs configuration tests for puncuation and proper
 
 ### Rule ???
