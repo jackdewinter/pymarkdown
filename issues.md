@@ -4,12 +4,7 @@
 
 ## Priority 2 - Like To Solve Before Initial
 
-- documentation for developers
-
 - pragma tests need to remove `disable_consistency_checks=True`
-
-- yaml support for front-matter
-  - if front matter is found to be disqualified, send error?
 
 - track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
   - leading_text_index - verify_line_and... ~715
@@ -55,21 +50,29 @@ md010 - tabs "converted"
 
 - commented out `rule_md_027.py#69` for now
 
-### 036 needs configuration tests for puncuation and proper
-
-### Rule ???
-
-- is there a rule that can detect a possible front-matter header and trigger?
-  i.e. something looks like front-matter and should be interpretted as front-matter
-
-### Like To Have
+### Like To Have - Issues
 
 - finish off inline elements for rule 027
-- better globbing for 043
 - md033 - <? and <! with alpha character after
+
 - better solution than `no-space-in-code` for scenario-cases.md
 - take `__consume_text_for_image_alt_text` and other functions like it and move as much as possible into token classes
   - TransformToGfmListLooseness.__handle_block_quote_start
+
+### Like To Have - Features
+
+- documentation for developers
+
+- yaml support for front-matter
+  - if front matter is found to be disqualified, send error?
+
+- dial home to see if there is a newer version
+- better globbing for 043
+
+#### Rule ???
+
+- is there a rule that can detect a possible front-matter header and trigger?
+  i.e. something looks like front-matter and should be interpretted as front-matter
 
 ## Priority 3 - Like To Solve in next 3 m
 

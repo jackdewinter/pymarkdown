@@ -18,6 +18,8 @@
   - rule md023: rule fine, scenario tests running with bad data
 - [Changed - Issue 68](https://github.com/jackdewinter/pymarkdown/issues/68)
   - documentation: added more clear description of sibling
+- [Changed - Issue 70](https://github.com/jackdewinter/pymarkdown/issues/70)
+  - scenario tests: gave better names, added one for configuration
 
 ### Fixed
 
