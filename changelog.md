@@ -10,8 +10,12 @@
 
 - [Changed - Issue 44](https://github.com/jackdewinter/pymarkdown/issues/44)
   - scenario tests: went through every scenario test and validated comment string
+- [Changed - Issue 62](https://github.com/jackdewinter/pymarkdown/issues/62)
+  - parser: not reproducible, but added extra scenario tests to make sure
 - [Changed - Issue 64](https://github.com/jackdewinter/pymarkdown/issues/64)
-  - rule md030: was not implemented according to specification for "double, changed to do so.
+  - rule md030: was not implemented according to specification for "double, changed to do so
+- [Changed - Issue 66](https://github.com/jackdewinter/pymarkdown/issues/66)
+  - rule md023: rule fine, scenario tests running with bad data
 
 ### Fixed
 
@@ -32,8 +36,6 @@
   - parser: when parsing `- > `, did not properly retain new block quote level on return
 - [Fixed - Issue 59](https://github.com/jackdewinter/pymarkdown/issues/59)
   - parser: on line after list item, if started with `===`, would think it was SetExt instead of continuation text.
-- [Fixed - Issue 62](https://github.com/jackdewinter/pymarkdown/issues/62)
-  - parser: not reproducible, but added extra scenario tests to make sure
 
 ## Version 0.9.1 - Date: 2021-10-06
 

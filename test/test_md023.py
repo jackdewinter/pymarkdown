@@ -97,10 +97,10 @@ def test_md023_bad_improper_indent_atx():
 
 
 @pytest.mark.rules
-def test_md023_bad_improper_indent_atx_in_list_item():
+def test_md023_good_proper_indent_atx_in_list_item():
     """
     Test to make sure this rule does not trigger with a document that
-    contains an Atx heading that does not start at the very left in a list item.
+    contains an Atx heading that does start at the very left within a list item.
     """
 
     # Arrange
@@ -109,7 +109,70 @@ def test_md023_bad_improper_indent_atx_in_list_item():
         "--enable-rules",
         "MD023",
         "scan",
+        "test/resources/rules/md023/proper_indent_atx_in_list_item.md",
+    ]
+
+    expected_return_code = 0
+    expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md023_bad_improper_indent_atx_in_list_item():
+    """
+    Test to make sure this rule does trigger with a document that
+    contains an Atx heading that does not start at the very left in a list item.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "MD022,md030",
+        "--enable-rules",
+        "MD023",
+        "scan",
         "test/resources/rules/md023/improper_indent_atx_in_list_item.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md023/improper_indent_atx_in_list_item.md:4:6: "
+        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)"
+    )
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md023_good_proper_indent_atx_in_block_quote():
+    """
+    Test to make sure this rule does not trigger with a document that
+    contains an Atx heading that does start at the very left within a block quote.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--enable-rules",
+        "MD023",
+        "scan",
+        "test/resources/rules/md023/proper_indent_atx_in_block_quote.md",
     ]
 
     expected_return_code = 0
@@ -128,21 +191,26 @@ def test_md023_bad_improper_indent_atx_in_list_item():
 @pytest.mark.rules
 def test_md023_bad_improper_indent_atx_in_block_quote():
     """
-    Test to make sure this rule does not trigger with a document that
+    Test to make sure this rule does trigger with a document that
     contains an Atx heading that does not start at the very left in a block quote.
     """
 
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "MD027",
         "--enable-rules",
         "MD023",
         "scan",
         "test/resources/rules/md023/improper_indent_atx_in_block_quote.md",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md023/improper_indent_atx_in_block_quote.md:3:4: "
+        + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)"
+    )
     expected_error = ""
 
     # Act
