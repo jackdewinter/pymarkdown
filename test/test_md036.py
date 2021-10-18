@@ -10,7 +10,42 @@ from .utils import write_temporary_configuration
 
 
 @pytest.mark.rules
-def test_md036_proper_headings_atx():
+def test_md036_bad_configuration_punctuation():
+    """
+    Test to verify that a configuration error is thrown when supplying the
+    punctuation value with an integer that is not a string.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--set",
+        "plugins.md036.punctuation=$#1",
+        "--strict-config",
+        "scan",
+        "test/resources/rules/md036/proper_headings_atx.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = ""
+    expected_error = (
+        "BadPluginError encountered while configuring plugins:\n"
+        + "The value for property 'plugins.md036.punctuation' must be of type 'str'."
+    )
+
+    # Act
+    execute_results = scanner.invoke_main(
+        arguments=supplied_arguments, suppress_first_line_heading_rule=False
+    )
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md036_good_proper_headings_atx():
     """
     Test to make sure this rule does trigger with a document that
     contains valid Atx Headings and not emphasis.
@@ -37,7 +72,7 @@ def test_md036_proper_headings_atx():
 
 
 @pytest.mark.rules
-def test_md036_proper_headings_setext():
+def test_md036_good_proper_headings_setext():
     """
     Test to make sure this rule does not trigger with a document that
     contains valid SetExt Headings and not emphasis.
@@ -64,7 +99,7 @@ def test_md036_proper_headings_setext():
 
 
 @pytest.mark.rules
-def test_md036_proper_emphasis_with_link():
+def test_md036_good_proper_emphasis_with_link():
     """
     Test to make sure this rule does not trigger with a document that
     contains an emphasis "heading" containing a link.
@@ -91,7 +126,7 @@ def test_md036_proper_emphasis_with_link():
 
 
 @pytest.mark.rules
-def test_md036_proper_emphasis_with_text_then_link():
+def test_md036_good_proper_emphasis_with_text_then_link():
     """
     Test to make sure this rule does not trigger with a document that
     contains an emphasis "heading" containing text and then a link.
@@ -118,7 +153,7 @@ def test_md036_proper_emphasis_with_text_then_link():
 
 
 @pytest.mark.rules
-def test_md036_proper_emphasis_with_text_then_link_then_text():
+def test_md036_good_proper_emphasis_with_text_then_link_then_text():
     """
     Test to make sure this rule does not trigger with a document that
     contains an emphasis "heading" containing text and then a link and then text.
@@ -145,7 +180,7 @@ def test_md036_proper_emphasis_with_text_then_link_then_text():
 
 
 @pytest.mark.rules
-def test_md036_proper_emphasis_with_text_end_emphasis_more_text():
+def test_md036_good_proper_emphasis_with_text_end_emphasis_more_text():
     """
     Test to make sure this rule does not trigger with a document that
     contains an emphasis "heading" containing text in the emphasis and
@@ -173,7 +208,7 @@ def test_md036_proper_emphasis_with_text_end_emphasis_more_text():
 
 
 @pytest.mark.rules
-def test_md036_proper_emphasis_within_text():
+def test_md036_good_proper_emphasis_within_text():
     """
     Test to make sure this rule does not trigger with a document that
     contains a line containing text and emphasis within the line.
@@ -200,7 +235,7 @@ def test_md036_proper_emphasis_within_text():
 
 
 @pytest.mark.rules
-def test_md036_proper_emphasis_within_multiline_text():
+def test_md036_good_proper_emphasis_within_multiline_text():
     """
     Test to make sure this rule does not trigger with a document that
     contains an emphasis "heading", with the emphasis going over 2 lines.
@@ -227,7 +262,7 @@ def test_md036_proper_emphasis_within_multiline_text():
 
 
 @pytest.mark.rules
-def test_md036_proper_emphasis_ending_with_punctuation():
+def test_md036_good_proper_emphasis_ending_with_punctuation():
     """
     Test to make sure this rule does not trigger with a document that
     contains an emphasis "heading" where the text ends with punctuation.
@@ -254,7 +289,7 @@ def test_md036_proper_emphasis_ending_with_punctuation():
 
 
 @pytest.mark.rules
-def test_md036_proper_emphasis_ending_with_punctuation_with_configuration():
+def test_md036_bad_proper_emphasis_ending_with_punctuation_with_configuration():
     """
     Test to make sure this rule does trigger with a document that
     contains an emphasis "heading" ending with punctuation, but not punctuation
@@ -297,7 +332,7 @@ def test_md036_proper_emphasis_ending_with_punctuation_with_configuration():
 
 
 @pytest.mark.rules
-def test_md036_valid_emphasis_headings():
+def test_md036_bad_valid_emphasis_headings():
     """
     Test to make sure this rule does trigger with a document that
     contains a valid emphasis "heading".
@@ -329,7 +364,7 @@ def test_md036_valid_emphasis_headings():
 
 
 @pytest.mark.rules
-def test_md036_valid_emphasis_headings_in_list():
+def test_md036_bad_valid_emphasis_headings_in_list():
     """
     Test to make sure this rule does trigger with a document that
     contains a valid emphasis "heading" in a list.
@@ -361,7 +396,7 @@ def test_md036_valid_emphasis_headings_in_list():
 
 
 @pytest.mark.rules
-def test_md036_valid_emphasis_headings_in_block_quote():
+def test_md036_bad_valid_emphasis_headings_in_block_quote():
     """
     Test to make sure this rule does trigger with a document that
     contains a valid emphasis "heading" in a block quote.
