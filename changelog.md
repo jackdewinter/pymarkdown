@@ -16,6 +16,8 @@
   - rule md030: was not implemented according to specification for "double, changed to do so
 - [Changed - Issue 66](https://github.com/jackdewinter/pymarkdown/issues/66)
   - rule md023: rule fine, scenario tests running with bad data
+- [Changed - Issue 68](https://github.com/jackdewinter/pymarkdown/issues/68)
+  - documentation: added more clear description of sibling
 
 ### Fixed
 
