@@ -35,12 +35,11 @@
   - test_md005_*weird*
 - check for nested within bq and decide how rule should react?
 
-md006 - how works within bq?
-      - two lists in same top-level... same indent?
-      - mixing left and right in same list?
-      - ordered with unordered sub, and unordered with ordered sub
 md010 - tabs "converted"
       - tabs in code blocks
+
+- md005
+  - two lists in same top-level... same indent?
 
 - md005/md007
   - only reporting first?
