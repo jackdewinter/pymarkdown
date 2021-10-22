@@ -13,7 +13,7 @@ class RuleMd006(Plugin):
 
     def __init__(self):
         super().__init__()
-        self.__list_stack = None
+        self.__token_stack = None
 
     def get_details(self):
         """
@@ -33,26 +33,34 @@ class RuleMd006(Plugin):
         """
         Event that the a new file to be scanned is starting.
         """
-        self.__list_stack = []
+        self.__token_stack = []
+
+    def __calculate_expected_indent(self):
+        expected_indent = 0
+        if len(self.__token_stack) > 1:
+            if self.__token_stack[-2].is_block_quote_start:
+                split_spaces = self.__token_stack[-2].leading_spaces.split("\n")
+                expected_indent = len(split_spaces[0]) + (
+                    self.__token_stack[-2].column_number - 1
+                )
+            else:
+                expected_indent = self.__token_stack[-2].indent_level
+        return expected_indent
 
     def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
-        if token.is_unordered_list_start or token.is_ordered_list_start:
-            self.__list_stack.append(token)
-            if (
-                len(self.__list_stack) == 1
-                and self.__list_stack[-1].is_unordered_list_start
-                and self.__list_stack[-1].column_number != 1
-            ):
-                self.report_next_token_error(context, token)
-        elif token.is_unordered_list_end or token.is_ordered_list_end:
-            del self.__list_stack[-1]
+        if token.is_list_start or token.is_block_quote_start:
+            self.__token_stack.append(token)
+            if token.is_unordered_list_start:
+                expected_indent = self.__calculate_expected_indent()
+                if token.column_number != (1 + expected_indent):
+                    self.report_next_token_error(context, token)
+        elif token.is_list_end or token.is_block_quote_end:
+            del self.__token_stack[-1]
         elif token.is_new_list_item:
-            if (
-                len(self.__list_stack) == 1
-                and self.__list_stack[-1].is_unordered_list_start
-                and token.column_number != 1
-            ):
-                self.report_next_token_error(context, token)
+            if self.__token_stack[-1].is_unordered_list_start:
+                expected_indent = self.__calculate_expected_indent()
+                if token.column_number != (1 + expected_indent):
+                    self.report_next_token_error(context, token)

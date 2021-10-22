@@ -85,3 +85,9 @@ as the next Unordered List element starts is at the beginning of the line.
 
 This rule is largely inspired by the MarkdownLint rule
 [MD006](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md006---consider-starting-bulleted-lists-at-the-beginning-of-the-line).
+
+### Differences From MarkdownLint Rule
+
+It is not clear how this rule, which is disabled by default, differs from
+Rule Md007.  To make sure this rule is well-rounded, it has been changed
+to work with nested list blocks and block quotes.
