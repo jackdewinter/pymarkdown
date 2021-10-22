@@ -949,7 +949,7 @@ def test_link_reference_definitions_183f():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_183g():
+def test_link_reference_definitions_183gx():
     """
     Test case 183g:  variation of 183 with it following a list
     """

@@ -7,6 +7,7 @@ from pymarkdown.container_markdown_token import BlockQuoteMarkdownToken
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.parser_helper import ParserHelper, PositionMarker
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.requeue_line_info import RequeueLineInfo
 from pymarkdown.stack_token import (
     BlockQuoteStackToken,
     FencedCodeBlockStackToken,
@@ -95,7 +96,7 @@ class BlockQuoteProcessor:
         return container_level_tokens
 
     # pylint: disable=too-many-arguments
-    # pylint: disable=too-many-locals
+    # pylint: disable=too-many-locals, too-many-branches, too-many-statements
     @staticmethod
     def handle_block_quote_block(
         parser_state,
@@ -105,6 +106,7 @@ class BlockQuoteProcessor:
         this_bq_count,
         stack_bq_count,
         container_start_bq_count,
+        container_depth,
     ):
         """
         Handle the processing of a block quote block.
@@ -142,12 +144,87 @@ class BlockQuoteProcessor:
             "handle_block_quote_block>>was_link_definition_started>:$:<",
             parser_state.token_stack[-1].was_link_definition_started,
         )
+        POGGER.debug(
+            "text_to_parse[index=$:]>:$:<",
+            position_marker.index_number,
+            position_marker.text_to_parse[position_marker.index_number :],
+        )
+        really_start = False
         if BlockQuoteProcessor.is_block_quote_start(
             position_marker.text_to_parse,
             position_marker.index_number,
             extracted_whitespace,
             adj_ws=adj_ws,
         ):
+            really_start = True
+            POGGER.debug(
+                "handle_block_quote_block>>container_depth>:$:<", container_depth
+            )
+            POGGER.debug(
+                "handle_block_quote_block>>token_stack[depth]>:$:<",
+                parser_state.token_stack,
+            )
+            if parser_state.token_stack[-1].is_paragraph:
+                eligible_stack = parser_state.token_stack[1:-1]
+                current_indent = 0
+                eligible_stack_index = 0
+                POGGER.debug(
+                    "handle_block_quote_block>>eligible_stack>:$:<", eligible_stack
+                )
+                continue_matching = True
+                while continue_matching and eligible_stack_index < len(eligible_stack):
+                    if eligible_stack[eligible_stack_index].is_list:
+                        current_indent = eligible_stack[
+                            eligible_stack_index
+                        ].indent_level
+                        if current_indent > position_marker.index_number:
+                            POGGER.debug("BOOYAH")
+                            assert True
+                            (
+                                container_level_tokens,
+                                _,
+                            ) = parser_state.close_open_blocks_fn(
+                                parser_state,
+                                include_block_quotes=True,
+                                include_lists=eligible_stack_index + 1,
+                                until_this_index=-1,
+                                was_forced=True,
+                            )
+                            parser_state.token_document.extend(container_level_tokens)
+                            lines_to_requeue = [position_marker.text_to_parse]
+                            requeue_line_info = RequeueLineInfo(lines_to_requeue, False)
+                            return (
+                                None,
+                                None,
+                                None,
+                                None,
+                                None,
+                                None,
+                                None,
+                                None,
+                                None,
+                                None,
+                                None,
+                                None,
+                                None,
+                                None,
+                                requeue_line_info,
+                            )
+                    else:
+                        assert eligible_stack[eligible_stack_index].is_block_quote
+                        continue_matching = False
+                    eligible_stack_index += 1
+                POGGER.debug(
+                    "eligible_stack_index($) < len(eligible_stack)($)",
+                    eligible_stack_index,
+                    len(eligible_stack),
+                )
+                POGGER.debug("current_indent($)", current_indent)
+                POGGER.debug(
+                    "handle_block_quote_block>>really_start>:$:<", str(really_start)
+                )
+
+        if really_start:
             POGGER.debug("handle_block_quote_block>>block-start")
             (
                 adjusted_text_to_parse,
@@ -233,7 +310,7 @@ class BlockQuoteProcessor:
         )
 
     # pylint: enable=too-many-arguments
-    # pylint: enable=too-many-locals
+    # pylint: enable=too-many-locals, too-many-branches, too-many-statements
 
     @staticmethod
     def __count_block_quote_starts(
@@ -387,6 +464,7 @@ class BlockQuoteProcessor:
 
         POGGER.debug("stack_bq_count--$", stack_bq_count)
         POGGER.debug("token_stack[-1]--$", parser_state.token_stack[-1])
+        POGGER.debug("token_stack--$", parser_state.token_stack)
 
         POGGER.debug(
             "__handle_block_quote_section---$--$--",
@@ -406,6 +484,7 @@ class BlockQuoteProcessor:
             parser_state.token_stack[-1].is_fenced_code_block,
             parser_state.token_stack[-1].is_html_block,
         )
+        POGGER.debug("token_stack--$", parser_state.token_stack)
         POGGER.debug(">>container_start_bq_count>>$", container_start_bq_count)
         POGGER.debug(">>this_bq_count>>$", this_bq_count)
         POGGER.debug(">>stack_bq_count>>$", stack_bq_count)
@@ -462,6 +541,7 @@ class BlockQuoteProcessor:
                 original_start_index,
                 container_start_bq_count,
             )
+            POGGER.debug("token_stack--$", parser_state.token_stack)
             if requeue_line_info:
                 return (
                     None,
@@ -534,12 +614,14 @@ class BlockQuoteProcessor:
             )
             assert stack_index != -1
             found_bq_stack_token = parser_state.token_stack[stack_index]
+            assert found_bq_stack_token
 
             POGGER.debug("__hbqs>>removed_text>>:$:<", removed_text)
             POGGER.debug(
                 "__hbqs>>container_start_bq_count>>$", container_start_bq_count
             )
             POGGER.debug("__hbqs>>original_start_index>>$", original_start_index)
+            POGGER.debug("token_stack--$", parser_state.token_stack)
             adjusted_removed_text = (
                 removed_text[original_start_index:]
                 if container_start_bq_count and original_start_index
@@ -585,6 +667,8 @@ class BlockQuoteProcessor:
                     "__hbqs>>adjusted_removed_text>>:$:<", adjusted_removed_text
                 )
                 # assert False
+            POGGER.debug("token_stack--$", parser_state.token_stack)
+            POGGER.debug("__hbqs>>found_bq_stack_token>>$", found_bq_stack_token)
             POGGER.debug("__hbqs>>bq>>$", found_bq_stack_token.matching_markdown_token)
             found_bq_stack_token.matching_markdown_token.add_leading_spaces(
                 adjusted_removed_text, special_case

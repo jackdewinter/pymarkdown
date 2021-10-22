@@ -621,7 +621,7 @@ def test_md027_bad_misalligned_quote_within_list():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md027/bad_misalligned_quote_within_list.md:2:1: "
+        "test/resources/rules/md027/bad_misalligned_quote_within_list.md:2:3: "
         + "MD027: Multiple spaces after blockquote symbol (no-multiple-space-blockquote)"
     )
     expected_error = ""

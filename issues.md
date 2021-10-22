@@ -20,27 +20,20 @@
   - every ordered tests should have an unordered counterpart
 - make sure that all inline elements treat blank lines properly and have test cases
 
-### if time 270, 271, 237, 238
-
-- with list item
-- start with blank
-- list starts after bq starts
-- varying spaces between bqs
-- no space between bq and following list
-
 ### nested lists
 
 - test_list_blocks_extra_6x, test_list_blocks_extra_6a
   - test_md005_good_ordered_list_double_level_right
   - test_md005_*weird*
 - check for nested within bq and decide how rule should react?
+- 4+ levels of nesting
+  - `test_list_blocks_271fx` and `test_list_blocks_271fa`
 
-md006 - how works within bq?
-      - two lists in same top-level... same indent?
-      - mixing left and right in same list?
-      - ordered with unordered sub, and unordered with ordered sub
 md010 - tabs "converted"
       - tabs in code blocks
+
+- md005
+  - mixing left and right in same list?
 
 - md005/md007
   - only reporting first?
@@ -75,6 +68,8 @@ md010 - tabs "converted"
   i.e. something looks like front-matter and should be interpretted as front-matter
 
 ## Priority 3 - Like To Solve in next 3 m
+
+- scan for `POGGER.debug(` and look for str() and other such things that are not necessary
 
 - md023 - can line 61 search be done more efficiently by looking for `{space}\x02` ?
 - in inline, does `if coalesced_stack and coalesced_stack[-1].is_block_quote_start:` really need

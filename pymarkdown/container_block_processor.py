@@ -126,6 +126,7 @@ class ContainerBlockProcessor:
             stack_bq_count,
             start_index,
             container_start_bq_count,
+            container_depth,
         )
         if requeue_line_info:
             POGGER.debug(">>requeuing lines after looking for block start. returning.")
@@ -171,7 +172,7 @@ class ContainerBlockProcessor:
             return None, None, None, requeue_line_info
         # POGGER.debug("this_bq_count>>$", this_bq_count)
         # POGGER.debug("stack_bq_count>>$", stack_bq_count)
-
+        # POGGER.debug("was_container_start>>$", was_container_start)
         (
             did_process,
             was_container_start,
@@ -206,6 +207,7 @@ class ContainerBlockProcessor:
         # POGGER.debug("last_block_quote_index>>$", last_block_quote_index)
         # POGGER.debug("indices>>$", end_container_indices)
         # POGGER.debug("line_to_parse(after containers)>>$", line_to_parse)
+        # POGGER.debug("was_container_start>>$", was_container_start)
 
         last_list_start_index = 0
         if end_container_indices.block_index != -1:
@@ -224,6 +226,7 @@ class ContainerBlockProcessor:
             )
             # POGGER.debug("this_bq_count>>$", this_bq_count)
             # POGGER.debug("stack_bq_count>>$", stack_bq_count)
+            # POGGER.debug("was_container_start>>$", was_container_start)
             (
                 line_to_parse,
                 leaf_tokens,
@@ -351,6 +354,7 @@ class ContainerBlockProcessor:
         stack_bq_count,
         start_index,
         container_start_bq_count,
+        container_depth,
     ):
         new_position_marker = PositionMarker(
             position_marker.line_number, start_index, position_marker.text_to_parse
@@ -379,13 +383,14 @@ class ContainerBlockProcessor:
             this_bq_count,
             stack_bq_count,
             container_start_bq_count,
+            container_depth,
         )
         # POGGER.debug("container_start_bq_count>>:$", container_start_bq_count)
         # POGGER.debug("this_bq_count>>:$", this_bq_count)
         # POGGER.debug("stack_bq_count>>$", stack_bq_count)
         # POGGER.debug("did_process>>$", did_process)
         POGGER.debug("text>>:$:>>", line_to_parse)
-        POGGER.debug(">>container_level_tokens>>$", container_level_tokens)
+        # POGGER.debug(">>container_level_tokens>>$", container_level_tokens)
         return (
             did_process,
             was_container_start,
@@ -623,6 +628,7 @@ class ContainerBlockProcessor:
         POGGER.debug("index_indent>$<", position_marker.index_indent)
         POGGER.debug("start_index>$<", start_index)
         POGGER.debug("parser_state.nested_list_start>$", parser_state.nested_list_start)
+        POGGER.debug("was_container_start>$", was_container_start)
 
         if was_container_start and position_marker.text_to_parse:
             assert container_depth < 10
