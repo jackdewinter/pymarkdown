@@ -2113,7 +2113,7 @@ def test_list_items_299():
 
 
 @pytest.mark.gfm
-def test_list_items_300():
+def test_list_items_300x():
     """
     Test case 300:  This is a tight list, because the blank line is inside the block quote:
     """

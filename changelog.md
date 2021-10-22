@@ -40,6 +40,11 @@
   - parser: when parsing `- > `, did not properly retain new block quote level on return
 - [Fixed - Issue 59](https://github.com/jackdewinter/pymarkdown/issues/59)
   - parser: on line after list item, if started with `===`, would think it was SetExt instead of continuation text.
+- [Fixed - Issue 72](https://github.com/jackdewinter/pymarkdown/issues/72)
+  - rule md006: was not properly handling block quotes and nested lists
+- [Fixed - Issue 74](https://github.com/jackdewinter/pymarkdown/issues/74)
+  - parser: not handling cases with list then block quote, with only block quote on next line
+  - scenario tests: added extra tests to cover variations on more complex nesting cases
 
 ## Version 0.9.1 - Date: 2021-10-06
 

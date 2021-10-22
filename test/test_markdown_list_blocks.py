@@ -478,6 +478,97 @@ def test_list_blocks_237e():
 
 
 @pytest.mark.gfm
+def test_list_blocks_237f():
+    """
+    Test case 237:  variation of 237 with blank lines before and after
+    """
+
+    # Arrange
+    source_markdown = """
+   > > 1.  one
+>>
+>>     two
+"""
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[block-quote(2,4):   :]",
+        "[block-quote(2,6):   :   > > \n>>\n>> ]",
+        "[olist(2,8):.:1:11:       ]",
+        "[para(2,12):]",
+        "[text(2,12):one:]",
+        "[end-para:::True]",
+        "[BLANK(3,3):]",
+        "[para(4,8):]",
+        "[text(4,8):two:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<ol>
+<li>
+<p>one</p>
+<p>two</p>
+</li>
+</ol>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
+
+
+@pytest.mark.gfm
+def test_list_blocks_237g():
+    """
+    Test case 237:  variation of 237 where bq starts before
+    """
+
+    # Arrange
+    source_markdown = """ >   >
+   > > 1.  one
+>>
+>>     two"""
+    expected_tokens = [
+        "[block-quote(1,2): : > ]",
+        "[block-quote(1,6):: >   >\n   > > \n>>\n>> ]",
+        "[BLANK(1,7):]",
+        "[BLANK(1,7):]",
+        "[olist(2,8):.:1:11:       ]",
+        "[para(2,12):]",
+        "[text(2,12):one:]",
+        "[end-para:::True]",
+        "[BLANK(3,3):]",
+        "[para(4,8):]",
+        "[text(4,8):two:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<ol>
+<li>
+<p>one</p>
+<p>two</p>
+</li>
+</ol>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
+
+
+@pytest.mark.gfm
 def test_list_blocks_238():
     """
     Test case 238:  The converse is also possible. In the following example, the word two occurs far to the right of the initial text of the list item, one, but it is not considered part of the list item, because it is not indented far enough past the blockquote marker:
@@ -555,6 +646,88 @@ def test_list_blocks_238a():
     act_and_assert(
         source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
     )
+
+
+@pytest.mark.gfm
+def test_list_blocks_238b():
+    """
+    Test case 238:  variation of 238 with blanks before and after
+    """
+
+    # Arrange
+    source_markdown = """
+>>- one
+>>
+  >  > two
+"""
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[block-quote(2,1)::]",
+        "[block-quote(2,2)::>>\n>>\n  >  > \n]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):one:]",
+        "[end-para:::True]",
+        "[end-ulist:::False]",
+        "[BLANK(3,3):]",
+        "[para(4,8):]",
+        "[text(4,8):two:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(5,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<ul>
+<li>one</li>
+</ul>
+<p>two</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_238c():
+    """
+    Test case 238:  variation of 238 where bq starts before
+    """
+
+    # Arrange
+    source_markdown = """>>
+>>- one
+>>
+  >  > two"""
+    expected_tokens = [
+        "[block-quote(1,1)::]",
+        "[block-quote(1,2)::>>\n>>\n>>\n  >  > ]",
+        "[BLANK(1,3):]",
+        "[ulist(2,3):-::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):one:]",
+        "[end-para:::True]",
+        "[end-ulist:::False]",
+        "[BLANK(3,3):]",
+        "[para(4,8):]",
+        "[text(4,8):two:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<blockquote>
+<ul>
+<li>one</li>
+</ul>
+<p>two</p>
+</blockquote>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2260,7 +2433,7 @@ the two lines.</li>
 
 
 @pytest.mark.gfm
-def test_list_blocks_270():
+def test_list_blocks_270x():
     """
     Test case 270:  (part 1) These examples show how laziness can work in nested structures:
     """
@@ -2295,7 +2468,118 @@ continued here.</p>
 
 
 @pytest.mark.gfm
-def test_list_blocks_271():
+def test_list_blocks_270a():
+    """
+    Test case 270a: variation of 270 that starts and stops with a blank
+    """
+
+    # Arrange
+    source_markdown = """
+> 1. > Blockquote
+continued here.
+"""
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[block-quote(2,1)::> ]",
+        "[olist(2,3):.:1:5:  :]",
+        "[block-quote(2,6)::> \n\n]",
+        "[para(2,8):\n]",
+        "[text(2,8):Blockquote\ncontinued here.::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<blockquote>
+<p>Blockquote
+continued here.</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_270b():
+    """
+    Test case 270a: variation of 270 with a list item
+    """
+
+    # Arrange
+    source_markdown = """1. > 1. Blockquote
+continued here."""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[block-quote(1,4):   :   > ]",
+        "[olist(1,6):.:1:8:     :]",
+        "[para(1,9):\n]",
+        "[text(1,9):Blockquote\ncontinued here.::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<ol>
+<li>Blockquote
+continued here.</li>
+</ol>
+</blockquote>
+</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_270c():
+    """
+    Test case 270:  variation where bq starts before
+    """
+
+    # Arrange
+    source_markdown = """>
+> 1. > Blockquote
+continued here."""
+    expected_tokens = [
+        "[block-quote(1,1)::>\n> ]",
+        "[BLANK(1,2):]",
+        "[olist(2,3):.:1:5:  :]",
+        "[block-quote(2,6)::> \n]",
+        "[para(2,8):\n]",
+        "[text(2,8):Blockquote\ncontinued here.::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<blockquote>
+<p>Blockquote
+continued here.</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_271x():
     """
     Test case 271:  (part 2) These examples show how laziness can work in nested structures:
     """
@@ -2323,6 +2607,280 @@ continued here.</p>
 </blockquote>
 </li>
 </ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_271a():
+    """
+    Test case 271a:  variation of 271 with blank line before and after
+    """
+
+    # Arrange
+    source_markdown = """
+> 1. > Blockquote
+> continued here.
+"""
+    expected_tokens = [
+        "[BLANK(1,1):]",
+        "[block-quote(2,1)::> ]",
+        "[olist(2,3):.:1:5:  ]",
+        "[block-quote(2,6)::> \n> \n]",
+        "[para(2,8):\n]",
+        "[text(2,8):Blockquote\ncontinued here.::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<blockquote>
+<p>Blockquote
+continued here.</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_271b():
+    """
+    Test case 271:  variation of 271 with list item
+    """
+
+    # Arrange
+    source_markdown = """1. > 1. Blockquote
+> continued here."""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[block-quote(1,4):   :   > ]",
+        "[olist(1,6):.:1:8:     ]",
+        "[para(1,9):]",
+        "[text(1,9):Blockquote:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[block-quote(2,1)::> ]",
+        "[para(2,3):]",
+        "[text(2,3):continued here.:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<ol>
+<li>Blockquote</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>continued here.</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_271c():
+    """
+    Test case 271:  variation where bq starts before
+    """
+
+    # Arrange
+    source_markdown = """>
+> 1. > Blockquote
+> continued here."""
+    expected_tokens = [
+        "[block-quote(1,1)::>\n> ]",
+        "[BLANK(1,2):]",
+        "[olist(2,3):.:1:5:  ]",
+        "[block-quote(2,6)::> \n> ]",
+        "[para(2,8):\n]",
+        "[text(2,8):Blockquote\ncontinued here.::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<blockquote>
+<p>Blockquote
+continued here.</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_271d():
+    """
+    Test case 271:  variation of 271b without base list item
+    """
+
+    # Arrange
+    source_markdown = """> 1. Blockquote
+> continued here."""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[olist(1,3):.:1:5:  ]",
+        "[para(1,6):\n]",
+        "[text(1,6):Blockquote\ncontinued here.::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>Blockquote
+continued here.</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_271e():
+    """
+    Test case 271:  variation of 271b without inner list item
+    """
+
+    # Arrange
+    source_markdown = """1. > Blockquote
+> continued here."""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[block-quote(1,4):   :   > \n]",
+        "[para(1,6):]",
+        "[text(1,6):Blockquote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[block-quote(2,1)::> ]",
+        "[para(2,3):]",
+        "[text(2,3):continued here.:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<p>Blockquote</p>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>continued here.</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_list_blocks_271fx():
+    """
+    Test case 271:  variation of 271e with extra nesting
+    """
+
+    # Arrange
+    source_markdown = """1. > 1. > Blockquote
+> continued here."""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[block-quote(1,4):   :   > \n]",
+        "[para(1,6):]",
+        "[text(1,6):Blockquote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[block-quote(2,1)::> ]",
+        "[para(2,3):]",
+        "[text(2,3):continued here.:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<ol>
+<li>
+<blockquote>
+<p>Blockquote</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>continued here.</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_list_blocks_271fa():
+    """
+    Test case 271:  variation of 271e with extra nesting
+    """
+
+    # Arrange
+    source_markdown = """1. > 1. > Blockquote"""
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[block-quote(1,4):   :   > \n]",
+        "[para(1,6):]",
+        "[text(1,6):Blockquote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[block-quote(2,1)::> ]",
+        "[para(2,3):]",
+        "[text(2,3):continued here.:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>
+<blockquote>
+<ol>
+<li>
+<blockquote>
+<p>Blockquote</p>
+</blockquote>
+</li>
+</ol>
+</blockquote>
+</li>
+</ol>
+<blockquote>
+<p>continued here.</p>
 </blockquote>"""
 
     # Act & Assert
