@@ -769,3 +769,91 @@ dd</p>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_012():
+    """
+    Unordered lists, nested within each other with weird indents.
+    """
+
+    # Arrange
+    source_markdown = """This is a test
+
+ * this is level 1
+ * this is also level 1
+   * this is level 2
+   * this is also level 2
+      * this is level 3
+   * this is also level 2
+    * this is also level 2
+    * this is also level 2
+* this is also level 1
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):This is a test:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[ulist(3,2):*::3: ]",
+        "[para(3,4):]",
+        "[text(3,4):this is level 1:]",
+        "[end-para:::True]",
+        "[li(4,2):3: :]",
+        "[para(4,4):]",
+        "[text(4,4):this is also level 1:]",
+        "[end-para:::True]",
+        "[ulist(5,4):*::5:   ]",
+        "[para(5,6):]",
+        "[text(5,6):this is level 2:]",
+        "[end-para:::True]",
+        "[li(6,4):5:   :]",
+        "[para(6,6):]",
+        "[text(6,6):this is also level 2:]",
+        "[end-para:::True]",
+        "[ulist(7,7):*::8:      ]",
+        "[para(7,9):]",
+        "[text(7,9):this is level 3:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(8,4):5:   :]",
+        "[para(8,6):]",
+        "[text(8,6):this is also level 2:]",
+        "[end-para:::True]",
+        "[li(9,5):6:    :]",
+        "[para(9,7):]",
+        "[text(9,7):this is also level 2:]",
+        "[end-para:::True]",
+        "[li(10,5):6:    :]",
+        "[para(10,7):]",
+        "[text(10,7):this is also level 2:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(11,1):2::]",
+        "[para(11,3):]",
+        "[text(11,3):this is also level 1:]",
+        "[end-para:::True]",
+        "[BLANK(12,1):]",
+        "[end-ulist:::True]",
+    ]
+    expected_gfm = """<p>This is a test</p>
+<ul>
+<li>this is level 1</li>
+<li>this is also level 1
+<ul>
+<li>this is level 2</li>
+<li>this is also level 2
+<ul>
+<li>this is level 3</li>
+</ul>
+</li>
+<li>this is also level 2</li>
+<li>this is also level 2</li>
+<li>this is also level 2</li>
+</ul>
+</li>
+<li>this is also level 1</li>
+</ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)

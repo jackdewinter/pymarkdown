@@ -564,6 +564,7 @@ def test_md005_bad_ordered_list_double_level_weirder():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--stack-trace",
         "--disable-rules",
         "md029",
         "scan",
