@@ -35,6 +35,19 @@ class RuleMd005(Plugin):
         """
         self.__list_stack = []
 
+    def __report_issue(self, context, token):
+        current_list_indent = len(self.__list_stack[-1].extracted_whitespace)
+        token_indent = len(token.extracted_whitespace)
+        expected_indent = (
+            len(self.__list_stack[-2].extracted_whitespace)
+            if token_indent <= current_list_indent
+            and len(self.__list_stack) > 1
+            and self.__list_stack[-2].is_list_start
+            else current_list_indent
+        )
+        extra_data = f"Expected: {expected_indent}; Actual: {token_indent}"
+        self.report_next_token_error(context, token, extra_data)
+
     def next_token(self, context, token):
         """
         Event that a new token is being processed.
@@ -46,8 +59,7 @@ class RuleMd005(Plugin):
         elif token.is_new_list_item:
             if self.__list_stack[-1].is_unordered_list_start:
                 if self.__list_stack[-1].indent_level != token.indent_level:
-                    extra_data = f"Expected: {len(self.__list_stack[-1].extracted_whitespace)}; Actual: {len(token.extracted_whitespace)}"
-                    self.report_next_token_error(context, token, extra_data)
+                    self.__report_issue(context, token)
             elif self.__list_stack[-1].column_number != token.column_number:
                 original_text = self.__list_stack[-1].list_start_content
                 if self.__list_stack[-1].extracted_whitespace:
@@ -59,5 +71,4 @@ class RuleMd005(Plugin):
                 if original_text_length == current_prefix_length:
                     assert token.indent_level == self.__list_stack[-1].indent_level
                 else:
-                    extra_data = f"Expected: {len(self.__list_stack[-1].extracted_whitespace)}; Actual: {len(token.extracted_whitespace)}"
-                    self.report_next_token_error(context, token, extra_data)
+                    self.__report_issue(context, token)

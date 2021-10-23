@@ -5,6 +5,8 @@ from test.markdown_scanner import MarkdownScanner
 
 import pytest
 
+# pylint: disable=too-many-lines
+
 
 @pytest.mark.rules
 def test_md007_bad_configuration_indent():
@@ -887,6 +889,60 @@ def test_md007_good_unordered_list_elements():
 
     expected_return_code = 0
     expected_output = ""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
+@pytest.mark.rules
+def test_md007_bad_unordered_list_elements():
+    """
+    Test to make sure this rule does trigger with a document that has
+    many nested unordered lists, most of them improperly indented.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner()
+    supplied_arguments = [
+        "--disable-rules",
+        "md005",
+        "scan",
+        "test/resources/rules/md007/bad_unordered_list_elements.md",
+    ]
+
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md007/bad_unordered_list_elements.md:3:2: "
+        + "MD007: Unordered list indentation "
+        + "[Expected: 0, Actual=1] (ul-indent)\n"
+        + "test/resources/rules/md007/bad_unordered_list_elements.md:4:2: "
+        + "MD007: Unordered list indentation "
+        + "[Expected: 0, Actual=1] (ul-indent)\n"
+        + "test/resources/rules/md007/bad_unordered_list_elements.md:5:4: "
+        + "MD007: Unordered list indentation "
+        + "[Expected: 2, Actual=3] (ul-indent)\n"
+        + "test/resources/rules/md007/bad_unordered_list_elements.md:6:4: "
+        + "MD007: Unordered list indentation "
+        + "[Expected: 2, Actual=3] (ul-indent)\n"
+        + "test/resources/rules/md007/bad_unordered_list_elements.md:7:7: "
+        + "MD007: Unordered list indentation "
+        + "[Expected: 4, Actual=6] (ul-indent)\n"
+        + "test/resources/rules/md007/bad_unordered_list_elements.md:8:4: "
+        + "MD007: Unordered list indentation "
+        + "[Expected: 2, Actual=3] (ul-indent)\n"
+        + "test/resources/rules/md007/bad_unordered_list_elements.md:9:5: "
+        + "MD007: Unordered list indentation "
+        + "[Expected: 2, Actual=4] (ul-indent)\n"
+        + "test/resources/rules/md007/bad_unordered_list_elements.md:10:5: "
+        + "MD007: Unordered list indentation "
+        + "[Expected: 2, Actual=4] (ul-indent)"
+    )
     expected_error = ""
 
     # Act

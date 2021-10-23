@@ -1217,16 +1217,23 @@ class ListBlockProcessor:
 
                 # assert parser_state.token_stack[-2].is_list
 
+                last_stack_depth_index = last_stack_depth - 1
                 POGGER.debug(
-                    "(current_start_index>$ < last_stack_depth>$) and allow_list_removal>$",
+                    "(current_start_index>$ < last_stack_depth_index>$) and allow_list_removal>$",
                     current_start_index,
-                    last_stack_depth,
+                    last_stack_depth_index,
                     allow_list_removal,
                 )
-                while current_start_index < last_stack_depth and allow_list_removal:
+                while (
+                    current_start_index < last_stack_depth_index and allow_list_removal
+                ):
                     last_stack_index = parser_state.token_stack.index(
                         parser_state.token_stack[-1]
                     )
+                    POGGER.debug(
+                        "parser_state.token_stack>>$", parser_state.token_stack
+                    )
+                    POGGER.debug("last_stack_index>>$", last_stack_index)
                     close_tokens, _ = parser_state.close_open_blocks_fn(
                         parser_state,
                         until_this_index=last_stack_index,
@@ -1236,10 +1243,11 @@ class ListBlockProcessor:
                     balancing_tokens.extend(close_tokens)
                     POGGER.debug("close_tokens>>$", close_tokens)
                     last_stack_depth = parser_state.token_stack[-1].ws_before_marker
+                    last_stack_depth_index = last_stack_depth - 1
                     POGGER.debug(
-                        "current_start_index>$, last_stack_depth>$",
+                        "current_start_index>$, last_stack_depth_index>$",
                         current_start_index,
-                        last_stack_depth,
+                        last_stack_depth_index,
                     )
 
             return True, True

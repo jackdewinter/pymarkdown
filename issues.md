@@ -35,7 +35,7 @@ md010 - tabs "converted"
 - md005
   - mixing left and right in same list?
 
-- md005/md007
+- md005
   - only reporting first?
   - need more comprehensive tests like test_extra_008x
 
@@ -62,12 +62,12 @@ md010 - tabs "converted"
 - dial home to see if there is a newer version
 - better globbing for 043
 
-#### Rule ???
+## Priority 3 - Like To Solve in next 3 m
+
+### Rule ???
 
 - is there a rule that can detect a possible front-matter header and trigger?
   i.e. something looks like front-matter and should be interpretted as front-matter
-
-## Priority 3 - Like To Solve in next 3 m
 
 - scan for `POGGER.debug(` and look for str() and other such things that are not necessary
 
