@@ -14,8 +14,8 @@ Inconsistent indentation for list items at the same level.
 ### Readability
 
 While the parsing engines do not usually have any problems with inconsistent
-starting indentation for List elements, a human reader of the same document will
-encounter difficulty with shifting starting positions.  By enforcing the items
+starting indentation for List elements, a human reader of the same list element
+will encounter difficulty with shifting starting positions.  By enforcing the items
 within a List element to start at predictable locations, the human reader will
 be able to read the document with less difficulty.
 
@@ -34,9 +34,9 @@ the indentation either matches up or not:
 ```
 
 A failure for this rule for Ordered List elements is a bit more nuanced as this
-rule supports both left aligned and right aligned.  That means that either the
-first character must match the indentation of the list or the list delimiter
-character (`.` or `)`) must match.  Therefore
+rule supports both left aligned and right aligned list.  That means that either
+the first character must match the indentation of the list or the list delimiter
+character (`.` or `)`) must match.  Therefore:
 
 ```Markdown
 1. First item
@@ -46,11 +46,28 @@ character (`.` or `)`) must match.  Therefore
 fails because neither the first character's indentation nor the delimiter
 character's indentation matches.
 
+A slightly more nuanced failure scenario involved the combining of multiple
+types of alignment within Ordered Sublists.  For example:
+
+```Markdown
+1. Item 1
+   1. Item 1a
+   10. Item 1b
+2. Item 2
+    1. Item 2a
+   10. Item 2b
+```
+
+triggers this rule as the sublist within `Item 1` is left aligned while the
+sublist within `Item 2` is right aligned.  Therefore, the alignment of the list
+is determined by the `Item 1` list and the `Item 2a` list item is out of
+alignment.
+
 ### Correct Scenarios
 
 This rule does not trigger under two groups of scenarios.  The first
 group of scenarios occur when every Unordered List Start in the
-document is the same, regardless of whether they are lists or sublists:
+same root list is the same, regardless of whether they are lists or sublists:
 
 ```Markdown
 * Item 1
@@ -108,3 +125,11 @@ of the start of an Ordered List.
 
 This rule is largely inspired by the MarkdownLint rule
 [MD005](https://github.com/DavidAnson/markdownlint/blob/main/doc/Rules.md#md005---inconsistent-indentation-for-list-items-at-the-same-level).
+
+### Differences From MarkdownLint Rule
+
+The original rule did not make any distinctions between alignment outside
+of the specific list that is was examining.  As such, it was possible to
+have a list containing sublists that mixed left aligned lists with right
+aligned lists.  This rule resets its notion of the proper alignment for
+Ordered Lists when the base List element is closed.

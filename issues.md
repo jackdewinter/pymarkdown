@@ -32,13 +32,6 @@
 md010 - tabs "converted"
       - tabs in code blocks
 
-- md005
-  - mixing left and right in same list?
-
-- md005
-  - only reporting first?
-  - need more comprehensive tests like test_extra_008x
-
 ### bad_split_block_quote_in_list
 
 - commented out `rule_md_027.py#69` for now
@@ -68,6 +61,9 @@ md010 - tabs "converted"
 
 - is there a rule that can detect a possible front-matter header and trigger?
   i.e. something looks like front-matter and should be interpretted as front-matter
+- within a given list or block quote, should only have one pattern of container tokens
+
+### Other
 
 - scan for `POGGER.debug(` and look for str() and other such things that are not necessary
 

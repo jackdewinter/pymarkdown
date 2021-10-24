@@ -45,6 +45,12 @@
 - [Fixed - Issue 74](https://github.com/jackdewinter/pymarkdown/issues/74)
   - parser: not handling cases with list then block quote, with only block quote on next line
   - scenario tests: added extra tests to cover variations on more complex nesting cases
+- [Fixed - Issue 76](https://github.com/jackdewinter/pymarkdown/issues/76)
+  - scenario tests: added extra test to cover missing variations
+  - parser: was not handle the unwinding of lists properly in one case due to off-by-one error
+- [Fixed - Issue 79](https://github.com/jackdewinter/pymarkdown/issues/79)
+  - scenario tests: added extra test to cover missing variations
+  - rule Md005: rewritten to respond to ordered lists better
 
 ## Version 0.9.1 - Date: 2021-10-06
 
