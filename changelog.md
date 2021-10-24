@@ -8,6 +8,28 @@
 
 ### Changed
 
+- None
+
+### Fixed
+
+- None
+
+## Version 0.9.2 - Date: 2021-10-24
+
+This was a point release to make several new features and fixed
+issues to be released.  While the full descriptions are below,
+here are some highlights:
+
+- Fixed issue with PyMarkdown scripts not having correct permissions
+- Added more scenario tests and verified that those worked
+- Fixed small issues with parser and rules, mostly boundary cases
+
+### Added
+
+- None
+
+### Changed
+
 - [Changed - Issue 44](https://github.com/jackdewinter/pymarkdown/issues/44)
   - scenario tests: went through every scenario test and validated comment string
 - [Changed - Issue 62](https://github.com/jackdewinter/pymarkdown/issues/62)
