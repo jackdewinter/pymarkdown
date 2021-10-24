@@ -48,6 +48,8 @@
 - [Fixed - Issue 76](https://github.com/jackdewinter/pymarkdown/issues/76)
   - scenario tests: added extra test to cover missing variations
   - parser: was not handle the unwinding of lists properly in one case due to off-by-one error
+- [Fixed - Issue 77](https://github.com/jackdewinter/pymarkdown/issues/77)
+  - command line: scripts not interfacing properly on linux systems
 - [Fixed - Issue 79](https://github.com/jackdewinter/pymarkdown/issues/79)
   - scenario tests: added extra test to cover missing variations
   - rule Md005: rewritten to respond to ordered lists better

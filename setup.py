@@ -3,7 +3,6 @@ Setup file for the PyMarkdown project.
 """
 
 import runpy
-from distutils import util
 
 from setuptools import setup
 
@@ -21,15 +20,6 @@ def get_semantic_version():
 def load_readme_file():
     with open("README.md", "r") as readme_file:
         return readme_file.read()
-
-
-def ensure_scripts(linux_scripts):
-    """
-    Creates the proper script names required for each platform (taken from PyLint)
-    """
-    if util.get_platform()[:3] == "win":
-        return linux_scripts + [script + ".bat" for script in linux_scripts]
-    return linux_scripts
 
 
 AUTHOR = "Jack De Winter"
@@ -61,7 +51,6 @@ PACKAGE_MODULES = [
     "pymarkdown.plugins",
     "pymarkdown.resources",
 ]
-PACKAGE_SCRIPTS = ensure_scripts(["scripts/pymarkdown"])
 
 setup(
     name=PACKAGE_NAME,
@@ -78,7 +67,12 @@ setup(
     long_description_content_type=LONG_DESCRIPTION_CONTENT_TYPE,
     keywords=KEYWORDS,
     classifiers=PROJECT_CLASSIFIERS,
-    scripts=PACKAGE_SCRIPTS,
+    entry_points={
+        "console_scripts": [
+            "pymarkdown=pymarkdown.__main__:main",
+            "pymarkdownlnt=pymarkdown.__main__:main",
+        ],
+    },
     packages=PACKAGE_MODULES,
     include_package_data=True,
 )

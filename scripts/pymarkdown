@@ -1,7 +1,0 @@
-#!/usr/bin/env python
-
-# This script provides a simple interface to the PyMarkdown project.
-
-from pymarkdown import PyMarkdownLint
-
-PyMarkdownLint().main()
