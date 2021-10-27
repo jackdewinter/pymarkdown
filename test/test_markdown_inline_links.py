@@ -25,7 +25,9 @@ def test_inline_links_493x():
     expected_gfm = """<p><a href="/uri" title="title">link</a></p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    #
+    # NOTE: The `show_debug` is present to allow for extra coverage of the link_helper module.
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm

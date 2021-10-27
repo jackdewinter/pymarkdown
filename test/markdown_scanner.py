@@ -9,6 +9,7 @@ from test.pytest_execute import InProcessExecution
 sys.path.insert(0, os.path.abspath("pymarkdown"))  # isort:skip
 # pylint: disable=wrong-import-position
 from pymarkdown.main import PyMarkdownLint  # isort:skip
+from pymarkdown.__main__ import main
 
 # pylint: enable=wrong-import-position
 
@@ -18,8 +19,10 @@ class MarkdownScanner(InProcessExecution):
     Class to provide for a local instance of an InProcessExecution class.
     """
 
-    def __init__(self, use_module=False):
+    def __init__(self, use_module=False, use_main=False):
         super().__init__()
+        self.__use_main = use_main
+
         self.__entry_point = "__main.py__" if use_module else "main.py"
         resource_directory = os.path.join(os.getcwd(), "test", "resources")
         assert os.path.exists(resource_directory)
@@ -27,7 +30,10 @@ class MarkdownScanner(InProcessExecution):
         self.resource_directory = resource_directory
 
     def execute_main(self):
-        PyMarkdownLint().main()
+        if self.__use_main:
+            main()
+        else:
+            PyMarkdownLint().main()
 
     def get_main_name(self):
         return self.__entry_point
