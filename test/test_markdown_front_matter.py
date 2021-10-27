@@ -3,6 +3,8 @@ Tests for the optional front-matter processing
 """
 import pytest
 
+from pymarkdown.bad_tokenization_error import BadTokenizationError
+
 from .utils import act_and_assert
 
 config_map = {"extensions": {"front-matter": {"enabled": True}}}
@@ -528,3 +530,31 @@ Title: my document
     act_and_assert(
         source_markdown, expected_gfm, expected_tokens, config_map=config_map
     )
+
+
+@pytest.mark.gfm
+def test_front_matter_20():
+    """
+    This is an extension of test_front_matter_18. If a blank line is encountered
+    before the end marker, but before a field name and indented by at least 4 spaces,
+    the front matter is no longer valid.
+    """
+
+    # Arrange
+    source_markdown = """---
+test: assert
+---
+"""
+    expected_tokens = []
+    expected_gfm = ""
+
+    # Act & Assert
+    try:
+        act_and_assert(
+            source_markdown, expected_gfm, expected_tokens, config_map=config_map
+        )
+        assert False, "An exception should have been thrown before this point."
+    except BadTokenizationError as this_error:
+        assert (
+            str(this_error) == "An unhandled error occurred processing the document."
+        ), "message=" + str(this_error)

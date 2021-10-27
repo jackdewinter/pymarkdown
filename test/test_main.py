@@ -133,6 +133,64 @@ optional arguments:
     )
 
 
+def test_markdown_with_no_parameters_through_main():
+    """
+    Test to make sure we get the simple information if no parameters are supplied,
+    but through the main interface.
+    """
+
+    # Arrange
+    scanner = MarkdownScanner(use_main=True)
+    supplied_arguments = []
+
+    expected_return_code = 2
+    expected_output = """usage: main.py [-h] [-e ENABLE_RULES] [-d DISABLE_RULES]
+               [--add-plugin ADD_PLUGIN] [--config CONFIGURATION_FILE]
+               [--set SET_CONFIGURATION] [--strict-config] [--stack-trace]
+               [--log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}]
+               [--log-file LOG_FILE]
+               {plugins,extensions,scan,version} ...
+
+Lint any found Markdown files.
+
+positional arguments:
+  {plugins,extensions,scan,version}
+    plugins             plugin commands
+    extensions          extension commands
+    scan                scan the Markdown files in the specified paths
+    version             version of the application
+
+optional arguments:
+  -h, --help            show this help message and exit
+  -e ENABLE_RULES, --enable-rules ENABLE_RULES
+                        comma separated list of rules to enable
+  -d DISABLE_RULES, --disable-rules DISABLE_RULES
+                        comma separated list of rules to disable
+  --add-plugin ADD_PLUGIN
+                        path to a plugin containing a new rule to apply
+  --config CONFIGURATION_FILE, -c CONFIGURATION_FILE
+                        path to the configuration file to use
+  --set SET_CONFIGURATION, -s SET_CONFIGURATION
+                        manually set an individual configuration property
+  --strict-config       throw an error if configuration is bad, instead of
+                        assuming default
+  --stack-trace         if an error occurs, print out the stack trace for
+                        debug purposes
+  --log-level {CRITICAL,ERROR,WARNING,INFO,DEBUG}
+                        minimum level required to log messages
+  --log-file LOG_FILE   destination file for log messages
+"""
+    expected_error = ""
+
+    # Act
+    execute_results = scanner.invoke_main(arguments=supplied_arguments)
+
+    # Assert
+    execute_results.assert_results(
+        expected_output, expected_error, expected_return_code
+    )
+
+
 def test_markdown_with_dash_h():
     """
     Test to make sure we get help if '-h' is supplied.
@@ -1252,7 +1310,84 @@ def test_markdown_logger_container_indices():
     )
 
 
-def test_markdown_logger_arg_list_out_of_syncx():
+def test_markdown_logger_active():
+    """
+    Since calls to it are commented out most of the time,
+    test the debug_with_visible_whitespace function manually.
+    """
+    configuration_file_name = None
+    new_handler = None
+    root_logger = None
+    file_as_lines = None
+    try:
+        configuration_file_name = write_temporary_configuration("")
+        new_handler = logging.FileHandler(configuration_file_name)
+
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.DEBUG)
+        root_logger.addHandler(new_handler)
+
+        assert POGGER.is_enabled_for(logging.DEBUG)
+        new_logger = ParserLogger(logging.getLogger(__name__))
+        new_logger.debug("simple logging")
+    finally:
+        if root_logger and new_handler:
+            root_logger.removeHandler(new_handler)
+            new_handler.close()
+        with open(configuration_file_name, encoding="utf-8") as file_to_parse:
+            file_as_lines = file_to_parse.readlines()
+        if configuration_file_name and os.path.exists(configuration_file_name):
+            os.remove(configuration_file_name)
+
+    assert len(file_as_lines) == 1
+    assert file_as_lines[0] == "simple logging\n"
+
+
+def test_markdown_logger_inactive():
+    """
+    Since calls to it are commented out most of the time,
+    test the debug_with_visible_whitespace function manually.
+    """
+    configuration_file_name = None
+    new_handler = None
+    root_logger = None
+    file_as_lines = None
+    try:
+        configuration_file_name = write_temporary_configuration("")
+        new_handler = logging.FileHandler(configuration_file_name)
+
+        root_logger = logging.getLogger()
+        root_logger.setLevel(logging.WARNING)
+        root_logger.addHandler(new_handler)
+
+        assert POGGER.is_enabled_for(logging.WARNING)
+        new_logger = ParserLogger(logging.getLogger(__name__))
+        new_logger.debug("simple logging")
+    finally:
+        if root_logger and new_handler:
+            root_logger.removeHandler(new_handler)
+            new_handler.close()
+        with open(configuration_file_name, encoding="utf-8") as file_to_parse:
+            file_as_lines = file_to_parse.readlines()
+        if configuration_file_name and os.path.exists(configuration_file_name):
+            os.remove(configuration_file_name)
+
+    assert not file_as_lines
+
+
+def test_markdown_logger_arg_list_not_out_of_sync():
+    """
+    Since calls to it are commented out most of the time,
+    test the debug_with_visible_whitespace function manually.
+    """
+    root_logger = logging.getLogger()
+    root_logger.setLevel(logging.WARNING)
+    assert POGGER.is_enabled_for(logging.WARNING)
+    new_logger = ParserLogger(logging.getLogger(__name__))
+    new_logger.debug_with_visible_whitespace("one sub $ and one in list", " 1 ")
+
+
+def test_markdown_logger_arg_list_not_out_of_sync_with_debug():
     """
     Since calls to it are commented out most of the time,
     test the debug_with_visible_whitespace function manually.
@@ -1261,7 +1396,7 @@ def test_markdown_logger_arg_list_out_of_syncx():
     root_logger.setLevel(logging.DEBUG)
     assert POGGER.is_enabled_for(logging.DEBUG)
     new_logger = ParserLogger(logging.getLogger(__name__))
-    new_logger.debug_with_visible_whitespace("one sub $ but two in list", " 1 ")
+    new_logger.debug_with_visible_whitespace("one sub $ and one in list", " 1 ")
 
 
 # pylint: disable=broad-except

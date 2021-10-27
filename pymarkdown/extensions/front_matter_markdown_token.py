@@ -201,6 +201,9 @@ class FrontMatterExtension:
         if current_title:
             POGGER.debug("Adding final '$' as '$'.", current_title, current_value)
             value_map[current_title.lower()] = current_value
+
+            # This is specifically to trigger test_front_matter_20.
+            assert not (current_title == "test" and current_value == "assert")
         if not value_map:
             return "No valid metadata header lines were found."
         return value_map

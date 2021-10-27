@@ -54,8 +54,7 @@ class PyMarkdownLint:
     @staticmethod
     def __get_semantic_version():
         file_path = __file__
-        if not os.path.isabs(file_path):
-            assert False
+        assert os.path.isabs(file_path)
         file_path = file_path.replace(os.sep, "/")
         last_index = file_path.rindex("/")
         file_path = file_path[0 : last_index + 1] + "version.py"

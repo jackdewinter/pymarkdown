@@ -16,9 +16,8 @@
 
 ## Version 0.9.2 - Date: 2021-10-24
 
-This was a point release to make several new features and fixed
-issues to be released.  While the full descriptions are below,
-here are some highlights:
+This was a point release to allow fixed issues to be released.  While
+the full descriptions are below, here are some highlights:
 
 - Fixed issue with PyMarkdown scripts not having correct permissions
 - Added more scenario tests and verified that those worked

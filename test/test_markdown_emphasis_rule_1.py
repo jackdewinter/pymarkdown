@@ -24,7 +24,9 @@ def test_emphasis_360():
     expected_gfm = """<p><em>foo bar</em></p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    #
+    # NOTE: The `show_debug` is present to allow for extra coverage of the emphasis_helper module.
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
