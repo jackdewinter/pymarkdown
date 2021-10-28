@@ -8,7 +8,8 @@
 
 ### Changed
 
-- None
+- [Changed - Issue 85](https://github.com/jackdewinter/pymarkdown/issues/85)
+  - scenario tests: verified and documented inlines with newline tests
 
 ### Fixed
 

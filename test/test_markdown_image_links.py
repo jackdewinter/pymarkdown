@@ -694,3 +694,31 @@ def test_image_link_601():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_image_link_extra_01():
+    """
+    Test case extra 01:  shortcut with newline in label
+    """
+
+    # Arrange
+    source_markdown = """![fo
+o]
+
+[fo
+o]: /url "title"
+"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[image(1,1):shortcut:/url:title:fo\no::::fo\no:::::]",
+        "[end-para:::True]",
+        "[BLANK(3,1):]",
+        '[link-ref-def(4,1):True::fo o:fo\no: :/url:: :title:"title":]',
+        "[BLANK(6,1):]",
+    ]
+    expected_gfm = """<p><img src="/url" alt="fo
+o" title="title" /></p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

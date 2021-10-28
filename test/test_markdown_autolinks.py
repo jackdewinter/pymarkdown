@@ -563,3 +563,45 @@ def test_autolinks_620e():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_autolinks_extra_01():
+    """
+    Test case extra_01: url autolink with newline before end, invalidating it
+    """
+
+    # Arrange
+    source_markdown = """<http://foo.
+bar.baz>"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):\a<\a&lt;\ahttp://foo.\nbar.baz\a>\a&gt;\a::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>&lt;http://foo.
+bar.baz&gt;</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_autolinks_extra_02():
+    """
+    Test case extra_02:email autolink with newline before end, invalidating it
+    """
+
+    # Arrange
+    source_markdown = """<mailbox@domain.
+name>"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        "[text(1,1):\a<\a&lt;\amailbox@domain.\nname\a>\a&gt;\a::\n]",
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>&lt;mailbox@domain.
+name&gt;</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

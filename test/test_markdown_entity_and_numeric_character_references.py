@@ -618,6 +618,27 @@ def test_character_references_extra_03():
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
+@pytest.mark.gfm
+def test_character_references_extra_04():
+    """
+    Test case extra 3:  entity with newline before end
+    """
+
+    # Arrange
+    source_markdown = """&#x22;this is cool!&#x22
+;)"""
+    expected_tokens = [
+        "[para(1,1):\n]",
+        '[text(1,1):\a&#x22;\a\a"\a&quot;\a\athis is cool!\a&\a&amp;\a#x22\n;)::\n]',
+        "[end-para:::True]",
+    ]
+    expected_gfm = """<p>&quot;this is cool!&amp;#x22
+;)</p>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
 def test_missing_entities_json_file():
     """
     Test the entities.json not being present in the specified directory.
