@@ -18,7 +18,6 @@
 - make sure to generated ordered/unordered tests to make sure both covered
   - every unordered tests should have an ordered counterpart
   - every ordered tests should have an unordered counterpart
-- make sure that all inline elements treat blank lines properly and have test cases
 
 ### nested lists
 
