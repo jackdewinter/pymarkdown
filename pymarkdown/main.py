@@ -349,7 +349,7 @@ class PyMarkdownLint:
         try:
             self.__plugins.apply_configuration(self.__properties)
         except Exception as this_exception:
-            formatted_error = f"{str(type(this_exception).__name__)} encountered while configuring plugins:\n{str(this_exception)}"
+            formatted_error = f"{type(this_exception).__name__} encountered while configuring plugins:\n{this_exception}"
             self.__handle_error(formatted_error, this_exception)
 
     # pylint: enable=broad-except
@@ -364,7 +364,7 @@ class PyMarkdownLint:
             self.__tokenizer = TokenizedMarkdown(resource_path)
             self.__tokenizer.apply_configuration(self.__properties, self.__extensions)
         except BadTokenizationError as this_exception:
-            formatted_error = f"{str(type(this_exception).__name__)} encountered while initializing tokenizer:\n{str(this_exception)}"
+            formatted_error = f"{type(this_exception).__name__} encountered while initializing tokenizer:\n{this_exception}"
             self.__handle_error(formatted_error, this_exception)
 
     # pylint: disable=broad-except
@@ -383,7 +383,9 @@ class PyMarkdownLint:
                 self.__show_stack_trace,
             )
         except BadPluginError as this_exception:
-            formatted_error = f"BadPluginError encountered while loading plugins:\n{str(this_exception)}"
+            formatted_error = (
+                f"BadPluginError encountered while loading plugins:\n{this_exception}"
+            )
             self.__handle_error(formatted_error, this_exception)
 
     # pylint: enable=broad-except
@@ -400,7 +402,7 @@ class PyMarkdownLint:
 
     def __handle_scan_error(self, next_file, this_exception):
 
-        formatted_error = f"{str(type(this_exception).__name__)} encountered while scanning '{next_file}':\n{str(this_exception)}"
+        formatted_error = f"{type(this_exception).__name__} encountered while scanning '{next_file}':\n{this_exception}"
         self.__handle_error(formatted_error, this_exception)
 
     def __set_initial_state(self, args):
@@ -473,7 +475,7 @@ class PyMarkdownLint:
             self.__initialize_plugin_manager(args, plugin_dir)
             self.__apply_configuration_to_plugins()
         except ValueError as this_exception:
-            formatted_error = f"{str(type(this_exception).__name__)} encountered while initializing plugins:\n{str(this_exception)}"
+            formatted_error = f"{type(this_exception).__name__} encountered while initializing plugins:\n{this_exception}"
             self.__handle_error(formatted_error, this_exception)
 
     # pylint: disable=broad-except
@@ -486,10 +488,10 @@ class PyMarkdownLint:
             self.__extensions.apply_configuration()
 
         except ValueError as this_exception:
-            formatted_error = f"{str(type(this_exception).__name__)} encountered while initializing extensions:\n{str(this_exception)}"
+            formatted_error = f"{type(this_exception).__name__} encountered while initializing extensions:\n{this_exception}"
             self.__handle_error(formatted_error, this_exception)
         except Exception as this_exception:
-            formatted_error = f"{str(type(this_exception).__name__)} encountered while initializing extensions:\n{str(this_exception)}"
+            formatted_error = f"{type(this_exception).__name__} encountered while initializing extensions:\n{this_exception}"
             self.__handle_error(formatted_error, this_exception)
 
     # pylint: enable=broad-except

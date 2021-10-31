@@ -57,12 +57,7 @@ class RuleMd001(Plugin):
             if self.__last_heading_count and (hash_count > self.__last_heading_count):
                 delta = hash_count - self.__last_heading_count
                 if delta > 1:
-                    extra_data = (
-                        "Expected: h"
-                        + str(self.__last_heading_count + 1)
-                        + "; Actual: h"
-                        + str(hash_count)
-                    )
+                    extra_data = f"Expected: h{self.__last_heading_count + 1}; Actual: h{hash_count}"
                     self.report_next_token_error(
                         context, token, extra_error_information=extra_data
                     )

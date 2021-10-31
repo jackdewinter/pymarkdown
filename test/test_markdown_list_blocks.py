@@ -264,9 +264,7 @@ def test_list_blocks_237x():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -518,9 +516,7 @@ def test_list_blocks_237f():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -537,7 +533,6 @@ def test_list_blocks_237g():
     expected_tokens = [
         "[block-quote(1,2): : > ]",
         "[block-quote(1,6):: >   >\n   > > \n>>\n>> ]",
-        "[BLANK(1,7):]",
         "[BLANK(1,7):]",
         "[olist(2,8):.:1:11:       ]",
         "[para(2,12):]",
@@ -563,9 +558,7 @@ def test_list_blocks_237g():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -643,9 +636,7 @@ def test_list_blocks_238a():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2771,7 +2762,7 @@ def test_list_blocks_271e():
 > continued here."""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[block-quote(1,4):   :   > \n]",
+        "[block-quote(1,4):   :   > ]",
         "[para(1,6):]",
         "[text(1,6):Blockquote:]",
         "[end-para:::True]",
@@ -4258,9 +4249,7 @@ def test_list_blocks_extra_6xx():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4302,9 +4291,7 @@ def test_list_blocks_extra_6xa():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4352,12 +4339,45 @@ def test_list_blocks_extra_6xb():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        disable_consistency_checks=True,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_list_blocks_extra_6xc():
+    """
+    Test case 06:  the sublist is properly idented, but the start is extra
+                   indented to right justify the list
+    """
+
+    # Arrange
+    source_markdown = """  1. Item 1a
+ 10. Item 1b
+100. Item 1c
+"""
+    expected_tokens = [
+        "[olist(1,3):.:1:5:  ]",
+        "[para(1,6):]",
+        "[text(1,6):Item 1a:]",
+        "[end-para:::True]",
+        "[li(2,2):5: :10]",
+        "[para(2,6):]",
+        "[text(2,6):Item 1b:]",
+        "[end-para:::True]",
+        "[li(3,1):5::100]",
+        "[para(3,6):]",
+        "[text(3,6):Item 1c:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+    ]
+    expected_gfm = """<ol>
+<li>Item 1a</li>
+<li>Item 1b</li>
+<li>Item 1c</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -4399,9 +4419,7 @@ def test_list_blocks_extra_6ax():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

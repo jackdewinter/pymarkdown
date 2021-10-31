@@ -932,13 +932,45 @@ class LeafBlockProcessor:
         if container_index > 0:
             if parser_state.token_stack[container_index].is_block_quote:
                 top_block_token = parser_state.token_stack[container_index]
+                POGGER.debug(">>container_index>>$", container_index)
                 POGGER.debug(">>block-owners>>$", top_block_token)
-                LeafBlockProcessor.__adjust_paragraph_for_block_quotes(
-                    top_block_token,
-                    text_removed_by_container,
-                    force_it,
-                    parser_state.token_document,
+                POGGER.debug(
+                    ">>token_stack>>$",
+                    ParserHelper.make_value_visible(parser_state.token_stack),
                 )
+                POGGER.debug(">>line_number>>$", position_marker.line_number)
+
+                apply_paragraph_adjustment = True
+                if (
+                    container_index + 1 == len(parser_state.token_stack)
+                    and position_marker.line_number
+                    == top_block_token.matching_markdown_token.line_number
+                    and container_index > 0
+                    and parser_state.token_stack[container_index - 1].is_list
+                ):
+                    POGGER.debug(
+                        ">>list-owners>>$",
+                        ParserHelper.make_value_visible(
+                            parser_state.token_stack[
+                                container_index - 1
+                            ].matching_markdown_token
+                        ),
+                    )
+                    if (
+                        position_marker.line_number
+                        == parser_state.token_stack[
+                            container_index - 1
+                        ].matching_markdown_token.line_number
+                    ):
+                        apply_paragraph_adjustment = False
+
+                if apply_paragraph_adjustment:
+                    LeafBlockProcessor.__adjust_paragraph_for_block_quotes(
+                        top_block_token,
+                        text_removed_by_container,
+                        force_it,
+                        parser_state.token_document,
+                    )
             else:
                 top_list_token = parser_state.token_stack[container_index]
                 POGGER.debug(">>list-owners>>$", top_list_token)
@@ -1049,6 +1081,8 @@ class LeafBlockProcessor:
         token_document,
     ):
         POGGER.debug(">>list-owners>>$", token_document)
+        POGGER.debug(">>text_removed_by_container>>$<<", text_removed_by_container)
+        POGGER.debug(">>force_it>>$<<", force_it)
         number_of_block_quote_ends, end_index = 0, len(token_document) - 1
         while token_document[end_index].is_block_quote_end:
             number_of_block_quote_ends += 1

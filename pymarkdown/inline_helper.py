@@ -237,9 +237,7 @@ class InlineHelper:
                 InlineHelper.__ascii_letters_and_digits,
             )
             if collected_string:
-                collected_string = (
-                    InlineHelper.character_reference_start_character + collected_string
-                )
+                collected_string = f"{InlineHelper.character_reference_start_character}{collected_string}"
                 if (
                     end_index < source_text_size
                     and inline_request.source_text[end_index]
@@ -499,7 +497,7 @@ class InlineHelper:
                     inline_response.delta_line_number,
                     inline_response.delta_column_number,
                 ) = ParserHelper.calculate_deltas(
-                    original_between_text + extracted_start_backticks
+                    f"{original_between_text}{extracted_start_backticks}"
                 )
 
         POGGER.debug(
@@ -625,7 +623,7 @@ class InlineHelper:
                 POGGER.debug("<<new_index<<$<<", new_index)
                 POGGER.debug("<<ex_ws<<$<<", ex_ws)
                 assert new_index
-                end_string = ex_ws + ParserHelper.whitespace_split_character
+                end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
                 remaining_line = remaining_line[new_index:]
 
             end_string = InlineHelper.modify_end_string(
@@ -823,10 +821,10 @@ class InlineHelper:
             with open(os.path.abspath(master_entities_file)) as infile:
                 results_dictionary = json.load(infile)
         except json.decoder.JSONDecodeError as this_exception:
-            error_message = f"Named character entity map file '{master_entities_file}' is not a valid JSON file ({str(this_exception)})."
+            error_message = f"Named character entity map file '{master_entities_file}' is not a valid JSON file ({this_exception})."
             raise BadTokenizationError(error_message) from this_exception
         except IOError as this_exception:
-            error_message = f"Named character entity map file '{master_entities_file}' was not loaded ({str(this_exception)})."
+            error_message = f"Named character entity map file '{master_entities_file}' was not loaded ({this_exception})."
             raise BadTokenizationError(error_message) from this_exception
 
         approved_entity_map = {}

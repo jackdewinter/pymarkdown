@@ -196,6 +196,7 @@ class TokenizedMarkdown:
                             _,
                             _,
                             requeue_line_info,
+                            _,
                         ) = ContainerBlockProcessor.parse_line_for_container_blocks(
                             parser_state,
                             position_marker,
@@ -234,7 +235,7 @@ class TokenizedMarkdown:
                         requeue, did_start_close, did_started_close
                     )
         except AssertionError as this_exception:
-            error_message = f"A project assertion failed on line {str(line_number)} of the current document."
+            error_message = f"A project assertion failed on line {line_number} of the current document."
             raise BadTokenizationError(error_message) from this_exception
 
         if self.__parse_properties.pragma_lines:

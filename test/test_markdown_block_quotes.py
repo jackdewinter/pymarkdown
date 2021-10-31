@@ -2464,12 +2464,7 @@ def test_block_quotes_extra_02ae():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        disable_consistency_checks=True,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2844,9 +2839,7 @@ def test_block_quotes_extra_04a():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2883,9 +2876,7 @@ def test_block_quotes_extra_04b():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

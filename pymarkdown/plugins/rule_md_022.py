@@ -128,13 +128,7 @@ class RuleMd022(Plugin):
         """
 
         if not self.__did_above_line_count_match:
-            extra_info = (
-                "Expected: "
-                + str(self.__lines_above)
-                + "; Actual: "
-                + str(self.__start_heading_blank_line_count)
-                + "; Above"
-            )
+            extra_info = f"Expected: {self.__lines_above}; Actual: {self.__start_heading_blank_line_count}; Above"
             self.report_next_token_error(
                 context,
                 self.__start_heading_token,
@@ -142,13 +136,7 @@ class RuleMd022(Plugin):
                 use_original_position=self.__start_heading_token.is_setext_heading,
             )
         if not did_end_match:
-            extra_info = (
-                "Expected: "
-                + str(self.__lines_below)
-                + "; Actual: "
-                + str(self.__blank_line_count)
-                + "; Below"
-            )
+            extra_info = f"Expected: {self.__lines_below}; Actual: {self.__blank_line_count}; Below"
             self.report_next_token_error(
                 context,
                 self.__start_heading_token,

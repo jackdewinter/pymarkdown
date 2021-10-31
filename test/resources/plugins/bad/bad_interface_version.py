@@ -26,22 +26,22 @@ class BadInterfaceVersion(Plugin):
         """
         Event to allow the plugin to load configuration.
         """
-        print(self.get_details().plugin_id + ">>init_from_config")
+        print(f"{self.get_details().plugin_id}>>init_from_config")
 
     def starting_new_file(self):
         """
         Event that the a new file to be scanned is starting.
         """
-        print(self.get_details().plugin_id + ">>starting_new_file>>")
+        print(f"{self.get_details().plugin_id}>>starting_new_file>>")
 
     def next_line(self, context, line):
         """
         Event that a new line is being processed.
         """
-        print(self.get_details().plugin_id + ">>next_line:" + line)
+        print(f"{self.get_details().plugin_id}>>next_line:{line}")
 
     def completed_file(self, context):
         """
         Event that the file being currently scanned is now completed.
         """
-        print(self.get_details().plugin_id + ">>completed_file")
+        print(f"{self.get_details().plugin_id}>>completed_file")

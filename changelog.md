@@ -13,7 +13,14 @@
 
 ### Fixed
 
-- None
+- [Fixed - Issue 87](https://github.com/jackdewinter/pymarkdown/issues/87)
+  - scenario tests: removing `disable_consistency_checks` from tests and getting clean
+    - parser: found and resolved two issues
+    - consistency checks: found and resolved ~7 issues
+  - general: pass through code to clean up string usage
+  - consistency check: verified rehydrate usage through project
+  - consistency check: tightening leading space index for block quotes
+    - parser: found and resolved issue with extra newline added to leading spaces for block quote
 
 ## Version 0.9.2 - Date: 2021-10-24
 

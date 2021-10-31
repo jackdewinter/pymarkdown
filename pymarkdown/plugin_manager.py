@@ -131,7 +131,7 @@ class BadPluginError(Exception):
                 if cause and isinstance(cause, ValueError):
                     formatted_message = str(cause)
                 else:
-                    formatted_message = f"Plugin id '{plugin_id.upper()}' had a critical failure during the '{str(plugin_action)}' action."
+                    formatted_message = f"Plugin id '{plugin_id.upper()}' had a critical failure during the '{plugin_action}' action."
             if line_number:
                 position_message = (
                     f"({line_number},{column_number})"

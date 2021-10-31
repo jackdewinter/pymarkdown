@@ -371,11 +371,7 @@ class LinkHelper:
             if deactivate_token.is_special_text:
                 display_parts.extend(
                     [
-                        ",>>Spec:",
-                        str(deactivate_token.is_active),
-                        ":",
-                        str(deactivate_token),
-                        "<<",
+                        f",>>Spec:{deactivate_token.is_active}:{deactivate_token}<<",
                     ]
                 )
             else:

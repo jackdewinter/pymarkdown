@@ -1193,6 +1193,14 @@ class InlineProcessor:
             # )
 
             # POGGER.debug("5<<end_string<<$<<", end_string)
+            # POGGER.debug(
+            #     "<<current_string<<$<<",
+            #     current_string,
+            # )
+            # POGGER.debug(
+            #     "<<current_string_unresolved<<$<<",
+            #     current_string_unresolved,
+            # )
             (
                 start_index,
                 next_index,
@@ -1326,10 +1334,27 @@ class InlineProcessor:
             current_string,
         )
 
+        # POGGER.debug(
+        #     "new_string>>$>>",
+        #     new_string,
+        # )
         POGGER.debug(
             "new_string_unresolved>>$>>",
             new_string_unresolved,
         )
+        # POGGER.debug(
+        #     "current_string_unresolved>>$>>",
+        #     current_string_unresolved,
+        # )
+        if new_string == "\n" and end_string:
+            split_end_string = end_string.split(ParserHelper.newline_character)
+            POGGER.debug(
+                "split_end_string>>$>>",
+                split_end_string,
+            )
+            assert len(split_end_string) >= 2
+            new_string = split_end_string[len(split_end_string) - 2] + new_string
+
         if new_string_unresolved:
             current_string_unresolved = (
                 f"{current_string_unresolved}{new_string_unresolved}"
@@ -1406,7 +1431,7 @@ class InlineProcessor:
                 POGGER.debug("__cibp>new_index>$<", new_index)
                 POGGER.debug("__cibp>b>$<", ex_ws)
                 if new_index:
-                    end_string = ex_ws + ParserHelper.whitespace_split_character
+                    end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
                     current_string = current_string[new_index:]
             POGGER.debug("__cibp>end_string>$<", end_string)
             inline_blocks.append(

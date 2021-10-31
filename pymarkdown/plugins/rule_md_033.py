@@ -72,7 +72,7 @@ class RuleMd033(Plugin):
             _, tag_text = ParserHelper.collect_until_one_of_characters(
                 tag_text, 0, " \n\t/>"
             )
-        extra_data = "Element: " + tag_text
+        extra_data = f"Element: {tag_text}"
 
         is_first_image_element = False
         if (
