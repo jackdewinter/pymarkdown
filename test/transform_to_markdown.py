@@ -837,7 +837,49 @@ class TransformToMarkdown:
         if ParserHelper.newline_character in extracted_whitespace:
             line_end_index = extracted_whitespace.index(ParserHelper.newline_character)
             extracted_whitespace = extracted_whitespace[0:line_end_index]
-        return ParserHelper.resolve_all_from_text(extracted_whitespace)
+        extracted_whitespace = ParserHelper.resolve_all_from_text(extracted_whitespace)
+
+        if extracted_whitespace:
+            print(
+                f">>self.container_token_stack>>{ParserHelper.make_value_visible(self.container_token_stack)}<"
+            )
+            print(
+                f">>extracted_whitespace>>{ParserHelper.make_value_visible(extracted_whitespace)}<"
+            )
+            found_block_token = None
+            was_list_found = False
+            for i in range(len(self.container_token_stack) - 1, -1, -1):
+                print(
+                    f">>self.container_token_stack>>{ParserHelper.make_value_visible(self.container_token_stack[i])}<"
+                )
+                if self.container_token_stack[i].is_block_quote_start:
+                    found_block_token = self.container_token_stack[i]
+                    break
+                was_list_found = True
+            print(
+                f">>found_block_token>>{ParserHelper.make_value_visible(found_block_token)}<"
+            )
+            if found_block_token and was_list_found:
+                split_leading_spaces = found_block_token.leading_spaces.split(
+                    ParserHelper.newline_character
+                )
+                print(
+                    f">>found_block_token.leading_text_index>>{found_block_token.leading_text_index}<"
+                )
+                print(f">>xy>>{ParserHelper.make_value_visible(split_leading_spaces)}<")
+                specific_start = split_leading_spaces[
+                    found_block_token.leading_text_index - 1
+                ]
+                print(
+                    f">>specific_start>>{ParserHelper.make_value_visible(specific_start)}<"
+                )
+                print(
+                    f">>extracted_whitespace>>{ParserHelper.make_value_visible(extracted_whitespace)}<"
+                )
+                if len(specific_start) <= len(extracted_whitespace):
+                    extracted_whitespace = extracted_whitespace[len(specific_start) :]
+
+        return extracted_whitespace
 
     # pylint: enable=unused-argument
 

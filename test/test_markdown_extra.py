@@ -189,12 +189,7 @@ a real test</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        disable_consistency_checks=True,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -233,35 +228,32 @@ a real test</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        disable_consistency_checks=True,
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
-def test_extra_007c():
+def test_extra_007cx():
     """
     Variation on 7a with more spacing
     """
 
     # Arrange
     source_markdown = """> this is text
-> [a 
+> [a\a
 >  not
 >  so simple](/link
 > "a
 >  title"
 >  )
 > a real test
-"""
+""".replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n]",
         "[para(1,3):\n\n \n \n\n \n \n]",
         "[text(1,3):this is text\n::\n]",
-        '[link(2,3):inline:/link:a\ntitle::::a\nnot\nso simple:False:"::\n:\n]',
+        '[link(2,3):inline:/link:a\ntitle::::a \nnot\nso simple:False:"::\n:\n]',
         "[text(2,4):a\nnot\nso simple:: \n\n]",
         "[end-link::]",
         "[text(7,5):\na real test::\n]",
@@ -279,9 +271,50 @@ a real test</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_007ca():
+    """
+    Variation on 7a with more spacing
+    """
+
+    # Arrange
+    source_markdown = """> this is text
+> [a
+>  not\a
+>  so simple](/link
+> "a
+>  title"
+>  )
+> a real test
+""".replace(
+        "\a", " "
     )
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> \n> \n> \n]",
+        "[para(1,3):\n\n \n \n\n \n \n]",
+        "[text(1,3):this is text\n::\n]",
+        '[link(2,3):inline:/link:a\ntitle::::a\nnot \nso simple:False:"::\n:\n]',
+        "[text(2,4):a\nnot\nso simple::\n \n]",
+        "[end-link::]",
+        "[text(7,5):\na real test::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[BLANK(9,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>this is text
+<a href="/link" title="a
+title">a
+not
+so simple</a>
+a real test</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -292,7 +325,7 @@ def test_extra_007d():
 
     # Arrange
     source_markdown = """> this is text
-> [a 
+> [a
 >  not
 >  so simple](/link
 > "a
@@ -305,7 +338,7 @@ def test_extra_007d():
         "[para(1,3):\n\n \n \n\n \n \n]",
         "[text(1,3):this is text\n::\n]",
         '[link(2,3):inline:/link:a\ntitle::::a\nnot\nso simple:False:"::\n:\n]',
-        "[text(2,4):a\nnot\nso simple:: \n\n]",
+        "[text(2,4):a\nnot\nso simple::\n\n]",
         "[end-link::]",
         "[text(7,5):\na real test::\n]",
         "[end-para:::True]",
@@ -322,9 +355,7 @@ a real test</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -359,9 +390,7 @@ a real test</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -856,4 +885,4 @@ def test_extra_012():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

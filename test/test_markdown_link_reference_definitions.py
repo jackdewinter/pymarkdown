@@ -943,9 +943,7 @@ def test_link_reference_definitions_183f():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(
-        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
-    )
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

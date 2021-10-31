@@ -40,7 +40,8 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
         last_token_stack,
         container_block_stack,
         token_stack,
-    ) = (None, None, None, [], [])
+        list_block_start_indices,
+    ) = (None, None, None, [], [], {})
 
     for ind, current_token in enumerate(actual_tokens):
 
@@ -128,7 +129,9 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
 
         current_position = __calc_adjusted_position(current_token)
 
-        __maintain_block_stack(container_block_stack, current_token)
+        __maintain_block_stack(
+            container_block_stack, current_token, list_block_start_indices
+        )
 
         if current_token.is_end_token:
             print("end token, skipping")
@@ -186,11 +189,13 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
             print(
                 f"top_block_token>>{ParserHelper.make_value_visible(top_block_token)}"
             )
-            if top_block_token and last_token.is_link_reference_definition:
-
+            if top_block_token:
+                print("-----")
                 print(
-                    f">>mainline-top_block_token>>leading_text_index>{str(container_block_stack[-1].leading_text_index)}"
+                    f">>>>>>>>>>mainline-top_block_token>>leading_text_index>{top_block_token.leading_text_index}"
                 )
+                print("-----")
+            if top_block_token and last_token.is_link_reference_definition:
                 top_block_token.leading_text_index += (
                     ParserHelper.count_newlines_in_texts(
                         last_token.link_name_debug,
@@ -216,9 +221,16 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                     token_stack, current_token
                 )
             else:
+                print("vlacn>__validate_new_line>>")
                 did_x = __validate_new_line(
-                    container_block_stack, current_token, current_position
+                    container_block_stack,
+                    current_token,
+                    current_position,
+                    top_block_token,
+                    actual_tokens,
+                    list_block_start_indices,
                 )
+                print("vlacn>__verify_token_height>>")
                 remember_token_as_last_token = __verify_token_height(
                     current_token,
                     last_token,
@@ -227,6 +239,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
                     token_stack,
                     last_token_stack,
                 )
+                print("vlacn<<")
 
             __xx(current_token, token_stack)
 
@@ -267,6 +280,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
 
     print(f"Total lines in source document: {str(number_of_lines)}")
 
+    print("__validate_block_token_height>>")
     __validate_block_token_height(
         last_token,
         None,
@@ -275,6 +289,16 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
         actual_tokens,
         token_stack,
     )
+    print(f"__verify_inline>>{ParserHelper.make_value_visible(actual_tokens)}")
+    print(f"__verify_inline>>{ParserHelper.make_value_visible(last_token)}")
+    container_token_index = actual_tokens.index(last_token)
+    block_container_token = None
+    if (
+        container_token_index > 0
+        and actual_tokens[container_token_index - 1].is_block_quote_start
+    ):
+        block_container_token = actual_tokens[container_token_index - 1]
+    print(f"__verify_inline>>{ParserHelper.make_value_visible(block_container_token)}")
     __verify_inline(
         actual_tokens,
         last_token,
@@ -282,6 +306,7 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
         None,
         last_token_stack,
         number_of_lines,
+        block_container_token,
     )
 
     assert (
@@ -439,10 +464,21 @@ def __verify_token_height(
     Verify the height of a given token.
     """
 
+    print("__verify_token_height>>")
     remember_token_as_last_token = __push_to_stack_if_required(
         token_stack, current_block_token
     )
     assert last_block_token
+    print(f"vth>>actual_tokens>>{ParserHelper.make_value_visible(actual_tokens)}")
+    print(f"vth>>last_block_token>>{ParserHelper.make_value_visible(last_block_token)}")
+    container_token_index = actual_tokens.index(last_block_token)
+    block_container_token = None
+    if (
+        container_token_index > 0
+        and actual_tokens[container_token_index - 1].is_block_quote_start
+    ):
+        block_container_token = actual_tokens[container_token_index - 1]
+
     __verify_inline(
         actual_tokens,
         last_block_token,
@@ -450,6 +486,7 @@ def __verify_token_height(
         current_block_token,
         last_token_stack,
         None,
+        block_container_token,
     )
 
     token_line_number = (
@@ -526,8 +563,15 @@ def __validate_same_line(
 # pylint: enable=too-many-branches, too-many-statements
 
 
-# pylint: disable=too-many-branches, too-many-statements
-def __validate_new_line(container_block_stack, current_token, current_position):
+# pylint: disable=too-many-branches, too-many-statements,too-many-locals,too-many-arguments
+def __validate_new_line(  # noqa: C901
+    container_block_stack,
+    current_token,
+    current_position,
+    top_block_token,
+    actual_tokens,
+    list_block_start_indices,
+):
     print(">>__validate_new_line")
     init_ws, had_tab = __calc_initial_whitespace(current_token)
     print(f">>init_ws({str(init_ws)})>>w/ tab={str(had_tab)}")
@@ -536,13 +580,17 @@ def __validate_new_line(container_block_stack, current_token, current_position):
 
     did_x = False
 
+    print(
+        f">>container_block_stack>>={ParserHelper.make_value_visible(container_block_stack)}"
+    )
+    print(f">>current_token>>={ParserHelper.make_value_visible(current_token)}")
     if (
         container_block_stack
         and not current_token.is_blank_line
         and not current_token.is_list_start
         and not current_token.is_new_list_item
     ):
-        print(">>__vnl->list-ish")
+        print(">>__vnl->list-adjacent")
         top_block = container_block_stack[-1]
         _, had_tab = __calc_initial_whitespace(top_block)
         print(f">>top_block>>={ParserHelper.make_value_visible(top_block)}")
@@ -552,7 +600,87 @@ def __validate_new_line(container_block_stack, current_token, current_position):
 
         if top_block.is_list_start or top_block.is_new_list_item:
             print(">>__vnl->list")
-            init_ws += top_block.indent_level
+
+            indent_level = top_block.indent_level
+            print(f">>indent_level>>{indent_level}<")
+            block_quote_start_token = None
+            is_list_token_present = False
+            list_start_token = None
+            for next_token in range(len(container_block_stack) - 1, -1, -1):
+                print(
+                    f">>container_block_stack>>{ParserHelper.make_value_visible(container_block_stack[next_token])}<"
+                )
+                if container_block_stack[next_token].is_block_quote_start:
+                    block_quote_start_token = container_block_stack[next_token]
+                    break
+                is_list_token_present = True
+                if (
+                    not list_start_token
+                    and container_block_stack[next_token].is_list_start
+                ):
+                    list_start_token = container_block_stack[next_token]
+            print(
+                f">>list_block_start_indices>>{ParserHelper.make_value_visible(list_block_start_indices)}<"
+            )
+            print(
+                f">>list_start_token>>{ParserHelper.make_value_visible(list_start_token)}<"
+            )
+            list_block_quote_text_index = -1
+            if list_start_token and list_start_token in list_block_start_indices:
+                list_block_quote_text_index = list_block_start_indices[list_start_token]
+            print(
+                f">>block_quote_start_token>>{ParserHelper.make_value_visible(block_quote_start_token)}<"
+            )
+            print(f">>is_list_token_present>>{is_list_token_present}<")
+            print(f">>list_block_quote_text_index>>{list_block_quote_text_index}<")
+            if block_quote_start_token and is_list_token_present:
+                split_block_quote_leading_spaces = (
+                    block_quote_start_token.leading_spaces.split(
+                        ParserHelper.newline_character
+                    )
+                )
+                print(
+                    f">>split_block_quote_leading_spaces>>{ParserHelper.make_value_visible(split_block_quote_leading_spaces)}<"
+                )
+
+                print(
+                    f">>block_quote_start_token.leading_text_index>>{block_quote_start_token.leading_text_index}<"
+                )
+                current_token_block_indent = split_block_quote_leading_spaces[
+                    block_quote_start_token.leading_text_index
+                ]
+                print(f">>current_token_block_indent>>:{current_token_block_indent}:<")
+                current_token_block_indent = len(current_token_block_indent)
+                print(f">>current_token_block_indent>>{current_token_block_indent}<")
+
+                selected_prefix = None
+                if list_block_quote_text_index != -1:
+                    print(
+                        f">>list_block_quote_text_index>>{list_block_quote_text_index}<"
+                    )
+                    selected_prefix = split_block_quote_leading_spaces[
+                        list_block_quote_text_index
+                    ]
+                    print(f">>selected_prefix>>:{selected_prefix}:<")
+                    print(
+                        f">>list_start_token.indent_level>>:{list_start_token.indent_level}:<"
+                    )
+                    print(f">>len(selected_prefix)>>:{len(selected_prefix)}:<")
+
+                print(f">>len(selected_prefix)>>{len(selected_prefix)}<")
+                print(f">>current_token_block_indent>>{current_token_block_indent}<")
+                print(f">>indent_level>>{indent_level}<")
+                if len(selected_prefix) != current_token_block_indent:
+                    print("diff_levels")
+                    indent_level = (
+                        indent_level - len(selected_prefix) + current_token_block_indent
+                    )
+                else:
+                    if current_token_block_indent <= indent_level:
+                        indent_level -= current_token_block_indent
+                print(f">>indent_level>>{indent_level}<")
+
+            init_ws += indent_level
         elif (
             container_block_stack
             and container_block_stack[-1] != current_token
@@ -568,18 +696,43 @@ def __validate_new_line(container_block_stack, current_token, current_position):
         print(">>__vnl->li-ish")
         assert container_block_stack[-1] == current_token
         if len(container_block_stack) > 1:
-            top_block = container_block_stack[-2]
-            init_ws = (
-                top_block.column_number
-                - 1
-                + (current_token.indent_level - top_block.indent_level)
-            )
+            init_ws = len(current_token.extracted_whitespace)
     elif container_block_stack and current_token.is_blank_line:
         print(">>__vnl->blank-ish")
+        print(f">>current_token>>{ParserHelper.make_value_visible(current_token)}")
+        print(
+            f">>container_block_stack[-1]>>{ParserHelper.make_value_visible(container_block_stack[-1])}"
+        )
+        print(f">>top_block_token>>{ParserHelper.make_value_visible(top_block_token)}")
+        top_block = None
         if container_block_stack[-1].is_block_quote_start:
+            top_block = container_block_stack[-1]
+        elif top_block_token:
+            top_block = top_block_token
 
+        needs_recalculation = False
+        was_end_list_end = False
+        next_token_index = actual_tokens.index(current_token) + 1
+        while (
+            next_token_index < len(actual_tokens)
+            and actual_tokens[next_token_index].is_end_token
+        ):
+            print(f">>actual_tokens[]>>{actual_tokens[next_token_index]}")
+            if actual_tokens[next_token_index].is_list_end:
+                was_end_list_end = True
+            next_token_index += 1
+        if next_token_index < len(actual_tokens):
+            print(f"actual_tokens[]>>{actual_tokens[next_token_index]}")
+            print("found")
+            needs_recalculation = True
+        else:
+            print("not found")
+            needs_recalculation = not was_end_list_end
+
+        if top_block and needs_recalculation:
+            print(f">>xxx.leading_text_index>>{top_block.leading_text_index}")
             leading_text, did_x = (
-                container_block_stack[-1].calculate_next_leading_space_part(),
+                top_block.calculate_next_leading_space_part(),
                 True,
             )
             init_ws += len(leading_text)
@@ -594,7 +747,7 @@ def __validate_new_line(container_block_stack, current_token, current_position):
     return did_x
 
 
-# pylint: enable=too-many-branches, too-many-statements
+# pylint: enable=too-many-branches, too-many-statements,too-many-locals,too-many-arguments
 
 
 def __validate_first_token(current_token, current_position):
@@ -671,7 +824,9 @@ def __calc_adjusted_position(markdown_token):
     return PositionMarker(line_number, index_number, "")
 
 
-def __maintain_block_stack(container_block_stack, current_token):
+def __maintain_block_stack(
+    container_block_stack, current_token, list_block_start_indices
+):
     """
     Maintain a stack of the block elements, to allow better understanding of
     what container a given token is kept within.
@@ -687,7 +842,38 @@ def __maintain_block_stack(container_block_stack, current_token):
             and container_block_stack[-1].is_new_list_item
         ):
             del container_block_stack[-1]
-
+        elif current_token.is_list_start:
+            block_quote_start_token = None
+            for i in range(len(container_block_stack) - 1, -1, -1):
+                print(
+                    f">>container_block_stack>>{ParserHelper.make_value_visible(container_block_stack[i])}<"
+                )
+                if container_block_stack[i].is_block_quote_start:
+                    block_quote_start_token = container_block_stack[i]
+                    break
+            print(
+                f">>block_quote_start_token>>{ParserHelper.make_value_visible(block_quote_start_token)}<"
+            )
+            if block_quote_start_token:
+                print(
+                    f">>block_quote_start_token.leading_text_index>>{block_quote_start_token.leading_text_index}<"
+                )
+                list_block_start_indices[
+                    current_token
+                ] = block_quote_start_token.leading_text_index
+        elif current_token.is_list_end:
+            start_list_token = current_token.start_markdown_token
+            print(
+                f">>start_list_token>>{ParserHelper.make_value_visible(start_list_token)}<"
+            )
+            print(
+                f">>list_block_start_indices>>{ParserHelper.make_value_visible(list_block_start_indices)}<"
+            )
+            if start_list_token in list_block_start_indices:
+                del list_block_start_indices[start_list_token]
+            print(
+                f">>list_block_start_indices>>{ParserHelper.make_value_visible(list_block_start_indices)}<"
+            )
         container_block_stack.append(current_token)
         print(f">>CON>>after>>{ParserHelper.make_value_visible(container_block_stack)}")
 
@@ -874,9 +1060,14 @@ def __verify_first_inline_setext(last_non_inline_token, first_inline_token):
 # pylint: enable=too-many-boolean-expressions
 
 
-# pylint: disable=too-many-branches,too-many-locals,too-many-statements
+# pylint: disable=too-many-branches,too-many-locals,too-many-statements,too-many-arguments
 def __verify_next_inline_handle_previous_end(  # noqa: C901
-    last_token, previous_inline_token, current_inline_token, inline_tokens, token_index
+    last_token,
+    previous_inline_token,
+    current_inline_token,
+    inline_tokens,
+    token_index,
+    block_container_token,
 ):
     """
     This function is intentionally longer than the matching function in
@@ -1037,13 +1228,25 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
         assert parent_cur_token.label_type == "collapsed", parent_cur_token.label_type
         adjust_column_by = 3
 
-    print(f"adj->{str(new_lines)},{str(adjust_column_by)})")
+    print(f"adj-->->{str(new_lines)},{str(adjust_column_by)})")
+    if last_token.is_paragraph:
+        print(
+            f"rehydrate_index(__verify_next_inline_handle_current_end)>{last_token.rehydrate_index}"
+        )
 
     print(f"before->({str(estimated_line_number)},{str(estimated_column_number)})")
+    if block_container_token:
+        print(
+            f"  vnihpe>>leading_text_index>>{block_container_token.leading_text_index}"
+        )
     previous_line_number_delta, _ = __process_previous_token(
-        None, pre_pre_token, pre_token, cur_token, None, 0, 0
+        None, pre_pre_token, pre_token, cur_token, None, 0, 0, block_container_token
     )
     print(f"previous_line_number_delta={str(previous_line_number_delta)}")
+    if block_container_token:
+        print(
+            f"  vnihpe>>leading_text_index>>{block_container_token.leading_text_index}"
+        )
 
     previous_rehydrate_index = None
     if last_token.is_paragraph and previous_line_number_delta:
@@ -1052,6 +1255,10 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
         print(f"rehydrate_index(saved)={str(previous_rehydrate_index)}")
         print(f"last_token.rehydrate_index={str(last_token.rehydrate_index)}")
 
+    if block_container_token:
+        print(
+            f"  vnihpe2>>leading_text_index>>{block_container_token.leading_text_index}"
+        )
     new_estimated_line_number, new_estimated_column_number = __process_previous_token(
         last_token,
         pre_pre_token,
@@ -1060,7 +1267,12 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
         None,
         estimated_line_number,
         estimated_column_number,
+        block_container_token,
     )
+    if block_container_token:
+        print(
+            f"  vnihpe2>>leading_text_index>>{block_container_token.leading_text_index}"
+        )
 
     if previous_rehydrate_index:
         last_token.rehydrate_index = previous_rehydrate_index
@@ -1073,6 +1285,29 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
     if new_lines:
         new_estimated_line_number += new_lines
         new_estimated_column_number = adjust_column_by
+        print(
+            f"block_container_token->{ParserHelper.make_value_visible(block_container_token)}"
+        )
+        if block_container_token:
+            print(
+                f"  vnihpe3>>leading_text_index>>{block_container_token.leading_text_index}"
+            )
+            block_container_token.leading_text_index += new_lines
+            print(
+                f"  vnihpe3>>leading_text_index>>{block_container_token.leading_text_index}"
+            )
+            split_leading_spaces = block_container_token.leading_spaces.split(
+                ParserHelper.newline_character
+            )
+            print(
+                f"split_leading_spaces->{ParserHelper.make_value_visible(split_leading_spaces)}"
+            )
+            print(
+                f"block_container_token.leading_text_index->{block_container_token.leading_text_index}"
+            )
+            new_estimated_column_number += len(
+                split_leading_spaces[block_container_token.leading_text_index]
+            )
     else:
         new_estimated_column_number += adjust_column_by
 
@@ -1086,7 +1321,7 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
     ), f">>est>{str(new_estimated_line_number)},{str(new_estimated_column_number)}>act>{str(current_inline_token.line_number)},{str(current_inline_token.column_number)}"
 
 
-# pylint: enable=too-many-branches,too-many-locals,too-many-statements
+# pylint: enable=too-many-branches,too-many-locals,too-many-statements,too-many-arguments
 
 
 def __verify_next_inline_handle_current_end(last_token, current_inline_token):
@@ -1119,6 +1354,7 @@ def __verify_next_inline(
     link_stack,
     inline_tokens,
     token_index,
+    block_container_token,
 ):
     """
     Verify any pair of inline tokens past the first inline token.
@@ -1134,6 +1370,7 @@ def __verify_next_inline(
             current_inline_token,
             inline_tokens,
             token_index,
+            block_container_token,
         )
         return
     if (
@@ -1152,6 +1389,8 @@ def __verify_next_inline(
         f">>before-{previous_inline_token.token_name}>>{str(estimated_line_number)},{str(estimated_column_number)}"
     )
 
+    if block_container_token:
+        print(f"  vni>>leading_text_index>>{block_container_token.leading_text_index}")
     estimated_line_number, estimated_column_number = __process_previous_token(
         last_token,
         pre_previous_inline_token,
@@ -1160,7 +1399,10 @@ def __verify_next_inline(
         link_stack,
         estimated_line_number,
         estimated_column_number,
+        block_container_token,
     )
+    if block_container_token:
+        print(f"  vni>>leading_text_index>>{block_container_token.leading_text_index}")
 
     assert (
         estimated_line_number == current_inline_token.line_number
@@ -1171,7 +1413,7 @@ def __verify_next_inline(
 # pylint: enable=too-many-arguments
 
 
-# pylint: disable=too-many-branches,too-many-arguments
+# pylint: disable=too-many-branches,too-many-arguments,too-many-statements
 def __process_previous_token(
     last_token,
     pre_previous_inline_token,
@@ -1180,9 +1422,17 @@ def __process_previous_token(
     link_stack,
     estimated_line_number,
     estimated_column_number,
+    block_container_token,
 ):
 
+    old_line_number = estimated_line_number
+
+    print(
+        f"  ppt->pre_previous_inline_token={ParserHelper.make_value_visible(pre_previous_inline_token)}"
+    )
+    print(f"  ppt->link_stack={ParserHelper.make_value_visible(link_stack)}")
     if previous_inline_token.is_text:
+        print("  ppt->is_text")
         estimated_line_number, estimated_column_number = __verify_next_inline_text(
             last_token,
             pre_previous_inline_token,
@@ -1191,7 +1441,9 @@ def __process_previous_token(
             estimated_column_number,
             link_stack,
         )
+        print("  ppt<-is_text")
     elif previous_inline_token.is_inline_emphasis:
+        print("  ppt->is_inline_emphasis")
         (
             estimated_line_number,
             estimated_column_number,
@@ -1201,6 +1453,7 @@ def __process_previous_token(
             estimated_column_number,
         )
     elif previous_inline_token.is_inline_emphasis_end:
+        print("  ppt->is_inline_emphasis_end")
         (
             estimated_line_number,
             estimated_column_number,
@@ -1210,6 +1463,7 @@ def __process_previous_token(
             estimated_column_number,
         )
     elif previous_inline_token.is_blank_line:
+        print("  ppt->is_blank_line")
         (
             estimated_line_number,
             estimated_column_number,
@@ -1219,6 +1473,7 @@ def __process_previous_token(
             estimated_column_number,
         )
     elif previous_inline_token.is_inline_hard_break:
+        print("  ppt->is_inline_hard_break")
         (
             estimated_line_number,
             estimated_column_number,
@@ -1231,6 +1486,7 @@ def __process_previous_token(
             link_stack,
         )
     elif previous_inline_token.is_inline_code_span:
+        print("  ppt->is_inline_code_span")
         estimated_line_number, estimated_column_number = __verify_next_inline_code_span(
             last_token,
             previous_inline_token,
@@ -1239,6 +1495,7 @@ def __process_previous_token(
             link_stack,
         )
     elif previous_inline_token.is_inline_raw_html:
+        print("  ppt->is_inline_raw_html")
         estimated_line_number, estimated_column_number = __verify_next_inline_raw_html(
             last_token,
             previous_inline_token,
@@ -1247,12 +1504,14 @@ def __process_previous_token(
             link_stack,
         )
     elif previous_inline_token.is_inline_autolink:
+        print("  ppt->is_inline_autolink")
         estimated_line_number, estimated_column_number = __verify_next_inline_autolink(
             previous_inline_token,
             estimated_line_number,
             estimated_column_number,
         )
     elif previous_inline_token.is_inline_link:
+        print("  ppt->is_inline_link")
         (
             estimated_line_number,
             estimated_column_number,
@@ -1261,6 +1520,7 @@ def __process_previous_token(
             estimated_column_number,
         )
     elif previous_inline_token.is_inline_image:
+        print("  ppt->is_inline_image")
         (
             estimated_line_number,
             estimated_column_number,
@@ -1273,18 +1533,42 @@ def __process_previous_token(
     else:
         assert False, previous_inline_token.token_name
 
-    print(
-        f">>before-blank>>{str(estimated_line_number)},{str(estimated_column_number)}"
-    )
     if current_inline_token.is_blank_line:
+        print(f">>before-blank>>{estimated_line_number},{estimated_column_number}")
         if not previous_inline_token.is_blank_line:
             estimated_line_number += 1
         estimated_column_number = 1
-    print(f">>after>>{str(estimated_line_number)},{str(estimated_column_number)}")
+    print(
+        f">>block_container_token>>{ParserHelper.make_value_visible(block_container_token)}"
+    )
+    if block_container_token:
+        print(f"  ppt->bq-index:{block_container_token.leading_text_index}")
+    print(f">>old_line_number>>{old_line_number} != {estimated_line_number}")
+    print(
+        f">>current_inline_token>>{ParserHelper.make_value_visible(current_inline_token)}"
+    )
+    if block_container_token and old_line_number != estimated_line_number:
+        delta = estimated_line_number - old_line_number
+        if not current_inline_token.is_inline_link_end:
+            print(
+                f"  ppt>>leading_text_index>>{block_container_token.leading_text_index}"
+            )
+            block_container_token.leading_text_index += delta
+            print(
+                f"  ppt>>leading_text_index>>{block_container_token.leading_text_index}"
+            )
+        split_leading_spaces = block_container_token.leading_spaces.split(
+            ParserHelper.newline_character
+        )
+        estimated_column_number += len(
+            split_leading_spaces[block_container_token.leading_text_index]
+        )
+
+    print(f">>after>>{estimated_line_number},{estimated_column_number}")
     return estimated_line_number, estimated_column_number
 
 
-# pylint: enable=too-many-branches,too-many-arguments
+# pylint: enable=too-many-branches,too-many-arguments,too-many-statements
 
 
 def __verify_next_inline_blank_line(
@@ -1855,6 +2139,9 @@ def __verify_next_inline_text(
     estimated_column_number,
     link_stack,
 ):
+    print(f"estimated_line_number>{estimated_line_number}<")
+    print(f"estimated_column_number>{estimated_column_number}<")
+
     current_line = previous_inline_token.token_text
     if not pre_previous_inline_token and last_token.is_atx_heading:
         pass
@@ -1930,12 +2217,16 @@ def __verify_next_inline_text(
     print(f"split_current_line>{ParserHelper.make_value_visible(split_current_line)}<")
     delta_column = len(split_current_line)
 
+    print(f"estimated_column_number>{estimated_column_number}<")
     if delta_line:
         estimated_column_number = 1
     estimated_column_number += delta_column
     if split_end_whitespace:
         estimated_column_number += split_end_whitespace
-    return estimated_line_number + delta_line, estimated_column_number
+    estimated_line_number += delta_line
+    print(f"estimated_line_number>{estimated_line_number}<")
+    print(f"estimated_column_number>{estimated_column_number}<")
+    return estimated_line_number, estimated_column_number
 
 
 # pylint: enable=too-many-statements, too-many-arguments
@@ -2277,6 +2568,7 @@ def __verify_inline(  # noqa: C901
     current_block_token,
     last_token_stack,
     number_of_lines,
+    block_container_token,
 ):
     """
     Validate the inline tokens between block tokens.
@@ -2325,11 +2617,17 @@ def __verify_inline(  # noqa: C901
     if inline_tokens:
         print(f">inline_tokens>{ParserHelper.make_value_visible(inline_tokens)}")
         link_stack = []
+        initial_leading_text_index = None
+        if block_container_token:
+            initial_leading_text_index = block_container_token.leading_text_index
+            block_container_token.leading_text_index = 0
         for token_index, current_inline_token in enumerate(inline_tokens):
             print(
                 f"{str(token_index)}-token:{ParserHelper.make_value_visible(current_inline_token)}"
             )
             print(f"  links:{ParserHelper.make_value_visible(link_stack)}")
+            if block_container_token:
+                print(f"  bq-index:{block_container_token.leading_text_index}")
             print(">>>>>>")
             if not token_index:
                 __verify_first_inline(
@@ -2347,6 +2645,7 @@ def __verify_inline(  # noqa: C901
                     link_stack,
                     inline_tokens,
                     token_index,
+                    block_container_token,
                 )
 
             print("<<<<<<")
@@ -2423,6 +2722,9 @@ def __verify_inline(  # noqa: C901
         else:
             print(f"number_of_lines is not None>{str(number_of_lines)}")
             assert not current_block_token
+
+        if block_container_token:
+            block_container_token.leading_text_index = initial_leading_text_index
 
         last_inline_token = inline_tokens[-1]
         __verify_last_inline(

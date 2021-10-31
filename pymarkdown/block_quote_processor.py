@@ -291,6 +291,11 @@ class BlockQuoteProcessor:
                 last_block_token.add_leading_spaces("")
 
         POGGER.debug("handle_block_quote_block>>end>>did_process>>$", did_process)
+        POGGER.debug("handle_block_quote_block>>end>>leaf_tokens>>$", leaf_tokens)
+        POGGER.debug(
+            "handle_block_quote_block>>end>>container_level_tokens>>$",
+            container_level_tokens,
+        )
         return (
             did_process,
             was_container_start,
@@ -704,6 +709,7 @@ class BlockQuoteProcessor:
                     from_main_transform=False,
                     position_marker=adjusted_position_marker,
                 )
+                POGGER.debug("handle_block_quote_section>>leaf_tokens>>$", leaf_tokens)
                 assert not (requeue_line_info and requeue_line_info.lines_to_requeue)
         else:
             POGGER.debug("handle_block_quote_section>>fenced")
