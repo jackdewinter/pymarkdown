@@ -192,7 +192,7 @@ class TransformToMarkdown:
             ] = end_token_handler
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-statements
-    def transform(self, actual_tokens):
+    def transform(self, actual_tokens):  # noqa: C901
         """
         Transform the incoming token stream back into Markdown.
         """
@@ -212,6 +212,19 @@ class TransformToMarkdown:
             print(
                 f"\n\n>>>>{ParserHelper.make_value_visible(current_token)}-->{ParserHelper.make_value_visible(transformed_data)}<--"
             )
+            found_block_token = None
+            for i in range(len(self.container_token_stack) - 1, -1, -1):
+                if self.container_token_stack[i].is_block_quote_start:
+                    found_block_token = self.container_token_stack[i]
+                    break
+            print(
+                f">>found_block_token>>{ParserHelper.make_value_visible(found_block_token)}<"
+            )
+            if found_block_token:
+                print(
+                    f">>found_block_token-->index>>{found_block_token.leading_text_index}<"
+                )
+
             next_token = (
                 actual_tokens[token_index + 1]
                 if token_index < len(actual_tokens) - 1
@@ -258,6 +271,18 @@ class TransformToMarkdown:
             print(
                 f"post-h>new_data>{ParserHelper.make_value_visible(new_data)}<continue_sequence>{continue_sequence}<delayed_continue>{delayed_continue}<"
             )
+            found_block_token = None
+            for i in range(len(self.container_token_stack) - 1, -1, -1):
+                if self.container_token_stack[i].is_block_quote_start:
+                    found_block_token = self.container_token_stack[i]
+                    break
+            print(
+                f">>found_block_token>>{ParserHelper.make_value_visible(found_block_token)}<"
+            )
+            if found_block_token:
+                print(
+                    f">>found_block_token-->index>>{found_block_token.leading_text_index}<"
+                )
             (
                 new_data,
                 delayed_continue,
@@ -292,6 +317,20 @@ class TransformToMarkdown:
             print(
                 f">>block_stack-->{ParserHelper.make_value_visible(self.block_stack)}"
             )
+
+            found_block_token = None
+            for i in range(len(self.container_token_stack) - 1, -1, -1):
+                if self.container_token_stack[i].is_block_quote_start:
+                    found_block_token = self.container_token_stack[i]
+                    break
+            print(
+                f">>found_block_token>>{ParserHelper.make_value_visible(found_block_token)}<"
+            )
+            if found_block_token:
+                print(
+                    f">>found_block_token-->index>>{found_block_token.leading_text_index}<"
+                )
+
             print("---")
             previous_token = current_token
 
@@ -1139,8 +1178,21 @@ class TransformToMarkdown:
                         top_of_list_token_stack.leading_text_index
                         == split_leading_spaces_size
                     )
+                print(
+                    f"current_token<<{ParserHelper.make_value_visible(current_token)}<<"
+                )
+                print(f"next_token<<{ParserHelper.make_value_visible(next_token)}<<")
+
+                # bob = True
+                # if (current_token.is_fenced_code_block and next_token.is_fenced_code_block_end) or \
+                #     (current_token.is_fenced_code_block_end and current_token.was_forced and False) or \
+                #     (current_token.is_paragraph_end and next_token.is_block_quote_end and True):
+                #     bob = False
+
+                # if bob:
                 print(f"bq-post->{top_of_list_token_stack.leading_text_index}")
                 top_of_list_token_stack.leading_text_index += 1
+                print(f"bq-post->{top_of_list_token_stack.leading_text_index}")
                 new_data = new_data[next_newline_index + 1 :]
             print(
                 f"2<<composed_data<<{ParserHelper.make_value_visible(composed_data)}<<new<<{ParserHelper.make_value_visible(new_data)}<<"
@@ -1268,6 +1320,7 @@ class TransformToMarkdown:
         any_non_container_end_tokens = search_index < len(actual_tokens)
         print(f">>{any_non_container_end_tokens}")
 
+        stack_copy_of_token = self.container_token_stack[-1]
         del self.container_token_stack[-1]
         if any_non_container_end_tokens:
             continue_sequence = self.__reset_container_continue_sequence()
@@ -1284,18 +1337,27 @@ class TransformToMarkdown:
             print(
                 f">>current_token.start_markdown_token>>{ParserHelper.make_value_visible(current_token.start_markdown_token)}"
             )
+            print(
+                f">>extracted_whitespace>>:{ParserHelper.make_value_visible(current_token.start_markdown_token.leading_spaces)}:<<"
+            )
+
+            print(
+                f">>orig>>:{ParserHelper.make_value_visible(current_token.start_markdown_token)}:<<"
+            )
+            print(f">>copy>>:{ParserHelper.make_value_visible(stack_copy_of_token)}:<<")
+            assert str(current_token.start_markdown_token) == str(stack_copy_of_token)
+
             leading_text_index, expected_leading_text_index = (
-                current_token.start_markdown_token.leading_text_index,
-                ParserHelper.count_newlines_in_text(
-                    current_token.start_markdown_token.extracted_whitespace
-                ),
+                stack_copy_of_token.leading_text_index,
+                ParserHelper.count_newlines_in_text(stack_copy_of_token.leading_spaces)
+                + 1,
             )
 
             assert isinstance(expected_leading_text_index, int)
-            _ = leading_text_index
-            # assert (
-            #     leading_text_index == expected_leading_text_index
-            # ), f"leading_text_index={str(leading_text_index)};expected_leading_text_index={str(expected_leading_text_index)}"
+            assert leading_text_index in [
+                expected_leading_text_index,
+                expected_leading_text_index + 1,
+            ], f"leading_text_index={leading_text_index};expected_leading_text_index={expected_leading_text_index}"
 
         return text_to_add, continue_sequence, continue_sequence
 

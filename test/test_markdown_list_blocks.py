@@ -2762,7 +2762,7 @@ def test_list_blocks_271e():
 > continued here."""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[block-quote(1,4):   :   > \n]",
+        "[block-quote(1,4):   :   > ]",
         "[para(1,6):]",
         "[text(1,6):Blockquote:]",
         "[end-para:::True]",

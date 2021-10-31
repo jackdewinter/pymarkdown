@@ -6,13 +6,6 @@
 
 - pragma tests need to remove `disable_consistency_checks=True`
 
-- track down uses of rehydrate_index in consistency checks and make to have cases to verify that each is updating properly, including multi
-  - see 213c.  doesn't seem to have enough information to properly reconstruct
-  - compare to 213d which does
-  - _215, 229gx, 229ga, 229hx, 229ha,
-  - test_fenced_code_blocks_098c, _extra_05x, _extra_05a, _extra_06xx, _extra_06xa
-  - test_paragraph_series_n_bq_t_nl_bq_fb_nl_without_bq
-
 - make sure to generated ordered/unordered tests to make sure both covered
   - every unordered tests should have an ordered counterpart
   - every ordered tests should have an unordered counterpart
@@ -61,8 +54,6 @@ md010 - tabs "converted"
 - within a given list or block quote, should only have one pattern of container tokens
 
 ### Other
-
-- scan for `POGGER.debug(` and look for str() and other such things that are not necessary
 
 - md023 - can line 61 search be done more efficiently by looking for `{space}\x02` ?
 - in inline, does `if coalesced_stack and coalesced_stack[-1].is_block_quote_start:` really need
