@@ -56,12 +56,7 @@ class RuleMd002(Plugin):
         if not self.__have_seen_first_heading and hash_count:
             self.__have_seen_first_heading = True
             if hash_count != self.__start_level:
-                extra_data = (
-                    "Expected: h"
-                    + str(self.__start_level)
-                    + "; Actual: h"
-                    + str(hash_count)
-                )
+                extra_data = f"Expected: h{self.__start_level}; Actual: h{hash_count}"
                 self.report_next_token_error(
                     context, token, extra_error_information=extra_data
                 )

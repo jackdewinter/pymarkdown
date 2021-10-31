@@ -779,7 +779,7 @@ def test_markdown_with_dash_dash_log_level_info_with_file():
             file_data = file.read().replace("\n", "")
 
         # Info messages
-        assert "Number of files found: " in file_data, ">" + str(file_data) + "<"
+        assert "Number of files found: " in file_data, f">{file_data}<"
         assert (
             "Determining files to scan for path "
             + "'test/resources/rules/md047/end_with_blank_line.md'."

@@ -110,7 +110,7 @@ class StartOfLineTokenParser:
 
         for split_index, next_text in enumerate(split_text):
             combined_text = (
-                split_whitespace[split_index + self.__paragraph_index] + next_text
+                f"{split_whitespace[split_index + self.__paragraph_index]}{next_text}"
             )
             if (
                 self.__first_line_after_hard_break

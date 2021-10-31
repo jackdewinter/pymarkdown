@@ -94,12 +94,7 @@ class RuleMd044(Plugin):
         if not is_character_after_match and not is_character_before_match:
             assert len(original_found_text) == len(required_capitalization)
             if original_found_text != required_capitalization:
-                extra_data = (
-                    "Expected: "
-                    + required_capitalization
-                    + "; Actual: "
-                    + original_found_text
-                )
+                extra_data = f"Expected: {required_capitalization}; Actual: {original_found_text}"
                 self.report_next_token_error(
                     context,
                     token,
@@ -204,17 +199,21 @@ class RuleMd044(Plugin):
                 )
             elif token.is_inline_link_end:
                 if token.start_markdown_token.label_type == "inline":
-                    link_body = (
-                        token.start_markdown_token.before_link_whitespace
-                        + token.start_markdown_token.active_link_uri
-                        + token.start_markdown_token.before_title_whitespace
-                        + token.start_markdown_token.inline_title_bounding_character
+                    link_body = "".join(
+                        [
+                            token.start_markdown_token.before_link_whitespace,
+                            token.start_markdown_token.active_link_uri,
+                            token.start_markdown_token.before_title_whitespace,
+                            token.start_markdown_token.inline_title_bounding_character,
+                        ]
                     )
-                    full_link_text = (
-                        "["
-                        + token.start_markdown_token.text_from_blocks
-                        + "]("
-                        + link_body
+                    full_link_text = "".join(
+                        [
+                            "[",
+                            token.start_markdown_token.text_from_blocks,
+                            "](",
+                            link_body,
+                        ]
                     )
                     same_line_offset = len(full_link_text) + 1
                     self.__adjust_for_newlines_and_search(
@@ -232,13 +231,15 @@ class RuleMd044(Plugin):
                 )
 
                 if token.label_type == "inline":
-                    link_body = (
-                        token.before_link_whitespace
-                        + token.active_link_uri
-                        + token.before_title_whitespace
-                        + token.inline_title_bounding_character
+                    link_body = "".join(
+                        [
+                            token.before_link_whitespace,
+                            token.active_link_uri,
+                            token.before_title_whitespace,
+                            token.inline_title_bounding_character,
+                        ]
                     )
-                    full_link_text = "![" + token.text_from_blocks + "](" + link_body
+                    full_link_text = f"![{token.text_from_blocks}]({link_body}"
                     same_line_offset = len(full_link_text) + 1
                     self.__adjust_for_newlines_and_search(
                         context,
@@ -255,14 +256,16 @@ class RuleMd044(Plugin):
                 same_line_offset = -1
                 self.__search_for_matches(link_name, context, token, same_line_offset)
 
-                full_link_text = (
-                    "["
-                    + link_name
-                    + "]:"
-                    + token.link_destination_whitespace
-                    + token.link_destination
-                    + token.link_title_whitespace
-                    + "'"
+                full_link_text = "".join(
+                    [
+                        "[",
+                        link_name,
+                        "]:",
+                        token.link_destination_whitespace,
+                        token.link_destination,
+                        token.link_title_whitespace,
+                        "'",
+                    ]
                 )
                 same_line_offset = -(len(full_link_text) - 1)
                 self.__adjust_for_newlines_and_search(

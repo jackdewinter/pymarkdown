@@ -41,7 +41,7 @@ class RuleMd048(Plugin):
     @classmethod
     def __validate_configuration_style(cls, found_value):
         if found_value not in RuleMd048.__valid_styles:
-            raise ValueError(f"Allowable values: {str(RuleMd048.__valid_styles)}")
+            raise ValueError(f"Allowable values: {RuleMd048.__valid_styles}")
 
     def initialize_from_config(self):
         """
@@ -75,10 +75,7 @@ class RuleMd048(Plugin):
                 self.__actual_style_type = current_style
             if self.__actual_style_type != current_style:
                 extra_data = (
-                    "Expected: "
-                    + str(self.__actual_style_type)
-                    + "; Actual: "
-                    + str(current_style)
+                    f"Expected: {self.__actual_style_type}; Actual: {current_style}"
                 )
                 self.report_next_token_error(
                     context, token, extra_error_information=extra_data

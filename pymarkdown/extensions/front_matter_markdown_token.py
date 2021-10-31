@@ -175,7 +175,7 @@ class FrontMatterExtension:
             if next_index >= 4:
                 POGGER.debug("Indented line established.")
                 if current_title:
-                    current_value += "\n" + next_line.strip()
+                    current_value += f"\n{next_line.strip()}"
                     POGGER.debug("current_value>$<", current_value)
                 else:
                     return "Continuation line encountered before a keyword line."

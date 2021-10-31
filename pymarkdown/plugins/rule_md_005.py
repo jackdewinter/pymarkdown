@@ -84,7 +84,7 @@ class RuleMd005(Plugin):
             )
             original_text_length = len(original_text)
             current_prefix_length = len(
-                token.list_start_content + token.extracted_whitespace
+                f"{token.list_start_content}{token.extracted_whitespace}"
             )
             if original_text_length == current_prefix_length:
                 assert (

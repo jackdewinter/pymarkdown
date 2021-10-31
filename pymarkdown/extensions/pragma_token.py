@@ -182,7 +182,7 @@ class PragmaToken(MarkdownToken):
         serialized_pragmas = ""
         for next_line_number in pragma_lines:
             serialized_pragmas += (
-                ";" + str(next_line_number) + ":" + pragma_lines[next_line_number]
+                f";{next_line_number}:{pragma_lines[next_line_number]}"
             )
 
         MarkdownToken.__init__(

@@ -155,7 +155,7 @@ class TransformToMarkdown:
 
         assert issubclass(
             type_name, MarkdownToken
-        ), f"Token class '{str(type_name)}' must be descended from the 'MarkdownToken' class."
+        ), f"Token class '{type_name}' must be descended from the 'MarkdownToken' class."
         token_init_fn, init_parameters = type_name.__dict__["__init__"], {}
         for i in inspect.getfullargspec(token_init_fn)[0]:
             if i == "self":
@@ -220,7 +220,7 @@ class TransformToMarkdown:
             skip_merge = False
 
             print(
-                f"pre-h>continue_sequence>{str(continue_sequence)}<delayed_continue>{str(delayed_continue)}<"
+                f"pre-h>continue_sequence>{continue_sequence}<delayed_continue>{delayed_continue}<"
             )
 
             if current_token.token_name in self.start_container_token_handlers:
@@ -251,12 +251,12 @@ class TransformToMarkdown:
                         current_token, actual_tokens, token_index
                     )
                 else:
-                    assert False, f"end_current_token>>{str(current_token.type_name)}"
+                    assert False, f"end_current_token>>{current_token.type_name}"
             else:
-                assert False, f"current_token>>{str(current_token)}"
+                assert False, f"current_token>>{current_token}"
 
             print(
-                f"post-h>new_data>{ParserHelper.make_value_visible(new_data)}<continue_sequence>{str(continue_sequence)}<delayed_continue>{str(delayed_continue)}<"
+                f"post-h>new_data>{ParserHelper.make_value_visible(new_data)}<continue_sequence>{continue_sequence}<delayed_continue>{delayed_continue}<"
             )
             (
                 new_data,
@@ -274,7 +274,7 @@ class TransformToMarkdown:
                 transformed_data,
             )
             print(
-                f"post-p>new_data>{ParserHelper.make_value_visible(new_data)}<continue_sequence>{str(continue_sequence)}<delayed_continue>{str(delayed_continue)}<"
+                f"post-p>new_data>{ParserHelper.make_value_visible(new_data)}<continue_sequence>{continue_sequence}<delayed_continue>{delayed_continue}<"
             )
             print(
                 f"post-p>transformed_data>{ParserHelper.make_value_visible(transformed_data)}<"
@@ -311,11 +311,7 @@ class TransformToMarkdown:
             for next_line_number in ordered_lines:
                 if next_line_number == 1:
                     if transformed_data:
-                        transformed_data = (
-                            ordered_lines[next_line_number]
-                            + ParserHelper.newline_character
-                            + transformed_data
-                        )
+                        transformed_data = f"{ordered_lines[next_line_number]}{ParserHelper.newline_character}{transformed_data}"
                     else:
                         transformed_data = ordered_lines[next_line_number]
                 else:
@@ -325,18 +321,9 @@ class TransformToMarkdown:
                         next_line_number - 1,
                     )
                     if nth_index == -1:
-                        transformed_data = (
-                            transformed_data
-                            + ParserHelper.newline_character
-                            + ordered_lines[next_line_number]
-                        )
+                        transformed_data = f"{transformed_data}{ParserHelper.newline_character}{ordered_lines[next_line_number]}"
                     else:
-                        transformed_data = (
-                            transformed_data[0:nth_index]
-                            + ParserHelper.newline_character
-                            + ordered_lines[next_line_number]
-                            + transformed_data[nth_index:]
-                        )
+                        transformed_data = f"{transformed_data[0:nth_index]}{ParserHelper.newline_character}{ordered_lines[next_line_number]}{transformed_data[nth_index:]}"
 
         assert not self.block_stack
         assert not self.container_token_stack
@@ -392,15 +379,15 @@ class TransformToMarkdown:
         if not block_should_end_with_newline:
             ind = actual_tokens.index(current_token)
             print(
-                f">>actual_tokens[{str(ind)}]>>{ParserHelper.make_value_visible(actual_tokens[ind])}"
+                f">>actual_tokens[{ind}]>>{ParserHelper.make_value_visible(actual_tokens[ind])}"
             )
             while actual_tokens[ind].is_inline:
                 print(
-                    f">>actual_tokens[{str(ind)}]>>{ParserHelper.make_value_visible(actual_tokens[ind])}"
+                    f">>actual_tokens[{ind}]>>{ParserHelper.make_value_visible(actual_tokens[ind])}"
                 )
                 ind -= 1
             print(
-                f"<<actual_tokens[{str(ind)}]>>{ParserHelper.make_value_visible(actual_tokens[ind])}"
+                f"<<actual_tokens[{ind}]>>{ParserHelper.make_value_visible(actual_tokens[ind])}"
             )
             if actual_tokens[ind].is_paragraph:
                 if (
@@ -415,7 +402,7 @@ class TransformToMarkdown:
                 ):
                     special_text_in_list_exception = True
 
-        print(f"?>special_text_in_list_exception>{str(special_text_in_list_exception)}")
+        print(f"?>special_text_in_list_exception>{special_text_in_list_exception}")
         print(
             f"?>{ParserHelper.make_value_visible(delayed_continue)}>>{ParserHelper.make_value_visible(new_data)}>>"
         )
@@ -441,10 +428,8 @@ class TransformToMarkdown:
         print(
             f"__merge_with_container_data>new_data>{ParserHelper.make_value_visible(new_data)}"
         )
-        print(f"__merge_with_container_data>skip_merge>{str(skip_merge)}")
-        print(
-            f"__merge_with_container_data>continue_sequence>{str(continue_sequence)}<"
-        )
+        print(f"__merge_with_container_data>skip_merge>{skip_merge}")
+        print(f"__merge_with_container_data>continue_sequence>{continue_sequence}<")
         if not skip_merge and continue_sequence:
             print(
                 f"__merge_with_container_data>:{ParserHelper.make_value_visible(new_data)}:<"
@@ -603,7 +588,7 @@ class TransformToMarkdown:
                         split_new_data[split_index],
                     ]
                 )
-        print(">>line_parts>>" + str(line_parts))
+        print(f">>line_parts>>{line_parts}")
         if use_abbreviated_list:
             line_parts.extend([ParserHelper.newline_character, split_new_data[-1]])
 
@@ -673,23 +658,20 @@ class TransformToMarkdown:
             split_new_data[0],
         )
 
-        print("last_list_block>" + ParserHelper.make_value_visible(last_list_block))
+        print(f"last_list_block>{ParserHelper.make_value_visible(last_list_block)}")
         additional_whitespace = ""
         if last_list_block:
             block_token_index = self.container_token_stack.index(top_block_stack_token)
             list_token_index = self.container_token_stack.index(last_list_block)
             print(
-                "block_token_index>"
-                + str(block_token_index)
-                + ", list_token_index="
-                + str(list_token_index)
+                f"block_token_index>{block_token_index}, list_token_index={list_token_index}"
             )
             if list_token_index > block_token_index:
                 extra_count = last_list_block.indent_level - len(
                     last_list_block.extracted_whitespace
                 )
-                print("extra_count>" + str(extra_count))
-                print("next_token>" + ParserHelper.make_value_visible(next_token))
+                print(f"extra_count>{extra_count}")
+                print(f"next_token>{ParserHelper.make_value_visible(next_token)}")
                 if (
                     not next_token.is_blank_line
                     and not next_token.is_new_list_item
@@ -698,13 +680,13 @@ class TransformToMarkdown:
                     additional_whitespace = ParserHelper.repeat_string(
                         ParserHelper.space_character, extra_count
                     )
-                    print("additional_whitespace->" + str(additional_whitespace) + "<")
+                    print(f"additional_whitespace->{additional_whitespace}<")
 
         parts_to_merge = [new_data]
         for i in range(1, len(split_new_data)):
-            print(f"::{str(i)}::{split_new_data[i]}::")
+            print(f"::{i}::{split_new_data[i]}::")
             print(
-                f"::{str(top_block_stack_token.leading_text_index)}::{str(split_leading_spaces)}::"
+                f"::{top_block_stack_token.leading_text_index}::{split_leading_spaces}::"
             )
             if top_block_stack_token.leading_text_index < split_leading_spaces_size:
                 print("a")
@@ -725,7 +707,7 @@ class TransformToMarkdown:
             print(f"__merge_xx-post->{top_block_stack_token.leading_text_index}")
             top_block_stack_token.leading_text_index += 1
 
-        print("parts_to_merge>>" + str(parts_to_merge) + "<<")
+        print(f"parts_to_merge>>{parts_to_merge}<<")
         return "".join(parts_to_merge)
 
     # pylint: disable=too-many-arguments, too-many-branches, too-many-statements, too-many-locals
@@ -748,7 +730,7 @@ class TransformToMarkdown:
 
         # TODO can this be simplified like block quote?
 
-        print("mwcd:>>new_data>>" + ParserHelper.make_value_visible(new_data) + "<<")
+        print(f"mwcd:>>new_data>>{ParserHelper.make_value_visible(new_data)}<<")
         if special_text_in_list_exception:
             new_data = f"{ParserHelper.newline_character}{new_data}"
 
@@ -819,7 +801,7 @@ class TransformToMarkdown:
             assert new_data and new_data[0] == ParserHelper.newline_character
             new_data = new_data[1:]
 
-        print("mwcd:>>new_data>>" + ParserHelper.make_value_visible(new_data) + "<<")
+        print(f"mwcd:>>new_data>>{ParserHelper.make_value_visible(new_data)}<<")
         return new_data, delayed_continue
 
     # pylint: enable=too-many-arguments, too-many-branches, too-many-statements, too-many-locals
@@ -901,7 +883,7 @@ class TransformToMarkdown:
         )
         assert (
             rehydrate_index == expected_rehydrate_index
-        ), f"rehydrate_index={str(rehydrate_index)};expected_rehydrate_index={str(expected_rehydrate_index)}"
+        ), f"rehydrate_index={rehydrate_index};expected_rehydrate_index={expected_rehydrate_index}"
         return f"{top_stack_token.final_whitespace}{ParserHelper.newline_character}"
 
     # pylint: enable=unused-argument
@@ -1205,7 +1187,7 @@ class TransformToMarkdown:
                     else len(previous_token.leading_spaces)
                 )
 
-        print(f">>extracted_whitespace>>{str(extracted_whitespace)}<<")
+        print(f">>extracted_whitespace>>{extracted_whitespace}<<")
         print(
             f">>transformed_data>>{ParserHelper.make_value_visible(transformed_data)}<<"
         )
@@ -1222,13 +1204,13 @@ class TransformToMarkdown:
             if current_token.is_unordered_list_start
             else f"{extracted_whitespace}{current_token.list_start_content}{current_token.list_start_sequence}"
         )
-        print(f">>start_sequence>>:{str(start_sequence)}:<<")
+        print(f">>start_sequence>>:{start_sequence}:<<")
         if not next_token.is_blank_line:
             start_sequence = start_sequence.ljust(
                 current_token.indent_level - previous_indent - adjustment_since_newline,
                 " ",
             )
-            print(f">>start_sequence>>:{str(start_sequence)}:<<")
+            print(f">>start_sequence>>:{start_sequence}:<<")
         return start_sequence, ParserHelper.repeat_string(
             " ", current_token.indent_level
         )
@@ -1245,9 +1227,7 @@ class TransformToMarkdown:
             transformed_data_since_newline = transformed_data_since_newline[
                 last_newline_index + 1 :
             ]
-        print(
-            f">>transformed_data_since_newline>>:{str(transformed_data_since_newline)}:<<"
-        )
+        print(f">>transformed_data_since_newline>>:{transformed_data_since_newline}:<<")
         adjustment_since_newline, transformed_data_since_newline_size = 0, len(
             transformed_data_since_newline
         )
@@ -1277,16 +1257,16 @@ class TransformToMarkdown:
             self.container_token_stack[-1].line_number,
         )
 
-        print(">>" + ParserHelper.make_value_visible(actual_tokens[token_index:]))
+        print(f">>{ParserHelper.make_value_visible(actual_tokens[token_index:])}")
         search_index = token_index + 1
         while (
             search_index < len(actual_tokens)
             and actual_tokens[search_index].is_container_end_token
         ):
             search_index += 1
-        print(">>" + str(search_index))
+        print(f">>{search_index}")
         any_non_container_end_tokens = search_index < len(actual_tokens)
-        print(">>" + str(any_non_container_end_tokens))
+        print(f">>{any_non_container_end_tokens}")
 
         del self.container_token_stack[-1]
         if any_non_container_end_tokens:
@@ -1300,10 +1280,9 @@ class TransformToMarkdown:
                     -1
                 ].calculate_next_leading_space_part()
 
-            print(">>current_token>>" + ParserHelper.make_value_visible(current_token))
+            print(f">>current_token>>{ParserHelper.make_value_visible(current_token)}")
             print(
-                ">>current_token.start_markdown_token>>"
-                + ParserHelper.make_value_visible(current_token.start_markdown_token)
+                f">>current_token.start_markdown_token>>{ParserHelper.make_value_visible(current_token.start_markdown_token)}"
             )
             leading_text_index, expected_leading_text_index = (
                 current_token.start_markdown_token.leading_text_index,
@@ -1338,7 +1317,7 @@ class TransformToMarkdown:
 
         assert (
             leading_spaces_index == expected_leading_spaces_index
-        ), f"leading_spaces_index={str(leading_spaces_index)};expected_leading_spaces_index={str(len(expected_leading_spaces_index))}"
+        ), f"leading_spaces_index={leading_spaces_index};expected_leading_spaces_index={len(expected_leading_spaces_index)}"
         return "", continue_sequence, continue_sequence
 
     # pylint: enable=unused-argument
@@ -1611,7 +1590,7 @@ class TransformToMarkdown:
         """
         _ = previous_token
 
-        leading_whitespace = current_token.line_end + ParserHelper.newline_character
+        leading_whitespace = f"{current_token.line_end}{ParserHelper.newline_character}"
         if self.block_stack[-1].is_paragraph:
             (
                 leading_whitespace,
@@ -1873,7 +1852,7 @@ class TransformToMarkdown:
             if current_token.end_whitespace and current_token.end_whitespace.endswith(
                 ParserHelper.whitespace_split_character
             ):
-                main_text = current_token.end_whitespace[0:-1] + main_text
+                main_text = f"{current_token.end_whitespace[0:-1]}{main_text}"
         return main_text
 
     def __find_last_block_quote_on_stack(self):
@@ -1893,7 +1872,7 @@ class TransformToMarkdown:
             )
             if last_block_quote_block:
                 print(
-                    f"__find_last_block_quote_on_stack>>last_block_quote_block.leading_text_index>>{str(last_block_quote_block.leading_text_index)}<<"
+                    f"__find_last_block_quote_on_stack>>last_block_quote_block.leading_text_index>>{last_block_quote_block.leading_text_index}<<"
                 )
         return last_block_quote_block
 

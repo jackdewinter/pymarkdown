@@ -511,7 +511,7 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
         """
 
         original_location = (
-            f"({str(self.original_line_number)},{str(self.original_column_number)})"
+            f"({self.original_line_number},{self.original_column_number})"
         )
         field_parts = [
             self.__heading_character,

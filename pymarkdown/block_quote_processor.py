@@ -221,7 +221,7 @@ class BlockQuoteProcessor:
                 )
                 POGGER.debug("current_indent($)", current_indent)
                 POGGER.debug(
-                    "handle_block_quote_block>>really_start>:$:<", str(really_start)
+                    "handle_block_quote_block>>really_start>:$:<", really_start
                 )
 
         if really_start:

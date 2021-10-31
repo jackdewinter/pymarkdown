@@ -1431,7 +1431,7 @@ class InlineProcessor:
                 POGGER.debug("__cibp>new_index>$<", new_index)
                 POGGER.debug("__cibp>b>$<", ex_ws)
                 if new_index:
-                    end_string = ex_ws + ParserHelper.whitespace_split_character
+                    end_string = f"{ex_ws}{ParserHelper.whitespace_split_character}"
                     current_string = current_string[new_index:]
             POGGER.debug("__cibp>end_string>$<", end_string)
             inline_blocks.append(

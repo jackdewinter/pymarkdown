@@ -788,4 +788,4 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         """
         Independent of the __str__ function, provide extra information.
         """
-        return f">>active={str(self.__is_active)},repeat={str(self.__repeat_count)},preceding='{str(self.__preceding_two)}',following='{str(self.__following_two)}':{str(self)}"
+        return f">>active={self.__is_active},repeat={self.__repeat_count},preceding='{self.__preceding_two}',following='{self.__following_two}':{self}"

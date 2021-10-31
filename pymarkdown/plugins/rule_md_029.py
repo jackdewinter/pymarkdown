@@ -47,7 +47,7 @@ class RuleMd029(Plugin):
     @classmethod
     def __validate_configuration_style(cls, found_value):
         if found_value not in RuleMd029.__valid_styles:
-            raise ValueError(f"Allowable values: {str(RuleMd029.__valid_styles)}")
+            raise ValueError(f"Allowable values: {RuleMd029.__valid_styles}")
 
     def initialize_from_config(self):
         """

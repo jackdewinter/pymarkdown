@@ -557,4 +557,4 @@ test: assert
     except BadTokenizationError as this_error:
         assert (
             str(this_error) == "An unhandled error occurred processing the document."
-        ), "message=" + str(this_error)
+        ), f"message={this_error}"

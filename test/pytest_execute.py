@@ -41,12 +41,8 @@ class InProcessResult:
 
         if additional_text:
             assert actual_stream.getvalue().strip().startswith(expected_text.strip()), (
-                "Block\n---\n"
-                + expected_text
-                + "\n---\nwas not found at the start of\n---\n"
-                + actual_stream.getvalue()
-                + "\nExtra:"
-                + str(log_extra)
+                f"Block\n---\n{expected_text}\n---\nwas not found at the start of"
+                + "\n---\n{actual_stream.getvalue()}\nExtra:{log_extra}"
             )
 
             for next_text_block in additional_text:
@@ -59,12 +55,9 @@ class InProcessResult:
                 diff_values = ParserHelper.newline_character.join(list(diff))
                 print(diff_values, file=sys.stderr)
                 if not was_found:
-                    assert False, (
-                        "Block\n---\n"
-                        + next_text_block
-                        + "\n---\nwas not found in\n---\n"
-                        + actual_stream.getvalue()
-                    )
+                    assert (
+                        False
+                    ), f"Block\n---\n{next_text_block}\n---\nwas not found in\n---\n{actual_stream.getvalue()}"
         else:
             if actual_stream.getvalue().strip() != expected_text.strip():
                 diff = difflib.ndiff(
@@ -72,7 +65,7 @@ class InProcessResult:
                 )
 
                 diff_values = (
-                    ParserHelper.newline_character.join(list(diff)) + "\n---\n"
+                    f"{ParserHelper.newline_character.join(list(diff))}\n---\n"
                 )
 
                 LOGGER.warning(
@@ -80,16 +73,15 @@ class InProcessResult:
                     ParserHelper.make_value_visible(actual_stream.getvalue()),
                 )
                 print(
-                    "WARN>actual>>"
-                    + ParserHelper.make_value_visible(actual_stream.getvalue())
+                    f"WARN>actual>>{ParserHelper.make_value_visible(actual_stream.getvalue())}"
                 )
                 LOGGER.warning(
                     "expect>>%s", ParserHelper.make_value_visible(expected_text)
                 )
-                print("WARN>expect>>" + ParserHelper.make_value_visible(expected_text))
+                print(f"WARN>expect>>{ParserHelper.make_value_visible(expected_text)}")
                 if log_extra:
-                    print("log_extra:" + log_extra)
-                assert False, stream_name + " not as expected:\n" + diff_values
+                    print(f"log_extra:{log_extra}")
+                assert False, f"{stream_name} not as expected:\n{diff_values}"
 
     # pylint: enable=too-many-arguments
 
@@ -107,10 +99,10 @@ class InProcessResult:
                 )
             else:
                 assert_text = (
-                    "Expected stdout to be empty, not: " + self.std_out.getvalue()
+                    f"Expected stdout to be empty, not: {self.std_out.getvalue()}"
                 )
                 if self.std_err.getvalue():
-                    assert_text += "\nStdErr was:" + self.std_err.getvalue()
+                    assert_text += f"\nStdErr was:{self.std_err.getvalue()}"
                 assert not self.std_out.getvalue(), assert_text
 
             if stderr:
@@ -118,17 +110,13 @@ class InProcessResult:
                     "Stderr", self.std_err, stderr, additional_error
                 )
             else:
-                assert not self.std_err.getvalue(), (
-                    "Expected stderr to be empty, not: " + self.std_err.getvalue()
-                )
+                assert (
+                    not self.std_err.getvalue()
+                ), f"Expected stderr to be empty, not: {self.std_err.getvalue()}"
 
-            assert self.return_code == error_code, (
-                "Actual error code ("
-                + str(self.return_code)
-                + ") and expected error code ("
-                + str(error_code)
-                + ") differ."
-            )
+            assert (
+                self.return_code == error_code
+            ), f"Actual error code ({self.return_code}) and expected error code ({error_code}) differ."
 
         finally:
             self.std_out.close()

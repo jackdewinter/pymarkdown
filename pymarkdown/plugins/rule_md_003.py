@@ -51,7 +51,7 @@ class RuleMd003(Plugin):
     @classmethod
     def __validate_configuration_style(cls, found_value):
         if found_value not in RuleMd003.__valid_styles:
-            raise ValueError(f"Allowable values: {str(RuleMd003.__valid_styles)}")
+            raise ValueError(f"Allowable values: {RuleMd003.__valid_styles}")
 
     def initialize_from_config(self):
         """
@@ -116,10 +116,7 @@ class RuleMd003(Plugin):
 
             if is_heading_bad:
                 extra_data = (
-                    "Expected: "
-                    + str(expected_style_type)
-                    + "; Actual: "
-                    + str(heading_style_type)
+                    f"Expected: {expected_style_type}; Actual: {heading_style_type}"
                 )
                 self.report_next_token_error(
                     context, token, extra_error_information=extra_data

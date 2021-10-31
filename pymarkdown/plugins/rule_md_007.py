@@ -130,7 +130,7 @@ class RuleMd007(Plugin):
         """
         Event that a new token is being processed.
         """
-        # print(">>>" + str(token).replace("\n", "\\n"))
+        # print(f">>>{token}".replace("\n", "\\n"))
         if token.is_unordered_list_start or (
             token.is_new_list_item
             and self.__container_token_stack[-1].is_unordered_list_start
@@ -152,10 +152,10 @@ class RuleMd007(Plugin):
                     break
                 list_depth += 1
                 stack_index -= 1
-            # print("stack_index=" + str(stack_index))
+            # print(f"stack_index={stack_index}")
             ignore_list_starts = False
             while stack_index >= 0:
-                # print("stack_index>" + str(stack_index) + ",token=" + str(self.__container_token_stack[t]).replace("\n", "\\n"))
+                # print(f"stack_index>{stack_index},token={self.__container_token_stack[t]}".replace("\n", "\\n"))
                 if self.__container_token_stack[stack_index].is_ordered_list_start:
                     if not ignore_list_starts:
                         container_base_column += self.__container_token_stack[
@@ -175,14 +175,14 @@ class RuleMd007(Plugin):
                         )
                     container_base_column += len(split_leading_spaces[bq_index])
                     ignore_list_starts = False
-                # print("container_base_column>" + str(container_base_column))
+                # print(f"container_base_column>{container_base_column}")
                 stack_index -= 1
         return container_base_column, block_quote_base, list_depth
 
     def __check(self, context, token):
-        # print(str(token).replace("\n", "\\n"))
-        # print(str(self.__container_token_stack).replace("\n", "\\n"))
-        # print(str(self.__bq_line_index).replace("\n", "\\n"))
+        # print(f"{token}".replace("\n", "\\n"))
+        # print(f"{self.__container_token_stack}".replace("\n", "\\n"))
+        # print(f"{self.__bq_line_index}".replace("\n", "\\n"))
 
         (
             container_base_column,

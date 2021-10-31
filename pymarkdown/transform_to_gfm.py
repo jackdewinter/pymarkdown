@@ -194,7 +194,7 @@ class TransformToGfm:
         """
         assert issubclass(
             type_name, MarkdownToken
-        ), f"Token class '{str(type_name)}' must be descended from the 'MarkdownToken' class."
+        ), f"Token class '{type_name}' must be descended from the 'MarkdownToken' class."
         token_init_fn = type_name.__dict__["__init__"]
         init_parameters = {}
         for i in inspect.getfullargspec(token_init_fn)[0]:
@@ -242,9 +242,7 @@ class TransformToGfm:
                         False
                     ), f"Markdown token end type {next_token.type_name} not supported."
             else:
-                assert (
-                    False
-                ), f"Markdown token type {str(type(next_token))} not supported."
+                assert False, f"Markdown token type {type(next_token)} not supported."
 
             POGGER.debug("======")
             POGGER.debug(
@@ -507,7 +505,7 @@ class TransformToGfm:
         POGGER.debug(f"inner_tag>>:{inner_tag}:<<")
         POGGER.debug(f"output_html>>:{output_html}:<<")
         POGGER.debug(
-            f"last_token>>:{str(transform_state.actual_tokens[transform_state.actual_token_index - 1])}:<<"
+            f"last_token>>:{transform_state.actual_tokens[transform_state.actual_token_index - 1]}:<<"
         )
 
         token_parts = [output_html]

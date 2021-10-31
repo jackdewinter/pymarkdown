@@ -320,7 +320,8 @@ def test_markdown_with_dash_l_on_directory():
 ../../docs/extensions.md
 ../../docs/faq.md
 ../../docs/pre-commit.md
-../../docs/rules.md"""
+../../docs/rules.md
+../../docs/writing_rule_plugins.md"""
     expected_error = ""
 
     # Act
@@ -399,7 +400,8 @@ def test_markdown_with_dash_l_and_dash_r_on_directory():
 ../../docs/rules/rule_md045.md
 ../../docs/rules/rule_md046.md
 ../../docs/rules/rule_md047.md
-../../docs/rules/rule_md048.md"""
+../../docs/rules/rule_md048.md
+../../docs/writing_rule_plugins.md"""
     expected_error = ""
 
     # Act
