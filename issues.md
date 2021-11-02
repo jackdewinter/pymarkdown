@@ -12,9 +12,6 @@
 
 ### nested lists
 
-- test_list_blocks_extra_6x, test_list_blocks_extra_6a
-  - test_md005_good_ordered_list_double_level_right
-  - test_md005_*weird*
 - check for nested within bq and decide how rule should react?
 - 4+ levels of nesting
   - `test_list_blocks_271fx` and `test_list_blocks_271fa`
