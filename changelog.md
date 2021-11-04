@@ -10,6 +10,8 @@
 
 - [Changed - Issue 85](https://github.com/jackdewinter/pymarkdown/issues/85)
   - scenario tests: verified and documented inlines with newline tests
+- [Changed - Issue 90](https://github.com/jackdewinter/pymarkdown/issues/90)
+  - scenario tests: verified noted tests have been fixed
 
 ### Fixed
 

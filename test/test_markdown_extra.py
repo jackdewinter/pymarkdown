@@ -5,6 +5,8 @@ import pytest
 
 from .utils import act_and_assert
 
+# pylint: disable=too-many-lines
+
 
 @pytest.mark.gfm
 def test_extra_001():
@@ -949,6 +951,76 @@ def test_extra_012():
 </li>
 <li>this is also level 1</li>
 </ul>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_013x():
+    """
+    Paragraph followed by a blank line and a SetExt heading in a block quote
+    """
+
+    # Arrange
+    source_markdown = """ > this is text
+ >
+ > a setext heading
+ > that is not properly
+>  indented
+> ---
+"""
+    expected_tokens = [
+        "[block-quote(1,2): : > \n >\n > \n > \n> \n> \n]",
+        "[para(1,4):]",
+        "[text(1,4):this is text:]",
+        "[end-para:::True]",
+        "[BLANK(2,3):]",
+        "[setext(6,3):-:3::(3,4)]",
+        "[text(3,4):a setext heading\nthat is not properly\nindented::\n\n \x02]",
+        "[end-setext::]",
+        "[end-block-quote:::True]",
+        "[BLANK(7,1):]",
+    ]
+    expected_gfm = """<blockquote>
+<p>this is text</p>
+<h2>a setext heading
+that is not properly
+indented</h2>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_013a():
+    """
+    Variation of 13x without the block quote.
+    """
+
+    # Arrange
+    source_markdown = """this is text
+
+a setext heading
+that is not properly
+ indented
+---
+"""
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):this is text:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[setext(6,1):-:3::(3,1)]",
+        "[text(3,1):a setext heading\nthat is not properly\nindented::\n\n \x02]",
+        "[end-setext::]",
+        "[BLANK(7,1):]",
+    ]
+    expected_gfm = """<p>this is text</p>
+<h2>a setext heading
+that is not properly
+indented</h2>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
