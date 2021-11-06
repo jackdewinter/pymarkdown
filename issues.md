@@ -20,8 +20,6 @@ md010 - tabs "converted"
 
 ### Like To Have - Issues
 
-- finish off inline elements for rule 027
-  - check for nested within bq and decide how rule should react?
 - md033 - <? and <! with alpha character after
 
 - better solution than `no-space-in-code` for scenario-cases.md

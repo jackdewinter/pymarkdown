@@ -23,6 +23,8 @@ jobs:
         python-version: 3.8
     - name: Install PipEnv
       uses: dschep/install-pipenv-action@v1
+      with:
+        version: 2021.11.5
     - name: Sync With Repository
       run: pipenv sync
     - name: Execute Tests

@@ -24,6 +24,9 @@
 - [Fixed - Issue 90](https://github.com/jackdewinter/pymarkdown/issues/90)
   - scenario tests: verified noted tests have been fixed
   - rule md027: rewrote bq index logic to work properly
+- [Fixed(partial) - Issue 92](https://github.com/jackdewinter/pymarkdown/issues/92)
+  - rule md027: nested containers were not thoroughly tested
+  - parser: added new bugs linked to Issue 92 as part of discovery
 
 ## Version 0.9.2 - Date: 2021-10-24
 
