@@ -567,6 +567,8 @@ def test_md007_bad_list_indentation_in_block_quote_level_0():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md027",
         "scan",
         "test/resources/rules/md007/bad_list_indentation_in_block_quote_level_0.md",
     ]

@@ -661,7 +661,7 @@ def test_md005_good_unordered_list_double_level_in_block_quote_first():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md007",
+        "md007,md027",
         "scan",
         "test/resources/rules/md005/bad_unordered_list_double_level_in_block_quote_first.md",
     ]
