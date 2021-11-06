@@ -185,12 +185,11 @@ class RuleMd027(Plugin):
         #     print(f"found_block_quote_token={ParserHelper.make_value_visible(found_block_quote_token)}")
         #     print(f"num_container_tokens={num_container_tokens},self.__bq_line_index={self.__bq_line_index[num_container_tokens]}")
         split_leading_spaces = found_block_quote_token.leading_spaces.split("\n")
-        specific_block_quote_prefix = split_leading_spaces[
-            self.__bq_line_index[num_container_tokens]
-        ]
         # if self.__debug_on:
         #     print(f"specific_block_quote_prefix={specific_block_quote_prefix};")
-        return specific_block_quote_prefix
+        return split_leading_spaces[
+            self.__bq_line_index[num_container_tokens]
+        ]
 
     def __check_list_starts(
         self, context, token, num_container_tokens, is_new_list_item
