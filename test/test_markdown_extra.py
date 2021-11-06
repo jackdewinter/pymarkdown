@@ -1024,3 +1024,345 @@ indented</h2>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_014x():
+    """
+    TBD - test_md027_good_block_quote_ordered_list_thematic_break
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>    *****
+> 1. that
+
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> ]",
+        "[olist(1,3):.:1:5:  ]",
+        "[para(1,6):\n   ]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::False]",
+        "[tbreak(3,6):*:   :*****]",
+        "[li(4,3):5:  :1]",
+        "[para(4,6):]",
+        "[text(4,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+this
+<hr />
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_014a():
+    """
+    TBD - test_md027_good_block_quote_ordered_list_thematic_break_misaligned
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>     *****
+> 1. that
+
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> ]",
+        "[olist(1,3):.:1:5:  ]",
+        "[para(1,6):\n   ]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::False]",
+        "[tbreak(3,6):*:    :*****]",
+        "[li(4,3):5:  :1]",
+        "[para(4,6):]",
+        "[text(4,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+this
+<hr />
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_015():
+    """
+    TBD - test_md027_good_block_quote_ordered_list_atx_heading
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>    # Heading
+> 1. that
+
+"""
+    expected_tokens = []
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+this
+<h1>Heading</h1>
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_016():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>
+>    Heading
+>    ---
+> 1. that
+
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n>\n> \n> \n> ]",
+        "[olist(1,3):.:1:5:  ]",
+        "[para(1,6):\n   ]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,2):]",
+        "[setext(5,6):-:3:   :(4,6)]",
+        "[text(4,6):Heading:]",
+        "[end-setext:   :]",
+        "[li(6,3):5:  :1]",
+        "[para(6,6):]",
+        "[text(6,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<p>list
+this</p>
+<h2>Heading</h2>
+</li>
+<li>
+<p>that</p>
+</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_017():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>
+>        indented
+>        code block
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n>\n> \n> \n> ]",
+        "[olist(1,3):.:1:5:  ]",
+        "[para(1,6):\n   ]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,2):]",
+        "[icode-block(4,7):    :\n    ]",
+        "[text(4,7):indented\n   code block:   ]",
+        "[end-icode-block:::True]",
+        "[li(6,3):5:  :1]",
+        "[para(6,6):]",
+        "[text(6,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<p>list
+this</p>
+<pre><code>indented
+code block
+</code></pre>
+</li>
+<li>
+<p>that</p>
+</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_018():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>    ```html
+>    <html>
+>    ```
+> 1. that
+"""
+    expected_tokens = []
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+this
+<pre><code class="language-html">&lt;html&gt;
+</code></pre>
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_019():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>    <!-- this is a comment -->
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> ]",
+        "[olist(1,3):.:1:5:  ]",
+        "[para(1,6):\n   ]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::False]",
+        "[end-olist:::True]",
+        "[html-block(3,3)]",
+        "[text(3,6):<!-- this is a comment -->:   ]",
+        "[end-html-block:::False]",
+        "[olist(4,3):.:1:5:  ]",
+        "[para(4,6):]",
+        "[text(4,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+this
+<!-- this is a comment -->
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_020():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>
+>    [abc]: /url
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n>\n> \n> \n]",
+        "[olist(1,3):.:1:5:  ]",
+        "[para(1,6):\n   ]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,2):]",
+        "[link-ref-def(4,6):True:   :abc:: :/url:::::]",
+        "[li(5,3):5:  :1]",
+        "[para(5,6):]",
+        "[text(5,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<p>list
+this</p>
+</li>
+<li>
+<p>that</p>
+</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)

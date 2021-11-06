@@ -12,20 +12,16 @@
 
 ### nested lists
 
-- check for nested within bq and decide how rule should react?
 - 4+ levels of nesting
   - `test_list_blocks_271fx` and `test_list_blocks_271fa`
 
 md010 - tabs "converted"
       - tabs in code blocks
 
-### bad_split_block_quote_in_list
-
-- commented out `rule_md_027.py#69` for now
-
 ### Like To Have - Issues
 
 - finish off inline elements for rule 027
+  - check for nested within bq and decide how rule should react?
 - md033 - <? and <! with alpha character after
 
 - better solution than `no-space-in-code` for scenario-cases.md

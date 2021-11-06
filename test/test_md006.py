@@ -146,7 +146,7 @@ def test_md006_bad_indentation_in_block_quote():
         "--enable-rules",
         "MD006",
         "--disable-rules",
-        "MD007",
+        "MD007,md027",
         "scan",
         "test/resources/rules/md006/bad_indentation_in_block_quote.md",
     ]

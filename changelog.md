@@ -10,8 +10,6 @@
 
 - [Changed - Issue 85](https://github.com/jackdewinter/pymarkdown/issues/85)
   - scenario tests: verified and documented inlines with newline tests
-- [Changed - Issue 90](https://github.com/jackdewinter/pymarkdown/issues/90)
-  - scenario tests: verified noted tests have been fixed
 
 ### Fixed
 
@@ -23,6 +21,9 @@
   - consistency check: verified rehydrate usage through project
   - consistency check: tightening leading space index for block quotes
     - parser: found and resolved issue with extra newline added to leading spaces for block quote
+- [Fixed - Issue 90](https://github.com/jackdewinter/pymarkdown/issues/90)
+  - scenario tests: verified noted tests have been fixed
+  - rule md027: rewrote bq index logic to work properly
 
 ## Version 0.9.2 - Date: 2021-10-24
 
