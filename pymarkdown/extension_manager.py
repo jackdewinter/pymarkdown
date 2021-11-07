@@ -71,6 +71,7 @@ class ExtensionManager:
             _ = next_extension.extension_interface_version
             _ = next_extension.extension_configuration
 
+    # pylint: disable=consider-using-dict-items
     def apply_configuration(self):
         """
         Apply any supplied configuration to each of the enabled extensions.
@@ -94,6 +95,8 @@ class ExtensionManager:
         self.__is_linter_pragmas_enabled = (
             PragmaExtension().get_identifier() in self.__enabled_extensions
         )
+
+    # pylint: enable=consider-using-dict-items
 
     @property
     def is_front_matter_enabled(self):

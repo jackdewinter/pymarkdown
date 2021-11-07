@@ -12,7 +12,7 @@ class RuleMd030(Plugin):
 
     def __init__(self):
         super().__init__()
-        self.__debug = False
+        # self.__debug = False
         self.__ul_single = None
         self.__ul_multi = None
         self.__ol_single = None

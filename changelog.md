@@ -4,7 +4,8 @@
 
 ### Added
 
-- None
+- [Added - Issue 104](https://github.com/jackdewinter/pymarkdown/issues/104)
+  - core: added support for calling home every week to see if there is a new version at PyPi.org
 
 ### Changed
 

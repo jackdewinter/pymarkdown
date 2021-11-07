@@ -12,7 +12,7 @@ class RuleMd043(Plugin):
 
     def __init__(self):
         super().__init__()
-        self.__show_debug = False
+        # self.__show_debug = False
         self.__collected_tokens = None
         self.__all_tokens = None
         self.__headings_have_wildcards = None

@@ -19,7 +19,7 @@ the `.pre-commit-config.yaml` file must exist in the
 root of that repository and start with the text:
 
 ```text
-default_stages: [commit]
+default_stages: [commit, push]
 
 repos:
 ```
@@ -31,11 +31,21 @@ pre-commit hooks, append the following configuration to
 the `.pre-commit-config.yaml` file:
 
 ```yaml
-- repo: https://github.com/jackdewinter/pymarkdown
+  - repo: https://github.com/jackdewinter/pymarkdown
     rev: main
     hooks:
       - id: pymarkdown
 ```
+
+For a good example of a working `` file, please feel free to look at that file
+for any of the PyMarkdown companion projects, as listed below:
+
+- [application_properties](https://github.com/jackdewinter/application_properties/blob/main/.pre-commit-config.yaml)
+
+## Executing The Configuration File
+
+- add on how to add python support locally
+- add pointers on pre-commit.io on adding them for CI
 
 ## Configuration
 
@@ -110,12 +120,14 @@ or:
 where `option1` is one of the specified options.
 
 Note that
-the default arguments are specified as `[scan]`, instructing
+the default arguments are specified as `[--disable-version,scan]`, instructing
 PyMarkdown to perform a scan of any files supplied by the
 pre-commit hook without applying any added configuration.
-If any custom arguments are specified, make sure to append
-the `scan` keyword to the end of the list to instruct PyMarkdown
-to scan for documents.
+The `--disable-version` flag instructs the application to disable checking
+if the current version is the latest version.
+Therefore, if any custom arguments are specified, make sure to start the
+list with the argument `--disable-version` and end the list with the
+argument `scan`.
 
 #### Command Line Arguments Vs Configuration File
 

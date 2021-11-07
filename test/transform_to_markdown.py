@@ -1048,40 +1048,6 @@ class TransformToMarkdown:
         )
 
     # pylint: disable=unused-argument
-    def __rehydrate_ordered_list_start(
-        self, current_token, previous_token, next_token, transformed_data
-    ):
-        """
-        Rehydrate the unordered list start token.
-        """
-        _ = transformed_data
-
-        self.container_token_stack.append(copy.deepcopy(current_token))
-
-        previous_indent, extracted_whitespace = 0, current_token.extracted_whitespace
-        if previous_token and previous_token.is_list_start:
-            previous_indent = previous_token.indent_level
-            assert len(current_token.extracted_whitespace) == previous_indent
-            extracted_whitespace = ""
-
-        start_sequence = "".join(
-            [
-                extracted_whitespace,
-                current_token.list_start_content,
-                current_token.list_start_sequence,
-            ]
-        )
-        if not next_token.is_blank_line:
-            start_sequence = start_sequence.ljust(
-                current_token.indent_level - previous_indent, " "
-            )
-        return start_sequence, ParserHelper.repeat_string(
-            " ", current_token.indent_level
-        )
-
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_block_quote(
         self, current_token, previous_token, next_token, transformed_data
     ):

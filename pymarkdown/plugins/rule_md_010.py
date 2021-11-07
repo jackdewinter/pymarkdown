@@ -41,6 +41,8 @@ class RuleMd010(Plugin):
         """
         Event that a new line is being processed.
         """
+        _ = self.__allow_in_code_blocks
+
         if "\t" in line:
             next_index = line.find("\t", 0)
             while next_index != -1:

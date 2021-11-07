@@ -4,5 +4,5 @@
   language: python
   language_version: python3
   entry: pymarkdown
-  args: [scan]
+  args: [--disable-version,scan]
   types: [markdown]
