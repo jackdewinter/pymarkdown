@@ -315,23 +315,22 @@ class PyMarkdownLint:
                     rooted_file_path = f"{normalized_root}/{file}"
                     if self.__is_file_eligible_to_scan(rooted_file_path):
                         files_to_parse.add(rooted_file_path)
+        elif self.__is_file_eligible_to_scan(next_path):
+            POGGER.debug(
+                "Provided path '$' is a valid file. Adding.",
+                next_path,
+            )
+            files_to_parse.add(next_path)
+            did_find_any = True
         else:
-            if self.__is_file_eligible_to_scan(next_path):
-                POGGER.debug(
-                    "Provided path '$' is a valid file. Adding.",
-                    next_path,
-                )
-                files_to_parse.add(next_path)
-                did_find_any = True
-            else:
-                POGGER.debug(
-                    "Provided path '$' is not a valid file. Skipping.",
-                    next_path,
-                )
-                print(
-                    f"Provided file path '{next_path}' is not a valid file. Skipping.",
-                    file=sys.stderr,
-                )
+            POGGER.debug(
+                "Provided path '$' is not a valid file. Skipping.",
+                next_path,
+            )
+            print(
+                f"Provided file path '{next_path}' is not a valid file. Skipping.",
+                file=sys.stderr,
+            )
         return did_find_any
 
     def __determine_files_to_scan(self, eligible_paths, recurse_directories):
@@ -353,12 +352,11 @@ class PyMarkdownLint:
                     self.__process_next_path(
                         next_globbed_path, files_to_parse, recurse_directories
                     )
-            else:
-                if not self.__process_next_path(
+            elif not self.__process_next_path(
                     next_path, files_to_parse, recurse_directories
                 ):
-                    did_error_scanning_files = True
-                    break
+                did_error_scanning_files = True
+                break
 
         files_to_parse = list(files_to_parse)
         files_to_parse.sort()
@@ -388,10 +386,7 @@ class PyMarkdownLint:
 
     def __initialize_parser(self, args):
 
-        resource_path = None
-        if args.x_test_init_fault:
-            resource_path = "fredo"
-
+        resource_path = "fredo" if args.x_test_init_fault else None
         try:
             self.__tokenizer = TokenizedMarkdown(resource_path)
             self.__tokenizer.apply_configuration(self.__properties, self.__extensions)
@@ -519,10 +514,7 @@ class PyMarkdownLint:
             )
             self.__extensions.apply_configuration()
 
-        except ValueError as this_exception:
-            formatted_error = f"{type(this_exception).__name__} encountered while initializing extensions:\n{this_exception}"
-            self.__handle_error(formatted_error, this_exception)
-        except Exception as this_exception:
+        except (ValueError, Exception) as this_exception:
             formatted_error = f"{type(this_exception).__name__} encountered while initializing extensions:\n{this_exception}"
             self.__handle_error(formatted_error, this_exception)
 

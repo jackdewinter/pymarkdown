@@ -192,7 +192,7 @@ class TransformToMarkdown:
             ] = end_token_handler
 
     # pylint: disable=too-many-locals, too-many-branches, too-many-statements
-    def transform(self, actual_tokens):  # noqa: C901
+    def transform(self, actual_tokens):    # noqa: C901
         """
         Transform the incoming token stream back into Markdown.
         """
@@ -334,13 +334,16 @@ class TransformToMarkdown:
             print("---")
             previous_token = current_token
 
-        if transformed_data and transformed_data[-1] == ParserHelper.newline_character:
-            if not (
+        if (
+            transformed_data
+            and transformed_data[-1] == ParserHelper.newline_character
+            and not (
                 actual_tokens[-1].is_fenced_code_block_end
                 and actual_tokens[-1].was_forced
                 and not actual_tokens[-2].is_fenced_code_block
-            ):
-                transformed_data = transformed_data[0:-1]
+            )
+        ):
+            transformed_data = transformed_data[0:-1]
 
         if pragma_token:
             ordered_lines = collections.OrderedDict(
@@ -412,9 +415,10 @@ class TransformToMarkdown:
             f">>self.container_token_stack>>{ParserHelper.make_value_visible(self.container_token_stack)}"
         )
 
-        merge_with_block_start = False
-        if self.container_token_stack[0].is_block_quote_start:
-            merge_with_block_start = True
+        merge_with_block_start = bool(
+            self.container_token_stack[0].is_block_quote_start
+        )
+
         if not block_should_end_with_newline:
             ind = actual_tokens.index(current_token)
             print(
@@ -428,18 +432,21 @@ class TransformToMarkdown:
             print(
                 f"<<actual_tokens[{ind}]>>{ParserHelper.make_value_visible(actual_tokens[ind])}"
             )
-            if actual_tokens[ind].is_paragraph:
-                if (
+            if (
+                actual_tokens[ind].is_paragraph
+                and (
                     transformed_data
                     and transformed_data[-1] == ParserHelper.newline_character
-                ) and (
+                )
+                and (
                     current_token.is_text
                     or current_token.is_inline_emphasis
                     or current_token.is_inline_link
                     or current_token.is_inline_image
                     or current_token.is_inline_raw_html
-                ):
-                    special_text_in_list_exception = True
+                )
+            ):
+                special_text_in_list_exception = True
 
         print(f"?>special_text_in_list_exception>{special_text_in_list_exception}")
         print(
@@ -932,9 +939,12 @@ class TransformToMarkdown:
         Rehydrate the blank line from the token.
         """
         extra_newline_after_text_token = ""
-        if self.block_stack and self.block_stack[-1].is_fenced_code_block:
-            if previous_token.is_text:
-                extra_newline_after_text_token = ParserHelper.newline_character
+        if (
+            self.block_stack
+            and self.block_stack[-1].is_fenced_code_block
+            and previous_token.is_text
+        ):
+            extra_newline_after_text_token = ParserHelper.newline_character
 
         return f"{extra_newline_after_text_token}{current_token.extracted_whitespace}{ParserHelper.newline_character}"
 
@@ -1003,14 +1013,12 @@ class TransformToMarkdown:
                 current_token.fence_character, current_token.fence_count
             ),
             current_token.extracted_whitespace_before_info_string,
-            current_token.pre_extracted_text
-            if current_token.pre_extracted_text
-            else current_token.extracted_text,
+            current_token.pre_extracted_text or current_token.extracted_text,
             current_token.pre_text_after_extracted_text
-            if current_token.pre_text_after_extracted_text
-            else current_token.text_after_extracted_text,
+            or current_token.text_after_extracted_text,
             ParserHelper.newline_character,
         ]
+
         return "".join(code_block_start_parts)
 
     # pylint: enable=unused-argument
@@ -1062,15 +1070,14 @@ class TransformToMarkdown:
         )
 
         already_existing_whitespace = None
-        if len(self.container_token_stack) > 1:
-            if (
-                self.container_token_stack[-2].is_list_start
-                and current_token.line_number
-                == self.container_token_stack[-2].line_number
-            ):
-                already_existing_whitespace = ParserHelper.repeat_string(
-                    " ", self.container_token_stack[-2].indent_level
-                )
+        if len(self.container_token_stack) > 1 and (
+            self.container_token_stack[-2].is_list_start
+            and current_token.line_number
+            == self.container_token_stack[-2].line_number
+        ):
+            already_existing_whitespace = ParserHelper.repeat_string(
+                " ", self.container_token_stack[-2].indent_level
+            )
 
         print(f">bquote>current_token>{ParserHelper.make_value_visible(current_token)}")
         print(f">bquote>next_token>{ParserHelper.make_value_visible(next_token)}")
@@ -1467,21 +1474,16 @@ class TransformToMarkdown:
         link_def_parts = [
             current_token.extracted_whitespace,
             "[",
-            current_token.link_name_debug
-            if current_token.link_name_debug
-            else current_token.link_name,
+            current_token.link_name_debug or current_token.link_name,
             "]:",
             current_token.link_destination_whitespace,
-            current_token.link_destination_raw
-            if current_token.link_destination_raw
-            else current_token.link_destination,
+            current_token.link_destination_raw or current_token.link_destination,
             current_token.link_title_whitespace,
-            current_token.link_title_raw
-            if current_token.link_title_raw
-            else current_token.link_title,
+            current_token.link_title_raw or current_token.link_title,
             current_token.end_whitespace,
             ParserHelper.newline_character,
         ]
+
         return "".join(link_def_parts)
 
     # pylint: enable=unused-argument

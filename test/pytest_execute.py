@@ -58,30 +58,29 @@ class InProcessResult:
                     assert (
                         False
                     ), f"Block\n---\n{next_text_block}\n---\nwas not found in\n---\n{actual_stream.getvalue()}"
-        else:
-            if actual_stream.getvalue().strip() != expected_text.strip():
-                diff = difflib.ndiff(
-                    expected_text.splitlines(), actual_stream.getvalue().splitlines()
-                )
+        elif actual_stream.getvalue().strip() != expected_text.strip():
+            diff = difflib.ndiff(
+                expected_text.splitlines(), actual_stream.getvalue().splitlines()
+            )
 
-                diff_values = (
-                    f"{ParserHelper.newline_character.join(list(diff))}\n---\n"
-                )
+            diff_values = (
+                f"{ParserHelper.newline_character.join(list(diff))}\n---\n"
+            )
 
-                LOGGER.warning(
-                    "actual>>%s",
-                    ParserHelper.make_value_visible(actual_stream.getvalue()),
-                )
-                print(
-                    f"WARN>actual>>{ParserHelper.make_value_visible(actual_stream.getvalue())}"
-                )
-                LOGGER.warning(
-                    "expect>>%s", ParserHelper.make_value_visible(expected_text)
-                )
-                print(f"WARN>expect>>{ParserHelper.make_value_visible(expected_text)}")
-                if log_extra:
-                    print(f"log_extra:{log_extra}")
-                assert False, f"{stream_name} not as expected:\n{diff_values}"
+            LOGGER.warning(
+                "actual>>%s",
+                ParserHelper.make_value_visible(actual_stream.getvalue()),
+            )
+            print(
+                f"WARN>actual>>{ParserHelper.make_value_visible(actual_stream.getvalue())}"
+            )
+            LOGGER.warning(
+                "expect>>%s", ParserHelper.make_value_visible(expected_text)
+            )
+            print(f"WARN>expect>>{ParserHelper.make_value_visible(expected_text)}")
+            if log_extra:
+                print(f"log_extra:{log_extra}")
+            assert False, f"{stream_name} not as expected:\n{diff_values}"
 
     # pylint: enable=too-many-arguments
 

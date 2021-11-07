@@ -682,9 +682,7 @@ class PluginManager:
             ]
             table = columnar(show_rows, headers, no_borders=True)
             split_rows = table.split("\n")
-            new_rows = []
-            for next_row in split_rows:
-                new_rows.append(next_row.rstrip())
+            new_rows = [next_row.rstrip() for next_row in split_rows]
             print("\n".join(new_rows))
         else:
             print(
@@ -724,9 +722,7 @@ class PluginManager:
         headers = ["Item", "Description"]
         table = columnar(show_rows, headers, no_borders=True)
         split_rows = table.split("\n")
-        new_rows = []
-        for next_row in split_rows:
-            new_rows.append(next_row.rstrip())
+        new_rows = [next_row.rstrip() for next_row in split_rows]
         print("\n".join(new_rows))
         return 0
 
@@ -815,12 +811,11 @@ class PluginManager:
         Given a directory to search, scan for eligible modules to load later.
         """
 
-        plugin_files = [
+        return [
             x
             for x in os.listdir(directory_to_search)
             if x.endswith(".py") and x[0:-3] != "__init__"
         ]
-        return plugin_files
 
     @classmethod
     def __snake_to_camel(cls, word):
@@ -1144,10 +1139,7 @@ class PluginManager:
         Get a list of all plugins by their id.
         """
 
-        id_list = []
-        for next_plugin in self.__registered_plugins:
-            id_list.append(next_plugin.plugin_id)
-        return id_list
+        return [next_plugin.plugin_id for next_plugin in self.__registered_plugins]
 
     @classmethod
     def __find_configuration_for_plugin(
