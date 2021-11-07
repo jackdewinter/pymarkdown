@@ -21,9 +21,9 @@ class InProcessResult:
     """
 
     def __init__(self, return_code, std_out, std_err):
-        self.return_code = return_code
-        self.std_out = std_out
-        self.std_err = std_err
+        self.__return_code = return_code
+        self.__std_out = std_out
+        self.__std_err = std_err
 
     # pylint: disable=too-many-arguments
     @classmethod
@@ -85,6 +85,20 @@ class InProcessResult:
 
     # pylint: enable=too-many-arguments
 
+    @property
+    def return_code(self):
+        """
+        Return code provided after execution.
+        """
+        return self.__return_code
+
+    @property
+    def std_out(self):
+        """
+        Standard output collected during execution.
+        """
+        return self.__std_out
+
     def assert_results(
         self, stdout=None, stderr=None, error_code=0, additional_error=None
     ):
@@ -95,32 +109,35 @@ class InProcessResult:
         try:
             if stdout:
                 self.compare_versus_expected(
-                    "Stdout", self.std_out, stdout, log_extra=self.std_err.getvalue()
+                    "Stdout",
+                    self.__std_out,
+                    stdout,
+                    log_extra=self.__std_err.getvalue(),
                 )
             else:
                 assert_text = (
-                    f"Expected stdout to be empty, not: {self.std_out.getvalue()}"
+                    f"Expected stdout to be empty, not: {self.__std_out.getvalue()}"
                 )
-                if self.std_err.getvalue():
-                    assert_text += f"\nStdErr was:{self.std_err.getvalue()}"
-                assert not self.std_out.getvalue(), assert_text
+                if self.__std_err.getvalue():
+                    assert_text += f"\nStdErr was:{self.__std_err.getvalue()}"
+                assert not self.__std_out.getvalue(), assert_text
 
             if stderr:
                 self.compare_versus_expected(
-                    "Stderr", self.std_err, stderr, additional_error
+                    "Stderr", self.__std_err, stderr, additional_error
                 )
             else:
                 assert (
-                    not self.std_err.getvalue()
-                ), f"Expected stderr to be empty, not: {self.std_err.getvalue()}"
+                    not self.__std_err.getvalue()
+                ), f"Expected stderr to be empty, not: {self.__std_err.getvalue()}"
 
             assert (
-                self.return_code == error_code
-            ), f"Actual error code ({self.return_code}) and expected error code ({error_code}) differ."
+                self.__return_code == error_code
+            ), f"Actual error code ({self.__return_code}) and expected error code ({error_code}) differ."
 
         finally:
-            self.std_out.close()
-            self.std_err.close()
+            self.__std_out.close()
+            self.__std_err.close()
 
 
 # pylint: enable=too-few-public-methods
@@ -207,12 +224,15 @@ class InProcessExecution(ABC):
 
     # pylint: disable=broad-except
     def invoke_main(
-        self, arguments=None, cwd=None, suppress_first_line_heading_rule=True
+        self,
+        arguments=None,
+        cwd=None,
+        suppress_first_line_heading_rule=True,
+        disable_version_checking=True,
     ):
         """
         Invoke the mainline so that we can capture results.
         """
-
         if suppress_first_line_heading_rule:
             new_arguments = arguments.copy() if arguments else []
             if "--disable-rules" not in new_arguments:
@@ -225,6 +245,10 @@ class InProcessExecution(ABC):
                     disable_value += ","
                 disable_value += "md041"
                 new_arguments[disable_index + 1] = disable_value
+            arguments = new_arguments
+        if disable_version_checking:
+            new_arguments = arguments.copy() if arguments else []
+            new_arguments.insert(0, "--disable-version")
             arguments = new_arguments
 
         saved_state = SystemState()

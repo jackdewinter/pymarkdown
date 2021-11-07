@@ -33,7 +33,6 @@ md010 - tabs "converted"
 - yaml support for front-matter
   - if front matter is found to be disqualified, send error?
 
-- dial home to see if there is a newer version
 - better globbing for 043
 
 ## Priority 3 - Like To Solve in next 3 m

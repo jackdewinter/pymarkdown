@@ -449,6 +449,13 @@ class FoundPlugin:
         return self.__plugin_version
 
     @property
+    def plugin_interface_version(self):
+        """
+        Gets the interface version of the plugin.
+        """
+        return self.__plugin_interface_version
+
+    @property
     def plugin_url(self):
         """
         Gets the optional url for the plugin.
@@ -1007,10 +1014,6 @@ class PluginManager:
         self.__verify_integer_field(
             plugin_instance, "plugin_interface_version", plugin_interface_version
         )
-        if plugin_interface_version != 1:
-            raise BadPluginError(
-                formatted_message=f"Plugin '{instance_file_name}' with an interface version ('{plugin_interface_version}') that is not '1'."
-            )
         if plugin_url:
             self.__verify_string_field(plugin_instance, "plugin_url", plugin_url)
         if plugin_configuration:
@@ -1030,6 +1033,12 @@ class PluginManager:
             plugin_url,
             plugin_configuration,
         )
+
+        if plugin_object.plugin_interface_version != 1:
+            raise BadPluginError(
+                formatted_message=f"Plugin '{instance_file_name}' with an interface version ('{plugin_object.plugin_interface_version}') that is not '1'."
+            )
+
         return plugin_object
 
     # pylint: disable=too-many-arguments

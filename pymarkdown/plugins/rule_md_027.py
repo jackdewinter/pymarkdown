@@ -20,7 +20,7 @@ class RuleMd027(Plugin):
         self.__is_paragraph_end_delayed = None
         self.__delayed_blank_line = None
         self.__have_incremented_for_this_line = None
-        self.__debug_on = True
+        # self.__debug_on = True
 
     def get_details(self):
         """
@@ -187,9 +187,7 @@ class RuleMd027(Plugin):
         split_leading_spaces = found_block_quote_token.leading_spaces.split("\n")
         # if self.__debug_on:
         #     print(f"specific_block_quote_prefix={specific_block_quote_prefix};")
-        return split_leading_spaces[
-            self.__bq_line_index[num_container_tokens]
-        ]
+        return split_leading_spaces[self.__bq_line_index[num_container_tokens]]
 
     def __check_list_starts(
         self, context, token, num_container_tokens, is_new_list_item
