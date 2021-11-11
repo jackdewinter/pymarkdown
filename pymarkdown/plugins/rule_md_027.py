@@ -546,11 +546,8 @@ class RuleMd027(Plugin):
         num_container_tokens = len(
             [i for i in self.__container_tokens if i.is_block_quote_start]
         )
-        is_directly_within_block_quote = self.__container_tokens[
-            -1
-        ].is_block_quote_start
         # if self.__debug_on:
-        #     print(f"{self.__bq_line_index}-->index>{num_container_tokens}, is_directly_within_block_quote={is_directly_within_block_quote}")
+        #     print(f"{self.__bq_line_index}-->index>{num_container_tokens}")
         #     print(f"{self.__bq_line_index[num_container_tokens]}-->token>{ParserHelper.make_value_visible(token)}")
 
         self.__process_delayed_paragraph_end(token, num_container_tokens)

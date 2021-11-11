@@ -930,8 +930,6 @@ class PluginManager:
             plugin_object.plugin_enabled_by_default if new_value is None else new_value
         )
 
-    # pylint: enable=too-many-arguments
-
     @classmethod
     def __verify_string_field(cls, plugin_instance, field_name, field_value):
         """
