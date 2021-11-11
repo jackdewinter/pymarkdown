@@ -909,7 +909,7 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments, too-many-locals, too-many-statements, too-many-branches
 
-    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __get_nested_container_starts(
         parser_state,
@@ -989,7 +989,7 @@ class ContainerBlockProcessor:
             nested_ulist_start, nested_olist_start, nested_block_start
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals, too-many-statements
+    # pylint: enable=too-many-arguments, too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -1143,7 +1143,7 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __process_leaf_tokens(
         parser_state,
@@ -1182,7 +1182,7 @@ class ContainerBlockProcessor:
         POGGER.debug("parsed leaf>>$", leaf_tokens)
         return leaf_tokens, requeue_line_info
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __close_indented_block_if_indent_not_there(parser_state, extracted_whitespace):
@@ -1254,7 +1254,6 @@ class ContainerBlockProcessor:
                 outer_processed = True
         return outer_processed
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_html_block(
         parser_state,
@@ -1303,8 +1302,6 @@ class ContainerBlockProcessor:
             outer_processed = True
 
         return outer_processed
-
-    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -1509,7 +1506,6 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments, too-many-locals
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __look_for_pragmas(
         position_marker,
@@ -1529,8 +1525,6 @@ class ContainerBlockProcessor:
                 parser_properties,
             )
         return found_pragmas
-
-    # pylint: enable=too-many-arguments
 
 
 # pylint: disable=too-few-public-methods

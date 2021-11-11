@@ -83,7 +83,6 @@ class NewListItemMarkdownToken(ContainerMarkdownToken):
         return self.__list_start_content
 
 
-# pylint: disable=too-many-instance-attributes
 class OrderedListStartMarkdownToken(ContainerMarkdownToken):
     """
     Class to provide for an encapsulation of the ordered list start element.
@@ -197,9 +196,6 @@ class OrderedListStartMarkdownToken(ContainerMarkdownToken):
             else f"{self.__leading_spaces}{ParserHelper.newline_character}{ws_add}"
         )
         self.__compose_extra_data_field()
-
-
-# pylint: enable=too-many-instance-attributes
 
 
 class UnorderedListStartMarkdownToken(ContainerMarkdownToken):

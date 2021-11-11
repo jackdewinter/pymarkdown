@@ -11,7 +11,6 @@ from pymarkdown.parser_logger import ParserLogger
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
-# pylint: disable=too-few-public-methods
 class PragmaExtension:
     """
     Extension to implement the pragma extensions.
@@ -161,9 +160,6 @@ class PragmaExtension:
             )
 
     # pylint: enable=too-many-locals, too-many-arguments
-
-
-# pylint: enable=too-few-public-methods
 
 
 class PragmaToken(MarkdownToken):

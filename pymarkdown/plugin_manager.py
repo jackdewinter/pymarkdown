@@ -20,7 +20,6 @@ LOGGER = logging.getLogger(__name__)
 # pylint: disable=too-many-lines
 
 
-# pylint: disable=too-few-public-methods
 class ScanContext:
     """
     Class to provide context when reporting any errors.
@@ -79,9 +78,6 @@ class ScanContext:
                 extra_error_information=next_entry[6],
             )
         self.__reported.clear()
-
-
-# pylint: enable=too-few-public-methods
 
 
 class BadPluginError(Exception):
@@ -342,7 +338,7 @@ class PluginDetails:
 # pylint: enable=too-few-public-methods,too-many-instance-attributes
 
 
-# pylint: disable=too-few-public-methods,too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes
 class FoundPlugin:
     """
     Encapsulation of a plugin that was discovered.  While similar to the PluginDetails
@@ -477,7 +473,7 @@ class FoundPlugin:
         return self.__plugin_enabled_by_default
 
 
-# pylint: enable=too-few-public-methods,too-many-instance-attributes
+# pylint: enable=too-many-instance-attributes
 
 
 # pylint: disable=too-many-instance-attributes
@@ -791,7 +787,6 @@ class PluginManager:
         print("{0}:{1}:1: INLINE: {2}".format(scan_file, line_number, pragma_error))
         self.number_of_pragma_failures += 1
 
-    # pylint: disable=too-many-locals
     def compile_pragmas(self, scan_file, pragma_lines):
         """
         Go through the list of extracted pragmas and compile them.
@@ -806,8 +801,6 @@ class PluginManager:
                 self.__document_pragmas,
                 self.log_pragma_failure,
             )
-
-    # pylint: enable=too-many-locals
 
     @classmethod
     def __find_eligible_plugins_in_directory(cls, directory_to_search):
@@ -929,8 +922,6 @@ class PluginManager:
         return (
             plugin_object.plugin_enabled_by_default if new_value is None else new_value
         )
-
-    # pylint: enable=too-many-arguments
 
     @classmethod
     def __verify_string_field(cls, plugin_instance, field_name, field_value):

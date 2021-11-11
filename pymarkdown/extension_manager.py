@@ -134,7 +134,6 @@ class ExtensionManager:
             sys.exit(2)
         return return_code
 
-    # pylint: disable=too-many-locals,too-many-branches
     def __handle_argparse_subparser_list(self, args):
         list_re = None
         if args.list_filter:
@@ -183,8 +182,6 @@ class ExtensionManager:
             print("\n".join(new_rows))
         else:
             print(f"No extension identifier matches the pattern '{args.list_filter}'.")
-
-    # pylint: enable=too-many-locals,too-many-branches
 
     def __handle_argparse_subparser_info(self, args):
         if args.info_filter not in self.__extension_details.keys():

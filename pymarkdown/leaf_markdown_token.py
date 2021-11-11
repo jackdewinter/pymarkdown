@@ -47,7 +47,6 @@ class LeafMarkdownToken(MarkdownToken):
         return self.__extracted_whitespace
 
 
-# pylint: disable=too-few-public-methods
 class BlankLineMarkdownToken(LeafMarkdownToken):
     """
     Class to provide for an encapsulation of the blank line element.
@@ -73,9 +72,6 @@ class BlankLineMarkdownToken(LeafMarkdownToken):
             column_number=column_number,
             extracted_whitespace=extracted_whitespace,
         )
-
-
-# pylint: enable=too-few-public-methods
 
 
 class ParagraphMarkdownToken(LeafMarkdownToken):
@@ -350,7 +346,6 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
     Class to provide for an encapsulation of the atx heading element.
     """
 
-    # pylint: disable=too-many-arguments
     def __init__(
         self,
         hash_count,
@@ -373,8 +368,6 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
             can_force_close=False,
         )
         self.__compose_extra_data_field()
-
-    # pylint: enable=too-many-arguments
 
     @property
     def hash_count(self):
@@ -405,7 +398,6 @@ class AtxHeadingMarkdownToken(LeafMarkdownToken):
         )
 
 
-# pylint: disable=too-many-instance-attributes
 class SetextHeadingMarkdownToken(LeafMarkdownToken):
     """
     Class to provide for an encapsulation of the setext heading element.
@@ -524,9 +516,6 @@ class SetextHeadingMarkdownToken(LeafMarkdownToken):
         self._set_extra_data(MarkdownToken.extra_data_separator.join(field_parts))
 
 
-# pylint: enable=too-many-instance-attributes
-
-
 class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
     """
     Class to provide for an encapsulation of the indented code block element.
@@ -570,7 +559,6 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
         self.__compose_extra_data_field()
 
 
-# pylint: disable=too-many-instance-attributes
 class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
     """
     Class to provide for an encapsulation of the fenced code block element.
@@ -685,6 +673,3 @@ class FencedCodeBlockMarkdownToken(LeafMarkdownToken):
                 ]
             )
         )
-
-
-# pylint: enable=too-many-instance-attributes

@@ -239,7 +239,6 @@ class PyMarkdownLint:
         """
         return path_to_test.endswith(".md")
 
-    # pylint: disable=broad-except
     def __scan_file(self, args, next_file):
         """
         Scan a given file and call the plugin manager for any significant events.
@@ -283,8 +282,6 @@ class PyMarkdownLint:
         except Exception:
             context.report_on_triggered_rules()
             raise
-
-    # pylint: enable=broad-except
 
     def __process_next_path(self, next_path, files_to_parse, recurse_directories):
 
@@ -399,7 +396,6 @@ class PyMarkdownLint:
             formatted_error = f"{type(this_exception).__name__} encountered while initializing tokenizer:\n{this_exception}"
             self.__handle_error(formatted_error, this_exception)
 
-    # pylint: disable=broad-except
     def __initialize_plugin_manager(self, args, plugin_dir):
         """
         Make sure all plugins are ready before being initialized.
@@ -419,8 +415,6 @@ class PyMarkdownLint:
                 f"BadPluginError encountered while loading plugins:\n{this_exception}"
             )
             self.__handle_error(formatted_error, this_exception)
-
-    # pylint: enable=broad-except
 
     def __handle_error(self, formatted_error, thrown_error):
 

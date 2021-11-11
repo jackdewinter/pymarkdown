@@ -83,7 +83,7 @@ class ListBlockProcessor:
         return is_start, after_all_whitespace_index, start_index, 0
         # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
+    # pylint: disable=too-many-arguments
     @staticmethod
     def is_olist_start(
         parser_state,
@@ -143,7 +143,7 @@ class ListBlockProcessor:
 
         return is_start, after_all_whitespace_index, index, number_of_digits
 
-    # pylint: enable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __is_start_ulist(line_to_parse, start_index, extracted_whitespace):
