@@ -820,7 +820,7 @@ class InlineHelper:
 
             # Downloaded file is for HTML5, which includes some names that do
             # not end with ";".  These are excluded.
-            if not next_name[-1] == InlineHelper.__skip_html5_entities_ending_with:
+            if next_name[-1] != InlineHelper.__skip_html5_entities_ending_with:
                 continue
 
             entity_characters = char_entity["characters"]
@@ -829,11 +829,10 @@ class InlineHelper:
             # The only entities we should encounter either have a length of 1 or 2
             if len(entity_characters) == 1:
                 assert len(entity_codepoints) == 1
-                assert ord(entity_characters[0]) == entity_codepoints[0]
             else:
                 assert len(entity_codepoints) == 2
-                assert ord(entity_characters[0]) == entity_codepoints[0]
                 assert ord(entity_characters[1]) == entity_codepoints[1]
+            assert ord(entity_characters[0]) == entity_codepoints[0]
             approved_entity_map[next_name] = entity_characters
         return approved_entity_map
 
