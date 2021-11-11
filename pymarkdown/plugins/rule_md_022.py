@@ -2,10 +2,11 @@
 Module to implement a plugin that looks for headings that are not surrounded by
 blank lines.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd022(Plugin):
+class RuleMd022(RulePlugin):
     """
     Class to implement a plugin that looks for headings that are not surrounded by
     blank lines.

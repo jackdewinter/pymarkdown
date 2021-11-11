@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that looks for inconsistent styles for thematic breaks.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd035(Plugin):
+class RuleMd035(RulePlugin):
     """
     Class to implement a plugin that looks for inconsistent styles for thematic breaks.
     """

@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that looks for spaces within link labels.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd039(Plugin):
+class RuleMd039(RulePlugin):
     """
     Class to implement a plugin that looks for spaces within link labels.
     """

@@ -1,10 +1,11 @@
 """
 Module to implement a sample plugin that has an empty description.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class EmptyDescription(Plugin):
+class EmptyDescription(RulePlugin):
     """
     Class to implement a sample plugin that has an empty description.
     """

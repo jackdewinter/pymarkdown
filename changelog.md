@@ -17,6 +17,8 @@
   - refactoring: identified and removed unused pylint suppressions
 - [Changed - Issue 112](https://github.com/jackdewinter/pymarkdown/issues/112)
   - refactoring: finding and applying all Sourcery recommended issues
+- Module Refactoring:
+  - [plugin_manager.py](https://github.com/jackdewinter/pymarkdown/issues/115)
 
 ### Fixed
 

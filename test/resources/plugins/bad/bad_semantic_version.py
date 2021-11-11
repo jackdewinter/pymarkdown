@@ -1,10 +1,11 @@
 """
 Module to implement a sample plugin that has a blank description.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class BadSemanticVersion(Plugin):
+class BadSemanticVersion(RulePlugin):
     """
     Class to implement a sample plugin that has a blank description.
     """

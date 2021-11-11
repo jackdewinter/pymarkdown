@@ -2,10 +2,11 @@
 Module to implement a plugin that looks for code blocks for scripts that do not
 look right.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd014(Plugin):
+class RuleMd014(RulePlugin):
     """
     Class to implement a plugin that looks for code blocks for scripts that do not
     look right.

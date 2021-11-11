@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that looks for trailing punctuation in headings.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd026(Plugin):
+class RuleMd026(RulePlugin):
     """
     Class to implement a plugin that looks for trailing punctuation in headings.
     """

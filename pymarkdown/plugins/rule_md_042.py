@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that looks for inline links with empty link URIs.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd042(Plugin):
+class RuleMd042(RulePlugin):
     """
     Class to implement a plugin that looks for inline links with empty link URIs.
     """

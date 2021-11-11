@@ -1,10 +1,11 @@
 """
 Module to implement a sample plugin that has a class name different than the file name.
 """
-from plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class PluginTwo(Plugin):
+class PluginTwo(RulePlugin):
     """
     Class to implement a sample plugin that has a class name different than the file name.
     """

@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that ensures that blank lines surround fenced block quotes.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd031(Plugin):
+class RuleMd031(RulePlugin):
     """
     Class to implement a plugin that ensures that blank lines surround fenced block quotes.
     """

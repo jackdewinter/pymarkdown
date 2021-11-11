@@ -2,10 +2,11 @@
 Module to implement a plugin that looks for inconsistencies in the
 style used for Unordered List elements.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd004(Plugin):
+class RuleMd004(RulePlugin):
     """
     Class to implement a plugin that looks for inconsistencies in the
     style used for Unordered List elements.

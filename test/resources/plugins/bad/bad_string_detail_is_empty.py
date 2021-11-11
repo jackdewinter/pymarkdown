@@ -1,10 +1,11 @@
 """
 Module to implement a sample plugin that has an empty string field from get_details.
 """
-from plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class BadStringDetailIsEmpty(Plugin):
+class BadStringDetailIsEmpty(RulePlugin):
     """
     Class to implement a sample plugin that has an empty string field from get_details.
     """

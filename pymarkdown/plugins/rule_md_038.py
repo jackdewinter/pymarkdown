@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that looks for leading and trailing spaces within code spans.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd038(Plugin):
+class RuleMd038(RulePlugin):
     """
     Class to implement a plugin that looks for leading and trailing spaces within code spans.
     """

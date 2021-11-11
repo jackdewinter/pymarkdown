@@ -4,7 +4,8 @@ like it is being used instead of a heading.
 """
 from enum import Enum
 
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
 class RuleMd036States(Enum):
@@ -19,7 +20,7 @@ class RuleMd036States(Enum):
     LOOK_FOR_PARAGRAPH_END = 4
 
 
-class RuleMd036(Plugin):
+class RuleMd036(RulePlugin):
     """
     Class to implement a plugin that looks for single line emphasis text that looks
     like it is being used instead of a heading.

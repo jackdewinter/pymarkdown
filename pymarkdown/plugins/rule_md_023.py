@@ -3,10 +3,11 @@ Module to implement a plugin that looks for headings that do not start at the
 beginning of the line.
 """
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd023(Plugin):
+class RuleMd023(RulePlugin):
     """
     Class to implement a plugin that looks for headings that do not start at the
     beginning of the line.

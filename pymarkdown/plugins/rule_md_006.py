@@ -2,10 +2,11 @@
 Module to implement a plugin that ensures that all Unordered List Items
 start at the beginning of the line.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd006(Plugin):
+class RuleMd006(RulePlugin):
     """
     Class to implement a plugin that ensures that all Unordered List Items
     start at the beginning of the line.

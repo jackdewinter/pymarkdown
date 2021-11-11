@@ -1,10 +1,11 @@
 """
 Module to implement a sample plugin that has the same name as another plugin.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class DuplicateNameDebug(Plugin):
+class DuplicateNameDebug(RulePlugin):
     """
     Class to implement a sample plugin that has the same name as another plugin.
     """

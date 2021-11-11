@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that looks for hard tabs in the files.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd010(Plugin):
+class RuleMd010(RulePlugin):
     """
     Class to implement a plugin that looks for hard tabs in the files.
     """

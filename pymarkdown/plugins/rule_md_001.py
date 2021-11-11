@@ -2,10 +2,11 @@
 Module to implement a plugin that looks for heading that increment more than one
 level at a time (going up).
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd001(Plugin):
+class RuleMd001(RulePlugin):
     """
     Class to implement a plugin that looks for headings that increment more than one
     level at a time (going up).

@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that looks for spaces within emphasis sections.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd037(Plugin):
+class RuleMd037(RulePlugin):
     """
     Class to implement a plugin that looks for spaces within emphasis sections.
     """

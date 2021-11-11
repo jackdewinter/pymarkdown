@@ -297,7 +297,6 @@ class MarkdownToken:
         """
         return bool(self.is_list_end or self.is_block_quote_end)
 
-    # pylint: disable=too-many-boolean-expressions
     @property
     def is_leaf_end_token(self):
         """
@@ -314,8 +313,6 @@ class MarkdownToken:
                 or self.is_indented_code_block_end
             )
         )
-
-    # pylint: enable=too-many-boolean-expressions
 
     @property
     def is_new_list_item(self):

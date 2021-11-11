@@ -1,10 +1,11 @@
 """
 Module to implement a sample plugin that has the same id as another plugin.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class DuplicateIdDebug(Plugin):
+class DuplicateIdDebug(RulePlugin):
     """
     Class to implement a sample plugin that has the same id as another plugin.
     """

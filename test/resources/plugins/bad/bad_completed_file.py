@@ -1,10 +1,11 @@
 """
 Module to implement a sample plugin that has a bad starting_new_file function.
 """
-from plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class BadCompletedFile(Plugin):
+class BadCompletedFile(RulePlugin):
     """
     Class to implement a sample plugin that has a bad starting_new_file function.
     """

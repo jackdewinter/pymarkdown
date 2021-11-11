@@ -2,10 +2,11 @@
 Module to implement a plugin that ensures that nested Unordered List Items
 start at predictable positions.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd007(Plugin):
+class RuleMd007(RulePlugin):
     """
     Class to implement a plugin that ensures that nested Unordered List Items
     start at predictable positions.

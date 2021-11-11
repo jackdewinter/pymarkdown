@@ -2,10 +2,11 @@
 Module to implement a plugin that looks for excessive spaces after the block quote character.
 """
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd027(Plugin):
+class RuleMd027(RulePlugin):
     """
     Class to implement a plugin that looks for excessive spaces after the block quote character.
     """
