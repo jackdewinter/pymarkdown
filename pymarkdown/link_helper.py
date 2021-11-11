@@ -379,7 +379,6 @@ class LinkHelper:
 
         POGGER.debug("$", "".join(display_parts)[1:])
 
-    # pylint: disable=too-many-branches
     @staticmethod
     def __consume_text_for_image_alt_text(
         inline_blocks, ind, remaining_line, text_from_blocks_raw, xx_fn
@@ -457,9 +456,7 @@ class LinkHelper:
         POGGER.debug(">>text_from_blocks_raw>>$>>", text_from_blocks_raw)
         return image_alt_text, text_from_blocks_raw
 
-    # pylint: enable=too-many-branches
-
-    # pylint: disable=too-many-statements, too-many-branches
+    # pylint: disable=too-many-branches
     @staticmethod
     def __collect_text_from_blocks(inline_blocks, ind, suffix_text):
         """
@@ -561,7 +558,7 @@ class LinkHelper:
 
         return "".join(text_parts), "".join(text_raw_parts)
 
-    # pylint: enable=too-many-statements, too-many-branches
+    # pylint: enable=too-many-branches
 
     @staticmethod
     def __parse_angle_link_destination(source_text, new_index):
@@ -1277,7 +1274,6 @@ class LinkHelper:
         """
         return f"!{LinkHelper.rehydrate_inline_link_text_from_token(image_token)}"
 
-    # pylint: disable=too-many-branches
     @staticmethod
     def rehydrate_inline_link_text_from_token(link_token):
         """
@@ -1335,5 +1331,3 @@ class LinkHelper:
                 )
             link_parts.append(")")
         return "".join(link_parts)
-
-    # pylint: enable=too-many-branches

@@ -5,7 +5,6 @@ Module to provide for a debug extension.
 from pymarkdown.extension_impl import ExtensionDetails
 
 
-# pylint: disable=too-few-public-methods
 class DebugExtension:
     """
     Extension to provide for a debug extension.
@@ -39,6 +38,3 @@ class DebugExtension:
             raise Exception("blah")
         if debug_mode == 2:
             raise ValueError("blah")
-
-
-# pylint: enable=too-few-public-methods

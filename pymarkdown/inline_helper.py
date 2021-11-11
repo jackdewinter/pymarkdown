@@ -65,7 +65,7 @@ class InlineRequest:
 # pylint: enable=too-few-public-methods, too-many-instance-attributes
 
 
-# pylint: disable=too-few-public-methods,too-many-arguments,too-many-instance-attributes
+# pylint: disable=too-few-public-methods,too-many-instance-attributes
 class InlineResponse:
     """
     Class to hold the response from the inline handle_* functions.
@@ -100,7 +100,7 @@ class InlineResponse:
         ) = (None, None, None, None, False, None, 0, 0)
 
 
-# pylint: enable=too-few-public-methods,too-many-arguments,too-many-instance-attributes
+# pylint: enable=too-few-public-methods,too-many-instance-attributes
 
 
 class InlineHelper:
@@ -361,7 +361,6 @@ class InlineHelper:
 
         return "".join(text_parts)
 
-    # pylint: disable=too-many-statements, too-many-locals
     @staticmethod
     def handle_inline_backtick(inline_request):
         """
@@ -514,8 +513,6 @@ class InlineHelper:
                 inline_response.new_index - inline_request.next_index,
             )
         return inline_response
-
-    # pylint: enable=too-many-statements, too-many-locals
 
     @staticmethod
     def modify_end_string(end_string, removed_end_whitespace):

@@ -5,7 +5,6 @@ from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_manager import Plugin, PluginDetails
 
 
-# pylint: disable=too-many-instance-attributes
 class RuleMd027(Plugin):
     """
     Class to implement a plugin that looks for excessive spaces after the block quote character.
@@ -55,7 +54,6 @@ class RuleMd027(Plugin):
             #     print(f"delay-para-end-->token->{ParserHelper.make_value_visible(token)}")
             #     print(f"delay-para-end-->index->{self.__bq_line_index[num_container_tokens]}")
 
-            # pylint: disable=too-many-boolean-expressions
             assert (
                 token.is_blank_line
                 or token.is_fenced_code_block
@@ -65,7 +63,6 @@ class RuleMd027(Plugin):
                 or token.is_atx_heading
                 or token.is_block_quote_end
             )
-            # pylint: enable=too-many-boolean-expressions
             self.__bq_line_index[num_container_tokens] += 1
             self.__have_incremented_for_this_line = True
             # if self.__debug_on:
@@ -613,6 +610,3 @@ class RuleMd027(Plugin):
         #     print(f"{self.__bq_line_index[num_container_tokens]}<--token>{ParserHelper.make_value_visible(token)}")
 
     # pylint: enable=too-many-branches
-
-
-# pylint: enable=too-many-instance-attributes

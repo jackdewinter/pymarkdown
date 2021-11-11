@@ -24,7 +24,6 @@ from pymarkdown.stack_token import DocumentStackToken, ParagraphStackToken
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
-# pylint: disable=too-few-public-methods
 class TokenizedMarkdown:
     """
     Class to provide a tokenization of a markdown-encoded string.
@@ -337,11 +336,9 @@ class TokenizedMarkdown:
             if only_these_blocks:
                 POGGER.debug("cob-only-type>>$", only_these_blocks)
                 POGGER.debug("cob-only-type>>$", type(parser_state.token_stack[-1]))
-                # pylint: disable=unidiomatic-typecheck
                 if type(parser_state.token_stack[-1]) not in only_these_blocks:
                     POGGER.debug("cob>>not in only")
                     break
-                # pylint: enable=unidiomatic-typecheck
             if not include_block_quotes and parser_state.token_stack[-1].is_block_quote:
                 POGGER.debug("cob>>not block quotes")
                 break
@@ -447,7 +444,7 @@ class TokenizedMarkdown:
         del parser_state.token_stack[-1]
         return new_tokens
 
-    # pylint: disable=too-many-locals, too-many-branches, too-many-statements
+    # pylint: disable=too-many-locals, too-many-branches
     @staticmethod
     def __handle_blank_line(
         parser_state,
@@ -549,7 +546,7 @@ class TokenizedMarkdown:
 
         return new_tokens, requeue_line_info
 
-    # pylint: enable=too-many-locals, too-many-branches, too-many-statements
+    # pylint: enable=too-many-locals, too-many-branches
 
     @staticmethod
     def __handle_blank_line_in_block_quote(parser_state):
@@ -585,9 +582,6 @@ class TokenizedMarkdown:
                 self.tokenized_document,
             )
         return token_to_use, line_number, requeue
-
-
-# pylint: enable=too-few-public-methods
 
 
 class ParseBlockPassProperties:

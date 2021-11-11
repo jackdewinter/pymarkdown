@@ -15,7 +15,6 @@ POGGER = ParserLogger(logging.getLogger(__name__))
 # pylint: disable=too-many-lines
 
 
-# pylint: disable=too-few-public-methods
 class InlineProcessor:
     """
     Handle the inline processing of the token stream.
@@ -108,7 +107,7 @@ class InlineProcessor:
             )
 
     @staticmethod
-    # pylint: disable=too-many-branches, too-many-statements, too-many-nested-blocks
+    # pylint: disable=too-many-branches, too-many-statements
     def parse_inline(coalesced_results):
         """
         Parse and resolve any inline elements.
@@ -290,7 +289,7 @@ class InlineProcessor:
                 POGGER.debug("STACK:$", coalesced_stack)
         return coalesced_list
 
-    # pylint: enable=too-many-branches, too-many-statements, too-many-nested-blocks
+    # pylint: enable=too-many-branches, too-many-statements
 
     @staticmethod
     def __handle_inline_special_single_character(inline_request):
@@ -334,7 +333,7 @@ class InlineProcessor:
             ) = (LinkHelper.image_start_sequence[0], inline_request.next_index + 1, 1)
         return inline_response
 
-    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements, too-many-branches, too-many-nested-blocks
+    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
     @staticmethod
     def __handle_inline_special(
         source_text,
@@ -509,7 +508,7 @@ class InlineProcessor:
         ) = ("", new_index, [new_token], consume_rest_of_line, delta_line, repeat_count)
         return inline_response
 
-    # pylint: enable=too-many-arguments, too-many-locals, too-many-statements, too-many-branches, too-many-nested-blocks
+    # pylint: enable=too-many-arguments, too-many-locals, too-many-statements
 
     @staticmethod
     def __process_simple_inline_fn(source_text):
@@ -584,7 +583,6 @@ class InlineProcessor:
             repeat_count = -(len(last_line_of_label) + 2)
         return delta_line, repeat_count
 
-    # pylint: disable=too-many-arguments, too-many-branches, too-many-statements
     @staticmethod
     def __calculate_inline_deltas(
         current_token,
@@ -690,8 +688,6 @@ class InlineProcessor:
             POGGER.debug(">>repeat_count>>$<<", delta_line)
         return delta_line, repeat_count
 
-    # pylint: enable=too-many-arguments, too-many-branches, too-many-statements
-
     @staticmethod
     def __calculate_shortcut_collapsed_deltas(current_token, delta_line, repeat_count):
         """
@@ -750,7 +746,7 @@ class InlineProcessor:
         POGGER.debug(">>delta_line>>$<<repeat_count>>$<<", delta_line, repeat_count)
         return delta_line, repeat_count
 
-    # pylint: disable=too-many-statements, too-many-locals, too-many-arguments, too-many-branches, invalid-unary-operand-type
+    # pylint: disable=too-many-statements, too-many-locals, too-many-arguments, too-many-branches
     @staticmethod  # noqa: C901
     def __process_inline_text_block(  # noqa: C901
         source_text,
@@ -1245,7 +1241,7 @@ class InlineProcessor:
             column_number=last_column_number,
         )
 
-    # pylint: enable=too-many-statements, too-many-locals, too-many-arguments, too-many-branches, invalid-unary-operand-type
+    # pylint: enable=too-many-statements, too-many-locals, too-many-arguments, too-many-branches
 
     @staticmethod
     def __add_recombined_whitespace(
@@ -1448,6 +1444,3 @@ class InlineProcessor:
         return EmphasisHelper.resolve_inline_emphasis(inline_blocks, None)
 
     # pylint: enable=too-many-arguments
-
-
-# pylint: enable=too-few-public-methods

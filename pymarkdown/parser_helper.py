@@ -850,7 +850,7 @@ class ParserHelper:
 # pylint: enable=too-many-public-methods
 
 
-# pylint: disable=too-few-public-methods, too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes
 class ParserState:
     """
     Class to provide for an encapsulation of the high level state of the parser.
@@ -1066,10 +1066,9 @@ class ParserState:
         self.__no_para_start_if_empty = True
 
 
-# pylint: enable=too-few-public-methods, too-many-instance-attributes
+# pylint: enable=too-many-instance-attributes
 
 
-# pylint: disable=too-few-public-methods
 class PositionMarker:
     """
     Class to provide an encapsulation of the location within the Markdown document.
@@ -1110,6 +1109,3 @@ class PositionMarker:
         Gets the amount that the index is considered indented by.
         """
         return self.__index_indent
-
-
-# pylint: enable=too-few-public-methods

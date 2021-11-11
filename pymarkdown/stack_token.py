@@ -167,7 +167,6 @@ class StackToken:
         return self.type_name == self._stack_link_definition
 
 
-# pylint: disable=too-few-public-methods
 class DocumentStackToken(StackToken):
     """
     Class to provide for a stack token at the root.
@@ -175,9 +174,6 @@ class DocumentStackToken(StackToken):
 
     def __init__(self):
         StackToken.__init__(self, StackToken._stack_base_document)
-
-
-# pylint: enable=too-few-public-methods
 
 
 class ParagraphStackToken(StackToken):

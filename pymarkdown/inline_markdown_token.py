@@ -427,7 +427,6 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
 # pylint: enable=too-many-instance-attributes
 
 
-# pylint: disable=too-many-instance-attributes
 class LinkStartMarkdownToken(ReferenceMarkdownToken):
     """
     Class to provide for an encapsulation of the link element.
@@ -476,10 +475,6 @@ class LinkStartMarkdownToken(ReferenceMarkdownToken):
     # pylint: enable=too-many-arguments
 
 
-# pylint: enable=too-many-instance-attributes
-
-
-# pylint: disable=too-many-instance-attributes
 class ImageStartMarkdownToken(ReferenceMarkdownToken):
     """
     Class to provide for an encapsulation of the image element.
@@ -533,9 +528,6 @@ class ImageStartMarkdownToken(ReferenceMarkdownToken):
         Returns the text extracted from the blocks of the link, after processing.
         """
         return self.__image_alt_text
-
-
-# pylint: enable=too-many-instance-attributes
 
 
 class TextMarkdownToken(InlineMarkdownToken):
