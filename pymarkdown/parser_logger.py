@@ -85,7 +85,6 @@ class ParserLogger:
         """
         return self.__my_logger.isEnabledFor(debug_level)
 
-    # pylint: disable=consider-using-enumerate
     @classmethod
     def __munge(cls, show_whitespace, log_format, args):
         split_log_format = log_format.split("$")
@@ -97,22 +96,19 @@ class ParserLogger:
             )
 
         recipient_array = [None] * (split_log_format_length + args_length)
-        for next_array_index in range(0, len(recipient_array)):
+        for next_array_index, _ in enumerate(recipient_array):
             if next_array_index % 2 == 0:
                 recipient_array[next_array_index] = split_log_format[
                     int(next_array_index / 2)
                 ]
+            elif show_whitespace:
+                recipient_array[
+                    next_array_index
+                ] = ParserHelper.make_whitespace_visible(
+                    args[int(next_array_index / 2)]
+                )
             else:
-                if show_whitespace:
-                    recipient_array[
-                        next_array_index
-                    ] = ParserHelper.make_whitespace_visible(
-                        args[int(next_array_index / 2)]
-                    )
-                else:
-                    recipient_array[next_array_index] = ParserHelper.make_value_visible(
-                        args[int(next_array_index / 2)]
-                    )
+                recipient_array[next_array_index] = ParserHelper.make_value_visible(
+                    args[int(next_array_index / 2)]
+                )
         return "".join(recipient_array)
-
-    # pylint: enable=consider-using-enumerate
