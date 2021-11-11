@@ -71,7 +71,7 @@ def test_md001_bad_configuration_enabled():
 
     expected_return_code = 1
     expected_output = ""
-    expected_error = """ValueError encountered while initializing extensions:
+    expected_error = """Configuration error ValueError encountered while initializing extensions:
 The value for property 'extensions.front-matter.enabled' must be of type 'bool'."""
 
     # Act

@@ -11,6 +11,12 @@
 
 - [Changed - Issue 85](https://github.com/jackdewinter/pymarkdown/issues/85)
   - scenario tests: verified and documented inlines with newline tests
+- [Changed - Issue 103](https://github.com/jackdewinter/pymarkdown/issues/103)
+  - refactoring: look for better way to use .items()
+- [Changed - Issue 107](https://github.com/jackdewinter/pymarkdown/issues/107)
+  - refactoring: identified and removed unused pylint suppressions
+- [Changed - Issue 112](https://github.com/jackdewinter/pymarkdown/issues/112)
+  - refactoring: finding and applying all Sourcery recommended issues
 
 ### Fixed
 

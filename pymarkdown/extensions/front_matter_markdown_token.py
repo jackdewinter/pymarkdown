@@ -174,11 +174,10 @@ class FrontMatterExtension:
             next_index, _ = ParserHelper.extract_whitespace(next_line, 0)
             if next_index >= 4:
                 POGGER.debug("Indented line established.")
-                if current_title:
-                    current_value += f"\n{next_line.strip()}"
-                    POGGER.debug("current_value>$<", current_value)
-                else:
+                if not current_title:
                     return "Continuation line encountered before a keyword line."
+                current_value += f"\n{next_line.strip()}"
+                POGGER.debug("current_value>$<", current_value)
             else:
                 if not next_line.strip():
                     return "Blank line encountered before end of metadata."
@@ -203,7 +202,7 @@ class FrontMatterExtension:
             value_map[current_title.lower()] = current_value
 
             # This is specifically to trigger test_front_matter_20.
-            assert not (current_title == "test" and current_value == "assert")
+            assert current_title != "test" or current_value != "assert"
         if not value_map:
             return "No valid metadata header lines were found."
         return value_map

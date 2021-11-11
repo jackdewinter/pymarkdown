@@ -257,12 +257,10 @@ class RuleMd027(Plugin):
             self.report_next_token_error(context, token)
         self.__bq_line_index[num_container_tokens] += 1
 
-    def __handle_thematic_break(
+    def __handle_common_element(
         self, context, token, num_container_tokens, is_directly_within_block_quote
     ):
         if token.extracted_whitespace and is_directly_within_block_quote:
-            # if self.__debug_on:
-            #     print("thematic_break-error")
             column_number_delta = -(
                 token.column_number - len(token.extracted_whitespace)
             )
@@ -272,20 +270,19 @@ class RuleMd027(Plugin):
         self.__bq_line_index[num_container_tokens] += 1
         self.__last_leaf_token = token
 
+    def __handle_thematic_break(
+        self, context, token, num_container_tokens, is_directly_within_block_quote
+    ):
+        self.__handle_common_element(
+            context, token, num_container_tokens, is_directly_within_block_quote
+        )
+
     def __handle_atx_heading(
         self, context, token, num_container_tokens, is_directly_within_block_quote
     ):
-        if token.extracted_whitespace and is_directly_within_block_quote:
-            # if self.__debug_on:
-            #     print("atx_heading-error")
-            column_number_delta = -(
-                token.column_number - len(token.extracted_whitespace)
-            )
-            self.report_next_token_error(
-                context, token, column_number_delta=column_number_delta
-            )
-        self.__bq_line_index[num_container_tokens] += 1
-        self.__last_leaf_token = token
+        self.__handle_common_element(
+            context, token, num_container_tokens, is_directly_within_block_quote
+        )
 
     def __handle_setext_heading(self, context, token, is_directly_within_block_quote):
         if token.extracted_whitespace and is_directly_within_block_quote:
@@ -323,17 +320,9 @@ class RuleMd027(Plugin):
     def __handle_fenced_code_block(
         self, context, token, num_container_tokens, is_directly_within_block_quote
     ):
-        if token.extracted_whitespace and is_directly_within_block_quote:
-            column_number_delta = -(
-                token.column_number - len(token.extracted_whitespace)
-            )
-            # if self.__debug_on:
-            #     print("fenced-start-error")
-            self.report_next_token_error(
-                context, token, column_number_delta=column_number_delta
-            )
-        self.__last_leaf_token = token
-        self.__bq_line_index[num_container_tokens] += 1
+        self.__handle_common_element(
+            context, token, num_container_tokens, is_directly_within_block_quote
+        )
         self.__line_index_at_bq_start = self.__bq_line_index[num_container_tokens]
 
     def __handle_fenced_code_block_end(

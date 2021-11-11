@@ -22,6 +22,7 @@ class LinkReferenceDefinitionHelper:
 
     __lrd_start_character = "["
 
+    # LOW
     # pylint: disable=too-many-locals, too-many-arguments, too-many-statements, too-many-branches
     @staticmethod
     def process_link_reference_definition(

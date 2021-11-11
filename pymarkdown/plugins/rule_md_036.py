@@ -75,12 +75,11 @@ class RuleMd036(Plugin):
             if token.is_inline_emphasis:
                 new_state = RuleMd036States.LOOK_FOR_ELIGIBLE_TEXT
         elif self.__current_state == RuleMd036States.LOOK_FOR_ELIGIBLE_TEXT:
-            if token.is_text:
-                if (
-                    "\n" not in token.token_text
-                    and token.token_text[-1] not in self.__punctuation
-                ):
-                    new_state = RuleMd036States.LOOK_FOR_EMPHASIS_END
+            if token.is_text and (
+                "\n" not in token.token_text
+                and token.token_text[-1] not in self.__punctuation
+            ):
+                new_state = RuleMd036States.LOOK_FOR_EMPHASIS_END
         elif self.__current_state == RuleMd036States.LOOK_FOR_EMPHASIS_END:
             if token.is_inline_emphasis_end:
                 new_state = RuleMd036States.LOOK_FOR_PARAGRAPH_END

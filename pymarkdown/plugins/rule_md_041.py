@@ -72,24 +72,25 @@ class RuleMd041(Plugin):
         """
         Event that a new token is being processed.
         """
-        if not self.__have_seen_first_token:
-            if token.is_atx_heading or token.is_setext_heading:
-                self.__have_seen_first_token = True
-                if token.hash_count != self.__start_level:
-                    self.report_next_token_error(context, token)
-            elif token.is_front_matter and self.__front_matter_title:
-                if self.__front_matter_title in token.matter_map:
-                    self.__have_seen_first_token = True
-            elif token.is_html_block:
-                self.__seen_html_block_start = token
-            elif self.__seen_html_block_start:
-                assert token.is_text
-                html_block_contents = token.token_text.strip()
-                if not html_block_contents.startswith(
-                    "<h1 "
-                ) and not html_block_contents.startswith("<h1>"):
-                    self.report_next_token_error(context, self.__seen_html_block_start)
-                self.__have_seen_first_token = True
-            elif not token.is_blank_line:
+        if self.__have_seen_first_token:
+            return
+        if token.is_atx_heading or token.is_setext_heading:
+            self.__have_seen_first_token = True
+            if token.hash_count != self.__start_level:
                 self.report_next_token_error(context, token)
+        elif token.is_front_matter and self.__front_matter_title:
+            if self.__front_matter_title in token.matter_map:
                 self.__have_seen_first_token = True
+        elif token.is_html_block:
+            self.__seen_html_block_start = token
+        elif self.__seen_html_block_start:
+            assert token.is_text
+            html_block_contents = token.token_text.strip()
+            if not html_block_contents.startswith(
+                "<h1 "
+            ) and not html_block_contents.startswith("<h1>"):
+                self.report_next_token_error(context, self.__seen_html_block_start)
+            self.__have_seen_first_token = True
+        elif not token.is_blank_line:
+            self.report_next_token_error(context, token)
+            self.__have_seen_first_token = True

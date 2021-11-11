@@ -21,6 +21,7 @@ class ContainerBlockProcessor:
     Class to provide processing for the container blocks.
     """
 
+    # LOW
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-arguments
     # pylint: disable=too-many-statements
@@ -608,6 +609,7 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
+    # LOW
     # pylint: disable=too-many-arguments, too-many-locals, too-many-statements, too-many-branches
     @staticmethod
     def __handle_nested_container_blocks(
@@ -1515,16 +1517,17 @@ class ContainerBlockProcessor:
         parser_properties,
     ):
 
-        found_pragmas = False
-        if parser_properties.is_pragmas_enabled:
-            found_pragmas = PragmaExtension.look_for_pragmas(
+        return (
+            PragmaExtension.look_for_pragmas(
                 position_marker,
                 line_to_parse,
                 container_depth,
                 extracted_whitespace,
                 parser_properties,
             )
-        return found_pragmas
+            if parser_properties.is_pragmas_enabled
+            else False
+        )
 
 
 # pylint: disable=too-few-public-methods

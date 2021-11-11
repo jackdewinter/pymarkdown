@@ -21,6 +21,7 @@ class EmphasisHelper:
     __complex_emphasis = "_"
     inline_emphasis = f"{__simple_emphasis}{__complex_emphasis}"
 
+    # LOW
     # pylint: disable=too-many-branches
     @staticmethod
     def resolve_inline_emphasis(inline_blocks, wall_token):
@@ -247,10 +248,8 @@ class EmphasisHelper:
                     break
                 wall_index_in_inlines -= 1
             POGGER.debug(">>wall_index_in_inlines(mod)>>$", wall_index_in_inlines)
-            stack_bottom = wall_index_in_inlines
-        else:
-            stack_bottom = -1
-        return stack_bottom
+            return wall_index_in_inlines
+        return -1
 
     @staticmethod
     def __reset_token_text(inline_blocks):
@@ -287,7 +286,7 @@ class EmphasisHelper:
         )
 
         return preceding_two[-1] not in Constants.unicode_whitespace and (
-            not preceding_two[-1] in Constants.punctuation_characters
+            preceding_two[-1] not in Constants.punctuation_characters
             or (
                 preceding_two[-1] in Constants.punctuation_characters
                 and (
@@ -309,7 +308,7 @@ class EmphasisHelper:
         )
 
         return following_two[0] not in Constants.unicode_whitespace and (
-            not following_two[0] in Constants.punctuation_characters
+            following_two[0] not in Constants.punctuation_characters
             or (
                 following_two[0] in Constants.punctuation_characters
                 and (

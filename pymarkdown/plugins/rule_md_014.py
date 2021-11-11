@@ -44,11 +44,10 @@ class RuleMd014(Plugin):
         elif token.is_code_block_end:
             self.__in_code_block = False
         elif self.__in_code_block and token.is_text:
-            are_all_preceded_with_dollar_sign = True
             split_token_text = token.token_text.split("\n")
-            for next_line in split_token_text:
-                if not next_line.strip().startswith("$"):
-                    are_all_preceded_with_dollar_sign = False
-                    break
+            are_all_preceded_with_dollar_sign = all(
+                next_line.strip().startswith("$") for next_line in split_token_text
+            )
+
             if are_all_preceded_with_dollar_sign:
                 self.report_next_token_error(context, token)

@@ -27,6 +27,5 @@ class RuleMd040(Plugin):
         """
         Event that a new token is being processed.
         """
-        if token.is_fenced_code_block:
-            if not token.extracted_text.strip():
-                self.report_next_token_error(context, token)
+        if token.is_fenced_code_block and not token.extracted_text.strip():
+            self.report_next_token_error(context, token)

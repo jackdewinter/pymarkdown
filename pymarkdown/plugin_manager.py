@@ -86,6 +86,7 @@ class BadPluginError(Exception):
     and reported.
     """
 
+    # LOW
     # pylint: disable=too-many-arguments, too-many-branches
     def __init__(
         self,
@@ -676,18 +677,19 @@ class PluginManager:
                 "enabled\n(current)",
                 "version",
             ]
-            table = columnar(show_rows, headers, no_borders=True)
-            split_rows = table.split("\n")
-            new_rows = []
-            for next_row in split_rows:
-                new_rows.append(next_row.rstrip())
-            print("\n".join(new_rows))
+            self.__print_columnar_data(headers, show_rows)
         else:
             print(
                 f"No plugin rule identifiers matches the pattern '{args.list_filter}'."
             )
 
     # pylint: enable=too-many-locals,too-many-branches
+    @classmethod
+    def __print_columnar_data(cls, headers, show_rows):
+        table = columnar(show_rows, headers, no_borders=True)
+        split_rows = table.split("\n")
+        new_rows = [next_row.rstrip() for next_row in split_rows]
+        print("\n".join(new_rows))
 
     def __handle_argparse_subparser_info(self, args):
         found_plugin = list(
@@ -718,12 +720,7 @@ class PluginManager:
             show_rows.append(next_row)
 
         headers = ["Item", "Description"]
-        table = columnar(show_rows, headers, no_borders=True)
-        split_rows = table.split("\n")
-        new_rows = []
-        for next_row in split_rows:
-            new_rows.append(next_row.rstrip())
-        print("\n".join(new_rows))
+        self.__print_columnar_data(headers, show_rows)
         return 0
 
     def handle_argparse_subparser(self, args):
@@ -808,12 +805,11 @@ class PluginManager:
         Given a directory to search, scan for eligible modules to load later.
         """
 
-        plugin_files = [
+        return [
             x
             for x in os.listdir(directory_to_search)
             if x.endswith(".py") and x[0:-3] != "__init__"
         ]
-        return plugin_files
 
     @classmethod
     def __snake_to_camel(cls, word):
@@ -1135,10 +1131,7 @@ class PluginManager:
         Get a list of all plugins by their id.
         """
 
-        id_list = []
-        for next_plugin in self.__registered_plugins:
-            id_list.append(next_plugin.plugin_id)
-        return id_list
+        return [next_plugin.plugin_id for next_plugin in self.__registered_plugins]
 
     @classmethod
     def __find_configuration_for_plugin(

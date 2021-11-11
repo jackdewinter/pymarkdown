@@ -295,9 +295,7 @@ class MarkdownToken:
         """
         Returns whether the current token is an end element for a container elements.
         """
-        if self.is_list_end or self.is_block_quote_end:
-            return True
-        return False
+        return bool(self.is_list_end or self.is_block_quote_end)
 
     # pylint: disable=too-many-boolean-expressions
     @property
@@ -305,17 +303,17 @@ class MarkdownToken:
         """
         Returns whether the current token is an end element for a leaf element.
         """
-        if (
-            self.is_paragraph_end
-            or self.is_atx_heading_end
-            or self.is_setext_heading_end
-            or self.is_thematic_break
-            or self.is_html_block_end
-            or self.is_fenced_code_block_end
-            or self.is_indented_code_block_end
-        ):
-            return True
-        return False
+        return bool(
+            (
+                self.is_paragraph_end
+                or self.is_atx_heading_end
+                or self.is_setext_heading_end
+                or self.is_thematic_break
+                or self.is_html_block_end
+                or self.is_fenced_code_block_end
+                or self.is_indented_code_block_end
+            )
+        )
 
     # pylint: enable=too-many-boolean-expressions
 
@@ -692,11 +690,9 @@ class EndMarkdownToken(MarkdownToken):
         field_parts = []
         if self.extra_end_data is not None:
             field_parts.append(self.extracted_whitespace)
-        else:
-            field_parts.append("")
-        if self.extra_end_data is not None:
             field_parts.append(self.extra_end_data)
         else:
+            field_parts.append("")
             field_parts.append("")
         if (
             isinstance(self.__start_markdown_token, MarkdownToken)

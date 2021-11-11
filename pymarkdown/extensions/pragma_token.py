@@ -175,11 +175,10 @@ class PragmaToken(MarkdownToken):
     def __init__(self, pragma_lines):
         self.__pragma_lines = pragma_lines
 
-        serialized_pragmas = ""
-        for next_line_number in pragma_lines:
-            serialized_pragmas += (
-                f";{next_line_number}:{pragma_lines[next_line_number]}"
-            )
+        serialized_pragmas = "".join(
+            f";{next_line_number}:{pragma_lines[next_line_number]}"
+            for next_line_number in pragma_lines
+        )
 
         MarkdownToken.__init__(
             self,

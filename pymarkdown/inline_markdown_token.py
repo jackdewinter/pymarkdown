@@ -358,7 +358,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         """
         Returns the active URI for the link, preferring the __pre_link_uri over the __link_uri.
         """
-        return self.__pre_link_uri if self.__pre_link_uri else self.__link_uri
+        return self.__pre_link_uri or self.__link_uri
 
     @property
     def link_title(self):
@@ -372,7 +372,7 @@ class ReferenceMarkdownToken(InlineMarkdownToken):
         """
         Returns the active text associated with the link's title, preferring the __pre_link_title over the __link_title.
         """
-        return self.__pre_link_title if self.__pre_link_title else self.__link_title
+        return self.__pre_link_title or self.__link_title
 
     @property
     def ex_label(self):
@@ -603,14 +603,13 @@ class TextMarkdownToken(InlineMarkdownToken):
         """
         Create a copy of this token.
         """
-        new_token = TextMarkdownToken(
+        return TextMarkdownToken(
             self.__token_text,
             self.__extracted_whitespace,
             self.__end_whitespace,
             line_number=self.line_number,
             column_number=self.column_number,
         )
-        return new_token
 
     def __compose_extra_data_field(self):
         """

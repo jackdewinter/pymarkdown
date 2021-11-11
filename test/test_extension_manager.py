@@ -236,7 +236,7 @@ def test_markdown_with_extensions_error_during_configuration():
 
         expected_return_code = 1
         expected_output = ""
-        expected_error = """Exception encountered while initializing extensions:
+        expected_error = """Error Exception encountered while initializing extensions:
 blah
 """
 
@@ -271,7 +271,7 @@ def test_markdown_with_extensions_value_error_during_configuration():
 
         expected_return_code = 1
         expected_output = ""
-        expected_error = """ValueError encountered while initializing extensions:
+        expected_error = """Configuration error ValueError encountered while initializing extensions:
 blah
 """
 

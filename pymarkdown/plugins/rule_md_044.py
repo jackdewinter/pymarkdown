@@ -186,97 +186,94 @@ class RuleMd044(Plugin):
         """
         Event that a new token is being processed.
         """
-        if self.__proper_name_list:
-            if token.is_text:
-                if not self.__is_in_code_block or self.__check_in_code_blocks:
-                    self.__search_for_matches(token.token_text, context, token)
-            elif token.is_inline_code_span:
-                same_line_offset = len(token.extracted_start_backticks) + len(
-                    token.leading_whitespace
+        if not self.__proper_name_list:
+            return
+        if token.is_text:
+            if not self.__is_in_code_block or self.__check_in_code_blocks:
+                self.__search_for_matches(token.token_text, context, token)
+        elif token.is_inline_code_span:
+            same_line_offset = len(token.extracted_start_backticks) + len(
+                token.leading_whitespace
+            )
+            self.__search_for_matches(token.span_text, context, token, same_line_offset)
+        elif token.is_inline_link_end:
+            if token.start_markdown_token.label_type == "inline":
+                link_body = "".join(
+                    [
+                        token.start_markdown_token.before_link_whitespace,
+                        token.start_markdown_token.active_link_uri,
+                        token.start_markdown_token.before_title_whitespace,
+                        token.start_markdown_token.inline_title_bounding_character,
+                    ]
                 )
-                self.__search_for_matches(
-                    token.span_text, context, token, same_line_offset
-                )
-            elif token.is_inline_link_end:
-                if token.start_markdown_token.label_type == "inline":
-                    link_body = "".join(
-                        [
-                            token.start_markdown_token.before_link_whitespace,
-                            token.start_markdown_token.active_link_uri,
-                            token.start_markdown_token.before_title_whitespace,
-                            token.start_markdown_token.inline_title_bounding_character,
-                        ]
-                    )
-                    full_link_text = "".join(
-                        [
-                            "[",
-                            token.start_markdown_token.text_from_blocks,
-                            "](",
-                            link_body,
-                        ]
-                    )
-                    same_line_offset = len(full_link_text) + 1
-                    self.__adjust_for_newlines_and_search(
-                        context,
-                        token.start_markdown_token,
-                        link_body,
-                        full_link_text,
-                        token.start_markdown_token.active_link_title,
-                        same_line_offset,
-                    )
-            elif token.is_inline_image:
-                same_line_offset = -2
-                self.__search_for_matches(
-                    token.text_from_blocks, context, token, same_line_offset
-                )
-
-                if token.label_type == "inline":
-                    link_body = "".join(
-                        [
-                            token.before_link_whitespace,
-                            token.active_link_uri,
-                            token.before_title_whitespace,
-                            token.inline_title_bounding_character,
-                        ]
-                    )
-                    full_link_text = f"![{token.text_from_blocks}]({link_body}"
-                    same_line_offset = len(full_link_text) + 1
-                    self.__adjust_for_newlines_and_search(
-                        context,
-                        token,
-                        link_body,
-                        full_link_text,
-                        token.active_link_title,
-                        same_line_offset,
-                    )
-            elif token.is_link_reference_definition:
-                link_name = (
-                    token.link_name_debug if token.link_name_debug else token.link_name
-                )
-                same_line_offset = -1
-                self.__search_for_matches(link_name, context, token, same_line_offset)
-
                 full_link_text = "".join(
                     [
                         "[",
-                        link_name,
-                        "]:",
-                        token.link_destination_whitespace,
-                        token.link_destination,
-                        token.link_title_whitespace,
-                        "'",
+                        token.start_markdown_token.text_from_blocks,
+                        "](",
+                        link_body,
                     ]
                 )
-                same_line_offset = -(len(full_link_text) - 1)
+                same_line_offset = len(full_link_text) + 1
+                self.__adjust_for_newlines_and_search(
+                    context,
+                    token.start_markdown_token,
+                    link_body,
+                    full_link_text,
+                    token.start_markdown_token.active_link_title,
+                    same_line_offset,
+                )
+        elif token.is_inline_image:
+            same_line_offset = -2
+            self.__search_for_matches(
+                token.text_from_blocks, context, token, same_line_offset
+            )
+
+            if token.label_type == "inline":
+                link_body = "".join(
+                    [
+                        token.before_link_whitespace,
+                        token.active_link_uri,
+                        token.before_title_whitespace,
+                        token.inline_title_bounding_character,
+                    ]
+                )
+                full_link_text = f"![{token.text_from_blocks}]({link_body}"
+                same_line_offset = len(full_link_text) + 1
                 self.__adjust_for_newlines_and_search(
                     context,
                     token,
+                    link_body,
                     full_link_text,
-                    full_link_text,
-                    token.link_title_raw,
+                    token.active_link_title,
                     same_line_offset,
                 )
-            elif token.is_code_block:
-                self.__is_in_code_block = True
-            elif token.is_code_block_end:
-                self.__is_in_code_block = False
+        elif token.is_link_reference_definition:
+            link_name = token.link_name_debug or token.link_name
+            same_line_offset = -1
+            self.__search_for_matches(link_name, context, token, same_line_offset)
+
+            full_link_text = "".join(
+                [
+                    "[",
+                    link_name,
+                    "]:",
+                    token.link_destination_whitespace,
+                    token.link_destination,
+                    token.link_title_whitespace,
+                    "'",
+                ]
+            )
+            same_line_offset = -(len(full_link_text) - 1)
+            self.__adjust_for_newlines_and_search(
+                context,
+                token,
+                full_link_text,
+                full_link_text,
+                token.link_title_raw,
+                same_line_offset,
+            )
+        elif token.is_code_block:
+            self.__is_in_code_block = True
+        elif token.is_code_block_end:
+            self.__is_in_code_block = False
