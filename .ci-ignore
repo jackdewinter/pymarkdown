@@ -1,0 +1,3 @@
+# The following directories will be ignored by Codiga/Code Inspector
+test
+publish
