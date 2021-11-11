@@ -27,6 +27,5 @@ class RuleMd045(Plugin):
         """
         Event that a new token is being processed.
         """
-        if token.is_inline_image:
-            if not token.text_from_blocks.strip():
-                self.report_next_token_error(context, token)
+        if token.is_inline_image and not token.text_from_blocks.strip():
+            self.report_next_token_error(context, token)

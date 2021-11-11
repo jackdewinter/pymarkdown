@@ -162,9 +162,9 @@ class InlineHelper:
             inline_response.new_string_unresolved,
             source_text_size,
         ) = (inline_request.next_index + 1, "", "", len(inline_request.source_text))
-        if inline_response.new_index >= source_text_size or (
-            inline_response.new_index < source_text_size
-            and inline_request.source_text[inline_response.new_index]
+        if (
+            inline_response.new_index >= source_text_size
+            or inline_request.source_text[inline_response.new_index]
             == ParserHelper.newline_character
         ):
             inline_response.new_string, inline_response.new_string_unresolved = (
@@ -290,10 +290,6 @@ class InlineHelper:
                 inline_response = InlineHelper.handle_inline_backslash(
                     inline_request, add_text_signature=add_text_signature
                 )
-                new_string, new_index = (
-                    inline_response.new_string,
-                    inline_response.new_index,
-                )
             else:
                 assert (
                     source_text[next_index]
@@ -302,11 +298,10 @@ class InlineHelper:
                 inline_response = InlineHelper.handle_character_reference(
                     inline_request
                 )
-                new_string, new_index = (
-                    inline_response.new_string,
-                    inline_response.new_index,
-                )
-
+            new_string, new_index = (
+                inline_response.new_string,
+                inline_response.new_index,
+            )
             POGGER.debug("handle_backslashes<<$<<$", new_string, new_index)
             string_parts.append(new_string)
             start_index = new_index
@@ -418,14 +413,10 @@ class InlineHelper:
             leading_whitespace, trailing_whitespace = "", ""
             if (
                 len(between_text) > 2
-                and (
-                    between_text[0] == ParserHelper.space_character
-                    or between_text[0] == ParserHelper.newline_character
-                )
-                and (
-                    between_text[-1] == ParserHelper.space_character
-                    or between_text[-1] == ParserHelper.newline_character
-                )
+                and between_text[0]
+                in [ParserHelper.space_character, ParserHelper.newline_character]
+                and between_text[-1]
+                in [ParserHelper.space_character, ParserHelper.newline_character]
             ):
                 stripped_between_attempt = between_text[1:-1]
                 if len(stripped_between_attempt.strip()) != 0:

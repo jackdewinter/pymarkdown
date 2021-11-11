@@ -69,7 +69,8 @@ class RuleMd022(Plugin):
         """
         Event that the file being currently scanned is now completed.
         """
-        self.perform_close_check(context, None)
+        if (self.__blank_line_count is not None) and self.__blank_line_count >= 0:
+            self.perform_close_check(context, None)
 
     def next_token(self, context, token):
         """
@@ -77,18 +78,21 @@ class RuleMd022(Plugin):
         """
         # print("START>>" + str(token).replace("\n", "\\n").replace("\t", "\\t"))
         # print(">>self.__blank_line_count>>" + str(self.__blank_line_count))
-        self.perform_close_check(context, token)
+        if (self.__blank_line_count is not None) and self.__blank_line_count >= 0:
+            self.perform_close_check(context, token)
 
-        if token.is_blank_line:
-            # print(">>token.is_blank_line>>")
-            if (self.__blank_line_count is not None) and self.__blank_line_count >= 0:
-                self.__blank_line_count += 1
+        if (
+            token.is_blank_line
+            and (self.__blank_line_count is not None)
+            and self.__blank_line_count >= 0
+        ):
+            self.__blank_line_count += 1
         if token.is_setext_heading or token.is_atx_heading:
             # print(">>token.is_setext_heading or token.is_atx_heading>>")
             self.__did_above_line_count_match = bool(
-                self.__blank_line_count == -1
-                or self.__blank_line_count == self.__lines_above
+                self.__blank_line_count in [-1, self.__lines_above]
             )
+
             self.__start_heading_token = token
             self.__start_heading_blank_line_count = self.__blank_line_count
             self.__did_heading_end = False
@@ -114,13 +118,12 @@ class RuleMd022(Plugin):
         document is handled properly.
         """
 
-        if (
-            (self.__start_heading_token and self.__did_heading_end)
-        ) and self.__blank_line_count >= 0:
-            if not token or (not token.is_blank_line and not token.is_block_quote_end):
-                did_end_match = bool(self.__blank_line_count == self.__lines_below)
-                self.report_any_match_failures(context, did_end_match)
-                self.__start_heading_token = None
+        if ((self.__start_heading_token and self.__did_heading_end)) and (
+            not token or (not token.is_blank_line and not token.is_block_quote_end)
+        ):
+            did_end_match = bool(self.__blank_line_count == self.__lines_below)
+            self.report_any_match_failures(context, did_end_match)
+            self.__start_heading_token = None
 
     def report_any_match_failures(self, context, did_end_match):
         """

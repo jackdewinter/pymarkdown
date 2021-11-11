@@ -82,12 +82,15 @@ class RuleMd020(Plugin):
         if token.is_atx_heading:
             self.__is_in_normal_atx = True
         elif token.is_atx_heading_end:
-            if self.__is_in_normal_atx and self.__last_atx_token.is_text:
-                if self.__last_atx_token.token_text.endswith("#"):
-                    regex_match = re.search(r"\#+$", self.__last_atx_token.token_text)
-                    self.report_next_token_error(
-                        context,
-                        self.__last_atx_token,
-                        column_number_delta=regex_match.start(),
-                    )
+            if (
+                self.__is_in_normal_atx
+                and self.__last_atx_token.is_text
+                and self.__last_atx_token.token_text.endswith("#")
+            ):
+                regex_match = re.search(r"\#+$", self.__last_atx_token.token_text)
+                self.report_next_token_error(
+                    context,
+                    self.__last_atx_token,
+                    column_number_delta=regex_match.start(),
+                )
             self.__is_in_normal_atx = False

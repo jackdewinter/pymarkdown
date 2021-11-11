@@ -220,6 +220,7 @@ class LinkHelper:
         # Fold the case of any characters to their lower equivalent.
         return link_label.casefold().strip()
 
+    # LOW
     # pylint: disable=too-many-arguments
     @staticmethod
     def look_for_link_or_image(
@@ -379,6 +380,7 @@ class LinkHelper:
 
         POGGER.debug("$", "".join(display_parts)[1:])
 
+    # LOW
     @staticmethod
     def __consume_text_for_image_alt_text(
         inline_blocks, ind, remaining_line, text_from_blocks_raw, xx_fn
@@ -456,6 +458,7 @@ class LinkHelper:
         POGGER.debug(">>text_from_blocks_raw>>$>>", text_from_blocks_raw)
         return image_alt_text, text_from_blocks_raw
 
+    # LOW
     # pylint: disable=too-many-branches
     @staticmethod
     def __collect_text_from_blocks(inline_blocks, ind, suffix_text):
@@ -828,11 +831,11 @@ class LinkHelper:
                         new_index,
                         bounding_character,
                     ) = LinkHelper.__parse_link_title(source_text, new_index)
-                if new_index != -1:
-                    (
-                        new_index,
-                        after_title_whitespace,
-                    ) = ParserHelper.extract_any_whitespace(source_text, new_index)
+            if new_index != -1:
+                (
+                    new_index,
+                    after_title_whitespace,
+                ) = ParserHelper.extract_any_whitespace(source_text, new_index)
         POGGER.debug(
             "inline_link>>$>>inline_title>>$>new_index>$>",
             inline_link,

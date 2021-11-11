@@ -15,6 +15,7 @@ class CoalesceProcessor:
     Handle the text coalesce processing of the token stream.
     """
 
+    # LOW
     @staticmethod
     def coalesce_text_blocks(first_pass_results):
         """

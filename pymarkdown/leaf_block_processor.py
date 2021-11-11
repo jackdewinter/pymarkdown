@@ -76,6 +76,7 @@ class LeafBlockProcessor:
                 )
         return False, None, None, None
 
+    # LOW
     # pylint: disable=too-many-locals
     @staticmethod
     def parse_fenced_code_block(
@@ -428,6 +429,7 @@ class LeafBlockProcessor:
 
         return accumulated_whitespace_count, actual_whitespace_index, adj_ws, left_ws
 
+    # LOW
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def parse_indented_code_block(
@@ -634,8 +636,10 @@ class LeafBlockProcessor:
         )
         if start_char:
             # TODO why not use close?
-            force_paragraph_close_if_present = this_bq_count == 0 and stack_bq_count > 0
             if parser_state.token_stack[-1].is_paragraph:
+                force_paragraph_close_if_present = (
+                    this_bq_count == 0 and stack_bq_count > 0
+                )
                 new_tokens.append(
                     parser_state.token_stack[
                         -1
@@ -892,6 +896,7 @@ class LeafBlockProcessor:
                 del parser_state.token_stack[-1]
         return new_tokens
 
+    # LOW
     # pylint: disable=too-many-arguments
     # pylint: disable=too-many-locals
     @staticmethod
@@ -1066,12 +1071,11 @@ class LeafBlockProcessor:
         )
         POGGER.debug(">>original_list_indent>>$>>", original_list_indent)
         POGGER.debug(">>original_text_indent>$>>", original_text_indent)
-        adjusted_whitespace_length = (
+        return (
             dominant_indent - original_text_indent
             if dominant_indent > original_text_indent >= 4
             else 0
         )
-        return adjusted_whitespace_length
 
     @staticmethod
     def __adjust_paragraph_for_block_quotes(

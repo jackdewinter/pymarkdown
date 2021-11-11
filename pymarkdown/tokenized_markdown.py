@@ -99,6 +99,7 @@ class TokenizedMarkdown:
                 "An unhandled error occurred processing the document."
             ) from this_exception
 
+    # LOW
     # pylint: disable=too-many-statements,too-many-locals,too-many-branches
     def __parse_blocks_pass(self):
         """
@@ -286,6 +287,7 @@ class TokenizedMarkdown:
 
         return token_to_use, did_start_close, did_started_close
 
+    # LOW
     # pylint: disable=too-many-arguments,too-many-locals,too-many-statements, too-many-branches
     @staticmethod
     def __close_open_blocks(  # noqa: C901
@@ -302,11 +304,8 @@ class TokenizedMarkdown:
         Close any open blocks that are currently on the stack.
         """
 
-        new_tokens = []
         requeue_line_info = None
-        if destination_array:
-            new_tokens = destination_array
-
+        new_tokens = destination_array or []
         POGGER.debug("cob-start>>$", parser_state.token_stack)
         POGGER.debug(
             "cob-start>>$",
@@ -444,6 +443,7 @@ class TokenizedMarkdown:
         del parser_state.token_stack[-1]
         return new_tokens
 
+    # LOW
     # pylint: disable=too-many-locals, too-many-branches
     @staticmethod
     def __handle_blank_line(

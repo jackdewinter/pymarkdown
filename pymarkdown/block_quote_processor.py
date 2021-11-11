@@ -95,6 +95,7 @@ class BlockQuoteProcessor:
 
         return container_level_tokens
 
+    # LOW
     # pylint: disable=too-many-arguments
     # pylint: disable=too-many-locals, too-many-branches, too-many-statements
     @staticmethod
@@ -317,6 +318,7 @@ class BlockQuoteProcessor:
     # pylint: enable=too-many-arguments
     # pylint: enable=too-many-locals, too-many-branches, too-many-statements
 
+    # LOW
     @staticmethod
     def __count_block_quote_starts(
         line_to_parse,
@@ -438,6 +440,7 @@ class BlockQuoteProcessor:
             avoid_block_starts,
         )
 
+    # LOW
     # pylint: disable=too-many-locals, too-many-statements, too-many-branches
     @staticmethod
     def __handle_block_quote_section(
@@ -768,6 +771,7 @@ class BlockQuoteProcessor:
 
     # pylint: enable=too-many-locals, too-many-statements, too-many-branches
 
+    # LOW
     # pylint: disable=too-many-arguments, too-many-statements, too-many-locals
     @staticmethod
     def __ensure_stack_at_level(

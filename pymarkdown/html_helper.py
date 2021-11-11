@@ -138,10 +138,10 @@ class HtmlHelper:
 
         if not tag_name:
             return False
-        for next_character in tag_name.lower():
-            if next_character not in HtmlHelper.__valid_tag_name_characters:
-                return False
-        return True
+        return all(
+            next_character in HtmlHelper.__valid_tag_name_characters
+            for next_character in tag_name.lower()
+        )
 
     @staticmethod
     def extract_html_attribute_name(string_to_parse, string_index):
@@ -165,13 +165,12 @@ class HtmlHelper:
                 break
             string_index += 1
 
-        if string_index < string_to_parse_length and (
-            string_to_parse[string_index]
-            == HtmlHelper.__html_attribute_name_value_separator
-            or string_to_parse[string_index] == HtmlHelper.__html_attribute_separator
-            or string_to_parse[string_index] == HtmlHelper.__html_tag_start
-            or string_to_parse[string_index] == HtmlHelper.__html_tag_end
-        ):
+        if string_index < string_to_parse_length and string_to_parse[string_index] in [
+            HtmlHelper.__html_attribute_name_value_separator,
+            HtmlHelper.__html_attribute_separator,
+            HtmlHelper.__html_tag_start,
+            HtmlHelper.__html_tag_end,
+        ]:
             return string_index
         return -1
 
@@ -280,11 +279,9 @@ class HtmlHelper:
             is_tag_valid
             and extracted_whitespace
             and are_attributes_valid
-            and (0 <= non_whitespace_index < line_to_parse_size)
-            and not (
-                line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_end
-                or line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_start
-            )
+            and 0 <= non_whitespace_index < line_to_parse_size
+            and line_to_parse[non_whitespace_index]
+            not in [HtmlHelper.__html_tag_end, HtmlHelper.__html_tag_start]
         ):
 
             non_whitespace_index = HtmlHelper.extract_html_attribute_name(
@@ -338,10 +335,8 @@ class HtmlHelper:
                 text_to_parse, index, HtmlHelper.__valid_tag_name_characters
             ):
                 index += 1
-            tag_name = text_to_parse[0:index]
-        else:
-            tag_name = ""
-        return tag_name
+            return text_to_parse[0:index]
+        return ""
 
     @staticmethod
     def __parse_tag_attributes(text_to_parse, start_index):
@@ -710,10 +705,9 @@ class HtmlHelper:
         POGGER.debug("html_block_type=$", html_block_type)
         if not html_block_type:
             return None, None
-        if html_block_type == HtmlHelper.html_block_7:
-            if token_stack[-1].is_paragraph:
-                POGGER.debug("html_block_type 7 cannot interrupt a paragraph")
-                return None, None
+        if html_block_type == HtmlHelper.html_block_7 and token_stack[-1].is_paragraph:
+            POGGER.debug("html_block_type 7 cannot interrupt a paragraph")
+            return None, None
         return html_block_type, remaining_html_tag
 
     @staticmethod
@@ -773,10 +767,10 @@ class HtmlHelper:
         """
 
         new_tokens = []
-        if (
-            parser_state.token_stack[-1].html_block_type == HtmlHelper.html_block_6
-            or parser_state.token_stack[-1].html_block_type == HtmlHelper.html_block_7
-        ):
+        if parser_state.token_stack[-1].html_block_type in [
+            HtmlHelper.html_block_6,
+            HtmlHelper.html_block_7,
+        ]:
             new_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 only_these_blocks=[type(parser_state.token_stack[-1])],

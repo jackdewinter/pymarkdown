@@ -511,6 +511,7 @@ class ListBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
+    # LOW
     # pylint: disable=too-many-statements, too-many-locals
     @staticmethod
     def list_in_process(

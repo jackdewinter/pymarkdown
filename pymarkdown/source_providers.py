@@ -18,12 +18,11 @@ class InMemorySourceProvider:
         """
         token_to_use = None
         if self.next_token:
+            token_to_use = self.next_token[0]
             if len(self.next_token) == 2:
-                token_to_use = self.next_token[0]
                 self.next_token = self.next_token[1].split("\n", 1)
             else:
                 assert self.next_token
-                token_to_use = self.next_token[0]
                 self.next_token = None
         return token_to_use
 

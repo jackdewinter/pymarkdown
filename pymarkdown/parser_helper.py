@@ -72,10 +72,9 @@ class ParserHelper:
         Determine if the specified character is valid and a whitespace character.
         """
 
-        return 0 <= index_in_string < len(source_string) and (
-            source_string[index_in_string] == " "
-            or source_string[index_in_string] == ParserHelper.tab_character
-        )
+        return 0 <= index_in_string < len(source_string) and source_string[
+            index_in_string
+        ] in [" ", ParserHelper.tab_character]
 
     @staticmethod
     def is_character_at_index_one_of(source_string, index_in_string, valid_characters):
@@ -406,12 +405,12 @@ class ParserHelper:
         """
         Count the number of new line characters in a given string.
         """
-        total_newlines = 0
-        for next_argument in args:
-            total_newlines += ParserHelper.count_characters_in_text(
+        return sum(
+            ParserHelper.count_characters_in_text(
                 next_argument, ParserHelper.newline_character
             )
-        return total_newlines
+            for next_argument in args
+        )
 
     @staticmethod
     def calculate_deltas(text_to_analyze):
@@ -1007,12 +1006,10 @@ class ParserState:
         Helper method to count the number of block quotes currently on the stack.
         """
 
-        stack_bq_count = 0
-        for next_item_on_stack in self.token_stack:
-            if next_item_on_stack.is_block_quote:
-                stack_bq_count += 1
-
-        return stack_bq_count
+        return sum(
+            bool(next_item_on_stack.is_block_quote)
+            for next_item_on_stack in self.token_stack
+        )
 
     def mark_start_information(self, position_marker):
         """

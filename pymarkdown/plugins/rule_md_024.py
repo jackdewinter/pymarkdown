@@ -78,10 +78,7 @@ class RuleMd024(Plugin):
         """
         self.__heading_text = ""
         self.__start_token = token
-        if self.__siblings_only:
-            self.__hash_count = token.hash_count
-        else:
-            self.__hash_count = 1
+        self.__hash_count = token.hash_count if self.__siblings_only else 1
 
     def handler_heading_end(self, context, token):
         """

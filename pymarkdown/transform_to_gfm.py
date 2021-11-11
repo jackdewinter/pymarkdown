@@ -196,11 +196,10 @@ class TransformToGfm:
             type_name, MarkdownToken
         ), f"Token class '{type_name}' must be descended from the 'MarkdownToken' class."
         token_init_fn = type_name.__dict__["__init__"]
-        init_parameters = {}
-        for i in inspect.getfullargspec(token_init_fn)[0]:
-            if i == "self":
-                continue
-            init_parameters[i] = ""
+        init_parameters = {
+            i: "" for i in inspect.getfullargspec(token_init_fn)[0] if i != "self"
+        }
+
         handler_instance = type_name(**init_parameters)
 
         self.start_token_handlers[handler_instance.token_name] = start_token_handler
@@ -385,7 +384,7 @@ class TransformToGfm:
         _ = next_token
 
         token_parts = [output_html]
-        if output_html and not output_html[-1] == ParserHelper.newline_character:
+        if output_html and output_html[-1] != ParserHelper.newline_character:
             token_parts.append(ParserHelper.newline_character)
         transform_state.is_in_loose_list = True
         token_parts.extend(["<blockquote>", ParserHelper.newline_character])
@@ -833,11 +832,13 @@ class TransformToGfm:
             ]
             POGGER.debug(">previous_token>$>", previous_token)
             token_parts.append(output_html)
-            if previous_token.is_list_end:
+            if (
+                not previous_token.is_list_end
+                and previous_token.is_paragraph_end
+                and not transform_state.is_in_loose_list
+                or previous_token.is_list_end
+            ):
                 token_parts.append(ParserHelper.newline_character)
-            elif previous_token.is_paragraph_end:
-                if not transform_state.is_in_loose_list:
-                    token_parts.append(ParserHelper.newline_character)
         return "".join(token_parts)
 
     @classmethod
