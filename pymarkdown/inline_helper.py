@@ -825,14 +825,13 @@ class InlineHelper:
             raise BadTokenizationError(error_message) from this_exception
 
         approved_entity_map = {}
-        for next_name in results_dictionary:
+        for next_name, char_entity in results_dictionary.items():
 
             # Downloaded file is for HTML5, which includes some names that do
             # not end with ";".  These are excluded.
             if not next_name[-1] == InlineHelper.__skip_html5_entities_ending_with:
                 continue
 
-            char_entity = results_dictionary[next_name]
             entity_characters = char_entity["characters"]
             entity_codepoints = char_entity["codepoints"]
 

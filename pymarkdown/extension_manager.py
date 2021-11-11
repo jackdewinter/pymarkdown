@@ -71,13 +71,14 @@ class ExtensionManager:
             _ = next_extension.extension_interface_version
             _ = next_extension.extension_configuration
 
-    # pylint: disable=consider-using-dict-items
     def apply_configuration(self):
         """
         Apply any supplied configuration to each of the enabled extensions.
         """
-        for next_extension_id in self.__extension_details:
-            next_extension_detail = self.__extension_details[next_extension_id]
+        for (
+            next_extension_id,
+            next_extension_detail,
+        ) in self.__extension_details.items():
             (
                 is_enabled,
                 extension_specific_facade,
@@ -95,8 +96,6 @@ class ExtensionManager:
         self.__is_linter_pragmas_enabled = (
             PragmaExtension().get_identifier() in self.__enabled_extensions
         )
-
-    # pylint: enable=consider-using-dict-items
 
     @property
     def is_front_matter_enabled(self):
@@ -145,8 +144,8 @@ class ExtensionManager:
         names = list(self.__extension_details.keys())
         names.sort()
         for next_extension_name in names:
-
             next_extension = self.__extension_details[next_extension_name]
+
             if next_extension.extension_id == "debug-extension" or (
                 next_extension.extension_version == "0.0.0" and not args.show_all
             ):

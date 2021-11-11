@@ -74,6 +74,12 @@ if ERRORLEVEL 1 (
 	echo {Executing pylint static analyzer on source Python code failed.}
 	goto error_end
 )
+pipenv run python pylint_utils.py --config setup.cfg -r publish\pylint_suppression.json  pymarkdown
+if ERRORLEVEL 1 (
+	echo.
+	echo {Executing reporting of pylint suppressions in source Python code failed.}
+	goto error_end
+)
 
 echo {Executing pylint static analyzer on test Python code.}
 pipenv run pylint -j 1 --rcfile=setup.cfg test %MY_VERBOSE%
@@ -92,7 +98,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing unit tests on Python code.}
-call ptest.cmd -q -c
+call ptest.cmd -c
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing unit tests on Python code failed.}

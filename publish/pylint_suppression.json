@@ -38,9 +38,7 @@
             "too-many-instance-attributes": 1,
             "too-many-arguments": 1
         },
-        "pymarkdown/extension_manager.py": {
-            "consider-using-dict-items": 1
-        },
+        "pymarkdown/extension_manager.py": {},
         "pymarkdown/extensions/disallowed_raw_html.py": {
             "too-few-public-methods": 1
         },
@@ -124,9 +122,7 @@
             "too-many-arguments": 1,
             "too-many-instance-attributes": 1
         },
-        "pymarkdown/parser_logger.py": {
-            "consider-using-enumerate": 1
-        },
+        "pymarkdown/parser_logger.py": {},
         "pymarkdown/plugin_manager.py": {
             "too-many-arguments": 8,
             "too-many-branches": 2,
@@ -231,11 +227,9 @@
         "broad-except": 6,
         "no-self-use": 1,
         "too-many-instance-attributes": 15,
-        "consider-using-dict-items": 1,
         "too-many-public-methods": 2,
         "too-many-boolean-expressions": 1,
         "no-member": 1,
-        "consider-using-enumerate": 1,
         "invalid-unary-operand-type": 1
     }
 }
