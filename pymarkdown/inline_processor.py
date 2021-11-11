@@ -373,115 +373,114 @@ class InlineProcessor:
                 source_text[max(0, next_index - 2) : next_index],
                 source_text[new_index : min(len(source_text), new_index + 2)],
             )
-        else:
-            if special_sequence[0] == LinkHelper.link_label_end:
-                POGGER.debug(
-                    "POSSIBLE LINK CLOSE_FOUND($)>>$>>",
-                    special_length,
-                    special_sequence,
-                )
-                POGGER.debug(
-                    ">>inline_blocks>>$<<",
-                    inline_blocks,
-                )
-                POGGER.debug(
-                    ">>remaining_line>>$<<",
-                    remaining_line,
-                )
-                POGGER.debug(
-                    ">>current_string_unresolved>>$<<",
-                    current_string_unresolved,
-                )
-                POGGER.debug(
-                    ">>source_text>>$<<",
-                    source_text[next_index:],
-                )
-                POGGER.debug("")
-                old_inline_blocks_count, old_inline_blocks_last_token = (
-                    len(inline_blocks),
-                    inline_blocks[-1] if inline_blocks else None,
-                )
-                (
-                    new_index,
-                    is_active,
-                    new_token,
-                    consume_rest_of_line,
-                ) = LinkHelper.look_for_link_or_image(
-                    inline_blocks,
-                    source_text,
-                    next_index,
-                    remaining_line,
-                    current_string_unresolved,
-                    InlineProcessor.__process_simple_inline_fn,
-                )
-                POGGER.debug(">>next_index>>$<<", next_index)
-                POGGER.debug(">>new_index>>$<<", new_index)
-                POGGER.debug(
-                    ">>source_text:new_index>>$<<",
-                    source_text[new_index:],
-                )
-                POGGER.debug(">>inline_blocks>>$<<", inline_blocks)
-                POGGER.debug(">>new_token>>$<<", new_token)
-                POGGER.debug(">>source_text>>$<<", source_text[new_index:])
-                POGGER.debug(">>consume_rest_of_line>>$<<", consume_rest_of_line)
-                POGGER.debug(">>old_inline_blocks_count>>$<<", old_inline_blocks_count)
+        elif special_sequence[0] == LinkHelper.link_label_end:
+            POGGER.debug(
+                "POSSIBLE LINK CLOSE_FOUND($)>>$>>",
+                special_length,
+                special_sequence,
+            )
+            POGGER.debug(
+                ">>inline_blocks>>$<<",
+                inline_blocks,
+            )
+            POGGER.debug(
+                ">>remaining_line>>$<<",
+                remaining_line,
+            )
+            POGGER.debug(
+                ">>current_string_unresolved>>$<<",
+                current_string_unresolved,
+            )
+            POGGER.debug(
+                ">>source_text>>$<<",
+                source_text[next_index:],
+            )
+            POGGER.debug("")
+            old_inline_blocks_count, old_inline_blocks_last_token = (
+                len(inline_blocks),
+                inline_blocks[-1] if inline_blocks else None,
+            )
+            (
+                new_index,
+                is_active,
+                new_token,
+                consume_rest_of_line,
+            ) = LinkHelper.look_for_link_or_image(
+                inline_blocks,
+                source_text,
+                next_index,
+                remaining_line,
+                current_string_unresolved,
+                InlineProcessor.__process_simple_inline_fn,
+            )
+            POGGER.debug(">>next_index>>$<<", next_index)
+            POGGER.debug(">>new_index>>$<<", new_index)
+            POGGER.debug(
+                ">>source_text:new_index>>$<<",
+                source_text[new_index:],
+            )
+            POGGER.debug(">>inline_blocks>>$<<", inline_blocks)
+            POGGER.debug(">>new_token>>$<<", new_token)
+            POGGER.debug(">>source_text>>$<<", source_text[new_index:])
+            POGGER.debug(">>consume_rest_of_line>>$<<", consume_rest_of_line)
+            POGGER.debug(">>old_inline_blocks_count>>$<<", old_inline_blocks_count)
 
-                new_inline_blocks_count = len(inline_blocks)
-                POGGER.debug(">>new_inline_blocks_count>>$<<", new_inline_blocks_count)
+            new_inline_blocks_count = len(inline_blocks)
+            POGGER.debug(">>new_inline_blocks_count>>$<<", new_inline_blocks_count)
 
-                if (
-                    new_token
-                    or old_inline_blocks_count != new_inline_blocks_count
-                    or (
-                        inline_blocks
-                        and old_inline_blocks_last_token != inline_blocks[-1]
+            if (
+                new_token
+                or old_inline_blocks_count != new_inline_blocks_count
+                or (
+                    inline_blocks
+                    and old_inline_blocks_last_token != inline_blocks[-1]
+                )
+            ):
+                if inline_blocks[-1].is_inline_image:
+                    repeat_count = (new_index - next_index) + remaining_line_size
+                    (
+                        delta_line,
+                        repeat_count,
+                    ) = InlineProcessor.__calculate_link_and_image_deltas(
+                        para_owner, inline_blocks[-1], delta_line, repeat_count
                     )
-                ):
-                    if inline_blocks[-1].is_inline_image:
-                        repeat_count = (new_index - next_index) + remaining_line_size
-                        (
-                            delta_line,
-                            repeat_count,
-                        ) = InlineProcessor.__calculate_link_and_image_deltas(
-                            para_owner, inline_blocks[-1], delta_line, repeat_count
-                        )
-                        POGGER.debug(">>delta_line>>$<<", delta_line)
-                        POGGER.debug(">>repeat_count>>$<<", repeat_count)
-                    elif new_token and new_token.is_inline_link_end:
+                    POGGER.debug(">>delta_line>>$<<", delta_line)
+                    POGGER.debug(">>repeat_count>>$<<", repeat_count)
+                elif new_token and new_token.is_inline_link_end:
+                    POGGER.debug(
+                        ">>new_token.start_markdown_token>>$<<",
+                        new_token.start_markdown_token,
+                    )
+                    assert new_token.start_markdown_token
+                    repeat_count = new_index - next_index
+                    POGGER.debug(">>delta_line>>$<<", delta_line)
+                    POGGER.debug(">>repeat_count>>$<<", repeat_count)
+                    if para_owner:
                         POGGER.debug(
-                            ">>new_token.start_markdown_token>>$<<",
-                            new_token.start_markdown_token,
+                            ">>para_owner.rehydrate_index>>$<<",
+                            para_owner.rehydrate_index,
                         )
-                        assert new_token.start_markdown_token
-                        repeat_count = new_index - next_index
-                        POGGER.debug(">>delta_line>>$<<", delta_line)
-                        POGGER.debug(">>repeat_count>>$<<", repeat_count)
-                        if para_owner:
-                            POGGER.debug(
-                                ">>para_owner.rehydrate_index>>$<<",
-                                para_owner.rehydrate_index,
-                            )
-                        (
-                            delta_line,
-                            repeat_count,
-                        ) = InlineProcessor.__calculate_link_and_image_deltas(
-                            para_owner,
-                            new_token.start_markdown_token,
-                            delta_line,
-                            repeat_count,
+                    (
+                        delta_line,
+                        repeat_count,
+                    ) = InlineProcessor.__calculate_link_and_image_deltas(
+                        para_owner,
+                        new_token.start_markdown_token,
+                        delta_line,
+                        repeat_count,
+                    )
+                    if para_owner:
+                        POGGER.debug(
+                            ">>para_owner.rehydrate_index>>$<<",
+                            para_owner.rehydrate_index,
                         )
-                        if para_owner:
-                            POGGER.debug(
-                                ">>para_owner.rehydrate_index>>$<<",
-                                para_owner.rehydrate_index,
-                            )
-                        POGGER.debug(">>delta_line>>$<<", delta_line)
-                        POGGER.debug(">>repeat_count>>$<<", repeat_count)
-                    else:
-                        repeat_count = new_index - next_index
-                        POGGER.debug(">>repeat_count>>$<<", repeat_count)
-            else:
-                repeat_count, new_index = special_length, next_index + special_length
+                    POGGER.debug(">>delta_line>>$<<", delta_line)
+                    POGGER.debug(">>repeat_count>>$<<", repeat_count)
+                else:
+                    repeat_count = new_index - next_index
+                    POGGER.debug(">>repeat_count>>$<<", repeat_count)
+        else:
+            repeat_count, new_index = special_length, next_index + special_length
 
         if not new_token:
             POGGER.debug(">>create>>$,$<<", line_number, column_number)
@@ -923,24 +922,27 @@ class InlineProcessor:
 
                 did_line_number_change = bool(inline_response.delta_line_number)
 
-                if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
-                    if (
+                if (
+                    coalesced_stack
+                    and coalesced_stack[-1].is_block_quote_start
+                    and (
                         inline_response.new_tokens
                         and inline_response.new_tokens[-1].is_inline_raw_html
-                    ):
-                        newline_count = ParserHelper.count_newlines_in_text(
-                            inline_response.new_tokens[-1].raw_tag
-                        )
-                        POGGER.debug("newline_count in raw-html>>$>", newline_count)
-                        coalesced_stack[-1].leading_text_index += newline_count
+                    )
+                ):
+                    newline_count = ParserHelper.count_newlines_in_text(
+                        inline_response.new_tokens[-1].raw_tag
+                    )
+                    POGGER.debug("newline_count in raw-html>>$>", newline_count)
+                    coalesced_stack[-1].leading_text_index += newline_count
 
-                # POGGER.debug("line_number>>$>",line_number)
-                # POGGER.debug("column_number>>$>", column_number)
-                # POGGER.debug("handler(after)>>$,$<<", line_number, column_number)
-                # POGGER.debug(
-                #     "handler(after)>>new_tokens>>$<<",
-                #     inline_response.new_tokens,
-                # )
+                        # POGGER.debug("line_number>>$>",line_number)
+                        # POGGER.debug("column_number>>$>", column_number)
+                        # POGGER.debug("handler(after)>>$,$<<", line_number, column_number)
+                        # POGGER.debug(
+                        #     "handler(after)>>new_tokens>>$<<",
+                        #     inline_response.new_tokens,
+                        # )
             else:
                 assert source_text[next_index] == ParserHelper.newline_character
                 # POGGER.debug(
@@ -1214,15 +1216,15 @@ class InlineProcessor:
                 inline_response.new_string,
                 inline_response.original_string,
             )
-            # POGGER.debug("6<<end_string<<$<<", end_string)
-            # POGGER.debug(
-            #     "<<current_string<<$<<",
-            #     current_string,
-            # )
-            # POGGER.debug(
-            #     "<<current_string_unresolved<<$<<",
-            #     current_string_unresolved,
-            # )
+                # POGGER.debug("6<<end_string<<$<<", end_string)
+                # POGGER.debug(
+                #     "<<current_string<<$<<",
+                #     current_string,
+                # )
+                # POGGER.debug(
+                #     "<<current_string_unresolved<<$<<",
+                #     current_string_unresolved,
+                # )
 
         # POGGER.debug("<<__complete_inline_block_processing<<")
         # POGGER.debug(

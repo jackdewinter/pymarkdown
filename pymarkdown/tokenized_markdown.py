@@ -302,11 +302,8 @@ class TokenizedMarkdown:
         Close any open blocks that are currently on the stack.
         """
 
-        new_tokens = []
         requeue_line_info = None
-        if destination_array:
-            new_tokens = destination_array
-
+        new_tokens = destination_array or []
         POGGER.debug("cob-start>>$", parser_state.token_stack)
         POGGER.debug(
             "cob-start>>$",

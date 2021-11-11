@@ -152,9 +152,7 @@ class ExtensionManager:
             ):
                 continue
 
-            does_match = True
-            if list_re:
-                does_match = list_re.match(next_extension_name)
+            does_match = list_re.match(next_extension_name) if list_re else True
             if does_match:
                 is_enabled_now = next_extension_name in self.__enabled_extensions
                 display_row = [
@@ -176,9 +174,7 @@ class ExtensionManager:
             ]
             table = columnar(show_rows, headers, no_borders=True)
             split_rows = table.split("\n")
-            new_rows = []
-            for next_row in split_rows:
-                new_rows.append(next_row.rstrip())
+            new_rows = [next_row.rstrip() for next_row in split_rows]
             print("\n".join(new_rows))
         else:
             print(f"No extension identifier matches the pattern '{args.list_filter}'.")
@@ -205,9 +201,7 @@ class ExtensionManager:
         headers = ["Item", "Description"]
         table = columnar(show_rows, headers, no_borders=True)
         split_rows = table.split("\n")
-        new_rows = []
-        for next_row in split_rows:
-            new_rows.append(next_row.rstrip())
+        new_rows = [next_row.rstrip() for next_row in split_rows]
         print("\n".join(new_rows))
         return 0
 

@@ -1515,16 +1515,13 @@ class ContainerBlockProcessor:
         parser_properties,
     ):
 
-        found_pragmas = False
-        if parser_properties.is_pragmas_enabled:
-            found_pragmas = PragmaExtension.look_for_pragmas(
+        return PragmaExtension.look_for_pragmas(
                 position_marker,
                 line_to_parse,
                 container_depth,
                 extracted_whitespace,
                 parser_properties,
-            )
-        return found_pragmas
+            ) if parser_properties.is_pragmas_enabled else False
 
 
 # pylint: disable=too-few-public-methods

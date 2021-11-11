@@ -828,11 +828,11 @@ class LinkHelper:
                         new_index,
                         bounding_character,
                     ) = LinkHelper.__parse_link_title(source_text, new_index)
-                if new_index != -1:
-                    (
-                        new_index,
-                        after_title_whitespace,
-                    ) = ParserHelper.extract_any_whitespace(source_text, new_index)
+            if new_index != -1:
+                (
+                    new_index,
+                    after_title_whitespace,
+                ) = ParserHelper.extract_any_whitespace(source_text, new_index)
         POGGER.debug(
             "inline_link>>$>>inline_title>>$>new_index>$>",
             inline_link,
