@@ -8,7 +8,8 @@ from abc import ABC, abstractmethod
 class RulePlugin(ABC):
     """
     Class to provide structure to scan through a file.
-    Based off of concepts from https://github.com/hiddenillusion/example-code/commit/3e2daada652fe9b487574c784e0924bd5fcfe667
+    Based off of concepts from
+    https://github.com/hiddenillusion/example-code/commit/3e2daada652fe9b487574c784e0924bd5fcfe667
     """
 
     def __init__(self):
@@ -40,16 +41,16 @@ class RulePlugin(ABC):
         self.__plugin_specific_facade = plugin_specific_facade
 
         self.__is_next_token_implemented_in_plugin = (
-            "next_token" in self.__class__.__dict__.keys()
+            "next_token" in self.__class__.__dict__
         )
         self.__is_next_line_implemented_in_plugin = (
-            "next_line" in self.__class__.__dict__.keys()
+            "next_line" in self.__class__.__dict__
         )
         self.__is_starting_new_file_implemented_in_plugin = (
-            "starting_new_file" in self.__class__.__dict__.keys()
+            "starting_new_file" in self.__class__.__dict__
         )
         self.__is_completed_file_implemented_in_plugin = (
-            "completed_file" in self.__class__.__dict__.keys()
+            "completed_file" in self.__class__.__dict__
         )
 
     @property
