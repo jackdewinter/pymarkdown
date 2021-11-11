@@ -2,6 +2,9 @@
     "disables-by-file": {
         "pymarkdown/__init__.py": {},
         "pymarkdown/__main__.py": {},
+        "pymarkdown/bad_plugin_error.py": {
+            "too-many-arguments": 1
+        },
         "pymarkdown/bad_tokenization_error.py": {},
         "pymarkdown/block_quote_processor.py": {
             "too-many-arguments": 2,
@@ -62,6 +65,10 @@
         "pymarkdown/extensions/task_list_items.py": {
             "too-few-public-methods": 1
         },
+        "pymarkdown/found_plugin.py": {
+            "too-many-instance-attributes": 1,
+            "too-many-arguments": 1
+        },
         "pymarkdown/html_helper.py": {},
         "pymarkdown/inline_helper.py": {
             "too-few-public-methods": 2,
@@ -114,7 +121,6 @@
             "too-many-public-methods": 1,
             "too-many-instance-attributes": 1,
             "too-many-arguments": 3,
-            "too-many-boolean-expressions": 1,
             "no-member": 1
         },
         "pymarkdown/parser_helper.py": {
@@ -123,12 +129,17 @@
             "too-many-instance-attributes": 1
         },
         "pymarkdown/parser_logger.py": {},
-        "pymarkdown/plugin_manager.py": {
-            "too-many-arguments": 8,
-            "too-many-branches": 2,
+        "pymarkdown/plugin_details.py": {
             "too-few-public-methods": 1,
-            "too-many-instance-attributes": 3,
-            "too-many-locals": 1
+            "too-many-instance-attributes": 1,
+            "too-many-arguments": 1
+        },
+        "pymarkdown/plugin_manager.py": {
+            "too-many-instance-attributes": 1,
+            "too-many-arguments": 3
+        },
+        "pymarkdown/plugin_scan_context.py": {
+            "too-many-arguments": 1
         },
         "pymarkdown/plugins/plugin_one.py": {},
         "pymarkdown/plugins/rule_md_001.py": {},
@@ -197,6 +208,9 @@
         "pymarkdown/requeue_line_info.py": {
             "too-few-public-methods": 1
         },
+        "pymarkdown/rule_plugin.py": {
+            "too-many-arguments": 1
+        },
         "pymarkdown/source_providers.py": {
             "too-few-public-methods": 2
         },
@@ -219,8 +233,8 @@
     },
     "disables-by-name": {
         "too-many-arguments": 76,
-        "too-many-locals": 34,
-        "too-many-branches": 16,
+        "too-many-locals": 33,
+        "too-many-branches": 14,
         "too-many-statements": 13,
         "too-few-public-methods": 17,
         "too-many-return-statements": 1,
@@ -228,7 +242,6 @@
         "no-self-use": 1,
         "too-many-instance-attributes": 15,
         "too-many-public-methods": 2,
-        "too-many-boolean-expressions": 1,
         "no-member": 1,
         "invalid-unary-operand-type": 1
     }

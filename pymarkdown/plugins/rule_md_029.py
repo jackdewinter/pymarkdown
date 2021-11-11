@@ -2,10 +2,11 @@
 Module to implement a plugin that ensures that Ordered List Items have
 consistent numeric prefaces.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd029(Plugin):
+class RuleMd029(RulePlugin):
     """
     Class to implement a plugin that ensures that Ordered List Items have
     consistent numeric prefaces.

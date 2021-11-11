@@ -1,10 +1,11 @@
 """
 Module to implement a sample plugin that has a bad interface version.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class BadInterfaceVersion(Plugin):
+class BadInterfaceVersion(RulePlugin):
     """
     Class to implement a sample plugin that has a bad interface version.
     """

@@ -3,10 +3,11 @@ Module to implement a plugin that looks for multiple spaces after the hash
 mark on an atx heading.
 """
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd019(Plugin):
+class RuleMd019(RulePlugin):
     """
     Class to implement a plugin that looks for multiple spaces after the hash
     mark on an atx heading.

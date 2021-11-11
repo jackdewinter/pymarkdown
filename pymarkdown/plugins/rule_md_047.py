@@ -1,10 +1,11 @@
 """
 Module to implement a plugin to ensure all files end with a blank line.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd047(Plugin):
+class RuleMd047(RulePlugin):
     """
     Class to implement a plugin to ensure all files end with a blank line.
     """

@@ -1,10 +1,11 @@
 """
 Module to implement a sample plugin that has a bad constructor function.
 """
-from plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class BadConstructor(Plugin):
+class BadConstructor(RulePlugin):
     """
     Class to implement a sample plugin that has a bad constructor function.
     """

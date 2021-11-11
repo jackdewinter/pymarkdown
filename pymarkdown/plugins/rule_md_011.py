@@ -4,10 +4,11 @@ it appear like the author got the inline link syntax reversed.
 """
 import re
 
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd011(Plugin):
+class RuleMd011(RulePlugin):
     """
     Class to implement a plugin that looks for text sequences that make
     it appear like the author got the inline link syntax reversed.

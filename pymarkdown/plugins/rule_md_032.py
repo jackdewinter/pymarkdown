@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that ensures that top-level lists are surrounded by Blank Lines.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd032(Plugin):
+class RuleMd032(RulePlugin):
     """
     Class to implement a plugin that ensures that top-level lists are surrounded by Blank Lines.
     """

@@ -2,10 +2,11 @@
 Module to implement a plugin that looks for bare URLs in the files.
 """
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd034(Plugin):
+class RuleMd034(RulePlugin):
     """
     Class to implement a plugin that looks for bare URLs in the files.
     """

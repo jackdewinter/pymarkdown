@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that looks for fenced code blocks without a language specified.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd040(Plugin):
+class RuleMd040(RulePlugin):
     """
     Class to implement a plugin that looks for fenced code blocks without a language specified.
     """

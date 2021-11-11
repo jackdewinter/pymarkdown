@@ -2,10 +2,11 @@
 Module to implement a plugin that looks to see if the first heading in a file is
 a top level heading.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd002(Plugin):
+class RuleMd002(RulePlugin):
     """
     Class to implement a plugin that looks to see if the first heading in a file is
     a top level heading.

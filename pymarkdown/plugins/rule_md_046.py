@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that ensures the code blocks maintain a consistent style.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd046(Plugin):
+class RuleMd046(RulePlugin):
     """
     Class to implement a plugin that ensures the code blocks maintain a consistent style.
     """

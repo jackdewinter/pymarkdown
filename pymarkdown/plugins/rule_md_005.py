@@ -4,7 +4,8 @@ are equivalent with each other.
 """
 from enum import Enum
 
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
 class OrderedListAlignment(Enum):
@@ -17,7 +18,7 @@ class OrderedListAlignment(Enum):
     RIGHT = 2
 
 
-class RuleMd005(Plugin):
+class RuleMd005(RulePlugin):
     """
     Class to implement a plugin that ensures that the indentation for List Items
     are equivalent with each other.

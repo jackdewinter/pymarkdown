@@ -1,10 +1,11 @@
 """
 Module to implement a sample plugin that just reports that it has been called.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class PluginOne(Plugin):
+class PluginOne(RulePlugin):
     """
     Class to implement a sample plugin that just reports that it has been called.
     """

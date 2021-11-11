@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that ensures that the first line in a file is a top level heading.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd041(Plugin):
+class RuleMd041(RulePlugin):
     """
     Class to implement a plugin that ensures that the first line in a file is a top level heading.
     """

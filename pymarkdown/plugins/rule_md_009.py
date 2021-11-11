@@ -2,11 +2,12 @@
 Module to implement a plugin that looks for trailing spaces in the files.
 """
 from pymarkdown.parser_helper import ParserHelper
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
 # pylint: disable=too-many-instance-attributes
-class RuleMd009(Plugin):
+class RuleMd009(RulePlugin):
     """
     Class to implement a plugin that looks for trailing spaces in the files.
     """

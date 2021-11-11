@@ -2,10 +2,11 @@
 Module to implement a plugin that looks for multiple heading lines with the same
 content.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd024(Plugin):
+class RuleMd024(RulePlugin):
     """
     Class to implement a plugin that looks for multiple heading lines with the same
     content.

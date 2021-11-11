@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that ensures that Block Quote elements are surrounded by Blank Lines.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd028(Plugin):
+class RuleMd028(RulePlugin):
     """
     Class to implement a plugin that ensures that Block Quote elements are surrounded by Blank Lines.
     """

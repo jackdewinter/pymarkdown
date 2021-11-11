@@ -1,10 +1,11 @@
 """
 Module to implement a plugin that looks for multiple blank lines in the files.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd012(Plugin):
+class RuleMd012(RulePlugin):
     """
     Class to implement a plugin that looks for multiple blank lines in the files.
     """

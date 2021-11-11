@@ -2,10 +2,11 @@
 Module to implement a plugin that looks for more than one space between either the
 opening or closing hashes of an atx heading.
 """
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
-class RuleMd021(Plugin):
+class RuleMd021(RulePlugin):
     """
     Class to implement a plugin that looks for more than one space between either the
     opening or closing hashes of an atx heading.

@@ -5,7 +5,8 @@ the text of the heading.
 """
 import re
 
-from pymarkdown.plugin_manager import Plugin, PluginDetails
+from pymarkdown.plugin_details import PluginDetails
+from pymarkdown.rule_plugin import RulePlugin
 
 
 class StartOfLineTokenParser:
@@ -191,7 +192,7 @@ class MyStartOfLineTokenParser(StartOfLineTokenParser):
     # pylint: enable=too-many-arguments
 
 
-class RuleMd018(Plugin):
+class RuleMd018(RulePlugin):
     """
     Class to implement a plugin that looks for text in a paragraph where a line starts
     with what could be an atx heading, except there is no spaces between the hashes and
