@@ -21,14 +21,8 @@ class EmphasisHelper:
     __complex_emphasis = "_"
     inline_emphasis = f"{__simple_emphasis}{__complex_emphasis}"
 
-    # LOW
-    # pylint: disable=too-many-branches
     @staticmethod
-    def resolve_inline_emphasis(inline_blocks, wall_token):
-        """
-        Resolve the inline emphasis by interpreting the special text tokens.
-        """
-        is_debug_enabled = POGGER.is_debug_enabled
+    def __create_delimiter_stack(inline_blocks, is_debug_enabled, wall_token):
         delimiter_stack, special_count = [], 0
         for next_block in inline_blocks:
             POGGER.debug(
@@ -49,6 +43,77 @@ class EmphasisHelper:
         stack_bottom = EmphasisHelper.__find_token_in_delimiter_stack(
             inline_blocks, delimiter_stack, wall_token
         )
+        return delimiter_stack, stack_bottom
+
+    @staticmethod
+    def __find_potential_opener(
+        delimiter_stack, current_position, stack_bottom, openers_bottom
+    ):
+        close_token, scan_index, found_opener = (
+            delimiter_stack[current_position],
+            current_position - 1,
+            None,
+        )
+        POGGER.debug("potential closer-->$", current_position)
+        while (
+            scan_index >= 0
+            and scan_index > stack_bottom
+            and scan_index > openers_bottom
+        ):
+            POGGER.debug("potential opener:$", scan_index)
+            open_token = delimiter_stack[scan_index]
+            is_valid_opener = EmphasisHelper.__is_open_close_emphasis_valid(
+                open_token, close_token
+            )
+            if is_valid_opener:
+                found_opener = open_token
+                break
+            scan_index -= 1
+            POGGER.debug(
+                "scan_index-->$>stack_bottom>$>openers_bottom>$>",
+                scan_index,
+                stack_bottom,
+                openers_bottom,
+            )
+        return close_token, found_opener
+
+    @staticmethod
+    def __process_this_delimiter_item(
+        is_debug_enabled, delimiter_stack, current_position
+    ):
+        continue_processing = True
+        if is_debug_enabled:
+            POGGER.debug(
+                "Block($)-->$",
+                current_position,
+                delimiter_stack[current_position].show_process_emphasis(),
+            )
+        if not delimiter_stack[current_position].is_active:
+            POGGER.debug("not active")
+            continue_processing = False
+        elif (
+            delimiter_stack[current_position].token_text[0]
+            not in EmphasisHelper.inline_emphasis
+        ):
+            POGGER.debug("not emphasis")
+            continue_processing = False
+        elif not EmphasisHelper.__is_potential_closer(
+            delimiter_stack[current_position]
+        ):
+            POGGER.debug("not closer")
+            continue_processing = False
+        return continue_processing
+
+    @staticmethod
+    def resolve_inline_emphasis(inline_blocks, wall_token):
+        """
+        Resolve the inline emphasis by interpreting the special text tokens.
+        """
+        is_debug_enabled = POGGER.is_debug_enabled
+        delimiter_stack, stack_bottom = EmphasisHelper.__create_delimiter_stack(
+            inline_blocks, is_debug_enabled, wall_token
+        )
+
         current_position, openers_bottom, stack_size = (
             stack_bottom + 1,
             stack_bottom,
@@ -65,53 +130,14 @@ class EmphasisHelper:
 
             while current_position < (len(delimiter_stack) - 1):
                 current_position += 1
-                if is_debug_enabled:
-                    POGGER.debug(
-                        "Block($)-->$",
-                        current_position,
-                        delimiter_stack[current_position].show_process_emphasis(),
-                    )
-                if not delimiter_stack[current_position].is_active:
-                    POGGER.debug("not active")
-                    continue
-                if (
-                    delimiter_stack[current_position].token_text[0]
-                    not in EmphasisHelper.inline_emphasis
+                if not EmphasisHelper.__process_this_delimiter_item(
+                    is_debug_enabled, delimiter_stack, current_position
                 ):
-                    POGGER.debug("not emphasis")
-                    continue
-                if not EmphasisHelper.__is_potential_closer(
-                    delimiter_stack[current_position]
-                ):
-                    POGGER.debug("not closer")
                     continue
 
-                close_token, scan_index, found_opener = (
-                    delimiter_stack[current_position],
-                    current_position - 1,
-                    None,
+                close_token, found_opener = EmphasisHelper.__find_potential_opener(
+                    delimiter_stack, current_position, stack_bottom, openers_bottom
                 )
-                POGGER.debug("potential closer-->$", current_position)
-                while (
-                    scan_index >= 0
-                    and scan_index > stack_bottom
-                    and scan_index > openers_bottom
-                ):
-                    POGGER.debug("potential opener:$", scan_index)
-                    open_token = delimiter_stack[scan_index]
-                    is_valid_opener = EmphasisHelper.__is_open_close_emphasis_valid(
-                        open_token, close_token
-                    )
-                    if is_valid_opener:
-                        found_opener = open_token
-                        break
-                    scan_index -= 1
-                    POGGER.debug(
-                        "scan_index-->$>stack_bottom>$>openers_bottom>$>",
-                        scan_index,
-                        stack_bottom,
-                        openers_bottom,
-                    )
 
                 if found_opener:
                     POGGER.debug("FOUND OPEN")
@@ -130,7 +156,65 @@ class EmphasisHelper:
         EmphasisHelper.__reset_token_text(inline_blocks)
         EmphasisHelper.__clear_remaining_emphasis(delimiter_stack, stack_bottom)
         return inline_blocks
-        # pylint: enable=too-many-branches
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __mark_used_tokens(
+        open_token,
+        close_token,
+        start_index_in_blocks,
+        end_index_in_blocks,
+        emphasis_length,
+        inline_blocks,
+        current_position,
+    ):
+        # remove emphasis_length from open and close nodes
+        is_debug_enabled = POGGER.is_debug_enabled
+        if is_debug_enabled:
+            POGGER.debug(
+                "$>>close_token>>$<<",
+                end_index_in_blocks,
+                close_token.show_process_emphasis(),
+            )
+        close_token.reduce_repeat_count(emphasis_length, adjust_column_number=True)
+        if not close_token.repeat_count:
+            inline_blocks.remove(close_token)
+            POGGER.debug("close_token>>removed")
+            end_index_in_blocks -= 1
+            close_token.deactivate()
+        else:
+            current_position -= 1
+        if is_debug_enabled:
+            POGGER.debug("close_token>>$<<", close_token.show_process_emphasis())
+            POGGER.debug(
+                "$>>open_token>>$<<",
+                start_index_in_blocks,
+                open_token.show_process_emphasis(),
+            )
+        open_token.reduce_repeat_count(emphasis_length)
+        if not open_token.repeat_count:
+            inline_blocks.remove(open_token)
+            POGGER.debug("open_token>>removed")
+            end_index_in_blocks -= 1
+            open_token.deactivate()
+        if is_debug_enabled:
+            POGGER.debug("open_token>>$<<", open_token.show_process_emphasis())
+
+        # "remove" between start and end from delimiter_stack
+        inline_index = start_index_in_blocks + 1
+        while inline_index < end_index_in_blocks:
+            POGGER.debug(
+                "inline_index>>$>>end>>$>>$",
+                inline_index,
+                end_index_in_blocks,
+                len(inline_blocks),
+            )
+            if inline_blocks[inline_index].is_special_text:
+                inline_blocks[inline_index].deactivate()
+            inline_index += 1
+        return current_position
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __process_emphasis_pair(
@@ -183,50 +267,15 @@ class EmphasisHelper:
         )
         end_index_in_blocks += 1
 
-        # remove emphasis_length from open and close nodes
-        is_debug_enabled = POGGER.is_debug_enabled
-        if is_debug_enabled:
-            POGGER.debug(
-                "$>>close_token>>$<<",
-                end_index_in_blocks,
-                close_token.show_process_emphasis(),
-            )
-        close_token.reduce_repeat_count(emphasis_length, adjust_column_number=True)
-        if not close_token.repeat_count:
-            inline_blocks.remove(close_token)
-            POGGER.debug("close_token>>removed")
-            end_index_in_blocks -= 1
-            close_token.deactivate()
-        else:
-            current_position -= 1
-        if is_debug_enabled:
-            POGGER.debug("close_token>>$<<", close_token.show_process_emphasis())
-            POGGER.debug(
-                "$>>open_token>>$<<",
-                start_index_in_blocks,
-                open_token.show_process_emphasis(),
-            )
-        open_token.reduce_repeat_count(emphasis_length)
-        if not open_token.repeat_count:
-            inline_blocks.remove(open_token)
-            POGGER.debug("open_token>>removed")
-            end_index_in_blocks -= 1
-            open_token.deactivate()
-        if is_debug_enabled:
-            POGGER.debug("open_token>>$<<", open_token.show_process_emphasis())
-
-        # "remove" between start and end from delimiter_stack
-        inline_index = start_index_in_blocks + 1
-        while inline_index < end_index_in_blocks:
-            POGGER.debug(
-                "inline_index>>$>>end>>$>>$",
-                inline_index,
-                end_index_in_blocks,
-                len(inline_blocks),
-            )
-            if inline_blocks[inline_index].is_special_text:
-                inline_blocks[inline_index].deactivate()
-            inline_index += 1
+        current_position = EmphasisHelper.__mark_used_tokens(
+            open_token,
+            close_token,
+            start_index_in_blocks,
+            end_index_in_blocks,
+            emphasis_length,
+            inline_blocks,
+            current_position,
+        )
 
         return current_position
 

@@ -35,7 +35,7 @@
         },
         "pymarkdown/emphasis_helper.py": {
             "too-few-public-methods": 1,
-            "too-many-branches": 1
+            "too-many-arguments": 1
         },
         "pymarkdown/extension_impl.py": {
             "too-many-instance-attributes": 1,
@@ -231,9 +231,9 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 80,
+        "too-many-arguments": 81,
         "too-many-locals": 33,
-        "too-many-branches": 14,
+        "too-many-branches": 13,
         "too-many-statements": 12,
         "too-few-public-methods": 17,
         "too-many-return-statements": 1,
