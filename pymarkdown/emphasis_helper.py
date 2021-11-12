@@ -157,6 +157,65 @@ class EmphasisHelper:
         EmphasisHelper.__clear_remaining_emphasis(delimiter_stack, stack_bottom)
         return inline_blocks
 
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __mark_used_tokens(
+        open_token,
+        close_token,
+        start_index_in_blocks,
+        end_index_in_blocks,
+        emphasis_length,
+        inline_blocks,
+        current_position,
+    ):
+        # remove emphasis_length from open and close nodes
+        is_debug_enabled = POGGER.is_debug_enabled
+        if is_debug_enabled:
+            POGGER.debug(
+                "$>>close_token>>$<<",
+                end_index_in_blocks,
+                close_token.show_process_emphasis(),
+            )
+        close_token.reduce_repeat_count(emphasis_length, adjust_column_number=True)
+        if not close_token.repeat_count:
+            inline_blocks.remove(close_token)
+            POGGER.debug("close_token>>removed")
+            end_index_in_blocks -= 1
+            close_token.deactivate()
+        else:
+            current_position -= 1
+        if is_debug_enabled:
+            POGGER.debug("close_token>>$<<", close_token.show_process_emphasis())
+            POGGER.debug(
+                "$>>open_token>>$<<",
+                start_index_in_blocks,
+                open_token.show_process_emphasis(),
+            )
+        open_token.reduce_repeat_count(emphasis_length)
+        if not open_token.repeat_count:
+            inline_blocks.remove(open_token)
+            POGGER.debug("open_token>>removed")
+            end_index_in_blocks -= 1
+            open_token.deactivate()
+        if is_debug_enabled:
+            POGGER.debug("open_token>>$<<", open_token.show_process_emphasis())
+
+        # "remove" between start and end from delimiter_stack
+        inline_index = start_index_in_blocks + 1
+        while inline_index < end_index_in_blocks:
+            POGGER.debug(
+                "inline_index>>$>>end>>$>>$",
+                inline_index,
+                end_index_in_blocks,
+                len(inline_blocks),
+            )
+            if inline_blocks[inline_index].is_special_text:
+                inline_blocks[inline_index].deactivate()
+            inline_index += 1
+        return current_position
+
+    # pylint: enable=too-many-arguments
+
     @staticmethod
     def __process_emphasis_pair(
         inline_blocks, open_token, close_token, current_position
@@ -208,50 +267,15 @@ class EmphasisHelper:
         )
         end_index_in_blocks += 1
 
-        # remove emphasis_length from open and close nodes
-        is_debug_enabled = POGGER.is_debug_enabled
-        if is_debug_enabled:
-            POGGER.debug(
-                "$>>close_token>>$<<",
-                end_index_in_blocks,
-                close_token.show_process_emphasis(),
-            )
-        close_token.reduce_repeat_count(emphasis_length, adjust_column_number=True)
-        if not close_token.repeat_count:
-            inline_blocks.remove(close_token)
-            POGGER.debug("close_token>>removed")
-            end_index_in_blocks -= 1
-            close_token.deactivate()
-        else:
-            current_position -= 1
-        if is_debug_enabled:
-            POGGER.debug("close_token>>$<<", close_token.show_process_emphasis())
-            POGGER.debug(
-                "$>>open_token>>$<<",
-                start_index_in_blocks,
-                open_token.show_process_emphasis(),
-            )
-        open_token.reduce_repeat_count(emphasis_length)
-        if not open_token.repeat_count:
-            inline_blocks.remove(open_token)
-            POGGER.debug("open_token>>removed")
-            end_index_in_blocks -= 1
-            open_token.deactivate()
-        if is_debug_enabled:
-            POGGER.debug("open_token>>$<<", open_token.show_process_emphasis())
-
-        # "remove" between start and end from delimiter_stack
-        inline_index = start_index_in_blocks + 1
-        while inline_index < end_index_in_blocks:
-            POGGER.debug(
-                "inline_index>>$>>end>>$>>$",
-                inline_index,
-                end_index_in_blocks,
-                len(inline_blocks),
-            )
-            if inline_blocks[inline_index].is_special_text:
-                inline_blocks[inline_index].deactivate()
-            inline_index += 1
+        current_position = EmphasisHelper.__mark_used_tokens(
+            open_token,
+            close_token,
+            start_index_in_blocks,
+            end_index_in_blocks,
+            emphasis_length,
+            inline_blocks,
+            current_position,
+        )
 
         return current_position
 
