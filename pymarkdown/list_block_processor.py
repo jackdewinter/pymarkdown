@@ -511,8 +511,6 @@ class ListBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # LOW
-    # pylint: disable=too-many-statements, too-many-locals
     @staticmethod
     def list_in_process(
         parser_state,
@@ -547,25 +545,12 @@ class ListBlockProcessor:
             before_ws_length,
         )
 
-        started_ulist, _, _, _ = ListBlockProcessor.is_ulist_start(
+        allow_list_continue = ListBlockProcessor.__can_list_continue(
             parser_state,
             line_to_parse,
             start_index,
             extracted_whitespace,
-            True,
-        )
-        started_olist, _, _, _ = ListBlockProcessor.is_olist_start(
-            parser_state,
-            line_to_parse,
-            start_index,
-            extracted_whitespace,
-            True,
-        )
-
-        allow_list_continue = (
-            (not parser_state.token_document[-1].is_blank_line)
-            if leading_space_length >= 4 and (started_ulist or started_olist)
-            else True
+            leading_space_length,
         )
 
         POGGER.debug(
@@ -596,132 +581,25 @@ class ListBlockProcessor:
                 used_indent,
             )
         else:
-            POGGER.debug(
-                "requested_list_indent>>$<<",
+            (
+                container_level_tokens,
+                line_to_parse,
+                used_indent,
+                ind,
+                requeue_line_info,
+            ) = ListBlockProcessor.__process_list_non_continue(
+                parser_state,
                 requested_list_indent,
-            )
-            original_requested_list_indent = requested_list_indent
-            requested_list_indent = requested_list_indent - before_ws_length
-            POGGER.debug(
-                "leading_space_length>>$>>adj requested_list_indent>>$>>$<<",
                 leading_space_length,
-                requested_list_indent,
-                parser_state.token_stack[-1].is_paragraph,
-            )
-
-            # This needs to be in place to prevent a thematic break after a paragraph
-            # within a list from being misinterpreted as a SetExt Heading.
-            is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
+                before_ws_length,
                 line_to_parse,
                 start_index,
                 extracted_whitespace,
-                skip_whitespace_check=True,
+                allow_list_continue,
+                ind,
             )
-            POGGER.debug("is_theme_break>>$", is_theme_break)
-
-            if (
-                parser_state.token_stack[-1].is_paragraph
-                and leading_space_length >= requested_list_indent
-                and allow_list_continue
-                and not is_theme_break
-            ):
-                POGGER.debug(
-                    "1>>line_to_parse>>$>>",
-                    line_to_parse,
-                )
-                (
-                    line_to_parse,
-                    used_indent,
-                ) = ListBlockProcessor.__adjust_line_for_list_in_process(
-                    line_to_parse,
-                    start_index,
-                    extracted_whitespace,
-                    leading_space_length,
-                    original_requested_list_indent,
-                )
-                POGGER.debug(
-                    ">>line_to_parse>>$>>",
-                    line_to_parse,
-                )
-                POGGER.debug(">>used_indent>>$>>", used_indent)
-            else:
-                POGGER.debug(
-                    "2>>line_to_parse>>$>>",
-                    line_to_parse,
-                )
-                (
-                    container_level_tokens,
-                    requeue_line_info,
-                ) = ListBlockProcessor.__check_for_list_closures(
-                    parser_state,
-                    line_to_parse,
-                    start_index,
-                    extracted_whitespace,
-                    ind,
-                    leading_space_length,
-                )
-                POGGER.debug(
-                    "2>>requeue_line_info>>$>>",
-                    requeue_line_info,
-                )
-                if requeue_line_info:
-                    return None, None, None, requeue_line_info
-
-                POGGER.debug(
-                    "2>>__check_for_list_closures>>$>>",
-                    container_level_tokens,
-                )
-                POGGER.debug(
-                    "2>>parser_state.token_stack>>$>>",
-                    parser_state.token_stack,
-                )
-                POGGER.debug(
-                    "2>>ind>>$>>",
-                    ind,
-                )
-
-                found_owning_list = None
-                if container_level_tokens:
-                    (
-                        did_find,
-                        last_list_index,
-                    ) = LeafBlockProcessor.check_for_list_in_process(parser_state)
-                    POGGER.debug(
-                        "2>>did_find>>$>>$>>",
-                        did_find,
-                        last_list_index,
-                    )
-                    if did_find:
-                        ind = last_list_index
-                        found_owning_list = parser_state.token_stack[ind]
-                else:
-                    assert parser_state.token_stack[ind].is_list
-                    found_owning_list = parser_state.token_stack[ind]
-
-                if found_owning_list:
-                    POGGER.debug(">>in list>>")
-                    requested_list_indent = (
-                        (found_owning_list.last_new_list_token.indent_level)
-                        if found_owning_list.last_new_list_token
-                        else found_owning_list.indent_level
-                    )
-                    POGGER.debug(">>line_to_parse>>$>>", line_to_parse)
-                    POGGER.debug(">>extracted_whitespace>>$<<", extracted_whitespace)
-                    POGGER.debug(">>start_index>>$", start_index)
-                    POGGER.debug(">>requested_list_indent>>$", requested_list_indent)
-                    POGGER.debug(">>before_ws_length>>$", before_ws_length)
-                    (
-                        line_to_parse,
-                        used_indent,
-                    ) = ListBlockProcessor.__adjust_line_for_list_in_process(
-                        line_to_parse,
-                        start_index,
-                        extracted_whitespace,
-                        leading_space_length,
-                        requested_list_indent,
-                    )
-                    POGGER.debug(">>line_to_parse>>$", line_to_parse)
-                    POGGER.debug(">>used_indent>>$<<", used_indent)
+            if requeue_line_info:
+                return None, None, None, requeue_line_info
 
         POGGER.debug(">>used_indent>>$<<", used_indent)
         if used_indent is not None:
@@ -738,7 +616,213 @@ class ListBlockProcessor:
             )
         return container_level_tokens, line_to_parse, used_indent, None
 
-    # pylint: enable=too-many-statements, too-many-locals
+    @staticmethod
+    def __can_list_continue(
+        parser_state,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+        leading_space_length,
+    ):
+        started_ulist, _, _, _ = ListBlockProcessor.is_ulist_start(
+            parser_state,
+            line_to_parse,
+            start_index,
+            extracted_whitespace,
+            True,
+        )
+        started_olist, _, _, _ = ListBlockProcessor.is_olist_start(
+            parser_state,
+            line_to_parse,
+            start_index,
+            extracted_whitespace,
+            True,
+        )
+        return (
+            (not parser_state.token_document[-1].is_blank_line)
+            if leading_space_length >= 4 and (started_ulist or started_olist)
+            else True
+        )
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __process_list_non_continue(
+        parser_state,
+        requested_list_indent,
+        leading_space_length,
+        before_ws_length,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+        allow_list_continue,
+        ind,
+    ):
+
+        container_level_tokens = []
+        used_indent = None
+
+        POGGER.debug(
+            "requested_list_indent>>$<<",
+            requested_list_indent,
+        )
+        original_requested_list_indent = requested_list_indent
+        requested_list_indent = requested_list_indent - before_ws_length
+        POGGER.debug(
+            "leading_space_length>>$>>adj requested_list_indent>>$>>$<<",
+            leading_space_length,
+            requested_list_indent,
+            parser_state.token_stack[-1].is_paragraph,
+        )
+
+        # This needs to be in place to prevent a thematic break after a paragraph
+        # within a list from being misinterpreted as a SetExt Heading.
+        is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
+            line_to_parse,
+            start_index,
+            extracted_whitespace,
+            skip_whitespace_check=True,
+        )
+        POGGER.debug("is_theme_break>>$", is_theme_break)
+
+        if (
+            parser_state.token_stack[-1].is_paragraph
+            and leading_space_length >= requested_list_indent
+            and allow_list_continue
+            and not is_theme_break
+        ):
+            POGGER.debug(
+                "1>>line_to_parse>>$>>",
+                line_to_parse,
+            )
+            (
+                line_to_parse,
+                used_indent,
+            ) = ListBlockProcessor.__adjust_line_for_list_in_process(
+                line_to_parse,
+                start_index,
+                extracted_whitespace,
+                leading_space_length,
+                original_requested_list_indent,
+            )
+            POGGER.debug(
+                ">>line_to_parse>>$>>",
+                line_to_parse,
+            )
+            POGGER.debug(">>used_indent>>$>>", used_indent)
+        else:
+            POGGER.debug(
+                "2>>line_to_parse>>$>>",
+                line_to_parse,
+            )
+            (
+                container_level_tokens,
+                requeue_line_info,
+            ) = ListBlockProcessor.__check_for_list_closures(
+                parser_state,
+                line_to_parse,
+                start_index,
+                extracted_whitespace,
+                ind,
+                leading_space_length,
+            )
+            POGGER.debug(
+                "2>>requeue_line_info>>$>>",
+                requeue_line_info,
+            )
+            if requeue_line_info:
+                return None, None, None, None, requeue_line_info
+
+            (
+                line_to_parse,
+                used_indent,
+                ind,
+            ) = ListBlockProcessor.__adjust_for_nested_list(
+                parser_state,
+                container_level_tokens,
+                ind,
+                line_to_parse,
+                extracted_whitespace,
+                start_index,
+                before_ws_length,
+                leading_space_length,
+            )
+
+        return container_level_tokens, line_to_parse, used_indent, ind, None
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __adjust_for_nested_list(
+        parser_state,
+        container_level_tokens,
+        ind,
+        line_to_parse,
+        extracted_whitespace,
+        start_index,
+        before_ws_length,
+        leading_space_length,
+    ):
+
+        POGGER.debug(
+            "2>>__check_for_list_closures>>$>>",
+            container_level_tokens,
+        )
+        POGGER.debug(
+            "2>>parser_state.token_stack>>$>>",
+            parser_state.token_stack,
+        )
+        POGGER.debug(
+            "2>>ind>>$>>",
+            ind,
+        )
+
+        found_owning_list = None
+        if container_level_tokens:
+            (
+                did_find,
+                last_list_index,
+            ) = LeafBlockProcessor.check_for_list_in_process(parser_state)
+            POGGER.debug(
+                "2>>did_find>>$>>$>>",
+                did_find,
+                last_list_index,
+            )
+            if did_find:
+                ind = last_list_index
+                found_owning_list = parser_state.token_stack[ind]
+        else:
+            assert parser_state.token_stack[ind].is_list
+            found_owning_list = parser_state.token_stack[ind]
+
+        used_indent = None
+        if found_owning_list:
+            POGGER.debug(">>in list>>")
+            requested_list_indent = (
+                (found_owning_list.last_new_list_token.indent_level)
+                if found_owning_list.last_new_list_token
+                else found_owning_list.indent_level
+            )
+            POGGER.debug(">>line_to_parse>>$>>", line_to_parse)
+            POGGER.debug(">>extracted_whitespace>>$<<", extracted_whitespace)
+            POGGER.debug(">>start_index>>$", start_index)
+            POGGER.debug(">>requested_list_indent>>$", requested_list_indent)
+            POGGER.debug(">>before_ws_length>>$", before_ws_length)
+            (
+                line_to_parse,
+                used_indent,
+            ) = ListBlockProcessor.__adjust_line_for_list_in_process(
+                line_to_parse,
+                start_index,
+                extracted_whitespace,
+                leading_space_length,
+                requested_list_indent,
+            )
+            POGGER.debug(">>line_to_parse>>$", line_to_parse)
+            POGGER.debug(">>used_indent>>$<<", used_indent)
+        return line_to_parse, used_indent, ind
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -928,9 +1012,12 @@ class ListBlockProcessor:
         POGGER.debug("__post_list>>after>>$", container_level_tokens)
 
         parser_state.set_no_para_start_if_empty()
+        padded_spaces = ParserHelper.repeat_string(
+            ParserHelper.space_character, remaining_whitespace
+        )
         return (
             container_level_tokens,
-            f"{ParserHelper.repeat_string(ParserHelper.space_character, remaining_whitespace)}{line_to_parse[after_marker_ws_index:]}",
+            f"{padded_spaces}{line_to_parse[after_marker_ws_index:]}",
             None,
         )
         # pylint: enable=too-many-arguments, too-many-locals
@@ -1206,7 +1293,8 @@ class ListBlockProcessor:
                     adjusted_index = parser_state.token_stack[-1].indent_level - 2
 
                 POGGER.debug(
-                    "adjusted_index>$ > parser_state.token_stack[-2].indent_level>$ ) or not with_previous_list_bounds=$",
+                    "adjusted_index>$ > parser_state.token_stack[-2].indent_level>$ ) "
+                    + "or not with_previous_list_bounds=$",
                     adjusted_index,
                     parser_state.token_stack[-2].indent_level,
                     with_previous_list_bounds,
@@ -1285,8 +1373,11 @@ class ListBlockProcessor:
             if ParserHelper.tab_character in leading_space
             else leading_space[0:requested_list_indent]
         )
+        padded_spaces = ParserHelper.repeat_string(
+            ParserHelper.space_character, remaining_indent
+        )
         return (
-            f"{ParserHelper.repeat_string(ParserHelper.space_character, remaining_indent)}{line_to_parse[start_index:]}",
+            f"{padded_spaces}{line_to_parse[start_index:]}",
             removed_whitespace,
         )
 
