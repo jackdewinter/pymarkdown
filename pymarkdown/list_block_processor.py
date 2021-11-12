@@ -431,32 +431,23 @@ class ListBlockProcessor:
                     position_marker.index_number,
                 )
                 if indent_level >= 0:
-                    new_token, new_stack = create_token_fn(
+                    (
+                        adjusted_text_to_parse,
+                        requeue_line_info,
+                    ) = ListBlockProcessor.__create_new_list(
+                        parser_state,
                         position_marker,
                         indent_level,
                         extracted_whitespace,
                         ws_before_marker,
                         ws_after_marker,
                         index,
-                    )
-
-                    (
-                        new_container_level_tokens,
-                        adjusted_text_to_parse,
-                        requeue_line_info,
-                    ) = ListBlockProcessor.__post_list(
-                        parser_state,
-                        new_stack,
-                        new_token,
-                        position_marker.text_to_parse,
+                        container_level_tokens,
                         remaining_whitespace,
                         after_marker_ws_index,
-                        indent_level,
                         current_container_blocks,
-                        position_marker,
+                        create_token_fn,
                     )
-                    if new_container_level_tokens:
-                        container_level_tokens.extend(new_container_level_tokens)
                     did_process, was_container_start = True, True
         return (
             did_process,
@@ -468,6 +459,53 @@ class ListBlockProcessor:
             requeue_line_info,
         )
         # pylint: enable=too-many-locals, too-many-arguments
+
+    # pylint: disable=too-many-locals, too-many-arguments
+    @staticmethod
+    def __create_new_list(
+        parser_state,
+        position_marker,
+        indent_level,
+        extracted_whitespace,
+        ws_before_marker,
+        ws_after_marker,
+        index,
+        container_level_tokens,
+        remaining_whitespace,
+        after_marker_ws_index,
+        current_container_blocks,
+        create_token_fn,
+    ):
+
+        new_token, new_stack = create_token_fn(
+            position_marker,
+            indent_level,
+            extracted_whitespace,
+            ws_before_marker,
+            ws_after_marker,
+            index,
+        )
+
+        (
+            new_container_level_tokens,
+            adjusted_text_to_parse,
+            requeue_line_info,
+        ) = ListBlockProcessor.__post_list(
+            parser_state,
+            new_stack,
+            new_token,
+            position_marker.text_to_parse,
+            remaining_whitespace,
+            after_marker_ws_index,
+            indent_level,
+            current_container_blocks,
+            position_marker,
+        )
+        if new_container_level_tokens:
+            container_level_tokens.extend(new_container_level_tokens)
+        return adjusted_text_to_parse, requeue_line_info
+
+    # pylint: enable=too-many-locals, too-many-arguments
 
     @staticmethod
     # pylint: disable=too-many-arguments
@@ -1154,74 +1192,96 @@ class ListBlockProcessor:
         POGGER.debug("old-stack>>$<<", container_level_tokens)
         repeat_check, emit_li = True, False
         while repeat_check:
-            POGGER.debug("start")
-            repeat_check = False
             (
-                do_not_emit,
+                repeat_check,
                 emit_li,
-                extra_tokens,
                 last_list_index,
-            ) = ListBlockProcessor.__are_list_starts_equal(
+            ) = ListBlockProcessor.__close_next_level_of_lists(
                 parser_state,
-                last_list_index,
                 new_stack,
                 current_container_blocks,
+                container_level_tokens,
+                last_list_index,
             )
-            POGGER.debug("extra_tokens>>$", extra_tokens)
-            container_level_tokens.extend(extra_tokens)
-            if do_not_emit:
-                POGGER.debug("post_list>>don't emit")
-                (
-                    did_find,
-                    last_list_index,
-                ) = LeafBlockProcessor.check_for_list_in_process(parser_state)
-                POGGER.debug(
-                    "did_find>>$--last_list_index--$",
-                    did_find,
-                    last_list_index,
-                )
-                assert did_find
+        return container_level_tokens, emit_li, None
+
+    @staticmethod
+    def __close_next_level_of_lists(
+        parser_state,
+        new_stack,
+        current_container_blocks,
+        container_level_tokens,
+        last_list_index,
+    ):
+        POGGER.debug("start")
+        repeat_check = False
+
+        (
+            do_not_emit,
+            emit_li,
+            extra_tokens,
+            last_list_index,
+        ) = ListBlockProcessor.__are_list_starts_equal(
+            parser_state,
+            last_list_index,
+            new_stack,
+            current_container_blocks,
+        )
+        POGGER.debug("extra_tokens>>$", extra_tokens)
+        container_level_tokens.extend(extra_tokens)
+        if do_not_emit:
+            POGGER.debug("post_list>>don't emit")
+            (
+                did_find,
+                last_list_index,
+            ) = LeafBlockProcessor.check_for_list_in_process(parser_state)
+            POGGER.debug(
+                "did_find>>$--last_list_index--$",
+                did_find,
+                last_list_index,
+            )
+            assert did_find
+            POGGER.debug(
+                "ARE-EQUAL>>stack>>$>>new>>$",
+                parser_state.token_stack[last_list_index],
+                new_stack,
+            )
+            if not (
+                parser_state.token_stack[last_list_index].type_name
+                == new_stack.type_name
+                or new_stack.start_index
+                > parser_state.token_stack[last_list_index].start_index
+            ):
+                repeat_check = True
+        else:
+            POGGER.debug("post_list>>close open blocks and emit")
+            close_tokens, _ = parser_state.close_open_blocks_fn(
+                parser_state, until_this_index=last_list_index, include_lists=True
+            )
+            assert close_tokens
+            container_level_tokens.extend(close_tokens)
+
+            (
+                did_find,
+                last_list_index,
+            ) = LeafBlockProcessor.check_for_list_in_process(parser_state)
+            POGGER.debug(
+                "did_find>>$--last_list_index--$",
+                did_find,
+                last_list_index,
+            )
+            if did_find:
                 POGGER.debug(
                     "ARE-EQUAL>>stack>>$>>new>>$",
                     parser_state.token_stack[last_list_index],
                     new_stack,
                 )
-                if not (
-                    parser_state.token_stack[last_list_index].type_name
-                    == new_stack.type_name
-                    or new_stack.start_index
-                    > parser_state.token_stack[last_list_index].start_index
+                if (
+                    new_stack.indent_level
+                    <= parser_state.token_stack[last_list_index].indent_level
                 ):
                     repeat_check = True
-            else:
-                POGGER.debug("post_list>>close open blocks and emit")
-                close_tokens, _ = parser_state.close_open_blocks_fn(
-                    parser_state, until_this_index=last_list_index, include_lists=True
-                )
-                assert close_tokens
-                container_level_tokens.extend(close_tokens)
-
-                (
-                    did_find,
-                    last_list_index,
-                ) = LeafBlockProcessor.check_for_list_in_process(parser_state)
-                POGGER.debug(
-                    "did_find>>$--last_list_index--$",
-                    did_find,
-                    last_list_index,
-                )
-                if did_find:
-                    POGGER.debug(
-                        "ARE-EQUAL>>stack>>$>>new>>$",
-                        parser_state.token_stack[last_list_index],
-                        new_stack,
-                    )
-                    if (
-                        new_stack.indent_level
-                        <= parser_state.token_stack[last_list_index].indent_level
-                    ):
-                        repeat_check = True
-        return container_level_tokens, emit_li, None
+        return repeat_check, emit_li, last_list_index
 
     @staticmethod
     def __are_list_starts_equal(

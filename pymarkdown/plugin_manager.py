@@ -303,16 +303,9 @@ class PluginManager:
 
         extra_info = f" [{extra_error_information}]" if extra_error_information else ""
 
+        rule_id = rule_id.upper()
         print(
-            "{0}:{1}:{2}: {3}: {4}{5} ({6})".format(
-                scan_file,
-                line_number,
-                column_number,
-                rule_id.upper(),
-                rule_description,
-                extra_info,
-                rule_name,
-            )
+            f"{scan_file}:{line_number}:{column_number}: {rule_id}: {rule_description}{extra_info} ({rule_name})"
         )
         self.number_of_scan_failures += 1
 
@@ -323,7 +316,7 @@ class PluginManager:
         Log the pragma failure in the appropriate format.
         """
 
-        print("{0}:{1}:1: INLINE: {2}".format(scan_file, line_number, pragma_error))
+        print(f"{scan_file}:{line_number}:1: INLINE: {pragma_error}")
         self.number_of_pragma_failures += 1
 
     def compile_pragmas(self, scan_file, pragma_lines):
@@ -565,7 +558,8 @@ class PluginManager:
 
         if plugin_object.plugin_interface_version != 1:
             raise BadPluginError(
-                formatted_message=f"Plugin '{instance_file_name}' with an interface version ('{plugin_object.plugin_interface_version}') that is not '1'."
+                formatted_message=f"Plugin '{instance_file_name}' with an interface version "
+                + f"('{plugin_object.plugin_interface_version}') that is not '1'."
             )
 
         return plugin_object
@@ -588,25 +582,29 @@ class PluginManager:
         next_key = plugin_object.plugin_id
         if not PluginManager.__id_regex.match(next_key):
             raise ValueError(
-                f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as id is not a valid id in the form 'aannn' or 'aaannn'."
+                f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as "
+                + "id is not a valid id in the form 'aannn' or 'aaannn'."
             )
 
         if next_key in self.__all_ids:
             found_plugin = self.__all_ids[next_key]
             raise ValueError(
-                f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as plugin '{found_plugin.plugin_file_name}' is already registered with that id."
+                f"Unable to register plugin '{instance_file_name}' with id '{next_key}' as "
+                + f"plugin '{found_plugin.plugin_file_name}' is already registered with that id."
             )
         self.__all_ids[next_key] = plugin_object
 
         for next_key in plugin_object.plugin_names:
             if not PluginManager.__name_regex.match(next_key):
                 raise ValueError(
-                    f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as name is not a valid name in the form 'an-an'."
+                    f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as "
+                    + "name is not a valid name in the form 'an-an'."
                 )
             if next_key in self.__all_ids:
                 found_plugin = self.__all_ids[next_key]
                 raise ValueError(
-                    f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as plugin '{found_plugin.plugin_file_name}' is already registered with that name."
+                    f"Unable to register plugin '{instance_file_name}' with name '{next_key}' as "
+                    + f"plugin '{found_plugin.plugin_file_name}' is already registered with that name."
                 )
             self.__all_ids[next_key] = plugin_object
         if not plugin_object.plugin_description.strip():
@@ -615,7 +613,8 @@ class PluginManager:
             )
         if not PluginManager.__version_regex.match(plugin_object.plugin_version):
             raise ValueError(
-                f"Unable to register plugin '{instance_file_name}' with a version string that is not a valid semantic version."
+                f"Unable to register plugin '{instance_file_name}' with a version string "
+                + "that is not a valid semantic version."
             )
 
         self.__registered_plugins.append(plugin_object)
@@ -682,7 +681,10 @@ class PluginManager:
         plugin_specific_facade = None
         first_facade = None
         for next_key_name in next_plugin.plugin_identifiers:
-            plugin_section_title = f"{PluginManager.__plugin_prefix}{properties.separator}{next_key_name}{properties.separator}"
+            plugin_section_title = (
+                f"{PluginManager.__plugin_prefix}{properties.separator}"
+                + f"{next_key_name}{properties.separator}"
+            )
             section_facade_candidate = ApplicationPropertiesFacade(
                 properties, plugin_section_title
             )
