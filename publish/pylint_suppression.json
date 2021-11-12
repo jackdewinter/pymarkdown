@@ -109,9 +109,8 @@
             "too-many-branches": 1
         },
         "pymarkdown/list_block_processor.py": {
-            "too-many-arguments": 9,
-            "too-many-locals": 4,
-            "too-many-statements": 1
+            "too-many-arguments": 13,
+            "too-many-locals": 4
         },
         "pymarkdown/main.py": {
             "broad-except": 2,
@@ -232,10 +231,10 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 76,
+        "too-many-arguments": 80,
         "too-many-locals": 33,
         "too-many-branches": 14,
-        "too-many-statements": 13,
+        "too-many-statements": 12,
         "too-few-public-methods": 17,
         "too-many-return-statements": 1,
         "broad-except": 6,
