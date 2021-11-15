@@ -1762,30 +1762,13 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments,too-many-locals
     @staticmethod
-    def __parse_line_for_leaf_blocks(
+    def __handle_block_leaf_tokens(
         parser_state,
         xposition_marker,
-        this_bq_count,
-        removed_chars_at_start,
+        new_tokens,
         ignore_link_definition_start,
-        last_block_quote_index,
-        last_list_start_index,
-        text_removed_by_container,
-        force_it,
     ):
-        """
-        Parse the contents of a line for a leaf block.
-
-        Note: This is one of the more heavily traffic functions in the
-        parser.  Debugging should be uncommented only if needed.
-        """
-        POGGER.debug("Leaf Line:$:", xposition_marker.text_to_parse)
-        # POGGER.debug("this_bq_count:$:", this_bq_count)
-        new_tokens = []
-
-        # TODO rename to avoid collision with parameter
         remaining_line_to_parse = xposition_marker.text_to_parse[
             xposition_marker.index_number :
         ]
@@ -1834,6 +1817,51 @@ class ContainerBlockProcessor:
             position_marker,
             extracted_whitespace,
             new_tokens,
+        )
+        return (
+            pre_tokens,
+            outer_processed,
+            requeue_line_info,
+            position_marker,
+            extracted_whitespace,
+        )
+
+    # pylint: disable=too-many-arguments,too-many-locals
+    @staticmethod
+    def __parse_line_for_leaf_blocks(
+        parser_state,
+        xposition_marker,
+        this_bq_count,
+        removed_chars_at_start,
+        ignore_link_definition_start,
+        last_block_quote_index,
+        last_list_start_index,
+        text_removed_by_container,
+        force_it,
+    ):
+        """
+        Parse the contents of a line for a leaf block.
+
+        Note: This is one of the more heavily traffic functions in the
+        parser.  Debugging should be uncommented only if needed.
+        """
+        POGGER.debug("Leaf Line:$:", xposition_marker.text_to_parse)
+        # POGGER.debug("this_bq_count:$:", this_bq_count)
+        new_tokens = []
+
+        # TODO rename to avoid collision with parameter
+
+        (
+            pre_tokens,
+            outer_processed,
+            requeue_line_info,
+            position_marker,
+            extracted_whitespace,
+        ) = ContainerBlockProcessor.__handle_block_leaf_tokens(
+            parser_state,
+            xposition_marker,
+            new_tokens,
+            ignore_link_definition_start,
         )
 
         if not outer_processed:
