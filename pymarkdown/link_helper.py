@@ -518,14 +518,14 @@ class LinkHelper:
         Aggregate the text component of text blocks.
         """
 
-        POGGER.debug(
-            ">>collect_text_from_blocks>>$",
-            inline_blocks,
-        )
-        POGGER.debug(
-            ">>collect_text_from_blocks>>suffix_text>>$",
-            suffix_text,
-        )
+        # POGGER.debug(
+        #     ">>collect_text_from_blocks>>$",
+        #     inline_blocks,
+        # )
+        # POGGER.debug(
+        #     ">>collect_text_from_blocks>>suffix_text>>$",
+        #     suffix_text,
+        # )
 
         (
             text_parts,
@@ -1105,26 +1105,20 @@ class LinkHelper:
             before_title_whitespace,
             after_title_whitespace,
         ) = LinkHelper.__look_for_link_formats(source_text, new_index, text_from_blocks)
-        POGGER.debug("__look_for_link_formats>>update_index>>$>>", update_index)
 
         # u != -1 - inline valid
         # tried_full_reference_form - collapsed or full valid
         if update_index == -1 and not tried_full_reference_form:
-            ex_label = ""
-            POGGER.debug("shortcut?")
-            POGGER.debug(
-                ">>$<<",
-                inline_blocks,
+            (
+                ex_label,
+                update_index,
+                inline_link,
+                inline_title,
+                label_type,
+                pre_inline_link,
+            ) = LinkHelper.__look_for_shortcut_link(
+                inline_blocks, text_from_blocks, new_index
             )
-            POGGER.debug(
-                ">>$<<",
-                text_from_blocks,
-            )
-
-            update_index, inline_link, inline_title = LinkHelper.__look_up_link(
-                text_from_blocks, new_index, "shortcut"
-            )
-            label_type, pre_inline_link = "shortcut", ""
 
         token_to_append = None
         POGGER.debug("<<<<<<<new_index<<<<<<<$<<", new_index)
@@ -1161,6 +1155,32 @@ class LinkHelper:
         return update_index, token_to_append, consume_rest_of_line
 
     # pylint: enable=too-many-arguments, too-many-locals
+
+    @staticmethod
+    def __look_for_shortcut_link(inline_blocks, text_from_blocks, new_index):
+        ex_label = ""
+        POGGER.debug("shortcut?")
+        POGGER.debug(
+            ">>$<<",
+            inline_blocks,
+        )
+        POGGER.debug(
+            ">>$<<",
+            text_from_blocks,
+        )
+
+        update_index, inline_link, inline_title = LinkHelper.__look_up_link(
+            text_from_blocks, new_index, "shortcut"
+        )
+        label_type, pre_inline_link = "shortcut", ""
+        return (
+            ex_label,
+            update_index,
+            inline_link,
+            inline_title,
+            label_type,
+            pre_inline_link,
+        )
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -1416,6 +1436,7 @@ class LinkHelper:
             ) = LinkHelper.__try_to_find_link_match(
                 new_index, source_text, text_from_blocks
             )
+        POGGER.debug("__look_for_link_formats>>update_index>>$>>", update_index)
         return (
             inline_link,
             pre_inline_link,
