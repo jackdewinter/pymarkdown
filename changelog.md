@@ -22,6 +22,7 @@
   - [list_block_processor.py](https://github.com/jackdewinter/pymarkdown/issues/117)
   - [coalesce_processor.py + emphasis_helper.py](https://github.com/jackdewinter/pymarkdown/issues/119)
   - [container_block_processor.py](https://github.com/jackdewinter/pymarkdown/issues/121)
+  - [leaf_block_processor.py](https://github.com/jackdewinter/pymarkdown/issues/123)
 
 ### Fixed
 

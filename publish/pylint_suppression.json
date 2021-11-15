@@ -86,8 +86,8 @@
             "too-many-locals": 2
         },
         "pymarkdown/leaf_block_processor.py": {
-            "too-many-locals": 5,
-            "too-many-arguments": 2
+            "too-many-arguments": 7,
+            "too-many-locals": 3
         },
         "pymarkdown/leaf_markdown_token.py": {
             "too-many-arguments": 4,
@@ -228,8 +228,8 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 90,
-        "too-many-locals": 36,
+        "too-many-arguments": 95,
+        "too-many-locals": 34,
         "too-many-branches": 11,
         "too-many-statements": 10,
         "too-few-public-methods": 17,
