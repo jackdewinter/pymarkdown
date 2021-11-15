@@ -193,25 +193,7 @@ class PluginManager:
             next_plugin = next_plugin_list[0]
             if next_plugin.plugin_version == "0.0.0" and not args.show_all:
                 continue
-            does_match = True
-            if list_re:
-                does_match = list_re.match(next_plugin_id)
-                if not does_match:
-                    for next_name in next_plugin.plugin_names:
-                        does_match = list_re.match(next_name)
-                        if does_match:
-                            break
-            if does_match:
-                is_enabled_now = next_plugin in self.__enabled_plugins
-                display_row = [
-                    next_plugin_id,
-                    ", ".join(next_plugin.plugin_names),
-                    str(next_plugin.plugin_enabled_by_default),
-                    str(is_enabled_now),
-                    next_plugin.plugin_version,
-                ]
-                show_rows.append(display_row)
-
+            self.__show_row_if_matches(list_re, next_plugin_id, next_plugin, show_rows)
         if show_rows:
             headers = [
                 "id",
@@ -225,6 +207,26 @@ class PluginManager:
             print(
                 f"No plugin rule identifiers matches the pattern '{args.list_filter}'."
             )
+
+    def __show_row_if_matches(self, list_re, next_plugin_id, next_plugin, show_rows):
+        does_match = True
+        if list_re:
+            does_match = list_re.match(next_plugin_id)
+            if not does_match:
+                for next_name in next_plugin.plugin_names:
+                    does_match = list_re.match(next_name)
+                    if does_match:
+                        break
+        if does_match:
+            is_enabled_now = next_plugin in self.__enabled_plugins
+            display_row = [
+                next_plugin_id,
+                ", ".join(next_plugin.plugin_names),
+                str(next_plugin.plugin_enabled_by_default),
+                str(is_enabled_now),
+                next_plugin.plugin_version,
+            ]
+            show_rows.append(display_row)
 
     @classmethod
     def __print_columnar_data(cls, headers, show_rows):
@@ -405,29 +407,15 @@ class PluginManager:
         state of the plugin in proper order.
         """
 
-        new_value = None
         LOGGER.debug(
             "Plugin '%s', identifiers: %s",
             plugin_object.plugin_id,
             plugin_object.plugin_identifiers,
         )
 
-        if command_line_disabled_rules:
-            LOGGER.debug(
-                "Disabled on command line: %s", str(command_line_disabled_rules)
-            )
-            for next_identifier in plugin_object.plugin_identifiers:
-                if next_identifier in command_line_disabled_rules:
-                    new_value = False
-                    LOGGER.debug("Plugin is disabled from command line.")
-                    break
-        if new_value is None and command_line_enabled_rules:
-            LOGGER.debug("Enabled on command line: %s", str(command_line_enabled_rules))
-            for next_identifier in plugin_object.plugin_identifiers:
-                if next_identifier in command_line_enabled_rules:
-                    new_value = True
-                    LOGGER.debug("Plugin is enabled from command line.")
-                    break
+        new_value = self.__handle_command_line_settings(
+            plugin_object, command_line_disabled_rules, command_line_enabled_rules
+        )
         if new_value is None:
             plugin_specific_facade = self.__find_configuration_for_plugin(
                 plugin_object, properties
@@ -453,6 +441,29 @@ class PluginManager:
         return (
             plugin_object.plugin_enabled_by_default if new_value is None else new_value
         )
+
+    @classmethod
+    def __handle_command_line_settings(
+        cls, plugin_object, command_line_disabled_rules, command_line_enabled_rules
+    ):
+        new_value = None
+        if command_line_disabled_rules:
+            LOGGER.debug(
+                "Disabled on command line: %s", str(command_line_disabled_rules)
+            )
+            for next_identifier in plugin_object.plugin_identifiers:
+                if next_identifier in command_line_disabled_rules:
+                    new_value = False
+                    LOGGER.debug("Plugin is disabled from command line.")
+                    break
+        if new_value is None and command_line_enabled_rules:
+            LOGGER.debug("Enabled on command line: %s", str(command_line_enabled_rules))
+            for next_identifier in plugin_object.plugin_identifiers:
+                if next_identifier in command_line_enabled_rules:
+                    new_value = True
+                    LOGGER.debug("Plugin is enabled from command line.")
+                    break
+        return new_value
 
     @classmethod
     def __verify_string_field(cls, plugin_instance, field_name, field_value):

@@ -22,8 +22,7 @@ class LinkReferenceDefinitionHelper:
 
     __lrd_start_character = "["
 
-    # LOW
-    # pylint: disable=too-many-locals, too-many-arguments, too-many-statements, too-many-branches
+    # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def process_link_reference_definition(
         parser_state,
@@ -41,19 +40,13 @@ class LinkReferenceDefinitionHelper:
         (
             line_to_parse,
             start_index,
-            did_pause_lrd,
-            new_tokens,
             lines_to_requeue,
-            force_ignore_first_as_lrd,
             was_started,
             lrd_stack_token,
         ) = (
             position_marker.text_to_parse,
             position_marker.index_number,
-            False,
             [],
-            [],
-            False,
             False,
             None,
         )
@@ -76,6 +69,146 @@ class LinkReferenceDefinitionHelper:
             POGGER.debug(">>line_to_parse>>$<<", line_to_parse)
 
         line_to_parse_size = len(line_to_parse)
+
+        (
+            did_complete_lrd,
+            end_lrd_index,
+            parsed_lrd_tuple,
+            is_blank_line,
+            line_to_parse,
+        ) = LinkReferenceDefinitionHelper.__handle_link_reference_definition_processing(
+            parser_state,
+            line_to_parse,
+            start_index,
+            extracted_whitespace,
+            is_blank_line,
+            was_started,
+            line_to_parse_size,
+            remaining_line_to_parse,
+            lines_to_requeue,
+            unmodified_line_to_parse,
+        )
+        (
+            did_pause_lrd,
+            force_ignore_first_as_lrd,
+            new_tokens,
+        ) = LinkReferenceDefinitionHelper.__determine_continue_or_stop(
+            parser_state,
+            position_marker,
+            was_started,
+            remaining_line_to_parse,
+            extracted_whitespace,
+            unmodified_line_to_parse,
+            original_stack_depth,
+            original_document_depth,
+            end_lrd_index,
+            line_to_parse_size,
+            is_blank_line,
+            did_complete_lrd,
+            parsed_lrd_tuple,
+            lines_to_requeue,
+        )
+        if lines_to_requeue:
+            LinkReferenceDefinitionHelper.__prepare_for_requeue(
+                parser_state,
+                lrd_stack_token,
+                did_complete_lrd,
+                original_stack_depth,
+                original_document_depth,
+            )
+            requeue_line_info = RequeueLineInfo(
+                lines_to_requeue, force_ignore_first_as_lrd
+            )
+        else:
+            requeue_line_info = None
+
+        return (
+            did_complete_lrd or end_lrd_index != -1,
+            did_complete_lrd,
+            did_pause_lrd,
+            requeue_line_info,
+            new_tokens,
+        )
+
+    # pylint: enable=too-many-locals, too-many-arguments
+
+    # pylint: disable=too-many-locals, too-many-arguments
+    @staticmethod
+    def __determine_continue_or_stop(
+        parser_state,
+        position_marker,
+        was_started,
+        remaining_line_to_parse,
+        extracted_whitespace,
+        unmodified_line_to_parse,
+        original_stack_depth,
+        original_document_depth,
+        end_lrd_index,
+        line_to_parse_size,
+        is_blank_line,
+        did_complete_lrd,
+        parsed_lrd_tuple,
+        lines_to_requeue,
+    ):
+
+        force_ignore_first_as_lrd = False
+        did_pause_lrd = False
+        new_tokens = []
+
+        if (
+            end_lrd_index >= 0
+            and end_lrd_index == line_to_parse_size
+            and not is_blank_line
+        ):
+            POGGER.debug(">>parse_link_reference_definition>>continuation")
+            LinkReferenceDefinitionHelper.__add_line_for_lrd_continuation(
+                parser_state,
+                position_marker,
+                was_started,
+                remaining_line_to_parse,
+                extracted_whitespace,
+                unmodified_line_to_parse,
+                original_stack_depth,
+                original_document_depth,
+            )
+            did_pause_lrd = True
+        if (not did_pause_lrd and was_started) or did_complete_lrd:
+            POGGER.debug(">>parse_link_reference_definition>>was_started")
+            (
+                force_ignore_first_as_lrd,
+                new_tokens,
+            ) = LinkReferenceDefinitionHelper.__stop_lrd_continuation(
+                parser_state,
+                did_complete_lrd,
+                parsed_lrd_tuple,
+                end_lrd_index,
+                remaining_line_to_parse,
+                is_blank_line,
+                lines_to_requeue,
+            )
+        else:
+            POGGER.debug(">>parse_link_reference_definition>>other")
+
+        POGGER.debug(">>XXXXXX>>requeue:$:", lines_to_requeue)
+        POGGER.debug(">>XXXXXX>>did_complete_lrd:$:", did_complete_lrd)
+        return did_pause_lrd, force_ignore_first_as_lrd, new_tokens
+
+    # pylint: enable=too-many-locals, too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __handle_link_reference_definition_processing(
+        parser_state,
+        line_to_parse,
+        start_index,
+        extracted_whitespace,
+        is_blank_line,
+        was_started,
+        line_to_parse_size,
+        remaining_line_to_parse,
+        lines_to_requeue,
+        unmodified_line_to_parse,
+    ):
         if was_started:
             POGGER.debug(">>parse_link_reference_definition>>was_started")
             (
@@ -90,7 +223,8 @@ class LinkReferenceDefinitionHelper:
                 is_blank_line,
             )
             POGGER.debug(
-                ">>parse_link_reference_definition>>was_started>>did_complete_lrd>>$>>end_lrd_index>>$>>len(line_to_parse)>>$",
+                ">>parse_link_reference_definition>>was_started>>did_complete_lrd>>$"
+                + ">>end_lrd_index>>$>>len(line_to_parse)>>$",
                 did_complete_lrd,
                 end_lrd_index,
                 line_to_parse_size,
@@ -137,136 +271,96 @@ class LinkReferenceDefinitionHelper:
                 end_lrd_index,
                 line_to_parse_size,
             )
-        if (
-            end_lrd_index >= 0
-            and end_lrd_index == line_to_parse_size
-            and not is_blank_line
-        ):
-            POGGER.debug(">>parse_link_reference_definition>>continuation")
-            LinkReferenceDefinitionHelper.__add_line_for_lrd_continuation(
-                parser_state,
-                position_marker,
-                was_started,
-                remaining_line_to_parse,
-                extracted_whitespace,
-                unmodified_line_to_parse,
-                original_stack_depth,
-                original_document_depth,
-            )
-            did_pause_lrd = True
-        if (not did_pause_lrd and was_started) or did_complete_lrd:
-            POGGER.debug(">>parse_link_reference_definition>>was_started")
-            (
-                force_ignore_first_as_lrd,
-                new_tokens,
-            ) = LinkReferenceDefinitionHelper.__stop_lrd_continuation(
-                parser_state,
-                did_complete_lrd,
-                parsed_lrd_tuple,
-                end_lrd_index,
-                remaining_line_to_parse,
-                is_blank_line,
-                lines_to_requeue,
-            )
-        else:
-            POGGER.debug(">>parse_link_reference_definition>>other")
-
-        POGGER.debug(">>XXXXXX>>requeue:$:", lines_to_requeue)
-        POGGER.debug(">>XXXXXX>>did_complete_lrd:$:", did_complete_lrd)
-        if lines_to_requeue:
-
-            # This works because in most cases, we add things.  However, in cases like
-            # an indented code block, we process the "is it indented enough" and close
-            # that block before hitting this.  As such, we have a special case to take
-            # care of that.  In the future, will possibly want to do something instead of
-            # original_document_depth and stack, such as passing in a copy of the both
-            # elements so they can be reset on the rewind.
-            # i.e. icode would go back on stack, end-icode would not be in document.
-            POGGER.debug(
-                ">>XXXXXX>>copy_of_last_block_quote_markdown_token:$:",
-                lrd_stack_token.copy_of_last_block_quote_markdown_token,
-            )
-            if lrd_stack_token.copy_of_last_block_quote_markdown_token:
-                POGGER.debug(
-                    ">>XXXXXX>>last_block_quote_markdown_token_index:$:",
-                    lrd_stack_token.last_block_quote_markdown_token_index,
-                )
-                POGGER.debug(
-                    ">>XXXXXX>>st-now:$:",
-                    parser_state.token_document[
-                        lrd_stack_token.last_block_quote_markdown_token_index
-                    ],
-                )
-
-                del parser_state.token_document[
-                    lrd_stack_token.last_block_quote_markdown_token_index
-                ]
-                parser_state.token_document.insert(
-                    lrd_stack_token.last_block_quote_markdown_token_index,
-                    lrd_stack_token.copy_of_last_block_quote_markdown_token,
-                )
-                lrd_stack_token.last_block_quote_stack_token.reset_matching_markdown_token(
-                    lrd_stack_token.copy_of_last_block_quote_markdown_token
-                )
-
-            if not did_complete_lrd:
-                POGGER.debug(">>XXXXXX>>original_stack_depth:$:", original_stack_depth)
-                POGGER.debug(
-                    ">>XXXXXX>>token_stack_depth:$:", len(parser_state.token_stack)
-                )
-                POGGER.debug(
-                    ">>XXXXXX>>token_stack(before):$:", parser_state.token_stack
-                )
-                POGGER.debug(
-                    ">>XXXXXX>>copy_of_token_stack:$:", parser_state.copy_of_token_stack
-                )
-                POGGER.debug(
-                    ">>lrd_stack_token>>copy_of_token_stack:$:",
-                    lrd_stack_token.copy_of_token_stack,
-                )
-                if len(parser_state.token_stack) >= original_stack_depth:
-                    while len(parser_state.token_stack) > original_stack_depth:
-                        del parser_state.token_stack[-1]
-                else:
-                    while len(parser_state.token_stack):
-                        del parser_state.token_stack[-1]
-                    for next_token in lrd_stack_token.copy_of_token_stack:
-                        parser_state.token_stack.append(next_token)
-                POGGER.debug(
-                    ">>XXXXXX>>token_stack(after):$:", parser_state.token_stack
-                )
-
-                POGGER.debug(
-                    ">>XXXXXX>>original_document_depth:$:", original_document_depth
-                )
-                POGGER.debug(
-                    ">>XXXXXX>>token_document_depth:$:",
-                    len(parser_state.token_document),
-                )
-                POGGER.debug(
-                    ">>XXXXXX>>token_document(before):$:", parser_state.token_document
-                )
-                while len(parser_state.token_document) > original_document_depth:
-                    del parser_state.token_document[-1]
-                POGGER.debug(
-                    ">>XXXXXX>>token_document(after):$:", parser_state.token_document
-                )
-
-        if lines_to_requeue:
-            requeue_line_info = RequeueLineInfo(
-                lines_to_requeue, force_ignore_first_as_lrd
-            )
-        else:
-            requeue_line_info = None
         return (
-            did_complete_lrd or end_lrd_index != -1,
             did_complete_lrd,
-            did_pause_lrd,
-            requeue_line_info,
-            new_tokens,
+            end_lrd_index,
+            parsed_lrd_tuple,
+            is_blank_line,
+            line_to_parse,
         )
 
-    # pylint: enable=too-many-locals, too-many-arguments, too-many-statements, too-many-branches
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __prepare_for_requeue(
+        parser_state,
+        lrd_stack_token,
+        did_complete_lrd,
+        original_stack_depth,
+        original_document_depth,
+    ):
+        # This works because in most cases, we add things.  However, in cases like
+        # an indented code block, we process the "is it indented enough" and close
+        # that block before hitting this.  As such, we have a special case to take
+        # care of that.  In the future, will possibly want to do something instead of
+        # original_document_depth and stack, such as passing in a copy of the both
+        # elements so they can be reset on the rewind.
+        # i.e. icode would go back on stack, end-icode would not be in document.
+        POGGER.debug(
+            ">>XXXXXX>>copy_of_last_block_quote_markdown_token:$:",
+            lrd_stack_token.copy_of_last_block_quote_markdown_token,
+        )
+        if lrd_stack_token.copy_of_last_block_quote_markdown_token:
+            POGGER.debug(
+                ">>XXXXXX>>last_block_quote_markdown_token_index:$:",
+                lrd_stack_token.last_block_quote_markdown_token_index,
+            )
+            POGGER.debug(
+                ">>XXXXXX>>st-now:$:",
+                parser_state.token_document[
+                    lrd_stack_token.last_block_quote_markdown_token_index
+                ],
+            )
+
+            del parser_state.token_document[
+                lrd_stack_token.last_block_quote_markdown_token_index
+            ]
+            parser_state.token_document.insert(
+                lrd_stack_token.last_block_quote_markdown_token_index,
+                lrd_stack_token.copy_of_last_block_quote_markdown_token,
+            )
+            lrd_stack_token.last_block_quote_stack_token.reset_matching_markdown_token(
+                lrd_stack_token.copy_of_last_block_quote_markdown_token
+            )
+
+        if not did_complete_lrd:
+            POGGER.debug(">>XXXXXX>>original_stack_depth:$:", original_stack_depth)
+            POGGER.debug(
+                ">>XXXXXX>>token_stack_depth:$:", len(parser_state.token_stack)
+            )
+            POGGER.debug(">>XXXXXX>>token_stack(before):$:", parser_state.token_stack)
+            POGGER.debug(
+                ">>XXXXXX>>copy_of_token_stack:$:", parser_state.copy_of_token_stack
+            )
+            POGGER.debug(
+                ">>lrd_stack_token>>copy_of_token_stack:$:",
+                lrd_stack_token.copy_of_token_stack,
+            )
+            if len(parser_state.token_stack) >= original_stack_depth:
+                while len(parser_state.token_stack) > original_stack_depth:
+                    del parser_state.token_stack[-1]
+            else:
+                while len(parser_state.token_stack):
+                    del parser_state.token_stack[-1]
+                for next_token in lrd_stack_token.copy_of_token_stack:
+                    parser_state.token_stack.append(next_token)
+            POGGER.debug(">>XXXXXX>>token_stack(after):$:", parser_state.token_stack)
+
+            POGGER.debug(
+                ">>XXXXXX>>original_document_depth:$:", original_document_depth
+            )
+            POGGER.debug(
+                ">>XXXXXX>>token_document_depth:$:",
+                len(parser_state.token_document),
+            )
+            POGGER.debug(
+                ">>XXXXXX>>token_document(before):$:", parser_state.token_document
+            )
+            while len(parser_state.token_document) > original_document_depth:
+                del parser_state.token_document[-1]
+            POGGER.debug(
+                ">>XXXXXX>>token_document(after):$:", parser_state.token_document
+            )
 
     @staticmethod
     def __is_link_reference_definition(
@@ -580,7 +674,8 @@ class LinkReferenceDefinitionHelper:
                 is_blank_line,
             )
             POGGER.debug(
-                ">>parse_link_reference_definition>>was_started>>did_complete_lrd>>$>>end_lrd_index>>$>>len(line_to_parse)>>$",
+                ">>parse_link_reference_definition>>was_started>>did_complete_lrd>>$"
+                + ">>end_lrd_index>>$>>len(line_to_parse)>>$",
                 did_complete_lrd,
                 end_lrd_index,
                 len(line_to_parse),
