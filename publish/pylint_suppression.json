@@ -94,8 +94,8 @@
             "too-many-instance-attributes": 1
         },
         "pymarkdown/link_helper.py": {
-            "too-many-arguments": 4,
-            "too-many-locals": 3
+            "too-many-arguments": 6,
+            "too-many-locals": 5
         },
         "pymarkdown/link_reference_definition_helper.py": {
             "too-few-public-methods": 1,
@@ -225,8 +225,8 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 100,
-        "too-many-locals": 34,
+        "too-many-arguments": 102,
+        "too-many-locals": 36,
         "too-many-branches": 9,
         "too-many-statements": 9,
         "too-few-public-methods": 17,
