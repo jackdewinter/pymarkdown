@@ -108,11 +108,11 @@ class ContainerBlockProcessor:
             )
 
         (
+            can_continue,
             line_to_parse,
             leaf_tokens,
             container_level_tokens,
             this_bq_count,
-            did_process_blank_line,
             last_list_start_index,
         ) = ContainerBlockProcessor.__handle_nested_blocks(
             parser_state,
@@ -133,30 +133,27 @@ class ContainerBlockProcessor:
             last_block_quote_index,
         )
 
-        if container_depth or did_process_blank_line:
-            assert not leaf_tokens
-            POGGER.debug(">>>>>>>>$<<<<<<<<<<", line_to_parse)
-            return container_level_tokens, line_to_parse, this_bq_count, None, False
-
-        (
-            did_process,
-            line_to_parse,
-            container_level_tokens,
-            used_indent,
-            requeue_line_info,
-        ) = ContainerBlockProcessor.__handle_block_continuations(
-            parser_state,
-            did_process,
-            line_to_parse,
-            start_index,
-            container_level_tokens,
-            extracted_whitespace,
-            leaf_tokens,
-            this_bq_count,
-            stack_bq_count,
-            container_start_bq_count,
-        )
-        if not requeue_line_info:
+        if can_continue:
+            (
+                can_continue,
+                did_process,
+                line_to_parse,
+                container_level_tokens,
+                used_indent,
+                requeue_line_info,
+            ) = ContainerBlockProcessor.__handle_block_continuations(
+                parser_state,
+                did_process,
+                line_to_parse,
+                start_index,
+                container_level_tokens,
+                extracted_whitespace,
+                leaf_tokens,
+                this_bq_count,
+                stack_bq_count,
+                container_start_bq_count,
+            )
+        if can_continue:
             requeue_line_info = ContainerBlockProcessor.__handle_leaf_tokens(
                 parser_state,
                 position_marker,
@@ -289,7 +286,10 @@ class ContainerBlockProcessor:
                 container_level_tokens,
                 container_start_bq_count,
             )
+
+        can_continue = not requeue_line_info
         return (
+            can_continue,
             did_process,
             line_to_parse,
             container_level_tokens,
@@ -318,8 +318,8 @@ class ContainerBlockProcessor:
 
         end_container_indices = ContainerIndices(-1, -1, -1)
         parser_state.nested_list_start = None
-        can_continue = True
         (
+            can_continue,
             did_process,
             was_container_start,
             end_container_indices.block_index,
@@ -346,16 +346,6 @@ class ContainerBlockProcessor:
             container_start_bq_count,
             container_depth,
         )
-        if requeue_line_info:
-            POGGER.debug(">>requeuing lines after looking for block start. returning.")
-            container_level_tokens, line_to_parse, this_bq_count = (None, None, None)
-            can_continue = False
-
-        if did_blank:
-            POGGER.debug(">>already handled blank line. returning.")
-            container_level_tokens.extend(leaf_tokens)
-            can_continue = False
-
         if can_continue:
             # POGGER.debug("this_bq_count>>$", this_bq_count)
             # POGGER.debug("stack_bq_count>>$", stack_bq_count)
@@ -516,14 +506,20 @@ class ContainerBlockProcessor:
             # POGGER.debug("this_bq_count>>$", this_bq_count)
             # POGGER.debug("stack_bq_count>>$", stack_bq_count)
 
+        can_continue = True
+        if container_depth or did_process_blank_line:
+            assert not leaf_tokens
+            POGGER.debug(">>>>>>>>$<<<<<<<<<<", line_to_parse)
+            can_continue = False
+
         # POGGER.debug("olist->container_level_tokens->$", container_level_tokens)
         # POGGER.debug("removed_chars_at_start>>>$", removed_chars_at_start)
         return (
+            can_continue,
             line_to_parse,
             leaf_tokens,
             container_level_tokens,
             this_bq_count,
-            did_process_blank_line,
             last_list_start_index,
         )
 
@@ -640,7 +636,19 @@ class ContainerBlockProcessor:
         POGGER.debug("text>>:$:>>", line_to_parse)
         # POGGER.debug(">>container_level_tokens>>$", container_level_tokens)
         # POGGER.debug(">>leaf_tokens>>$", leaf_tokens)
+
+        can_continue = True
+        if requeue_line_info:
+            POGGER.debug(">>requeuing lines after looking for block start. returning.")
+            can_continue = False
+
+        if did_blank:
+            POGGER.debug(">>already handled blank line. returning.")
+            container_level_tokens.extend(leaf_tokens)
+            can_continue = False
+
         return (
+            can_continue,
             did_process,
             was_container_start,
             block_index,
