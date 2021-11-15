@@ -24,6 +24,7 @@
   - [container_block_processor.py](https://github.com/jackdewinter/pymarkdown/issues/121)
   - [leaf_block_processor.py](https://github.com/jackdewinter/pymarkdown/issues/123)
   - [link_reference_definition_helper.py](https://github.com/jackdewinter/pymarkdown/issues/126)
+  - [link_helper.py](https://github.com/jackdewinter/pymarkdown/issues/128)
 
 ### Fixed
 
