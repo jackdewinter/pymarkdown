@@ -100,10 +100,8 @@
         },
         "pymarkdown/link_reference_definition_helper.py": {
             "too-few-public-methods": 1,
-            "too-many-locals": 2,
-            "too-many-arguments": 3,
-            "too-many-statements": 1,
-            "too-many-branches": 1
+            "too-many-locals": 3,
+            "too-many-arguments": 5
         },
         "pymarkdown/list_block_processor.py": {
             "too-many-arguments": 13,
@@ -228,10 +226,10 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 97,
-        "too-many-locals": 33,
-        "too-many-branches": 11,
-        "too-many-statements": 10,
+        "too-many-arguments": 99,
+        "too-many-locals": 34,
+        "too-many-branches": 10,
+        "too-many-statements": 9,
         "too-few-public-methods": 17,
         "broad-except": 6,
         "no-self-use": 1,
