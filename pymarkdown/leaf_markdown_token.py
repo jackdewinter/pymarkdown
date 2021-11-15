@@ -555,7 +555,10 @@ class IndentedCodeBlockMarkdownToken(LeafMarkdownToken):
         """
         Add the indented whitespace that comes before the text.
         """
-        self.__indented_whitespace = f"{self.__indented_whitespace}{ParserHelper.newline_character}{indented_whitespace}"
+        self.__indented_whitespace = (
+            f"{self.__indented_whitespace}{ParserHelper.newline_character}"
+            + f"{indented_whitespace}"
+        )
         self.__compose_extra_data_field()
 
 
