@@ -19,6 +19,9 @@
   - refactoring: finding and applying all Sourcery recommended issues
 - Module Refactoring:
   - [plugin_manager.py](https://github.com/jackdewinter/pymarkdown/issues/115)
+  - [list_block_processor.py](https://github.com/jackdewinter/pymarkdown/issues/117)
+  - [coalesce_processor.py + emphasis_helper.py](https://github.com/jackdewinter/pymarkdown/issues/119)
+  - [container_block_processor.py](https://github.com/jackdewinter/pymarkdown/issues/121)
 
 ### Fixed
 
