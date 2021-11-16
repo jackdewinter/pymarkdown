@@ -80,10 +80,8 @@
             "too-many-locals": 2
         },
         "pymarkdown/inline_processor.py": {
-            "too-many-branches": 2,
-            "too-many-statements": 3,
-            "too-many-arguments": 4,
-            "too-many-locals": 2
+            "too-many-arguments": 13,
+            "too-many-locals": 4
         },
         "pymarkdown/leaf_block_processor.py": {
             "too-many-arguments": 9,
@@ -225,10 +223,10 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 102,
-        "too-many-locals": 36,
-        "too-many-branches": 9,
-        "too-many-statements": 9,
+        "too-many-arguments": 111,
+        "too-many-locals": 38,
+        "too-many-branches": 7,
+        "too-many-statements": 6,
         "too-few-public-methods": 17,
         "broad-except": 6,
         "no-self-use": 1,
