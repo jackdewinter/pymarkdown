@@ -8,5 +8,5 @@ repos:
         files: ^README\.md$
         entry: pymarkdown
         args:
-          - --config=.pymarkdown.json
+          - --config=clean.json
           - scan
