@@ -17,7 +17,7 @@
   - refactoring: identified and removed unused pylint suppressions
 - [Changed - Issue 112](https://github.com/jackdewinter/pymarkdown/issues/112)
   - refactoring: finding and applying all Sourcery recommended issues
-- Module Refactoring:
+- Module Refactoring to reduce complexity
   - [plugin_manager.py](https://github.com/jackdewinter/pymarkdown/issues/115)
   - [list_block_processor.py](https://github.com/jackdewinter/pymarkdown/issues/117)
   - [coalesce_processor.py + emphasis_helper.py](https://github.com/jackdewinter/pymarkdown/issues/119)
@@ -26,6 +26,7 @@
   - [link_reference_definition_helper.py](https://github.com/jackdewinter/pymarkdown/issues/126)
   - [link_helper.py](https://github.com/jackdewinter/pymarkdown/issues/128)
   - [inline_processor.py](https://github.com/jackdewinter/pymarkdown/issues/130)
+  - [block_quote_processor.py](https://github.com/jackdewinter/pymarkdown/issues/134)
 
 ### Fixed
 
