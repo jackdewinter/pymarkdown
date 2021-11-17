@@ -4,9 +4,9 @@ repos:
     hooks:
       - id: pymarkdown
         name: PyMarkdown
-        description: "PyMarkdown - GitHub Flavored Markdown and CommonMark Compliant Linter"
+        description: "PyMarkdown"
         files: ^README\.md$
         entry: pymarkdown
         args:
-          - --config=.pymarkdown.json
+          - --config=clean.json
           - scan
