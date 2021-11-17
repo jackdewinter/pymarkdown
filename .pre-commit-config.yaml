@@ -7,4 +7,6 @@ repos:
         description: "PyMarkdown - GitHub Flavored Markdown and CommonMark Compliant Linter"
         files: ^README\.md$
         entry: pymarkdown
-        args: [scan, README.md]
+        args:
+          - --config=.pymarkdown.json
+          - scan
