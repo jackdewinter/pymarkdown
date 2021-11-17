@@ -1,0 +1,12 @@
+repos:
+  - repo: https://github.com/jackdewinter/pymarkdown
+    rev: 0.9.2
+    hooks:
+      - id: pymarkdown
+        name: PyMarkdown
+        description: "PyMarkdown - GitHub Flavored Markdown and CommonMark Compliant Linter"
+        files: ^README\.md$
+        entry: pymarkdown
+        args:
+          - --config=.pymarkdown.json
+          - scan
