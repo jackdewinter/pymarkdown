@@ -396,6 +396,78 @@ class InlineProcessor:
         POGGER.debug(">>remaining_line>>$<<", remaining_line)
         column_number += remaining_line_size
         POGGER.debug(">>column_number>>$<<", column_number)
+
+        (
+            special_sequence,
+            repeat_count,
+            new_index,
+            preceding_two,
+            following_two,
+            is_active,
+            new_token,
+            consume_rest_of_line,
+            delta_line,
+        ) = InlineProcessor.__handle_inline_special_character(
+            special_length,
+            inline_blocks,
+            remaining_line,
+            current_string_unresolved,
+            source_text,
+            next_index,
+            para_owner,
+            remaining_line_size,
+            delta_line,
+            repeat_count,
+        )
+
+        if not new_token:
+            POGGER.debug(">>create>>$,$<<", line_number, column_number)
+            new_token = SpecialTextMarkdownToken(
+                special_sequence,
+                repeat_count,
+                preceding_two,
+                following_two,
+                is_active,
+                line_number,
+                column_number,
+            )
+
+        POGGER.debug(">>delta_line>>$<<", delta_line)
+        POGGER.debug(">>repeat_count>>$<<", repeat_count)
+        inline_response = InlineResponse()
+        (
+            inline_response.new_string,
+            inline_response.new_index,
+            inline_response.new_tokens,
+            inline_response.consume_rest_of_line,
+            inline_response.delta_line_number,
+            inline_response.delta_column_number,
+        ) = ("", new_index, [new_token], consume_rest_of_line, delta_line, repeat_count)
+        return inline_response
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    # pylint: disable=too-many-arguments, too-many-locals
+    @staticmethod
+    def __handle_inline_special_character(
+        special_length,
+        inline_blocks,
+        remaining_line,
+        current_string_unresolved,
+        source_text,
+        next_index,
+        para_owner,
+        remaining_line_size,
+        delta_line,
+        repeat_count,
+    ):
+        preceding_two, following_two, is_active, new_token, consume_rest_of_line = (
+            None,
+            None,
+            True,
+            None,
+            False,
+        )
         special_sequence = source_text[next_index : next_index + special_length]
         if special_length == 1 and special_sequence in EmphasisHelper.inline_emphasis:
             repeat_count, new_index = ParserHelper.collect_while_character(
@@ -429,31 +501,17 @@ class InlineProcessor:
             )
         else:
             repeat_count, new_index = special_length, next_index + special_length
-
-        if not new_token:
-            POGGER.debug(">>create>>$,$<<", line_number, column_number)
-            new_token = SpecialTextMarkdownToken(
-                special_sequence,
-                repeat_count,
-                preceding_two,
-                following_two,
-                is_active,
-                line_number,
-                column_number,
-            )
-
-        POGGER.debug(">>delta_line>>$<<", delta_line)
-        POGGER.debug(">>repeat_count>>$<<", repeat_count)
-        inline_response = InlineResponse()
-        (
-            inline_response.new_string,
-            inline_response.new_index,
-            inline_response.new_tokens,
-            inline_response.consume_rest_of_line,
-            inline_response.delta_line_number,
-            inline_response.delta_column_number,
-        ) = ("", new_index, [new_token], consume_rest_of_line, delta_line, repeat_count)
-        return inline_response
+        return (
+            special_sequence,
+            repeat_count,
+            new_index,
+            preceding_two,
+            following_two,
+            is_active,
+            new_token,
+            consume_rest_of_line,
+            delta_line,
+        )
 
     # pylint: enable=too-many-arguments, too-many-locals
 
@@ -708,64 +766,63 @@ class InlineProcessor:
             link_part_lengths[1] = 1
             link_part_lengths[2] = len(active_link_title) + 1
             link_part_lengths[3] = len(current_token.after_title_whitespace)
-
         POGGER.debug(">>link_part_lengths>>$<<", link_part_lengths)
 
-        link_part_index, total_newlines = -2, 0
-        newline_count = ParserHelper.count_newlines_in_text(
-            current_token.text_from_blocks
-        )
-        oooooo = newline_count
-        POGGER.debug(
-            ">>current_token.text_from_blocks>>$<<", current_token.text_from_blocks
-        )
-        POGGER.debug(">>newline_count>>$<<", newline_count)
-        if newline_count:
-            link_part_index, total_newlines = -1, total_newlines + newline_count
+        (
+            link_part_index,
+            total_newlines,
+            oooooo,
+        ) = InlineProcessor.__calculate_inline_label(current_token)
 
-        newline_count = ParserHelper.count_newlines_in_text(
-            current_token.before_link_whitespace
+        (
+            link_part_index,
+            delta_line,
+            last_spaces,
+        ) = InlineProcessor.__calculate_inline_whitespace(
+            current_token.before_link_whitespace,
+            "before_link_whitespace",
+            0,
+            link_part_index,
+            delta_line,
+            last_spaces,
         )
-        if newline_count:
-            POGGER.debug(">>before_link_whitespace")
-            link_part_index, delta_line, last_spaces = (
-                0,
-                delta_line + newline_count,
-                current_token.before_link_whitespace[:],
-            )
 
-        newline_count = ParserHelper.count_newlines_in_text(
-            current_token.before_title_whitespace
+        (
+            link_part_index,
+            delta_line,
+            last_spaces,
+        ) = InlineProcessor.__calculate_inline_whitespace(
+            current_token.before_title_whitespace,
+            "before_title_whitespace",
+            1,
+            link_part_index,
+            delta_line,
+            last_spaces,
         )
-        if newline_count:
-            POGGER.debug(">>before_title_whitespace")
-            link_part_index, delta_line, last_spaces = (
-                1,
-                delta_line + newline_count,
-                current_token.before_title_whitespace[:],
-            )
 
-        newline_count = ParserHelper.count_newlines_in_text(active_link_title)
-        if newline_count:
-            POGGER.debug(">>active_link_title")
-            _, delta_column_number = ParserHelper.calculate_deltas(active_link_title)
-            link_part_index, delta_line, last_spaces, link_part_lengths[2] = (
-                2,
-                delta_line + newline_count,
-                "",
-                -delta_column_number,
-            )
-
-        newline_count = ParserHelper.count_newlines_in_text(
-            current_token.after_title_whitespace
+        (
+            link_part_index,
+            delta_line,
+            last_spaces,
+            new_link_part_length,
+        ) = InlineProcessor.__calculate_inline_link_title(
+            active_link_title, link_part_index, delta_line, last_spaces
         )
-        if newline_count:
-            POGGER.debug(">>after_title_whitespace")
-            link_part_index, delta_line, last_spaces = (
-                4,
-                delta_line + newline_count,
-                current_token.after_title_whitespace[:],
-            )
+        if new_link_part_length is not None:
+            link_part_lengths[2] = new_link_part_length
+
+        (
+            link_part_index,
+            delta_line,
+            last_spaces,
+        ) = InlineProcessor.__calculate_inline_whitespace(
+            current_token.after_title_whitespace,
+            "after_title_whitespace",
+            4,
+            link_part_index,
+            delta_line,
+            last_spaces,
+        )
 
         POGGER.debug(">>link_part_index>>$<<", link_part_index)
         POGGER.debug(">>total_newlines>>$<<", total_newlines)
@@ -790,6 +847,56 @@ class InlineProcessor:
             POGGER.debug(">>link_part_lengths>>$<<", link_part_lengths)
             POGGER.debug(">>repeat_count>>$<<", delta_line)
         return delta_line, repeat_count
+
+    @staticmethod
+    def __calculate_inline_label(current_token):
+        link_part_index, total_newlines = -2, 0
+        newline_count = ParserHelper.count_newlines_in_text(
+            current_token.text_from_blocks
+        )
+        oooooo = newline_count
+        if newline_count:
+            link_part_index, total_newlines = -1, total_newlines + newline_count
+        return link_part_index, total_newlines, oooooo
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __calculate_inline_whitespace(
+        sample_string,
+        sample_name,
+        new_link_part_index,
+        link_part_index,
+        delta_line,
+        last_spaces,
+    ):
+        newline_count = ParserHelper.count_newlines_in_text(sample_string)
+        if newline_count:
+            POGGER.debug(">>$", sample_name)
+            link_part_index, delta_line, last_spaces = (
+                new_link_part_index,
+                delta_line + newline_count,
+                sample_string[:],
+            )
+        return link_part_index, delta_line, last_spaces
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
+    def __calculate_inline_link_title(
+        active_link_title, link_part_index, delta_line, last_spaces
+    ):
+        new_link_part_length = None
+        newline_count = ParserHelper.count_newlines_in_text(active_link_title)
+        if newline_count:
+            POGGER.debug(">>active_link_title")
+            _, delta_column_number = ParserHelper.calculate_deltas(active_link_title)
+            link_part_index, delta_line, last_spaces, new_link_part_length = (
+                2,
+                delta_line + newline_count,
+                "",
+                -delta_column_number,
+            )
+        return link_part_index, delta_line, last_spaces, new_link_part_length
 
     @staticmethod
     def __calculate_shortcut_collapsed_deltas(current_token, delta_line, repeat_count):
@@ -1062,43 +1169,33 @@ class InlineProcessor:
             column_number,
             para_owner,
         )
-        if source_text[next_index] in InlineProcessor.__inline_character_handlers:
-            (
-                inline_response,
-                line_number,
-                column_number,
-                was_column_number_reset,
-                did_line_number_change,
-            ) = InlineProcessor.__process_inline_handled_character(
-                source_text,
-                next_index,
-                inline_request,
-                line_number,
-                column_number,
-                coalesced_stack,
-            )
-        else:
-            (
-                whitespace_to_add,
-                remaining_line,
-                end_string,
-                current_string,
-                was_new_line,
-            ) = InlineProcessor.__process_inline_new_line(
-                source_text,
-                next_index,
-                inline_response,
-                remaining_line,
-                end_string,
-                current_string,
-                inline_blocks,
-                is_setext,
-                line_number,
-                column_number,
-                coalesced_stack,
-                whitespace_to_recombine,
-                para_owner,
-            )
+        (
+            inline_response,
+            line_number,
+            column_number,
+            was_column_number_reset,
+            did_line_number_change,
+            whitespace_to_add,
+            remaining_line,
+            end_string,
+            current_string,
+            was_new_line,
+        ) = InlineProcessor.__handle_next_special_character(
+            source_text,
+            next_index,
+            inline_request,
+            line_number,
+            column_number,
+            coalesced_stack,
+            inline_response,
+            remaining_line,
+            end_string,
+            current_string,
+            inline_blocks,
+            is_setext,
+            whitespace_to_recombine,
+            para_owner,
+        )
 
         (
             reset_current_string,
@@ -1192,6 +1289,83 @@ class InlineProcessor:
             last_column_number,
             start_index,
             next_index,
+        )
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    # pylint: disable=too-many-arguments, too-many-locals
+    @staticmethod
+    def __handle_next_special_character(
+        source_text,
+        next_index,
+        inline_request,
+        line_number,
+        column_number,
+        coalesced_stack,
+        inline_response,
+        remaining_line,
+        end_string,
+        current_string,
+        inline_blocks,
+        is_setext,
+        whitespace_to_recombine,
+        para_owner,
+    ):
+
+        (
+            whitespace_to_add,
+            was_new_line,
+            was_column_number_reset,
+            did_line_number_change,
+        ) = (None, False, False, False)
+        if source_text[next_index] in InlineProcessor.__inline_character_handlers:
+            (
+                inline_response,
+                line_number,
+                column_number,
+                was_column_number_reset,
+                did_line_number_change,
+            ) = InlineProcessor.__process_inline_handled_character(
+                source_text,
+                next_index,
+                inline_request,
+                line_number,
+                column_number,
+                coalesced_stack,
+            )
+        else:
+            (
+                whitespace_to_add,
+                remaining_line,
+                end_string,
+                current_string,
+                was_new_line,
+            ) = InlineProcessor.__process_inline_new_line(
+                source_text,
+                next_index,
+                inline_response,
+                remaining_line,
+                end_string,
+                current_string,
+                inline_blocks,
+                is_setext,
+                line_number,
+                column_number,
+                coalesced_stack,
+                whitespace_to_recombine,
+                para_owner,
+            )
+        return (
+            inline_response,
+            line_number,
+            column_number,
+            was_column_number_reset,
+            did_line_number_change,
+            whitespace_to_add,
+            remaining_line,
+            end_string,
+            current_string,
+            was_new_line,
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
