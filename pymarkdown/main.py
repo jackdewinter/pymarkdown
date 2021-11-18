@@ -294,24 +294,9 @@ class PyMarkdownLint:
             )
             POGGER.debug("Provided path '$' does not exist.", next_path)
         elif os.path.isdir(next_path):
-            POGGER.debug(
-                "Provided path '$' is a directory. Walking directory.", next_path
+            did_find_any = self.__process_next_path_directory(
+                next_path, files_to_parse, recurse_directories
             )
-            did_find_any = True
-            normalized_next_path = next_path.replace("\\", "/")
-            for root, _, files in os.walk(next_path):
-                normalized_root = root.replace("\\", "/")
-                if not recurse_directories and normalized_root != normalized_next_path:
-                    continue
-                normalized_root = (
-                    normalized_root[0:-1]
-                    if normalized_root.endswith("/")
-                    else normalized_root
-                )
-                for file in files:
-                    rooted_file_path = f"{normalized_root}/{file}"
-                    if self.__is_file_eligible_to_scan(rooted_file_path):
-                        files_to_parse.add(rooted_file_path)
         elif self.__is_file_eligible_to_scan(next_path):
             POGGER.debug(
                 "Provided path '$' is a valid file. Adding.",
@@ -329,6 +314,26 @@ class PyMarkdownLint:
                 file=sys.stderr,
             )
         return did_find_any
+
+    def __process_next_path_directory(
+        self, next_path, files_to_parse, recurse_directories
+    ):
+        POGGER.debug("Provided path '$' is a directory. Walking directory.", next_path)
+        normalized_next_path = next_path.replace("\\", "/")
+        for root, _, files in os.walk(next_path):
+            normalized_root = root.replace("\\", "/")
+            if not recurse_directories and normalized_root != normalized_next_path:
+                continue
+            normalized_root = (
+                normalized_root[0:-1]
+                if normalized_root.endswith("/")
+                else normalized_root
+            )
+            for file in files:
+                rooted_file_path = f"{normalized_root}/{file}"
+                if self.__is_file_eligible_to_scan(rooted_file_path):
+                    files_to_parse.add(rooted_file_path)
+        return True
 
     def __determine_files_to_scan(self, eligible_paths, recurse_directories):
 
@@ -376,7 +381,10 @@ class PyMarkdownLint:
         try:
             self.__plugins.apply_configuration(self.__properties)
         except Exception as this_exception:
-            formatted_error = f"{type(this_exception).__name__} encountered while configuring plugins:\n{this_exception}"
+            formatted_error = (
+                f"{type(this_exception).__name__} encountered while configuring plugins:\n"
+                + f"{this_exception}"
+            )
             self.__handle_error(formatted_error, this_exception)
 
     # pylint: enable=broad-except
@@ -388,7 +396,10 @@ class PyMarkdownLint:
             self.__tokenizer = TokenizedMarkdown(resource_path)
             self.__tokenizer.apply_configuration(self.__properties, self.__extensions)
         except BadTokenizationError as this_exception:
-            formatted_error = f"{type(this_exception).__name__} encountered while initializing tokenizer:\n{this_exception}"
+            formatted_error = (
+                f"{type(this_exception).__name__} encountered while initializing tokenizer:\n"
+                + f"{this_exception}"
+            )
             self.__handle_error(formatted_error, this_exception)
 
     def __initialize_plugin_manager(self, args, plugin_dir):
@@ -496,7 +507,10 @@ class PyMarkdownLint:
             self.__initialize_plugin_manager(args, plugin_dir)
             self.__apply_configuration_to_plugins()
         except ValueError as this_exception:
-            formatted_error = f"{type(this_exception).__name__} encountered while initializing plugins:\n{this_exception}"
+            formatted_error = (
+                f"{type(this_exception).__name__} encountered while initializing plugins:\n"
+                + f"{this_exception}"
+            )
             self.__handle_error(formatted_error, this_exception)
 
     # pylint: disable=broad-except
@@ -509,10 +523,16 @@ class PyMarkdownLint:
             self.__extensions.apply_configuration()
 
         except ValueError as this_exception:
-            formatted_error = f"Configuration error {type(this_exception).__name__} encountered while initializing extensions:\n{this_exception}"
+            formatted_error = (
+                f"Configuration error {type(this_exception).__name__} encountered "
+                + f"while initializing extensions:\n{this_exception}"
+            )
             self.__handle_error(formatted_error, this_exception)
         except Exception as this_exception:
-            formatted_error = f"Error {type(this_exception).__name__} encountered while initializing extensions:\n{this_exception}"
+            formatted_error = (
+                f"Error {type(this_exception).__name__} encountered while initializing extensions:\n"
+                + f"{this_exception}"
+            )
             self.__handle_error(formatted_error, this_exception)
 
     # pylint: enable=broad-except
@@ -542,7 +562,23 @@ class PyMarkdownLint:
             LOGGER.warning(update_message)
             print(update_message)
 
-    # pylint: disable=too-many-branches
+    def __handle_plugins_and_extensions(self, args):
+        self.__initialize_plugins(args)
+        self.__initialize_extensions(args)
+
+        if args.primary_subparser == PluginManager.argparse_subparser_name():
+            return_code = self.__plugins.handle_argparse_subparser(args)
+            sys.exit(return_code)
+        if args.primary_subparser == ExtensionManager.argparse_subparser_name():
+            return_code = self.__extensions.handle_argparse_subparser(args)
+            sys.exit(return_code)
+
+    def __handle_main_list_files(self, args, files_to_scan):
+        if args.list_files:
+            POGGER.info("Sending list of files that would have been scanned to stdout.")
+            return_code = self.__handle_list_files(files_to_scan)
+            sys.exit(return_code)
+
     def main(self):
         """
         Main entrance point.
@@ -558,15 +594,7 @@ class PyMarkdownLint:
 
             self.__check_for_current_version(args)
 
-            self.__initialize_plugins(args)
-            self.__initialize_extensions(args)
-
-            if args.primary_subparser == PluginManager.argparse_subparser_name():
-                return_code = self.__plugins.handle_argparse_subparser(args)
-                sys.exit(return_code)
-            if args.primary_subparser == ExtensionManager.argparse_subparser_name():
-                return_code = self.__extensions.handle_argparse_subparser(args)
-                sys.exit(return_code)
+            self.__handle_plugins_and_extensions(args)
 
             POGGER.info("Determining files to scan.")
             files_to_scan, did_error_scanning_files = self.__determine_files_to_scan(
@@ -577,12 +605,7 @@ class PyMarkdownLint:
             else:
                 self.__initialize_parser(args)
 
-                if args.list_files:
-                    POGGER.info(
-                        "Sending list of files that would have been scanned to stdout."
-                    )
-                    return_code = self.__handle_list_files(files_to_scan)
-                    sys.exit(return_code)
+                self.__handle_main_list_files(args, files_to_scan)
 
                 for next_file in files_to_scan:
                     try:
@@ -601,8 +624,6 @@ class PyMarkdownLint:
         # TODO self.__plugins.number_of_pragma_failures
         if self.__plugins.number_of_scan_failures or total_error_count:
             sys.exit(1)
-
-    # pylint: enable=too-many-branches
 
 
 if __name__ == "__main__":

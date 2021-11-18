@@ -104,9 +104,11 @@ class RuleMd027(RulePlugin):
             [i for i in self.__container_tokens if i.is_block_quote_start]
         )
         # if self.__debug_on:
-        #     print(f"num->bqs:{num_container_tokens}, self.__have_incremented_for_this_line={self.__have_incremented_for_this_line}")
+        #     print(f"num->bqs:{num_container_tokens}, self.__have_incremented_for_this_line=" + \
+        #       f"{self.__have_incremented_for_this_line}")
         #     if num_container_tokens in self.__bq_line_index:
-        #         print(f"{self.__bq_line_index[num_container_tokens]}-->token>{ParserHelper.make_value_visible(token)}")
+        #         print(f"{self.__bq_line_index[num_container_tokens]}-->token>" + \
+        #           f"{ParserHelper.make_value_visible(token)}")
         #     else:
         #         print(f"token>{ParserHelper.make_value_visible(token)}")
         #     if self.__container_tokens:
@@ -181,7 +183,8 @@ class RuleMd027(RulePlugin):
         found_block_quote_token = self.__get_last_block_quote()
         # if self.__debug_on:
         #     print(f"found_block_quote_token={ParserHelper.make_value_visible(found_block_quote_token)}")
-        #     print(f"num_container_tokens={num_container_tokens},self.__bq_line_index={self.__bq_line_index[num_container_tokens]}")
+        #     print(f"num_container_tokens={num_container_tokens},self.__bq_line_index=" + \
+        #       f"{self.__bq_line_index[num_container_tokens]}")
         split_leading_spaces = found_block_quote_token.leading_spaces.split("\n")
         # if self.__debug_on:
         #     print(f"specific_block_quote_prefix={specific_block_quote_prefix};")
@@ -204,7 +207,8 @@ class RuleMd027(RulePlugin):
                     found_block_quote_token == self.__container_tokens[-1]
                 )
             # if self.__debug_on:
-            #     print(f"is_start_properly_scoped={is_start_properly_scoped};found_block_quote_token={ParserHelper.make_value_visible(found_block_quote_token)}")
+            #     print(f"is_start_properly_scoped={is_start_properly_scoped};" + \
+            #       f"found_block_quote_token={ParserHelper.make_value_visible(found_block_quote_token)}")
             if is_start_properly_scoped:
                 specific_block_quote_prefix = self.__get_current_block_quote_prefix(
                     num_container_tokens
@@ -231,7 +235,9 @@ class RuleMd027(RulePlugin):
 
     def __handle_new_list_item(self, context, token, num_container_tokens):
         # if self.__debug_on:
-        #     print(f"num_container_tokens={num_container_tokens}, __is_paragraph_end_delayed={self.__is_paragraph_end_delayed}, self.__have_incremented_for_this_line={self.__have_incremented_for_this_line}")
+        #     print(f"num_container_tokens={num_container_tokens}, __is_paragraph_end_delayed=" + \
+        #           f"{self.__is_paragraph_end_delayed}, self.__have_incremented_for_this_line=" + \
+        #           f"{self.__have_incremented_for_this_line}")
         if (
             num_container_tokens
             and not self.__have_incremented_for_this_line
@@ -345,7 +351,8 @@ class RuleMd027(RulePlugin):
             # if self.__debug_on:
             #     print(f"end-container>>{ParserHelper.make_value_visible(self.__container_tokens[-1])}")
             #     print(f"split_leading_spaces>>{ParserHelper.make_value_visible(split_leading_spaces)}")
-            #     print(f"specific_block_quote_prefix>>:{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
+            #     print(f"specific_block_quote_prefix>>:" + \
+            #       f"{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
             #     print("fenced-end-error")
             self.report_next_token_error(
                 context,
@@ -388,7 +395,8 @@ class RuleMd027(RulePlugin):
             #     print(f"split_array_index>>{split_array_index}")
             #     print(f"end-container>>{ParserHelper.make_value_visible(self.__container_tokens[-1])}")
             #     print(f"split_leading_spaces>>{ParserHelper.make_value_visible(split_leading_spaces)}")
-            #     print(f"specific_block_quote_prefix>>:{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
+            #     print(f"specific_block_quote_prefix>>:" + \
+            #       f"{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
             #     print("lrd-2-error")
             self.report_next_token_error(
                 context,
@@ -419,7 +427,8 @@ class RuleMd027(RulePlugin):
             #     print("split_array_index>>" + str(split_array_index))
             #     print(f"end-container>>{ParserHelper.make_value_visible(self.__container_tokens[-1])}")
             #     print(f"split_leading_spaces>>{ParserHelper.make_value_visible(split_leading_spaces)}")
-            #     print(f"specific_block_quote_prefix>>:{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
+            #     print(f"specific_block_quote_prefix>>:" + \
+            #       f"{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
             #     print("lrd-3-error")
             self.report_next_token_error(
                 context,
@@ -469,7 +478,8 @@ class RuleMd027(RulePlugin):
                         # if self.__debug_on:
                         #     print(f"split_leading_spaces>>{ParserHelper.make_value_visible(split_leading_spaces)}")
                         #     print(f"split_array_index>>{ParserHelper.make_value_visible(split_array_index)}")
-                        #     print(f"specific_block_quote_prefix>>:{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
+                        #     print(f"specific_block_quote_prefix>>:" + \
+                        #       f"{ParserHelper.make_value_visible(specific_block_quote_prefix)}:")
                         #     print("setext-text-error")
                         self.report_next_token_error(
                             context,
@@ -526,7 +536,6 @@ class RuleMd027(RulePlugin):
             "\n"
         )
 
-    # pylint: disable=too-many-branches
     def __handle_within_block_quotes(self, context, token):
         # if self.__debug_on:
         #     print("__handle_within_block_quotes")
@@ -572,22 +581,8 @@ class RuleMd027(RulePlugin):
             self.__handle_setext_heading_end(
                 context, token, num_container_tokens, is_directly_within_block_quote
             )
-        elif token.is_html_block or token.is_indented_code_block:
-            self.__last_leaf_token = token
-        elif (
-            token.is_html_block_end
-            or token.is_indented_code_block_end
-            or token.is_atx_heading_end
-        ):
+        elif token.is_atx_heading_end:
             self.__last_leaf_token = None
-        elif token.is_fenced_code_block:
-            self.__handle_fenced_code_block(
-                context, token, num_container_tokens, is_directly_within_block_quote
-            )
-        elif token.is_fenced_code_block_end:
-            self.__handle_fenced_code_block_end(
-                context, token, num_container_tokens, is_directly_within_block_quote
-            )
         elif token.is_thematic_break:
             self.__handle_thematic_break(
                 context, token, num_container_tokens, is_directly_within_block_quote
@@ -596,7 +591,25 @@ class RuleMd027(RulePlugin):
             self.__handle_link_reference_definition(
                 context, token, num_container_tokens
             )
+        else:
+            self.__handle_within_block_quotes_blocks(
+                token, context, num_container_tokens, is_directly_within_block_quote
+            )
         # if self.__debug_on:
         #     print(f"{self.__bq_line_index[num_container_tokens]}<--token>{ParserHelper.make_value_visible(token)}")
 
-    # pylint: enable=too-many-branches
+    def __handle_within_block_quotes_blocks(
+        self, token, context, num_container_tokens, is_directly_within_block_quote
+    ):
+        if token.is_fenced_code_block:
+            self.__handle_fenced_code_block(
+                context, token, num_container_tokens, is_directly_within_block_quote
+            )
+        elif token.is_fenced_code_block_end:
+            self.__handle_fenced_code_block_end(
+                context, token, num_container_tokens, is_directly_within_block_quote
+            )
+        elif token.is_html_block or token.is_indented_code_block:
+            self.__last_leaf_token = token
+        elif token.is_html_block_end or token.is_indented_code_block_end:
+            self.__last_leaf_token = None
