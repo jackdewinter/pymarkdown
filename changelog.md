@@ -27,6 +27,7 @@
   - [link_helper.py](https://github.com/jackdewinter/pymarkdown/issues/128)
   - [inline_processor.py](https://github.com/jackdewinter/pymarkdown/issues/130)
   - [block_quote_processor.py](https://github.com/jackdewinter/pymarkdown/issues/134)
+  - [tokenized_markdown.py](https://github.com/jackdewinter/pymarkdown/issues/136)
 
 ### Fixed
 
