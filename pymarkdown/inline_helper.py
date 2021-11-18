@@ -20,6 +20,8 @@ from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-many-lines
+
 
 # pylint: disable=too-few-public-methods, too-many-instance-attributes
 class InlineRequest:
@@ -108,7 +110,10 @@ class InlineHelper:
     Class to helper with the parsing of inline elements.
     """
 
-    __valid_email_regex = "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+    __valid_email_regex = (
+        "^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}"
+        + "[a-zA-Z0-9])?(?:\\.[a-zA-Z0-9](?:[a-zA-Z0-9-]{0,61}[a-zA-Z0-9])?)*$"
+    )
 
     __scheme_end_character = ":"
     __valid_scheme_characters = f"{string.ascii_letters}{string.digits}.-+"
@@ -212,61 +217,73 @@ class InlineHelper:
             and inline_request.source_text[inline_response.new_index]
             == InlineHelper.__numeric_character_reference_start_character
         ):
-            original_new_index = inline_response.new_index
-            POGGER.debug("here")
-            (
-                inline_response.new_string,
-                inline_response.new_index,
-                inline_response.original_string,
-            ) = InlineHelper.__handle_numeric_character_reference(
-                inline_request.source_text, inline_response.new_index
+            InlineHelper.__handle_numeric_character_reference(
+                inline_request, inline_response
             )
-            inline_response.new_string_unresolved = (
-                InlineHelper.character_reference_start_character
-                + inline_request.source_text[
-                    original_new_index : inline_response.new_index
-                ]
-            )
-            POGGER.debug("here-->$<--", inline_response.new_string)
-            POGGER.debug("here-->$<--", inline_response.new_string_unresolved)
         else:
-            POGGER.debug("there")
-            end_index, collected_string = ParserHelper.collect_while_one_of_characters(
-                inline_request.source_text,
-                inline_response.new_index,
-                InlineHelper.__ascii_letters_and_digits,
+            InlineHelper.__handle_non_numeric_character_reference(
+                inline_request, inline_response, source_text_size
             )
-            if collected_string:
-                collected_string = f"{InlineHelper.character_reference_start_character}{collected_string}"
-                if (
-                    end_index < source_text_size
-                    and inline_request.source_text[end_index]
-                    == InlineHelper.__character_reference_end_character
-                ):
-                    end_index += 1
-                    collected_string += InlineHelper.__character_reference_end_character
-                    original_collected_string = collected_string
-                    if collected_string in InlineHelper.__entity_map:
-                        inline_response.original_string = collected_string
-                        collected_string = InlineHelper.__entity_map[collected_string]
-                        inline_response.new_string_unresolved = (
-                            original_collected_string
-                        )
-                inline_response.new_string, inline_response.new_index = (
-                    collected_string,
-                    end_index,
-                )
-                POGGER.debug("there-->$<--", inline_response.new_string)
-                POGGER.debug("there-->$<--", inline_response.new_string_unresolved)
-            else:
-                inline_response.new_string = (
-                    InlineHelper.character_reference_start_character
-                )
         inline_response.delta_line_number, inline_response.delta_column_number = (
             0,
             inline_response.new_index - inline_request.next_index,
         )
         return inline_response
+
+    @staticmethod
+    def __handle_numeric_character_reference(inline_request, inline_response):
+        original_new_index = inline_response.new_index
+        POGGER.debug("here")
+        (
+            inline_response.new_string,
+            inline_response.new_index,
+            inline_response.original_string,
+        ) = InlineHelper.__handle_numeric_character_reference_inner(
+            inline_request.source_text, inline_response.new_index
+        )
+        inline_response.new_string_unresolved = (
+            InlineHelper.character_reference_start_character
+            + inline_request.source_text[original_new_index : inline_response.new_index]
+        )
+        POGGER.debug("here-->$<--", inline_response.new_string)
+        POGGER.debug("here-->$<--", inline_response.new_string_unresolved)
+
+    @staticmethod
+    def __handle_non_numeric_character_reference(
+        inline_request, inline_response, source_text_size
+    ):
+        POGGER.debug("there")
+        end_index, collected_string = ParserHelper.collect_while_one_of_characters(
+            inline_request.source_text,
+            inline_response.new_index,
+            InlineHelper.__ascii_letters_and_digits,
+        )
+        if collected_string:
+            collected_string = (
+                f"{InlineHelper.character_reference_start_character}{collected_string}"
+            )
+            if (
+                end_index < source_text_size
+                and inline_request.source_text[end_index]
+                == InlineHelper.__character_reference_end_character
+            ):
+                end_index += 1
+                collected_string += InlineHelper.__character_reference_end_character
+                original_collected_string = collected_string
+                if collected_string in InlineHelper.__entity_map:
+                    inline_response.original_string = collected_string
+                    collected_string = InlineHelper.__entity_map[collected_string]
+                    inline_response.new_string_unresolved = original_collected_string
+            inline_response.new_string, inline_response.new_index = (
+                collected_string,
+                end_index,
+            )
+            POGGER.debug("there-->$<--", inline_response.new_string)
+            POGGER.debug("there-->$<--", inline_response.new_string_unresolved)
+        else:
+            inline_response.new_string = (
+                InlineHelper.character_reference_start_character
+            )
 
     @staticmethod
     def handle_backslashes(source_text, add_text_signature=True):
@@ -391,6 +408,37 @@ class InlineHelper:
                 extracted_start_backticks, end_backticks_index
             )
 
+        inline_response = InlineHelper.__build_backtick_response(
+            inline_request,
+            end_backtick_start_index,
+            extracted_start_backticks,
+            new_index,
+            extracted_start_backticks_size,
+        )
+
+        POGGER.debug(
+            ">>delta_line_number>>$<<",
+            inline_response.delta_line_number,
+        )
+        POGGER.debug(
+            ">>delta_column_number>>$<<",
+            inline_response.delta_column_number,
+        )
+        if inline_response.delta_line_number == -1:
+            inline_response.delta_line_number, inline_response.delta_column_number = (
+                0,
+                inline_response.new_index - inline_request.next_index,
+            )
+        return inline_response
+
+    @staticmethod
+    def __build_backtick_response(
+        inline_request,
+        end_backtick_start_index,
+        extracted_start_backticks,
+        new_index,
+        extracted_start_backticks_size,
+    ):
         inline_response = InlineResponse()
         inline_response.delta_line_number = -1
 
@@ -400,54 +448,13 @@ class InlineHelper:
                 new_index,
             )
         else:
-            between_text = inline_request.source_text[
-                new_index:end_backtick_start_index
-            ]
-            original_between_text = between_text
-            POGGER.debug(
-                "after_collect>$>>$>>$<<",
+            (
                 between_text,
-                end_backtick_start_index,
-                inline_request.source_text[end_backtick_start_index:],
-            )
-            leading_whitespace, trailing_whitespace = "", ""
-            if (
-                len(between_text) > 2
-                and between_text[0]
-                in [ParserHelper.space_character, ParserHelper.newline_character]
-                and between_text[-1]
-                in [ParserHelper.space_character, ParserHelper.newline_character]
-            ):
-                stripped_between_attempt = between_text[1:-1]
-                if len(stripped_between_attempt.strip()) != 0:
-                    leading_whitespace, trailing_whitespace = (
-                        between_text[0],
-                        between_text[-1],
-                    )
-                    between_text = stripped_between_attempt
-
-            replaced_newline = ParserHelper.create_replacement_markers(
-                ParserHelper.newline_character, ParserHelper.space_character
-            )
-            POGGER.debug("between_text>>$<<", between_text)
-            between_text = ParserHelper.escape_special_characters(between_text)
-            POGGER.debug("between_text>>$<<", between_text)
-            POGGER.debug(
-                "leading_whitespace>>$<<",
+                original_between_text,
                 leading_whitespace,
-            )
-            POGGER.debug(
-                "trailing_whitespace>>$<<",
                 trailing_whitespace,
-            )
-            between_text, leading_whitespace, trailing_whitespace = (
-                between_text.replace(ParserHelper.newline_character, replaced_newline),
-                leading_whitespace.replace(
-                    ParserHelper.newline_character, replaced_newline
-                ),
-                trailing_whitespace.replace(
-                    ParserHelper.newline_character, replaced_newline
-                ),
+            ) = InlineHelper.__calculate_backtick_between_text(
+                inline_request, new_index, end_backtick_start_index
             )
 
             POGGER.debug("between_text>>$<<", between_text)
@@ -489,20 +496,6 @@ class InlineHelper:
                 ) = ParserHelper.calculate_deltas(
                     f"{original_between_text}{extracted_start_backticks}"
                 )
-
-        POGGER.debug(
-            ">>delta_line_number>>$<<",
-            inline_response.delta_line_number,
-        )
-        POGGER.debug(
-            ">>delta_column_number>>$<<",
-            inline_response.delta_column_number,
-        )
-        if inline_response.delta_line_number == -1:
-            inline_response.delta_line_number, inline_response.delta_column_number = (
-                0,
-                inline_response.new_index - inline_request.next_index,
-            )
         return inline_response
 
     @staticmethod
@@ -514,7 +507,65 @@ class InlineHelper:
             return f"{removed_end_whitespace}{ParserHelper.newline_character}"
         return f"{end_string}{removed_end_whitespace}{ParserHelper.newline_character}"
 
-    # pylint: disable=too-many-arguments, too-many-locals, too-many-statements
+    @staticmethod
+    def __calculate_backtick_between_text(
+        inline_request, new_index, end_backtick_start_index
+    ):
+        between_text = inline_request.source_text[new_index:end_backtick_start_index]
+        original_between_text = between_text
+        POGGER.debug(
+            "after_collect>$>>$>>$<<",
+            between_text,
+            end_backtick_start_index,
+            inline_request.source_text[end_backtick_start_index:],
+        )
+        leading_whitespace, trailing_whitespace = "", ""
+        if (
+            len(between_text) > 2
+            and between_text[0]
+            in [ParserHelper.space_character, ParserHelper.newline_character]
+            and between_text[-1]
+            in [ParserHelper.space_character, ParserHelper.newline_character]
+        ):
+            stripped_between_attempt = between_text[1:-1]
+            if len(stripped_between_attempt.strip()) != 0:
+                leading_whitespace, trailing_whitespace = (
+                    between_text[0],
+                    between_text[-1],
+                )
+                between_text = stripped_between_attempt
+
+        replaced_newline = ParserHelper.create_replacement_markers(
+            ParserHelper.newline_character, ParserHelper.space_character
+        )
+        POGGER.debug("between_text>>$<<", between_text)
+        between_text = ParserHelper.escape_special_characters(between_text)
+        POGGER.debug("between_text>>$<<", between_text)
+        POGGER.debug(
+            "leading_whitespace>>$<<",
+            leading_whitespace,
+        )
+        POGGER.debug(
+            "trailing_whitespace>>$<<",
+            trailing_whitespace,
+        )
+        between_text, leading_whitespace, trailing_whitespace = (
+            between_text.replace(ParserHelper.newline_character, replaced_newline),
+            leading_whitespace.replace(
+                ParserHelper.newline_character, replaced_newline
+            ),
+            trailing_whitespace.replace(
+                ParserHelper.newline_character, replaced_newline
+            ),
+        )
+        return (
+            between_text,
+            original_between_text,
+            leading_whitespace,
+            trailing_whitespace,
+        )
+
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def handle_line_end(
         next_index,
@@ -575,6 +626,60 @@ class InlineHelper:
             is_proper_hard_break = modified_current_string[-2:] != "\\\b"
             POGGER.debug(">>$<<", is_proper_hard_break)
 
+        (
+            current_string,
+            whitespace_to_add,
+            append_to_current_string,
+            end_string,
+            remaining_line,
+        ) = InlineHelper.__select_line_ending(
+            new_tokens,
+            is_proper_hard_break,
+            line_number,
+            adj_hard_column,
+            current_string,
+            removed_end_whitespace,
+            removed_end_whitespace_size,
+            whitespace_to_add,
+            append_to_current_string,
+            end_string,
+            remaining_line,
+            inline_blocks,
+            is_setext,
+        )
+
+        if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
+            coalesced_stack[-1].leading_text_index += 1
+
+        return (
+            append_to_current_string,
+            whitespace_to_add,
+            next_index + 1,
+            new_tokens,
+            remaining_line,
+            end_string,
+            current_string,
+        )
+
+    # pylint: enable=too-many-arguments, too-many-locals
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __select_line_ending(
+        new_tokens,
+        is_proper_hard_break,
+        line_number,
+        adj_hard_column,
+        current_string,
+        removed_end_whitespace,
+        removed_end_whitespace_size,
+        whitespace_to_add,
+        append_to_current_string,
+        end_string,
+        remaining_line,
+        inline_blocks,
+        is_setext,
+    ):
         if is_proper_hard_break:
             POGGER.debug(">>proper hard break")
             new_tokens.append(
@@ -619,9 +724,6 @@ class InlineHelper:
             )
             POGGER.debug("<<end_string<<$<<", end_string)
 
-        if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
-            coalesced_stack[-1].leading_text_index += 1
-
         POGGER.debug(
             "<<append_to_current_string<<$<<",
             append_to_current_string,
@@ -634,16 +736,14 @@ class InlineHelper:
         POGGER.debug("<<end_string<<$<<", end_string)
         POGGER.debug("<<current_string<<$<<", current_string)
         return (
-            append_to_current_string,
-            whitespace_to_add,
-            next_index + 1,
-            new_tokens,
-            remaining_line,
-            end_string,
             current_string,
+            whitespace_to_add,
+            append_to_current_string,
+            end_string,
+            remaining_line,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals, too-many-statements
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def extract_bounded_string(
@@ -727,7 +827,7 @@ class InlineHelper:
         return next_index, None
 
     @staticmethod
-    def __handle_numeric_character_reference(source_text, new_index):
+    def __handle_numeric_character_reference_inner(source_text, new_index):
         """
         Handle a character reference that is numeric in nature.
         """
@@ -758,7 +858,8 @@ class InlineHelper:
             if 1 <= delta <= 6:
                 translated_reference = int(collected_string, 16)
             new_string, new_index = (
-                f"{InlineHelper.character_reference_start_character}{InlineHelper.__numeric_character_reference_start_character}{hex_char}{collected_string}",
+                f"{InlineHelper.character_reference_start_character}"
+                + f"{InlineHelper.__numeric_character_reference_start_character}{hex_char}{collected_string}",
                 end_index,
             )
         else:
@@ -776,7 +877,8 @@ class InlineHelper:
             if 1 <= delta <= 7:
                 translated_reference = int(collected_string)
             new_string, new_index = (
-                f"{InlineHelper.character_reference_start_character}{InlineHelper.__numeric_character_reference_start_character}{collected_string}",
+                f"{InlineHelper.character_reference_start_character}"
+                + f"{InlineHelper.__numeric_character_reference_start_character}{collected_string}",
                 end_index,
             )
 
@@ -809,10 +911,16 @@ class InlineHelper:
             with open(os.path.abspath(master_entities_file)) as infile:
                 results_dictionary = json.load(infile)
         except json.decoder.JSONDecodeError as this_exception:
-            error_message = f"Named character entity map file '{master_entities_file}' is not a valid JSON file ({this_exception})."
+            error_message = (
+                f"Named character entity map file '{master_entities_file}' "
+                + f"is not a valid JSON file ({this_exception})."
+            )
             raise BadTokenizationError(error_message) from this_exception
         except IOError as this_exception:
-            error_message = f"Named character entity map file '{master_entities_file}' was not loaded ({this_exception})."
+            error_message = (
+                f"Named character entity map file '{master_entities_file}' "
+                + f"was not loaded ({this_exception})."
+            )
             raise BadTokenizationError(error_message) from this_exception
 
         approved_entity_map = {}

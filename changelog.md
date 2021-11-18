@@ -28,6 +28,7 @@
   - [inline_processor.py](https://github.com/jackdewinter/pymarkdown/issues/130)
   - [block_quote_processor.py](https://github.com/jackdewinter/pymarkdown/issues/134)
   - [tokenized_markdown.py](https://github.com/jackdewinter/pymarkdown/issues/136)
+  - [main.py + inline_helper.py + rule md027](https://github.com/jackdewinter/pymarkdown/issues/138)
 
 ### Fixed
 
