@@ -538,7 +538,7 @@ class BlockQuoteProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-locals
     @staticmethod
     def __handle_block_quote_section(
         parser_state,
@@ -650,7 +650,7 @@ class BlockQuoteProcessor:
             requeue_line_info,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod

@@ -7,7 +7,7 @@
         },
         "pymarkdown/bad_tokenization_error.py": {},
         "pymarkdown/block_quote_processor.py": {
-            "too-many-arguments": 11,
+            "too-many-arguments": 10,
             "too-many-locals": 4
         },
         "pymarkdown/coalesce_processor.py": {
@@ -208,10 +208,7 @@
             "too-many-instance-attributes": 1
         },
         "pymarkdown/tokenized_markdown.py": {
-            "too-many-statements": 2,
-            "too-many-locals": 3,
-            "too-many-branches": 3,
-            "too-many-arguments": 1
+            "too-many-arguments": 4
         },
         "pymarkdown/transform_to_gfm.py": {
             "too-many-instance-attributes": 1,
@@ -221,14 +218,14 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 123,
-        "too-many-locals": 41,
+        "too-many-arguments": 125,
+        "too-many-locals": 38,
         "too-few-public-methods": 17,
         "broad-except": 6,
         "no-self-use": 1,
         "too-many-instance-attributes": 15,
-        "too-many-statements": 3,
-        "too-many-branches": 5,
+        "too-many-statements": 1,
+        "too-many-branches": 2,
         "too-many-public-methods": 2,
         "no-member": 1,
         "invalid-unary-operand-type": 1
