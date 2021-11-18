@@ -68,7 +68,7 @@
         "pymarkdown/inline_helper.py": {
             "too-few-public-methods": 2,
             "too-many-instance-attributes": 2,
-            "too-many-arguments": 3,
+            "too-many-arguments": 4,
             "too-many-locals": 1
         },
         "pymarkdown/inline_markdown_token.py": {
@@ -214,7 +214,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 126,
+        "too-many-arguments": 127,
         "too-many-locals": 38,
         "too-few-public-methods": 17,
         "broad-except": 6,

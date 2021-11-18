@@ -612,19 +612,10 @@ class InlineHelper:
             removed_end_whitespace_size,
             remaining_line,
         )
-        POGGER.debug(">>current_string>>$>>", current_string)
 
-        is_proper_hard_break, current_string_size = False, len(current_string)
-        if (
-            removed_end_whitespace_size == 0
-            and current_string_size
-            and current_string[current_string_size - 1]
-            == InlineHelper.backslash_character
-        ):
-            POGGER.debug(">>$<<", current_string)
-            modified_current_string = current_string[0:-1]
-            is_proper_hard_break = modified_current_string[-2:] != "\\\b"
-            POGGER.debug(">>$<<", is_proper_hard_break)
+        is_proper_hard_break = InlineHelper.__is_proper_hard_break(
+            current_string, removed_end_whitespace_size
+        )
 
         (
             current_string,
@@ -662,6 +653,23 @@ class InlineHelper:
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
+
+    @staticmethod
+    def __is_proper_hard_break(current_string, removed_end_whitespace_size):
+        POGGER.debug(">>current_string>>$>>", current_string)
+
+        is_proper_hard_break, current_string_size = False, len(current_string)
+        if (
+            removed_end_whitespace_size == 0
+            and current_string_size
+            and current_string[current_string_size - 1]
+            == InlineHelper.backslash_character
+        ):
+            POGGER.debug(">>$<<", current_string)
+            modified_current_string = current_string[0:-1]
+            is_proper_hard_break = modified_current_string[-2:] != "\\\b"
+            POGGER.debug(">>$<<", is_proper_hard_break)
+        return is_proper_hard_break
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -776,40 +784,23 @@ class InlineHelper:
         while next_index < source_text_size and not (
             source_text[next_index] == close_character and nesting_level == 0
         ):
-            if ParserHelper.is_character_at_index(
-                source_text, next_index, InlineHelper.backslash_character
-            ):
-                POGGER.debug("pre-back>>next_index>>$>>", next_index)
-                old_index = next_index
-
-                inline_request = InlineRequest(source_text, next_index)
-                inline_response = InlineHelper.handle_inline_backslash(inline_request)
-                next_index = inline_response.new_index
-                extracted_parts.append(source_text[old_index:next_index])
-            elif start_character is not None and ParserHelper.is_character_at_index(
-                source_text, next_index, start_character
-            ):
-                POGGER.debug("pre-start>>next_index>>$>>", next_index)
-                extracted_parts.append(start_character)
-                next_index += 1
-                nesting_level += 1
-            else:
-                assert ParserHelper.is_character_at_index(
-                    source_text, next_index, close_character
-                )
-                POGGER.debug("pre-close>>next_index>>$>>", next_index)
-                extracted_parts.append(close_character)
-                next_index += 1
-                nesting_level -= 1
-            next_index, new_data = ParserHelper.collect_until_one_of_characters(
-                source_text, next_index, break_characters
+            (
+                next_index,
+                nesting_level,
+            ) = InlineHelper.__handle_next_extract_bounded_string_item(
+                source_text,
+                next_index,
+                extracted_parts,
+                start_character,
+                nesting_level,
+                close_character,
+                break_characters,
             )
             POGGER.debug(
                 "back>>next_index>>$>>data>>$>>",
                 next_index,
                 data,
             )
-            extracted_parts.append(new_data)
         POGGER.debug(
             ">>next_index2>>$>>data>>$>>",
             next_index,
@@ -825,6 +816,51 @@ class InlineHelper:
             "extract_bounded_string>>ran out of string>>next_index>>$", next_index
         )
         return next_index, None
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __handle_next_extract_bounded_string_item(
+        source_text,
+        next_index,
+        extracted_parts,
+        start_character,
+        nesting_level,
+        close_character,
+        break_characters,
+    ):
+
+        if ParserHelper.is_character_at_index(
+            source_text, next_index, InlineHelper.backslash_character
+        ):
+            POGGER.debug("pre-back>>next_index>>$>>", next_index)
+            old_index = next_index
+
+            inline_request = InlineRequest(source_text, next_index)
+            inline_response = InlineHelper.handle_inline_backslash(inline_request)
+            next_index = inline_response.new_index
+            extracted_parts.append(source_text[old_index:next_index])
+        elif start_character is not None and ParserHelper.is_character_at_index(
+            source_text, next_index, start_character
+        ):
+            POGGER.debug("pre-start>>next_index>>$>>", next_index)
+            extracted_parts.append(start_character)
+            next_index += 1
+            nesting_level += 1
+        else:
+            assert ParserHelper.is_character_at_index(
+                source_text, next_index, close_character
+            )
+            POGGER.debug("pre-close>>next_index>>$>>", next_index)
+            extracted_parts.append(close_character)
+            next_index += 1
+            nesting_level -= 1
+        next_index, new_data = ParserHelper.collect_until_one_of_characters(
+            source_text, next_index, break_characters
+        )
+        extracted_parts.append(new_data)
+        return next_index, nesting_level
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __handle_numeric_character_reference_inner(source_text, new_index):
