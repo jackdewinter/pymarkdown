@@ -23,7 +23,7 @@ POGGER = ParserLogger(logging.getLogger(__name__))
 # pylint: disable=too-many-lines
 
 
-# pylint: disable=too-few-public-methods, too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes
 class InlineRequest:
     """
     Class to hold the request information to pass on to the handle_* functions.
@@ -42,14 +42,14 @@ class InlineRequest:
         para_owner=None,
     ):
         (
-            self.source_text,
-            self.next_index,
-            self.inline_blocks,
-            self.remaining_line,
-            self.current_string_unresolved,
-            self.line_number,
-            self.column_number,
-            self.para_owner,
+            self.__source_text,
+            self.__next_index,
+            self.__inline_blocks,
+            self.__remaining_line,
+            self.__current_string_unresolved,
+            self.__line_number,
+            self.__column_number,
+            self.__para_owner,
         ) = (
             source_text,
             next_index,
@@ -62,12 +62,67 @@ class InlineRequest:
         )
 
     # pylint: enable=too-many-arguments
+    @property
+    def source_text(self):
+        """
+        Text that is the source of the inline request.
+        """
+        return self.__source_text
+
+    @property
+    def next_index(self):
+        """
+        Index into the source text.
+        """
+        return self.__next_index
+
+    @property
+    def inline_blocks(self):
+        """
+        Inline blocks collected up to this point in the processing.
+        """
+        return self.__inline_blocks
+
+    @property
+    def remaining_line(self):
+        """
+        Remaining part of the line.
+        """
+        return self.__remaining_line
+
+    @property
+    def current_string_unresolved(self):
+        """
+        Version of the current string before anything is changed.
+        """
+        return self.__current_string_unresolved
+
+    @property
+    def line_number(self):
+        """
+        Line number where the block of text starts.
+        """
+        return self.__line_number
+
+    @property
+    def column_number(self):
+        """
+        Column number where the block of text starts.
+        """
+        return self.__column_number
+
+    @property
+    def para_owner(self):
+        """
+        Paragraph token that owns the current block of text.
+        """
+        return self.__para_owner
 
 
-# pylint: enable=too-few-public-methods, too-many-instance-attributes
+# pylint: enable=too-many-instance-attributes
 
 
-# pylint: disable=too-few-public-methods,too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes
 class InlineResponse:
     """
     Class to hold the response from the inline handle_* functions.
@@ -75,34 +130,122 @@ class InlineResponse:
 
     def __init__(self):
         (
-            self.new_string,
-            self.new_index,
-            self.new_tokens,
-            self.new_string_unresolved,
-            self.consume_rest_of_line,
-            self.original_string,
-            self.delta_line_number,
-            self.delta_column_number,
+            self.__new_string,
+            self.__new_index,
+            self.__new_tokens,
+            self.__new_string_unresolved,
+            self.__consume_rest_of_line,
+            self.__original_string,
+            self.__delta_line_number,
+            self.__delta_column_number,
         ) = (None, None, None, None, False, None, 0, 0)
         self.clear_fields()
+
+    @property
+    def new_string(self):
+        """
+        New string that was processed.
+        """
+        return self.__new_string
+
+    @new_string.setter
+    def new_string(self, value):
+        self.__new_string = value
+
+    @property
+    def new_string_unresolved(self):
+        """
+        New string that was processed, raw.
+        """
+        return self.__new_string_unresolved
+
+    @new_string_unresolved.setter
+    def new_string_unresolved(self, value):
+        self.__new_string_unresolved = value
+
+    @property
+    def new_index(self):
+        """
+        New index resulting from the parsing.
+        """
+        return self.__new_index
+
+    @new_index.setter
+    def new_index(self, value):
+        self.__new_index = value
+
+    @property
+    def new_tokens(self):
+        """
+        New tokens produced as part of the parsing.
+        """
+        return self.__new_tokens
+
+    @new_tokens.setter
+    def new_tokens(self, value):
+        self.__new_tokens = value
+
+    @property
+    def consume_rest_of_line(self):
+        """
+        Whether to consume the rest of the line.
+        """
+        return self.__consume_rest_of_line
+
+    @consume_rest_of_line.setter
+    def consume_rest_of_line(self, value):
+        self.__consume_rest_of_line = value
+
+    @property
+    def original_string(self):
+        """
+        Original string that was interpreted.
+        """
+        return self.__original_string
+
+    @original_string.setter
+    def original_string(self, value):
+        self.__original_string = value
+
+    @property
+    def delta_line_number(self):
+        """
+        Change in the line number.
+        """
+        return self.__delta_line_number
+
+    @delta_line_number.setter
+    def delta_line_number(self, value):
+        self.__delta_line_number = value
+
+    @property
+    def delta_column_number(self):
+        """
+        Change in the column number.
+        """
+        return self.__delta_column_number
+
+    @delta_column_number.setter
+    def delta_column_number(self, value):
+        self.__delta_column_number = value
 
     def clear_fields(self):
         """
         Clear any of the fields that start with new_*.
         """
         (
-            self.new_string,
-            self.new_index,
-            self.new_tokens,
-            self.new_string_unresolved,
-            self.consume_rest_of_line,
-            self.original_string,
-            self.delta_line_number,
-            self.delta_column_number,
+            self.__new_string,
+            self.__new_index,
+            self.__new_tokens,
+            self.__new_string_unresolved,
+            self.__consume_rest_of_line,
+            self.__original_string,
+            self.__delta_line_number,
+            self.__delta_column_number,
         ) = (None, None, None, None, False, None, 0, 0)
 
 
-# pylint: enable=too-few-public-methods,too-many-instance-attributes
+# pylint: enable=too-many-instance-attributes
 
 
 class InlineHelper:

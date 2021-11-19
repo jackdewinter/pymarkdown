@@ -45,8 +45,10 @@ from pymarkdown.transform_to_gfm_list_looseness import TransformToGfmListLoosene
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-many-lines
 
-# pylint: disable=too-many-instance-attributes, too-few-public-methods
+
+# pylint: disable=too-many-instance-attributes
 class TransformState:
     """
     Class that contains the state of transformation of TransformToGfm.
@@ -57,21 +59,161 @@ class TransformState:
         Initializes a new instance of the TransformState class.
         """
         (
-            self.is_in_code_block,
-            self.is_in_fenced_code_block,
-            self.is_in_html_block,
-            self.is_in_loose_list,
-            self.transform_stack,
-            self.add_trailing_text,
-            self.add_leading_text,
-            self.actual_tokens,
-            self.actual_token_index,
-            self.next_token,
-            self.last_token,
+            self.__is_in_code_block,
+            self.__is_in_fenced_code_block,
+            self.__is_in_html_block,
+            self.__is_in_loose_list,
+            self.__transform_stack,
+            self.__add_trailing_text,
+            self.__add_leading_text,
+            self.__actual_tokens,
+            self.__actual_token_index,
+            self.__next_token,
+            self.__last_token,
         ) = (False, False, False, True, [], None, None, actual_tokens, 0, None, None)
 
+    @property
+    def is_in_code_block(self):
+        """
+        Whether the generator is currently inside of a code block.
+        """
+        return self.__is_in_code_block
 
-# pylint: enable=too-many-instance-attributes, too-few-public-methods
+    @is_in_code_block.setter
+    def is_in_code_block(self, value):
+        """
+        Set whether the generator is currently inside of a code block.
+        """
+        self.__is_in_code_block = value
+
+    @property
+    def is_in_fenced_code_block(self):
+        """
+        Whether the generator is currently inside of a fenced code block.
+        """
+        return self.__is_in_fenced_code_block
+
+    @is_in_fenced_code_block.setter
+    def is_in_fenced_code_block(self, value):
+        """
+        Set whether the generator is currently inside of a fenced code block.
+        """
+        self.__is_in_fenced_code_block = value
+
+    @property
+    def is_in_html_block(self):
+        """
+        Whether the generator is currently inside of a HTML block.
+        """
+        return self.__is_in_html_block
+
+    @is_in_html_block.setter
+    def is_in_html_block(self, value):
+        """
+        Set whether the generator is currently inside of a HTML block.
+        """
+        self.__is_in_html_block = value
+
+    @property
+    def is_in_loose_list(self):
+        """
+        Whether the generator is currently inside of a loose list.
+        """
+        return self.__is_in_loose_list
+
+    @is_in_loose_list.setter
+    def is_in_loose_list(self, value):
+        """
+        Set whether the generator is currently inside of a loose list.
+        """
+        self.__is_in_loose_list = value
+
+    @property
+    def transform_stack(self):
+        """
+        Stack used to keep track of scope within the generator.
+        """
+        return self.__transform_stack
+
+    @property
+    def add_trailing_text(self):
+        """
+        Keep track of trailing text.
+        """
+        return self.__add_trailing_text
+
+    @add_trailing_text.setter
+    def add_trailing_text(self, value):
+        """
+        Set trailing text to keep track of.
+        """
+        self.__add_trailing_text = value
+
+    @property
+    def add_leading_text(self):
+        """
+        Keep track of leading text.
+        """
+        return self.__add_leading_text
+
+    @add_leading_text.setter
+    def add_leading_text(self, value):
+        """
+        Set leading text to keep track of.
+        """
+        self.__add_leading_text = value
+
+    @property
+    def next_token(self):
+        """
+        Next token to process.
+        """
+        return self.__next_token
+
+    @next_token.setter
+    def next_token(self, value):
+        """
+        Sets the next token to process.
+        """
+        self.__next_token = value
+
+    @property
+    def last_token(self):
+        """
+        Last token to process.
+        """
+        return self.__last_token
+
+    @last_token.setter
+    def last_token(self, value):
+        """
+        Sets the last token to process.
+        """
+        self.__last_token = value
+
+    @property
+    def actual_tokens(self):
+        """
+        Actual tokens to use to generate the HTML with.
+        """
+        return self.__actual_tokens
+
+    @property
+    def actual_token_index(self):
+        """
+        Index into the actual token list.
+        """
+        return self.__actual_token_index
+
+    @actual_token_index.setter
+    def actual_token_index(self, value):
+        """
+        Sets the new index into the actual token list.
+        """
+        self.__actual_token_index = value
+
+
+# pylint: enable=too-many-instance-attributes
 
 
 class TransformToGfm:
@@ -216,32 +358,20 @@ class TransformToGfm:
             "",
             len(actual_tokens),
         )
-        for next_token in transform_state.actual_tokens:
-            (
-                transform_state.add_trailing_text,
-                transform_state.add_leading_text,
-                transform_state.next_token,
-            ) = (None, None, None)
-            if (transform_state.actual_token_index + 1) < actual_tokens_size:
-                transform_state.next_token = actual_tokens[
-                    transform_state.actual_token_index + 1
-                ]
-            if next_token.token_name in self.start_token_handlers:
-                start_handler_fn = self.start_token_handlers[next_token.token_name]
-                output_html = start_handler_fn(output_html, next_token, transform_state)
 
-            elif next_token.is_end_token:
-                if next_token.type_name in self.end_token_handlers:
-                    end_handler_fn = self.end_token_handlers[next_token.type_name]
-                    output_html = end_handler_fn(
-                        output_html, next_token, transform_state
-                    )
-                else:
-                    assert (
-                        False
-                    ), f"Markdown token end type {next_token.type_name} not supported."
-            else:
-                assert False, f"Markdown token type {type(next_token)} not supported."
+        # This is the easiest way to finish covering the missing items.
+        assert transform_state.next_token is None
+        assert not transform_state.is_in_fenced_code_block
+
+        for next_token in transform_state.actual_tokens:
+
+            output_html = self.__apply_transformation(
+                transform_state,
+                actual_tokens,
+                actual_tokens_size,
+                next_token,
+                output_html,
+            )
 
             POGGER.debug("======")
             POGGER.debug(
@@ -268,6 +398,42 @@ class TransformToGfm:
             output_html = output_html[:-1]
         POGGER.debug("output_html    -->$<--", output_html)
         return output_html
+
+    # pylint: disable=too-many-arguments
+    def __apply_transformation(
+        self,
+        transform_state,
+        actual_tokens,
+        actual_tokens_size,
+        next_token,
+        output_html,
+    ):
+        (
+            transform_state.add_trailing_text,
+            transform_state.add_leading_text,
+            transform_state.next_token,
+        ) = (None, None, None)
+        if (transform_state.actual_token_index + 1) < actual_tokens_size:
+            transform_state.next_token = actual_tokens[
+                transform_state.actual_token_index + 1
+            ]
+        if next_token.token_name in self.start_token_handlers:
+            start_handler_fn = self.start_token_handlers[next_token.token_name]
+            output_html = start_handler_fn(output_html, next_token, transform_state)
+
+        elif next_token.is_end_token:
+            if next_token.type_name in self.end_token_handlers:
+                end_handler_fn = self.end_token_handlers[next_token.type_name]
+                output_html = end_handler_fn(output_html, next_token, transform_state)
+            else:
+                assert (
+                    False
+                ), f"Markdown token end type {next_token.type_name} not supported."
+        else:
+            assert False, f"Markdown token type {type(next_token)} not supported."
+        return output_html
+
+    # pylint: enable=too-many-arguments
 
     @classmethod
     def __apply_trailing_text(cls, output_html, transform_state):

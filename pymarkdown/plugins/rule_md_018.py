@@ -124,6 +124,7 @@ class StartOfLineTokenParser:
                         split_whitespace[split_index + self.__paragraph_index]
                     )
                 # pylint: disable=invalid-unary-operand-type
+                # See https://github.com/PyCQA/pylint/issues/1472
                 if split_index == len(split_text) - 1:
                     self.__delayed_line = (
                         combined_text,

@@ -64,6 +64,7 @@ class MarkdownToken:
         is_extension=False,
         can_force_close=True,
         requires_end_token=False,
+        is_special=False,
     ):
         if position_marker:
             line_number, column_number = (
@@ -79,6 +80,7 @@ class MarkdownToken:
             self.__is_extension,
             self.__requires_end_token,
             self.__can_force_close,
+            self.__is_special,
         ) = (
             token_name,
             token_class,
@@ -88,6 +90,7 @@ class MarkdownToken:
             is_extension,
             requires_end_token,
             can_force_close,
+            is_special,
         )
 
     # pylint: enable=too-many-arguments
@@ -185,6 +188,13 @@ class MarkdownToken:
         Returns whether this token can be forceably closed.
         """
         return self.__can_force_close
+
+    @property
+    def is_special(self):
+        """
+        Returns whether the current token is actually a special subclass.
+        """
+        return self.__is_special
 
     @property
     def is_end_token(self):
@@ -366,15 +376,12 @@ class MarkdownToken:
         """
         return self.token_name == MarkdownToken._token_text
 
-    # pylint: disable=no-member
     @property
     def is_special_text(self):
         """
         Returns whether the current token is a special text element.
         """
         return self.is_text and self.is_special
-
-    # pylint: enable=no-member
 
     @property
     def is_setext_heading(self):

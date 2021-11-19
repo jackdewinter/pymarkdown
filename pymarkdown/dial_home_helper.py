@@ -85,7 +85,10 @@ class DialHomeHelper:
             )
             return registered_semantic_version, None
         except Exception as this_exception:
-            error_value = f"{type(this_exception).__name__} encountered while determining semantic version: '{this_exception}'"
+            error_value = (
+                f"{type(this_exception).__name__} encountered while "
+                + f"determining semantic version: '{this_exception}'"
+            )
             LOGGER.error(error_value)
             return None, error_value
 
@@ -109,7 +112,10 @@ class DialHomeHelper:
                 file_lines = file_lines[0].strip()
                 marker_epoch_time = int(file_lines)
             except Exception as this_exception:
-                error_value = f"{type(this_exception).__name__} encountered while checking age of version marker: '{this_exception}'"
+                error_value = (
+                    f"{type(this_exception).__name__} encountered while "
+                    + f"checking age of version marker: '{this_exception}'"
+                )
                 LOGGER.warning(error_value)
         return int(datetime.datetime.now().timestamp()), marker_epoch_time
 
@@ -135,7 +141,10 @@ class DialHomeHelper:
             with open(self.marker_path, "wt") as marker_file:
                 marker_file.write(marker_line)
         except Exception as this_exception:
-            error_value = f"{type(this_exception).__name__} encountered while refreshing version marker: '{this_exception}'"
+            error_value = (
+                f"{type(this_exception).__name__} encountered "
+                + f"while refreshing version marker: '{this_exception}'"
+            )
             LOGGER.warning(error_value)
         return error_value
 
@@ -162,7 +171,8 @@ class DialHomeHelper:
 
         if current_version != extract_version:
             return (
-                f"WARN: Current application version '{extract_version}' differs from the published version '{current_version}'.\n"
+                f"WARN: Current application version '{extract_version}' differs "
+                + f"from the published version '{current_version}'.\n"
                 + f"  Please update the {self.__package_name} application version."
             )
         return None
@@ -199,9 +209,10 @@ class DialHomeHelper:
             assert (
                 len(split_useful_content) == 2
             ), "Extracted webpage content must have two parts separated by spaces."
-            assert (
-                split_useful_content[0] == self.__package_name
-            ), f"Extracted package name '{split_useful_content[0]}' differs from the requested package name '{self.__package_name}'."
+            assert split_useful_content[0] == self.__package_name, (
+                f"Extracted package name '{split_useful_content[0]}' differs from "
+                + "the requested package name '{self.__package_name}'."
+            )
 
             extracted_package_version = split_useful_content[1]
         except Exception as this_exception:
@@ -214,8 +225,8 @@ class DialHomeHelper:
 
     # pylint: enable=broad-except
 
-    # pylint: disable=no-self-use
-    def fetch_web_page(self, url_to_fetch):
+    @classmethod
+    def fetch_web_page(cls, url_to_fetch):
         """
         Fetch the specified web page, reporting an error is there were any
         problems getting the web page.
@@ -226,5 +237,3 @@ class DialHomeHelper:
         except requests.exceptions.RequestException as this_exception:
             return None, this_exception
         return response, None
-
-    # pylint: enable=no-self-use

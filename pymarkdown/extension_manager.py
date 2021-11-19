@@ -297,7 +297,10 @@ class ExtensionManager:
         #             LOGGER.debug("Plugin is enabled from command line.")
         #             break
         # if new_value is None:
-        plugin_section_title = f"{ExtensionManager.__extensions_prefix}{self.__properties.separator}{extension_object.extension_id}{self.__properties.separator}"
+        plugin_section_title = (
+            f"{ExtensionManager.__extensions_prefix}{self.__properties.separator}"
+            + f"{extension_object.extension_id}{self.__properties.separator}"
+        )
         extension_specific_facade = ApplicationPropertiesFacade(
             self.__properties, plugin_section_title
         )

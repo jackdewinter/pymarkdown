@@ -3,7 +3,7 @@ Module to provide details about a plugin, supplied by the plugin.
 """
 
 
-# pylint: disable=too-few-public-methods,too-many-instance-attributes
+# pylint: disable=too-many-instance-attributes
 class PluginDetails:
     """
     Class to provide details about a plugin, supplied by the plugin.
@@ -22,14 +22,14 @@ class PluginDetails:
         plugin_configuration=None,
     ):
         (
-            self.plugin_id,
-            self.plugin_name,
-            self.plugin_description,
-            self.plugin_enabled_by_default,
-            self.plugin_version,
-            self.plugin_interface_version,
-            self.plugin_url,
-            self.plugin_configuration,
+            self.__plugin_id,
+            self.__plugin_name,
+            self.__plugin_description,
+            self.__plugin_enabled_by_default,
+            self.__plugin_version,
+            self.__plugin_interface_version,
+            self.__plugin_url,
+            self.__plugin_configuration,
         ) = (
             plugin_id,
             plugin_name,
@@ -43,5 +43,61 @@ class PluginDetails:
 
     # pylint: enable=too-many-arguments
 
+    @property
+    def plugin_id(self):
+        """
+        Gets the id associated with the plugin.
+        """
+        return self.__plugin_id
 
-# pylint: enable=too-few-public-methods,too-many-instance-attributes
+    @property
+    def plugin_name(self):
+        """
+        Gets the names associated with the plugin.
+        """
+        return self.__plugin_name
+
+    @property
+    def plugin_description(self):
+        """
+        Gets the description of the plugin.
+        """
+        return self.__plugin_description
+
+    @property
+    def plugin_enabled_by_default(self):
+        """
+        Gets a value indicating whether the plugin is enabled by default.
+        """
+        return self.__plugin_enabled_by_default
+
+    @property
+    def plugin_version(self):
+        """
+        Gets the version of the plugin.
+        """
+        return self.__plugin_version
+
+    @property
+    def plugin_interface_version(self):
+        """
+        Gets the interface version of the plugin.
+        """
+        return self.__plugin_interface_version
+
+    @property
+    def plugin_url(self):
+        """
+        Gets the optional url for the plugin.
+        """
+        return self.__plugin_url
+
+    @property
+    def plugin_configuration(self):
+        """
+        Gets the optional configuration items for the plugin.
+        """
+        return self.__plugin_configuration
+
+
+# pylint: enable=too-many-instance-attributes

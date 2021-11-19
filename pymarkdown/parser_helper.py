@@ -23,7 +23,10 @@ class ParserHelper:
     tab_character = "\t"
     space_character = " "
 
-    all_escape_characters = f"{__backspace_character}{__alert_character}{whitespace_split_character}{replace_noop_character}{blech_character}{escape_character}"
+    all_escape_characters = (
+        f"{__backspace_character}{__alert_character}{whitespace_split_character}"
+        + f"{replace_noop_character}{blech_character}{escape_character}"
+    )
 
     backslash_escape_sequence = f"{backslash_character}{__backspace_character}"
 
@@ -212,7 +215,8 @@ class ParserHelper:
     @staticmethod
     def collect_backwards_while_character(source_string, end_index, match_character):
         """
-        Collect a sequence of the same character from a given starting point in a string going backwards towards the start of the string.
+        Collect a sequence of the same character from a given starting point in a
+        string going backwards towards the start of the string.
 
         Returns the number of characters collected and the index of the first non-matching
         character and any extracted text in a tuple.
@@ -234,7 +238,8 @@ class ParserHelper:
         source_string, end_index, match_characters
     ):
         """
-        Collect a sequence of the same character from a given starting point in a string going backwards towards the start of the string.
+        Collect a sequence of the same character from a given starting point in
+        a string going backwards towards the start of the string.
 
         Returns the number of characters collected and the index of the first non-matching
         character and any extracted text in a tuple.
@@ -273,7 +278,8 @@ class ParserHelper:
     @staticmethod
     def collect_while_one_of_characters(source_string, start_index, match_characters):
         """
-        Collect a sequence of characters from a given starting point in a string as long as the character is one of the match characters.
+        Collect a sequence of characters from a given starting point in a string as long
+        as the character is one of the match characters.
 
         Returns the index of the first non-matching character and any extracted text
         in a tuple.
@@ -292,7 +298,8 @@ class ParserHelper:
     @staticmethod
     def collect_until_one_of_characters(source_string, start_index, match_characters):
         """
-        Collect a sequence of characters from a given starting point in a string until we hit one of a given set of characters.
+        Collect a sequence of characters from a given starting point in a string until
+        we hit one of a given set of characters.
 
         Returns the index of the first non-matching character and any extracted text
         in a tuple.
@@ -577,14 +584,20 @@ class ParserHelper:
         Create a replacement marker indicating that the first string is being replaced
         by the second string.
         """
-        return f"{ParserHelper.__alert_character}{replace_this_string}{ParserHelper.__alert_character}{with_this_string}{ParserHelper.__alert_character}"
+        return (
+            f"{ParserHelper.__alert_character}{replace_this_string}{ParserHelper.__alert_character}"
+            + f"{with_this_string}{ParserHelper.__alert_character}"
+        )
 
     @staticmethod
     def create_replace_with_nothing_marker(replace_this_string):
         """
         Create a replacement marker of the given string with the noop character.
         """
-        return f"{ParserHelper.__alert_character}{replace_this_string}{ParserHelper.__alert_character}{ParserHelper.replace_noop_character}{ParserHelper.__alert_character}"
+        return (
+            f"{ParserHelper.__alert_character}{replace_this_string}{ParserHelper.__alert_character}"
+            + f"{ParserHelper.replace_noop_character}{ParserHelper.__alert_character}"
+        )
 
     @staticmethod
     def __remove_sequence_from_text(token_text, sequence_to_remove):

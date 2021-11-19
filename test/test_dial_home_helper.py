@@ -155,10 +155,10 @@ def test_dialhome_versions_bad_relative_path():
     assert version_error, "Error should have been logged."
     assert version_error.startswith(
         "AssertionError encountered while determining semantic version: 'Version module file '"
-    ), "Error prefix is not as expected."
+    ), f"Error prefix is not as expected: {version_error}"
     assert version_error.endswith(
         "version.py' does not exist.'"
-    ), "Error suffix is not as expected."
+    ), f"Error suffix is not as expected: {version_error}"
 
 
 def test_dialhome_verify_bad_package_name():
@@ -385,7 +385,7 @@ def test_dialhome_with_day_old_marker_file():
     # Arrange
     dial_home_helper = ZeroVersionDialHomeHelper(PyMarkdownLint().package_name)
     marker_timestamp = int(datetime.datetime.now().timestamp())
-    marker_timestamp -= 60 * 60 * 24
+    marker_timestamp -= 60**2 * 24
     dial_home_helper.refresh_check_marker(marker_timestamp)
 
     # Act
@@ -411,7 +411,7 @@ def test_dialhome_with_seven_day_old_marker_file():
     # Arrange
     dial_home_helper = ZeroVersionDialHomeHelper(PyMarkdownLint().package_name)
     marker_timestamp = int(datetime.datetime.now().timestamp())
-    marker_timestamp -= (60 * 60 * 24 * 7) + 30
+    marker_timestamp -= 60**2 * 24 * 7 + 30
     dial_home_helper.refresh_check_marker(marker_timestamp)
 
     # Act

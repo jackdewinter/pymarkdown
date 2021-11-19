@@ -14,7 +14,6 @@ from pymarkdown.stack_token import LinkDefinitionStackToken
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 
-# pylint: disable=too-few-public-methods
 class LinkReferenceDefinitionHelper:
     """
     Class to helper with the parsing of link reference definitions.
@@ -689,5 +688,64 @@ class LinkReferenceDefinitionHelper:
             parsed_lrd_tuple,
         )
 
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def handle_link_reference_definition_leaf_block(
+        parser_state,
+        outer_processed,
+        position_marker,
+        extracted_whitespace,
+        remaining_line_to_parse,
+        ignore_link_definition_start,
+        pre_tokens,
+    ):
+        """
+        Take care of the processing for link reference definitions.
+        """
+        requeue_line_info, new_tokens = None, []
 
-# pylint: enable=too-few-public-methods
+        POGGER.debug(
+            "handle_link_reference_definition>>pre_tokens>>$<<",
+            pre_tokens,
+        )
+
+        if not outer_processed and not ignore_link_definition_start:
+            POGGER.debug(
+                "plflb-process_link_reference_definition>>outer_processed>>$",
+                position_marker.text_to_parse[position_marker.index_number :],
+            )
+            (
+                outer_processed,
+                _,  # did_complete_lrd,
+                _,  # did_pause_lrd,
+                requeue_line_info,
+                new_tokens,
+            ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
+                parser_state,
+                position_marker,
+                remaining_line_to_parse,
+                extracted_whitespace,
+                parser_state.original_line_to_parse,
+                parser_state.original_stack_depth,
+                parser_state.original_document_depth,
+            )
+            if requeue_line_info and requeue_line_info.lines_to_requeue:
+                outer_processed = True
+                POGGER.debug(
+                    "plflb-process_link_reference_definition>>outer_processed>>$<lines_to_requeue<$<$",
+                    outer_processed,
+                    requeue_line_info.lines_to_requeue,
+                    len(requeue_line_info.lines_to_requeue),
+                )
+            else:
+                POGGER.debug(
+                    "plflb-process_link_reference_definition>>outer_processed>>$<lines_to_requeue<(None)",
+                    outer_processed,
+                )
+
+        POGGER.debug("handle_link_reference_definition>>pre_tokens>>$<<", pre_tokens)
+        pre_tokens.extend(new_tokens)
+        POGGER.debug("handle_link_reference_definition>>pre_tokens>>$<<", pre_tokens)
+        return outer_processed, requeue_line_info
+
+    # pylint: enable=too-many-arguments

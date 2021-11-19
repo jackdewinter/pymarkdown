@@ -26,6 +26,7 @@ class InlineMarkdownToken(MarkdownToken):
         position_marker=None,
         requires_end_token=False,
         can_force_close=True,
+        is_special=False,
     ):
         MarkdownToken.__init__(
             self,
@@ -37,6 +38,7 @@ class InlineMarkdownToken(MarkdownToken):
             position_marker=position_marker,
             can_force_close=can_force_close,
             requires_end_token=requires_end_token,
+            is_special=is_special,
         )
 
 
@@ -550,8 +552,7 @@ class TextMarkdownToken(InlineMarkdownToken):
             self.__token_text,
             self.__extracted_whitespace,
             self.__end_whitespace,
-            self.__is_special,
-        ) = (token_text, extracted_whitespace, end_whitespace, is_special)
+        ) = (token_text, extracted_whitespace, end_whitespace)
         InlineMarkdownToken.__init__(
             self,
             MarkdownToken._token_text,
@@ -559,6 +560,7 @@ class TextMarkdownToken(InlineMarkdownToken):
             position_marker=position_marker,
             line_number=line_number,
             column_number=column_number,
+            is_special=is_special,
         )
         self.__compose_extra_data_field()
 
@@ -567,16 +569,6 @@ class TextMarkdownToken(InlineMarkdownToken):
     def _set_token_text(self, new_text):
         self.__token_text = new_text
         self.__compose_extra_data_field()
-
-    @property
-    def is_special(self):
-        """
-        Returns whether the current token is actually a special subclass.
-
-        This resolves issues above the base class being able to have helper
-        methods to identify the type of token.
-        """
-        return self.__is_special
 
     @property
     def token_text(self):
@@ -687,8 +679,14 @@ class TextMarkdownToken(InlineMarkdownToken):
                 )
 
         if whitespace_to_append is not None:
-            self.__extracted_whitespace = f"{self.__extracted_whitespace}{ParserHelper.newline_character}{whitespace_to_append}"
-        self.__token_text = f"{self.__token_text}{ParserHelper.newline_character}{blank_line_sequence}{prefix_whitespace}{text_to_combine}"
+            self.__extracted_whitespace = (
+                f"{self.__extracted_whitespace}"
+                + f"{ParserHelper.newline_character}{whitespace_to_append}"
+            )
+        self.__token_text = (
+            f"{self.__token_text}{ParserHelper.newline_character}{blank_line_sequence}"
+            + f"{prefix_whitespace}{text_to_combine}"
+        )
         self.__compose_extra_data_field()
         return removed_whitespace
 
@@ -779,4 +777,7 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         """
         Independent of the __str__ function, provide extra information.
         """
-        return f">>active={self.__is_active},repeat={self.__repeat_count},preceding='{self.__preceding_two}',following='{self.__following_two}':{self}"
+        return (
+            f">>active={self.__is_active},repeat={self.__repeat_count},preceding='{self.__preceding_two}',"
+            + f"following='{self.__following_two}':{self}"
+        )

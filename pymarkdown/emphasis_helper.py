@@ -334,13 +334,13 @@ class EmphasisHelper:
             current_token.following_two.ljust(2, ParserHelper.space_character),
         )
 
-        return preceding_two[-1] not in Constants.unicode_whitespace and (
-            preceding_two[-1] not in Constants.punctuation_characters
+        return not Constants.unicode_whitespace.contains(preceding_two[-1]) and (
+            not Constants.punctuation_characters.contains(preceding_two[-1])
             or (
-                preceding_two[-1] in Constants.punctuation_characters
+                Constants.punctuation_characters.contains(preceding_two[-1])
                 and (
-                    following_two[0] in Constants.unicode_whitespace
-                    or following_two[0] in Constants.punctuation_characters
+                    Constants.unicode_whitespace.contains(following_two[0])
+                    or Constants.punctuation_characters.contains(following_two[0])
                 )
             )
         )
@@ -356,13 +356,13 @@ class EmphasisHelper:
             current_token.following_two.ljust(2, ParserHelper.space_character),
         )
 
-        return following_two[0] not in Constants.unicode_whitespace and (
-            following_two[0] not in Constants.punctuation_characters
+        return not Constants.unicode_whitespace.contains(following_two[0]) and (
+            not Constants.punctuation_characters.contains(following_two[0])
             or (
-                following_two[0] in Constants.punctuation_characters
+                Constants.punctuation_characters.contains(following_two[0])
                 and (
-                    preceding_two[-1] in Constants.unicode_whitespace
-                    or preceding_two[-1] in Constants.punctuation_characters
+                    Constants.unicode_whitespace.contains(preceding_two[-1])
+                    or Constants.punctuation_characters.contains(preceding_two[-1])
                 )
             )
         )
@@ -389,7 +389,7 @@ class EmphasisHelper:
                 )
                 is_closer = not is_left_flanking or (
                     is_left_flanking
-                    and following_two[0] in Constants.punctuation_characters
+                    and Constants.punctuation_characters.contains(following_two[0])
                 )
         return is_closer
 
@@ -414,7 +414,7 @@ class EmphasisHelper:
                 )
                 is_opener = not is_right_flanking or (
                     is_right_flanking
-                    and preceding_two[-1] in Constants.punctuation_characters
+                    and Constants.punctuation_characters.contains(preceding_two[-1])
                 )
         return is_opener
 
