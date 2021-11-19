@@ -15,6 +15,8 @@ from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
+# pylint: disable=too-many-lines
+
 
 class ContainerBlockProcessor:
     """
@@ -1700,68 +1702,6 @@ class ContainerBlockProcessor:
 
         return outer_processed
 
-    # pylint: disable=too-many-arguments
-    @staticmethod
-    def __handle_link_reference_definition(
-        parser_state,
-        outer_processed,
-        position_marker,
-        extracted_whitespace,
-        remaining_line_to_parse,
-        ignore_link_definition_start,
-        pre_tokens,
-    ):
-        """
-        Take care of the processing for link reference definitions.
-        """
-        requeue_line_info, new_tokens = None, []
-
-        POGGER.debug(
-            "handle_link_reference_definition>>pre_tokens>>$<<",
-            pre_tokens,
-        )
-
-        if not outer_processed and not ignore_link_definition_start:
-            POGGER.debug(
-                "plflb-process_link_reference_definition>>outer_processed>>$",
-                position_marker.text_to_parse[position_marker.index_number :],
-            )
-            (
-                outer_processed,
-                _,  # did_complete_lrd,
-                _,  # did_pause_lrd,
-                requeue_line_info,
-                new_tokens,
-            ) = LinkReferenceDefinitionHelper.process_link_reference_definition(
-                parser_state,
-                position_marker,
-                remaining_line_to_parse,
-                extracted_whitespace,
-                parser_state.original_line_to_parse,
-                parser_state.original_stack_depth,
-                parser_state.original_document_depth,
-            )
-            if requeue_line_info and requeue_line_info.lines_to_requeue:
-                outer_processed = True
-                POGGER.debug(
-                    "plflb-process_link_reference_definition>>outer_processed>>$<lines_to_requeue<$<$",
-                    outer_processed,
-                    requeue_line_info.lines_to_requeue,
-                    len(requeue_line_info.lines_to_requeue),
-                )
-            else:
-                POGGER.debug(
-                    "plflb-process_link_reference_definition>>outer_processed>>$<lines_to_requeue<(None)",
-                    outer_processed,
-                )
-
-        POGGER.debug("handle_link_reference_definition>>pre_tokens>>$<<", pre_tokens)
-        pre_tokens.extend(new_tokens)
-        POGGER.debug("handle_link_reference_definition>>pre_tokens>>$<<", pre_tokens)
-        return outer_processed, requeue_line_info
-
-    # pylint: enable=too-many-arguments
-
     @staticmethod
     def __handle_block_leaf_tokens(
         parser_state,
@@ -1801,7 +1741,7 @@ class ContainerBlockProcessor:
         (
             outer_processed,
             requeue_line_info,
-        ) = ContainerBlockProcessor.__handle_link_reference_definition(
+        ) = LinkReferenceDefinitionHelper.handle_link_reference_definition_leaf_block(
             parser_state,
             outer_processed,
             position_marker,
@@ -1953,23 +1893,51 @@ class ContainerBlockProcessor:
         )
 
 
-# pylint: disable=too-few-public-methods
-# pylint: disable=too-many-lines
 class ContainerIndices:
     """
     Class to provide for encapsulation on a group of container indices.
     """
 
     def __init__(self, ulist_index, olist_index, block_index):
-        self.ulist_index = ulist_index
-        self.olist_index = olist_index
-        self.block_index = block_index
+        self.__ulist_index = ulist_index
+        self.__olist_index = olist_index
+        self.__block_index = block_index
+
+    @property
+    def ulist_index(self):
+        """
+        Index of the next unordered list element, or -1 if none.
+        """
+        return self.__ulist_index
+
+    @ulist_index.setter
+    def ulist_index(self, value):
+        self.__ulist_index = value
+
+    @property
+    def olist_index(self):
+        """
+        Index of the next ordered list element, or -1 if none.
+        """
+        return self.__olist_index
+
+    @olist_index.setter
+    def olist_index(self, value):
+        self.__olist_index = value
+
+    @property
+    def block_index(self):
+        """
+        Index of the next block quote element, or -1 if none.
+        """
+        return self.__block_index
+
+    @block_index.setter
+    def block_index(self, value):
+        self.__block_index = value
 
     def __str__(self):
         return (
             f"{{ContainerIndices:ulist_index:{self.ulist_index};olist_index:{self.olist_index};"
             + f"block_index:{self.block_index}}}"
         )
-
-
-# pylint: enable=too-few-public-methods

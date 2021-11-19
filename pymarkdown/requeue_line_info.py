@@ -3,7 +3,6 @@ Module to provide a container for lines that need to be requeued.
 """
 
 
-# pylint: disable=too-few-public-methods
 class RequeueLineInfo:
     """
     Class to provide a container for lines that need to be requeued.
@@ -26,6 +25,3 @@ class RequeueLineInfo:
         Whether to ignore the first line as an LRD.
         """
         return self.__force_ignore_first_as_lrd
-
-
-# pylint: enable=too-few-public-methods
