@@ -217,31 +217,14 @@ class TransformToGfm:
             len(actual_tokens),
         )
         for next_token in transform_state.actual_tokens:
-            (
-                transform_state.add_trailing_text,
-                transform_state.add_leading_text,
-                transform_state.next_token,
-            ) = (None, None, None)
-            if (transform_state.actual_token_index + 1) < actual_tokens_size:
-                transform_state.next_token = actual_tokens[
-                    transform_state.actual_token_index + 1
-                ]
-            if next_token.token_name in self.start_token_handlers:
-                start_handler_fn = self.start_token_handlers[next_token.token_name]
-                output_html = start_handler_fn(output_html, next_token, transform_state)
 
-            elif next_token.is_end_token:
-                if next_token.type_name in self.end_token_handlers:
-                    end_handler_fn = self.end_token_handlers[next_token.type_name]
-                    output_html = end_handler_fn(
-                        output_html, next_token, transform_state
-                    )
-                else:
-                    assert (
-                        False
-                    ), f"Markdown token end type {next_token.type_name} not supported."
-            else:
-                assert False, f"Markdown token type {type(next_token)} not supported."
+            output_html = self.__apply_transformation(
+                transform_state,
+                actual_tokens,
+                actual_tokens_size,
+                next_token,
+                output_html,
+            )
 
             POGGER.debug("======")
             POGGER.debug(
@@ -268,6 +251,42 @@ class TransformToGfm:
             output_html = output_html[:-1]
         POGGER.debug("output_html    -->$<--", output_html)
         return output_html
+
+    # pylint: disable=too-many-arguments
+    def __apply_transformation(
+        self,
+        transform_state,
+        actual_tokens,
+        actual_tokens_size,
+        next_token,
+        output_html,
+    ):
+        (
+            transform_state.add_trailing_text,
+            transform_state.add_leading_text,
+            transform_state.next_token,
+        ) = (None, None, None)
+        if (transform_state.actual_token_index + 1) < actual_tokens_size:
+            transform_state.next_token = actual_tokens[
+                transform_state.actual_token_index + 1
+            ]
+        if next_token.token_name in self.start_token_handlers:
+            start_handler_fn = self.start_token_handlers[next_token.token_name]
+            output_html = start_handler_fn(output_html, next_token, transform_state)
+
+        elif next_token.is_end_token:
+            if next_token.type_name in self.end_token_handlers:
+                end_handler_fn = self.end_token_handlers[next_token.type_name]
+                output_html = end_handler_fn(output_html, next_token, transform_state)
+            else:
+                assert (
+                    False
+                ), f"Markdown token end type {next_token.type_name} not supported."
+        else:
+            assert False, f"Markdown token type {type(next_token)} not supported."
+        return output_html
+
+    # pylint: enable=too-many-arguments
 
     @classmethod
     def __apply_trailing_text(cls, output_html, transform_state):

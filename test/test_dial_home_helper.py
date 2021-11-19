@@ -155,10 +155,10 @@ def test_dialhome_versions_bad_relative_path():
     assert version_error, "Error should have been logged."
     assert version_error.startswith(
         "AssertionError encountered while determining semantic version: 'Version module file '"
-    ), "Error prefix is not as expected."
+    ), f"Error prefix is not as expected: {version_error}"
     assert version_error.endswith(
         "version.py' does not exist.'"
-    ), "Error suffix is not as expected."
+    ), f"Error suffix is not as expected: {version_error}"
 
 
 def test_dialhome_verify_bad_package_name():

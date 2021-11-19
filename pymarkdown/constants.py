@@ -19,7 +19,10 @@ class Constants:
         + "\x20\x7f"
     )
 
-    unicode_whitespace = "\x20\x09\x0a\x0c\x0d\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007\u2008\u2009\u200A\u202F\u205F\u3000"
+    unicode_whitespace = (
+        "\x20\x09\x0a\x0c\x0d\u00a0\u1680\u2000\u2001\u2002\u2003\u2004\u2005\u2006\u2007"
+        + "\u2008\u2009\u200A\u202F\u205F\u3000"
+    )
 
     punctuation_characters = (
         # standard ascii punctuation

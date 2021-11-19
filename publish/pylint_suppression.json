@@ -25,8 +25,7 @@
             "too-many-arguments": 2
         },
         "pymarkdown/dial_home_helper.py": {
-            "broad-except": 4,
-            "no-self-use": 1
+            "broad-except": 4
         },
         "pymarkdown/emphasis_helper.py": {
             "too-few-public-methods": 1,
@@ -107,8 +106,7 @@
         "pymarkdown/markdown_token.py": {
             "too-many-public-methods": 1,
             "too-many-instance-attributes": 1,
-            "too-many-arguments": 3,
-            "no-member": 1
+            "too-many-arguments": 3
         },
         "pymarkdown/parser_helper.py": {
             "too-many-public-methods": 1,
@@ -208,20 +206,21 @@
         },
         "pymarkdown/transform_to_gfm.py": {
             "too-many-instance-attributes": 1,
-            "too-few-public-methods": 1
+            "too-few-public-methods": 1,
+            "too-many-arguments": 1
         },
-        "pymarkdown/transform_to_gfm_list_looseness.py": {},
+        "pymarkdown/transform_to_gfm_list_looseness.py": {
+            "too-many-arguments": 1
+        },
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 127,
+        "too-many-arguments": 129,
         "too-many-locals": 38,
         "too-few-public-methods": 17,
         "broad-except": 6,
-        "no-self-use": 1,
         "too-many-instance-attributes": 15,
         "too-many-public-methods": 2,
-        "no-member": 1,
         "invalid-unary-operand-type": 1
     }
 }

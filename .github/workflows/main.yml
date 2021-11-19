@@ -15,27 +15,27 @@ jobs:
         platform: [windows-latest, ubuntu-latest, macos-latest]
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@master
-    - name: Setup Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-    - name: Install PipEnv
-      uses: dschep/install-pipenv-action@v1
-      with:
-        version: 2021.5.29
-    - name: Sync With Repository
-      run: pipenv sync
-    - name: Execute Tests
-      run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage 
-    - name: Report Coverage
-      uses: codecov/codecov-action@v1
-      if: github.event_name != 'schedule'
-      with:
-        file: ./report/coverage.xml
-        name: ${{ matrix.python }} - ${{ matrix.platform }}
-        fail_ci_if_error: true
+      - name: Checkout Repository
+        uses: actions/checkout@master
+      - name: Setup Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install PipEnv
+        uses: dschep/install-pipenv-action@v1
+        with:
+          version: 2021.5.29
+      - name: Sync With Repository
+        run: pipenv sync
+      - name: Execute Tests
+        run: pipenv run pytest --cov-fail-under=90 --cov --cov-branch --cov-report xml:report/coverage.xml --cov-report html:report/coverage
+      - name: Report Coverage
+        uses: codecov/codecov-action@v1
+        if: github.event_name != 'schedule'
+        with:
+          file: ./report/coverage.xml
+          name: ${{ matrix.python }} - ${{ matrix.platform }}
+          fail_ci_if_error: true
   lint:
     strategy:
       matrix:
@@ -43,21 +43,21 @@ jobs:
         platform: [windows-latest]
     runs-on: ${{ matrix.platform }}
     steps:
-    - name: Checkout Repository
-      uses: actions/checkout@master
-    - name: Setup Python 3.8
-      uses: actions/setup-python@v1
-      with:
-        python-version: 3.8
-    - name: Install PipEnv
-      uses: dschep/install-pipenv-action@v1
-    - name: Sync With Repository
-      run: pipenv sync
-    - name: Execute Flake8
-      run: pipenv run flake8 --exclude dist,build
-    - name: Execute PyLint on Source
-      run: pipenv run pylint --rcfile=setup.cfg ./pymarkdown ./pymarkdown/extensions ./pymarkdown/plugins
-    - name: Execute PyLint on Tests
-      run: pipenv run pylint --rcfile=setup.cfg ./test
-    - name: Execute PyMarkdown on Current Docs
-      run: pipenv run python main.py --config ./clean.json scan . ./docs
+      - name: Checkout Repository
+        uses: actions/checkout@master
+      - name: Setup Python 3.8
+        uses: actions/setup-python@v1
+        with:
+          python-version: 3.8
+      - name: Install PipEnv
+        uses: dschep/install-pipenv-action@v1
+      - name: Sync With Repository
+        run: pipenv sync
+      - name: Execute Flake8
+        run: pipenv run flake8 --exclude dist,build
+      - name: Execute PyLint on Source
+        run: pipenv run pylint --rcfile=setup.cfg ./pymarkdown ./pymarkdown/extensions ./pymarkdown/plugins
+      - name: Execute PyLint on Tests
+        run: pipenv run pylint --rcfile=setup.cfg ./test
+      - name: Execute PyMarkdown on Current Docs
+        run: pipenv run python main.py --config ./clean.json scan . ./docs

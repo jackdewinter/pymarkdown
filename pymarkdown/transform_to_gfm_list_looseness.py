@@ -27,50 +27,18 @@ class TransformToGfmListLooseness:
                 False,
                 actual_tokens[current_token_index],
             )
-            if current_token.is_list_start:
-                POGGER.debug("cll>>start list>>$", current_token)
-                check_me, stack_count = TransformToGfmListLooseness.__handle_list_start(
-                    stack_count
-                )
-            elif current_token.is_new_list_item:
-                POGGER.debug("cll>>new list item>>$", current_token)
-                check_me = TransformToGfmListLooseness.__handle_new_list_item(
-                    current_token, stack_count
-                )
-            elif current_token.is_block_quote_start:
-                POGGER.debug("cll>>start block quote>>$", current_token)
-                stack_count = TransformToGfmListLooseness.__handle_block_quote_start(
-                    stack_count
-                )
-            elif current_token.is_block_quote_end:
-                POGGER.debug("cll>>end block quote>>$", current_token)
-                stack_count = TransformToGfmListLooseness.__handle_block_quote_end(
-                    stack_count
-                )
-            elif current_token.is_list_end:
-                POGGER.debug("cll>>end list>>$", current_token)
-                (
-                    stop_me,
-                    is_loose,
-                    stack_count,
-                ) = TransformToGfmListLooseness.__handle_list_end(
-                    stack_count,
-                    is_loose,
-                    stop_me,
-                    actual_tokens,
-                    current_token_index,
-                )
-            elif actual_tokens[current_token_index - 1].is_blank_line:
-                check_me = TransformToGfmListLooseness.__handle_blank_line(
-                    current_token, stack_count, actual_tokens, current_token_index
-                )
-
-            POGGER.debug(
-                ">>stack_count>>$>>#$:$>>check=$",
-                stack_count,
-                current_token_index,
-                actual_tokens[current_token_index],
+            (
                 check_me,
+                stack_count,
+                stop_me,
+                is_loose,
+            ) = TransformToGfmListLooseness.__calculate_list_looseness_for_containers(
+                current_token,
+                stack_count,
+                is_loose,
+                stop_me,
+                actual_tokens,
+                current_token_index,
             )
             if check_me:
                 POGGER.debug("check-->?")
@@ -94,6 +62,66 @@ class TransformToGfmListLooseness:
         )
         next_token.is_loose = is_loose
         return is_loose
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __calculate_list_looseness_for_containers(
+        current_token,
+        stack_count,
+        is_loose,
+        stop_me,
+        actual_tokens,
+        current_token_index,
+    ):
+        check_me = False
+        if current_token.is_list_start:
+            POGGER.debug("cll>>start list>>$", current_token)
+            check_me, stack_count = TransformToGfmListLooseness.__handle_list_start(
+                stack_count
+            )
+        elif current_token.is_new_list_item:
+            POGGER.debug("cll>>new list item>>$", current_token)
+            check_me = TransformToGfmListLooseness.__handle_new_list_item(
+                current_token, stack_count
+            )
+        elif current_token.is_block_quote_start:
+            POGGER.debug("cll>>start block quote>>$", current_token)
+            stack_count = TransformToGfmListLooseness.__handle_block_quote_start(
+                stack_count
+            )
+        elif current_token.is_block_quote_end:
+            POGGER.debug("cll>>end block quote>>$", current_token)
+            stack_count = TransformToGfmListLooseness.__handle_block_quote_end(
+                stack_count
+            )
+        elif current_token.is_list_end:
+            POGGER.debug("cll>>end list>>$", current_token)
+            (
+                stop_me,
+                is_loose,
+                stack_count,
+            ) = TransformToGfmListLooseness.__handle_list_end(
+                stack_count,
+                is_loose,
+                stop_me,
+                actual_tokens,
+                current_token_index,
+            )
+        elif actual_tokens[current_token_index - 1].is_blank_line:
+            check_me = TransformToGfmListLooseness.__handle_blank_line(
+                current_token, stack_count, actual_tokens, current_token_index
+            )
+
+        POGGER.debug(
+            ">>stack_count>>$>>#$:$>>check=$",
+            stack_count,
+            current_token_index,
+            actual_tokens[current_token_index],
+            check_me,
+        )
+        return check_me, stack_count, stop_me, is_loose
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __handle_list_start(stack_count):
