@@ -38,41 +38,41 @@ class RuleMd037(RulePlugin):
         self.__start_emphasis_token = None
         self.__emphasis_token_list = []
 
+    def __handle_start_emphasis(self, context, token):
+        if (
+            token.is_paragraph_end
+            or token.is_setext_heading_end
+            or token.is_atx_heading_end
+        ):
+            del self.__block_stack[-1]
+            self.__start_emphasis_token = None
+            self.__emphasis_token_list = []
+        elif (
+            token.is_text and token.token_text == self.__start_emphasis_token.token_text
+        ):
+            assert self.__emphasis_token_list
+            first_capture_token = self.__emphasis_token_list[0]
+            did_first_start_with_space = (
+                first_capture_token.is_text and first_capture_token.token_text[0] == " "
+            )
+            last_capture_token = self.__emphasis_token_list[-1]
+            did_last_end_with_space = (
+                last_capture_token.is_text and last_capture_token.token_text[-1] == " "
+            )
+            if did_first_start_with_space or did_last_end_with_space:
+                self.report_next_token_error(context, self.__start_emphasis_token)
+
+            self.__start_emphasis_token = None
+            self.__emphasis_token_list = []
+        else:
+            self.__emphasis_token_list.append(token)
+
     def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
         if self.__start_emphasis_token:
-            if (
-                token.is_paragraph_end
-                or token.is_setext_heading_end
-                or token.is_atx_heading_end
-            ):
-                del self.__block_stack[-1]
-                self.__start_emphasis_token = None
-                self.__emphasis_token_list = []
-            elif (
-                token.is_text
-                and token.token_text == self.__start_emphasis_token.token_text
-            ):
-                assert self.__emphasis_token_list
-                first_capture_token = self.__emphasis_token_list[0]
-                did_first_start_with_space = (
-                    first_capture_token.is_text
-                    and first_capture_token.token_text[0] == " "
-                )
-                last_capture_token = self.__emphasis_token_list[-1]
-                did_last_end_with_space = (
-                    last_capture_token.is_text
-                    and last_capture_token.token_text[-1] == " "
-                )
-                if did_first_start_with_space or did_last_end_with_space:
-                    self.report_next_token_error(context, self.__start_emphasis_token)
-
-                self.__start_emphasis_token = None
-                self.__emphasis_token_list = []
-            else:
-                self.__emphasis_token_list.append(token)
+            self.__handle_start_emphasis(context, token)
         elif token.is_paragraph or token.is_setext_heading or token.is_atx_heading:
             self.__block_stack.append(token)
         elif token.is_paragraph_end or token.is_setext_heading_end:

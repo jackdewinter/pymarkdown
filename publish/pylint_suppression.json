@@ -178,7 +178,7 @@
             "too-many-locals": 1
         },
         "pymarkdown/plugins/rule_md_044.py": {
-            "too-many-arguments": 3
+            "too-many-arguments": 4
         },
         "pymarkdown/plugins/rule_md_045.py": {},
         "pymarkdown/plugins/rule_md_046.py": {},
@@ -206,7 +206,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 129,
+        "too-many-arguments": 130,
         "too-many-locals": 38,
         "too-few-public-methods": 7,
         "no-self-argument": 1,

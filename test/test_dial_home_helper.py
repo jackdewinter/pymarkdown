@@ -385,7 +385,7 @@ def test_dialhome_with_day_old_marker_file():
     # Arrange
     dial_home_helper = ZeroVersionDialHomeHelper(PyMarkdownLint().package_name)
     marker_timestamp = int(datetime.datetime.now().timestamp())
-    marker_timestamp -= 60**2 * 24
+    marker_timestamp -= 60 ** 2 * 24
     dial_home_helper.refresh_check_marker(marker_timestamp)
 
     # Act
@@ -411,7 +411,7 @@ def test_dialhome_with_seven_day_old_marker_file():
     # Arrange
     dial_home_helper = ZeroVersionDialHomeHelper(PyMarkdownLint().package_name)
     marker_timestamp = int(datetime.datetime.now().timestamp())
-    marker_timestamp -= 60**2 * 24 * 7 + 30
+    marker_timestamp -= 60 ** 2 * 24 * 7 + 30
     dial_home_helper.refresh_check_marker(marker_timestamp)
 
     # Act
