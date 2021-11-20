@@ -191,7 +191,6 @@ class TransformToMarkdown:
                 handler_instance.token_name
             ] = end_token_handler
 
-    # pylint: disable=too-many-locals, too-many-branches, too-many-statements
     def transform(self, actual_tokens):  # noqa: C901
         """
         Transform the incoming token stream back into Markdown.
@@ -271,8 +270,6 @@ class TransformToMarkdown:
         assert not self.block_stack
         assert not self.container_token_stack
         return transformed_data, avoid_processing
-
-    # pylint: enable=too-many-locals, too-many-branches, too-many-statements
 
     def __look_for_last_block_token(self):
         found_block_token = None
@@ -470,7 +467,7 @@ class TransformToMarkdown:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-branches, unused-argument, too-many-boolean-expressions, too-many-locals, too-many-statements
+    # pylint: disable=too-many-arguments, too-many-branches, too-many-boolean-expressions, too-many-locals, too-many-statements
     def __perform_container_post_processing_lists(
         self,
         current_token,
@@ -612,7 +609,7 @@ class TransformToMarkdown:
             continue_sequence,
         )
 
-    # pylint: enable=too-many-arguments, too-many-branches, unused-argument, too-many-boolean-expressions, too-many-locals, too-many-statements
+    # pylint: enable=too-many-arguments, too-many-branches, too-many-boolean-expressions, too-many-locals, too-many-statements
 
     # pylint: disable=too-many-arguments
     def __perform_container_post_processing(
@@ -783,6 +780,32 @@ class TransformToMarkdown:
         )
         return new_data
 
+    def __merge_xx_with_last_list_block(
+        self, last_list_block, top_block_stack_token, next_token
+    ):
+        additional_whitespace = ""
+        block_token_index = self.container_token_stack.index(top_block_stack_token)
+        list_token_index = self.container_token_stack.index(last_list_block)
+        print(
+            f"block_token_index>{block_token_index}, list_token_index={list_token_index}"
+        )
+        if list_token_index > block_token_index:
+            extra_count = last_list_block.indent_level - len(
+                last_list_block.extracted_whitespace
+            )
+            print(f"extra_count>{extra_count}")
+            print(f"next_token>{ParserHelper.make_value_visible(next_token)}")
+            if (
+                not next_token.is_blank_line
+                and not next_token.is_new_list_item
+                and not next_token.is_list_end
+            ):
+                additional_whitespace = ParserHelper.repeat_string(
+                    ParserHelper.space_character, extra_count
+                )
+                print(f"additional_whitespace->{additional_whitespace}<")
+        return additional_whitespace
+
     def __merge_xx(self, new_data, top_block_stack_token, last_list_block, next_token):
         """
         Take care of a merge for a new leaf line with leading spaces in the container
@@ -803,26 +826,9 @@ class TransformToMarkdown:
         print(f"last_list_block>{ParserHelper.make_value_visible(last_list_block)}")
         additional_whitespace = ""
         if last_list_block:
-            block_token_index = self.container_token_stack.index(top_block_stack_token)
-            list_token_index = self.container_token_stack.index(last_list_block)
-            print(
-                f"block_token_index>{block_token_index}, list_token_index={list_token_index}"
+            additional_whitespace = self.__merge_xx_with_last_list_block(
+                last_list_block, top_block_stack_token, next_token
             )
-            if list_token_index > block_token_index:
-                extra_count = last_list_block.indent_level - len(
-                    last_list_block.extracted_whitespace
-                )
-                print(f"extra_count>{extra_count}")
-                print(f"next_token>{ParserHelper.make_value_visible(next_token)}")
-                if (
-                    not next_token.is_blank_line
-                    and not next_token.is_new_list_item
-                    and not next_token.is_list_end
-                ):
-                    additional_whitespace = ParserHelper.repeat_string(
-                        ParserHelper.space_character, extra_count
-                    )
-                    print(f"additional_whitespace->{additional_whitespace}<")
 
         parts_to_merge = [new_data]
         for i in range(1, len(split_new_data)):
@@ -852,7 +858,7 @@ class TransformToMarkdown:
         print(f"parts_to_merge>>{parts_to_merge}<<")
         return "".join(parts_to_merge)
 
-    # pylint: disable=too-many-arguments, too-many-branches, too-many-statements, too-many-locals
+    # pylint: disable=too-many-arguments, too-many-branches, too-many-locals
     def __merge_with_container_data(
         self,
         new_data,
@@ -944,9 +950,8 @@ class TransformToMarkdown:
         print(f"mwcd:>>new_data>>{ParserHelper.make_value_visible(new_data)}<<")
         return new_data, delayed_continue
 
-    # pylint: enable=too-many-arguments, too-many-branches, too-many-statements, too-many-locals
+    # pylint: enable=too-many-arguments, too-many-branches, too-many-locals
 
-    # pylint: disable=unused-argument
     def __rehydrate_paragraph(self, current_token, previous_token):
         """
         Rehydrate the paragraph block from the token.
@@ -1003,9 +1008,6 @@ class TransformToMarkdown:
 
         return extracted_whitespace
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_paragraph_end(self, current_token, previous_token, next_token):
         """
         Rehydrate the end of the paragraph block from the token.
@@ -1026,8 +1028,6 @@ class TransformToMarkdown:
         ), f"rehydrate_index={rehydrate_index};expected_rehydrate_index={expected_rehydrate_index}"
         return f"{top_stack_token.final_whitespace}{ParserHelper.newline_character}"
 
-    # pylint: enable=unused-argument
-
     def __rehydrate_blank_line(self, current_token, previous_token):
         """
         Rehydrate the blank line from the token.
@@ -1042,7 +1042,6 @@ class TransformToMarkdown:
 
         return f"{extra_newline_after_text_token}{current_token.extracted_whitespace}{ParserHelper.newline_character}"
 
-    # pylint: disable=unused-argument
     def __rehydrate_indented_code_block(self, current_token, previous_token):
         """
         Rehydrate the indented code block from the token.
@@ -1052,9 +1051,6 @@ class TransformToMarkdown:
         self.block_stack.append(current_token)
         return ""
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_indented_code_block_end(
         self, current_token, previous_token, next_token
     ):
@@ -1066,9 +1062,6 @@ class TransformToMarkdown:
         del self.block_stack[-1]
         return ""
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_html_block(self, current_token, previous_token):
         """
         Rehydrate the html block from the token.
@@ -1078,21 +1071,14 @@ class TransformToMarkdown:
         self.block_stack.append(current_token)
         return ""
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_html_block_end(self, current_token, previous_token, next_token):
         """
         Rehydrate the end of the html block from the token.
         """
-        _ = (current_token, previous_token, next_token)
+        return self.__rehydrate_indented_code_block_end(
+            current_token, previous_token, next_token
+        )
 
-        del self.block_stack[-1]
-        return ""
-
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_fenced_code_block(self, current_token, previous_token):
         """
         Rehydrate the fenced code block from the token.
@@ -1114,8 +1100,6 @@ class TransformToMarkdown:
         ]
 
         return "".join(code_block_start_parts)
-
-    # pylint: enable=unused-argument
 
     def __rehydrate_fenced_code_block_end(
         self, current_token, previous_token, next_token
@@ -1149,7 +1133,6 @@ class TransformToMarkdown:
             else ""
         )
 
-    # pylint: disable=unused-argument
     def __rehydrate_block_quote(
         self, current_token, previous_token, next_token, transformed_data
     ):
@@ -1194,10 +1177,7 @@ class TransformToMarkdown:
             ]
         return selected_leading_sequence, ""
 
-    # pylint: enable=unused-argument
-
     # pylint: disable=too-many-arguments
-    # pylint: disable=unused-argument
     @classmethod
     def __perform_container_post_processing_block_quote(
         cls,
@@ -1280,7 +1260,6 @@ class TransformToMarkdown:
             continue_sequence,
         )
 
-    # pylint: enable=unused-argument
     # pylint: enable=too-many-arguments
 
     def __rehydrate_list_start(
@@ -1371,7 +1350,6 @@ class TransformToMarkdown:
             else ""
         )
 
-    # pylint: disable=unused-argument
     def __rehydrate_block_quote_end(self, current_token, actual_tokens, token_index):
 
         text_to_add, continue_sequence, old_line_number = (
@@ -1434,13 +1412,11 @@ class TransformToMarkdown:
 
         return text_to_add, continue_sequence, continue_sequence
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_list_start_end(self, current_token, actual_tokens, token_index):
         """
         Rehydrate the ordered list end token.
         """
+        _ = actual_tokens, token_index
         del self.container_token_stack[-1]
         continue_sequence, leading_spaces_index, expected_leading_spaces_index = (
             self.__reset_container_continue_sequence(),
@@ -1456,9 +1432,6 @@ class TransformToMarkdown:
         )
         return "", continue_sequence, continue_sequence
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_next_list_item(
         self, current_token, previous_token, next_token, transformed_data
     ):
@@ -1494,8 +1467,6 @@ class TransformToMarkdown:
 
         return start_sequence, continue_sequence
 
-    # pylint: enable=unused-argument
-
     def __insert_leading_whitespace_at_newlines(self, text_to_modify):
         """
         Deal with re-inserting any removed whitespace at the starts of lines.
@@ -1523,7 +1494,6 @@ class TransformToMarkdown:
                 )
         return text_to_modify
 
-    # pylint: disable=unused-argument
     def __rehydrate_inline_image(self, current_token, previous_token):
         """
         Rehydrate the image text from the token.
@@ -1539,9 +1509,6 @@ class TransformToMarkdown:
         print(f">>>>>>>>:{ParserHelper.make_value_visible(rehydrated_text)}:<<<<<")
         return self.__insert_leading_whitespace_at_newlines(rehydrated_text)
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_inline_link(self, current_token, previous_token):
         """
         Rehydrate the start of the link from the token.
@@ -1554,20 +1521,14 @@ class TransformToMarkdown:
         )
         return self.__insert_leading_whitespace_at_newlines(rehydrated_text)
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_inline_link_end(self, current_token, previous_token, next_token):
         """
         Rehydrate the end of the link from the token.
         """
-        _ = (current_token, previous_token, next_token)
-        del self.block_stack[-1]
-        return ""
+        return self.__rehydrate_indented_code_block_end(
+            current_token, previous_token, next_token
+        )
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     @classmethod
     def __rehydrate_link_reference_definition(cls, current_token, previous_token):
         """
@@ -1590,9 +1551,6 @@ class TransformToMarkdown:
 
         return "".join(link_def_parts)
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_atx_heading(self, current_token, previous_token):
         """
         Rehydrate the atx heading block from the token.
@@ -1602,9 +1560,6 @@ class TransformToMarkdown:
         self.block_stack.append(current_token)
         return f'{current_token.extracted_whitespace}{ParserHelper.repeat_string("#", current_token.hash_count)}'
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_atx_heading_end(self, current_token, previous_token, next_token):
         """
         Rehydrate the end of the atx heading block from the token.
@@ -1625,9 +1580,6 @@ class TransformToMarkdown:
             ]
         )
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_setext_heading(self, current_token, previous_token):
         """
         Rehydrate the setext heading from the token.
@@ -1637,9 +1589,6 @@ class TransformToMarkdown:
         self.block_stack.append(current_token)
         return current_token.extracted_whitespace
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_setext_heading_end(self, current_token, previous_token, next_token):
         """
         Rehydrate the end of the setext heading block from the token.
@@ -1661,9 +1610,6 @@ class TransformToMarkdown:
             ]
         )
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_text(self, current_token, previous_token):
         """
         Rehydrate the text from the token.
@@ -1717,9 +1663,6 @@ class TransformToMarkdown:
         )
         return "".join([prefix_text, leading_whitespace, main_text, extra_line])
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_hard_break(self, current_token, previous_token):
         """
         Rehydrate the hard break text from the token.
@@ -1739,9 +1682,6 @@ class TransformToMarkdown:
 
         return "" if self.block_stack[-1].is_inline_link else leading_whitespace
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_inline_emphaisis(self, current_token, previous_token):
         """
         Rehydrate the emphasis text from the token.
@@ -1756,9 +1696,6 @@ class TransformToMarkdown:
             )
         )
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_inline_emphaisis_end(
         self, current_token, previous_token, next_token
     ):
@@ -1776,9 +1713,6 @@ class TransformToMarkdown:
             )
         )
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_inline_uri_autolink(self, current_token, previous_token):
         """
         Rehydrate the uri autolink from the token.
@@ -1791,9 +1725,6 @@ class TransformToMarkdown:
             else f"<{current_token.autolink_text}>"
         )
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_inline_email_autolink(self, current_token, previous_token):
         """
         Rehydrate the email autolink from the token.
@@ -1806,9 +1737,6 @@ class TransformToMarkdown:
             else f"<{current_token.autolink_text}>"
         )
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_inline_raw_html(self, current_token, previous_token):
         """
         Rehydrate the email raw html from the token.
@@ -1829,9 +1757,6 @@ class TransformToMarkdown:
             print(f"raw_html>>after>>{ParserHelper.make_value_visible(raw_text)}")
         return f"<{raw_text}>"
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     def __rehydrate_inline_code_span(self, current_token, previous_token):
         """
         Rehydrate the code span data from the token.
@@ -1885,9 +1810,6 @@ class TransformToMarkdown:
             ]
         )
 
-    # pylint: enable=unused-argument
-
-    # pylint: disable=unused-argument
     @classmethod
     def __rehydrate_thematic_break(cls, current_token, previous_token):
         """
@@ -1902,8 +1824,6 @@ class TransformToMarkdown:
                 ParserHelper.newline_character,
             ]
         )
-
-    # pylint: enable=unused-argument
 
     def __reconstitute_paragraph_text(self, main_text, current_token):
         """
@@ -1943,6 +1863,38 @@ class TransformToMarkdown:
         )
         return f"{recombined_text}{ParserHelper.newline_character}", "", ""
 
+    # pylint: disable=unused-private-member
+    @classmethod
+    def __reconstitute_setext_text_item(
+        cls,
+        text_part_index,
+        text_part_value,
+        rejoined_token_text,
+        split_parent_whitespace_text,
+    ):
+        ws_prefix_text = ""
+        ws_suffix_text = ""
+        if split_parent_whitespace_text[text_part_index]:
+            split_setext_text = split_parent_whitespace_text[text_part_index].split(
+                ParserHelper.whitespace_split_character
+            )
+            split_setext_text_size = len(split_setext_text)
+            if split_setext_text_size == 1:
+                if text_part_index == 0:
+                    ws_suffix_text = split_setext_text[0]
+                else:
+                    ws_prefix_text = split_setext_text[0]
+            else:
+                assert split_setext_text_size == 2
+                ws_prefix_text = split_setext_text[0]
+                ws_suffix_text = split_setext_text[1]
+
+        rejoined_token_text.append(
+            "".join([ws_prefix_text, text_part_value, ws_suffix_text])
+        )
+
+    # pylint: enable=unused-private-member
+
     @classmethod
     def __reconstitute_setext_text(cls, main_text, current_token):
         """
@@ -1960,25 +1912,11 @@ class TransformToMarkdown:
 
             rejoined_token_text = []
             for text_part_index, text_part_value in enumerate(split_token_text):
-                ws_prefix_text = ""
-                ws_suffix_text = ""
-                if split_parent_whitespace_text[text_part_index]:
-                    split_setext_text = split_parent_whitespace_text[
-                        text_part_index
-                    ].split(ParserHelper.whitespace_split_character)
-                    split_setext_text_size = len(split_setext_text)
-                    if split_setext_text_size == 1:
-                        if text_part_index == 0:
-                            ws_suffix_text = split_setext_text[0]
-                        else:
-                            ws_prefix_text = split_setext_text[0]
-                    else:
-                        assert split_setext_text_size == 2
-                        ws_prefix_text = split_setext_text[0]
-                        ws_suffix_text = split_setext_text[1]
-
-                rejoined_token_text.append(
-                    "".join([ws_prefix_text, text_part_value, ws_suffix_text])
+                cls.__reconstitute_setext_text_item(
+                    text_part_index,
+                    text_part_value,
+                    rejoined_token_text,
+                    split_parent_whitespace_text,
                 )
 
             main_text = ParserHelper.newline_character.join(rejoined_token_text)

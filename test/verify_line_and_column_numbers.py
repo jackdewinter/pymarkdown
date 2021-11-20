@@ -519,7 +519,6 @@ def __xx(current_block_token, token_stack):
                 token_stack[i].leading_text_index += 1
 
 
-# pylint: disable=too-many-branches, too-many-statements
 def __validate_same_line(
     container_block_stack, current_token, current_position, last_token, last_position
 ):
@@ -556,9 +555,6 @@ def __validate_same_line(
             )
         else:
             assert current_position.index_number == last_token.indent_level + 1
-
-
-# pylint: enable=too-many-branches, too-many-statements
 
 
 # pylint: disable=too-many-branches, too-many-statements,too-many-locals,too-many-arguments
@@ -1770,7 +1766,7 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
 
 # pylint: enable=too-many-branches, too-many-statements, too-many-arguments, too-many-locals
 
-# pylint: disable=too-many-locals, too-many-branches, too-many-statements
+# pylint: disable=too-many-branches, too-many-statements
 def __verify_next_inline_inline_image(  # noqa: C901
     last_token, previous_inline_token, estimated_line_number, estimated_column_number
 ):
@@ -1925,7 +1921,7 @@ def __verify_next_inline_inline_image(  # noqa: C901
     return estimated_line_number, estimated_column_number
 
 
-# pylint: enable=too-many-locals, too-many-branches, too-many-statements
+# pylint: enable=too-many-branches, too-many-statements
 
 
 def __verify_next_inline_autolink(
@@ -1958,7 +1954,7 @@ def __verify_next_inline_raw_html(
     return estimated_line_number + delta_line_number, estimated_column_number
 
 
-# pylint: disable=unused-argument,too-many-arguments
+# pylint: disable=too-many-arguments
 def __verify_next_inline_hard_break(
     last_token,
     previous_inline_token,
@@ -2016,7 +2012,7 @@ def __verify_next_inline_hard_break(
     return estimated_line_number + 1, new_column_number
 
 
-# pylint: enable=unused-argument,too-many-arguments
+# pylint: enable=too-many-arguments
 
 
 def __verify_next_inline_code_span(
@@ -2273,7 +2269,6 @@ def __handle_last_token_text(
     return inline_height
 
 
-# pylint: disable=unused-argument
 def __handle_last_token_end_link(
     last_block_token,
     second_last_inline_token,
@@ -2302,10 +2297,6 @@ def __handle_last_token_end_link(
     )
 
 
-# pylint: enable=unused-argument
-
-
-# pylint: disable=unused-argument
 def __handle_last_token_image(
     last_block_token,
     second_last_inline_token,
@@ -2332,10 +2323,6 @@ def __handle_last_token_image(
     return inline_height + 1 if last_block_token.is_setext_heading else inline_height
 
 
-# pylint: enable=unused-argument
-
-
-# pylint: disable=unused-argument
 def __handle_last_token_code_span(
     last_block_token,
     second_last_inline_token,
@@ -2353,10 +2340,6 @@ def __handle_last_token_code_span(
     return inline_height + 1 if last_block_token.is_setext_heading else inline_height
 
 
-# pylint: enable=unused-argument
-
-
-# pylint: disable=unused-argument
 def __handle_last_token_autolink(
     last_block_token,
     second_last_inline_token,
@@ -2368,10 +2351,6 @@ def __handle_last_token_autolink(
     return 1 if last_block_token.is_setext_heading else 0
 
 
-# pylint: enable=unused-argument
-
-
-# pylint: disable=unused-argument
 def __handle_last_token_raw_html(
     last_block_token,
     second_last_inline_token,
@@ -2384,10 +2363,6 @@ def __handle_last_token_raw_html(
     return inline_height + 1 if last_block_token.is_setext_heading else inline_height
 
 
-# pylint: enable=unused-argument
-
-
-# pylint: disable=unused-argument
 def __handle_last_token_end_emphasis(
     last_block_token,
     second_last_inline_token,
@@ -2399,10 +2374,6 @@ def __handle_last_token_end_emphasis(
     return 1 if current_token and current_token.is_setext_heading_end else 0
 
 
-# pylint: enable=unused-argument
-
-
-# pylint: disable=unused-argument
 def __handle_last_token_blank_line(
     last_block_token,
     second_last_inline_token,
@@ -2436,10 +2407,6 @@ def __handle_last_token_blank_line(
     return inline_height
 
 
-# pylint: enable=unused-argument
-
-
-# pylint: disable=too-many-arguments
 def __verify_last_inline(
     last_block_token,
     current_block_token,
@@ -2545,8 +2512,6 @@ def __verify_last_inline(
         inline_end_line_number == expected_end_line_number
     ), f"Expected line number '{expected_end_line_number}' does not equal computed line number '{inline_end_line_number}'."
 
-
-# pylint: enable=too-many-arguments
 
 # pylint: disable=too-many-branches, too-many-arguments, too-many-statements, too-many-locals, too-many-nested-blocks
 def __verify_inline(  # noqa: C901

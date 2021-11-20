@@ -1,11 +1,6 @@
 # pylint: disable=missing-module-docstring
-# pylint: disable=missing-class-docstring
 # pylint: disable=missing-function-docstring
 # pylint: disable=invalid-name
-# pylint: disable=wrong-import-position
-# pylint: disable=consider-using-enumerate
-# pylint: disable=no-self-use
-# pylint: disable=wrong-import-order
 import timeit
 
 import pytest
@@ -88,10 +83,5 @@ def xtest_block_quotes_extra_perf3():
 
 
 # pylint: enable=missing-module-docstring
-# pylint: enable=missing-class-docstring
 # pylint: enable=missing-function-docstring
 # pylint: enable=invalid-name
-# pylint: enable=wrong-import-position
-# pylint: enable=consider-using-enumerate
-# pylint: enable=no-self-use
-# pylint: enable=wrong-import-order

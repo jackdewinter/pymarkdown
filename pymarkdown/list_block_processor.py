@@ -345,6 +345,18 @@ class ListBlockProcessor:
             is_sub_list = start_index >= parser_state.token_stack[-2].indent_level
         return is_first_item_in_list, is_sub_list
 
+    @staticmethod
+    def __get_list_functions(is_ulist):
+        if is_ulist:
+            POGGER.debug("hlb>>searching for ulist")
+            is_start_fn = ListBlockProcessor.is_ulist_start
+            create_token_fn = ListBlockProcessor.__handle_list_block_unordered
+        else:
+            POGGER.debug("hlb>>searching for olist")
+            is_start_fn = ListBlockProcessor.is_olist_start
+            create_token_fn = ListBlockProcessor.__handle_list_block_ordered
+        return is_start_fn, create_token_fn
+
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def handle_list_block(
@@ -377,14 +389,9 @@ class ListBlockProcessor:
 
         if not did_process:
 
-            if is_ulist:
-                POGGER.debug("hlb>>searching for ulist")
-                is_start_fn = ListBlockProcessor.is_ulist_start
-                create_token_fn = ListBlockProcessor.__handle_list_block_unordered
-            else:
-                POGGER.debug("hlb>>searching for olist")
-                is_start_fn = ListBlockProcessor.is_olist_start
-                create_token_fn = ListBlockProcessor.__handle_list_block_ordered
+            is_start_fn, create_token_fn = ListBlockProcessor.__get_list_functions(
+                is_ulist
+            )
 
             (
                 started_ulist,
