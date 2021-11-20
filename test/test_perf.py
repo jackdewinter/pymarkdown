@@ -44,23 +44,15 @@ def fred():
     g = "1"
     h = "yyyyy"
     hh = "yyyyy33"
-    i = "".join([f, g, h, hh])
-    return i
+    return "".join([f, g, h, hh])
 
 
 def barney():
-    f = "this is a test!"
-    g = "1"
-    h = "yyyyy"
-    hh = "yyyyy33"
-    i = f"{f}{g}{h}{hh}"
-    return i
+    return f'this is a test!1yyyyyyyyyy33'
 
 
 def xtest_block_quotes_extra_perf3x():
-    a = "a"
-    b = 1
-    c = f"{a}{b}"
+    c = f'a1'
     assert c == "a1"
 
 
@@ -68,15 +60,15 @@ def xtest_block_quotes_extra_perf3x():
 def xtest_block_quotes_extra_perf3():
 
     assert fred() == barney()
-    for y in range(0, 5):
+    for _ in range(5):
         xx = timeit.timeit("barney()", globals=globals(), number=100)
-    for y in range(0, 5):
+    for _ in range(5):
         xx = timeit.timeit("fred()", globals=globals(), number=100)
 
-    for y in range(0, 5):
+    for y in range(5):
         xx = timeit.timeit("barney()", globals=globals(), number=10000000)
         print(str(xx) + ">>" + str(y))
-    for y in range(0, 5):
+    for y in range(5):
         xx = timeit.timeit("fred()", globals=globals(), number=10000000)
         print(str(xx) + ">>" + str(y))
     assert False

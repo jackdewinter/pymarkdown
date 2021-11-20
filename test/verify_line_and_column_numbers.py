@@ -572,8 +572,6 @@ def __validate_new_line(  # noqa: C901
     if had_tab:
         return False
 
-    did_x = False
-
     print(
         f">>container_block_stack>>={ParserHelper.make_value_visible(container_block_stack)}"
     )
@@ -669,9 +667,8 @@ def __validate_new_line(  # noqa: C901
                     indent_level = (
                         indent_level - len(selected_prefix) + current_token_block_indent
                     )
-                else:
-                    if current_token_block_indent <= indent_level:
-                        indent_level -= current_token_block_indent
+                elif current_token_block_indent <= indent_level:
+                    indent_level -= current_token_block_indent
                 print(f">>indent_level>>{indent_level}<")
 
             init_ws += indent_level
@@ -686,51 +683,6 @@ def __validate_new_line(  # noqa: C901
                 increment_index=False
             )
             init_ws += len(next_leading_space_part)
-    elif container_block_stack and current_token.is_new_list_item:
-        print(">>__vnl->li-ish")
-        assert container_block_stack[-1] == current_token
-        if len(container_block_stack) > 1:
-            init_ws = len(current_token.extracted_whitespace)
-    elif container_block_stack and current_token.is_blank_line:
-        print(">>__vnl->blank-ish")
-        print(f">>current_token>>{ParserHelper.make_value_visible(current_token)}")
-        print(
-            f">>container_block_stack[-1]>>{ParserHelper.make_value_visible(container_block_stack[-1])}"
-        )
-        print(f">>top_block_token>>{ParserHelper.make_value_visible(top_block_token)}")
-        top_block = None
-        if container_block_stack[-1].is_block_quote_start:
-            top_block = container_block_stack[-1]
-        elif top_block_token:
-            top_block = top_block_token
-
-        needs_recalculation = False
-        was_end_list_end = False
-        next_token_index = actual_tokens.index(current_token) + 1
-        while (
-            next_token_index < len(actual_tokens)
-            and actual_tokens[next_token_index].is_end_token
-        ):
-            print(f">>actual_tokens[]>>{actual_tokens[next_token_index]}")
-            if actual_tokens[next_token_index].is_list_end:
-                was_end_list_end = True
-            next_token_index += 1
-        if next_token_index < len(actual_tokens):
-            print(f"actual_tokens[]>>{actual_tokens[next_token_index]}")
-            print("found")
-            needs_recalculation = True
-        else:
-            print("not found")
-            needs_recalculation = not was_end_list_end
-
-        if top_block and needs_recalculation:
-            print(f">>xxx.leading_text_index>>{top_block.leading_text_index}")
-            leading_text, did_x = (
-                top_block.calculate_next_leading_space_part(),
-                True,
-            )
-            init_ws += len(leading_text)
-
     print(f">>current_position.index_number>>{current_position.index_number}")
     print(f">>current_position.index_indent>>{current_position.index_indent}")
     print(f">>1 + init_ws({init_ws})>>{1 + init_ws}")
@@ -738,7 +690,7 @@ def __validate_new_line(  # noqa: C901
         assert (
             current_position.index_number == 1 + init_ws
         ), f"Line:{current_position.line_number}:{current_token}"
-    return did_x
+    return False
 
 
 # pylint: enable=too-many-branches, too-many-statements,too-many-locals,too-many-arguments
@@ -932,17 +884,16 @@ def __verify_first_inline_fenced_code_block(
             if len(split_leading_spaces) >= 2
             else len(split_leading_spaces[0])
         )
+    elif first_inline_token.is_blank_line:
+        col_pos = 0
     else:
-        if first_inline_token.is_blank_line:
-            col_pos = 0
-        else:
-            resolved_extracted_whitespace = ParserHelper.remove_all_from_text(
-                first_inline_token.extracted_whitespace
-            )
-            print(
-                f">resolved_extracted_whitespace>{ParserHelper.make_value_visible(resolved_extracted_whitespace)}<"
-            )
-            col_pos = len(resolved_extracted_whitespace)
+        resolved_extracted_whitespace = ParserHelper.remove_all_from_text(
+            first_inline_token.extracted_whitespace
+        )
+        print(
+            f">resolved_extracted_whitespace>{ParserHelper.make_value_visible(resolved_extracted_whitespace)}<"
+        )
+        col_pos = len(resolved_extracted_whitespace)
 
     print(f">first_inline_token.column_number>{first_inline_token.column_number}")
     print(f">col_pos>{col_pos}")
@@ -1572,7 +1523,7 @@ def __verify_next_inline_blank_line(
 
     return (
         estimated_line_number + 1,
-        estimated_column_number + len(current_inline_token.extracted_whitespace)
+        _ + len(current_inline_token.extracted_whitespace)
         if current_inline_token.is_text
         else 1,
     )
@@ -1778,10 +1729,9 @@ def __verify_next_inline_inline_image(  # noqa: C901
         f">>ex_label>>{ParserHelper.make_value_visible(previous_inline_token.ex_label)}"
     )
     label_data = (
-        previous_inline_token.ex_label
-        if previous_inline_token.ex_label
-        else previous_inline_token.image_alt_text
+        previous_inline_token.ex_label or previous_inline_token.image_alt_text
     )
+
     print(f">>label_data>>{ParserHelper.make_value_visible(label_data)}")
 
     before_link_whitespace, url_data, before_title_whitespace, title_data = (
@@ -1844,9 +1794,9 @@ def __verify_next_inline_inline_image(  # noqa: C901
         print(">>>>>>>>>collapsed")
         image_alt_text = (
             previous_inline_token.text_from_blocks
-            if previous_inline_token.text_from_blocks
-            else previous_inline_token.image_alt_text
+            or previous_inline_token.image_alt_text
         )
+
 
         token_prefix = 1
         newline_count = ParserHelper.count_newlines_in_text(image_alt_text)
@@ -1873,9 +1823,9 @@ def __verify_next_inline_inline_image(  # noqa: C901
 
         image_alt_text = (
             previous_inline_token.text_from_blocks
-            if previous_inline_token.text_from_blocks
-            else previous_inline_token.image_alt_text
+            or previous_inline_token.image_alt_text
         )
+
 
         print(f">>image_alt_text>>{ParserHelper.make_value_visible(image_alt_text)}")
         print(f">>label_data>>{ParserHelper.make_value_visible(label_data)}")
@@ -2084,7 +2034,7 @@ def __create_newline_tuple():
     ]
 
     prefix = ""
-    while (1 + len(prefix)) <= 6:
+    while len(prefix) <= 5:
         prefix += "0"
         newline_pattern_list.append(f"\a&#x{prefix}a;\a")
         newline_pattern_list.append(f"\a&#x{prefix}A;\a")
@@ -2093,7 +2043,7 @@ def __create_newline_tuple():
 
     prefix = ""
     newline_pattern_list.append("\a&#10;\a")
-    while (2 + len(prefix)) <= 7:
+    while len(prefix) <= 5:
         prefix += "0"
         newline_pattern_list.append(f"\a&#{prefix}10;\a")
 
@@ -2131,9 +2081,7 @@ def __verify_next_inline_text(
     print(f"estimated_column_number>{estimated_column_number}<")
 
     current_line = previous_inline_token.token_text
-    if not pre_previous_inline_token and last_token.is_atx_heading:
-        pass
-    else:
+    if pre_previous_inline_token or not last_token.is_atx_heading:
         current_line = f"{previous_inline_token.extracted_whitespace}{current_line}"
 
     print(f"last_token>{ParserHelper.make_value_visible(last_token)}<")
@@ -2306,15 +2254,14 @@ def __handle_last_token_image(
     _ = (second_last_inline_token, current_token)
 
     inline_height = ParserHelper.count_newlines_in_texts(
-        last_inline_token.ex_label
-        if last_inline_token.ex_label
-        else last_inline_token.image_alt_text,
+        last_inline_token.ex_label or last_inline_token.image_alt_text,
         last_inline_token.active_link_uri,
         last_inline_token.active_link_title,
         last_inline_token.before_link_whitespace,
         last_inline_token.before_title_whitespace,
         last_inline_token.after_title_whitespace,
     )
+
     if last_inline_token.label_type == "full":
         inline_height += ParserHelper.count_newlines_in_text(
             last_inline_token.text_from_blocks
