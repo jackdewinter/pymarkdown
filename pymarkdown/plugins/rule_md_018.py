@@ -154,13 +154,6 @@ class StartOfLineTokenParser:
         """
         Check for a pattern at the start of the line.
         """
-        _, _, _, _, _ = (
-            combined_text,
-            context,
-            token,
-            line_number_delta,
-            column_number_delta,
-        )
 
     # pylint: enable=too-many-arguments
 
