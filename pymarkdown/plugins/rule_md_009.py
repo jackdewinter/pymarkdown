@@ -77,6 +77,20 @@ class RuleMd009(RulePlugin):
         self.__inline_token_index = 0
         self.__container_token_stack = []
 
+    def __report_error(
+        self, context, extracted_whitespace_length, first_non_whitespace_index
+    ):
+        if self.__strict_mode or self.__break_spaces < 2:
+            extra_error_information = "0"
+        else:
+            extra_error_information = f"0 or {self.__break_spaces}"
+        extra_error_information = f"Expected: {extra_error_information}; Actual: {extracted_whitespace_length}"
+        self.report_next_line_error(
+            context,
+            first_non_whitespace_index + 1,
+            extra_error_information=extra_error_information,
+        )
+
     def next_line(self, context, line):
         """
         Event that a new line is being processed.
@@ -118,16 +132,8 @@ class RuleMd009(RulePlugin):
             if extracted_whitespace_length != self.__break_spaces or (
                 self.__strict_mode and not is_list_empty_line
             ):
-
-                if self.__strict_mode or self.__break_spaces < 2:
-                    extra_error_information = "0"
-                else:
-                    extra_error_information = f"0 or {self.__break_spaces}"
-                extra_error_information = f"Expected: {extra_error_information}; Actual: {extracted_whitespace_length}"
-                self.report_next_line_error(
-                    context,
-                    first_non_whitespace_index + 1,
-                    extra_error_information=extra_error_information,
+                self.__report_error(
+                    context, extracted_whitespace_length, first_non_whitespace_index
                 )
 
         self.__line_index += 1

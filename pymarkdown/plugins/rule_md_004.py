@@ -104,7 +104,10 @@ class RuleMd004(RulePlugin):
 
             this_start_style = self.__get_sequence_type(token)
             if self.__actual_style_type[self.__current_list_level] != this_start_style:
-                extra_data = f"Expected: {self.__actual_style_type[self.__current_list_level]}; Actual: {this_start_style}"
+                extra_data = (
+                    f"Expected: {self.__actual_style_type[self.__current_list_level]}; "
+                    + f"Actual: {this_start_style}"
+                )
                 self.report_next_token_error(context, token, extra_data)
             self.__current_list_level += 1
         elif token.is_unordered_list_end:

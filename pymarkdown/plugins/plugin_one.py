@@ -65,12 +65,14 @@ class PluginOne(RulePlugin):
         """
         Event that a new line is being processed.
         """
+        _ = context
         print(f"{self.get_details().plugin_id}>>next_line:{line}")
 
     def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
+        _ = context
         print(f"{self.get_details().plugin_id}>>token:{token}")
         if self.test_value == 20:
             raise Exception("because")
@@ -79,4 +81,5 @@ class PluginOne(RulePlugin):
         """
         Event that the file being currently scanned is now completed.
         """
+        _ = context
         print(f"{self.get_details().plugin_id}>>completed_file")

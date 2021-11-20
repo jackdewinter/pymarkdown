@@ -40,7 +40,8 @@ class RuleMd013(RulePlugin):
             plugin_version="0.5.0",
             plugin_interface_version=1,
             plugin_url="https://github.com/jackdewinter/pymarkdown/blob/main/docs/rules/rule_md013.md",
-            plugin_configuration="line_length,heading_line_length,code_block_line_length,code_blocks,headings,strict,stern",
+            plugin_configuration="line_length,heading_line_length,code_block_line_length,"
+            + "code_blocks,headings,strict,stern",
         )
 
     @classmethod
@@ -98,6 +99,29 @@ class RuleMd013(RulePlugin):
         self.__line_index = 1
         self.__leaf_token_index = 0
 
+    def __is_really_longer(self, line_length, compare_length):
+        # print("line(" + str(self.__line_index) + ")->len=(" + str(line_length) + "):" + str(line))
+        # print("-->" + str(self.__leaf_tokens[self.__leaf_token_index]))
+        if (
+            self.__leaf_tokens[self.__leaf_token_index].is_fenced_code_block
+            or self.__leaf_tokens[self.__leaf_token_index].is_indented_code_block
+        ):
+            compare_length = (
+                self.__code_block_line_length
+                if self.__code_blocks_active
+                else RuleMd013.__maximum_line_length
+            )
+        elif (
+            self.__leaf_tokens[self.__leaf_token_index].is_atx_heading
+            or self.__leaf_tokens[self.__leaf_token_index].is_setext_heading
+        ):
+            compare_length = (
+                self.__heading_line_length
+                if self.__headings_active
+                else RuleMd013.__maximum_line_length
+            )
+        return line_length > compare_length, compare_length
+
     def next_line(self, context, line):
         """
         Event that a new line is being processed.
@@ -113,28 +137,10 @@ class RuleMd013(RulePlugin):
         compare_length = self.__line_length
         is_actually_longer = False
         if line_length > self.__minimum_line_length:
-            # print("line(" + str(self.__line_index) + ")->len=(" + str(line_length) + "):" + str(line))
-            # print("-->" + str(self.__leaf_tokens[self.__leaf_token_index]))
-            if (
-                self.__leaf_tokens[self.__leaf_token_index].is_fenced_code_block
-                or self.__leaf_tokens[self.__leaf_token_index].is_indented_code_block
-            ):
-                compare_length = (
-                    self.__code_block_line_length
-                    if self.__code_blocks_active
-                    else RuleMd013.__maximum_line_length
-                )
-            elif (
-                self.__leaf_tokens[self.__leaf_token_index].is_atx_heading
-                or self.__leaf_tokens[self.__leaf_token_index].is_setext_heading
-            ):
-                compare_length = (
-                    self.__heading_line_length
-                    if self.__headings_active
-                    else RuleMd013.__maximum_line_length
-                )
-            is_actually_longer = line_length > compare_length
-            # print("is_actually_longer=" + str(is_actually_longer) + ", len=(" + str(line_length) + ", compare_length=" + str(compare_length))
+
+            is_actually_longer, compare_length = self.__is_really_longer(
+                line_length, compare_length
+            )
         if is_actually_longer:
 
             trigger_rule = False
@@ -164,6 +170,7 @@ class RuleMd013(RulePlugin):
         """
         Event that a new token is being processed.
         """
+        _ = context
         if token.is_blank_line or token.is_leaf:
             self.__leaf_tokens.append(token)
 

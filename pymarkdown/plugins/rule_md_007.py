@@ -63,26 +63,42 @@ class RuleMd007(RulePlugin):
         self.__bq_line_index = {}
         self.__last_leaf_token = None
 
-    def __manage_leaf_tokens(self, token):
-        bq_delta = 0
-        if (
+    @classmethod
+    def __is_simple_delta(cls, token):
+        return (
             token.is_blank_line
             or token.is_thematic_break
             or token.is_atx_heading
             or token.is_paragraph_end
-        ):
-            bq_delta = 1
-        elif (
+        )
+
+    @classmethod
+    def __is_remember_leaf_token(cls, token):
+        return (
             token.is_setext_heading
             or token.is_indented_code_block
             or token.is_html_block
-        ):
-            self.__last_leaf_token = token
-        elif token.is_setext_heading_end or token.is_fenced_code_block_end:
-            self.__last_leaf_token = None
+        )
+
+    @classmethod
+    def __is_clear_leaf_token(cls, token):
+        return (
+            token.is_indented_code_block_end
+            or token.is_html_block_end
+            or token.is_setext_heading_end
+            or token.is_fenced_code_block_end
+        )
+
+    def __manage_leaf_tokens(self, token):
+        bq_delta = 0
+        if self.__is_simple_delta(token):
             bq_delta = 1
-        elif token.is_indented_code_block_end or token.is_html_block_end:
+        elif self.__is_remember_leaf_token(token):
+            self.__last_leaf_token = token
+        elif self.__is_clear_leaf_token(token):
             self.__last_leaf_token = None
+            if token.is_setext_heading_end or token.is_fenced_code_block_end:
+                bq_delta = 1
         elif token.is_fenced_code_block:
             bq_delta = 1
             self.__last_leaf_token = token
@@ -199,14 +215,18 @@ class RuleMd007(RulePlugin):
         adjusted_column_number = token.column_number - 1 - container_base_column
         # print(f"adjusted_column_number={adjusted_column_number}")
         calculated_column_number = list_depth * self.__indent_basis
-        # print(f"adjusted_column_number={adjusted_column_number}, calculated_column_number={calculated_column_number},block_quote_base={block_quote_base}")
+        # print(f"adjusted_column_number={adjusted_column_number}, calculated_column_number=" + \
+        #   f"{calculated_column_number},block_quote_base={block_quote_base}")
         if adjusted_column_number != calculated_column_number:
             # print(f"container_base_column={container_base_column}")
             if block_quote_base:
                 container_base_column -= block_quote_base
             elif container_base_column:
                 container_base_column += 1
-            extra_error_information = f"Expected: {calculated_column_number+container_base_column}, Actual={adjusted_column_number+container_base_column}"
+            extra_error_information = (
+                f"Expected: {calculated_column_number+container_base_column}, "
+                + f"Actual={adjusted_column_number+container_base_column}"
+            )
             self.report_next_token_error(
                 context, token, extra_error_information=extra_error_information
             )

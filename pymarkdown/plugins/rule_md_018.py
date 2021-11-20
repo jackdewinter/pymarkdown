@@ -147,8 +147,9 @@ class StartOfLineTokenParser:
         self.__paragraph_index += token.token_text.count("\n")
 
     # pylint: disable=too-many-arguments
+    @classmethod
     def check_start_of_line(
-        self, combined_text, context, token, line_number_delta, column_number_delta
+        cls, combined_text, context, token, line_number_delta, column_number_delta
     ):
         """
         Check for a pattern at the start of the line.

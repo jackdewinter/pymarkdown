@@ -41,37 +41,49 @@ class RuleMd023(RulePlugin):
         self.__any_leading_whitespace_detected = False
         self.__seen_first_line_of_setext = False
 
+    def __handle_atx_heading(self, context, token):
+        if token.extracted_whitespace:
+            self.report_next_token_error(context, token)
+
+    def __handle_setext_heading(self, token):
+        self.__setext_start_token = token
+        self.__any_leading_whitespace_detected = bool(token.extracted_whitespace)
+        self.__seen_first_line_of_setext = False
+
+    def __handle_setext_heading_end(self, context, token):
+        if token.extracted_whitespace:
+            self.__any_leading_whitespace_detected = True
+
+        if self.__any_leading_whitespace_detected:
+            self.report_next_token_error(context, self.__setext_start_token)
+        self.__setext_start_token = None
+
+    def __handle_text(self, token):
+        if (
+            self.__setext_start_token
+            and not self.__any_leading_whitespace_detected
+            and token.end_whitespace
+        ):
+            split_end_whitespace = token.end_whitespace.split("\n")
+            for next_split in split_end_whitespace:
+                if self.__seen_first_line_of_setext:
+                    split_next_split = next_split.split(
+                        ParserHelper.whitespace_split_character
+                    )
+                    if len(split_next_split) == 2 and split_next_split[0]:
+                        self.__any_leading_whitespace_detected = True
+                else:
+                    self.__seen_first_line_of_setext = True
+
     def next_token(self, context, token):
         """
         Event that a new token is being processed.
         """
         if token.is_atx_heading:
-            if token.extracted_whitespace:
-                self.report_next_token_error(context, token)
+            self.__handle_atx_heading(context, token)
         elif token.is_setext_heading:
-            self.__setext_start_token = token
-            self.__any_leading_whitespace_detected = bool(token.extracted_whitespace)
-            self.__seen_first_line_of_setext = False
+            self.__handle_setext_heading(token)
         elif token.is_text:
-            if (
-                self.__setext_start_token
-                and not self.__any_leading_whitespace_detected
-                and token.end_whitespace
-            ):
-                split_end_whitespace = token.end_whitespace.split("\n")
-                for next_split in split_end_whitespace:
-                    if self.__seen_first_line_of_setext:
-                        split_next_split = next_split.split(
-                            ParserHelper.whitespace_split_character
-                        )
-                        if len(split_next_split) == 2 and split_next_split[0]:
-                            self.__any_leading_whitespace_detected = True
-                    else:
-                        self.__seen_first_line_of_setext = True
+            self.__handle_text(token)
         elif token.is_setext_heading_end:
-            if token.extracted_whitespace:
-                self.__any_leading_whitespace_detected = True
-
-            if self.__any_leading_whitespace_detected:
-                self.report_next_token_error(context, self.__setext_start_token)
-            self.__setext_start_token = None
+            self.__handle_setext_heading_end(context, token)
