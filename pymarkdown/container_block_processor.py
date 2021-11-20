@@ -548,7 +548,6 @@ class ContainerBlockProcessor:
         # POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
         # POGGER.debug("container_level_tokens>>$>>", container_level_tokens)
 
-        # TODO refactor to make indent unnecessary?
         calculated_indent = len(parser_state.original_line_to_parse) - len(
             line_to_parse
         )
@@ -692,7 +691,6 @@ class ContainerBlockProcessor:
         Note: This is one of the more heavily traffic functions in the
         parser.  Debugging should be uncommented only if needed.
         """
-        # TODO refactor so it doesn't need this!
         new_position_marker = PositionMarker(
             position_marker.line_number, start_index, line_to_parse
         )
@@ -1433,7 +1431,6 @@ class ContainerBlockProcessor:
             init_bq=this_bq_count,
         )
         assert not requeue_line_info or not requeue_line_info.lines_to_requeue
-        # TODO will need to deal with force_ignore_first_as_lrd
 
         POGGER.debug("\ncheck next container_start>recursed")
         POGGER.debug("check next container_start>stack>>$", parser_state.token_stack)
@@ -1705,21 +1702,22 @@ class ContainerBlockProcessor:
     @staticmethod
     def __handle_block_leaf_tokens(
         parser_state,
-        xposition_marker,
+        incoming_position_marker,
         new_tokens,
         ignore_link_definition_start,
     ):
-        remaining_line_to_parse = xposition_marker.text_to_parse[
-            xposition_marker.index_number :
+        remaining_line_to_parse = incoming_position_marker.text_to_parse[
+            incoming_position_marker.index_number :
         ]
         (new_index_number, extracted_whitespace,) = ParserHelper.extract_whitespace(
-            xposition_marker.text_to_parse, xposition_marker.index_number
+            incoming_position_marker.text_to_parse,
+            incoming_position_marker.index_number,
         )
         position_marker = PositionMarker(
-            xposition_marker.line_number,
+            incoming_position_marker.line_number,
             new_index_number,
-            xposition_marker.text_to_parse,
-            index_indent=xposition_marker.index_indent,
+            incoming_position_marker.text_to_parse,
+            index_indent=incoming_position_marker.index_indent,
         )
 
         pre_tokens = ContainerBlockProcessor.__close_indented_block_if_indent_not_there(
@@ -1770,7 +1768,7 @@ class ContainerBlockProcessor:
     @staticmethod
     def __parse_line_for_leaf_blocks(
         parser_state,
-        xposition_marker,
+        position_marker,
         this_bq_count,
         removed_chars_at_start,
         ignore_link_definition_start,
@@ -1785,21 +1783,19 @@ class ContainerBlockProcessor:
         Note: This is one of the more heavily traffic functions in the
         parser.  Debugging should be uncommented only if needed.
         """
-        POGGER.debug("Leaf Line:$:", xposition_marker.text_to_parse)
+        POGGER.debug("Leaf Line:$:", position_marker.text_to_parse)
         # POGGER.debug("this_bq_count:$:", this_bq_count)
         new_tokens = []
-
-        # TODO rename to avoid collision with parameter
 
         (
             pre_tokens,
             outer_processed,
             requeue_line_info,
-            position_marker,
+            leaf_block_position_marker,
             extracted_whitespace,
         ) = ContainerBlockProcessor.__handle_block_leaf_tokens(
             parser_state,
-            xposition_marker,
+            position_marker,
             new_tokens,
             ignore_link_definition_start,
         )
@@ -1807,12 +1803,12 @@ class ContainerBlockProcessor:
         if not outer_processed:
             assert not new_tokens
             new_tokens = LeafBlockProcessor.parse_atx_headings(
-                parser_state, position_marker, extracted_whitespace
+                parser_state, leaf_block_position_marker, extracted_whitespace
             )
             if not new_tokens:
                 new_tokens = LeafBlockProcessor.parse_indented_code_block(
                     parser_state,
-                    position_marker,
+                    leaf_block_position_marker,
                     extracted_whitespace,
                     removed_chars_at_start,
                     last_block_quote_index,
@@ -1822,25 +1818,23 @@ class ContainerBlockProcessor:
                 stack_bq_count = parser_state.count_of_block_quotes_on_stack()
                 new_tokens = LeafBlockProcessor.parse_setext_headings(
                     parser_state,
-                    position_marker,
+                    leaf_block_position_marker,
                     extracted_whitespace,
                     this_bq_count,
                     stack_bq_count,
                 )
             if not new_tokens:
-                stack_bq_count = parser_state.count_of_block_quotes_on_stack()
                 new_tokens = LeafBlockProcessor.parse_thematic_break(
                     parser_state,
-                    position_marker,
+                    leaf_block_position_marker,
                     extracted_whitespace,
                     this_bq_count,
                     stack_bq_count,
                 )
             if not new_tokens:
-                stack_bq_count = parser_state.count_of_block_quotes_on_stack()
                 new_tokens = LeafBlockProcessor.parse_paragraph(
                     parser_state,
-                    position_marker,
+                    leaf_block_position_marker,
                     extracted_whitespace,
                     this_bq_count,
                     stack_bq_count,

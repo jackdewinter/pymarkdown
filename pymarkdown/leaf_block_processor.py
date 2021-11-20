@@ -567,7 +567,6 @@ class LeafBlockProcessor:
             extracted_whitespace,
         )
 
-        # TODO revisit with tabs
         line_number = position_marker.line_number
         column_number = (
             position_marker.index_number
@@ -764,19 +763,16 @@ class LeafBlockProcessor:
             extracted_whitespace,
         )
         if start_char:
-            # TODO why not use close?
             if parser_state.token_stack[-1].is_paragraph:
                 force_paragraph_close_if_present = (
                     this_bq_count == 0 and stack_bq_count > 0
                 )
-                new_tokens.append(
-                    parser_state.token_stack[
-                        -1
-                    ].generate_close_markdown_token_from_stack_token(
-                        was_forced=force_paragraph_close_if_present
-                    )
+                new_tokens, _ = parser_state.close_open_blocks_fn(
+                    parser_state,
+                    destination_array=new_tokens,
+                    only_these_blocks=[ParagraphStackToken],
+                    was_forced=force_paragraph_close_if_present,
                 )
-                del parser_state.token_stack[-1]
             if this_bq_count == 0 and stack_bq_count > 0:
                 new_tokens, _ = parser_state.close_open_blocks_fn(
                     parser_state,

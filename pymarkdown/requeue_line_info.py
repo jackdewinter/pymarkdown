@@ -8,7 +8,8 @@ class RequeueLineInfo:
     Class to provide a container for lines that need to be requeued.
     """
 
-    def __init__(self, lines_to_requeue=None, force_ignore_first_as_lrd=None):
+    def __init__(self, lines_to_requeue, force_ignore_first_as_lrd=None):
+        assert lines_to_requeue
         self.__lines_to_requeue = lines_to_requeue
         self.__force_ignore_first_as_lrd = force_ignore_first_as_lrd
 

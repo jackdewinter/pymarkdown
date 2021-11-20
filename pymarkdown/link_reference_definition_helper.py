@@ -729,7 +729,7 @@ class LinkReferenceDefinitionHelper:
                 parser_state.original_stack_depth,
                 parser_state.original_document_depth,
             )
-            if requeue_line_info and requeue_line_info.lines_to_requeue:
+            if requeue_line_info:
                 outer_processed = True
                 POGGER.debug(
                     "plflb-process_link_reference_definition>>outer_processed>>$<lines_to_requeue<$<$",

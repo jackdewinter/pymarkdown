@@ -309,7 +309,7 @@ class TokenizedMarkdown:
     @staticmethod
     def __handle_parse_increment_line(line_number, requeue_line_info, requeue):
 
-        if requeue_line_info and requeue_line_info.lines_to_requeue:
+        if requeue_line_info:
             number_of_lines_to_requeue = len(requeue_line_info.lines_to_requeue)
             POGGER.debug("\n\n---lines_to_requeue>>$", number_of_lines_to_requeue)
             line_number -= number_of_lines_to_requeue - 1
@@ -357,6 +357,7 @@ class TokenizedMarkdown:
         include_lists=False,
         until_this_index=-1,
         caller_can_handle_requeue=False,
+        requeue_reset=False,
         was_forced=False,
     ):
         """
@@ -413,9 +414,32 @@ class TokenizedMarkdown:
         POGGER.debug("cob-end>>$", parser_state.token_stack)
         POGGER.debug("cob-end>>$", parser_state.token_document)
         POGGER.debug("cob-end>>new_tokens>>$", new_tokens)
+        if caller_can_handle_requeue:
+            TokenizedMarkdown.__log_requeue(
+                requeue_line_info, requeue_reset, parser_state
+            )
         return new_tokens, requeue_line_info
 
     # pylint: enable=too-many-arguments
+    @staticmethod
+    def __log_requeue(requeue_line_info, requeue_reset, parser_state):
+        if not requeue_line_info:
+            POGGER.debug("requeue_line_info>>no requeue")
+            return
+        POGGER.debug(
+            "cob>>lines_to_requeue>>$",
+            requeue_line_info.lines_to_requeue,
+        )
+        if requeue_reset:
+            POGGER.debug(
+                "cob>>original_line_to_parse>$>", parser_state.original_line_to_parse
+            )
+            assert not requeue_line_info.lines_to_requeue[0]
+            requeue_line_info.lines_to_requeue[0] = parser_state.original_line_to_parse
+            POGGER.debug(
+                "cob>>(adjusted)lines_to_requeue>>$",
+                requeue_line_info.lines_to_requeue,
+            )
 
     # pylint: disable=too-many-arguments
     @staticmethod
