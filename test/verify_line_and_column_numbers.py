@@ -486,6 +486,50 @@ def __pop_from_stack_if_required(token_stack, current_token):
     )
 
 
+def __validate_block_token_height_check(
+    current_token, token_stack, delta, token_height, last_line_number
+):
+    skip_check = False
+    if current_token and current_token.is_blank_line:
+        print(f"blank:{ParserHelper.make_value_visible(token_stack)}")
+        skip_check = token_stack and (
+            token_stack[-1].is_html_block or token_stack[-1].is_fenced_code_block
+        )
+
+    if not skip_check:
+        print(f"delta:{ParserHelper.make_value_visible(delta)}; height:{token_height}")
+        delta += token_height
+        print(f"calc current_line_number:{ParserHelper.make_value_visible(delta)}")
+        assert (
+            delta == last_line_number
+        ), f"Calculated line number '{delta}' does not equal the actual line number '{last_line_number}'."
+
+
+def __validate_block_token_height_blocks(last_token, last_token_index, actual_tokens):
+    current_token_index, token_height = (
+        last_token_index + 1,
+        1 if last_token.is_fenced_code_block else 0,
+    )
+    while not (
+        actual_tokens[current_token_index].is_end_token
+        and actual_tokens[current_token_index].type_name == last_token.token_name
+    ):
+        if actual_tokens[current_token_index].is_text:
+            token_height += 1 + ParserHelper.count_newlines_in_text(
+                actual_tokens[current_token_index].token_text
+            )
+        else:
+            assert actual_tokens[current_token_index].is_blank_line
+            token_height += 1
+        current_token_index += 1
+    if (
+        last_token.is_fenced_code_block
+        and not actual_tokens[current_token_index].was_forced
+    ):
+        token_height += 1
+    return token_height
+
+
 # pylint: disable=too-many-arguments,too-many-branches
 def __validate_block_token_height(
     last_token,
@@ -499,13 +543,6 @@ def __validate_block_token_height(
     print(f"last_token_index:{ParserHelper.make_value_visible(last_token_index)}")
     print(f"last_line_number:{last_line_number}")
 
-    skip_check = False
-    if current_token and current_token.is_blank_line:
-        print(f"blank:{ParserHelper.make_value_visible(token_stack)}")
-        skip_check = token_stack and (
-            token_stack[-1].is_html_block or token_stack[-1].is_fenced_code_block
-        )
-
     delta = last_token.line_number
     if last_token.is_extension:
         token_height = last_token.calculate_block_token_height(last_token)
@@ -518,27 +555,9 @@ def __validate_block_token_height(
             last_token.indented_whitespace
         )
     elif last_token.is_html_block or last_token.is_fenced_code_block:
-        current_token_index, token_height = (
-            last_token_index + 1,
-            1 if last_token.is_fenced_code_block else 0,
+        token_height = __validate_block_token_height_blocks(
+            last_token, last_token_index, actual_tokens
         )
-        while not (
-            actual_tokens[current_token_index].is_end_token
-            and actual_tokens[current_token_index].type_name == last_token.token_name
-        ):
-            if actual_tokens[current_token_index].is_text:
-                token_height += 1 + ParserHelper.count_newlines_in_text(
-                    actual_tokens[current_token_index].token_text
-                )
-            else:
-                assert actual_tokens[current_token_index].is_blank_line
-                token_height += 1
-            current_token_index += 1
-        if (
-            last_token.is_fenced_code_block
-            and not actual_tokens[current_token_index].was_forced
-        ):
-            token_height += 1
     elif last_token.is_link_reference_definition:
         token_height = 1 + ParserHelper.count_newlines_in_texts(
             last_token.extracted_whitespace,
@@ -560,13 +579,9 @@ def __validate_block_token_height(
         token_height = last_token.line_number - last_token.original_line_number + 1
         delta = last_token.original_line_number
 
-    if not skip_check:
-        print(f"delta:{ParserHelper.make_value_visible(delta)}; height:{token_height}")
-        delta += token_height
-        print(f"calc current_line_number:{ParserHelper.make_value_visible(delta)}")
-        assert (
-            delta == last_line_number
-        ), f"Calculated line number '{delta}' does not equal the actual line number '{last_line_number}'."
+    __validate_block_token_height_check(
+        current_token, token_stack, delta, token_height, last_line_number
+    )
 
 
 # pylint: enable=too-many-arguments,too-many-branches
@@ -988,6 +1003,46 @@ def __calc_adjusted_position(markdown_token):
     return PositionMarker(line_number, index_number, "")
 
 
+def __maintain_block_stack_containers(
+    current_token, container_block_stack, list_block_start_indices
+):
+    if current_token.is_new_list_item and container_block_stack[-1].is_new_list_item:
+        del container_block_stack[-1]
+    elif current_token.is_list_start:
+        block_quote_start_token = None
+        for i in range(len(container_block_stack) - 1, -1, -1):
+            print(
+                f">>container_block_stack>>{ParserHelper.make_value_visible(container_block_stack[i])}<"
+            )
+            if container_block_stack[i].is_block_quote_start:
+                block_quote_start_token = container_block_stack[i]
+                break
+        print(
+            f">>block_quote_start_token>>{ParserHelper.make_value_visible(block_quote_start_token)}<"
+        )
+        if block_quote_start_token:
+            print(
+                f">>block_quote_start_token.leading_text_index>>{block_quote_start_token.leading_text_index}<"
+            )
+            list_block_start_indices[
+                current_token
+            ] = block_quote_start_token.leading_text_index
+    elif current_token.is_list_end:
+        start_list_token = current_token.start_markdown_token
+        print(
+            f">>start_list_token>>{ParserHelper.make_value_visible(start_list_token)}<"
+        )
+        print(
+            f">>list_block_start_indices>>{ParserHelper.make_value_visible(list_block_start_indices)}<"
+        )
+        if start_list_token in list_block_start_indices:
+            del list_block_start_indices[start_list_token]
+        print(
+            f">>list_block_start_indices>>{ParserHelper.make_value_visible(list_block_start_indices)}<"
+        )
+    container_block_stack.append(current_token)
+
+
 def __maintain_block_stack(
     container_block_stack, current_token, list_block_start_indices
 ):
@@ -1001,44 +1056,9 @@ def __maintain_block_stack(
         print(
             f">>CON>>before>>{ParserHelper.make_value_visible(container_block_stack)}"
         )
-        if (
-            current_token.is_new_list_item
-            and container_block_stack[-1].is_new_list_item
-        ):
-            del container_block_stack[-1]
-        elif current_token.is_list_start:
-            block_quote_start_token = None
-            for i in range(len(container_block_stack) - 1, -1, -1):
-                print(
-                    f">>container_block_stack>>{ParserHelper.make_value_visible(container_block_stack[i])}<"
-                )
-                if container_block_stack[i].is_block_quote_start:
-                    block_quote_start_token = container_block_stack[i]
-                    break
-            print(
-                f">>block_quote_start_token>>{ParserHelper.make_value_visible(block_quote_start_token)}<"
-            )
-            if block_quote_start_token:
-                print(
-                    f">>block_quote_start_token.leading_text_index>>{block_quote_start_token.leading_text_index}<"
-                )
-                list_block_start_indices[
-                    current_token
-                ] = block_quote_start_token.leading_text_index
-        elif current_token.is_list_end:
-            start_list_token = current_token.start_markdown_token
-            print(
-                f">>start_list_token>>{ParserHelper.make_value_visible(start_list_token)}<"
-            )
-            print(
-                f">>list_block_start_indices>>{ParserHelper.make_value_visible(list_block_start_indices)}<"
-            )
-            if start_list_token in list_block_start_indices:
-                del list_block_start_indices[start_list_token]
-            print(
-                f">>list_block_start_indices>>{ParserHelper.make_value_visible(list_block_start_indices)}<"
-            )
-        container_block_stack.append(current_token)
+        __maintain_block_stack_containers(
+            current_token, container_block_stack, list_block_start_indices
+        )
         print(f">>CON>>after>>{ParserHelper.make_value_visible(container_block_stack)}")
 
     elif current_token.is_end_token and (
@@ -1694,6 +1714,51 @@ def __verify_next_inline(
 # pylint: enable=too-many-arguments
 
 
+# pylint: disable=too-many-arguments
+def __process_previous_token_check(
+    current_inline_token,
+    estimated_line_number,
+    estimated_column_number,
+    previous_inline_token,
+    block_container_token,
+    old_line_number,
+):
+    if current_inline_token.is_blank_line:
+        print(f">>before-blank>>{estimated_line_number},{estimated_column_number}")
+        if not previous_inline_token.is_blank_line:
+            estimated_line_number += 1
+        estimated_column_number = 1
+    print(
+        f">>block_container_token>>{ParserHelper.make_value_visible(block_container_token)}"
+    )
+    if block_container_token:
+        print(f"  ppt->bq-index:{block_container_token.leading_text_index}")
+    print(f">>old_line_number>>{old_line_number} != {estimated_line_number}")
+    print(
+        f">>current_inline_token>>{ParserHelper.make_value_visible(current_inline_token)}"
+    )
+    if block_container_token and old_line_number != estimated_line_number:
+        delta = estimated_line_number - old_line_number
+        if not current_inline_token.is_inline_link_end:
+            print(
+                f"  ppt>>leading_text_index>>{block_container_token.leading_text_index}"
+            )
+            block_container_token.leading_text_index += delta
+            print(
+                f"  ppt>>leading_text_index>>{block_container_token.leading_text_index}"
+            )
+        split_leading_spaces = block_container_token.leading_spaces.split(
+            ParserHelper.newline_character
+        )
+        estimated_column_number += len(
+            split_leading_spaces[block_container_token.leading_text_index]
+        )
+    return estimated_line_number, estimated_column_number
+
+
+# pylint: enable=too-many-arguments
+
+
 # pylint: disable=too-many-branches,too-many-arguments,too-many-statements
 def __process_previous_token(
     last_token,
@@ -1814,36 +1879,14 @@ def __process_previous_token(
     else:
         assert False, previous_inline_token.token_name
 
-    if current_inline_token.is_blank_line:
-        print(f">>before-blank>>{estimated_line_number},{estimated_column_number}")
-        if not previous_inline_token.is_blank_line:
-            estimated_line_number += 1
-        estimated_column_number = 1
-    print(
-        f">>block_container_token>>{ParserHelper.make_value_visible(block_container_token)}"
+    estimated_line_number, estimated_column_number = __process_previous_token_check(
+        current_inline_token,
+        estimated_line_number,
+        estimated_column_number,
+        previous_inline_token,
+        block_container_token,
+        old_line_number,
     )
-    if block_container_token:
-        print(f"  ppt->bq-index:{block_container_token.leading_text_index}")
-    print(f">>old_line_number>>{old_line_number} != {estimated_line_number}")
-    print(
-        f">>current_inline_token>>{ParserHelper.make_value_visible(current_inline_token)}"
-    )
-    if block_container_token and old_line_number != estimated_line_number:
-        delta = estimated_line_number - old_line_number
-        if not current_inline_token.is_inline_link_end:
-            print(
-                f"  ppt>>leading_text_index>>{block_container_token.leading_text_index}"
-            )
-            block_container_token.leading_text_index += delta
-            print(
-                f"  ppt>>leading_text_index>>{block_container_token.leading_text_index}"
-            )
-        split_leading_spaces = block_container_token.leading_spaces.split(
-            ParserHelper.newline_character
-        )
-        estimated_column_number += len(
-            split_leading_spaces[block_container_token.leading_text_index]
-        )
 
     print(f">>after>>{estimated_line_number},{estimated_column_number}")
     return estimated_line_number, estimated_column_number
@@ -1870,6 +1913,276 @@ def __verify_next_inline_inline_link(
     estimated_column_number,
 ):
     return estimated_line_number, estimated_column_number + 1
+
+
+# pylint: disable=too-many-arguments
+def __verify_next_inline_inline_image_inline_label_text(
+    previous_inline_token,
+    estimated_line_number,
+    para_owner,
+    label_data_raw,
+    include_part_1,
+    estimated_column_number,
+):
+    newline_count = ParserHelper.count_newlines_in_text(
+        previous_inline_token.text_from_blocks
+    )
+    if newline_count:
+        estimated_line_number += newline_count
+        if para_owner:
+            para_owner.rehydrate_index += newline_count
+            print(
+                f"rehydrate_index(__verify_next_inline_inline_image_inline#1)>{para_owner.rehydrate_index}"
+            )
+        include_part_1, estimated_column_number, label_data_raw = (
+            False,
+            0,
+            ParserHelper.calculate_last_line(label_data_raw),
+        )
+        print(f"text_from_blocks>>estimated_line_number>>{estimated_line_number}")
+    return (
+        estimated_line_number,
+        include_part_1,
+        estimated_column_number,
+        label_data_raw,
+    )
+
+
+# pylint: enable=too-many-arguments
+
+
+# pylint: disable=too-many-arguments
+def __verify_next_inline_inline_image_inline_before_link(
+    before_link_whitespace,
+    estimated_line_number,
+    para_owner,
+    estimated_column_number,
+    include_part_1,
+    include_part_2,
+):
+    newline_count = ParserHelper.count_newlines_in_text(before_link_whitespace)
+    if newline_count:
+        estimated_line_number += newline_count
+        if para_owner:
+            para_owner.rehydrate_index += newline_count
+            print(
+                f"rehydrate_index(__verify_next_inline_inline_image_inline#2)>{para_owner.rehydrate_index}"
+            )
+        (
+            estimated_column_number,
+            include_part_1,
+            include_part_2,
+            before_link_whitespace,
+        ) = (0, False, False, ParserHelper.calculate_last_line(before_link_whitespace))
+        print(f"before_link_whitespace>>estimated_line_number>>{estimated_line_number}")
+    return (
+        estimated_line_number,
+        estimated_column_number,
+        include_part_1,
+        include_part_2,
+        before_link_whitespace,
+    )
+
+
+# pylint: enable=too-many-arguments
+
+
+# pylint: disable=too-many-arguments
+def __verify_next_inline_inline_image_inline_before_title(
+    before_title_whitespace,
+    para_owner,
+    estimated_line_number,
+    estimated_column_number,
+    include_part_1,
+    include_part_2,
+    include_part_3,
+):
+    newline_count = ParserHelper.count_newlines_in_text(before_title_whitespace)
+    if newline_count:
+        estimated_line_number += newline_count
+        if para_owner:
+            para_owner.rehydrate_index += newline_count
+            print(
+                f"rehydrate_index(__verify_next_inline_inline_image_inline#3)>{para_owner.rehydrate_index}"
+            )
+        (
+            estimated_column_number,
+            include_part_1,
+            include_part_2,
+            include_part_3,
+            before_title_whitespace,
+        ) = (
+            0,
+            False,
+            False,
+            False,
+            ParserHelper.calculate_last_line(before_title_whitespace),
+        )
+        print(
+            f"before_title_whitespace>>estimated_line_number>>{estimated_line_number}"
+        )
+    return (
+        estimated_line_number,
+        estimated_column_number,
+        include_part_1,
+        include_part_2,
+        include_part_3,
+        before_title_whitespace,
+    )
+
+
+# pylint: enable=too-many-arguments
+
+
+# pylint: disable=too-many-arguments
+def __verify_next_inline_inline_image_inline_title(
+    title_data,
+    para_owner,
+    estimated_line_number,
+    estimated_column_number,
+    include_part_1,
+    include_part_2,
+    include_part_3,
+    include_part_4,
+):
+    newline_count = ParserHelper.count_newlines_in_text(title_data)
+    if newline_count:
+        estimated_line_number += newline_count
+        if para_owner:
+            para_owner.rehydrate_index += newline_count
+            print(
+                f"rehydrate_index(__verify_next_inline_inline_image_inline#4)>{para_owner.rehydrate_index}"
+            )
+        (
+            estimated_column_number,
+            include_part_1,
+            include_part_2,
+            include_part_3,
+            include_part_4,
+            title_data,
+        ) = (
+            0,
+            False,
+            False,
+            False,
+            False,
+            ParserHelper.calculate_last_line(title_data),
+        )
+        print(f"title_data>>estimated_line_number>>{estimated_line_number}")
+    return (
+        estimated_line_number,
+        estimated_column_number,
+        include_part_1,
+        include_part_2,
+        include_part_3,
+        include_part_4,
+        title_data,
+    )
+
+
+# pylint: enable=too-many-arguments
+
+
+# pylint: disable=too-many-arguments
+def __verify_next_inline_inline_image_inline_after_title(
+    after_title_whitespace,
+    para_owner,
+    estimated_line_number,
+    estimated_column_number,
+    include_part_1,
+    include_part_2,
+    include_part_3,
+    include_part_4,
+    include_part_5,
+):
+    newline_count = ParserHelper.count_newlines_in_text(after_title_whitespace)
+    if newline_count:
+        estimated_line_number += newline_count
+        if para_owner:
+            para_owner.rehydrate_index += newline_count
+            print(
+                f"rehydrate_index(__verify_next_inline_inline_image_inline#5)>{para_owner.rehydrate_index}"
+            )
+        (
+            estimated_column_number,
+            include_part_1,
+            include_part_2,
+            include_part_3,
+            include_part_4,
+            include_part_5,
+            after_title_whitespace,
+        ) = (
+            0,
+            False,
+            False,
+            False,
+            False,
+            False,
+            ParserHelper.calculate_last_line(after_title_whitespace),
+        )
+        print(f"after_title_whitespace>>estimated_line_number>>{estimated_line_number}")
+    return (
+        estimated_line_number,
+        estimated_column_number,
+        include_part_1,
+        include_part_2,
+        include_part_3,
+        include_part_4,
+        include_part_5,
+        after_title_whitespace,
+    )
+
+
+# pylint: enable=too-many-arguments
+
+
+# pylint: disable=too-many-arguments
+def __verify_next_inline_inline_image_inline_apply(
+    estimated_column_number,
+    label_data_raw,
+    before_link_whitespace,
+    url_data,
+    previous_inline_token,
+    before_title_whitespace,
+    title_data,
+    after_title_whitespace,
+    include_part_1,
+    include_part_2,
+    include_part_3,
+    include_part_4,
+    include_part_5,
+):
+    print(f">>estimated_column_number>>{estimated_column_number}")
+    if include_part_1:
+        estimated_column_number += 1
+        print(f">>include_part_1>>{estimated_column_number}")
+    if include_part_2:
+        estimated_column_number += len(label_data_raw) + 2
+        print(f">>label_data_raw>>{ParserHelper.make_value_visible(label_data_raw)}<<")
+        print(f">>include_part_2>>{estimated_column_number}")
+    if include_part_3:
+        estimated_column_number += len(before_link_whitespace) + len(url_data)
+        if previous_inline_token.did_use_angle_start:
+            estimated_column_number += 2
+        print(f">>include_part_3>>{estimated_column_number}")
+    if include_part_4:
+        print(f">>include_part_4>>{before_title_whitespace}<")
+        estimated_column_number += len(before_title_whitespace)
+        print(f">>include_part_4>>{estimated_column_number}")
+    if previous_inline_token.inline_title_bounding_character:
+        if include_part_4:
+            estimated_column_number += 1
+            print(f">>include_part_4a>>{estimated_column_number}")
+        if include_part_5:
+            estimated_column_number += len(title_data) + 1 + len(after_title_whitespace)
+            print(f">>include_part_5>>{estimated_column_number}")
+        else:
+            estimated_column_number += len(after_title_whitespace)
+            print(f">>include_part_5a>>{estimated_column_number}")
+    return estimated_column_number
+
+
+# pylint: enable=too-many-arguments
 
 
 # pylint: disable=too-many-branches, too-many-statements, too-many-arguments, too-many-locals
@@ -1901,143 +2214,107 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
         label_data_raw
     )
 
-    newline_count = ParserHelper.count_newlines_in_text(
-        previous_inline_token.text_from_blocks
+    (
+        estimated_line_number,
+        include_part_1,
+        estimated_column_number,
+        label_data_raw,
+    ) = __verify_next_inline_inline_image_inline_label_text(
+        previous_inline_token,
+        estimated_line_number,
+        para_owner,
+        label_data_raw,
+        include_part_1,
+        estimated_column_number,
     )
-    if newline_count:
-        estimated_line_number += newline_count
-        if para_owner:
-            para_owner.rehydrate_index += newline_count
-            print(
-                f"rehydrate_index(__verify_next_inline_inline_image_inline#1)>{para_owner.rehydrate_index}"
-            )
-        include_part_1, estimated_column_number, label_data_raw = (
-            False,
-            0,
-            ParserHelper.calculate_last_line(label_data_raw),
-        )
-        print(f"text_from_blocks>>estimated_line_number>>{estimated_line_number}")
 
-    newline_count = ParserHelper.count_newlines_in_text(before_link_whitespace)
-    if newline_count:
-        estimated_line_number += newline_count
-        if para_owner:
-            para_owner.rehydrate_index += newline_count
-            print(
-                f"rehydrate_index(__verify_next_inline_inline_image_inline#2)>{para_owner.rehydrate_index}"
-            )
-        (
-            estimated_column_number,
-            include_part_1,
-            include_part_2,
-            before_link_whitespace,
-        ) = (0, False, False, ParserHelper.calculate_last_line(before_link_whitespace))
-        print(f"before_link_whitespace>>estimated_line_number>>{estimated_line_number}")
+    (
+        estimated_line_number,
+        estimated_column_number,
+        include_part_1,
+        include_part_2,
+        before_link_whitespace,
+    ) = __verify_next_inline_inline_image_inline_before_link(
+        before_link_whitespace,
+        estimated_line_number,
+        para_owner,
+        estimated_column_number,
+        include_part_1,
+        include_part_2,
+    )
 
-    newline_count = ParserHelper.count_newlines_in_text(before_title_whitespace)
-    if newline_count:
-        estimated_line_number += newline_count
-        if para_owner:
-            para_owner.rehydrate_index += newline_count
-            print(
-                f"rehydrate_index(__verify_next_inline_inline_image_inline#3)>{para_owner.rehydrate_index}"
-            )
-        (
-            estimated_column_number,
-            include_part_1,
-            include_part_2,
-            include_part_3,
-            before_title_whitespace,
-        ) = (
-            0,
-            False,
-            False,
-            False,
-            ParserHelper.calculate_last_line(before_title_whitespace),
-        )
-        print(
-            f"before_title_whitespace>>estimated_line_number>>{estimated_line_number}"
-        )
+    (
+        estimated_line_number,
+        estimated_column_number,
+        include_part_1,
+        include_part_2,
+        include_part_3,
+        before_title_whitespace,
+    ) = __verify_next_inline_inline_image_inline_before_title(
+        before_title_whitespace,
+        para_owner,
+        estimated_line_number,
+        estimated_column_number,
+        include_part_1,
+        include_part_2,
+        include_part_3,
+    )
 
-    newline_count = ParserHelper.count_newlines_in_text(title_data)
-    if newline_count:
-        estimated_line_number += newline_count
-        if para_owner:
-            para_owner.rehydrate_index += newline_count
-            print(
-                f"rehydrate_index(__verify_next_inline_inline_image_inline#4)>{para_owner.rehydrate_index}"
-            )
-        (
-            estimated_column_number,
-            include_part_1,
-            include_part_2,
-            include_part_3,
-            include_part_4,
-            title_data,
-        ) = (
-            0,
-            False,
-            False,
-            False,
-            False,
-            ParserHelper.calculate_last_line(title_data),
-        )
-        print(f"title_data>>estimated_line_number>>{estimated_line_number}")
+    (
+        estimated_line_number,
+        estimated_column_number,
+        include_part_1,
+        include_part_2,
+        include_part_3,
+        include_part_4,
+        title_data,
+    ) = __verify_next_inline_inline_image_inline_title(
+        title_data,
+        para_owner,
+        estimated_line_number,
+        estimated_column_number,
+        include_part_1,
+        include_part_2,
+        include_part_3,
+        include_part_4,
+    )
 
-    newline_count = ParserHelper.count_newlines_in_text(after_title_whitespace)
-    if newline_count:
-        estimated_line_number += newline_count
-        if para_owner:
-            para_owner.rehydrate_index += newline_count
-            print(
-                f"rehydrate_index(__verify_next_inline_inline_image_inline#5)>{para_owner.rehydrate_index}"
-            )
-        (
-            estimated_column_number,
-            include_part_1,
-            include_part_2,
-            include_part_3,
-            include_part_4,
-            include_part_5,
-            after_title_whitespace,
-        ) = (
-            0,
-            False,
-            False,
-            False,
-            False,
-            False,
-            ParserHelper.calculate_last_line(after_title_whitespace),
-        )
-        print(f"after_title_whitespace>>estimated_line_number>>{estimated_line_number}")
+    (
+        estimated_line_number,
+        estimated_column_number,
+        include_part_1,
+        include_part_2,
+        include_part_3,
+        include_part_4,
+        include_part_5,
+        after_title_whitespace,
+    ) = __verify_next_inline_inline_image_inline_after_title(
+        after_title_whitespace,
+        para_owner,
+        estimated_line_number,
+        estimated_column_number,
+        include_part_1,
+        include_part_2,
+        include_part_3,
+        include_part_4,
+        include_part_5,
+    )
 
-    print(f">>estimated_column_number>>{estimated_column_number}")
-    if include_part_1:
-        estimated_column_number += 1
-        print(f">>include_part_1>>{estimated_column_number}")
-    if include_part_2:
-        estimated_column_number += len(label_data_raw) + 2
-        print(f">>label_data_raw>>{ParserHelper.make_value_visible(label_data_raw)}<<")
-        print(f">>include_part_2>>{estimated_column_number}")
-    if include_part_3:
-        estimated_column_number += len(before_link_whitespace) + len(url_data)
-        if previous_inline_token.did_use_angle_start:
-            estimated_column_number += 2
-        print(f">>include_part_3>>{estimated_column_number}")
-    if include_part_4:
-        print(f">>include_part_4>>{before_title_whitespace}<")
-        estimated_column_number += len(before_title_whitespace)
-        print(f">>include_part_4>>{estimated_column_number}")
-    if previous_inline_token.inline_title_bounding_character:
-        if include_part_4:
-            estimated_column_number += 1
-            print(f">>include_part_4a>>{estimated_column_number}")
-        if include_part_5:
-            estimated_column_number += len(title_data) + 1 + len(after_title_whitespace)
-            print(f">>include_part_5>>{estimated_column_number}")
-        else:
-            estimated_column_number += len(after_title_whitespace)
-            print(f">>include_part_5a>>{estimated_column_number}")
+    estimated_column_number = __verify_next_inline_inline_image_inline_apply(
+        estimated_column_number,
+        label_data_raw,
+        before_link_whitespace,
+        url_data,
+        previous_inline_token,
+        before_title_whitespace,
+        title_data,
+        after_title_whitespace,
+        include_part_1,
+        include_part_2,
+        include_part_3,
+        include_part_4,
+        include_part_5,
+    )
     estimated_column_number += +1
     if not include_part_1 and para_owner:
         print(f">>split_paragraph_lines>>{split_paragraph_lines}")
@@ -2445,23 +2722,7 @@ def __handle_newline_character_entity_split(split_current_line):
     return split_current_line
 
 
-# pylint: disable=too-many-statements, too-many-arguments
-def __verify_next_inline_text(
-    last_token,
-    pre_previous_inline_token,
-    previous_inline_token,
-    estimated_line_number,
-    estimated_column_number,
-    link_stack,
-):
-    print(f"estimated_line_number>{estimated_line_number}<")
-    print(f"estimated_column_number>{estimated_column_number}<")
-
-    current_line = previous_inline_token.token_text
-    if pre_previous_inline_token or not last_token.is_atx_heading:
-        current_line = f"{previous_inline_token.extracted_whitespace}{current_line}"
-
-    print(f"last_token>{ParserHelper.make_value_visible(last_token)}<")
+def __verify_next_inline_text_whitespace(last_token, previous_inline_token):
     split_extracted_whitespace, split_end_whitespace = None, None
     if last_token:
         if last_token.is_paragraph:
@@ -2489,14 +2750,12 @@ def __verify_next_inline_text(
                 print(
                     f"split_end_whitespace>{ParserHelper.make_value_visible(split_end_whitespace)}<"
                 )
+    return split_extracted_whitespace, split_end_whitespace
 
-    split_current_line = current_line.split(ParserHelper.newline_character)
-    print(f"split_current_line>{ParserHelper.make_value_visible(split_current_line)}<")
-    split_current_line = __handle_newline_character_entity_split(split_current_line)
-    print(f"split_current_line>{ParserHelper.make_value_visible(split_current_line)}<")
 
-    delta_line = len(split_current_line) - 1
-
+def __verify_next_inline_text_appply_whitespace(
+    last_token, split_extracted_whitespace, split_current_line, link_stack
+):
     if split_extracted_whitespace and last_token.rehydrate_index < len(
         split_extracted_whitespace
     ):
@@ -2523,6 +2782,40 @@ def __verify_next_inline_text(
         print(
             f"split_current_line>{ParserHelper.make_value_visible(split_current_line)}<"
         )
+
+
+# pylint: disable=too-many-statements, too-many-arguments
+def __verify_next_inline_text(
+    last_token,
+    pre_previous_inline_token,
+    previous_inline_token,
+    estimated_line_number,
+    estimated_column_number,
+    link_stack,
+):
+    print(f"estimated_line_number>{estimated_line_number}<")
+    print(f"estimated_column_number>{estimated_column_number}<")
+
+    current_line = previous_inline_token.token_text
+    if pre_previous_inline_token or not last_token.is_atx_heading:
+        current_line = f"{previous_inline_token.extracted_whitespace}{current_line}"
+
+    print(f"last_token>{ParserHelper.make_value_visible(last_token)}<")
+
+    (
+        split_extracted_whitespace,
+        split_end_whitespace,
+    ) = __verify_next_inline_text_whitespace(last_token, previous_inline_token)
+
+    split_current_line = current_line.split(ParserHelper.newline_character)
+    print(f"split_current_line>{ParserHelper.make_value_visible(split_current_line)}<")
+    split_current_line = __handle_newline_character_entity_split(split_current_line)
+    print(f"split_current_line>{ParserHelper.make_value_visible(split_current_line)}<")
+    delta_line = len(split_current_line) - 1
+
+    __verify_next_inline_text_appply_whitespace(
+        last_token, split_extracted_whitespace, split_current_line, link_stack
+    )
 
     split_current_line = split_current_line[-1]
     print(f"split_current_line>{ParserHelper.make_value_visible(split_current_line)}<")
