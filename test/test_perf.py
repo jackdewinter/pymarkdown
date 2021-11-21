@@ -1,11 +1,6 @@
 # pylint: disable=missing-module-docstring
-# pylint: disable=missing-class-docstring
 # pylint: disable=missing-function-docstring
 # pylint: disable=invalid-name
-# pylint: disable=wrong-import-position
-# pylint: disable=consider-using-enumerate
-# pylint: disable=no-self-use
-# pylint: disable=wrong-import-order
 import timeit
 
 import pytest
@@ -44,7 +39,7 @@ def bob1():
     ParserHelper.index_any_of(search_string, search_for)
 
 
-def fred():
+def fred():  # sourcery skip: inline-immediately-returned-variable
     f = "this is a test!"
     g = "1"
     h = "yyyyy"
@@ -54,6 +49,7 @@ def fred():
 
 
 def barney():
+    # sourcery skip: inline-immediately-returned-variable, inline-variable, simplify-fstring-formatting
     f = "this is a test!"
     g = "1"
     h = "yyyyy"
@@ -63,6 +59,7 @@ def barney():
 
 
 def xtest_block_quotes_extra_perf3x():
+    # sourcery skip: inline-variable, simplify-fstring-formatting
     a = "a"
     b = 1
     c = f"{a}{b}"
@@ -73,25 +70,20 @@ def xtest_block_quotes_extra_perf3x():
 def xtest_block_quotes_extra_perf3():
 
     assert fred() == barney()
-    for y in range(0, 5):
+    for _ in range(5):
         xx = timeit.timeit("barney()", globals=globals(), number=100)
-    for y in range(0, 5):
+    for _ in range(5):
         xx = timeit.timeit("fred()", globals=globals(), number=100)
 
-    for y in range(0, 5):
+    for y in range(5):
         xx = timeit.timeit("barney()", globals=globals(), number=10000000)
         print(str(xx) + ">>" + str(y))
-    for y in range(0, 5):
+    for y in range(5):
         xx = timeit.timeit("fred()", globals=globals(), number=10000000)
         print(str(xx) + ">>" + str(y))
     assert False
 
 
 # pylint: enable=missing-module-docstring
-# pylint: enable=missing-class-docstring
 # pylint: enable=missing-function-docstring
 # pylint: enable=invalid-name
-# pylint: enable=wrong-import-position
-# pylint: enable=consider-using-enumerate
-# pylint: enable=no-self-use
-# pylint: enable=wrong-import-order

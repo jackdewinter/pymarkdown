@@ -345,6 +345,18 @@ class ListBlockProcessor:
             is_sub_list = start_index >= parser_state.token_stack[-2].indent_level
         return is_first_item_in_list, is_sub_list
 
+    @staticmethod
+    def __get_list_functions(is_ulist):
+        if is_ulist:
+            POGGER.debug("hlb>>searching for ulist")
+            is_start_fn = ListBlockProcessor.is_ulist_start
+            create_token_fn = ListBlockProcessor.__handle_list_block_unordered
+        else:
+            POGGER.debug("hlb>>searching for olist")
+            is_start_fn = ListBlockProcessor.is_olist_start
+            create_token_fn = ListBlockProcessor.__handle_list_block_ordered
+        return is_start_fn, create_token_fn
+
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def handle_list_block(
@@ -377,14 +389,9 @@ class ListBlockProcessor:
 
         if not did_process:
 
-            if is_ulist:
-                POGGER.debug("hlb>>searching for ulist")
-                is_start_fn = ListBlockProcessor.is_ulist_start
-                create_token_fn = ListBlockProcessor.__handle_list_block_unordered
-            else:
-                POGGER.debug("hlb>>searching for olist")
-                is_start_fn = ListBlockProcessor.is_olist_start
-                create_token_fn = ListBlockProcessor.__handle_list_block_ordered
+            is_start_fn, create_token_fn = ListBlockProcessor.__get_list_functions(
+                is_ulist
+            )
 
             (
                 started_ulist,
@@ -1163,30 +1170,9 @@ class ListBlockProcessor:
             parser_state,
             until_this_index=last_list_index + 1,
             caller_can_handle_requeue=True,
+            requeue_reset=True,
         )
-        if requeue_line_info and requeue_line_info.lines_to_requeue:
-            POGGER.debug(
-                "__close_required_lists_after_start>>lines_to_requeue>>$",
-                requeue_line_info.lines_to_requeue,
-            )
-            POGGER.debug(
-                "__close_required_lists_after_start>>parser_state.original_line_to_parse>>$",
-                parser_state.original_line_to_parse,
-            )
-            POGGER.debug(
-                "__close_required_lists_after_start>>token_stack>>$",
-                parser_state.token_stack,
-            )
-            POGGER.debug(
-                "__close_required_lists_after_start>>token_document>>$",
-                parser_state.token_document,
-            )
-            assert not requeue_line_info.lines_to_requeue[0]
-            requeue_line_info.lines_to_requeue[0] = parser_state.original_line_to_parse
-            POGGER.debug(
-                "__close_required_lists_after_start>>lines_to_requeue>>$",
-                requeue_line_info.lines_to_requeue,
-            )
+        if requeue_line_info:
             return None, None, requeue_line_info
 
         POGGER.debug("old-stack>>$<<", container_level_tokens)
@@ -1568,18 +1554,9 @@ class ListBlockProcessor:
                 until_this_index=search_index,
                 include_lists=True,
                 caller_can_handle_requeue=True,
+                requeue_reset=True,
             )
-            POGGER.debug("container_level_tokens>$>", container_level_tokens)
-            if requeue_line_info:
-                POGGER.debug("requeue_line_info>$>", requeue_line_info.lines_to_requeue)
-                POGGER.debug(
-                    "original_line_to_parse>$>", parser_state.original_line_to_parse
-                )
-                assert len(requeue_line_info.lines_to_requeue) > 1
-                assert not requeue_line_info.lines_to_requeue[0]
-                requeue_line_info.lines_to_requeue[
-                    0
-                ] = parser_state.original_line_to_parse
+
         return container_level_tokens, requeue_line_info
 
     # pylint: enable=too-many-arguments

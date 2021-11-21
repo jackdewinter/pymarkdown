@@ -621,7 +621,6 @@ class PyMarkdownLint:
             if new_handler:
                 new_handler.close()
 
-        # TODO self.__plugins.number_of_pragma_failures
         if self.__plugins.number_of_scan_failures or total_error_count:
             sys.exit(1)
 

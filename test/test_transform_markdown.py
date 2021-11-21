@@ -2,7 +2,6 @@
 Test the top level transform functions.
 """
 
-# pylint: disable=relative-beyond-top-level
 from .utils import act_and_assert
 
 
@@ -54,6 +53,3 @@ def test_transform_with_debug_off():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
-
-
-# pylint: enable=relative-beyond-top-level

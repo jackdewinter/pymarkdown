@@ -242,7 +242,6 @@ class BlockQuoteProcessor:
         last_block_quote_index,
         adjusted_index_number,
     ):
-        # TODO for nesting, may need to augment with this_bq_count already set.
         this_bq_count = alt_this_bq_count
         POGGER.debug(">>this_bq_count>>$", this_bq_count)
         POGGER.debug(">>did_process>>$", did_process)
@@ -363,8 +362,7 @@ class BlockQuoteProcessor:
                 was_forced=True,
             )
             parser_state.token_document.extend(container_level_tokens)
-            lines_to_requeue = [position_marker.text_to_parse]
-            requeue_line_info = RequeueLineInfo(lines_to_requeue, False)
+            requeue_line_info = RequeueLineInfo([position_marker.text_to_parse], False)
         return current_indent, requeue_line_info
 
     @staticmethod
@@ -1091,33 +1089,9 @@ class BlockQuoteProcessor:
                 ],
                 was_forced=True,
                 caller_can_handle_requeue=True,
+                requeue_reset=True,
             )
-            if requeue_line_info and requeue_line_info.lines_to_requeue:
-                # TODO is this common?
-                POGGER.debug(
-                    "__ensure_stack_at_level>>lines_to_requeue>>$",
-                    requeue_line_info.lines_to_requeue,
-                )
-                POGGER.debug(
-                    "__close_required_lists_after_start>>parser_state.original_line_to_parse>>$",
-                    parser_state.original_line_to_parse,
-                )
-                POGGER.debug(
-                    "__ensure_stack_at_level>>token_stack>>$",
-                    parser_state.token_stack,
-                )
-                POGGER.debug(
-                    "__ensure_stack_at_level>>token_document>>$",
-                    parser_state.token_document,
-                )
-                assert not requeue_line_info.lines_to_requeue[0]
-                requeue_line_info.lines_to_requeue[
-                    0
-                ] = parser_state.original_line_to_parse
-                POGGER.debug(
-                    "__close_required_lists_after_start>>lines_to_requeue>>$",
-                    requeue_line_info.lines_to_requeue,
-                )
+            if requeue_line_info:
                 return None, None, requeue_line_info
 
             BlockQuoteProcessor.__decrease_stack(

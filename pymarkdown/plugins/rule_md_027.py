@@ -364,7 +364,6 @@ class RuleMd027(RulePlugin):
         self.__bq_line_index[num_container_tokens] += 1
 
     def __handle_link_reference_definition(self, context, token, num_container_tokens):
-        # TODO - https://github.com/jackdewinter/pymarkdown/issues/100
         scoped_block_quote_token = self.__container_tokens[-1]
         if token.extracted_whitespace:
             column_number_delta = -(

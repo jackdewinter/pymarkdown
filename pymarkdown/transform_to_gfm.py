@@ -654,7 +654,6 @@ class TransformToGfm:
         while not transform_state.actual_tokens[fenced_token].is_fenced_code_block:
             fenced_token -= 1
 
-        # TODO can we store this in the begin so we don't have to compute it again?
         inner_tag_parts = ["<code"]
         if transform_state.actual_tokens[fenced_token].extracted_text:
             inner_tag_parts.extend(
