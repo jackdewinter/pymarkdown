@@ -599,7 +599,7 @@ class TransformToMarkdown:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-branches, too-many-boolean-expressions, too-many-locals, too-many-statements
+    # pylint: disable=too-many-arguments
     def __perform_container_post_processing_lists(
         self,
         current_token,
@@ -687,7 +687,7 @@ class TransformToMarkdown:
             continue_sequence,
         )
 
-    # pylint: enable=too-many-arguments, too-many-branches, too-many-boolean-expressions, too-many-locals, too-many-statements
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     def __perform_container_post_processing(
@@ -1014,7 +1014,7 @@ class TransformToMarkdown:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-branches, too-many-locals
+    # pylint: disable=too-many-arguments
     def __merge_with_container_data(
         self,
         new_data,
@@ -1073,7 +1073,7 @@ class TransformToMarkdown:
         print(f"mwcd:>>new_data>>{ParserHelper.make_value_visible(new_data)}<<")
         return new_data, delayed_continue
 
-    # pylint: enable=too-many-arguments, too-many-branches, too-many-locals
+    # pylint: enable=too-many-arguments
 
     def __rehydrate_paragraph(self, current_token, previous_token):
         """

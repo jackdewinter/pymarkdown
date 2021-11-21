@@ -347,6 +347,25 @@ class TokenizedMarkdown:
 
         return token_to_use, did_start_close, did_started_close
 
+    @staticmethod
+    def __close_open_blocks_log_args(
+        include_block_quotes,
+        include_lists,
+        until_this_index,
+        caller_can_handle_requeue,
+        was_forced,
+    ):
+        if include_block_quotes:
+            POGGER.debug("cob-include_block_quotes>>$", include_block_quotes)
+        if include_lists:
+            POGGER.debug("cob-include_lists>>$", include_lists)
+        if until_this_index != -1:
+            POGGER.debug("cob-until_this_index>>$", until_this_index)
+        if caller_can_handle_requeue:
+            POGGER.debug("cob-caller_can_handle_requeue>>$", caller_can_handle_requeue)
+        if was_forced:
+            POGGER.debug("cob-was_forced>>$", was_forced)
+
     # pylint: disable=too-many-arguments
     @staticmethod
     def __close_open_blocks(  # noqa: C901
@@ -378,16 +397,13 @@ class TokenizedMarkdown:
             )
         if only_these_blocks:
             POGGER.debug("cob-only_these_blocks>>$", only_these_blocks)
-        if include_block_quotes:
-            POGGER.debug("cob-include_block_quotes>>$", include_block_quotes)
-        if include_lists:
-            POGGER.debug("cob-include_lists>>$", include_lists)
-        if until_this_index != -1:
-            POGGER.debug("cob-until_this_index>>$", until_this_index)
-        if caller_can_handle_requeue:
-            POGGER.debug("cob-caller_can_handle_requeue>>$", caller_can_handle_requeue)
-        if was_forced:
-            POGGER.debug("cob-was_forced>>$", was_forced)
+        TokenizedMarkdown.__close_open_blocks_log_args(
+            include_block_quotes,
+            include_lists,
+            until_this_index,
+            caller_can_handle_requeue,
+            was_forced,
+        )
         while not parser_state.token_stack[-1].is_document:
 
             was_close_forced = was_forced

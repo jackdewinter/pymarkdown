@@ -351,7 +351,6 @@ def __verify_line_and_column_numbers_next_token(
 # pylint: enable=too-many-arguments
 
 
-# pylint: disable=too-many-branches,too-many-statements,too-many-locals, too-many-boolean-expressions
 def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C901
     """
     Verify that the line numbers and column numbers in tokens are as expected,
@@ -438,9 +437,6 @@ def verify_line_and_column_numbers(source_markdown, actual_tokens):  # noqa: C90
     assert (
         not container_block_stack
     ), f"Container block stack should be empty: {ParserHelper.make_value_visible(container_block_stack)}"
-
-
-# pylint: enable=too-many-branches,too-many-statements,too-many-locals, too-many-boolean-expressions
 
 
 def __push_to_stack_if_required(token_stack, current_token):
@@ -530,7 +526,7 @@ def __validate_block_token_height_blocks(last_token, last_token_index, actual_to
     return token_height
 
 
-# pylint: disable=too-many-arguments,too-many-branches
+# pylint: disable=too-many-arguments
 def __validate_block_token_height(
     last_token,
     current_token,
@@ -584,7 +580,7 @@ def __validate_block_token_height(
     )
 
 
-# pylint: enable=too-many-arguments,too-many-branches
+# pylint: enable=too-many-arguments
 
 
 # pylint: disable=too-many-arguments
@@ -867,7 +863,7 @@ def __validate_new_line_list_adjacent(
     return False, init_ws
 
 
-# pylint: disable=too-many-branches, too-many-statements,too-many-locals,too-many-arguments
+# pylint: disable=too-many-arguments
 def __validate_new_line(  # noqa: C901
     container_block_stack,
     current_token,
@@ -926,7 +922,7 @@ def __validate_new_line(  # noqa: C901
     return did_x
 
 
-# pylint: enable=too-many-branches, too-many-statements,too-many-locals,too-many-arguments
+# pylint: enable=too-many-arguments
 
 
 def __validate_first_token(current_token, current_position):
@@ -936,6 +932,23 @@ def __validate_first_token(current_token, current_position):
     init_ws, had_tab = __calc_initial_whitespace(current_token)
     if not had_tab:
         assert current_position.index_number == 1 + init_ws
+
+
+def __calc_initial_whitespace_paragraph(calc_token):
+    if ParserHelper.newline_character in calc_token.extracted_whitespace:
+        end_of_line_index = calc_token.extracted_whitespace.index(
+            ParserHelper.newline_character
+        )
+        first_para_ws = calc_token.extracted_whitespace[0:end_of_line_index]
+    else:
+        first_para_ws = calc_token.extracted_whitespace
+    print(f">>first_para_ws>>{ParserHelper.make_value_visible(first_para_ws)}>>")
+    indent_level, had_tab = (
+        len(first_para_ws),
+        ParserHelper.tab_character in first_para_ws,
+    )
+    print(f">>indent_level>>{indent_level}>>had_tab>>{had_tab}")
+    return indent_level, had_tab
 
 
 # pylint: disable=too-many-boolean-expressions
@@ -970,19 +983,7 @@ def __calc_initial_whitespace(calc_token):
     else:
         assert calc_token.is_paragraph, f"Token {calc_token.token_name} not handled."
 
-        if ParserHelper.newline_character in calc_token.extracted_whitespace:
-            end_of_line_index = calc_token.extracted_whitespace.index(
-                ParserHelper.newline_character
-            )
-            first_para_ws = calc_token.extracted_whitespace[0:end_of_line_index]
-        else:
-            first_para_ws = calc_token.extracted_whitespace
-        print(f">>first_para_ws>>{ParserHelper.make_value_visible(first_para_ws)}>>")
-        indent_level, had_tab = (
-            len(first_para_ws),
-            ParserHelper.tab_character in first_para_ws,
-        )
-        print(f">>indent_level>>{indent_level}>>had_tab>>{had_tab}")
+        indent_level, had_tab = __calc_initial_whitespace_paragraph(calc_token)
     return indent_level, had_tab
 
 
@@ -1514,7 +1515,7 @@ def __verify_next_inline_handle_previous_end_adjust_rehydrate(
 # pylint: enable=too-many-arguments
 
 
-# pylint: disable=too-many-branches,too-many-locals,too-many-statements,too-many-arguments
+# pylint: disable=too-many-locals,too-many-arguments
 def __verify_next_inline_handle_previous_end(  # noqa: C901
     last_token,
     previous_inline_token,
@@ -1622,7 +1623,7 @@ def __verify_next_inline_handle_previous_end(  # noqa: C901
     ), f">>est>{new_estimated_line_number},{new_estimated_column_number}>act>{current_inline_token.line_number},{current_inline_token.column_number}"
 
 
-# pylint: enable=too-many-branches,too-many-locals,too-many-statements,too-many-arguments
+# pylint: enable=too-many-locals,too-many-arguments
 
 
 def __verify_next_inline_handle_current_end(last_token, current_inline_token):
@@ -1759,7 +1760,56 @@ def __process_previous_token_check(
 # pylint: enable=too-many-arguments
 
 
-# pylint: disable=too-many-branches,too-many-arguments,too-many-statements
+def __process_previous_token_extras(
+    previous_inline_token, last_token, estimated_line_number, estimated_column_number
+):
+    did_process = True
+    if previous_inline_token.is_inline_emphasis:
+        print("  ppt->is_inline_emphasis")
+        (
+            estimated_line_number,
+            estimated_column_number,
+        ) = __verify_next_inline_emphasis_start(
+            previous_inline_token,
+            estimated_line_number,
+            estimated_column_number,
+        )
+    elif previous_inline_token.is_inline_emphasis_end:
+        print("  ppt->is_inline_emphasis_end")
+        (
+            estimated_line_number,
+            estimated_column_number,
+        ) = __verify_next_inline_emphasis_end(
+            previous_inline_token,
+            estimated_line_number,
+            estimated_column_number,
+        )
+    elif previous_inline_token.is_inline_link:
+        print("  ppt->is_inline_link")
+        (
+            estimated_line_number,
+            estimated_column_number,
+        ) = __verify_next_inline_inline_link(
+            estimated_line_number,
+            estimated_column_number,
+        )
+    elif previous_inline_token.is_inline_image:
+        print("  ppt->is_inline_image")
+        (
+            estimated_line_number,
+            estimated_column_number,
+        ) = __verify_next_inline_inline_image(
+            last_token,
+            previous_inline_token,
+            estimated_line_number,
+            estimated_column_number,
+        )
+    else:
+        did_process = False
+    return did_process, estimated_line_number, estimated_column_number
+
+
+# pylint: disable=too-many-arguments
 def __process_previous_token(
     last_token,
     pre_previous_inline_token,
@@ -1788,26 +1838,6 @@ def __process_previous_token(
             link_stack,
         )
         print("  ppt<-is_text")
-    elif previous_inline_token.is_inline_emphasis:
-        print("  ppt->is_inline_emphasis")
-        (
-            estimated_line_number,
-            estimated_column_number,
-        ) = __verify_next_inline_emphasis_start(
-            previous_inline_token,
-            estimated_line_number,
-            estimated_column_number,
-        )
-    elif previous_inline_token.is_inline_emphasis_end:
-        print("  ppt->is_inline_emphasis_end")
-        (
-            estimated_line_number,
-            estimated_column_number,
-        ) = __verify_next_inline_emphasis_end(
-            previous_inline_token,
-            estimated_line_number,
-            estimated_column_number,
-        )
     elif previous_inline_token.is_blank_line:
         print("  ppt->is_blank_line")
         (
@@ -1856,28 +1886,19 @@ def __process_previous_token(
             estimated_line_number,
             estimated_column_number,
         )
-    elif previous_inline_token.is_inline_link:
-        print("  ppt->is_inline_link")
-        (
-            estimated_line_number,
-            estimated_column_number,
-        ) = __verify_next_inline_inline_link(
-            estimated_line_number,
-            estimated_column_number,
-        )
-    elif previous_inline_token.is_inline_image:
-        print("  ppt->is_inline_image")
-        (
-            estimated_line_number,
-            estimated_column_number,
-        ) = __verify_next_inline_inline_image(
-            last_token,
-            previous_inline_token,
-            estimated_line_number,
-            estimated_column_number,
-        )
     else:
-        assert False, previous_inline_token.token_name
+        (
+            did_process,
+            estimated_line_number,
+            estimated_column_number,
+        ) = __process_previous_token_extras(
+            previous_inline_token,
+            last_token,
+            estimated_line_number,
+            estimated_column_number,
+        )
+        if not did_process:
+            assert False, previous_inline_token.token_name
 
     estimated_line_number, estimated_column_number = __process_previous_token_check(
         current_inline_token,
@@ -1892,7 +1913,7 @@ def __process_previous_token(
     return estimated_line_number, estimated_column_number
 
 
-# pylint: enable=too-many-branches,too-many-arguments,too-many-statements
+# pylint: enable=too-many-arguments
 
 
 def __verify_next_inline_blank_line(
@@ -2185,7 +2206,7 @@ def __verify_next_inline_inline_image_inline_apply(
 # pylint: enable=too-many-arguments
 
 
-# pylint: disable=too-many-branches, too-many-statements, too-many-arguments, too-many-locals
+# pylint: disable=too-many-arguments, too-many-locals
 def __verify_next_inline_inline_image_inline(  # noqa: C901
     previous_inline_token,
     para_owner,
@@ -2328,7 +2349,9 @@ def __verify_next_inline_inline_image_inline(  # noqa: C901
     return estimated_line_number, estimated_column_number + 1
 
 
-# pylint: enable=too-many-branches, too-many-statements, too-many-arguments, too-many-locals
+# pylint: enable= too-many-arguments, too-many-locals
+
+
 def __verify_next_inline_inline_image_shortcut(
     previous_inline_token, estimated_line_number, estimated_column_number, para_owner
 ):
@@ -2435,7 +2458,6 @@ def __verify_next_inline_inline_image_full(
     return estimated_line_number, estimated_column_number
 
 
-# pylint: disable=too-many-branches, too-many-statements
 def __verify_next_inline_inline_image(  # noqa: C901
     last_token, previous_inline_token, estimated_line_number, estimated_column_number
 ):
@@ -2523,9 +2545,6 @@ def __verify_next_inline_inline_image(  # noqa: C901
             estimated_column_number,
         )
     return estimated_line_number, estimated_column_number
-
-
-# pylint: enable=too-many-branches, too-many-statements
 
 
 def __verify_next_inline_autolink(
@@ -2784,7 +2803,7 @@ def __verify_next_inline_text_appply_whitespace(
         )
 
 
-# pylint: disable=too-many-statements, too-many-arguments
+# pylint: disable=too-many-arguments
 def __verify_next_inline_text(
     last_token,
     pre_previous_inline_token,
@@ -2835,7 +2854,7 @@ def __verify_next_inline_text(
     return estimated_line_number, estimated_column_number
 
 
-# pylint: enable=too-many-statements, too-many-arguments
+# pylint: enable=too-many-arguments
 
 
 def __handle_last_token_text(
@@ -3024,6 +3043,30 @@ def __handle_last_token_blank_line(
     return inline_height
 
 
+def __verify_last_inline_assert(
+    inline_height,
+    use_line_number_from_start_token,
+    last_inline_token,
+    expected_end_line_number,
+):
+    print(f"inline_height>>{ParserHelper.make_value_visible(inline_height)}")
+    if use_line_number_from_start_token:
+        print(
+            f"last_inline_token.start_markdown_token.line_number>>{ParserHelper.make_value_visible(last_inline_token.start_markdown_token.line_number)}"
+        )
+        inline_end_line_number = (
+            last_inline_token.start_markdown_token.line_number + inline_height
+        )
+    else:
+        print(
+            f"last_inline_token.line_number>>{ParserHelper.make_value_visible(last_inline_token.line_number)}"
+        )
+        inline_end_line_number = last_inline_token.line_number + inline_height
+    assert (
+        inline_end_line_number == expected_end_line_number
+    ), f"Expected line number '{expected_end_line_number}' does not equal computed line number '{inline_end_line_number}'."
+
+
 # pylint: disable=too-many-arguments
 def __verify_last_inline(
     last_block_token,
@@ -3113,22 +3156,12 @@ def __verify_last_inline(
             current_block_token,
         )
 
-    print(f"inline_height>>{ParserHelper.make_value_visible(inline_height)}")
-    if use_line_number_from_start_token:
-        print(
-            f"last_inline_token.start_markdown_token.line_number>>{ParserHelper.make_value_visible(last_inline_token.start_markdown_token.line_number)}"
-        )
-        inline_end_line_number = (
-            last_inline_token.start_markdown_token.line_number + inline_height
-        )
-    else:
-        print(
-            f"last_inline_token.line_number>>{ParserHelper.make_value_visible(last_inline_token.line_number)}"
-        )
-        inline_end_line_number = last_inline_token.line_number + inline_height
-    assert (
-        inline_end_line_number == expected_end_line_number
-    ), f"Expected line number '{expected_end_line_number}' does not equal computed line number '{inline_end_line_number}'."
+    __verify_last_inline_assert(
+        inline_height,
+        use_line_number_from_start_token,
+        last_inline_token,
+        expected_end_line_number,
+    )
 
 
 # pylint: enable=too-many-arguments
@@ -3315,7 +3348,7 @@ def __verify_inline_collect_tokens(
     return inline_tokens, removed_end_token, next_token_index
 
 
-# pylint: disable=too-many-branches, too-many-arguments, too-many-statements, too-many-locals, too-many-nested-blocks
+# pylint: disable=too-many-arguments
 def __verify_inline(  # noqa: C901
     actual_tokens,
     last_block_token,
@@ -3363,4 +3396,4 @@ def __verify_inline(  # noqa: C901
     print("<<__verify_inline\n\n")
 
 
-# pylint: enable=too-many-branches, too-many-arguments, too-many-statements, too-many-locals, too-many-nested-blocks
+# pylint: enable=too-many-arguments
