@@ -1,7 +1,8 @@
 """
 Module to provide for verification of the line numbers and column numbers in tokens.
 """
-from pymarkdown.parser_helper import ParserHelper, PositionMarker
+from pymarkdown.parser_helper import ParserHelper
+from pymarkdown.position_marker import PositionMarker
 
 # pylint: disable=too-many-lines
 

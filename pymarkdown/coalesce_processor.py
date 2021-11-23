@@ -20,8 +20,7 @@ class CoalesceProcessor:
         """
         Take a pass and combine any two adjacent text blocks into one.
         """
-        coalesced_list = []
-        coalesced_list.extend(first_pass_results[0:1])
+        coalesced_list = [first_pass_results[0]]
         for coalesce_index in range(1, len(first_pass_results)):
             did_process = False
             POGGER.debug(
@@ -36,9 +35,10 @@ class CoalesceProcessor:
                 first_pass_results[coalesce_index].is_blank_line
                 and coalesced_list[-1].is_code_block
             ):
-                did_process = CoalesceProcessor.__coalesce_with_blank_line(
+                CoalesceProcessor.__coalesce_with_blank_line(
                     first_pass_results, coalesced_list, coalesce_index
                 )
+                did_process = True
             if not did_process:
                 coalesced_list.append(first_pass_results[coalesce_index])
 
@@ -116,7 +116,6 @@ class CoalesceProcessor:
         )
         POGGER.debug("now>>$", replacement_token)
         coalesced_list.append(replacement_token)
-        return True
 
 
 # pylint: enable=too-few-public-methods

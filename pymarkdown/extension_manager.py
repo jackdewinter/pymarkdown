@@ -17,6 +17,7 @@ from pymarkdown.extensions.markdown_strikethrough import MarkdownStrikeThroughEx
 from pymarkdown.extensions.markdown_tables import MarkdownTablesExtension
 from pymarkdown.extensions.pragma_token import PragmaExtension
 from pymarkdown.extensions.task_list_items import MarkdownTaskListItemsExtension
+from pymarkdown.parser_helper import ParserHelper
 
 LOGGER = logging.getLogger(__name__)
 
@@ -122,8 +123,9 @@ class ExtensionManager:
         """
         Handle the parsing for this subparser.
         """
-        subparser_value = getattr(args, ExtensionManager.__root_subparser_name)
-        return_code = 0
+        return_code, subparser_value = 0, getattr(
+            args, ExtensionManager.__root_subparser_name
+        )
         if subparser_value == "list":
             self.__handle_argparse_subparser_list(args)
         elif subparser_value == "info":
@@ -140,8 +142,7 @@ class ExtensionManager:
                 "^" + args.list_filter.replace("*", ".*").replace("?", ".") + "$"
             )
 
-        show_rows = []
-        names = list(self.__extension_details.keys())
+        names, show_rows = list(self.__extension_details.keys()), []
         names.sort()
         for next_extension_name in names:
             next_extension = self.__extension_details[next_extension_name]
@@ -151,8 +152,7 @@ class ExtensionManager:
             ):
                 continue
 
-            does_match = list_re.match(next_extension_name) if list_re else True
-            if does_match:
+            if list_re.match(next_extension_name) if list_re else True:
                 is_enabled_now = next_extension_name in self.__enabled_extensions
                 display_row = [
                     next_extension.extension_id,
@@ -181,15 +181,13 @@ class ExtensionManager:
             return 1
 
         found_extension = self.__extension_details[args.info_filter]
-        show_rows = []
-        next_row = ["Id", found_extension.extension_id]
-        show_rows.append(next_row)
-        next_row = ["Name", found_extension.extension_name]
-        show_rows.append(next_row)
-        next_row = ["Short Description", found_extension.extension_description]
-        show_rows.append(next_row)
-        next_row = ["Description Url", found_extension.extension_url]
-        show_rows.append(next_row)
+        show_rows = [
+            ["Id", found_extension.extension_id],
+            ["Name", found_extension.extension_name],
+            ["Short Description", found_extension.extension_description],
+            ["Description Url", found_extension.extension_url],
+        ]
+
         # if found_plugin.plugin_configuration:
         #     next_row = ["Configuration Items", found_plugin.plugin_configuration]
         #     show_rows.append(next_row)
@@ -201,9 +199,9 @@ class ExtensionManager:
     @staticmethod
     def __print_column_output(headers, show_rows):
         table = columnar(show_rows, headers, no_borders=True)
-        split_rows = table.split("\n")
+        split_rows = table.split(ParserHelper.newline_character)
         new_rows = [next_row.rstrip() for next_row in split_rows]
-        print("\n".join(new_rows))
+        print(ParserHelper.newline_character.join(new_rows))
 
     @staticmethod
     def __list_filter_type(argument):

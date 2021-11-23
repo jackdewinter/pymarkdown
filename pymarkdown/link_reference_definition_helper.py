@@ -150,9 +150,7 @@ class LinkReferenceDefinitionHelper:
         lines_to_requeue,
     ):
 
-        force_ignore_first_as_lrd = False
-        did_pause_lrd = False
-        new_tokens = []
+        force_ignore_first_as_lrd, did_pause_lrd, new_tokens = False, False, []
 
         if (
             end_lrd_index >= 0
@@ -580,7 +578,6 @@ class LinkReferenceDefinitionHelper:
         As part of processing a link reference definition, stop a continuation.
         """
 
-        new_tokens = []
         POGGER.debug(">>parse_link_reference_definition>>no longer need start")
         if did_complete_lrd:
             assert parsed_lrd_tuple
@@ -600,6 +597,7 @@ class LinkReferenceDefinitionHelper:
             ]
             force_ignore_first_as_lrd = len(lines_to_requeue) > 1
         else:
+            new_tokens = []
             assert is_blank_line
             force_ignore_first_as_lrd = True
         del parser_state.token_stack[-1]
@@ -654,8 +652,9 @@ class LinkReferenceDefinitionHelper:
                 ">>continuation_lines>>$<<",
                 parser_state.token_stack[-1].continuation_lines,
             )
-            is_blank_line = True
-            line_to_parse = parser_state.token_stack[-1].get_joined_lines("")
+            is_blank_line, line_to_parse = True, parser_state.token_stack[
+                -1
+            ].get_joined_lines("")
             line_to_parse = line_to_parse[0:-1]
             start_index, extracted_whitespace = ParserHelper.extract_whitespace(
                 line_to_parse, 0

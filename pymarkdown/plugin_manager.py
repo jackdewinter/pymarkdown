@@ -14,6 +14,7 @@ from columnar import columnar
 from pymarkdown.bad_plugin_error import BadPluginError
 from pymarkdown.extensions.pragma_token import PragmaExtension
 from pymarkdown.found_plugin import FoundPlugin
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_scan_context import PluginScanContext
 
 LOGGER = logging.getLogger(__name__)
@@ -179,8 +180,7 @@ class PluginManager:
                 "^" + args.list_filter.replace("*", ".*").replace("?", ".") + "$"
             )
 
-        show_rows = []
-        ids = self.all_plugin_ids
+        ids, show_rows = self.all_plugin_ids, []
         ids.sort()
         for next_plugin_id in ids:
             # if next_plugin_id.startswith("md9"):
@@ -231,9 +231,9 @@ class PluginManager:
     @classmethod
     def __print_columnar_data(cls, headers, show_rows):
         table = columnar(show_rows, headers, no_borders=True)
-        split_rows = table.split("\n")
+        split_rows = table.split(ParserHelper.newline_character)
         new_rows = [next_row.rstrip() for next_row in split_rows]
-        print("\n".join(new_rows))
+        print(ParserHelper.newline_character.join(new_rows))
 
     def __handle_argparse_subparser_info(self, args):
         found_plugin = list(
@@ -249,13 +249,11 @@ class PluginManager:
             return 1
 
         found_plugin = found_plugin[0]
-        show_rows = []
-        next_row = ["Id", found_plugin.plugin_id]
-        show_rows.append(next_row)
-        next_row = ["Name(s)", ",".join(found_plugin.plugin_names)]
-        show_rows.append(next_row)
-        next_row = ["Short Description", found_plugin.plugin_description]
-        show_rows.append(next_row)
+        show_rows = [
+            ["Id", found_plugin.plugin_id],
+            ["Name(s)", ",".join(found_plugin.plugin_names)],
+            ["Short Description", found_plugin.plugin_description],
+        ]
         if found_plugin.plugin_url:
             next_row = ["Description Url", found_plugin.plugin_url]
             show_rows.append(next_row)
@@ -271,8 +269,9 @@ class PluginManager:
         """
         Handle the parsing for this subparser.
         """
-        subparser_value = getattr(args, PluginManager.__root_subparser_name)
-        return_code = 0
+        return_code, subparser_value = 0, getattr(
+            args, PluginManager.__root_subparser_name
+        )
         if subparser_value == "list":
             self.__handle_argparse_subparser_list(args)
         elif subparser_value == "info":
@@ -689,8 +688,7 @@ class PluginManager:
     def __find_configuration_for_plugin(
         cls, next_plugin, properties, always_return_facade=False
     ):
-        plugin_specific_facade = None
-        first_facade = None
+        plugin_specific_facade, first_facade = None, None
         for next_key_name in next_plugin.plugin_identifiers:
             plugin_section_title = (
                 f"{PluginManager.__plugin_prefix}{properties.separator}"

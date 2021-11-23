@@ -8,8 +8,9 @@ from pymarkdown.extension_impl import ExtensionDetails
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.leaf_markdown_token import LeafMarkdownToken
 from pymarkdown.markdown_token import MarkdownToken
-from pymarkdown.parser_helper import ParserHelper, PositionMarker
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.position_marker import PositionMarker
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 

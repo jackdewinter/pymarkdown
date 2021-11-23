@@ -15,237 +15,14 @@ from pymarkdown.inline_markdown_token import (
     InlineCodeSpanMarkdownToken,
     UriAutolinkMarkdownToken,
 )
+from pymarkdown.inline_request import InlineRequest
+from pymarkdown.inline_response import InlineResponse
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
 # pylint: disable=too-many-lines
-
-
-# pylint: disable=too-many-instance-attributes
-class InlineRequest:
-    """
-    Class to hold the request information to pass on to the handle_* functions.
-    """
-
-    # pylint: disable=too-many-arguments
-    def __init__(
-        self,
-        source_text,
-        next_index,
-        inline_blocks=None,
-        remaining_line=None,
-        current_string_unresolved=None,
-        line_number=None,
-        column_number=None,
-        para_owner=None,
-    ):
-        (
-            self.__source_text,
-            self.__next_index,
-            self.__inline_blocks,
-            self.__remaining_line,
-            self.__current_string_unresolved,
-            self.__line_number,
-            self.__column_number,
-            self.__para_owner,
-        ) = (
-            source_text,
-            next_index,
-            inline_blocks,
-            remaining_line,
-            current_string_unresolved,
-            line_number,
-            column_number,
-            para_owner,
-        )
-
-    # pylint: enable=too-many-arguments
-    @property
-    def source_text(self):
-        """
-        Text that is the source of the inline request.
-        """
-        return self.__source_text
-
-    @property
-    def next_index(self):
-        """
-        Index into the source text.
-        """
-        return self.__next_index
-
-    @property
-    def inline_blocks(self):
-        """
-        Inline blocks collected up to this point in the processing.
-        """
-        return self.__inline_blocks
-
-    @property
-    def remaining_line(self):
-        """
-        Remaining part of the line.
-        """
-        return self.__remaining_line
-
-    @property
-    def current_string_unresolved(self):
-        """
-        Version of the current string before anything is changed.
-        """
-        return self.__current_string_unresolved
-
-    @property
-    def line_number(self):
-        """
-        Line number where the block of text starts.
-        """
-        return self.__line_number
-
-    @property
-    def column_number(self):
-        """
-        Column number where the block of text starts.
-        """
-        return self.__column_number
-
-    @property
-    def para_owner(self):
-        """
-        Paragraph token that owns the current block of text.
-        """
-        return self.__para_owner
-
-
-# pylint: enable=too-many-instance-attributes
-
-
-# pylint: disable=too-many-instance-attributes
-class InlineResponse:
-    """
-    Class to hold the response from the inline handle_* functions.
-    """
-
-    def __init__(self):
-        (
-            self.__new_string,
-            self.__new_index,
-            self.__new_tokens,
-            self.__new_string_unresolved,
-            self.__consume_rest_of_line,
-            self.__original_string,
-            self.__delta_line_number,
-            self.__delta_column_number,
-        ) = (None, None, None, None, False, None, 0, 0)
-        self.clear_fields()
-
-    @property
-    def new_string(self):
-        """
-        New string that was processed.
-        """
-        return self.__new_string
-
-    @new_string.setter
-    def new_string(self, value):
-        self.__new_string = value
-
-    @property
-    def new_string_unresolved(self):
-        """
-        New string that was processed, raw.
-        """
-        return self.__new_string_unresolved
-
-    @new_string_unresolved.setter
-    def new_string_unresolved(self, value):
-        self.__new_string_unresolved = value
-
-    @property
-    def new_index(self):
-        """
-        New index resulting from the parsing.
-        """
-        return self.__new_index
-
-    @new_index.setter
-    def new_index(self, value):
-        self.__new_index = value
-
-    @property
-    def new_tokens(self):
-        """
-        New tokens produced as part of the parsing.
-        """
-        return self.__new_tokens
-
-    @new_tokens.setter
-    def new_tokens(self, value):
-        self.__new_tokens = value
-
-    @property
-    def consume_rest_of_line(self):
-        """
-        Whether to consume the rest of the line.
-        """
-        return self.__consume_rest_of_line
-
-    @consume_rest_of_line.setter
-    def consume_rest_of_line(self, value):
-        self.__consume_rest_of_line = value
-
-    @property
-    def original_string(self):
-        """
-        Original string that was interpreted.
-        """
-        return self.__original_string
-
-    @original_string.setter
-    def original_string(self, value):
-        self.__original_string = value
-
-    @property
-    def delta_line_number(self):
-        """
-        Change in the line number.
-        """
-        return self.__delta_line_number
-
-    @delta_line_number.setter
-    def delta_line_number(self, value):
-        self.__delta_line_number = value
-
-    @property
-    def delta_column_number(self):
-        """
-        Change in the column number.
-        """
-        return self.__delta_column_number
-
-    @delta_column_number.setter
-    def delta_column_number(self, value):
-        self.__delta_column_number = value
-
-    def clear_fields(self):
-        """
-        Clear any of the fields that start with new_*.
-        """
-        (
-            self.__new_string,
-            self.__new_index,
-            self.__new_tokens,
-            self.__new_string_unresolved,
-            self.__consume_rest_of_line,
-            self.__original_string,
-            self.__delta_line_number,
-            self.__delta_column_number,
-        ) = (None, None, None, None, False, None, 0, 0)
-
-
-# pylint: enable=too-many-instance-attributes
 
 
 class InlineHelper:
@@ -435,11 +212,10 @@ class InlineHelper:
         blocks, which have additional needs for parsing.
         """
 
-        start_index = 0
+        start_index, string_parts = 0, []
         next_index = ParserHelper.index_any_of(
             source_text, InlineHelper.__valid_backslash_sequence_starts, start_index
         )
-        string_parts = []
         while next_index != -1:
             string_parts.append(source_text[start_index:next_index])
             current_char = source_text[next_index]
@@ -487,11 +263,10 @@ class InlineHelper:
         if not alternate_escape_map:
             alternate_escape_map = InlineHelper.__html_character_escape_map
 
-        start_index = 0
+        start_index, text_parts = 0, [string_to_append_to]
         next_index = ParserHelper.index_any_of(
             text_to_append, alternate_escape_map.keys(), start_index
         )
-        text_parts = [string_to_append_to]
         while next_index != -1:
 
             escaped_part = alternate_escape_map[text_to_append[next_index]]
@@ -646,9 +421,11 @@ class InlineHelper:
         """
         Modify the string at the end of the paragraph.
         """
-        if end_string is None:
-            return f"{removed_end_whitespace}{ParserHelper.newline_character}"
-        return f"{end_string}{removed_end_whitespace}{ParserHelper.newline_character}"
+        return (
+            f"{removed_end_whitespace}{ParserHelper.newline_character}"
+            if end_string is None
+            else f"{end_string}{removed_end_whitespace}{ParserHelper.newline_character}"
+        )
 
     @staticmethod
     def __calculate_backtick_between_text(
@@ -711,7 +488,6 @@ class InlineHelper:
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def handle_line_end(
-        next_index,
         remaining_line,
         end_string,
         current_string,
@@ -788,7 +564,6 @@ class InlineHelper:
         return (
             append_to_current_string,
             whitespace_to_add,
-            next_index + 1,
             new_tokens,
             remaining_line,
             end_string,
@@ -903,12 +678,15 @@ class InlineHelper:
         """
         Extract a string that is bounded by some manner of characters.
         """
-        break_characters = (
-            f"{InlineHelper.backslash_character}{close_character}{start_character}"
-            if start_character
-            else f"{InlineHelper.backslash_character}{close_character}"
+        break_characters, nesting_level, source_text_size = (
+            (
+                f"{InlineHelper.backslash_character}{close_character}{start_character}"
+                if start_character
+                else f"{InlineHelper.backslash_character}{close_character}"
+            ),
+            0,
+            len(source_text),
         )
-        nesting_level = 0
         POGGER.debug(
             "extract_bounded_string>>new_index>>$>>data>>$>>",
             new_index,
@@ -923,7 +701,6 @@ class InlineHelper:
             next_index,
             data,
         )
-        source_text_size = len(source_text)
         while next_index < source_text_size and not (
             source_text[next_index] == close_character and nesting_level == 0
         ):
@@ -1068,8 +845,7 @@ class InlineHelper:
             == InlineHelper.__character_reference_end_character
         ):
             new_index += 1
-            original_reference = f"{new_string};"
-            new_string = (
+            original_reference, new_string = f"{new_string};", (
                 InlineHelper.__invalid_reference_character_substitute
                 if translated_reference == 0
                 else chr(translated_reference)
@@ -1128,9 +904,11 @@ class InlineHelper:
         """
         Parse a possible email autolink and determine if it is valid.
         """
-        if re.match(InlineHelper.__valid_email_regex, text_to_parse):
-            return EmailAutolinkMarkdownToken(text_to_parse, line_number, column_number)
-        return None
+        return (
+            EmailAutolinkMarkdownToken(text_to_parse, line_number, column_number)
+            if re.match(InlineHelper.__valid_email_regex, text_to_parse)
+            else None
+        )
 
     @staticmethod
     def __parse_valid_uri_autolink(text_to_parse, line_number, column_number):

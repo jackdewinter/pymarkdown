@@ -246,11 +246,11 @@ class HtmlHelper:
         non_whitespace_index, _ = ParserHelper.extract_whitespace(
             line_to_parse, next_char_index
         )
-        have_end_of_tag = (
+        is_valid = is_valid and (
             non_whitespace_index < len(line_to_parse)
             and line_to_parse[non_whitespace_index] == HtmlHelper.__html_tag_end
         )
-        return have_end_of_tag and is_valid, non_whitespace_index + 1
+        return is_valid, non_whitespace_index + 1
 
     @staticmethod
     def __is_valid_block_1_tag_name(tag_name):
@@ -567,22 +567,22 @@ class HtmlHelper:
         if not valid_raw_html:
             valid_raw_html = HtmlHelper.__parse_raw_declaration(only_between_angles)
 
-        if valid_raw_html:
-            if inline_request.para_owner:
-                (
-                    valid_raw_html,
-                    inline_request.para_owner.rehydrate_index,
-                ) = ParserHelper.recombine_string_with_whitespace(
-                    valid_raw_html,
-                    inline_request.para_owner.extracted_whitespace,
-                    inline_request.para_owner.rehydrate_index,
-                    add_replace_marker_if_empty=True,
-                )
-            return (
-                RawHtmlMarkdownToken(valid_raw_html, line_number, column_number),
-                remaining_line_parse_index,
+        if not valid_raw_html:
+            return None, -1
+        if inline_request.para_owner:
+            (
+                valid_raw_html,
+                inline_request.para_owner.rehydrate_index,
+            ) = ParserHelper.recombine_string_with_whitespace(
+                valid_raw_html,
+                inline_request.para_owner.extracted_whitespace,
+                inline_request.para_owner.rehydrate_index,
+                add_replace_marker_if_empty=True,
             )
-        return None, -1
+        return (
+            RawHtmlMarkdownToken(valid_raw_html, line_number, column_number),
+            remaining_line_parse_index,
+        )
 
     @staticmethod
     def __check_for_special_html_blocks(line_to_parse, character_index):
