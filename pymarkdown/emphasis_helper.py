@@ -155,7 +155,6 @@ class EmphasisHelper:
 
         EmphasisHelper.__reset_token_text(inline_blocks)
         EmphasisHelper.__clear_remaining_emphasis(delimiter_stack, stack_bottom)
-        return inline_blocks
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -267,7 +266,7 @@ class EmphasisHelper:
         )
         end_index_in_blocks += 1
 
-        current_position = EmphasisHelper.__mark_used_tokens(
+        return EmphasisHelper.__mark_used_tokens(
             open_token,
             close_token,
             start_index_in_blocks,
@@ -277,8 +276,6 @@ class EmphasisHelper:
             current_position,
         )
 
-        return current_position
-
     @staticmethod
     def __find_token_in_delimiter_stack(inline_blocks, delimiter_stack, wall_token):
         """
@@ -286,19 +283,19 @@ class EmphasisHelper:
         position in the inline_blocks.
         """
 
-        if wall_token:
-            wall_index_in_inlines = inline_blocks.index(wall_token)
-            POGGER.debug(">>wall_index_in_inlines>>$", wall_index_in_inlines)
-            while wall_index_in_inlines >= 0:
-                if inline_blocks[wall_index_in_inlines].is_special_text:
-                    wall_index_in_inlines = delimiter_stack.index(
-                        inline_blocks[wall_index_in_inlines]
-                    )
-                    break
-                wall_index_in_inlines -= 1
-            POGGER.debug(">>wall_index_in_inlines(mod)>>$", wall_index_in_inlines)
-            return wall_index_in_inlines
-        return -1
+        if not wall_token:
+            return -1
+        wall_index_in_inlines = inline_blocks.index(wall_token)
+        POGGER.debug(">>wall_index_in_inlines>>$", wall_index_in_inlines)
+        while wall_index_in_inlines >= 0:
+            if inline_blocks[wall_index_in_inlines].is_special_text:
+                wall_index_in_inlines = delimiter_stack.index(
+                    inline_blocks[wall_index_in_inlines]
+                )
+                break
+            wall_index_in_inlines -= 1
+        POGGER.debug(">>wall_index_in_inlines(mod)>>$", wall_index_in_inlines)
+        return wall_index_in_inlines
 
     @staticmethod
     def __reset_token_text(inline_blocks):

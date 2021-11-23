@@ -1,7 +1,8 @@
 """
 Module to provide helper functions for parsing.
 """
-import copy
+
+from pymarkdown.constants import Constants
 
 
 # pylint: disable=too-many-lines
@@ -30,6 +31,8 @@ class ParserHelper:
 
     backslash_escape_sequence = f"{backslash_character}{__backspace_character}"
 
+    __normal_whitespace = f" {tab_character}"
+
     @staticmethod
     def is_character_at_index(source_string, index_in_string, valid_character):
         """
@@ -49,8 +52,7 @@ class ParserHelper:
         specified valid character.
         """
 
-        string_to_match_size = len(string_to_match)
-        test_index = index_in_string + string_to_match_size
+        test_index = index_in_string + len(string_to_match)
         return (
             index_in_string >= 0
             and test_index <= len(source_string)
@@ -75,9 +77,10 @@ class ParserHelper:
         Determine if the specified character is valid and a whitespace character.
         """
 
-        return 0 <= index_in_string < len(source_string) and source_string[
-            index_in_string
-        ] in [" ", ParserHelper.tab_character]
+        return (
+            0 <= index_in_string < len(source_string)
+            and source_string[index_in_string] in ParserHelper.__normal_whitespace
+        )
 
     @staticmethod
     def is_character_at_index_one_of(source_string, index_in_string, valid_characters):
@@ -148,7 +151,7 @@ class ParserHelper:
 
         index = start_index
         while ParserHelper.is_character_at_index_one_of(
-            source_string, index, " \x09\x0a\x0b\x0c\x0d"
+            source_string, index, Constants.whitespace
         ):
             index += 1
 
@@ -171,9 +174,9 @@ class ParserHelper:
         while ParserHelper.is_character_at_index_whitespace(source_string, index):
             index -= 1
 
-        if start_index is not None:
-            return index + 1, source_string[index + 1 : start_index]
-        return index + 1, source_string[index + 1 :]
+        if start_index is None:
+            return index + 1, source_string[index + 1 :]
+        return index + 1, source_string[index + 1 : start_index]
 
     @staticmethod
     def extract_until_whitespace(source_string, start_index):
@@ -481,8 +484,7 @@ class ParserHelper:
         """
         Determine the last line of a multi-line string.
         """
-        split_label = text_string.split(ParserHelper.newline_character)
-        return split_label[-1]
+        return text_string.split(ParserHelper.newline_character)[-1]
 
     @staticmethod
     def make_value_visible(value_to_modify):
@@ -543,18 +545,19 @@ class ParserHelper:
         """
         Remove any backspaces from the text.
         """
-        start_index, adjusted_text_token = 0, token_text[0:]
+        adjusted_text_token = token_text[0:]
         next_backspace_index = ParserHelper.__find_with_escape(
-            adjusted_text_token, ParserHelper.__backspace_character, start_index
+            adjusted_text_token, ParserHelper.__backspace_character, 0
         )
         while next_backspace_index != -1:
             adjusted_text_token = (
                 adjusted_text_token[0:next_backspace_index]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
-            start_index = next_backspace_index
             next_backspace_index = ParserHelper.__find_with_escape(
-                adjusted_text_token, ParserHelper.__backspace_character, start_index
+                adjusted_text_token,
+                ParserHelper.__backspace_character,
+                next_backspace_index,
             )
         return adjusted_text_token
 
@@ -563,18 +566,19 @@ class ParserHelper:
         """
         Deal with any backslash encoding in text with backspaces.
         """
-        start_index, adjusted_text_token = 0, token_text[0:]
+        adjusted_text_token = token_text[0:]
         next_backspace_index = ParserHelper.__find_with_escape(
-            adjusted_text_token, ParserHelper.__backspace_character, start_index
+            adjusted_text_token, ParserHelper.__backspace_character, 0
         )
         while next_backspace_index != -1:
             adjusted_text_token = (
                 adjusted_text_token[0 : next_backspace_index - 1]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
-            start_index = next_backspace_index
             next_backspace_index = ParserHelper.__find_with_escape(
-                adjusted_text_token, ParserHelper.__backspace_character, start_index
+                adjusted_text_token,
+                ParserHelper.__backspace_character,
+                next_backspace_index,
             )
         return adjusted_text_token
 
@@ -604,19 +608,17 @@ class ParserHelper:
         """
         Resolve the specific character out of the text string.
         """
-        start_index = 0
         adjusted_text_token = token_text[0:]
         next_backspace_index = ParserHelper.__find_with_escape(
-            adjusted_text_token, sequence_to_remove, start_index
+            adjusted_text_token, sequence_to_remove, 0
         )
         while next_backspace_index != -1:
             adjusted_text_token = (
                 adjusted_text_token[0:next_backspace_index]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
-            start_index = next_backspace_index
             next_backspace_index = ParserHelper.__find_with_escape(
-                adjusted_text_token, sequence_to_remove, start_index
+                adjusted_text_token, sequence_to_remove, next_backspace_index
             )
         return adjusted_text_token
 
@@ -643,18 +645,19 @@ class ParserHelper:
         """
         Resolve any escapes from the text, leaving only what they escaped.
         """
-        start_index, adjusted_text_token = 0, token_text[0:]
+        adjusted_text_token = token_text[0:]
         next_backspace_index = ParserHelper.__find_with_escape(
-            adjusted_text_token, ParserHelper.escape_character, start_index
+            adjusted_text_token, ParserHelper.escape_character, 0
         )
         while next_backspace_index != -1:
             adjusted_text_token = (
                 adjusted_text_token[0:next_backspace_index]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
-            start_index = next_backspace_index + 1
             next_backspace_index = ParserHelper.__find_with_escape(
-                adjusted_text_token, ParserHelper.escape_character, start_index
+                adjusted_text_token,
+                ParserHelper.escape_character,
+                next_backspace_index + 1,
             )
         return adjusted_text_token
 
@@ -670,9 +673,8 @@ class ParserHelper:
         """
         Resolve the alert characters (i.e. replacement markers) out of the text string.
         """
-        start_index = 0
         start_replacement_index = ParserHelper.__find_with_escape(
-            main_text, ParserHelper.__alert_character, start_index
+            main_text, ParserHelper.__alert_character, 0
         )
         while start_replacement_index != -1:
             middle_replacement_index = main_text.index(
@@ -743,9 +745,8 @@ class ParserHelper:
         The alert characters signal that a replacement has occurred, so make sure
         we take the right text from the replacement.
         """
-        start_index = 0
         start_replacement_index = ParserHelper.__find_with_escape(
-            adjusted_text_token, ParserHelper.__alert_character, start_index
+            adjusted_text_token, ParserHelper.__alert_character, 0
         )
         while start_replacement_index != -1:
             middle_replacement_index = adjusted_text_token.index(
@@ -830,9 +831,7 @@ class ParserHelper:
         string within the search_in string.
         """
 
-        found_index = -1
-        start_index = 0
-        did_find_last = True
+        did_find_last, found_index, start_index = True, -1, 0
         while nth > 0 and did_find_last:
             found_index = search_in.find(search_for, start_index)
             did_find_last = found_index != -1
@@ -849,273 +848,17 @@ class ParserHelper:
         specified text.
         """
 
-        col_adjust = end_index
-        line_adjust = 0
-        newline_index = source_string.find("\n", start_index)
+        col_adjust, line_adjust, newline_index = (
+            end_index,
+            0,
+            source_string.find(ParserHelper.newline_character, start_index),
+        )
         while newline_index != -1 and newline_index < end_index:
             line_adjust += 1
-            col_adjust = -(end_index - newline_index)
-            newline_index = source_string.find("\n", newline_index + 1)
+            col_adjust, newline_index = -(
+                end_index - newline_index
+            ), source_string.find(ParserHelper.newline_character, newline_index + 1)
         return col_adjust, line_adjust
 
 
 # pylint: enable=too-many-public-methods
-
-
-# pylint: disable=too-many-instance-attributes
-class ParserState:
-    """
-    Class to provide for an encapsulation of the high level state of the parser.
-    """
-
-    def __init__(
-        self, token_stack, token_document, close_open_blocks_fn, handle_blank_line_fn
-    ):
-        (
-            self.__token_stack,
-            self.__token_document,
-            self.__close_open_blocks_fn,
-            self.__handle_blank_line_fn,
-        ) = (token_stack, token_document, close_open_blocks_fn, handle_blank_line_fn)
-
-        (
-            self.__same_line_container_tokens,
-            self.__last_block_quote_stack_token,
-            self.__last_block_quote_markdown_token_index,
-            self.__copy_of_last_block_quote_markdown_token,
-            self.__original_line_to_parse,
-            self.__original_stack_depth,
-            self.__original_document_depth,
-            self.__no_para_start_if_empty,
-        ) = (None, None, None, None, None, None, None, False)
-        self.nested_list_start = None
-        self.copy_of_token_stack = None
-
-    @property
-    def token_stack(self):
-        """
-        Stack array containing the currently active stack tokens.
-        """
-        return self.__token_stack
-
-    @property
-    def token_document(self):
-        """
-        Document array containing any Markdown tokens.
-        """
-        return self.__token_document
-
-    @property
-    def close_open_blocks_fn(self):
-        """
-        Function to handle the closing of blocks.
-        """
-        return self.__close_open_blocks_fn
-
-    @property
-    def handle_blank_line_fn(self):
-        """
-        Function to handle blank lines.
-        """
-        return self.__handle_blank_line_fn
-
-    @property
-    def same_line_container_tokens(self):
-        """
-        State of the container tokens at the start of the leaf processing.
-        """
-        return self.__same_line_container_tokens
-
-    @property
-    def last_block_quote_stack_token(self):
-        """
-        Last block quote token.
-        """
-        return self.__last_block_quote_stack_token
-
-    @property
-    def last_block_quote_markdown_token_index(self):
-        """
-        Index of the last block quote token.
-        """
-        return self.__last_block_quote_markdown_token_index
-
-    @property
-    def copy_of_last_block_quote_markdown_token(self):
-        """
-        Copy of the last block quote markdown token, before any changes.
-        """
-        return self.__copy_of_last_block_quote_markdown_token
-
-    @property
-    def original_line_to_parse(self):
-        """
-        Line to parse, before any processing occurs.
-        """
-        return self.__original_line_to_parse
-
-    @property
-    def original_stack_depth(self):
-        """
-        Length of the token_stack array at the start of the line.
-        """
-        return self.__original_stack_depth
-
-    @property
-    def original_document_depth(self):
-        """
-        Length of the token_document array at the start of the line.
-        """
-        return self.__original_document_depth
-
-    @property
-    def no_para_start_if_empty(self):
-        """
-        Whether to start a paragraph if the owning list item was empty.
-        """
-        return self.__no_para_start_if_empty
-
-    def find_last_block_quote_on_stack(self):
-        """
-        Finds the index of the last block quote on the stack (from the end).
-        If no block quotes are found, 0 is returned.
-        """
-        last_stack_index = len(self.token_stack) - 1
-        while not self.token_stack[last_stack_index].is_document:
-            if self.token_stack[last_stack_index].is_block_quote:
-                break
-            last_stack_index -= 1
-        return last_stack_index
-
-    def find_last_list_block_on_stack(self):
-        """
-        Finds the index of the last list block on the stack (from the end).
-        If no block quotes are found, 0 is returned.
-        """
-        last_stack_index = len(self.token_stack) - 1
-        while not self.token_stack[last_stack_index].is_document:
-            if self.token_stack[last_stack_index].is_list:
-                break
-            last_stack_index -= 1
-        return last_stack_index
-
-    def find_last_container_on_stack(self):
-        """
-        Finds the index of the last container on the stack (from the end).
-        If no container tokens are found, 0 is returned.
-        """
-        last_stack_index = len(self.token_stack) - 1
-        while not self.token_stack[last_stack_index].is_document:
-            if (
-                self.token_stack[last_stack_index].is_block_quote
-                or self.token_stack[last_stack_index].is_list
-            ):
-                break
-            last_stack_index -= 1
-        return last_stack_index
-
-    def count_of_block_quotes_on_stack(self):
-        """
-        Helper method to count the number of block quotes currently on the stack.
-        """
-
-        return sum(
-            bool(next_item_on_stack.is_block_quote)
-            for next_item_on_stack in self.token_stack
-        )
-
-    def mark_start_information(self, position_marker):
-        """
-        Mark the start of processing this line of information.  A lot of
-        this information is to allow a requeue to occur, if needed.
-        """
-        (
-            self.__original_line_to_parse,
-            self.__original_stack_depth,
-            self.__original_document_depth,
-            self.__no_para_start_if_empty,
-        ) = (
-            position_marker.text_to_parse[:],
-            len(self.token_stack),
-            len(self.token_document),
-            False,
-        )
-
-        last_stack_index = self.find_last_block_quote_on_stack()
-
-        (
-            self.__last_block_quote_stack_token,
-            self.__last_block_quote_markdown_token_index,
-            self.__copy_of_last_block_quote_markdown_token,
-        ) = (None, None, None)
-        if not self.token_stack[last_stack_index].is_document:
-            self.__last_block_quote_stack_token = self.token_stack[last_stack_index]
-            self.__last_block_quote_markdown_token_index = self.token_document.index(
-                self.token_stack[last_stack_index].matching_markdown_token
-            )
-            self.__copy_of_last_block_quote_markdown_token = copy.deepcopy(
-                self.token_document[self.__last_block_quote_markdown_token_index]
-            )
-
-    def mark_for_leaf_processing(self, container_level_tokens):
-        """
-        Set things up for leaf processing.
-        """
-        self.__same_line_container_tokens = container_level_tokens
-
-    def clear_after_leaf_processing(self):
-        """
-        Reset things after leaf processing.
-        """
-        self.__same_line_container_tokens = None
-
-    def set_no_para_start_if_empty(self):
-        """
-        Set the member variable to true.
-        """
-        self.__no_para_start_if_empty = True
-
-
-# pylint: enable=too-many-instance-attributes
-
-
-class PositionMarker:
-    """
-    Class to provide an encapsulation of the location within the Markdown document.
-    """
-
-    def __init__(self, line_number, index_number, text_to_parse, index_indent=0):
-        (
-            self.__line_number,
-            self.__index_number,
-            self.__text_to_parse,
-            self.__index_indent,
-        ) = (line_number, index_number, text_to_parse, index_indent)
-
-    @property
-    def line_number(self):
-        """
-        Gets the line number.
-        """
-        return self.__line_number
-
-    @property
-    def index_number(self):
-        """
-        Gets the index number.
-        """
-        return self.__index_number
-
-    @property
-    def text_to_parse(self):
-        """
-        Gets the text being parsed.
-        """
-        return self.__text_to_parse
-
-    @property
-    def index_indent(self):
-        """
-        Gets the amount that the index is considered indented by.
-        """
-        return self.__index_indent

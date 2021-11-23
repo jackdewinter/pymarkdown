@@ -7,8 +7,8 @@
         },
         "pymarkdown/bad_tokenization_error.py": {},
         "pymarkdown/block_quote_processor.py": {
-            "too-many-arguments": 10,
-            "too-many-locals": 4
+            "too-many-arguments": 9,
+            "too-many-locals": 3
         },
         "pymarkdown/coalesce_processor.py": {
             "too-few-public-methods": 1
@@ -18,8 +18,9 @@
         },
         "pymarkdown/container_block_processor.py": {
             "too-many-locals": 9,
-            "too-many-arguments": 20
+            "too-many-arguments": 19
         },
+        "pymarkdown/container_indices.py": {},
         "pymarkdown/container_markdown_token.py": {
             "too-many-arguments": 2
         },
@@ -64,8 +65,7 @@
         },
         "pymarkdown/html_helper.py": {},
         "pymarkdown/inline_helper.py": {
-            "too-many-instance-attributes": 2,
-            "too-many-arguments": 4,
+            "too-many-arguments": 3,
             "too-many-locals": 1
         },
         "pymarkdown/inline_markdown_token.py": {
@@ -76,6 +76,13 @@
         "pymarkdown/inline_processor.py": {
             "too-many-arguments": 16,
             "too-many-locals": 6
+        },
+        "pymarkdown/inline_request.py": {
+            "too-many-instance-attributes": 1,
+            "too-many-arguments": 1
+        },
+        "pymarkdown/inline_response.py": {
+            "too-many-instance-attributes": 1
         },
         "pymarkdown/leaf_block_processor.py": {
             "too-many-arguments": 9,
@@ -107,10 +114,12 @@
         },
         "pymarkdown/parser_helper.py": {
             "too-many-public-methods": 1,
-            "too-many-arguments": 1,
-            "too-many-instance-attributes": 1
+            "too-many-arguments": 1
         },
         "pymarkdown/parser_logger.py": {},
+        "pymarkdown/parser_state.py": {
+            "too-many-instance-attributes": 1
+        },
         "pymarkdown/plugin_details.py": {
             "too-many-instance-attributes": 1,
             "too-many-arguments": 1
@@ -184,6 +193,7 @@
         "pymarkdown/plugins/rule_md_046.py": {},
         "pymarkdown/plugins/rule_md_047.py": {},
         "pymarkdown/plugins/rule_md_048.py": {},
+        "pymarkdown/position_marker.py": {},
         "pymarkdown/requeue_line_info.py": {},
         "pymarkdown/rule_plugin.py": {
             "too-many-arguments": 1
@@ -206,8 +216,8 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 130,
-        "too-many-locals": 38,
+        "too-many-arguments": 128,
+        "too-many-locals": 37,
         "too-few-public-methods": 7,
         "no-self-argument": 1,
         "broad-except": 6,

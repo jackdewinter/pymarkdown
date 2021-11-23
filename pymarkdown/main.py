@@ -17,6 +17,7 @@ from application_properties import (
 from pymarkdown.bad_tokenization_error import BadTokenizationError
 from pymarkdown.dial_home_helper import DialHomeHelper
 from pymarkdown.extension_manager import ExtensionManager
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.plugin_manager import BadPluginError, PluginManager
 from pymarkdown.source_providers import FileSourceProvider
@@ -44,16 +45,18 @@ class PyMarkdownLint:
     }
 
     def __init__(self):
-        self.__version_number = PyMarkdownLint.__get_semantic_version()
-        self.__show_stack_trace = False
+        (
+            self.__version_number,
+            self.__show_stack_trace,
+            self.__tokenizer,
+            self.default_log_level,
+        ) = (PyMarkdownLint.__get_semantic_version(), False, None, "CRITICAL")
 
-        self.__properties = ApplicationProperties()
-
-        self.__plugins = PluginManager()
-        self.__extensions = ExtensionManager()
-
-        self.__tokenizer = None
-        self.default_log_level = "CRITICAL"
+        self.__properties, self.__plugins, self.__extensions = (
+            ApplicationProperties(),
+            PluginManager(),
+            ExtensionManager(),
+        )
 
     @staticmethod
     def __get_semantic_version():
@@ -249,9 +252,9 @@ class PyMarkdownLint:
 
         try:
             POGGER.info("Scanning file '$' token-by-token.", next_file)
-            source_provider = FileSourceProvider(next_file)
-            if args.x_test_scan_fault:
-                source_provider = None
+            source_provider = (
+                None if args.x_test_scan_fault else FileSourceProvider(next_file)
+            )
             actual_tokens = self.__tokenizer.transform_from_provider(source_provider)
 
             if actual_tokens and actual_tokens[-1].is_pragma:
@@ -267,8 +270,7 @@ class PyMarkdownLint:
 
             POGGER.info("Scanning file '$' line-by-line.", next_file)
             source_provider = FileSourceProvider(next_file)
-            line_number = 1
-            next_line = source_provider.get_next_line()
+            line_number, next_line = 1, source_provider.get_next_line()
             while next_line is not None:
                 POGGER.info("Processing line $: $", line_number, next_line)
                 self.__plugins.next_line(context, line_number, next_line)
@@ -294,9 +296,10 @@ class PyMarkdownLint:
             )
             POGGER.debug("Provided path '$' does not exist.", next_path)
         elif os.path.isdir(next_path):
-            did_find_any = self.__process_next_path_directory(
+            self.__process_next_path_directory(
                 next_path, files_to_parse, recurse_directories
             )
+            did_find_any = True
         elif self.__is_file_eligible_to_scan(next_path):
             POGGER.debug(
                 "Provided path '$' is a valid file. Adding.",
@@ -333,12 +336,10 @@ class PyMarkdownLint:
                 rooted_file_path = f"{normalized_root}/{file}"
                 if self.__is_file_eligible_to_scan(rooted_file_path):
                     files_to_parse.add(rooted_file_path)
-        return True
 
     def __determine_files_to_scan(self, eligible_paths, recurse_directories):
 
-        did_error_scanning_files = False
-        files_to_parse = set()
+        did_error_scanning_files, files_to_parse = False, set()
         for next_path in eligible_paths:
             if "*" in next_path or "?" in next_path:
                 globbed_paths = glob.glob(next_path)
@@ -370,7 +371,7 @@ class PyMarkdownLint:
     def __handle_list_files(cls, files_to_scan):
 
         if files_to_scan:
-            print("\n".join(files_to_scan))
+            print(ParserHelper.newline_character.join(files_to_scan))
             return 0
         print("No matching files found.", file=sys.stderr)
         return 1
@@ -465,18 +466,18 @@ class PyMarkdownLint:
 
     def __initialize_logging(self, args):
 
-        new_handler = None
-
         self.__show_stack_trace = args.show_stack_trace
         if not self.__show_stack_trace:
             self.__show_stack_trace = self.__properties.get_boolean_property(
                 "log.stack-trace"
             )
 
-        effective_log_file = args.log_file
-        if effective_log_file is None:
-            effective_log_file = self.__properties.get_string_property("log.file")
-
+        effective_log_file = (
+            self.__properties.get_string_property("log.file")
+            if args.log_file is None
+            else args.log_file
+        )
+        new_handler = None
         if effective_log_file:
             new_handler = logging.FileHandler(effective_log_file)
             logging.getLogger().addHandler(new_handler)
@@ -567,17 +568,14 @@ class PyMarkdownLint:
         self.__initialize_extensions(args)
 
         if args.primary_subparser == PluginManager.argparse_subparser_name():
-            return_code = self.__plugins.handle_argparse_subparser(args)
-            sys.exit(return_code)
+            sys.exit(self.__plugins.handle_argparse_subparser(args))
         if args.primary_subparser == ExtensionManager.argparse_subparser_name():
-            return_code = self.__extensions.handle_argparse_subparser(args)
-            sys.exit(return_code)
+            sys.exit(self.__extensions.handle_argparse_subparser(args))
 
     def __handle_main_list_files(self, args, files_to_scan):
         if args.list_files:
             POGGER.info("Sending list of files that would have been scanned to stdout.")
-            return_code = self.__handle_list_files(files_to_scan)
-            sys.exit(return_code)
+            sys.exit(self.__handle_list_files(files_to_scan))
 
     def main(self):
         """
@@ -586,8 +584,7 @@ class PyMarkdownLint:
         args = self.__parse_arguments()
         self.__set_initial_state(args)
 
-        new_handler = None
-        total_error_count = 0
+        new_handler, total_error_count = None, 0
         try:
             self.__initialize_strict_mode(args)
             new_handler = self.__initialize_logging(args)

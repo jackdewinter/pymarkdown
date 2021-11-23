@@ -39,7 +39,6 @@ class DialHomeHelper:
         """
         Use the call stack and standard file locations to load the semantic version.
         """
-        registered_semantic_version = None
         LOGGER.info("Looking for semantic version information in standard location.")
         try:
             LOGGER.debug("Inspecting call stack to determine calling information.")
@@ -186,7 +185,6 @@ class DialHomeHelper:
         if response_error:
             return None, f"Fetch webpage error: {response_error}"
 
-        extracted_package_version = None
         try:
             start_text_index = response.text.find(
                 DialHomeHelper.__package_info_start_text
@@ -214,14 +212,12 @@ class DialHomeHelper:
                 + "the requested package name '{self.__package_name}'."
             )
 
-            extracted_package_version = split_useful_content[1]
+            return split_useful_content[1], None
         except Exception as this_exception:
             return (
                 None,
                 f"Semantic version lookup error ({type(this_exception).__name__}): {this_exception}",
             )
-
-        return extracted_package_version, None
 
     # pylint: enable=broad-except
 

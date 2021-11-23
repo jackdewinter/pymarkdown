@@ -343,7 +343,6 @@ class LeafBlockProcessor:
                     last_block_quote_index,
                     extracted_whitespace,
                     during_original_whitespace,
-                    block_quote_adjust_delta,
                 )
                 did_process = True
 
@@ -363,8 +362,9 @@ class LeafBlockProcessor:
         last_block_quote_index,
         extracted_whitespace,
         during_original_whitespace,
-        block_quote_adjust_delta,
     ):
+        block_quote_adjust_delta = 0
+
         POGGER.debug(
             ".text_to_parse>[$]",
             position_marker,
@@ -438,11 +438,13 @@ class LeafBlockProcessor:
         Recalculate the whitespace characteristics.
         """
 
-        accumulated_whitespace_count = 0
-        actual_whitespace_index = 0
-        abc = 4 + offset_index
+        (
+            accumulated_whitespace_count,
+            actual_whitespace_index,
+            abc,
+            relative_whitespace_index,
+        ) = (0, 0, 4 + offset_index, special_parse_start_index - offset_index)
 
-        relative_whitespace_index = special_parse_start_index - offset_index
         POGGER.debug(
             "whitespace_to_parse>>$>>",
             whitespace_to_parse,
@@ -567,8 +569,7 @@ class LeafBlockProcessor:
             extracted_whitespace,
         )
 
-        line_number = position_marker.line_number
-        column_number = (
+        line_number, column_number = position_marker.line_number, (
             position_marker.index_number
             + position_marker.index_indent
             - len(extracted_whitespace)
@@ -637,8 +638,7 @@ class LeafBlockProcessor:
         )
         POGGER.debug("<<__adjust_for_list_start<<$", did_process)
 
-        force_me = False
-        kludge_adjust = 0
+        force_me, kludge_adjust = False, 0
         if not did_process:
             POGGER.debug(">>>>$", parser_state.token_stack[-1])
             if parser_state.token_stack[-1].is_list:
@@ -646,9 +646,7 @@ class LeafBlockProcessor:
                     ">>indent>>$",
                     parser_state.token_stack[-1].indent_level,
                 )
-                last_block_quote_index = 0
-                kludge_adjust = 1
-                force_me = True
+                last_block_quote_index, kludge_adjust, force_me = 0, 1, True
 
         POGGER.debug(">>__adjust_for_block_quote_start")
         (
@@ -1214,7 +1212,6 @@ class LeafBlockProcessor:
             )
             POGGER.debug(">>line_number>>$", position_marker.line_number)
 
-            apply_paragraph_adjustment = True
             if (
                 container_index + 1 == len(parser_state.token_stack)
                 and position_marker.line_number
@@ -1230,13 +1227,14 @@ class LeafBlockProcessor:
                         ].matching_markdown_token
                     ),
                 )
-                if (
+                apply_paragraph_adjustment = not (
                     position_marker.line_number
                     == parser_state.token_stack[
                         container_index - 1
                     ].matching_markdown_token.line_number
-                ):
-                    apply_paragraph_adjustment = False
+                )
+            else:
+                apply_paragraph_adjustment = True
 
             if apply_paragraph_adjustment:
                 LeafBlockProcessor.__adjust_paragraph_for_block_quotes(
@@ -1403,8 +1401,7 @@ class LeafBlockProcessor:
             ">>correct_for_leaf_block_start_in_list>>tokens_to_add>>$>>", html_tokens
         )
 
-        repeat_loop = True
-        is_remaining_list_token = True
+        repeat_loop, is_remaining_list_token = True, True
         while repeat_loop and is_remaining_list_token:
             assert parser_state.token_stack[-1].is_list
 
@@ -1430,8 +1427,9 @@ class LeafBlockProcessor:
 
         if is_remaining_list_token:
             assert parser_state.token_stack[-1].is_list
-            last_indent = parser_state.token_stack[-1].indent_level
-            delta_indent = removed_chars_at_start - last_indent
+            delta_indent = (
+                removed_chars_at_start - parser_state.token_stack[-1].indent_level
+            )
             POGGER.debug(
                 ">>correct_for_leaf_block_start_in_list>>delta_indent>>$>>",
                 delta_indent,
@@ -1479,7 +1477,6 @@ class LeafBlockProcessor:
             is_leaf_block_start, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
                 line_to_parse, start_index, extracted_whitespace
             )
-            is_leaf_block_start = bool(is_leaf_block_start)
             POGGER.debug(
                 "is_paragraph_ending_leaf_block_start>>is_fenced_code_block>>$",
                 is_leaf_block_start,
@@ -1488,7 +1485,6 @@ class LeafBlockProcessor:
             is_leaf_block_start, _, _, _ = LeafBlockProcessor.is_atx_heading(
                 line_to_parse, start_index, extracted_whitespace
             )
-            is_leaf_block_start = bool(is_leaf_block_start)
             POGGER.debug(
                 "is_paragraph_ending_leaf_block_start>>is_atx_heading>>$",
                 is_leaf_block_start,

@@ -16,8 +16,10 @@ from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.leaf_markdown_token import BlankLineMarkdownToken
 from pymarkdown.link_helper import LinkHelper
 from pymarkdown.link_reference_definition_helper import LinkReferenceDefinitionHelper
-from pymarkdown.parser_helper import ParserHelper, ParserState, PositionMarker
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
+from pymarkdown.parser_state import ParserState
+from pymarkdown.position_marker import PositionMarker
 from pymarkdown.source_providers import InMemorySourceProvider
 from pymarkdown.stack_token import DocumentStackToken, ParagraphStackToken
 
@@ -104,18 +106,30 @@ class TokenizedMarkdown:
         The first pass at the tokens is to deal with blocks.
         """
 
-        self.stack = [DocumentStackToken()]
+        (
+            self.stack,
+            self.tokenized_document,
+            requeue,
+            did_start_close,
+            did_started_close,
+            ignore_link_definition_start,
+            token_to_use,
+            self.__parse_properties.pragma_lines,
+            line_number,
+        ) = (
+            [DocumentStackToken()],
+            [],
+            [],
+            False,
+            False,
+            False,
+            self.source_provider.get_next_line(),
+            {},
+            1,
+        )
 
-        self.tokenized_document = []
-        token_to_use = self.source_provider.get_next_line()
-        did_start_close = False
-        did_started_close = False
-        requeue = []
-        ignore_link_definition_start = False
         POGGER.debug("---$---", token_to_use)
         POGGER.debug("---")
-        self.__parse_properties.pragma_lines = {}
-        line_number = 1
         try:
             (
                 token_to_use,
@@ -124,8 +138,7 @@ class TokenizedMarkdown:
             ) = self.__process_front_matter_header_if_present(
                 token_to_use, line_number, requeue
             )
-            did_start_close = token_to_use is None
-            keep_on_going = True
+            did_start_close, keep_on_going = token_to_use is None, True
             while keep_on_going:
                 POGGER.debug("next-line>>$", token_to_use)
                 POGGER.debug("stack>>$", self.stack)
@@ -212,8 +225,7 @@ class TokenizedMarkdown:
             del requeue_line_info.lines_to_requeue[0]
             line_number -= 1
 
-            did_start_close = False
-            tokens_from_line = None
+            did_start_close, tokens_from_line = False, None
         return (
             did_started_close,
             did_start_close,
@@ -383,8 +395,7 @@ class TokenizedMarkdown:
         Close any open blocks that are currently on the stack.
         """
 
-        requeue_line_info = None
-        new_tokens = destination_array or []
+        requeue_line_info, new_tokens = None, destination_array or []
         POGGER.debug("cob-start>>$", parser_state.token_stack)
         POGGER.debug(
             "cob-start>>$",
@@ -469,8 +480,7 @@ class TokenizedMarkdown:
         only_these_blocks,
     ):
 
-        requeue_line_info = None
-        adjusted_tokens = None
+        requeue_line_info, adjusted_tokens = None, None
 
         POGGER.debug("cob>>$", parser_state.token_stack)
         can_continue, was_close_forced = TokenizedMarkdown.__can_close_continue(
@@ -689,9 +699,7 @@ class TokenizedMarkdown:
             parser_state.token_stack[-1],
         )
 
-        requeue_line_info = None
-        new_tokens = None
-        force_default_handling = False
+        requeue_line_info, new_tokens, force_default_handling = None, None, False
         if parser_state.token_stack[-1].was_link_definition_started:
             POGGER.debug(
                 "hbl>>process_link_reference_definition>>stopping link definition"
@@ -745,7 +753,6 @@ class TokenizedMarkdown:
     def __process_front_matter_header_if_present(
         self, token_to_use, line_number, requeue
     ):
-
         POGGER.debug(
             "is_front_matter_enabled>>$",
             self.__parse_properties.is_front_matter_enabled,
@@ -771,9 +778,11 @@ class ParseBlockPassProperties:
     """
 
     def __init__(self, extension_manager):
-        self.__front_matter_enabled = extension_manager.is_front_matter_enabled
-        self.__pragmas_enabled = extension_manager.is_linter_pragmas_enabled
-        self.pragma_lines = None
+        self.__front_matter_enabled, self.__pragmas_enabled, self.pragma_lines = (
+            extension_manager.is_front_matter_enabled,
+            extension_manager.is_linter_pragmas_enabled,
+            None,
+        )
 
     @property
     def is_front_matter_enabled(self):

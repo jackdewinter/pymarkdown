@@ -104,8 +104,9 @@ class LinkHelper:
                 line_to_parse, new_index, InlineHelper.backslash_character
             ):
                 old_new_index = new_index
-                inline_request = InlineRequest(line_to_parse, new_index)
-                inline_response = InlineHelper.handle_inline_backslash(inline_request)
+                inline_response = InlineHelper.handle_inline_backslash(
+                    InlineRequest(line_to_parse, new_index)
+                )
                 new_index = inline_response.new_index
                 label_parts.append(line_to_parse[old_new_index:new_index])
                 keep_collecting = True
@@ -275,11 +276,7 @@ class LinkHelper:
                     remaining_line,
                     current_string_unresolved,
                     xx_fn,
-                    is_valid,
                     updated_index,
-                    token_to_append,
-                    consume_rest_of_line,
-                    valid_special_start_text,
                 )
                 if is_done:
                     break
@@ -346,11 +343,7 @@ class LinkHelper:
         remaining_line,
         current_string_unresolved,
         xx_fn,
-        is_valid,
         updated_index,
-        token_to_append,
-        consume_rest_of_line,
-        valid_special_start_text,
     ):
         if POGGER.is_debug_enabled:
             POGGER.debug(
@@ -359,7 +352,13 @@ class LinkHelper:
                 inline_blocks[search_index].show_process_emphasis(),
             )
 
-        is_done = False
+        (
+            is_done,
+            consume_rest_of_line,
+            valid_special_start_text,
+            token_to_append,
+            is_valid,
+        ) = (False, False, None, None, False)
         if inline_blocks[search_index].token_text in LinkHelper.__valid_link_starts:
             valid_special_start_text = inline_blocks[search_index].token_text
             if inline_blocks[search_index].is_active:
@@ -379,8 +378,7 @@ class LinkHelper:
                     xx_fn,
                 )
                 if updated_index != -1:
-                    is_valid = True
-                    is_done = True
+                    is_valid, is_done = True, True
 
             if not is_done:
                 POGGER.debug("  not active:$", search_index)
@@ -958,11 +956,13 @@ class LinkHelper:
     @staticmethod
     def __parse_inline_link_properties(source_text, new_index):
 
-        inline_title = ""
-        pre_inline_title = ""
-        bounding_character = ""
-        after_title_whitespace = ""
-        before_title_whitespace = ""
+        (
+            inline_title,
+            pre_inline_title,
+            bounding_character,
+            after_title_whitespace,
+            before_title_whitespace,
+        ) = ("", "", "", "", "")
         POGGER.debug(">>search for link destination")
         (
             inline_link,
@@ -1158,7 +1158,6 @@ class LinkHelper:
 
     @staticmethod
     def __look_for_shortcut_link(inline_blocks, text_from_blocks, new_index):
-        ex_label = ""
         POGGER.debug("shortcut?")
         POGGER.debug(
             ">>$<<",
@@ -1172,14 +1171,13 @@ class LinkHelper:
         update_index, inline_link, inline_title = LinkHelper.__look_up_link(
             text_from_blocks, new_index, "shortcut"
         )
-        label_type, pre_inline_link = "shortcut", ""
         return (
-            ex_label,
+            "",
             update_index,
             inline_link,
             inline_title,
-            label_type,
-            pre_inline_link,
+            "shortcut",
+            "",
         )
 
     # pylint: disable=too-many-arguments, too-many-locals
@@ -1208,7 +1206,19 @@ class LinkHelper:
         """
         Create the right type of link token.
         """
-        consume_rest_of_line, token_to_append = False, None
+        (
+            consume_rest_of_line,
+            token_to_append,
+            text_from_blocks_raw,
+            line_number,
+            column_number,
+        ) = (
+            False,
+            None,
+            ParserHelper.resolve_backspaces_from_text(text_from_blocks_raw),
+            inline_blocks[ind].line_number,
+            inline_blocks[ind].column_number,
+        )
 
         POGGER.debug("<<<<<<<start_text<<<<<<<$<<", start_text)
         POGGER.debug(">>inline_link>>$>>", inline_link)
@@ -1225,16 +1235,9 @@ class LinkHelper:
             pre_inline_title = ""
         POGGER.debug(">>pre_inline_link>>$>>", pre_inline_link)
 
-        text_from_blocks_raw = ParserHelper.resolve_backspaces_from_text(
-            text_from_blocks_raw
-        )
         POGGER.debug(">>text_from_blocks_raw>>$>>", text_from_blocks_raw)
         POGGER.debug(">>inline_blocks[ind]>>$>>", inline_blocks[ind])
 
-        line_number, column_number = (
-            inline_blocks[ind].line_number,
-            inline_blocks[ind].column_number,
-        )
         if start_text == LinkHelper.__link_start_sequence:
             token_to_append = LinkHelper.__add_link_start_token(
                 inline_blocks,
@@ -1459,13 +1462,15 @@ class LinkHelper:
     def __try_to_find_link_match(new_index, source_text, text_from_blocks):
         POGGER.debug("collapsed reference?")
 
-        after_open_index = new_index + 1
-        ex_label = ""
-        label_type = ""
-        inline_link = ""
-        inline_title = ""
-        tried_full_reference_form = False
-        update_index = -1
+        (
+            after_open_index,
+            ex_label,
+            label_type,
+            inline_link,
+            inline_title,
+            tried_full_reference_form,
+            update_index,
+        ) = (new_index + 1, "", "", "", "", False, -1)
 
         if ParserHelper.is_character_at_index(
             source_text, after_open_index, LinkHelper.__link_format_reference_end
@@ -1508,14 +1513,12 @@ class LinkHelper:
     @staticmethod
     def __encode_link_destination(link_to_encode):
 
-        el_parts = []
         percent_index, before_data = ParserHelper.collect_until_one_of_characters(
             link_to_encode, 0, LinkHelper.__special_link_destination_characters
         )
-        el_parts.append(
+        el_parts, link_to_encode_size = [
             urllib.parse.quote(before_data, safe=LinkHelper.__link_safe_characters)
-        )
-        link_to_encode_size = len(link_to_encode)
+        ], len(link_to_encode)
         while percent_index < link_to_encode_size:
             special_character = link_to_encode[percent_index]
             percent_index += 1

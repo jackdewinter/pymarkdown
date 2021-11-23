@@ -10,8 +10,10 @@ class RequeueLineInfo:
 
     def __init__(self, lines_to_requeue, force_ignore_first_as_lrd=None):
         assert lines_to_requeue
-        self.__lines_to_requeue = lines_to_requeue
-        self.__force_ignore_first_as_lrd = force_ignore_first_as_lrd
+        self.__lines_to_requeue, self.__force_ignore_first_as_lrd = (
+            lines_to_requeue,
+            force_ignore_first_as_lrd,
+        )
 
     @property
     def lines_to_requeue(self):
