@@ -623,6 +623,31 @@ class HtmlHelper:
         return html_block_type
 
     @staticmethod
+    def __check_for_normal_html_blocks_adjust_tag(
+        remaining_html_tag, line_to_parse, character_index
+    ):
+
+        adjusted_remaining_html_tag, line_to_parse_size = remaining_html_tag, len(
+            line_to_parse
+        )
+        is_end_tag = (
+            adjusted_remaining_html_tag
+            and adjusted_remaining_html_tag[0] == HtmlHelper.__html_tag_start
+        )
+        if is_end_tag:
+            adjusted_remaining_html_tag = adjusted_remaining_html_tag[1:]
+
+        if (
+            character_index < line_to_parse_size
+            and line_to_parse[character_index] == HtmlHelper.__html_tag_end
+            and adjusted_remaining_html_tag
+            and adjusted_remaining_html_tag[-1] == HtmlHelper.__html_tag_start
+        ):
+            adjusted_remaining_html_tag = adjusted_remaining_html_tag[0:-1]
+
+        return adjusted_remaining_html_tag, line_to_parse_size, is_end_tag
+
+    @staticmethod
     def __check_for_normal_html_blocks(
         remaining_html_tag, line_to_parse, character_index
     ):
@@ -635,23 +660,14 @@ class HtmlHelper:
         if HtmlHelper.__is_valid_block_1_tag_name(remaining_html_tag):
             html_block_type = HtmlHelper.html_block_1
         else:
-            adjusted_remaining_html_tag, line_to_parse_size = remaining_html_tag, len(
-                line_to_parse
+            (
+                adjusted_remaining_html_tag,
+                line_to_parse_size,
+                is_end_tag,
+            ) = HtmlHelper.__check_for_normal_html_blocks_adjust_tag(
+                remaining_html_tag, line_to_parse, character_index
             )
-            is_end_tag = (
-                adjusted_remaining_html_tag
-                and adjusted_remaining_html_tag[0] == HtmlHelper.__html_tag_start
-            )
-            if is_end_tag:
-                adjusted_remaining_html_tag = adjusted_remaining_html_tag[1:]
 
-            if (
-                character_index < line_to_parse_size
-                and line_to_parse[character_index] == HtmlHelper.__html_tag_end
-                and adjusted_remaining_html_tag
-                and adjusted_remaining_html_tag[-1] == HtmlHelper.__html_tag_start
-            ):
-                adjusted_remaining_html_tag = adjusted_remaining_html_tag[0:-1]
             if adjusted_remaining_html_tag in HtmlHelper.__html_block_6_start:
                 html_block_type = HtmlHelper.html_block_6
             elif is_end_tag:
@@ -659,8 +675,10 @@ class HtmlHelper:
                     adjusted_remaining_html_tag, line_to_parse, character_index
                 )
                 if is_complete:
-                    html_block_type = HtmlHelper.html_block_7
-                    character_index = complete_parse_index
+                    html_block_type, character_index = (
+                        HtmlHelper.html_block_7,
+                        complete_parse_index,
+                    )
             else:
                 (
                     is_complete,
@@ -669,8 +687,10 @@ class HtmlHelper:
                     adjusted_remaining_html_tag, line_to_parse, character_index
                 )
                 if is_complete:
-                    html_block_type = HtmlHelper.html_block_7
-                    character_index = complete_parse_index
+                    html_block_type, character_index = (
+                        HtmlHelper.html_block_7,
+                        complete_parse_index,
+                    )
             if html_block_type == HtmlHelper.html_block_7:
                 new_index, _ = ParserHelper.extract_whitespace(
                     line_to_parse, character_index
