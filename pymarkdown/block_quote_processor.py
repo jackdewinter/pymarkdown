@@ -114,10 +114,8 @@ class BlockQuoteProcessor:
         """
         POGGER.debug("handle_block_quote_block>>start")
 
-        # TODO did_process and was_container_start are always the same?
         (
             did_process,
-            was_container_start,
             avoid_block_starts,
             did_blank,
             removed_chars_at_start,
@@ -130,7 +128,6 @@ class BlockQuoteProcessor:
             adjusted_text_to_parse,
             adjusted_index_number,
         ) = (
-            False,
             False,
             False,
             False,
@@ -193,7 +190,6 @@ class BlockQuoteProcessor:
                 last_block_quote_index,
                 adjusted_index_number,
             )
-            was_container_start = did_process
         elif (
             parser_state.token_stack[-1].was_link_definition_started
             and not requeue_line_info
@@ -206,9 +202,9 @@ class BlockQuoteProcessor:
             "handle_block_quote_block>>end>>container_level_tokens>>$",
             container_level_tokens,
         )
+
         return (
             did_process,
-            was_container_start,
             end_of_bquote_start_index,
             block_quote_data,
             adjusted_text_to_parse,
@@ -1029,7 +1025,6 @@ class BlockQuoteProcessor:
         found_bq_stack_token.matching_markdown_token.add_leading_spaces(removed_text)
 
         return block_quote_data, line_to_parse, container_level_tokens
-
 
     # pylint: disable=too-many-arguments
     @staticmethod

@@ -33,6 +33,10 @@
   - [extensions and rules](https://github.com/jackdewinter/pymarkdown/issues/143)
 - [Changed - Issue 145](https://github.com/jackdewinter/pymarkdown/issues/145)
   - refactoring: Either implemented todo or filed new issue to do it later
+- [Changed - Issue 151](https://github.com/jackdewinter/pymarkdown/issues/151)
+  - refactoring: tightening up code after refactoring
+- [Changed - Issue 155](https://github.com/jackdewinter/pymarkdown/issues/155)
+  - refactoring: moving this_bq_count and stack_bq_quote into new BlockQuoteData class
 
 ### Fixed
 

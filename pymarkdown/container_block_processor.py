@@ -77,7 +77,6 @@ class ContainerBlockProcessor:
         (
             end_container_indices,
             did_process,
-            was_container_start,
             block_quote_data,
             line_to_parse,
             start_index,
@@ -124,7 +123,7 @@ class ContainerBlockProcessor:
             end_container_indices,
             leaf_tokens,
             container_level_tokens,
-            was_container_start,
+            did_process,
             avoid_block_starts,
             start_index,
             removed_chars_at_start,
@@ -316,7 +315,6 @@ class ContainerBlockProcessor:
         (
             can_continue,
             did_process,
-            was_container_start,
             end_container_indices.block_index,
             block_quote_data,
             line_to_parse,
@@ -346,7 +344,6 @@ class ContainerBlockProcessor:
 
             (
                 did_process,
-                was_container_start,
                 end_container_indices.ulist_index,
                 line_to_parse,
                 removed_chars_at_start,
@@ -359,7 +356,6 @@ class ContainerBlockProcessor:
                 True,
                 parser_state,
                 did_process,
-                was_container_start,
                 extracted_whitespace,
                 adj_ws,
                 block_quote_data,
@@ -379,7 +375,6 @@ class ContainerBlockProcessor:
             # POGGER.debug("was_container_start>>$", was_container_start)
             (
                 did_process,
-                was_container_start,
                 end_container_indices.olist_index,
                 line_to_parse,
                 removed_chars_at_start,
@@ -392,7 +387,6 @@ class ContainerBlockProcessor:
                 False,
                 parser_state,
                 did_process,
-                was_container_start,
                 extracted_whitespace,
                 adj_ws,
                 block_quote_data,
@@ -408,7 +402,6 @@ class ContainerBlockProcessor:
         return (
             end_container_indices,
             did_process,
-            was_container_start,
             block_quote_data,
             line_to_parse,
             start_index,
@@ -585,7 +578,6 @@ class ContainerBlockProcessor:
         )
         (
             did_process,
-            was_container_start,
             block_index,
             block_quote_data,
             line_to_parse,
@@ -624,7 +616,6 @@ class ContainerBlockProcessor:
         return (
             not requeue_line_info and not did_blank,
             did_process,
-            was_container_start,
             block_index,
             block_quote_data,
             line_to_parse,
@@ -650,7 +641,6 @@ class ContainerBlockProcessor:
         is_ulist,
         parser_state,
         did_process,
-        was_container_start,
         extracted_whitespace,
         adj_ws,
         block_quote_data,
@@ -682,7 +672,7 @@ class ContainerBlockProcessor:
         if not did_process:
             (
                 did_process,
-                was_container_start,
+                _,
                 new_list_index,
                 line_to_parse,
                 resultant_tokens,
@@ -692,7 +682,7 @@ class ContainerBlockProcessor:
             ) = ListBlockProcessor.handle_list_block(
                 is_ulist,
                 parser_state,
-                was_container_start,
+                did_process,
                 new_position_marker,
                 extracted_whitespace,
                 adj_ws,
@@ -702,7 +692,6 @@ class ContainerBlockProcessor:
             )
             if requeue_line_info:
                 return (
-                    None,
                     None,
                     None,
                     None,
@@ -727,7 +716,6 @@ class ContainerBlockProcessor:
 
         return (
             did_process,
-            was_container_start,
             new_list_index,
             line_to_parse,
             removed_chars_at_start,
