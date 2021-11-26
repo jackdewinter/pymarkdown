@@ -3,6 +3,7 @@ Module to provide processing for the container blocks.
 """
 import logging
 
+from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.block_quote_processor import BlockQuoteProcessor
 from pymarkdown.container_indices import ContainerIndices
 from pymarkdown.extensions.pragma_token import PragmaExtension
@@ -63,8 +64,7 @@ class ContainerBlockProcessor:
             line_to_parse,
             current_container_blocks,
             adj_ws,
-            stack_bq_count,
-            this_bq_count,
+            block_quote_data,
         ) = ContainerBlockProcessor.__prepare_container_start_variables(
             parser_state,
             position_marker,
@@ -77,9 +77,7 @@ class ContainerBlockProcessor:
         (
             end_container_indices,
             did_process,
-            was_container_start,
-            this_bq_count,
-            stack_bq_count,
+            block_quote_data,
             line_to_parse,
             start_index,
             leaf_tokens,
@@ -95,17 +93,17 @@ class ContainerBlockProcessor:
             position_marker,
             extracted_whitespace,
             adj_ws,
-            this_bq_count,
-            stack_bq_count,
+            block_quote_data,
             start_index,
             container_start_bq_count,
             current_container_blocks,
         )
+
         if requeue_line_info or did_blank:
             return (
                 container_level_tokens,
                 line_to_parse,
-                this_bq_count,
+                block_quote_data.current_count,
                 requeue_line_info,
                 did_blank,
             )
@@ -115,18 +113,17 @@ class ContainerBlockProcessor:
             line_to_parse,
             leaf_tokens,
             container_level_tokens,
-            this_bq_count,
+            block_quote_data,
             last_list_start_index,
         ) = ContainerBlockProcessor.__handle_nested_blocks(
             parser_state,
             container_depth,
-            this_bq_count,
-            stack_bq_count,
+            block_quote_data,
             parser_properties,
             end_container_indices,
             leaf_tokens,
             container_level_tokens,
-            was_container_start,
+            did_process,
             avoid_block_starts,
             start_index,
             removed_chars_at_start,
@@ -143,6 +140,7 @@ class ContainerBlockProcessor:
                 line_to_parse,
                 container_level_tokens,
                 used_indent,
+                block_quote_data,
                 requeue_line_info,
             ) = ContainerBlockProcessor.__handle_block_continuations(
                 parser_state,
@@ -152,8 +150,7 @@ class ContainerBlockProcessor:
                 container_level_tokens,
                 extracted_whitespace,
                 leaf_tokens,
-                this_bq_count,
-                stack_bq_count,
+                block_quote_data,
                 container_start_bq_count,
             )
         if can_continue:
@@ -166,7 +163,7 @@ class ContainerBlockProcessor:
                 start_index,
                 container_level_tokens,
                 leaf_tokens,
-                this_bq_count,
+                block_quote_data,
                 removed_chars_at_start,
                 ignore_link_definition_start,
                 last_block_quote_index,
@@ -176,7 +173,7 @@ class ContainerBlockProcessor:
         return (
             container_level_tokens,
             line_to_parse,
-            this_bq_count,
+            block_quote_data.current_count,
             requeue_line_info,
             False,
         )
@@ -221,8 +218,7 @@ class ContainerBlockProcessor:
         (
             current_container_blocks,
             adj_ws,
-            stack_bq_count,
-            this_bq_count,
+            block_quote_data,
         ) = ContainerBlockProcessor.__calculate_for_container_blocks(
             parser_state,
             line_to_parse,
@@ -234,8 +230,7 @@ class ContainerBlockProcessor:
             line_to_parse,
             current_container_blocks,
             adj_ws,
-            stack_bq_count,
-            this_bq_count,
+            block_quote_data,
         )
 
     # pylint: enable=too-many-arguments
@@ -250,8 +245,7 @@ class ContainerBlockProcessor:
         container_level_tokens,
         extracted_whitespace,
         leaf_tokens,
-        this_bq_count,
-        stack_bq_count,
+        block_quote_data,
         container_start_bq_count,
     ):
         # POGGER.debug_with_visible_whitespace(
@@ -278,13 +272,12 @@ class ContainerBlockProcessor:
             #     ">>__process_list_in_progress>>$>>", line_to_parse
             # )
             # POGGER.debug("container_start_bq_count>>$", container_start_bq_count)
-            # POGGER.debug("this_bq_count>>$", this_bq_count)
-            # POGGER.debug("stack_bq_count>>$", stack_bq_count)
-            ContainerBlockProcessor.__process_lazy_lines(
+            # POGGER.debug("block_quote_data.current_count>>$", block_quote_data.current_count)
+            # POGGER.debug("block_quote_data.stack_count>>$", block_quote_data.stack_count)
+            block_quote_data = ContainerBlockProcessor.__process_lazy_lines(
                 parser_state,
                 leaf_tokens,
-                this_bq_count,
-                stack_bq_count,
+                block_quote_data,
                 line_to_parse,
                 container_level_tokens,
                 container_start_bq_count,
@@ -296,6 +289,7 @@ class ContainerBlockProcessor:
             line_to_parse,
             container_level_tokens,
             used_indent,
+            block_quote_data,
             requeue_line_info,
         )
 
@@ -308,24 +302,21 @@ class ContainerBlockProcessor:
         position_marker,
         extracted_whitespace,
         adj_ws,
-        this_bq_count,
-        stack_bq_count,
+        block_quote_data,
         start_index,
         container_start_bq_count,
         current_container_blocks,
     ):
 
-        # POGGER.debug("this_bq_count>>$", this_bq_count)
+        # POGGER.debug("block_quote_data.current_count>>$", block_quote_data.current_count)
 
         end_container_indices = ContainerIndices(-1, -1, -1)
         parser_state.nested_list_start = None
         (
             can_continue,
             did_process,
-            was_container_start,
             end_container_indices.block_index,
-            this_bq_count,
-            stack_bq_count,
+            block_quote_data,
             line_to_parse,
             start_index,
             leaf_tokens,
@@ -341,23 +332,22 @@ class ContainerBlockProcessor:
             parser_state,
             extracted_whitespace,
             adj_ws,
-            this_bq_count,
-            stack_bq_count,
+            block_quote_data,
             start_index,
             container_start_bq_count,
         )
         if can_continue:
-            # POGGER.debug("this_bq_count>>$", this_bq_count)
-            # POGGER.debug("stack_bq_count>>$", stack_bq_count)
+            # POGGER.debug("block_quote_data.current_count>>$", block_quote_data.current_count)
+            # POGGER.debug("block_quote_data.stack_count>>$", block_quote_data.stack_count)
             # POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
             # POGGER.debug(">>did_process>>$", did_process)
 
             (
                 did_process,
-                was_container_start,
                 end_container_indices.ulist_index,
                 line_to_parse,
                 removed_chars_at_start,
+                block_quote_data,
                 requeue_line_info,
             ) = ContainerBlockProcessor.__get_list_start_index(
                 position_marker,
@@ -366,11 +356,9 @@ class ContainerBlockProcessor:
                 True,
                 parser_state,
                 did_process,
-                was_container_start,
                 extracted_whitespace,
                 adj_ws,
-                stack_bq_count,
-                this_bq_count,
+                block_quote_data,
                 removed_chars_at_start,
                 current_container_blocks,
                 container_level_tokens,
@@ -382,15 +370,15 @@ class ContainerBlockProcessor:
                 can_continue = False
 
         if can_continue:
-            # POGGER.debug("this_bq_count>>$", this_bq_count)
-            # POGGER.debug("stack_bq_count>>$", stack_bq_count)
+            # POGGER.debug("block_quote_data.current_count>>$", block_quote_data.current_count)
+            # POGGER.debug("block_quote_data.stack_count>>$", block_quote_data.stack_count)
             # POGGER.debug("was_container_start>>$", was_container_start)
             (
                 did_process,
-                was_container_start,
                 end_container_indices.olist_index,
                 line_to_parse,
                 removed_chars_at_start,
+                block_quote_data,
                 requeue_line_info,
             ) = ContainerBlockProcessor.__get_list_start_index(
                 position_marker,
@@ -399,11 +387,9 @@ class ContainerBlockProcessor:
                 False,
                 parser_state,
                 did_process,
-                was_container_start,
                 extracted_whitespace,
                 adj_ws,
-                stack_bq_count,
-                this_bq_count,
+                block_quote_data,
                 removed_chars_at_start,
                 current_container_blocks,
                 container_level_tokens,
@@ -412,12 +398,11 @@ class ContainerBlockProcessor:
                 POGGER.debug(
                     ">>requeuing lines after looking for unordered list start. returning."
                 )
+
         return (
             end_container_indices,
             did_process,
-            was_container_start,
-            this_bq_count,
-            stack_bq_count,
+            block_quote_data,
             line_to_parse,
             start_index,
             leaf_tokens,
@@ -437,8 +422,7 @@ class ContainerBlockProcessor:
     def __handle_nested_blocks(
         parser_state,
         container_depth,
-        this_bq_count,
-        stack_bq_count,
+        block_quote_data,
         parser_properties,
         end_container_indices,
         leaf_tokens,
@@ -453,8 +437,8 @@ class ContainerBlockProcessor:
         last_block_quote_index,
     ):
 
-        # POGGER.debug("this_bq_count>>$", this_bq_count)
-        # POGGER.debug("stack_bq_count>>$", stack_bq_count)
+        # POGGER.debug("block_quote_data.current_count>>$", block_quote_data.current_count)
+        # POGGER.debug("block_quote_data.stack_count>>$", block_quote_data.stack_count)
 
         # POGGER.debug("last_block_quote_index>>$", last_block_quote_index)
         # POGGER.debug("indices>>$", end_container_indices)
@@ -477,20 +461,19 @@ class ContainerBlockProcessor:
             new_position_marker = PositionMarker(
                 position_marker.line_number, start_index, line_to_parse
             )
-            # POGGER.debug("this_bq_count>>$", this_bq_count)
-            # POGGER.debug("stack_bq_count>>$", stack_bq_count)
+            # POGGER.debug("block_quote_data.current_count>>$", block_quote_data.current_count)
+            # POGGER.debug("block_quote_data.stack_count>>$", block_quote_data.stack_count)
             # POGGER.debug("was_container_start>>$", was_container_start)
             (
                 line_to_parse,
                 leaf_tokens,
                 container_level_tokens,
-                this_bq_count,
+                block_quote_data,
                 did_process_blank_line,
             ) = ContainerBlockProcessor.__handle_nested_container_blocks(
                 parser_state,
                 container_depth,
-                this_bq_count,
-                stack_bq_count,
+                block_quote_data,
                 new_position_marker,
                 parser_properties,
                 end_container_indices,
@@ -503,8 +486,8 @@ class ContainerBlockProcessor:
                 text_removed_by_container,
             )
             # POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
-            # POGGER.debug("this_bq_count>>$", this_bq_count)
-            # POGGER.debug("stack_bq_count>>$", stack_bq_count)
+            # POGGER.debug("block_quote_data.current_count>>$", block_quote_data.current_count)
+            # POGGER.debug("block_quote_data.stack_count>>$", block_quote_data.stack_count)
 
         # POGGER.debug("olist->container_level_tokens->$", container_level_tokens)
         # POGGER.debug("removed_chars_at_start>>>$", removed_chars_at_start)
@@ -513,7 +496,7 @@ class ContainerBlockProcessor:
             line_to_parse,
             leaf_tokens,
             container_level_tokens,
-            this_bq_count,
+            block_quote_data,
             last_list_start_index,
         )
 
@@ -530,13 +513,12 @@ class ContainerBlockProcessor:
         start_index,
         container_level_tokens,
         leaf_tokens,
-        this_bq_count,
+        block_quote_data,
         removed_chars_at_start,
         ignore_link_definition_start,
         last_block_quote_index,
         last_list_start_index,
     ):
-
         # POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
         # POGGER.debug("container_level_tokens>>$>>", container_level_tokens)
 
@@ -565,7 +547,7 @@ class ContainerBlockProcessor:
             parser_state,
             leaf_tokens,
             newer_position_marker,
-            this_bq_count,
+            block_quote_data,
             removed_chars_at_start,
             ignore_link_definition_start,
             last_block_quote_index,
@@ -587,8 +569,7 @@ class ContainerBlockProcessor:
         parser_state,
         extracted_whitespace,
         adj_ws,
-        this_bq_count,
-        stack_bq_count,
+        block_quote_data,
         start_index,
         container_start_bq_count,
     ):
@@ -597,10 +578,8 @@ class ContainerBlockProcessor:
         )
         (
             did_process,
-            was_container_start,
             block_index,
-            this_bq_count,
-            stack_bq_count,
+            block_quote_data,
             line_to_parse,
             start_index,
             leaf_tokens,
@@ -616,13 +595,12 @@ class ContainerBlockProcessor:
             new_position_marker,
             extracted_whitespace,
             adj_ws,
-            this_bq_count,
-            stack_bq_count,
+            block_quote_data,
             container_start_bq_count,
         )
         # POGGER.debug("container_start_bq_count>>:$", container_start_bq_count)
-        # POGGER.debug("this_bq_count>>:$", this_bq_count)
-        # POGGER.debug("stack_bq_count>>$", stack_bq_count)
+        # POGGER.debug("block_quote_data.current_count>>:$", block_quote_data.current_count)
+        # POGGER.debug("block_quote_data.stack_count>>$", block_quote_data.stack_count)
         # POGGER.debug("did_process>>$", did_process)
         POGGER.debug("text>>:$:>>", line_to_parse)
         # POGGER.debug(">>container_level_tokens>>$", container_level_tokens)
@@ -638,10 +616,8 @@ class ContainerBlockProcessor:
         return (
             not requeue_line_info and not did_blank,
             did_process,
-            was_container_start,
             block_index,
-            this_bq_count,
-            stack_bq_count,
+            block_quote_data,
             line_to_parse,
             start_index,
             leaf_tokens,
@@ -665,11 +641,9 @@ class ContainerBlockProcessor:
         is_ulist,
         parser_state,
         did_process,
-        was_container_start,
         extracted_whitespace,
         adj_ws,
-        stack_bq_count,
-        this_bq_count,
+        block_quote_data,
         removed_chars_at_start,
         current_container_blocks,
         container_level_tokens,
@@ -698,21 +672,21 @@ class ContainerBlockProcessor:
         if not did_process:
             (
                 did_process,
-                was_container_start,
+                _,
                 new_list_index,
                 line_to_parse,
                 resultant_tokens,
                 removed_chars_at_start,
+                block_quote_data,
                 requeue_line_info,
             ) = ListBlockProcessor.handle_list_block(
                 is_ulist,
                 parser_state,
-                was_container_start,
+                did_process,
                 new_position_marker,
                 extracted_whitespace,
                 adj_ws,
-                stack_bq_count,
-                this_bq_count,
+                block_quote_data,
                 removed_chars_at_start,
                 current_container_blocks,
             )
@@ -722,7 +696,7 @@ class ContainerBlockProcessor:
                     None,
                     None,
                     None,
-                    None,
+                    block_quote_data,
                     requeue_line_info,
                 )
             container_level_tokens.extend(resultant_tokens)
@@ -742,10 +716,10 @@ class ContainerBlockProcessor:
 
         return (
             did_process,
-            was_container_start,
             new_list_index,
             line_to_parse,
             removed_chars_at_start,
+            block_quote_data,
             None,
         )
 
@@ -777,8 +751,10 @@ class ContainerBlockProcessor:
         return (
             current_container_blocks,
             adj_ws,
-            parser_state.count_of_block_quotes_on_stack(),
-            0 if init_bq is None else init_bq,
+            BlockQuoteData(
+                0 if init_bq is None else init_bq,
+                parser_state.count_of_block_quotes_on_stack(),
+            ),
         )
 
     # pylint: disable=too-many-arguments
@@ -846,8 +822,7 @@ class ContainerBlockProcessor:
     def __handle_nested_container_blocks(
         parser_state,
         container_depth,
-        this_bq_count,
-        stack_bq_count,
+        block_quote_data,
         position_marker,
         parser_properties,
         end_container_indices,
@@ -912,8 +887,7 @@ class ContainerBlockProcessor:
                 end_container_indices,
                 nested_container_starts,
                 adj_line_to_parse,
-                this_bq_count,
-                stack_bq_count,
+                block_quote_data,
                 start_index,
             )
 
@@ -925,8 +899,7 @@ class ContainerBlockProcessor:
                 adjusted_text_to_parse,
             ) = ContainerBlockProcessor.__do_nested_cleanup(
                 parser_state,
-                stack_bq_count,
-                this_bq_count,
+                block_quote_data,
                 delta,
                 already_adjusted,
                 adj_line_to_parse,
@@ -937,12 +910,12 @@ class ContainerBlockProcessor:
 
             (
                 did_process_blank_line,
-                this_bq_count,
+                block_quote_data,
                 adjusted_text_to_parse,
             ) = ContainerBlockProcessor.__check_for_next_container(
                 parser_state,
                 nested_container_starts,
-                this_bq_count,
+                block_quote_data,
                 adjusted_text_to_parse,
                 adj_line_to_parse,
                 end_container_indices,
@@ -950,11 +923,12 @@ class ContainerBlockProcessor:
                 container_depth,
                 parser_properties,
             )
+
         return (
             adjusted_text_to_parse,
             leaf_tokens,
             container_level_tokens,
-            this_bq_count,
+            block_quote_data,
             did_process_blank_line,
         )
 
@@ -967,8 +941,7 @@ class ContainerBlockProcessor:
         end_container_indices,
         nested_container_starts,
         adj_line_to_parse,
-        this_bq_count,
-        stack_bq_count,
+        block_quote_data,
         start_index,
     ):
 
@@ -1019,8 +992,7 @@ class ContainerBlockProcessor:
                     nested_container_starts,
                     adj_line_to_parse,
                     indent_was_adjusted,
-                    this_bq_count,
-                    stack_bq_count,
+                    block_quote_data,
                 )
         return (
             start_index,
@@ -1100,10 +1072,8 @@ class ContainerBlockProcessor:
         nested_container_starts,
         adj_line_to_parse,
         indent_was_adjusted,
-        this_bq_count,
-        stack_bq_count,
+        block_quote_data,
     ):
-
         already_adjusted = False
         if (
             parser_state.token_document[-1].is_blank_line
@@ -1138,9 +1108,9 @@ class ContainerBlockProcessor:
             )
 
             POGGER.debug(
-                "this_bq_count:$, stack_bq_count:$",
-                this_bq_count,
-                stack_bq_count,
+                "block_quote_data.current_count:$, block_quote_data.stack_count:$",
+                block_quote_data.current_count,
+                block_quote_data.stack_count,
             )
 
             (
@@ -1193,8 +1163,7 @@ class ContainerBlockProcessor:
     @staticmethod
     def __do_nested_cleanup(
         parser_state,
-        stack_bq_count,
-        this_bq_count,
+        block_quote_data,
         delta,
         already_adjusted,
         adj_line_to_parse,
@@ -1203,9 +1172,9 @@ class ContainerBlockProcessor:
         adjusted_text_to_parse,
     ):
         POGGER.debug(
-            "check next container_start>mid>>stack_bq_count>>$<<this_bq_count<<$",
-            stack_bq_count,
-            this_bq_count,
+            "check next container_start>mid>>block_quote_data.stack_count>>$<<block_quote_data.current_count<<$",
+            block_quote_data.stack_count,
+            block_quote_data.current_count,
         )
         if delta or already_adjusted:
             POGGER.debug(
@@ -1234,7 +1203,7 @@ class ContainerBlockProcessor:
     def __check_for_next_container(
         parser_state,
         nested_container_starts,
-        this_bq_count,
+        block_quote_data,
         adjusted_text_to_parse,
         adj_line_to_parse,
         end_container_indices,
@@ -1260,20 +1229,20 @@ class ContainerBlockProcessor:
             )
             (
                 adjusted_text_to_parse,
-                this_bq_count,
+                block_quote_data,
                 did_process_blank_line,
             ) = ContainerBlockProcessor.__look_for_container_blocks(
                 parser_state,
                 adj_line_to_parse,
                 end_container_indices.block_index,
                 container_depth,
-                this_bq_count,
+                block_quote_data,
                 position_marker,
                 parser_properties,
             )
         parser_state.set_no_para_start_if_empty()
 
-        return did_process_blank_line, this_bq_count, adjusted_text_to_parse
+        return did_process_blank_line, block_quote_data, adjusted_text_to_parse
 
     # pylint: enable=too-many-arguments
 
@@ -1382,7 +1351,7 @@ class ContainerBlockProcessor:
         adj_line_to_parse,
         end_of_bquote_start_index,
         container_depth,
-        this_bq_count,
+        block_quote_data,
         position_marker,
         parser_properties,
     ):
@@ -1391,9 +1360,9 @@ class ContainerBlockProcessor:
         """
         POGGER.debug("check next container_start>recursing")
         POGGER.debug("check next container_start>>$\n", adj_line_to_parse)
-        POGGER.debug("this_bq_count>$", this_bq_count)
+        POGGER.debug("block_quote_data.current_count>$", block_quote_data.current_count)
         container_start_bq_count, adj_block, position_marker = (
-            this_bq_count,
+            block_quote_data.current_count,
             None if end_of_bquote_start_index == -1 else end_of_bquote_start_index,
             PositionMarker(position_marker.line_number, -1, adj_line_to_parse),
         )
@@ -1401,7 +1370,7 @@ class ContainerBlockProcessor:
         (
             produced_inner_tokens,
             line_to_parse,
-            proposed_this_bq_count,
+            current_bq_count_increment,
             requeue_line_info,
             did_process_blank_line,
         ) = ContainerBlockProcessor.parse_line_for_container_blocks(
@@ -1412,7 +1381,7 @@ class ContainerBlockProcessor:
             container_start_bq_count,
             container_depth=container_depth + 1,
             foobar=adj_block,
-            init_bq=this_bq_count,
+            init_bq=block_quote_data.current_count,
         )
         assert not requeue_line_info or not requeue_line_info.lines_to_requeue
 
@@ -1423,16 +1392,24 @@ class ContainerBlockProcessor:
             parser_state.token_document,
         )
         POGGER.debug("check next container_start>line_parse>>$", line_to_parse)
-        POGGER.debug("this_bq_count>$", this_bq_count)
-        if proposed_this_bq_count:
-            this_bq_count += proposed_this_bq_count
-        POGGER.debug("this_bq_count>$", this_bq_count)
+        if current_bq_count_increment:
+            POGGER.debug(
+                "block_quote_data.current_count>$", block_quote_data.current_count
+            )
+            block_quote_data = BlockQuoteData(
+                block_quote_data.current_count + current_bq_count_increment,
+                parser_state.count_of_block_quotes_on_stack(),
+            )
+            POGGER.debug(
+                "block_quote_data.current_count>$", block_quote_data.current_count
+            )
 
         POGGER.debug("parser_state.token_document>$", parser_state.token_document)
         parser_state.token_document.extend(produced_inner_tokens)
         POGGER.debug("parser_state.token_document>$", parser_state.token_document)
         POGGER.debug("did_process_blank_line>$", did_process_blank_line)
-        return line_to_parse, this_bq_count, did_process_blank_line
+
+        return line_to_parse, block_quote_data, did_process_blank_line
 
     # pylint: enable=too-many-arguments
 
@@ -1479,8 +1456,7 @@ class ContainerBlockProcessor:
     def __process_lazy_lines(
         parser_state,
         leaf_tokens,
-        this_bq_count,
-        stack_bq_count,
+        block_quote_data,
         line_to_parse,
         container_level_tokens,
         container_start_bq_count,
@@ -1496,21 +1472,28 @@ class ContainerBlockProcessor:
         )
         remaining_line = line_to_parse[after_ws_index:]
         POGGER.debug("container_start_bq_count>>:$", container_start_bq_count)
-        POGGER.debug("__process_lazy_lines>>this_bq_count>$<", this_bq_count)
-        POGGER.debug("__process_lazy_lines>>stack_bq_count>$<", stack_bq_count)
+        POGGER.debug(
+            "__process_lazy_lines>>block_quote_data.current_count>$<",
+            block_quote_data.current_count,
+        )
+        POGGER.debug(
+            "__process_lazy_lines>>block_quote_data.stack_count>$<",
+            block_quote_data.stack_count,
+        )
         POGGER.debug("__process_lazy_lines>>mod->ltp>$<", remaining_line)
         POGGER.debug("__process_lazy_lines>>mod->ews>$<", ex_whitespace)
 
-        lazy_tokens = BlockQuoteProcessor.check_for_lazy_handling(
+        lazy_tokens, block_quote_data = BlockQuoteProcessor.check_for_lazy_handling(
             parser_state,
-            this_bq_count,
-            stack_bq_count,
+            block_quote_data,
             remaining_line,
             ex_whitespace,
         )
+
         if lazy_tokens:
             POGGER.debug("clt>>lazy-found")
             container_level_tokens.extend(lazy_tokens)
+        return block_quote_data
 
     # pylint: enable=too-many-arguments
 
@@ -1520,7 +1503,7 @@ class ContainerBlockProcessor:
         parser_state,
         leaf_tokens,
         xposition_marker,
-        this_bq_count,
+        block_quote_data,
         removed_chars_at_start,
         ignore_link_definition_start,
         last_block_quote_index,
@@ -1542,7 +1525,7 @@ class ContainerBlockProcessor:
         ) = ContainerBlockProcessor.__parse_line_for_leaf_blocks(
             parser_state,
             position_marker,
-            this_bq_count,
+            block_quote_data,
             removed_chars_at_start,
             ignore_link_definition_start,
             last_block_quote_index,
@@ -1739,12 +1722,12 @@ class ContainerBlockProcessor:
             extracted_whitespace,
         )
 
-    # pylint: disable=too-many-arguments,too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __parse_line_for_leaf_blocks(
         parser_state,
         position_marker,
-        this_bq_count,
+        block_quote_data,
         removed_chars_at_start,
         ignore_link_definition_start,
         last_block_quote_index,
@@ -1759,7 +1742,7 @@ class ContainerBlockProcessor:
         parser.  Debugging should be uncommented only if needed.
         """
         POGGER.debug("Leaf Line:$:", position_marker.text_to_parse)
-        # POGGER.debug("this_bq_count:$:", this_bq_count)
+        # POGGER.debug("block_quote_data.current_count:$:", block_quote_data.current_count)
         new_tokens = []
 
         (
@@ -1790,37 +1773,35 @@ class ContainerBlockProcessor:
                     last_list_start_index,
                 )
             if not new_tokens:
-                stack_bq_count = parser_state.count_of_block_quotes_on_stack()
                 new_tokens = LeafBlockProcessor.parse_setext_headings(
                     parser_state,
                     leaf_block_position_marker,
                     extracted_whitespace,
-                    this_bq_count,
-                    stack_bq_count,
+                    block_quote_data,
                 )
             if not new_tokens:
                 new_tokens = LeafBlockProcessor.parse_thematic_break(
                     parser_state,
                     leaf_block_position_marker,
                     extracted_whitespace,
-                    this_bq_count,
-                    stack_bq_count,
+                    block_quote_data,
                 )
             if not new_tokens:
                 new_tokens = LeafBlockProcessor.parse_paragraph(
                     parser_state,
                     leaf_block_position_marker,
                     extracted_whitespace,
-                    this_bq_count,
-                    stack_bq_count,
+                    block_quote_data,
                     text_removed_by_container,
                     force_it,
                 )
 
-        POGGER.debug(">>leaf--adding>>$", new_tokens)
+        # POGGER.debug(">>leaf--adding>>$", new_tokens)
         pre_tokens.extend(new_tokens)
-        POGGER.debug(">>leaf--added>>$", pre_tokens)
+        # POGGER.debug(">>leaf--added>>$", pre_tokens)
         return pre_tokens, requeue_line_info
+
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def extract_markdown_tokens_back_to_blank_line(parser_state, was_forced):
@@ -1837,8 +1818,6 @@ class ContainerBlockProcessor:
                 pre_tokens.append(last_element)
             del parser_state.token_document[-1]
         return pre_tokens
-
-    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __look_for_pragmas(

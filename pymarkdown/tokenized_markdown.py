@@ -717,8 +717,7 @@ class TokenizedMarkdown:
             assert not did_pause_lrd
             force_default_handling = True
         elif parser_state.token_stack[-1].is_code_block:
-            stack_bq_count = parser_state.count_of_block_quotes_on_stack()
-            if stack_bq_count:
+            if parser_state.count_of_block_quotes_on_stack():
                 POGGER.debug("hbl>>code block within block quote")
             else:
                 POGGER.debug("hbl>>code block")
