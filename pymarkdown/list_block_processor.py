@@ -5,6 +5,7 @@ Module to provide processing for the list blocks.
 import logging
 import string
 
+from pymarkdown.block_quote_data import BlockQuoteData
 from pymarkdown.container_markdown_token import (
     NewListItemMarkdownToken,
     OrderedListStartMarkdownToken,
@@ -343,8 +344,7 @@ class ListBlockProcessor:
         position_marker,
         extracted_whitespace,
         adj_ws,
-        stack_bq_count,
-        this_bq_count,
+        block_quote_data,
         removed_chars_at_start,
         current_container_blocks,
     ):
@@ -389,15 +389,14 @@ class ListBlockProcessor:
                 after_marker_ws_index,
                 ws_before_marker,
                 container_level_tokens,
-                stack_bq_count,
+                block_quote_data,
             ) = ListBlockProcessor.__pre_list(
                 parser_state,
                 position_marker.text_to_parse,
                 index,
                 extracted_whitespace,
                 number_of_digits,
-                stack_bq_count,
-                this_bq_count,
+                block_quote_data,
                 adj_ws=adj_ws,
             )
 
@@ -434,6 +433,7 @@ class ListBlockProcessor:
             adjusted_text_to_parse,
             container_level_tokens,
             removed_chars_at_start,
+            block_quote_data,
             requeue_line_info,
         )
         # pylint: enable=too-many-locals, too-many-arguments
@@ -867,14 +867,12 @@ class ListBlockProcessor:
         start_index,
         extracted_whitespace,
         marker_width_minus_one,
-        stack_bq_count,
-        this_bq_count,
+        block_quote_data,
         adj_ws,
     ):
         """
         Handle the processing of the first part of the list.
         """
-
         (
             after_marker_ws_index,
             ws_after_marker,
@@ -910,10 +908,9 @@ class ListBlockProcessor:
 
         (
             container_level_tokens,
-            stack_bq_count,
-        ) = ListBlockProcessor.__handle_list_nesting(
-            parser_state, stack_bq_count, this_bq_count
-        )
+            block_quote_data,
+        ) = ListBlockProcessor.__handle_list_nesting(parser_state, block_quote_data)
+
         return (
             indent_level,
             remaining_whitespace,
@@ -921,7 +918,7 @@ class ListBlockProcessor:
             after_marker_ws_index,
             ws_before_marker,
             container_level_tokens,
-            stack_bq_count,
+            block_quote_data,
         )
         # pylint: enable=too-many-arguments, too-many-locals
 
@@ -997,17 +994,18 @@ class ListBlockProcessor:
     # pylint: enable=too-many-arguments
 
     @staticmethod
-    def __handle_list_nesting(parser_state, stack_bq_count, this_bq_count):
+    def __handle_list_nesting(parser_state, block_quote_data):
         """
         Resolve any nesting issues with block quotes.
         """
         POGGER.debug(
-            ">>stack_bq_count>>$>>this_bq_count>>$",
-            stack_bq_count,
-            this_bq_count,
+            ">>block_quote_data.stack_count>>$>>block_quote_data.current_count>>$",
+            block_quote_data.stack_count,
+            block_quote_data.current_count,
         )
         container_level_tokens = []
-        while this_bq_count < stack_bq_count:
+        adjusted_stack_count = block_quote_data.stack_count
+        while block_quote_data.current_count < adjusted_stack_count:
 
             assert not container_level_tokens
             last_block_index = parser_state.find_last_block_quote_on_stack()
@@ -1018,8 +1016,13 @@ class ListBlockProcessor:
                 include_lists=True,
             )
             POGGER.debug("container_level_tokens>>$", container_level_tokens)
-            stack_bq_count -= 1
-        return container_level_tokens, stack_bq_count
+            adjusted_stack_count -= 1
+
+        if adjusted_stack_count != block_quote_data.stack_count:
+            block_quote_data = BlockQuoteData(
+                block_quote_data.current_count, adjusted_stack_count
+            )
+        return container_level_tokens, block_quote_data
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod

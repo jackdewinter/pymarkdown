@@ -6,6 +6,7 @@
             "too-many-arguments": 1
         },
         "pymarkdown/bad_tokenization_error.py": {},
+        "pymarkdown/block_quote_data.py": {},
         "pymarkdown/block_quote_processor.py": {
             "too-many-arguments": 9,
             "too-many-locals": 3

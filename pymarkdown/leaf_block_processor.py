@@ -746,8 +746,7 @@ class LeafBlockProcessor:
         parser_state,
         position_marker,
         extracted_whitespace,
-        this_bq_count,
-        stack_bq_count,
+        block_quote_data,
     ):
         """
         Handle the parsing of a thematic break.
@@ -763,7 +762,8 @@ class LeafBlockProcessor:
         if start_char:
             if parser_state.token_stack[-1].is_paragraph:
                 force_paragraph_close_if_present = (
-                    this_bq_count == 0 and stack_bq_count > 0
+                    block_quote_data.current_count == 0
+                    and block_quote_data.stack_count > 0
                 )
                 new_tokens, _ = parser_state.close_open_blocks_fn(
                     parser_state,
@@ -771,7 +771,7 @@ class LeafBlockProcessor:
                     only_these_blocks=[ParagraphStackToken],
                     was_forced=force_paragraph_close_if_present,
                 )
-            if this_bq_count == 0 and stack_bq_count > 0:
+            if block_quote_data.current_count == 0 and block_quote_data.stack_count > 0:
                 new_tokens, _ = parser_state.close_open_blocks_fn(
                     parser_state,
                     destination_array=new_tokens,
@@ -954,8 +954,7 @@ class LeafBlockProcessor:
         parser_state,
         position_marker,
         extracted_whitespace,
-        this_bq_count,
-        stack_bq_count,
+        block_quote_data,
     ):
         """
         Handle the parsing of an setext heading.
@@ -970,7 +969,7 @@ class LeafBlockProcessor:
                 LeafBlockProcessor.__setext_characters,
             )
             and parser_state.token_stack[-1].is_paragraph
-            and (this_bq_count == stack_bq_count)
+            and (block_quote_data.current_count == block_quote_data.stack_count)
         ):
             is_paragraph_continuation = (
                 LeafBlockProcessor.__adjust_continuation_for_active_list(
@@ -1070,8 +1069,7 @@ class LeafBlockProcessor:
         parser_state,
         position_marker,
         extracted_whitespace,
-        this_bq_count,
-        stack_bq_count,
+        block_quote_data,
         text_removed_by_container,
         force_it,
     ):
@@ -1089,9 +1087,9 @@ class LeafBlockProcessor:
             ]
 
         POGGER.debug(
-            "parse_paragraph>stack_bq_count>$>this_bq_count>$<",
-            stack_bq_count,
-            this_bq_count,
+            "parse_paragraph>block_quote_data.stack_count>$>block_quote_data.current_count>$<",
+            block_quote_data.stack_count,
+            block_quote_data.current_count,
         )
 
         container_index, adjusted_whitespace_length = (
@@ -1113,8 +1111,7 @@ class LeafBlockProcessor:
 
         new_tokens, extracted_whitespace = LeafBlockProcessor.__handle_paragraph_prep(
             parser_state,
-            stack_bq_count,
-            this_bq_count,
+            block_quote_data,
             adjusted_whitespace_length,
             position_marker,
             extracted_whitespace,
@@ -1131,12 +1128,10 @@ class LeafBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __handle_paragraph_prep(
         parser_state,
-        stack_bq_count,
-        this_bq_count,
+        block_quote_data,
         adjusted_whitespace_length,
         position_marker,
         extracted_whitespace,
@@ -1166,7 +1161,7 @@ class LeafBlockProcessor:
                 parser_state, until_this_index=last_list_index
             )
 
-        if stack_bq_count != 0 and this_bq_count == 0:
+        if block_quote_data.stack_count != 0 and block_quote_data.current_count == 0:
             new_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 only_these_blocks=[BlockQuoteStackToken],
@@ -1187,8 +1182,6 @@ class LeafBlockProcessor:
             new_tokens.append(new_paragraph_token)
             extracted_whitespace = ""
         return new_tokens, extracted_whitespace
-
-    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
