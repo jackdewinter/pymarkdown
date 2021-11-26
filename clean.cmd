@@ -60,29 +60,44 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing flake8 static analyzer on Python code.}
-pipenv run flake8 --exclude dist,build %MY_VERBOSE%
+pipenv run flake8 -j 4 --exclude dist,build %MY_VERBOSE%
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing static analyzer on Python code failed.}
 	goto error_end
 )
 
-echo {Executing pylint static analyzer on source Python code.}
-pipenv run pylint -j 1 --rcfile=setup.cfg %MY_VERBOSE% %PYTHON_MODULE_NAME% %PYTHON_MODULE_NAME%/extensions %PYTHON_MODULE_NAME%/plugins
+echo {Executing pylint static analyzer on Python source code.}
+pipenv run pylint -j 4 --rcfile=setup.cfg %MY_VERBOSE% %PYTHON_MODULE_NAME% %PYTHON_MODULE_NAME%/extensions %PYTHON_MODULE_NAME%/plugins
 if ERRORLEVEL 1 (
 	echo.
-	echo {Executing pylint static analyzer on source Python code failed.}
+	echo {Executing pylint static analyzer on Python source code failed.}
 	goto error_end
 )
-pipenv run python pylint_utils.py --config setup.cfg -r publish\pylint_suppression.json  pymarkdown
+
+echo {Executing pylint utils analyzer on Python source code to verify suppressions and document them.}
+pipenv run python ..\pylint_utils\main.py --config setup.cfg -r publish\pylint_suppression.json  pymarkdown
 if ERRORLEVEL 1 (
 	echo.
-	echo {Executing reporting of pylint suppressions in source Python code failed.}
+	echo {Executing reporting of pylint suppressions in Python source code failed.}
+	goto error_end
+)
+
+git diff --name-only --staged > %CLEAN_TEMPFILE%
+set TOT=
+for /f "tokens=*" %%x in (%CLEAN_TEMPFILE%) do (
+	set TOT=!TOT! %%x
+)
+echo %TOT%
+rem pipenv run python ..\pylint_utils\main.py --config setup.cfg -s %TOT%
+if ERRORLEVEL 1 (
+	echo.
+	echo {Executing reporting of unused pylint suppressions in modified Python source code failed.}
 	goto error_end
 )
 
 echo {Executing pylint static analyzer on test Python code.}
-pipenv run pylint -j 1 --rcfile=setup.cfg test %MY_VERBOSE%
+pipenv run pylint -j 4 --rcfile=setup.cfg test %MY_VERBOSE%
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing pylint static analyzer on test Python code failed.}
@@ -98,7 +113,7 @@ if ERRORLEVEL 1 (
 )
 
 echo {Executing unit tests on Python code.}
-call ptest.cmd -c
+call ptest.cmd -c -m
 if ERRORLEVEL 1 (
 	echo.
 	echo {Executing unit tests on Python code failed.}
