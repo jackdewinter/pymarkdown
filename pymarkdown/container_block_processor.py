@@ -672,7 +672,6 @@ class ContainerBlockProcessor:
         if not did_process:
             (
                 did_process,
-                _,
                 new_list_index,
                 line_to_parse,
                 resultant_tokens,
@@ -682,7 +681,6 @@ class ContainerBlockProcessor:
             ) = ListBlockProcessor.handle_list_block(
                 is_ulist,
                 parser_state,
-                did_process,
                 new_position_marker,
                 extracted_whitespace,
                 adj_ws,

@@ -924,6 +924,9 @@ class TransformToMarkdown:
                         additional_whitespace,
                     ]
                 )
+                print("a-->" + ParserHelper.make_value_visible(next_token) + "<--")
+                if next_token.is_list_start or next_token.is_thematic_break or next_token.is_paragraph:
+                    del parts_to_merge[-1]
             else:
                 print("b")
                 parts_to_merge.extend(
@@ -1126,8 +1129,6 @@ class TransformToMarkdown:
                 print(
                     f">>extracted_whitespace>>{ParserHelper.make_value_visible(extracted_whitespace)}<"
                 )
-                if len(specific_start) <= len(extracted_whitespace):
-                    extracted_whitespace = extracted_whitespace[len(specific_start) :]
 
         return extracted_whitespace
 
@@ -1385,44 +1386,132 @@ class TransformToMarkdown:
 
     # pylint: enable=too-many-arguments
 
+    def __rehydrate_list_start_previous_token(self, current_token, previous_token, extracted_whitespace):
+        previous_indent, post_adjust_whitespace, was_within_block_token = 0, None, False
+
+        print(f"rls>>previous_token>>{previous_token}<<")
+        print(f"rls>>self.container_token_stack>>{ParserHelper.make_value_visible(self.container_token_stack)}<<")
+        containing_block_quote_token = self.__look_for_last_block_token()
+        print("rls>>containing_block_quote_token>>" + \
+            f"{ParserHelper.make_value_visible(containing_block_quote_token)}<<")
+        if containing_block_quote_token:
+            print("rls>>containing_block_quote_token>>" + \
+                f"{ParserHelper.make_value_visible(containing_block_quote_token.leading_text_index)}<<")
+
+        token_stack_index = len(self.container_token_stack) - 1
+        print(f"rls>>token_stack_index>>{token_stack_index}<<")
+        while token_stack_index >= 0:
+            if self.container_token_stack[token_stack_index].is_list_start or \
+                self.container_token_stack[token_stack_index].is_block_quote_start:
+                break
+            token_stack_index -= 1
+
+        containing_list_token, deeper_containing_block_quote_token = None, None
+        if token_stack_index >= 0 and containing_block_quote_token != self.container_token_stack[token_stack_index]:
+            containing_list_token = self.container_token_stack[token_stack_index]
+            deeper_containing_block_quote_token = containing_block_quote_token
+            containing_block_quote_token = None
+
+        if previous_token.is_list_start:
+            previous_indent, extracted_whitespace = \
+                self.__rehydrate_list_start_prev_list(current_token, previous_token)
+        elif previous_token.is_block_quote_start:
+            previous_indent, extracted_whitespace = \
+                self.__rehydrate_list_start_prev_block_quote(previous_token)
+        elif containing_block_quote_token:
+            was_within_block_token, previous_indent = \
+                self.__rehydrate_list_start_contained_in_block_quote(current_token, containing_block_quote_token)
+        elif containing_list_token:
+            previous_indent, extracted_whitespace, post_adjust_whitespace = \
+                self.__rehydrate_list_start_contained_in_list(current_token, containing_list_token,
+                    deeper_containing_block_quote_token, extracted_whitespace)
+        return previous_indent, extracted_whitespace, was_within_block_token, post_adjust_whitespace
+
+    def __rehydrate_list_start_prev_list(self, current_token, previous_token):
+        previous_indent = previous_token.indent_level
+        assert len(current_token.extracted_whitespace) == previous_indent
+        extracted_whitespace = ""
+        return previous_indent, extracted_whitespace
+
+    def __rehydrate_list_start_prev_block_quote(self, previous_token):
+        extracted_whitespace = ""
+        previous_indent = (
+            len(
+                previous_token.calculate_next_leading_space_part(
+                    increment_index=False
+                )
+            )
+            if ParserHelper.newline_character in previous_token.leading_spaces
+            else len(previous_token.leading_spaces)
+        )
+        return previous_indent, extracted_whitespace
+
+    def __rehydrate_list_start_contained_in_block_quote(self, current_token, containing_block_quote_token):
+        block_quote_leading_space = containing_block_quote_token.calculate_next_leading_space_part(\
+            increment_index=False, delta=-1)
+        previous_indent = len(block_quote_leading_space)
+        print(f"adj->rls>>previous_indent>>:{previous_indent}:<<")
+        print(f"adj->rls>>current_token.indent_level>>:{current_token.indent_level}:<<")
+
+        was_within_block_token = True
+        return was_within_block_token, previous_indent
+
+    def __rehydrate_list_start_contained_in_list(self, current_token, containing_list_token,
+        deeper_containing_block_quote_token, extracted_whitespace):
+
+        print(f"adj->containing_list_token>>:{ParserHelper.make_value_visible(containing_list_token)}:<<")
+        print("adj->deeper_containing_block_quote_token>>:" + \
+            f"{ParserHelper.make_value_visible(deeper_containing_block_quote_token)}:<<")
+        block_quote_leading_space_length = 0
+        if deeper_containing_block_quote_token:
+            block_quote_leading_space = deeper_containing_block_quote_token.calculate_next_leading_space_part(\
+                increment_index=False, delta=-1)
+            block_quote_leading_space_length = len(block_quote_leading_space)
+        print(f"adj->block_quote_leading_space_length>>:{block_quote_leading_space_length}:<<")
+        post_adjust_whitespace = "".ljust(\
+            containing_list_token.indent_level - block_quote_leading_space_length, " ")
+
+        previous_indent = containing_list_token.indent_level
+        white_space_length = len(current_token.extracted_whitespace)
+        print(f"adj->len(ws)>>:{white_space_length}:<<")
+        print(f"adj->previous_indent>>:{previous_indent}:<<")
+        #assert len(current_token.extracted_whitespace) == previous_indent
+        if white_space_length > previous_indent:
+            extracted_whitespace = extracted_whitespace[previous_indent:]
+        else:
+            extracted_whitespace = ""
+        return previous_indent, extracted_whitespace, post_adjust_whitespace
+
     def __rehydrate_list_start(
         self, current_token, previous_token, next_token, transformed_data
     ):
         """
         Rehydrate the unordered list start token.
         """
-        self.container_token_stack.append(copy.deepcopy(current_token))
-
-        previous_indent, extracted_whitespace = 0, current_token.extracted_whitespace
+        extracted_whitespace = current_token.extracted_whitespace
         if previous_token:
-            if previous_token.is_list_start:
-                previous_indent = previous_token.indent_level
-                assert len(current_token.extracted_whitespace) == previous_indent
-                extracted_whitespace = ""
-            elif previous_token.is_block_quote_start:
+            previous_indent, extracted_whitespace, was_within_block_token, post_adjust_whitespace = \
+                self.__rehydrate_list_start_previous_token(current_token, previous_token, extracted_whitespace)
+        else:
+            previous_indent, post_adjust_whitespace, was_within_block_token = 0, None, False
 
-                extracted_whitespace = ""
-                previous_indent = (
-                    len(
-                        previous_token.calculate_next_leading_space_part(
-                            increment_index=False
-                        )
-                    )
-                    if ParserHelper.newline_character in previous_token.leading_spaces
-                    else len(previous_token.leading_spaces)
-                )
+        self.container_token_stack.append(copy.deepcopy(current_token))
 
         print(f">>extracted_whitespace>>{extracted_whitespace}<<")
         print(
             f">>transformed_data>>{ParserHelper.make_value_visible(transformed_data)}<<"
         )
 
-        (
-            adjustment_since_newline,
-            extracted_whitespace,
-        ) = self.__adjust_whitespace_for_block_quote(
-            transformed_data, extracted_whitespace
-        )
+        if was_within_block_token:
+            adjustment_since_newline = 0
+        else:
+            (
+                adjustment_since_newline,
+                extracted_whitespace,
+            ) = self.__adjust_whitespace_for_block_quote(
+                transformed_data, extracted_whitespace
+            )
+        print(f">>extracted_whitespace>>{extracted_whitespace}<<")
 
         start_sequence = (
             f"{extracted_whitespace}{current_token.list_start_sequence}"
@@ -1431,11 +1520,16 @@ class TransformToMarkdown:
         )
         print(f">>start_sequence>>:{start_sequence}:<<")
         if not next_token.is_blank_line:
+            print(f">>current_token.indent_level>>:{current_token.indent_level}:<<")
+            print(f">>previous_indent>>:{previous_indent}:<<")
+            print(f">>adjustment_since_newline>>:{adjustment_since_newline}:<<")
             start_sequence = start_sequence.ljust(
                 current_token.indent_level - previous_indent - adjustment_since_newline,
                 " ",
             )
             print(f">>start_sequence>>:{start_sequence}:<<")
+        if post_adjust_whitespace:
+            start_sequence = post_adjust_whitespace + start_sequence
         return start_sequence, ParserHelper.repeat_string(
             " ", current_token.indent_level
         )

@@ -103,9 +103,13 @@ class ListBlockProcessor:
             False,
         )
 
+        whitespace_to_measure = extracted_whitespace if adj_ws is None else adj_ws
+        POGGER.debug("before_adjust>>ws=$=", whitespace_to_measure)
         adj_ws, parent_indent = ListBlockProcessor.__adjust_whitespace_for_nested_lists(
-            parser_state, extracted_whitespace if adj_ws is None else adj_ws
-        )
+            parser_state, whitespace_to_measure)
+        POGGER.debug("after_adjust>>ws=$=", adj_ws)
+        POGGER.debug("after_adjust>>parent_indent=$=", parent_indent)
+
         POGGER.debug("skip_whitespace_check>>$", skip_whitespace_check)
         POGGER.debug("len(adj_ws)>>$", len(adj_ws))
 
@@ -340,7 +344,6 @@ class ListBlockProcessor:
     def handle_list_block(
         is_ulist,
         parser_state,
-        was_container_start,
         position_marker,
         extracted_whitespace,
         adj_ws,
@@ -360,6 +363,20 @@ class ListBlockProcessor:
 
         POGGER.debug(
             "hlb>>parser_state.nested_list_start>$", parser_state.nested_list_start
+        )
+        POGGER.debug(
+            "hlb>>extracted_whitespace>$<", extracted_whitespace
+        )
+        POGGER.debug(
+            "hlb>>adj_ws>$<", adj_ws
+        )
+        POGGER.debug(
+            "hlb>>removed_chars_at_start>$<", removed_chars_at_start
+        )
+        POGGER.debug(
+            "text_to_parse[index=$:]>:$:<",
+            position_marker.index_number,
+            position_marker.text_to_parse[position_marker.index_number :],
         )
 
         is_start_fn, create_token_fn = ListBlockProcessor.__get_list_functions(is_ulist)
@@ -381,7 +398,6 @@ class ListBlockProcessor:
         if started_ulist:
             POGGER.debug("clt>>ulist-start")
             removed_chars_at_start = 0
-
             (
                 indent_level,
                 remaining_whitespace,
@@ -407,7 +423,19 @@ class ListBlockProcessor:
                 ws_after_marker,
                 position_marker.index_number,
             )
+            POGGER.debug("extracted_whitespace=$=",extracted_whitespace)
             if indent_level >= 0:
+                create_adj_ws = adj_ws
+                if position_marker.index_number:
+                    POGGER.debug("adjusting for nested")
+                    POGGER.debug("afn>>$", parser_state.token_stack)
+                    search_index = len(parser_state.token_stack) - 1
+                    while search_index > 0 and \
+                        not parser_state.token_stack[search_index].is_list and \
+                        not parser_state.token_stack[search_index].is_block_quote:
+                        search_index -= 1
+                    if parser_state.token_stack[search_index].is_list:
+                        create_adj_ws = None
                 (
                     adjusted_text_to_parse,
                     requeue_line_info,
@@ -424,11 +452,11 @@ class ListBlockProcessor:
                     after_marker_ws_index,
                     current_container_blocks,
                     create_token_fn,
+                    adj_ws=create_adj_ws,
                 )
-                did_process, was_container_start = True, True
+                did_process = True
         return (
             did_process,
-            was_container_start,
             end_of_ulist_start_index,
             adjusted_text_to_parse,
             container_level_tokens,
@@ -453,11 +481,12 @@ class ListBlockProcessor:
         after_marker_ws_index,
         current_container_blocks,
         create_token_fn,
+        adj_ws=None
     ):
         new_token, new_stack = create_token_fn(
             position_marker,
             indent_level,
-            extracted_whitespace,
+            extracted_whitespace if adj_ws is None else adj_ws,
             ws_before_marker,
             ws_after_marker,
             index,
@@ -532,6 +561,9 @@ class ListBlockProcessor:
             extracted_whitespace,
             position_marker,
         )
+
+        POGGER.debug("ordered-token-->$",new_token)
+
         return new_token, OrderedListStackToken(
             indent_level,
             position_marker.text_to_parse[position_marker.index_number : index + 1],

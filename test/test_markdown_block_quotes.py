@@ -378,7 +378,8 @@ def test_block_quotes_211c():
 @pytest.mark.gfm
 def test_block_quotes_212():
     """
-    Test case 212:  Laziness only applies to lines that would have been continuations of paragraphs had they been prepended with block quote markers.
+    Test case 212:  Laziness only applies to lines that would have been continuations
+                    of paragraphs had they been prepended with block quote markers.
     """
 
     # Arrange
@@ -499,7 +500,7 @@ def test_block_quotes_213():
 - bar"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[ulist(1,3):-::4:  ]",
+        "[ulist(1,3):-::4:]",
         "[para(1,5):]",
         "[text(1,5):foo:]",
         "[end-para:::True]",
@@ -536,7 +537,7 @@ def test_block_quotes_213ax():
 > - bar"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):-::4:  ]",
+        "[ulist(1,3):-::4:]",
         "[para(1,5):]",
         "[text(1,5):foo:]",
         "[end-para:::True]",
@@ -572,7 +573,7 @@ def test_block_quotes_213aa():
 > - bar"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
-        "[ulist(1,3):-::4:  ]",
+        "[ulist(1,3):-::4:]",
         "[para(1,5):]",
         "[text(1,5):foo:]",
         "[end-para:::True]",
@@ -640,7 +641,7 @@ def test_block_quotes_213ab():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -656,7 +657,7 @@ def test_block_quotes_213b():
 > - bar"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
-        "[ulist(1,3):-::4:  ]",
+        "[ulist(1,3):-::4:]",
         "[para(1,5):]",
         "[text(1,5):foo:]",
         "[end-para:::True]",
@@ -697,7 +698,7 @@ def test_block_quotes_213c():
 > - bar"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> ]",
-        "[ulist(1,3):-::4:  :    ]",
+        "[ulist(1,3):-::4::    ]",
         "[para(1,5):\n]",
         "[text(1,5):foo\nbrr::\n]",
         "[end-para:::True]",
@@ -734,7 +735,7 @@ def test_block_quotes_213d():
 > - bar"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
-        "[ulist(1,3):-::4:  ]",
+        "[ulist(1,3):-::4:]",
         "[para(1,5):\n  ]",
         "[text(1,5):foo\nbrr::\n]",
         "[end-para:::True]",
@@ -760,7 +761,8 @@ brr</li>
 @pytest.mark.gfm
 def test_block_quotes_214():
     """
-    Test case 214:  (part 1) For the same reason, we can’t omit the > in front of subsequent lines of an indented or fenced code block:
+    Test case 214:  (part 1) For the same reason, we can’t omit the > in front of
+                    subsequent lines of an indented or fenced code block:
     Variation: - test_paragraph_series_n_bq_i4_t_nl_bq_i4_t
                  - proper indent and block quotes on both
                - test_paragraph_series_n_bq_i4_t_nl_bq_i3_t
@@ -798,7 +800,8 @@ def test_block_quotes_214():
 @pytest.mark.gfm
 def test_block_quotes_215():
     """
-    Test case 215:  (part 2) For the same reason, we can’t omit the > in front of subsequent lines of an indented or fenced code block:
+    Test case 215:  (part 2) For the same reason, we can’t omit the > in front of
+                    subsequent lines of an indented or fenced code block:
 
     Variation: - test_paragraph_series_n_bq_t_nl_bq_fb
                  - for the entire block to be considered a fcb, all must be prefaced
@@ -875,7 +878,7 @@ def test_block_quotes_216a():
         "[para(1,3):]",
         "[text(1,3):foo:]",
         "[end-para:::True]",
-        "[ulist(2,6):-::7:     ]",
+        "[ulist(2,6):-::7:   ]",
         "[para(2,8):]",
         "[text(2,8):bar:]",
         "[end-para:::True]",
@@ -1220,7 +1223,8 @@ def test_block_quotes_224():
 @pytest.mark.gfm
 def test_block_quotes_225():
     """
-    Test case 225:  (part 1) However, because of laziness, a blank line is needed between a block quote and a following paragraph:
+    Test case 225:  (part 1) However, because of laziness, a blank line is needed
+                    between a block quote and a following paragraph:
     """
 
     # Arrange
@@ -1245,7 +1249,8 @@ baz</p>
 @pytest.mark.gfm
 def test_block_quotes_226():
     """
-    Test case 226:  (part 2) However, because of laziness, a blank line is needed between a block quote and a following paragraph:
+    Test case 226:  (part 2) However, because of laziness, a blank line is needed
+                    between a block quote and a following paragraph:
     """
 
     # Arrange
@@ -1275,7 +1280,8 @@ baz"""
 @pytest.mark.gfm
 def test_block_quotes_227():
     """
-    Test case 227:  (part 3) However, because of laziness, a blank line is needed between a block quote and a following paragraph:
+    Test case 227:  (part 3) However, because of laziness, a blank line is needed
+                    between a block quote and a following paragraph:
     """
 
     # Arrange
@@ -1305,7 +1311,9 @@ baz"""
 @pytest.mark.gfm
 def test_block_quotes_228():
     """
-    Test case 228:  (part 1) It is a consequence of the Laziness rule that any number of initial >s may be omitted on a continuation line of a nested block quote:
+    Test case 228:  (part 1) It is a consequence of the Laziness rule that any number
+                    of initial >s may be omitted on a continuation line of a nested
+                    block quote:
     """
 
     # Arrange
@@ -1338,7 +1346,9 @@ bar</p>
 @pytest.mark.gfm
 def test_block_quotes_229():
     """
-    Test case 229:  (part 2) It is a consequence of the Laziness rule that any number of initial >s may be omitted on a continuation line of a nested block quote:
+    Test case 229:  (part 2) It is a consequence of the Laziness rule that any number
+                    of initial >s may be omitted on a continuation line of a nested
+                    block quote:
     """
 
     # Arrange
@@ -2059,7 +2069,9 @@ comments
 @pytest.mark.gfm
 def test_block_quotes_230():
     """
-    Test case 230:  When including an indented code block in a block quote, remember that the block quote marker includes both the > and a following space. So five spaces are needed after the >:
+    Test case 230:  When including an indented code block in a block quote, remember
+                    that the block quote marker includes both the > and a following
+                    space. So five spaces are needed after the >:
     """
 
     # Arrange
@@ -2215,7 +2227,7 @@ def test_block_quotes_extra_02x():
         "[para(1,3):]",
         "[text(1,3):start:]",
         "[end-para:::True]",
-        "[ulist(2,3):-::4:  ]",
+        "[ulist(2,3):-::4:]",
         "[para(2,5):\n]",
         "[text(2,5):quote\nend::\n]",
         "[end-para:::True]",
@@ -2250,7 +2262,7 @@ def test_block_quotes_extra_02ax():
         "[para(1,3):]",
         "[text(1,3):start:]",
         "[end-para:::True]",
-        "[ulist(2,3):-::4:  ]",
+        "[ulist(2,3):-::4:]",
         "[para(2,5):]",
         "[text(2,5):quote:]",
         "[end-para:::True]",
@@ -2316,7 +2328,7 @@ def test_block_quotes_extra_02ab():
 > end"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n>\n> ]",
-        "[ulist(1,3):-::4:  ]",
+        "[ulist(1,3):-::4:]",
         "[para(1,5):\n]",
         "[text(1,5):start\nquote::\n]",
         "[end-para:::True]",
@@ -2352,7 +2364,7 @@ def test_block_quotes_extra_02ac():
 > end"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n>\n> ]",
-        "[ulist(1,3):-::4:  ]",
+        "[ulist(1,3):-::4:]",
         "[para(1,5):]",
         "[text(1,5):start:]",
         "[end-para:::True]",
@@ -2392,7 +2404,7 @@ def test_block_quotes_extra_02ad():
 > end"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n>\n> ]",
-        "[ulist(1,3):-::4:  ]",
+        "[ulist(1,3):-::4:]",
         "[para(1,5):]",
         "[text(1,5):start:]",
         "[end-para:::True]",
@@ -2436,7 +2448,7 @@ def test_block_quotes_extra_02ae():
 >   end"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n>\n> ]",
-        "[ulist(1,3):-::4:  ]",
+        "[ulist(1,3):-::4:]",
         "[para(1,5):]",
         "[text(1,5):start:]",
         "[end-para:::True]",
@@ -3117,7 +3129,7 @@ def test_block_quotes_extra_04j():
 
 
 @pytest.mark.gfm
-def test_block_quotes_extra_05x():
+def test_block_quotes_extra_05xx():
     """
     Test case Bq04:  variant
     """
@@ -3132,7 +3144,7 @@ def test_block_quotes_extra_05x():
         "[para(1,4):]",
         "[text(1,4):start:]",
         "[end-para:::True]",
-        "[ulist(2,4):-::5:   ]",
+        "[ulist(2,4):-::5:]",
         "[para(2,6):\n]",
         "[text(2,6):quote\nend::\n]",
         "[end-para:::True]",
@@ -3171,7 +3183,7 @@ def test_block_quotes_extra_05xa():
         "[para(1,5):]",
         "[text(1,5):start:]",
         "[end-para:::True]",
-        "[ulist(2,5):-::6:    ]",
+        "[ulist(2,5):-::6:]",
         "[para(2,7):\n]",
         "[text(2,7):quote\nend::\n]",
         "[end-para:::True]",
@@ -3211,7 +3223,7 @@ def test_block_quotes_extra_05a():
         "[para(1,3):]",
         "[text(1,3):start:]",
         "[end-para:::True]",
-        "[ulist(2,3):-::4:  ]",
+        "[ulist(2,3):-::4:]",
         "[para(2,5):]",
         "[text(2,5):quote:]",
         "[end-para:::True]",
@@ -3252,7 +3264,7 @@ def test_block_quotes_extra_05aa():
         "[para(1,3):]",
         "[text(1,3):start:]",
         "[end-para:::True]",
-        "[ulist(2,3):-::4:  ]",
+        "[ulist(2,3):-::4:]",
         "[para(2,5):]",
         "[text(2,5):quote:]",
         "[end-para:::True]",

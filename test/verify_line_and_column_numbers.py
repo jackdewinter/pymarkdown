@@ -919,7 +919,7 @@ def __validate_new_line(  # noqa: C901
     if not had_tab:
         assert (
             current_position.index_number == 1 + init_ws
-        ), f"Line:{current_position.line_number}:{current_token}"
+        ), f"VNL::Line:{current_position.line_number}:{current_token}"
     return did_x
 
 

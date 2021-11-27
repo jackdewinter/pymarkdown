@@ -509,7 +509,8 @@ def test_list_items_282d():
 @pytest.mark.gfm
 def test_list_items_283():
     """
-    Test case 283:  In CommonMark, a list can interrupt a paragraph. That is, no blank line is needed to separate a paragraph from a following list:
+    Test case 283:  In CommonMark, a list can interrupt a paragraph. That is, no blank
+                    line is needed to separate a paragraph from a following list:
     """
 
     # Arrange
@@ -543,7 +544,8 @@ def test_list_items_283():
 @pytest.mark.gfm
 def test_list_items_284():
     """
-    Test case 284:  In order to solve of unwanted lists in paragraphs with hard-wrapped numerals, we allow only lists starting with 1 to interrupt paragraphs. Thus,
+    Test case 284:  In order to solve of unwanted lists in paragraphs with hard-wrapped
+                    numerals, we allow only lists starting with 1 to interrupt paragraphs. Thus,
     """
 
     # Arrange
@@ -693,7 +695,10 @@ def test_list_items_287():
 @pytest.mark.gfm
 def test_list_items_288():
     """
-    Test case 288:  (part 1) To separate consecutive lists of the same type, or to separate a list from an indented code block that would otherwise be parsed as a subparagraph of the final list item, you can insert a blank HTML comment:
+    Test case 288:  (part 1) To separate consecutive lists of the same type, or to
+                    separate a list from an indented code block that would otherwise
+                    be parsed as a subparagraph of the final list item, you can insert
+                    a blank HTML comment:
     """
 
     # Arrange
@@ -746,7 +751,10 @@ def test_list_items_288():
 @pytest.mark.gfm
 def test_list_items_289():
     """
-    Test case 289:  (part 2) To separate consecutive lists of the same type, or to separate a list from an indented code block that would otherwise be parsed as a subparagraph of the final list item, you can insert a blank HTML comment:
+    Test case 289:  (part 2) To separate consecutive lists of the same type, or to
+                    separate a list from an indented code block that would otherwise
+                    be parsed as a subparagraph of the final list item, you can
+                    insert a blank HTML comment:
     """
 
     # Arrange
@@ -803,7 +811,9 @@ def test_list_items_289():
 @pytest.mark.gfm
 def test_list_items_290():
     """
-    Test case 290:  (part 1) List items need not be indented to the same level. The following list items will be treated as items at the same list level, since none is indented enough to belong to the previous list item:
+    Test case 290:  (part 1) List items need not be indented to the same level. The
+                    following list items will be treated as items at the same list level,
+                    since none is indented enough to belong to the previous list item:
     """
 
     # Arrange
@@ -862,7 +872,10 @@ def test_list_items_290():
 @pytest.mark.gfm
 def test_list_items_291():
     """
-    Test case 291:  (part 2) List items need not be indented to the same level. The following list items will be treated as items at the same list level, since none is indented enough to belong to the previous list item:
+    Test case 291:  (part 2) List items need not be indented to the same level. The
+                    following list items will be treated as items at the same list
+                    level, since none is indented enough to belong to the previous
+                    list item:
     """
 
     # Arrange
@@ -907,7 +920,9 @@ def test_list_items_291():
 @pytest.mark.gfm
 def test_list_items_292x():
     """
-    Test case 292x:  Note, however, that list items may not be indented more than three spaces. Here - e is treated as a paragraph continuation line, because it is indented more than three spaces:
+    Test case 292x:  Note, however, that list items may not be indented more than
+                     three spaces. Here - e is treated as a paragraph continuation line,
+                     because it is indented more than three spaces:
     """
 
     # Arrange
@@ -1232,7 +1247,8 @@ def test_list_items_292e():
 @pytest.mark.gfm
 def test_list_items_293():
     """
-    Test case 293:  And here, 3. c is treated as in indented code block, because it is indented four spaces and preceded by a blank line.
+    Test case 293:  And here, 3. c is treated as in indented code block, because it
+                    is indented four spaces and preceded by a blank line.
     """
 
     # Arrange
@@ -1621,7 +1637,9 @@ def test_list_items_295():
 @pytest.mark.gfm
 def test_list_items_296():
     """
-    Test case 296:  (part 1) These are loose lists, even though there is no space between the items, because one of the items directly contains two block-level elements with a blank line between them:
+    Test case 296:  (part 1) These are loose lists, even though there is no space
+                    between the items, because one of the items directly contains
+                    two block-level elements with a blank line between them:
     """
 
     # Arrange
@@ -1669,7 +1687,9 @@ def test_list_items_296():
 @pytest.mark.gfm
 def test_list_items_297():
     """
-    Test case 297:  (part 2) These are loose lists, even though there is no space between the items, because one of the items directly contains two block-level elements with a blank line between them:
+    Test case 297:  (part 2) These are loose lists, even though there is no space
+                    between the items, because one of the items directly contains
+                    two block-level elements with a blank line between them:
     """
 
     # Arrange
@@ -2067,7 +2087,9 @@ def test_list_items_298():
 @pytest.mark.gfm
 def test_list_items_299():
     """
-    Test case 299:  This is a tight list, because the blank line is between two paragraphs of a sublist. So the sublist is loose while the outer list is tight:
+    Test case 299:  This is a tight list, because the blank line is between two
+                    paragraphs of a sublist. So the sublist is loose while the
+                    outer list is tight:
     """
 
     # Arrange
