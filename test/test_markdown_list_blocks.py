@@ -639,7 +639,9 @@ def test_list_blocks_238a():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True)
+    act_and_assert(
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
+    )
 
 
 @pytest.mark.gfm
@@ -2571,6 +2573,7 @@ continued here.</p>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_list_blocks_270d():
@@ -2584,10 +2587,20 @@ def test_list_blocks_270d():
 >    > Blockquote
 continued here."""
     expected_tokens = [
-        '[block-quote(1,1)::>\n> \n> ]', '[BLANK(1,2):]',
-        '[olist(2,3):.:1:5::]', '[para(2,6):]', '[text(2,6):test:]', '[end-para:::True]',
-        '[block-quote(3,6)::> \n]', '[para(3,8):\n]', '[text(3,8):Blockquote\ncontinued here.::\n]', '[end-para:::True]',
-        '[end-block-quote:::True]', '[end-olist:::True]', '[end-block-quote:::True]']
+        "[block-quote(1,1)::>\n> \n> ]",
+        "[BLANK(1,2):]",
+        "[olist(2,3):.:1:5::]",
+        "[para(2,6):]",
+        "[text(2,6):test:]",
+        "[end-para:::True]",
+        "[block-quote(3,6)::> \n]",
+        "[para(3,8):\n]",
+        "[text(3,8):Blockquote\ncontinued here.::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
     expected_gfm = """<blockquote>
 <ol>
 <li>test
@@ -2601,6 +2614,7 @@ continued here.</p>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_list_blocks_271x():

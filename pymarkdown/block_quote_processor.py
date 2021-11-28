@@ -299,7 +299,7 @@ class BlockQuoteProcessor:
             found_list_token
             and len(extracted_whitespace) >= position_marker.index_number
         ):
-            adj_ws = extracted_whitespace[position_marker.index_number-1:]
+            adj_ws = extracted_whitespace[position_marker.index_number - 1 :]
         POGGER.debug("handle_block_quote_block>>adj_ws>:$:<", adj_ws)
         if BlockQuoteProcessor.is_block_quote_start(
             position_marker.text_to_parse,

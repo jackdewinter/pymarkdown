@@ -692,7 +692,7 @@ def __validate_same_line(
             assert current_position.index_number == last_token.indent_level + 1
 
 
-# pylint: disable=too-many-arguments
+# pylint: disable=too-many-arguments, too-many-branches
 def __validate_new_line_blank_line(
     current_token, container_block_stack, top_block_token, actual_tokens, init_ws, did_x
 ):
@@ -761,7 +761,7 @@ def __validate_new_line_blank_line(
     return init_ws, did_x
 
 
-# pylint: enable=too-many-arguments
+# pylint: enable=too-many-arguments, too-many-branches
 
 
 def __validate_new_line_list_adjacent_indents(
@@ -891,7 +891,7 @@ def __validate_new_line_list_adjacent(
     return False, init_ws
 
 
-# pylint: disable=too-many-arguments
+# pylint: disable=too-many-arguments, too-many-branches
 def __validate_new_line(  # noqa: C901
     container_block_stack,
     current_token,
@@ -943,7 +943,7 @@ def __validate_new_line(  # noqa: C901
                 init_ws,
                 did_x,
             )
-        else: # list start
+        else:  # list start
             print(">>__vnl->search")
             delta = 0
 
@@ -956,9 +956,14 @@ def __validate_new_line(  # noqa: C901
                     break
                 block_stack_index -= 1
             if found_block_quote_token:
-                print(f"found_block_quote_token>>{found_block_quote_token.leading_text_index}")
-                leading_space = found_block_quote_token.calculate_next_leading_space_part(\
-                    increment_index=False, delta=delta)
+                print(
+                    f"found_block_quote_token>>{found_block_quote_token.leading_text_index}"
+                )
+                leading_space = (
+                    found_block_quote_token.calculate_next_leading_space_part(
+                        increment_index=False, delta=delta
+                    )
+                )
                 print(f"uk>>:{leading_space}:")
                 init_ws += len(leading_space)
 
@@ -972,7 +977,7 @@ def __validate_new_line(  # noqa: C901
     return did_x
 
 
-# pylint: enable=too-many-arguments
+# pylint: enable=too-many-arguments, too-many-branches
 
 
 def __validate_first_token(current_token, current_position):

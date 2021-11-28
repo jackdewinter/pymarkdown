@@ -761,6 +761,63 @@ class ContainerBlockProcessor:
 
     # pylint: disable=too-many-arguments
     @staticmethod
+    def __calculate_adjusted_whitespace_kludge(
+        parser_state,
+        token_index,
+        extracted_whitespace,
+        previous_ws_len,
+        found_block_quote_token,
+        line_to_parse,
+        adj_ws,
+    ):
+        force_reline = False
+        ws_len = ParserHelper.calculate_length(extracted_whitespace) + previous_ws_len
+        if found_block_quote_token:
+            leading_spaces = found_block_quote_token.calculate_next_leading_space_part(
+                increment_index=False
+            )
+            POGGER.debug("PLFCB>>leading_spaces>>:$:", leading_spaces)
+            old_start_index = len(leading_spaces)
+        else:
+            other_block_quote_token = None
+            other_token_index = token_index
+            while other_token_index >= 0:
+                if parser_state.token_document[other_token_index].is_block_quote_start:
+                    other_block_quote_token = parser_state.token_document[
+                        other_token_index
+                    ]
+                    break
+                other_token_index -= 1
+            POGGER.debug_with_visible_whitespace(
+                "PLFCB>>other_block_quote_token>>$",
+                other_block_quote_token,
+            )
+            if other_block_quote_token:
+                leading_spaces = (
+                    other_block_quote_token.calculate_next_leading_space_part(
+                        increment_index=False
+                    )
+                )
+                POGGER.debug("PLFCB>>leading_spaces>>:$:", leading_spaces)
+                force_reline = True
+                old_start_index = len(leading_spaces)
+            else:
+                old_start_index = parser_state.token_document[token_index].indent_level
+        POGGER.debug(
+            "old_start_index>>$>>ws_len>>$>>force_reline>>$",
+            old_start_index,
+            ws_len,
+            force_reline,
+        )
+        if force_reline or ws_len >= old_start_index:
+            POGGER.debug("RELINE:$:", line_to_parse)
+            adj_ws = extracted_whitespace[old_start_index:]
+        return adj_ws
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
+    @staticmethod
     def __calculate_adjusted_whitespace(
         parser_state,
         current_container_blocks,
@@ -801,7 +858,10 @@ class ContainerBlockProcessor:
             while token_index >= 0 and not (
                 parser_state.token_document[token_index].is_any_list_token
             ):
-                if not found_block_quote_token and parser_state.token_document[token_index].is_block_quote_start:
+                if (
+                    not found_block_quote_token
+                    and parser_state.token_document[token_index].is_block_quote_start
+                ):
                     found_block_quote_token = parser_state.token_document[token_index]
                 token_index -= 1
             POGGER.debug(
@@ -809,47 +869,30 @@ class ContainerBlockProcessor:
                 parser_state.token_document[token_index],
             )
             POGGER.debug_with_visible_whitespace(
-                "PLFCB>>found_block_quote_token>>$",found_block_quote_token,
+                "PLFCB>>found_block_quote_token>>$",
+                found_block_quote_token,
             )
             if found_block_quote_token:
-                POGGER.debug("PLFCB>>fgh>>$",found_block_quote_token.leading_text_index)
+                POGGER.debug(
+                    "PLFCB>>fgh>>$", found_block_quote_token.leading_text_index
+                )
             assert token_index >= 0
 
-            force_reline = False
-            ws_len = ParserHelper.calculate_length(extracted_whitespace) + previous_ws_len
-            if found_block_quote_token:
-                leading_spaces = found_block_quote_token.calculate_next_leading_space_part(increment_index=False)
-                POGGER.debug("PLFCB>>leading_spaces>>:$:",leading_spaces)
-                old_start_index = len(leading_spaces)
-            else:
-                other_block_quote_token = None
-                other_token_index = token_index
-                while other_token_index >= 0:
-                    if parser_state.token_document[other_token_index].is_block_quote_start:
-                        other_block_quote_token = parser_state.token_document[other_token_index]
-                        break
-                    other_token_index -= 1
-                POGGER.debug_with_visible_whitespace(
-                    "PLFCB>>other_block_quote_token>>$",other_block_quote_token,
-                )
-                if other_block_quote_token:
-                    leading_spaces = other_block_quote_token.calculate_next_leading_space_part(increment_index=False)
-                    POGGER.debug("PLFCB>>leading_spaces>>:$:",leading_spaces)
-                    force_reline = True
-                    old_start_index = len(leading_spaces)
-                else:
-                    old_start_index = parser_state.token_document[token_index].indent_level
-
-            POGGER.debug("old_start_index>>$>>ws_len>>$>>force_reline>>$", old_start_index, ws_len, force_reline)
-            if force_reline or ws_len >= old_start_index:
-                POGGER.debug("RELINE:$:", line_to_parse)
-                adj_ws = extracted_whitespace[old_start_index:]
+            adj_ws = ContainerBlockProcessor.__calculate_adjusted_whitespace_kludge(
+                parser_state,
+                token_index,
+                extracted_whitespace,
+                previous_ws_len,
+                found_block_quote_token,
+                line_to_parse,
+                adj_ws,
+            )
 
         POGGER.debug(f"cfcs>extracted_whitespace>:{extracted_whitespace}:")
         POGGER.debug(f"cfcs>adj_ws>:{adj_ws}:")
         return adj_ws
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
@@ -1177,9 +1220,11 @@ class ContainerBlockProcessor:
             curr_parse,
             orig_parse,
         )
-        whitespace_to_remove = parser_state.nested_list_start.matching_markdown_token.extracted_whitespace[
-            delta_parse:
-        ]
+        whitespace_to_remove = (
+            parser_state.nested_list_start.matching_markdown_token.extracted_whitespace[
+                delta_parse:
+            ]
+        )
         POGGER.debug("whitespace_to_remove>:$:<", whitespace_to_remove)
         assert adj_line_to_parse.startswith(whitespace_to_remove)
         adj_line_to_parse = adj_line_to_parse[len(whitespace_to_remove) :]

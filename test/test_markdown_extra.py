@@ -50,14 +50,16 @@ def test_extra_003():
     source_markdown = "[link](!\"#$%&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~)"
     expected_tokens = [
         "[para(1,1):]",
-        "[link(1,1):inline:!%22#$%25&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D" + \
-        "%5E_%60a-z%7B%7C%7D~::!\"#$%&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~:::link:False::::]",
+        "[link(1,1):inline:!%22#$%25&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D"
+        + "%5E_%60a-z%7B%7C%7D~::!\"#$%&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~:::link:False::::]",
         "[text(1,2):link:]",
         "[end-link::]",
         "[end-para:::True]",
     ]
-    expected_gfm = '<p><a href="!%22#$%25&amp;\'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D' +\
-     '%5E_%60a-z%7B%7C%7D~">link</a></p>'
+    expected_gfm = (
+        "<p><a href=\"!%22#$%25&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D"
+        + '%5E_%60a-z%7B%7C%7D~">link</a></p>'
+    )
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -80,14 +82,16 @@ def test_extra_004():
     )
     expected_tokens = [
         "[para(1,1):]",
-        "[link(1,1):inline:!%22#$%12&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D" + \
-            "%5E_%60a-z%7B%7C%7D~::!\"#$%12&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~:::link:False::::]",
+        "[link(1,1):inline:!%22#$%12&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D"
+        + "%5E_%60a-z%7B%7C%7D~::!\"#$%12&'\\(\\)*+,-./0123456789:;<=>?@A-Z[\\\\]^_`a-z{|}~:::link:False::::]",
         "[text(1,2):link:]",
         "[end-link::]",
         "[end-para:::True]",
     ]
-    expected_gfm = '<p><a href="!%22#$%12&amp;\'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D' +\
-        '%5E_%60a-z%7B%7C%7D~">link</a></p>'
+    expected_gfm = (
+        "<p><a href=\"!%22#$%12&amp;'()*+,-./0123456789:;%3C=%3E?@A-Z%5B%5C%5D"
+        + '%5E_%60a-z%7B%7C%7D~">link</a></p>'
+    )
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -1087,12 +1091,12 @@ def test_extra_014a():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> ]",
-        "[olist(1,3):.:1:5:  ]",
-        "[para(1,6):\n   ]",
-        "[text(1,6):list\nthis::\n]",
-        "[end-para:::False]",
-        "[tbreak(3,6):*:    :*****]",
-        "[li(4,3):5:  :1]",
+        "[olist(1,3):.:1:5:]",
+        "[para(1,6):\n   \n    ]",
+        "[text(1,6):list\nthis\n::\n\n]",
+        "[text(3,5):*****:]",
+        "[end-para:::True]",
+        "[li(4,3):5::1]",
         "[para(4,6):]",
         "[text(4,6):that:]",
         "[end-para:::True]",
@@ -1498,6 +1502,7 @@ this</p>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 @pytest.mark.skip
 def test_extra_021():
@@ -1511,13 +1516,22 @@ def test_extra_021():
   100. Item 1b
 """
     expected_tokens = [
-        '[olist(1,1):.:1:3:]',
-        '[para(1,4):]', '[text(1,4):Item 1:]', '[end-para:::True]',
-        '[olist(2,4):.:1:6:   ]',
-        '[para(2,7):]', '[text(2,7):Item 1a:]', '[end-para:::True]',
-        '[li(3,3):7:  :100]',
-        '[para(3,8):]', '[text(3,8):Item 1b:]', '[end-para:::True]',
-        '[BLANK(4,1):]', '[end-olist:::True]', '[end-olist:::True]']
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):Item 1:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[text(2,7):Item 1a:]",
+        "[end-para:::True]",
+        "[li(3,3):7:  :100]",
+        "[para(3,8):]",
+        "[text(3,8):Item 1b:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>Item 1
 <ol>
@@ -1529,6 +1543,7 @@ def test_extra_021():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+
 
 @pytest.mark.gfm
 def test_extra_021a():
@@ -1542,7 +1557,28 @@ def test_extra_021a():
  * Item 2
    * Item 2a
 """
-    expected_tokens = ['[ulist(1,1):*::2:]', '[para(1,3):]', '[text(1,3):Item 1:]', '[end-para:::True]', '[ulist(2,3):*::4:  ]', '[para(2,5):]', '[text(2,5):Item 1a:]', '[end-para:::True]', '[end-ulist:::True]', '[li(3,2):3: :]', '[para(3,4):]', '[text(3,4):Item 2:]', '[end-para:::True]', '[ulist(4,4):*::5:   ]', '[para(4,6):]', '[text(4,6):Item 2a:]', '[end-para:::True]', '[BLANK(5,1):]', '[end-ulist:::True]', '[end-ulist:::True]']
+    expected_tokens = [
+        "[ulist(1,1):*::2:]",
+        "[para(1,3):]",
+        "[text(1,3):Item 1:]",
+        "[end-para:::True]",
+        "[ulist(2,3):*::4:  ]",
+        "[para(2,5):]",
+        "[text(2,5):Item 1a:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(3,2):3: :]",
+        "[para(3,4):]",
+        "[text(3,4):Item 2:]",
+        "[end-para:::True]",
+        "[ulist(4,4):*::5:   ]",
+        "[para(4,6):]",
+        "[text(4,6):Item 2a:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+    ]
     expected_gfm = """<ul>
 <li>Item 1
 <ul>
@@ -1559,6 +1595,7 @@ def test_extra_021a():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_extra_021b():
     """
@@ -1571,13 +1608,19 @@ def test_extra_021b():
 > + that
 """
     expected_tokens = [
-        '[block-quote(1,1)::> \n> \n> ]',
-        '[ulist(1,4):+::5: ]',
-        '[para(1,6):\n   ]', '[text(1,6):list\nthis::\n]', '[end-para:::True]',
-        '[li(3,3):4::]',
-        '[para(3,5):]', '[text(3,5):that:]', '[end-para:::True]',
-        '[BLANK(4,1):]', '[end-ulist:::True]',
-        '[end-block-quote:::True]']
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[ulist(1,4):+::5: ]",
+        "[para(1,6):\n   ]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::True]",
+        "[li(3,3):4::]",
+        "[para(3,5):]",
+        "[text(3,5):that:]",
+        "[end-para:::True]",
+        "[BLANK(4,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
     expected_gfm = """<blockquote>
 <ul>
 <li>list
@@ -1588,6 +1631,7 @@ this</li>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_extra_021c():
@@ -1603,17 +1647,29 @@ def test_extra_021c():
 >      * this is level 3
 """
     expected_tokens = [
-        '[para(1,1):]', '[text(1,1):This is a test:]', '[end-para:::True]', '[BLANK(2,1):]',
-        '[block-quote(3,1)::> \n> \n> ]',
-        '[ulist(3,4):*::5: ]',
-        '[para(3,6):]', '[text(3,6):this is level 1:]', '[end-para:::True]',
-        '[ulist(4,6):*::7:   ]', '[para(4,8):]', '[text(4,8):this is level 2:]', '[end-para:::True]', 
-        '[ulist(5,8):*::9:     ]', '[para(5,10):]', '[text(5,10):this is level 3:]', '[end-para:::True]',
-        '[BLANK(6,1):]',
-        '[end-ulist:::True]',
-        '[end-ulist:::True]',
-        '[end-ulist:::True]',
-        '[end-block-quote:::True]']
+        "[para(1,1):]",
+        "[text(1,1):This is a test:]",
+        "[end-para:::True]",
+        "[BLANK(2,1):]",
+        "[block-quote(3,1)::> \n> \n> ]",
+        "[ulist(3,4):*::5: ]",
+        "[para(3,6):]",
+        "[text(3,6):this is level 1:]",
+        "[end-para:::True]",
+        "[ulist(4,6):*::7:   ]",
+        "[para(4,8):]",
+        "[text(4,8):this is level 2:]",
+        "[end-para:::True]",
+        "[ulist(5,8):*::9:     ]",
+        "[para(5,10):]",
+        "[text(5,10):this is level 3:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
     expected_gfm = """<p>This is a test</p>
 <blockquote>
 <ul>
