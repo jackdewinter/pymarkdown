@@ -1469,7 +1469,14 @@ class ListBlockProcessor:
 
     @staticmethod
     def __calculate_can_remove_list(parser_state, current_start_index):
-        assert parser_state.token_stack[-2].is_list
+        POGGER.debug_with_visible_whitespace(
+            "parser_state.token_stack>$", parser_state.token_stack
+        )
+        POGGER.debug_with_visible_whitespace(
+            "current_start_index>$", current_start_index
+        )
+        if len(parser_state.token_stack) <= 2:
+            return False
 
         POGGER.debug("parser_state.token_stack[-2]>$", parser_state.token_stack[-2])
         previous_list_start_index = parser_state.token_stack[-2].indent_level
