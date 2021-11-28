@@ -32,7 +32,8 @@ def test_emphasis_360():
 @pytest.mark.gfm
 def test_emphasis_361():
     """
-    Test case 361:  This is not emphasis, because the opening * is followed by whitespace, and hence not part of a left-flanking delimiter run:
+    Test case 361:  This is not emphasis, because the opening * is followed by whitespace,
+                    and hence not part of a left-flanking delimiter run:
     """
 
     # Arrange
@@ -54,7 +55,9 @@ def test_emphasis_361():
 @pytest.mark.gfm
 def test_emphasis_362():
     """
-    Test case 362:  This is not emphasis, because the opening * is preceded by an alphanumeric and followed by punctuation, and hence not part of a left-flanking delimiter run:
+    Test case 362:  This is not emphasis, because the opening * is preceded by an
+                    alphanumeric and followed by punctuation, and hence not part of
+                    a left-flanking delimiter run:
     """
 
     # Arrange

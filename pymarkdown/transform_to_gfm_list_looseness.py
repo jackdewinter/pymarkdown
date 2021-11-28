@@ -107,7 +107,10 @@ class TransformToGfmListLooseness:
                 actual_tokens,
                 current_token_index,
             )
+            POGGER.debug("cll>>stop_me>>$", stop_me)
+            POGGER.debug("cll>>is_loose>>$", is_loose)
         elif actual_tokens[current_token_index - 1].is_blank_line:
+            POGGER.debug("cll>>__handle_blank_line>>")
             check_me = TransformToGfmListLooseness.__handle_blank_line(
                 current_token, stack_count, actual_tokens, current_token_index
             )
@@ -142,17 +145,34 @@ class TransformToGfmListLooseness:
         actual_tokens,
         current_token_index,
     ):
+        POGGER.debug(">>list--end>>$", stack_count)
         if stack_count == 0:
             stop_me = True
         else:
             stack_count -= 1
-            if TransformToGfmListLooseness.__correct_for_me(
-                actual_tokens, current_token_index
-            ):
-                is_loose = True
-                stop_me = True
-                POGGER.debug("!!!latent-LOOSE!!!")
-        POGGER.debug(">>list--end>>$", stack_count)
+            if stack_count == 0:
+                POGGER.debug("<<check!!")
+
+                check_index = current_token_index + 1
+                assert check_index < len(actual_tokens)
+                POGGER.debug_with_visible_whitespace(
+                    "<<check>>$", actual_tokens[check_index]
+                )
+                if not actual_tokens[check_index].is_list_end:
+                    POGGER.debug("<END OF possibly multiple list ends")
+                    search_back_index = current_token_index - 1
+                    # while (
+                    #     search_back_index >= 0
+                    #     and actual_tokens[check_index].is_list_end
+                    # ):
+                    #     search_back_index -= 1
+                    if TransformToGfmListLooseness.__is_token_loose(
+                        actual_tokens, search_back_index + 1
+                    ):
+                        is_loose = True
+                        stop_me = True
+                        POGGER.debug("!!!latent-LOOSE!!!")
+        POGGER.debug("<<list--end>>$", stack_count)
         return stop_me, is_loose, stack_count
 
     @staticmethod
@@ -203,32 +223,6 @@ class TransformToGfmListLooseness:
         return stack_count == 0 and current_check and pre_prev_check
 
     @staticmethod
-    def __correct_for_me(actual_tokens, current_token_index):
-        correct_closure, is_valid = False, True
-        assert current_token_index > 0
-
-        POGGER.debug(">>prev>>$", actual_tokens[current_token_index - 1])
-        if actual_tokens[current_token_index - 1].is_blank_line:
-            search_index, actual_tokens_size = current_token_index + 1, len(
-                actual_tokens
-            )
-            while (
-                search_index < actual_tokens_size
-                and actual_tokens[search_index].is_list_end
-            ):
-                search_index += 1
-            POGGER.debug(">>ss>>$>>len>>$", search_index, actual_tokens_size)
-            is_valid = search_index != actual_tokens_size
-        if is_valid:
-            POGGER.debug(">>current>>$", actual_tokens[current_token_index])
-            POGGER.debug(">>current-1>>$", actual_tokens[current_token_index - 1])
-            correct_closure = TransformToGfmListLooseness.__is_token_loose(
-                actual_tokens, current_token_index
-            )
-            POGGER.debug(">>correct_closure>>$", correct_closure)
-        return correct_closure
-
-    @staticmethod
     def __is_token_loose(actual_tokens, current_token_index):
         """
         Check to see if this token inspires looseness.
@@ -262,17 +256,16 @@ class TransformToGfmListLooseness:
         """
 
         assert not actual_tokens[actual_token_index].is_list_start
-        current_index, keep_going, stack_count = actual_token_index - 1, True, 0
-        while keep_going and current_index >= 0:
+        current_index, stack_count = actual_token_index - 1, 0
+        while True:
+            assert current_index >= 0
             if actual_tokens[current_index].is_list_start:
                 if stack_count == 0:
-                    keep_going = False
-                else:
-                    stack_count -= 1
+                    break
+                stack_count -= 1
             elif actual_tokens[current_index].is_list_end:
                 stack_count += 1
-            if keep_going:
-                current_index -= 1
+            current_index -= 1
         return current_index
 
     @staticmethod

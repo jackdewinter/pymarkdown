@@ -177,4 +177,4 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
 
         assert (
             source_markdown == original_markdown
-        ), f"Strings are not equal.{diff_values}"
+        ), f"Markdown strings are not equal.{diff_values}"

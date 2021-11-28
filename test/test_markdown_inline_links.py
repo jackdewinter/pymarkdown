@@ -568,7 +568,9 @@ def test_inline_links_511():
 @pytest.mark.gfm
 def test_inline_links_512():
     """
-    Test case 512:  Note that, because titles can often be parsed as destinations, if you try to omit the destination and keep the title, you’ll get unexpected results:
+    Test case 512:  Note that, because titles can often be parsed as destinations,
+                    if you try to omit the destination and keep the title, you’ll
+                    get unexpected results:
     """
 
     # Arrange
@@ -643,7 +645,8 @@ def test_inline_links_514():
 @pytest.mark.gfm
 def test_inline_links_515():
     """
-    Test case 515:  Titles must be separated from the link using a whitespace. Other Unicode whitespace like non-breaking space doesn’t work.
+    Test case 515:  Titles must be separated from the link using a whitespace.
+                    Other Unicode whitespace like non-breaking space doesn’t work.
     """
 
     # Arrange
@@ -883,7 +886,8 @@ def test_inline_links_519():
 @pytest.mark.gfm
 def test_inline_links_520():
     """
-    Test case 520:  (part 1) The link text may contain balanced brackets, but not unbalanced ones, unless they are escaped:
+    Test case 520:  (part 1) The link text may contain balanced brackets, but not
+                    unbalanced ones, unless they are escaped:
     """
 
     # Arrange
@@ -910,7 +914,8 @@ def test_inline_links_520():
 @pytest.mark.gfm
 def test_inline_links_521():
     """
-    Test case 521:  (part 2) The link text may contain balanced brackets, but not unbalanced ones, unless they are escaped:
+    Test case 521:  (part 2) The link text may contain balanced brackets, but not
+                    unbalanced ones, unless they are escaped:
     """
 
     # Arrange
@@ -934,7 +939,8 @@ def test_inline_links_521():
 @pytest.mark.gfm
 def test_inline_links_522():
     """
-    Test case 522:  (part 3) The link text may contain balanced brackets, but not unbalanced ones, unless they are escaped:
+    Test case 522:  (part 3) The link text may contain balanced brackets, but not
+                    unbalanced ones, unless they are escaped:
     """
 
     # Arrange
@@ -957,7 +963,8 @@ def test_inline_links_522():
 @pytest.mark.gfm
 def test_inline_links_523():
     """
-    Test case 523:  (part 4) The link text may contain balanced brackets, but not unbalanced ones, unless they are escaped:
+    Test case 523:  (part 4) The link text may contain balanced brackets, but not
+                    unbalanced ones, unless they are escaped:
     """
 
     # Arrange
@@ -1289,7 +1296,8 @@ def test_inline_links_531():
 @pytest.mark.gfm
 def test_inline_links_532():
     """
-    Test case 532:  (part 1) These cases illustrate the precedence of HTML tags, code spans, and autolinks over link grouping:
+    Test case 532:  (part 1) These cases illustrate the precedence of HTML tags,
+                    code spans, and autolinks over link grouping:
     """
 
     # Arrange
@@ -1310,7 +1318,8 @@ def test_inline_links_532():
 @pytest.mark.gfm
 def test_inline_links_533():
     """
-    Test case 533:  (part 2) These cases illustrate the precedence of HTML tags, code spans, and autolinks over link grouping:
+    Test case 533:  (part 2) These cases illustrate the precedence of HTML tags,
+                    code spans, and autolinks over link grouping:
     """
 
     # Arrange
@@ -1331,7 +1340,8 @@ def test_inline_links_533():
 @pytest.mark.gfm
 def test_inline_links_534():
     """
-    Test case 534:  (part 3) These cases illustrate the precedence of HTML tags, code spans, and autolinks over link grouping:
+    Test case 534:  (part 3) These cases illustrate the precedence of HTML tags,
+                    code spans, and autolinks over link grouping:
     """
 
     # Arrange

@@ -1194,6 +1194,8 @@ class LeafBlockProcessor:
         extracted_whitespace,
         adjusted_whitespace_length,
     ):
+        POGGER.debug(">>extracted_whitespace>>:$:<<", extracted_whitespace)
+        POGGER.debug(">>adjusted_whitespace_length>>$", adjusted_whitespace_length)
         top_block_token = None
         if parser_state.token_stack[container_index].is_block_quote:
             top_block_token = parser_state.token_stack[container_index]

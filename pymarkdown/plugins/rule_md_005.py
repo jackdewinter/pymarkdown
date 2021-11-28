@@ -57,19 +57,40 @@ class RuleMd005(RulePlugin):
         self.__ordered_list_alignment = {}
 
     def __report_issue(self, context, token):
-        current_list_indent = len(self.__list_stack[-1].extracted_whitespace)
+        # print(f"token>>{ParserHelper.make_value_visible(token)}")
+        # print(f"self.__list_stack[]>>{ParserHelper.make_value_visible(self.__list_stack)}")
+        # show_item = str(self.__list_stack[-1]).replace("\n", "\\n")
+        # print(f"self.__list_stack[-1]>>{show_item}")
+        if self.__list_stack[-1].is_unordered_list_start:
+            delta = self.__list_stack[-1].indent_level - 2
+        else:
+            delta = (
+                self.__list_stack[-1].indent_level
+                - 2
+                - len(self.__list_stack[-1].list_start_content)
+            )
+        current_list_indent = len(self.__list_stack[-1].extracted_whitespace) + delta
         if self.__list_stack[0].is_unordered_list_start:
             indent_adjust = self.__list_stack[0].column_number - 1
         else:
             indent_adjust = -1
-        token_indent = len(token.extracted_whitespace) - indent_adjust
-        expected_indent = (
-            len(self.__list_stack[-2].extracted_whitespace)
-            if token_indent <= current_list_indent
+        token_indent = len(token.extracted_whitespace)
+        # print(f"token_indent>>{token_indent}")
+        token_indent -= indent_adjust
+        # print(f"token_indent>>{token_indent}")
+        if (
+            token_indent <= current_list_indent
             and len(self.__list_stack) > 1
             and self.__list_stack[-2].is_list_start
-            else current_list_indent
-        )
+        ):
+            # show_item = str(self.__list_stack[-2]).replace("\n", "\\n")
+            # print(f"self.__list_stack[-2]>>{show_item}")
+            expected_indent = (
+                len(self.__list_stack[-2].extracted_whitespace)
+                + self.__list_stack[-2].indent_level
+            )
+        else:
+            expected_indent = current_list_indent
         extra_data = f"Expected: {expected_indent}; Actual: {token_indent}"
         self.report_next_token_error(context, token, extra_data)
 
@@ -175,6 +196,7 @@ class RuleMd005(RulePlugin):
         """
         Event that a new token is being processed.
         """
+        # print(f"token>>{ParserHelper.make_value_visible(token)}")
         if token.is_unordered_list_start:
             self.__handle_unordered_list_start(context, token)
         elif token.is_ordered_list_start:
