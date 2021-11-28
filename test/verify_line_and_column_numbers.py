@@ -692,26 +692,9 @@ def __validate_same_line(
             assert current_position.index_number == last_token.indent_level + 1
 
 
-# pylint: disable=too-many-arguments, too-many-branches
-def __validate_new_line_blank_line(
-    current_token, container_block_stack, top_block_token, actual_tokens, init_ws, did_x
+def __validate_new_line_blank_line_needs_recalc(
+    actual_tokens, current_token, is_in_list
 ):
-    print(">>__vnl->blank-ish")
-    print(f"init_ws>>{init_ws}")
-    print(f">>current_token>>{ParserHelper.make_value_visible(current_token)}")
-    print(
-        f">>container_block_stack[-1]>>{ParserHelper.make_value_visible(container_block_stack[-1])}"
-    )
-    print(f">>top_block_token>>{ParserHelper.make_value_visible(top_block_token)}")
-    top_block = None
-    is_in_list = False
-    if container_block_stack[-1].is_block_quote_start:
-        top_block = container_block_stack[-1]
-    elif top_block_token:
-        is_in_list = True
-        top_block = top_block_token
-
-    needs_recalculation = False
     was_end_list_end = False
     next_token_index = actual_tokens.index(current_token) + 1
     if next_token_index < len(actual_tokens):
@@ -743,10 +726,33 @@ def __validate_new_line_blank_line(
     if next_token_index < len(actual_tokens):
         print(f"actual_tokens[]>>{actual_tokens[next_token_index]}")
         print("found")
-        needs_recalculation = True
-    else:
-        print("not found")
-        needs_recalculation = not was_end_list_end
+        return True
+    print("not found")
+    return not was_end_list_end
+
+
+# pylint: disable=too-many-arguments, too-many-branches
+def __validate_new_line_blank_line(
+    current_token, container_block_stack, top_block_token, actual_tokens, init_ws, did_x
+):
+    print(">>__vnl->blank-ish")
+    print(f"init_ws>>{init_ws}")
+    print(f">>current_token>>{ParserHelper.make_value_visible(current_token)}")
+    print(
+        f">>container_block_stack[-1]>>{ParserHelper.make_value_visible(container_block_stack[-1])}"
+    )
+    print(f">>top_block_token>>{ParserHelper.make_value_visible(top_block_token)}")
+    top_block = None
+    is_in_list = False
+    if container_block_stack[-1].is_block_quote_start:
+        top_block = container_block_stack[-1]
+    elif top_block_token:
+        is_in_list = True
+        top_block = top_block_token
+
+    needs_recalculation = __validate_new_line_blank_line_needs_recalc(
+        actual_tokens, current_token, is_in_list
+    )
 
     if top_block and needs_recalculation:
         print(f">>xxx.leading_text_index>>{top_block.leading_text_index}")
@@ -891,6 +897,36 @@ def __validate_new_line_list_adjacent(
     return False, init_ws
 
 
+def __validate_new_line_apply_delta(container_block_stack, delta, init_ws):
+    if delta is not None:
+        block_stack_index = len(container_block_stack) - 2
+        found_block_quote_token = None
+        while block_stack_index >= 0:
+            if container_block_stack[block_stack_index].is_block_quote_start:
+                found_block_quote_token = container_block_stack[block_stack_index]
+                break
+            block_stack_index -= 1
+        if found_block_quote_token:
+            print(
+                f"found_block_quote_token>>{found_block_quote_token.leading_text_index}"
+            )
+            leading_space = found_block_quote_token.calculate_next_leading_space_part(
+                increment_index=False, delta=delta
+            )
+            print(f"uk>>:{leading_space}:")
+            init_ws += len(leading_space)
+    return init_ws
+
+
+def __validate_new_line_new_list_item(container_block_stack, current_token):
+    print(">>__vnl->li-ish")
+    assert container_block_stack[-1] == current_token
+    if len(container_block_stack) > 1:
+        init_ws = len(current_token.extracted_whitespace)
+    delta = -1
+    return init_ws, delta
+
+
 # pylint: disable=too-many-arguments, too-many-branches
 def __validate_new_line(  # noqa: C901
     container_block_stack,
@@ -928,11 +964,9 @@ def __validate_new_line(  # noqa: C901
             if had_tab:
                 return False
         elif current_token.is_new_list_item:
-            print(">>__vnl->li-ish")
-            assert container_block_stack[-1] == current_token
-            if len(container_block_stack) > 1:
-                init_ws = len(current_token.extracted_whitespace)
-            delta = -1
+            init_ws, delta = __validate_new_line_new_list_item(
+                container_block_stack, current_token
+            )
 
         elif current_token.is_blank_line:
             init_ws, did_x = __validate_new_line_blank_line(
@@ -947,25 +981,7 @@ def __validate_new_line(  # noqa: C901
             print(">>__vnl->search")
             delta = 0
 
-        if delta is not None:
-            block_stack_index = len(container_block_stack) - 2
-            found_block_quote_token = None
-            while block_stack_index >= 0:
-                if container_block_stack[block_stack_index].is_block_quote_start:
-                    found_block_quote_token = container_block_stack[block_stack_index]
-                    break
-                block_stack_index -= 1
-            if found_block_quote_token:
-                print(
-                    f"found_block_quote_token>>{found_block_quote_token.leading_text_index}"
-                )
-                leading_space = (
-                    found_block_quote_token.calculate_next_leading_space_part(
-                        increment_index=False, delta=delta
-                    )
-                )
-                print(f"uk>>:{leading_space}:")
-                init_ws += len(leading_space)
+        init_ws = __validate_new_line_apply_delta(container_block_stack, delta, init_ws)
 
     print(f"vnl>>current_position.index_number>>{current_position.index_number}")
     print(f"vnl>>current_position.index_indent>>{current_position.index_indent}")

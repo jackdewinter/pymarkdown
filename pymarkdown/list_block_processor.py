@@ -340,6 +340,24 @@ class ListBlockProcessor:
             create_token_fn = ListBlockProcessor.__handle_list_block_ordered
         return is_start_fn, create_token_fn
 
+    @staticmethod
+    def __calculate_create_adj_ws(adj_ws, position_marker, parser_state):
+        create_adj_ws = adj_ws
+        if position_marker.index_number:
+            POGGER.debug("adjusting for nested")
+            POGGER.debug("afn>>$", parser_state.token_stack)
+            search_index = len(parser_state.token_stack) - 1
+            while (
+                search_index > 0
+                and not parser_state.token_stack[search_index].is_list
+                and not parser_state.token_stack[search_index].is_block_quote
+            ):
+                search_index -= 1
+            if parser_state.token_stack[search_index].is_list:
+                create_adj_ws = None
+        POGGER.debug("create_adj_ws=$=", create_adj_ws)
+        return create_adj_ws
+
     # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
     def handle_list_block(
@@ -420,21 +438,9 @@ class ListBlockProcessor:
             )
             POGGER.debug("extracted_whitespace=$=", extracted_whitespace)
             if indent_level >= 0:
-                create_adj_ws = adj_ws
-                if position_marker.index_number:
-                    POGGER.debug("adjusting for nested")
-                    POGGER.debug("afn>>$", parser_state.token_stack)
-                    search_index = len(parser_state.token_stack) - 1
-                    while (
-                        search_index > 0
-                        and not parser_state.token_stack[search_index].is_list
-                        and not parser_state.token_stack[search_index].is_block_quote
-                    ):
-                        search_index -= 1
-                    if parser_state.token_stack[search_index].is_list:
-                        create_adj_ws = None
-                POGGER.debug("create_adj_ws=$=", create_adj_ws)
-                POGGER.debug("extracted_whitespace=$=", extracted_whitespace)
+                create_adj_ws = ListBlockProcessor.__calculate_create_adj_ws(
+                    adj_ws, position_marker, parser_state
+                )
                 (
                     adjusted_text_to_parse,
                     requeue_line_info,
@@ -466,24 +472,8 @@ class ListBlockProcessor:
         )
         # pylint: enable=too-many-locals, too-many-arguments
 
-    # pylint: disable=too-many-locals, too-many-arguments
     @staticmethod
-    def __create_new_list(
-        parser_state,
-        position_marker,
-        indent_level,
-        extracted_whitespace,
-        ws_before_marker,
-        ws_after_marker,
-        index,
-        container_level_tokens,
-        remaining_whitespace,
-        after_marker_ws_index,
-        current_container_blocks,
-        create_token_fn,
-        adj_ws=None,
-        alt_adj_ws=None,
-    ):
+    def __find_block_quote_before_list(parser_state):
         POGGER.debug_with_visible_whitespace(
             "parser_state.token_stack>$", parser_state.token_stack
         )
@@ -511,6 +501,29 @@ class ListBlockProcessor:
                 token_stack_index -= 1
         POGGER.debug_with_visible_whitespace(
             "found_block_quote_before_list>$", found_block_quote_before_list
+        )
+        return found_block_quote_before_list
+
+    # pylint: disable=too-many-locals, too-many-arguments
+    @staticmethod
+    def __create_new_list(
+        parser_state,
+        position_marker,
+        indent_level,
+        extracted_whitespace,
+        ws_before_marker,
+        ws_after_marker,
+        index,
+        container_level_tokens,
+        remaining_whitespace,
+        after_marker_ws_index,
+        current_container_blocks,
+        create_token_fn,
+        adj_ws=None,
+        alt_adj_ws=None,
+    ):
+        found_block_quote_before_list = (
+            ListBlockProcessor.__find_block_quote_before_list(parser_state)
         )
         if found_block_quote_before_list and adj_ws is None and alt_adj_ws is not None:
             adj_ws = alt_adj_ws
