@@ -286,6 +286,21 @@ class BlockQuoteProcessor:
         )
         POGGER.debug("handle_block_quote_block>>adj_ws>:$:<", adj_ws)
         really_start, requeue_line_info = False, None
+
+        search_index = len(parser_state.token_stack) - 1
+        found_list_token = None
+        while search_index > 0:
+            if parser_state.token_stack[search_index].is_list:
+                found_list_token = parser_state.token_stack[search_index]
+                break
+            search_index -= 1
+
+        if (
+            found_list_token
+            and len(extracted_whitespace) >= position_marker.index_number
+        ):
+            adj_ws = extracted_whitespace[position_marker.index_number-1:]
+        POGGER.debug("handle_block_quote_block>>adj_ws>:$:<", adj_ws)
         if BlockQuoteProcessor.is_block_quote_start(
             position_marker.text_to_parse,
             position_marker.index_number,

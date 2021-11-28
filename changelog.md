@@ -54,6 +54,9 @@
 - [Fixed(partial) - Issue 92](https://github.com/jackdewinter/pymarkdown/issues/92)
   - rule md027: nested containers were not thoroughly tested
   - parser: added new bugs linked to Issue 92 as part of discovery
+- [Fixed - Issue 93](https://github.com/jackdewinter/pymarkdown/issues/93)
+  - parser: was not handling extracted spaces properly, causing issues with calculating values for thematic breaks
+  - parser: spent time rewriting whitespace calculation and storage to address the issue
 
 ## Version 0.9.2 - Date: 2021-10-24
 

@@ -20,7 +20,7 @@ class RuleMd027(RulePlugin):
         self.__is_paragraph_end_delayed = None
         self.__delayed_blank_line = None
         self.__have_incremented_for_this_line = None
-        # self.__debug_on = True
+        self.__debug_on = False
 
     def get_details(self):
         """
@@ -92,7 +92,8 @@ class RuleMd027(RulePlugin):
         """
         Event that a new token is being processed.
         """
-
+        if self.__debug_on:
+            print(f">>{ParserHelper.make_value_visible(token)}")
         if (
             self.__have_incremented_for_this_line
             and not token.is_end_token
@@ -193,8 +194,8 @@ class RuleMd027(RulePlugin):
     def __check_list_starts(
         self, context, token, num_container_tokens, is_new_list_item
     ):
-        # if self.__debug_on:
-        #     print(f"num_container_tokens={num_container_tokens};")
+        if self.__debug_on:
+            print(f"num_container_tokens={num_container_tokens};")
         found_block_quote_token = self.__get_last_block_quote()
         if found_block_quote_token:
             is_start_properly_scoped = False
@@ -206,21 +207,18 @@ class RuleMd027(RulePlugin):
                 is_start_properly_scoped = (
                     found_block_quote_token == self.__container_tokens[-1]
                 )
-            # if self.__debug_on:
-            #     print(f"is_start_properly_scoped={is_start_properly_scoped};" + \
-            #       f"found_block_quote_token={ParserHelper.make_value_visible(found_block_quote_token)}")
+            if self.__debug_on:
+                print(f"is_start_properly_scoped={is_start_properly_scoped};" + \
+                  f"found_block_quote_token={ParserHelper.make_value_visible(found_block_quote_token)}")
             if is_start_properly_scoped:
-                specific_block_quote_prefix = self.__get_current_block_quote_prefix(
-                    num_container_tokens
-                )
-                # if self.__debug_on:
-                #     print(f"token.extracted_whitespace={token.extracted_whitespace};")
-                if len(token.extracted_whitespace) > len(specific_block_quote_prefix):
-                    # if self.__debug_on:
-                    #     print("list-error")
+                if self.__debug_on:
+                    print(f"token.column_number={token.column_number};")
+                    print(f"token.extracted_whitespace={token.extracted_whitespace};")
+                if token.extracted_whitespace:
+                    if self.__debug_on:
+                        print("list-error")
                     column_number_delta = -(
                         token.column_number
-                        + len(specific_block_quote_prefix)
                         - len(token.extracted_whitespace)
                     )
                     self.report_next_token_error(
@@ -234,10 +232,10 @@ class RuleMd027(RulePlugin):
         self.__container_tokens.append(token)
 
     def __handle_new_list_item(self, context, token, num_container_tokens):
-        # if self.__debug_on:
-        #     print(f"num_container_tokens={num_container_tokens}, __is_paragraph_end_delayed=" + \
-        #           f"{self.__is_paragraph_end_delayed}, self.__have_incremented_for_this_line=" + \
-        #           f"{self.__have_incremented_for_this_line}")
+        if self.__debug_on:
+            print(f"num_container_tokens={num_container_tokens}, __is_paragraph_end_delayed=" + \
+                  f"{self.__is_paragraph_end_delayed}, self.__have_incremented_for_this_line=" + \
+                  f"{self.__have_incremented_for_this_line}")
         if (
             num_container_tokens
             and not self.__have_incremented_for_this_line

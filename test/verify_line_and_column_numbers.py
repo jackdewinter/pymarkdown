@@ -677,8 +677,8 @@ def __validate_same_line(
     assert current_position.index_number > last_position.index_number
     if not last_token.is_block_quote_start:
         assert last_token.is_list_start or last_token.is_new_list_item
-        print(f">>current_token>>{ParserHelper.make_value_visible(current_token)}")
-        print(f">>current_position.index_number>>{current_position.index_number}")
+        print(f"vsl>>current_token>>{ParserHelper.make_value_visible(current_token)}")
+        print(f"vsl>>current_position.index_number>>{current_position.index_number}")
         print(f">>last_token>>{ParserHelper.make_value_visible(last_token)}")
         print(f">>last_token.indent_level>>{last_token.indent_level}")
         if current_token.is_blank_line:
@@ -697,20 +697,41 @@ def __validate_new_line_blank_line(
     current_token, container_block_stack, top_block_token, actual_tokens, init_ws, did_x
 ):
     print(">>__vnl->blank-ish")
+    print(f"init_ws>>{init_ws}")
     print(f">>current_token>>{ParserHelper.make_value_visible(current_token)}")
     print(
         f">>container_block_stack[-1]>>{ParserHelper.make_value_visible(container_block_stack[-1])}"
     )
     print(f">>top_block_token>>{ParserHelper.make_value_visible(top_block_token)}")
     top_block = None
+    is_in_list = False
     if container_block_stack[-1].is_block_quote_start:
         top_block = container_block_stack[-1]
     elif top_block_token:
+        is_in_list = True
         top_block = top_block_token
 
     needs_recalculation = False
     was_end_list_end = False
     next_token_index = actual_tokens.index(current_token) + 1
+    if next_token_index < len(actual_tokens):
+        print(f">>actual_tokens[]>>{actual_tokens[next_token_index]}!!")
+    else:
+        print(">>actual_tokens[]>>END!!")
+
+    if is_in_list:
+        print(">>actual_tokens>>adjusting for multiple blanks in list")
+        while (
+            next_token_index < len(actual_tokens)
+            and actual_tokens[next_token_index].is_blank_line
+        ):
+            print(f">>actual_tokens[]>>{actual_tokens[next_token_index]}")
+            next_token_index += 1
+
+    if next_token_index < len(actual_tokens):
+        print(f">>actual_tokens[]>>{actual_tokens[next_token_index]}!!")
+    else:
+        print(">>actual_tokens[]>>END!!")
     while (
         next_token_index < len(actual_tokens)
         and actual_tokens[next_token_index].is_end_token
@@ -733,7 +754,9 @@ def __validate_new_line_blank_line(
             top_block.calculate_next_leading_space_part(),
             True,
         )
+        print(f"init_ws>>{init_ws}")
         init_ws += len(leading_text)
+        print(f"init_ws>>{init_ws}")
 
     return init_ws, did_x
 
@@ -792,7 +815,8 @@ def __validate_new_line_list_adjacent_indents(
                 indent_level - len(selected_prefix) + current_token_block_indent
             )
         elif current_token_block_indent <= indent_level:
-            indent_level -= current_token_block_indent
+            print("block indent")
+            indent_level = current_token_block_indent
         print(f">>indent_level>>{indent_level}<")
     return indent_level
 
@@ -807,7 +831,7 @@ def __validate_new_line_list_adjacent_list(
     list_start_token = None
     for next_token in range(len(container_block_stack) - 1, -1, -1):
         print(
-            f">>container_block_stack>>{ParserHelper.make_value_visible(container_block_stack[next_token])}<"
+            f"vnllal>>container_block_stack>>{ParserHelper.make_value_visible(container_block_stack[next_token])}<"
         )
         if container_block_stack[next_token].is_block_quote_start:
             block_quote_start_token = container_block_stack[next_token]
@@ -849,7 +873,10 @@ def __validate_new_line_list_adjacent(
         indent_level = __validate_new_line_list_adjacent_list(
             top_block, container_block_stack, list_block_start_indices
         )
+        print(f">>__vnl->list->init_ws={init_ws}")
+        print(f">>__vnl->list->indent_level={indent_level}")
         init_ws += indent_level
+        print(f">>__vnl->list->init_ws={init_ws}")
     elif (
         container_block_stack
         and container_block_stack[-1] != current_token
@@ -881,11 +908,13 @@ def __validate_new_line(  # noqa: C901
         return False
 
     print(
-        f">>container_block_stack>>={ParserHelper.make_value_visible(container_block_stack)}"
+        f"vnl>>container_block_stack>>={ParserHelper.make_value_visible(container_block_stack)}"
     )
     print(f">>current_token>>={ParserHelper.make_value_visible(current_token)}")
     did_x = False
     if container_block_stack:
+        print("vnl>>container_block_stack")
+        delta = None
         if (
             not current_token.is_blank_line
             and not current_token.is_list_start
@@ -903,6 +932,8 @@ def __validate_new_line(  # noqa: C901
             assert container_block_stack[-1] == current_token
             if len(container_block_stack) > 1:
                 init_ws = len(current_token.extracted_whitespace)
+            delta = -1
+
         elif current_token.is_blank_line:
             init_ws, did_x = __validate_new_line_blank_line(
                 current_token,
@@ -912,9 +943,27 @@ def __validate_new_line(  # noqa: C901
                 init_ws,
                 did_x,
             )
+        else: # list start
+            print(">>__vnl->search")
+            delta = 0
 
-    print(f">>current_position.index_number>>{current_position.index_number}")
-    print(f">>current_position.index_indent>>{current_position.index_indent}")
+        if delta is not None:
+            block_stack_index = len(container_block_stack) - 2
+            found_block_quote_token = None
+            while block_stack_index >= 0:
+                if container_block_stack[block_stack_index].is_block_quote_start:
+                    found_block_quote_token = container_block_stack[block_stack_index]
+                    break
+                block_stack_index -= 1
+            if found_block_quote_token:
+                print(f"found_block_quote_token>>{found_block_quote_token.leading_text_index}")
+                leading_space = found_block_quote_token.calculate_next_leading_space_part(\
+                    increment_index=False, delta=delta)
+                print(f"uk>>:{leading_space}:")
+                init_ws += len(leading_space)
+
+    print(f"vnl>>current_position.index_number>>{current_position.index_number}")
+    print(f"vnl>>current_position.index_indent>>{current_position.index_indent}")
     print(f">>1 + init_ws({init_ws})>>{1 + init_ws}")
     if not had_tab:
         assert (
@@ -957,6 +1006,7 @@ def __calc_initial_whitespace(calc_token):
     had_tab = False
     if calc_token.is_extension:
         indent_level, had_tab = calc_token.calculate_initial_whitespace()
+        print(f">>ciw>>ext>>{indent_level}")
     elif (
         calc_token.is_new_list_item
         or calc_token.is_block_quote_start
@@ -971,6 +1021,7 @@ def __calc_initial_whitespace(calc_token):
             len(calc_token.extracted_whitespace),
             ParserHelper.tab_character in calc_token.extracted_whitespace,
         )
+        print(f">>ciw>>xxx>>{indent_level}")
     elif calc_token.is_list_start:
         indent_level, had_tab = len(calc_token.extracted_whitespace), (
             ParserHelper.tab_character in calc_token.extracted_whitespace
@@ -979,12 +1030,14 @@ def __calc_initial_whitespace(calc_token):
                 and ParserHelper.tab_character in calc_token.leading_spaces
             )
         )
+        print(f">>ciw>>lstart>>{indent_level}")
     elif calc_token.is_html_block or calc_token.is_blank_line:
         indent_level = 0
+        print(f">>ciw>>html/blank>>{indent_level}")
     else:
         assert calc_token.is_paragraph, f"Token {calc_token.token_name} not handled."
-
         indent_level, had_tab = __calc_initial_whitespace_paragraph(calc_token)
+        print(f">>ciw>>para>>{indent_level}")
     return indent_level, had_tab
 
 
@@ -1014,7 +1067,7 @@ def __maintain_block_stack_containers(
         block_quote_start_token = None
         for i in range(len(container_block_stack) - 1, -1, -1):
             print(
-                f">>container_block_stack>>{ParserHelper.make_value_visible(container_block_stack[i])}<"
+                f"mbsc>>container_block_stack>>{ParserHelper.make_value_visible(container_block_stack[i])}<"
             )
             if container_block_stack[i].is_block_quote_start:
                 block_quote_start_token = container_block_stack[i]
