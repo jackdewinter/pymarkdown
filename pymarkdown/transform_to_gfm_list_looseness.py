@@ -258,8 +258,7 @@ class TransformToGfmListLooseness:
                     stack_count -= 1
             elif actual_tokens[current_index].is_list_end:
                 stack_count += 1
-            if keep_going:
-                current_index -= 1
+            current_index -= 1
         return current_index
 
     @staticmethod
