@@ -53,7 +53,7 @@ def test_paragraph_series_m_fb_ol_nl_all_i3_fb():
    ```
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n   \n   ]",
+        "[olist(1,1):.:1:3::   \n   \n   \n]",
         "[BLANK(1,3):]",
         "[fcode-block(2,4):`:3::::::]",
         "[text(3,4):foo:]",
@@ -189,7 +189,7 @@ def test_paragraph_series_m_fb_ol_t_nl_all_i4_fb():
     ```
 """
     expected_tokens = [
-        "[olist(1,1):.:1:4::    \n    \n    ]",
+        "[olist(1,1):.:1:4::    \n    \n    \n]",
         "[para(1,5):]",
         "[text(1,5):abc:]",
         "[end-para:::False]",
@@ -329,7 +329,7 @@ def test_paragraph_series_m_fb_ol_ol_nl_all_i6_fb():
 """
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :      \n      \n      ]",
+        "[olist(1,4):.:1:6:   :      \n      \n      \n]",
         "[BLANK(1,6):]",
         "[fcode-block(2,7):`:3::::::]",
         "[text(3,7):foo:]",
@@ -407,7 +407,7 @@ def test_paragraph_series_m_fb_ol_ol_t_nl_all_i6_fb():
 """
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :      \n      \n      ]",
+        "[olist(1,4):.:1:6:   :      \n      \n      \n]",
         "[para(1,7):]",
         "[text(1,7):abc:]",
         "[end-para:::False]",
@@ -1078,12 +1078,12 @@ foo
 ```
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::   ]",
         "[BLANK(1,3):]",
-        "[olist(2,4):.:1:6:   :   ]",
+        "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
         "[text(2,7):abc:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[fcode-block(3,4):`:3::::::]",
         "[end-fcode-block:::True]",
@@ -1124,14 +1124,14 @@ foo
 ```
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::   ]",
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :   ]",
+        "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
         "[text(2,7):abc:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[fcode-block(3,4):`:3::::::]",
         "[end-fcode-block:::True]",
@@ -1155,4 +1155,4 @@ foo
 <pre><code></code></pre>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)

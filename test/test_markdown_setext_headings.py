@@ -69,7 +69,8 @@ baz</em></h1>"""
 @pytest.mark.gfm
 def test_setext_headings_052():
     """
-    Test case 052:  The heading’s raw content is formed by concatenating the lines and removing initial and final whitespace.
+    Test case 052:  The heading’s raw content is formed by concatenating the lines
+                    and removing initial and final whitespace.
     """
 
     # Arrange
@@ -560,7 +561,8 @@ def test_setext_headings_060():
 @pytest.mark.gfm
 def test_setext_headings_061():
     """
-    Test case 061:  Since indicators of block structure take precedence over indicators of inline structure, the following are setext headings:
+    Test case 061:  Since indicators of block structure take precedence over indicators
+                    of inline structure, the following are setext headings:
     """
 
     # Arrange
@@ -598,7 +600,8 @@ of dashes"/>"""
 @pytest.mark.gfm
 def test_setext_headings_062():
     """
-    Test case 062:  (part a) The setext heading underline cannot be a lazy continuation line in a list item or block quote:
+    Test case 062:  (part a) The setext heading underline cannot be a lazy continuation
+                    line in a list item or block quote:
     """
 
     # Arrange
@@ -624,7 +627,8 @@ def test_setext_headings_062():
 @pytest.mark.gfm
 def test_setext_headings_063():
     """
-    Test case 063:  (part b) The setext heading underline cannot be a lazy continuation line in a list item or block quote:
+    Test case 063:  (part b) The setext heading underline cannot be a lazy continuation
+    line in a list item or block quote:
     """
 
     # Arrange
@@ -651,7 +655,8 @@ bar
 @pytest.mark.gfm
 def test_setext_headings_064():
     """
-    Test case 064:  (part c) The setext heading underline cannot be a lazy continuation line in a list item or block quote:
+    Test case 064:  (part c) The setext heading underline cannot be a lazy continuation
+                    line in a list item or block quote:
     """
 
     # Arrange
@@ -711,8 +716,8 @@ def test_setext_headings_064b():
  ==="""
 
     expected_tokens = [
-        "[ulist(1,1):-::2:: ]",
-        "[para(1,3):\n]",
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n ]",
         "[text(1,3):Foo\n===::\n]",
         "[end-para:::True]",
         "[end-ulist:::True]",
@@ -737,8 +742,8 @@ def test_setext_headings_064ba():
  ==="""
 
     expected_tokens = [
-        "[olist(1,1):.:1:3:: ]",
-        "[para(1,4):\n]",
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):\n ]",
         "[text(1,4):Foo\n===::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -782,7 +787,9 @@ def test_setext_headings_064c():
 @pytest.mark.gfm
 def test_setext_headings_065():
     """
-    Test case 065:  A blank line is needed between a paragraph and a following setext heading, since otherwise the paragraph becomes part of the heading’s content:
+    Test case 065:  A blank line is needed between a paragraph and a following
+                    setext heading, since otherwise the paragraph becomes part
+                    of the heading’s content:
     """
 
     # Arrange
@@ -804,7 +811,9 @@ Bar</h2>"""
 @pytest.mark.gfm
 def test_setext_headings_066():
     """
-    Test case 066:  A blank line is needed between a paragraph and a following setext heading, since otherwise the paragraph becomes part of the heading’s content:
+    Test case 066:  A blank line is needed between a paragraph and a following
+                    setext heading, since otherwise the paragraph becomes part
+                    of the heading’s content:
     """
 
     # Arrange
@@ -859,7 +868,9 @@ def test_setext_headings_067():
 @pytest.mark.gfm
 def test_setext_headings_068():
     """
-    Test case 068:  (part a) Setext heading text lines must not be interpretable as block constructs other than paragraphs. So, the line of dashes in these examples gets interpreted as a thematic break:
+    Test case 068:  (part a) Setext heading text lines must not be interpretable
+                    as block constructs other than paragraphs. So, the line of
+                    dashes in these examples gets interpreted as a thematic break:
     """
 
     # Arrange
@@ -876,7 +887,9 @@ def test_setext_headings_068():
 @pytest.mark.gfm
 def test_setext_headings_069():
     """
-    Test case 069:  (part b) Setext heading text lines must not be interpretable as block constructs other than paragraphs. So, the line of dashes in these examples gets interpreted as a thematic break:
+    Test case 069:  (part b) Setext heading text lines must not be interpretable
+                    as block constructs other than paragraphs. So, the line of
+                    dashes in these examples gets interpreted as a thematic break:
     """
 
     # Arrange
@@ -927,7 +940,9 @@ def test_setext_headings_069a():
 @pytest.mark.gfm
 def test_setext_headings_070():
     """
-    Test case 070:  (part c) Setext heading text lines must not be interpretable as block constructs other than paragraphs. So, the line of dashes in these examples gets interpreted as a thematic break:
+    Test case 070:  (part c) Setext heading text lines must not be interpretable
+                    as block constructs other than paragraphs. So, the line of
+                    dashes in these examples gets interpreted as a thematic break:
     """
 
     # Arrange
@@ -950,7 +965,9 @@ def test_setext_headings_070():
 @pytest.mark.gfm
 def test_setext_headings_071():
     """
-    Test case 071:  (part d) Setext heading text lines must not be interpretable as block constructs other than paragraphs. So, the line of dashes in these examples gets interpreted as a thematic break:
+    Test case 071:  (part d) Setext heading text lines must not be interpretable
+                    as block constructs other than paragraphs. So, the line of
+                    dashes in these examples gets interpreted as a thematic break:
     """
 
     # Arrange

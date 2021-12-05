@@ -44,13 +44,13 @@ class LeafBlockProcessor:
     __setext_characters = "-="
 
     @staticmethod
-    def is_fenced_code_block(line_to_parse, start_index, extracted_whitespace):
+    def is_fenced_code_block(line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=False):
         """
         Determine if we have the start of a fenced code block.
         """
 
         if (
-            ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
+            skip_whitespace_check or ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
         ) and ParserHelper.is_character_at_index_one_of(
             line_to_parse,
             start_index,
@@ -792,14 +792,14 @@ class LeafBlockProcessor:
         return new_tokens
 
     @staticmethod
-    def is_atx_heading(line_to_parse, start_index, extracted_whitespace):
+    def is_atx_heading(line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=False):
         """
         Determine whether or not an ATX Heading is about to start.
         """
 
-        if ParserHelper.is_length_less_than_or_equal_to(
+        if (ParserHelper.is_length_less_than_or_equal_to(
             extracted_whitespace, 3
-        ) and ParserHelper.is_character_at_index(
+        ) or skip_whitespace_check )and ParserHelper.is_character_at_index(
             line_to_parse,
             start_index,
             LeafBlockProcessor.__atx_character,
@@ -1080,6 +1080,9 @@ class LeafBlockProcessor:
             position_marker.text_to_parse
         ):
             POGGER.debug("Escaping paragraph due to empty w/ blank")
+            POGGER.debug("position_marker.text_to_parse=:$:", position_marker.text_to_parse)
+            POGGER.debug("position_marker.index_number=:$:", position_marker.index_number)
+            POGGER.debug("position_marker.index_indent=:$:", position_marker.index_indent)
             return [
                 BlankLineMarkdownToken(
                     extracted_whitespace, position_marker, len(extracted_whitespace)

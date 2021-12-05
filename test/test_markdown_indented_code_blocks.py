@@ -31,7 +31,10 @@ def test_indented_code_blocks_077():
 @pytest.mark.gfm
 def test_indented_code_blocks_078():
     """
-    Test case 078:  (part a) If there is any ambiguity between an interpretation of indentation as a code block and as indicating that material belongs to a list item, the list item interpretation takes precedence:
+    Test case 078:  (part a) If there is any ambiguity between an interpretation
+                    of indentation as a code block and as indicating that material
+                    belongs to a list item, the list item interpretation takes
+                    precedence:
     """
 
     # Arrange
@@ -39,7 +42,7 @@ def test_indented_code_blocks_078():
 
     bar"""
     expected_tokens = [
-        "[ulist(1,3):-::4:  :    ]",
+        "[ulist(1,3):-::4:  :\n    ]",
         "[para(1,5):]",
         "[text(1,5):foo:]",
         "[end-para:::True]",
@@ -63,7 +66,10 @@ def test_indented_code_blocks_078():
 @pytest.mark.gfm
 def test_indented_code_blocks_079():
     """
-    Test case 079:  (part b) If there is any ambiguity between an interpretation of indentation as a code block and as indicating that material belongs to a list item, the list item interpretation takes precedence:
+    Test case 079:  (part b) If there is any ambiguity between an interpretation
+                    of indentation as a code block and as indicating that material
+                    belongs to a list item, the list item interpretation takes
+                    precedence:
     """
 
     # Arrange
@@ -71,7 +77,7 @@ def test_indented_code_blocks_079():
 
     - bar"""
     expected_tokens = [
-        "[olist(1,1):.:1:4:]",
+        "[olist(1,1):.:1:4::]",
         "[para(1,5):]",
         "[text(1,5):foo:]",
         "[end-para:::True]",
@@ -230,7 +236,9 @@ bar</p>"""
 @pytest.mark.gfm
 def test_indented_code_blocks_084():
     """
-    Test case 084:  However, any non-blank line with fewer than four leading spaces ends the code block immediately. So a paragraph may occur immediately after indented code:
+    Test case 084:  However, any non-blank line with fewer than four leading spaces
+                    ends the code block immediately. So a paragraph may occur immediately
+                    after indented code:
     """
 
     # Arrange

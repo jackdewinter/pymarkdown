@@ -70,7 +70,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_t():
   > xyz
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2:]",
+        "[ulist(1,1):*::2::\n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -112,7 +112,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_t():
     xyz
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2::  ]",
+        "[ulist(1,1):*::2::\n  \n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -210,7 +210,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_ha():
   > # head
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2:]",
+        "[ulist(1,1):*::2::\n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -255,7 +255,7 @@ def test_paragraph_series_n_ul_t_i2_bq_t_nl_i4_ha():
     # head
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2::  ]",
+        "[ulist(1,1):*::2::\n  ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -350,7 +350,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_tb():
   > ---
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2:]",
+        "[ulist(1,1):*::2::\n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -391,7 +391,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_tb():
     ---
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2::  ]",
+        "[ulist(1,1):*::2::\n  \n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -490,7 +490,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_hb():
   > <!-- comment -->
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2:]",
+        "[ulist(1,1):*::2::\n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -535,7 +535,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_hb():
     <!-- comment -->
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2::  ]",
+        "[ulist(1,1):*::2::\n  ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -631,7 +631,7 @@ def
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -729,7 +729,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_fb():
   > ```
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2:]",
+        "[ulist(1,1):*::2::\n\n\n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -777,7 +777,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_fb():
     ```
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2::  \n  \n  ]",
+        "[ulist(1,1):*::2::\n  \n  \n  ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -994,7 +994,7 @@ def test_paragraph_series_n_bq_t_nl_bq_nl_bq_ib():
 
 
 @pytest.mark.gfm
-def test_paragraph_series_n_bq_t_nl_i6_ib():
+def test_paragraph_series_n_bq_t_nl_i6_ib_x():
     """
     Test case:  Block quote, text, newline, indent of 6, indented block
     """
@@ -1015,8 +1015,32 @@ def</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
+
+@pytest.mark.gfm
+def test_paragraph_series_n_bq_t_nl_i6_ib_variation_1():
+    """
+    Test case:  Block quote, text, newline, indent of 6, indented block
+    """
+
+    # Arrange
+    source_markdown = """> uvw
+>     def"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> ]",
+        "[para(1,3):\n    ]",
+        "[text(1,3):uvw\ndef::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<p>uvw
+def</p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 @pytest.mark.gfm
 def test_paragraph_series_n_bq_t_nl_nl_nl_i6_ib():
@@ -1062,7 +1086,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i2_bq_ib():
   >     def
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2:]",
+        "[ulist(1,1):*::2::\n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -1105,7 +1129,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_bq_nl_i2_bq_ib():
   >     def
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2:]",
+        "[ulist(1,1):*::2::\n\n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -1152,7 +1176,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i6_ib():
       def
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2::  ]",
+        "[ulist(1,1):*::2::\n  \n]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -1195,7 +1219,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_nl_i6_ib():
       def
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2::  ]",
+        "[ulist(1,1):*::2::\n\n  ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -1229,7 +1253,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_nl_i6_ib():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 # setext?

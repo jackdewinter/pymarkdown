@@ -131,6 +131,9 @@ class InlineProcessor:
             POGGER.debug("STACK:$", coalesced_stack)
             if current_token.is_block_quote_start:
                 current_token.leading_text_index = 0
+                POGGER.info("-->last->block->$",  current_token.leading_text_index)
+            else:
+                POGGER.info("-->not bq-")
 
         for coalesce_index in range(1, len(coalesced_results)):
             InlineProcessor.__process_next_coalesce_item(
@@ -142,13 +145,17 @@ class InlineProcessor:
     def __process_next_coalesce_item(
         coalesced_results, coalesce_index, coalesced_list, coalesced_stack
     ):
+        POGGER.info("coalesced_results:$<", coalesced_list[-1])
+        POGGER.info("coalesced_stack:$<", coalesced_stack)
+        for i in range(len(coalesced_stack)-1, -1, -1):
+            if coalesced_stack[i].is_block_quote_start:
+                POGGER.info("$-->last->block->$",  i, coalesced_stack[i].leading_text_index)
         if coalesced_results[coalesce_index].is_text and (
             coalesced_list[-1].is_paragraph
             or coalesced_list[-1].is_setext_heading
             or coalesced_list[-1].is_atx_heading
             or coalesced_list[-1].is_code_block
         ):
-            POGGER.info("coalesced_results:$<", coalesced_list[-1])
             if coalesced_list[-1].is_code_block:
                 processed_tokens = InlineProcessor.__parse_code_block(
                     coalesced_results, coalesce_index, coalesced_list, coalesced_stack
@@ -176,6 +183,11 @@ class InlineProcessor:
             coalesced_stack.append(current_token)
             POGGER.debug("STACK-ADD:$", current_token)
             POGGER.debug("STACK:$", coalesced_stack)
+            if current_token.is_block_quote_start:
+                current_token.leading_text_index = 0
+                POGGER.info("-->last->block->$",  current_token.leading_text_index)
+            else:
+                POGGER.info("-->not bq-")
 
         elif current_token.is_list_end or current_token.is_block_quote_end:
             POGGER.debug("STACK:$", coalesced_stack)
@@ -1506,7 +1518,7 @@ class InlineProcessor:
             # POGGER.debug("l/c(before)>>newline")
             column_number = 1
             if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
-                # POGGER.debug("coalesced_list[-1]..leading_text_index=$", coalesced_stack[-1].leading_text_index)
+                POGGER.debug("coalesced_list[-1]..leading_text_index=$", coalesced_stack[-1].leading_text_index)
                 split_leading_spaces = coalesced_stack[-1].leading_spaces.split(
                     ParserHelper.newline_character
                 )
@@ -1527,7 +1539,7 @@ class InlineProcessor:
         else:
             assert did_line_number_change
             if coalesced_stack and coalesced_stack[-1].is_block_quote_start:
-                # POGGER.debug("coalesced_list[-1]..leading_text_index=$", coalesced_stack[-1].leading_text_index)
+                POGGER.debug("coalesced_list[-1]..leading_text_index=$", coalesced_stack[-1].leading_text_index)
                 split_leading_spaces = coalesced_stack[-1].leading_spaces.split(
                     ParserHelper.newline_character
                 )

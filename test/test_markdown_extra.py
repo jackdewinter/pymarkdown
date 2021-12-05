@@ -143,7 +143,7 @@ def test_extra_006():
         "[fcode-block(2,3):`:3:block:::::]",
         "[text(3,3):A code block:]",
         "[end-fcode-block::3:False]",
-        "[olist(5,3):.:1:5:]",
+        "[olist(5,3):.:1:5::]",
         "[para(5,6):]",
         "[text(5,6):another list:]",
         "[end-para:::True]",
@@ -424,7 +424,7 @@ def test_extra_008x():
         "[para(2,7):]",
         "[text(2,7):this is level 2:]",
         "[end-para:::True]",
-        "[ulist(3,7):*::8:    ]",
+        "[ulist(3,7):*::8:    :]",
         "[para(3,9):]",
         "[text(3,9):this is level 3:]",
         "[end-para:::True]",
@@ -472,7 +472,7 @@ def test_extra_008a():
         "[para(2,5):]",
         "[text(2,5):this is level 2:]",
         "[end-para:::True]",
-        "[ulist(3,5):*::6:    ]",
+        "[ulist(3,5):*::6:    :]",
         "[para(3,7):]",
         "[text(3,7):this is level 3:]",
         "[end-para:::True]",
@@ -507,7 +507,7 @@ def test_extra_009():
     source_markdown = """- > This is one section of a block quote
 """
     expected_tokens = [
-        "[ulist(1,1):-::2:]",
+        "[ulist(1,1):-::2::\n]",
         "[block-quote(1,3):  :  > \n]",
         "[para(1,5):]",
         "[text(1,5):This is one section of a block quote:]",
@@ -538,7 +538,7 @@ def test_extra_009a():
     source_markdown = """1. > This is one section of a block quote
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::\n]",
         "[block-quote(1,4):   :   > \n]",
         "[para(1,6):]",
         "[text(1,6):This is one section of a block quote:]",
@@ -570,7 +570,7 @@ def test_extra_009b():
    > This is one section of a block quote
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::\n]",
         "[BLANK(1,3):]",
         "[block-quote(2,4):   :   > \n]",
         "[para(2,6):]",
@@ -603,7 +603,7 @@ def test_extra_009c():
    > Just one section.
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::\n\n]",
         "[block-quote(1,4):   :   > \n   > \n]",
         "[para(1,6):\n]",
         "[text(1,6):This is one section of a block quote\nJust one section.::\n]",
@@ -639,7 +639,7 @@ def test_extra_010x():
 * Second Item
 """
     expected_tokens = [
-        "[ulist(1,1):*::2:]",
+        "[ulist(1,1):*::2::]",
         "[para(1,3):]",
         "[text(1,3):First Item:]",
         "[end-para:::True]",
@@ -690,7 +690,7 @@ def test_extra_010a():
   * Third Item
 """
     expected_tokens = [
-        "[ulist(1,1):*::2:]",
+        "[ulist(1,1):*::2::]",
         "[para(1,3):]",
         "[text(1,3):First Item:]",
         "[end-para:::True]",
@@ -730,7 +730,7 @@ def test_extra_010b():
 1. Second Item
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::]",
         "[para(1,4):]",
         "[text(1,4):First Item:]",
         "[end-para:::True]",
@@ -898,7 +898,7 @@ def test_extra_012():
         "[text(1,1):This is a test:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
-        "[ulist(3,2):*::3: ]",
+        "[ulist(3,2):*::3: :]",
         "[para(3,4):]",
         "[text(3,4):this is level 1:]",
         "[end-para:::True]",
@@ -1413,8 +1413,7 @@ this
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_extra_019():
+def test_extra_019x():
     """
     TBD
     """
@@ -1425,24 +1424,14 @@ def test_extra_019():
 >    <!-- this is a comment -->
 > 1. that
 """
-    expected_tokens = [
-        "[block-quote(1,1)::> \n> \n> \n> ]",
-        "[olist(1,3):.:1:5:  ]",
-        "[para(1,6):\n   ]",
-        "[text(1,6):list\nthis::\n]",
-        "[end-para:::False]",
-        "[end-olist:::True]",
-        "[html-block(3,3)]",
-        "[text(3,6):<!-- this is a comment -->:   ]",
-        "[end-html-block:::False]",
-        "[olist(4,3):.:1:5:  ]",
-        "[para(4,6):]",
-        "[text(4,6):that:]",
-        "[end-para:::True]",
-        "[BLANK(5,1):]",
-        "[end-olist:::True]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[block-quote(1,1)::> \n> \n> \n> ]',
+    '[olist(1,3):.:1:5::]',
+    '[para(1,6):\n]', '[text(1,6):list\nthis::\n]', '[end-para:::False]',
+    '[html-block(3,6)]', '[text(3,6):<!-- this is a comment -->:]', '[end-html-block:::False]',
+    '[li(4,3):5::1]',
+    '[para(4,6):]', '[text(4,6):that:]', '[end-para:::True]',
+    '[BLANK(5,1):]',
+    '[end-olist:::True]', '[end-block-quote:::True]']
     expected_gfm = """<blockquote>
 <ol>
 <li>list
@@ -1456,6 +1445,42 @@ this
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+@pytest.mark.gfm
+def test_extra_019a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>     <!-- this is a comment -->
+> 1. that
+"""
+    expected_tokens = [
+        '[block-quote(1,1)::> \n> \n> \n> ]',
+        '[olist(1,3):.:1:5::]',
+        '[para(1,6):\n]', '[text(1,6):list\nthis::\n]', '[end-para:::False]',
+        '[html-block(3,3)]',
+        '[text(3,6):<!-- this is a comment -->:   ]',
+        '[end-html-block:::False]',
+        '[olist(4,3):.:1:5:]',
+        '[para(4,6):]', '[text(4,6):that:]', '[end-para:::True]',
+        '[BLANK(5,1):]',
+        '[end-olist:::True]',
+        '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+this
+<!-- this is a comment -->
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 @pytest.mark.gfm
 @pytest.mark.skip
@@ -1571,7 +1596,7 @@ def test_extra_021a():
         "[para(3,4):]",
         "[text(3,4):Item 2:]",
         "[end-para:::True]",
-        "[ulist(4,4):*::5:   ]",
+        "[ulist(4,4):*::5:   :]",
         "[para(4,6):]",
         "[text(4,6):Item 2a:]",
         "[end-para:::True]",
@@ -1609,8 +1634,8 @@ def test_extra_021b():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
-        "[ulist(1,4):+::5: ]",
-        "[para(1,6):\n   ]",
+        "[ulist(1,4):+::5: :   ]",
+        "[para(1,6):\n]",
         "[text(1,6):list\nthis::\n]",
         "[end-para:::True]",
         "[li(3,3):4::]",
@@ -1660,7 +1685,7 @@ def test_extra_021c():
         "[para(4,8):]",
         "[text(4,8):this is level 2:]",
         "[end-para:::True]",
-        "[ulist(5,8):*::9:     ]",
+        "[ulist(5,8):*::9:     :]",
         "[para(5,10):]",
         "[text(5,10):this is level 3:]",
         "[end-para:::True]",
@@ -1720,7 +1745,7 @@ def test_extra_022():
         "[para(4,4):]",
         "[text(4,4):line 3:]",
         "[end-para:::True]",
-        "[ulist(5,4):*::5:   ]",
+        "[ulist(5,4):*::5:   :]",
         "[para(5,6):]",
         "[text(5,6):line 3a:]",
         "[end-para:::True]",

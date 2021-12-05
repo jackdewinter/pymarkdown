@@ -175,7 +175,8 @@ aaa
 @pytest.mark.gfm
 def test_fenced_code_blocks_096():
     """
-    Test case 096:  (part a) Unclosed code blocks are closed by the end of the document (or the enclosing block quote or list item):
+    Test case 096:  (part a) Unclosed code blocks are closed by the end of the
+                    document (or the enclosing block quote or list item):
     """
 
     # Arrange
@@ -336,7 +337,8 @@ abc
 @pytest.mark.gfm
 def test_fenced_code_blocks_097():
     """
-    Test case 097:  (part b) Unclosed code blocks are closed by the end of the document (or the enclosing block quote or list item):
+    Test case 097:  (part b) Unclosed code blocks are closed by the end of the
+                    document (or the enclosing block quote or list item):
     """
 
     # Arrange
@@ -361,7 +363,8 @@ aaa
 @pytest.mark.gfm
 def test_fenced_code_blocks_098x():
     """
-    Test case 098:  (part c) Unclosed code blocks are closed by the end of the document (or the enclosing block quote or list item):
+    Test case 098:  (part c) Unclosed code blocks are closed by the end of the
+                    document (or the enclosing block quote or list item):
     """
 
     # Arrange
@@ -984,7 +987,9 @@ def test_fenced_code_blocks_100():
 @pytest.mark.gfm
 def test_fenced_code_blocks_101():
     """
-    Test case 101:  (part a)  Fences can be indented. If the opening fence is indented, content lines will have equivalent opening indentation removed, if present:
+    Test case 101:  (part a)  Fences can be indented. If the opening fence is indented,
+                    content lines will have equivalent opening indentation removed,
+                    if present:
     """
 
     # Arrange
@@ -1008,7 +1013,9 @@ aaa
 @pytest.mark.gfm
 def test_fenced_code_blocks_102():
     """
-    Test case 102:  (part b)  Fences can be indented. If the opening fence is indented, content lines will have equivalent opening indentation removed, if present:
+    Test case 102:  (part b)  Fences can be indented. If the opening fence is
+                    indented, content lines will have equivalent opening indentation
+                    removed, if present:
     """
 
     # Arrange
@@ -1034,7 +1041,9 @@ aaa
 @pytest.mark.gfm
 def test_fenced_code_blocks_103():
     """
-    Test case 103:  (part c)  Fences can be indented. If the opening fence is indented, content lines will have equivalent opening indentation removed, if present:
+    Test case 103:  (part c)  Fences can be indented. If the opening fence is indented,
+                    content lines will have equivalent opening indentation removed,
+                    if present:
     """
 
     # Arrange
@@ -1078,13 +1087,14 @@ aaa
 </code></pre>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
 def test_fenced_code_blocks_105():
     """
-    Test case 105:  (part a) Closing fences may be indented by 0-3 spaces, and their indentation need not match that of the opening fence:
+    Test case 105:  (part a) Closing fences may be indented by 0-3 spaces, and
+                    their indentation need not match that of the opening fence:
     """
 
     # Arrange
@@ -1106,7 +1116,8 @@ aaa
 @pytest.mark.gfm
 def test_fenced_code_blocks_106():
     """
-    Test case 106:  (part b) Closing fences may be indented by 0-3 spaces, and their indentation need not match that of the opening fence:
+    Test case 106:  (part b) Closing fences may be indented by 0-3 spaces, and
+                    their indentation need not match that of the opening fence:
     """
 
     # Arrange
@@ -1197,7 +1208,8 @@ aaa
 @pytest.mark.gfm
 def test_fenced_code_blocks_110():
     """
-    Test case 110:  Fenced code blocks can interrupt paragraphs, and can be followed directly by paragraphs, without a blank line between:
+    Test case 110:  Fenced code blocks can interrupt paragraphs, and can be followed
+                    directly by paragraphs, without a blank line between:
     """
 
     # Arrange

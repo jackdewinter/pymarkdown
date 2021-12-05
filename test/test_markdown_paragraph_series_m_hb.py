@@ -54,7 +54,7 @@ def test_paragraph_series_m_hb_ol_nl_all_i3_hb():
    </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n   \n   ]",
+        "[olist(1,1):.:1:3::   \n   \n   \n]",
         "[BLANK(1,3):]",
         "[html-block(2,4)]",
         "[text(2,4):<script>\nfoo\n</script>:]",
@@ -104,7 +104,7 @@ foo
 </script>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -193,7 +193,7 @@ def test_paragraph_series_m_hb_ol_t_nl_all_i4_hb():
     </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:4::    \n    \n    ]",
+        "[olist(1,1):.:1:4::    \n    \n    \n]",
         "[para(1,5):]",
         "[text(1,5):abc:]",
         "[end-para:::False]",
@@ -342,7 +342,7 @@ def test_paragraph_series_m_hb_ol_ol_nl_all_i6_hb():
 """
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :      \n      \n      ]",
+        "[olist(1,4):.:1:6:   :      \n      \n      \n]",
         "[BLANK(1,6):]",
         "[html-block(2,7)]",
         "[text(2,7):<script>\nfoo\n</script>:]",
@@ -422,7 +422,7 @@ def test_paragraph_series_m_hb_ol_ol_t_nl_all_i6_hb():
 """
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :      \n      \n      ]",
+        "[olist(1,4):.:1:6:   :      \n      \n      \n]",
         "[para(1,7):]",
         "[text(1,7):abc:]",
         "[end-para:::False]",
@@ -1105,12 +1105,12 @@ foo
 </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::   ]",
         "[BLANK(1,3):]",
-        "[olist(2,4):.:1:6:   :   ]",
+        "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
         "[text(2,7):def:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[html-block(3,4)]",
         "[text(3,4):<script>:]",
@@ -1152,14 +1152,14 @@ foo
 </script>
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::   ]",
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :   ]",
+        "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
         "[text(2,7):def:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[html-block(3,4)]",
         "[text(3,4):<script>:]",

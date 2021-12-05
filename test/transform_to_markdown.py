@@ -329,6 +329,13 @@ class TransformToMarkdown:
         actual_tokens,
         transformed_data,
     ):
+        print(
+            f"new_data>{ParserHelper.make_value_visible(new_data)}<"
+        )
+        print(
+            f"transformed_data>{ParserHelper.make_value_visible(transformed_data)}<"
+        )
+        return new_data, delayed_continue, continue_sequence, transformed_data
         self.__look_for_last_block_token()
         (
             new_data,
@@ -867,12 +874,19 @@ class TransformToMarkdown:
         print(
             f"block_token_index>{block_token_index}, list_token_index={list_token_index}"
         )
+        print(
+            f"top_block_stack_token>{ParserHelper.make_value_visible(top_block_stack_token)}"
+        )
         if list_token_index > block_token_index:
             extra_count = last_list_block.indent_level - len(
                 last_list_block.extracted_whitespace
             )
+            ff = top_block_stack_token.calculate_next_leading_space_part(increment_index=False, delta=-1)
+            print(f"ff>:{ff}:<")
             print(f"extra_count>{extra_count}")
             print(f"next_token>{ParserHelper.make_value_visible(next_token)}")
+            extra_count -= len(ff)
+            print(f"extra_count>{extra_count}")
             if (
                 not next_token.is_blank_line
                 and not next_token.is_new_list_item
@@ -909,6 +923,7 @@ class TransformToMarkdown:
             )
 
         parts_to_merge = [new_data]
+        print(f"parts_to_merge-in>>{parts_to_merge}<<")
         for i in range(1, len(split_new_data)):
             print(f"::{i}::{split_new_data[i]}::")
             print(
@@ -920,8 +935,8 @@ class TransformToMarkdown:
                     [
                         ParserHelper.newline_character,
                         split_leading_spaces[top_block_stack_token.leading_text_index],
-                        split_new_data[i],
                         additional_whitespace,
+                        split_new_data[i],
                     ]
                 )
                 print("a-->" + ParserHelper.make_value_visible(next_token) + "<--")
@@ -939,8 +954,9 @@ class TransformToMarkdown:
 
             print(f"__merge_xx-post->{top_block_stack_token.leading_text_index}")
             top_block_stack_token.leading_text_index += 1
+            print(f"parts_to_merge-loop>>{parts_to_merge}<<")
 
-        print(f"parts_to_merge>>{parts_to_merge}<<")
+        print(f"parts_to_merge-out>>{parts_to_merge}<<")
         return "".join(parts_to_merge)
 
     # pylint: disable=too-many-arguments
@@ -1002,6 +1018,7 @@ class TransformToMarkdown:
             new_data = new_data[0:-1]
 
         last_block_quote_block = self.__find_last_block_quote_on_stack()
+        last_list_block = self.__find_last_list_on_stack()
         if ParserHelper.blech_character in new_data:
             print("with_newline>__merge_with_blech_in_data")
             new_data = self.__merge_with_blech_in_data(new_data, continue_sequence)
@@ -1013,7 +1030,7 @@ class TransformToMarkdown:
         elif last_block_quote_block:
             print("with_newline>__merge_xx")
             new_data = self.__merge_xx(
-                new_data, last_block_quote_block, None, next_token
+                new_data, last_block_quote_block, last_list_block, next_token
             )
 
         if remove_trailing_newline:

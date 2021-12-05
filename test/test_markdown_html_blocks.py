@@ -888,12 +888,12 @@ def test_html_blocks_143x():
 
 bar"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> \n\n]",
+        "[block-quote(1,1)::> \n> ]",
         "[html-block(1,3)]",
         "[text(1,3):<div>\nfoo:]",
         "[end-html-block:::False]",
-        "[BLANK(3,1):]",
         "[end-block-quote:::False]",
+        "[BLANK(3,1):]",
         "[para(4,1):]",
         "[text(4,1):bar:]",
         "[end-para:::True]",
@@ -905,7 +905,7 @@ foo
 <p>bar</p>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -921,12 +921,12 @@ def test_html_blocks_143a():
 
 bar"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> \n> \n\n]",
+        "[block-quote(1,1)::> \n> \n> ]",
         "[html-block(1,3)]",
         "[text(1,3):<div>\nfoo\nbar:]",
         "[end-html-block:::False]",
-        "[BLANK(4,1):]",
         "[end-block-quote:::False]",
+        "[BLANK(4,1):]",
         "[para(5,1):]",
         "[text(5,1):bar:]",
         "[end-para:::True]",
@@ -956,12 +956,12 @@ def test_html_blocks_143b():
 
 bar"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n> \n> \n> \n\n]",
+        "[block-quote(1,1)::> \n> \n> \n> ]",
         "[html-block(1,3)]",
         "[text(1,3):<div>\nfoo\nbar\nbaz:]",
         "[end-html-block:::False]",
-        "[BLANK(5,1):]",
         "[end-block-quote:::False]",
+        "[BLANK(5,1):]",
         "[para(6,1):]",
         "[text(6,1):bar:]",
         "[end-para:::True]",
@@ -992,12 +992,12 @@ def test_html_blocks_143c():
 
 bar"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n>\n> \n>\n\n]",
+        "[block-quote(1,1)::> \n>\n> \n>]",
         "[html-block(1,3)]",
         "[text(1,3):<div>\nfoo\nbar\nbaz:]",
         "[end-html-block:::False]",
-        "[BLANK(5,1):]",
         "[end-block-quote:::False]",
+        "[BLANK(5,1):]",
         "[para(6,1):]",
         "[text(6,1):bar:]",
         "[end-para:::True]",
@@ -1057,7 +1057,7 @@ def test_html_blocks_144a():
 
 foo"""
     expected_tokens = [
-        "[ulist(1,1):-::2:]",
+        "[ulist(1,1):-::2::]",
         "[html-block(1,3)]",
         "[text(1,3):<div>:]",
         "[end-html-block:::True]",
@@ -1850,19 +1850,7 @@ def test_html_blocks_extra_02x():
 some other text
 </script>
 """
-    expected_tokens = [
-        "[ulist(1,1):-::2::\n]",
-        "[html-block(1,3)]",
-        "[text(1,3):<script>:]",
-        "[end-html-block:::True]",
-        "[li(2,1):2::]",
-        "[para(2,3):\n\n]",
-        "[text(2,3):some text\nsome other text\n::\n\n]",
-        "[raw-html(4,1):/script]",
-        "[end-para:::True]",
-        "[BLANK(5,1):]",
-        "[end-ulist:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2::\n\n]', '[html-block(1,3)]', '[text(1,3):<script>:]', '[end-html-block:::True]', '[li(2,1):2::]', '[para(2,3):\n\n]', '[text(2,3):some text\nsome other text\n::\n\n]', '[raw-html(4,1):/script]', '[end-para:::True]', '[BLANK(5,1):]', '[end-ulist:::True]']
     expected_gfm = """<ul>
 <li>
 <script>
@@ -1893,22 +1881,7 @@ def test_html_blocks_extra_02a():
 </script>
 """
 
-    expected_tokens = [
-        "[ulist(1,1):-::2::\n]",
-        "[html-block(1,3)]",
-        "[text(1,3):<script>:]",
-        "[end-html-block:::True]",
-        "[li(2,1):2::]",
-        "[para(2,3):\n\n]",
-        "[text(2,3):[:]",
-        "[text(2,4):foo:]",
-        "[text(2,7):]:]",
-        "[text(2,8)::\n/url\n::\n\n]",
-        "[raw-html(4,1):/script]",
-        "[end-para:::True]",
-        "[BLANK(5,1):]",
-        "[end-ulist:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2::\n\n]', '[html-block(1,3)]', '[text(1,3):<script>:]', '[end-html-block:::True]', '[li(2,1):2::]', '[para(2,3):\n\n]', '[text(2,3):[:]', '[text(2,4):foo:]', '[text(2,7):]:]', '[text(2,8)::\n/url\n::\n\n]', '[raw-html(4,1):/script]', '[end-para:::True]', '[BLANK(5,1):]', '[end-ulist:::True]']
     expected_gfm = """<ul>
 <li>
 <script>
@@ -1939,21 +1912,7 @@ def test_html_blocks_extra_02b():
  script
 """
 
-    expected_tokens = [
-        "[ulist(1,1):-::2:: \n ]",
-        "[html-block(1,3)]",
-        "[text(1,3):<script>:]",
-        "[end-html-block:::True]",
-        "[li(2,1):2::]",
-        "[para(2,3):\n\n]",
-        "[text(2,3):[:]",
-        "[text(2,4):foo:]",
-        "[text(2,7):]:]",
-        "[text(2,8)::\n/url\nscript::\n\n]",
-        "[end-para:::True]",
-        "[BLANK(5,1):]",
-        "[end-ulist:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2::\n\n]', '[html-block(1,3)]', '[text(1,3):<script>:]', '[end-html-block:::True]', '[li(2,1):2::]', '[para(2,3):\n \n ]', '[text(2,3):[:]', '[text(2,4):foo:]', '[text(2,7):]:]', '[text(2,8)::\n/url\nscript::\n\n]', '[end-para:::True]', '[BLANK(5,1):]', '[end-ulist:::True]']
     expected_gfm = """<ul>
 <li>
 <script>
@@ -1984,21 +1943,7 @@ def test_html_blocks_extra_02c():
 script
 """
 
-    expected_tokens = [
-        "[ulist(1,1):-::2::\n]",
-        "[html-block(1,3)]",
-        "[text(1,3):<script>:]",
-        "[end-html-block:::True]",
-        "[li(2,1):2::]",
-        "[para(2,3):\n\n]",
-        "[text(2,3):[:]",
-        "[text(2,4):foo:]",
-        "[text(2,7):]:]",
-        "[text(2,8)::\n/url\nscript::\n\n]",
-        "[end-para:::True]",
-        "[BLANK(5,1):]",
-        "[end-ulist:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2::\n\n]', '[html-block(1,3)]', '[text(1,3):<script>:]', '[end-html-block:::True]', '[li(2,1):2::]', '[para(2,3):\n\n]', '[text(2,3):[:]', '[text(2,4):foo:]', '[text(2,7):]:]', '[text(2,8)::\n/url\nscript::\n\n]', '[end-para:::True]', '[BLANK(5,1):]', '[end-ulist:::True]']
     expected_gfm = """<ul>
 <li>
 <script>

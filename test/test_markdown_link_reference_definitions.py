@@ -540,7 +540,8 @@ def test_link_reference_definitions_175():
 @pytest.mark.gfm
 def test_link_reference_definitions_176():
     """
-    Test case 176:  Here is a link reference definition with no corresponding link. It contributes nothing to the document.
+    Test case 176:  Here is a link reference definition with no corresponding
+                    link. It contributes nothing to the document.
     """
 
     # Arrange
@@ -578,7 +579,8 @@ bar"""
 @pytest.mark.gfm
 def test_link_reference_definitions_178():
     """
-    Test case 178:  This is not a link reference definition, because there are non-whitespace characters after the title:
+    Test case 178:  This is not a link reference definition, because there are
+                    non-whitespace characters after the title:
     """
 
     # Arrange
@@ -715,7 +717,9 @@ def test_link_reference_definitions_182():
 @pytest.mark.gfm
 def test_link_reference_definitions_183():
     """
-    Test case 183:  (part 1) However, it can directly follow other block elements, such as headings and thematic breaks, and it need not be followed by a blank line.
+    Test case 183:  (part 1) However, it can directly follow other block elements,
+                    such as headings and thematic breaks, and it need not be followed
+                    by a blank line.
     """
 
     # Arrange
@@ -956,24 +960,7 @@ def test_link_reference_definitions_183gx():
     source_markdown = """- A simple list
 [foo]: /url
 > [Foo]"""
-    expected_tokens = [
-        "[ulist(1,1):-::2::]",
-        "[para(1,3):\n]",
-        "[text(1,3):A simple list\n::\n]",
-        "[text(2,1):[:]",
-        "[text(2,2):foo:]",
-        "[text(2,5):]:]",
-        "[text(2,6):: /url:]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[block-quote(3,1)::> ]",
-        "[para(3,3):]",
-        "[text(3,3):[:]",
-        "[text(3,4):Foo:]",
-        "[text(3,7):]:]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2::]', '[para(1,3):\n]', '[text(1,3):A simple list\n::\n]', '[text(2,1):[:]', '[text(2,2):foo:]','[text(2,5):]:]', '[text(2,6):: /url:]', '[end-para:::True]', '[end-ulist:::True]', '[block-quote(3,1)::> ]', '[para(3,3):]', '[text(3,3):[:]', '[text(3,4):Foo:]', '[text(3,7):]:]', '[end-para:::True]', '[end-block-quote:::True]']
     expected_gfm = """<ul>
 <li>A simple list
 [foo]: /url</li>
@@ -1034,24 +1021,7 @@ def test_link_reference_definitions_183gb():
     source_markdown = """- A simple list
  [foo]: /url
 > [Foo]"""
-    expected_tokens = [
-        "[ulist(1,1):-::2:: ]",
-        "[para(1,3):\n]",
-        "[text(1,3):A simple list\n::\n]",
-        "[text(2,1):[:]",
-        "[text(2,2):foo:]",
-        "[text(2,5):]:]",
-        "[text(2,6):: /url:]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[block-quote(3,1)::> ]",
-        "[para(3,3):]",
-        "[text(3,3):[:]",
-        "[text(3,4):Foo:]",
-        "[text(3,7):]:]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2::]', '[para(1,3):\n ]', '[text(1,3):A simple list\n::\n]', '[text(2,2):[:]', '[text(2,3):foo:]', '[text(2,6):]:]', '[text(2,7):: /url:]', '[end-para:::True]', '[end-ulist:::True]', '[block-quote(3,1)::> ]', '[para(3,3):]', '[text(3,3):[:]', '[text(3,4):Foo:]', '[text(3,7):]:]', '[end-para:::True]', '[end-block-quote:::True]']
     expected_gfm = """<ul>
 <li>A simple list
 [foo]: /url</li>
@@ -1075,24 +1045,7 @@ def test_link_reference_definitions_183gc():
     source_markdown = """1. A simple list
  [foo]: /url
 > [Foo]"""
-    expected_tokens = [
-        "[olist(1,1):.:1:3:: ]",
-        "[para(1,4):\n]",
-        "[text(1,4):A simple list\n::\n]",
-        "[text(2,1):[:]",
-        "[text(2,2):foo:]",
-        "[text(2,5):]:]",
-        "[text(2,6):: /url:]",
-        "[end-para:::True]",
-        "[end-olist:::True]",
-        "[block-quote(3,1)::> ]",
-        "[para(3,3):]",
-        "[text(3,3):[:]",
-        "[text(3,4):Foo:]",
-        "[text(3,7):]:]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[olist(1,1):.:1:3::]', '[para(1,4):\n ]', '[text(1,4):A simple list\n::\n]', '[text(2,2):[:]', '[text(2,3):foo:]', '[text(2,6):]:]', '[text(2,7):: /url:]', '[end-para:::True]', '[end-olist:::True]', '[block-quote(3,1)::> ]', '[para(3,3):]', '[text(3,3):[:]', '[text(3,4):Foo:]', '[text(3,7):]:]', '[end-para:::True]', '[end-block-quote:::True]']
     expected_gfm = """<ol>
 <li>A simple list
 [foo]: /url</li>
@@ -1155,24 +1108,7 @@ def test_link_reference_definitions_183ge():
     source_markdown = """- A simple list
 *foo*: /url
 > [Foo]"""
-    expected_tokens = [
-        "[ulist(1,1):-::2::]",
-        "[para(1,3):\n]",
-        "[text(1,3):A simple list\n::\n]",
-        "[emphasis(2,1):1:*]",
-        "[text(2,2):foo:]",
-        "[end-emphasis(2,5)::]",
-        "[text(2,6):: /url:]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-        "[block-quote(3,1)::> ]",
-        "[para(3,3):]",
-        "[text(3,3):[:]",
-        "[text(3,4):Foo:]",
-        "[text(3,7):]:]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2::]', '[para(1,3):\n]', '[text(1,3):A simple list\n::\n]', '[emphasis(2,1):1:*]', '[text(2,2):foo:]', '[end-emphasis(2,5)::]', '[text(2,6):: /url:]', '[end-para:::True]', '[end-ulist:::True]', '[block-quote(3,1)::> ]', '[para(3,3):]', '[text(3,3):[:]', '[text(3,4):Foo:]', '[text(3,7):]:]', '[end-para:::True]', '[end-block-quote:::True]']
     expected_gfm = """<ul>
 <li>A simple list
 <em>foo</em>: /url</li>
@@ -1232,7 +1168,7 @@ def test_link_reference_definitions_183gg():
 [foo]: /url
   > [Foo]"""
     expected_tokens = [
-        "[ulist(1,1):-::2::]",
+        "[ulist(1,1):-::2::\n]",
         "[para(1,3):\n]",
         "[text(1,3):A simple list\n::\n]",
         "[text(2,1):[:]",
@@ -1265,7 +1201,9 @@ def test_link_reference_definitions_183gg():
 @pytest.mark.gfm
 def test_link_reference_definitions_184():
     """
-    Test case 184:  (part 2) However, it can directly follow other block elements, such as headings and thematic breaks, and it need not be followed by a blank line.
+    Test case 184:  (part 2) However, it can directly follow other block elements,
+                    such as headings and thematic breaks, and it need not be followed
+                    by a blank line.
     """
 
     # Arrange
@@ -1294,7 +1232,9 @@ bar
 @pytest.mark.gfm
 def test_link_reference_definitions_185():
     """
-    Test case 185:  (part 3) However, it can directly follow other block elements, such as headings and thematic breaks, and it need not be followed by a blank line.
+    Test case 185:  (part 3) However, it can directly follow other block elements,
+                    such as headings and thematic breaks, and it need not be followed
+                    by a blank line.
     """
 
     # Arrange
@@ -1468,7 +1408,7 @@ def test_link_reference_definitions_185e():
 
 
 @pytest.mark.gfm
-def test_link_reference_definitions_185f():
+def test_link_reference_definitions_185fx():
     """
     Test case 185a:  variation of 185 with List between
     """
@@ -1570,7 +1510,9 @@ def test_link_reference_definitions_186():
 @pytest.mark.gfm
 def test_link_reference_definitions_187():
     """
-    Test case 187:  Link reference definitions can occur inside block containers, like lists and block quotations. They affect the entire document, not just the container in which they are defined:
+    Test case 187:  Link reference definitions can occur inside block containers,
+                    like lists and block quotations. They affect the entire document,
+                    not just the container in which they are defined:
     """
 
     # Arrange
@@ -1599,7 +1541,8 @@ def test_link_reference_definitions_187():
 @pytest.mark.gfm
 def test_link_reference_definitions_188():
     """
-    Test case 188:  Whether something is a link reference definition is independent of whether the link reference it defines is used in the document.
+    Test case 188:  Whether something is a link reference definition is independent
+                    of whether the link reference it defines is used in the document.
     """
 
     # Arrange
@@ -1778,16 +1721,7 @@ def test_link_reference_definitions_extra_01b():
     # Arrange
     source_markdown = """- [foo]:
  /url"""
-    expected_tokens = [
-        "[ulist(1,1):-::2:: ]",
-        "[para(1,3):\n]",
-        "[text(1,3):[:]",
-        "[text(1,4):foo:]",
-        "[text(1,7):]:]",
-        "[text(1,8)::\n/url::\n]",
-        "[end-para:::True]",
-        "[end-ulist:::True]",
-    ]
+    expected_tokens = ['[ulist(1,1):-::2::]', '[para(1,3):\n ]', '[text(1,3):[:]', '[text(1,4):foo:]', '[text(1,7):]:]', '[text(1,8)::\n/url::\n]', '[end-para:::True]', '[end-ulist:::True]']
     expected_gfm = """<ul>
 <li>[foo]:
 /url</li>
@@ -1871,7 +1805,7 @@ def test_link_reference_definitions_extra_02x():
     source_markdown = """> [foo]:
 /url"""
     expected_tokens = [
-        "[block-quote(1,1)::> \n]",
+        "[block-quote(1,1)::> \n\n]",
         "[link-ref-def(1,3):True::foo::\n:/url:::::]",
         "[end-block-quote:::True]",
     ]
