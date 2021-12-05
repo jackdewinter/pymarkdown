@@ -807,7 +807,7 @@ class ParserHelper:
         return ParserHelper.__resolve_escapes_from_text(resolved_text)
 
     @staticmethod
-    def remove_all_from_text(text_to_remove):
+    def remove_all_from_text(text_to_remove, include_noops = False):
         """
         Combination to remove all of these special characters from the text.
         """
@@ -815,6 +815,8 @@ class ParserHelper:
         removed_text = ParserHelper.__resolve_replacement_markers_from_text(
             removed_text
         )
+        if include_noops:
+            removed_text = ParserHelper.resolve_noops_from_text(removed_text)
         return ParserHelper.__remove_escapes_from_text(removed_text)
 
     @staticmethod

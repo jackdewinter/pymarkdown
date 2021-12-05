@@ -239,22 +239,24 @@ class TransformToMarkdown:
                 + f"<continue_sequence>{continue_sequence}<delayed_continue>{delayed_continue}<"
             )
 
-            (
-                new_data,
-                delayed_continue,
-                continue_sequence,
-                transformed_data,
-            ) = self.__handle_post_processing(
-                current_token,
-                new_data,
-                skip_merge,
-                delayed_continue,
-                continue_sequence,
-                next_token,
-                previous_token,
-                actual_tokens,
-                transformed_data,
-            )
+            transformed_data += new_data
+            if False:
+                (
+                    new_data,
+                    delayed_continue,
+                    continue_sequence,
+                    transformed_data,
+                ) = self.__handle_post_processing(
+                    current_token,
+                    new_data,
+                    skip_merge,
+                    delayed_continue,
+                    continue_sequence,
+                    next_token,
+                    previous_token,
+                    actual_tokens,
+                    transformed_data,
+                )
 
             print("---")
             previous_token = current_token
@@ -1973,7 +1975,9 @@ class TransformToMarkdown:
         print(
             f">>rehydrate_text>>{ParserHelper.make_value_visible(current_token.token_text)}"
         )
-        main_text = ParserHelper.remove_all_from_text(current_token.token_text)
+        #main_text = ParserHelper.resolve_noops_from_text(current_token.token_text)
+        main_text = ParserHelper.remove_all_from_text(current_token.token_text, include_noops=True)
+
         print(f"<<rehydrate_text>>{ParserHelper.make_value_visible(main_text)}")
 
         print(

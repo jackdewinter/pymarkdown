@@ -131,8 +131,8 @@ def assert_token_consistency(source_markdown, actual_tokens):
     """
     Compare the markdown document against the tokens that are expected.
     """
+    verify_markdown_roundtrip(source_markdown, actual_tokens)
     if False:
-        verify_markdown_roundtrip(source_markdown, actual_tokens)
         verify_line_and_column_numbers(source_markdown, actual_tokens)
 
 
@@ -143,6 +143,16 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
     """
 
     if ParserHelper.tab_character in source_markdown:
+        return
+
+    has_block_tokens = False
+    has_list_tokens = False
+    for next_token in actual_tokens:
+        if next_token.is_list_start:
+            has_list_tokens = True
+        elif next_token.is_block_quote_start:
+            has_block_tokens = True
+    if has_block_tokens or has_list_tokens:
         return
 
     transformer = TransformToMarkdown()

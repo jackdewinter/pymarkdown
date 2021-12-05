@@ -1668,7 +1668,7 @@ class ContainerBlockProcessor:
 
         # TODO KLUDGE
         last_list_index = parser_state.find_last_list_block_on_stack()
-        if last_list_index > 0 and last_block_index > 0 and last_list_index < last_block_index:
+        if last_block_index > 0 and 0 < last_list_index < last_block_index:
             parser_state.token_stack[last_list_index].matching_markdown_token.add_leading_spaces("")
 
         orig_text_removed_by_container = text_removed_by_container
