@@ -16,7 +16,7 @@ class ParserHelper:
     __alert_character = "\a"
     whitespace_split_character = "\x02"
     replace_noop_character = "\x03"
-    blech_character = "\x04"
+    blech_character = "\x04" # TODO remove blech
     escape_character = "\x05"
 
     backslash_character = "\\"
