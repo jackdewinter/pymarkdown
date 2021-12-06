@@ -344,8 +344,8 @@ def test_code_spans_346ba():
 
     # Arrange
     source_markdown = """> ``
-> foo 
-> ``"""
+> foo\a
+> ``""".replace("\a", " ")
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
         "[para(1,3):\n\n]",
@@ -360,6 +360,27 @@ def test_code_spans_346ba():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+@pytest.mark.gfm
+def test_code_spans_346bb():
+    """
+    Test case 346ba:  variation of 346b within a block quote with
+        block quotes indentation
+    """
+
+    # Arrange
+    source_markdown = """start
+> ``
+> foo\a
+> ``""".replace("\a", " ")
+    expected_tokens = ['[para(1,1):]', '[text(1,1):start:]', '[end-para:::True]', '[block-quote(2,1)::> \n> \n> ]', '[para(2,3):\n\n]',
+'[icode-span(2,3):foo :``:\a\n\a \a:\a\n\a \a]', '[end-para:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<p>start</p>
+<blockquote>
+<p><code>foo </code></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
 def test_code_spans_346c():

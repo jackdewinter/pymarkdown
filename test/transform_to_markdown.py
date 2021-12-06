@@ -203,6 +203,9 @@ class TransformToMarkdown:
             delayed_continue,
         ) = ("", False, None, "", "")
 
+        container_stack = []
+        container_records = []
+
         print("---\nTransformToMarkdown\n---")
 
         pragma_token = None
@@ -238,8 +241,40 @@ class TransformToMarkdown:
                 f"post-h>new_data>{ParserHelper.make_value_visible(new_data)}"
                 + f"<continue_sequence>{continue_sequence}<delayed_continue>{delayed_continue}<"
             )
-
+            transformed_data_length_before_add = len(transformed_data)
             transformed_data += new_data
+
+            if current_token.is_block_quote_start:
+                if not container_stack:
+                    container_records.clear()
+                container_stack.append(current_token)
+                record_item = (True, transformed_data_length_before_add, current_token)
+                container_records.append(record_item)
+                # print("START:" + ParserHelper.make_value_visible(current_token))
+                # print(">>" + ParserHelper.make_value_visible(container_stack))
+                # print(">>" + ParserHelper.make_value_visible(container_records))
+            elif current_token.is_block_quote_end:
+                # print("END:" + ParserHelper.make_value_visible(current_token.start_markdown_token))
+                assert str(container_stack[-1]) == str(current_token.start_markdown_token), \
+                    ParserHelper.make_value_visible(container_stack[-1]) + "==" + \
+                        ParserHelper.make_value_visible(current_token.start_markdown_token)
+                del container_stack[-1]
+                record_item = (False, len(transformed_data), current_token.start_markdown_token)
+                container_records.append(record_item)
+                # print(">>" + ParserHelper.make_value_visible(container_stack))
+                # print(">>" + ParserHelper.make_value_visible(container_records))
+
+                if not container_stack:
+                    record_item = container_records[0]
+                    assert record_item[0]
+                    pre_container_text = transformed_data[0:record_item[1]]
+                    container_text = transformed_data[record_item[1]:]
+                    adjusted_text = self.abcd(container_text, container_records)
+                    print("pre>:" + str(pre_container_text) + ":<")
+                    print("adj>:" + str(adjusted_text) + ":<")
+                    transformed_data = pre_container_text + adjusted_text
+                    print("trn>:" + str(transformed_data) + ":<")
+
             if False:
                 (
                     new_data,
@@ -272,6 +307,79 @@ class TransformToMarkdown:
         assert not self.block_stack
         assert not self.container_token_stack
         return transformed_data, avoid_processing
+
+    def abcd(self, container_text, container_records):
+        print(">>incoming>>:" + ParserHelper.make_value_visible(container_text) + ":<<")
+        print(">>container_records>>" + ParserHelper.make_value_visible(container_records))
+        # is_start, position, token
+        base_line = container_records[0][2].line_number
+        split_container_text = container_text.split("\n")
+        print(">>split_container_text>>" + ParserHelper.make_value_visible(split_container_text))
+
+        transformed_parts = []
+        token_stack = []
+        container_token_indices = []
+        record_index = -1
+
+        container_text_index = container_records[0][1]
+        delta_line = 0
+        current_changed_record = None
+        for container_line in split_container_text:
+            container_line_length = len(container_line)
+            print("\n" + str(delta_line) + "(" + str(base_line + delta_line) + ")>>container_line>>" + \
+                str(container_text_index) + "-" + \
+                str(container_text_index + container_line_length) + ":>:" +\
+                    ParserHelper.make_value_visible(container_line) + ":<")
+
+            old_record_index = record_index
+            did_move_ahead = False
+            while record_index + 1 < len(container_records) and \
+                container_records[record_index + 1][1] <= container_text_index:
+                record_index += 1
+            while old_record_index != record_index:
+                did_move_ahead = True
+                current_changed_record = container_records[old_record_index+1]
+                print("   current_changed_record(" + str(old_record_index+1) + ")-->" + \
+                    ParserHelper.make_value_visible(current_changed_record))
+                if current_changed_record[0]:
+                    token_stack.append(current_changed_record[2])
+                    container_token_indices.append(0)
+                else:
+                    print("   -->" + ParserHelper.make_value_visible(token_stack))
+                    print("   -->" + ParserHelper.make_value_visible(container_token_indices))
+                    assert str(current_changed_record[2]) == str(token_stack[-1]), \
+                        "end:" + ParserHelper.make_value_visible(current_changed_record[2]) + "!=" + \
+                            ParserHelper.make_value_visible(token_stack[-1])
+                    del token_stack[-1]
+                    del container_token_indices[-1]
+
+                print("   -->current_changed_record>" + ParserHelper.make_value_visible(current_changed_record))
+                print("   -->" + ParserHelper.make_value_visible(token_stack))
+                print("   -->" + ParserHelper.make_value_visible(container_token_indices))
+                old_record_index += 1
+            if not container_token_indices:
+                transformed_parts.append(container_line)
+                break
+
+            print(" -->did_move_ahead>" + ParserHelper.make_value_visible(did_move_ahead))
+            print(" -->" + ParserHelper.make_value_visible(token_stack))
+            print(" -->" + ParserHelper.make_value_visible(container_token_indices))
+            last_container_token_index = container_token_indices[-1]
+            if not did_move_ahead or not current_changed_record[0]:
+                split_leading_spaces = token_stack[-1].leading_spaces.split("\n")
+                if last_container_token_index < len(split_leading_spaces):
+                    print(" -->" + ParserHelper.make_value_visible(split_leading_spaces))
+                    container_line = split_leading_spaces[last_container_token_index] + container_line
+            container_token_indices[-1] = last_container_token_index + 1
+            print(" -->" + ParserHelper.make_value_visible(container_token_indices))
+
+            transformed_parts.append(container_line)
+            print(" -->transformed_parts>" + ParserHelper.make_value_visible(transformed_parts))
+            container_text_index += container_line_length + 1
+            delta_line += 1
+
+        print("\n<<transformed<<" + ParserHelper.make_value_visible(transformed_parts))
+        return "\n".join(transformed_parts)
 
     def __look_for_last_block_token(self):
         found_block_token = None
@@ -1138,7 +1246,7 @@ class TransformToMarkdown:
             print(
                 f">>found_block_token>>{ParserHelper.make_value_visible(found_block_token)}<"
             )
-            if found_block_token and was_list_found:
+            if found_block_token and was_list_found and False:
                 split_leading_spaces = found_block_token.leading_spaces.split(
                     ParserHelper.newline_character
                 )
@@ -1693,7 +1801,7 @@ class TransformToMarkdown:
 
         stack_copy_of_token = self.container_token_stack[-1]
         del self.container_token_stack[-1]
-        if any_non_container_end_tokens:
+        if any_non_container_end_tokens and False:
             continue_sequence = self.__reset_container_continue_sequence()
             if (
                 self.container_token_stack
@@ -1726,11 +1834,11 @@ class TransformToMarkdown:
                 + 1,
             )
 
-            assert isinstance(expected_leading_text_index, int)
-            assert leading_text_index in [
-                expected_leading_text_index,
-                expected_leading_text_index + 1,
-            ], f"leading_text_index={leading_text_index};expected_leading_text_index={expected_leading_text_index}"
+            # assert isinstance(expected_leading_text_index, int)
+            # assert leading_text_index in [
+            #     expected_leading_text_index,
+            #     expected_leading_text_index + 1,
+            # ], f"leading_text_index={leading_text_index};expected_leading_text_index={expected_leading_text_index}"
 
         return text_to_add, continue_sequence, continue_sequence
 
