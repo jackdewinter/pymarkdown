@@ -1220,7 +1220,7 @@ def test_list_blocks_249():
            bar"""
     expected_tokens = [
         "[olist(1,3):.:10:7:  :\n       ]",
-        "[para(1,8):\x04\x04\x04]",
+        "[para(1,8):]",
         "[text(1,8):foo:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
@@ -2414,7 +2414,7 @@ def test_list_blocks_268():
           indented code
 
       > A block quote."""
-    expected_tokens = ['[olist(1,3):.:1:6:  :\n\n      \n\n]', '[para(1,7):\n\x04\x04]', '[text(1,7):A paragraph\nwith two lines.::\n]', '[end-para:::True]', '[BLANK(3,1):]', '[icode-block(4,11):    :]', '[text(4,11):indented code:]', '[end-icode-block:::True]', '[BLANK(5,1):]', '[block-quote(6,7):      :      > ]', '[para(6,9):]', '[text(6,9):A block quote.:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
+    expected_tokens = ['[olist(1,3):.:1:6:  :\n\n      \n\n]', '[para(1,7):\n ]', '[text(1,7):A paragraph\nwith two lines.::\n]', '[end-para:::True]', '[BLANK(3,1):]', '[icode-block(4,11):    :]', '[text(4,11):indented code:]', '[end-icode-block:::True]', '[BLANK(5,1):]', '[block-quote(6,7):      :      > ]', '[para(6,9):]', '[text(6,9):A block quote.:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
     expected_gfm = """<ol>
 <li>
 <p>A paragraph

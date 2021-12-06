@@ -244,7 +244,7 @@ class TransformToMarkdown:
             transformed_data_length_before_add = len(transformed_data)
             transformed_data += new_data
 
-            if current_token.is_block_quote_start:
+            if current_token.is_block_quote_start or current_token.is_list_start or current_token.is_new_list_item:
                 if not container_stack:
                     container_records.clear()
                 container_stack.append(current_token)
@@ -253,8 +253,10 @@ class TransformToMarkdown:
                 # print("START:" + ParserHelper.make_value_visible(current_token))
                 # print(">>" + ParserHelper.make_value_visible(container_stack))
                 # print(">>" + ParserHelper.make_value_visible(container_records))
-            elif current_token.is_block_quote_end:
+            elif current_token.is_block_quote_end or current_token.is_list_end:
                 # print("END:" + ParserHelper.make_value_visible(current_token.start_markdown_token))
+                while container_stack[-1].is_new_list_item:
+                    del container_stack[-1]
                 assert str(container_stack[-1]) == str(current_token.start_markdown_token), \
                     ParserHelper.make_value_visible(container_stack[-1]) + "==" + \
                         ParserHelper.make_value_visible(current_token.start_markdown_token)
@@ -333,9 +335,12 @@ class TransformToMarkdown:
 
             old_record_index = record_index
             did_move_ahead = False
+            print("(" + str(container_text_index) + ")")
+            print("(" + str(record_index + 1) + "):" + ParserHelper.make_value_visible(container_records[1]))
             while record_index + 1 < len(container_records) and \
-                container_records[record_index + 1][1] <= container_text_index:
+                container_records[record_index + 1][1] <= (container_text_index+container_line_length):
                 record_index += 1
+            print("(" + str(record_index + 1) + "):" + ParserHelper.make_value_visible(container_records[1]))
             while old_record_index != record_index:
                 did_move_ahead = True
                 current_changed_record = container_records[old_record_index+1]
@@ -364,13 +369,19 @@ class TransformToMarkdown:
             print(" -->did_move_ahead>" + ParserHelper.make_value_visible(did_move_ahead))
             print(" -->" + ParserHelper.make_value_visible(token_stack))
             print(" -->" + ParserHelper.make_value_visible(container_token_indices))
+            xx = did_move_ahead and current_changed_record[0] and (token_stack[-1].is_list_start or token_stack[-1].is_new_list_item)
             last_container_token_index = container_token_indices[-1]
             if not did_move_ahead or not current_changed_record[0]:
                 split_leading_spaces = token_stack[-1].leading_spaces.split("\n")
                 if last_container_token_index < len(split_leading_spaces):
                     print(" -->" + ParserHelper.make_value_visible(split_leading_spaces))
                     container_line = split_leading_spaces[last_container_token_index] + container_line
-            container_token_indices[-1] = last_container_token_index + 1
+            if not xx:
+                container_token_indices[-1] = last_container_token_index + 1
+            elif token_stack[-1].is_new_list_item:
+                del token_stack[-1]
+                del container_token_indices[-1] # TODO may need earlier if both new item and start of new list on same line
+            print(" -->" + ParserHelper.make_value_visible(token_stack))
             print(" -->" + ParserHelper.make_value_visible(container_token_indices))
 
             transformed_parts.append(container_line)
@@ -1733,9 +1744,18 @@ class TransformToMarkdown:
                 current_token.indent_level - previous_indent - adjustment_since_newline,
                 " ",
             )
-            print(f">>start_sequence>>:{start_sequence}:<<")
+        else:
+            print(f">>next_token.column_number>>:{next_token.column_number}:<<")
+            print(f">>current_token.column_number>>:{current_token.column_number}:<<")
+            hh = 1
+            if not current_token.is_unordered_list_start:
+                hh += len(current_token.list_start_content)
+            gh = next_token.column_number - current_token.column_number - hh
+            start_sequence += ParserHelper.repeat_string(" ", gh)
+        print(f"<<start_sequence<<:{start_sequence}:<<")
         if post_adjust_whitespace:
             start_sequence = post_adjust_whitespace + start_sequence
+            print(f"<<start_sequence<<(post):{start_sequence}:<<")
         return start_sequence, ParserHelper.repeat_string(
             " ", current_token.indent_level
         )
@@ -1919,6 +1939,14 @@ class TransformToMarkdown:
                 self.container_token_stack[-1].indent_level - adjustment_since_newline,
                 " ",
             )
+        else:
+            print(f">>next_token.column_number>>:{next_token.column_number}:<<")
+            print(f">>current_token.column_number>>:{current_token.column_number}:<<")
+            hh = 1
+            if current_token.list_start_content:
+                hh += len(current_token.list_start_content)
+            gh = next_token.column_number - current_token.column_number - hh
+            start_sequence += ParserHelper.repeat_string(" ", gh)
         print(f"rnli->start_sequence>:{start_sequence}:")
 
         continue_sequence = ParserHelper.repeat_string(

@@ -1769,3 +1769,59 @@ def test_extra_022():
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_extra_023x():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """1. abc
+   1. def
+  foo
+  ---
+"""
+    expected_tokens = [
+        '[olist(1,1):.:1:3:]',
+        '[para(1,4):]', '[text(1,4):abc:]', '[end-para:::True]',
+        '[olist(2,4):.:1:6:   :]',
+        '[para(2,7):\n  ]', '[text(2,7):def\nfoo::\n]', '[end-para:::True]',
+        '[end-olist:::True]',
+        '[end-olist:::True]',
+        '[tbreak(4,3):-:  :---]',
+        '[BLANK(5,1):]']
+    expected_gfm = """<ol>
+<li>abc
+<ol>
+<li>def
+foo</li>
+</ol>
+</li>
+</ol>
+<hr />"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+
+@pytest.mark.gfm
+def test_extra_023a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """  1.  A paragraph
+ with two lines."""
+    expected_tokens = [
+        '[olist(1,3):.:1:6:  :]',
+        '[para(1,7):\n ]', '[text(1,7):A paragraph\nwith two lines.::\n]', '[end-para:::True]',
+        '[end-olist:::True]']
+    expected_gfm = """<ol>
+<li>A paragraph
+with two lines.</li>
+</ol>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+

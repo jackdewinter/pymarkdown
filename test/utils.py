@@ -152,7 +152,7 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
             has_list_tokens = True
         elif next_token.is_block_quote_start:
             has_block_tokens = True
-    if has_block_tokens or has_list_tokens:
+    if (has_list_tokens and has_block_tokens):
         return
 
     transformer = TransformToMarkdown()

@@ -1115,7 +1115,6 @@ class LeafBlockProcessor:
         new_tokens, extracted_whitespace = LeafBlockProcessor.__handle_paragraph_prep(
             parser_state,
             block_quote_data,
-            adjusted_whitespace_length,
             position_marker,
             extracted_whitespace,
         )
@@ -1135,7 +1134,6 @@ class LeafBlockProcessor:
     def __handle_paragraph_prep(
         parser_state,
         block_quote_data,
-        adjusted_whitespace_length,
         position_marker,
         extracted_whitespace,
     ):
@@ -1169,12 +1167,6 @@ class LeafBlockProcessor:
                 parser_state,
                 only_these_blocks=[BlockQuoteStackToken],
                 include_block_quotes=True,
-            )
-
-        if adjusted_whitespace_length:
-            POGGER.debug(">>GGHHJJ!!>>$>>", adjusted_whitespace_length)
-            extracted_whitespace = ParserHelper.repeat_string(
-                ParserHelper.blech_character, adjusted_whitespace_length
             )
 
         if not parser_state.token_stack[-1].is_paragraph:
