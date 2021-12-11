@@ -98,7 +98,10 @@ class DialHomeHelper:
         """
         Get the path to the marker file.
         """
-        return os.path.join(Path.home(), f".{self.__package_name}")
+        return os.path.join(
+            os.getenv("XDG_CACHE_HOME", Path.home() / ".cache"),
+            self.__package_name, "dial_home_marker"
+        )
 
     # pylint: disable=broad-except
     def __get_marker_epochs(self):
@@ -137,6 +140,7 @@ class DialHomeHelper:
         error_value = None
         marker_line = f"{current_timestamp}\n"
         try:
+            os.makedirs(os.path.dirname(self.marker_path), exist_ok=True)
             with open(self.marker_path, "wt") as marker_file:
                 marker_file.write(marker_line)
         except Exception as this_exception:

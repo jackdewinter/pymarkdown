@@ -314,8 +314,10 @@ WARN: Current application version '0.9.2' differs from the published version '0.
 This dial home feature can be forced to run by using the `--force-version` command
 line flag and it can also be disabled by using the `--disable-version` command
 line flag.  To keep track of the last time that the dial home check was successfully
-performed, a `.pymarkdownlnt` file is created in the user's home directory containing
-the timestamp of the last successful check.
+performed, a `pymarkdownlnt` dir and `dial_home_marker` file in it is created in
+the user's
+[cache directory](https://specifications.freedesktop.org/basedir-spec/basedir-spec-latest.html)
+containing the timestamp of the last successful check.
 
 ## Open Issues and Future Plans
 
