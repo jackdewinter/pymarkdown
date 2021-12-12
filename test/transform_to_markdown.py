@@ -232,7 +232,7 @@ class TransformToMarkdown:
         if not container_stack:
             record_item = container_records[0]
             assert record_item[0]
-            pre_container_text = transformed_data[0 : record_item[1]]
+            pre_container_text = transformed_data[:record_item[1]]
             container_text = transformed_data[record_item[1] :]
             adjusted_text = self.__apply_container_transformation(
                 container_text, container_records
