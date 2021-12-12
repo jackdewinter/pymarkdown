@@ -1356,7 +1356,6 @@ def test_md027_good_block_quote_ordered_list_thematic_break_misaligned():
 
 
 @pytest.mark.rules
-@pytest.mark.skip
 def test_md027_good_block_quote_ordered_list_atx_heading():
     """
     Block quote with an aligned multiline list followed by an Atx Heading.

@@ -1255,7 +1255,6 @@ this</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_015():
     """
     TBD - test_md027_good_block_quote_ordered_list_atx_heading
@@ -1268,7 +1267,69 @@ def test_extra_015():
 > 1. that
 
 """
-    expected_tokens = []
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> ]",
+        "[olist(1,3):.:1:5::   \n   \n\n]",
+        "[para(1,6):\n]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::False]",
+        "[atx(3,6):1:0:]",
+        "[text(3,8):Heading: ]",
+        "[end-atx::]",
+        "[li(4,3):5::1]",
+        "[para(4,6):]",
+        "[text(4,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+this
+<h1>Heading</h1>
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_015a():
+    """
+    TBD - test_md027_good_block_quote_ordered_list_atx_heading
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>     # Heading
+> 1. that
+
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> ]",
+        "[olist(1,3):.:1:5::   \n   \n\n]",
+        "[para(1,6):\n]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::False]",
+        "[atx(3,7):1:0: ]",
+        "[text(3,9):Heading: ]",
+        "[end-atx::]",
+        "[li(4,3):5::1]",
+        "[para(4,6):]",
+        "[text(4,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
     expected_gfm = """<blockquote>
 <ol>
 <li>list

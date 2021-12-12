@@ -2,6 +2,14 @@
 
 ## Unversioned - In Main, Not Released
 
+This was a point release to allow fixed issues to be released.  While
+the full descriptions are below, here are some highlights:
+
+- Added "call home support" similar to VSCode and other products, to allow notification of new versions
+  - This is currently experimental.  Feedback welcome.
+- Lots of refactoring to reduce complexity and adhere to guidelines
+- Rewrite of the whitespace calculations to drastically reduce their complexity
+
 ### Added
 
 - [Added - Issue 104](https://github.com/jackdewinter/pymarkdown/issues/104)
@@ -39,7 +47,7 @@
   - refactoring: tightening up code after refactoring
 - [Changed - Issue 155](https://github.com/jackdewinter/pymarkdown/issues/155)
   - refactoring: moving this_bq_count and stack_bq_quote into new BlockQuoteData class
-- [Changed - Issue 166]](https://github.com/jackdewinter/pymarkdown/issues/166)
+- [Changed - Issue 166](https://github.com/jackdewinter/pymarkdown/issues/166)
   - refactoring: large refactoring to standardize the whitespace in tokens
 
 ### Fixed
@@ -61,6 +69,8 @@
 - [Fixed - Issue 93](https://github.com/jackdewinter/pymarkdown/issues/93)
   - parser: was not handling extracted spaces properly, causing issues with calculating values for thematic breaks
   - parser: spent time rewriting whitespace calculation and storage to address the issue
+- [Fixed - Issue 94](https://github.com/jackdewinter/pymarkdown/issues/94)
+  - parser: after work on 153, this was resolved
 - [Fixed - Issue 97](https://github.com/jackdewinter/pymarkdown/issues/97)
   - parser: after work on 153, this was resolved
 - [Fixed - Issue 98](https://github.com/jackdewinter/pymarkdown/issues/98)
