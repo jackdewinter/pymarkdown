@@ -15,11 +15,11 @@ def test_tabs_001():
     # Arrange
     source_markdown = """\tfoo\tbaz\t\tbim"""
     expected_tokens = [
-        "[icode-block(1,2):\t:]",
-        "[text(1,2):foo\tbaz\t\tbim:]",
+        "[icode-block(1,5):    :]",
+        "[text(1,5):foo baz     bim:]",
         "[end-icode-block:::True]",
     ]
-    expected_gfm = """<pre><code>foo\tbaz\t\tbim
+    expected_gfm = """<pre><code>foo baz     bim
 </code></pre>"""
 
     # Act & Assert
@@ -35,11 +35,11 @@ def test_tabs_002():
     # Arrange
     source_markdown = """  \tfoo\tbaz\t\tbim"""
     expected_tokens = [
-        "[icode-block(1,4):  \t:]",
-        "[text(1,4):foo\tbaz\t\tbim:]",
+        "[icode-block(1,5):    :]",
+        "[text(1,5):foo baz     bim:]",
         "[end-icode-block:::True]",
     ]
-    expected_gfm = """<pre><code>foo\tbaz\t\tbim
+    expected_gfm = """<pre><code>foo baz     bim
 </code></pre>"""
 
     # Act & Assert
@@ -110,11 +110,11 @@ def test_tabs_003():
     ὐ\ta"""
     expected_tokens = [
         "[icode-block(1,5):    :\n    ]",
-        "[text(1,5):a\ta\nὐ\ta:]",
+        "[text(1,5):a   a\nὐ   a:]",
         "[end-icode-block:::True]",
     ]
-    expected_gfm = """<pre><code>a\ta
-ὐ\ta
+    expected_gfm = """<pre><code>a   a
+ὐ   a
 </code></pre>"""
 
     # Act & Assert
@@ -124,7 +124,9 @@ def test_tabs_003():
 @pytest.mark.gfm
 def test_tabs_004x():
     """
-    Test case 004:  (part a) a continuation paragraph of a list item is indented with a tab; this has exactly the same effect as indentation with four spaces would
+    Test case 004:  (part a) a continuation paragraph of a list item is indented
+                    with a tab; this has exactly the same effect as indentation
+                    with four spaces would
     """
 
     # Arrange
@@ -133,13 +135,13 @@ def test_tabs_004x():
 \tbar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist(1,3):-::4:  :\t]",
+        "[ulist(1,3):-::4:  :\n    ]",
         "[para(1,5):]",
         "[text(1,5):foo:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
-        "[para(3,2):]",
-        "[text(3,2):bar:]",
+        "[para(3,5):]",
+        "[text(3,5):bar:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
     ]
@@ -166,7 +168,7 @@ def test_tabs_004a():
     bar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist(1,3):-::4:  :    ]",
+        "[ulist(1,3):-::4:  :\n    ]",
         "[para(1,5):]",
         "[text(1,5):foo:]",
         "[end-para:::True]",
@@ -190,7 +192,9 @@ def test_tabs_004a():
 @pytest.mark.gfm
 def test_tabs_005():
     """
-    Test case 005:  (part b) a continuation paragraph of a list item is indented with a tab; this has exactly the same effect as indentation with four spaces would
+    Test case 005:  (part b) a continuation paragraph of a list item is indented
+                    with a tab; this has exactly the same effect as indentation
+                    with four spaces would
     """
 
     # Arrange
@@ -199,13 +203,13 @@ def test_tabs_005():
 \t\tbar"""  # noqa: E101,W191
     # noqa: E101,W191
     expected_tokens = [
-        "[ulist(1,1):-::2::\t]",
+        "[ulist(1,1):-::2::\n  ]",
         "[para(1,3):]",
         "[text(1,3):foo:]",
         "[end-para:::True]",
         "[BLANK(2,1):]",
-        "[icode-block(3,2):\t\t:]",
-        "[text(3,2):bar:  ]",
+        "[icode-block(3,7):    :]",
+        "[text(3,7):bar:  ]",
         "[end-icode-block:::True]",
         "[end-ulist:::True]",
     ]
@@ -218,11 +222,11 @@ def test_tabs_005():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
-def test_tabs_006():
+def test_tabs_006x():
     """
     Test case 006:  case > is followed by a tab, which is treated as if it were expanded into three spaces.
     """
@@ -231,8 +235,8 @@ def test_tabs_006():
     source_markdown = """>\t\tfoo"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[icode-block(1,3):\t\t:]",
-        "[text(1,3):foo:  ]",
+        "[icode-block(1,7):    :]",
+        "[text(1,7):foo:  ]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -255,8 +259,8 @@ def test_tabs_006a():
     source_markdown = """>   \tfoo"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[icode-block(1,5):  \t:]",
-        "[text(1,5):foo:  ]",
+        "[icode-block(1,7):    :]",
+        "[text(1,7):foo:  ]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -279,8 +283,8 @@ def test_tabs_006b():
     source_markdown = """>\t    foo"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[icode-block(1,5):\t  :]",
-        "[text(1,5):foo:  ]",
+        "[icode-block(1,7):    :]",
+        "[text(1,7):foo:  ]",
         "[end-icode-block:::True]",
         "[end-block-quote:::True]",
     ]
@@ -318,7 +322,7 @@ def test_tabs_006c():
 
 
 @pytest.mark.gfm
-def test_tabs_007():
+def test_tabs_007x():
     """
     Test case 007:  none
     """
@@ -327,8 +331,8 @@ def test_tabs_007():
     source_markdown = """-\t\tfoo"""
     expected_tokens = [
         "[ulist(1,1):-::2:]",
-        "[icode-block(1,3):\t\t:]",
-        "[text(1,3):foo:  ]",
+        "[icode-block(1,7):    :]",
+        "[text(1,7):foo:  ]",
         "[end-icode-block:::True]",
         "[end-ulist:::True]",
     ]
@@ -353,8 +357,8 @@ def test_tabs_007a():
     source_markdown = """1)\t\tfoo"""
     expected_tokens = [
         "[olist(1,1):):1:3:]",
-        "[icode-block(1,4):\t\t:]",
-        "[text(1,4):foo: ]",
+        "[icode-block(1,8):    :]",
+        "[text(1,8):foo: ]",
         "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
@@ -379,8 +383,8 @@ def test_tabs_007b():
     source_markdown = """01)\t\tfoo"""
     expected_tokens = [
         "[olist(1,1):):01:4:]",
-        "[icode-block(1,5):\t\t:]",
-        "[text(1,5):foo:]",
+        "[icode-block(1,9):    :]",
+        "[text(1,9):foo:]",
         "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
@@ -405,8 +409,8 @@ def test_tabs_007c():
     source_markdown = """001)\t\tfoo"""
     expected_tokens = [
         "[olist(1,1):):001:5:]",
-        "[icode-block(1,6):\t\t:]",
-        "[text(1,6):foo:   ]",
+        "[icode-block(1,10):    :]",
+        "[text(1,10):foo:   ]",
         "[end-icode-block:::True]",
         "[end-olist:::True]",
     ]
@@ -432,7 +436,7 @@ def test_tabs_008():
 \tbar"""  # noqa: E101,W191
     # noqa: E101
     expected_tokens = [
-        "[icode-block(1,5):    :\n\t]",
+        "[icode-block(1,5):    :\n    ]",
         "[text(1,5):foo\nbar:]",
         "[end-icode-block:::True]",
     ]
@@ -464,9 +468,9 @@ def test_tabs_009():
         "[para(2,6):]",
         "[text(2,6):bar:]",
         "[end-para:::True]",
-        "[ulist(3,3):-::7:\t ]",
-        "[para(3,5):]",
-        "[text(3,5):baz:]",
+        "[ulist(3,6):-::7:     ]",
+        "[para(3,8):]",
+        "[text(3,8):baz:]",
         "[end-para:::True]",
         "[end-ulist:::True]",
         "[end-ulist:::True]",
@@ -496,8 +500,8 @@ def test_tabs_010():
 
     # Arrange
     source_markdown = """#\tFoo"""
-    expected_tokens = ["[para(1,1):]", "[text(1,1):#    Foo:]", "[end-para:::True]"]
-    expected_gfm = """<p>#    Foo</p>"""
+    expected_tokens = ["[atx(1,1):1:0:]", "[text(1,5):Foo:   ]", "[end-atx::]"]
+    expected_gfm = """<h1>Foo</h1>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -511,7 +515,7 @@ def test_tabs_011():
 
     # Arrange
     source_markdown = """*\t*\t*\t"""
-    expected_tokens = ["[tbreak(1,1):*::*    *    *    ]"]
+    expected_tokens = ["[tbreak(1,1):*::*   *   *   ]"]
     expected_gfm = """<hr />"""
 
     # Act & Assert

@@ -191,6 +191,58 @@ class TransformToMarkdown:
                 handler_instance.token_name
             ] = end_token_handler
 
+    @classmethod
+    def __transform_container_start(
+        cls,
+        container_stack,
+        container_records,
+        transformed_data_length_before_add,
+        current_token,
+    ):
+        if not container_stack:
+            container_records.clear()
+        container_stack.append(current_token)
+        record_item = (True, transformed_data_length_before_add, current_token)
+        container_records.append(record_item)
+        # print("START:" + ParserHelper.make_value_visible(current_token))
+        # print(">>" + ParserHelper.make_value_visible(container_stack))
+        # print(">>" + ParserHelper.make_value_visible(container_records))
+
+    def __transform_container_end(
+        self, container_stack, container_records, current_token, transformed_data
+    ):
+        # print("END:" + ParserHelper.make_value_visible(current_token.start_markdown_token))
+        while container_stack[-1].is_new_list_item:
+            del container_stack[-1]
+        assert str(container_stack[-1]) == str(current_token.start_markdown_token), (
+            ParserHelper.make_value_visible(container_stack[-1])
+            + "=="
+            + ParserHelper.make_value_visible(current_token.start_markdown_token)
+        )
+        del container_stack[-1]
+        record_item = (
+            False,
+            len(transformed_data),
+            current_token.start_markdown_token,
+        )
+        container_records.append(record_item)
+        # print(">>" + ParserHelper.make_value_visible(container_stack))
+        # print(">>" + ParserHelper.make_value_visible(container_records))
+
+        if not container_stack:
+            record_item = container_records[0]
+            assert record_item[0]
+            pre_container_text = transformed_data[: record_item[1]]
+            container_text = transformed_data[record_item[1] :]
+            adjusted_text = self.__apply_container_transformation(
+                container_text, container_records
+            )
+            print("pre>:" + str(pre_container_text) + ":<")
+            print("adj>:" + str(adjusted_text) + ":<")
+            transformed_data = pre_container_text + adjusted_text
+            print("trn>:" + str(transformed_data) + ":<")
+        return transformed_data
+
     def transform(self, actual_tokens):  # noqa: C901
         """
         Transform the incoming token stream back into Markdown.
@@ -201,11 +253,12 @@ class TransformToMarkdown:
             previous_token,
             continue_sequence,
             delayed_continue,
-        ) = ("", False, None, "", "")
+            container_stack,
+            container_records,
+            pragma_token,
+        ) = ("", False, None, "", "", [], [], None)
 
         print("---\nTransformToMarkdown\n---")
-
-        pragma_token = None
 
         for token_index, current_token in enumerate(actual_tokens):
             next_token = self.__handle_pre_processing(
@@ -221,7 +274,6 @@ class TransformToMarkdown:
                 new_data,
                 continue_sequence,
                 delayed_continue,
-                skip_merge,
                 pragma_token,
             ) = self.__process_next_token(
                 current_token,
@@ -238,23 +290,24 @@ class TransformToMarkdown:
                 f"post-h>new_data>{ParserHelper.make_value_visible(new_data)}"
                 + f"<continue_sequence>{continue_sequence}<delayed_continue>{delayed_continue}<"
             )
+            transformed_data_length_before_add = len(transformed_data)
+            transformed_data += new_data
 
-            (
-                new_data,
-                delayed_continue,
-                continue_sequence,
-                transformed_data,
-            ) = self.__handle_post_processing(
-                current_token,
-                new_data,
-                skip_merge,
-                delayed_continue,
-                continue_sequence,
-                next_token,
-                previous_token,
-                actual_tokens,
-                transformed_data,
-            )
+            if (
+                current_token.is_block_quote_start
+                or current_token.is_list_start
+                or current_token.is_new_list_item
+            ):
+                self.__transform_container_start(
+                    container_stack,
+                    container_records,
+                    transformed_data_length_before_add,
+                    current_token,
+                )
+            elif current_token.is_block_quote_end or current_token.is_list_end:
+                transformed_data = self.__transform_container_end(
+                    container_stack, container_records, current_token, transformed_data
+                )
 
             print("---")
             previous_token = current_token
@@ -270,6 +323,370 @@ class TransformToMarkdown:
         assert not self.block_stack
         assert not self.container_token_stack
         return transformed_data, avoid_processing
+
+    # pylint: disable=too-many-arguments
+    @classmethod
+    def __move_to_current_record(
+        cls,
+        old_record_index,
+        container_records,
+        container_text_index,
+        token_stack,
+        container_token_indices,
+        container_line_length,
+    ):
+        record_index, current_changed_record, did_move_ahead = (
+            old_record_index,
+            None,
+            False,
+        )
+
+        print("(" + str(container_text_index) + ")")
+        print(
+            "("
+            + str(record_index + 1)
+            + "):"
+            + ParserHelper.make_value_visible(container_records[1])
+        )
+        while record_index + 1 < len(container_records) and container_records[
+            record_index + 1
+        ][1] <= (container_text_index + container_line_length):
+            record_index += 1
+        print(
+            "("
+            + str(record_index + 1)
+            + "):"
+            + ParserHelper.make_value_visible(container_records[1])
+        )
+        while old_record_index != record_index:
+            did_move_ahead, current_changed_record = (
+                True,
+                container_records[old_record_index + 1],
+            )
+            print(
+                "   current_changed_record("
+                + str(old_record_index + 1)
+                + ")-->"
+                + ParserHelper.make_value_visible(current_changed_record)
+            )
+            if current_changed_record[0]:
+                token_stack.append(current_changed_record[2])
+                container_token_indices.append(0)
+            else:
+                print("   -->" + ParserHelper.make_value_visible(token_stack))
+                print(
+                    "   -->" + ParserHelper.make_value_visible(container_token_indices)
+                )
+                assert str(current_changed_record[2]) == str(token_stack[-1]), (
+                    "end:"
+                    + ParserHelper.make_value_visible(current_changed_record[2])
+                    + "!="
+                    + ParserHelper.make_value_visible(token_stack[-1])
+                )
+                del token_stack[-1]
+                del container_token_indices[-1]
+
+            print(
+                "   -->current_changed_record>"
+                + ParserHelper.make_value_visible(current_changed_record)
+            )
+            print("   -->" + ParserHelper.make_value_visible(token_stack))
+            print("   -->" + ParserHelper.make_value_visible(container_token_indices))
+            old_record_index += 1
+        return record_index, did_move_ahead, current_changed_record
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @classmethod
+    def __adjust_state_for_element(
+        cls,
+        token_stack,
+        container_token_indices,
+        did_move_ahead,
+        current_changed_record,
+        last_container_token_index,
+    ):
+        print(" -->" + ParserHelper.make_value_visible(token_stack))
+        print(" -->" + ParserHelper.make_value_visible(container_token_indices))
+        did_change_to_list_token = (
+            did_move_ahead
+            and current_changed_record[0]
+            and (token_stack[-1].is_list_start or token_stack[-1].is_new_list_item)
+        )
+        if not did_change_to_list_token:
+            container_token_indices[-1] = last_container_token_index + 1
+        elif token_stack[-1].is_new_list_item:
+            del token_stack[-1]
+            del container_token_indices[
+                -1
+            ]  # TODO may need earlier if both new item and start of new list on same line
+        print(" -->" + ParserHelper.make_value_visible(token_stack))
+        print(" -->" + ParserHelper.make_value_visible(container_token_indices))
+
+    # pylint: enable=too-many-arguments
+
+    # pylint: disable=too-many-arguments
+    @classmethod
+    def __apply_primary_transformation(
+        cls,
+        did_move_ahead,
+        token_stack,
+        container_token_indices,
+        current_changed_record,
+        container_line,
+    ):
+        print(" -->did_move_ahead>" + ParserHelper.make_value_visible(did_move_ahead))
+        print(" -->" + ParserHelper.make_value_visible(token_stack))
+        print(" -->" + ParserHelper.make_value_visible(container_token_indices))
+        print(" -->did_move_ahead>" + ParserHelper.make_value_visible(did_move_ahead))
+        print(
+            " -->current_changed_record>"
+            + ParserHelper.make_value_visible(current_changed_record)
+        )
+        (
+            last_container_token_index,
+            applied_leading_spaces_to_start_of_container_line,
+            split_leading_spaces,
+        ) = (container_token_indices[-1], False, None)
+
+        if not (did_move_ahead and current_changed_record[0]):
+            applied_leading_spaces_to_start_of_container_line = True
+            print(" container->" + ParserHelper.make_value_visible(token_stack[-1]))
+            split_leading_spaces = token_stack[-1].leading_spaces.split(
+                ParserHelper.newline_character
+            )
+            if last_container_token_index < len(split_leading_spaces):
+                print(" -->" + ParserHelper.make_value_visible(split_leading_spaces))
+                print(
+                    " -->container_line>"
+                    + ParserHelper.make_value_visible(container_line)
+                )
+                container_line = (
+                    split_leading_spaces[last_container_token_index] + container_line
+                )
+                print(
+                    " -->container_line>"
+                    + ParserHelper.make_value_visible(container_line)
+                )
+        return (
+            last_container_token_index,
+            applied_leading_spaces_to_start_of_container_line,
+            container_line,
+        )
+
+    # pylint: enable=too-many-arguments
+
+    @classmethod
+    def __find_last_block_quote_on_stack(cls, token_stack):
+        print(" looking for nested block start")
+        stack_index = len(token_stack) - 2
+        nested_block_start_index = -1
+        while stack_index >= 0:
+            if token_stack[stack_index].is_block_quote_start:
+                nested_block_start_index = stack_index
+                break
+            stack_index -= 1
+        return nested_block_start_index
+
+    @classmethod
+    def __adjust_for_list(
+        cls,
+        token_stack,
+        applied_leading_spaces_to_start_of_container_line,
+        container_token_indices,
+        container_line,
+    ):
+
+        if (
+            len(token_stack) > 1
+            and token_stack[-1].is_list_start
+            or token_stack[-1].is_new_list_item
+        ):
+            nested_block_start_index = (
+                TransformToMarkdown.__find_last_block_quote_on_stack(token_stack)
+            )
+            if nested_block_start_index != -1:
+                previous_token = token_stack[nested_block_start_index]
+                print(
+                    " nested_block_start_index->"
+                    + str(nested_block_start_index)
+                    + ":previous_token="
+                    + ParserHelper.make_value_visible(previous_token)
+                )
+                print(
+                    " token_stack[-1]="
+                    + ParserHelper.make_value_visible(token_stack[-1])
+                )
+                print(
+                    " applied_leading_spaces_to_start_of_container_line->"
+                    + str(applied_leading_spaces_to_start_of_container_line)
+                )
+                inner_token_index = container_token_indices[nested_block_start_index]
+                if (
+                    applied_leading_spaces_to_start_of_container_line
+                    or token_stack[-1].line_number != previous_token.line_number
+                ):
+                    split_leading_spaces = previous_token.leading_spaces.split(
+                        ParserHelper.newline_character
+                    )
+                    if inner_token_index < len(split_leading_spaces):
+                        print(
+                            " -->container_line>"
+                            + ParserHelper.make_value_visible(container_line)
+                        )
+                        container_line = (
+                            split_leading_spaces[inner_token_index] + container_line
+                        )
+                        print(
+                            " -->container_line>"
+                            + ParserHelper.make_value_visible(container_line)
+                        )
+                container_token_indices[nested_block_start_index] = (
+                    inner_token_index + 1
+                )
+        return container_line
+
+    @classmethod
+    def __adjust_for_block_quote(
+        cls, token_stack, container_line, container_token_indices
+    ):
+
+        if len(token_stack) > 1 and token_stack[-1].is_block_quote_start:
+            print(" looking for nested list start")
+            stack_index = len(token_stack) - 2
+            nested_list_start_index = -1
+            while stack_index >= 0:
+                if (
+                    token_stack[stack_index].is_list_start
+                    or token_stack[stack_index].is_new_list_item
+                ):
+                    nested_list_start_index = stack_index
+                    break
+                stack_index -= 1
+            if nested_list_start_index == -1:
+                print(" nope")
+            else:
+                previous_token = token_stack[nested_list_start_index]
+                print(" yes->" + ParserHelper.make_value_visible(previous_token))
+                inner_token_index = container_token_indices[nested_list_start_index]
+                if token_stack[-1].line_number != previous_token.line_number:
+                    split_leading_spaces = previous_token.leading_spaces.split(
+                        ParserHelper.newline_character
+                    )
+                    if inner_token_index < len(split_leading_spaces):
+                        container_line = (
+                            split_leading_spaces[inner_token_index] + container_line
+                        )
+                        container_token_indices[nested_list_start_index] = (
+                            inner_token_index + 1
+                        )
+        return container_line
+
+    # pylint: disable=too-many-locals
+    def __apply_container_transformation(self, container_text, container_records):
+        print(">>incoming>>:" + ParserHelper.make_value_visible(container_text) + ":<<")
+        print(
+            ">>container_records>>" + ParserHelper.make_value_visible(container_records)
+        )
+        (
+            base_line_number,
+            delta_line,
+            split_container_text,
+            transformed_parts,
+            token_stack,
+            container_token_indices,
+            record_index,
+            container_text_index,
+            current_changed_record,
+        ) = (
+            container_records[0][2].line_number,
+            0,
+            container_text.split(ParserHelper.newline_character),
+            [],
+            [],
+            [],
+            -1,
+            container_records[0][1],
+            None,
+        )
+        print(
+            ">>split_container_text>>"
+            + ParserHelper.make_value_visible(split_container_text)
+        )
+
+        for container_line in split_container_text:
+            container_line_length = len(container_line)
+            print(
+                ParserHelper.newline_character
+                + str(delta_line)
+                + "("
+                + str(base_line_number + delta_line)
+                + ")>>container_line>>"
+                + str(container_text_index)
+                + "-"
+                + str(container_text_index + container_line_length)
+                + ":>:"
+                + ParserHelper.make_value_visible(container_line)
+                + ":<"
+            )
+
+            old_record_index = record_index
+            (
+                record_index,
+                did_move_ahead,
+                current_changed_record,
+            ) = self.__move_to_current_record(
+                old_record_index,
+                container_records,
+                container_text_index,
+                token_stack,
+                container_token_indices,
+                container_line_length,
+            )
+
+            if not container_token_indices:
+                transformed_parts.append(container_line)
+                break
+
+            (
+                last_container_token_index,
+                applied_leading_spaces_to_start_of_container_line,
+                container_line,
+            ) = self.__apply_primary_transformation(
+                did_move_ahead,
+                token_stack,
+                container_token_indices,
+                current_changed_record,
+                container_line,
+            )
+
+            container_line = self.__adjust_for_list(
+                token_stack,
+                applied_leading_spaces_to_start_of_container_line,
+                container_token_indices,
+                container_line,
+            )
+            container_line = self.__adjust_for_block_quote(
+                token_stack, container_line, container_token_indices
+            )
+
+            self.__adjust_state_for_element(
+                token_stack,
+                container_token_indices,
+                did_move_ahead,
+                current_changed_record,
+                last_container_token_index,
+            )
+
+            transformed_parts.append(container_line)
+            container_text_index += container_line_length + 1
+            delta_line += 1
+
+        print("\n<<transformed<<" + ParserHelper.make_value_visible(transformed_parts))
+        return ParserHelper.newline_character.join(transformed_parts)
+
+    # pylint: enable=too-many-locals
 
     def __look_for_last_block_token(self):
         found_block_token = None
@@ -316,60 +733,6 @@ class TransformToMarkdown:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
-    def __handle_post_processing(
-        self,
-        current_token,
-        new_data,
-        skip_merge,
-        delayed_continue,
-        continue_sequence,
-        next_token,
-        previous_token,
-        actual_tokens,
-        transformed_data,
-    ):
-        self.__look_for_last_block_token()
-        (
-            new_data,
-            delayed_continue,
-            continue_sequence,
-        ) = self.__perform_container_post_processing(
-            current_token,
-            new_data,
-            skip_merge,
-            delayed_continue,
-            continue_sequence,
-            next_token,
-            previous_token,
-            actual_tokens,
-            transformed_data,
-        )
-        print(
-            f"post-p>new_data>{ParserHelper.make_value_visible(new_data)}"
-            + f"<continue_sequence>{continue_sequence}<delayed_continue>{delayed_continue}<"
-        )
-        print(
-            f"post-p>transformed_data>{ParserHelper.make_value_visible(transformed_data)}<"
-        )
-
-        transformed_data = f"{transformed_data}{new_data}"
-
-        print("---")
-        print(
-            f">>>>{ParserHelper.make_value_visible(current_token)}"
-            + f"-->{ParserHelper.make_value_visible(transformed_data)}<--"
-        )
-        print(
-            f">>container-stack-->{ParserHelper.make_value_visible(self.container_token_stack)}"
-        )
-        print(f">>block_stack-->{ParserHelper.make_value_visible(self.block_stack)}")
-
-        self.__look_for_last_block_token()
-        return new_data, delayed_continue, continue_sequence, transformed_data
-
-    # pylint: enable=too-many-arguments
-
     @classmethod
     def __correct_for_final_newline(cls, transformed_data, actual_tokens):
         if (
@@ -381,7 +744,7 @@ class TransformToMarkdown:
                 and not actual_tokens[-2].is_fenced_code_block
             )
         ):
-            transformed_data = transformed_data[0:-1]
+            transformed_data = transformed_data[:-1]
         return transformed_data
 
     @classmethod
@@ -412,7 +775,7 @@ class TransformToMarkdown:
                     )
                 else:
                     transformed_data = (
-                        f"{transformed_data[0:nth_index]}{ParserHelper.newline_character}"
+                        f"{transformed_data[:nth_index]}{ParserHelper.newline_character}"
                         + f"{ordered_lines[next_line_number]}{transformed_data[nth_index:]}"
                     )
         return transformed_data
@@ -430,7 +793,6 @@ class TransformToMarkdown:
         delayed_continue,
     ):
 
-        skip_merge = False
         pragma_token = None
         if current_token.token_name in self.start_container_token_handlers:
             start_handler_fn = self.start_container_token_handlers[
@@ -439,7 +801,6 @@ class TransformToMarkdown:
             new_data, continue_sequence = start_handler_fn(
                 current_token, previous_token, next_token, transformed_data
             )
-            skip_merge = True
 
         elif current_token.token_name in self.start_token_handlers:
             start_handler_fn = self.start_token_handlers[current_token.token_name]
@@ -463,625 +824,7 @@ class TransformToMarkdown:
                 assert False, f"end_current_token>>{current_token.type_name}"
         else:
             assert False, f"current_token>>{current_token}"
-        return new_data, continue_sequence, delayed_continue, skip_merge, pragma_token
-
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-boolean-expressions
-    @classmethod
-    def __perform_container_post_processing_lists_look_for_special(
-        cls,
-        block_should_end_with_newline,
-        current_token,
-        actual_tokens,
-        transformed_data,
-    ):
-        special_text_in_list_exception = False
-        if not block_should_end_with_newline:
-            ind = actual_tokens.index(current_token)
-            print(
-                f">>actual_tokens[{ind}]>>{ParserHelper.make_value_visible(actual_tokens[ind])}"
-            )
-            while actual_tokens[ind].is_inline:
-                print(
-                    f">>actual_tokens[{ind}]>>{ParserHelper.make_value_visible(actual_tokens[ind])}"
-                )
-                ind -= 1
-            print(
-                f"<<actual_tokens[{ind}]>>{ParserHelper.make_value_visible(actual_tokens[ind])}"
-            )
-            if (
-                actual_tokens[ind].is_paragraph
-                and (
-                    transformed_data
-                    and transformed_data[-1] == ParserHelper.newline_character
-                )
-                and (
-                    current_token.is_text
-                    or current_token.is_inline_emphasis
-                    or current_token.is_inline_link
-                    or current_token.is_inline_image
-                    or current_token.is_inline_raw_html
-                )
-            ):
-                special_text_in_list_exception = True
-        print(f"?>special_text_in_list_exception>{special_text_in_list_exception}")
-        return special_text_in_list_exception
-
-    # pylint: enable=too-many-boolean-expressions
-
-    # pylint: disable=too-many-arguments
-    def __perform_container_post_processing_lists_merge(
-        self,
-        next_token,
-        current_token,
-        skip_merge,
-        continue_sequence,
-        new_data,
-        delayed_continue,
-        block_should_end_with_newline,
-        top_of_list_token_stack,
-        force_newline_processing,
-        special_text_in_list_exception,
-        merge_with_block_start,
-    ):
-        print(
-            f"s/c>{ParserHelper.make_value_visible(skip_merge)}>>{ParserHelper.make_value_visible(continue_sequence)}>>"
-        )
-        print(
-            f"__merge_with_container_data>new_data>{ParserHelper.make_value_visible(new_data)}"
-        )
-        print(f"__merge_with_container_data>skip_merge>{skip_merge}")
-        print(f"__merge_with_container_data>continue_sequence>{continue_sequence}<")
-        if not skip_merge and continue_sequence:
-            print(
-                f"__merge_with_container_data>:{ParserHelper.make_value_visible(new_data)}:<"
-            )
-            print(
-                f"merge_with_block_start>:{ParserHelper.make_value_visible(merge_with_block_start)}:<"
-            )
-
-            need_to_massage_data = (
-                current_token.is_setext_heading_end and next_token.is_list_end
-            )
-            if need_to_massage_data:
-                assert new_data and new_data[-1] == ParserHelper.newline_character
-                new_data = new_data[:-1]
-            new_data, delayed_continue = self.__merge_with_container_data(
-                new_data,
-                next_token,
-                current_token,
-                continue_sequence,
-                delayed_continue,
-                block_should_end_with_newline,
-                top_of_list_token_stack,
-                force_newline_processing,
-                special_text_in_list_exception,
-                merge_with_block_start,
-            )
-            if need_to_massage_data:
-                new_data = f"{new_data}{ParserHelper.newline_character}"
-
-        print(f"new_data>{ParserHelper.make_value_visible(new_data)}<<")
-        print(f"delayed_continue>{ParserHelper.make_value_visible(delayed_continue)}<<")
-        print(
-            f"continue_sequence>{ParserHelper.make_value_visible(continue_sequence)}<<"
-        )
-        return new_data, delayed_continue
-
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-arguments
-    @classmethod
-    def __perform_container_post_processing_lists_init(
-        cls, current_token, next_token, previous_token, skip_merge, delayed_continue
-    ):
-        block_should_end_with_newline, force_newline_processing = False, False
-        if current_token.is_fenced_code_block_end:
-            block_should_end_with_newline = True
-            if next_token.is_list_end:
-                skip_merge = True
-        elif current_token.is_setext_heading_end:
-            block_should_end_with_newline = True
-        elif previous_token and previous_token.is_html_block:
-            block_should_end_with_newline = True
-            force_newline_processing = True
-
-        if skip_merge:
-            delayed_continue = ""
-
-        return (
-            block_should_end_with_newline,
-            force_newline_processing,
-            skip_merge,
-            delayed_continue,
-        )
-
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-arguments
-    def __perform_container_post_processing_lists(
-        self,
-        current_token,
-        new_data,
-        skip_merge,
-        delayed_continue,
-        continue_sequence,
-        next_token,
-        top_of_list_token_stack,
-        previous_token,
-        actual_tokens,
-        transformed_data,
-    ):
-        print(
-            f">>__perform_container_post_processing_lists>>:{ParserHelper.make_value_visible(new_data)}:<<"
-        )
-
-        (
-            block_should_end_with_newline,
-            force_newline_processing,
-            skip_merge,
-            delayed_continue,
-        ) = self.__perform_container_post_processing_lists_init(
-            current_token, next_token, previous_token, skip_merge, delayed_continue
-        )
-
-        print(f">>previous_token>>{ParserHelper.make_value_visible(previous_token)}")
-        print(f">>current_token>>{ParserHelper.make_value_visible(current_token)}")
-        print(f">>next_token>>{ParserHelper.make_value_visible(next_token)}")
-        print(
-            f">>self.container_token_stack>>{ParserHelper.make_value_visible(self.container_token_stack)}"
-        )
-
-        merge_with_block_start = bool(
-            self.container_token_stack[0].is_block_quote_start
-        )
-
-        special_text_in_list_exception = (
-            self.__perform_container_post_processing_lists_look_for_special(
-                block_should_end_with_newline,
-                current_token,
-                actual_tokens,
-                transformed_data,
-            )
-        )
-
-        print(
-            f"?>{ParserHelper.make_value_visible(delayed_continue)}>>{ParserHelper.make_value_visible(new_data)}>>"
-        )
-        if (
-            delayed_continue
-            and new_data
-            and not current_token.is_blank_line
-            and not merge_with_block_start
-        ):
-            print(
-                f"__merge_with_container_data--nd>:{ParserHelper.make_value_visible(new_data)}:<"
-            )
-            if not special_text_in_list_exception:
-                new_data = f"{delayed_continue}{new_data}"
-            delayed_continue = ""
-            print(
-                f"__merge_with_container_data--nd>:{ParserHelper.make_value_visible(new_data)}:<"
-            )
-
-        (
-            new_data,
-            delayed_continue,
-        ) = self.__perform_container_post_processing_lists_merge(
-            next_token,
-            current_token,
-            skip_merge,
-            continue_sequence,
-            new_data,
-            delayed_continue,
-            block_should_end_with_newline,
-            top_of_list_token_stack,
-            force_newline_processing,
-            special_text_in_list_exception,
-            merge_with_block_start,
-        )
-        return (
-            ParserHelper.resolve_all_from_text(new_data),
-            delayed_continue,
-            continue_sequence,
-        )
-
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-arguments
-    def __perform_container_post_processing(
-        self,
-        current_token,
-        new_data,
-        skip_merge,
-        delayed_continue,
-        continue_sequence,
-        next_token,
-        previous_token,
-        actual_tokens,
-        transformed_data,
-    ):
-        """
-        Perform any post processing required by the containers.  This is intentionally
-        kept separate to ensure that the leaf and inline processing is distinct and
-        separate.
-        """
-
-        top_of_list_token_stack = (
-            self.container_token_stack[-1] if self.container_token_stack else None
-        )
-        if top_of_list_token_stack and top_of_list_token_stack.is_block_quote_start:
-            print(
-                f"pcpp-leading_text_index>{top_of_list_token_stack.leading_text_index}"
-            )
-
-        if not top_of_list_token_stack:
-            print("nada")
-
-            data_to_emit = (
-                ParserHelper.resolve_noops_from_text(new_data)
-                if self.block_stack and self.block_stack[-1].is_code_block
-                else new_data
-            )
-            return (
-                data_to_emit,
-                delayed_continue,
-                continue_sequence,
-            )
-
-        if top_of_list_token_stack.is_list_start:
-            print("lists")
-            return self.__perform_container_post_processing_lists(
-                current_token,
-                new_data,
-                skip_merge,
-                delayed_continue,
-                continue_sequence,
-                next_token,
-                top_of_list_token_stack,
-                previous_token,
-                actual_tokens,
-                transformed_data,
-            )
-
-        assert top_of_list_token_stack.is_block_quote_start
-        print("bq")
-        (
-            new_data,
-            delayed_continue,
-            continue_sequence,
-        ) = self.__perform_container_post_processing_block_quote(
-            current_token,
-            new_data,
-            skip_merge,
-            delayed_continue,
-            continue_sequence,
-            next_token,
-            top_of_list_token_stack,
-        )
-        if top_of_list_token_stack and top_of_list_token_stack.is_block_quote_start:
-            print(
-                f"pcpp-leading_text_index<{top_of_list_token_stack.leading_text_index}"
-            )
-        return (
-            new_data,
-            delayed_continue,
-            continue_sequence,
-        )
-
-    # pylint: enable=too-many-arguments
-
-    @classmethod
-    def __merge_with_noop_in_data(cls, new_data, continue_sequence):
-        """
-        Take care of a merge for a new leaf line with a NOOP character in the
-        sequence.
-
-        Note that the tricky combination of NOOP logic means that this is not
-        a candidate for the recombine_string_with_whitespace function.
-        """
-        split_new_data = new_data.split(ParserHelper.newline_character)
-        split_new_data_length = len(split_new_data)
-        use_abbreviated_list = False
-        if new_data and new_data[-1] == ParserHelper.newline_character:
-            split_new_data_length -= 1
-            use_abbreviated_list = True
-        line_parts = [split_new_data[0]]
-        for split_index in range(1, split_new_data_length):
-            if (
-                split_new_data[split_index]
-                and split_new_data[split_index][0]
-                == ParserHelper.replace_noop_character
-            ):
-                line_parts.extend(
-                    [ParserHelper.newline_character, split_new_data[split_index][1:]]
-                )
-            else:
-                line_parts.extend(
-                    [
-                        ParserHelper.newline_character,
-                        continue_sequence,
-                        split_new_data[split_index],
-                    ]
-                )
-        print(f">>line_parts>>{line_parts}")
-        if use_abbreviated_list:
-            line_parts.extend([ParserHelper.newline_character, split_new_data[-1]])
-
-        return "".join(line_parts)
-
-    @classmethod
-    def __merge_with_blech_in_data(cls, new_data, continue_sequence):
-        """
-        Take care of a merge for a new leaf line with a blech character in the
-        sequence.
-
-        Note that the tricky combination of Blech logic means that this is not
-        a candidate for the recombine_string_with_whitespace function.
-        """
-
-        split_new_data = new_data.split(ParserHelper.newline_character)
-        line_parts = [split_new_data[0]]
-        for next_split_item in range(1, len(split_new_data)):
-            next_continue_separator, next_data_item = (
-                continue_sequence,
-                split_new_data[next_split_item],
-            )
-            while next_data_item and next_data_item[0] == ParserHelper.blech_character:
-                next_continue_separator = next_continue_separator[1:]
-                next_data_item = next_data_item[1:]
-            line_parts.extend(
-                [
-                    ParserHelper.newline_character,
-                    next_continue_separator,
-                    next_data_item,
-                ]
-            )
-
-        return "".join(line_parts)
-
-    @classmethod
-    def __merge_with_leading_spaces_in_data(cls, new_data, top_of_list_token_stack):
-        """
-        Take care of a merge for a new leaf line with leading spaces in the container
-        block's whitespaces.
-        """
-        (
-            new_data,
-            top_of_list_token_stack.leading_spaces_index,
-        ) = ParserHelper.recombine_string_with_whitespace(
-            new_data,
-            top_of_list_token_stack.leading_spaces,
-            top_of_list_token_stack.leading_spaces_index,
-            post_increment_index=True,
-        )
-        return new_data
-
-    def __merge_xx_with_last_list_block(
-        self, last_list_block, top_block_stack_token, next_token
-    ):
-        additional_whitespace = ""
-        block_token_index = self.container_token_stack.index(top_block_stack_token)
-        list_token_index = self.container_token_stack.index(last_list_block)
-        print(
-            f"block_token_index>{block_token_index}, list_token_index={list_token_index}"
-        )
-        if list_token_index > block_token_index:
-            extra_count = last_list_block.indent_level - len(
-                last_list_block.extracted_whitespace
-            )
-            print(f"extra_count>{extra_count}")
-            print(f"next_token>{ParserHelper.make_value_visible(next_token)}")
-            if (
-                not next_token.is_blank_line
-                and not next_token.is_new_list_item
-                and not next_token.is_list_end
-            ):
-                additional_whitespace = ParserHelper.repeat_string(
-                    ParserHelper.space_character, extra_count
-                )
-                print(f"additional_whitespace->{additional_whitespace}<")
-        return additional_whitespace
-
-    def __merge_xx(self, new_data, top_block_stack_token, last_list_block, next_token):
-        """
-        Take care of a merge for a new leaf line with leading spaces in the container
-        block's whitespaces.
-
-        Note that the tricky combination of leading_text_index logic means that this
-        is not a candidate for the recombine_string_with_whitespace function.
-        """
-        split_new_data, split_leading_spaces = (
-            new_data.split(ParserHelper.newline_character),
-            top_block_stack_token.leading_spaces.split(ParserHelper.newline_character),
-        )
-        split_leading_spaces_size, new_data = (
-            len(split_leading_spaces),
-            split_new_data[0],
-        )
-
-        print(f"last_list_block>{ParserHelper.make_value_visible(last_list_block)}")
-        additional_whitespace = ""
-        if last_list_block:
-            additional_whitespace = self.__merge_xx_with_last_list_block(
-                last_list_block, top_block_stack_token, next_token
-            )
-
-        parts_to_merge = [new_data]
-        for i in range(1, len(split_new_data)):
-            print(f"::{i}::{split_new_data[i]}::")
-            print(
-                f"::{top_block_stack_token.leading_text_index}::{split_leading_spaces}::"
-            )
-            if top_block_stack_token.leading_text_index < split_leading_spaces_size:
-                print("a")
-                parts_to_merge.extend(
-                    [
-                        ParserHelper.newline_character,
-                        split_leading_spaces[top_block_stack_token.leading_text_index],
-                        split_new_data[i],
-                        additional_whitespace,
-                    ]
-                )
-                print("a-->" + ParserHelper.make_value_visible(next_token) + "<--")
-                if (
-                    next_token.is_list_start
-                    or next_token.is_thematic_break
-                    or next_token.is_paragraph
-                ):
-                    del parts_to_merge[-1]
-            else:
-                print("b")
-                parts_to_merge.extend(
-                    [ParserHelper.newline_character, split_new_data[i]]
-                )
-
-            print(f"__merge_xx-post->{top_block_stack_token.leading_text_index}")
-            top_block_stack_token.leading_text_index += 1
-
-        print(f"parts_to_merge>>{parts_to_merge}<<")
-        return "".join(parts_to_merge)
-
-    # pylint: disable=too-many-arguments
-    def __merge_with_container_data_ends_with_newline(
-        self,
-        continue_sequence,
-        new_data,
-        next_token,
-        top_of_list_token_stack,
-        current_token,
-    ):
-        print("block 1")
-        delayed_continue = continue_sequence
-        last_block_quote_block = self.__find_last_block_quote_on_stack()
-        last_list_block = self.__find_last_list_on_stack()
-        if last_block_quote_block:
-            print("block 1a")
-            new_data = self.__merge_xx(
-                new_data, last_block_quote_block, last_list_block, next_token
-            )
-        elif top_of_list_token_stack and top_of_list_token_stack.leading_spaces:
-            print("block 1b?")
-            if current_token.is_link_reference_definition:
-                print("block 1b")
-                did_remove_trailing_newline = (
-                    new_data and new_data[-1] == ParserHelper.newline_character
-                )
-                if did_remove_trailing_newline:
-                    new_data = new_data[0:-1]
-                new_data = self.__merge_with_leading_spaces_in_data(
-                    new_data, top_of_list_token_stack
-                )
-                if did_remove_trailing_newline:
-                    new_data = f"{new_data}{ParserHelper.newline_character}"
-        return delayed_continue, new_data
-
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-arguments
-    def __merge_with_container_data_contains_newline(
-        self,
-        new_data,
-        block_should_end_with_newline,
-        next_token,
-        force_newline_processing,
-        continue_sequence,
-        top_of_list_token_stack,
-    ):
-        print("block 2")
-        block_ends_with_newline = (
-            block_should_end_with_newline
-            and new_data
-            and new_data[-1] == ParserHelper.newline_character
-        )
-        remove_trailing_newline = block_ends_with_newline and (
-            next_token.is_blank_line or force_newline_processing
-        )
-        if remove_trailing_newline:
-            new_data = new_data[0:-1]
-
-        last_block_quote_block = self.__find_last_block_quote_on_stack()
-        if ParserHelper.blech_character in new_data:
-            print("with_newline>__merge_with_blech_in_data")
-            new_data = self.__merge_with_blech_in_data(new_data, continue_sequence)
-        elif top_of_list_token_stack.leading_spaces:
-            print("with_newline>__merge_with_leading_spaces_in_data")
-            new_data = self.__merge_with_leading_spaces_in_data(
-                new_data, top_of_list_token_stack
-            )
-        elif last_block_quote_block:
-            print("with_newline>__merge_xx")
-            new_data = self.__merge_xx(
-                new_data, last_block_quote_block, None, next_token
-            )
-
-        if remove_trailing_newline:
-            new_data = f"{new_data}{ParserHelper.newline_character}"
-        if block_ends_with_newline and next_token and next_token.is_new_list_item:
-            new_data = new_data[0 : -len(continue_sequence)]
-        return new_data
-
-    # pylint: enable=too-many-arguments
-
-    # pylint: disable=too-many-arguments
-    def __merge_with_container_data(
-        self,
-        new_data,
-        next_token,
-        current_token,
-        continue_sequence,
-        delayed_continue,
-        block_should_end_with_newline,
-        top_of_list_token_stack,
-        force_newline_processing,
-        special_text_in_list_exception,
-        merge_with_block_start,
-    ):
-        """
-        Merge the leaf data with the container data.
-        """
-
-        print(f"mwcd:>>new_data>>{ParserHelper.make_value_visible(new_data)}<<")
-        if special_text_in_list_exception:
-            new_data = f"{ParserHelper.newline_character}{new_data}"
-
-        if ParserHelper.replace_noop_character in new_data:
-            print("noop")
-            new_data = self.__merge_with_noop_in_data(new_data, continue_sequence)
-        elif (
-            not block_should_end_with_newline
-            and new_data
-            and new_data[-1] == ParserHelper.newline_character
-        ):
-            (
-                delayed_continue,
-                new_data,
-            ) = self.__merge_with_container_data_ends_with_newline(
-                continue_sequence,
-                new_data,
-                next_token,
-                top_of_list_token_stack,
-                current_token,
-            )
-        elif ParserHelper.newline_character in new_data:
-            new_data = self.__merge_with_container_data_contains_newline(
-                new_data,
-                block_should_end_with_newline,
-                next_token,
-                force_newline_processing,
-                continue_sequence,
-                top_of_list_token_stack,
-            )
-        elif merge_with_block_start:
-            print("block 3")
-
-        if special_text_in_list_exception:
-            assert new_data and new_data[0] == ParserHelper.newline_character
-            new_data = new_data[1:]
-
-        print(f"mwcd:>>new_data>>{ParserHelper.make_value_visible(new_data)}<<")
-        return new_data, delayed_continue
+        return new_data, continue_sequence, delayed_continue, pragma_token
 
     # pylint: enable=too-many-arguments
 
@@ -1096,47 +839,8 @@ class TransformToMarkdown:
         extracted_whitespace = current_token.extracted_whitespace
         if ParserHelper.newline_character in extracted_whitespace:
             line_end_index = extracted_whitespace.index(ParserHelper.newline_character)
-            extracted_whitespace = extracted_whitespace[0:line_end_index]
+            extracted_whitespace = extracted_whitespace[:line_end_index]
         extracted_whitespace = ParserHelper.resolve_all_from_text(extracted_whitespace)
-
-        if extracted_whitespace:
-            print(
-                f">>self.container_token_stack>>{ParserHelper.make_value_visible(self.container_token_stack)}<"
-            )
-            print(
-                f">>extracted_whitespace>>{ParserHelper.make_value_visible(extracted_whitespace)}<"
-            )
-            found_block_token = None
-            was_list_found = False
-            for i in range(len(self.container_token_stack) - 1, -1, -1):
-                print(
-                    f">>self.container_token_stack>>{ParserHelper.make_value_visible(self.container_token_stack[i])}<"
-                )
-                if self.container_token_stack[i].is_block_quote_start:
-                    found_block_token = self.container_token_stack[i]
-                    break
-                was_list_found = True
-            print(
-                f">>found_block_token>>{ParserHelper.make_value_visible(found_block_token)}<"
-            )
-            if found_block_token and was_list_found:
-                split_leading_spaces = found_block_token.leading_spaces.split(
-                    ParserHelper.newline_character
-                )
-                print(
-                    f">>found_block_token.leading_text_index>>{found_block_token.leading_text_index}<"
-                )
-                print(f">>xy>>{ParserHelper.make_value_visible(split_leading_spaces)}<")
-                specific_start = split_leading_spaces[
-                    found_block_token.leading_text_index - 1
-                ]
-                print(
-                    f">>specific_start>>{ParserHelper.make_value_visible(specific_start)}<"
-                )
-                print(
-                    f">>extracted_whitespace>>{ParserHelper.make_value_visible(extracted_whitespace)}<"
-                )
-
         return extracted_whitespace
 
     def __rehydrate_paragraph_end(self, current_token, previous_token, next_token):
@@ -1308,91 +1012,6 @@ class TransformToMarkdown:
             ]
         return selected_leading_sequence, ""
 
-    # pylint: disable=too-many-arguments
-    @classmethod
-    def __perform_container_post_processing_block_quote(
-        cls,
-        current_token,
-        new_data,
-        skip_merge,
-        delayed_continue,
-        continue_sequence,
-        next_token,
-        top_of_list_token_stack,
-    ):
-        _ = (current_token, skip_merge, next_token)
-
-        if ParserHelper.newline_character in new_data:
-            composed_data = []
-            print(
-                f"1<<composed_data<<{ParserHelper.make_value_visible(composed_data)}"
-                + f"<<new<<{ParserHelper.make_value_visible(new_data)}<<"
-            )
-            while ParserHelper.newline_character in new_data:
-
-                print(">>[{ParserHelper.make_value_visible(new_data)}]<<")
-                print(f"bq-post->{top_of_list_token_stack.leading_text_index}")
-                next_newline_index = new_data.index(ParserHelper.newline_character)
-                composed_data.extend(
-                    [new_data[0:next_newline_index], ParserHelper.newline_character]
-                )
-
-                split_leading_spaces = top_of_list_token_stack.leading_spaces.split(
-                    ParserHelper.newline_character
-                )
-                split_leading_spaces_size = len(split_leading_spaces)
-                if (
-                    top_of_list_token_stack.leading_text_index
-                    < split_leading_spaces_size
-                ):
-                    composed_data.append(
-                        split_leading_spaces[top_of_list_token_stack.leading_text_index]
-                    )
-                else:
-                    print(
-                        "top_of_list_token_stack.leading_text_index="
-                        + f"{top_of_list_token_stack.leading_text_index},"
-                        + f"split_leading_spaces_size={split_leading_spaces_size}"
-                    )
-                    assert (
-                        top_of_list_token_stack.leading_text_index
-                        == split_leading_spaces_size
-                    )
-                print(
-                    f"current_token<<{ParserHelper.make_value_visible(current_token)}<<"
-                )
-                print(f"next_token<<{ParserHelper.make_value_visible(next_token)}<<")
-
-                # bob = True
-                # if (current_token.is_fenced_code_block and next_token.is_fenced_code_block_end) or \
-                #     (current_token.is_fenced_code_block_end and current_token.was_forced and False) or \
-                #     (current_token.is_paragraph_end and next_token.is_block_quote_end and True):
-                #     bob = False
-
-                # if bob:
-                print(f"bq-post->{top_of_list_token_stack.leading_text_index}")
-                top_of_list_token_stack.leading_text_index += 1
-                print(f"bq-post->{top_of_list_token_stack.leading_text_index}")
-                new_data = new_data[next_newline_index + 1 :]
-            print(
-                f"2<<composed_data<<{ParserHelper.make_value_visible(composed_data)}"
-                + f"<<new<<{ParserHelper.make_value_visible(new_data)}<<"
-            )
-            composed_data.append(new_data)
-            print(
-                f"3<<composed_data<<{ParserHelper.make_value_visible(composed_data)}"
-                + f"<<new<<{ParserHelper.make_value_visible(new_data)}<<"
-            )
-            new_data = "".join(composed_data)
-
-        return (
-            ParserHelper.resolve_all_from_text(new_data),
-            delayed_continue,
-            continue_sequence,
-        )
-
-    # pylint: enable=too-many-arguments
-
     def __rehydrate_list_start_previous_token(
         self, current_token, previous_token, extracted_whitespace
     ):
@@ -1522,6 +1141,9 @@ class TransformToMarkdown:
             "adj->deeper_containing_block_quote_token>>:"
             + f"{ParserHelper.make_value_visible(deeper_containing_block_quote_token)}:<<"
         )
+        print(
+            f"adj->extracted_whitespace>>:{ParserHelper.make_value_visible(extracted_whitespace)}:<<"
+        )
         block_quote_leading_space_length = 0
         if deeper_containing_block_quote_token:
             block_quote_leading_space = (
@@ -1538,14 +1160,20 @@ class TransformToMarkdown:
         )
 
         previous_indent = containing_list_token.indent_level
-        white_space_length = len(current_token.extracted_whitespace)
+        white_space_length = (
+            len(current_token.extracted_whitespace) + block_quote_leading_space_length
+        )
         print(f"adj->len(ws)>>:{white_space_length}:<<")
-        print(f"adj->previous_indent>>:{previous_indent}:<<")
         # assert len(current_token.extracted_whitespace) == previous_indent
         if white_space_length > previous_indent:
-            extracted_whitespace = extracted_whitespace[previous_indent:]
+            extracted_whitespace = "".ljust(white_space_length - previous_indent, " ")
         else:
             extracted_whitespace = ""
+        print(f"adj->previous_indent>>:{previous_indent}:<<")
+        print(
+            f"adj->extracted_whitespace>>:{ParserHelper.make_value_visible(extracted_whitespace)}:<<"
+        )
+        print(f"adj->post_adjust_whitespace>>:{post_adjust_whitespace}:<<")
         return previous_indent, extracted_whitespace, post_adjust_whitespace
 
     def __rehydrate_list_start(
@@ -1602,13 +1230,28 @@ class TransformToMarkdown:
             print(f">>current_token.indent_level>>:{current_token.indent_level}:<<")
             print(f">>previous_indent>>:{previous_indent}:<<")
             print(f">>adjustment_since_newline>>:{adjustment_since_newline}:<<")
-            start_sequence = start_sequence.ljust(
-                current_token.indent_level - previous_indent - adjustment_since_newline,
-                " ",
+            requested_indent = (
+                current_token.indent_level - previous_indent - adjustment_since_newline
             )
-            print(f">>start_sequence>>:{start_sequence}:<<")
+            print(f">>requested_indent>>:{requested_indent}:<<")
+            start_sequence = start_sequence.ljust(requested_indent, " ")
+        else:
+            print(f">>next_token.column_number>>:{next_token.column_number}:<<")
+            print(f">>current_token.column_number>>:{current_token.column_number}:<<")
+            list_content_length = 1
+            if not current_token.is_unordered_list_start:
+                list_content_length += len(current_token.list_start_content)
+            new_column_number = (
+                next_token.column_number
+                - current_token.column_number
+                - list_content_length
+            )
+            start_sequence += ParserHelper.repeat_string(" ", new_column_number)
+        print(f"<<start_sequence<<:{start_sequence}:<<")
         if post_adjust_whitespace:
+            print(f"<<post_adjust_whitespace<<(post):{post_adjust_whitespace}:<<")
             start_sequence = post_adjust_whitespace + start_sequence
+            print(f"<<start_sequence<<(post):{start_sequence}:<<")
         return start_sequence, ParserHelper.repeat_string(
             " ", current_token.indent_level
         )
@@ -1655,10 +1298,10 @@ class TransformToMarkdown:
 
     def __rehydrate_block_quote_end(self, current_token, actual_tokens, token_index):
 
-        text_to_add, continue_sequence, old_line_number = (
+        _ = current_token
+        text_to_add, continue_sequence = (
             "",
             "",
-            self.container_token_stack[-1].line_number,
         )
 
         print(f">>{ParserHelper.make_value_visible(actual_tokens[token_index:])}")
@@ -1672,46 +1315,7 @@ class TransformToMarkdown:
         any_non_container_end_tokens = search_index < len(actual_tokens)
         print(f">>{any_non_container_end_tokens}")
 
-        stack_copy_of_token = self.container_token_stack[-1]
         del self.container_token_stack[-1]
-        if any_non_container_end_tokens:
-            continue_sequence = self.__reset_container_continue_sequence()
-            if (
-                self.container_token_stack
-                and self.container_token_stack[-1].is_block_quote_start
-                and self.container_token_stack[-1].line_number == old_line_number
-            ):
-                text_to_add = self.container_token_stack[
-                    -1
-                ].calculate_next_leading_space_part()
-
-            print(f">>current_token>>{ParserHelper.make_value_visible(current_token)}")
-            print(
-                ">>current_token.start_markdown_token>>"
-                + f"{ParserHelper.make_value_visible(current_token.start_markdown_token)}"
-            )
-            print(
-                ">>extracted_whitespace>>:"
-                + f"{ParserHelper.make_value_visible(current_token.start_markdown_token.leading_spaces)}:<<"
-            )
-
-            print(
-                f">>orig>>:{ParserHelper.make_value_visible(current_token.start_markdown_token)}:<<"
-            )
-            print(f">>copy>>:{ParserHelper.make_value_visible(stack_copy_of_token)}:<<")
-            assert str(current_token.start_markdown_token) == str(stack_copy_of_token)
-
-            leading_text_index, expected_leading_text_index = (
-                stack_copy_of_token.leading_text_index,
-                ParserHelper.count_newlines_in_text(stack_copy_of_token.leading_spaces)
-                + 1,
-            )
-
-            assert isinstance(expected_leading_text_index, int)
-            assert leading_text_index in [
-                expected_leading_text_index,
-                expected_leading_text_index + 1,
-            ], f"leading_text_index={leading_text_index};expected_leading_text_index={expected_leading_text_index}"
 
         return text_to_add, continue_sequence, continue_sequence
 
@@ -1735,28 +1339,7 @@ class TransformToMarkdown:
         )
         return "", continue_sequence, continue_sequence
 
-    def __rehydrate_next_list_item(
-        self, current_token, previous_token, next_token, transformed_data
-    ):
-        """
-        Rehydrate the next list item token.
-        """
-        _ = previous_token
-
-        assert self.container_token_stack[-1].is_list_start
-
-        print("__rehydrate_next_list_item")
-        self.container_token_stack[-1].adjust_for_new_list_item(current_token)
-
-        (
-            adjustment_since_newline,
-            extracted_whitespace,
-        ) = self.__adjust_whitespace_for_block_quote(
-            transformed_data, current_token.extracted_whitespace
-        )
-        print(f"rnli->adjustment_since_newline>:{adjustment_since_newline}:")
-        print(f"rnli->extracted_whitespace>:{extracted_whitespace}:")
-
+    def __recalc_adjustment_since_newline(self, adjustment_since_newline):
         if not adjustment_since_newline:
             print(
                 f"rnli->container_token_stack>:{ParserHelper.make_value_visible(self.container_token_stack)}:"
@@ -1779,6 +1362,54 @@ class TransformToMarkdown:
                 )
                 print(f"rnli->leading_space>:{leading_space}:")
                 adjustment_since_newline = len(leading_space)
+        return adjustment_since_newline
+
+    # pylint: disable=too-many-locals
+    def __rehydrate_next_list_item(
+        self, current_token, previous_token, next_token, transformed_data
+    ):
+        """
+        Rehydrate the next list item token.
+        """
+        _ = previous_token
+
+        assert self.container_token_stack[-1].is_list_start
+
+        print("__rehydrate_next_list_item")
+        self.container_token_stack[-1].adjust_for_new_list_item(current_token)
+
+        (
+            adjustment_since_newline,
+            extracted_whitespace,
+        ) = self.__adjust_whitespace_for_block_quote(
+            transformed_data, current_token.extracted_whitespace
+        )
+        print(f"rnli->adjustment_since_newline>:{adjustment_since_newline}:")
+        print(f"rnli->extracted_whitespace>:{extracted_whitespace}:")
+
+        if previous_token:
+            (
+                previous_indent,
+                extracted_whitespace2,
+                was_within_block_token,
+                post_adjust_whitespace,
+            ) = self.__rehydrate_list_start_previous_token(
+                current_token, previous_token, extracted_whitespace
+            )
+        else:
+            previous_indent, post_adjust_whitespace, was_within_block_token = (
+                0,
+                None,
+                False,
+            )
+        print(f">>previous_indent>>{previous_indent}<<")
+        print(f">>extracted_whitespace2>>{extracted_whitespace2}<<")
+        print(f">>was_within_block_token>>{was_within_block_token}<<")
+        print(f">>post_adjust_whitespace>>{post_adjust_whitespace}<<")
+
+        adjustment_since_newline = self.__recalc_adjustment_since_newline(
+            adjustment_since_newline
+        )
 
         print(f"rnli->adjustment_since_newline>:{adjustment_since_newline}:")
         print(f"rnli->extracted_whitespace>:{extracted_whitespace}:")
@@ -1786,12 +1417,35 @@ class TransformToMarkdown:
             f"{extracted_whitespace}{current_token.list_start_content}"
             + f"{self.container_token_stack[-1].list_start_sequence}"
         )
+        # start_sequence = (
+        #     f"{extracted_whitespace2}{self.container_token_stack[-1].list_start_sequence}"
+        #     if current_token.is_unordered_list_start
+        #     else f"{extracted_whitespace2}{current_token.list_start_content}" + \
+        #           f"{self.container_token_stack[-1].list_start_sequence}"
+        # )
+
         print(f"rnli->start_sequence>:{start_sequence}:")
         if not next_token.is_blank_line:
             start_sequence = start_sequence.ljust(
                 self.container_token_stack[-1].indent_level - adjustment_since_newline,
                 " ",
             )
+            # start_sequence = start_sequence.ljust(
+            #     current_token.indent_level - previous_indent - adjustment_since_newline,
+            #     " ",
+            # )
+        else:
+            print(f">>next_token.column_number>>:{next_token.column_number}:<<")
+            print(f">>current_token.column_number>>:{current_token.column_number}:<<")
+            start_content_length = 1
+            if current_token.list_start_content:
+                start_content_length += len(current_token.list_start_content)
+            new_column_number = (
+                next_token.column_number
+                - current_token.column_number
+                - start_content_length
+            )
+            start_sequence += ParserHelper.repeat_string(" ", new_column_number)
         print(f"rnli->start_sequence>:{start_sequence}:")
 
         continue_sequence = ParserHelper.repeat_string(
@@ -1799,6 +1453,8 @@ class TransformToMarkdown:
         )
 
         return start_sequence, continue_sequence
+
+    # pylint: enable=too-many-locals
 
     def __insert_leading_whitespace_at_newlines(self, text_to_modify):
         """
@@ -1956,7 +1612,11 @@ class TransformToMarkdown:
         print(
             f">>rehydrate_text>>{ParserHelper.make_value_visible(current_token.token_text)}"
         )
-        main_text = ParserHelper.remove_all_from_text(current_token.token_text)
+        # main_text = ParserHelper.resolve_noops_from_text(current_token.token_text)
+        main_text = ParserHelper.remove_all_from_text(
+            current_token.token_text, include_noops=True
+        )
+
         print(f"<<rehydrate_text>>{ParserHelper.make_value_visible(main_text)}")
 
         print(
@@ -2259,45 +1919,5 @@ class TransformToMarkdown:
             if current_token.end_whitespace and current_token.end_whitespace.endswith(
                 ParserHelper.whitespace_split_character
             ):
-                main_text = f"{current_token.end_whitespace[0:-1]}{main_text}"
+                main_text = f"{current_token.end_whitespace[:-1]}{main_text}"
         return main_text
-
-    def __find_last_block_quote_on_stack(self):
-        last_block_quote_block = None
-        if self.container_token_stack:
-            print(
-                f"__find_last_block_quote_on_stack>>{ParserHelper.make_value_visible(self.container_token_stack)}<<"
-            )
-            search_index = len(self.container_token_stack) - 1
-            while search_index >= 0:
-                if self.container_token_stack[search_index].is_block_quote_start:
-                    last_block_quote_block = self.container_token_stack[search_index]
-                    break
-                search_index -= 1
-            print(
-                "__find_last_block_quote_on_stack>>search_index>>"
-                + f"{ParserHelper.make_value_visible(last_block_quote_block)}<<"
-            )
-            if last_block_quote_block:
-                print(
-                    "__find_last_block_quote_on_stack>>last_block_quote_block.leading_text_index>>"
-                    + f"{last_block_quote_block.leading_text_index}<<"
-                )
-        return last_block_quote_block
-
-    def __find_last_list_on_stack(self):
-        last_list_block = None
-        if self.container_token_stack:
-            print(
-                f"__find_last_list_on_stack>>{ParserHelper.make_value_visible(self.container_token_stack)}<<"
-            )
-            search_index = len(self.container_token_stack) - 1
-            while search_index >= 0:
-                if self.container_token_stack[search_index].is_list_start:
-                    last_list_block = self.container_token_stack[search_index]
-                    break
-                search_index -= 1
-            print(
-                f"__find_last_list_on_stack>>last_list_block>>{ParserHelper.make_value_visible(last_list_block)}<<"
-            )
-        return last_list_block

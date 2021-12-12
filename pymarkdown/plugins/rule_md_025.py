@@ -69,7 +69,7 @@ class RuleMd025(RulePlugin):
         """
         Event that a new token is being processed.
         """
-        # print(">>>" + str(token).replace("\n", "\\n"))
+        # print(">>>" + str(token).replace(ParserHelper.newline_character, "\\n"))
         if token.is_atx_heading or token.is_setext_heading:
             if token.hash_count == self.__level:
                 if self.__have_top_level:

@@ -37,6 +37,8 @@
   - refactoring: tightening up code after refactoring
 - [Changed - Issue 155](https://github.com/jackdewinter/pymarkdown/issues/155)
   - refactoring: moving this_bq_count and stack_bq_quote into new BlockQuoteData class
+- [Changed - Issue 166]](https://github.com/jackdewinter/pymarkdown/issues/166)
+  - refactoring: large refactoring to standardize the whitespace in tokens
 
 ### Fixed
 

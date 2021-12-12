@@ -49,7 +49,7 @@ def test_paragraph_series_m_ib_i3_ol_nl_i7_t_all_ib():
        foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[BLANK(1,3):]",
         "[icode-block(2,8):    :]",
         "[text(2,8):foo:]",
@@ -110,7 +110,7 @@ def test_paragraph_series_m_ib_i3_ol_nl_i6_t_fb():
       foo
 """
     expected_tokens = [
-        "[olist(1,4):.:1:6:   :      ]",
+        "[olist(1,4):.:1:6:   :      \n]",
         "[BLANK(1,6):]",
         "[para(2,7):]",
         "[text(2,7):foo:]",
@@ -138,8 +138,8 @@ def test_paragraph_series_m_ib_i3_ol_t_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[olist(1,4):.:1:6:   :    ]",
-        "[para(1,7):\n]",
+        "[olist(1,4):.:1:6:   :\n]",
+        "[para(1,7):\n    ]",
         "[text(1,7):abc\nfoo::\n]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
@@ -165,7 +165,7 @@ def test_paragraph_series_m_ib_i3_ol_t_nl_i10_t_all_ib():
           foo
 """
     expected_tokens = [
-        "[olist(1,4):.:1:6:   :      ]",
+        "[olist(1,4):.:1:6:   :      \n]",
         "[para(1,7):\n    ]",
         "[text(1,7):abc\nfoo::\n]",
         "[end-para:::True]",
@@ -193,7 +193,7 @@ def test_paragraph_series_m_ib_i3_ol_t_nl_nl_i10_t_all_ib():
           foo
 """
     expected_tokens = [
-        "[olist(1,4):.:1:6:   :      ]",
+        "[olist(1,4):.:1:6:   :\n      \n]",
         "[para(1,7):]",
         "[text(1,7):abc:]",
         "[end-para:::True]",
@@ -228,8 +228,8 @@ def test_paragraph_series_m_ib_i3_ol_t_nl_i5_t_ib():
      foo
 """
     expected_tokens = [
-        "[olist(1,4):.:1:6:   :     ]",
-        "[para(1,7):\n]",
+        "[olist(1,4):.:1:6:   :\n]",
+        "[para(1,7):\n     ]",
         "[text(1,7):abc\nfoo::\n]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
@@ -256,7 +256,7 @@ def test_paragraph_series_m_ib_i3_ol_t_nl_i6_t_ib():
       foo
 """
     expected_tokens = [
-        "[olist(1,4):.:1:6:   :      ]",
+        "[olist(1,4):.:1:6:   :      \n]",
         "[para(1,7):\n]",
         "[text(1,7):abc\nfoo::\n]",
         "[end-para:::True]",
@@ -283,7 +283,7 @@ def test_paragraph_series_m_ib_ol_ol_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[olist(1,4):.:1:6:   ]",
         "[BLANK(1,6):]",
         "[end-olist:::True]",
@@ -317,7 +317,7 @@ def test_paragraph_series_m_ib_ol_ol_nl_i10_t_all_ib():
 """
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :      ]",
+        "[olist(1,4):.:1:6:   :      \n]",
         "[BLANK(1,6):]",
         "[icode-block(2,11):    :]",
         "[text(2,11):foo:]",
@@ -354,8 +354,8 @@ def test_paragraph_series_m_ib_ol_ol_t_nl_i4_t_ib():
 """
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :    ]",
-        "[para(1,7):\n]",
+        "[olist(1,4):.:1:6:   :\n]",
+        "[para(1,7):\n    ]",
         "[text(1,7):abc\nfoo::\n]",
         "[end-para:::True]",
         "[BLANK(3,1):]",
@@ -387,7 +387,7 @@ def test_paragraph_series_m_ib_ol_ol_t_nl_i4_t_all_ib():
 """
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :      ]",
+        "[olist(1,4):.:1:6:   :      \n]",
         "[para(1,7):\n    ]",
         "[text(1,7):abc\nfoo::\n]",
         "[end-para:::True]",
@@ -421,7 +421,7 @@ def test_paragraph_series_m_ib_ol_ol_t_nl_nl_i4_t_all_ib():
 """
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :      ]",
+        "[olist(1,4):.:1:6:   :\n      \n]",
         "[para(1,7):]",
         "[text(1,7):abc:]",
         "[end-para:::True]",
@@ -461,7 +461,7 @@ def test_paragraph_series_m_ib_ol_nl_i3_ol_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[BLANK(1,3):]",
         "[olist(2,4):.:1:6:   ]",
         "[BLANK(2,6):]",
@@ -496,7 +496,7 @@ def test_paragraph_series_m_ib_ol_t_nl_i3_ol_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n   ]",
+        "[olist(1,1):.:1:3::   \n   \n]",
         "[para(1,4):\n\n ]",
         "[text(1,4):abc\n1.\nfoo::\n\n]",
         "[end-para:::True]",
@@ -525,7 +525,7 @@ def test_paragraph_series_m_ib_ul_t_nl_i2_ul_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  ]",
+        "[ulist(1,1):-::2::  \n  \n]",
         "[setext(2,3):-:1::(1,3)]",
         "[text(1,3):abc:]",
         "[end-setext::]",
@@ -557,7 +557,7 @@ def test_paragraph_series_m_ib_ul_t_nl_i2_ulb_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  ]",
+        "[ulist(1,1):-::2::  \n  \n]",
         "[para(1,3):\n\n  ]",
         "[text(1,3):abc\n::\n]",
         "[text(2,1):*:]",
@@ -591,8 +591,8 @@ def test_paragraph_series_m_ib_ol_nl_i3_ol_t_nl_i4_t_ib():
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
         "[BLANK(1,3):]",
-        "[olist(2,4):.:1:6:   :    ]",
-        "[para(2,7):\n]",
+        "[olist(2,4):.:1:6:   :\n]",
+        "[para(2,7):\n    ]",
         "[text(2,7):abc\nfoo::\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
@@ -628,8 +628,8 @@ def test_paragraph_series_m_ib_ol_t_nl_i3_ol_t_nl_i4_t_ib():
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :    ]",
-        "[para(2,7):\n]",
+        "[olist(2,4):.:1:6:   :\n]",
+        "[para(2,7):\n    ]",
         "[text(2,7):abc\nfoo::\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
@@ -663,8 +663,8 @@ def test_paragraph_series_m_ib_i3_ol_nl_i5_ol_nl_i4_t_ib():
     expected_tokens = [
         "[olist(1,4):.:1:6:   ]",
         "[BLANK(1,6):]",
-        "[olist(2,7):.:1:9:      :    ]",
-        "[para(2,10):\n]",
+        "[olist(2,7):.:1:9:      :\n]",
+        "[para(2,10):\n    ]",
         "[text(2,10):abc\nfoo::\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
@@ -700,8 +700,8 @@ def test_paragraph_series_m_ib_i3_ol_t_nl_i5_ol_nl_i4_t_ib():
         "[para(1,7):]",
         "[text(1,7):abc:]",
         "[end-para:::True]",
-        "[olist(2,7):.:1:9:      :    ]",
-        "[para(2,10):\n]",
+        "[olist(2,7):.:1:9:      :\n]",
+        "[para(2,10):\n    ]",
         "[text(2,10):abc\nfoo::\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
@@ -736,8 +736,8 @@ def test_paragraph_series_m_ib_i3_ol_nl_i5_ol_t_nl_i4__t_ib():
     expected_tokens = [
         "[olist(1,4):.:1:6:   ]",
         "[BLANK(1,6):]",
-        "[olist(2,7):.:1:9:      :    ]",
-        "[para(2,10):\n]",
+        "[olist(2,7):.:1:9:      :\n]",
+        "[para(2,10):\n    ]",
         "[text(2,10):abc\nfoo::\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
@@ -760,7 +760,8 @@ foo</li>
 @pytest.mark.gfm
 def test_paragraph_series_m_ib_i3_ol_t_nl_i5_ol_t_nl_i4_t_ib():
     """
-    Test case:  Indent of 3 ordered list text newline indent of 5 ordered list text newline indent of 4 text (indented block)
+    Test case:  Indent of 3 ordered list text newline indent of 5 ordered list
+                text newline indent of 4 text (indented block)
     """
 
     # Arrange
@@ -773,8 +774,8 @@ def test_paragraph_series_m_ib_i3_ol_t_nl_i5_ol_t_nl_i4_t_ib():
         "[para(1,7):]",
         "[text(1,7):abc:]",
         "[end-para:::True]",
-        "[olist(2,7):.:1:9:      :    ]",
-        "[para(2,10):\n]",
+        "[olist(2,7):.:1:9:      :\n]",
+        "[para(2,10):\n    ]",
         "[text(2,10):abc\nfoo::\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
@@ -806,7 +807,7 @@ def test_paragraph_series_m_ib_i1_ol_nl_i4_ol_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[olist(1,2):.:1:4: :    \n    ]",
+        "[olist(1,2):.:1:4: :    \n    \n]",
         "[para(1,5):\n\n]",
         "[text(1,5):abc\n1.\nfoo::\n\n]",
         "[end-para:::True]",
@@ -835,7 +836,7 @@ def test_paragraph_series_m_ib_i2_ul_nl_i4_ul_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[ulist(1,3):-::4:  :    \n    ]",
+        "[ulist(1,3):-::4:  :    \n    \n]",
         "[setext(2,5):-:1::(1,5)]",
         "[text(1,5):abc:]",
         "[end-setext::]",
@@ -858,7 +859,8 @@ foo</li>
 @pytest.mark.gfm
 def test_paragraph_series_m_ib_i2_ul_nl_i4_ulb_nl_i4_t_ib():
     """
-    Test case:  Indent of 2 unordered list newline indent of 4 unordered list (b) newline indent of 4 text (indented block)
+    Test case:  Indent of 2 unordered list newline indent of 4 unordered list
+                (b) newline indent of 4 text (indented block)
     """
 
     # Arrange
@@ -867,7 +869,7 @@ def test_paragraph_series_m_ib_i2_ul_nl_i4_ulb_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[ulist(1,3):-::4:  :    \n    ]",
+        "[ulist(1,3):-::4:  :    \n    \n]",
         "[para(1,5):\n\n]",
         "[text(1,5):abc\n::\n]",
         "[text(2,1):*:]",
@@ -898,7 +900,7 @@ def test_paragraph_series_m_ib_i1_ol_t_nl_i4_ol_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[olist(1,2):.:1:4: :    \n    ]",
+        "[olist(1,2):.:1:4: :    \n    \n]",
         "[para(1,5):\n\n]",
         "[text(1,5):abc\n1.\nfoo::\n\n]",
         "[end-para:::True]",
@@ -918,7 +920,8 @@ foo</li>
 @pytest.mark.gfm
 def test_paragraph_series_m_ib_i2_ul_t_nl_i4_ul_nl_i4_t_ib():
     """
-    Test case:  Indent of 2 unordered list text newline indent of 4 unordered list newline indent of 4 text (indented block)
+    Test case:  Indent of 2 unordered list text newline indent of 4 unordered
+                list newline indent of 4 text (indented block)
     """
 
     # Arrange
@@ -927,7 +930,7 @@ def test_paragraph_series_m_ib_i2_ul_t_nl_i4_ul_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[ulist(1,3):-::4:  :    \n    ]",
+        "[ulist(1,3):-::4:  :    \n    \n]",
         "[setext(2,5):-:1::(1,5)]",
         "[text(1,5):abc:]",
         "[end-setext::]",
@@ -950,7 +953,8 @@ foo</li>
 @pytest.mark.gfm
 def test_paragraph_series_m_ib_i2_ul_t_nl_i4_ulb_nl_i4_t_ib():
     """
-    Test case:  Indent of 2 unordered list text newline indent of 4 unordered list (b) newline indent of 4 text (indented block)
+    Test case:  Indent of 2 unordered list text newline indent of 4 unordered
+                list (b) newline indent of 4 text (indented block)
     """
 
     # Arrange
@@ -959,7 +963,7 @@ def test_paragraph_series_m_ib_i2_ul_t_nl_i4_ulb_nl_i4_t_ib():
     foo
 """
     expected_tokens = [
-        "[ulist(1,3):-::4:  :    \n    ]",
+        "[ulist(1,3):-::4:  :    \n    \n]",
         "[para(1,5):\n\n]",
         "[text(1,5):abc\n::\n]",
         "[text(2,1):*:]",
@@ -992,8 +996,8 @@ def test_paragraph_series_m_ib_i1_ol_nl_i4_ol_t_nl_i4_t_ib():
     expected_tokens = [
         "[olist(1,2):.:1:4: ]",
         "[BLANK(1,4):]",
-        "[olist(2,5):.:1:7:    :    ]",
-        "[para(2,8):\n]",
+        "[olist(2,5):.:1:7:    :\n]",
+        "[para(2,8):\n    ]",
         "[text(2,8):def\nfoo::\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",
@@ -1010,13 +1014,14 @@ foo</li>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
 def test_paragraph_series_m_ib_i1_ol_t_nl_i4_ol_t_nl_i4_t_ib():
     """
-    Test case:  Indent of 1 ordered list text newline indent of 4 ordered list text newline indent of 4 text (indented block)
+    Test case:  Indent of 1 ordered list text newline indent of 4 ordered list text
+                newline indent of 4 text (indented block)
     was:        test_list_blocks_256ie
     """
 
@@ -1030,8 +1035,8 @@ def test_paragraph_series_m_ib_i1_ol_t_nl_i4_ol_t_nl_i4_t_ib():
         "[para(1,5):]",
         "[text(1,5):abc:]",
         "[end-para:::True]",
-        "[olist(2,5):.:1:7:    :    ]",
-        "[para(2,8):\n]",
+        "[olist(2,5):.:1:7:    :\n]",
+        "[para(2,8):\n    ]",
         "[text(2,8):def\nfoo::\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",

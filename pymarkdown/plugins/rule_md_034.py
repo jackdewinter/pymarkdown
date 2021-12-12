@@ -45,12 +45,15 @@ class RuleMd034(RulePlugin):
     def __evaluate_possible_url(
         self, source_text, url_prefix, found_index, context, token
     ):
-        if found_index == 0 or source_text[found_index - 1] in (" ", "\n"):
+        if found_index == 0 or source_text[found_index - 1] in (
+            " ",
+            ParserHelper.newline_character,
+        ):
             url_start_sequence = source_text[found_index + len(url_prefix) :]
             if (
                 len(url_start_sequence) >= 3
                 and url_start_sequence.startswith("//")
-                and url_start_sequence[2] not in (" ", "\n")
+                and url_start_sequence[2] not in (" ", ParserHelper.newline_character)
             ):
                 (
                     column_number_delta,

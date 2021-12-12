@@ -64,7 +64,9 @@ class RuleMd023(RulePlugin):
             and not self.__any_leading_whitespace_detected
             and token.end_whitespace
         ):
-            split_end_whitespace = token.end_whitespace.split("\n")
+            split_end_whitespace = token.end_whitespace.split(
+                ParserHelper.newline_character
+            )
             for next_split in split_end_whitespace:
                 if self.__seen_first_line_of_setext:
                     split_next_split = next_split.split(

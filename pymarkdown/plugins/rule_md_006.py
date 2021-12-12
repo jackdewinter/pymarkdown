@@ -2,6 +2,7 @@
 Module to implement a plugin that ensures that all Unordered List Items
 start at the beginning of the line.
 """
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_details import PluginDetails
 from pymarkdown.rule_plugin import RulePlugin
 
@@ -40,7 +41,9 @@ class RuleMd006(RulePlugin):
         expected_indent = 0
         if len(self.__token_stack) > 1:
             if self.__token_stack[-2].is_block_quote_start:
-                split_spaces = self.__token_stack[-2].leading_spaces.split("\n")
+                split_spaces = self.__token_stack[-2].leading_spaces.split(
+                    ParserHelper.newline_character
+                )
                 expected_indent = len(split_spaces[0]) + (
                     self.__token_stack[-2].column_number - 1
                 )

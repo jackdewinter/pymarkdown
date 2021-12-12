@@ -73,7 +73,7 @@ def test_paragraph_series_m_tb_ol_nl_i3_tb():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[BLANK(1,3):]",
         "[tbreak(2,4):-::---]",
         "[BLANK(3,1):]",
@@ -159,7 +159,7 @@ def test_paragraph_series_m_tb_ol_t_nl_i3_tb():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[setext(2,4):-:3::(1,4)]",
         "[text(1,4):abc:]",
         "[end-setext::]",
@@ -777,7 +777,7 @@ def test_paragraph_series_m_tb_ol_nl_ol_t_nl_i3_tb():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[BLANK(1,3):]",
         "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
@@ -813,7 +813,7 @@ def test_paragraph_series_m_tb_ol_t_nl_ol_t_nl_i3_tb():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
@@ -851,7 +851,7 @@ def test_paragraph_series_m_tb_ol_nl_ol_nl_i3_tb():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[BLANK(1,3):]",
         "[olist(2,4):.:1:6:   ]",
         "[BLANK(2,6):]",
@@ -870,7 +870,7 @@ def test_paragraph_series_m_tb_ol_nl_ol_nl_i3_tb():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -885,7 +885,7 @@ def test_paragraph_series_m_tb_ol_t_nl_ol_nl_i3_tb():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n   ]",
+        "[olist(1,1):.:1:3::   \n   \n]",
         "[setext(3,4):-:3::(1,4)]",
         "[text(1,4):abc\n1.::\n]",
         "[end-setext::]",
@@ -915,7 +915,7 @@ def test_paragraph_series_m_tb_ul_t_nl_ul_nl_i2_tb():
   ---
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  ]",
+        "[ulist(1,1):-::2::  \n  \n]",
         "[setext(2,3):-:1::(1,3)]",
         "[text(1,3):abc:]",
         "[end-setext::]",
@@ -946,7 +946,7 @@ def test_paragraph_series_m_tb_ul_t_nl_ulb_nl_i2_tb():
   ---
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  ]",
+        "[ulist(1,1):-::2::  \n  \n]",
         "[setext(3,3):-:3::(1,3)]",
         "[text(1,3):abc\n::\n]",
         "[text(2,1):*:]",

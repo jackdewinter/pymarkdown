@@ -2,6 +2,7 @@
 Module to implement a plugin that looks for code blocks for scripts that do not
 look right.
 """
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_details import PluginDetails
 from pymarkdown.rule_plugin import RulePlugin
 
@@ -45,7 +46,7 @@ class RuleMd014(RulePlugin):
         elif token.is_code_block_end:
             self.__in_code_block = False
         elif self.__in_code_block and token.is_text:
-            split_token_text = token.token_text.split("\n")
+            split_token_text = token.token_text.split(ParserHelper.newline_character)
             are_all_preceded_with_dollar_sign = all(
                 next_line.strip().startswith("$") for next_line in split_token_text
             )

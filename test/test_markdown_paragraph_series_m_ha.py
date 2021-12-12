@@ -77,7 +77,7 @@ def test_paragraph_series_m_ha_ol_nl_i3_ha_t():
    # foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[BLANK(1,3):]",
         "[atx(2,4):1:0:]",
         "[text(2,6):foo: ]",
@@ -169,7 +169,7 @@ def test_paragraph_series_m_ha_ol_t_nl_i3_ha_t():
    # foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::False]",
@@ -698,7 +698,7 @@ def test_paragraph_series_m_ha_ol_nl_ol_nl_i3_ha_t():
    # foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[BLANK(1,3):]",
         "[olist(2,4):.:1:6:   ]",
         "[BLANK(2,6):]",
@@ -734,7 +734,7 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_nl_i3_ha_t():
    # foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n   ]",
+        "[olist(1,1):.:1:3::   \n   \n]",
         "[para(1,4):\n]",
         "[text(1,4):abc\n1.::\n]",
         "[end-para:::False]",
@@ -767,7 +767,7 @@ def test_paragraph_series_m_ha_ul_t_nl_ul_nl_i2_ha_t():
   # foo
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  ]",
+        "[ulist(1,1):-::2::  \n  \n]",
         "[setext(2,3):-:1::(1,3)]",
         "[text(1,3):abc:]",
         "[end-setext::]",
@@ -800,7 +800,7 @@ def test_paragraph_series_m_ha_ul_t_nl_ulb_nl_i2_ha_t():
   # foo
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  ]",
+        "[ulist(1,1):-::2::  \n  \n]",
         "[para(1,3):\n]",
         "[text(1,3):abc\n::\n]",
         "[text(2,1):*:]",
@@ -835,12 +835,12 @@ def test_paragraph_series_m_ha_ol_nl_ol_t_nl_i3_ha_t():
    # foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::   \n]",
         "[BLANK(1,3):]",
-        "[olist(2,4):.:1:6:   :   ]",
+        "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
         "[text(2,7):abc:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[atx(3,4):1:0:]",
         "[text(3,6):foo: ]",
@@ -873,14 +873,14 @@ def test_paragraph_series_m_ha_ol_t_nl_ol_t_nl_i3_ha_t():
    # foo
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
+        "[olist(1,1):.:1:3::   \n]",
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :   ]",
+        "[olist(2,4):.:1:6:   ]",
         "[para(2,7):]",
         "[text(2,7):abc:]",
-        "[end-para:::False]",
+        "[end-para:::True]",
         "[end-olist:::True]",
         "[atx(3,4):1:0:]",
         "[text(3,6):foo: ]",

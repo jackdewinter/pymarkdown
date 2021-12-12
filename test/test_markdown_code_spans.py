@@ -29,7 +29,9 @@ def test_code_spans_338():
 @pytest.mark.gfm
 def test_code_spans_339():
     """
-    Test case 339:  Here two backticks are used, because the code contains a backtick. This example also illustrates stripping of a single leading and trailing space:
+    Test case 339:  Here two backticks are used, because the code contains a backtick.
+                    This example also illustrates stripping of a single leading
+                    and trailing space:
     """
 
     # Arrange
@@ -330,7 +332,7 @@ foo
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -342,8 +344,10 @@ def test_code_spans_346ba():
 
     # Arrange
     source_markdown = """> ``
-> foo 
-> ``"""
+> foo\a
+> ``""".replace(
+        "\a", " "
+    )
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
         "[para(1,3):\n\n]",
@@ -352,6 +356,39 @@ def test_code_spans_346ba():
         "[end-block-quote:::True]",
     ]
     expected_gfm = """<blockquote>
+<p><code>foo </code></p>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_code_spans_346bb():
+    """
+    Test case 346ba:  variation of 346b within a block quote with
+        block quotes indentation
+    """
+
+    # Arrange
+    source_markdown = """start
+> ``
+> foo\a
+> ``""".replace(
+        "\a", " "
+    )
+    expected_tokens = [
+        "[para(1,1):]",
+        "[text(1,1):start:]",
+        "[end-para:::True]",
+        "[block-quote(2,1)::> \n> \n> ]",
+        "[para(2,3):\n\n]",
+        "[icode-span(2,3):foo :``:\a\n\a \a:\a\n\a \a]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<p>start</p>
+<blockquote>
 <p><code>foo </code></p>
 </blockquote>"""
 
@@ -486,7 +523,10 @@ def test_code_spans_348():
 @pytest.mark.gfm
 def test_code_spans_349():
     """
-    Test case 349:  (part 1) Backslash escapes are never needed, because one can always choose a string of n backtick characters as delimiters, where the code does not contain any strings of exactly n backtick characters.
+    Test case 349:  (part 1) Backslash escapes are never needed, because one can
+                    always choose a string of n backtick characters as delimiters,
+                    where the code does not contain any strings of exactly n
+                    backtick characters.
     """
 
     # Arrange
@@ -505,7 +545,10 @@ def test_code_spans_349():
 @pytest.mark.gfm
 def test_code_spans_350():
     """
-    Test case 350:  (part 2) Backslash escapes are never needed, because one can always choose a string of n backtick characters as delimiters, where the code does not contain any strings of exactly n backtick characters.
+    Test case 350:  (part 2) Backslash escapes are never needed, because one can
+                    always choose a string of n backtick characters as delimiters,
+                    where the code does not contain any strings of exactly n backtick
+                    characters.
     """
 
     # Arrange
@@ -524,7 +567,8 @@ def test_code_spans_350():
 @pytest.mark.gfm
 def test_code_spans_351():
     """
-    Test case 351:  Code span backticks have higher precedence than any other inline constructs except HTML tags and autolinks.
+    Test case 351:  Code span backticks have higher precedence than any other inline
+                    constructs except HTML tags and autolinks.
     """
 
     # Arrange
@@ -647,7 +691,8 @@ def test_code_spans_356():
 @pytest.mark.gfm
 def test_code_spans_357():
     """
-    Test case 357:  (part 1) When a backtick string is not closed by a matching backtick string, we just have literal backticks:
+    Test case 357:  (part 1) When a backtick string is not closed by a matching
+                    backtick string, we just have literal backticks:
     """
 
     # Arrange
@@ -666,7 +711,8 @@ def test_code_spans_357():
 @pytest.mark.gfm
 def test_code_spans_358():
     """
-    Test case 358:  (part 2) When a backtick string is not closed by a matching backtick string, we just have literal backticks:
+    Test case 358:  (part 2) When a backtick string is not closed by a matching
+                    backtick string, we just have literal backticks:
     """
 
     # Arrange
@@ -685,7 +731,8 @@ def test_code_spans_358():
 @pytest.mark.gfm
 def test_code_spans_359():
     """
-    Test case 359:  The following case also illustrates the need for opening and closing backtick strings to be equal in length:
+    Test case 359:  The following case also illustrates the need for opening and
+                    closing backtick strings to be equal in length:
     """
 
     # Arrange

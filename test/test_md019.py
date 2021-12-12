@@ -135,7 +135,7 @@ def test_md019_bad_multiple_spacing_with_indent():
 
 def test_md019_bad_single_space_single_tab():
     """
-    Test to make sure this rule does not trigger with a document that
+    Test to make sure this rule does trigger with a document that
     contains multiple Atx Headings with tabs before text.
     """
 
@@ -148,8 +148,13 @@ def test_md019_bad_single_space_single_tab():
         "test/resources/rules/md019/single_space_single_tab.md",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md019/single_space_single_tab.md:1:1: "
+        + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)\n"
+        + "test/resources/rules/md019/single_space_single_tab.md:3:1: "
+        + "MD019: Multiple spaces are present after hash character on Atx Heading. (no-multiple-space-atx)"
+    )
     expected_error = ""
 
     # Act

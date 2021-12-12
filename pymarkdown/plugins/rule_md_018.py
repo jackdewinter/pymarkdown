@@ -5,6 +5,7 @@ the text of the heading.
 """
 import re
 
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_details import PluginDetails
 from pymarkdown.rule_plugin import RulePlugin
 
@@ -75,23 +76,37 @@ class StartOfLineTokenParser:
         if token.is_inline_code_span:
             self.__delayed_line = None
             self.__paragraph_index += (
-                token.leading_whitespace.count("\n")
-                + token.span_text.count("\n")
-                + token.trailing_whitespace.count("\n")
+                token.leading_whitespace.count(ParserHelper.newline_character)
+                + token.span_text.count(ParserHelper.newline_character)
+                + token.trailing_whitespace.count(ParserHelper.newline_character)
             )
         elif token.is_inline_raw_html:
             self.__delayed_line = None
-            self.__paragraph_index += token.raw_tag.count("\n")
+            self.__paragraph_index += token.raw_tag.count(
+                ParserHelper.newline_character
+            )
         elif token.is_inline_image or token.is_inline_link:
             self.__delayed_line = None
-            self.__paragraph_index += token.text_from_blocks.count("\n")
+            self.__paragraph_index += token.text_from_blocks.count(
+                ParserHelper.newline_character
+            )
             if token.label_type == "inline":
-                self.__paragraph_index += token.before_link_whitespace.count("\n")
-                self.__paragraph_index += token.before_title_whitespace.count("\n")
-                self.__paragraph_index += token.after_title_whitespace.count("\n")
-                self.__paragraph_index += token.active_link_title.count("\n")
+                self.__paragraph_index += token.before_link_whitespace.count(
+                    ParserHelper.newline_character
+                )
+                self.__paragraph_index += token.before_title_whitespace.count(
+                    ParserHelper.newline_character
+                )
+                self.__paragraph_index += token.after_title_whitespace.count(
+                    ParserHelper.newline_character
+                )
+                self.__paragraph_index += token.active_link_title.count(
+                    ParserHelper.newline_character
+                )
             if token.label_type == "full":
-                self.__paragraph_index += token.ex_label.count("\n")
+                self.__paragraph_index += token.ex_label.count(
+                    ParserHelper.newline_character
+                )
             self.__inside_of_link = token.is_inline_link
         elif token.is_inline_hard_break:
             self.__delayed_line = None
@@ -106,8 +121,10 @@ class StartOfLineTokenParser:
             self.__delayed_line = None
 
     def __next_token_paragraph_text_inline(self, token, context):
-        split_whitespace = self.__last_paragraph_token.extracted_whitespace.split("\n")
-        split_text = token.token_text.split("\n")
+        split_whitespace = self.__last_paragraph_token.extracted_whitespace.split(
+            ParserHelper.newline_character
+        )
+        split_text = token.token_text.split(ParserHelper.newline_character)
 
         for split_index, next_text in enumerate(split_text):
             combined_text = (
@@ -144,7 +161,7 @@ class StartOfLineTokenParser:
                 # pylint: enable=invalid-unary-operand-type
             self.__first_line_after_other_token = False
             self.__first_line_after_hard_break = False
-        self.__paragraph_index += token.token_text.count("\n")
+        self.__paragraph_index += token.token_text.count(ParserHelper.newline_character)
 
     # pylint: disable=too-many-arguments
     @classmethod

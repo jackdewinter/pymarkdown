@@ -52,9 +52,11 @@ def test_md021_bad_multiple_spacing_both():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md021/multiple_spacing.md:1:1: "
-        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)\n"
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)\n"
         + "test/resources/rules/md021/multiple_spacing.md:3:1: "
-        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)\n"
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -84,9 +86,11 @@ def test_md021_bad_multiple_spacing_left():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md021/multiple_spacing_left.md:1:1: "
-        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)\n"
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)\n"
         + "test/resources/rules/md021/multiple_spacing_left.md:3:1: "
-        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)\n"
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -116,9 +120,11 @@ def test_md021_bad_multiple_spacing_right():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md021/multiple_spacing_right.md:1:1: "
-        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)\n"
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)\n"
         + "test/resources/rules/md021/multiple_spacing_right.md:3:1: "
-        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)\n"
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -177,9 +183,11 @@ def test_md021_good_multiple_spacing_with_indent():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md021/multiple_spacing_with_indent.md:1:2: "
-        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)\n"
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)\n"
         + "test/resources/rules/md021/multiple_spacing_with_indent.md:3:3: "
-        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. (no-multiple-space-closed-atx)\n"
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -208,8 +216,15 @@ def test_md021_good_single_space_single_tab_before():
         "test/resources/rules/md021/single_space_single_tab_before.md",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md021/single_space_single_tab_before.md:1:1: "
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)\n"
+        + "test/resources/rules/md021/single_space_single_tab_before.md:3:1: "
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)"
+    )
     expected_error = ""
 
     # Act
@@ -237,8 +252,15 @@ def test_md021_good_single_space_single_tab_after():
         "test/resources/rules/md021/single_space_single_tab_after.md",
     ]
 
-    expected_return_code = 0
-    expected_output = ""
+    expected_return_code = 1
+    expected_output = (
+        "test/resources/rules/md021/single_space_single_tab_after.md:1:1: "
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)\n"
+        + "test/resources/rules/md021/single_space_single_tab_after.md:3:1: "
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)"
+    )
     expected_error = ""
 
     # Act

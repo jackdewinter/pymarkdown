@@ -79,8 +79,7 @@ class RuleMd030(RulePlugin):
 
     def __handle_list_end(self, context):
 
-        for _, list_token in enumerate(self.__list_tokens[-1]):
-
+        for list_token in self.__list_tokens[-1]:
             this_list_token_paragraph_count = 0
             if str(list_token) in self.__paragraph_count_map:
                 this_list_token_paragraph_count = self.__paragraph_count_map[
@@ -116,7 +115,7 @@ class RuleMd030(RulePlugin):
             if self.__list_stack[-1].is_ordered_list_start:
                 delta -= len(list_token.list_start_content)
             # if self.__debug:
-            #     print("y=" + str(list_token).replace("\n", "\\n"))
+            #     print("y=" + str(list_token).replace(ParserHelper.newline_character, "\\n"))
             #     print(
             #         "token_index="
             #         + str(token_index)

@@ -177,6 +177,7 @@ class BlockQuoteProcessor:
                 container_start_bq_count,
             )
             POGGER.debug(">>avoid_block_starts>>$", avoid_block_starts)
+            POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
 
             (
                 did_process,
@@ -232,7 +233,15 @@ class BlockQuoteProcessor:
                 "handle_block w/ no open>>found>>$",
                 last_block_token,
             )
+            POGGER.debug("hbqblk>>last_block_token>>$", last_block_token)
+            POGGER.debug(
+                "hbqblk>>leading_text_index>>$", last_block_token.leading_text_index
+            )
             last_block_token.add_leading_spaces("")
+            POGGER.debug("hbqblk>>last_block_token>>$", last_block_token)
+            POGGER.debug(
+                "hbqblk>>leading_text_index>>$", last_block_token.leading_text_index
+            )
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -457,20 +466,7 @@ class BlockQuoteProcessor:
     @staticmethod
     def __handle_bq_whitespace(adjusted_line, start_index):
         if ParserHelper.is_character_at_index_whitespace(adjusted_line, start_index):
-            if adjusted_line[start_index] == ParserHelper.tab_character:
-                adjusted_tab_length = ParserHelper.calculate_length(
-                    ParserHelper.tab_character, start_index=start_index
-                )
-                POGGER.debug("adj--$--", adjusted_line)
-                parts = [
-                    adjusted_line[0:start_index],
-                    ParserHelper.repeat_string(
-                        ParserHelper.space_character, adjusted_tab_length
-                    ),
-                    adjusted_line[start_index + 1 :],
-                ]
-                adjusted_line = "".join(parts)
-                POGGER.debug("--$--", adjusted_line)
+            assert adjusted_line[start_index] != ParserHelper.tab_character
             start_index += 1
         return adjusted_line, start_index
 
@@ -729,6 +725,7 @@ class BlockQuoteProcessor:
                 block_quote_data,
                 line_to_parse,
                 container_level_tokens,
+                text_removed_by_container,
             ) = BlockQuoteProcessor.__handle_fenced_code_section(
                 parser_state,
                 block_quote_data,
@@ -825,6 +822,8 @@ class BlockQuoteProcessor:
                 removed_text,
                 original_start_index,
             )
+            POGGER.debug("text_removed_by_container=[$]", text_removed_by_container)
+            POGGER.debug("removed_text=[$]", removed_text)
             if not line_to_parse.strip():
                 did_blank, leaf_tokens = BlockQuoteProcessor.__handle_normal_blank_line(
                     parser_state,
@@ -944,9 +943,26 @@ class BlockQuoteProcessor:
         POGGER.debug("token_stack--$", parser_state.token_stack)
         POGGER.debug("__hbqs>>found_bq_stack_token>>$", found_bq_stack_token)
         POGGER.debug("__hbqs>>bq>>$", found_bq_stack_token.matching_markdown_token)
+
+        POGGER.debug(
+            "dbqlsa>>last_block_token>>$", found_bq_stack_token.matching_markdown_token
+        )
+        POGGER.debug(
+            "dbqlsa>>leading_text_index>>$",
+            found_bq_stack_token.matching_markdown_token.leading_text_index,
+        )
         found_bq_stack_token.matching_markdown_token.add_leading_spaces(
             adjusted_removed_text, special_case
         )
+        found_bq_stack_token.matching_markdown_token.leading_text_index += 1
+        POGGER.debug(
+            "dbqlsa>>last_block_token>>$", found_bq_stack_token.matching_markdown_token
+        )
+        POGGER.debug(
+            "dbqlsa>>leading_text_index>>$",
+            found_bq_stack_token.matching_markdown_token.leading_text_index,
+        )
+
         POGGER.debug("__hbqs>>bq>>$", found_bq_stack_token.matching_markdown_token)
 
     # pylint: enable=too-many-arguments
@@ -1002,8 +1018,9 @@ class BlockQuoteProcessor:
     ):
         POGGER.debug("handle_block_quote_section>>fenced")
         assert start_index >= 0
+        text_removed_by_container = None
         removed_text, line_to_parse = (
-            line_to_parse[0:start_index],
+            line_to_parse[:start_index],
             line_to_parse[start_index:],
         )
 
@@ -1037,9 +1054,30 @@ class BlockQuoteProcessor:
             "found_bq_stack_token---$<<<",
             found_bq_stack_token,
         )
+        POGGER.debug(
+            "hfcs>>last_block_token>>$", found_bq_stack_token.matching_markdown_token
+        )
+        POGGER.debug(
+            "hfcs>>leading_text_index>>$",
+            found_bq_stack_token.matching_markdown_token.leading_text_index,
+        )
         found_bq_stack_token.matching_markdown_token.add_leading_spaces(removed_text)
+        found_bq_stack_token.matching_markdown_token.leading_text_index += 1
+        POGGER.debug(
+            "hfcs>>last_block_token>>$", found_bq_stack_token.matching_markdown_token
+        )
+        POGGER.debug(
+            "hfcs>>leading_text_index>>$",
+            found_bq_stack_token.matching_markdown_token.leading_text_index,
+        )
+        text_removed_by_container = removed_text
 
-        return block_quote_data, line_to_parse, container_level_tokens
+        return (
+            block_quote_data,
+            line_to_parse,
+            container_level_tokens,
+            text_removed_by_container,
+        )
 
     # pylint: disable=too-many-arguments
     @staticmethod

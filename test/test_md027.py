@@ -1422,6 +1422,8 @@ def test_md027_bad_block_quote_ordered_list_setext_heading_first():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md022,md023",
         "scan",
         "test/resources/rules/md027/bad_block_quote_ordered_list_setext_heading_first.md",
     ]
@@ -1449,6 +1451,8 @@ def test_md027_bad_block_quote_ordered_list_setext_heading_last():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--disable-rules",
+        "md022,md023",
         "scan",
         "test/resources/rules/md027/bad_block_quote_ordered_list_setext_heading_last.md",
     ]

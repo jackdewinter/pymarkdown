@@ -336,6 +336,46 @@ class ParserHelper:
         return string_length - start_index
 
     @staticmethod
+    def detabify_string(source_string):
+        """
+        Given a string that may have one or more tabstops in it, resolve the
+        tabstops into more easily handled space characters.
+        """
+        if ParserHelper.tab_character not in source_string:
+            return source_string
+
+        rebuilt_string = ""
+        current_start_index = 0
+        next_tab_index = source_string.find(ParserHelper.tab_character)
+        while next_tab_index != -1:
+            _, start_index = ParserHelper.collect_backwards_while_one_of_characters(
+                source_string, next_tab_index, " \t"
+            )
+            end_index, _ = ParserHelper.collect_while_one_of_characters(
+                source_string, next_tab_index, " \t"
+            )
+            # print("si:" + str(start_index))
+            # print("ei:" + str(end_index))
+            whitespace_section = source_string[start_index:end_index]
+            # print("whitespace_section:" + ParserHelper.make_whitespace_visible(whitespace_section) + ":")
+            if start_index:
+                rebuilt_string += source_string[:start_index]
+            realized_start_index = current_start_index + start_index
+            # print("xxx:" + str(xxx) + "=" + str(current_start_index) + "+" + str(start_index))
+            whitespace_actual_length = ParserHelper.calculate_length(
+                whitespace_section, realized_start_index
+            )
+            # print("whitespace_actual_length:" + str(whitespace_actual_length) + ":")
+            rebuilt_string += ParserHelper.repeat_string(" ", whitespace_actual_length)
+            current_start_index += start_index + whitespace_actual_length
+
+            source_string = source_string[end_index:]
+            next_tab_index = source_string.find(ParserHelper.tab_character)
+        if source_string:
+            rebuilt_string += source_string
+        return rebuilt_string
+
+    @staticmethod
     def is_length_less_than_or_equal_to(source_string, length_limit):
         """
         Determine if the adjusted length of the string is less than or equal to the
@@ -545,13 +585,13 @@ class ParserHelper:
         """
         Remove any backspaces from the text.
         """
-        adjusted_text_token = token_text[0:]
+        adjusted_text_token = token_text[:]
         next_backspace_index = ParserHelper.__find_with_escape(
             adjusted_text_token, ParserHelper.__backspace_character, 0
         )
         while next_backspace_index != -1:
             adjusted_text_token = (
-                adjusted_text_token[0:next_backspace_index]
+                adjusted_text_token[:next_backspace_index]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
             next_backspace_index = ParserHelper.__find_with_escape(
@@ -566,13 +606,13 @@ class ParserHelper:
         """
         Deal with any backslash encoding in text with backspaces.
         """
-        adjusted_text_token = token_text[0:]
+        adjusted_text_token = token_text[:]
         next_backspace_index = ParserHelper.__find_with_escape(
             adjusted_text_token, ParserHelper.__backspace_character, 0
         )
         while next_backspace_index != -1:
             adjusted_text_token = (
-                adjusted_text_token[0 : next_backspace_index - 1]
+                adjusted_text_token[: next_backspace_index - 1]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
             next_backspace_index = ParserHelper.__find_with_escape(
@@ -608,13 +648,13 @@ class ParserHelper:
         """
         Resolve the specific character out of the text string.
         """
-        adjusted_text_token = token_text[0:]
+        adjusted_text_token = token_text[:]
         next_backspace_index = ParserHelper.__find_with_escape(
             adjusted_text_token, sequence_to_remove, 0
         )
         while next_backspace_index != -1:
             adjusted_text_token = (
-                adjusted_text_token[0:next_backspace_index]
+                adjusted_text_token[:next_backspace_index]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
             next_backspace_index = ParserHelper.__find_with_escape(
@@ -645,13 +685,13 @@ class ParserHelper:
         """
         Resolve any escapes from the text, leaving only what they escaped.
         """
-        adjusted_text_token = token_text[0:]
+        adjusted_text_token = token_text[:]
         next_backspace_index = ParserHelper.__find_with_escape(
             adjusted_text_token, ParserHelper.escape_character, 0
         )
         while next_backspace_index != -1:
             adjusted_text_token = (
-                adjusted_text_token[0:next_backspace_index]
+                adjusted_text_token[:next_backspace_index]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
             next_backspace_index = ParserHelper.__find_with_escape(
@@ -705,7 +745,7 @@ class ParserHelper:
             length_before_mod = len(main_text)
             main_text = (
                 (
-                    main_text[0:start_replacement_index]
+                    main_text[:start_replacement_index]
                     + replace_text
                     + main_text[end_replacement_index + 1 :]
                 )
@@ -779,12 +819,12 @@ class ParserHelper:
             length_before_mod = len(adjusted_text_token)
             adjusted_text_token = (
                 (
-                    adjusted_text_token[0:start_replacement_index]
+                    adjusted_text_token[:start_replacement_index]
                     + replace_text
                     + adjusted_text_token[end_replacement_index + 1 :]
                 )
                 if start_replacement_index
-                else (replace_text + adjusted_text_token[end_replacement_index + 1 :])
+                else replace_text + adjusted_text_token[end_replacement_index + 1 :]
             )
             length_after_mod = len(adjusted_text_token)
             start_index = (
@@ -807,7 +847,7 @@ class ParserHelper:
         return ParserHelper.__resolve_escapes_from_text(resolved_text)
 
     @staticmethod
-    def remove_all_from_text(text_to_remove):
+    def remove_all_from_text(text_to_remove, include_noops=False):
         """
         Combination to remove all of these special characters from the text.
         """
@@ -815,6 +855,8 @@ class ParserHelper:
         removed_text = ParserHelper.__resolve_replacement_markers_from_text(
             removed_text
         )
+        if include_noops:
+            removed_text = ParserHelper.resolve_noops_from_text(removed_text)
         return ParserHelper.__remove_escapes_from_text(removed_text)
 
     @staticmethod

@@ -21,7 +21,11 @@ from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.parser_state import ParserState
 from pymarkdown.position_marker import PositionMarker
 from pymarkdown.source_providers import InMemorySourceProvider
-from pymarkdown.stack_token import DocumentStackToken, ParagraphStackToken
+from pymarkdown.stack_token import (
+    BlockQuoteStackToken,
+    DocumentStackToken,
+    ParagraphStackToken,
+)
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -630,16 +634,7 @@ class TokenizedMarkdown:
         return new_tokens
 
     @staticmethod
-    def __handle_blank_line(
-        parser_state,
-        input_line,
-        from_main_transform,
-        position_marker=None,
-    ):
-        """
-        Handle the processing of a blank line.
-        """
-
+    def __handle_blank_line_init(from_main_transform, input_line):
         if not from_main_transform:
             close_only_these_blocks = [ParagraphStackToken]
             do_include_block_quotes = False
@@ -653,6 +648,30 @@ class TokenizedMarkdown:
         non_whitespace_index, extracted_whitespace = ParserHelper.extract_whitespace(
             input_line, 0
         )
+        return (
+            close_only_these_blocks,
+            do_include_block_quotes,
+            non_whitespace_index,
+            extracted_whitespace,
+        )
+
+    @staticmethod
+    def __handle_blank_line(
+        parser_state,
+        input_line,
+        from_main_transform,
+        position_marker=None,
+    ):
+        """
+        Handle the processing of a blank line.
+        """
+
+        (
+            close_only_these_blocks,
+            do_include_block_quotes,
+            non_whitespace_index,
+            extracted_whitespace,
+        ) = TokenizedMarkdown.__handle_blank_line_init(from_main_transform, input_line)
 
         (
             new_tokens,
@@ -662,7 +681,9 @@ class TokenizedMarkdown:
 
         if from_main_transform:
             POGGER.debug("hbl>>__handle_blank_line_in_block_quote")
-            TokenizedMarkdown.__handle_blank_line_in_block_quote(parser_state)
+            TokenizedMarkdown.__handle_blank_line_in_block_quote(
+                parser_state, new_tokens
+            )
 
         if force_default_handling or new_tokens is None:
             POGGER.debug("hbl>>default blank handling-->cob")
@@ -676,6 +697,26 @@ class TokenizedMarkdown:
                 new_tokens.extend(n_tokens)
             else:
                 new_tokens = n_tokens
+
+        stack_index = parser_state.find_last_list_block_on_stack()
+        POGGER.debug("stack_index>>$", stack_index)
+        if stack_index > 0:
+            POGGER.debug(
+                "blank>>bq_start>>$",
+                parser_state.token_stack[stack_index],
+            )
+            assert parser_state.token_stack[stack_index].is_list
+            POGGER.debug(
+                "hbl>>last_block_token>>$",
+                parser_state.token_stack[stack_index].matching_markdown_token,
+            )
+            parser_state.token_stack[
+                stack_index
+            ].matching_markdown_token.add_leading_spaces("")
+            POGGER.debug(
+                "hbl>>last_block_token>>$",
+                parser_state.token_stack[stack_index].matching_markdown_token,
+            )
 
         POGGER.debug("hbl>>new_tokens>>$", new_tokens)
         assert non_whitespace_index == len(input_line)
@@ -716,6 +757,9 @@ class TokenizedMarkdown:
             )
             assert not did_pause_lrd
             force_default_handling = True
+            POGGER.debug(
+                "hbl<<process_link_reference_definition>>stopping link definition"
+            )
         elif parser_state.token_stack[-1].is_code_block:
             if parser_state.count_of_block_quotes_on_stack():
                 POGGER.debug("hbl>>code block within block quote")
@@ -725,6 +769,7 @@ class TokenizedMarkdown:
         elif parser_state.token_stack[-1].is_html_block:
             POGGER.debug("hbl>>check_blank_html_block_end")
             new_tokens = HtmlHelper.check_blank_html_block_end(parser_state)
+            POGGER.debug("hbl<<check_blank_html_block_end")
         elif (
             is_processing_list
             and parser_state.token_document[-1].is_blank_line
@@ -734,10 +779,27 @@ class TokenizedMarkdown:
             new_tokens, _ = TokenizedMarkdown.__close_open_blocks(
                 parser_state, until_this_index=in_index, include_lists=True
             )
+            POGGER.debug("hbl<<double blank in list")
         return new_tokens, force_default_handling, requeue_line_info
 
     @staticmethod
-    def __handle_blank_line_in_block_quote(parser_state):
+    def __handle_blank_line_in_block_quote(parser_state, new_tokens):
+
+        stack_index = parser_state.find_last_container_on_stack()
+        POGGER.debug_with_visible_whitespace("new_tokens>>$", new_tokens)
+        POGGER.debug("stack_index>>$", stack_index)
+        if new_tokens and stack_index > 0:
+            POGGER.debug_with_visible_whitespace("new_tokens[-1]>>$", new_tokens[-1])
+            assert new_tokens[-1].is_html_block_end and stack_index == (
+                len(parser_state.token_stack) - 1
+            )
+            close_tokens, _ = parser_state.close_open_blocks_fn(
+                parser_state,
+                only_these_blocks=[BlockQuoteStackToken],
+                include_block_quotes=True,
+            )
+            POGGER.debug("close_tokens>>$", close_tokens)
+            new_tokens.extend(close_tokens)
 
         stack_index = parser_state.find_last_container_on_stack()
         POGGER.debug(
@@ -745,9 +807,29 @@ class TokenizedMarkdown:
             parser_state.token_stack[stack_index],
         )
         if stack_index > 0 and parser_state.token_stack[stack_index].is_block_quote:
+            POGGER.debug(
+                "hblibq>>last_block_token>>$",
+                parser_state.token_stack[stack_index].matching_markdown_token,
+            )
+            POGGER.debug(
+                "hblibq>>leading_text_index>>$",
+                parser_state.token_stack[
+                    stack_index
+                ].matching_markdown_token.leading_text_index,
+            )
             parser_state.token_stack[
                 stack_index
             ].matching_markdown_token.add_leading_spaces("")
+            POGGER.debug(
+                "hblibq>>last_block_token>>$",
+                parser_state.token_stack[stack_index].matching_markdown_token,
+            )
+            POGGER.debug(
+                "hblibq>>leading_text_index>>$",
+                parser_state.token_stack[
+                    stack_index
+                ].matching_markdown_token.leading_text_index,
+            )
 
     def __process_front_matter_header_if_present(
         self, token_to_use, line_number, requeue

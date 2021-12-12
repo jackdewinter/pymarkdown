@@ -50,7 +50,7 @@ def test_paragraph_series_m_hs_ol_nl_t_nl_all_hs():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n   ]",
+        "[olist(1,1):.:1:3::   \n   \n]",
         "[BLANK(1,3):]",
         "[setext(3,4):-:3::(2,4)]",
         "[text(2,4):foo:]",
@@ -142,7 +142,7 @@ def test_paragraph_series_m_hs_ol_nl_i3_t_nl_i3_hs():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n   ]",
+        "[olist(1,1):.:1:3::   \n   \n]",
         "[BLANK(1,3):]",
         "[setext(3,4):-:3::(2,4)]",
         "[text(2,4):foo:]",
@@ -203,7 +203,7 @@ def test_paragraph_series_m_hs_ol_t_nl_t_nl_all_hs():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n   ]",
+        "[olist(1,1):.:1:3::   \n   \n]",
         "[setext(3,4):-:3::(1,4)]",
         "[text(1,4):abc\nfoo::\n]",
         "[end-setext::]",
@@ -234,8 +234,8 @@ def test_paragraph_series_m_hs_ol_t_nl_i2_t_nl_hs():
 ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::  ]",
-        "[para(1,4):\n]",
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):\n  ]",
         "[text(1,4):abc\nfoo::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -296,7 +296,7 @@ def test_paragraph_series_m_hs_ol_t_nl_i3_t_nl_i3_hs():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n   ]",
+        "[olist(1,1):.:1:3::   \n   \n]",
         "[setext(3,4):-:3::(1,4)]",
         "[text(1,4):abc\nfoo::\n]",
         "[end-setext::]",
@@ -362,7 +362,7 @@ def test_paragraph_series_m_hs_ol_ol_nl_t_nl_all_hs():
 """
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :      \n      ]",
+        "[olist(1,4):.:1:6:   :      \n      \n]",
         "[BLANK(1,6):]",
         "[setext(3,7):-:3::(2,7)]",
         "[text(2,7):foo:]",
@@ -435,7 +435,7 @@ def test_paragraph_series_m_hs_ol_ol_t_nl_t_nl_all_hs():
 """
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :      \n      ]",
+        "[olist(1,4):.:1:6:   :      \n      \n]",
         "[setext(3,7):-:3::(1,7)]",
         "[text(1,7):abc\nfoo::\n]",
         "[end-setext::]",
@@ -677,7 +677,8 @@ foo</li>
 @pytest.mark.gfm
 def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i2_t_nl_i2_hs():
     """
-    Test case:  Ordered list newline indent of 3 ordered list new line indent of 2 text newline indent of 2 setext heading
+    Test case:  Ordered list newline indent of 3 ordered list new line indent of
+                2 text newline indent of 2 setext heading
     """
 
     # Arrange
@@ -714,7 +715,8 @@ def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i2_t_nl_i2_hs():
 @pytest.mark.gfm
 def test_paragraph_series_m_hs_ol_t_nl_i3_ol_nl_i2_t_nl_i2_hs():
     """
-    Test case:  Ordered list text newline indent of 3 ordered list new line indent of 2 text newline indent of 2 setext heading
+    Test case:  Ordered list text newline indent of 3 ordered list new line indent
+                of 2 text newline indent of 2 setext heading
     """
 
     # Arrange
@@ -724,8 +726,8 @@ def test_paragraph_series_m_hs_ol_t_nl_i3_ol_nl_i2_t_nl_i2_hs():
   ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n  ]",
-        "[para(1,4):\n\n]",
+        "[olist(1,1):.:1:3::   \n]",
+        "[para(1,4):\n\n  ]",
         "[text(1,4):abc\n1.\nfoo::\n\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -746,7 +748,8 @@ foo</li>
 @pytest.mark.gfm
 def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i1_t_nl_i1_hs():
     """
-    Test case:  Unordered list text newline indent of 2 unordered list new line indent of 1 text newline indent of 1 setext heading
+    Test case:  Unordered list text newline indent of 2 unordered list new line
+                indent of 1 text newline indent of 1 setext heading
     """
 
     # Arrange
@@ -780,7 +783,8 @@ def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i1_t_nl_i1_hs():
 @pytest.mark.gfm
 def test_paragraph_series_m_hs_ul_t_nl_i2_ulb_nl_i1_t_nl_i1_hs():
     """
-    Test case:  Unordered list text newline indent of 2 unordered list (b) new line indent of 1 text newline indent of 1 setext heading
+    Test case:  Unordered list text newline indent of 2 unordered list (b) new
+                line indent of 1 text newline indent of 1 setext heading
     """
 
     # Arrange
@@ -790,8 +794,8 @@ def test_paragraph_series_m_hs_ul_t_nl_i2_ulb_nl_i1_t_nl_i1_hs():
  ---
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n ]",
-        "[para(1,3):\n\n]",
+        "[ulist(1,1):-::2::  \n]",
+        "[para(1,3):\n\n ]",
         "[text(1,3):abc\n::\n]",
         "[text(2,1):*:]",
         "[text(2,2):\nfoo::\n]",
@@ -814,7 +818,8 @@ foo</li>
 @pytest.mark.gfm
 def test_paragraph_series_m_hs_ol_nl_i3_ol_t_nl_i2_t_nl_i2_hs():
     """
-    Test case:  Ordered list newline indent of 3 ordered list text new line indent of 2 text newline indent of 2 setext heading
+    Test case:  Ordered list newline indent of 3 ordered list text new line indent
+                of 2 text newline indent of 2 setext heading
     """
 
     # Arrange
@@ -826,8 +831,8 @@ def test_paragraph_series_m_hs_ol_nl_i3_ol_t_nl_i2_t_nl_i2_hs():
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
         "[BLANK(1,3):]",
-        "[olist(2,4):.:1:6:   :  ]",
-        "[para(2,7):\n]",
+        "[olist(2,4):.:1:6:   :]",
+        "[para(2,7):\n  ]",
         "[text(2,7):def\nfoo::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -852,7 +857,8 @@ foo</li>
 @pytest.mark.gfm
 def test_paragraph_series_m_hs_ol_t_nl_i3_ol_t_nl_i2_t_nl_i2_hs():
     """
-    Test case:  Ordered list text newline indent of 3 ordered list text new line indent of 2 text newline indent of 2 setext heading
+    Test case:  Ordered list text newline indent of 3 ordered list text new line
+                indent of 2 text newline indent of 2 setext heading
     was:        test_list_blocks_256hd
     """
 
@@ -867,8 +873,8 @@ def test_paragraph_series_m_hs_ol_t_nl_i3_ol_t_nl_i2_t_nl_i2_hs():
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :  ]",
-        "[para(2,7):\n]",
+        "[olist(2,4):.:1:6:   :]",
+        "[para(2,7):\n  ]",
         "[text(2,7):def\nfoo::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -887,13 +893,14 @@ foo</li>
 <hr />"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
 def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i3_t_nl_i3_hs():
     """
-    Test case:  Ordered list newline indent of 3 ordered list new line indent of 3 text newline indent of 3 setext heading
+    Test case:  Ordered list newline indent of 3 ordered list new line indent
+                of 3 text newline indent of 3 setext heading
     """
 
     # Arrange
@@ -903,7 +910,7 @@ def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i3_t_nl_i3_hs():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n   ]",
+        "[olist(1,1):.:1:3::   \n   \n]",
         "[BLANK(1,3):]",
         "[olist(2,4):.:1:6:   ]",
         "[BLANK(2,6):]",
@@ -930,7 +937,8 @@ def test_paragraph_series_m_hs_ol_nl_i3_ol_nl_i3_t_nl_i3_hs():
 @pytest.mark.gfm
 def test_paragraph_series_m_hs_ol_t_nl_i3_ol_nl_i3_t_nl_i3_hs():
     """
-    Test case:  Ordered list text newline indent of 3 ordered list new line indent of 3 text newline indent of 3 setext heading
+    Test case:  Ordered list text newline indent of 3 ordered list new line indent
+                of 3 text newline indent of 3 setext heading
     """
 
     # Arrange
@@ -940,7 +948,7 @@ def test_paragraph_series_m_hs_ol_t_nl_i3_ol_nl_i3_t_nl_i3_hs():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   \n   \n   ]",
+        "[olist(1,1):.:1:3::   \n   \n   \n]",
         "[setext(4,4):-:3::(1,4)]",
         "[text(1,4):abc\n1.\nfoo::\n\n]",
         "[end-setext::]",
@@ -962,7 +970,8 @@ foo</h2>
 @pytest.mark.gfm
 def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i2_t_nl_i2_hs():
     """
-    Test case:  Unordered list text newline indent of 2 unordered list new line indent of 2 text newline indent of 2 setext heading
+    Test case:  Unordered list text newline indent of 2 unordered list new line
+                indent of 2 text newline indent of 2 setext heading
     """
 
     # Arrange
@@ -972,7 +981,7 @@ def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i2_t_nl_i2_hs():
   ---
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[ulist(1,1):-::2::  \n  \n  \n]",
         "[setext(2,3):-:1::(1,3)]",
         "[text(1,3):abc:]",
         "[end-setext::]",
@@ -996,7 +1005,8 @@ def test_paragraph_series_m_hs_ul_t_nl_i2_ul_nl_i2_t_nl_i2_hs():
 @pytest.mark.gfm
 def test_paragraph_series_m_hs_ul_t_nl_i2_ulb_nl_i2_t_nl_i2_hs():
     """
-    Test case:  Unordered list text newline indent of 2 unordered list (b) new line indent of 2 text newline indent of 2 setext heading
+    Test case:  Unordered list text newline indent of 2 unordered list (b) new line
+                indent of 2 text newline indent of 2 setext heading
     """
 
     # Arrange
@@ -1006,7 +1016,7 @@ def test_paragraph_series_m_hs_ul_t_nl_i2_ulb_nl_i2_t_nl_i2_hs():
   ---
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::  \n  \n  ]",
+        "[ulist(1,1):-::2::  \n  \n  \n]",
         "[setext(4,3):-:3::(1,3)]",
         "[text(1,3):abc\n::\n]",
         "[text(2,1):*:]",
@@ -1030,7 +1040,8 @@ foo</h2>
 @pytest.mark.gfm
 def test_paragraph_series_m_hs_ol_nl_i3_ol_t_nl_i3_t_nl_i3_hs():
     """
-    Test case:  Ordered list newline indent of 3 ordered list text new line indent of 3 text newline indent of 3 setext heading
+    Test case:  Ordered list newline indent of 3 ordered list text new line indent
+                of 3 text newline indent of 3 setext heading
     """
 
     # Arrange
@@ -1040,10 +1051,10 @@ def test_paragraph_series_m_hs_ol_nl_i3_ol_t_nl_i3_t_nl_i3_hs():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[BLANK(1,3):]",
-        "[olist(2,4):.:1:6:   :   ]",
-        "[para(2,7):\n]",
+        "[olist(2,4):.:1:6:   :]",
+        "[para(2,7):\n   ]",
         "[text(2,7):def\nfoo::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -1068,7 +1079,8 @@ foo</li>
 @pytest.mark.gfm
 def test_paragraph_series_m_hs_ol_t_nl_i3_ol_t_nl_i3_t_nl_i3_hs():
     """
-    Test case:  Ordered list text newline indent of 3 ordered list text new line indent of 3 text newline indent of 3 setext heading
+    Test case:  Ordered list text newline indent of 3 ordered list text new line
+                indent of 3 text newline indent of 3 setext heading
     was:        test_list_blocks_256he
     """
 
@@ -1079,12 +1091,12 @@ def test_paragraph_series_m_hs_ol_t_nl_i3_ol_t_nl_i3_t_nl_i3_hs():
    ---
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::   ]",
+        "[olist(1,1):.:1:3::   \n]",
         "[para(1,4):]",
         "[text(1,4):abc:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   :   ]",
-        "[para(2,7):\n]",
+        "[olist(2,4):.:1:6:   :]",
+        "[para(2,7):\n   ]",
         "[text(2,7):def\nfoo::\n]",
         "[end-para:::True]",
         "[end-olist:::True]",
@@ -1103,4 +1115,4 @@ foo</li>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)

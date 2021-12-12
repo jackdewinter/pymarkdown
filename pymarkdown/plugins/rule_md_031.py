@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that ensures that blank lines surround fenced block quotes.
 """
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_details import PluginDetails
 from pymarkdown.rule_plugin import RulePlugin
 
@@ -70,7 +71,12 @@ class RuleMd031(RulePlugin):
         ):
             can_trigger = self.__trigger_in_list_items
         if not token.is_blank_line and can_trigger:
-            line_number_delta = self.__last_non_end_token.token_text.count("\n") + 2
+            line_number_delta = (
+                self.__last_non_end_token.token_text.count(
+                    ParserHelper.newline_character
+                )
+                + 2
+            )
             column_number_delta = (
                 self.__end_fenced_code_block_token.start_markdown_token.column_number
             )

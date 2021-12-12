@@ -203,8 +203,10 @@ def test_md018_bad_missing_atx_start_spacing_in_block_quote():
 
     expected_return_code = 1
     expected_output = (
-        "test/resources/rules/md018/missing_start_spacing_in_block_quote.md:1:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
-        + "test/resources/rules/md018/missing_start_spacing_in_block_quote.md:3:3: MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
+        "test/resources/rules/md018/missing_start_spacing_in_block_quote.md:1:3: "
+        + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
+        + "test/resources/rules/md018/missing_start_spacing_in_block_quote.md:3:3: "
+        + "MD018: No space present after the hash character on a possible Atx Heading. (no-missing-space-atx)\n"
     )
     expected_error = ""
 
@@ -876,7 +878,7 @@ def test_md018_bad_single_paragraph_with_whitespace():
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md010",
+        "md010,md022,md023",
         "scan",
         "test/resources/rules/md018/single_paragraph_with_whitespace.md",
     ]
