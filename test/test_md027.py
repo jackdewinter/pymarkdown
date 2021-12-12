@@ -1761,7 +1761,6 @@ def test_md027_good_block_quote_ordered_list_html_block_with_multiline():
 
 
 @pytest.mark.rules
-@pytest.mark.skip
 def test_md027_good_block_quote_ordered_list_lrd():
     """
     Block quote with an aligned multiline list followed by an LRD.
@@ -1773,7 +1772,7 @@ def test_md027_good_block_quote_ordered_list_lrd():
         "--disable-rules",
         "md032",
         "scan",
-        "test/resources/rules/md027/good_block_quote_ordered_list_html_block.md",
+        "test/resources/rules/md027/good_block_quote_ordered_list_lrd.md",
     ]
 
     expected_return_code = 0

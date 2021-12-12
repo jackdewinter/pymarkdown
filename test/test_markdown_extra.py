@@ -1816,7 +1816,6 @@ this
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_020():
     """
     TBD
@@ -1831,17 +1830,110 @@ def test_extra_020():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n>\n> \n> \n]",
-        "[olist(1,3):.:1:5:  ]",
-        "[para(1,6):\n   ]",
+        "[olist(1,3):.:1:5::   \n\n   \n]",
+        "[para(1,6):\n]",
         "[text(1,6):list\nthis::\n]",
         "[end-para:::True]",
         "[BLANK(3,2):]",
-        "[link-ref-def(4,6):True:   :abc:: :/url:::::]",
-        "[li(5,3):5:  :1]",
+        "[link-ref-def(4,6):True::abc:: :/url:::::]",
+        "[li(5,3):5::1]",
         "[para(5,6):]",
         "[text(5,6):that:]",
         "[end-para:::True]",
         "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<p>list
+this</p>
+</li>
+<li>
+<p>that</p>
+</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_020a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>
+>    [abc]:
+>     /url
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n>\n> \n> \n> \n]",
+        "[olist(1,3):.:1:5::   \n\n   \n   \n]",
+        "[para(1,6):\n]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,2):]",
+        "[link-ref-def(4,6):True::abc::\n :/url:::::]",
+        "[li(6,3):5::1]",
+        "[para(6,6):]",
+        "[text(6,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>
+<p>list
+this</p>
+</li>
+<li>
+<p>that</p>
+</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+def test_extra_020b():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>
+>    [abc]:
+>     /url
+>      "title"
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n>\n> \n> \n> \n> ]",
+        "[olist(1,3):.:1:5::   \n\n   \n   \n   \n]",
+        "[para(1,6):\n]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::True]",
+        "[BLANK(3,2):]",
+        '[link-ref-def(4,6):True::abc::\n :/url::\n  :title:"title":]',
+        "[li(7,3):5::1]",
+        "[para(7,6):]",
+        "[text(7,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(8,1):]",
         "[end-olist:::True]",
         "[end-block-quote:::True]",
     ]
