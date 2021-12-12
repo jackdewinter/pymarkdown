@@ -457,7 +457,7 @@ class RuleMd027(RulePlugin):
                         ParserHelper.whitespace_split_character
                     )
                     if found_index != -1:
-                        next_line = next_line[0:found_index]
+                        next_line = next_line[:found_index]
                     if next_line:
                         split_leading_spaces = (
                             scoped_block_quote_token.leading_spaces.split(

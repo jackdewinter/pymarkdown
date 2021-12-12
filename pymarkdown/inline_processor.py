@@ -121,7 +121,7 @@ class InlineProcessor:
         POGGER.info("-----")
 
         coalesced_stack, coalesced_list, current_token = [], [], coalesced_results[0]
-        coalesced_list.extend(coalesced_results[0:1])
+        coalesced_list.extend(coalesced_results[:1])
 
         POGGER.debug("STACK?:$", current_token)
         if current_token.is_container:
@@ -140,6 +140,30 @@ class InlineProcessor:
                 coalesced_results, coalesce_index, coalesced_list, coalesced_stack
             )
         return coalesced_list
+
+    @staticmethod
+    def __adjust_stack(coalesced_results, coalesced_stack, coalesce_index):
+        current_token = coalesced_results[coalesce_index]
+        POGGER.debug("STACK?:$", current_token)
+        if current_token.is_container and not current_token.is_new_list_item:
+            POGGER.debug("STACK:$", coalesced_stack)
+            coalesced_stack.append(current_token)
+            POGGER.debug("STACK-ADD:$", current_token)
+            POGGER.debug("STACK:$", coalesced_stack)
+            if current_token.is_block_quote_start:
+                current_token.leading_text_index = 0
+                POGGER.info("-->last->block->$", current_token.leading_text_index)
+            else:
+                POGGER.info("-->not bq-")
+
+        elif current_token.is_list_end or current_token.is_block_quote_end:
+            POGGER.debug("STACK:$", coalesced_stack)
+            del coalesced_stack[-1]
+            POGGER.debug(
+                "STACK-REMOVE:$",
+                current_token,
+            )
+            POGGER.debug("STACK:$", coalesced_stack)
 
     @staticmethod
     def __process_next_coalesce_item(
@@ -178,27 +202,9 @@ class InlineProcessor:
         else:
             coalesced_list.append(coalesced_results[coalesce_index])
 
-        current_token = coalesced_results[coalesce_index]
-        POGGER.debug("STACK?:$", current_token)
-        if current_token.is_container and not current_token.is_new_list_item:
-            POGGER.debug("STACK:$", coalesced_stack)
-            coalesced_stack.append(current_token)
-            POGGER.debug("STACK-ADD:$", current_token)
-            POGGER.debug("STACK:$", coalesced_stack)
-            if current_token.is_block_quote_start:
-                current_token.leading_text_index = 0
-                POGGER.info("-->last->block->$", current_token.leading_text_index)
-            else:
-                POGGER.info("-->not bq-")
-
-        elif current_token.is_list_end or current_token.is_block_quote_end:
-            POGGER.debug("STACK:$", coalesced_stack)
-            del coalesced_stack[-1]
-            POGGER.debug(
-                "STACK-REMOVE:$",
-                current_token,
-            )
-            POGGER.debug("STACK:$", coalesced_stack)
+        InlineProcessor.__adjust_stack(
+            coalesced_results, coalesced_stack, coalesce_index
+        )
 
     @staticmethod
     def __parse_paragraph(
@@ -1816,7 +1822,7 @@ class InlineProcessor:
             new_index, extracted_whitespace = ParserHelper.extract_whitespace(
                 source_text, inline_response.new_index
             )
-            POGGER.debug("__arw>>$>>", source_text[0 : inline_response.new_index])
+            POGGER.debug("__arw>>$>>", source_text[: inline_response.new_index])
             POGGER.debug("__arw>>$>>", source_text[inline_response.new_index :])
             POGGER.debug(
                 "__arw>>extracted_whitespace>>$>>",

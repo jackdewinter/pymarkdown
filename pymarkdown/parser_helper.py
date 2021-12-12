@@ -359,7 +359,7 @@ class ParserHelper:
             whitespace_section = source_string[start_index:end_index]
             # print("whitespace_section:" + ParserHelper.make_whitespace_visible(whitespace_section) + ":")
             if start_index:
-                rebuilt_string += source_string[0:start_index]
+                rebuilt_string += source_string[:start_index]
             realized_start_index = current_start_index + start_index
             # print("xxx:" + str(xxx) + "=" + str(current_start_index) + "+" + str(start_index))
             whitespace_actual_length = ParserHelper.calculate_length(
@@ -585,13 +585,13 @@ class ParserHelper:
         """
         Remove any backspaces from the text.
         """
-        adjusted_text_token = token_text[0:]
+        adjusted_text_token = token_text[:]
         next_backspace_index = ParserHelper.__find_with_escape(
             adjusted_text_token, ParserHelper.__backspace_character, 0
         )
         while next_backspace_index != -1:
             adjusted_text_token = (
-                adjusted_text_token[0:next_backspace_index]
+                adjusted_text_token[:next_backspace_index]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
             next_backspace_index = ParserHelper.__find_with_escape(
@@ -606,13 +606,13 @@ class ParserHelper:
         """
         Deal with any backslash encoding in text with backspaces.
         """
-        adjusted_text_token = token_text[0:]
+        adjusted_text_token = token_text[:]
         next_backspace_index = ParserHelper.__find_with_escape(
             adjusted_text_token, ParserHelper.__backspace_character, 0
         )
         while next_backspace_index != -1:
             adjusted_text_token = (
-                adjusted_text_token[0 : next_backspace_index - 1]
+                adjusted_text_token[: next_backspace_index - 1]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
             next_backspace_index = ParserHelper.__find_with_escape(
@@ -648,13 +648,13 @@ class ParserHelper:
         """
         Resolve the specific character out of the text string.
         """
-        adjusted_text_token = token_text[0:]
+        adjusted_text_token = token_text[:]
         next_backspace_index = ParserHelper.__find_with_escape(
             adjusted_text_token, sequence_to_remove, 0
         )
         while next_backspace_index != -1:
             adjusted_text_token = (
-                adjusted_text_token[0:next_backspace_index]
+                adjusted_text_token[:next_backspace_index]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
             next_backspace_index = ParserHelper.__find_with_escape(
@@ -685,13 +685,13 @@ class ParserHelper:
         """
         Resolve any escapes from the text, leaving only what they escaped.
         """
-        adjusted_text_token = token_text[0:]
+        adjusted_text_token = token_text[:]
         next_backspace_index = ParserHelper.__find_with_escape(
             adjusted_text_token, ParserHelper.escape_character, 0
         )
         while next_backspace_index != -1:
             adjusted_text_token = (
-                adjusted_text_token[0:next_backspace_index]
+                adjusted_text_token[:next_backspace_index]
                 + adjusted_text_token[next_backspace_index + 1 :]
             )
             next_backspace_index = ParserHelper.__find_with_escape(
@@ -745,7 +745,7 @@ class ParserHelper:
             length_before_mod = len(main_text)
             main_text = (
                 (
-                    main_text[0:start_replacement_index]
+                    main_text[:start_replacement_index]
                     + replace_text
                     + main_text[end_replacement_index + 1 :]
                 )
@@ -819,12 +819,12 @@ class ParserHelper:
             length_before_mod = len(adjusted_text_token)
             adjusted_text_token = (
                 (
-                    adjusted_text_token[0:start_replacement_index]
+                    adjusted_text_token[:start_replacement_index]
                     + replace_text
                     + adjusted_text_token[end_replacement_index + 1 :]
                 )
                 if start_replacement_index
-                else (replace_text + adjusted_text_token[end_replacement_index + 1 :])
+                else replace_text + adjusted_text_token[end_replacement_index + 1 :]
             )
             length_after_mod = len(adjusted_text_token)
             start_index = (

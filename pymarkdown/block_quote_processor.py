@@ -1020,7 +1020,7 @@ class BlockQuoteProcessor:
         assert start_index >= 0
         text_removed_by_container = None
         removed_text, line_to_parse = (
-            line_to_parse[0:start_index],
+            line_to_parse[:start_index],
             line_to_parse[start_index:],
         )
 

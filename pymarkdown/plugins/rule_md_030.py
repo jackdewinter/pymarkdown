@@ -79,8 +79,7 @@ class RuleMd030(RulePlugin):
 
     def __handle_list_end(self, context):
 
-        for _, list_token in enumerate(self.__list_tokens[-1]):
-
+        for list_token in self.__list_tokens[-1]:
             this_list_token_paragraph_count = 0
             if str(list_token) in self.__paragraph_count_map:
                 this_list_token_paragraph_count = self.__paragraph_count_map[

@@ -191,6 +191,58 @@ class TransformToMarkdown:
                 handler_instance.token_name
             ] = end_token_handler
 
+    @classmethod
+    def __transform_container_start(
+        cls,
+        container_stack,
+        container_records,
+        transformed_data_length_before_add,
+        current_token,
+    ):
+        if not container_stack:
+            container_records.clear()
+        container_stack.append(current_token)
+        record_item = (True, transformed_data_length_before_add, current_token)
+        container_records.append(record_item)
+        # print("START:" + ParserHelper.make_value_visible(current_token))
+        # print(">>" + ParserHelper.make_value_visible(container_stack))
+        # print(">>" + ParserHelper.make_value_visible(container_records))
+
+    def __transform_container_end(
+        self, container_stack, container_records, current_token, transformed_data
+    ):
+        # print("END:" + ParserHelper.make_value_visible(current_token.start_markdown_token))
+        while container_stack[-1].is_new_list_item:
+            del container_stack[-1]
+        assert str(container_stack[-1]) == str(current_token.start_markdown_token), (
+            ParserHelper.make_value_visible(container_stack[-1])
+            + "=="
+            + ParserHelper.make_value_visible(current_token.start_markdown_token)
+        )
+        del container_stack[-1]
+        record_item = (
+            False,
+            len(transformed_data),
+            current_token.start_markdown_token,
+        )
+        container_records.append(record_item)
+        # print(">>" + ParserHelper.make_value_visible(container_stack))
+        # print(">>" + ParserHelper.make_value_visible(container_records))
+
+        if not container_stack:
+            record_item = container_records[0]
+            assert record_item[0]
+            pre_container_text = transformed_data[0 : record_item[1]]
+            container_text = transformed_data[record_item[1] :]
+            adjusted_text = self.__apply_container_transformation(
+                container_text, container_records
+            )
+            print("pre>:" + str(pre_container_text) + ":<")
+            print("adj>:" + str(adjusted_text) + ":<")
+            transformed_data = pre_container_text + adjusted_text
+            print("trn>:" + str(transformed_data) + ":<")
+        return transformed_data
+
     # pylint: disable=too-many-locals
     def transform(self, actual_tokens):  # noqa: C901
         """
@@ -202,14 +254,12 @@ class TransformToMarkdown:
             previous_token,
             continue_sequence,
             delayed_continue,
-        ) = ("", False, None, "", "")
-
-        container_stack = []
-        container_records = []
+            container_stack,
+            container_records,
+            pragma_token,
+        ) = ("", False, None, "", "", [], [], None)
 
         print("---\nTransformToMarkdown\n---")
-
-        pragma_token = None
 
         for token_index, current_token in enumerate(actual_tokens):
             next_token = self.__handle_pre_processing(
@@ -249,49 +299,16 @@ class TransformToMarkdown:
                 or current_token.is_list_start
                 or current_token.is_new_list_item
             ):
-                if not container_stack:
-                    container_records.clear()
-                container_stack.append(current_token)
-                record_item = (True, transformed_data_length_before_add, current_token)
-                container_records.append(record_item)
-                # print("START:" + ParserHelper.make_value_visible(current_token))
-                # print(">>" + ParserHelper.make_value_visible(container_stack))
-                # print(">>" + ParserHelper.make_value_visible(container_records))
+                self.__transform_container_start(
+                    container_stack,
+                    container_records,
+                    transformed_data_length_before_add,
+                    current_token,
+                )
             elif current_token.is_block_quote_end or current_token.is_list_end:
-                # print("END:" + ParserHelper.make_value_visible(current_token.start_markdown_token))
-                while container_stack[-1].is_new_list_item:
-                    del container_stack[-1]
-                assert str(container_stack[-1]) == str(
-                    current_token.start_markdown_token
-                ), (
-                    ParserHelper.make_value_visible(container_stack[-1])
-                    + "=="
-                    + ParserHelper.make_value_visible(
-                        current_token.start_markdown_token
-                    )
+                transformed_data = self.__transform_container_end(
+                    container_stack, container_records, current_token, transformed_data
                 )
-                del container_stack[-1]
-                record_item = (
-                    False,
-                    len(transformed_data),
-                    current_token.start_markdown_token,
-                )
-                container_records.append(record_item)
-                # print(">>" + ParserHelper.make_value_visible(container_stack))
-                # print(">>" + ParserHelper.make_value_visible(container_records))
-
-                if not container_stack:
-                    record_item = container_records[0]
-                    assert record_item[0]
-                    pre_container_text = transformed_data[0 : record_item[1]]
-                    container_text = transformed_data[record_item[1] :]
-                    adjusted_text = self.__apply_container_transformation(
-                        container_text, container_records
-                    )
-                    print("pre>:" + str(pre_container_text) + ":<")
-                    print("adj>:" + str(adjusted_text) + ":<")
-                    transformed_data = pre_container_text + adjusted_text
-                    print("trn>:" + str(transformed_data) + ":<")
 
             print("---")
             previous_token = current_token
@@ -464,6 +481,18 @@ class TransformToMarkdown:
     # pylint: enable=too-many-arguments
 
     @classmethod
+    def __find_last_block_quote_on_stack(cls, token_stack):
+        print(" looking for nested block start")
+        stack_index = len(token_stack) - 2
+        nested_block_start_index = -1
+        while stack_index >= 0:
+            if token_stack[stack_index].is_block_quote_start:
+                nested_block_start_index = stack_index
+                break
+            stack_index -= 1
+        return nested_block_start_index
+
+    @classmethod
     def __adjust_for_list(
         cls,
         token_stack,
@@ -477,17 +506,10 @@ class TransformToMarkdown:
             and token_stack[-1].is_list_start
             or token_stack[-1].is_new_list_item
         ):
-            print(" looking for nested block start")
-            stack_index = len(token_stack) - 2
-            nested_block_start_index = -1
-            while stack_index >= 0:
-                if token_stack[stack_index].is_block_quote_start:
-                    nested_block_start_index = stack_index
-                    break
-                stack_index -= 1
-            if nested_block_start_index == -1:
-                print(" nope")
-            else:
+            nested_block_start_index = (
+                TransformToMarkdown.__find_last_block_quote_on_stack(token_stack)
+            )
+            if nested_block_start_index != -1:
                 previous_token = token_stack[nested_block_start_index]
                 print(
                     " nested_block_start_index->"
@@ -511,13 +533,6 @@ class TransformToMarkdown:
                     split_leading_spaces = previous_token.leading_spaces.split(
                         ParserHelper.newline_character
                     )
-                    print(
-                        " ("
-                        + str(len(split_leading_spaces))
-                        + ")-->"
-                        + ParserHelper.make_value_visible(split_leading_spaces)
-                    )
-                    print(" inner_token_index->" + str(inner_token_index))
                     if inner_token_index < len(split_leading_spaces):
                         print(
                             " -->container_line>"
@@ -732,7 +747,7 @@ class TransformToMarkdown:
                 and not actual_tokens[-2].is_fenced_code_block
             )
         ):
-            transformed_data = transformed_data[0:-1]
+            transformed_data = transformed_data[:-1]
         return transformed_data
 
     @classmethod
@@ -763,7 +778,7 @@ class TransformToMarkdown:
                     )
                 else:
                     transformed_data = (
-                        f"{transformed_data[0:nth_index]}{ParserHelper.newline_character}"
+                        f"{transformed_data[:nth_index]}{ParserHelper.newline_character}"
                         + f"{ordered_lines[next_line_number]}{transformed_data[nth_index:]}"
                     )
         return transformed_data
@@ -827,7 +842,7 @@ class TransformToMarkdown:
         extracted_whitespace = current_token.extracted_whitespace
         if ParserHelper.newline_character in extracted_whitespace:
             line_end_index = extracted_whitespace.index(ParserHelper.newline_character)
-            extracted_whitespace = extracted_whitespace[0:line_end_index]
+            extracted_whitespace = extracted_whitespace[:line_end_index]
         extracted_whitespace = ParserHelper.resolve_all_from_text(extracted_whitespace)
         return extracted_whitespace
 
@@ -1901,5 +1916,5 @@ class TransformToMarkdown:
             if current_token.end_whitespace and current_token.end_whitespace.endswith(
                 ParserHelper.whitespace_split_character
             ):
-                main_text = f"{current_token.end_whitespace[0:-1]}{main_text}"
+                main_text = f"{current_token.end_whitespace[:-1]}{main_text}"
         return main_text

@@ -318,10 +318,8 @@ class LeafBlockProcessor:
                 whitespace_to_parse[actual_whitespace_index]
                 == ParserHelper.tab_character
             )
-            delta_whitespace = 1
-            POGGER.debug(">>delta_whitespace>>$", delta_whitespace)
-            accumulated_whitespace_count += delta_whitespace
-            relative_whitespace_index += delta_whitespace
+            accumulated_whitespace_count += 1
+            relative_whitespace_index += 1
             actual_whitespace_index += 1
             POGGER.debug(
                 ">>index>>$($)>>accumulated_whitespace_count>>$",
@@ -337,7 +335,7 @@ class LeafBlockProcessor:
             accumulated_whitespace_count,
         )
 
-        adj_ws = whitespace_to_parse[0:actual_whitespace_index]
+        adj_ws = whitespace_to_parse[:actual_whitespace_index]
         left_ws = whitespace_to_parse[actual_whitespace_index:]
         POGGER.debug("accumulated_whitespace_count>>$", accumulated_whitespace_count)
         POGGER.debug("actual_whitespace_index>>$", actual_whitespace_index)
@@ -726,7 +724,7 @@ class LeafBlockProcessor:
                 remaining_line = ""
         else:
             extracted_whitespace_at_end = remaining_line[end_index:]
-            remaining_line = remaining_line[0:end_index]
+            remaining_line = remaining_line[:end_index]
 
         return (
             old_top_of_stack,

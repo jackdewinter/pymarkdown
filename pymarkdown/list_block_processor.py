@@ -844,8 +844,6 @@ class ListBlockProcessor:
             parser_state.token_stack[-1].is_paragraph,
         )
 
-        # TODO KLUDGE better way to do this?
-
         # This needs to be in place to prevent a thematic break after a paragraph
         # within a list from being misinterpreted as a SetExt Heading.
         is_theme_break, _ = LeafBlockProcessor.is_thematic_break(
@@ -1680,7 +1678,7 @@ class ListBlockProcessor:
             removed_whitespace = (
                 ParserHelper.tab_character
                 if ParserHelper.tab_character in leading_space
-                else leading_space[0:requested_list_indent]
+                else leading_space[:requested_list_indent]
             )
             padded_spaces = ParserHelper.repeat_string(
                 ParserHelper.space_character, remaining_indent
