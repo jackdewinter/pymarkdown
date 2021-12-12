@@ -642,10 +642,7 @@ def test_list_blocks_238a():
 
     # Act & Assert
     act_and_assert(
-        source_markdown,
-        expected_gfm,
-        expected_tokens,
-        disable_consistency_checks=True
+        source_markdown, expected_gfm, expected_tokens, disable_consistency_checks=True
     )
 
 
