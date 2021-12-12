@@ -25,6 +25,9 @@ def load_readme_file():
 AUTHOR = "Jack De Winter"
 AUTHOR_EMAIL = "jack.de.winter@outlook.com"
 PROJECT_URL = "https://github.com/jackdewinter/pymarkdown"
+PROJECT_URLS = {
+    "Change Log": "https://github.com/jackdewinter/pymarkdown/blob/main/changelog.md",
+}
 
 PACKAGE_NAME = "pymarkdownlnt"
 SEMANTIC_VERSION = get_semantic_version()
@@ -67,6 +70,7 @@ setup(
     long_description_content_type=LONG_DESCRIPTION_CONTENT_TYPE,
     keywords=KEYWORDS,
     classifiers=PROJECT_CLASSIFIERS,
+    project_urls=PROJECT_URLS,
     entry_points={
         "console_scripts": [
             "pymarkdown=pymarkdown.__main__:main",
