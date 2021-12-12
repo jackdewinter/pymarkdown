@@ -391,7 +391,7 @@ class LeafBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __create_indented_block(
         parser_state,
@@ -429,9 +429,8 @@ class LeafBlockProcessor:
 
         return last_block_quote_index, extracted_whitespace
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-locals
     @staticmethod
     def __prepare_for_indented_block(
         parser_state,
@@ -470,8 +469,6 @@ class LeafBlockProcessor:
             adj_ws,
             left_ws,
         )
-
-    # pylint: enable=too-many-locals
 
     @staticmethod
     def is_thematic_break(
@@ -849,7 +846,6 @@ class LeafBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def parse_paragraph(
         parser_state,
@@ -917,8 +913,6 @@ class LeafBlockProcessor:
             )
         )
         return new_tokens
-
-    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __handle_paragraph_prep(

@@ -634,16 +634,7 @@ class TokenizedMarkdown:
         return new_tokens
 
     @staticmethod
-    def __handle_blank_line(
-        parser_state,
-        input_line,
-        from_main_transform,
-        position_marker=None,
-    ):
-        """
-        Handle the processing of a blank line.
-        """
-
+    def __handle_blank_line_init(from_main_transform, input_line):
         if not from_main_transform:
             close_only_these_blocks = [ParagraphStackToken]
             do_include_block_quotes = False
@@ -657,6 +648,30 @@ class TokenizedMarkdown:
         non_whitespace_index, extracted_whitespace = ParserHelper.extract_whitespace(
             input_line, 0
         )
+        return (
+            close_only_these_blocks,
+            do_include_block_quotes,
+            non_whitespace_index,
+            extracted_whitespace,
+        )
+
+    @staticmethod
+    def __handle_blank_line(
+        parser_state,
+        input_line,
+        from_main_transform,
+        position_marker=None,
+    ):
+        """
+        Handle the processing of a blank line.
+        """
+
+        (
+            close_only_these_blocks,
+            do_include_block_quotes,
+            non_whitespace_index,
+            extracted_whitespace,
+        ) = TokenizedMarkdown.__handle_blank_line_init(from_main_transform, input_line)
 
         (
             new_tokens,

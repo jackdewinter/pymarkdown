@@ -26,6 +26,37 @@ class ContainerBlockProcessor:
     Class to provide processing for the container blocks.
     """
 
+    @staticmethod
+    def __setup(parser_state, position_marker, container_depth, foobar, init_bq):
+        position_marker = ContainerBlockProcessor.__prepare_container_start_variables(
+            parser_state,
+            position_marker,
+            container_depth,
+        )
+        cheat_line = position_marker.text_to_parse
+
+        (
+            current_container_blocks,
+            adj_ws,
+            block_quote_data,
+            start_index,
+            extracted_whitespace,
+        ) = ContainerBlockProcessor.__prepare_container_start_variables2(
+            parser_state,
+            position_marker,
+            foobar,
+            init_bq,
+        )
+        return (
+            position_marker,
+            cheat_line,
+            current_container_blocks,
+            adj_ws,
+            block_quote_data,
+            start_index,
+            extracted_whitespace,
+        )
+
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -55,24 +86,16 @@ class ContainerBlockProcessor:
         ):
             return None, None, None, None, False
 
-        position_marker = ContainerBlockProcessor.__prepare_container_start_variables(
-            parser_state,
-            position_marker,
-            container_depth,
-        )
-        cheat_line = position_marker.text_to_parse
-
         (
+            position_marker,
+            cheat_line,
             current_container_blocks,
             adj_ws,
             block_quote_data,
             start_index,
             extracted_whitespace,
-        ) = ContainerBlockProcessor.__prepare_container_start_variables2(
-            parser_state,
-            position_marker,
-            foobar,
-            init_bq,
+        ) = ContainerBlockProcessor.__setup(
+            parser_state, position_marker, container_depth, foobar, init_bq
         )
 
         (
@@ -189,7 +212,6 @@ class ContainerBlockProcessor:
         # pylint: enable=too-many-locals
         # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments
     @staticmethod
     def __prepare_container_start_variables(
         parser_state,
@@ -261,8 +283,6 @@ class ContainerBlockProcessor:
             start_index,
             extracted_whitespace,
         )
-
-    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -878,7 +898,7 @@ class ContainerBlockProcessor:
 
     # pylint: enable=too-many-arguments
 
-    # pylint: disable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __calculate_adjusted_whitespace(
         parser_state,
@@ -956,7 +976,7 @@ class ContainerBlockProcessor:
         POGGER.debug(f"cfcs>adj_ws>:{adj_ws}:")
         return adj_ws
 
-    # pylint: enable=too-many-arguments, too-many-locals, too-many-branches, too-many-statements
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod

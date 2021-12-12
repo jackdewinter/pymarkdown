@@ -232,7 +232,7 @@ class TransformToMarkdown:
         if not container_stack:
             record_item = container_records[0]
             assert record_item[0]
-            pre_container_text = transformed_data[0 : record_item[1]]
+            pre_container_text = transformed_data[: record_item[1]]
             container_text = transformed_data[record_item[1] :]
             adjusted_text = self.__apply_container_transformation(
                 container_text, container_records
@@ -243,7 +243,6 @@ class TransformToMarkdown:
             print("trn>:" + str(transformed_data) + ":<")
         return transformed_data
 
-    # pylint: disable=too-many-locals
     def transform(self, actual_tokens):  # noqa: C901
         """
         Transform the incoming token stream back into Markdown.
@@ -324,8 +323,6 @@ class TransformToMarkdown:
         assert not self.block_stack
         assert not self.container_token_stack
         return transformed_data, avoid_processing
-
-    # pylint: enable=too-many-locals
 
     # pylint: disable=too-many-arguments
     @classmethod
@@ -1342,6 +1339,31 @@ class TransformToMarkdown:
         )
         return "", continue_sequence, continue_sequence
 
+    def __recalc_adjustment_since_newline(self, adjustment_since_newline):
+        if not adjustment_since_newline:
+            print(
+                f"rnli->container_token_stack>:{ParserHelper.make_value_visible(self.container_token_stack)}:"
+            )
+            stack_index = len(self.container_token_stack) - 1
+            found_block_quote_token = None
+            while stack_index >= 0:
+                if self.container_token_stack[stack_index].is_block_quote_start:
+                    found_block_quote_token = self.container_token_stack[stack_index]
+                    break
+                stack_index -= 1
+            print(
+                f"rnli->found_block_quote_token>:{ParserHelper.make_value_visible(found_block_quote_token)}:"
+            )
+            if found_block_quote_token:
+                leading_space = (
+                    found_block_quote_token.calculate_next_leading_space_part(
+                        increment_index=False, delta=-1
+                    )
+                )
+                print(f"rnli->leading_space>:{leading_space}:")
+                adjustment_since_newline = len(leading_space)
+        return adjustment_since_newline
+
     # pylint: disable=too-many-locals
     def __rehydrate_next_list_item(
         self, current_token, previous_token, next_token, transformed_data
@@ -1385,28 +1407,9 @@ class TransformToMarkdown:
         print(f">>was_within_block_token>>{was_within_block_token}<<")
         print(f">>post_adjust_whitespace>>{post_adjust_whitespace}<<")
 
-        if not adjustment_since_newline:
-            print(
-                f"rnli->container_token_stack>:{ParserHelper.make_value_visible(self.container_token_stack)}:"
-            )
-            stack_index = len(self.container_token_stack) - 1
-            found_block_quote_token = None
-            while stack_index >= 0:
-                if self.container_token_stack[stack_index].is_block_quote_start:
-                    found_block_quote_token = self.container_token_stack[stack_index]
-                    break
-                stack_index -= 1
-            print(
-                f"rnli->found_block_quote_token>:{ParserHelper.make_value_visible(found_block_quote_token)}:"
-            )
-            if found_block_quote_token:
-                leading_space = (
-                    found_block_quote_token.calculate_next_leading_space_part(
-                        increment_index=False, delta=-1
-                    )
-                )
-                print(f"rnli->leading_space>:{leading_space}:")
-                adjustment_since_newline = len(leading_space)
+        adjustment_since_newline = self.__recalc_adjustment_since_newline(
+            adjustment_since_newline
+        )
 
         print(f"rnli->adjustment_since_newline>:{adjustment_since_newline}:")
         print(f"rnli->extracted_whitespace>:{extracted_whitespace}:")
