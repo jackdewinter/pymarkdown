@@ -26,8 +26,24 @@ class ContainerBlockProcessor:
     Class to provide processing for the container blocks.
     """
 
+    # pylint: disable=too-many-arguments
     @staticmethod
-    def __setup(parser_state, position_marker, container_depth, foobar, init_bq):
+    def __setup(
+        parser_state,
+        position_marker,
+        container_depth,
+        foobar,
+        init_bq,
+        parser_properties,
+    ):
+
+        if ContainerBlockProcessor.__look_for_pragmas(
+            position_marker,
+            container_depth,
+            parser_properties,
+        ):
+            return None, None, None, None, None, None, None, True
+
         position_marker = ContainerBlockProcessor.__prepare_container_start_variables(
             parser_state,
             position_marker,
@@ -55,7 +71,10 @@ class ContainerBlockProcessor:
             block_quote_data,
             start_index,
             extracted_whitespace,
+            False,
         )
+
+    # pylint: enable=too-many-arguments
 
     # pylint: disable=too-many-locals
     # pylint: disable=too-many-arguments
@@ -79,13 +98,6 @@ class ContainerBlockProcessor:
         parser.  Debugging should be uncommented only if needed.
         """
 
-        if ContainerBlockProcessor.__look_for_pragmas(
-            position_marker,
-            container_depth,
-            parser_properties,
-        ):
-            return None, None, None, None, False
-
         (
             position_marker,
             cheat_line,
@@ -94,9 +106,17 @@ class ContainerBlockProcessor:
             block_quote_data,
             start_index,
             extracted_whitespace,
+            did_find_pragma,
         ) = ContainerBlockProcessor.__setup(
-            parser_state, position_marker, container_depth, foobar, init_bq
+            parser_state,
+            position_marker,
+            container_depth,
+            foobar,
+            init_bq,
+            parser_properties,
         )
+        if did_find_pragma:
+            return None, None, None, None, False
 
         (
             end_container_indices,
