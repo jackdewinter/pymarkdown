@@ -59,6 +59,8 @@
 - [Fixed - Issue 93](https://github.com/jackdewinter/pymarkdown/issues/93)
   - parser: was not handling extracted spaces properly, causing issues with calculating values for thematic breaks
   - parser: spent time rewriting whitespace calculation and storage to address the issue
+- [Fixed - Issue 97](https://github.com/jackdewinter/pymarkdown/issues/97)
+  - parser: after work on 153, this was resolved
 - [Fixed - Issue 98](https://github.com/jackdewinter/pymarkdown/issues/98)
   - parser: after work on 153, this was resolved
 - [Fixed - Issue 99](https://github.com/jackdewinter/pymarkdown/issues/99)
