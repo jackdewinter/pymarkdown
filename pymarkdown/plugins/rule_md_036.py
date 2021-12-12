@@ -4,6 +4,7 @@ like it is being used instead of a heading.
 """
 from enum import Enum
 
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_details import PluginDetails
 from pymarkdown.rule_plugin import RulePlugin
 
@@ -77,7 +78,7 @@ class RuleMd036(RulePlugin):
                 new_state = RuleMd036States.LOOK_FOR_ELIGIBLE_TEXT
         elif self.__current_state == RuleMd036States.LOOK_FOR_ELIGIBLE_TEXT:
             if token.is_text and (
-                "\n" not in token.token_text
+                ParserHelper.newline_character not in token.token_text
                 and token.token_text[-1] not in self.__punctuation
             ):
                 new_state = RuleMd036States.LOOK_FOR_EMPHASIS_END

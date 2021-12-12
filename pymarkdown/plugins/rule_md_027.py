@@ -147,11 +147,15 @@ class RuleMd027(RulePlugin):
         )
         # if self.__debug_on:
         #     print(f"leading_spaces>{ParserHelper.make_value_visible(self.__container_tokens[-1].leading_spaces)}")
-        newlines_in_container = self.__container_tokens[-1].leading_spaces.count("\n")
+        newlines_in_container = self.__container_tokens[-1].leading_spaces.count(
+            ParserHelper.newline_character
+        )
         if (
             not (
                 self.__container_tokens[-1].leading_spaces
-                and self.__container_tokens[-1].leading_spaces.endswith("\n")
+                and self.__container_tokens[-1].leading_spaces.endswith(
+                    ParserHelper.newline_character
+                )
             )
             and self.__container_tokens
             and self.__container_tokens[-1].leading_spaces
@@ -323,7 +327,9 @@ class RuleMd027(RulePlugin):
     ):
         if token.extracted_whitespace and is_directly_within_block_quote:
             scoped_block_quote_token = self.__container_tokens[-1]
-            split_leading_spaces = scoped_block_quote_token.leading_spaces.split("\n")
+            split_leading_spaces = scoped_block_quote_token.leading_spaces.split(
+                ParserHelper.newline_character
+            )
             specific_block_quote_prefix = split_leading_spaces[
                 self.__bq_line_index[num_container_tokens]
             ]
@@ -361,16 +367,22 @@ class RuleMd027(RulePlugin):
                 context, token, column_number_delta=column_number_delta
             )
 
-        found_index = token.link_destination_whitespace.find("\n")
+        found_index = token.link_destination_whitespace.find(
+            ParserHelper.newline_character
+        )
         if found_index != -1 and ParserHelper.is_character_at_index_whitespace(
             token.link_destination_whitespace, found_index + 1
         ):
-            line_number_delta = token.link_name_debug.count("\n") + 1
+            line_number_delta = (
+                token.link_name_debug.count(ParserHelper.newline_character) + 1
+            )
 
             split_array_index = (
                 self.__bq_line_index[num_container_tokens] + line_number_delta
             )
-            split_leading_spaces = scoped_block_quote_token.leading_spaces.split("\n")
+            split_leading_spaces = scoped_block_quote_token.leading_spaces.split(
+                ParserHelper.newline_character
+            )
             specific_block_quote_prefix = split_leading_spaces[split_array_index]
 
             column_number_delta = -(len(specific_block_quote_prefix) + 1)
@@ -390,20 +402,22 @@ class RuleMd027(RulePlugin):
                 column_number_delta=column_number_delta,
             )
 
-        found_index = token.link_title_whitespace.find("\n")
+        found_index = token.link_title_whitespace.find(ParserHelper.newline_character)
         if found_index != -1 and ParserHelper.is_character_at_index_whitespace(
             token.link_title_whitespace, found_index + 1
         ):
             line_number_delta = (
-                token.link_name_debug.count("\n")
-                + token.link_title_whitespace.count("\n")
+                token.link_name_debug.count(ParserHelper.newline_character)
+                + token.link_title_whitespace.count(ParserHelper.newline_character)
                 + 1
             )
 
             split_array_index = (
                 self.__bq_line_index[num_container_tokens] + line_number_delta
             )
-            split_leading_spaces = scoped_block_quote_token.leading_spaces.split("\n")
+            split_leading_spaces = scoped_block_quote_token.leading_spaces.split(
+                ParserHelper.newline_character
+            )
             specific_block_quote_prefix = split_leading_spaces[split_array_index]
 
             column_number_delta = -(len(specific_block_quote_prefix) + 1)
@@ -424,10 +438,10 @@ class RuleMd027(RulePlugin):
 
         self.__bq_line_index[num_container_tokens] += (
             1
-            + token.link_name_debug.count("\n")
-            + token.link_destination_whitespace.count("\n")
-            + token.link_title_whitespace.count("\n")
-            + token.link_title_raw.count("\n")
+            + token.link_name_debug.count(ParserHelper.newline_character)
+            + token.link_destination_whitespace.count(ParserHelper.newline_character)
+            + token.link_title_whitespace.count(ParserHelper.newline_character)
+            + token.link_title_raw.count(ParserHelper.newline_character)
         )
 
     def __handle_text(
@@ -437,7 +451,7 @@ class RuleMd027(RulePlugin):
             if is_directly_within_block_quote:
                 scoped_block_quote_token = self.__container_tokens[-1]
                 for line_number_delta, next_line in enumerate(
-                    token.end_whitespace.split("\n")
+                    token.end_whitespace.split(ParserHelper.newline_character)
                 ):
                     found_index = next_line.find(
                         ParserHelper.whitespace_split_character
@@ -446,7 +460,9 @@ class RuleMd027(RulePlugin):
                         next_line = next_line[0:found_index]
                     if next_line:
                         split_leading_spaces = (
-                            scoped_block_quote_token.leading_spaces.split("\n")
+                            scoped_block_quote_token.leading_spaces.split(
+                                ParserHelper.newline_character
+                            )
                         )
                         split_array_index = (
                             self.__bq_line_index[num_container_tokens]
@@ -473,13 +489,13 @@ class RuleMd027(RulePlugin):
                             column_number_delta=calculated_column_number,
                         )
             self.__bq_line_index[num_container_tokens] += (
-                token.end_whitespace.count("\n") + 1
+                token.end_whitespace.count(ParserHelper.newline_character) + 1
             )
         elif (
             self.__last_leaf_token.is_html_block or self.__last_leaf_token.is_code_block
         ):
             self.__bq_line_index[num_container_tokens] += (
-                token.token_text.count("\n") + 1
+                token.token_text.count(ParserHelper.newline_character) + 1
             )
 
     def __handle_paragraph(
@@ -492,7 +508,7 @@ class RuleMd027(RulePlugin):
             #     print(f"para>>>{scoped_block_quote_token}")
 
             for line_number_delta, next_line in enumerate(
-                token.extracted_whitespace.split("\n")
+                token.extracted_whitespace.split(ParserHelper.newline_character)
             ):
                 if next_line and scoped_block_quote_token.leading_spaces:
                     # if self.__debug_on:
@@ -500,7 +516,9 @@ class RuleMd027(RulePlugin):
                     #     print(f"2>{line_number_delta}")
                     #     print(f"3>{ParserHelper.make_value_visible(scoped_block_quote_token)}")
                     split_leading_spaces = (
-                        scoped_block_quote_token.leading_spaces.split("\n")
+                        scoped_block_quote_token.leading_spaces.split(
+                            ParserHelper.newline_character
+                        )
                     )
                     line_index = (
                         self.__bq_line_index[num_container_tokens] + line_number_delta
@@ -518,7 +536,7 @@ class RuleMd027(RulePlugin):
                         column_number_delta=-calculated_column_number,
                     )
         self.__bq_line_index[num_container_tokens] += token.extracted_whitespace.count(
-            "\n"
+            ParserHelper.newline_character
         )
 
     def __handle_within_block_quotes(self, context, token):

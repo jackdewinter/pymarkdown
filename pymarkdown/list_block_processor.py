@@ -11,11 +11,11 @@ from pymarkdown.container_markdown_token import (
     OrderedListStartMarkdownToken,
     UnorderedListStartMarkdownToken,
 )
+from pymarkdown.html_helper import HtmlHelper
 from pymarkdown.leaf_block_processor import LeafBlockProcessor
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.parser_logger import ParserLogger
 from pymarkdown.stack_token import OrderedListStackToken, UnorderedListStackToken
-from pymarkdown.html_helper import HtmlHelper
 
 POGGER = ParserLogger(logging.getLogger(__name__))
 
@@ -344,6 +344,7 @@ class ListBlockProcessor:
     @staticmethod
     def __calculate_create_adj_ws(adj_ws, position_marker, parser_state):
         create_adj_ws = adj_ws
+        POGGER.debug("adj_ws=>:$:<", adj_ws)
         if position_marker.index_number:
             POGGER.debug("adjusting for nested")
             POGGER.debug("afn>>$", parser_state.token_stack)
@@ -654,7 +655,9 @@ class ListBlockProcessor:
             ParserHelper.calculate_length(extracted_whitespace),
         )
         if parser_state.token_stack[ind].last_new_list_token:
-            requested_list_indent = parser_state.token_stack[ind].last_new_list_token.indent_level
+            requested_list_indent = parser_state.token_stack[
+                ind
+            ].last_new_list_token.indent_level
 
         POGGER.debug("!!!!!FOUND>>$", parser_state.token_stack[ind])
         POGGER.debug("!!!!!FOUND>>$", parser_state.token_stack[ind].extra_data)
@@ -698,6 +701,7 @@ class ListBlockProcessor:
                 leading_space_length,
                 requested_list_indent,
             )
+            was_paragraph_continuation = True
             POGGER.debug(
                 "after>>$>>$>>",
                 line_to_parse,
@@ -710,7 +714,7 @@ class ListBlockProcessor:
                 used_indent,
                 ind,
                 requeue_line_info,
-                was_paragraph_continuation
+                was_paragraph_continuation,
             ) = ListBlockProcessor.__process_list_non_continue(
                 parser_state,
                 requested_list_indent,
@@ -732,9 +736,18 @@ class ListBlockProcessor:
                 ">>adj_before>>$<<",
                 parser_state.token_stack[ind].matching_markdown_token,
             )
+            POGGER.debug(
+                "lip>>last_block_token>>$",
+                parser_state.token_stack[ind].matching_markdown_token,
+            )
             parser_state.token_stack[ind].matching_markdown_token.add_leading_spaces(
                 used_indent
             )
+            POGGER.debug(
+                "lip>>last_block_token>>$",
+                parser_state.token_stack[ind].matching_markdown_token,
+            )
+
             POGGER.debug(
                 ">>adj_after>>$<<",
                 parser_state.token_stack[ind].matching_markdown_token,
@@ -746,14 +759,30 @@ class ListBlockProcessor:
                     ">>adj_before>>$<<",
                     parser_state.token_stack[ind].matching_markdown_token,
                 )
-                parser_state.token_stack[ind].matching_markdown_token.add_leading_spaces(
-                    ""
+
+                POGGER.debug(
+                    "lip>>last_block_token>>$",
+                    parser_state.token_stack[ind].matching_markdown_token,
                 )
+                parser_state.token_stack[
+                    ind
+                ].matching_markdown_token.add_leading_spaces("")
+                POGGER.debug(
+                    "lip>>last_block_token>>$",
+                    parser_state.token_stack[ind].matching_markdown_token,
+                )
+
                 POGGER.debug(
                     ">>adj_after>>$<<",
                     parser_state.token_stack[ind].matching_markdown_token,
                 )
-        return container_level_tokens, line_to_parse, used_indent, None, was_paragraph_continuation
+        return (
+            container_level_tokens,
+            line_to_parse,
+            used_indent,
+            None,
+            was_paragraph_continuation,
+        )
 
     @staticmethod
     def __can_list_continue(
@@ -783,7 +812,7 @@ class ListBlockProcessor:
             else True
         )
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments,too-many-locals
     @staticmethod
     def __process_list_non_continue(
         parser_state,
@@ -826,8 +855,9 @@ class ListBlockProcessor:
             skip_whitespace_check=True,
         )
         POGGER.debug("is_theme_break>>$", is_theme_break)
-        is_atx_heading, _, _, _ = LeafBlockProcessor.is_atx_heading(line_to_parse, start_index, \
-            extracted_whitespace, skip_whitespace_check=True)
+        is_atx_heading, _, _, _ = LeafBlockProcessor.is_atx_heading(
+            line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=True
+        )
         POGGER.debug("is_atx_heading>>$", is_atx_heading)
         is_fenced_start, _, _, _ = LeafBlockProcessor.is_fenced_code_block(
             line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=True
@@ -846,7 +876,9 @@ class ListBlockProcessor:
             parser_state.token_stack[-1].is_paragraph
             and leading_space_length >= requested_list_indent
             and allow_list_continue
-            and not (is_theme_break or is_atx_heading or is_fenced_start or is_html_start)
+            and not (
+                is_theme_break or is_atx_heading or is_fenced_start or is_html_start
+            )
         ):
             POGGER.debug(
                 "1>>line_to_parse>>$>>",
@@ -862,7 +894,7 @@ class ListBlockProcessor:
                 leading_space_length,
                 original_requested_list_indent,
             )
-            was_paragraph_continuation =used_indent is None
+            was_paragraph_continuation = used_indent is None
             POGGER.debug(
                 ">>line_to_parse>>$>>",
                 line_to_parse,
@@ -906,9 +938,16 @@ class ListBlockProcessor:
                 leading_space_length,
             )
 
-        return container_level_tokens, line_to_parse, used_indent, ind, None, was_paragraph_continuation
+        return (
+            container_level_tokens,
+            line_to_parse,
+            used_indent,
+            ind,
+            None,
+            was_paragraph_continuation,
+        )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments,too-many-locals
 
     # pylint: disable=too-many-arguments
     @staticmethod

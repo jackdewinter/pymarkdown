@@ -737,7 +737,7 @@ def test_paragraph_series_m_ib_i3_ol_nl_i5_ol_t_nl_i4__t_ib():
         "[olist(1,4):.:1:6:   ]",
         "[BLANK(1,6):]",
         "[olist(2,7):.:1:9:      :\n]",
-        '[para(2,10):\n    ]',
+        "[para(2,10):\n    ]",
         "[text(2,10):abc\nfoo::\n]",
         "[end-para:::True]",
         "[BLANK(4,1):]",

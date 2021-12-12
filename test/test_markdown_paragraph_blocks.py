@@ -148,7 +148,8 @@ bbb</p>"""
 @pytest.mark.gfm
 def test_paragraph_blocks_193():
     """
-    Test case 193:  Lines after the first may be indented any amount, since indented code blocks cannot interrupt paragraphs.
+    Test case 193:  Lines after the first may be indented any amount, since indented
+                    code blocks cannot interrupt paragraphs.
     """
 
     # Arrange
@@ -171,7 +172,8 @@ ccc</p>"""
 @pytest.mark.gfm
 def test_paragraph_blocks_194():
     """
-    Test case 194: (part a) However, the first line may be indented at most three spaces, or an indented code block will be triggered:
+    Test case 194: (part a) However, the first line may be indented at most three
+                    spaces, or an indented code block will be triggered:
     """
 
     # Arrange
@@ -192,7 +194,8 @@ bbb</p>"""
 @pytest.mark.gfm
 def test_paragraph_blocks_195():
     """
-    Test case 195:  (part b) However, the first line may be indented at most three spaces, or an indented code block will be triggered:
+    Test case 195:  (part b) However, the first line may be indented at most three
+                    spaces, or an indented code block will be triggered:
     """
 
     # Arrange
@@ -217,7 +220,9 @@ bbb"""
 @pytest.mark.gfm
 def test_paragraph_blocks_196x():
     """
-    Test case 196:  Final spaces are stripped before inline parsing, so a paragraph that ends with two or more spaces will not end with a hard line break.
+    Test case 196:  Final spaces are stripped before inline parsing, so a paragraph
+                    that ends with two or more spaces will not end with a hard line
+                    break.
     """
 
     # Arrange
@@ -249,9 +254,9 @@ def test_paragraph_blocks_196a():
     source_markdown = """aaa\t\t\t\t\t
 bbb\t\t\t\t\t"""
     expected_tokens = [
-        "[para(1,1):\n:\t\t\t\t\t]",
+        "[para(1,1):\n:                 ]",
         "[text(1,1):aaa:]",
-        "[hard-break(1,4):                    :\n]",
+        "[hard-break(1,4):                 :\n]",
         "[text(2,1):bbb:]",
         "[end-para:::True]",
     ]

@@ -242,3 +242,131 @@ def test_calculate_length_tab_after_4_index_start():
 
     # Assert
     assert expected_output == actual_output
+
+
+def test_detabify_string_multiple_spaces():
+    """
+    TBD
+    """
+
+    # Arrange
+    for i in range(10):
+        input_string = "".rjust(i, " ")
+
+        # Act
+        actual_output = ParserHelper.detabify_string(input_string)
+
+        # Assert
+        assert input_string == actual_output
+
+
+def test_detabify_string_single_tab():
+    """
+    TBD
+    """
+
+    # Arrange
+    input_string = "\t"
+    expected_output = "    "
+
+    # Act
+    actual_output = ParserHelper.detabify_string(input_string)
+
+    # Assert
+    assert expected_output == actual_output
+
+
+def test_detabify_string_double_tab():
+    """
+    TBD
+    """
+
+    # Arrange
+    input_string = "\t\t"
+    expected_output = "        "
+
+    # Act
+    actual_output = ParserHelper.detabify_string(input_string)
+
+    # Assert
+    assert expected_output == actual_output
+
+
+def test_detabify_string_double_tab_with_char_before_and_after():
+    """
+    TBD - tab stop starts at 2, moves it to 5, second tab stop normal of 4
+    """
+
+    # Arrange
+    input_string = "a\t\ta"
+    expected_output = "a       a"
+
+    # Act
+    actual_output = ParserHelper.detabify_string(input_string)
+
+    # Assert
+    assert expected_output == actual_output
+
+
+def test_detabify_string_double_tab_with_two_chars_before_and_after():
+    """
+    TBD - tab stop starts at 3, moves it to 5, second tab stop normal of 4
+    """
+
+    # Arrange
+    input_string = "aa\t\taa"
+    expected_output = "aa      aa"
+
+    # Act
+    actual_output = ParserHelper.detabify_string(input_string)
+
+    # Assert
+    assert expected_output == actual_output
+
+
+def test_detabify_string_double_tab_with_three_chars_before_and_after():
+    """
+    TBD - tab stop starts at 4, moves it to 5, second tab stop normal of 4
+    """
+
+    # Arrange
+    input_string = "aaa\t\taaa"
+    expected_output = "aaa     aaa"
+
+    # Act
+    actual_output = ParserHelper.detabify_string(input_string)
+
+    # Assert
+    assert expected_output == actual_output
+
+
+def test_detabify_string_double_tab_with_four_chars_before_and_after():
+    """
+    TBD - tab stop starts at 5, moves it to 9, second tab stop normal of 4
+    """
+
+    # Arrange
+    input_string = "aaaa\t\taaaa"
+    expected_output = "aaaa        aaaa"
+
+    # Act
+    actual_output = ParserHelper.detabify_string(input_string)
+
+    # Assert
+    assert expected_output == actual_output
+
+
+def test_detabify_string_building_sequences():
+    """
+    TBD - tab stop starts at 5, moves it to 9, second tab stop normal of 4
+    """
+
+    # Arrange
+    input_string = "\t0\t01\t012\t0123\t"
+    expected_output = "    0   01  012 0123    "
+
+    # Act
+    actual_output = ParserHelper.detabify_string(input_string)
+
+    # Assert
+    assert expected_output == actual_output

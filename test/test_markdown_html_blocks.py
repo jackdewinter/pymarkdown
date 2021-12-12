@@ -169,7 +169,8 @@ def test_html_blocks_122():
 @pytest.mark.gfm
 def test_html_blocks_123():
     """
-    Test case 123:  (part 1) The tag on the first line can be partial, as long as it is split where there would be whitespace:
+    Test case 123:  (part 1) The tag on the first line can be partial, as long
+                    as it is split where there would be whitespace:
     """
 
     # Arrange
@@ -363,7 +364,8 @@ class="bar">"""
 @pytest.mark.gfm
 def test_html_blocks_124():
     """
-    Test case 124:  (part 2) The tag on the first line can be partial, as long as it is split where there would be whitespace:
+    Test case 124:  (part 2) The tag on the first line can be partial, as long
+                    as it is split where there would be whitespace:
     """
 
     # Arrange
@@ -546,7 +548,9 @@ int x = 33;
 @pytest.mark.gfm
 def test_html_blocks_132():
     """
-    Test case 132:  To start an HTML block with a tag that is not in the list of block-level tags in (6), you must put the tag by itself on the first line (and it must be complete):
+    Test case 132:  To start an HTML block with a tag that is not in the list of
+                    block-level tags in (6), you must put the tag by itself on
+                    the first line (and it must be complete):
     """
 
     # Arrange
@@ -636,7 +640,11 @@ def test_html_blocks_135():
 @pytest.mark.gfm
 def test_html_blocks_136():
     """
-    Test case 136:  These rules are designed to allow us to work with tags that can function as either block-level or inline-level tags. The <del> tag is a nice example. We can surround content with <del> tags in three different ways. In this case, we get a raw HTML block, because the <del> tag is on a line by itself:
+    Test case 136:  These rules are designed to allow us to work with tags that
+                    can function as either block-level or inline-level tags. The
+                    <del> tag is a nice example. We can surround content with <del>
+                    tags in three different ways. In this case, we get a raw HTML
+                    block, because the <del> tag is on a line by itself:
     """
 
     # Arrange
@@ -659,7 +667,9 @@ def test_html_blocks_136():
 @pytest.mark.gfm
 def test_html_blocks_137():
     """
-    Test case 137:  In this case, we get a raw HTML block that just includes the <del> tag (because it ends with the following blank line). So the contents get interpreted as CommonMark:
+    Test case 137:  In this case, we get a raw HTML block that just includes the
+                    <del> tag (because it ends with the following blank line).
+                    So the contents get interpreted as CommonMark:
     """
 
     # Arrange
@@ -694,7 +704,10 @@ def test_html_blocks_137():
 @pytest.mark.gfm
 def test_html_blocks_138():
     """
-    Test case 138:  Finally, in this case, the <del> tags are interpreted as raw HTML inside the CommonMark paragraph. (Because the tag is not on a line by itself, we get inline HTML rather than an HTML block.)
+    Test case 138:  Finally, in this case, the <del> tags are interpreted as raw
+                    HTML inside the CommonMark paragraph. (Because the tag is not
+                    on a line by itself, we get inline HTML rather than an HTML
+                    block.)
     """
 
     # Arrange
@@ -823,7 +836,9 @@ p {color:blue;}
 @pytest.mark.gfm
 def test_html_blocks_142():
     """
-    Test case 142:  (part 1) If there is no matching end tag, the block will end at the end of the document (or the enclosing block quote or list item):
+    Test case 142:  (part 1) If there is no matching end tag, the block will end
+                    at the end of the document (or the enclosing block quote or
+                    list item):
     """
 
     # Arrange
@@ -879,7 +894,9 @@ foo"""
 @pytest.mark.gfm
 def test_html_blocks_143x():
     """
-    Test case 143:  (part 2) If there is no matching end tag, the block will end at the end of the document (or the enclosing block quote or list item):
+    Test case 143:  (part 2) If there is no matching end tag, the block will end
+                    at the end of the document (or the enclosing block quote or
+                    list item):
     """
 
     # Arrange
@@ -1017,7 +1034,9 @@ baz
 @pytest.mark.gfm
 def test_html_blocks_144():
     """
-    Test case 144:  (part 3) If there is no matching end tag, the block will end at the end of the document (or the enclosing block quote or list item):
+    Test case 144:  (part 3) If there is no matching end tag, the block will end
+                    at the end of the document (or the enclosing block quote or
+                    list item):
     """
 
     # Arrange
@@ -1380,7 +1399,8 @@ bar
 @pytest.mark.gfm
 def test_html_blocks_155():
     """
-    Test case 155:  However, a following blank line is needed, except at the end of a document, and except for blocks of types 1–5, above:
+    Test case 155:  However, a following blank line is needed, except at the end
+                    of a document, and except for blocks of types 1–5, above:
     """
 
     # Arrange
@@ -1489,7 +1509,9 @@ def test_html_blocks_158():
 @pytest.mark.gfm
 def test_html_blocks_159():
     """
-    Test case 159:  The rule given above seems a simpler and more elegant way of achieving the same expressive power, which is also much simpler to parse.
+    Test case 159:  The rule given above seems a simpler and more elegant way of
+                    achieving the same expressive power, which is also much simpler
+                    to parse.
     """
 
     # Arrange
@@ -1540,7 +1562,9 @@ Hi
 @pytest.mark.gfm
 def test_html_blocks_160():
     """
-    Test case 160:  The rule given above seems a simpler and more elegant way of achieving the same expressive power, which is also much simpler to parse.
+    Test case 160:  The rule given above seems a simpler and more elegant way of
+                    achieving the same expressive power, which is also much simpler
+                    to parse.
     """
 
     # Arrange
@@ -1850,7 +1874,19 @@ def test_html_blocks_extra_02x():
 some other text
 </script>
 """
-    expected_tokens = ['[ulist(1,1):-::2::\n\n]', '[html-block(1,3)]', '[text(1,3):<script>:]', '[end-html-block:::True]', '[li(2,1):2::]', '[para(2,3):\n\n]', '[text(2,3):some text\nsome other text\n::\n\n]', '[raw-html(4,1):/script]', '[end-para:::True]', '[BLANK(5,1):]', '[end-ulist:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n\n]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[end-html-block:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n\n]",
+        "[text(2,3):some text\nsome other text\n::\n\n]",
+        "[raw-html(4,1):/script]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
     expected_gfm = """<ul>
 <li>
 <script>
@@ -1881,7 +1917,22 @@ def test_html_blocks_extra_02a():
 </script>
 """
 
-    expected_tokens = ['[ulist(1,1):-::2::\n\n]', '[html-block(1,3)]', '[text(1,3):<script>:]', '[end-html-block:::True]', '[li(2,1):2::]', '[para(2,3):\n\n]', '[text(2,3):[:]', '[text(2,4):foo:]', '[text(2,7):]:]', '[text(2,8)::\n/url\n::\n\n]', '[raw-html(4,1):/script]', '[end-para:::True]', '[BLANK(5,1):]', '[end-ulist:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n\n]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[end-html-block:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n\n]",
+        "[text(2,3):[:]",
+        "[text(2,4):foo:]",
+        "[text(2,7):]:]",
+        "[text(2,8)::\n/url\n::\n\n]",
+        "[raw-html(4,1):/script]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
     expected_gfm = """<ul>
 <li>
 <script>
@@ -1912,7 +1963,21 @@ def test_html_blocks_extra_02b():
  script
 """
 
-    expected_tokens = ['[ulist(1,1):-::2::\n\n]', '[html-block(1,3)]', '[text(1,3):<script>:]', '[end-html-block:::True]', '[li(2,1):2::]', '[para(2,3):\n \n ]', '[text(2,3):[:]', '[text(2,4):foo:]', '[text(2,7):]:]', '[text(2,8)::\n/url\nscript::\n\n]', '[end-para:::True]', '[BLANK(5,1):]', '[end-ulist:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n\n]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[end-html-block:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n \n ]",
+        "[text(2,3):[:]",
+        "[text(2,4):foo:]",
+        "[text(2,7):]:]",
+        "[text(2,8)::\n/url\nscript::\n\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
     expected_gfm = """<ul>
 <li>
 <script>
@@ -1943,7 +2008,21 @@ def test_html_blocks_extra_02c():
 script
 """
 
-    expected_tokens = ['[ulist(1,1):-::2::\n\n]', '[html-block(1,3)]', '[text(1,3):<script>:]', '[end-html-block:::True]', '[li(2,1):2::]', '[para(2,3):\n\n]', '[text(2,3):[:]', '[text(2,4):foo:]', '[text(2,7):]:]', '[text(2,8)::\n/url\nscript::\n\n]', '[end-para:::True]', '[BLANK(5,1):]', '[end-ulist:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::\n\n]",
+        "[html-block(1,3)]",
+        "[text(1,3):<script>:]",
+        "[end-html-block:::True]",
+        "[li(2,1):2::]",
+        "[para(2,3):\n\n]",
+        "[text(2,3):[:]",
+        "[text(2,4):foo:]",
+        "[text(2,7):]:]",
+        "[text(2,8)::\n/url\nscript::\n\n]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+    ]
     expected_gfm = """<ul>
 <li>
 <script>

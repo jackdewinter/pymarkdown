@@ -77,7 +77,7 @@ class RuleMd022(RulePlugin):
         """
         Event that a new token is being processed.
         """
-        # print("START>>" + str(token).replace("\n", "\\n").replace("\t", "\\t"))
+        # print("START>>" + str(token).replace(ParserHelper.newline_character, "\\n").replace("\t", "\\t"))
         # print(">>self.__blank_line_count>>" + str(self.__blank_line_count))
         if (self.__blank_line_count is not None) and self.__blank_line_count >= 0:
             self.perform_close_check(context, token)

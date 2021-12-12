@@ -44,13 +44,16 @@ class LeafBlockProcessor:
     __setext_characters = "-="
 
     @staticmethod
-    def is_fenced_code_block(line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=False):
+    def is_fenced_code_block(
+        line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=False
+    ):
         """
         Determine if we have the start of a fenced code block.
         """
 
         if (
-            skip_whitespace_check or ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
+            skip_whitespace_check
+            or ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
         ) and ParserHelper.is_character_at_index_one_of(
             line_to_parse,
             start_index,
@@ -276,197 +279,46 @@ class LeafBlockProcessor:
         last_list_start_index,
         last_block_quote_index,
     ):
-        did_process, offset_index = False, 0
         POGGER.debug("last_list_start_index>>$>>", last_list_start_index)
         POGGER.debug(
             "parser_state.original_line_to_parse>>$>>",
             parser_state.original_line_to_parse,
         )
         if last_list_start_index:
-            new_index, extracted_whitespace = ParserHelper.extract_whitespace_from_end(
+            _, extracted_whitespace = ParserHelper.extract_whitespace_from_end(
                 parser_state.original_line_to_parse, last_list_start_index
             )
-            POGGER.debug("new_index>>$>>", new_index)
-            POGGER.debug("extracted_whitespace>>$>>", extracted_whitespace)
-            if ParserHelper.tab_character in extracted_whitespace:
-                did_process, last_block_quote_index, offset_index = True, new_index, 1
-        return did_process, offset_index, last_block_quote_index
+            assert ParserHelper.tab_character not in extracted_whitespace
+        return last_block_quote_index
 
     @staticmethod
-    def __adjust_for_block_quote_start(
-        force_me,
-        parser_state,
-        last_block_quote_index,
-        position_marker,
-        extracted_whitespace,
-    ):
-        """
-        Block quotes cause indents, which need to be handled specifically.
-        """
-
-        (
-            did_process,
-            special_parse_start_index,
-            whitespace_to_parse,
-            block_quote_adjust_delta,
-        ) = (False, 0, extracted_whitespace, 0)
-        POGGER.debug(
-            "last_block_quote_index>>$>>force_me>>$",
-            last_block_quote_index,
-            force_me,
-        )
-        if last_block_quote_index or force_me:
-            POGGER.debug(
-                "original_line_to_parse>[$]>>last_block_quote_index>>$",
-                parser_state.original_line_to_parse,
-                last_block_quote_index,
-            )
-            (
-                block_quote_after_whitespace_index,
-                during_original_whitespace,
-            ) = ParserHelper.extract_whitespace(
-                parser_state.original_line_to_parse, last_block_quote_index
-            )
-            POGGER.debug(
-                "during_original_whitespace>[$]",
-                during_original_whitespace,
-            )
-            if ParserHelper.tab_character in during_original_whitespace:
-                (
-                    special_parse_start_index,
-                    whitespace_to_parse,
-                    block_quote_adjust_delta,
-                ) = LeafBlockProcessor.__block_quote_start_with_tab(
-                    parser_state,
-                    position_marker,
-                    block_quote_after_whitespace_index,
-                    last_block_quote_index,
-                    extracted_whitespace,
-                    during_original_whitespace,
-                )
-                did_process = True
-
-        return (
-            did_process,
-            special_parse_start_index,
-            whitespace_to_parse,
-            block_quote_adjust_delta,
-        )
-
-    # pylint: disable=too-many-arguments
-    @staticmethod
-    def __block_quote_start_with_tab(
-        parser_state,
-        position_marker,
-        block_quote_after_whitespace_index,
-        last_block_quote_index,
-        extracted_whitespace,
-        during_original_whitespace,
-    ):
-        block_quote_adjust_delta = 0
-
-        POGGER.debug(
-            ".text_to_parse>[$]",
-            position_marker,
-        )
-        POGGER.debug(".index_number>>$", position_marker.index_number)
-        POGGER.debug(".index_indent>>$", position_marker.index_indent)
-        POGGER.debug("last_block_quote_index>>$", last_block_quote_index)
-
-        # Make sure everything after the whitespace remains the same.
-        text_after_original_whitespace, text_after_whitespace = (
-            parser_state.original_line_to_parse[block_quote_after_whitespace_index:],
-            position_marker.text_to_parse[position_marker.index_number :],
-        )
-        POGGER.debug(
-            "text_after_original_whitespace>[$]", text_after_original_whitespace
-        )
-        POGGER.debug(
-            "text_after_whitespace>[$]",
-            text_after_whitespace,
-        )
-        assert text_after_original_whitespace == text_after_whitespace
-
-        # Make sure the whitespace is within expected bounds.
-        during_current_whitespace = position_marker.text_to_parse[
-            position_marker.index_number
-            - len(extracted_whitespace) : position_marker.index_number
-        ]
-        POGGER.debug(
-            "during_current_whitespace>[$]",
-            during_current_whitespace,
-        )
-        POGGER.debug(
-            "during_original_whitespace>[$]",
-            during_original_whitespace,
-        )
-
-        current_whitespace_length, original_whitespace_length = len(
-            during_current_whitespace
-        ), (
-            ParserHelper.calculate_length(
-                during_original_whitespace, start_index=last_block_quote_index
-            )
-            - 1
-        )
-        POGGER.debug(
-            "current_whitespace_length[$],original_whitespace_length[$]",
-            current_whitespace_length,
-            original_whitespace_length,
-        )
-        assert current_whitespace_length <= original_whitespace_length
-
-        special_parse_start_index = last_block_quote_index + 1
-        if during_original_whitespace[0] == ParserHelper.tab_character:
-            whitespace_to_parse = during_original_whitespace
-            if (
-                current_whitespace_length > 1
-                and whitespace_to_parse[1] == ParserHelper.tab_character
-            ):
-                block_quote_adjust_delta = -1
-        else:
-            whitespace_to_parse = during_original_whitespace[1:]
-        return special_parse_start_index, whitespace_to_parse, block_quote_adjust_delta
-
-    # pylint: enable=too-many-arguments
-
-    @staticmethod
-    def __recalculate_whitespace(
-        special_parse_start_index, whitespace_to_parse, offset_index
-    ):
+    def __recalculate_whitespace(whitespace_to_parse, offset_index):
         """
         Recalculate the whitespace characteristics.
         """
-
         (
             accumulated_whitespace_count,
             actual_whitespace_index,
             abc,
             relative_whitespace_index,
-        ) = (0, 0, 4 + offset_index, special_parse_start_index - offset_index)
+        ) = (0, 0, 4 + offset_index, 0 - offset_index)
 
         POGGER.debug(
             "whitespace_to_parse>>$>>",
             whitespace_to_parse,
         )
-        POGGER.debug("special_parse_start_index>>$>>", special_parse_start_index)
         POGGER.debug(
             "in>>index>>$($)>>accumulated_whitespace_count>>$",
             actual_whitespace_index,
-            actual_whitespace_index + special_parse_start_index,
+            actual_whitespace_index,
             accumulated_whitespace_count,
         )
         while accumulated_whitespace_count < abc:
-            if (
+            assert not (
                 whitespace_to_parse[actual_whitespace_index]
                 == ParserHelper.tab_character
-            ):
-                POGGER.debug(
-                    ">>relative_whitespace_index>>$", relative_whitespace_index
-                )
-                delta_whitespace = 4 - (relative_whitespace_index % 4)
-            else:
-                delta_whitespace = 1
+            )
+            delta_whitespace = 1
             POGGER.debug(">>delta_whitespace>>$", delta_whitespace)
             accumulated_whitespace_count += delta_whitespace
             relative_whitespace_index += delta_whitespace
@@ -474,14 +326,14 @@ class LeafBlockProcessor:
             POGGER.debug(
                 ">>index>>$($)>>accumulated_whitespace_count>>$",
                 actual_whitespace_index,
-                (actual_whitespace_index + special_parse_start_index),
+                actual_whitespace_index,
                 accumulated_whitespace_count,
             )
 
         POGGER.debug(
             "out>>index>>$($)>>accumulated_whitespace_count>>$",
             actual_whitespace_index,
-            (actual_whitespace_index + special_parse_start_index),
+            actual_whitespace_index,
             accumulated_whitespace_count,
         )
 
@@ -493,7 +345,7 @@ class LeafBlockProcessor:
         POGGER.debug("left_ws>>$<<", left_ws)
         POGGER.debug("offset_index>>$<<", offset_index)
 
-        return accumulated_whitespace_count, actual_whitespace_index, adj_ws, left_ws
+        return actual_whitespace_index, adj_ws, left_ws
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -551,66 +403,30 @@ class LeafBlockProcessor:
         extracted_whitespace,
         new_tokens,
     ):
-        (
-            offset_index,
-            last_block_quote_index,
-            kludge_adjust,
-            special_parse_start_index,
-            block_quote_adjust_delta,
-            accumulated_whitespace_count,
-            actual_whitespace_index,
-            adj_ws,
-            left_ws,
-        ) = LeafBlockProcessor.__prepare_for_indented_block(
-            parser_state,
-            last_list_start_index,
-            last_block_quote_index,
-            position_marker,
-            extracted_whitespace,
-        )
-
         line_number, column_number = position_marker.line_number, (
             position_marker.index_number
             + position_marker.index_indent
             - len(extracted_whitespace)
             + 1
         )
-        if special_parse_start_index:
-            column_number = (
-                actual_whitespace_index
-                + special_parse_start_index
-                + block_quote_adjust_delta
-            )
-            POGGER.debug(
-                "column_number($)=actual_whitespace_index($)+special_parse_start_index($)+block_quote_adjust_delta($)",
-                column_number,
-                actual_whitespace_index,
-                special_parse_start_index,
-                block_quote_adjust_delta,
-            )
-            excess_whitespace_count = accumulated_whitespace_count - 4 - offset_index
-            POGGER.debug(
-                "excess_whitespace_count($)=accumulated_whitespace_count($)-4-offset_index($)",
-                excess_whitespace_count,
-                accumulated_whitespace_count,
-                offset_index,
-            )
-            POGGER.debug("before>>$>>", left_ws)
-            if excess_whitespace_count:
-                excess_whitespace_count -= kludge_adjust
-                left_ws_padding = ParserHelper.repeat_string(
-                    ParserHelper.space_character, excess_whitespace_count
-                )
-                left_ws = f"{left_ws_padding}{left_ws}"
-            POGGER.debug("after>>$>>", left_ws)
-        else:
-            column_number += actual_whitespace_index
+        (
+            last_block_quote_index,
+            actual_whitespace_index,
+            adj_ws,
+            extracted_whitespace,
+        ) = LeafBlockProcessor.__prepare_for_indented_block(
+            parser_state,
+            last_list_start_index,
+            last_block_quote_index,
+            extracted_whitespace,
+        )
+
+        column_number += actual_whitespace_index
         POGGER.debug("column_number>>$", column_number)
 
         new_token = IndentedCodeBlockMarkdownToken(adj_ws, line_number, column_number)
         parser_state.token_stack.append(IndentedCodeBlockStackToken(new_token))
         new_tokens.append(new_token)
-        extracted_whitespace = left_ws
         POGGER.debug("left_ws>>$<<", extracted_whitespace)
 
         return last_block_quote_index, extracted_whitespace
@@ -623,66 +439,35 @@ class LeafBlockProcessor:
         parser_state,
         last_list_start_index,
         last_block_quote_index,
-        position_marker,
         extracted_whitespace,
     ):
         POGGER.debug(">>__adjust_for_list_start")
-        (
-            did_process,
-            offset_index,
-            last_block_quote_index,
-        ) = LeafBlockProcessor.__adjust_for_list_start(
+        (last_block_quote_index) = LeafBlockProcessor.__adjust_for_list_start(
             parser_state,
             last_list_start_index,
             last_block_quote_index,
         )
-        POGGER.debug("<<__adjust_for_list_start<<$", did_process)
 
-        force_me, kludge_adjust = False, 0
-        if not did_process:
-            POGGER.debug(">>>>$", parser_state.token_stack[-1])
-            if parser_state.token_stack[-1].is_list:
-                POGGER.debug(
-                    ">>indent>>$",
-                    parser_state.token_stack[-1].indent_level,
-                )
-                last_block_quote_index, kludge_adjust, force_me = 0, 1, True
-
-        POGGER.debug(">>__adjust_for_block_quote_start")
-        (
-            did_process,
-            special_parse_start_index,
-            whitespace_to_parse,
-            block_quote_adjust_delta,
-        ) = LeafBlockProcessor.__adjust_for_block_quote_start(
-            force_me,
-            parser_state,
-            last_block_quote_index,
-            position_marker,
-            extracted_whitespace,
-        )
-        POGGER.debug("<<__adjust_for_block_quote_start<<$", did_process)
+        POGGER.debug(">>>>$", parser_state.token_stack[-1])
+        if parser_state.token_stack[-1].is_list:
+            POGGER.debug(
+                ">>indent>>$",
+                parser_state.token_stack[-1].indent_level,
+            )
+            last_block_quote_index = 0
 
         POGGER.debug(
             "__recalculate_whitespace>>$>>$",
-            whitespace_to_parse,
-            offset_index,
+            extracted_whitespace,
+            0,
         )
         (
-            accumulated_whitespace_count,
             actual_whitespace_index,
             adj_ws,
             left_ws,
-        ) = LeafBlockProcessor.__recalculate_whitespace(
-            special_parse_start_index, whitespace_to_parse, offset_index
-        )
+        ) = LeafBlockProcessor.__recalculate_whitespace(extracted_whitespace, 0)
         return (
-            offset_index,
             last_block_quote_index,
-            kludge_adjust,
-            special_parse_start_index,
-            block_quote_adjust_delta,
-            accumulated_whitespace_count,
             actual_whitespace_index,
             adj_ws,
             left_ws,
@@ -792,14 +577,17 @@ class LeafBlockProcessor:
         return new_tokens
 
     @staticmethod
-    def is_atx_heading(line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=False):
+    def is_atx_heading(
+        line_to_parse, start_index, extracted_whitespace, skip_whitespace_check=False
+    ):
         """
         Determine whether or not an ATX Heading is about to start.
         """
 
-        if (ParserHelper.is_length_less_than_or_equal_to(
-            extracted_whitespace, 3
-        ) or skip_whitespace_check )and ParserHelper.is_character_at_index(
+        if (
+            ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
+            or skip_whitespace_check
+        ) and ParserHelper.is_character_at_index(
             line_to_parse,
             start_index,
             LeafBlockProcessor.__atx_character,
@@ -1071,7 +859,6 @@ class LeafBlockProcessor:
         extracted_whitespace,
         block_quote_data,
         text_removed_by_container,
-        force_it,
     ):
         """
         Handle the parsing of a paragraph.
@@ -1080,9 +867,15 @@ class LeafBlockProcessor:
             position_marker.text_to_parse
         ):
             POGGER.debug("Escaping paragraph due to empty w/ blank")
-            POGGER.debug("position_marker.text_to_parse=:$:", position_marker.text_to_parse)
-            POGGER.debug("position_marker.index_number=:$:", position_marker.index_number)
-            POGGER.debug("position_marker.index_indent=:$:", position_marker.index_indent)
+            POGGER.debug(
+                "position_marker.text_to_parse=:$:", position_marker.text_to_parse
+            )
+            POGGER.debug(
+                "position_marker.index_number=:$:", position_marker.index_number
+            )
+            POGGER.debug(
+                "position_marker.index_indent=:$:", position_marker.index_indent
+            )
             return [
                 BlankLineMarkdownToken(
                     extracted_whitespace, position_marker, len(extracted_whitespace)
@@ -1106,7 +899,6 @@ class LeafBlockProcessor:
                     container_index,
                     position_marker,
                     text_removed_by_container,
-                    force_it,
                     extracted_whitespace,
                     adjusted_whitespace_length,
                 )
@@ -1185,7 +977,6 @@ class LeafBlockProcessor:
         container_index,
         position_marker,
         text_removed_by_container,
-        force_it,
         extracted_whitespace,
         adjusted_whitespace_length,
     ):
@@ -1230,7 +1021,6 @@ class LeafBlockProcessor:
                 LeafBlockProcessor.__adjust_paragraph_for_block_quotes(
                     top_block_token,
                     text_removed_by_container,
-                    force_it,
                     parser_state.token_document,
                 )
         else:
@@ -1239,6 +1029,7 @@ class LeafBlockProcessor:
             adjusted_whitespace_length = LeafBlockProcessor.__adjust_paragraph_for_list(
                 top_list_token, extracted_whitespace
             )
+        POGGER.debug(">>adjusted_whitespace_length>>$", adjusted_whitespace_length)
         return adjusted_whitespace_length
 
     # pylint: enable=too-many-arguments
@@ -1284,12 +1075,10 @@ class LeafBlockProcessor:
     def __adjust_paragraph_for_block_quotes(
         top_block_token,
         text_removed_by_container,
-        force_it,
         token_document,
     ):
         POGGER.debug(">>list-owners>>$", token_document)
         POGGER.debug(">>text_removed_by_container>>$<<", text_removed_by_container)
-        POGGER.debug(">>force_it>>$<<", force_it)
         number_of_block_quote_ends, end_index = 0, len(token_document) - 1
         while token_document[end_index].is_block_quote_end:
             number_of_block_quote_ends += 1
@@ -1298,12 +1087,22 @@ class LeafBlockProcessor:
             number_of_block_quote_ends > 0
             and token_document[end_index].is_fenced_code_block_end
         ):
+            POGGER.debug(
+                "apfbq>>last_block_token>>$", top_block_token.matching_markdown_token
+            )
+            POGGER.debug(
+                "apfbq>>leading_text_index>>$",
+                top_block_token.matching_markdown_token.leading_text_index,
+            )
             if text_removed_by_container is None:
                 top_block_token.matching_markdown_token.add_leading_spaces("")
-            elif force_it:
-                top_block_token.matching_markdown_token.add_leading_spaces(
-                    text_removed_by_container
-                )
+            POGGER.debug(
+                "apfbq>>last_block_token>>$", top_block_token.matching_markdown_token
+            )
+            POGGER.debug(
+                "apfbq>>leading_text_index>>$",
+                top_block_token.matching_markdown_token.leading_text_index,
+            )
 
     @staticmethod
     def check_for_list_in_process(parser_state):

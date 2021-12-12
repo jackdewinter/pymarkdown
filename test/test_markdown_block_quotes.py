@@ -698,11 +698,11 @@ def test_block_quotes_213c():
 > - bar"""
     expected_tokens = [
         "[block-quote(1,1)::> \n\n> ]",
-        "[ulist(1,3):-::4::    ]",
+        "[ulist(1,3):-::4::    \n]",
         "[para(1,5):\n]",
         "[text(1,5):foo\nbrr::\n]",
         "[end-para:::True]",
-        "[li(3,3):4:  :]",
+        "[li(3,3):4::]",
         "[para(3,5):]",
         "[text(3,5):bar:]",
         "[end-para:::True]",
@@ -718,7 +718,7 @@ brr</li>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -735,7 +735,7 @@ def test_block_quotes_213d():
 > - bar"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> ]",
-        "[ulist(1,3):-::4:]",
+        "[ulist(1,3):-::4::  ]",
         "[para(1,5):\n]",
         "[text(1,5):foo\nbrr::\n]",
         "[end-para:::True]",
@@ -2001,7 +2001,19 @@ def test_block_quotes_229jx():
 >> comments
 > </script>
 """
-    expected_tokens = ['[block-quote(1,1)::> ]', '[block-quote(1,2)::>> \n>> ]', '[html-block(1,4)]', '[text(1,4):<script>\ncomments:]', '[end-html-block:::True]', '[end-block-quote:::True]', '[html-block(3,3)]', '[text(3,3):</script>:]', '[end-html-block:::False]','[end-block-quote:::False]', '[BLANK(4,1):]']
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[block-quote(1,2)::>> \n>> ]",
+        "[html-block(1,4)]",
+        "[text(1,4):<script>\ncomments:]",
+        "[end-html-block:::True]",
+        "[end-block-quote:::True]",
+        "[html-block(3,3)]",
+        "[text(3,3):</script>:]",
+        "[end-html-block:::False]",
+        "[end-block-quote:::False]",
+        "[BLANK(4,1):]",
+    ]
     expected_gfm = """<blockquote>
 <blockquote>
 <script>
@@ -2025,7 +2037,21 @@ def test_block_quotes_229ja():
 >>> comments
 > </script>
 """
-    expected_tokens = ['[block-quote(1,1)::> ]', '[block-quote(1,2)::]', '[block-quote(1,3)::>>> \n>>> ]', '[html-block(1,5)]', '[text(1,5):<script>\ncomments:]', '[end-html-block:::True]', '[end-block-quote:::True]', '[end-block-quote:::True]', '[html-block(3,3)]','[text(3,3):</script>:]', '[end-html-block:::False]', '[end-block-quote:::False]', '[BLANK(4,1):]']
+    expected_tokens = [
+        "[block-quote(1,1)::> ]",
+        "[block-quote(1,2)::]",
+        "[block-quote(1,3)::>>> \n>>> ]",
+        "[html-block(1,5)]",
+        "[text(1,5):<script>\ncomments:]",
+        "[end-html-block:::True]",
+        "[end-block-quote:::True]",
+        "[end-block-quote:::True]",
+        "[html-block(3,3)]",
+        "[text(3,3):</script>:]",
+        "[end-html-block:::False]",
+        "[end-block-quote:::False]",
+        "[BLANK(4,1):]",
+    ]
     expected_gfm = """<blockquote>
 <blockquote>
 <blockquote>
@@ -2146,7 +2172,7 @@ def test_block_quotes_extra_01a():
         "[para(3,5):]",
         "[text(3,5):middle:]",
         "[end-para:::True]",
-        "[block-quote(4,5):    :    > \n    ]",
+        "[block-quote(4,5):    :    > \n\n]",
         "[para(4,7):\n  ]",
         "[text(4,7):middle\nquote::\n]",
         "[end-para:::True]",
@@ -2201,7 +2227,7 @@ def test_block_quotes_extra_02x():
         "[para(1,3):]",
         "[text(1,3):start:]",
         "[end-para:::True]",
-        "[ulist(2,3):-::4:]",
+        "[ulist(2,3):-::4::]",
         "[para(2,5):\n]",
         "[text(2,5):quote\nend::\n]",
         "[end-para:::True]",
@@ -2302,7 +2328,7 @@ def test_block_quotes_extra_02ab():
 > end"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n>\n> ]",
-        "[ulist(1,3):-::4::]",
+        "[ulist(1,3):-::4::\n]",
         "[para(1,5):\n]",
         "[text(1,5):start\nquote::\n]",
         "[end-para:::True]",
@@ -2422,7 +2448,7 @@ def test_block_quotes_extra_02ae():
 >   end"""
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n>\n> ]",
-        "[ulist(1,3):-::4::]",
+        "[ulist(1,3):-::4::\n  ]",
         "[para(1,5):]",
         "[text(1,5):start:]",
         "[end-para:::True]",
@@ -3118,7 +3144,7 @@ def test_block_quotes_extra_05xx():
         "[para(1,4):]",
         "[text(1,4):start:]",
         "[end-para:::True]",
-        "[ulist(2,4):-::5:]",
+        "[ulist(2,4):-::5::]",
         "[para(2,6):\n]",
         "[text(2,6):quote\nend::\n]",
         "[end-para:::True]",
@@ -3157,7 +3183,7 @@ def test_block_quotes_extra_05xa():
         "[para(1,5):]",
         "[text(1,5):start:]",
         "[end-para:::True]",
-        "[ulist(2,5):-::6:]",
+        "[ulist(2,5):-::6::]",
         "[para(2,7):\n]",
         "[text(2,7):quote\nend::\n]",
         "[end-para:::True]",

@@ -116,7 +116,7 @@ class RuleMd030(RulePlugin):
             if self.__list_stack[-1].is_ordered_list_start:
                 delta -= len(list_token.list_start_content)
             # if self.__debug:
-            #     print("y=" + str(list_token).replace("\n", "\\n"))
+            #     print("y=" + str(list_token).replace(ParserHelper.newline_character, "\\n"))
             #     print(
             #         "token_index="
             #         + str(token_index)

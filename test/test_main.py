@@ -1536,8 +1536,9 @@ def test_markdown_with_multiple_errors_reported():
         + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:1:12: "
         + "MD010: Hard tabs "
         + "[Column: 12] (no-hard-tabs)\n"
-        + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:1:13: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:2:2: "
+        + "MD021: Multiple spaces are present inside hash characters on Atx Closed Heading. "
+        + "(no-multiple-space-closed-atx)\n"
         + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:2:2: "
         + "MD022: Headings should be surrounded by blank lines. "
         + "[Expected: 1; Actual: 0; Above] (blanks-around-headings,blanks-around-headers)\n"
@@ -1545,9 +1546,7 @@ def test_markdown_with_multiple_errors_reported():
         + "MD023: Headings must start at the beginning of the line. (heading-start-left, header-start-left)\n"
         + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:2:14: "
         + "MD010: Hard tabs "
-        + "[Column: 14] (no-hard-tabs)\n"
-        + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:2:15: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)"
+        + "[Column: 14] (no-hard-tabs)"
     )
     expected_error = ""
 

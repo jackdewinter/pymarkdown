@@ -44,7 +44,7 @@ class RuleMd028(RulePlugin):
         """
         Event that a new token is being processed.
         """
-        # print(str(self.__current_state) + "--" + str(token).replace("\n", "\\n"))
+        # print(str(self.__current_state) + "--" + str(token).replace(ParserHelper.newline_character, "\\n"))
         if self.__current_state == RuleMd028.__look_for_end_of_block_quote:
             if token.is_block_quote_end:
                 self.__current_state = RuleMd028.__look_for_blank_lines

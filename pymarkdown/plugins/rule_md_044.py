@@ -197,7 +197,7 @@ class RuleMd044(RulePlugin):
 
         start_x_offset = 0
         start_y_offset = 0
-        if "\n" in link_body_text:
+        if ParserHelper.newline_character in link_body_text:
             start_x_offset, start_y_offset = ParserHelper.adjust_for_newlines(
                 full_link_text, 0, len(full_link_text)
             )

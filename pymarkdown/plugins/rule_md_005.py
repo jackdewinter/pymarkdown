@@ -59,7 +59,7 @@ class RuleMd005(RulePlugin):
     def __report_issue(self, context, token):
         # print(f"token>>{ParserHelper.make_value_visible(token)}")
         # print(f"self.__list_stack[]>>{ParserHelper.make_value_visible(self.__list_stack)}")
-        # show_item = str(self.__list_stack[-1]).replace("\n", "\\n")
+        # show_item = str(self.__list_stack[-1]).replace(ParserHelper.newline_character, "\\n")
         # print(f"self.__list_stack[-1]>>{show_item}")
         if self.__list_stack[-1].is_unordered_list_start:
             delta = self.__list_stack[-1].indent_level - 2
@@ -83,7 +83,7 @@ class RuleMd005(RulePlugin):
             and len(self.__list_stack) > 1
             and self.__list_stack[-2].is_list_start
         ):
-            # show_item = str(self.__list_stack[-2]).replace("\n", "\\n")
+            # show_item = str(self.__list_stack[-2]).replace(ParserHelper.newline_character, "\\n")
             # print(f"self.__list_stack[-2]>>{show_item}")
             expected_indent = (
                 len(self.__list_stack[-2].extracted_whitespace)

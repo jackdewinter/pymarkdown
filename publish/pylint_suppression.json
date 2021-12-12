@@ -18,10 +18,11 @@
             "no-self-argument": 1
         },
         "pymarkdown/container_block_processor.py": {
-            "too-many-locals": 9,
-            "too-many-arguments": 20,
+            "too-many-locals": 11,
+            "too-many-arguments": 22,
             "too-many-branches": 1,
-            "too-many-statements": 1
+            "too-many-statements": 1,
+            "chained-comparison": 1
         },
         "pymarkdown/container_indices.py": {},
         "pymarkdown/container_markdown_token.py": {
@@ -39,29 +40,6 @@
             "too-many-arguments": 1
         },
         "pymarkdown/extension_manager.py": {},
-        "pymarkdown/extensions/disallowed_raw_html.py": {
-            "too-few-public-methods": 1
-        },
-        "pymarkdown/extensions/extended_autolinks.py": {
-            "too-few-public-methods": 1
-        },
-        "pymarkdown/extensions/extension_one.py": {},
-        "pymarkdown/extensions/front_matter_markdown_token.py": {
-            "too-many-arguments": 1
-        },
-        "pymarkdown/extensions/markdown_strikethrough.py": {
-            "too-few-public-methods": 1
-        },
-        "pymarkdown/extensions/markdown_tables.py": {
-            "too-few-public-methods": 1
-        },
-        "pymarkdown/extensions/pragma_token.py": {
-            "too-many-locals": 1,
-            "too-many-arguments": 1
-        },
-        "pymarkdown/extensions/task_list_items.py": {
-            "too-few-public-methods": 1
-        },
         "pymarkdown/found_plugin.py": {
             "too-many-instance-attributes": 1,
             "too-many-arguments": 1
@@ -88,7 +66,7 @@
             "too-many-instance-attributes": 1
         },
         "pymarkdown/leaf_block_processor.py": {
-            "too-many-arguments": 8,
+            "too-many-arguments": 7,
             "too-many-locals": 2
         },
         "pymarkdown/leaf_markdown_token.py": {
@@ -105,7 +83,7 @@
         },
         "pymarkdown/list_block_processor.py": {
             "too-many-arguments": 16,
-            "too-many-locals": 4
+            "too-many-locals": 5
         },
         "pymarkdown/main.py": {
             "broad-except": 2
@@ -134,68 +112,6 @@
         "pymarkdown/plugin_scan_context.py": {
             "too-many-arguments": 1
         },
-        "pymarkdown/plugins/plugin_one.py": {},
-        "pymarkdown/plugins/rule_md_001.py": {},
-        "pymarkdown/plugins/rule_md_002.py": {},
-        "pymarkdown/plugins/rule_md_003.py": {},
-        "pymarkdown/plugins/rule_md_004.py": {},
-        "pymarkdown/plugins/rule_md_005.py": {},
-        "pymarkdown/plugins/rule_md_006.py": {},
-        "pymarkdown/plugins/rule_md_007.py": {},
-        "pymarkdown/plugins/rule_md_009.py": {
-            "too-many-instance-attributes": 1
-        },
-        "pymarkdown/plugins/rule_md_010.py": {},
-        "pymarkdown/plugins/rule_md_011.py": {},
-        "pymarkdown/plugins/rule_md_012.py": {},
-        "pymarkdown/plugins/rule_md_013.py": {
-            "too-many-instance-attributes": 1
-        },
-        "pymarkdown/plugins/rule_md_014.py": {},
-        "pymarkdown/plugins/rule_md_018.py": {
-            "invalid-unary-operand-type": 1,
-            "too-many-arguments": 2
-        },
-        "pymarkdown/plugins/rule_md_019.py": {},
-        "pymarkdown/plugins/rule_md_020.py": {
-            "too-many-arguments": 1
-        },
-        "pymarkdown/plugins/rule_md_021.py": {},
-        "pymarkdown/plugins/rule_md_022.py": {},
-        "pymarkdown/plugins/rule_md_023.py": {},
-        "pymarkdown/plugins/rule_md_024.py": {},
-        "pymarkdown/plugins/rule_md_025.py": {},
-        "pymarkdown/plugins/rule_md_026.py": {},
-        "pymarkdown/plugins/rule_md_027.py": {},
-        "pymarkdown/plugins/rule_md_028.py": {},
-        "pymarkdown/plugins/rule_md_029.py": {},
-        "pymarkdown/plugins/rule_md_030.py": {
-            "too-many-instance-attributes": 1
-        },
-        "pymarkdown/plugins/rule_md_031.py": {},
-        "pymarkdown/plugins/rule_md_032.py": {},
-        "pymarkdown/plugins/rule_md_033.py": {},
-        "pymarkdown/plugins/rule_md_034.py": {
-            "too-many-arguments": 1
-        },
-        "pymarkdown/plugins/rule_md_035.py": {},
-        "pymarkdown/plugins/rule_md_036.py": {},
-        "pymarkdown/plugins/rule_md_037.py": {},
-        "pymarkdown/plugins/rule_md_038.py": {},
-        "pymarkdown/plugins/rule_md_039.py": {},
-        "pymarkdown/plugins/rule_md_040.py": {},
-        "pymarkdown/plugins/rule_md_041.py": {},
-        "pymarkdown/plugins/rule_md_042.py": {},
-        "pymarkdown/plugins/rule_md_043.py": {
-            "too-many-locals": 1
-        },
-        "pymarkdown/plugins/rule_md_044.py": {
-            "too-many-arguments": 4
-        },
-        "pymarkdown/plugins/rule_md_045.py": {},
-        "pymarkdown/plugins/rule_md_046.py": {},
-        "pymarkdown/plugins/rule_md_047.py": {},
-        "pymarkdown/plugins/rule_md_048.py": {},
         "pymarkdown/position_marker.py": {},
         "pymarkdown/requeue_line_info.py": {},
         "pymarkdown/rule_plugin.py": {
@@ -219,15 +135,15 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 130,
-        "too-many-locals": 37,
-        "too-few-public-methods": 7,
+        "too-many-arguments": 121,
+        "too-many-locals": 38,
+        "too-few-public-methods": 2,
         "no-self-argument": 1,
         "too-many-branches": 1,
         "too-many-statements": 1,
+        "chained-comparison": 1,
         "broad-except": 6,
-        "too-many-instance-attributes": 15,
-        "too-many-public-methods": 2,
-        "invalid-unary-operand-type": 1
+        "too-many-instance-attributes": 12,
+        "too-many-public-methods": 2
     }
 }

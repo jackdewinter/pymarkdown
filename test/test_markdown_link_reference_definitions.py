@@ -960,7 +960,24 @@ def test_link_reference_definitions_183gx():
     source_markdown = """- A simple list
 [foo]: /url
 > [Foo]"""
-    expected_tokens = ['[ulist(1,1):-::2::]', '[para(1,3):\n]', '[text(1,3):A simple list\n::\n]', '[text(2,1):[:]', '[text(2,2):foo:]','[text(2,5):]:]', '[text(2,6):: /url:]', '[end-para:::True]', '[end-ulist:::True]', '[block-quote(3,1)::> ]', '[para(3,3):]', '[text(3,3):[:]', '[text(3,4):Foo:]', '[text(3,7):]:]', '[end-para:::True]', '[end-block-quote:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n]",
+        "[text(1,3):A simple list\n::\n]",
+        "[text(2,1):[:]",
+        "[text(2,2):foo:]",
+        "[text(2,5):]:]",
+        "[text(2,6):: /url:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[text(3,3):[:]",
+        "[text(3,4):Foo:]",
+        "[text(3,7):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
     expected_gfm = """<ul>
 <li>A simple list
 [foo]: /url</li>
@@ -1021,7 +1038,24 @@ def test_link_reference_definitions_183gb():
     source_markdown = """- A simple list
  [foo]: /url
 > [Foo]"""
-    expected_tokens = ['[ulist(1,1):-::2::]', '[para(1,3):\n ]', '[text(1,3):A simple list\n::\n]', '[text(2,2):[:]', '[text(2,3):foo:]', '[text(2,6):]:]', '[text(2,7):: /url:]', '[end-para:::True]', '[end-ulist:::True]', '[block-quote(3,1)::> ]', '[para(3,3):]', '[text(3,3):[:]', '[text(3,4):Foo:]', '[text(3,7):]:]', '[end-para:::True]', '[end-block-quote:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n ]",
+        "[text(1,3):A simple list\n::\n]",
+        "[text(2,2):[:]",
+        "[text(2,3):foo:]",
+        "[text(2,6):]:]",
+        "[text(2,7):: /url:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[text(3,3):[:]",
+        "[text(3,4):Foo:]",
+        "[text(3,7):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
     expected_gfm = """<ul>
 <li>A simple list
 [foo]: /url</li>
@@ -1045,7 +1079,24 @@ def test_link_reference_definitions_183gc():
     source_markdown = """1. A simple list
  [foo]: /url
 > [Foo]"""
-    expected_tokens = ['[olist(1,1):.:1:3::]', '[para(1,4):\n ]', '[text(1,4):A simple list\n::\n]', '[text(2,2):[:]', '[text(2,3):foo:]', '[text(2,6):]:]', '[text(2,7):: /url:]', '[end-para:::True]', '[end-olist:::True]', '[block-quote(3,1)::> ]', '[para(3,3):]', '[text(3,3):[:]', '[text(3,4):Foo:]', '[text(3,7):]:]', '[end-para:::True]', '[end-block-quote:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3::]",
+        "[para(1,4):\n ]",
+        "[text(1,4):A simple list\n::\n]",
+        "[text(2,2):[:]",
+        "[text(2,3):foo:]",
+        "[text(2,6):]:]",
+        "[text(2,7):: /url:]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[text(3,3):[:]",
+        "[text(3,4):Foo:]",
+        "[text(3,7):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
     expected_gfm = """<ol>
 <li>A simple list
 [foo]: /url</li>
@@ -1108,7 +1159,24 @@ def test_link_reference_definitions_183ge():
     source_markdown = """- A simple list
 *foo*: /url
 > [Foo]"""
-    expected_tokens = ['[ulist(1,1):-::2::]', '[para(1,3):\n]', '[text(1,3):A simple list\n::\n]', '[emphasis(2,1):1:*]', '[text(2,2):foo:]', '[end-emphasis(2,5)::]', '[text(2,6):: /url:]', '[end-para:::True]', '[end-ulist:::True]', '[block-quote(3,1)::> ]', '[para(3,3):]', '[text(3,3):[:]', '[text(3,4):Foo:]', '[text(3,7):]:]', '[end-para:::True]', '[end-block-quote:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n]",
+        "[text(1,3):A simple list\n::\n]",
+        "[emphasis(2,1):1:*]",
+        "[text(2,2):foo:]",
+        "[end-emphasis(2,5)::]",
+        "[text(2,6):: /url:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[block-quote(3,1)::> ]",
+        "[para(3,3):]",
+        "[text(3,3):[:]",
+        "[text(3,4):Foo:]",
+        "[text(3,7):]:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
     expected_gfm = """<ul>
 <li>A simple list
 <em>foo</em>: /url</li>
@@ -1721,7 +1789,16 @@ def test_link_reference_definitions_extra_01b():
     # Arrange
     source_markdown = """- [foo]:
  /url"""
-    expected_tokens = ['[ulist(1,1):-::2::]', '[para(1,3):\n ]', '[text(1,3):[:]', '[text(1,4):foo:]', '[text(1,7):]:]', '[text(1,8)::\n/url::\n]', '[end-para:::True]', '[end-ulist:::True]']
+    expected_tokens = [
+        "[ulist(1,1):-::2::]",
+        "[para(1,3):\n ]",
+        "[text(1,3):[:]",
+        "[text(1,4):foo:]",
+        "[text(1,7):]:]",
+        "[text(1,8)::\n/url::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+    ]
     expected_gfm = """<ul>
 <li>[foo]:
 /url</li>

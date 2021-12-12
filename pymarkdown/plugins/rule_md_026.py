@@ -1,6 +1,7 @@
 """
 Module to implement a plugin that looks for trailing punctuation in headings.
 """
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_details import PluginDetails
 from pymarkdown.rule_plugin import RulePlugin
 
@@ -70,9 +71,13 @@ class RuleMd026(RulePlugin):
                     column_delta = len(self.__heading_text) - 1
                 else:
                     use_original_position = True
-                    line_delta = self.__heading_text.count("\n")
+                    line_delta = self.__heading_text.count(
+                        ParserHelper.newline_character
+                    )
                     if line_delta:
-                        split_heading_text = self.__heading_text.split("\n")
+                        split_heading_text = self.__heading_text.split(
+                            ParserHelper.newline_character
+                        )
                         column_delta = len(split_heading_text[-1]) - 1
                     else:
                         column_delta = len(self.__heading_text) - 1

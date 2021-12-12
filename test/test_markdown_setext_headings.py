@@ -67,7 +67,7 @@ baz</em></h1>"""
 
 
 @pytest.mark.gfm
-def test_setext_headings_052():
+def test_setext_headings_052x():
     """
     Test case 052:  The heading’s raw content is formed by concatenating the lines
                     and removing initial and final whitespace.
@@ -78,7 +78,7 @@ def test_setext_headings_052():
 baz*\t
 ===="""
     expected_tokens = [
-        "[setext(3,1):=:4:  :(1,3):\t]",
+        "[setext(3,1):=:4:  :(1,3):    ]",
         "[text(1,3):Foo :]",
         "[emphasis(1,7):1:*]",
         "[text(1,8):bar\nbaz::\n]",

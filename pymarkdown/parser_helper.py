@@ -16,7 +16,7 @@ class ParserHelper:
     __alert_character = "\a"
     whitespace_split_character = "\x02"
     replace_noop_character = "\x03"
-    blech_character = "\x04" # TODO remove blech
+    blech_character = "\x04"
     escape_character = "\x05"
 
     backslash_character = "\\"
@@ -334,6 +334,46 @@ class ParserHelper:
                 else (string_length + 1)
             )
         return string_length - start_index
+
+    @staticmethod
+    def detabify_string(source_string):
+        """
+        Given a string that may have one or more tabstops in it, resolve the
+        tabstops into more easily handled space characters.
+        """
+        if ParserHelper.tab_character not in source_string:
+            return source_string
+
+        rebuilt_string = ""
+        current_start_index = 0
+        next_tab_index = source_string.find(ParserHelper.tab_character)
+        while next_tab_index != -1:
+            _, start_index = ParserHelper.collect_backwards_while_one_of_characters(
+                source_string, next_tab_index, " \t"
+            )
+            end_index, _ = ParserHelper.collect_while_one_of_characters(
+                source_string, next_tab_index, " \t"
+            )
+            # print("si:" + str(start_index))
+            # print("ei:" + str(end_index))
+            whitespace_section = source_string[start_index:end_index]
+            # print("whitespace_section:" + ParserHelper.make_whitespace_visible(whitespace_section) + ":")
+            if start_index:
+                rebuilt_string += source_string[0:start_index]
+            realized_start_index = current_start_index + start_index
+            # print("xxx:" + str(xxx) + "=" + str(current_start_index) + "+" + str(start_index))
+            whitespace_actual_length = ParserHelper.calculate_length(
+                whitespace_section, realized_start_index
+            )
+            # print("whitespace_actual_length:" + str(whitespace_actual_length) + ":")
+            rebuilt_string += ParserHelper.repeat_string(" ", whitespace_actual_length)
+            current_start_index += start_index + whitespace_actual_length
+
+            source_string = source_string[end_index:]
+            next_tab_index = source_string.find(ParserHelper.tab_character)
+        if source_string:
+            rebuilt_string += source_string
+        return rebuilt_string
 
     @staticmethod
     def is_length_less_than_or_equal_to(source_string, length_limit):
@@ -807,7 +847,7 @@ class ParserHelper:
         return ParserHelper.__resolve_escapes_from_text(resolved_text)
 
     @staticmethod
-    def remove_all_from_text(text_to_remove, include_noops = False):
+    def remove_all_from_text(text_to_remove, include_noops=False):
         """
         Combination to remove all of these special characters from the text.
         """

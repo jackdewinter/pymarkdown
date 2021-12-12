@@ -116,7 +116,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_t():
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,3):  :  > \n  ]",
+        "[block-quote(2,3):  :  > \n\n]",
         "[para(2,5):\n  ]",
         "[text(2,5):uvw\nxyz::\n]",
         "[end-para:::True]",
@@ -138,7 +138,7 @@ xyz</p>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -1042,6 +1042,7 @@ def</p>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
+
 @pytest.mark.gfm
 def test_paragraph_series_n_bq_t_nl_nl_nl_i6_ib():
     """
@@ -1180,7 +1181,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i6_ib():
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
-        "[block-quote(2,3):  :  > \n  ]",
+        "[block-quote(2,3):  :  > \n\n]",
         "[para(2,5):\n    ]",
         "[text(2,5):uvw\ndef::\n]",
         "[end-para:::True]",

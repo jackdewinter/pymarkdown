@@ -2424,7 +2424,7 @@ def test_list_items_301cx():
         "[para(1,3):]",
         "[text(1,3):a:]",
         "[end-para:::True]",
-        "[block-quote(2,3):  :  > \n  ]",
+        "[block-quote(2,3):  :  > \n\n]",
         "[para(2,5):\n    ]",
         "[text(2,5):b\nc::\n]",
         "[end-para:::True]",

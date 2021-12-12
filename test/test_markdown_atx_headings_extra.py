@@ -898,7 +898,7 @@ def test_atx_headings_extra_43a():
 
 
 @pytest.mark.gfm
-def test_atx_headings_extra_44():
+def test_atx_headings_extra_44x():
     """
     Test case extra 44:  Tab character instead of space between the # and text.
     """
@@ -906,11 +906,11 @@ def test_atx_headings_extra_44():
     # Arrange
     source_markdown = """#\tHeading 1 with no blank lines"""
     expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):#    Heading 1 with no blank lines:]",
-        "[end-para:::True]",
+        "[atx(1,1):1:0:]",
+        "[text(1,5):Heading 1 with no blank lines:   ]",
+        "[end-atx::]",
     ]
-    expected_gfm = """<p>#    Heading 1 with no blank lines</p>"""
+    expected_gfm = """<h1>Heading 1 with no blank lines</h1>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -925,11 +925,11 @@ def test_atx_headings_extra_44a():
     # Arrange
     source_markdown = """# Heading 1 with no blank lines\t#"""
     expected_tokens = [
-        "[atx(1,1):1:0:]",
-        "[text(1,3):Heading 1 with no blank lines\t#: ]",
-        "[end-atx::]",
+        "[atx(1,1):1:1:]",
+        "[text(1,3):Heading 1 with no blank lines: ]",
+        "[end-atx:: ]",
     ]
-    expected_gfm = """<h1>Heading 1 with no blank lines\t#</h1>"""
+    expected_gfm = """<h1>Heading 1 with no blank lines</h1>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)

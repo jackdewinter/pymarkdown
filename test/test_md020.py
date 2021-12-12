@@ -135,9 +135,11 @@ def test_md020_bad_missing_start_spacing():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/missing_start_spacing.md:1:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/missing_start_spacing.md:3:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -168,9 +170,11 @@ def test_md020_bad_missing_start_spacing_in_list():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/missing_start_spacing_in_list.md:1:4: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/missing_start_spacing_in_list.md:3:4: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -203,9 +207,11 @@ def test_md020_bad_missing_start_spacing_in_block_quotes():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/missing_start_spacing_in_block_quotes.md:1:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/missing_start_spacing_in_block_quotes.md:3:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -235,9 +241,11 @@ def test_md020_bad_missing_end_spacingx():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/missing_end_spacing.md:1:12: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/missing_end_spacing.md:3:13: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -267,9 +275,11 @@ def test_md020_bad_missing_end_spacing_in_list():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/missing_end_spacing_in_list.md:1:15: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/missing_end_spacing_in_list.md:3:16: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -299,9 +309,11 @@ def test_md020_bad_missing_end_spacing_in_block_quotes():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/missing_end_spacing_in_block_quotes.md:1:14: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/missing_end_spacing_in_block_quotes.md:3:15: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -360,9 +372,11 @@ def test_md020_bad_missing_both_spacing():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/missing_both_spacing.md:1:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/missing_both_spacing.md:3:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -393,9 +407,11 @@ def test_md020_bad_missing_both_spacing_in_list():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/missing_both_spacing_in_list.md:1:4: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/missing_both_spacing_in_list.md:3:4: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -428,9 +444,11 @@ def test_md020_bad_missing_both_spacing_in_block_quotes():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/missing_both_spacing_in_block_quotes.md:1:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/missing_both_spacing_in_block_quotes.md:3:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -545,9 +563,11 @@ def test_md020_bad_multiple_within_paragraph():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph.md:1:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/multiple_within_paragraph.md:2:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -578,9 +598,11 @@ def test_md020_bad_multiple_within_paragraph_separated_codespan():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_codespan.md:1:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/multiple_within_paragraph_separated_codespan.md:3:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -611,9 +633,11 @@ def test_md020_bad_multiple_within_paragraph_separated_codespan_multi():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_codespan_multi.md:1:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/multiple_within_paragraph_separated_codespan_multi.md:4:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -644,7 +668,8 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_codespan_multi():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_inline_codespan_multi.md:4:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -677,7 +702,8 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_rawhtml_multi():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_inline_rawhtml_multi.md:4:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -708,7 +734,8 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_image_multi():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_inline_image_multi.md:8:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -739,7 +766,8 @@ def test_md020_bad_multiple_within_paragraph_separated_full_image_multi():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_full_image_multi.md:5:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -770,7 +798,8 @@ def test_md020_bad_multiple_within_paragraph_separated_shortcut_image_multi():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_image_multi.md:4:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -801,7 +830,8 @@ def test_md020_bad_multiple_within_paragraph_separated_collapsed_image_multi():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_image_multi.md:4:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -832,7 +862,8 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_link_multi():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_inline_link_multi.md:8:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -863,7 +894,8 @@ def test_md020_bad_multiple_within_paragraph_separated_full_link_multi():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_full_link_multi.md:5:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -894,7 +926,8 @@ def test_md020_bad_multiple_within_paragraph_separated_separated_shortcut_link_m
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_shortcut_link_multi.md:4:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -925,7 +958,8 @@ def test_md020_bad_multiple_within_paragraph_separated_collapsed_link_multi():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_collapsed_link_multi.md:4:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -956,7 +990,8 @@ def test_md020_bad_multiple_within_paragraph_separated_inline_hardbreak_multi():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/multiple_within_paragraph_separated_inline_hardbreak_multi.md:3:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -987,13 +1022,17 @@ def test_md020_bad_paragraphs_with_starting_whitespace():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/paragraphs_with_starting_whitespace.md:1:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/paragraphs_with_starting_whitespace.md:3:2: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/paragraphs_with_starting_whitespace.md:5:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/paragraphs_with_starting_whitespace.md:7:4: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -1024,13 +1063,17 @@ def test_md020_bad_single_paragraph_with_starting_whitespace():
     expected_return_code = 1
     expected_output = (
         "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:1:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:2:2: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:3:3: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
         + "test/resources/rules/md020/single_paragraph_with_starting_whitespace.md:4:4: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
+        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. "
+        + "(no-missing-space-closed-atx)\n"
     )
     expected_error = ""
 
@@ -1046,27 +1089,22 @@ def test_md020_bad_single_paragraph_with_starting_whitespace():
 @pytest.mark.rules
 def test_md020_bad_single_paragraph_with_whitespace_at_start():
     """
-    Test to make sure this rule does trigger with a document that
+    Test to make sure this rule does not trigger with a document that
     contains multiple Atx Closed Headings within a paragraph
-    including extra whitespace at the start of the heading.
+    including tabbed whitespace at the start of the heading.
     """
 
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md010",
+        "md010,md021,md022,md023",
         "scan",
         "test/resources/rules/md020/single_paragraph_with_whitespace_at_start.md",
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md020/single_paragraph_with_whitespace_at_start.md:1:1: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/single_paragraph_with_whitespace_at_start.md:2:2: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
-    )
+    expected_return_code = 0
+    expected_output = ""
     expected_error = ""
 
     # Act
@@ -1081,27 +1119,22 @@ def test_md020_bad_single_paragraph_with_whitespace_at_start():
 @pytest.mark.rules
 def test_md020_bad_single_paragraph_with_whitespace_at_end():
     """
-    Test to make sure this rule does trigger with a document that
+    Test to make sure this rule does not trigger with a document that
     contains multiple Atx Closed Headings within a paragraph
-    including extra whitespace at the end of the heading.
+    including tabbed whitespace at the end of the heading.
     """
 
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
         "--disable-rules",
-        "md010,md022,md023",
+        "md010,md021,md022,md023",
         "scan",
         "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md",
     ]
 
-    expected_return_code = 1
-    expected_output = (
-        "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:1:13: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
-        + "test/resources/rules/md020/single_paragraph_with_whitespace_at_end.md:2:15: "
-        + "MD020: No space present inside of the hashes on a possible Atx Closed Heading. (no-missing-space-closed-atx)\n"
-    )
+    expected_return_code = 0
+    expected_output = ""
     expected_error = ""
 
     # Act

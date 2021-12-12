@@ -2,6 +2,7 @@
 Module to implement a plugin that ensures that nested Unordered List Items
 start at predictable positions.
 """
+from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_details import PluginDetails
 from pymarkdown.rule_plugin import RulePlugin
 
@@ -103,24 +104,28 @@ class RuleMd007(RulePlugin):
             bq_delta = 1
             self.__last_leaf_token = token
         elif token.is_paragraph:
-            bq_delta = token.extracted_whitespace.count("\n")
+            bq_delta = token.extracted_whitespace.count(ParserHelper.newline_character)
         elif token.is_link_reference_definition:
             bq_delta = (
                 1
-                + token.link_name_debug.count("\n")
-                + token.link_destination_whitespace.count("\n")
-                + token.link_title_whitespace.count("\n")
-                + token.link_title_raw.count("\n")
+                + token.link_name_debug.count(ParserHelper.newline_character)
+                + token.link_destination_whitespace.count(
+                    ParserHelper.newline_character
+                )
+                + token.link_title_whitespace.count(ParserHelper.newline_character)
+                + token.link_title_raw.count(ParserHelper.newline_character)
             )
         elif token.is_text and self.__last_leaf_token:
             if self.__last_leaf_token.is_setext_heading:
-                bq_delta = token.end_whitespace.count("\n") + 1
+                bq_delta = (
+                    token.end_whitespace.count(ParserHelper.newline_character) + 1
+                )
             else:
                 assert (
                     self.__last_leaf_token.is_html_block
                     or self.__last_leaf_token.is_code_block
                 )
-                bq_delta = token.token_text.count("\n") + 1
+                bq_delta = token.token_text.count(ParserHelper.newline_character) + 1
         self.__bq_line_index[len(self.__container_token_stack)] += bq_delta
 
     def manage_container_tokens(self, token):
@@ -147,7 +152,7 @@ class RuleMd007(RulePlugin):
         """
         Event that a new token is being processed.
         """
-        # print(f">>>{token}".replace("\n", "\\n"))
+        # print(f">>>{token}".replace(ParserHelper.newline_character, "\\n"))
         if token.is_unordered_list_start or (
             token.is_new_list_item
             and self.__container_token_stack[-1].is_unordered_list_start
@@ -172,7 +177,8 @@ class RuleMd007(RulePlugin):
             # print(f"stack_index={stack_index}")
             ignore_list_starts = False
             while stack_index >= 0:
-                # print(f"stack_index>{stack_index},token={self.__container_token_stack[t]}".replace("\n", "\\n"))
+                # print(f"stack_index>{stack_index}," + \
+                #   f"token={self.__container_token_stack[t]}".replace(ParserHelper.newline_character, "\\n"))
                 if self.__container_token_stack[stack_index].is_ordered_list_start:
                     if not ignore_list_starts:
                         container_base_column += self.__container_token_stack[
@@ -183,7 +189,7 @@ class RuleMd007(RulePlugin):
                     bq_index = self.__bq_line_index[stack_index + 1]
                     split_leading_spaces = self.__container_token_stack[
                         stack_index
-                    ].leading_spaces.split("\n")
+                    ].leading_spaces.split(ParserHelper.newline_character)
                     # print(f"bq_index={bq_index},split_leading_spaces={split_leading_spaces}")
                     # print(f"split_leading_spaces[bq_index]={split_leading_spaces[bq_index]}=")
                     if not block_quote_base:
@@ -197,9 +203,9 @@ class RuleMd007(RulePlugin):
         return container_base_column, block_quote_base, list_depth
 
     def __check(self, context, token):
-        # print(f"{token}".replace("\n", "\\n"))
-        # print(f"{self.__container_token_stack}".replace("\n", "\\n"))
-        # print(f"{self.__bq_line_index}".replace("\n", "\\n"))
+        # print(f"{token}".replace(ParserHelper.newline_character, "\\n"))
+        # print(f"{self.__container_token_stack}".replace(ParserHelper.newline_character, "\\n"))
+        # print(f"{self.__bq_line_index}".replace(ParserHelper.newline_character, "\\n"))
 
         (
             container_base_column,
