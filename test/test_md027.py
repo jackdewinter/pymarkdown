@@ -1577,10 +1577,14 @@ def test_md027_good_block_quote_ordered_list_fenced_code_block():
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md027_good_block_quote_ordered_list_fenced_code_block_indent_first():
     """
-    Block quote with an aligned multiline list followed by a fecned code block.
+    Block quote with an aligned multiline list followed by a fecned code block
+    and an indent on the first line of the block.
+
+    Note that the indent is closest to the list, so this rule will not fire.
     """
 
     # Arrange
@@ -1604,10 +1608,14 @@ def test_md027_good_block_quote_ordered_list_fenced_code_block_indent_first():
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md027_good_block_quote_ordered_list_fenced_code_block_indent_second():
     """
-    Block quote with an aligned multiline list followed by a fecned code block.
+    Block quote with an aligned multiline list followed by a fecned code block
+    and an indent on the second line of the block.
+
+    Note that the indent is closest to the list, so this rule will not fire.
     """
 
     # Arrange
@@ -1631,10 +1639,14 @@ def test_md027_good_block_quote_ordered_list_fenced_code_block_indent_second():
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md027_good_block_quote_ordered_list_fenced_code_block_indent_third():
     """
-    Block quote with an aligned multiline list followed by a fecned code block.
+    Block quote with an aligned multiline list followed by a fecned code block
+    and an indent on the third line of the block.
+
+    Note that the indent is closest to the list, so this rule will not fire.
     """
 
     # Arrange
