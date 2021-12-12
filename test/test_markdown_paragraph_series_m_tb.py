@@ -870,7 +870,7 @@ def test_paragraph_series_m_tb_ol_nl_ol_nl_i3_tb():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm

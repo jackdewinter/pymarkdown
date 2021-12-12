@@ -1077,7 +1077,7 @@ this
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1576,7 +1576,9 @@ this
 @pytest.mark.gfm
 def test_extra_019x():
     """
-    TBD
+    Validate that having an HTML block inside of a list does not close the list
+    when the HTML block is started.
+    Per: https://github.com/jackdewinter/pymarkdown/issues/99
     """
 
     # Arrange
@@ -1619,7 +1621,7 @@ this
 @pytest.mark.gfm
 def test_extra_019a():
     """
-    TBD
+    Variation of 019 with extra space in front of html block.
     """
 
     # Arrange
@@ -1656,8 +1658,51 @@ this
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+@pytest.mark.gfm
+def test_extra_019b():
+    """
+    Variation of 019 with extra space in front of html block.
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>     <!-- this is
+>     a comment -->
+> 1. that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> ]",
+        "[olist(1,3):.:1:5::   \n   \n   \n]",
+        "[para(1,6):\n]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::False]",
+        "[html-block(3,6)]",
+        "[text(3,7):<!-- this is\n a comment -->: ]",
+        "[end-html-block:::False]",
+        "[li(5,3):5::1]",
+        "[para(5,6):]",
+        "[text(5,6):that:]",
+        "[end-para:::True]",
+        "[BLANK(6,1):]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+this
+ <!-- this is
+ a comment -->
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
 @pytest.mark.skip
@@ -1945,7 +1990,7 @@ def test_extra_022():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -1985,7 +2030,7 @@ foo</li>
 <hr />"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2025,7 +2070,7 @@ foo</li>
 <hr />"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2065,7 +2110,7 @@ foo</li>
 <hr />"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2107,7 +2152,7 @@ bar</li>
 <hr />"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2132,7 +2177,7 @@ with two lines.</li>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2157,7 +2202,7 @@ with two lines.</li>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2182,7 +2227,7 @@ with two lines.</li>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2249,7 +2294,7 @@ def test_extra_024x():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2316,7 +2361,7 @@ def test_extra_024a():
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
