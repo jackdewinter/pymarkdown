@@ -1659,6 +1659,7 @@ this
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_extra_019b():
     """
@@ -1702,6 +1703,7 @@ this
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 @pytest.mark.skip
