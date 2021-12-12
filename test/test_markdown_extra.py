@@ -1335,7 +1335,6 @@ this</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_017():
     """
     TBD
@@ -1351,15 +1350,15 @@ def test_extra_017():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n>\n> \n> \n> ]",
-        "[olist(1,3):.:1:5:  ]",
-        "[para(1,6):\n   ]",
+        "[olist(1,3):.:1:5::   \n\n   \n   \n]",
+        "[para(1,6):\n]",
         "[text(1,6):list\nthis::\n]",
         "[end-para:::True]",
         "[BLANK(3,2):]",
-        "[icode-block(4,7):    :\n    ]",
-        "[text(4,7):indented\n   code block:   ]",
+        "[icode-block(4,10):    :\n    ]",
+        "[text(4,10):indented\ncode block:]",
         "[end-icode-block:::True]",
-        "[li(6,3):5:  :1]",
+        "[li(6,3):5::1]",
         "[para(6,6):]",
         "[text(6,6):that:]",
         "[end-para:::True]",
@@ -1660,6 +1659,7 @@ this
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_extra_019b():
     """
@@ -1703,6 +1703,7 @@ this
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 @pytest.mark.skip
