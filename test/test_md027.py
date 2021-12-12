@@ -1606,6 +1606,7 @@ def test_md027_good_block_quote_ordered_list_html_block():
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md027_good_block_quote_ordered_list_html_block_with_indent():
     """
@@ -1637,6 +1638,7 @@ def test_md027_good_block_quote_ordered_list_html_block_with_indent():
         expected_output, expected_error, expected_return_code
     )
 
+
 @pytest.mark.rules
 def test_md027_good_block_quote_ordered_list_html_block_with_multiline():
     """
@@ -1664,6 +1666,7 @@ def test_md027_good_block_quote_ordered_list_html_block_with_multiline():
     execute_results.assert_results(
         expected_output, expected_error, expected_return_code
     )
+
 
 @pytest.mark.rules
 @pytest.mark.skip
