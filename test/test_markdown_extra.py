@@ -1387,10 +1387,12 @@ code block
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_extra_018():
+def test_extra_018x():
     """
-    TBD
+    Validate that having a fenced block inside of a list does not close the list
+    when the code block is started.
+
+    Per: https://github.com/jackdewinter/pymarkdown/issues/98
     """
 
     # Arrange
@@ -1401,7 +1403,15 @@ def test_extra_018():
 >    ```
 > 1. that
 """
-    expected_tokens = []
+    expected_tokens = [
+        '[block-quote(1,1)::> \n> \n> \n> \n> \n> ]',
+        '[olist(1,3):.:1:5::   \n   \n   \n   \n]',
+        '[para(1,6):\n]', '[text(1,6):list\nthis::\n]', '[end-para:::False]',
+        '[fcode-block(3,6):`:3:html:::::]', '[text(4,4):\a<\a&lt;\ahtml\a>\a&gt;\a:]', '[end-fcode-block::3:False]',
+        '[li(6,3):5::1]',
+        '[para(6,6):]', '[text(6,6):that:]', '[end-para:::True]',
+        '[BLANK(7,1):]',
+        '[end-olist:::True]', '[end-block-quote:::True]']
     expected_gfm = """<blockquote>
 <ol>
 <li>list
@@ -1416,6 +1426,116 @@ this
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+@pytest.mark.gfm
+def test_extra_018a():
+    """
+    variation of 18 with indent on first line
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>     ```html
+>    <html>
+>    ```
+> 1. that
+"""
+    expected_tokens = [
+        '[block-quote(1,1)::> \n> \n> \n> \n> \n> ]',
+        '[olist(1,3):.:1:5::   \n   \n   \n   \n]',
+        '[para(1,6):\n]', '[text(1,6):list\nthis::\n]', '[end-para:::False]',
+        '[fcode-block(3,7):`:3:html:::: :]', '[text(4,4):\a<\a&lt;\ahtml\a>\a&gt;\a:]', '[end-fcode-block::3:False]',
+        '[li(6,3):5::1]',
+        '[para(6,6):]', '[text(6,6):that:]', '[end-para:::True]',
+        '[BLANK(7,1):]',
+        '[end-olist:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+this
+<pre><code class="language-html">&lt;html&gt;
+</code></pre>
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
+def test_extra_018b():
+    """
+    variation of 18 with indent on second line
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>    ```html
+>     <html>
+>    ```
+> 1. that
+"""
+    expected_tokens = [
+        '[block-quote(1,1)::> \n> \n> \n> \n> \n> ]',
+        '[olist(1,3):.:1:5::   \n   \n   \n   \n]',
+        '[para(1,6):\n]', '[text(1,6):list\nthis::\n]', '[end-para:::False]',
+        '[fcode-block(3,6):`:3:html:::::]', '[text(4,4):\a<\a&lt;\ahtml\a>\a&gt;\a: ]', '[end-fcode-block::3:False]',
+        '[li(6,3):5::1]',
+        '[para(6,6):]', '[text(6,6):that:]', '[end-para:::True]',
+        '[BLANK(7,1):]',
+        '[end-olist:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+this
+<pre><code class="language-html"> &lt;html&gt;
+</code></pre>
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+@pytest.mark.gfm
+def test_extra_018c():
+    """
+    variation of 18 with indent on third line
+    """
+
+    # Arrange
+    source_markdown = """> 1. list
+>    this
+>    ```html
+>    <html>
+>     ```
+> 1. that
+"""
+    expected_tokens = [
+        '[block-quote(1,1)::> \n> \n> \n> \n> \n> ]',
+        '[olist(1,3):.:1:5::   \n   \n   \n   \n]',
+        '[para(1,6):\n]', '[text(1,6):list\nthis::\n]', '[end-para:::False]',
+        '[fcode-block(3,6):`:3:html:::::]', '[text(4,4):\a<\a&lt;\ahtml\a>\a&gt;\a:]', '[end-fcode-block: :3:False]',
+        '[li(6,3):5::1]',
+        '[para(6,6):]', '[text(6,6):that:]', '[end-para:::True]',
+        '[BLANK(7,1):]',
+        '[end-olist:::True]', '[end-block-quote:::True]']
+    expected_gfm = """<blockquote>
+<ol>
+<li>list
+this
+<pre><code class="language-html">&lt;html&gt;
+</code></pre>
+</li>
+<li>that</li>
+</ol>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 @pytest.mark.gfm
 def test_extra_019x():
