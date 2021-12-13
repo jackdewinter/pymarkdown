@@ -1081,7 +1081,6 @@ this
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_extra_014a():
     """
     TBD - test_md027_good_block_quote_ordered_list_thematic_break_misaligned
@@ -1096,11 +1095,11 @@ def test_extra_014a():
 """
     expected_tokens = [
         "[block-quote(1,1)::> \n> \n> \n> ]",
-        "[olist(1,3):.:1:5:]",
-        "[para(1,6):\n   \n    ]",
-        "[text(1,6):list\nthis\n::\n\n]",
-        "[text(3,5):*****:]",
-        "[end-para:::True]",
+        "[olist(1,3):.:1:5::   \n   \n\n]",
+        "[para(1,6):\n]",
+        "[text(1,6):list\nthis::\n]",
+        "[end-para:::False]",
+        "[tbreak(3,7):*: :*****]",
         "[li(4,3):5::1]",
         "[para(4,6):]",
         "[text(4,6):that:]",
