@@ -57,7 +57,7 @@ def test_dialhome_basic():
             split_file_data[0]
             == "Looking for semantic version information in standard location."
         )
-        assert split_file_data[1] == "Semantic version for calling module is '0.9.2'."
+        assert split_file_data[1] == "Semantic version for calling module is '0.9.3'."
         assert split_file_data[2].startswith("extension front-matter:")
     finally:
         if os.path.exists(log_file_name):
@@ -314,7 +314,7 @@ def test_dialhome_verify_different_web_page_version():
     # Assert
     assert (
         version_message
-        == "WARN: Current application version '0.0.0' differs from the published version '0.9.2'.\n"
+        == "WARN: Current application version '0.0.0' differs from the published version '0.9.3'.\n"
         + "  Please update the pymarkdownlnt application version."
     )
 
@@ -343,7 +343,7 @@ def test_dialhome_with_non_existent_marker_file():
     # Assert
     assert (
         version_message
-        == "WARN: Current application version '0.0.0' differs from the published version '0.9.2'.\n"
+        == "WARN: Current application version '0.0.0' differs from the published version '0.9.3'.\n"
         + "  Please update the pymarkdownlnt application version."
     )
 
@@ -372,7 +372,7 @@ def test_dialhome_with_bad_marker_file():
     # Assert
     assert (
         version_message
-        == "WARN: Current application version '0.0.0' differs from the published version '0.9.2'.\n"
+        == "WARN: Current application version '0.0.0' differs from the published version '0.9.3'.\n"
         + "  Please update the pymarkdownlnt application version."
     )
 
@@ -428,7 +428,7 @@ def test_dialhome_with_seven_day_old_marker_file():
     # Assert
     assert (
         version_message
-        == "WARN: Current application version '0.0.0' differs from the published version '0.9.2'.\n"
+        == "WARN: Current application version '0.0.0' differs from the published version '0.9.3'.\n"
         + "  Please update the pymarkdownlnt application version."
     )
 

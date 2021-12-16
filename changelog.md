@@ -2,6 +2,20 @@
 
 ## Unversioned - In Main, Not Released
 
+### Added
+
+- None
+
+### Changed
+
+- None
+
+### Fixed
+
+- None
+
+## Version 0.9.3 - Date: 2021-12-14
+
 This was a point release to allow fixed issues to be released.  While
 the full descriptions are below, here are some highlights:
 
