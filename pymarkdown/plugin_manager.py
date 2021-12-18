@@ -76,8 +76,7 @@ class PluginManager:
         self.__load_plugins(directory_to_search, plugin_files)
 
         all_additional_paths = []
-        if additional_paths:
-            all_additional_paths.extend(additional_paths)
+        all_additional_paths.extend([] if not additional_paths else additional_paths)
         more_paths = properties.get_string_property("plugins.additional_paths")
         if more_paths:
             all_additional_paths.extend(more_paths.split(","))
@@ -344,7 +343,7 @@ class PluginManager:
         return [
             x
             for x in os.listdir(directory_to_search)
-            if x.endswith(".py") and x[0:-3] != "__init__"
+            if x.endswith(".py") and x[:-3] != "__init__"
         ]
 
     @classmethod
@@ -388,7 +387,7 @@ class PluginManager:
             sys.path.insert(0, os.path.abspath(directory_to_search))
 
         for next_plugin_file in plugin_files:
-            next_plugin_module = next_plugin_file[0:-3]
+            next_plugin_module = next_plugin_file[:-3]
             plugin_class_name = self.__snake_to_camel(next_plugin_module)
             self.__attempt_to_load_plugin(
                 next_plugin_module, plugin_class_name, next_plugin_file

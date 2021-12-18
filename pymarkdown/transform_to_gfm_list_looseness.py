@@ -22,11 +22,7 @@ class TransformToGfmListLooseness:
         POGGER.debug("\n\n__calculate_list_looseness>>$", actual_token_index)
         is_loose, current_token_index, stack_count = False, actual_token_index + 1, 0
         while True:
-            check_me, stop_me, current_token = (
-                False,
-                False,
-                actual_tokens[current_token_index],
-            )
+            current_token = actual_tokens[current_token_index]
             (
                 check_me,
                 stack_count,
@@ -36,7 +32,7 @@ class TransformToGfmListLooseness:
                 current_token,
                 stack_count,
                 is_loose,
-                stop_me,
+                False,
                 actual_tokens,
                 current_token_index,
             )
@@ -45,8 +41,7 @@ class TransformToGfmListLooseness:
                 if TransformToGfmListLooseness.__is_token_loose(
                     actual_tokens, current_token_index
                 ):
-                    is_loose = True
-                    stop_me = True
+                    is_loose, stop_me = True, True
                     POGGER.debug("check-->Loose")
                 else:
                     POGGER.debug("check-->Normal")
@@ -146,11 +141,10 @@ class TransformToGfmListLooseness:
         current_token_index,
     ):
         POGGER.debug(">>list--end>>$", stack_count)
-        if stack_count == 0:
-            stop_me = True
-        else:
+        stop_me = bool(not stack_count)
+        if not stop_me:
             stack_count -= 1
-            if stack_count == 0:
+            if not stack_count:
                 POGGER.debug("<<check!!")
 
                 check_index = current_token_index + 1
@@ -166,11 +160,11 @@ class TransformToGfmListLooseness:
                     #     and actual_tokens[check_index].is_list_end
                     # ):
                     #     search_back_index -= 1
-                    if TransformToGfmListLooseness.__is_token_loose(
+                    stop_me = TransformToGfmListLooseness.__is_token_loose(
                         actual_tokens, search_back_index + 1
-                    ):
-                        is_loose = True
-                        stop_me = True
+                    )
+                    is_loose = stop_me
+                    if stop_me:
                         POGGER.debug("!!!latent-LOOSE!!!")
         POGGER.debug("<<list--end>>$", stack_count)
         return stop_me, is_loose, stack_count
@@ -190,13 +184,10 @@ class TransformToGfmListLooseness:
         current_token, stack_count, actual_tokens, current_token_index
     ):
         search_back_index = current_token_index - 2
-        pre_prev_token = actual_tokens[search_back_index]
-        POGGER.debug(">>pre_prev_token>>$", pre_prev_token)
-
-        while pre_prev_token.is_blank_line:
+        while actual_tokens[search_back_index].is_blank_line:
             search_back_index -= 1
-            pre_prev_token = actual_tokens[search_back_index]
 
+        pre_prev_token = actual_tokens[search_back_index]
         if pre_prev_token.is_end_token:
             assert pre_prev_token.start_markdown_token, str(pre_prev_token)
             pre_prev_token = pre_prev_token.start_markdown_token
@@ -229,12 +220,9 @@ class TransformToGfmListLooseness:
         """
 
         check_index = current_token_index - 1
-        token_to_check = actual_tokens[check_index]
-        POGGER.debug("token_to_check-->$", token_to_check)
-
-        while token_to_check.is_link_reference_definition:
+        while actual_tokens[check_index].is_link_reference_definition:
             check_index -= 1
-            token_to_check = actual_tokens[check_index]
+        token_to_check = actual_tokens[check_index]
 
         POGGER.debug("token_to_check-->$", token_to_check)
         if token_to_check.is_blank_line:
@@ -298,9 +286,8 @@ class TransformToGfmListLooseness:
         POGGER.debug("!!!!!!!!!!!!!!!$-of-$", search_index, actual_tokens_size)
         # check to see where we are, then grab the matching start to find
         # the loose
-        if search_index == actual_tokens_size:
-            is_in_loose_list = True
-        else:
+        is_in_loose_list = search_index == actual_tokens_size
+        if not is_in_loose_list:
             POGGER.debug(">>reset_list_looseness-token_list_start>>")
             new_index = TransformToGfmListLooseness.__find_owning_list_start(
                 actual_tokens, search_index

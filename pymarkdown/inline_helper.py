@@ -85,10 +85,9 @@ class InlineHelper:
             inline_response.new_index,
             inline_response.new_string,
             inline_response.new_string_unresolved,
-            source_text_size,
-        ) = (inline_request.next_index + 1, "", "", len(inline_request.source_text))
+        ) = (inline_request.next_index + 1, "", "")
         if (
-            inline_response.new_index >= source_text_size
+            inline_response.new_index >= len(inline_request.source_text)
             or inline_request.source_text[inline_response.new_index]
             == ParserHelper.newline_character
         ):
@@ -189,11 +188,10 @@ class InlineHelper:
             ):
                 end_index += 1
                 collected_string += InlineHelper.__character_reference_end_character
-                original_collected_string = collected_string
                 if collected_string in InlineHelper.__entity_map:
+                    inline_response.new_string_unresolved = collected_string
                     inline_response.original_string = collected_string
                     collected_string = InlineHelper.__entity_map[collected_string]
-                    inline_response.new_string_unresolved = original_collected_string
             inline_response.new_string, inline_response.new_index = (
                 collected_string,
                 end_index,
@@ -206,7 +204,7 @@ class InlineHelper:
             )
 
     @staticmethod
-    def handle_backslashes(source_text, add_text_signature=True):
+    def handle_backslashes(source_text):
         """
         Handle the processing of backslashes for anything other than the text
         blocks, which have additional needs for parsing.
@@ -224,7 +222,7 @@ class InlineHelper:
             POGGER.debug("handle_backslashes>>$>>", current_char)
             if current_char == InlineHelper.backslash_character:
                 inline_response = InlineHelper.handle_inline_backslash(
-                    inline_request, add_text_signature=add_text_signature
+                    inline_request, add_text_signature=False
                 )
             else:
                 assert (
@@ -268,7 +266,6 @@ class InlineHelper:
             text_to_append, alternate_escape_map.keys(), start_index
         )
         while next_index != -1:
-
             escaped_part = alternate_escape_map[text_to_append[next_index]]
             text_parts.extend(
                 [
@@ -432,14 +429,17 @@ class InlineHelper:
         inline_request, new_index, end_backtick_start_index
     ):
         between_text = inline_request.source_text[new_index:end_backtick_start_index]
-        original_between_text = between_text
+        original_between_text, leading_whitespace, trailing_whitespace = (
+            between_text,
+            "",
+            "",
+        )
         POGGER.debug(
             "after_collect>$>>$>>$<<",
             between_text,
             end_backtick_start_index,
             inline_request.source_text[end_backtick_start_index:],
         )
-        leading_whitespace, trailing_whitespace = "", ""
         if (
             len(between_text) > 2
             and between_text[0]
@@ -510,7 +510,7 @@ class InlineHelper:
         )
         POGGER.debug(">>last_non_whitespace_index>>$", last_non_whitespace_index)
         removed_end_whitespace = remaining_line[last_non_whitespace_index:]
-        remaining_line = remaining_line[0:last_non_whitespace_index]
+        remaining_line = remaining_line[:last_non_whitespace_index]
         POGGER.debug(">>removed_end_whitespace>>$>>", removed_end_whitespace)
         POGGER.debug(">>remaining_line>>$>>", remaining_line)
 
@@ -576,7 +576,7 @@ class InlineHelper:
     def __is_proper_hard_break(current_string, removed_end_whitespace_size):
         POGGER.debug(">>current_string>>$>>", current_string)
 
-        is_proper_hard_break, current_string_size = False, len(current_string)
+        current_string_size = len(current_string)
         if (
             removed_end_whitespace_size == 0
             and current_string_size
@@ -584,9 +584,11 @@ class InlineHelper:
             == InlineHelper.backslash_character
         ):
             POGGER.debug(">>$<<", current_string)
-            modified_current_string = current_string[0:-1]
+            modified_current_string = current_string[:-1]
             is_proper_hard_break = modified_current_string[-2:] != "\\\b"
             POGGER.debug(">>$<<", is_proper_hard_break)
+        else:
+            is_proper_hard_break = False
         return is_proper_hard_break
 
     # pylint: disable=too-many-arguments
@@ -613,7 +615,7 @@ class InlineHelper:
                     InlineHelper.backslash_character, line_number, adj_hard_column - 1
                 )
             )
-            current_string, whitespace_to_add = current_string[0:-1], None
+            current_string, whitespace_to_add = current_string[:-1], None
             append_to_current_string = ""
         elif removed_end_whitespace_size >= 2:
             POGGER.debug(">>whitespace hard break")
@@ -678,14 +680,13 @@ class InlineHelper:
         """
         Extract a string that is bounded by some manner of characters.
         """
-        break_characters, nesting_level, source_text_size = (
+        break_characters, nesting_level = (
             (
                 f"{InlineHelper.backslash_character}{close_character}{start_character}"
                 if start_character
                 else f"{InlineHelper.backslash_character}{close_character}"
             ),
             0,
-            len(source_text),
         )
         POGGER.debug(
             "extract_bounded_string>>new_index>>$>>data>>$>>",
@@ -701,7 +702,7 @@ class InlineHelper:
             next_index,
             data,
         )
-        while next_index < source_text_size and not (
+        while next_index < len(source_text) and not (
             source_text[next_index] == close_character and nesting_level == 0
         ):
             (
@@ -916,7 +917,6 @@ class InlineHelper:
         Parse a possible uri autolink and determine if it is valid.
         """
 
-        uri_scheme, path_index = "", -1
         if (
             InlineHelper.angle_bracket_start not in text_to_parse
             and text_to_parse[0] in string.ascii_letters
@@ -941,6 +941,8 @@ class InlineHelper:
                     return UriAutolinkMarkdownToken(
                         text_to_parse, line_number, column_number
                     )
+        else:
+            uri_scheme, path_index = "", -1
         return None
 
     @staticmethod
@@ -951,7 +953,6 @@ class InlineHelper:
         closing_angle_index = inline_request.source_text.find(
             InlineHelper.__angle_bracket_end, inline_request.next_index
         )
-        new_token, between_brackets = None, None
         if closing_angle_index not in (-1, inline_request.next_index + 1):
 
             between_brackets, remaining_line = (
@@ -984,6 +985,8 @@ class InlineHelper:
                 if after_index != -1:
                     closing_angle_index = after_index + inline_request.next_index + 1
                     between_brackets = new_token.raw_tag
+        else:
+            new_token, between_brackets = None, None
 
         inline_response = InlineResponse()
         if new_token:

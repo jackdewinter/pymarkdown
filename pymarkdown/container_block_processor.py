@@ -42,14 +42,13 @@ class ContainerBlockProcessor:
             container_depth,
             parser_properties,
         ):
-            return None, None, None, None, None, None, None, True
+            return None, None, None, None, None, None, True
 
         position_marker = ContainerBlockProcessor.__prepare_container_start_variables(
             parser_state,
             position_marker,
             container_depth,
         )
-        cheat_line = position_marker.text_to_parse
 
         (
             current_container_blocks,
@@ -65,7 +64,6 @@ class ContainerBlockProcessor:
         )
         return (
             position_marker,
-            cheat_line,
             current_container_blocks,
             adj_ws,
             block_quote_data,
@@ -100,7 +98,6 @@ class ContainerBlockProcessor:
 
         (
             position_marker,
-            cheat_line,
             current_container_blocks,
             adj_ws,
             block_quote_data,
@@ -116,7 +113,7 @@ class ContainerBlockProcessor:
             parser_properties,
         )
         if did_find_pragma:
-            return None, None, None, None, False
+            return [], None, None, None, False
 
         (
             end_container_indices,
@@ -219,7 +216,6 @@ class ContainerBlockProcessor:
                 last_block_quote_index,
                 last_list_start_index,
                 was_paragraph_continuation,
-                cheat_line,
             )
 
         return (
@@ -240,25 +236,24 @@ class ContainerBlockProcessor:
     ):
         # POGGER.debug("Stack Depth:$:", parser_state.original_stack_depth)
         # POGGER.debug("Document Depth:$:", parser_state.original_document_depth)
-        if container_depth == 0:
-            if "\t" in position_marker.text_to_parse:
-                line_to_parse = ParserHelper.detabify_string(
-                    position_marker.text_to_parse
-                )
-                POGGER.debug("Before tab replacement:$:", position_marker.text_to_parse)
-                POGGER.debug("After tab replacement :$:", line_to_parse)
-                position_marker = PositionMarker(
-                    position_marker.line_number,
-                    position_marker.index_number,
-                    line_to_parse,
-                    position_marker.index_indent,
-                )
+        if container_depth:
+            return position_marker
 
-            parser_state.mark_start_information(position_marker)
+        if ParserHelper.tab_character in position_marker.text_to_parse:
+            line_to_parse = ParserHelper.detabify_string(position_marker.text_to_parse)
+            POGGER.debug("Before tab replacement:$:", position_marker.text_to_parse)
+            POGGER.debug("After tab replacement :$:", line_to_parse)
+            position_marker = PositionMarker(
+                position_marker.line_number,
+                position_marker.index_number,
+                line_to_parse,
+                position_marker.index_indent,
+            )
 
-            parser_state.copy_of_token_stack = []
-            for next_item in parser_state.token_stack:
-                parser_state.copy_of_token_stack.append(next_item)
+        parser_state.mark_start_information(position_marker)
+
+        parser_state.copy_of_token_stack = []
+        parser_state.copy_of_token_stack.extend(parser_state.token_stack)
 
         return position_marker
 
@@ -321,7 +316,6 @@ class ContainerBlockProcessor:
         #     ">>__process_list_in_progress>>$>>",
         #     line_to_parse,
         # )
-        requeue_line_info, used_indent, was_paragraph_continuation = None, None, False
         if not did_process:
             (
                 did_process,
@@ -337,20 +331,26 @@ class ContainerBlockProcessor:
                 container_level_tokens,
                 extracted_whitespace,
             )
-        if not requeue_line_info:
-            # POGGER.debug_with_visible_whitespace(
-            #     ">>__process_list_in_progress>>$>>", line_to_parse
-            # )
-            # POGGER.debug("container_start_bq_count>>$", container_start_bq_count)
-            # POGGER.debug("block_quote_data.current_count>>$", block_quote_data.current_count)
-            # POGGER.debug("block_quote_data.stack_count>>$", block_quote_data.stack_count)
-            block_quote_data = ContainerBlockProcessor.__process_lazy_lines(
-                parser_state,
-                leaf_tokens,
-                block_quote_data,
-                line_to_parse,
-                container_level_tokens,
-                container_start_bq_count,
+            if not requeue_line_info:
+                # POGGER.debug_with_visible_whitespace(
+                #     ">>__process_list_in_progress>>$>>", line_to_parse
+                # )
+                # POGGER.debug("container_start_bq_count>>$", container_start_bq_count)
+                # POGGER.debug("block_quote_data.current_count>>$", block_quote_data.current_count)
+                # POGGER.debug("block_quote_data.stack_count>>$", block_quote_data.stack_count)
+                block_quote_data = ContainerBlockProcessor.__process_lazy_lines(
+                    parser_state,
+                    leaf_tokens,
+                    block_quote_data,
+                    line_to_parse,
+                    container_level_tokens,
+                    container_start_bq_count,
+                )
+        else:
+            requeue_line_info, used_indent, was_paragraph_continuation = (
+                None,
+                None,
+                False,
             )
 
         return (
@@ -437,11 +437,11 @@ class ContainerBlockProcessor:
                 current_container_blocks,
                 container_level_tokens,
             )
-            if requeue_line_info:
+            can_continue = bool(not requeue_line_info)
+            if not can_continue:
                 POGGER.debug(
                     ">>requeuing lines after looking for ordered list start. returning."
                 )
-                can_continue = False
 
         if can_continue:
             # POGGER.debug("block_quote_data.current_count>>$", block_quote_data.current_count)
@@ -530,8 +530,6 @@ class ContainerBlockProcessor:
         elif end_container_indices.ulist_index != -1:
             last_list_start_index = end_container_indices.ulist_index
 
-        did_process_blank_line = False
-        nested_removed_text = None
         if not parser_state.token_stack[-1].is_fenced_code_block:
             new_position_marker = PositionMarker(
                 position_marker.line_number, start_index, line_to_parse
@@ -564,6 +562,8 @@ class ContainerBlockProcessor:
             # POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
             # POGGER.debug("block_quote_data.current_count>>$", block_quote_data.current_count)
             # POGGER.debug("block_quote_data.stack_count>>$", block_quote_data.stack_count)
+        else:
+            did_process_blank_line, nested_removed_text = False, None
 
         # POGGER.debug("olist->container_level_tokens->$", container_level_tokens)
         # POGGER.debug("removed_chars_at_start>>>$", removed_chars_at_start)
@@ -603,7 +603,6 @@ class ContainerBlockProcessor:
         last_block_quote_index,
         last_list_start_index,
         was_paragraph_continuation,
-        cheat_line,
     ):
         # POGGER.debug_with_visible_whitespace("text>>$>>", line_to_parse)
         # POGGER.debug("container_level_tokens>>$>>", container_level_tokens)
@@ -638,7 +637,6 @@ class ContainerBlockProcessor:
             last_list_start_index,
             text_removed_by_container,
             was_paragraph_continuation,
-            cheat_line,
         )
         parser_state.clear_after_leaf_processing()
 
@@ -759,7 +757,6 @@ class ContainerBlockProcessor:
             new_position_marker.index_indent,
             new_position_marker.text_to_parse,
         )
-        new_list_index = -1
         if not did_process:
             (
                 did_process,
@@ -790,6 +787,8 @@ class ContainerBlockProcessor:
                     requeue_line_info,
                 )
             container_level_tokens.extend(resultant_tokens)
+        else:
+            new_list_index = -1
         POGGER.debug(
             "post-ulist>>#$#$#$#",
             position_marker.index_number,
@@ -858,8 +857,10 @@ class ContainerBlockProcessor:
         line_to_parse,
         adj_ws,
     ):
-        force_reline = False
-        ws_len = ParserHelper.calculate_length(extracted_whitespace) + previous_ws_len
+        force_reline, ws_len = (
+            False,
+            ParserHelper.calculate_length(extracted_whitespace) + previous_ws_len,
+        )
         if found_block_quote_token:
             leading_spaces = found_block_quote_token.calculate_next_leading_space_part(
                 increment_index=False, delta=-1
@@ -867,8 +868,7 @@ class ContainerBlockProcessor:
             POGGER.debug("PLFCB>>leading_spaces>>:$:", leading_spaces)
             old_start_index = len(leading_spaces)
         else:
-            other_block_quote_token = None
-            other_token_index = token_index
+            other_block_quote_token, other_token_index = None, token_index
             while other_token_index >= 0:
                 if parser_state.token_document[other_token_index].is_block_quote_start:
                     other_block_quote_token = parser_state.token_document[
@@ -1031,7 +1031,6 @@ class ContainerBlockProcessor:
         POGGER.debug("parser_state.nested_list_start>$", parser_state.nested_list_start)
         POGGER.debug("was_container_start>$", was_container_start)
 
-        nested_removed_text = None
         if was_container_start and position_marker.text_to_parse:
             assert container_depth < 10
             nested_container_starts = (
@@ -1060,7 +1059,7 @@ class ContainerBlockProcessor:
 
             (
                 start_index,
-                delta,
+                indent_level_delta,
                 adj_line_to_parse,
                 already_adjusted,
                 active_container_index,
@@ -1075,22 +1074,19 @@ class ContainerBlockProcessor:
 
             assert not leaf_tokens
             (
-                container_level_tokens,
                 adj_line_to_parse,
                 adjusted_text_to_parse,
             ) = ContainerBlockProcessor.__do_nested_cleanup(
                 parser_state,
                 block_quote_data,
-                delta,
+                indent_level_delta,
                 already_adjusted,
                 adj_line_to_parse,
                 container_level_tokens,
                 active_container_index,
                 adjusted_text_to_parse,
             )
-            POGGER.debug_with_visible_whitespace(
-                "container_level_tokens>>$<<", container_level_tokens
-            )
+            container_level_tokens = []
 
             (
                 did_process_blank_line,
@@ -1108,6 +1104,8 @@ class ContainerBlockProcessor:
                 container_depth,
                 parser_properties,
             )
+        else:
+            nested_removed_text = None
 
         return (
             adjusted_text_to_parse,
@@ -1141,7 +1139,7 @@ class ContainerBlockProcessor:
             active_container_index,
             end_container_indices.block_index,
         )
-        delta, already_adjusted = 0, False
+        indent_level_delta, already_adjusted = 0, False
         if (
             end_container_indices.block_index != -1
             and not nested_container_starts.ulist_index
@@ -1162,7 +1160,7 @@ class ContainerBlockProcessor:
                     start_index,
                     indent_level,
                     indent_was_adjusted,
-                    delta,
+                    indent_level_delta,
                 ) = ContainerBlockProcessor.__calculate_initial_list_adjustments(
                     parser_state, adj_line_to_parse, end_container_indices
                 )
@@ -1182,7 +1180,7 @@ class ContainerBlockProcessor:
                 )
         return (
             start_index,
-            delta,
+            indent_level_delta,
             adj_line_to_parse,
             already_adjusted,
             active_container_index,
@@ -1194,18 +1192,12 @@ class ContainerBlockProcessor:
     def __calculate_initial_list_adjustments(
         parser_state, adj_line_to_parse, end_container_indices
     ):
-
-        delta, indent_level = 0, parser_state.nested_list_start.indent_level
         start_index, _ = ParserHelper.extract_whitespace(adj_line_to_parse, 0)
         POGGER.debug(
             "end_container_indices.block_index>>$<<",
             end_container_indices.block_index,
         )
         POGGER.debug("start_index>>$<<", start_index)
-        POGGER.debug(
-            "indent_level>>$<<",
-            indent_level,
-        )
 
         POGGER.debug(
             "parser_state.nested_list_start.matching_markdown_token>>$<<",
@@ -1235,7 +1227,11 @@ class ContainerBlockProcessor:
             "column_number_delta>>$<<",
             column_number_delta,
         )
-        adjusted_indent_level = column_number_delta + end_container_indices.block_index
+        indent_level_delta, indent_level, adjusted_indent_level = (
+            0,
+            parser_state.nested_list_start.indent_level,
+            column_number_delta + end_container_indices.block_index,
+        )
         POGGER.debug(
             "adjusted_indent_level>>$<<  indent_level>$",
             adjusted_indent_level,
@@ -1243,10 +1239,10 @@ class ContainerBlockProcessor:
         )
         indent_was_adjusted = indent_level != adjusted_indent_level
         if indent_level > adjusted_indent_level:
-            delta = indent_level - adjusted_indent_level
+            indent_level_delta = indent_level - adjusted_indent_level
         indent_level = column_number_delta + end_container_indices.block_index
 
-        return start_index, indent_level, indent_was_adjusted, delta
+        return start_index, indent_level, indent_was_adjusted, indent_level_delta
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -1276,7 +1272,6 @@ class ContainerBlockProcessor:
                 parser_state,
                 include_lists=True,
             )
-            # assert False
             parser_state.token_document.extend(x_tokens)
             parser_state.token_document.extend(y_tokens)
         elif (
@@ -1372,11 +1367,8 @@ class ContainerBlockProcessor:
             adj_line_to_parse = f"{adjustment_filler}{adj_line_to_parse}"
             POGGER.debug("check next container_start>post<<$<<", adj_line_to_parse)
 
-        if container_level_tokens:
-            parser_state.token_document.extend(container_level_tokens)
-            container_level_tokens = []
-
-        return container_level_tokens, adj_line_to_parse, adjusted_text_to_parse
+        parser_state.token_document.extend(container_level_tokens)
+        return adj_line_to_parse, adjusted_text_to_parse
 
     # pylint: enable=too-many-arguments
 
@@ -1400,8 +1392,6 @@ class ContainerBlockProcessor:
             parser_state.token_document,
         )
 
-        did_process_blank_line = False
-        nested_removed_text = None
         if (
             nested_container_starts.ulist_index
             or nested_container_starts.olist_index
@@ -1424,6 +1414,8 @@ class ContainerBlockProcessor:
                 position_marker,
                 parser_properties,
             )
+        else:
+            did_process_blank_line, nested_removed_text = False, None
         parser_state.set_no_para_start_if_empty()
 
         return (
@@ -1471,18 +1463,10 @@ class ContainerBlockProcessor:
 
         whitespace_scan_start_index = 0
         for token_stack_index in parser_state.token_stack:
-            if token_stack_index.is_block_quote:
-                # if text_removed_by_container:
-                #     if text_removed_by_container.startswith("> "):
-                #         text_removed_by_container = text_removed_by_container[2:]
-                #     elif text_removed_by_container.startswith(">"):
-                #         text_removed_by_container = text_removed_by_container[1:]
-                #     else:
-                #         POGGER.info("check next container_start> out of block quote data")
-                pass
-            elif token_stack_index.is_list:
-                if token_stack_index.ws_before_marker <= len(ex_ws_test):
-                    whitespace_scan_start_index = token_stack_index.ws_before_marker
+            if token_stack_index.is_list and token_stack_index.ws_before_marker <= len(
+                ex_ws_test
+            ):
+                whitespace_scan_start_index = token_stack_index.ws_before_marker
 
         after_ws_index, ex_whitespace = ParserHelper.extract_whitespace(
             line_to_parse, whitespace_scan_start_index
@@ -1560,7 +1544,7 @@ class ContainerBlockProcessor:
                 nested_removed_text = split_spaces[-1]
         return nested_removed_text
 
-    # pylint: disable=too-many-arguments, too-many-locals
+    # pylint: disable=too-many-arguments
     @staticmethod
     def __look_for_container_blocks(
         parser_state,
@@ -1577,8 +1561,7 @@ class ContainerBlockProcessor:
         POGGER.debug("check next container_start>recursing")
         POGGER.debug("check next container_start>>$\n", adj_line_to_parse)
         POGGER.debug("block_quote_data.current_count>$", block_quote_data.current_count)
-        container_start_bq_count, adj_block, position_marker = (
-            block_quote_data.current_count,
+        adj_block, position_marker = (
             None if end_of_bquote_start_index == -1 else end_of_bquote_start_index,
             PositionMarker(position_marker.line_number, -1, adj_line_to_parse),
         )
@@ -1596,7 +1579,7 @@ class ContainerBlockProcessor:
             position_marker,
             False,
             parser_properties,
-            container_start_bq_count,
+            block_quote_data.current_count,
             container_depth=container_depth + 1,
             foobar=adj_block,
             init_bq=block_quote_data.current_count,
@@ -1637,7 +1620,7 @@ class ContainerBlockProcessor:
             nested_removed_text,
         )
 
-    # pylint: enable=too-many-arguments, too-many-locals
+    # pylint: enable=too-many-arguments
 
     @staticmethod
     def __process_list_in_progress(
@@ -1647,12 +1630,6 @@ class ContainerBlockProcessor:
         container_level_tokens,
         extracted_whitespace,
     ):
-        did_process, used_indent, requeue_line_info, was_paragraph_continuation = (
-            False,
-            None,
-            None,
-            False,
-        )
         did_process, ind = LeafBlockProcessor.check_for_list_in_process(parser_state)
         if did_process:
             assert not container_level_tokens
@@ -1677,6 +1654,12 @@ class ContainerBlockProcessor:
             POGGER.debug("clt>>line_to_parse>>:$:>>", line_to_parse)
             POGGER.debug("clt>>used_indent>>:$:>>", used_indent)
             POGGER.debug("clt>>requeue_line_info>>:$:>>", requeue_line_info)
+        else:
+            used_indent, requeue_line_info, was_paragraph_continuation = (
+                None,
+                None,
+                False,
+            )
 
         return (
             did_process,
@@ -1726,9 +1709,7 @@ class ContainerBlockProcessor:
             ex_whitespace,
         )
 
-        if lazy_tokens:
-            POGGER.debug("clt>>lazy-found")
-            container_level_tokens.extend(lazy_tokens)
+        container_level_tokens.extend(lazy_tokens)
         return block_quote_data
 
     # pylint: enable=too-many-arguments
@@ -1768,8 +1749,10 @@ class ContainerBlockProcessor:
         ):
             # pylint: enable=chained-comparison
 
-            document_index = len(parser_state.token_document) - 1
-            found_list_token = None
+            found_list_token, document_index = (
+                None,
+                len(parser_state.token_document) - 1,
+            )
             while (
                 document_index >= 0
                 and parser_state.token_document[document_index].line_number
@@ -1814,7 +1797,6 @@ class ContainerBlockProcessor:
                 POGGER.debug(
                     "parser_state.token_document>>$", parser_state.token_document
                 )
-        return extracted_whitespace
 
     # pylint: enable=too-many-arguments
 
@@ -1875,14 +1857,12 @@ class ContainerBlockProcessor:
                     len(text_removed_by_container) if text_removed_by_container else 0
                 )
             elif parser_state.token_stack[stack_index].is_list:
-                if parser_state.token_stack[stack_index].last_new_list_token:
-                    proposed_indent_level = parser_state.token_stack[
-                        stack_index
-                    ].last_new_list_token.indent_level
-                else:
-                    proposed_indent_level = parser_state.token_stack[
-                        stack_index
-                    ].matching_markdown_token.indent_level
+                stack_token = parser_state.token_stack[stack_index]
+                proposed_indent_level = (
+                    stack_token.last_new_list_token.indent_level
+                    if parser_state.token_stack[stack_index].last_new_list_token
+                    else stack_token.matching_markdown_token.indent_level
+                )
             else:
                 break
             POGGER.debug(
@@ -1905,7 +1885,6 @@ class ContainerBlockProcessor:
         last_block_index,
         text_removed_by_container,
         total_ws,
-        cheat_line,
     ):
 
         if xposition_marker.text_to_parse and not was_paragraph_continuation:
@@ -1925,22 +1904,27 @@ class ContainerBlockProcessor:
             new_text_to_parse = xposition_marker.text_to_parse[current_indent_level:]
 
             new_index_indent = xposition_marker.index_indent + current_indent_level
-            POGGER.debug("cheat_line>>:$:<", cheat_line)
-            assert cheat_line.endswith(new_text_to_parse), (
+            POGGER.debug(
+                "original_line_to_parse>>:$:<", parser_state.original_line_to_parse
+            )
+            assert parser_state.original_line_to_parse.endswith(new_text_to_parse), (
                 "cheat=:"
-                + ParserHelper.make_value_visible(cheat_line)
+                + ParserHelper.make_value_visible(parser_state.original_line_to_parse)
                 + ":,bob=:"
                 + ParserHelper.make_value_visible(new_text_to_parse)
                 + ":"
             )
-            new_index_indent = len(cheat_line) - len(new_text_to_parse)
+            new_index_indent = len(parser_state.original_line_to_parse) - len(
+                new_text_to_parse
+            )
 
             POGGER.debug("new_text_to_parse>>:$:<", new_text_to_parse)
             POGGER.debug("new_index_indent>>:$:<", new_index_indent)
-            if text_removed_by_container:
-                text_removed_by_container += prefix_text
-            else:
-                text_removed_by_container = prefix_text
+            text_removed_by_container = (
+                text_removed_by_container + prefix_text
+                if text_removed_by_container
+                else prefix_text
+            )
         else:
             new_text_to_parse = xposition_marker.text_to_parse
             new_index_indent = xposition_marker.index_indent
@@ -1952,7 +1936,7 @@ class ContainerBlockProcessor:
             new_text_to_parse,
             new_index_indent,
         )
-        return position_marker, text_removed_by_container, total_ws
+        return position_marker, text_removed_by_container
 
     # pylint: enable=too-many-arguments
 
@@ -1969,7 +1953,6 @@ class ContainerBlockProcessor:
         last_list_start_index,
         text_removed_by_container,
         was_paragraph_continuation,
-        cheat_line,
     ):
         assert not leaf_tokens
         POGGER.debug("parsing leaf>>")
@@ -2014,7 +1997,7 @@ class ContainerBlockProcessor:
             parser_state, last_block_index, last_list_index
         )
 
-        extracted_whitespace = ContainerBlockProcessor.__adjust_for_list_container(
+        ContainerBlockProcessor.__adjust_for_list_container(
             parser_state,
             last_block_index,
             last_list_index,
@@ -2026,7 +2009,6 @@ class ContainerBlockProcessor:
         (
             position_marker,
             text_removed_by_container,
-            total_ws,
         ) = ContainerBlockProcessor.__adjust_containers_before_leaf_blocks(
             parser_state,
             xposition_marker,
@@ -2034,7 +2016,6 @@ class ContainerBlockProcessor:
             last_block_index,
             text_removed_by_container,
             total_ws,
-            cheat_line,
         )
 
         (
@@ -2099,7 +2080,6 @@ class ContainerBlockProcessor:
     @staticmethod
     def __handle_fenced_code_block(
         parser_state,
-        outer_processed,
         position_marker,
         extracted_whitespace,
         new_tokens,
@@ -2107,29 +2087,30 @@ class ContainerBlockProcessor:
         """
         Take care of the processing for fenced code blocks.
         """
-        if not parser_state.token_stack[-1].was_link_definition_started:
-            (
-                fenced_tokens,
-                extracted_whitespace,
-            ) = LeafBlockProcessor.parse_fenced_code_block(
-                parser_state,
-                position_marker,
-                extracted_whitespace,
-            )
-            outer_processed = False
-            if fenced_tokens:
-                new_tokens.extend(fenced_tokens)
-                outer_processed = True
-            elif parser_state.token_stack[-1].is_fenced_code_block:
-                new_tokens.append(
-                    TextMarkdownToken(
-                        position_marker.text_to_parse[position_marker.index_number :],
-                        extracted_whitespace,
-                        position_marker=position_marker,
-                    )
+        if parser_state.token_stack[-1].was_link_definition_started:
+            return False
+
+        (
+            fenced_tokens,
+            extracted_whitespace,
+        ) = LeafBlockProcessor.parse_fenced_code_block(
+            parser_state,
+            position_marker,
+            extracted_whitespace,
+        )
+        if fenced_tokens:
+            new_tokens.extend(fenced_tokens)
+        elif parser_state.token_stack[-1].is_fenced_code_block:
+            new_tokens.append(
+                TextMarkdownToken(
+                    position_marker.text_to_parse[position_marker.index_number :],
+                    extracted_whitespace,
+                    position_marker=position_marker,
                 )
-                outer_processed = True
-        return outer_processed
+            )
+        else:
+            return False
+        return True
 
     @staticmethod
     def __handle_html_block(
@@ -2162,8 +2143,6 @@ class ContainerBlockProcessor:
                     old_top_of_stack,
                     html_tokens,
                 )
-            else:
-                POGGER.debug(">>html not started>>")
             new_tokens.extend(html_tokens)
         if parser_state.token_stack[-1].is_html_block:
             POGGER.debug(">>html continued>>")
@@ -2214,7 +2193,6 @@ class ContainerBlockProcessor:
 
         outer_processed = ContainerBlockProcessor.__handle_fenced_code_block(
             parser_state,
-            False,
             position_marker,
             extracted_whitespace,
             new_tokens,

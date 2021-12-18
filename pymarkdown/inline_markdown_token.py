@@ -631,7 +631,7 @@ class TextMarkdownToken(InlineMarkdownToken):
                 first_non_whitespace_index : first_non_whitespace_index
                 + collected_whitespace_length
             ]
-            self.__token_text = self.__token_text[0:first_non_whitespace_index]
+            self.__token_text = self.__token_text[:first_non_whitespace_index]
         return removed_whitespace
 
     def combine(self, other_text_token, remove_leading_spaces):
@@ -674,7 +674,7 @@ class TextMarkdownToken(InlineMarkdownToken):
                 removed_whitespace, prefix_whitespace = whitespace_present, ""
             else:
                 removed_whitespace, prefix_whitespace = (
-                    whitespace_present[0:remove_leading_spaces],
+                    whitespace_present[:remove_leading_spaces],
                     whitespace_present[remove_leading_spaces:],
                 )
 
@@ -763,7 +763,7 @@ class SpecialTextMarkdownToken(TextMarkdownToken):
         """
         Adjust the token's text by the repeat count.
         """
-        self._set_token_text(self.token_text[0 : self.repeat_count])
+        self._set_token_text(self.token_text[: self.repeat_count])
 
     def reduce_repeat_count(self, emphasis_length, adjust_column_number=False):
         """

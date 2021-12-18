@@ -168,13 +168,15 @@ class DialHomeHelper:
         if not force_version_check:
             self.refresh_check_marker(int(datetime.datetime.now().timestamp()))
 
-        if current_version != extract_version:
-            return (
+        return (
+            (
                 f"WARN: Current application version '{extract_version}' differs "
                 + f"from the published version '{current_version}'.\n"
                 + f"  Please update the {self.__package_name} application version."
             )
-        return None
+            if current_version != extract_version
+            else None
+        )
 
     # pylint: disable=broad-except
     def __get_pypi_package_version(self):

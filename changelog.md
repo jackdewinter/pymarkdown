@@ -91,6 +91,8 @@ the full descriptions are below, here are some highlights:
   - parser: after work on 153, this was resolved
 - [Fixed - Issue 99](https://github.com/jackdewinter/pymarkdown/issues/99)
   - parser: after work on 153, this was resolved
+- [Fixed - Issue 100](https://github.com/jackdewinter/pymarkdown/issues/100)
+  - parser: after work on 153, this was resolved
 - [Fixed - Issue 153](https://github.com/jackdewinter/pymarkdown/issues/153)
   - parser: hit missed scenario test with list indents
 

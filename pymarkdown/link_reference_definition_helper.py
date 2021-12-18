@@ -36,23 +36,17 @@ class LinkReferenceDefinitionHelper:
         Process a link deference definition.  Note, this requires a lot of work to
         handle properly because of partial definitions across lines.
         """
-        (
-            line_to_parse,
-            start_index,
-            lines_to_requeue,
-            was_started,
-            lrd_stack_token,
-        ) = (
+        (line_to_parse, start_index, lines_to_requeue, lrd_stack_token,) = (
             position_marker.text_to_parse,
             position_marker.index_number,
             [],
-            False,
             None,
         )
 
         is_blank_line = not line_to_parse and not start_index
-        if parser_state.token_stack[-1].was_link_definition_started:
-            was_started, lrd_stack_token = True, parser_state.token_stack[-1]
+        was_started = parser_state.token_stack[-1].was_link_definition_started
+        if was_started:
+            lrd_stack_token = parser_state.token_stack[-1]
             original_stack_depth, original_document_depth = (
                 lrd_stack_token.original_stack_depth,
                 lrd_stack_token.original_document_depth,
@@ -150,13 +144,12 @@ class LinkReferenceDefinitionHelper:
         lines_to_requeue,
     ):
 
-        force_ignore_first_as_lrd, did_pause_lrd, new_tokens = False, False, []
-
-        if (
+        did_pause_lrd = (
             end_lrd_index >= 0
             and end_lrd_index == line_to_parse_size
             and not is_blank_line
-        ):
+        )
+        if did_pause_lrd:
             POGGER.debug(">>parse_link_reference_definition>>continuation")
             LinkReferenceDefinitionHelper.__add_line_for_lrd_continuation(
                 parser_state,
@@ -168,7 +161,6 @@ class LinkReferenceDefinitionHelper:
                 original_stack_depth,
                 original_document_depth,
             )
-            did_pause_lrd = True
         if (not did_pause_lrd and was_started) or did_complete_lrd:
             POGGER.debug(">>parse_link_reference_definition>>was_started")
             (
@@ -184,6 +176,7 @@ class LinkReferenceDefinitionHelper:
                 lines_to_requeue,
             )
         else:
+            force_ignore_first_as_lrd, new_tokens = False, []
             POGGER.debug(">>parse_link_reference_definition>>other")
 
         POGGER.debug(">>XXXXXX>>requeue:$:", lines_to_requeue)
@@ -339,8 +332,7 @@ class LinkReferenceDefinitionHelper:
             else:
                 while len(parser_state.token_stack):
                     del parser_state.token_stack[-1]
-                for next_token in lrd_stack_token.copy_of_token_stack:
-                    parser_state.token_stack.append(next_token)
+                parser_state.token_stack.extend(lrd_stack_token.copy_of_token_stack)
             POGGER.debug(">>XXXXXX>>token_stack(after):$:", parser_state.token_stack)
 
             POGGER.debug(
@@ -439,7 +431,6 @@ class LinkReferenceDefinitionHelper:
             return False, -1, None
 
         POGGER.debug("parse_link_reference_definition")
-        inline_title, inline_link = "", None
         keep_going, new_index, collected_destination = LinkHelper.extract_link_label(
             line_to_parse, start_index + 1
         )
@@ -454,6 +445,8 @@ class LinkReferenceDefinitionHelper:
             ) = LinkHelper.extract_link_destination(
                 line_to_parse, new_index, is_blank_line
             )
+        else:
+            inline_link = None
         if keep_going:
             (
                 keep_going,
@@ -463,6 +456,8 @@ class LinkReferenceDefinitionHelper:
                 line_title_whitespace,
                 inline_raw_title,
             ) = LinkHelper.extract_link_title(line_to_parse, new_index, is_blank_line)
+        else:
+            inline_title = ""
         if keep_going:
             (
                 keep_going,
@@ -481,7 +476,7 @@ class LinkReferenceDefinitionHelper:
             if not normalized_destination:
                 keep_going, new_index = False, -1
         if not keep_going:
-            return False, new_index, None
+            return keep_going, new_index, None
 
         assert new_index != -1
 
@@ -495,7 +490,7 @@ class LinkReferenceDefinitionHelper:
             and line_title_whitespace
             and line_title_whitespace[-1] == ParserHelper.newline_character
         ):
-            line_title_whitespace = line_title_whitespace[0:-1]
+            line_title_whitespace = line_title_whitespace[:-1]
 
         POGGER.debug(">>inline_link>>$<<", inline_link)
         POGGER.debug(">>inline_title>>$<<", inline_title)
@@ -618,16 +613,15 @@ class LinkReferenceDefinitionHelper:
         LRD in the mix somehow.  So take lines off the end while we have lines.
         """
         (
-            do_again,
             is_blank_line,
             line_to_parse,
             did_complete_lrd,
             end_lrd_index,
             parsed_lrd_tuple,
-        ) = (True, None, None, None, None, None)
+        ) = (None, None, None, None, None)
         parser_state.token_stack[-1].add_continuation_line(remaining_line_to_parse)
         parser_state.token_stack[-1].add_unmodified_line(unmodified_line_to_parse)
-        while do_again and parser_state.token_stack[-1].continuation_lines:
+        while parser_state.token_stack[-1].continuation_lines:
             POGGER.debug(
                 "continuation_lines>>$<<",
                 parser_state.token_stack[-1].continuation_lines,
@@ -655,7 +649,7 @@ class LinkReferenceDefinitionHelper:
             is_blank_line, line_to_parse = True, parser_state.token_stack[
                 -1
             ].get_joined_lines("")
-            line_to_parse = line_to_parse[0:-1]
+            line_to_parse = line_to_parse[:-1]
             start_index, extracted_whitespace = ParserHelper.extract_whitespace(
                 line_to_parse, 0
             )
@@ -678,7 +672,8 @@ class LinkReferenceDefinitionHelper:
                 end_lrd_index,
                 len(line_to_parse),
             )
-            do_again = not did_complete_lrd
+            if did_complete_lrd:
+                break
         return (
             is_blank_line,
             line_to_parse,
@@ -701,8 +696,6 @@ class LinkReferenceDefinitionHelper:
         """
         Take care of the processing for link reference definitions.
         """
-        requeue_line_info, new_tokens = None, []
-
         POGGER.debug(
             "handle_link_reference_definition>>pre_tokens>>$<<",
             pre_tokens,
@@ -741,6 +734,8 @@ class LinkReferenceDefinitionHelper:
                     "plflb-process_link_reference_definition>>outer_processed>>$<lines_to_requeue<(None)",
                     outer_processed,
                 )
+        else:
+            requeue_line_info, new_tokens = None, []
 
         POGGER.debug("handle_link_reference_definition>>pre_tokens>>$<<", pre_tokens)
         pre_tokens.extend(new_tokens)

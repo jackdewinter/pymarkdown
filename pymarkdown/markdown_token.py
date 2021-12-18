@@ -573,12 +573,10 @@ class MarkdownToken:
         """
         return self.token_name == MarkdownToken._token_inline_image
 
-    # pylint: disable=too-many-arguments
     def generate_close_markdown_token_from_markdown_token(
         self,
         extracted_whitespace,
         extra_end_data,
-        was_forced,
         line_number=0,
         column_number=0,
     ):
@@ -590,12 +588,10 @@ class MarkdownToken:
             extracted_whitespace,
             extra_end_data,
             self,
-            was_forced,
+            False,
             line_number=line_number,
             column_number=column_number,
         )
-
-    # pylint: enable=too-many-arguments
 
 
 # pylint: enable=too-many-public-methods,too-many-instance-attributes

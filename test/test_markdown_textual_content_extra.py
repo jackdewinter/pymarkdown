@@ -14,13 +14,13 @@ def test_textual_content_extra_1():
     """
 
     # Arrange
-    source_markdown = """each\bof\athese\x02should\x03be\x04escaped\x05!"""
+    source_markdown = """each\bof\athese\x02should\x03be\x03escaped\x05!"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):each\x05\bof\x05\athese\x05\x02should\x05\x03be\x05\x04escaped\x05\x05!:]",
+        "[text(1,1):each\x05\bof\x05\athese\x05\x02should\x05\x03be\x05\x03escaped\x05\x05!:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>each\bof\athese\x02should\x03be\x04escaped\x05!</p>"""
+    expected_gfm = """<p>each\bof\athese\x02should\x03be\x03escaped\x05!</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
@@ -437,27 +437,6 @@ def test_textual_content_extra_21():
 
 
 @pytest.mark.gfm
-def test_textual_content_extra_22():
-    """
-    Test case extra 22: Blech character
-    NOTE: Since this is only appears not-naturally in whitespace, cannot come
-          up with embedded test case.
-    """
-
-    # Arrange
-    source_markdown = """this character \x04 is me"""
-    expected_tokens = [
-        "[para(1,1):]",
-        "[text(1,1):this character \x05\x04 is me:]",
-        "[end-para:::True]",
-    ]
-    expected_gfm = """<p>this character \x04 is me</p>"""
-
-    # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
-
-
-@pytest.mark.gfm
 def test_textual_content_extra_23():
     """
     Test case extra 23: Escape character
@@ -483,13 +462,13 @@ def test_textual_content_extra_24():
     """
 
     # Arrange
-    source_markdown = """\b\a\x02\x03\x04\x05"""
+    source_markdown = """\b\a\x02\x03\x05"""
     expected_tokens = [
         "[para(1,1):]",
-        "[text(1,1):\x05\b\x05\a\x05\x02\x05\x03\x05\x04\x05\x05:]",
+        "[text(1,1):\x05\b\x05\a\x05\x02\x05\x03\x05\x05:]",
         "[end-para:::True]",
     ]
-    expected_gfm = """<p>\b\a\x02\x03\x04\x05</p>"""
+    expected_gfm = """<p>\b\a\x02\x03\x05</p>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
