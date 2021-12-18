@@ -22,7 +22,6 @@ class CoalesceProcessor:
         """
         coalesced_list = [first_pass_results[0]]
         for coalesce_index in range(1, len(first_pass_results)):
-            did_process = False
             POGGER.debug(
                 "coalesce_text_blocks>>>>$<<",
                 first_pass_results[coalesce_index],
@@ -31,14 +30,15 @@ class CoalesceProcessor:
                 did_process = CoalesceProcessor.__coalesce_with_previous(
                     first_pass_results, coalesced_list, coalesce_index
                 )
-            elif (
-                first_pass_results[coalesce_index].is_blank_line
-                and coalesced_list[-1].is_code_block
-            ):
-                CoalesceProcessor.__coalesce_with_blank_line(
-                    first_pass_results, coalesced_list, coalesce_index
+            else:
+                did_process = (
+                    first_pass_results[coalesce_index].is_blank_line
+                    and coalesced_list[-1].is_code_block
                 )
-                did_process = True
+                if did_process:
+                    CoalesceProcessor.__coalesce_with_blank_line(
+                        first_pass_results, coalesced_list, coalesce_index
+                    )
             if not did_process:
                 coalesced_list.append(first_pass_results[coalesce_index])
 
@@ -74,7 +74,6 @@ class CoalesceProcessor:
     @staticmethod
     def __coalesce_with_previous(first_pass_results, coalesced_list, coalesce_index):
 
-        did_process = False
         POGGER.debug(">>coalesce_text_blocks>>>>$<<", coalesced_list[-1])
         if first_pass_results[coalesce_index].is_text or (
             first_pass_results[coalesce_index].is_blank_line
@@ -101,8 +100,8 @@ class CoalesceProcessor:
             POGGER.debug("indented_whitespace>>$<<", indented_whitespace)
             if coalesced_list[-2].is_indented_code_block:
                 coalesced_list[-2].add_indented_whitespace(indented_whitespace)
-            did_process = True
-        return did_process
+            return True
+        return False
 
     @staticmethod
     def __coalesce_with_blank_line(first_pass_results, coalesced_list, coalesce_index):

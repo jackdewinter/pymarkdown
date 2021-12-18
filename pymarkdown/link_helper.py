@@ -92,10 +92,9 @@ class LinkHelper:
         """
         Extract the link reference definition's link label.
         """
-        label_parts, keep_collecting = [], True
+        label_parts = []
 
-        while keep_collecting:
-            keep_collecting = False
+        while True:
             new_index, ert_new = ParserHelper.collect_until_one_of_characters(
                 line_to_parse, new_index, LinkHelper.__link_label_breaks
             )
@@ -109,12 +108,13 @@ class LinkHelper:
                 )
                 new_index = inline_response.new_index
                 label_parts.append(line_to_parse[old_new_index:new_index])
-                keep_collecting = True
             elif ParserHelper.is_character_at_index(
                 line_to_parse, new_index, LinkHelper.link_label_start
             ):
                 POGGER.debug(">> unescaped [, bailing")
                 return False, -1, None
+            else:
+                break  # pragma: no cover
 
         POGGER.debug("look for ]>>$<<", line_to_parse[new_index:])
         if not ParserHelper.is_character_at_index(
@@ -145,7 +145,6 @@ class LinkHelper:
         """
         Extract the link reference definition's optional link title.
         """
-        inline_title, pre_inline_title = "", ""
         POGGER.debug("before ws>>$>", line_to_parse[new_index:])
         new_index, ex_ws = ParserHelper.extract_any_whitespace(line_to_parse, new_index)
         POGGER.debug(
@@ -165,6 +164,8 @@ class LinkHelper:
             ) = LinkHelper.__parse_link_title(line_to_parse, new_index)
             if new_index == -1 or inline_title is None:
                 return False, new_index, None, None, None, None
+        else:
+            inline_title, pre_inline_title = "", ""
         return (
             True,
             new_index,
@@ -355,10 +356,9 @@ class LinkHelper:
         (
             is_done,
             consume_rest_of_line,
-            valid_special_start_text,
             token_to_append,
             is_valid,
-        ) = (False, False, None, None, False)
+        ) = (False, False, None, False)
         if inline_blocks[search_index].token_text in LinkHelper.__valid_link_starts:
             valid_special_start_text = inline_blocks[search_index].token_text
             if inline_blocks[search_index].is_active:
@@ -386,6 +386,8 @@ class LinkHelper:
                     inline_blocks, search_index
                 )
                 is_done = True
+        else:
+            valid_special_start_text = None
         return (
             is_done,
             is_valid,
@@ -683,22 +685,23 @@ class LinkHelper:
         Parse a link destination that is included in angle brackets.
         """
 
-        destination_parts, keep_collecting, new_index = [], True, new_index + 1
-        while keep_collecting:
-            keep_collecting = False
+        destination_parts, new_index = [], new_index + 1
+        while True:
             new_index, ert_new = ParserHelper.collect_until_one_of_characters(
                 source_text, new_index, LinkHelper.__angle_link_destination_breaks
             )
             destination_parts.append(ert_new)
-            if ParserHelper.is_character_at_index(
+
+            if not ParserHelper.is_character_at_index(
                 source_text, new_index, InlineHelper.backslash_character
             ):
-                old_new_index = new_index
-                inline_request = InlineRequest(source_text, new_index)
-                inline_response = InlineHelper.handle_inline_backslash(inline_request)
-                keep_collecting, new_index = True, inline_response.new_index
-                destination_parts.append(source_text[old_new_index:new_index])
+                break
 
+            old_new_index = new_index
+            inline_request = InlineRequest(source_text, new_index)
+            inline_response = InlineHelper.handle_inline_backslash(inline_request)
+            new_index = inline_response.new_index
+            destination_parts.append(source_text[old_new_index:new_index])
         if ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__angle_link_end
         ):
@@ -722,7 +725,6 @@ class LinkHelper:
                 source_text[new_index:],
                 nesting_level,
             )
-            keep_collecting = False
             new_index, before_part = ParserHelper.collect_until_one_of_characters(
                 source_text, new_index, LinkHelper.__non_angle_link_breaks
             )
@@ -732,7 +734,7 @@ class LinkHelper:
                 source_text, new_index, InlineHelper.backslash_character
             ):
                 POGGER.debug("backslash")
-                keep_collecting, old_new_index = True, new_index
+                old_new_index = new_index
                 inline_request = InlineRequest(source_text, new_index)
                 inline_response = InlineHelper.handle_inline_backslash(inline_request)
                 new_index = inline_response.new_index
@@ -744,16 +746,17 @@ class LinkHelper:
                 nesting_level += 1
                 destination_parts.append(LinkHelper.__non_angle_link_nest)
                 new_index += 1
-                keep_collecting = True
             elif ParserHelper.is_character_at_index(
                 source_text, new_index, LinkHelper.__non_angle_link_unnest
             ):
                 POGGER.debug("-1")
-                if nesting_level:
+                keep_collecting = bool(nesting_level)
+                if keep_collecting:
                     destination_parts.append(LinkHelper.__non_angle_link_unnest)
                     new_index += 1
                     nesting_level -= 1
-                    keep_collecting = True
+            else:
+                keep_collecting = False
 
         if nesting_level:
             return -1, None
@@ -766,16 +769,16 @@ class LinkHelper:
         """
 
         POGGER.debug("parse_link_destination>>new_index>>$>>", source_text[new_index:])
-        start_index, did_use_angle_start = new_index, False
-        if ParserHelper.is_character_at_index(
+        start_index = new_index
+        did_use_angle_start = ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__angle_link_start
-        ):
+        )
+        if did_use_angle_start:
             POGGER.debug(
                 ">parse_angle_link_destination>new_index>$>$",
                 new_index,
                 source_text[new_index:],
             )
-            did_use_angle_start = True
             new_index, ex_link = LinkHelper.__parse_angle_link_destination(
                 source_text, new_index
             )
@@ -811,7 +814,7 @@ class LinkHelper:
 
         pre_handle_link = ex_link
         if new_index != -1 and ex_link:
-            ex_link = InlineHelper.handle_backslashes(ex_link, add_text_signature=False)
+            ex_link = InlineHelper.handle_backslashes(ex_link)
         POGGER.debug(
             "urllib.parse.quote>>ex_link>>$>>",
             ex_link,
@@ -874,7 +877,7 @@ class LinkHelper:
         if ex_title is not None:
             ex_title = InlineHelper.append_text(
                 "",
-                InlineHelper.handle_backslashes(ex_title, add_text_signature=False),
+                InlineHelper.handle_backslashes(ex_title),
                 add_text_signature=False,
             )
         POGGER.debug("parse_link_title>>pre>>$>>", pre_ex_title)
@@ -889,16 +892,6 @@ class LinkHelper:
         """
 
         POGGER.debug("process_inline_link_body>>$<<", source_text[new_index:])
-        (
-            inline_link,
-            pre_inline_link,
-            inline_title,
-            pre_inline_title,
-            did_use_angle_start,
-            bounding_character,
-            before_title_whitespace,
-            after_title_whitespace,
-        ) = ("", "", "", "", "", "", "", "")
 
         new_index, before_link_whitespace = ParserHelper.extract_any_whitespace(
             source_text, new_index
@@ -921,6 +914,17 @@ class LinkHelper:
                 bounding_character,
                 after_title_whitespace,
             ) = LinkHelper.__parse_inline_link_properties(source_text, new_index)
+        else:
+            (
+                inline_link,
+                pre_inline_link,
+                inline_title,
+                pre_inline_title,
+                did_use_angle_start,
+                bounding_character,
+                before_title_whitespace,
+                after_title_whitespace,
+            ) = ("", "", "", "", "", "", "", "")
         POGGER.debug(
             "inline_link>>$>>inline_title>>$>new_index>$>",
             inline_link,
@@ -1022,11 +1026,7 @@ class LinkHelper:
         """
 
         POGGER.debug("pre>>$<<", link_to_lookup)
-        inline_link, inline_title, link_to_lookup = (
-            "",
-            "",
-            ParserHelper.remove_all_from_text(link_to_lookup),
-        )
+        link_to_lookup = ParserHelper.remove_all_from_text(link_to_lookup)
         POGGER.debug("mid(pre-norm)>>$<<", link_to_lookup)
 
         link_label = LinkHelper.normalize_link_label(link_to_lookup)
@@ -1034,7 +1034,7 @@ class LinkHelper:
 
         POGGER.debug("defs>>$<<", LinkHelper.__link_definitions)
         if not link_label or link_label not in LinkHelper.__link_definitions:
-            update_index = -1
+            update_index, inline_link, inline_title = -1, "", ""
         else:
             POGGER.debug(link_type)
             update_index, inline_link, inline_title = (
@@ -1087,8 +1087,6 @@ class LinkHelper:
             text_from_blocks,
         )
 
-        consume_rest_of_line = False
-
         POGGER.debug("__look_for_link_formats>>$>>", new_index)
         (
             inline_link,
@@ -1120,7 +1118,6 @@ class LinkHelper:
                 inline_blocks, text_from_blocks, new_index
             )
 
-        token_to_append = None
         POGGER.debug("<<<<<<<new_index<<<<<<<$<<", new_index)
         POGGER.debug("<<<<<<<update_index<<<<<<<$<<", update_index)
         POGGER.debug("<<<<<<<text_from_blocks_raw<<<<<<<$<<", text_from_blocks_raw)
@@ -1146,6 +1143,8 @@ class LinkHelper:
                 current_string_unresolved,
                 xx_fn,
             )
+        else:
+            consume_rest_of_line, token_to_append = False, None
 
         POGGER.debug(
             "handle_link_types<update_index<$<<$<<",
@@ -1169,14 +1168,14 @@ class LinkHelper:
         )
 
         update_index, inline_link, inline_title = LinkHelper.__look_up_link(
-            text_from_blocks, new_index, "shortcut"
+            text_from_blocks, new_index, Constants.link_type__shortcut
         )
         return (
             "",
             update_index,
             inline_link,
             inline_title,
-            "shortcut",
+            Constants.link_type__shortcut,
             "",
         )
 
@@ -1206,15 +1205,7 @@ class LinkHelper:
         """
         Create the right type of link token.
         """
-        (
-            consume_rest_of_line,
-            token_to_append,
-            text_from_blocks_raw,
-            line_number,
-            column_number,
-        ) = (
-            False,
-            None,
+        (text_from_blocks_raw, line_number, column_number,) = (
             ParserHelper.resolve_backspaces_from_text(text_from_blocks_raw),
             inline_blocks[ind].line_number,
             inline_blocks[ind].column_number,
@@ -1239,6 +1230,7 @@ class LinkHelper:
         POGGER.debug(">>inline_blocks[ind]>>$>>", inline_blocks[ind])
 
         if start_text == LinkHelper.__link_start_sequence:
+            consume_rest_of_line = False
             token_to_append = LinkHelper.__add_link_start_token(
                 inline_blocks,
                 ind,
@@ -1258,6 +1250,7 @@ class LinkHelper:
                 column_number,
             )
         else:
+            token_to_append = None
             consume_rest_of_line, text_from_blocks_raw = LinkHelper.__add_image_token(
                 start_text,
                 inline_blocks,
@@ -1321,7 +1314,7 @@ class LinkHelper:
             column_number,
         )
         return inline_blocks[ind].generate_close_markdown_token_from_markdown_token(
-            "", "", False
+            "", ""
         )
 
     # pylint: enable=too-many-arguments, too-many-locals
@@ -1351,7 +1344,6 @@ class LinkHelper:
         current_string_unresolved,
     ):
         assert start_text == LinkHelper.image_start_sequence
-        consume_rest_of_line = True
         POGGER.debug("\n>>__consume_text_for_image_alt_text>>$>>", inline_blocks)
         POGGER.debug("\n>>__consume_text_for_image_alt_text>>$>>", ind)
         POGGER.debug("\n>>__consume_text_for_image_alt_text>>$>>", remaining_line)
@@ -1384,7 +1376,7 @@ class LinkHelper:
         POGGER.debug(">>start_text>>$<<", start_text)
         POGGER.debug(">>remaining_line>>$<<", remaining_line)
         POGGER.debug(">>current_string_unresolved>>$<<", current_string_unresolved)
-        return consume_rest_of_line, text_from_blocks_raw
+        return True, text_from_blocks_raw
 
     # pylint: enable=too-many-arguments, too-many-locals
 
@@ -1425,7 +1417,7 @@ class LinkHelper:
                 before_title_whitespace,
                 after_title_whitespace,
             ) = LinkHelper.__process_inline_link_body(source_text, new_index + 1)
-            label_type = "inline"
+            label_type = Constants.link_type__inline
         elif ParserHelper.is_character_at_index(
             source_text, new_index, LinkHelper.__link_format_reference_start
         ):
@@ -1462,19 +1454,13 @@ class LinkHelper:
     def __try_to_find_link_match(new_index, source_text, text_from_blocks):
         POGGER.debug("collapsed reference?")
 
-        (
-            after_open_index,
-            ex_label,
-            label_type,
-            inline_link,
-            inline_title,
-            tried_full_reference_form,
-            update_index,
-        ) = (new_index + 1, "", "", "", "", False, -1)
-
-        if ParserHelper.is_character_at_index(
+        after_open_index = new_index + 1
+        tried_full_reference_form = ParserHelper.is_character_at_index(
             source_text, after_open_index, LinkHelper.__link_format_reference_end
-        ):
+        )
+        if tried_full_reference_form:
+            ex_label = ""
+
             POGGER.debug("collapsed reference")
             POGGER.debug(">>$>>", text_from_blocks)
             update_index, inline_link, inline_title = LinkHelper.__look_up_link(
@@ -1483,7 +1469,7 @@ class LinkHelper:
                 "collapsed reference",
             )
             POGGER.debug("collapsed reference>update_index>$", update_index)
-            label_type, tried_full_reference_form = "collapsed", True
+            label_type = Constants.link_type__collapsed
         else:
             POGGER.debug("full reference?")
             POGGER.debug(">>did_extract>>$>", source_text[after_open_index:])
@@ -1496,11 +1482,14 @@ class LinkHelper:
                 after_label_index,
                 ex_label,
             )
+            tried_full_reference_form = did_extract
             if did_extract:
-                label_type, tried_full_reference_form = "full", True
+                label_type = Constants.link_type__full
                 update_index, inline_link, inline_title = LinkHelper.__look_up_link(
                     ex_label, after_label_index, "full reference"
                 )
+            else:
+                label_type, inline_link, inline_title, update_index = "", "", "", -1
         return (
             label_type,
             tried_full_reference_form,
@@ -1562,7 +1551,7 @@ class LinkHelper:
         """
 
         link_parts = []
-        if link_token.label_type == "shortcut":
+        if link_token.label_type == Constants.link_type__shortcut:
             link_parts.extend(
                 [
                     "[",
@@ -1570,14 +1559,14 @@ class LinkHelper:
                     "]",
                 ]
             )
-        elif link_token.label_type == "full":
+        elif link_token.label_type == Constants.link_type__full:
             link_parts.extend(
                 ["[", link_token.text_from_blocks, "][", link_token.ex_label, "]"]
             )
-        elif link_token.label_type == "collapsed":
+        elif link_token.label_type == Constants.link_type__collapsed:
             link_parts.extend(["[", link_token.text_from_blocks, "][]"])
         else:
-            assert link_token.label_type == "inline"
+            assert link_token.label_type == Constants.link_type__inline
 
             link_parts.extend(
                 [

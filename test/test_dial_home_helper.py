@@ -87,6 +87,11 @@ def test_dialhome_mock_failure():
         + "Not Found for url: https://pypi.org/project/pymarkdownlntxxxxxx/\n"
         + "Unable to find a plugin with an id or name of 'BAD000'."
     )
+    alternate_expected_output = (
+        "WARN: Cannot retrive the published package version: "
+        + "Fetch webpage error: HTTPSConnectionPool(host='pypi.org', port=443): Read timed out. (read timeout=5)\n"
+        + "Unable to find a plugin with an id or name of 'BAD000'."
+    )
     expected_error = ""
 
     # Act
@@ -98,7 +103,10 @@ def test_dialhome_mock_failure():
 
     # Assert
     execute_results.assert_results(
-        expected_output, expected_error, expected_return_code
+        expected_output,
+        expected_error,
+        expected_return_code,
+        alternate_stdout=alternate_expected_output,
     )
 
 
@@ -176,11 +184,13 @@ def test_dialhome_verify_bad_package_name():
 
     # Assert
     assert version_message, "Error should have been logged."
-    assert (
-        version_message
-        == "WARN: Cannot retrive the published package version: "
+    assert version_message in (
+        "WARN: Cannot retrive the published package version: "
         + "Fetch webpage error: 404 Client Error: "
-        + "Not Found for url: https://pypi.org/project/not-a-valid-package-name/"
+        + "Not Found for url: https://pypi.org/project/not-a-valid-package-name/",
+        "WARN: Cannot retrive the published package version: "
+        + "Fetch webpage error: HTTPSConnectionPool(host='pypi.org', port=443): "
+        + "Read timed out. (read timeout=5)",
     )
 
 

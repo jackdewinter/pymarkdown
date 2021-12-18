@@ -93,8 +93,14 @@ class InProcessResult:
         """
         return self.__std_out
 
+    # pylint: disable=too-many-arguments
     def assert_results(
-        self, stdout=None, stderr=None, error_code=0, additional_error=None
+        self,
+        stdout=None,
+        stderr=None,
+        error_code=0,
+        additional_error=None,
+        alternate_stdout=None,
     ):
         """
         Assert the results are as expected in the "assert" phase.
@@ -102,12 +108,28 @@ class InProcessResult:
 
         try:
             if stdout:
-                self.compare_versus_expected(
-                    "Stdout",
-                    self.__std_out,
-                    stdout,
-                    log_extra=self.__std_err.getvalue(),
-                )
+                if alternate_stdout:
+                    try:
+                        self.compare_versus_expected(
+                            "Stdout",
+                            self.__std_out,
+                            stdout,
+                            log_extra=self.__std_err.getvalue(),
+                        )
+                    except AssertionError:
+                        self.compare_versus_expected(
+                            "Stdout",
+                            self.__std_out,
+                            alternate_stdout,
+                            log_extra=self.__std_err.getvalue(),
+                        )
+                else:
+                    self.compare_versus_expected(
+                        "Stdout",
+                        self.__std_out,
+                        stdout,
+                        log_extra=self.__std_err.getvalue(),
+                    )
             else:
                 assert_text = (
                     f"Expected stdout to be empty, not: {self.__std_out.getvalue()}"
@@ -132,6 +154,8 @@ class InProcessResult:
         finally:
             self.__std_out.close()
             self.__std_err.close()
+
+    # pylint: enable=too-many-arguments
 
 
 # pylint: disable=too-few-public-methods

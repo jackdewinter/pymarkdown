@@ -176,7 +176,7 @@ class ExtensionManager:
             print(f"No extension identifier matches the pattern '{args.list_filter}'.")
 
     def __handle_argparse_subparser_info(self, args):
-        if args.info_filter not in self.__extension_details.keys():
+        if args.info_filter not in self.__extension_details:
             print(f"Unable to find an extension with an id of '{args.info_filter}'.")
             return 1
 
@@ -187,10 +187,6 @@ class ExtensionManager:
             ["Short Description", found_extension.extension_description],
             ["Description Url", found_extension.extension_url],
         ]
-
-        # if found_plugin.plugin_configuration:
-        #     next_row = ["Configuration Items", found_plugin.plugin_configuration]
-        #     show_rows.append(next_row)
 
         headers = ["Item", "Description"]
         ExtensionManager.__print_column_output(headers, show_rows)

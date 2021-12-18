@@ -64,7 +64,7 @@ class PyMarkdownLint:
         assert os.path.isabs(file_path)
         file_path = file_path.replace(os.sep, "/")
         last_index = file_path.rindex("/")
-        file_path = file_path[0 : last_index + 1] + "version.py"
+        file_path = file_path[: last_index + 1] + "version.py"
         version_meta = runpy.run_path(file_path)
         return version_meta["__version__"]
 
@@ -328,7 +328,7 @@ class PyMarkdownLint:
             if not recurse_directories and normalized_root != normalized_next_path:
                 continue
             normalized_root = (
-                normalized_root[0:-1]
+                normalized_root[:-1]
                 if normalized_root.endswith("/")
                 else normalized_root
             )

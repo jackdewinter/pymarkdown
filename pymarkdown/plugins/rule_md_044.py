@@ -2,6 +2,7 @@
 Module to implement a plugin that ensures that specific proper names have
 the correct capitalization.
 """
+from pymarkdown.constants import Constants
 from pymarkdown.parser_helper import ParserHelper
 from pymarkdown.plugin_details import PluginDetails
 from pymarkdown.rule_plugin import RulePlugin
@@ -213,7 +214,7 @@ class RuleMd044(RulePlugin):
     # pylint: enable=too-many-arguments
 
     def __handle_inline_link_end(self, context, token):
-        if token.start_markdown_token.label_type == "inline":
+        if token.start_markdown_token.label_type == Constants.link_type__inline:
             link_body = "".join(
                 [
                     token.start_markdown_token.before_link_whitespace,
@@ -246,7 +247,7 @@ class RuleMd044(RulePlugin):
             token.text_from_blocks, context, token, same_line_offset
         )
 
-        if token.label_type == "inline":
+        if token.label_type == Constants.link_type__inline:
             link_body = "".join(
                 [
                     token.before_link_whitespace,

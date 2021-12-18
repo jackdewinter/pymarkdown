@@ -152,35 +152,32 @@ def verify_markdown_roundtrip(source_markdown, actual_tokens):
         source_markdown = ParserHelper.newline_character.join(new_source)
 
     transformer = TransformToMarkdown()
-    original_markdown, avoid_processing = transformer.transform(actual_tokens)
+    original_markdown = transformer.transform(actual_tokens)
 
-    if avoid_processing:
-        print("Comparison of generated Markdown against original Markdown shipped.")
-    else:
-        print(
-            "".join(
-                [
-                    "\n-=-=-\nExpected\n-=-=-\n-->",
-                    ParserHelper.make_value_visible(source_markdown),
-                    "<--\n-=-=-\nActual\n-=-=-\n-->",
-                    ParserHelper.make_value_visible(original_markdown),
-                    "<--\n-=-=-\n",
-                ]
-            )
-        )
-        diff = difflib.ndiff(source_markdown, original_markdown)
-        diff_values = "".join(
+    print(
+        "".join(
             [
-                "\n-=-=-n",
-                ParserHelper.newline_character.join(list(diff)),
-                "\n-=-=-expected\n-->",
+                "\n-=-=-\nExpected\n-=-=-\n-->",
                 ParserHelper.make_value_visible(source_markdown),
-                "<--\n-=-=-actual\n-->",
+                "<--\n-=-=-\nActual\n-=-=-\n-->",
                 ParserHelper.make_value_visible(original_markdown),
                 "<--\n-=-=-\n",
             ]
         )
+    )
+    diff = difflib.ndiff(source_markdown, original_markdown)
+    diff_values = "".join(
+        [
+            "\n-=-=-n",
+            ParserHelper.newline_character.join(list(diff)),
+            "\n-=-=-expected\n-->",
+            ParserHelper.make_value_visible(source_markdown),
+            "<--\n-=-=-actual\n-->",
+            ParserHelper.make_value_visible(original_markdown),
+            "<--\n-=-=-\n",
+        ]
+    )
 
-        assert (
-            source_markdown == original_markdown
-        ), f"Markdown strings are not equal.{diff_values}"
+    assert (
+        source_markdown == original_markdown
+    ), f"Markdown strings are not equal.{diff_values}"

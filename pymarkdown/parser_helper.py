@@ -16,7 +16,6 @@ class ParserHelper:
     __alert_character = "\a"
     whitespace_split_character = "\x02"
     replace_noop_character = "\x03"
-    blech_character = "\x04"
     escape_character = "\x05"
 
     backslash_character = "\\"
@@ -26,7 +25,7 @@ class ParserHelper:
 
     all_escape_characters = (
         f"{__backspace_character}{__alert_character}{whitespace_split_character}"
-        + f"{replace_noop_character}{blech_character}{escape_character}"
+        + f"{replace_noop_character}{escape_character}"
     )
 
     backslash_escape_sequence = f"{backslash_character}{__backspace_character}"
@@ -174,9 +173,9 @@ class ParserHelper:
         while ParserHelper.is_character_at_index_whitespace(source_string, index):
             index -= 1
 
-        if start_index is None:
-            return index + 1, source_string[index + 1 :]
-        return index + 1, source_string[index + 1 : start_index]
+        # if start_index is not None:
+        #     return index + 1, source_string[index + 1 : start_index]
+        return index + 1, source_string[index + 1 :]
 
     @staticmethod
     def extract_until_whitespace(source_string, start_index):
@@ -536,11 +535,9 @@ class ParserHelper:
             str(value_to_modify)
             .replace(ParserHelper.__backspace_character, "\\b")
             .replace(ParserHelper.__alert_character, "\\a")
-            .replace(ParserHelper.tab_character, "\\t")
             .replace(ParserHelper.newline_character, "\\n")
             .replace(ParserHelper.whitespace_split_character, "\\x02")
             .replace(ParserHelper.replace_noop_character, "\\x03")
-            .replace(ParserHelper.blech_character, "\\x04")
             .replace(ParserHelper.escape_character, "\\x05")
             .replace("\\x07", "\\a")
             .replace("\\x08", "\\b")
@@ -554,7 +551,6 @@ class ParserHelper:
         """
         return (
             str(value_to_modify)
-            .replace(ParserHelper.tab_character, "\\t")
             .replace(ParserHelper.newline_character, "\\n")
             .replace(" ", "\\s")
         )
@@ -672,15 +668,6 @@ class ParserHelper:
         )
 
     @staticmethod
-    def __resolve_blechs_from_text(token_text):
-        """
-        Resolve the blech character out of the text string.
-        """
-        return ParserHelper.__remove_sequence_from_text(
-            token_text, ParserHelper.blech_character
-        )
-
-    @staticmethod
     def __resolve_escapes_from_text(token_text):
         """
         Resolve any escapes from the text, leaving only what they escaped.
@@ -763,20 +750,19 @@ class ParserHelper:
 
     @staticmethod
     def __find_with_escape(adjusted_text_token, find_char, start_index):
-        repeat_me, found_index = True, -1
-        while repeat_me and start_index < len(adjusted_text_token):
-            repeat_me, start_replacement_index = False, adjusted_text_token.find(
-                find_char, start_index
-            )
+        found_index = -1
+        while start_index < len(adjusted_text_token):
+            start_replacement_index = adjusted_text_token.find(find_char, start_index)
             if (
                 start_replacement_index != -1
                 and start_replacement_index > 0
                 and adjusted_text_token[start_replacement_index - 1]
                 == ParserHelper.escape_character
             ):
-                repeat_me, start_index = True, start_replacement_index + 1
+                start_index = start_replacement_index + 1
             else:
                 found_index = start_replacement_index
+                break
         return found_index
 
     @staticmethod
@@ -843,7 +829,6 @@ class ParserHelper:
         resolved_text = ParserHelper.resolve_backspaces_from_text(text_to_resolve)
         resolved_text = ParserHelper.__resolve_references_from_text(resolved_text)
         resolved_text = ParserHelper.resolve_noops_from_text(resolved_text)
-        resolved_text = ParserHelper.__resolve_blechs_from_text(resolved_text)
         return ParserHelper.__resolve_escapes_from_text(resolved_text)
 
     @staticmethod

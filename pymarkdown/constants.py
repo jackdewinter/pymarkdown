@@ -64,6 +64,11 @@ class Constants:
         + "\u007b\u007c\u007d\u007e"
     )
 
+    link_type__inline = "inline"
+    link_type__full = "full"
+    link_type__shortcut = "shortcut"
+    link_type__collapsed = "collapsed"
+
     # http://www.fileformat.info/info/unicode/category/index.htm
     # http://www.fileformat.info/info/unicode/category/P*/list.htm
 

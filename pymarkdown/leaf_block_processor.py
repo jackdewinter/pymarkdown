@@ -193,11 +193,9 @@ class LeafBlockProcessor:
                 text_after_extracted_text,
             )
 
-            extracted_text = InlineHelper.handle_backslashes(
-                extracted_text, add_text_signature=False
-            )
+            extracted_text = InlineHelper.handle_backslashes(extracted_text)
             text_after_extracted_text = InlineHelper.handle_backslashes(
-                text_after_extracted_text, add_text_signature=False
+                text_after_extracted_text
             )
 
             if pre_extracted_text == extracted_text:
@@ -284,11 +282,6 @@ class LeafBlockProcessor:
             "parser_state.original_line_to_parse>>$>>",
             parser_state.original_line_to_parse,
         )
-        if last_list_start_index:
-            _, extracted_whitespace = ParserHelper.extract_whitespace_from_end(
-                parser_state.original_line_to_parse, last_list_start_index
-            )
-            assert ParserHelper.tab_character not in extracted_whitespace
         return last_block_quote_index
 
     @staticmethod
@@ -296,52 +289,16 @@ class LeafBlockProcessor:
         """
         Recalculate the whitespace characteristics.
         """
-        (
-            accumulated_whitespace_count,
-            actual_whitespace_index,
-            abc,
-            relative_whitespace_index,
-        ) = (0, 0, 4 + offset_index, 0 - offset_index)
-
         POGGER.debug(
             "whitespace_to_parse>>$>>",
             whitespace_to_parse,
         )
-        POGGER.debug(
-            "in>>index>>$($)>>accumulated_whitespace_count>>$",
-            actual_whitespace_index,
-            actual_whitespace_index,
-            accumulated_whitespace_count,
-        )
-        while accumulated_whitespace_count < abc:
-            assert not (
-                whitespace_to_parse[actual_whitespace_index]
-                == ParserHelper.tab_character
-            )
-            accumulated_whitespace_count += 1
-            relative_whitespace_index += 1
-            actual_whitespace_index += 1
-            POGGER.debug(
-                ">>index>>$($)>>accumulated_whitespace_count>>$",
-                actual_whitespace_index,
-                actual_whitespace_index,
-                accumulated_whitespace_count,
-            )
-
-        POGGER.debug(
-            "out>>index>>$($)>>accumulated_whitespace_count>>$",
-            actual_whitespace_index,
-            actual_whitespace_index,
-            accumulated_whitespace_count,
-        )
-
+        actual_whitespace_index = 4 + offset_index
         adj_ws = whitespace_to_parse[:actual_whitespace_index]
         left_ws = whitespace_to_parse[actual_whitespace_index:]
-        POGGER.debug("accumulated_whitespace_count>>$", accumulated_whitespace_count)
         POGGER.debug("actual_whitespace_index>>$", actual_whitespace_index)
         POGGER.debug("adj_ws>>$<<", adj_ws)
         POGGER.debug("left_ws>>$<<", left_ws)
-        POGGER.debug("offset_index>>$<<", offset_index)
 
         return actual_whitespace_index, adj_ws, left_ws
 
@@ -492,14 +449,14 @@ class LeafBlockProcessor:
             ParserHelper.is_length_less_than_or_equal_to(extracted_whitespace, 3)
             or skip_whitespace_check
         ) and is_thematic_character:
-            start_char, index, char_count, repeat_loop, line_to_parse_size = (
+            start_char, index, char_count, line_to_parse_size = (
                 line_to_parse[start_index],
                 start_index,
                 0,
-                True,
                 len(line_to_parse),
             )
-            while repeat_loop and index < line_to_parse_size:
+
+            while index < line_to_parse_size:
                 if (
                     whitespace_allowed_between_characters
                     and ParserHelper.is_character_at_index_whitespace(
@@ -511,7 +468,7 @@ class LeafBlockProcessor:
                     index += 1
                     char_count += 1
                 else:
-                    repeat_loop = False
+                    break  # pragma: no cover
 
             POGGER.debug("char_count>>$", char_count)
             POGGER.debug("index>>$", index)
@@ -562,10 +519,8 @@ class LeafBlockProcessor:
             new_tokens.append(
                 ThematicBreakMarkdownToken(
                     start_char,
-                    extracted_whitespace.replace(ParserHelper.tab_character, "    "),
-                    position_marker.text_to_parse[
-                        position_marker.index_number : index
-                    ].replace(ParserHelper.tab_character, "    "),
+                    extracted_whitespace,
+                    position_marker.text_to_parse[position_marker.index_number : index],
                     position_marker=position_marker,
                 )
             )
@@ -618,8 +573,6 @@ class LeafBlockProcessor:
         Handle the parsing of an atx heading.
         """
 
-        new_tokens = []
-
         (
             heading_found,
             non_whitespace_index,
@@ -643,7 +596,7 @@ class LeafBlockProcessor:
                 extracted_whitespace_at_end,
                 new_tokens,
             ) = LeafBlockProcessor.__prepare_for_create_atx_heading(
-                parser_state, position_marker, new_tokens, non_whitespace_index
+                parser_state, position_marker, [], non_whitespace_index
             )
             start_token = AtxHeadingMarkdownToken(
                 hash_count,
@@ -669,9 +622,11 @@ class LeafBlockProcessor:
                 )
             )
             end_token = start_token.generate_close_markdown_token_from_markdown_token(
-                extracted_whitespace_at_end, extracted_whitespace_before_end, False
+                extracted_whitespace_at_end, extracted_whitespace_before_end
             )
             new_tokens.append(end_token)
+        else:
+            new_tokens = []
         return new_tokens
 
     @staticmethod
@@ -787,8 +742,10 @@ class LeafBlockProcessor:
 
     @staticmethod
     def __adjust_continuation_for_active_list(parser_state, position_marker):
-        is_paragraph_continuation = False
-        if len(parser_state.token_stack) > 1 and parser_state.token_stack[-2].is_list:
+        is_paragraph_continuation = (
+            len(parser_state.token_stack) > 1 and parser_state.token_stack[-2].is_list
+        )
+        if is_paragraph_continuation:
             POGGER.debug(
                 "parser_state.original_line_to_parse>:$:<",
                 parser_state.original_line_to_parse,
@@ -801,11 +758,10 @@ class LeafBlockProcessor:
             POGGER.debug("removed_text_length>:$:<", removed_text_length)
             POGGER.debug("adj_text>:$:<", adj_text)
             POGGER.debug("indent_level>:$:<", parser_state.token_stack[-2].indent_level)
-            if (
+            is_paragraph_continuation = (
                 adj_text
                 and removed_text_length < parser_state.token_stack[-2].indent_level
-            ):
-                is_paragraph_continuation = True
+            )
         return is_paragraph_continuation
 
     # pylint: disable=too-many-arguments
@@ -837,7 +793,7 @@ class LeafBlockProcessor:
         # stack token to close.
         new_tokens.append(
             replacement_token.generate_close_markdown_token_from_markdown_token(
-                extracted_whitespace, extra_whitespace_after_setext, False
+                extracted_whitespace, extra_whitespace_after_setext
             )
         )
 
@@ -922,15 +878,12 @@ class LeafBlockProcessor:
         extracted_whitespace,
     ):
 
-        new_tokens = []
-
         # In cases where the list ended on the same line as we are processing, the
         # container tokens will not yet be added to the token_document.  As such,
         # make sure to construct a "proper" list that takes those into account
         # before checking to see if this is an issue.
         adjusted_document = parser_state.token_document[:]
-        if parser_state.same_line_container_tokens:
-            adjusted_document.extend(parser_state.same_line_container_tokens)
+        adjusted_document.extend(parser_state.same_line_container_tokens)
 
         if (
             len(adjusted_document) >= 2
@@ -945,13 +898,14 @@ class LeafBlockProcessor:
             new_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state, until_this_index=last_list_index
             )
-
-        if block_quote_data.stack_count != 0 and block_quote_data.current_count == 0:
+        elif block_quote_data.stack_count != 0 and block_quote_data.current_count == 0:
             new_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 only_these_blocks=[BlockQuoteStackToken],
                 include_block_quotes=True,
             )
+        else:
+            new_tokens = []
 
         if not parser_state.token_stack[-1].is_paragraph:
             new_paragraph_token = ParagraphMarkdownToken(
@@ -974,7 +928,6 @@ class LeafBlockProcessor:
     ):
         POGGER.debug(">>extracted_whitespace>>:$:<<", extracted_whitespace)
         POGGER.debug(">>adjusted_whitespace_length>>$", adjusted_whitespace_length)
-        top_block_token = None
         if parser_state.token_stack[container_index].is_block_quote:
             top_block_token = parser_state.token_stack[container_index]
             POGGER.debug(">>container_index>>$", container_index)
@@ -985,13 +938,14 @@ class LeafBlockProcessor:
             )
             POGGER.debug(">>line_number>>$", position_marker.line_number)
 
-            if (
+            apply_paragraph_adjustment = not (
                 container_index + 1 == len(parser_state.token_stack)
                 and position_marker.line_number
                 == top_block_token.matching_markdown_token.line_number
                 and container_index > 0
                 and parser_state.token_stack[container_index - 1].is_list
-            ):
+            )
+            if not apply_paragraph_adjustment:
                 POGGER.debug(
                     ">>list-owners>>$",
                     ParserHelper.make_value_visible(
@@ -1006,8 +960,6 @@ class LeafBlockProcessor:
                         container_index - 1
                     ].matching_markdown_token.line_number
                 )
-            else:
-                apply_paragraph_adjustment = True
 
             if apply_paragraph_adjustment:
                 LeafBlockProcessor.__adjust_paragraph_for_block_quotes(
@@ -1182,8 +1134,8 @@ class LeafBlockProcessor:
             ">>correct_for_leaf_block_start_in_list>>tokens_to_add>>$>>", html_tokens
         )
 
-        repeat_loop, is_remaining_list_token = True, True
-        while repeat_loop and is_remaining_list_token:
+        is_remaining_list_token = True
+        while is_remaining_list_token:
             assert parser_state.token_stack[-1].is_list
 
             POGGER.debug(">>removed_chars_at_start>>$>>", removed_chars_at_start)
@@ -1191,21 +1143,20 @@ class LeafBlockProcessor:
                 ">>stack indent>>$>>", parser_state.token_stack[-1].indent_level
             )
             if removed_chars_at_start >= parser_state.token_stack[-1].indent_level:
-                repeat_loop = False
-            else:
-                tokens_from_close, _ = parser_state.close_open_blocks_fn(
-                    parser_state,
-                    until_this_index=(len(parser_state.token_stack) - 1),
-                    include_lists=True,
-                )
-                POGGER.debug(
-                    ">>correct_for_leaf_block_start_in_list>>tokens_from_close>>$>>",
-                    tokens_from_close,
-                )
-                html_tokens.extend(tokens_from_close)
+                break  # pragma: no cover
 
-                is_remaining_list_token = parser_state.token_stack[-1].is_list
+            tokens_from_close, _ = parser_state.close_open_blocks_fn(
+                parser_state,
+                until_this_index=(len(parser_state.token_stack) - 1),
+                include_lists=True,
+            )
+            POGGER.debug(
+                ">>correct_for_leaf_block_start_in_list>>tokens_from_close>>$>>",
+                tokens_from_close,
+            )
+            html_tokens.extend(tokens_from_close)
 
+            is_remaining_list_token = parser_state.token_stack[-1].is_list
         if is_remaining_list_token:
             assert parser_state.token_stack[-1].is_list
             delta_indent = (
@@ -1229,7 +1180,7 @@ class LeafBlockProcessor:
         Determine whether we have a valid leaf block start.
         """
 
-        is_leaf_block_start = False
+        is_leaf_block_start = not exclude_thematic_break
         if not exclude_thematic_break:
             is_leaf_block_start, _ = LeafBlockProcessor.is_thematic_break(
                 line_to_parse,
