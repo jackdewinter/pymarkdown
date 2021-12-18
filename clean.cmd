@@ -83,6 +83,14 @@ if ERRORLEVEL 1 (
 	goto error_end
 )
 
+echo {Executing pylint static analyzer on test Python code.}
+pipenv run pylint -j 4 --rcfile=setup.cfg test %MY_VERBOSE%
+if ERRORLEVEL 1 (
+	echo.
+	echo {Executing pylint static analyzer on test Python code failed.}
+	goto error_end
+)	
+
 git diff --name-only --staged > %CLEAN_TEMPFILE%
 set ALL_FILES=
 for /f "tokens=*" %%x in (%CLEAN_TEMPFILE%) do (
@@ -99,14 +107,6 @@ if "%ALL_FILES%" == "" (
 		echo {Executing reporting of unused pylint suppressions in modified Python source code failed.}
 		goto error_end
 	)
-)
-
-echo {Executing pylint static analyzer on test Python code.}
-pipenv run pylint -j 4 --rcfile=setup.cfg test %MY_VERBOSE%
-if ERRORLEVEL 1 (
-	echo.
-	echo {Executing pylint static analyzer on test Python code failed.}
-	goto error_end
 )
 
 echo {Executing PyMarkdown scan on Markdown documents.}
