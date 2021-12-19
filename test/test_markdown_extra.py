@@ -1953,32 +1953,33 @@ this</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_extra_021():
+def test_extra_021x():
     """
     TBD
     """
 
     # Arrange
-    source_markdown = """1. Item 1
+    source_markdown = """
+1. Item 1
    1. Item 1a
   100. Item 1b
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3:]",
-        "[para(1,4):]",
-        "[text(1,4):Item 1:]",
+        "[BLANK(1,1):]",
+        "[olist(2,1):.:1:3::]",
+        "[para(2,4):]",
+        "[text(2,4):Item 1:]",
         "[end-para:::True]",
-        "[olist(2,4):.:1:6:   ]",
-        "[para(2,7):]",
-        "[text(2,7):Item 1a:]",
+        "[olist(3,4):.:1:6:   ]",
+        "[para(3,7):]",
+        "[text(3,7):Item 1a:]",
         "[end-para:::True]",
-        "[li(3,3):7:  :100]",
-        "[para(3,8):]",
-        "[text(3,8):Item 1b:]",
-        "[end-para:::True]",
-        "[BLANK(4,1):]",
         "[end-olist:::True]",
+        "[li(4,3):7:  :100]",
+        "[para(4,8):]",
+        "[text(4,8):Item 1b:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
         "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
@@ -1991,7 +1992,7 @@ def test_extra_021():
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
