@@ -827,6 +827,8 @@ class BlockQuoteProcessor:
     def __check_for_special_case(
         parser_state, container_start_bq_count, block_quote_data
     ):
+        POGGER.debug("container_start_bq_count=:$:", container_start_bq_count)
+        POGGER.debug("block_quote_data.stack_count=:$:", block_quote_data.stack_count)
         if (
             container_start_bq_count
             and block_quote_data.stack_count > 1
@@ -835,7 +837,9 @@ class BlockQuoteProcessor:
 
             stack_index, block_quote_token_count = 1, 0
             while True:
-                assert parser_state.token_stack[stack_index].is_block_quote
+                POGGER.debug("stack_index=:$:", stack_index)
+                if not parser_state.token_stack[stack_index].is_block_quote:
+                    return False, None
                 block_quote_token_count += 1
                 if block_quote_token_count == block_quote_data.stack_count:
                     break
