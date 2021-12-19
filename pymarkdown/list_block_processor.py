@@ -1457,22 +1457,27 @@ class ListBlockProcessor:
             parser_state.token_stack[last_list_index].extra_data,
             old_last_marker_character,
         )
-        old_x = parser_state.token_stack[last_list_index].indent_level
-        new_x = new_stack.indent_level
         POGGER.debug("new>>$>>$", new_stack.extra_data, new_stack.list_character[-1])
         if (
             parser_state.token_stack[last_list_index].type_name == new_stack.type_name
             and old_last_marker_character == new_stack.list_character[-1]
         ):
             balancing_tokens = []
+            POGGER.debug("new_stack>$<", new_stack)
+            POGGER.debug("new_stack>$<", new_stack.matching_markdown_token)
+            POGGER.debug("old_stack>$<", parser_state.token_stack[last_list_index])
+            POGGER.debug(
+                "old_stack>$<",
+                parser_state.token_stack[last_list_index].matching_markdown_token,
+            )
             emit_li = ListBlockProcessor.__process_eligible_list_start(
                 parser_state,
                 balancing_tokens,
                 current_start_index,
                 old_start_index,
                 current_container_blocks,
-                old_x,
-                new_x,
+                last_list_index,
+                new_stack,
             )
             return True, emit_li, balancing_tokens
 
@@ -1496,8 +1501,8 @@ class ListBlockProcessor:
         current_start_index,
         old_start_index,
         current_container_blocks,
-        old_x,
-        new_x,
+        last_list_index,
+        new_stack,
     ):
         POGGER.debug("are_list_starts_equal>>ELIGIBLE!!!")
         POGGER.debug(
@@ -1516,12 +1521,10 @@ class ListBlockProcessor:
             )
             ListBlockProcessor.__close_required_lists(
                 parser_state,
-                parser_state.token_stack[-1].ws_before_marker,
-                current_start_index,
                 allow_list_removal,
                 balancing_tokens,
-                old_x,
-                new_x,
+                last_list_index,
+                new_stack,
             )
 
         return True
@@ -1574,60 +1577,74 @@ class ListBlockProcessor:
             or not with_previous_list_bounds
         )
 
-    # pylint: disable=too-many-arguments
     @staticmethod
-    def __close_required_lists(
-        parser_state,
-        last_stack_depth,
-        current_start_index,
-        allow_list_removal,
-        balancing_tokens,
-        old_x,
-        new_x,
-    ):
-        older_x = parser_state.token_stack[-1].indent_level
-        assert old_x == older_x
-        last_stack_depth_index = last_stack_depth - 1
-        POGGER.debug(
-            "(current_start_index>$ < last_stack_depth_index>$) and allow_list_removal>$",
-            current_start_index,
-            last_stack_depth_index,
-            allow_list_removal,
-        )
-        POGGER.debug("parser_state.token_stack>>$", parser_state.token_stack)
-        list_count = 0
+    def __close_required_lists_calc(parser_state):
         token_stack_index = len(parser_state.token_stack) - 1
+        list_count = 0
         while parser_state.token_stack[token_stack_index].is_list:
             token_stack_index -= 1
             list_count += 1
-        while new_x < older_x and allow_list_removal and list_count > 1:
+
+        parent_indent_level = (
+            parser_state.token_stack[-2].matching_markdown_token.indent_level
+            if list_count > 1
+            else -1
+        )
+        return list_count, parent_indent_level
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __close_required_lists(
+        parser_state, allow_list_removal, balancing_tokens, last_list_index, new_stack
+    ):
+        assert last_list_index == len(parser_state.token_stack) - 1
+        matching_column_number = new_stack.matching_markdown_token.column_number
+
+        (
+            list_count,
+            parent_indent_level,
+        ) = ListBlockProcessor.__close_required_lists_calc(parser_state)
+
+        POGGER.debug(
+            "matching_column_number=$ <= parent_indent_level=$ and allow_list_removal=$ and list_count=$ > 1",
+            matching_column_number,
+            parent_indent_level,
+            allow_list_removal,
+            list_count,
+        )
+        while (
+            matching_column_number <= parent_indent_level
+            and allow_list_removal
+            and list_count > 1
+        ):
             last_stack_index = parser_state.token_stack.index(
                 parser_state.token_stack[-1]
             )
             POGGER.debug("parser_state.token_stack>>$", parser_state.token_stack)
             POGGER.debug("last_stack_index>>$", last_stack_index)
+
             close_tokens, _ = parser_state.close_open_blocks_fn(
                 parser_state,
                 until_this_index=last_stack_index,
                 include_lists=True,
             )
             assert close_tokens
+            assert parser_state.token_stack[-1].is_list
             balancing_tokens.extend(close_tokens)
             POGGER.debug("close_tokens>>$", close_tokens)
-            assert parser_state.token_stack[-1].is_list
-            last_stack_depth_index = parser_state.token_stack[-1].ws_before_marker - 1
-            older_x = parser_state.token_stack[-1].indent_level
-            POGGER.debug(
-                "current_start_index>$, last_stack_depth_index>$",
-                current_start_index,
-                last_stack_depth_index,
-            )
 
-            token_stack_index = len(parser_state.token_stack) - 1
-            list_count = 0
-            while parser_state.token_stack[token_stack_index].is_list:
-                token_stack_index -= 1
-                list_count += 1
+            (
+                list_count,
+                parent_indent_level,
+            ) = ListBlockProcessor.__close_required_lists_calc(parser_state)
+            POGGER.debug(
+                "matching_column_number=$ < parent_indent_level=$ and "
+                + "allow_list_removal=$ and list_count=$ > 1",
+                matching_column_number,
+                parent_indent_level,
+                allow_list_removal,
+                list_count,
+            )
 
     # pylint: enable=too-many-arguments
 
