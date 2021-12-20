@@ -14,6 +14,8 @@
 
 - [Fixed - Issue 185](https://github.com/jackdewinter/pymarkdown/issues/185)
   - parser: nesting of block quote, list, block quote raised an assert
+- [Fixed - Issue 188](https://github.com/jackdewinter/pymarkdown/issues/188)
+  - parser: not dealing with a block occurring after 2 nested lists
 
 ## Version 0.9.3 - Date: 2021-12-14
 

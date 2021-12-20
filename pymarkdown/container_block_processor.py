@@ -1210,19 +1210,24 @@ class ContainerBlockProcessor:
             "list_start_token_index>>$<<",
             list_start_token_index,
         )
-        token_after_list_start = parser_state.token_document[list_start_token_index + 1]
-        POGGER.debug(
-            "token_after_list_start>>$<<",
-            token_after_list_start,
-        )
-        assert (
-            parser_state.nested_list_start.matching_markdown_token.line_number
-            == token_after_list_start.line_number
-        )
-        column_number_delta = (
-            token_after_list_start.column_number
-            - parser_state.nested_list_start.matching_markdown_token.column_number
-        )
+        if list_start_token_index < (len(parser_state.token_document) - 1):
+            token_after_list_start = parser_state.token_document[
+                list_start_token_index + 1
+            ]
+            POGGER.debug(
+                "token_after_list_start>>$<<",
+                token_after_list_start,
+            )
+            assert (
+                parser_state.nested_list_start.matching_markdown_token.line_number
+                == token_after_list_start.line_number
+            )
+            column_number_delta = (
+                token_after_list_start.column_number
+                - parser_state.nested_list_start.matching_markdown_token.column_number
+            )
+        else:
+            column_number_delta = 0
         POGGER.debug(
             "column_number_delta>>$<<",
             column_number_delta,
