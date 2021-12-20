@@ -12,7 +12,8 @@
 
 ### Fixed
 
-- None
+- [Fixed - Issue 185](https://github.com/jackdewinter/pymarkdown/issues/185)
+  - parser: nesting of block quote, list, block quote raised an assert
 
 ## Version 0.9.3 - Date: 2021-12-14
 
