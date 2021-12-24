@@ -1,6 +1,7 @@
 """
 Module to provide processing for the container blocks.
 """
+import copy
 import logging
 
 from pymarkdown.block_quote_data import BlockQuoteData
@@ -139,7 +140,7 @@ class ContainerBlockProcessor:
             container_start_bq_count,
             current_container_blocks,
         )
-        POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
+        # POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
         # POGGER.debug("container_level_tokens>>$>>", container_level_tokens)
 
         if requeue_line_info or did_blank:
@@ -151,7 +152,7 @@ class ContainerBlockProcessor:
                 did_blank,
             )
 
-        POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
+        # POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
         (
             can_continue,
             line_to_parse,
@@ -177,7 +178,7 @@ class ContainerBlockProcessor:
             line_to_parse,
             last_block_quote_index,
         )
-        POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
+        # POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
         if can_continue:
             (
                 can_continue,
@@ -200,7 +201,10 @@ class ContainerBlockProcessor:
                 container_start_bq_count,
             )
         if can_continue:
-            POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
+            # POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
+            # POGGER.debug(
+            #     ">>was_paragraph_continuation>>:$:", was_paragraph_continuation
+            # )
             requeue_line_info = ContainerBlockProcessor.__handle_leaf_tokens(
                 parser_state,
                 position_marker,
@@ -217,6 +221,9 @@ class ContainerBlockProcessor:
                 last_list_start_index,
                 was_paragraph_continuation,
             )
+            # POGGER.debug(
+            #     ">>was_paragraph_continuation>>:$:", was_paragraph_continuation
+            # )
 
         return (
             container_level_tokens,
@@ -255,6 +262,11 @@ class ContainerBlockProcessor:
         parser_state.copy_of_token_stack = []
         parser_state.copy_of_token_stack.extend(parser_state.token_stack)
 
+        parser_state.block_copy = []
+        for i in parser_state.token_stack:
+            if i.is_document:
+                continue
+            parser_state.block_copy.append(copy.deepcopy(i.matching_markdown_token))
         return position_marker
 
     @staticmethod
@@ -338,13 +350,17 @@ class ContainerBlockProcessor:
                 # POGGER.debug("container_start_bq_count>>$", container_start_bq_count)
                 # POGGER.debug("block_quote_data.current_count>>$", block_quote_data.current_count)
                 # POGGER.debug("block_quote_data.stack_count>>$", block_quote_data.stack_count)
-                block_quote_data = ContainerBlockProcessor.__process_lazy_lines(
+                (
+                    block_quote_data,
+                    was_paragraph_continuation,
+                ) = ContainerBlockProcessor.__process_lazy_lines(
                     parser_state,
                     leaf_tokens,
                     block_quote_data,
                     line_to_parse,
                     container_level_tokens,
                     container_start_bq_count,
+                    was_paragraph_continuation,
                 )
         else:
             requeue_line_info, used_indent, was_paragraph_continuation = (
@@ -1210,19 +1226,24 @@ class ContainerBlockProcessor:
             "list_start_token_index>>$<<",
             list_start_token_index,
         )
-        token_after_list_start = parser_state.token_document[list_start_token_index + 1]
-        POGGER.debug(
-            "token_after_list_start>>$<<",
-            token_after_list_start,
-        )
-        assert (
-            parser_state.nested_list_start.matching_markdown_token.line_number
-            == token_after_list_start.line_number
-        )
-        column_number_delta = (
-            token_after_list_start.column_number
-            - parser_state.nested_list_start.matching_markdown_token.column_number
-        )
+        if list_start_token_index < (len(parser_state.token_document) - 1):
+            token_after_list_start = parser_state.token_document[
+                list_start_token_index + 1
+            ]
+            POGGER.debug(
+                "token_after_list_start>>$<<",
+                token_after_list_start,
+            )
+            assert (
+                parser_state.nested_list_start.matching_markdown_token.line_number
+                == token_after_list_start.line_number
+            )
+            column_number_delta = (
+                token_after_list_start.column_number
+                - parser_state.nested_list_start.matching_markdown_token.column_number
+            )
+        else:
+            column_number_delta = 0
         POGGER.debug(
             "column_number_delta>>$<<",
             column_number_delta,
@@ -1679,6 +1700,7 @@ class ContainerBlockProcessor:
         line_to_parse,
         container_level_tokens,
         container_start_bq_count,
+        was_paragraph_continuation,
     ):
 
         POGGER.debug("LINE-lazy>$", line_to_parse)
@@ -1702,34 +1724,41 @@ class ContainerBlockProcessor:
         POGGER.debug("__process_lazy_lines>>mod->ltp>$<", remaining_line)
         POGGER.debug("__process_lazy_lines>>mod->ews>$<", ex_whitespace)
 
-        lazy_tokens, block_quote_data = BlockQuoteProcessor.check_for_lazy_handling(
+        (
+            lazy_tokens,
+            block_quote_data,
+            was_paragraph_continuation,
+        ) = BlockQuoteProcessor.check_for_lazy_handling(
             parser_state,
             block_quote_data,
             remaining_line,
             ex_whitespace,
+            was_paragraph_continuation,
         )
 
         container_level_tokens.extend(lazy_tokens)
-        return block_quote_data
+        return block_quote_data, was_paragraph_continuation
 
     # pylint: enable=too-many-arguments
 
     @staticmethod
     def __adjust_for_inner_list_container(
-        parser_state, last_block_index, last_list_index
+        parser_state, last_block_index, last_list_index, current_line_number
     ):
         if last_block_index > 0 and 0 < last_list_index < last_block_index:
-            POGGER.debug(
-                "plt-a>>last_block_token>>$",
-                parser_state.token_stack[last_list_index].matching_markdown_token,
-            )
-            parser_state.token_stack[
+            list_token = parser_state.token_stack[
                 last_list_index
-            ].matching_markdown_token.add_leading_spaces("")
-            POGGER.debug(
-                "plt-a>>last_block_token>>$",
-                parser_state.token_stack[last_list_index].matching_markdown_token,
-            )
+            ].matching_markdown_token
+            if list_token.line_number != current_line_number:
+                POGGER.debug(
+                    "plt-a>>last_block_token>>$",
+                    list_token,
+                )
+                list_token.add_leading_spaces("")
+                POGGER.debug(
+                    "plt-a>>last_block_token>>$",
+                    list_token,
+                )
 
     # pylint: disable=too-many-arguments
     @staticmethod
@@ -1802,42 +1831,44 @@ class ContainerBlockProcessor:
 
     @staticmethod
     def __post_leaf_block_adjustment(
-        parser_state, text_removed_by_container, orig_text_removed_by_container
+        parser_state,
+        text_removed_by_container,
+        orig_text_removed_by_container,
+        line_number,
     ):
 
         last_block_index = parser_state.find_last_block_quote_on_stack()
         POGGER.debug("last_block_index>>:$:", last_block_index)
+        if not last_block_index:
+            return
+
+        last_block_token = parser_state.token_stack[
+            last_block_index
+        ].matching_markdown_token
+
         POGGER.debug("text_removed_by_container>>:$:", text_removed_by_container)
         POGGER.debug(
             "orig_text_removed_by_container>>:$:", orig_text_removed_by_container
         )
 
-        if not orig_text_removed_by_container and last_block_index:
+        if (
+            not orig_text_removed_by_container
+        ) and last_block_token.line_number != line_number:
             POGGER.debug(
                 "plt-c>>last_block_token>>$",
-                parser_state.token_stack[last_block_index].matching_markdown_token,
+                last_block_token,
             )
             POGGER.debug(
-                "plt-c>>leading_text_index>>$",
-                parser_state.token_stack[
-                    last_block_index
-                ].matching_markdown_token.leading_text_index,
+                "plt-c>>leading_text_index>>$", last_block_token.leading_text_index
             )
-            parser_state.token_stack[
-                last_block_index
-            ].matching_markdown_token.add_leading_spaces("")
-            parser_state.token_stack[
-                last_block_index
-            ].matching_markdown_token.leading_text_index += 1
+            last_block_token.add_leading_spaces("")
+            last_block_token.leading_text_index += 1
             POGGER.debug(
                 "plt-c>>last_block_token>>$",
-                parser_state.token_stack[last_block_index].matching_markdown_token,
+                last_block_token,
             )
             POGGER.debug(
-                "plt-c>>leading_text_index>>$",
-                parser_state.token_stack[
-                    last_block_index
-                ].matching_markdown_token.leading_text_index,
+                "plt-c>>leading_text_index>>$", last_block_token.leading_text_index
             )
 
     @staticmethod
@@ -1985,16 +2016,23 @@ class ContainerBlockProcessor:
         last_block_index = parser_state.find_last_block_quote_on_stack()
         last_list_index = parser_state.find_last_list_block_on_stack()
         POGGER.debug("last_block_index>>:$:<", last_block_index)
-        POGGER.debug("last_block>>:$:<", parser_state.token_stack[last_block_index])
         POGGER.debug(
             "last_block.token>>:$:<",
             parser_state.token_stack[last_block_index].matching_markdown_token,
+        )
+        POGGER.debug("last_list_index>>:$:<", last_list_index)
+        POGGER.debug(
+            "last_list.token>>:$:<",
+            parser_state.token_stack[last_list_index].matching_markdown_token,
         )
 
         orig_text_removed_by_container = text_removed_by_container
 
         ContainerBlockProcessor.__adjust_for_inner_list_container(
-            parser_state, last_block_index, last_list_index
+            parser_state,
+            last_block_index,
+            last_list_index,
+            xposition_marker.line_number,
         )
 
         ContainerBlockProcessor.__adjust_for_list_container(
@@ -2018,6 +2056,25 @@ class ContainerBlockProcessor:
             total_ws,
         )
 
+        POGGER.debug(
+            "parsing leaf($:$)>>$",
+            position_marker.index_number,
+            position_marker.index_indent,
+            position_marker.text_to_parse,
+        )
+        POGGER.debug(
+            ">>orig_text_removed_by_container>>:$:<<", orig_text_removed_by_container
+        )
+
+        POGGER.debug(
+            "parsing leaf($:$)>>$",
+            position_marker.index_number,
+            position_marker.index_indent,
+            position_marker.text_to_parse,
+        )
+        POGGER.debug(
+            ">>orig_text_removed_by_container>>:$:<<", orig_text_removed_by_container
+        )
         (
             leaf_tokens,
             requeue_line_info,
@@ -2034,7 +2091,10 @@ class ContainerBlockProcessor:
         POGGER.debug("parsed leaf>>$", leaf_tokens)
 
         ContainerBlockProcessor.__post_leaf_block_adjustment(
-            parser_state, text_removed_by_container, orig_text_removed_by_container
+            parser_state,
+            text_removed_by_container,
+            orig_text_removed_by_container,
+            xposition_marker.line_number,
         )
 
         POGGER.debug("parsed leaf>>$", leaf_tokens)
@@ -2249,6 +2309,7 @@ class ContainerBlockProcessor:
         parser.  Debugging should be uncommented only if needed.
         """
         POGGER.debug("Leaf Line:$:", position_marker.text_to_parse)
+        POGGER.debug(">>text_removed_by_container>>:$:<<", text_removed_by_container)
         # POGGER.debug("block_quote_data.current_count:$:", block_quote_data.current_count)
         new_tokens = []
 

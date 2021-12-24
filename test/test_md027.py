@@ -1252,6 +1252,7 @@ def test_md027_bad_block_quote_unordered_list_block_quote_text_first():
     # Arrange
     scanner = MarkdownScanner()
     supplied_arguments = [
+        "--stack-trace",
         "--disable-rules",
         "md007",
         "scan",
@@ -1671,7 +1672,6 @@ def test_md027_good_block_quote_ordered_list_fenced_code_block_indent_third():
 
 
 @pytest.mark.rules
-@pytest.mark.skip
 def test_md027_good_block_quote_ordered_list_html_block():
     """
     Block quote with an aligned multiline list followed by a HTML block.

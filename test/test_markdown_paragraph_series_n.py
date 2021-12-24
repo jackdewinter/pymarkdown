@@ -391,7 +391,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_tb():
     ---
 * def"""
     expected_tokens = [
-        "[ulist(1,1):*::2::\n  \n]",
+        "[ulist(1,1):*::2::\n  ]",
         "[para(1,3):]",
         "[text(1,3):abc:]",
         "[end-para:::True]",
@@ -418,7 +418,7 @@ def test_paragraph_series_n_ul_t_nl_i2_bq_t_nl_i4_tb():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -1203,7 +1203,7 @@ def</p>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm

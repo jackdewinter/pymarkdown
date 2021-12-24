@@ -258,11 +258,11 @@ class TransformToMarkdown:
         print("---\nTransformToMarkdown\n---")
 
         for token_index, current_token in enumerate(actual_tokens):
-            next_token = self.__handle_pre_processing(
-                current_token,
-                transformed_data,
-                actual_tokens,
-                token_index,
+
+            next_token = (
+                actual_tokens[token_index + 1]
+                if token_index < len(actual_tokens) - 1
+                else None
             )
 
             (new_data, pragma_token,) = self.__process_next_token(
@@ -531,29 +531,44 @@ class TransformToMarkdown:
         return container_line
 
     @classmethod
+    def __get_last_list_index(cls, token_stack):
+        stack_index = len(token_stack) - 2
+        nested_list_start_index = -1
+        while stack_index >= 0:
+            if (
+                token_stack[stack_index].is_list_start
+                or token_stack[stack_index].is_new_list_item
+            ):
+                nested_list_start_index = stack_index
+                break
+            stack_index -= 1
+        return nested_list_start_index
+
+    @classmethod
     def __adjust_for_block_quote(
-        cls, token_stack, container_line, container_token_indices
+        cls, token_stack, container_line, container_token_indices, line_number
     ):
 
         if len(token_stack) > 1 and token_stack[-1].is_block_quote_start:
             print(" looking for nested list start")
-            stack_index = len(token_stack) - 2
-            nested_list_start_index = -1
-            while stack_index >= 0:
-                if (
-                    token_stack[stack_index].is_list_start
-                    or token_stack[stack_index].is_new_list_item
-                ):
-                    nested_list_start_index = stack_index
-                    break
-                stack_index -= 1
+            nested_list_start_index = TransformToMarkdown.__get_last_list_index(
+                token_stack
+            )
             if nested_list_start_index == -1:
                 print(" nope")
             else:
                 previous_token = token_stack[nested_list_start_index]
                 print(" yes->" + ParserHelper.make_value_visible(previous_token))
                 inner_token_index = container_token_indices[nested_list_start_index]
-                if token_stack[-1].line_number != previous_token.line_number:
+                print(
+                    "token_stack[-1].line_number->" + str(token_stack[-1].line_number)
+                )
+                print("previous_token.line_number->" + str(previous_token.line_number))
+                print("line_number->" + str(line_number))
+                if (
+                    token_stack[-1].line_number != previous_token.line_number
+                    or line_number != previous_token.line_number
+                ):
                     split_leading_spaces = previous_token.leading_spaces.split(
                         ParserHelper.newline_character
                     )
@@ -651,7 +666,10 @@ class TransformToMarkdown:
                 container_line,
             )
             container_line = self.__adjust_for_block_quote(
-                token_stack, container_line, container_token_indices
+                token_stack,
+                container_line,
+                container_token_indices,
+                base_line_number + delta_line,
             )
 
             self.__adjust_state_for_element(
@@ -685,24 +703,6 @@ class TransformToMarkdown:
                 f">>found_block_token-->index>>{found_block_token.leading_text_index}<"
             )
         return found_block_token
-
-    @classmethod
-    def __handle_pre_processing(
-        cls,
-        current_token,
-        transformed_data,
-        actual_tokens,
-        token_index,
-    ):
-        print(
-            f"\n\n>>>>{ParserHelper.make_value_visible(current_token)}"
-            + f"-->{ParserHelper.make_value_visible(transformed_data)}<--"
-        )
-        return (
-            actual_tokens[token_index + 1]
-            if token_index < len(actual_tokens) - 1
-            else None
-        )
 
     @classmethod
     def __correct_for_final_newline(cls, transformed_data, actual_tokens):
@@ -949,12 +949,23 @@ class TransformToMarkdown:
             f">self.container_token_stack>{ParserHelper.make_value_visible(self.container_token_stack)}"
         )
 
+        token_stack_index = len(self.container_token_stack) - 2
+        while (
+            token_stack_index >= 0
+            and self.container_token_stack[token_stack_index].is_block_quote_start
+        ):
+            token_stack_index -= 1
+        print(f">token_stack_index>{token_stack_index}")
+        print(
+            f">token_stack_token-->{ParserHelper.make_value_visible(self.container_token_stack[token_stack_index])}"
+        )
         if len(self.container_token_stack) > 1 and (
-            self.container_token_stack[-2].is_list_start
-            and current_token.line_number == self.container_token_stack[-2].line_number
+            token_stack_index >= 0
+            and current_token.line_number
+            == self.container_token_stack[token_stack_index].line_number
         ):
             already_existing_whitespace = ParserHelper.repeat_string(
-                " ", self.container_token_stack[-2].indent_level
+                " ", self.container_token_stack[token_stack_index].indent_level
             )
         else:
             already_existing_whitespace = None
