@@ -140,7 +140,7 @@ class ContainerBlockProcessor:
             container_start_bq_count,
             current_container_blocks,
         )
-        POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
+        # POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
         # POGGER.debug("container_level_tokens>>$>>", container_level_tokens)
 
         if requeue_line_info or did_blank:
@@ -152,7 +152,7 @@ class ContainerBlockProcessor:
                 did_blank,
             )
 
-        POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
+        # POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
         (
             can_continue,
             line_to_parse,
@@ -178,7 +178,7 @@ class ContainerBlockProcessor:
             line_to_parse,
             last_block_quote_index,
         )
-        POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
+        # POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
         if can_continue:
             (
                 can_continue,
@@ -201,10 +201,10 @@ class ContainerBlockProcessor:
                 container_start_bq_count,
             )
         if can_continue:
-            POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
-            POGGER.debug(
-                ">>was_paragraph_continuation>>:$:", was_paragraph_continuation
-            )
+            # POGGER.debug(">>text_removed_by_container>>:$:", text_removed_by_container)
+            # POGGER.debug(
+            #     ">>was_paragraph_continuation>>:$:", was_paragraph_continuation
+            # )
             requeue_line_info = ContainerBlockProcessor.__handle_leaf_tokens(
                 parser_state,
                 position_marker,
@@ -221,9 +221,9 @@ class ContainerBlockProcessor:
                 last_list_start_index,
                 was_paragraph_continuation,
             )
-            POGGER.debug(
-                ">>was_paragraph_continuation>>:$:", was_paragraph_continuation
-            )
+            # POGGER.debug(
+            #     ">>was_paragraph_continuation>>:$:", was_paragraph_continuation
+            # )
 
         return (
             container_level_tokens,

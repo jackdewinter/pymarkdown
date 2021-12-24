@@ -531,22 +531,29 @@ class TransformToMarkdown:
         return container_line
 
     @classmethod
+    def __get_last_list_index(cls, token_stack):
+        stack_index = len(token_stack) - 2
+        nested_list_start_index = -1
+        while stack_index >= 0:
+            if (
+                token_stack[stack_index].is_list_start
+                or token_stack[stack_index].is_new_list_item
+            ):
+                nested_list_start_index = stack_index
+                break
+            stack_index -= 1
+        return nested_list_start_index
+
+    @classmethod
     def __adjust_for_block_quote(
         cls, token_stack, container_line, container_token_indices, line_number
     ):
 
         if len(token_stack) > 1 and token_stack[-1].is_block_quote_start:
             print(" looking for nested list start")
-            stack_index = len(token_stack) - 2
-            nested_list_start_index = -1
-            while stack_index >= 0:
-                if (
-                    token_stack[stack_index].is_list_start
-                    or token_stack[stack_index].is_new_list_item
-                ):
-                    nested_list_start_index = stack_index
-                    break
-                stack_index -= 1
+            nested_list_start_index = TransformToMarkdown.__get_last_list_index(
+                token_stack
+            )
             if nested_list_start_index == -1:
                 print(" nope")
             else:
