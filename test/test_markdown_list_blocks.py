@@ -605,6 +605,7 @@ def test_list_blocks_238x():
 
 
 @pytest.mark.gfm
+@pytest.mark.skip
 def test_list_blocks_238a():
     """
     Test case 238a:  variation of 238 with  more spacing
@@ -2598,7 +2599,6 @@ the two lines.</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_list_blocks_270x():
     """
     Test case 270:  (part 1) These examples show how laziness can work in nested structures:
