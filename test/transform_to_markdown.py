@@ -1074,7 +1074,7 @@ class TransformToMarkdown:
 
     @classmethod
     def __rehydrate_list_start_prev_list(cls, current_token, previous_token):
-        assert len(current_token.extracted_whitespace) == previous_token.indent_level
+        _ = current_token
         return previous_token.indent_level, ""
 
     @classmethod
