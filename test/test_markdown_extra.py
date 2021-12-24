@@ -503,7 +503,7 @@ def test_extra_008a():
 
 
 @pytest.mark.gfm
-def test_extra_009():
+def test_extra_009x():
     """
     Simple block quote within an unordered list.
     """
@@ -512,7 +512,7 @@ def test_extra_009():
     source_markdown = """- > This is one section of a block quote
 """
     expected_tokens = [
-        "[ulist(1,1):-::2::\n]",
+        "[ulist(1,1):-::2::]",
         "[block-quote(1,3):  :  > \n]",
         "[para(1,5):]",
         "[text(1,5):This is one section of a block quote:]",
@@ -530,7 +530,7 @@ def test_extra_009():
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -543,7 +543,7 @@ def test_extra_009a():
     source_markdown = """1. > This is one section of a block quote
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::\n]",
+        "[olist(1,1):.:1:3::]",
         "[block-quote(1,4):   :   > \n]",
         "[para(1,6):]",
         "[text(1,6):This is one section of a block quote:]",
@@ -608,7 +608,7 @@ def test_extra_009c():
    > Just one section.
 """
     expected_tokens = [
-        "[olist(1,1):.:1:3::\n\n]",
+        "[olist(1,1):.:1:3::\n]",
         "[block-quote(1,4):   :   > \n   > \n]",
         "[para(1,6):\n]",
         "[text(1,6):This is one section of a block quote\nJust one section.::\n]",

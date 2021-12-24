@@ -96,7 +96,7 @@ def test_nested_three_unordered_unordered_block():
     > item"""
     expected_tokens = [
         "[ulist(1,1):+::2:]",
-        "[ulist(1,3):+::4:  :\n]",
+        "[ulist(1,3):+::4:  :]",
         "[block-quote(1,5):    :    > \n    > ]",
         "[para(1,7):\n]",
         "[text(1,7):list\nitem::\n]",
@@ -123,7 +123,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_unordered_block_skip():
     """
     Verify that a nesting of unordered list, unordered list, block quote
@@ -135,7 +134,7 @@ def test_nested_three_unordered_unordered_block_skip():
       item"""
     expected_tokens = [
         "[ulist(1,1):+::2:]",
-        "[ulist(1,3):+::4:  :\n    \n]",
+        "[ulist(1,3):+::4:  :    \n]",
         "[block-quote(1,5):    :    > \n\n]",
         "[para(1,7):\n  ]",
         "[text(1,7):list\nitem::\n]",
@@ -249,7 +248,7 @@ def test_nested_three_unordered_ordered_block():
      > item"""
     expected_tokens = [
         "[ulist(1,1):+::2:]",
-        "[olist(1,3):.:1:5:  :\n]",
+        "[olist(1,3):.:1:5:  :]",
         "[block-quote(1,6):     :     > \n     > ]",
         "[para(1,8):\n]",
         "[text(1,8):list\nitem::\n]",
@@ -276,7 +275,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_ordered_block_skip():
     """
     Verify that a nesting of unordered list, ordered list, block quote with
@@ -288,7 +286,7 @@ def test_nested_three_unordered_ordered_block_skip():
        item"""
     expected_tokens = [
         "[ulist(1,1):+::2:]",
-        "[olist(1,3):.:1:5:  :\n     \n]",
+        "[olist(1,3):.:1:5:  :     \n]",
         "[block-quote(1,6):     :     > \n\n]",
         "[para(1,8):\n  ]",
         "[text(1,8):list\nitem::\n]",
@@ -315,7 +313,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_block_unordered():
     """
     Verify that a nesting of unordered list, block quote, unordered list works
@@ -327,7 +324,7 @@ def test_nested_three_unordered_block_unordered():
   >   item"""
     expected_tokens = [
         "[ulist(1,1):+::2:]",
-        "[block-quote(1,3):  :  > \n\n  > ]",
+        "[block-quote(1,3):  :  > \n  > ]",
         "[ulist(1,5):+::6::  ]",
         "[para(1,7):\n]",
         "[text(1,7):list\nitem::\n]",
@@ -348,7 +345,7 @@ item</li>
 </ul>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
 
 
 @pytest.mark.gfm
@@ -363,7 +360,7 @@ def test_nested_three_unordered_block_skip_unordered():
       item"""
     expected_tokens = [
         "[ulist(1,1):+::2:]",
-        "[block-quote(1,3):  :  > \n\n]",
+        "[block-quote(1,3):  :  > \n]",
         "[ulist(1,5):+::6::      \n]",
         "[para(1,7):\n]",
         "[text(1,7):list\nitem::\n]",
@@ -388,7 +385,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_block_ordered():
     """
     Verify that a nesting of unordered list, block quote, ordered list works
@@ -400,7 +396,7 @@ def test_nested_three_unordered_block_ordered():
   >    item"""
     expected_tokens = [
         "[ulist(1,1):+::2:]",
-        "[block-quote(1,3):  :  > \n\n  > ]",
+        "[block-quote(1,3):  :  > \n  > ]",
         "[olist(1,5):.:1:7::   ]",
         "[para(1,8):\n]",
         "[text(1,8):list\nitem::\n]",
@@ -436,7 +432,7 @@ def test_nested_three_unordered_block_skip_ordered():
        item"""
     expected_tokens = [
         "[ulist(1,1):+::2:]",
-        "[block-quote(1,3):  :  > \n\n]",
+        "[block-quote(1,3):  :  > \n]",
         "[olist(1,5):.:1:7::       \n]",
         "[para(1,8):\n]",
         "[text(1,8):list\nitem::\n]",
@@ -461,8 +457,7 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_nested_three_unordered_block_block():
+def test_nested_three_unordered_block_block_x():
     """
     Verify that a nesting of unordered list, block quote, block quote works
     properly.
@@ -472,7 +467,7 @@ def test_nested_three_unordered_block_block():
     source_markdown = """+ > > list
   > > item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n]",
+        "[ulist(1,1):+::2::]",
         "[block-quote(1,3):  :]",
         "[block-quote(1,5):  :  > > \n  > > ]",
         "[para(1,7):\n]",
@@ -498,8 +493,7 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_nested_three_unordered_block_skip_block():
+def test_nested_three_unordered_block_skip_block_x():
     """
     Verify that a nesting of unordered list, block quote, block quote works
     properly.
@@ -509,7 +503,7 @@ def test_nested_three_unordered_block_skip_block():
     source_markdown = """+ > > list
     > item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n]",
+        "[ulist(1,1):+::2::]",
         "[block-quote(1,3):  :]",
         "[block-quote(1,5):  :  > > \n    > ]",
         "[para(1,7):\n]",
@@ -535,7 +529,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_block_block_skip():
     """
     Verify that a nesting of unordered list, block quote, block quote works
@@ -546,7 +539,7 @@ def test_nested_three_unordered_block_block_skip():
     source_markdown = """+ > > list
   >   item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n]",
+        "[ulist(1,1):+::2::]",
         "[block-quote(1,3):  :]",
         "[block-quote(1,5):  :  > > \n  > ]",
         "[para(1,7):\n  ]",
@@ -572,7 +565,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_unordered_block_skip_block_skip():
     """
     Verify that a nesting of unordered list, block quote, block quote works
@@ -583,7 +575,7 @@ def test_nested_three_unordered_block_skip_block_skip():
     source_markdown = """+ > > list
       item"""
     expected_tokens = [
-        "[ulist(1,1):+::2::\n  \n]",
+        "[ulist(1,1):+::2::  \n]",
         "[block-quote(1,3):  :]",
         "[block-quote(1,5):  :  > > \n\n]",
         "[para(1,7):\n    ]",
@@ -696,7 +688,7 @@ def test_nested_three_ordered_unordered_block():
      > item"""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[ulist(1,4):+::5:   :\n]",
+        "[ulist(1,4):+::5:   :]",
         "[block-quote(1,6):     :     > \n     > ]",
         "[para(1,8):\n]",
         "[text(1,8):list\nitem::\n]",
@@ -723,7 +715,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_unordered_block_skip():
     """
     Verify that a nesting of ordered list, unordered list, block quote works
@@ -735,7 +726,7 @@ def test_nested_three_ordered_unordered_block_skip():
        item"""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[ulist(1,4):+::5:   :\n     \n]",
+        "[ulist(1,4):+::5:   :     \n]",
         "[block-quote(1,6):     :     > \n\n]",
         "[para(1,8):\n  ]",
         "[text(1,8):list\nitem::\n]",
@@ -849,7 +840,7 @@ def test_nested_three_ordered_ordered_block_x():
       > item"""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :\n]",
+        "[olist(1,4):.:1:6:   :]",
         "[block-quote(1,7):      :      > \n      > ]",
         "[para(1,9):\n]",
         "[text(1,9):list\nitem::\n]",
@@ -876,7 +867,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_ordered_block_skip():
     """
     Verify that a nesting of ordered list, ordered list, block quote works
@@ -888,7 +878,7 @@ def test_nested_three_ordered_ordered_block_skip():
         item"""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[olist(1,4):.:1:6:   :\n      \n]",
+        "[olist(1,4):.:1:6:   :      \n]",
         "[block-quote(1,7):      :      > \n\n]",
         "[para(1,9):\n  ]",
         "[text(1,9):list\nitem::\n]",
@@ -911,11 +901,10 @@ item</p>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_block_unordered():
     """
     Verify that a nesting of ordered list, block quote, unordered list works
@@ -927,7 +916,7 @@ def test_nested_three_ordered_block_unordered():
    >   item"""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[block-quote(1,4):   :   > \n\n   > ]",
+        "[block-quote(1,4):   :   > \n   > ]",
         "[ulist(1,6):+::7::  ]",
         "[para(1,8):\n]",
         "[text(1,8):list\nitem::\n]",
@@ -963,7 +952,7 @@ def test_nested_three_ordered_block_skip_unordered():
        item"""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[block-quote(1,4):   :   > \n\n]",
+        "[block-quote(1,4):   :   > \n]",
         "[ulist(1,6):+::7::       \n]",
         "[para(1,8):\n]",
         "[text(1,8):list\nitem::\n]",
@@ -988,7 +977,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_block_ordered():
     """
     Verify that a nesting of ordered list, block quote, ordered list works
@@ -1000,7 +988,7 @@ def test_nested_three_ordered_block_ordered():
    >    item"""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[block-quote(1,4):   :   > \n\n   > ]",
+        "[block-quote(1,4):   :   > \n   > ]",
         "[olist(1,6):.:1:8::   ]",
         "[para(1,9):\n]",
         "[text(1,9):list\nitem::\n]",
@@ -1036,7 +1024,7 @@ def test_nested_three_ordered_block_skip_ordered():
         item"""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[block-quote(1,4):   :   > \n\n]",
+        "[block-quote(1,4):   :   > \n]",
         "[olist(1,6):.:1:8::        \n]",
         "[para(1,9):\n]",
         "[text(1,9):list\nitem::\n]",
@@ -1061,8 +1049,7 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
-def test_nested_three_ordered_block_block():
+def test_nested_three_ordered_block_block_x():
     """
     Verify that a nesting of ordered list, block quote, block quote works
     properly.
@@ -1072,7 +1059,7 @@ def test_nested_three_ordered_block_block():
     source_markdown = """1. > > list
    > > item"""
     expected_tokens = [
-        "[olist(1,1):.:1:3::\n]",
+        "[olist(1,1):.:1:3::]",
         "[block-quote(1,4):   :]",
         "[block-quote(1,6):   :   > > \n   > > ]",
         "[para(1,8):\n]",
@@ -1098,7 +1085,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_block_skip_block():
     """
     Verify that a nesting of ordered list, block quote, block quote works
@@ -1109,7 +1095,7 @@ def test_nested_three_ordered_block_skip_block():
     source_markdown = """1. > > list
      > item"""
     expected_tokens = [
-        "[olist(1,1):.:1:3::\n]",
+        "[olist(1,1):.:1:3::]",
         "[block-quote(1,4):   :]",
         "[block-quote(1,6):   :   > > \n     > ]",
         "[para(1,8):\n]",
@@ -1135,7 +1121,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_block_block_skip():
     """
     Verify that a nesting of ordered list, block quote, block quote works
@@ -1146,7 +1131,7 @@ def test_nested_three_ordered_block_block_skip():
     source_markdown = """1. > > list
    >   item"""
     expected_tokens = [
-        "[olist(1,1):.:1:3::\n]",
+        "[olist(1,1):.:1:3::]",
         "[block-quote(1,4):   :]",
         "[block-quote(1,6):   :   > > \n   > ]",
         "[para(1,8):\n  ]",
@@ -1168,11 +1153,10 @@ item</p>
 </ol>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_block_skip_block_skip():
     """
     Verify that a nesting of ordered list, block quote, block quote works
@@ -1183,7 +1167,7 @@ def test_nested_three_ordered_block_skip_block_skip():
     source_markdown = """1. > > list
        item"""
     expected_tokens = [
-        "[olist(1,1):.:1:3::\n   \n]",
+        "[olist(1,1):.:1:3::   \n]",
         "[block-quote(1,4):   :]",
         "[block-quote(1,6):   :   > > \n\n]",
         "[para(1,8):\n    ]",
@@ -1357,7 +1341,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_unordered_block_x():
     """
     Verify that a nesting of block quote, unordered list, block quote works
@@ -1369,8 +1352,8 @@ def test_nested_three_block_unordered_block_x():
 >   > item"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::\n]",
-        "[block-quote(1,5)::> \n> \n> ]",
+        "[ulist(1,3):+::4::]",
+        "[block-quote(1,5)::> \n>   > ]",
         "[para(1,7):\n]",
         "[text(1,7):list\nitem::\n]",
         "[end-para:::True]",
@@ -1405,7 +1388,7 @@ def test_nested_three_block_skip_unordered_block():
     > item"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::\n]",
+        "[ulist(1,3):+::4::]",
         "[block-quote(1,5)::> \n    > ]",
         "[para(1,7):\n]",
         "[text(1,7):list\nitem::\n]",
@@ -1441,7 +1424,7 @@ def test_nested_three_block_unordered_block_skip():
 >      item"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::\n]",
+        "[ulist(1,3):+::4::]",
         "[block-quote(1,5)::> \n> ]",
         "[para(1,7):\n     ]",
         "[text(1,7):list\nitem::\n]",
@@ -1466,7 +1449,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_skip_unordered_block_skip():
     """
     Verify that a nesting of block quote, unordered list, block quote works
@@ -1478,7 +1460,7 @@ def test_nested_three_block_skip_unordered_block_skip():
        item"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::\n    \n]",
+        "[ulist(1,3):+::4::    \n]",
         "[block-quote(1,5)::> \n\n]",
         "[para(1,7):\n   ]",
         "[text(1,7):list\nitem::\n]",
@@ -1651,7 +1633,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_ordered_block_x():
     """
     Verify that a nesting of block quote, ordered list, block quote works
@@ -1663,8 +1644,8 @@ def test_nested_three_block_ordered_block_x():
 >    > item"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[olist(1,3):.:1:5::\n]",
-        "[block-quote(1,6)::> \n> \n> ]",
+        "[olist(1,3):.:1:5::]",
+        "[block-quote(1,6)::> \n>    > ]",
         "[para(1,8):\n]",
         "[text(1,8):list\nitem::\n]",
         "[end-para:::True]",
@@ -1699,7 +1680,7 @@ def test_nested_three_block_skip_ordered_block():
      > item"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[olist(1,3):.:1:5::\n]",
+        "[olist(1,3):.:1:5::]",
         "[block-quote(1,6)::> \n     > ]",
         "[para(1,8):\n]",
         "[text(1,8):list\nitem::\n]",
@@ -1735,7 +1716,7 @@ def test_nested_three_block_ordered_block_skip():
 >       item"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[olist(1,3):.:1:5::\n]",
+        "[olist(1,3):.:1:5::]",
         "[block-quote(1,6)::> \n> ]",
         "[para(1,8):\n      ]",
         "[text(1,8):list\nitem::\n]",
@@ -1760,7 +1741,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_skip_ordered_block_skip():
     """
     Verify that a nesting of block quote, ordered list, block quote works
@@ -1772,7 +1752,7 @@ def test_nested_three_block_skip_ordered_block_skip():
         item"""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[olist(1,3):.:1:5::\n     \n]",
+        "[olist(1,3):.:1:5::     \n]",
         "[block-quote(1,6)::> \n\n]",
         "[para(1,8):\n   ]",
         "[text(1,8):list\nitem::\n]",

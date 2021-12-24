@@ -2609,7 +2609,7 @@ def test_list_blocks_270x():
 continued here."""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[olist(1,3):.:1:5::\n\n]",
+        "[olist(1,3):.:1:5::\n]",
         "[block-quote(1,6)::> \n]",
         "[para(1,8):\n]",
         "[text(1,8):Blockquote\ncontinued here.::\n]",
@@ -2630,7 +2630,7 @@ continued here.</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
 
 
 @pytest.mark.gfm
@@ -2648,7 +2648,7 @@ continued here.
     expected_tokens = [
         "[BLANK(1,1):]",
         "[block-quote(2,1)::> ]",
-        "[olist(2,3):.:1:5::\n\n\n]",
+        "[olist(2,3):.:1:5::\n\n]",
         "[block-quote(2,6)::> \n\n]",
         "[para(2,8):\n]",
         "[text(2,8):Blockquote\ncontinued here.::\n]",
@@ -2684,7 +2684,7 @@ def test_list_blocks_270b():
 continued here."""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[block-quote(1,4):   :   > \n\n]",
+        "[block-quote(1,4):   :   > \n]",
         "[olist(1,6):.:1:8::\n]",
         "[para(1,9):\n]",
         "[text(1,9):Blockquote\ncontinued here.::\n]",
@@ -2722,7 +2722,7 @@ continued here."""
     expected_tokens = [
         "[block-quote(1,1)::>\n> ]",
         "[BLANK(1,2):]",
-        "[olist(2,3):.:1:5::\n\n]",
+        "[olist(2,3):.:1:5::\n]",
         "[block-quote(2,6)::> \n]",
         "[para(2,8):\n]",
         "[text(2,8):Blockquote\ncontinued here.::\n]",
@@ -2761,7 +2761,7 @@ continued here."""
     expected_tokens = [
         "[block-quote(1,1)::>\n> \n> ]",
         "[BLANK(1,2):]",
-        "[olist(2,3):.:1:5::]",
+        "[olist(2,3):.:1:5::\n\n]",
         "[para(2,6):]",
         "[text(2,6):test:]",
         "[end-para:::True]",
@@ -2800,7 +2800,7 @@ def test_list_blocks_271x():
 > continued here."""
     expected_tokens = [
         "[block-quote(1,1)::> ]",
-        "[olist(1,3):.:1:5::\n]",
+        "[olist(1,3):.:1:5::]",
         "[block-quote(1,6)::> \n> ]",
         "[para(1,8):\n]",
         "[text(1,8):Blockquote\ncontinued here.::\n]",
@@ -2839,7 +2839,7 @@ def test_list_blocks_271a():
     expected_tokens = [
         "[BLANK(1,1):]",
         "[block-quote(2,1)::> ]",
-        "[olist(2,3):.:1:5::\n\n]",
+        "[olist(2,3):.:1:5::\n]",
         "[block-quote(2,6)::> \n> \n]",
         "[para(2,8):\n]",
         "[text(2,8):Blockquote\ncontinued here.::\n]",
@@ -2875,7 +2875,7 @@ def test_list_blocks_271b():
 > continued here."""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[block-quote(1,4):   :   > \n]",
+        "[block-quote(1,4):   :   > ]",
         "[olist(1,6):.:1:8:]",
         "[para(1,9):]",
         "[text(1,9):Blockquote:]",
@@ -2920,7 +2920,7 @@ def test_list_blocks_271c():
     expected_tokens = [
         "[block-quote(1,1)::>\n> ]",
         "[BLANK(1,2):]",
-        "[olist(2,3):.:1:5::\n]",
+        "[olist(2,3):.:1:5::]",
         "[block-quote(2,6)::> \n> ]",
         "[para(2,8):\n]",
         "[text(2,8):Blockquote\ncontinued here.::\n]",
@@ -2983,7 +2983,7 @@ def test_list_blocks_271e():
     source_markdown = """1. > Blockquote
 > continued here."""
     expected_tokens = [
-        "[olist(1,1):.:1:3::]",
+        "[olist(1,1):.:1:3:]",
         "[block-quote(1,4):   :   > ]",
         "[para(1,6):]",
         "[text(1,6):Blockquote:]",

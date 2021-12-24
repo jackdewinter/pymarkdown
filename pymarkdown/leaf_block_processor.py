@@ -508,14 +508,17 @@ class LeafBlockProcessor:
                     only_these_blocks=[ParagraphStackToken],
                     was_forced=force_paragraph_close_if_present,
                 )
-            if block_quote_data.current_count == 0 and block_quote_data.stack_count > 0:
-                new_tokens, _ = parser_state.close_open_blocks_fn(
-                    parser_state,
-                    destination_array=new_tokens,
-                    only_these_blocks=[BlockQuoteStackToken],
-                    include_block_quotes=True,
-                    was_forced=True,
-                )
+
+            assert (
+                block_quote_data.current_count != 0 or block_quote_data.stack_count <= 0
+            )
+            # new_tokens, _ = parser_state.close_open_blocks_fn(
+            #     parser_state,
+            #     destination_array=new_tokens,
+            #     only_these_blocks=[BlockQuoteStackToken],
+            #     include_block_quotes=True,
+            #     was_forced=True,
+            # )
             new_tokens.append(
                 ThematicBreakMarkdownToken(
                     start_char,
@@ -813,6 +816,7 @@ class LeafBlockProcessor:
         """
         Handle the parsing of a paragraph.
         """
+        POGGER.debug(">>text_removed_by_container>>:$:<<", text_removed_by_container)
         if parser_state.no_para_start_if_empty and position_marker.index_number >= len(
             position_marker.text_to_parse
         ):
@@ -926,6 +930,7 @@ class LeafBlockProcessor:
         extracted_whitespace,
         adjusted_whitespace_length,
     ):
+        POGGER.debug(">>text_removed_by_container>>:$:<<", text_removed_by_container)
         POGGER.debug(">>extracted_whitespace>>:$:<<", extracted_whitespace)
         POGGER.debug(">>adjusted_whitespace_length>>$", adjusted_whitespace_length)
         if parser_state.token_stack[container_index].is_block_quote:
@@ -1017,9 +1022,7 @@ class LeafBlockProcessor:
 
     @staticmethod
     def __adjust_paragraph_for_block_quotes(
-        top_block_token,
-        text_removed_by_container,
-        token_document,
+        top_block_token, text_removed_by_container, token_document
     ):
         POGGER.debug(">>list-owners>>$", token_document)
         POGGER.debug(">>text_removed_by_container>>$<<", text_removed_by_container)
@@ -1180,19 +1183,22 @@ class LeafBlockProcessor:
         Determine whether we have a valid leaf block start.
         """
 
+        POGGER.debug(
+            "is_paragraph_ending_leaf_block_start, ex=$", exclude_thematic_break
+        )
         is_leaf_block_start = not exclude_thematic_break
-        if not exclude_thematic_break:
-            is_leaf_block_start, _ = LeafBlockProcessor.is_thematic_break(
-                line_to_parse,
-                start_index,
-                extracted_whitespace,
-                skip_whitespace_check=True,
-            )
-            is_leaf_block_start = bool(is_leaf_block_start)
-            POGGER.debug(
-                "is_paragraph_ending_leaf_block_start>>is_theme_break>>$",
-                is_leaf_block_start,
-            )
+        assert not exclude_thematic_break
+        is_leaf_block_start, _ = LeafBlockProcessor.is_thematic_break(
+            line_to_parse,
+            start_index,
+            extracted_whitespace,
+            skip_whitespace_check=True,
+        )
+        is_leaf_block_start = bool(is_leaf_block_start)
+        POGGER.debug(
+            "is_paragraph_ending_leaf_block_start>>is_theme_break>>$",
+            is_leaf_block_start,
+        )
         if not is_leaf_block_start:
             is_leaf_block_start, _ = HtmlHelper.is_html_block(
                 line_to_parse,
@@ -1221,4 +1227,8 @@ class LeafBlockProcessor:
                 "is_paragraph_ending_leaf_block_start>>is_atx_heading>>$",
                 is_leaf_block_start,
             )
+        POGGER.debug(
+            "is_paragraph_ending_leaf_block_start<<$",
+            is_leaf_block_start,
+        )
         return is_leaf_block_start

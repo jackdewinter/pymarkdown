@@ -7,7 +7,7 @@ set COVERAGE_FILE=build/.coverage
 rem Set needed environment variables.
 set PTEST_TEMPFILE=temp_ptest.txt
 set PTEST_SCRIPT_DIRECTORY=%~dp0
-set PTEST_PYSCAN_SCRIPT_PATH=%PTEST_SCRIPT_DIRECTORY%..\pyscan\pyscan\main.py
+set PTEST_PYSCAN_SCRIPT_PATH=%PTEST_SCRIPT_DIRECTORY%..\pyscan\main.py
 set PTEST_TEST_RESULTS_PATH=report\tests.xml
 set PTEST_TEST_COVERAGE_PATH=report\coverage.xml
 set "PROJECT_DIRECTORY=%cd%"
