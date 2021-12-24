@@ -18,7 +18,7 @@
             "no-self-argument": 1
         },
         "pymarkdown/container_block_processor.py": {
-            "too-many-arguments": 22,
+            "too-many-arguments": 23,
             "too-many-locals": 9,
             "chained-comparison": 1
         },
@@ -132,7 +132,7 @@
         "pymarkdown/version.py": {}
     },
     "disables-by-name": {
-        "too-many-arguments": 120,
+        "too-many-arguments": 121,
         "too-many-locals": 32,
         "too-few-public-methods": 2,
         "no-self-argument": 1,

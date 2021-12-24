@@ -1876,6 +1876,56 @@ class ContainerBlockProcessor:
             )
 
     @staticmethod
+    def __calculate_current_indent_level_list(parser_state, stack_index):
+        stack_token = parser_state.token_stack[stack_index]
+        return (
+            stack_token.last_new_list_token.indent_level
+            if parser_state.token_stack[stack_index].last_new_list_token
+            else stack_token.matching_markdown_token.indent_level
+        )
+
+    # pylint: disable=too-many-arguments
+    @staticmethod
+    def __calculate_current_indent_level_block_quote(
+        parser_state,
+        stack_index,
+        non_last_block_index,
+        last_block_index,
+        line_number,
+        current_indent_level,
+        text_removed_by_container,
+    ):
+        if stack_index != last_block_index:
+            POGGER.debug("not last bq token, skipping")
+            non_last_block_index = stack_index
+            return None, non_last_block_index
+
+        POGGER.debug("line_number=$", line_number)
+        POGGER.debug(
+            "matching_markdown_token.line_number=$",
+            parser_state.token_stack[stack_index].matching_markdown_token.line_number,
+        )
+        POGGER.debug("non_last_block_index=$", non_last_block_index)
+
+        valid_mark = non_last_block_index and non_last_block_index != (
+            last_block_index - 1
+        )
+        base_indent_level = (
+            current_indent_level
+            if valid_mark
+            and line_number
+            == parser_state.token_stack[stack_index].matching_markdown_token.line_number
+            else 0
+        )
+        proposed_indent_level = (
+            len(text_removed_by_container) if text_removed_by_container else 0
+        ) + base_indent_level
+        POGGER.debug("last bq token, processing:$", proposed_indent_level)
+        return proposed_indent_level, non_last_block_index
+
+    # pylint: enable=too-many-arguments
+
+    @staticmethod
     def __calculate_current_indent_level(
         parser_state, last_block_index, text_removed_by_container, total_ws, line_number
     ):
@@ -1887,43 +1937,25 @@ class ContainerBlockProcessor:
                 "token:$:", parser_state.token_stack[stack_index]
             )
             if parser_state.token_stack[stack_index].is_block_quote:
-                if stack_index != last_block_index:
-                    POGGER.debug("not last bq token, skipping")
-                    non_last_block_index = stack_index
+                (
+                    proposed_indent_level,
+                    non_last_block_index,
+                ) = ContainerBlockProcessor.__calculate_current_indent_level_block_quote(
+                    parser_state,
+                    stack_index,
+                    non_last_block_index,
+                    last_block_index,
+                    line_number,
+                    current_indent_level,
+                    text_removed_by_container,
+                )
+                if proposed_indent_level is None:
                     continue
-
-                POGGER.debug("line_number=$", line_number)
-                POGGER.debug(
-                    "matching_markdown_token.line_number=$",
-                    parser_state.token_stack[
-                        stack_index
-                    ].matching_markdown_token.line_number,
-                )
-                POGGER.debug("non_last_block_index=$", non_last_block_index)
-
-                valid_mark = non_last_block_index and non_last_block_index != (
-                    last_block_index - 1
-                )
-                base_indent_level = (
-                    current_indent_level
-                    if valid_mark
-                    and line_number
-                    == parser_state.token_stack[
-                        stack_index
-                    ].matching_markdown_token.line_number
-                    else 0
-                )
-                proposed_indent_level = (
-                    len(text_removed_by_container) if text_removed_by_container else 0
-                )
-                proposed_indent_level += base_indent_level
-                POGGER.debug("last bq token, processing:$", proposed_indent_level)
             elif parser_state.token_stack[stack_index].is_list:
-                stack_token = parser_state.token_stack[stack_index]
                 proposed_indent_level = (
-                    stack_token.last_new_list_token.indent_level
-                    if parser_state.token_stack[stack_index].last_new_list_token
-                    else stack_token.matching_markdown_token.indent_level
+                    ContainerBlockProcessor.__calculate_current_indent_level_list(
+                        parser_state, stack_index
+                    )
                 )
             else:
                 break
