@@ -1913,10 +1913,9 @@ class ContainerBlockProcessor:
                     ].matching_markdown_token.line_number
                     else 0
                 )
-                proposed_indent_level = (
+                proposed_indent_level = ((
                     len(text_removed_by_container) if text_removed_by_container else 0
-                )
-                proposed_indent_level += base_indent_level
+                )) + base_indent_level
                 POGGER.debug("last bq token, processing:$", proposed_indent_level)
             elif parser_state.token_stack[stack_index].is_list:
                 stack_token = parser_state.token_stack[stack_index]
