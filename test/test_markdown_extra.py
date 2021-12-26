@@ -2566,8 +2566,10 @@ def test_extra_024a():
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
-def test_extra_025():
+@pytest.mark.skip
+def test_extra_025x():
     """
     TBD
     """
@@ -2626,6 +2628,166 @@ item</p>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_025a():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> + list
+>   this
+>   > good
+>   > item
+> + that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> \n> \n> \n> ]",
+        "[ulist(1,3):*::4:]",
+        "[para(1,5):]",
+        "[text(1,5):Item 1:]",
+        "[end-para:::True]",
+        "[ulist(2,5):*::6:  ]",
+        "[para(2,7):]",
+        "[text(2,7):Item 1a:]",
+        "[end-para:::True]",
+        "[li(3,5):6:  :]",
+        "[para(3,7):]",
+        "[text(3,7):Item 1b:]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[li(4,4):5: :]",
+        "[para(4,6):]",
+        "[text(4,6):Item 2:]",
+        "[end-para:::True]",
+        "[ulist(5,6):*::7:   :]",
+        "[para(5,8):]",
+        "[text(5,8):Item 2a:]",
+        "[end-para:::True]",
+        "[li(6,6):7:   :]",
+        "[para(6,8):]",
+        "[text(6,8):Item 2b:]",
+        "[end-para:::True]",
+        "[BLANK(7,1):]",
+        "[end-ulist:::True]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>list
+this
+<blockquote>
+<p>good
+item</p>
+</blockquote>
+</li>
+<li>that</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=True)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_025b():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> + list
+>   this
+>   > item
+> + that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[ulist(1,3):+::4::  \n\n]",
+        "[para(1,5):\n]",
+        "[text(1,5):list\nthis::\n]",
+        "[end-para:::True]",
+        "[block-quote(3,5)::> \n> ]",
+        "[para(3,7):]",
+        "[text(3,7):item:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[li(4,3):4::]",
+        "[para(4,5):]",
+        "[text(4,5):that:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>list
+this
+<blockquote>
+<p>item</p>
+</blockquote>
+</li>
+<li>that</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
+
+@pytest.mark.gfm
+@pytest.mark.skip
+def test_extra_025c():
+    """
+    TBD
+    """
+
+    # Arrange
+    source_markdown = """> + list
+>   > good
+>   > item
+> + that
+"""
+    expected_tokens = [
+        "[block-quote(1,1)::> \n> \n> ]",
+        "[ulist(1,3):+::4::  \n\n]",
+        "[para(1,5):\n]",
+        "[text(1,5):list\nthis::\n]",
+        "[end-para:::True]",
+        "[block-quote(3,5)::> \n> ]",
+        "[para(3,7):]",
+        "[text(3,7):item:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[li(4,3):4::]",
+        "[para(4,5):]",
+        "[text(4,5):that:]",
+        "[end-para:::True]",
+        "[BLANK(5,1):]",
+        "[end-ulist:::True]",
+        "[end-block-quote:::True]",
+    ]
+    expected_gfm = """<blockquote>
+<ul>
+<li>list
+this
+<blockquote>
+<p>item</p>
+</blockquote>
+</li>
+<li>that</li>
+</ul>
+</blockquote>"""
+
+    # Act & Assert
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_extra_999():

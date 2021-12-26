@@ -8,7 +8,6 @@ from .utils import act_and_assert
 # pylint: disable=too-many-lines
 
 
-
 @pytest.mark.gfm
 def test_nested_three_ordered_ordered_unordered():
     """
@@ -46,6 +45,7 @@ item</li>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_nested_three_ordered_nl_ordered_nl_unordered():
     """
@@ -58,7 +58,19 @@ def test_nested_three_ordered_nl_ordered_nl_unordered():
    1.
       + list
         item"""
-    expected_tokens = ['[olist(1,1):.:1:3:]', '[BLANK(1,3):]', '[olist(2,4):.:1:6:   ]', '[BLANK(2,6):]', '[ulist(3,7):+::8:      :        ]', '[para(3,9):\n]', '[text(3,9):list\nitem::\n]', '[end-para:::True]', '[end-ulist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[BLANK(1,3):]",
+        "[olist(2,4):.:1:6:   ]",
+        "[BLANK(2,6):]",
+        "[ulist(3,7):+::8:      :        ]",
+        "[para(3,9):\n]",
+        "[text(3,9):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -75,6 +87,7 @@ item</li>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_nested_three_ordered_text_nl_ordered_text_nl_unordered():
     """
@@ -87,7 +100,23 @@ def test_nested_three_ordered_text_nl_ordered_text_nl_unordered():
    1. def
       + list
         item"""
-    expected_tokens =  ['[olist(1,1):.:1:3:]', '[para(1,4):]', '[text(1,4):abc:]', '[end-para:::True]', '[olist(2,4):.:1:6:   ]', '[para(2,7):]', '[text(2,7):def:]', '[end-para:::True]', '[ulist(3,7):+::8:      :        ]', '[para(3,9):\n]', '[text(3,9):list\nitem::\n]', '[end-para:::True]', '[end-ulist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::True]",
+        "[ulist(3,7):+::8:      :        ]",
+        "[para(3,9):\n]",
+        "[text(3,9):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-ulist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>abc
 <ol>
@@ -103,6 +132,7 @@ item</li>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_nested_three_ordered_ordered_ordered():
@@ -141,6 +171,7 @@ item</li>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_nested_three_ordered_nl_ordered_nl_ordered():
     """
@@ -153,7 +184,19 @@ def test_nested_three_ordered_nl_ordered_nl_ordered():
    1.
       1. list
          item"""
-    expected_tokens = ['[olist(1,1):.:1:3:]', '[BLANK(1,3):]', '[olist(2,4):.:1:6:   ]', '[BLANK(2,6):]', '[olist(3,7):.:1:9:      :         ]', '[para(3,10):\n]', '[text(3,10):list\nitem::\n]', '[end-para:::True]', '[end-olist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[BLANK(1,3):]",
+        "[olist(2,4):.:1:6:   ]",
+        "[BLANK(2,6):]",
+        "[olist(3,7):.:1:9:      :         ]",
+        "[para(3,10):\n]",
+        "[text(3,10):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -170,6 +213,7 @@ item</li>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_nested_three_ordered_text_nl_ordered_text_nl_ordered():
     """
@@ -182,7 +226,23 @@ def test_nested_three_ordered_text_nl_ordered_text_nl_ordered():
    1. def
       1. list
          item"""
-    expected_tokens = ['[olist(1,1):.:1:3:]', '[para(1,4):]', '[text(1,4):abc:]', '[end-para:::True]', '[olist(2,4):.:1:6:   ]', '[para(2,7):]', '[text(2,7):def:]', '[end-para:::True]', '[olist(3,7):.:1:9:      :         ]', '[para(3,10):\n]', '[text(3,10):list\nitem::\n]', '[end-para:::True]', '[end-olist:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   ]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::True]",
+        "[olist(3,7):.:1:9:      :         ]",
+        "[para(3,10):\n]",
+        "[text(3,10):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>abc
 <ol>
@@ -198,6 +258,7 @@ item</li>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_nested_three_ordered_ordered_block_x():
@@ -236,6 +297,7 @@ item</p>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_nested_three_ordered_nl_ordered_nl_block_x():
     """
@@ -248,7 +310,19 @@ def test_nested_three_ordered_nl_ordered_nl_block_x():
    1.
       > list
       > item"""
-    expected_tokens = ['[olist(1,1):.:1:3:]', '[BLANK(1,3):]', '[olist(2,4):.:1:6:   :\n]', '[BLANK(2,6):]', '[block-quote(3,7):      :      > \n      > ]', '[para(3,9):\n]', '[text(3,9):list\nitem::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[BLANK(1,3):]",
+        "[olist(2,4):.:1:6:   :\n]",
+        "[BLANK(2,6):]",
+        "[block-quote(3,7):      :      > \n      > ]",
+        "[para(3,9):\n]",
+        "[text(3,9):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -265,6 +339,7 @@ item</p>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_nested_three_ordered_text_nl_ordered_text_nl_block_x():
     """
@@ -277,7 +352,23 @@ def test_nested_three_ordered_text_nl_ordered_text_nl_block_x():
    1. def
       > list
       > item"""
-    expected_tokens = ['[olist(1,1):.:1:3:]', '[para(1,4):]', '[text(1,4):abc:]', '[end-para:::True]', '[olist(2,4):.:1:6:   :\n]', '[para(2,7):]', '[text(2,7):def:]', '[end-para:::True]', '[block-quote(3,7):      :      > \n      > ]', '[para(3,9):\n]', '[text(3,9):list\nitem::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :\n]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::True]",
+        "[block-quote(3,7):      :      > \n      > ]",
+        "[para(3,9):\n]",
+        "[text(3,9):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>abc
 <ol>
@@ -293,6 +384,7 @@ item</p>
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
+
 
 @pytest.mark.gfm
 def test_nested_three_ordered_ordered_block_skip():
@@ -331,6 +423,7 @@ item</p>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_nested_three_ordered_nl_ordered_nl_block_skip():
     """
@@ -343,7 +436,19 @@ def test_nested_three_ordered_nl_ordered_nl_block_skip():
    1.
       > list
         item"""
-    expected_tokens = ['[olist(1,1):.:1:3:]', '[BLANK(1,3):]', '[olist(2,4):.:1:6:   :\n      \n]', '[BLANK(2,6):]', '[block-quote(3,7):      :      > \n\n]', '[para(3,9):\n  ]', '[text(3,9):list\nitem::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[BLANK(1,3):]",
+        "[olist(2,4):.:1:6:   :\n      \n]",
+        "[BLANK(2,6):]",
+        "[block-quote(3,7):      :      > \n\n]",
+        "[para(3,9):\n  ]",
+        "[text(3,9):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <ol>
@@ -360,6 +465,7 @@ item</p>
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
+
 @pytest.mark.gfm
 def test_nested_three_ordered_text_nl_ordered_text_nl_block_skip():
     """
@@ -372,7 +478,23 @@ def test_nested_three_ordered_text_nl_ordered_text_nl_block_skip():
    1. def
       > list
         item"""
-    expected_tokens = ['[olist(1,1):.:1:3:]', '[para(1,4):]', '[text(1,4):abc:]', '[end-para:::True]', '[olist(2,4):.:1:6:   :\n      \n]', '[para(2,7):]', '[text(2,7):def:]', '[end-para:::True]', '[block-quote(3,7):      :      > \n\n]', '[para(3,9):\n  ]', '[text(3,9):list\nitem::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[para(1,4):]",
+        "[text(1,4):abc:]",
+        "[end-para:::True]",
+        "[olist(2,4):.:1:6:   :\n      \n]",
+        "[para(2,7):]",
+        "[text(2,7):def:]",
+        "[end-para:::True]",
+        "[block-quote(3,7):      :      > \n\n]",
+        "[para(3,9):\n  ]",
+        "[text(3,9):list\nitem::\n]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>abc
 <ol>
