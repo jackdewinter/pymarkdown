@@ -8,14 +8,23 @@
 
 ### Changed
 
-- None
+- [Changed - Issue 184](https://github.com/jackdewinter/pymarkdown/issues/184)
+  - scenario tests: instead of mixup in different areas, added initial combinations to test in one place
 
 ### Fixed
 
+- [Fixed - Issue 159](https://github.com/jackdewinter/pymarkdown/issues/159)
+  - parser: was using wrong values to determine nesting level
 - [Fixed - Issue 185](https://github.com/jackdewinter/pymarkdown/issues/185)
   - parser: nesting of block quote, list, block quote raised an assert
+- [Fixed - Issue 186](https://github.com/jackdewinter/pymarkdown/issues/186)
+  - parser: due to work on Issue 187, these now passed after assert examine and disabled
+- [Fixed - Issue 187](https://github.com/jackdewinter/pymarkdown/issues/187)
+  - parser: three separate adjustments needed to be made to ensure the whitespace is consistent
 - [Fixed - Issue 188](https://github.com/jackdewinter/pymarkdown/issues/188)
   - parser: not dealing with a block occurring after 2 nested lists
+- [Fixed - Issue 192](https://github.com/jackdewinter/pymarkdown/issues/192)
+  - parser: needed to adjust `__calculate_current_indent_level` function to accomodate nesting
 
 ## Version 0.9.3 - Date: 2021-12-14
 
