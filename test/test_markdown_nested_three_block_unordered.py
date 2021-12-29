@@ -1307,17 +1307,7 @@ def test_nested_three_block_nl_unordered_nl_block_x():
 > +
 >   > list
 >   > item"""
-    expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::]",
-        "[block-quote(1,5)::> \n>   > ]",
-        "[para(1,7):\n]",
-        "[text(1,7):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[block-quote(1,1)::>\n> \n> ]', '[BLANK(1,2):]', '[ulist(2,3):+::4::\n]', '[BLANK(2,4):]', '[block-quote(3,3)::> \n>   > ]', '[para(3,7):\n]', '[text(3,7):list\nitem::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[end-ulist:::True]', '[end-block-quote:::True]']
     expected_gfm = """<blockquote>
 <ul>
 <li>
@@ -1430,17 +1420,7 @@ def test_nested_three_block_nl_unordered_nl_block_no_bq3():
 > +
 >   > list
     > item"""
-    expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::]",
-        "[block-quote(1,5)::> \n>   > ]",
-        "[para(1,7):\n]",
-        "[text(1,7):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[block-quote(1,1)::>\n> \n> ]', '[BLANK(1,2):]', '[ulist(2,3):+::4::\n]', '[BLANK(2,4):]', '[block-quote(3,3)::> \n    > ]', '[para(3,7):\n]', '[text(3,7):list\nitem::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[end-ulist:::True]', '[end-block-quote:::True]']
     expected_gfm = """<blockquote>
 <ul>
 <li>
@@ -1686,17 +1666,7 @@ def test_nested_three_block_skip_nl_unordered_nl_block():
 > +
 >   > list
     > item"""
-    expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::]",
-        "[block-quote(1,5)::> \n    > ]",
-        "[para(1,7):\n]",
-        "[text(1,7):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[block-quote(1,1)::>\n> \n> ]', '[BLANK(1,2):]', '[ulist(2,3):+::4::\n]', '[BLANK(2,4):]', '[block-quote(3,3)::> \n    > ]', '[para(3,7):\n]', '[text(3,7):list\nitem::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[end-ulist:::True]', '[end-block-quote:::True]']
     expected_gfm = """<blockquote>
 <ul>
 <li>
@@ -1973,17 +1943,7 @@ def test_nested_three_block_nl_unordered_nl_block_skip():
 > +
 >   > list
 >     item"""
-    expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::]",
-        "[block-quote(1,5)::> \n> ]",
-        "[para(1,7):\n     ]",
-        "[text(1,7):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[block-quote(1,1)::>\n> \n> ]', '[BLANK(1,2):]', '[ulist(2,3):+::4::\n]', '[BLANK(2,4):]', '[block-quote(3,3)::> \n> ]', '[para(3,7):\n    ]', '[text(3,7):list\nitem::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[end-ulist:::True]', '[end-block-quote:::True]']
     expected_gfm = """<blockquote>
 <ul>
 <li>
@@ -2095,17 +2055,7 @@ def test_nested_three_block_nl_unordered_nl_block_skip_no_bq3():
 > +
 >   > list
       item"""
-    expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::]",
-        "[block-quote(1,5)::> \n> ]",
-        "[para(1,7):\n     ]",
-        "[text(1,7):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[block-quote(1,1)::>\n> \n> ]', '[BLANK(1,2):]', '[ulist(2,3):+::4::\n    \n]', '[BLANK(2,4):]', '[block-quote(3,3)::> \n\n]', '[para(3,7):\n  ]', '[text(3,7):list\nitem::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[end-ulist:::True]', '[end-block-quote:::True]']
     expected_gfm = """<blockquote>
 <ul>
 <li>
@@ -2347,17 +2297,7 @@ def test_nested_three_block_skip_nl_unordered_nl_block_skip():
 > +
 >   > list
       item"""
-    expected_tokens = [
-        "[block-quote(1,1)::> ]",
-        "[ulist(1,3):+::4::    \n]",
-        "[block-quote(1,5)::> \n\n]",
-        "[para(1,7):\n   ]",
-        "[text(1,7):list\nitem::\n]",
-        "[end-para:::True]",
-        "[end-block-quote:::True]",
-        "[end-ulist:::True]",
-        "[end-block-quote:::True]",
-    ]
+    expected_tokens = ['[block-quote(1,1)::>\n> \n> ]', '[BLANK(1,2):]', '[ulist(2,3):+::4::\n    \n]', '[BLANK(2,4):]', '[block-quote(3,3)::> \n\n]', '[para(3,7):\n  ]', '[text(3,7):list\nitem::\n]', '[end-para:::True]', '[end-block-quote:::True]', '[end-ulist:::True]', '[end-block-quote:::True]']
     expected_gfm = """<blockquote>
 <ul>
 <li>

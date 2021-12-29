@@ -291,7 +291,7 @@ item</li>
 
 
 @pytest.mark.gfm
-def test_nested_three_block_text_nl_ordered_text_nl_ordered():
+def test_nested_three_block_text_nl_ordered_text_nl_ordered_x():
     """
     Verify that a nesting of block quote, ordered list, ordered list works
     properly.
