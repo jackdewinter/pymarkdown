@@ -3020,7 +3020,24 @@ def test_list_blocks_271fx():
     # Arrange
     source_markdown = """1. > 1. > Blockquote
 > continued here."""
-    expected_tokens = ['[olist(1,1):.:1:3:]', '[block-quote(1,4):   :   > ]', '[olist(1,6):.:1:8:]', '[block-quote(1,9)::> ]', '[para(1,11):]', '[text(1,11):Blockquote:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[block-quote(2,1)::> ]', '[para(2,3):]', '[text(2,3):continued here.:]', '[end-para:::True]', '[end-block-quote:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[block-quote(1,4):   :   > ]",
+        "[olist(1,6):.:1:8:]",
+        "[block-quote(1,9)::> ]",
+        "[para(1,11):]",
+        "[text(1,11):Blockquote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[block-quote(2,1)::> ]",
+        "[para(2,3):]",
+        "[text(2,3):continued here.:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <blockquote>
@@ -3050,7 +3067,19 @@ def test_list_blocks_271fa():
 
     # Arrange
     source_markdown = """1. > 1. > Blockquote"""
-    expected_tokens = ['[olist(1,1):.:1:3:]', '[block-quote(1,4):   :   > ]', '[olist(1,6):.:1:8:]', '[block-quote(1,9)::> ]', '[para(1,11):]', '[text(1,11):Blockquote:]', '[end-para:::True]', '[end-block-quote:::True]', '[end-olist:::True]', '[end-block-quote:::True]', '[end-olist:::True]']
+    expected_tokens = [
+        "[olist(1,1):.:1:3:]",
+        "[block-quote(1,4):   :   > ]",
+        "[olist(1,6):.:1:8:]",
+        "[block-quote(1,9)::> ]",
+        "[para(1,11):]",
+        "[text(1,11):Blockquote:]",
+        "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
+    ]
     expected_gfm = """<ol>
 <li>
 <blockquote>

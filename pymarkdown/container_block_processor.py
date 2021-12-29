@@ -1121,7 +1121,7 @@ class ContainerBlockProcessor:
                 end_container_indices,
                 position_marker,
                 container_depth,
-                parser_properties
+                parser_properties,
             )
         else:
             nested_removed_text = None
@@ -1407,7 +1407,7 @@ class ContainerBlockProcessor:
         end_container_indices,
         position_marker,
         container_depth,
-        parser_properties
+        parser_properties,
     ):
 
         POGGER.debug("check next container_start>stack>>$", parser_state.token_stack)
@@ -1436,7 +1436,7 @@ class ContainerBlockProcessor:
                 container_depth,
                 block_quote_data,
                 position_marker,
-                parser_properties
+                parser_properties,
             )
         else:
             did_process_blank_line, nested_removed_text = False, None
@@ -1568,7 +1568,7 @@ class ContainerBlockProcessor:
                 nested_removed_text = split_spaces[-1]
         return nested_removed_text
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __look_for_container_blocks(
         parser_state,
@@ -1577,7 +1577,7 @@ class ContainerBlockProcessor:
         container_depth,
         block_quote_data,
         position_marker,
-        parser_properties
+        parser_properties,
     ):
         """
         Look for container blocks that we can use.
@@ -1590,7 +1590,7 @@ class ContainerBlockProcessor:
             PositionMarker(position_marker.line_number, -1, adj_line_to_parse),
         )
         # index_indent= start_index (passed down)
-        new_container_depth =container_depth + 1
+        new_container_depth = container_depth + 1
         # if new_container_depth < len(parser_state.token_stack) - 1:
         #     POGGER.debug("parser_state.token_document>$", parser_state.token_stack[new_container_depth + 1])
         #     if parser_state.token_stack[new_container_depth + 1].is_list:
@@ -1663,7 +1663,7 @@ class ContainerBlockProcessor:
             nested_removed_text,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __process_list_in_progress(
