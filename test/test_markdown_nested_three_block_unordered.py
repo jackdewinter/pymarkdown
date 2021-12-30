@@ -1295,7 +1295,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_unordered_nl_block_x():
     """
     Verify that a nesting of block quote, unordered list, block quote works
@@ -1461,7 +1460,6 @@ def test_nested_three_block_nl_unordered_nl_block_no_bq3():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_text_nl_unordered_text_nl_block_x():
     """
     Verify that a nesting of block quote, unordered list, block quote works
@@ -1967,7 +1965,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_unordered_nl_block_skip():
     """
     Verify that a nesting of block quote, unordered list, block quote works
@@ -2091,7 +2088,6 @@ def test_nested_three_block_nl_unordered_nl_block_skip_no_bq2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_nl_unordered_nl_block_skip_no_bq3():
     """
     Verify that a nesting of block quote, unordered list, block quote works
@@ -2132,7 +2128,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_text_nl_unordered_text_nl_block_skip():
     """
     Verify that a nesting of block quote, unordered list, block quote works
@@ -2263,7 +2258,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_text_nl_unordered_text_nl_block_skip_no_bq3():
     """
     Verify that a nesting of block quote, unordered list, block quote works
@@ -2345,7 +2339,6 @@ item</p>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_skip_nl_unordered_nl_block_skip():
     """
     Verify that a nesting of block quote, unordered list, block quote works
@@ -2466,7 +2459,6 @@ def test_nested_three_block_skip_nl_unordered_nl_block_skip_no_bq2():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_block_skip_text_nl_unordered_text_nl_block_skip():
     """
     Verify that a nesting of block quote, unordered list, block quote works

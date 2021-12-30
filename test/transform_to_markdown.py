@@ -549,37 +549,92 @@ class TransformToMarkdown:
         cls, token_stack, container_line, container_token_indices, line_number
     ):
 
-        if len(token_stack) > 1 and token_stack[-1].is_block_quote_start:
-            print(" looking for nested list start")
-            nested_list_start_index = TransformToMarkdown.__get_last_list_index(
-                token_stack
+        if not (len(token_stack) > 1 and token_stack[-1].is_block_quote_start):
+            return container_line
+
+        print(" looking for nested list start")
+        nested_list_start_index = TransformToMarkdown.__get_last_list_index(token_stack)
+        print(" afbq=" + str(len(token_stack) - 1))
+        print(" nested_list_start_index=" + str(nested_list_start_index))
+        if nested_list_start_index == -1:
+            print(" nope")
+        elif (
+            nested_list_start_index == len(token_stack) - 2
+            and nested_list_start_index > 0
+            and token_stack[-1].line_number == line_number
+            and token_stack[nested_list_start_index - 1].is_block_quote_start
+            and token_stack[-1].line_number != token_stack[-2].line_number
+        ):
+
+            adj_line = ""
+            print("adj_line->:" + adj_line + ":")
+            adj_line = cls.__adjust(
+                nested_list_start_index - 1,
+                token_stack,
+                container_token_indices,
+                adj_line,
+                True,
             )
-            if nested_list_start_index == -1:
-                print(" nope")
-            else:
-                previous_token = token_stack[nested_list_start_index]
-                print(" yes->" + ParserHelper.make_value_visible(previous_token))
-                inner_token_index = container_token_indices[nested_list_start_index]
-                print(
-                    "token_stack[-1].line_number->" + str(token_stack[-1].line_number)
+            print("adj_line->:" + adj_line + ":")
+            adj_line = cls.__adjust(
+                nested_list_start_index,
+                token_stack,
+                container_token_indices,
+                adj_line,
+                True,
+            )
+            print("adj_line->:" + adj_line + ":")
+            container_line = adj_line + container_line
+        else:
+            previous_token = token_stack[nested_list_start_index]
+            print(" yes->" + ParserHelper.make_value_visible(previous_token))
+            print("token_stack[-1].line_number->" + str(token_stack[-1].line_number))
+            print("previous_token.line_number->" + str(previous_token.line_number))
+            print("line_number->" + str(line_number))
+            if (
+                token_stack[-1].line_number != previous_token.line_number
+                or line_number != previous_token.line_number
+            ):
+                container_line = cls.__adjust(
+                    nested_list_start_index,
+                    token_stack,
+                    container_token_indices,
+                    container_line,
+                    False,
                 )
-                print("previous_token.line_number->" + str(previous_token.line_number))
-                print("line_number->" + str(line_number))
-                if (
-                    token_stack[-1].line_number != previous_token.line_number
-                    or line_number != previous_token.line_number
-                ):
-                    split_leading_spaces = previous_token.leading_spaces.split(
-                        ParserHelper.newline_character
-                    )
-                    if inner_token_index < len(split_leading_spaces):
-                        container_line = (
-                            split_leading_spaces[inner_token_index] + container_line
-                        )
-                        container_token_indices[nested_list_start_index] = (
-                            inner_token_index + 1
-                        )
         return container_line
+
+    # pylint: disable=too-many-arguments, unused-private-member
+    @classmethod
+    def __adjust(
+        cls,
+        nested_list_start_index,
+        token_stack,
+        container_token_indices,
+        container_line,
+        apply_list_fix,
+    ):
+        previous_token = token_stack[nested_list_start_index]
+        if apply_list_fix and previous_token.is_list_start:
+            delta = previous_token.indent_level - len(container_line)
+            print("delta->" + str(delta))
+            container_line += ParserHelper.repeat_string(" ", delta)
+        split_leading_spaces = previous_token.leading_spaces.split(
+            ParserHelper.newline_character
+        )
+        inner_token_index = container_token_indices[nested_list_start_index]
+        if inner_token_index < len(split_leading_spaces):
+            print(
+                "inner_index->" + str(container_token_indices[nested_list_start_index])
+            )
+            container_line = split_leading_spaces[inner_token_index] + container_line
+            container_token_indices[nested_list_start_index] = inner_token_index + 1
+            print(
+                "inner_index->" + str(container_token_indices[nested_list_start_index])
+            )
+        return container_line
+
+    # pylint: enable=too-many-arguments, unused-private-member
 
     # pylint: disable=too-many-locals
     def __apply_container_transformation(self, container_text, container_records):
