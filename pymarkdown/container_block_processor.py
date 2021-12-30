@@ -38,6 +38,9 @@ class ContainerBlockProcessor:
         parser_properties,
     ):
 
+        POGGER.debug(">>")
+        POGGER.debug(">>")
+        POGGER.debug(">>container_depth>>:$:", container_depth)
         if ContainerBlockProcessor.__look_for_pragmas(
             position_marker,
             container_depth,
@@ -1565,7 +1568,7 @@ class ContainerBlockProcessor:
                 nested_removed_text = split_spaces[-1]
         return nested_removed_text
 
-    # pylint: disable=too-many-arguments
+    # pylint: disable=too-many-arguments, too-many-locals
     @staticmethod
     def __look_for_container_blocks(
         parser_state,
@@ -1586,6 +1589,25 @@ class ContainerBlockProcessor:
             None if end_of_bquote_start_index == -1 else end_of_bquote_start_index,
             PositionMarker(position_marker.line_number, -1, adj_line_to_parse),
         )
+        # index_indent= start_index (passed down)
+        new_container_depth = container_depth + 1
+        # if new_container_depth < len(parser_state.token_stack) - 1:
+        #     POGGER.debug("parser_state.token_document>$", parser_state.token_stack[new_container_depth + 1])
+        #     if parser_state.token_stack[new_container_depth + 1].is_list:
+        #         POGGER.debug("list")
+        #         df = position_marker.index_indent
+        #         _, ex_ws = ParserHelper.extract_whitespace(adj_line_to_parse, 0)
+        #         dg = len(ex_ws)
+        #         dh = parser_state.token_stack[new_container_depth + 1].indent_level
+        #         delta = dh - df
+        #         POGGER.debug("list-delta:$ >= dg:$", delta, dg)
+        #         if delta > 0 and dg >= delta:
+        #             POGGER.debug("eligible")
+        #             new_container_depth += 1
+        #             position_marker = PositionMarker(position_marker.line_number, -1,
+        #               adj_line_to_parse[delta:], index_indent=xx+delta)
+        #     POGGER.debug("position_marker[$,$]->:$:", position_marker.index_indent,
+        # position_marker.index_number, position_marker.text_to_parse)
 
         POGGER.debug("parser_state.token_document>$", parser_state.token_document)
         previous_document_length = len(parser_state.token_document)
@@ -1601,7 +1623,7 @@ class ContainerBlockProcessor:
             False,
             parser_properties,
             block_quote_data.current_count,
-            container_depth=container_depth + 1,
+            container_depth=new_container_depth,
             foobar=adj_block,
             init_bq=block_quote_data.current_count,
         )
@@ -1641,7 +1663,7 @@ class ContainerBlockProcessor:
             nested_removed_text,
         )
 
-    # pylint: enable=too-many-arguments
+    # pylint: enable=too-many-arguments, too-many-locals
 
     @staticmethod
     def __process_list_in_progress(
@@ -1931,6 +1953,7 @@ class ContainerBlockProcessor:
     ):
         current_indent_level = 0
         non_last_block_index = 0
+        POGGER.debug_with_visible_whitespace("token-stack:$:", parser_state.token_stack)
         for stack_index in range(1, len(parser_state.token_stack)):
             proposed_indent_level = 0
             POGGER.debug_with_visible_whitespace(
@@ -1968,6 +1991,7 @@ class ContainerBlockProcessor:
                 break
             current_indent_level = proposed_indent_level
             POGGER.debug("current_indent_level:$", current_indent_level)
+        POGGER.debug("<<current_indent_level:$", current_indent_level)
         return current_indent_level
 
     # pylint: disable=too-many-arguments

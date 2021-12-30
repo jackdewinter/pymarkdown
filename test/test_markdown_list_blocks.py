@@ -2630,7 +2630,7 @@ continued here.</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -2821,7 +2821,7 @@ continued here.</p>
 </blockquote>"""
 
     # Act & Assert
-    act_and_assert(source_markdown, expected_gfm, expected_tokens, show_debug=False)
+    act_and_assert(source_markdown, expected_gfm, expected_tokens)
 
 
 @pytest.mark.gfm
@@ -3012,7 +3012,6 @@ def test_list_blocks_271e():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_list_blocks_271fx():
     """
     Test case 271:  variation of 271e with extra nesting
@@ -3023,10 +3022,14 @@ def test_list_blocks_271fx():
 > continued here."""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[block-quote(1,4):   :   > \n]",
-        "[para(1,6):]",
-        "[text(1,6):Blockquote:]",
+        "[block-quote(1,4):   :   > ]",
+        "[olist(1,6):.:1:8:]",
+        "[block-quote(1,9)::> ]",
+        "[para(1,11):]",
+        "[text(1,11):Blockquote:]",
         "[end-para:::True]",
+        "[end-block-quote:::True]",
+        "[end-olist:::True]",
         "[end-block-quote:::True]",
         "[end-olist:::True]",
         "[block-quote(2,1)::> ]",
@@ -3057,7 +3060,6 @@ def test_list_blocks_271fx():
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_list_blocks_271fa():
     """
     Test case 271:  variation of 271e with extra nesting
@@ -3067,17 +3069,16 @@ def test_list_blocks_271fa():
     source_markdown = """1. > 1. > Blockquote"""
     expected_tokens = [
         "[olist(1,1):.:1:3:]",
-        "[block-quote(1,4):   :   > \n]",
-        "[para(1,6):]",
-        "[text(1,6):Blockquote:]",
+        "[block-quote(1,4):   :   > ]",
+        "[olist(1,6):.:1:8:]",
+        "[block-quote(1,9)::> ]",
+        "[para(1,11):]",
+        "[text(1,11):Blockquote:]",
         "[end-para:::True]",
         "[end-block-quote:::True]",
         "[end-olist:::True]",
-        "[block-quote(2,1)::> ]",
-        "[para(2,3):]",
-        "[text(2,3):continued here.:]",
-        "[end-para:::True]",
         "[end-block-quote:::True]",
+        "[end-olist:::True]",
     ]
     expected_gfm = """<ol>
 <li>
@@ -3091,10 +3092,7 @@ def test_list_blocks_271fa():
 </ol>
 </blockquote>
 </li>
-</ol>
-<blockquote>
-<p>continued here.</p>
-</blockquote>"""
+</ol>"""
 
     # Act & Assert
     act_and_assert(source_markdown, expected_gfm, expected_tokens)
