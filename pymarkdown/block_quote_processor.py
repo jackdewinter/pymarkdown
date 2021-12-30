@@ -1194,25 +1194,25 @@ class BlockQuoteProcessor:
             delta,
             length_of_available_whitespace,
         )
-        if length_of_available_whitespace >= delta:
-            current_stack_index += 1
-            indent_text_count += delta
-            length_of_available_whitespace -= delta
-            extra_consumed_whitespace += delta
-            if adjust_current_block_quote:
-                POGGER.debug(
-                    "__calculate_stack_hard_limit>>last_block_token>>$",
-                    parser_state.token_stack[last_bq_index].matching_markdown_token,
-                )
-                parser_state.token_stack[
-                    last_bq_index
-                ].matching_markdown_token.add_leading_spaces(
-                    ParserHelper.repeat_string(" ", delta), True
-                )
-                POGGER.debug(
-                    "__calculate_stack_hard_limit>>last_block_token>>$",
-                    parser_state.token_stack[last_bq_index].matching_markdown_token,
-                )
+        assert length_of_available_whitespace >= delta
+        current_stack_index += 1
+        indent_text_count += delta
+        length_of_available_whitespace -= delta
+        extra_consumed_whitespace += delta
+        if adjust_current_block_quote:
+            POGGER.debug(
+                "__calculate_stack_hard_limit>>last_block_token>>$",
+                parser_state.token_stack[last_bq_index].matching_markdown_token,
+            )
+            parser_state.token_stack[
+                last_bq_index
+            ].matching_markdown_token.add_leading_spaces(
+                ParserHelper.repeat_string(" ", delta), True
+            )
+            POGGER.debug(
+                "__calculate_stack_hard_limit>>last_block_token>>$",
+                parser_state.token_stack[last_bq_index].matching_markdown_token,
+            )
 
         return (
             current_stack_index,
@@ -1302,12 +1302,12 @@ class BlockQuoteProcessor:
                 assert start_index != -1
                 POGGER.debug("bq-found")
                 indent_text_count = start_index + 1
-                if (
+                assert (
                     indent_text_count < len(remaining_text)
                     and remaining_text[indent_text_count] == " "
-                ):
-                    POGGER.debug("bq-space-found")
-                    indent_text_count += 1
+                )
+                POGGER.debug("bq-space-found")
+                indent_text_count += 1
                 current_stack_index += 1
                 assert indent_text_count == len(remaining_text)
 
