@@ -26,6 +26,9 @@ requests = "==2.26.0"
 pytest-xdist = "*"
 defusedxml = "*"
 project-summarizer = "==0.5.0"
+pyroma = "*"
+flake8-bugbear = "*"
+flake8-bandit = "*"
 
 [requires]
 python_version = "3.8"

@@ -653,7 +653,7 @@ def test_missing_entities_json_file():
     try:
         TokenizedMarkdown(resource_path=alternate_resource_directory)
 
-        assert False, "Should have exited prior to this."
+        raise AssertionError("Should have exited prior to this.")
     except BadTokenizationError as this_exception:
         assert str(this_exception).startswith(
             "Named character entity map file '"
@@ -675,7 +675,7 @@ def test_bad_entities_json_file():
     try:
         TokenizedMarkdown(resource_path=alternate_resource_path)
 
-        assert False, "Should have exited prior to this."
+        raise AssertionError("Should have exited prior to this.")
     except BadTokenizationError as this_exception:
         assert (
             str(this_exception)

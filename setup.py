@@ -8,7 +8,9 @@ from setuptools import setup
 
 
 def parse_requirements():
-    lineiter = (line.strip() for line in open("install-requirements.txt", "r"))
+    lineiter = (
+        line.strip() for line in open("install-requirements.txt", "r", encoding="utf-8")
+    )
     return [line for line in lineiter if line and not line.startswith("#")]
 
 
@@ -18,7 +20,7 @@ def get_semantic_version():
 
 
 def load_readme_file():
-    with open("README.md", "r") as readme_file:
+    with open("README.md", "r", encoding="utf-8") as readme_file:
         return readme_file.read()
 
 

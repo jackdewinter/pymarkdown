@@ -70,9 +70,10 @@ def write_temporary_configuration(supplied_configuration):
             else:
                 json.dump(supplied_configuration, outfile)
             return outfile.name
-    except IOError as ex:
-        assert False, f"Test configuration file was not written ({ex})."
-        return None
+    except IOError as this_exception:
+        raise AssertionError(
+            f"Test configuration file was not written ({this_exception})."
+        ) from this_exception
 
 
 def assert_if_lists_different(expected_tokens, actual_tokens):
