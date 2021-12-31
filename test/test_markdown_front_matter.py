@@ -553,7 +553,7 @@ test: assert
         act_and_assert(
             source_markdown, expected_gfm, expected_tokens, config_map=config_map
         )
-        assert False, "An exception should have been thrown before this point."
+        raise AssertionError("An exception should have been thrown before this point.")
     except BadTokenizationError as this_error:
         assert (
             str(this_error) == "An unhandled error occurred processing the document."

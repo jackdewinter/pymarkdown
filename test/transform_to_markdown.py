@@ -843,9 +843,9 @@ class TransformToMarkdown:
                 ]
                 new_data = end_handler_fn(current_token, actual_tokens, token_index)
             else:
-                assert False, f"end_current_token>>{current_token.type_name}"
+                raise AssertionError(f"end_current_token>>{current_token.type_name}")
         else:
-            assert False, f"current_token>>{current_token}"
+            raise AssertionError(f"current_token>>{current_token}")
         return new_data, pragma_token
 
     # pylint: enable=too-many-arguments

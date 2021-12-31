@@ -426,11 +426,13 @@ class TransformToGfm:
                 end_handler_fn = self.end_token_handlers[next_token.type_name]
                 output_html = end_handler_fn(output_html, next_token, transform_state)
             else:
-                assert (
-                    False
-                ), f"Markdown token end type {next_token.type_name} not supported."
+                raise AssertionError(
+                    f"Markdown token end type {next_token.type_name} not supported."
+                )
         else:
-            assert False, f"Markdown token type {type(next_token)} not supported."
+            raise AssertionError(
+                f"Markdown token type {type(next_token)} not supported."
+            )
         return output_html
 
     # pylint: enable=too-many-arguments

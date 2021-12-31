@@ -864,7 +864,9 @@ class InlineHelper:
             resource_path, InlineHelper.__entities_file_name
         )
         try:
-            with open(os.path.abspath(master_entities_file)) as infile:
+            with open(
+                os.path.abspath(master_entities_file), encoding="utf-8"
+            ) as infile:
                 results_dictionary = json.load(infile)
         except json.decoder.JSONDecodeError as this_exception:
             error_message = (

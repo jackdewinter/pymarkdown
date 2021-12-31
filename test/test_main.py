@@ -1435,7 +1435,7 @@ def test_markdown_logger_arg_list_out_of_sync():
         assert POGGER.is_enabled_for(logging.DEBUG)
         new_logger = ParserLogger(logging.getLogger(__name__))
         new_logger.debug("one sub $ but two in list", 1, 2)
-        assert False, "An exception should have been thrown by now."
+        raise AssertionError("An exception should have been thrown by now.")
     except Exception as this_exception:
         assert (
             str(this_exception)

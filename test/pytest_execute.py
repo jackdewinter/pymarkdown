@@ -54,9 +54,9 @@ class InProcessResult:
                 diff_values = ParserHelper.newline_character.join(list(diff))
                 print(diff_values, file=sys.stderr)
                 if not was_found:
-                    assert (
-                        False
-                    ), f"Block\n---\n{next_text_block}\n---\nwas not found in\n---\n{actual_stream.getvalue()}"
+                    raise AssertionError(
+                        f"Block\n---\n{next_text_block}\n---\nwas not found in\n---\n{actual_stream.getvalue()}"
+                    )
         elif actual_stream.getvalue().strip() != expected_text.strip():
             diff = difflib.ndiff(
                 expected_text.splitlines(), actual_stream.getvalue().splitlines()
@@ -75,7 +75,7 @@ class InProcessResult:
             print(f"WARN>expect>>{ParserHelper.make_value_visible(expected_text)}")
             if log_extra:
                 print(f"log_extra:{log_extra}")
-            assert False, f"{stream_name} not as expected:\n{diff_values}"
+            raise AssertionError(f"{stream_name} not as expected:\n{diff_values}")
 
     # pylint: enable=too-many-arguments
 
@@ -182,7 +182,7 @@ class SystemState:
         """
 
         os.chdir(self.saved_cwd)
-        os.environ = self.saved_env
+        os.environ = self.saved_env  # noqa B003
         sys.argv = self.saved_argv
         sys.stdout = self.saved_stdout
         sys.stderr = self.saved_stderr
