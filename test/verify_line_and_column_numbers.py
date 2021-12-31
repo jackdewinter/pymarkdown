@@ -343,7 +343,7 @@ def __verify_line_and_column_numbers_next_token(
             last_token, last_token_index, last_token_stack = (
                 current_token,
                 ind,
-                token_stack[0:],
+                token_stack[:],
             )
         else:
             print("skipping last")
@@ -1011,7 +1011,7 @@ def __calc_initial_whitespace_paragraph(calc_token):
         end_of_line_index = calc_token.extracted_whitespace.index(
             ParserHelper.newline_character
         )
-        first_para_ws = calc_token.extracted_whitespace[0:end_of_line_index]
+        first_para_ws = calc_token.extracted_whitespace[:end_of_line_index]
     else:
         first_para_ws = calc_token.extracted_whitespace
     print(f">>first_para_ws>>{ParserHelper.make_value_visible(first_para_ws)}>>")
@@ -2704,7 +2704,7 @@ def __verify_next_inline_hard_break(
             else:
                 ws_for_new_line = split_whitespace[0]
             if ws_for_new_line.endswith(ParserHelper.whitespace_split_character):
-                ws_for_new_line = ws_for_new_line[0:-1]
+                ws_for_new_line = ws_for_new_line[:-1]
             print(
                 f"ws_for_new_line>{ParserHelper.make_value_visible(ws_for_new_line)}<"
             )
@@ -2839,7 +2839,7 @@ def __verify_next_inline_text_whitespace(last_token, previous_inline_token):
 
             if split_end_whitespace:
                 assert split_end_whitespace[-1] == "\x02"
-                split_end_whitespace = split_end_whitespace[0:-1]
+                split_end_whitespace = split_end_whitespace[:-1]
                 print(
                     f"split_end_whitespace>{ParserHelper.make_value_visible(split_end_whitespace)}<"
                 )
