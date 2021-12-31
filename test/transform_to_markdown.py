@@ -1259,11 +1259,16 @@ class TransformToMarkdown:
         )
         print(f">>start_sequence>>:{start_sequence}:<<")
         if not next_token.is_blank_line:
+            print(
+                f">>current_token>>:{ParserHelper.make_value_visible(current_token)}:<<"
+            )
             print(f">>current_token.indent_level>>:{current_token.indent_level}:<<")
             print(f">>previous_indent>>:{previous_indent}:<<")
             print(f">>adjustment_since_newline>>:{adjustment_since_newline}:<<")
             requested_indent = (
-                current_token.indent_level - previous_indent - adjustment_since_newline
+                current_token.indent_level
+                + len(extracted_whitespace)
+                - (current_token.column_number - 1)
             )
             print(f">>requested_indent>>:{requested_indent}:<<")
             start_sequence = start_sequence.ljust(requested_indent, " ")
