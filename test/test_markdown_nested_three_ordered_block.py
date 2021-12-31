@@ -45,7 +45,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_nl_block_nl_unordered():
     """
     Verify that a nesting of ordered list, new line, block quote, new line, unordered list works
@@ -268,7 +267,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_nl_block_skip_nl_unordered():
     """
     Verify that a nesting of ordered list, new line, block quote, new line, unordered list works
@@ -475,7 +473,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_nl_block_nl_ordered():
     """
     Verify that a nesting of ordered list, new line, block quote, new line, ordered list works
@@ -698,7 +695,6 @@ item</li>
 
 
 @pytest.mark.gfm
-@pytest.mark.skip
 def test_nested_three_ordered_nl_block_skip_nl_ordered():
     """
     Verify that a nesting of ordered list, block quote, ordered list works
