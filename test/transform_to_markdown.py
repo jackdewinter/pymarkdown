@@ -1097,8 +1097,15 @@ class TransformToMarkdown:
             ) = self.__rehydrate_list_start_prev_list(current_token, previous_token)
         elif previous_token.is_block_quote_start:
             print("rlspt>>is_block_quote_start")
-            previous_indent, _ = self.__rehydrate_list_start_prev_block_quote(
-                previous_token
+            (
+                previous_indent,
+                post_adjust_whitespace,
+                extracted_whitespace,
+            ) = self.__rehydrate_list_start_prev_block_quote(
+                current_token,
+                previous_token,
+                containing_block_quote_token,
+                extracted_whitespace,
             )
         elif containing_block_quote_token:
             print("rlspt>>containing_block_quote_token")
@@ -1133,13 +1140,43 @@ class TransformToMarkdown:
         return previous_token.indent_level, ""
 
     @classmethod
-    def __rehydrate_list_start_prev_block_quote(cls, previous_token):
+    def __rehydrate_list_start_prev_block_quote(
+        cls,
+        current_token,
+        previous_token,
+        containing_block_quote_token,
+        extracted_whitespace,
+    ):
         previous_indent = (
             len(previous_token.calculate_next_leading_space_part(increment_index=False))
             if ParserHelper.newline_character in previous_token.leading_spaces
             else len(previous_token.leading_spaces)
         )
-        return previous_indent, ""
+        print(
+            f"adj->current_token>>:{ParserHelper.make_value_visible(current_token)}:<<"
+        )
+        print(
+            f"adj->containing_block_quote_token>>:{ParserHelper.make_value_visible(containing_block_quote_token)}:<<"
+        )
+        assert current_token.line_number == containing_block_quote_token.line_number
+        split_leading_spaces = containing_block_quote_token.leading_spaces.split(
+            ParserHelper.newline_character
+        )
+        block_quote_leading_space = split_leading_spaces[0]
+        block_quote_leading_space_length = len(block_quote_leading_space)
+
+        print(
+            f"bq->len>>:{block_quote_leading_space}: {block_quote_leading_space_length}"
+        )
+
+        post_adjust_whitespace = "".ljust(
+            current_token.column_number - block_quote_leading_space_length - 1, " "
+        )
+        extracted_whitespace = ""
+        print(
+            f"post_adjust_whitespace:{post_adjust_whitespace}: extracted_whitespace:{extracted_whitespace}:"
+        )
+        return previous_indent, post_adjust_whitespace, extracted_whitespace
 
     @classmethod
     def __rehydrate_list_start_contained_in_block_quote(
